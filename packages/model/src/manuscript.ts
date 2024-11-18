@@ -100,7 +100,7 @@ export type ManuscriptVersion = {
   availabilityStatementDetails?: DiscussionDataObject;
 
   teams: { displayName: string; id: string; inactiveSince?: string }[];
-  labs: { name: string; id: string; userIds: string[] }[];
+  labs: { name: string; id: string }[];
 
   createdBy: Pick<
     UserResponse,

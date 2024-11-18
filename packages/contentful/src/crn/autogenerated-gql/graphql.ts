@@ -18002,18 +18002,7 @@ export type ManuscriptsContentFragment = Pick<
             >;
           }>;
           labsCollection?: Maybe<{
-            items: Array<
-              Maybe<
-                Pick<Labs, 'name'> & {
-                  sys: Pick<Sys, 'id'>;
-                  linkedFrom?: Maybe<{
-                    usersCollection?: Maybe<{
-                      items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
-                    }>;
-                  }>;
-                }
-              >
-            >;
+            items: Array<Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>>;
           }>;
           createdBy?: Maybe<
             Pick<
@@ -18679,16 +18668,7 @@ export type FetchManuscriptByIdQuery = {
               }>;
               labsCollection?: Maybe<{
                 items: Array<
-                  Maybe<
-                    Pick<Labs, 'name'> & {
-                      sys: Pick<Sys, 'id'>;
-                      linkedFrom?: Maybe<{
-                        usersCollection?: Maybe<{
-                          items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
-                        }>;
-                      }>;
-                    }
-                  >
+                  Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
                 >;
               }>;
               createdBy?: Maybe<
@@ -20973,18 +20953,7 @@ export type FetchTeamByIdQuery = {
                         }>;
                         labsCollection?: Maybe<{
                           items: Array<
-                            Maybe<
-                              Pick<Labs, 'name'> & {
-                                sys: Pick<Sys, 'id'>;
-                                linkedFrom?: Maybe<{
-                                  usersCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<{ sys: Pick<Sys, 'id'> }>
-                                    >;
-                                  }>;
-                                }>;
-                              }
-                            >
+                            Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
                           >;
                         }>;
                         createdBy?: Maybe<
@@ -25535,71 +25504,6 @@ export const ManuscriptsContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'name' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'linkedFrom' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'usersCollection',
-                                          },
-                                          arguments: [
-                                            {
-                                              kind: 'Argument',
-                                              name: {
-                                                kind: 'Name',
-                                                value: 'limit',
-                                              },
-                                              value: {
-                                                kind: 'IntValue',
-                                                value: '50',
-                                              },
-                                            },
-                                          ],
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'items',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'sys',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'id',
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
                                   },
                                 ],
                               },

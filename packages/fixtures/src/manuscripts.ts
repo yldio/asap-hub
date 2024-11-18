@@ -57,7 +57,7 @@ export const createManuscriptResponse = (
           inactiveSince: undefined,
         },
       ],
-      labs: [{ name: 'Lab 1', id: 'lab-1', userIds: [] }],
+      labs: [{ name: 'Lab 1', id: 'lab-1' }],
       firstAuthors: [],
       correspondingAuthor: [],
       additionalAuthors: [],

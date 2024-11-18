@@ -433,10 +433,6 @@ export const parseGraphqlManuscriptVersion = (
       labs: version?.labsCollection?.items.map((labItem) => ({
         id: labItem?.sys.id,
         name: labItem?.name,
-        userIds:
-          labItem?.linkedFrom?.usersCollection?.items.map(
-            (userItem) => userItem?.sys.id,
-          ) || [],
       })),
       complianceReport: parseComplianceReport(
         version?.linkedFrom?.complianceReportsCollection?.items[0],

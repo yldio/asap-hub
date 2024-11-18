@@ -17,7 +17,6 @@ import ManuscriptVersionCard, {
   getLifecycleCode,
   getManuscriptVersionUID,
   isManuscriptAuthor,
-  isManuscriptLabPI,
   isManuscriptLead,
 } from '../ManuscriptVersionCard';
 
@@ -240,53 +239,6 @@ describe('edit', () => {
     expect(pushSpy).toHaveBeenCalledWith(
       '/network/teams/team-id-0/workspace/edit-manuscript/manuscript-1',
     );
-  });
-
-  describe('isManuscriptLabPI', () => {
-    it('returns true when user is lab PI', () => {
-      expect(
-        isManuscriptLabPI({
-          version: {
-            ...baseVersion,
-            labs: [{ name: 'lab', id: 'lab-1', userIds: ['lab-user'] }],
-            firstAuthors: [{ ...createUserResponse(), id: 'user-test' }],
-          },
-          user: {
-            ...user,
-            id: 'lab-user',
-            teams: [
-              {
-                displayName: 'lab',
-                id: 'team-id-4',
-                role: 'Project Manager',
-              },
-            ],
-          },
-        }),
-      ).toBeTruthy();
-    });
-    it('returns false when user is not lab PI', () => {
-      expect(
-        isManuscriptLabPI({
-          version: {
-            ...baseVersion,
-            labs: [{ name: 'lab', id: 'lab-1', userIds: ['lab-user'] }],
-            firstAuthors: [{ ...createUserResponse(), id: 'user-test' }],
-          },
-          user: {
-            ...user,
-            id: 'not-lab-user',
-            teams: [
-              {
-                displayName: 'lab',
-                id: 'team-id-4',
-                role: 'Project Manager',
-              },
-            ],
-          },
-        }),
-      ).not.toBeTruthy();
-    });
   });
 
   describe('isManuscriptAuthor', () => {

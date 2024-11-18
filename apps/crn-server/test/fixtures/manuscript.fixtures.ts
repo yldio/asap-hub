@@ -41,7 +41,7 @@ export const getManuscriptDataObject = (
       teams: [
         { id: 'team-1', displayName: 'Test 1', inactiveSince: undefined },
       ],
-      labs: [{ id: 'lab-1', name: 'Lab 1', userIds: ['user-id-1'] }],
+      labs: [{ id: 'lab-1', name: 'Lab 1' }],
       firstAuthors: [],
       correspondingAuthor: [],
       additionalAuthors: [],

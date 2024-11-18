@@ -218,19 +218,8 @@ export const isManuscriptLead = ({ version, user }: VersionUserProps) =>
 export const isManuscriptAuthor = ({ version, user }: VersionUserProps) =>
   user && version.firstAuthors.find((author) => author.id === user.id);
 
-export const isManuscriptLabPI = ({ version, user }: VersionUserProps) =>
-  user &&
-  user.teams.find(
-    (team) =>
-      team.role === 'Lead PI (Core Leadership)' ||
-      team.role === 'Project Manager',
-  ) &&
-  version.labs.find((lab) => lab.userIds.find((id) => id === user.id));
-
 export const canEditManuscript = ({ version, user }: VersionUserProps) =>
-  isManuscriptLead({ version, user }) ||
-  isManuscriptAuthor({ version, user }) ||
-  isManuscriptLabPI({ version, user });
+  isManuscriptLead({ version, user }) || isManuscriptAuthor({ version, user });
 
 export const getManuscriptVersionUID = ({
   version,

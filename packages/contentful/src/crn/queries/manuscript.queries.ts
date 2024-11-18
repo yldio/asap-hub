@@ -97,15 +97,6 @@ export const manuscriptContentQueryFragment = gql`
               id
             }
             name
-            linkedFrom {
-              usersCollection(limit: 50) {
-                items {
-                  sys {
-                    id
-                  }
-                }
-              }
-            }
           }
         }
         createdBy {

@@ -65,7 +65,7 @@ describe('Save cookie preferences handler', () => {
     });
   });
 
-  it('should successfully save cookie preferences', async () => {
+  test('should successfully save cookie preferences', async () => {
     const mockDynamoClient = new DynamoDBClient(
       {},
     ) as jest.Mocked<DynamoDBClient>;
@@ -104,7 +104,7 @@ describe('Save cookie preferences handler', () => {
     });
   });
 
-  it('should handle DynamoDB errors', async () => {
+  test('should handle DynamoDB errors', async () => {
     const mockDynamoClient = new DynamoDBClient(
       {},
     ) as jest.Mocked<DynamoDBClient>;

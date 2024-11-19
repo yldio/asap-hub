@@ -11,7 +11,9 @@ import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { ListNode, ListItemNode } from '@lexical/list';
 import { AutoLinkNode, LinkNode } from '@lexical/link';
-import { HeadingNode } from '@lexical/rich-text';
+import { HeadingNode, QuoteNode } from '@lexical/rich-text';
+import { CodeNode } from '@lexical/code';
+
 import { EditorState } from 'lexical';
 import {
   $convertFromMarkdownString,
@@ -22,6 +24,7 @@ import ToolbarPlugin from './TextEditorToolbar';
 import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import { ember } from '../colors';
+import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 
 const theme = {
   paragraph: 'editor-paragraph',
@@ -149,6 +152,28 @@ const placeholderStyles = css({
   pointerEvents: 'none',
 });
 
+const markdownStyles = css({
+  fontSize: '1em',
+
+  '& .editor-paragraph': {
+    margin: 0,
+    marginBottom: '16px',
+    position: 'relative',
+    '&:last-child': {
+      marginBottom: 0,
+    },
+  },
+
+  '& .editor-list-ol, & .editor-list-ul': {
+    margin: '0 0 16px 16px',
+    padding: 0,
+  },
+
+  '& .editor-listItem': {
+    margin: '8px 0',
+  },
+});
+
 const onChangeHandler = (
   editorState: EditorState,
   onChange: (content: string) => void,
@@ -162,7 +187,8 @@ export type TextEditorProps = {
   readonly maxLength?: number;
   readonly value: string;
   readonly enabled?: boolean;
-  onChange: (content: string) => void;
+  readonly isMarkdown?: boolean;
+  onChange?: (content: string) => void;
 };
 
 const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
@@ -182,11 +208,13 @@ const TextEditor = ({
   customValidationMessage = '',
   enabled = true,
   getValidationMessage,
+  isMarkdown = false,
 }: TextEditorProps) => {
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLTextAreaElement>(
       customValidationMessage,
       getValidationMessage,
+      isMarkdown,
     );
 
   const initialConfig = {
@@ -194,7 +222,19 @@ const TextEditor = ({
       $convertFromMarkdownString(value, TRANSFORMERS);
     },
     namespace: 'Editor',
-    nodes: [AutoLinkNode, LinkNode, ListNode, ListItemNode, HeadingNode],
+    nodes: [
+      AutoLinkNode,
+      LinkNode,
+      ListNode,
+      ListItemNode,
+      HeadingNode,
+      HeadingNode,
+      QuoteNode,
+      CodeNode,
+      ListNode,
+      ListItemNode,
+      LinkNode,
+    ],
     theme,
     // eslint-disable-next-line no-console
     onError: console.error,
@@ -203,9 +243,12 @@ const TextEditor = ({
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div css={containerStyles}>
-        <ToolbarPlugin />
+        <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+        {!isMarkdown && <ToolbarPlugin />}
         <OnChangePlugin
-          onChange={(editorState) => onChangeHandler(editorState, onChange)}
+          onChange={(editorState) =>
+            onChangeHandler(editorState, onChange ? onChange : () => null)
+          }
         />
         <EnablePlugin enabled={enabled} />
         <div css={innerStyles}>
@@ -215,18 +258,22 @@ const TextEditor = ({
                 id={id}
                 required={required}
                 data-testid={'editor'}
-                css={({ colors }) => [
-                  styles,
-                  inputStyles,
-                  validationMessage && {
-                    borderColor: ember.rgb,
-                  },
-                  colors?.primary500 && {
-                    ':focus': {
-                      borderColor: colors?.primary500.rgba,
-                    },
-                  },
-                ]}
+                css={({ colors }) =>
+                  !isMarkdown
+                    ? [
+                        styles,
+                        inputStyles,
+                        validationMessage && {
+                          borderColor: ember.rgb,
+                        },
+                        colors?.primary500 && {
+                          ':focus': {
+                            borderColor: colors?.primary500.rgba,
+                          },
+                        },
+                      ]
+                    : [markdownStyles]
+                }
               />
             }
             placeholder={
@@ -244,14 +291,16 @@ const TextEditor = ({
             }
             ErrorBoundary={LexicalErrorBoundary}
           />
-          <textarea
-            {...validationTargetProps}
-            onChange={noop}
-            css={{ display: 'none' }}
-            required={required}
-            maxLength={maxLength}
-            value={value}
-          />
+          {!isMarkdown && (
+            <textarea
+              {...validationTargetProps}
+              onChange={noop}
+              css={{ display: 'none' }}
+              required={required}
+              maxLength={maxLength}
+              value={value}
+            />
+          )}
           <ListPlugin />
           <HistoryPlugin />
           <AutoFocusPlugin />

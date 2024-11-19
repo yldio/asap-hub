@@ -230,12 +230,13 @@ const TextEditor = ({
       HeadingNode,
       QuoteNode,
       CodeNode,
-      ListNode,
     ],
     theme,
     // eslint-disable-next-line no-console
     onError: console.error,
   };
+
+  if (isMarkdown && !value) return <></>;
 
   return (
     <LexicalComposer initialConfig={initialConfig}>

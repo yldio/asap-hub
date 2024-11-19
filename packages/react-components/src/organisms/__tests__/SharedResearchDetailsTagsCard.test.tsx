@@ -9,6 +9,11 @@ const sharedResearchDetailsTagsCardProps: ComponentProps<
   displayDescription: true,
   tags: [],
 };
+
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
+});
+
 it('renders only description section if there are no tags', () => {
   const { getByText, queryByRole } = render(
     <SharedResearchDetailsTagsCard

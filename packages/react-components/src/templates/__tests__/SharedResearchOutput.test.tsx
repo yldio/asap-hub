@@ -22,6 +22,10 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   onPublish: jest.fn(() => Promise.resolve()),
 };
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
+});
+
 describe('Grant Documents', () => {
   it('renders an output with title and content', () => {
     const { getByText } = render(

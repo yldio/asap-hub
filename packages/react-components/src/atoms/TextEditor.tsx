@@ -228,12 +228,9 @@ const TextEditor = ({
       ListNode,
       ListItemNode,
       HeadingNode,
-      HeadingNode,
       QuoteNode,
       CodeNode,
       ListNode,
-      ListItemNode,
-      LinkNode,
     ],
     theme,
     // eslint-disable-next-line no-console

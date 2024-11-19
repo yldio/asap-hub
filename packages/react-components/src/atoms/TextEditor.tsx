@@ -1,30 +1,30 @@
-import { useEffect } from 'react';
 import { css } from '@emotion/react';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
+import { CodeNode } from '@lexical/code';
+import { AutoLinkNode, LinkNode } from '@lexical/link';
+import { ListItemNode, ListNode } from '@lexical/list';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
-import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
-import { ListNode, ListItemNode } from '@lexical/list';
-import { AutoLinkNode, LinkNode } from '@lexical/link';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
-import { CodeNode } from '@lexical/code';
+import { useEffect } from 'react';
 
-import { EditorState } from 'lexical';
 import {
   $convertFromMarkdownString,
   $convertToMarkdownString,
   TRANSFORMERS,
 } from '@lexical/markdown';
-import ToolbarPlugin from './TextEditorToolbar';
-import { useValidation, styles, validationMessageStyles } from '../form';
-import { noop } from '../utils';
-import { ember } from '../colors';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
+import { EditorState } from 'lexical';
+import { ember } from '../colors';
+import { styles, useValidation, validationMessageStyles } from '../form';
+import { noop } from '../utils';
+import ToolbarPlugin from './TextEditorToolbar';
 
 const theme = {
   paragraph: 'editor-paragraph',
@@ -245,11 +245,11 @@ const TextEditor = ({
       <div css={containerStyles}>
         <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
         {!isMarkdown && <ToolbarPlugin />}
-        <OnChangePlugin
-          onChange={(editorState) =>
-            onChangeHandler(editorState, onChange ? onChange : () => null)
-          }
-        />
+        {onChange && (
+          <OnChangePlugin
+            onChange={(editorState) => onChangeHandler(editorState, onChange)}
+          />
+        )}
         <EnablePlugin enabled={enabled} />
         <div css={innerStyles}>
           <RichTextPlugin

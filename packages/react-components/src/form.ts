@@ -76,17 +76,18 @@ export function useValidation<T extends ValidationTarget>(
   const inputRef = useRef<T>(null);
   const [validationMessage, setValidationMessage] = useState('');
   useEffect(() => {
-    if (skipValidation) return;
     const input = inputRef.current!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    input.setCustomValidity(customValidationMessage);
+    if (!skipValidation) input.setCustomValidity(customValidationMessage);
 
-    if (validationMessage || customValidationMessage) {
+    if ((validationMessage || customValidationMessage) && !skipValidation) {
       setValidationMessage(customValidationMessage);
       input.reportValidity();
     }
 
-    return () => !skipValidation && input.setCustomValidity('');
-  }, [customValidationMessage, validationMessage]);
+    return () => {
+      !skipValidation && input.setCustomValidity('');
+    };
+  }, [customValidationMessage, validationMessage, skipValidation]);
 
   const validate = () => {
     if (inputRef.current && !skipValidation) {

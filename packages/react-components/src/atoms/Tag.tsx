@@ -109,7 +109,13 @@ const Tag: React.FC<TagProps> = ({
       >
         <Ellipsis>{children}</Ellipsis>
         {!!onRemove && enabled && (
-          <button css={iconStyles} onClick={onRemove}>
+          <button
+            css={iconStyles}
+            onClick={(event) => {
+              event.preventDefault();
+              onRemove();
+            }}
+          >
             {crossSmallIcon}
           </button>
         )}

@@ -1,5 +1,6 @@
 import { User } from '@asap-hub/auth';
 import {
+  AuthorResponse,
   ManuscriptLifecycle,
   ManuscriptVersion,
   Message,
@@ -8,7 +9,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps, Suspense, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   article,
   AssociationList,
@@ -200,7 +201,14 @@ export const getLifecycleCode = ({
 };
 
 export type VersionUserProps = {
-  version: Pick<ManuscriptVersion, 'teams' | 'firstAuthors' | 'labs'>;
+  version: Pick<
+    ManuscriptVersion,
+    | 'teams'
+    | 'firstAuthors'
+    | 'correspondingAuthor'
+    | 'additionalAuthors'
+    | 'labs'
+  >;
   user: User | null;
 };
 
@@ -215,11 +223,24 @@ export const isManuscriptLead = ({ version, user }: VersionUserProps) =>
     ),
   );
 
-export const isManuscriptAuthor = ({ version, user }: VersionUserProps) =>
-  user && version.firstAuthors.find((author) => author.id === user.id);
+export const isManuscriptAuthor = ({
+  authors,
+  user,
+}: {
+  authors: AuthorResponse[];
+  user: User | null;
+}) => user && authors.find((author) => author.id === user.id);
 
 export const canEditManuscript = ({ version, user }: VersionUserProps) =>
-  isManuscriptLead({ version, user }) || isManuscriptAuthor({ version, user });
+  isManuscriptLead({ version, user }) ||
+  isManuscriptAuthor({
+    authors: [
+      ...version.firstAuthors,
+      ...version.correspondingAuthor,
+      ...version.additionalAuthors,
+    ],
+    user,
+  });
 
 export const getManuscriptVersionUID = ({
   version,
@@ -255,6 +276,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   manuscriptId,
 }) => {
   const history = useHistory();
+  const { teamId: currentTeamId } = useParams<{ teamId: string }>();
 
   const [expanded, setExpanded] = useState(false);
 
@@ -294,10 +316,10 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   const updatedByData = getUpdatedByData();
 
   const editManuscriptRoute =
-    version.createdBy?.teams[0]?.id &&
+    currentTeamId &&
     network({})
       .teams({})
-      .team({ teamId: version.createdBy.teams[0].id })
+      .team({ teamId: currentTeamId })
       .workspace({})
       .editManuscript({ manuscriptId }).$;
 

@@ -83,6 +83,41 @@ it('restricts allowed files when accept prop is provided', async () => {
   expect(uploadInput).toHaveAttribute('accept', 'application/pdf');
 });
 
+it('tagEnabled prop removes cross icon on file tag when false', async () => {
+  const { getByRole, queryByRole, rerender } = render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      enabled
+      tagEnabled={true}
+      currentFiles={[
+        {
+          filename: 'file.txt',
+          url: 'http://example.com/file.txt',
+          id: '123',
+        },
+      ]}
+    />,
+  );
+
+  expect(getByRole('button', { name: /cross/i })).toBeVisible();
+
+  rerender(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      enabled
+      tagEnabled={false}
+      placeholder="Upload Manuscript File"
+      accept="application/pdf"
+    />,
+  );
+
+  expect(queryByRole('button', { name: /cross/i })).not.toBeInTheDocument();
+});
+
 it('does not restrict allowed files when accept prop is not provided', async () => {
   render(
     <LabeledFileField

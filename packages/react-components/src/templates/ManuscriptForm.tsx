@@ -907,13 +907,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     subtitle="(required)"
                     description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures."
                     placeholder="Upload Manuscript File"
-                    {...(!isEditMode
-                      ? {
-                          onRemove: () => {
-                            resetField('versions.0.manuscriptFile');
-                          },
-                        }
-                      : {})}
+                    onRemove={() => {
+                      resetField('versions.0.manuscriptFile');
+                    }}
                     handleFileUpload={async (file) => {
                       if (file.size > MAX_FILE_SIZE) {
                         setError('versions.0.manuscriptFile', {
@@ -947,6 +943,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     enabled={
                       !isEditMode && !isSubmitting && !isUploadingManuscriptFile
                     }
+                    tagEnabled={!isEditMode}
                   />
                 )}
               />
@@ -975,13 +972,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         </>
                       }
                       placeholder="Upload Key Resource Table"
-                      {...(!isEditMode
-                        ? {
-                            onRemove: () => {
-                              resetField('versions.0.keyResourceTable');
-                            },
-                          }
-                        : {})}
+                      onRemove={() => {
+                        resetField('versions.0.keyResourceTable');
+                      }}
                       handleFileUpload={async (file) => {
                         if (file.size > MAX_FILE_SIZE) {
                           setError('versions.0.keyResourceTable', {
@@ -1021,6 +1014,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         !isSubmitting &&
                         !isUploadingKeyResourceTable
                       }
+                      tagEnabled={!isEditMode}
                     />
                   )}
                 />
@@ -1035,18 +1029,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     subtitle="(optional)"
                     description="Additional files must be submitted in PDF and/or CSV formats."
                     placeholder="Upload Additional Files"
-                    {...(!isEditMode
-                      ? {
-                          onRemove: (id?: string) => {
-                            setValue(
-                              'versions.0.additionalFiles',
-                              value?.filter(
-                                (additionalFile) => additionalFile.id !== id,
-                              ),
-                            );
-                          },
-                        }
-                      : {})}
+                    onRemove={(id?: string) => {
+                      setValue(
+                        'versions.0.additionalFiles',
+                        value?.filter(
+                          (additionalFile) => additionalFile.id !== id,
+                        ),
+                      );
+                    }}
                     maxFiles={5}
                     handleFileUpload={async (file) => {
                       const isExistingFile =
@@ -1104,6 +1094,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       !isSubmitting &&
                       !isUploadingAdditionalFiles
                     }
+                    tagEnabled={!isEditMode}
                   />
                 )}
               />

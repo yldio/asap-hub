@@ -139,3 +139,4 @@ export { default as WarningIcon } from './warning';
 export { default as warningTransparentIcon } from './warning-transparent';
 export { default as WorkingGroupsIcon } from './working-groups';
 export { default as XIcon } from './x';
+export { default as cookieIcon } from './cookie';

@@ -3,6 +3,9 @@ import { render } from '@testing-library/react';
 
 import OutputDetailPage from '../OutputDetailPage';
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
+});
 describe('OutputDetailPage', () => {
   it('displays edit and duplicate buttons if user is administrator', () => {
     const { queryByTitle } = render(

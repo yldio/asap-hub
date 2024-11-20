@@ -1,7 +1,7 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
 
-import { Card, Divider, Headline2, Markdown, Paragraph } from '../atoms';
 import { RichText, TagList } from '..';
+import { Card, Divider, Headline2, Paragraph, TextEditor } from '../atoms';
 import { perRem } from '../pixels';
 
 type SharedResearchDetailsTagsCardProps = Pick<
@@ -19,7 +19,12 @@ const SharedResearchDetailsTagsCard: React.FC<
     {displayDescription && (
       <div css={{ paddingBottom: `${12 / perRem}em` }}>
         <Headline2 noMargin>Description</Headline2>
-        <Markdown value={descriptionMD}></Markdown>
+        <TextEditor
+          id="description"
+          value={descriptionMD}
+          enabled={false}
+          isMarkdown
+        ></TextEditor>
         {descriptionMD === '' && <RichText poorText text={description} />}
       </div>
     )}
@@ -43,5 +48,4 @@ const SharedResearchDetailsTagsCard: React.FC<
     )}
   </Card>
 );
-
 export default SharedResearchDetailsTagsCard;

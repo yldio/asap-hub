@@ -1,27 +1,30 @@
-import { useEffect } from 'react';
 import { css } from '@emotion/react';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
+import { CodeNode } from '@lexical/code';
+import { AutoLinkNode, LinkNode } from '@lexical/link';
+import { ListItemNode, ListNode } from '@lexical/list';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
-import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
-import { ListNode, ListItemNode } from '@lexical/list';
-import { AutoLinkNode, LinkNode } from '@lexical/link';
-import { HeadingNode } from '@lexical/rich-text';
-import { EditorState } from 'lexical';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { HeadingNode, QuoteNode } from '@lexical/rich-text';
+import { useEffect } from 'react';
+
 import {
   $convertFromMarkdownString,
   $convertToMarkdownString,
   TRANSFORMERS,
 } from '@lexical/markdown';
-import ToolbarPlugin from './TextEditorToolbar';
-import { useValidation, styles, validationMessageStyles } from '../form';
-import { noop } from '../utils';
+import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
+import { EditorState } from 'lexical';
 import { ember } from '../colors';
+import { styles, useValidation, validationMessageStyles } from '../form';
+import { noop } from '../utils';
+import ToolbarPlugin from './TextEditorToolbar';
 
 const theme = {
   paragraph: 'editor-paragraph',
@@ -149,6 +152,28 @@ const placeholderStyles = css({
   pointerEvents: 'none',
 });
 
+const markdownStyles = css({
+  fontSize: '1em',
+
+  '& .editor-paragraph': {
+    margin: 0,
+    marginBottom: '16px',
+    position: 'relative',
+    '&:last-child': {
+      marginBottom: 0,
+    },
+  },
+
+  '& .editor-list-ol, & .editor-list-ul': {
+    margin: '0 0 16px 16px',
+    padding: 0,
+  },
+
+  '& .editor-listItem': {
+    margin: '8px 0',
+  },
+});
+
 const onChangeHandler = (
   editorState: EditorState,
   onChange: (content: string) => void,
@@ -162,7 +187,8 @@ export type TextEditorProps = {
   readonly maxLength?: number;
   readonly value: string;
   readonly enabled?: boolean;
-  onChange: (content: string) => void;
+  readonly isMarkdown?: boolean;
+  onChange?: (content: string) => void;
 };
 
 const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
@@ -182,11 +208,13 @@ const TextEditor = ({
   customValidationMessage = '',
   enabled = true,
   getValidationMessage,
+  isMarkdown = false,
 }: TextEditorProps) => {
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLTextAreaElement>(
       customValidationMessage,
       getValidationMessage,
+      isMarkdown,
     );
 
   const initialConfig = {
@@ -194,19 +222,32 @@ const TextEditor = ({
       $convertFromMarkdownString(value, TRANSFORMERS);
     },
     namespace: 'Editor',
-    nodes: [AutoLinkNode, LinkNode, ListNode, ListItemNode, HeadingNode],
+    nodes: [
+      AutoLinkNode,
+      LinkNode,
+      ListNode,
+      ListItemNode,
+      HeadingNode,
+      QuoteNode,
+      CodeNode,
+    ],
     theme,
     // eslint-disable-next-line no-console
     onError: console.error,
   };
 
+  if (isMarkdown && !value) return <></>;
+
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div css={containerStyles}>
-        <ToolbarPlugin />
-        <OnChangePlugin
-          onChange={(editorState) => onChangeHandler(editorState, onChange)}
-        />
+        <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+        {!isMarkdown && <ToolbarPlugin />}
+        {onChange && (
+          <OnChangePlugin
+            onChange={(editorState) => onChangeHandler(editorState, onChange)}
+          />
+        )}
         <EnablePlugin enabled={enabled} />
         <div css={innerStyles}>
           <RichTextPlugin
@@ -215,18 +256,22 @@ const TextEditor = ({
                 id={id}
                 required={required}
                 data-testid={'editor'}
-                css={({ colors }) => [
-                  styles,
-                  inputStyles,
-                  validationMessage && {
-                    borderColor: ember.rgb,
-                  },
-                  colors?.primary500 && {
-                    ':focus': {
-                      borderColor: colors?.primary500.rgba,
-                    },
-                  },
-                ]}
+                css={({ colors }) =>
+                  !isMarkdown
+                    ? [
+                        styles,
+                        inputStyles,
+                        validationMessage && {
+                          borderColor: ember.rgb,
+                        },
+                        colors?.primary500 && {
+                          ':focus': {
+                            borderColor: colors?.primary500.rgba,
+                          },
+                        },
+                      ]
+                    : [markdownStyles]
+                }
               />
             }
             placeholder={
@@ -244,14 +289,16 @@ const TextEditor = ({
             }
             ErrorBoundary={LexicalErrorBoundary}
           />
-          <textarea
-            {...validationTargetProps}
-            onChange={noop}
-            css={{ display: 'none' }}
-            required={required}
-            maxLength={maxLength}
-            value={value}
-          />
+          {!isMarkdown && (
+            <textarea
+              {...validationTargetProps}
+              onChange={noop}
+              css={{ display: 'none' }}
+              required={required}
+              maxLength={maxLength}
+              value={value}
+            />
+          )}
           <ListPlugin />
           <HistoryPlugin />
           <AutoFocusPlugin />

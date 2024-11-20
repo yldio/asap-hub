@@ -1663,6 +1663,7 @@ __metadata:
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.11.1
     "@emotion/serialize": 1.1.2
+    "@lexical/code": 0.18.0
     "@lexical/link": 0.18.0
     "@lexical/list": 0.18.0
     "@lexical/markdown": 0.18.0

@@ -63,6 +63,7 @@ type ValidationTarget =
 export function useValidation<T extends ValidationTarget>(
   customValidationMessage: string,
   getValidationMessage?: (validityState: ValidityState) => string | undefined,
+  skipValidation: boolean = false,
 ): {
   validationMessage: string;
   validationTargetProps: {
@@ -76,18 +77,20 @@ export function useValidation<T extends ValidationTarget>(
   const [validationMessage, setValidationMessage] = useState('');
   useEffect(() => {
     const input = inputRef.current!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    input.setCustomValidity(customValidationMessage);
+    if (!skipValidation) input.setCustomValidity(customValidationMessage);
 
-    if (validationMessage || customValidationMessage) {
+    if ((validationMessage || customValidationMessage) && !skipValidation) {
       setValidationMessage(customValidationMessage);
       input.reportValidity();
     }
 
-    return () => input.setCustomValidity('');
-  }, [customValidationMessage, validationMessage]);
+    return () => {
+      !skipValidation && input.setCustomValidity('');
+    };
+  }, [customValidationMessage, validationMessage, skipValidation]);
 
   const validate = () => {
-    if (inputRef.current) {
+    if (inputRef.current && !skipValidation) {
       const inputField = inputRef.current;
       const inputFieldValidity = inputField.validity.valid;
       setValidationMessage(

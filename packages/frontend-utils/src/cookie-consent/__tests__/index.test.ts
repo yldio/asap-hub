@@ -118,4 +118,13 @@ describe('useCookieConsent', () => {
 
     expect(result.current.showCookieModal).toBe(false);
   });
+
+  it('should toggle the value of showCookieModal when toggleCookieModal is called', async () => {
+    const { result } = renderHook(() => useCookieConsent(COOKIE_NAME, apiUrl));
+    expect(result.current.showCookieModal).toBe(true);
+    await act(async () => result.current.toggleCookieModal());
+    expect(result.current.showCookieModal).toBe(false);
+    await act(async () => result.current.toggleCookieModal());
+    expect(result.current.showCookieModal).toBe(true);
+  });
 });

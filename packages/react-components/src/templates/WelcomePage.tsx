@@ -1,8 +1,10 @@
 import { isEnabled } from '@asap-hub/flags';
 import { css, Global } from '@emotion/react';
 import { ComponentProps } from 'react';
+import { neutral200 } from '../colors';
 
 import { Anchor, Link, Paragraph } from '../atoms';
+import { cookieIcon } from '../icons';
 import { backgroundNeuronsImage } from '../images';
 import { mailToSupport } from '../mail';
 import { CookiesModal, Toast, WelcomeCard } from '../organisms';
@@ -77,6 +79,19 @@ const placeholderStyles = css({
   order: 4,
 });
 
+const iconStyles = css({
+  display: 'flex',
+  position: 'absolute',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '0.5em',
+  backgroundColor: neutral200.rgb,
+  borderRadius: '4px',
+  bottom: '1em',
+  left: '1em',
+  cursor: 'pointer',
+});
+
 type WelcomeCopy = {
   title: string;
   content: string;
@@ -90,6 +105,11 @@ type WelcomePageProps = Pick<ComponentProps<typeof WelcomeCard>, 'onClick'> & {
   readonly onCloseAuthFailedToast?: () => void;
   readonly values?: { signup: WelcomeCopy; welcome: WelcomeCopy };
   readonly showCookieModal?: boolean;
+  readonly toggleCookieModal?: () => void;
+  readonly cookieData?: {
+    cookieId?: string;
+    preferences: { essential?: boolean; analytics?: boolean };
+  } | null;
 } & ComponentProps<typeof CookiesModal>;
 
 const WelcomePage: React.FC<WelcomePageProps> = ({
@@ -98,7 +118,9 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
   onCloseAuthFailedToast = noop,
   values = defaultValues,
   showCookieModal = false,
+  cookieData,
   onSaveCookiePreferences,
+  toggleCookieModal,
   ...props
 }) => {
   const copy = allowSignup ? values.signup : values.welcome;
@@ -106,7 +128,10 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
   return (
     <>
       {isEnabled('DISPLAY_COOKIES') && showCookieModal && (
-        <CookiesModal onSaveCookiePreferences={onSaveCookiePreferences} />
+        <CookiesModal
+          cookieData={cookieData}
+          onSaveCookiePreferences={onSaveCookiePreferences}
+        />
       )}
       <div css={[themes.dark, containerStyles]}>
         <Global styles={rootStyles} />
@@ -134,6 +159,15 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
           </main>
           <div css={placeholderStyles} />
         </div>
+        {isEnabled('DISPLAY_COOKIES') && !showCookieModal && (
+          <span
+            css={iconStyles}
+            onClick={toggleCookieModal}
+            data-testId="cookie-button"
+          >
+            {cookieIcon}
+          </span>
+        )}
       </div>
     </>
   );

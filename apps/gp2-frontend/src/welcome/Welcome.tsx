@@ -7,7 +7,12 @@ import { API_BASE_URL, COOKIE_CONSENT_NAME } from '../config';
 
 const Welcome: React.FC<Record<string, never>> = () => {
   const { code } = useRouteParams(welcome({}).invited);
-  const { showCookieModal, onSaveCookiePreferences } = useCookieConsent(
+  const {
+    showCookieModal,
+    onSaveCookiePreferences,
+    cookieData,
+    toggleCookieModal,
+  } = useCookieConsent(
     COOKIE_CONSENT_NAME,
     `${API_BASE_URL}/cookie-preferences/save`,
   );
@@ -67,7 +72,9 @@ const Welcome: React.FC<Record<string, never>> = () => {
   return (
     <WelcomePage
       showCookieModal={showCookieModal}
+      cookieData={cookieData}
       onSaveCookiePreferences={onSaveCookiePreferences}
+      toggleCookieModal={toggleCookieModal}
       allowSignup
       values={values}
       onClick={() =>

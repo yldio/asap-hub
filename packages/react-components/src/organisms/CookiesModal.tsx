@@ -101,14 +101,21 @@ const ThirdPartyCookieLink = ({ link, label }: ThirdPartyCookieLinkProps) => (
 );
 
 type CookiesModalProps = {
+  readonly cookieData?: {
+    cookieId?: string;
+    preferences: { essential?: boolean; analytics?: boolean };
+  } | null;
   readonly onSaveCookiePreferences: (analytics: boolean) => void;
 };
 
 const CookiesModal: React.FC<CookiesModalProps> = ({
+  cookieData,
   onSaveCookiePreferences,
 }) => {
   const logo = useLogo();
-  const [isAnalyticsConsentGiven, setIsAnalyticsConsentGiven] = useState(false);
+  const [isAnalyticsConsentGiven, setIsAnalyticsConsentGiven] = useState(
+    Boolean(cookieData?.preferences?.analytics),
+  );
 
   const handleCookiePreferencesSaving = () => {
     onSaveCookiePreferences(isAnalyticsConsentGiven);

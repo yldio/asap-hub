@@ -66,5 +66,7 @@ export const useCookieConsent = (name: string, url: string) => {
   return {
     showCookieModal,
     onSaveCookiePreferences,
+    toggleCookieModal: () => setShowCookieModal((prev) => !prev),
+    cookieData,
   };
 };

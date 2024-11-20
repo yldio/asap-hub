@@ -12,7 +12,12 @@ const Welcome: React.FC<Record<string, never>> = () => {
 
   const toast = useContext(ToastContext);
 
-  const { showCookieModal, onSaveCookiePreferences } = useCookieConsent(
+  const {
+    showCookieModal,
+    cookieData,
+    onSaveCookiePreferences,
+    toggleCookieModal,
+  } = useCookieConsent(
     COOKIE_CONSENT_NAME,
     `${API_BASE_URL}/cookie-preferences/save`,
   );
@@ -54,7 +59,9 @@ const Welcome: React.FC<Record<string, never>> = () => {
   return (
     <WelcomePage
       showCookieModal={showCookieModal}
+      cookieData={cookieData}
       onSaveCookiePreferences={onSaveCookiePreferences}
+      toggleCookieModal={toggleCookieModal}
       allowSignup
       onClick={() =>
         // Effect should populate this ref before a click can occur

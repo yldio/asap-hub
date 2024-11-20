@@ -6,7 +6,12 @@ import { API_BASE_URL, COOKIE_CONSENT_NAME } from '../config';
 
 const Signin: React.FC<Record<string, never>> = () => {
   const { loginWithRedirect } = useAuth0CRN();
-  const { showCookieModal, onSaveCookiePreferences } = useCookieConsent(
+  const {
+    showCookieModal,
+    cookieData,
+    onSaveCookiePreferences,
+    toggleCookieModal,
+  } = useCookieConsent(
     COOKIE_CONSENT_NAME,
     `${API_BASE_URL}/cookie-preferences/save`,
   );
@@ -36,7 +41,9 @@ const Signin: React.FC<Record<string, never>> = () => {
       <UtilityBar>
         <WelcomePage
           showCookieModal={showCookieModal}
+          cookieData={cookieData}
           onSaveCookiePreferences={onSaveCookiePreferences}
+          toggleCookieModal={toggleCookieModal}
           onClick={signin}
           authFailed={getAuthFailureCode(
             searchParams.has('state') && searchParams.has('error'),

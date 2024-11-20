@@ -1,10 +1,17 @@
 import { disable, enable } from '@asap-hub/flags';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { useState } from 'react';
 
 import { noop } from '../../utils';
 import WelcomePage from '../WelcomePage';
 
 const onSaveCookiePreferences = jest.fn();
+
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
+});
+
 it('renders the signin page', () => {
   const handleClick = jest.fn();
   render(
@@ -104,6 +111,37 @@ describe('cookie modal', () => {
         showCookieModal={true}
       />,
     );
+    expect(screen.getByText('Privacy Preference Center')).toBeInTheDocument();
+  });
+
+  it('shows the cookie button if the DISPLAY_COOKIES flag is enabled and showCookieModal is false', () => {
+    render(
+      <WelcomePage
+        onClick={noop}
+        onSaveCookiePreferences={onSaveCookiePreferences}
+        showCookieModal={false}
+      />,
+    );
+    expect(screen.getByTestId('cookie-button')).toBeInTheDocument();
+  });
+
+  it('shows the cookie modal when cookie button is clicked', () => {
+    const WelcomePageRenderer = () => {
+      const [showCookieModal, setShowCookieModal] = useState<boolean>(false);
+      const toggleCookieModal = () => {
+        setShowCookieModal((prev: boolean) => !prev);
+      };
+      return (
+        <WelcomePage
+          onClick={noop}
+          onSaveCookiePreferences={onSaveCookiePreferences}
+          showCookieModal={showCookieModal}
+          toggleCookieModal={toggleCookieModal}
+        />
+      );
+    };
+    render(<WelcomePageRenderer />);
+    userEvent.click(screen.getByTestId('cookie-button'));
     expect(screen.getByText('Privacy Preference Center')).toBeInTheDocument();
   });
 });

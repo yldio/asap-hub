@@ -9,7 +9,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps, Suspense, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   article,
   AssociationList,
@@ -41,6 +41,7 @@ type ManuscriptVersionCardProps = {
   version: ManuscriptVersion;
   grantId: string;
   teamId: string;
+  teamIdCode: string;
   manuscriptCount: number;
   manuscriptId: string;
 } & Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
@@ -244,13 +245,13 @@ export const canEditManuscript = ({ version, user }: VersionUserProps) =>
 
 export const getManuscriptVersionUID = ({
   version,
-  teamId,
+  teamIdCode,
   grantId,
   manuscriptCount,
   manuscriptVersionCount,
 }: {
   version: Pick<ManuscriptVersion, 'type' | 'lifecycle'>;
-  teamId: string;
+  teamIdCode: string;
   grantId: string;
   manuscriptCount: number;
   manuscriptVersionCount: number;
@@ -259,7 +260,7 @@ export const getManuscriptVersionUID = ({
     version.type === 'Original Research' ? 'org' : 'rev';
 
   const lifecycleCode = getLifecycleCode(version);
-  return `${teamId}-${grantId}-${String(manuscriptCount).padStart(
+  return `${teamIdCode}-${grantId}-${String(manuscriptCount).padStart(
     3,
     '0',
   )}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
@@ -269,6 +270,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   user,
   version,
   teamId,
+  teamIdCode,
   grantId,
   manuscriptCount,
   onReplyToDiscussion,
@@ -276,7 +278,6 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   manuscriptId,
 }) => {
   const history = useHistory();
-  const { teamId: currentTeamId } = useParams<{ teamId: string }>();
 
   const [expanded, setExpanded] = useState(false);
 
@@ -315,13 +316,11 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
 
   const updatedByData = getUpdatedByData();
 
-  const editManuscriptRoute =
-    currentTeamId &&
-    network({})
-      .teams({})
-      .team({ teamId: currentTeamId })
-      .workspace({})
-      .editManuscript({ manuscriptId }).$;
+  const editManuscriptRoute = network({})
+    .teams({})
+    .team({ teamId })
+    .workspace({})
+    .editManuscript({ manuscriptId }).$;
 
   const handleEditManuscript = () => {
     if (editManuscriptRoute) {
@@ -393,7 +392,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
             <Pill accent="blue">
               {getManuscriptVersionUID({
                 version,
-                teamId,
+                teamIdCode,
                 grantId,
                 manuscriptCount,
                 manuscriptVersionCount: 1,

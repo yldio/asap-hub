@@ -16,8 +16,12 @@ import { FC, lazy, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 
+import { isEnabled } from '@asap-hub/flags';
+import { useCookieConsent } from '@asap-hub/frontend-utils';
+import { CookiesModal } from '@asap-hub/react-components/src/organisms';
 import CheckOnboarded from './auth/CheckOnboarded';
 import { auth0State } from './auth/state';
+import { API_BASE_URL, COOKIE_CONSENT_NAME } from './config';
 import { useCurrentUserProfileTabRoute } from './hooks';
 import Onboardable from './Onboardable';
 
@@ -54,6 +58,17 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   const auth0 = useAuth0CRN();
   const [recoilAuth0, setAuth0] = useRecoilState(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
+
+  const {
+    showCookieModal,
+    cookieData,
+    onSaveCookiePreferences,
+    toggleCookieModal,
+  } = useCookieConsent(
+    COOKIE_CONSENT_NAME,
+    `${API_BASE_URL}/cookie-preferences/save`,
+  );
+
   useEffect(() => {
     setAuth0(auth0);
     return () => resetAuth0();
@@ -118,6 +133,8 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
             }),
           )}
           aboutHref="https://www.parkinsonsroadmap.org/"
+          showCookieModal={showCookieModal}
+          toggleCookieModal={toggleCookieModal}
         >
           <CheckOnboarded>
             <Switch>
@@ -182,15 +199,23 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
               </Route>
             </Switch>
           </CheckOnboarded>
+          {isEnabled('DISPLAY_COOKIES') && showCookieModal && (
+            <CookiesModal
+              cookieData={cookieData}
+              onSaveCookiePreferences={onSaveCookiePreferences}
+            />
+          )}
         </Layout>
       )}
     </Onboardable>
   );
 };
-const AuthenticatedAppWithRecoil: FC<Record<string, never>> = () => (
-  <RecoilRoot>
-    <AuthenticatedApp />
-  </RecoilRoot>
-);
+const AuthenticatedAppWithRecoil: FC<Record<string, never>> = () => {
+  return (
+    <RecoilRoot>
+      <AuthenticatedApp />
+    </RecoilRoot>
+  );
+};
 
 export default AuthenticatedAppWithRecoil;

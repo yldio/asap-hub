@@ -3,8 +3,7 @@ import { css, Global } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { neutral200 } from '../colors';
 
-import { Anchor, Link, Paragraph } from '../atoms';
-import { cookieIcon } from '../icons';
+import { Anchor, CookieButton, Link, Paragraph } from '../atoms';
 import { backgroundNeuronsImage } from '../images';
 import { mailToSupport } from '../mail';
 import { CookiesModal, Toast, WelcomeCard } from '../organisms';
@@ -159,15 +158,11 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
           </main>
           <div css={placeholderStyles} />
         </div>
-        {isEnabled('DISPLAY_COOKIES') && !showCookieModal && (
-          <span
-            css={iconStyles}
-            onClick={toggleCookieModal}
-            data-testid="cookie-button"
-          >
-            {cookieIcon}
-          </span>
-        )}
+        {isEnabled('DISPLAY_COOKIES') &&
+          !showCookieModal &&
+          toggleCookieModal && (
+            <CookieButton toggleCookieModal={toggleCookieModal} />
+          )}
       </div>
     </>
   );

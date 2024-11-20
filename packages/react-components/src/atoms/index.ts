@@ -40,6 +40,7 @@ export { default as Toggle } from './Toggle';
 export { default as Tooltip } from './Tooltip';
 export { default as Typeahead } from './Typeahead';
 export { default as ScrollToTop } from './ScrollToTop';
+export { default as CookieButton } from './CookieButton';
 export type { AccentVariant } from './Pill';
 export type { DropdownProps } from './Dropdown';
 export type { MultiSelectOptionsType, MultiSelectProps } from './MultiSelect';

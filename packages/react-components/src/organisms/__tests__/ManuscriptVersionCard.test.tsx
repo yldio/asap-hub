@@ -245,10 +245,7 @@ describe('edit', () => {
     it('returns true when user is author', () => {
       expect(
         isManuscriptAuthor({
-          version: {
-            ...baseVersion,
-            firstAuthors: [{ ...createUserResponse(), id: 'user-test' }],
-          },
+          authors: [{ ...createUserResponse(), id: 'user-test' }],
           user: {
             ...user,
             id: 'user-test',
@@ -259,7 +256,7 @@ describe('edit', () => {
     it('returns false when user is not author', () => {
       expect(
         isManuscriptAuthor({
-          version: baseVersion,
+          authors: [{ ...createUserResponse(), id: 'different-user' }],
           user: {
             ...user,
           },

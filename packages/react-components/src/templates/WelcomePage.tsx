@@ -163,7 +163,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
           <span
             css={iconStyles}
             onClick={toggleCookieModal}
-            data-testId="cookie-button"
+            data-testid="cookie-button"
           >
             {cookieIcon}
           </span>

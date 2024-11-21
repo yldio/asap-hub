@@ -1,4 +1,6 @@
+import { User } from '@asap-hub/auth';
 import {
+  AuthorResponse,
   ManuscriptLifecycle,
   ManuscriptVersion,
   Message,
@@ -35,9 +37,11 @@ import { mobileScreen, perRem, rem } from '../pixels';
 import ComplianceReportCard from './ComplianceReportCard';
 
 type ManuscriptVersionCardProps = {
+  user: User | null;
   version: ManuscriptVersion;
   grantId: string;
   teamId: string;
+  teamIdCode: string;
   manuscriptCount: number;
   manuscriptId: string;
 } & Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
@@ -197,15 +201,57 @@ export const getLifecycleCode = ({
   }
 };
 
+export type VersionUserProps = {
+  version: Pick<
+    ManuscriptVersion,
+    | 'teams'
+    | 'firstAuthors'
+    | 'correspondingAuthor'
+    | 'additionalAuthors'
+    | 'labs'
+  >;
+  user: User | null;
+};
+
+export const isManuscriptLead = ({ version, user }: VersionUserProps) =>
+  user &&
+  user.teams.find((team) =>
+    version.teams.find(
+      (versionTeam) =>
+        versionTeam.id === team.id &&
+        (team.role === 'Lead PI (Core Leadership)' ||
+          team.role === 'Project Manager'),
+    ),
+  );
+
+export const isManuscriptAuthor = ({
+  authors,
+  user,
+}: {
+  authors: AuthorResponse[];
+  user: User | null;
+}) => user && authors.find((author) => author.id === user.id);
+
+export const canEditManuscript = ({ version, user }: VersionUserProps) =>
+  isManuscriptLead({ version, user }) ||
+  isManuscriptAuthor({
+    authors: [
+      ...version.firstAuthors,
+      ...version.correspondingAuthor,
+      ...version.additionalAuthors,
+    ],
+    user,
+  });
+
 export const getManuscriptVersionUID = ({
   version,
-  teamId,
+  teamIdCode,
   grantId,
   manuscriptCount,
   manuscriptVersionCount,
 }: {
   version: Pick<ManuscriptVersion, 'type' | 'lifecycle'>;
-  teamId: string;
+  teamIdCode: string;
   grantId: string;
   manuscriptCount: number;
   manuscriptVersionCount: number;
@@ -214,15 +260,17 @@ export const getManuscriptVersionUID = ({
     version.type === 'Original Research' ? 'org' : 'rev';
 
   const lifecycleCode = getLifecycleCode(version);
-  return `${teamId}-${grantId}-${String(manuscriptCount).padStart(
+  return `${teamIdCode}-${grantId}-${String(manuscriptCount).padStart(
     3,
     '0',
   )}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
 };
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
+  user,
   version,
   teamId,
+  teamIdCode,
   grantId,
   manuscriptCount,
   onReplyToDiscussion,
@@ -230,6 +278,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   manuscriptId,
 }) => {
   const history = useHistory();
+
   const [expanded, setExpanded] = useState(false);
 
   const quickCheckDetails = quickCheckQuestions.filter(
@@ -267,13 +316,11 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
 
   const updatedByData = getUpdatedByData();
 
-  const editManuscriptRoute =
-    version.createdBy?.teams[0]?.id &&
-    network({})
-      .teams({})
-      .team({ teamId: version.createdBy.teams[0].id })
-      .workspace({})
-      .editManuscript({ manuscriptId }).$;
+  const editManuscriptRoute = network({})
+    .teams({})
+    .team({ teamId })
+    .workspace({})
+    .editManuscript({ manuscriptId }).$;
 
   const handleEditManuscript = () => {
     if (editManuscriptRoute) {
@@ -318,15 +365,17 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                     </span>
                   </div>
                 </Caption>
-                <Button
-                  aria-label="Edit"
-                  small
-                  noMargin
-                  onClick={handleEditManuscript}
-                  overrideStyles={editIconStyles}
-                >
-                  <PencilIcon />
-                </Button>
+                {canEditManuscript({ version, user }) && (
+                  <Button
+                    aria-label="Edit"
+                    small
+                    noMargin
+                    onClick={handleEditManuscript}
+                    overrideStyles={editIconStyles}
+                  >
+                    <PencilIcon />
+                  </Button>
+                )}
               </div>
             </div>
           </span>
@@ -343,7 +392,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
             <Pill accent="blue">
               {getManuscriptVersionUID({
                 version,
-                teamId,
+                teamIdCode,
                 grantId,
                 manuscriptCount,
                 manuscriptVersionCount: 1,

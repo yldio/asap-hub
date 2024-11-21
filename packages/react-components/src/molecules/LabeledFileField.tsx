@@ -62,6 +62,7 @@ type LabeledFileFieldProps = {
   readonly customValidation?: (file: File) => boolean;
   readonly handleFileUpload: (file: File) => Promise<void>;
   readonly accept?: string;
+  readonly tagEnabled?: boolean;
 } & Pick<ComponentProps<typeof Button>, 'enabled'>;
 
 const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
@@ -77,6 +78,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   enabled,
   customValidationMessage,
   handleFileUpload,
+  tagEnabled = true,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -115,7 +117,10 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
               {currentFiles &&
                 currentFiles.map((file) => (
                   <div css={uploadedButtonTagStyles} key={file.id}>
-                    <Tag onRemove={() => handleRemove(file.id)}>
+                    <Tag
+                      onRemove={() => handleRemove(file.id)}
+                      enabled={tagEnabled}
+                    >
                       {file.filename}
                     </Tag>
                   </div>

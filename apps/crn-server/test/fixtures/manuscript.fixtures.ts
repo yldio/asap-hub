@@ -116,6 +116,9 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
           {
             sys: { id: 'lab-1' },
             name: 'Lab 1',
+            linkedFrom: {
+              usersCollection: { items: [] },
+            },
           },
         ],
       },

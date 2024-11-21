@@ -1,8 +1,13 @@
 import {
   createDiscussionResponse,
   createManuscriptResponse,
+  createUserResponse,
 } from '@asap-hub/fixtures';
-import { ManuscriptLifecycle, ManuscriptVersion } from '@asap-hub/model';
+import {
+  ManuscriptLifecycle,
+  ManuscriptVersion,
+  UserTeam,
+} from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
@@ -11,6 +16,8 @@ import { Router } from 'react-router-dom';
 import ManuscriptVersionCard, {
   getLifecycleCode,
   getManuscriptVersionUID,
+  isManuscriptAuthor,
+  isManuscriptLead,
 } from '../ManuscriptVersionCard';
 
 const setScrollHeightMock = (height: number) => {
@@ -31,9 +38,11 @@ afterAll(jest.clearAllMocks);
 
 const baseVersion = createManuscriptResponse().versions[0] as ManuscriptVersion;
 const props: ComponentProps<typeof ManuscriptVersionCard> = {
+  user: null,
   version: baseVersion,
   grantId: '000123',
-  teamId: 'TI1',
+  teamIdCode: 'TI1',
+  teamId: 'team-id-0',
   manuscriptCount: 1,
   onReplyToDiscussion: jest.fn(),
   getDiscussion: jest.fn(),
@@ -198,19 +207,99 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
   );
 });
 
-it('navigates to edit form page when clicking on edit button', () => {
-  const history = createMemoryHistory();
-  const pushSpy = jest.spyOn(history, 'push');
+describe('edit', () => {
+  const baseUser = createUserResponse({}, 1);
+  const user = {
+    ...baseUser,
+    teams: [
+      {
+        ...baseUser.teams[0],
+        id: 'team-1',
+        role: 'Project Manager',
+      },
+    ] as UserTeam[],
+    algoliaApiKey: 'algolia-mock-key',
+  };
+  it('does not display the edit button when no user is set', () => {
+    const { queryByLabelText } = render(
+      <ManuscriptVersionCard {...props} user={null} />,
+    );
+    expect(queryByLabelText('Edit')).not.toBeInTheDocument();
+  });
 
-  const { getByLabelText } = render(
-    <Router history={history}>
-      <ManuscriptVersionCard {...props} />
-    </Router>,
-  );
-  userEvent.click(getByLabelText('Edit'));
-  expect(pushSpy).toHaveBeenCalledWith(
-    '/network/teams/team-id-0/workspace/edit-manuscript/manuscript-1',
-  );
+  it('navigates to edit form page when clicking on edit button', () => {
+    const history = createMemoryHistory();
+    const pushSpy = jest.spyOn(history, 'push');
+
+    const { getByLabelText } = render(
+      <Router history={history}>
+        <ManuscriptVersionCard {...props} user={user} />
+      </Router>,
+    );
+    userEvent.click(getByLabelText('Edit'));
+    expect(pushSpy).toHaveBeenCalledWith(
+      '/network/teams/team-id-0/workspace/edit-manuscript/manuscript-1',
+    );
+  });
+
+  describe('isManuscriptAuthor', () => {
+    it('returns true when user is author', () => {
+      expect(
+        isManuscriptAuthor({
+          authors: [{ ...createUserResponse(), id: 'user-test' }],
+          user: {
+            ...user,
+            id: 'user-test',
+          },
+        }),
+      ).toBeTruthy();
+    });
+    it('returns false when user is not author', () => {
+      expect(
+        isManuscriptAuthor({
+          authors: [{ ...createUserResponse(), id: 'different-user' }],
+          user: {
+            ...user,
+          },
+        }),
+      ).not.toBeTruthy();
+    });
+  });
+
+  describe('isManuscriptLead', () => {
+    it('returns true when user is team lead', () => {
+      expect(
+        isManuscriptLead({
+          version: baseVersion,
+          user: {
+            ...user,
+            teams: [
+              {
+                id: 'team-1',
+                role: 'Project Manager',
+              },
+            ],
+          },
+        }),
+      ).toBeTruthy();
+    });
+    it('returns false when user is not team lead', () => {
+      expect(
+        isManuscriptLead({
+          version: baseVersion,
+          user: {
+            ...user,
+            teams: [
+              {
+                id: 'team-1',
+                role: 'Scientific Advisory Board',
+              },
+            ],
+          },
+        }),
+      ).not.toBeTruthy();
+    });
+  });
 });
 
 it('displays Additional Information section when present', () => {
@@ -523,7 +612,7 @@ describe('getManuscriptversionUID', () => {
       getManuscriptVersionUID({
         version: { type: 'Original Research', lifecycle: 'Preprint' },
         grantId: '000AAA',
-        teamId: 'AT1',
+        teamIdCode: 'AT1',
         manuscriptVersionCount: 9,
         manuscriptCount: 234,
       }),
@@ -536,7 +625,7 @@ describe('getManuscriptversionUID', () => {
           lifecycle: 'Preprint',
         },
         grantId: '000AAA',
-        teamId: 'AT1',
+        teamIdCode: 'AT1',
         manuscriptVersionCount: 9,
         manuscriptCount: 234,
       }),
@@ -547,7 +636,7 @@ describe('getManuscriptversionUID', () => {
       getManuscriptVersionUID({
         version: { type: 'Original Research', lifecycle: 'Preprint' },
         grantId: '000AAA',
-        teamId: 'AT1',
+        teamIdCode: 'AT1',
         manuscriptVersionCount: 9,
         manuscriptCount: 4,
       }),

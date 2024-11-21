@@ -333,6 +333,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     return undefined;
   };
 
+  const isEditMode = !!manuscriptId;
   const methods = useForm<ManuscriptFormData>({
     mode: 'onBlur',
     defaultValues: {
@@ -664,7 +665,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   onChange={onChange}
                   customValidationMessage={error?.message}
                   value={value}
-                  enabled={!isSubmitting}
+                  enabled={!isEditMode && !isSubmitting}
                   noOptionsMessage={(option) =>
                     `Sorry, no types match ${option.inputValue}`
                   }
@@ -692,7 +693,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     onChange={onChange}
                     customValidationMessage={error?.message}
                     value={value}
-                    enabled={!isSubmitting}
+                    enabled={!isEditMode && !isSubmitting}
                     noOptionsMessage={(option) =>
                       `Sorry, no options match ${option.inputValue}`
                     }
@@ -734,7 +735,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       onChange={onChange}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
-                      enabled={!isSubmitting}
+                      enabled={!isEditMode && !isSubmitting}
                       placeholder="e.g. 10.5555/YFRU1371"
                     />
                   )}
@@ -767,7 +768,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       onChange={onChange}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
-                      enabled={!isSubmitting}
+                      enabled={!isEditMode && !isSubmitting}
                       placeholder="e.g. 10.5555/YFRU1371"
                     />
                   )}
@@ -793,17 +794,17 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         {
                           value: 'Yes',
                           label: 'Yes',
-                          disabled: isSubmitting,
+                          disabled: isEditMode || isSubmitting,
                         },
                         {
                           value: 'No',
                           label: 'No',
-                          disabled: isSubmitting,
+                          disabled: isEditMode || isSubmitting,
                         },
                         {
                           value: 'Already submitted',
                           label: 'Already submitted',
-                          disabled: isSubmitting,
+                          disabled: isEditMode || isSubmitting,
                         },
                       ]}
                       value={value || 'Already submitted'}
@@ -836,7 +837,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       customValidationMessage={error?.message}
                       value={value || ''}
                       onChange={onChange}
-                      enabled={!isSubmitting}
+                      enabled={!isEditMode && !isSubmitting}
                     />
                   )}
                 />
@@ -856,6 +857,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       subtitle="(required)"
                       onChange={onChange}
                       value={value}
+                      enabled={!isEditMode && !isSubmitting}
                     />
                   )}
                 />
@@ -886,7 +888,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       onChange={onChange}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
-                      enabled={!isSubmitting}
+                      enabled={!isEditMode && !isSubmitting}
                     />
                   )}
                 />
@@ -938,7 +940,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     currentFiles={value && [value]}
                     accept="application/pdf"
                     customValidationMessage={error?.message}
-                    enabled={!isSubmitting && !isUploadingManuscriptFile}
+                    enabled={
+                      !isEditMode && !isSubmitting && !isUploadingManuscriptFile
+                    }
+                    tagEnabled={!isEditMode}
                   />
                 )}
               />
@@ -1004,7 +1009,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       currentFiles={value && [value]}
                       accept="text/csv"
                       customValidationMessage={error?.message}
-                      enabled={!isSubmitting && !isUploadingKeyResourceTable}
+                      enabled={
+                        !isEditMode &&
+                        !isSubmitting &&
+                        !isUploadingKeyResourceTable
+                      }
+                      tagEnabled={!isEditMode}
                     />
                   )}
                 />
@@ -1079,7 +1089,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     currentFiles={value}
                     customValidationMessage={error?.message}
                     accept="application/pdf,text/csv"
-                    enabled={!isSubmitting && !isUploadingAdditionalFiles}
+                    enabled={
+                      !isEditMode &&
+                      !isSubmitting &&
+                      !isUploadingAdditionalFiles
+                    }
+                    tagEnabled={!isEditMode}
                   />
                 )}
               />
@@ -1221,12 +1236,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                               {
                                 value: 'Yes',
                                 label: 'Yes',
-                                disabled: isSubmitting,
+                                disabled: isEditMode || isSubmitting,
                               },
                               {
                                 value: 'No',
                                 label: 'No',
-                                disabled: isSubmitting,
+                                disabled: isEditMode || isSubmitting,
                               },
                             ]}
                             value={value as QuestionChecksOption}
@@ -1253,7 +1268,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                               value={value || ''}
                               customValidationMessage={error?.message}
                               onChange={onChange}
-                              enabled={!isSubmitting}
+                              enabled={!isEditMode && !isSubmitting}
                             />
                           )}
                         />

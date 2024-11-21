@@ -1,3 +1,4 @@
+import { User } from '@asap-hub/auth';
 import {
   ManuscriptPutRequest,
   ManuscriptResponse,
@@ -31,6 +32,7 @@ type ManuscriptCardProps = Pick<
     ComponentProps<typeof ManuscriptVersionCard>,
     'onReplyToDiscussion' | 'getDiscussion'
   > & {
+    user: User | null;
     teamId: string;
     teamIdCode: string;
     grantId: string;
@@ -99,6 +101,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   onUpdateManuscript,
   getDiscussion,
   onReplyToDiscussion,
+  user,
 }) => {
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
@@ -230,10 +233,12 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 getDiscussion={getDiscussion}
                 key={index}
                 version={version}
-                teamId={teamIdCode}
+                teamId={teamId}
+                teamIdCode={teamIdCode}
                 grantId={grantId}
                 manuscriptCount={count}
                 manuscriptId={id}
+                user={user}
               />
             ))}
           </div>

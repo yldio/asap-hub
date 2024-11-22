@@ -107,7 +107,7 @@ export const publicAppFactory = (
   );
 
   // Catch all
-  app.get('*', async (_req, res) => {
+  app.get('/public/*', async (_req, res) => {
     res.status(404).json({
       statusCode: 404,
       error: 'Not Found',

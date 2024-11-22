@@ -46,7 +46,7 @@ export const algoliaApiKey = ALGOLIA_API_KEY || '';
 export const algoliaApiKeyTtl = 36060; // in [seconds] = 10 hours + 1 min - 1 minute is to account for network delays and off-sync clocks between servers
 export const algoliaAppId = ALGOLIA_APP_ID || 'R44097HEU2';
 export const algoliaIndex = ALGOLIA_INDEX || 'gp2-hub_dev';
-export const asapApiUrl = API_URL || 'http://localhost:3333';
+export const asapApiUrl = API_URL || 'http://localhost:4444';
 export const auth0Audience =
   process.env.GP2_AUTH0_AUDIENCE || AUTH0_AUDIENCE || '';
 export const auth0ClientId = AUTH0_CLIENT_ID || '';

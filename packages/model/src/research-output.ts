@@ -361,6 +361,7 @@ export type PublicResearchOutputResponse = Pick<
   | 'description'
   | 'shortDescription'
   | 'researchTheme'
+  | 'documentType'
 > & {
   hyperlink: ResearchOutputResponse['link'];
   teams: string[];

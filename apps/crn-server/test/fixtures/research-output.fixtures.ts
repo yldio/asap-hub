@@ -161,6 +161,7 @@ export const getPublicResearchOutputResponse =
       ],
       hyperlink: researchOutput.link,
       type: researchOutput.type,
+      documentType: researchOutput.documentType,
       persistentIdentifier: researchOutput.doi,
       relatedResearch: researchOutput.relatedResearch,
       created: researchOutput.created,

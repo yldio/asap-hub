@@ -69,6 +69,8 @@ it('loads overrides for feature flags', async () => {
   document.cookie = originalCookie;
 });
 
+global.fetch = jest.fn();
+
 describe('Cookie Modal & Button', () => {
   beforeEach(() => {
     document.cookie = 'ASAP_DISPLAY_COOKIES=true;';

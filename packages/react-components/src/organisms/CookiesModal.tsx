@@ -115,7 +115,7 @@ type CookiesModalProps = {
 const CookiesModal: React.FC<CookiesModalProps> = ({
   cookieData,
   isOnboardable,
-  showCookieModal,
+  showCookieModal = true,
   onSaveCookiePreferences,
   toggleCookieModal,
 }) => {

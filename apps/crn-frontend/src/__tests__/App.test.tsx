@@ -1,11 +1,14 @@
+import { getConsentCookie } from '@asap-hub/frontend-utils';
 import { authTestUtils } from '@asap-hub/react-components';
 import { useFlags } from '@asap-hub/react-context';
-import { render, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
+import userEvent from '@testing-library/user-event';
 
 import App from '../App';
 import Signin from '../auth/Signin';
 import AuthenticatedApp from '../AuthenticatedApp';
+import { COOKIE_CONSENT_NAME } from '../config';
 
 // Mock out normal auth
 jest.mock('../auth/AuthProvider', () =>
@@ -64,4 +67,80 @@ it('loads overrides for feature flags', async () => {
   document.cookie = 'ASAP_PERSISTENT_EXAMPLE=true';
   expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
   document.cookie = originalCookie;
+});
+
+describe('Cookie Modal & Button', () => {
+  beforeEach(() => {
+    document.cookie = 'ASAP_DISPLAY_COOKIES=true;';
+  });
+
+  afterEach(() => {
+    document.cookie = 'ASAP_DISPLAY_COOKIES=false;';
+    document.cookie = `crn-cookie-consent=;`;
+    cleanup();
+  });
+
+  it('does not show the cookie modal if the DISPLAY_COOKIES flag is disabled', () => {
+    document.cookie = 'ASAP_DISPLAY_COOKIES=false;';
+    render(<App />);
+    expect(
+      screen.queryByText('Privacy Preference Center'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows the cookie modal if the DISPLAY_COOKIES flag is enabled and showCookieModal is true', () => {
+    render(<App />);
+    expect(screen.queryByText('Privacy Preference Center')).toBeInTheDocument();
+  });
+
+  it('shows the cookie modal if the DISPLAY_COOKIES flag is enabled and consent has been given before', () => {
+    document.cookie = `crn-cookie-consent=${JSON.stringify({
+      cookieId: 'a29956e6-897a-47c9-a2f6-3216986d20c7',
+      preferences: { essential: true, analytics: false },
+    })};`;
+    render(<App />);
+    expect(
+      screen.queryByText('Privacy Preference Center'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('closes modal when save button is clicked, shows the cookie button and saves cookies', async () => {
+    render(<App />);
+    userEvent.click(screen.getByText('Save and close'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('cookie-button')).toBeInTheDocument();
+      expect(
+        screen.queryByText('Privacy Preference Center'),
+      ).not.toBeInTheDocument();
+      expect(getConsentCookie(COOKIE_CONSENT_NAME)?.preferences).not.toBeNull();
+      expect(getConsentCookie(COOKIE_CONSENT_NAME)?.preferences.essential).toBe(
+        true,
+      );
+      expect(getConsentCookie(COOKIE_CONSENT_NAME)?.preferences.analytics).toBe(
+        false,
+      );
+    });
+  });
+
+  it('shows the cookie modal when cookie button is clicked', async () => {
+    document.cookie = `crn-cookie-consent=${JSON.stringify({
+      cookieId: 'a29956e6-897a-47c9-a2f6-3216986d20c7',
+      preferences: { essential: true, analytics: false },
+    })};`;
+
+    render(<App />);
+
+    const cookieButton = await screen.findByTestId('cookie-button');
+    userEvent.click(cookieButton);
+
+    const saveAndCloseButton = await screen.findByText('Save and close');
+    userEvent.click(saveAndCloseButton);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText('Privacy Preference Center'),
+      ).toBeInTheDocument();
+    });
+  });
 });

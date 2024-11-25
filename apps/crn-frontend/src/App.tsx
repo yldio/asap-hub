@@ -13,8 +13,8 @@ import {
   LogoProvider,
   ToastStack,
   UtilityBar,
+  CookiesModal,
 } from '@asap-hub/react-components';
-import { CookiesModal } from '@asap-hub/react-components/src/organisms';
 import { logout, staticPages, welcome } from '@asap-hub/routing';
 
 import CheckAuth from './auth/CheckAuth';

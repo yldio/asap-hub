@@ -1,5 +1,4 @@
-/** @jsxImportSource @emotion/react */
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import React from 'react';
 import { neutral200 } from '../colors';
 import { cookieIcon } from '../icons';
@@ -9,28 +8,30 @@ type CookieButtonProps = {
   isOnboardable?: boolean;
 };
 
-const iconStyles = (isOnboardable?: boolean): SerializedStyles =>
-  css({
-    display: 'flex',
-    position: 'fixed',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '0.5em',
-    backgroundColor: neutral200.rgb,
-    borderRadius: '4px',
-    bottom: isOnboardable ? '7em' : '1em',
-    left: '1em',
-    cursor: 'pointer',
-    border: `1.5px solid rgba(223, 229, 234, 0.3)`,
-  });
+const iconStyles = css({
+  display: 'flex',
+  position: 'fixed',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '0.5em',
+  backgroundColor: neutral200.rgb,
+  borderRadius: '4px',
+  bottom: '1em',
+  left: '1em',
+  cursor: 'pointer',
+  border: `1.5px solid rgba(223, 229, 234, 0.3)`,
+  '&.is-onboarded': {
+    bottom: '7em',
+  },
+});
 
 const CookieButton: React.FC<CookieButtonProps> = ({
   toggleCookieModal,
   isOnboardable,
 }) => (
   <span
-    className="cookie-button"
-    css={[iconStyles(isOnboardable)]}
+    css={iconStyles}
+    className={isOnboardable ? 'is-onboarded' : ''}
     onClick={toggleCookieModal}
     data-testid="cookie-button"
   >

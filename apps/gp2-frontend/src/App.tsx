@@ -5,8 +5,8 @@ import {
   LogoProvider,
   ToastStack,
   UtilityBar,
+  CookiesModal,
 } from '@asap-hub/react-components';
-import { CookiesModal } from '@asap-hub/react-components/src/organisms';
 import { useFlags } from '@asap-hub/react-context';
 import { logout, staticPages, welcome } from '@asap-hub/routing';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';

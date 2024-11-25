@@ -16,11 +16,11 @@ const iconStyles = css({
   padding: '0.5em',
   backgroundColor: neutral200.rgb,
   borderRadius: '4px',
-  bottom: '1em',
   left: '1em',
   cursor: 'pointer',
   border: `1.5px solid rgba(223, 229, 234, 0.3)`,
-  '&.is-onboarded': {
+  bottom: '1em',
+  '&.is-not-onboarded': {
     bottom: '7em',
   },
 });
@@ -30,8 +30,8 @@ const CookieButton: React.FC<CookieButtonProps> = ({
   isOnboardable,
 }) => (
   <span
+    className={isOnboardable ? 'is-not-onboarded' : ''}
     css={iconStyles}
-    className={isOnboardable ? 'is-onboarded' : ''}
     onClick={toggleCookieModal}
     data-testid="cookie-button"
   >

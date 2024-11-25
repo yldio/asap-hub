@@ -1,12 +1,10 @@
-import { isEnabled } from '@asap-hub/flags';
 import { css, Global } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { neutral200 } from '../colors';
 
-import { Anchor, CookieButton, Link, Paragraph } from '../atoms';
+import { Anchor, Link, Paragraph } from '../atoms';
 import { backgroundNeuronsImage } from '../images';
 import { mailToSupport } from '../mail';
-import { CookiesModal, Toast, WelcomeCard } from '../organisms';
+import { Toast, WelcomeCard } from '../organisms';
 import { perRem } from '../pixels';
 import { themes } from '../theme';
 import { noop } from '../utils';
@@ -78,19 +76,6 @@ const placeholderStyles = css({
   order: 4,
 });
 
-const iconStyles = css({
-  display: 'flex',
-  position: 'absolute',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '0.5em',
-  backgroundColor: neutral200.rgb,
-  borderRadius: '4px',
-  bottom: '1em',
-  left: '1em',
-  cursor: 'pointer',
-});
-
 type WelcomeCopy = {
   title: string;
   content: string;
@@ -103,68 +88,45 @@ type WelcomePageProps = Pick<ComponentProps<typeof WelcomeCard>, 'onClick'> & {
   readonly authFailed?: 'alumni' | 'invalid';
   readonly onCloseAuthFailedToast?: () => void;
   readonly values?: { signup: WelcomeCopy; welcome: WelcomeCopy };
-  readonly showCookieModal?: boolean;
-  readonly toggleCookieModal?: () => void;
-  readonly cookieData?: {
-    cookieId?: string;
-    preferences: { essential?: boolean; analytics?: boolean };
-  } | null;
-} & ComponentProps<typeof CookiesModal>;
+};
 
 const WelcomePage: React.FC<WelcomePageProps> = ({
   allowSignup = false,
   authFailed,
   onCloseAuthFailedToast = noop,
   values = defaultValues,
-  showCookieModal = false,
-  cookieData,
-  onSaveCookiePreferences,
-  toggleCookieModal,
   ...props
 }) => {
   const copy = allowSignup ? values.signup : values.welcome;
 
   return (
-    <>
-      {isEnabled('DISPLAY_COOKIES') && showCookieModal && (
-        <CookiesModal
-          cookieData={cookieData}
-          onSaveCookiePreferences={onSaveCookiePreferences}
-        />
+    <div css={[themes.dark, containerStyles]}>
+      <Global styles={rootStyles} />
+      {authFailed && (
+        <Toast onClose={onCloseAuthFailedToast}>
+          {authFailed === 'alumni'
+            ? 'As an Alumni user, you no longer have access to this account. Please contact '
+            : 'There was a problem with your account. If this issue persists, please contact '}
+          <Anchor href={mailToSupport()}>
+            <span css={{ textDecoration: 'underline' }}>ASAP Support</span>
+          </Anchor>
+          {authFailed === 'alumni' ? ' for further assistance.' : '.'}
+        </Toast>
       )}
-      <div css={[themes.dark, containerStyles]}>
-        <Global styles={rootStyles} />
-        {authFailed && (
-          <Toast onClose={onCloseAuthFailedToast}>
-            {authFailed === 'alumni'
-              ? 'As an Alumni user, you no longer have access to this account. Please contact '
-              : 'There was a problem with your account. If this issue persists, please contact '}
-            <Anchor href={mailToSupport()}>
-              <span css={{ textDecoration: 'underline' }}>ASAP Support</span>
-            </Anchor>
-            {authFailed === 'alumni' ? ' for further assistance.' : '.'}
-          </Toast>
-        )}
-        <div css={bodyStyles}>
-          <main css={welcomeStyles}>
-            <WelcomeCard
-              title={copy.title}
-              content={copy.content}
-              buttonText={copy.buttonText}
-              {...props}
-            >
-              {copy.footer && copy.footer()}
-            </WelcomeCard>
-          </main>
-          <div css={placeholderStyles} />
-        </div>
-        {isEnabled('DISPLAY_COOKIES') &&
-          !showCookieModal &&
-          toggleCookieModal && (
-            <CookieButton toggleCookieModal={toggleCookieModal} />
-          )}
+      <div css={bodyStyles}>
+        <main css={welcomeStyles}>
+          <WelcomeCard
+            title={copy.title}
+            content={copy.content}
+            buttonText={copy.buttonText}
+            {...props}
+          >
+            {copy.footer && copy.footer()}
+          </WelcomeCard>
+        </main>
+        <div css={placeholderStyles} />
       </div>
-    </>
+    </div>
   );
 };
 

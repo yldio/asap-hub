@@ -23,7 +23,7 @@ import {
   success900,
 } from '../colors';
 import { MenuHeader, OnboardingFooter, ToastStack } from '../organisms';
-import { CookieButton, Overlay } from '../atoms';
+import { Overlay } from '../atoms';
 import {
   navigationGrey,
   crossQuery,
@@ -36,7 +36,6 @@ import { tagSearchIcon } from '../icons';
 import { rem } from '../pixels';
 import { Navigation } from '../atoms/NavigationLink';
 import { LoadingUserButton, LoadingMenu } from './LoadingLayout';
-import { isEnabled } from '@asap-hub/flags';
 
 const UserMenuButton = lazy(
   () =>
@@ -216,13 +215,7 @@ const userMenuShownStyles = css({
   },
 });
 
-const cookieButtonStyles = css({
-  bottom: '7em',
-});
-
 type LayoutProps = {
-  readonly showCookieModal?: boolean;
-  readonly toggleCookieModal?: () => void;
   readonly children: ReactNode;
 } & Partial<ComponentProps<typeof OnboardingFooter>> &
   ComponentProps<typeof MainNavigation> &
@@ -233,8 +226,6 @@ const Layout: FC<LayoutProps> = ({
   onboardable,
   onboardModalHref,
   canViewAnalytics,
-  showCookieModal,
-  toggleCookieModal,
   ...userNavProps
 }) => {
   const [menuShown, setMenuShown] = useState(false);
@@ -318,15 +309,6 @@ const Layout: FC<LayoutProps> = ({
           </div>
         )}
       </article>
-
-      {isEnabled('DISPLAY_COOKIES') &&
-        !showCookieModal &&
-        toggleCookieModal && (
-          <CookieButton
-            toggleCookieModal={toggleCookieModal}
-            customStyles={cookieButtonStyles}
-          />
-        )}
     </ToastStack>
   );
 };

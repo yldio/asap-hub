@@ -21,8 +21,8 @@ const cookieIcon = (
         y2="13.9989"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#0C8DC4" />
-        <stop offset="1" stop-color="#35A170" />
+        <stop stopColor="#0C8DC4" />
+        <stop offset="1" stopColor="#35A170" />
       </linearGradient>
     </defs>
   </svg>

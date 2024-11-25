@@ -1,9 +1,8 @@
-import { useCookieConsent } from '@asap-hub/frontend-utils';
 import { WelcomePage } from '@asap-hub/react-components';
 import { ToastContext, useAuth0CRN } from '@asap-hub/react-context';
 import { useRouteParams, welcome } from '@asap-hub/routing';
 import { useContext, useEffect, useRef } from 'react';
-import { API_BASE_URL, COOKIE_CONSENT_NAME } from '../config';
+import { API_BASE_URL } from '../config';
 
 const Welcome: React.FC<Record<string, never>> = () => {
   const { code } = useRouteParams(welcome({}).invited);
@@ -11,16 +10,6 @@ const Welcome: React.FC<Record<string, never>> = () => {
   const { loginWithRedirect } = useAuth0CRN();
 
   const toast = useContext(ToastContext);
-
-  const {
-    showCookieModal,
-    cookieData,
-    onSaveCookiePreferences,
-    toggleCookieModal,
-  } = useCookieConsent(
-    COOKIE_CONSENT_NAME,
-    `${API_BASE_URL}/cookie-preferences/save`,
-  );
 
   const invitationValidityCheck = useRef<Promise<boolean>>();
   useEffect(() => {
@@ -58,10 +47,6 @@ const Welcome: React.FC<Record<string, never>> = () => {
 
   return (
     <WelcomePage
-      showCookieModal={showCookieModal}
-      cookieData={cookieData}
-      onSaveCookiePreferences={onSaveCookiePreferences}
-      toggleCookieModal={toggleCookieModal}
       allowSignup
       onClick={() =>
         // Effect should populate this ref before a click can occur

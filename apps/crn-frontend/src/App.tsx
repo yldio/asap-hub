@@ -1,11 +1,11 @@
 import { useFlags } from '@asap-hub/react-context';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
-import { FC, lazy, useEffect } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
 
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, useCookieConsent } from '@asap-hub/frontend-utils';
 import {
   BasicLayout,
   GoogleTagManager,
@@ -14,13 +14,21 @@ import {
   ToastStack,
   UtilityBar,
 } from '@asap-hub/react-components';
+import { CookiesModal } from '@asap-hub/react-components/src/organisms';
 import { logout, staticPages, welcome } from '@asap-hub/routing';
 
 import CheckAuth from './auth/CheckAuth';
 import Logout from './auth/Logout';
 import SentryAuth0 from './auth/SentryAuth0';
 import Signin from './auth/Signin';
-import { ENVIRONMENT, GTM_CONTAINER_ID, RELEASE, SENTRY_DSN } from './config';
+import {
+  API_BASE_URL,
+  COOKIE_CONSENT_NAME,
+  ENVIRONMENT,
+  GTM_CONTAINER_ID,
+  RELEASE,
+  SENTRY_DSN,
+} from './config';
 import history from './history';
 
 init({
@@ -73,14 +81,26 @@ const Content = lazy(loadContent);
 const AuthenticatedApp = lazy(loadAuthenticatedApp);
 
 const App: FC<Record<string, never>> = () => {
-  const { setCurrentOverrides, setEnvironment } = useFlags();
+  const { setCurrentOverrides, setEnvironment, isEnabled } = useFlags();
+  const [isOnboardable, setIsOnboardable] = useState(false);
+  const [isCookiesFlagEnabled, setDisplayCookies] = useState(false);
+  const {
+    showCookieModal,
+    cookieData,
+    onSaveCookiePreferences,
+    toggleCookieModal,
+  } = useCookieConsent(
+    COOKIE_CONSENT_NAME,
+    `${API_BASE_URL}/cookie-preferences/save`,
+  );
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAuthenticatedApp().then(loadContent).then(loadWelcome);
     setEnvironment(ENVIRONMENT);
     setCurrentOverrides();
-  }, [setCurrentOverrides, setEnvironment]);
+    setDisplayCookies(isEnabled('DISPLAY_COOKIES'));
+  }, [setCurrentOverrides, setEnvironment, isEnabled]);
 
   return (
     <LogoProvider appName="CRN">
@@ -127,7 +147,9 @@ const App: FC<Record<string, never>> = () => {
                           </Frame>
                         ) : (
                           <Frame title={null} fallback={<LoadingLayout />}>
-                            <AuthenticatedApp />
+                            <AuthenticatedApp
+                              setIsOnboardable={setIsOnboardable}
+                            />
                           </Frame>
                         )
                       }
@@ -139,6 +161,16 @@ const App: FC<Record<string, never>> = () => {
           </Router>
         </AuthProvider>
       </Frame>
+
+      {isCookiesFlagEnabled && (
+        <CookiesModal
+          cookieData={cookieData}
+          onSaveCookiePreferences={onSaveCookiePreferences}
+          toggleCookieModal={toggleCookieModal}
+          showCookieModal={showCookieModal}
+          isOnboardable={isOnboardable}
+        />
+      )}
     </LogoProvider>
   );
 };

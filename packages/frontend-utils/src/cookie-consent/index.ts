@@ -26,6 +26,7 @@ export const getConsentCookie = (name: string): CookieData | null => {
 
 export const hasGivenCookieConsent = (name: string): boolean => {
   const cookie = getConsentCookie(name);
+
   return (
     cookie !== null &&
     typeof cookie.cookieId === 'string' &&

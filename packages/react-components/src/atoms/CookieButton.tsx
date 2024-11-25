@@ -1,4 +1,5 @@
-import { css } from '@emotion/react';
+/** @jsxImportSource @emotion/react */
+import { css, SerializedStyles } from '@emotion/react';
 import React from 'react';
 import { neutral200 } from '../colors';
 import { cookieIcon } from '../icons';
@@ -8,7 +9,7 @@ type CookieButtonProps = {
   isOnboardable?: boolean;
 };
 
-const iconStyles = (isOnboardable?: boolean) =>
+const iconStyles = (isOnboardable?: boolean): SerializedStyles =>
   css({
     display: 'flex',
     position: 'fixed',
@@ -29,7 +30,7 @@ const CookieButton: React.FC<CookieButtonProps> = ({
 }) => (
   <span
     className="cookie-button"
-    css={iconStyles(isOnboardable)}
+    css={[iconStyles(isOnboardable)]}
     onClick={toggleCookieModal}
     data-testid="cookie-button"
   >

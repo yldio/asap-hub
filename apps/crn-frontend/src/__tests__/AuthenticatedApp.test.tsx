@@ -43,3 +43,30 @@ it('syncs the auth state to recoil', async () => {
     { timeout: 2000 },
   );
 });
+it("should call setIsOnboardable if it's set", async () => {
+  MockDashboard.mockImplementation(() => {
+    const authorization = useRecoilValue(authorizationState);
+    return <>{authorization}</>;
+  });
+
+  const setIsOnboardable = jest.fn();
+  render(
+    <RecoilRoot>
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <StaticRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
+            </Suspense>
+          </StaticRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>
+    </RecoilRoot>,
+  );
+  await waitFor(
+    () => {
+      expect(setIsOnboardable).toHaveBeenCalled();
+    },
+    { timeout: 2000 },
+  );
+});

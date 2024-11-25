@@ -85,4 +85,31 @@ describe('CookiesModal', () => {
 
     expect(screen.getByText('Google Advertising Products')).toBeInTheDocument();
   });
+
+  it('displays cookie button instead of the cookie modal when showCookieModal is false', () => {
+    const { getByTestId } = render(
+      <CookiesModal
+        toggleCookieModal={jest.fn()}
+        onSaveCookiePreferences={mockOnSaveCookiePreferences}
+        showCookieModal={false}
+      />,
+    );
+
+    expect(getByTestId('cookie-button')).toBeInTheDocument();
+    expect(
+      screen.queryByText('Privacy Preference Center'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('displays cookie modal instead of the cookie button when showCookieModal is true', () => {
+    const { queryByTestId, getByText } = render(
+      <CookiesModal
+        onSaveCookiePreferences={mockOnSaveCookiePreferences}
+        showCookieModal={true}
+      />,
+    );
+
+    expect(queryByTestId('cookie-button')).not.toBeInTheDocument();
+    expect(getByText('Privacy Preference Center')).toBeInTheDocument();
+  });
 });

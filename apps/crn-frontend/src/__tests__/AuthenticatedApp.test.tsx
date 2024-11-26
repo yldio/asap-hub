@@ -1,10 +1,11 @@
 import { authTestUtils } from '@asap-hub/react-components';
 import { cleanup, render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
-import { StaticRouter, MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 
 import { useCurrentUserCRN } from '@asap-hub/react-context';
+import userEvent from '@testing-library/user-event';
 import { authorizationState } from '../auth/state';
 import AuthenticatedApp from '../AuthenticatedApp';
 import Dashboard from '../dashboard/Dashboard';
@@ -26,9 +27,31 @@ const mockedUser = {
   lastName: 'User',
   displayName: 'Test User',
   avatarUrl: '',
-  teams: [],
-  workingGroups: [],
-  interestGroups: [],
+  teams: [
+    {
+      id: 'test-team-id-1',
+      displayName: 'Team One',
+      role: 'ASAP Staff',
+    },
+  ],
+  workingGroups: [
+    {
+      id: 'working-group-id-1',
+      active: true,
+      name: 'Working Group One',
+      role: 'Project Manager',
+    },
+  ],
+  interestGroups: [
+    {
+      id: 'interest-group-id-1',
+      active: true,
+      name: 'Interest Group One',
+    },
+  ],
+  algoliaApiKey: '',
+  email: 'test@example.io',
+  openScienceTeamMember: true,
 };
 
 const MockDashboard = Dashboard as jest.MockedFunction<typeof Dashboard>;
@@ -106,16 +129,24 @@ it('renders the Analytics route when user has Staff role', async () => {
 });
 
 it('renders the application layout correctly', async () => {
-  const { getByText, findAllByText } = render(
+  const { getByText, findAllByText, getByTestId } = render(
     <RecoilRoot>
       <MemoryRouter>
         <AuthenticatedApp />
       </MemoryRouter>
     </RecoilRoot>,
   );
+  const menu = getByText('Menu');
+  expect(menu).toBeInTheDocument();
 
-  // Verify layout is rendered
-  expect(getByText('Menu')).toBeInTheDocument();
+  userEvent.click(menu);
+
+  await waitFor(() => {
+    expect(getByText('Team One')).toBeInTheDocument();
+    expect(getByText('Working Group One')).toBeInTheDocument();
+    expect(getByText('Interest Group One')).toBeInTheDocument();
+  });
+
   expect(getByText('ASAP Logo')).toBeInTheDocument();
   expect(getByText('Shared Research')).toBeInTheDocument();
   expect(getByText('Calendar & Events')).toBeInTheDocument();
@@ -132,4 +163,7 @@ it('renders the application layout correctly', async () => {
 
   const analyticsElements = await findAllByText('Analytics');
   expect(analyticsElements.length).toBeGreaterThan(0);
+
+  expect(getByTestId('layout-article-testid')).toBeInTheDocument();
+  expect(getByTestId('menu-header-testid')).toBeInTheDocument();
 });

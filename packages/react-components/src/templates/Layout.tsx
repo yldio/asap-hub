@@ -254,7 +254,10 @@ const Layout: FC<LayoutProps> = ({
 
   return (
     <ToastStack>
-      <article css={[styles, menuShown || { overflow: 'hidden' }]}>
+      <article
+        data-testid="layout-article-testid"
+        css={[styles, menuShown || { overflow: 'hidden' }]}
+      >
         {/* order relevant for overlap */}
         <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
           <MenuHeader

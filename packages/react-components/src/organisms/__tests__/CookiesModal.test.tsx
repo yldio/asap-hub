@@ -112,4 +112,24 @@ describe('CookiesModal', () => {
     expect(queryByTestId('cookie-button')).not.toBeInTheDocument();
     expect(getByText('Privacy Preference Center')).toBeInTheDocument();
   });
+
+  it('is able to apply styles to cookie button', async () => {
+    const { getByTestId } = render(
+      <CookiesModal
+        onSaveCookiePreferences={mockOnSaveCookiePreferences}
+        showCookieModal={false}
+        toggleCookieModal={jest.fn()}
+        customStyles={[
+          {
+            '& .cookie-button': {
+              bottom: '7em',
+            },
+          },
+        ]}
+      />,
+    );
+
+    const cookieButton = getByTestId('cookie-button');
+    expect(getComputedStyle(cookieButton).bottom).toBe('7em');
+  });
 });

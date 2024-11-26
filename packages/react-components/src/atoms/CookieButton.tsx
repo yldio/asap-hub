@@ -5,7 +5,6 @@ import { cookieIcon } from '../icons';
 
 type CookieButtonProps = {
   toggleCookieModal: () => void;
-  isOnboardable?: boolean;
 };
 
 const iconStyles = css({
@@ -20,17 +19,11 @@ const iconStyles = css({
   cursor: 'pointer',
   border: `1.5px solid rgba(223, 229, 234, 0.3)`,
   bottom: '1em',
-  '&.is-not-onboarded': {
-    bottom: '7em',
-  },
 });
 
-const CookieButton: React.FC<CookieButtonProps> = ({
-  toggleCookieModal,
-  isOnboardable,
-}) => (
+const CookieButton: React.FC<CookieButtonProps> = ({ toggleCookieModal }) => (
   <span
-    className={isOnboardable ? 'is-not-onboarded' : ''}
+    className="cookie-button"
     css={iconStyles}
     onClick={toggleCookieModal}
     data-testid="cookie-button"

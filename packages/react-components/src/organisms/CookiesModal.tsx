@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import { CSSInterpolation } from '@emotion/serialize';
 import { useState } from 'react';
 import { colors } from '..';
 
@@ -109,16 +110,16 @@ type CookiesModalProps = {
   } | null;
   readonly onSaveCookiePreferences: (analytics: boolean) => void;
   readonly toggleCookieModal?: () => void;
-  readonly isOnboardable?: boolean;
   readonly showCookieModal?: boolean;
+  readonly customStyles?: CSSInterpolation[];
 };
 
 const CookiesModal: React.FC<CookiesModalProps> = ({
   cookieData,
-  isOnboardable,
   showCookieModal = true,
   onSaveCookiePreferences,
   toggleCookieModal,
+  customStyles,
 }) => {
   const logo = useLogo();
   const [isAnalyticsConsentGiven, setIsAnalyticsConsentGiven] = useState(
@@ -130,12 +131,9 @@ const CookiesModal: React.FC<CookiesModalProps> = ({
   };
 
   return (
-    <>
+    <div css={css(customStyles)}>
       {!showCookieModal && toggleCookieModal && (
-        <CookieButton
-          toggleCookieModal={toggleCookieModal}
-          isOnboardable={isOnboardable}
-        />
+        <CookieButton toggleCookieModal={toggleCookieModal} />
       )}
       {showCookieModal && (
         <Modal padding={false}>
@@ -221,7 +219,7 @@ const CookiesModal: React.FC<CookiesModalProps> = ({
           </div>
         </Modal>
       )}
-    </>
+    </div>
   );
 };
 

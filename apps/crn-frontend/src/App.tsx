@@ -8,12 +8,12 @@ import { LastLocationProvider } from 'react-router-last-location';
 import { Frame, useCookieConsent } from '@asap-hub/frontend-utils';
 import {
   BasicLayout,
+  CookiesModal,
   GoogleTagManager,
   LoadingLayout,
   LogoProvider,
   ToastStack,
   UtilityBar,
-  CookiesModal,
 } from '@asap-hub/react-components';
 import { logout, staticPages, welcome } from '@asap-hub/routing';
 
@@ -168,7 +168,13 @@ const App: FC<Record<string, never>> = () => {
           onSaveCookiePreferences={onSaveCookiePreferences}
           toggleCookieModal={toggleCookieModal}
           showCookieModal={showCookieModal}
-          isOnboardable={isOnboardable}
+          customStyles={[
+            {
+              '& .cookie-button': {
+                bottom: isOnboardable ? '7em' : '1em',
+              },
+            },
+          ]}
         />
       )}
     </LogoProvider>

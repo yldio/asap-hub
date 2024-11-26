@@ -9,14 +9,6 @@ it('renders a cookie button', () => {
   expect(getByTestId('cookie-button')).toBeVisible();
 });
 
-it('renders a cookie button higher then footer when isOnbordable true', async () => {
-  const { getByTestId } = render(
-    <CookieButton toggleCookieModal={jest.fn()} isOnboardable />,
-  );
-
-  expect(getByTestId('cookie-button')).toHaveClass('is-not-onboarded');
-});
-
 it('should call toggleCookieModal when clicked', async () => {
   const toggleCookieModal = jest.fn();
   const { getByTestId } = render(

@@ -85,4 +85,51 @@ describe('CookiesModal', () => {
 
     expect(screen.getByText('Google Advertising Products')).toBeInTheDocument();
   });
+
+  it('displays cookie button instead of the cookie modal when showCookieModal is false', () => {
+    const { getByTestId } = render(
+      <CookiesModal
+        toggleCookieModal={jest.fn()}
+        onSaveCookiePreferences={mockOnSaveCookiePreferences}
+        showCookieModal={false}
+      />,
+    );
+
+    expect(getByTestId('cookie-button')).toBeInTheDocument();
+    expect(
+      screen.queryByText('Privacy Preference Center'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('displays cookie modal instead of the cookie button when showCookieModal is true', () => {
+    const { queryByTestId, getByText } = render(
+      <CookiesModal
+        onSaveCookiePreferences={mockOnSaveCookiePreferences}
+        showCookieModal={true}
+      />,
+    );
+
+    expect(queryByTestId('cookie-button')).not.toBeInTheDocument();
+    expect(getByText('Privacy Preference Center')).toBeInTheDocument();
+  });
+
+  it('is able to apply styles to cookie button', async () => {
+    const { getByTestId } = render(
+      <CookiesModal
+        onSaveCookiePreferences={mockOnSaveCookiePreferences}
+        showCookieModal={false}
+        toggleCookieModal={jest.fn()}
+        customStyles={[
+          {
+            '& .cookie-button': {
+              bottom: '7em',
+            },
+          },
+        ]}
+      />,
+    );
+
+    const cookieButton = getByTestId('cookie-button');
+    expect(getComputedStyle(cookieButton).bottom).toBe('7em');
+  });
 });

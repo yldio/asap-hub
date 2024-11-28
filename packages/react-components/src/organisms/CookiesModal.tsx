@@ -1,9 +1,12 @@
+/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import { CSSInterpolation } from '@emotion/serialize';
 import { useState } from 'react';
 import { colors } from '..';
 
 import {
   Button,
+  CookieButton,
   Headline3,
   Link,
   Paragraph,
@@ -101,99 +104,122 @@ const ThirdPartyCookieLink = ({ link, label }: ThirdPartyCookieLinkProps) => (
 );
 
 type CookiesModalProps = {
+  readonly cookieData?: {
+    cookieId?: string;
+    preferences: { essential?: boolean; analytics?: boolean };
+  } | null;
   readonly onSaveCookiePreferences: (analytics: boolean) => void;
+  readonly toggleCookieModal?: () => void;
+  readonly showCookieModal?: boolean;
+  readonly customStyles?: CSSInterpolation[];
 };
 
 const CookiesModal: React.FC<CookiesModalProps> = ({
+  cookieData,
+  showCookieModal = true,
   onSaveCookiePreferences,
+  toggleCookieModal,
+  customStyles,
 }) => {
   const logo = useLogo();
-  const [isAnalyticsConsentGiven, setIsAnalyticsConsentGiven] = useState(false);
+  const [isAnalyticsConsentGiven, setIsAnalyticsConsentGiven] = useState(
+    Boolean(cookieData?.preferences?.analytics),
+  );
 
   const handleCookiePreferencesSaving = () => {
     onSaveCookiePreferences(isAnalyticsConsentGiven);
   };
 
   return (
-    <Modal padding={false}>
-      <div css={modalStyles}>
-        <header css={headerStyles}>{logo}</header>
-        <div css={modalContentStyles}>
-          <div css={sectionStyles}>
-            <Headline3 noMargin>Privacy Preference Center</Headline3>
+    <div css={css(customStyles)}>
+      {!showCookieModal && toggleCookieModal && (
+        <CookieButton toggleCookieModal={toggleCookieModal} />
+      )}
+      {showCookieModal && (
+        <Modal padding={false}>
+          <div css={modalStyles}>
+            <header css={headerStyles}>{logo}</header>
+            <div css={modalContentStyles}>
+              <div css={sectionStyles}>
+                <Headline3 noMargin>Privacy Preference Center</Headline3>
 
-            <Paragraph noMargin accent="lead" styles={paragraphStyles}>
-              When you visit our website, it may store or retrieve data in your
-              browser. This storage is often necessary for the basic
-              functionality of the website and also for analytics. Privacy is
-              important to us, so you have the option of enabling certain types
-              of storage that may not be necessary for the basic functioning of
-              the website.
-            </Paragraph>
-          </div>
-          <div css={sectionStyles}>
-            <Headline3 noMargin>
-              Manage Consent Preferences by Category
-            </Headline3>
-            <div css={consentCategoryStyles}>
-              <div>
-                <Paragraph noMargin>
-                  <span css={essentialCategoryStyles}>
-                    <strong>Essential</strong>
-                    <span css={css({ color: colors.lead.rgb })}>
-                      <strong>Always Active</strong>
-                    </span>
-                  </span>
-                </Paragraph>
-                <Paragraph accent="lead">
-                  These items are required to enable basic website
-                  functionality.
+                <Paragraph noMargin accent="lead" styles={paragraphStyles}>
+                  When you visit our website, it may store or retrieve data in
+                  your browser. This storage is often necessary for the basic
+                  functionality of the website and also for analytics. Privacy
+                  is important to us, so you have the option of enabling certain
+                  types of storage that may not be necessary for the basic
+                  functioning of the website.
                 </Paragraph>
               </div>
+              <div css={sectionStyles}>
+                <Headline3 noMargin>
+                  Manage Consent Preferences by Category
+                </Headline3>
+                <div css={consentCategoryStyles}>
+                  <div>
+                    <Paragraph noMargin>
+                      <span css={essentialCategoryStyles}>
+                        <strong>Essential</strong>
+                        <span css={css({ color: colors.lead.rgb })}>
+                          <strong>Always Active</strong>
+                        </span>
+                      </span>
+                    </Paragraph>
+                    <Paragraph accent="lead">
+                      These items are required to enable basic website
+                      functionality.
+                    </Paragraph>
+                  </div>
 
-              <div css={dividerStyles} />
-              <div>
-                <Paragraph>
-                  <span css={essentialCategoryStyles}>
-                    <strong>Analytics</strong>
-                    <Switch
-                      checked={isAnalyticsConsentGiven}
-                      onClick={() =>
-                        setIsAnalyticsConsentGiven((prevValue) => !prevValue)
-                      }
-                    />
-                  </span>
-                </Paragraph>
-                <Paragraph accent="lead">
-                  These items help the website operator understand how its
-                  website performs, how visitors interact with the site, and
-                  whether there may be technical issues. This storage type
-                  usually doesn’t collect information that identifies a visitor.
-                </Paragraph>
-                <div css={thirdPartyCookieLinkStyles}>
-                  <ThirdPartyCookieLink
-                    link="https://business.safety.google/privacy/"
-                    label="Google Advertising Products"
-                  />
+                  <div css={dividerStyles} />
+                  <div>
+                    <Paragraph>
+                      <span css={essentialCategoryStyles}>
+                        <strong>Analytics</strong>
+                        <Switch
+                          checked={isAnalyticsConsentGiven}
+                          onClick={() =>
+                            setIsAnalyticsConsentGiven(
+                              (prevValue) => !prevValue,
+                            )
+                          }
+                        />
+                      </span>
+                    </Paragraph>
+                    <Paragraph accent="lead">
+                      These items help the website operator understand how its
+                      website performs, how visitors interact with the site, and
+                      whether there may be technical issues. This storage type
+                      usually doesn’t collect information that identifies a
+                      visitor.
+                    </Paragraph>
+                    <div css={thirdPartyCookieLinkStyles}>
+                      <ThirdPartyCookieLink
+                        link="https://business.safety.google/privacy/"
+                        label="Google Advertising Products"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div css={buttonContainerStyles}>
-          <Button
-            primary
-            enabled
-            noMargin
-            onClick={handleCookiePreferencesSaving}
-            overrideStyles={css({ width: 'fit-content' })}
-          >
-            Save and close
-          </Button>
-        </div>
-      </div>
-    </Modal>
+            <div css={buttonContainerStyles}>
+              <Button
+                primary
+                enabled
+                noMargin
+                onClick={handleCookiePreferencesSaving}
+                overrideStyles={css({ width: 'fit-content' })}
+              >
+                Save and close
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
   );
 };
 

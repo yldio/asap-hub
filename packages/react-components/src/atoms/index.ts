@@ -4,6 +4,7 @@ export { default as Avatar } from './Avatar';
 export { default as Button } from './Button';
 export { default as Caption } from './Caption';
 export { default as Checkbox } from './Checkbox';
+export { default as CookieButton } from './CookieButton';
 export { default as CopyButton } from './CopyButton';
 export { default as Display } from './Display';
 export { default as Divider } from './Divider';

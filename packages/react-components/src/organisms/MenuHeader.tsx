@@ -39,7 +39,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({
   menuOpen = false,
   onToggleMenu = noop,
 }) => (
-  <div css={styles}>
+  <div css={styles} data-testid="menu-header-testid">
     <div css={[menuButtonStyles]}>
       <MenuButton open={menuOpen} onClick={() => onToggleMenu()} />
     </div>

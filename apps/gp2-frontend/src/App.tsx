@@ -1,22 +1,32 @@
+import { useCookieConsent } from '@asap-hub/frontend-utils';
 import { BasicLayout, Theme } from '@asap-hub/gp2-components';
 import {
   GoogleTagManager,
   LogoProvider,
   ToastStack,
   UtilityBar,
+  CookiesModal,
 } from '@asap-hub/react-components';
 import { useFlags } from '@asap-hub/react-context';
 import { logout, staticPages, welcome } from '@asap-hub/routing';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
-import { FC, lazy, useEffect } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
+
 import CheckAuth from './auth/CheckAuth';
 import Logout from './auth/Logout';
 import SentryAuth0 from './auth/SentryAuth0';
 import Signin from './auth/Signin';
-import { ENVIRONMENT, GTM_CONTAINER_ID, RELEASE, SENTRY_DSN } from './config';
+import {
+  API_BASE_URL,
+  COOKIE_CONSENT_NAME,
+  ENVIRONMENT,
+  GTM_CONTAINER_ID,
+  RELEASE,
+  SENTRY_DSN,
+} from './config';
 import Frame from './Frame';
 import history from './history';
 
@@ -69,14 +79,26 @@ const Content = lazy(loadContent);
 const Welcome = lazy(loadWelcome);
 
 const App: FC<Record<string, never>> = () => {
-  const { setCurrentOverrides, setEnvironment } = useFlags();
+  const { setCurrentOverrides, setEnvironment, isEnabled } = useFlags();
+  const [isCookiesFlagEnabled, setDisplayCookies] = useState(false);
+
+  const {
+    showCookieModal,
+    cookieData,
+    onSaveCookiePreferences,
+    toggleCookieModal,
+  } = useCookieConsent(
+    COOKIE_CONSENT_NAME,
+    `${API_BASE_URL}/cookie-preferences/save`,
+  );
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAuthenticatedApp().then(loadContent).then(loadWelcome);
     setEnvironment(ENVIRONMENT);
     setCurrentOverrides();
-  }, [setCurrentOverrides, setEnvironment]);
+    setDisplayCookies(isEnabled('DISPLAY_COOKIES'));
+  }, [setCurrentOverrides, setEnvironment, isEnabled]);
 
   return (
     <LogoProvider appName="GP2">
@@ -135,6 +157,23 @@ const App: FC<Record<string, never>> = () => {
               </LastLocationProvider>
             </Router>
           </AuthProvider>
+          {isCookiesFlagEnabled && (
+            <CookiesModal
+              cookieData={cookieData}
+              onSaveCookiePreferences={onSaveCookiePreferences}
+              toggleCookieModal={toggleCookieModal}
+              showCookieModal={showCookieModal}
+              customStyles={[
+                {
+                  '& .cookie-button': {
+                    position: 'fixed',
+                    left: '1em',
+                    bottom: '1em',
+                  },
+                },
+              ]}
+            />
+          )}
         </Theme>
       </Frame>
     </LogoProvider>

@@ -171,6 +171,8 @@ const App: FC<Record<string, never>> = () => {
           customStyles={[
             {
               '& .cookie-button': {
+                position: 'fixed',
+                left: '1em',
                 bottom: isOnboardable ? '7em' : '1em',
               },
             },

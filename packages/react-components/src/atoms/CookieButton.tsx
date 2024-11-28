@@ -9,16 +9,13 @@ type CookieButtonProps = {
 
 const iconStyles = css({
   display: 'flex',
-  position: 'fixed',
   justifyContent: 'center',
   alignItems: 'center',
   padding: '0.5em',
   backgroundColor: neutral200.rgb,
   borderRadius: '4px',
-  left: '1em',
   cursor: 'pointer',
   border: `1.5px solid rgba(223, 229, 234, 0.3)`,
-  bottom: '1em',
 });
 
 const CookieButton: React.FC<CookieButtonProps> = ({ toggleCookieModal }) => (

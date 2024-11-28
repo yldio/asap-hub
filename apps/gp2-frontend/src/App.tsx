@@ -163,6 +163,15 @@ const App: FC<Record<string, never>> = () => {
               onSaveCookiePreferences={onSaveCookiePreferences}
               toggleCookieModal={toggleCookieModal}
               showCookieModal={showCookieModal}
+              customStyles={[
+                {
+                  '& .cookie-button': {
+                    position: 'fixed',
+                    left: '1em',
+                    bottom: '1em',
+                  },
+                },
+              ]}
             />
           )}
         </Theme>

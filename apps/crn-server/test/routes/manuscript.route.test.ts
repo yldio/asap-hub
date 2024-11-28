@@ -328,6 +328,54 @@ describe('/manuscripts/ route', () => {
     );
   });
 
+  describe('POST /manuscripts/{id}', () => {
+    const manuscriptId = 'manuscript-id-1';
+    const manuscriptResponse = getManuscriptResponse();
+
+    test('Should return 403 when not allowed to create a manuscript because user is not onboarded', async () => {
+      const createManuscriptRequest = getManuscriptCreateDataObject();
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: false,
+      });
+
+      const response = await supertest(app)
+        .post(`/manuscripts/${manuscriptId}`)
+        .send(createManuscriptRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should return a 201 and pass input to the controller', async () => {
+      const createManuscriptRequest: ManuscriptPostRequest =
+        getManuscriptPostBody();
+
+      userMockFactory.mockReturnValueOnce(createUserResponse());
+
+      manuscriptControllerMock.createVersion.mockResolvedValueOnce(
+        manuscriptResponse,
+      );
+
+      const response = await supertest(app)
+        .post(`/manuscripts/${manuscriptId}`)
+        .send(createManuscriptRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(201);
+      expect(manuscriptControllerMock.createVersion).toHaveBeenCalledWith(
+        manuscriptId,
+        {
+          ...createManuscriptRequest,
+          userId: 'user-id-0',
+        },
+      );
+
+      expect(response.body).toEqual(manuscriptResponse);
+    });
+  });
+
   describe('PUT /manuscripts/{id}', () => {
     const manuscriptId = 'manuscript-id-1';
     const manuscriptResponse = getManuscriptResponse();

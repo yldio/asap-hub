@@ -34,6 +34,7 @@ import {
   updateDiscussion,
   updateTeamResearchOutput,
   uploadManuscriptFile,
+  resubmitManuscript,
 } from '../api';
 
 jest.mock('../../../config');
@@ -448,6 +449,48 @@ describe('Manuscript', () => {
       );
 
       expect(handleErrorMock).toHaveBeenCalledWith('Validation Error');
+    });
+  });
+
+  describe('resubmitManuscript', () => {
+    const payload: ManuscriptPostRequest = {
+      title: 'The Manuscript',
+      teamId: '42',
+      versions: [
+        {
+          lifecycle: 'Publication',
+          type: 'Original Research',
+          manuscriptFile: {
+            id: '42',
+            filename: 'test-file',
+            url: 'https://example.com/test-file',
+          },
+          teams: ['42'],
+          labs: [],
+          description: '',
+          firstAuthors: [],
+        },
+      ],
+    };
+    const manuscriptId = 'manuscript-id-1';
+
+    it('makes an authorized POST request to resubmit a manuscript', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .post(`/manuscripts/${manuscriptId}`, payload)
+        .reply(201, { id: manuscriptId });
+
+      await resubmitManuscript(manuscriptId, payload, 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('errors for an error status', async () => {
+      nock(API_BASE_URL).post(`/manuscripts/${manuscriptId}`).reply(500, {});
+
+      await expect(
+        resubmitManuscript(manuscriptId, payload, 'Bearer x'),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to resubmit manuscript with id manuscript-id-1. Expected status 201. Received status 500."`,
+      );
     });
   });
 });

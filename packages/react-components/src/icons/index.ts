@@ -110,6 +110,7 @@ export { default as replyIcon } from './reply';
 export { default as reportIcon } from './report';
 export { default as ResearcherIdIcon } from './researcher-id';
 export { default as ResearchGateIcon } from './research-gate';
+export { default as resubmitManuscriptIcon } from './resubmit-manuscript';
 export { default as searchIcon } from './search-icon';
 export { default as settingsIcon } from './settings';
 export { default as shareIcon } from './share';

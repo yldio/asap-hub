@@ -22,6 +22,7 @@ import {
   ManuscriptLifecycle,
   manuscriptLifecycles,
   manuscriptMapStatus,
+  ManuscriptResubmitDataObject,
   ManuscriptType,
   manuscriptTypes,
   ManuscriptUpdateDataObject,
@@ -135,19 +136,12 @@ export class ManuscriptContentfulDataProvider
     return quickCheckDiscussions;
   }
 
-  async create(input: ManuscriptCreateDataObject): Promise<string> {
+  private async createManuscriptVersion(
+    version: ManuscriptCreateDataObject['versions'][number],
+    userId: string,
+    versionCount: number,
+  ): Promise<string> {
     const environment = await this.getRestClient();
-
-    const {
-      teamId,
-      userId,
-      versions: [version],
-      ...plainFields
-    } = input;
-
-    if (!version) {
-      throw new Error('No versions provided');
-    }
 
     await this.createManuscriptAssets(version);
     const quickCheckDiscussions = await this.createQuickChecks(version, userId);
@@ -157,7 +151,7 @@ export class ManuscriptContentfulDataProvider
       {
         fields: addLocaleToFields({
           ...version,
-          count: 1,
+          count: versionCount,
           teams: getLinkEntities(version.teams),
           firstAuthors: getLinkEntities(version.firstAuthors),
           correspondingAuthor: getLinkEntities(version.correspondingAuthor),
@@ -183,9 +177,30 @@ export class ManuscriptContentfulDataProvider
 
     await manuscriptVersionEntry.publish();
 
-    const { id: manuscriptVersionId } = manuscriptVersionEntry.sys;
+    return manuscriptVersionEntry.sys.id;
+  }
+
+  async create(input: ManuscriptCreateDataObject): Promise<string> {
+    const environment = await this.getRestClient();
+
+    const {
+      teamId,
+      userId,
+      versions: [version],
+      ...plainFields
+    } = input;
+
+    if (!version) {
+      throw new Error('No versions provided');
+    }
 
     const currentCount = (await this.fetchCountByTeamId(teamId)) || 0;
+
+    const manuscriptVersionId = await this.createManuscriptVersion(
+      version,
+      userId,
+      1,
+    );
 
     const manuscriptEntry = await environment.createEntry('manuscripts', {
       fields: addLocaleToFields({
@@ -199,6 +214,38 @@ export class ManuscriptContentfulDataProvider
     await manuscriptEntry.publish();
 
     return manuscriptEntry.sys.id;
+  }
+
+  async createVersion(
+    id: string,
+    input: ManuscriptResubmitDataObject,
+  ): Promise<void> {
+    const {
+      userId,
+      versions: [version],
+      title,
+    } = input;
+
+    if (!version) {
+      throw new Error('No versions provided');
+    }
+
+    const environment = await this.getRestClient();
+    const manuscriptEntry = await environment.getEntry(id);
+    const previousVersions = manuscriptEntry.fields.versions['en-US'];
+
+    const manuscriptVersionId = await this.createManuscriptVersion(
+      version,
+      userId,
+      previousVersions.length + 1,
+    );
+
+    const newVersion = getLinkEntity(manuscriptVersionId);
+
+    await patchAndPublish(manuscriptEntry, {
+      versions: [...previousVersions, newVersion],
+      title,
+    });
   }
 
   async update(

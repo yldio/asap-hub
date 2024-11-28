@@ -97,7 +97,7 @@ it('renders manuscript form page', async () => {
   const { container } = await renderPage();
 
   expect(container).toHaveTextContent(
-    'Submit your manuscript to receive a compliance report and find out which areas need to be improved before publishing your article',
+    'Start a new manuscript to receive an itemized compliance report outlining action items for compliance with the ASAP Open Science Policy',
   );
   expect(container).toHaveTextContent('What are you sharing');
   expect(container).toHaveTextContent('Title of Manuscript');

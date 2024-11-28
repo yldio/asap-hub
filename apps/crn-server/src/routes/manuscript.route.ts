@@ -1,6 +1,8 @@
 import {
   ManuscriptFileResponse,
   ManuscriptFileType,
+  ManuscriptPostCreateRequest,
+  ManuscriptPostResubmitRequest,
   ManuscriptResponse,
 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
@@ -79,7 +81,9 @@ export const manuscriptRouteFactory = (
 
   manuscriptRoutes.post('/manuscripts', async (req, res) => {
     const { body, loggedInUser } = req;
-    const createRequest = validateManuscriptPostRequestParameters(body);
+    const createRequest = validateManuscriptPostRequestParameters(
+      body,
+    ) as ManuscriptPostCreateRequest;
 
     const userBelongsToTeam = loggedInUser?.teams.some(
       (team) => team.id === createRequest.teamId,
@@ -94,6 +98,28 @@ export const manuscriptRouteFactory = (
 
     res.status(201).json(manuscript);
   });
+
+  manuscriptRoutes.post<{ manuscriptId: string }>(
+    '/manuscripts/:manuscriptId',
+    async (req, res) => {
+      const { body, loggedInUser, params } = req;
+      const createRequest = validateManuscriptPostRequestParameters(
+        body,
+      ) as ManuscriptPostResubmitRequest;
+
+      if (!loggedInUser) throw Boom.forbidden();
+
+      const manuscript = await manuscriptController.createVersion(
+        params.manuscriptId,
+        {
+          ...createRequest,
+          userId: loggedInUser.id,
+        },
+      );
+
+      res.status(201).json(manuscript);
+    },
+  );
 
   manuscriptRoutes.put<{ manuscriptId: string }>(
     '/manuscripts/:manuscriptId',

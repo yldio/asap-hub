@@ -70,6 +70,14 @@ it('displays share compliance report button if user has permission', () => {
   ).toBeVisible();
 });
 
+it('displays submit revised manuscript button if user has permission', () => {
+  const { getByRole } = render(<ManuscriptCard {...props} />);
+
+  expect(
+    getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+  ).toBeVisible();
+});
+
 it('redirects to compliance report form when user clicks on share compliance report button', () => {
   const history = createMemoryHistory({});
   const { getByRole } = render(

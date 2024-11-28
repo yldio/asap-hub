@@ -17,10 +17,11 @@ import {
   getManuscriptUpdateStatusDataObject,
 } from '../fixtures/manuscript.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
+import { manuscriptDataProviderMock as manuscriptDataProviderContentfulMock } from '../mocks/manuscript.data-provider.mock';
 
 describe('Manuscript controller', () => {
   const manuscriptDataProviderMock: jest.Mocked<ManuscriptDataProvider> =
-    getDataProviderMock();
+    manuscriptDataProviderContentfulMock;
   const externalAuthorDataProviderMock =
     getDataProviderMock() as unknown as jest.Mocked<ExternalAuthorContentfulDataProvider>;
 
@@ -283,6 +284,43 @@ describe('Manuscript controller', () => {
         contentType: manuscriptFileCreateData.contentType,
         publish: false,
       } satisfies AssetCreateData);
+    });
+  });
+
+  describe('Create version method', () => {
+    beforeEach(jest.clearAllMocks);
+
+    const manuscriptId = 'manuscript-id-1';
+
+    test('Should throw when fails to create the manuscript', async () => {
+      manuscriptDataProviderMock.createVersion.mockRejectedValueOnce(
+        new GenericError(),
+      );
+
+      await expect(
+        manuscriptController.createVersion(
+          manuscriptId,
+          getManuscriptCreateControllerDataObject(),
+        ),
+      ).rejects.toThrow(GenericError);
+    });
+
+    test('Should create the new manuscript version and return manuscript', async () => {
+      manuscriptDataProviderMock.createVersion.mockResolvedValueOnce();
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
+        getManuscriptResponse(),
+      );
+
+      const result = await manuscriptController.createVersion(
+        manuscriptId,
+        getManuscriptCreateControllerDataObject(),
+      );
+
+      expect(result).toEqual(getManuscriptResponse());
+      expect(manuscriptDataProviderMock.createVersion).toHaveBeenCalledWith(
+        manuscriptId,
+        getManuscriptCreateDataObject(),
+      );
     });
   });
 

@@ -18,6 +18,7 @@ import {
   QuestionChecksOption,
   QuickCheck,
   quickCheckQuestions,
+  resubmitManuscriptFormFieldsMapping,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -254,12 +255,17 @@ type ManuscriptFormProps = Omit<
     additionalFiles?: ManuscriptFileResponse[];
     description?: string | '';
     eligibilityReasons: Set<string>;
+    resubmitManuscript?: boolean;
     onCreate: (
       output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
     onUpdate: (
       id: string,
       output: ManuscriptPutRequest,
+    ) => Promise<ManuscriptResponse | void>;
+    onResubmit: (
+      id: string,
+      output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
     manuscriptId?: string;
     onSuccess: () => void;
@@ -289,6 +295,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   manuscriptId,
   onCreate,
   onUpdate,
+  onResubmit,
   onSuccess,
   handleFileUpload,
   teamId,
@@ -322,6 +329,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   firstAuthors,
   correspondingAuthor,
   additionalAuthors,
+  resubmitManuscript = false,
 }) => {
   const getDefaultQuickCheckValue = (quickCheckDetails: string | undefined) => {
     const isEditing = !!title;
@@ -333,7 +341,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     return undefined;
   };
 
-  const isEditMode = !!manuscriptId;
+  const isEditMode = !!manuscriptId && !resubmitManuscript;
   const methods = useForm<ManuscriptFormData>({
     mode: 'onBlur',
     defaultValues: {
@@ -578,6 +586,17 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             },
           ],
         });
+      } else if (resubmitManuscript) {
+        await onResubmit(manuscriptId, {
+          title: data.title,
+          teamId,
+          versions: [
+            {
+              ...requestVersionData,
+              ...versionDataPayload,
+            },
+          ],
+        });
       } else {
         await onUpdate(manuscriptId, {
           title: data.title,
@@ -590,7 +609,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           ],
         });
       }
-
       onSuccess();
     }
   };
@@ -705,9 +723,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
             {watchType &&
               watchLifecycle &&
-              manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
+              (manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
                 'preprintDoi',
-              ) && (
+              ) ||
+                (resubmitManuscript &&
+                  resubmitManuscriptFormFieldsMapping[watchType].includes(
+                    'preprintDoi',
+                  ))) && (
                 <Controller
                   name="versions.0.preprintDoi"
                   control={control}
@@ -717,7 +739,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       message: 'Your preprint DOI must start with 10.',
                     },
                     required:
-                      watchLifecycle === 'Preprint' &&
+                      (watchLifecycle === 'Preprint' || resubmitManuscript) &&
                       'Please enter a Preprint DOI',
                   }}
                   render={({
@@ -727,7 +749,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     <LabeledTextField
                       title="Preprint DOI"
                       subtitle={
-                        watchLifecycle === 'Preprint'
+                        watchLifecycle === 'Preprint' || resubmitManuscript
                           ? '(required)'
                           : '(optional)'
                       }

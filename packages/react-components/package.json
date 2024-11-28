@@ -23,8 +23,8 @@
     "react-router-dom": "5.3.4"
   },
   "dependencies": {
-    "@asap-hub/auth": "workspace:*",
     "@asap-hub/algolia": "workspace:*",
+    "@asap-hub/auth": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/routing": "workspace:*",

@@ -38,6 +38,7 @@ import {
   updateManuscript,
   updateDiscussion,
   uploadManuscriptFile,
+  resubmitManuscript,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -211,6 +212,16 @@ export const usePostManuscript = () => {
   const setManuscriptItem = useSetManuscriptItem();
   return async (payload: ManuscriptPostRequest) => {
     const manuscript = await createManuscript(payload, authorization);
+    setManuscriptItem(manuscript);
+    return manuscript;
+  };
+};
+
+export const useResubmitManuscript = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const setManuscriptItem = useSetManuscriptItem();
+  return async (id: string, payload: ManuscriptPostRequest) => {
+    const manuscript = await resubmitManuscript(id, payload, authorization);
     setManuscriptItem(manuscript);
     return manuscript;
   };

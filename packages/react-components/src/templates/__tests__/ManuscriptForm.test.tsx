@@ -49,6 +49,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   manuscriptId: undefined,
   onCreate: jest.fn(() => Promise.resolve()),
   onUpdate: jest.fn(() => Promise.resolve()),
+  onResubmit: jest.fn(() => Promise.resolve()),
   getAuthorSuggestions: jest.fn(),
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,

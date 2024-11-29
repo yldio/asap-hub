@@ -18,7 +18,6 @@ import {
   QuestionChecksOption,
   QuickCheck,
   quickCheckQuestions,
-  resubmitManuscriptFormFieldsMapping,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -723,13 +722,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
             {watchType &&
               watchLifecycle &&
-              (manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
+              manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
                 'preprintDoi',
-              ) ||
-                (resubmitManuscript &&
-                  resubmitManuscriptFormFieldsMapping[watchType].includes(
-                    'preprintDoi',
-                  ))) && (
+              ) && (
                 <Controller
                   name="versions.0.preprintDoi"
                   control={control}
@@ -739,7 +734,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       message: 'Your preprint DOI must start with 10.',
                     },
                     required:
-                      (watchLifecycle === 'Preprint' || resubmitManuscript) &&
+                      (watchLifecycle === 'Preprint' ||
+                        (resubmitManuscript &&
+                          [
+                            'Publication',
+                            'Publication with addendum or corrigendum',
+                          ].includes(watchLifecycle))) &&
                       'Please enter a Preprint DOI',
                   }}
                   render={({

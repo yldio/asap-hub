@@ -263,29 +263,6 @@ export const manuscriptFormFieldsMapping: Record<
   },
 };
 
-export const resubmitManuscriptFormFieldsMapping: Record<
-  ManuscriptType,
-  Array<
-    keyof Pick<
-      ManuscriptVersion,
-      | 'preprintDoi'
-      | 'publicationDoi'
-      | 'otherDetails'
-      | 'requestingApcCoverage'
-    >
-  >
-> = {
-  'Original Research': [
-    'preprintDoi',
-    'publicationDoi',
-    'requestingApcCoverage',
-  ],
-  'Review / Op-Ed / Letter / Hot Topic': [
-    'publicationDoi',
-    'requestingApcCoverage',
-  ],
-};
-
 export const manuscriptStatus = [
   'Waiting for Report',
   'Review Compliance Report',

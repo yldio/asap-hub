@@ -97,6 +97,23 @@ it('redirects to compliance report form when user clicks on share compliance rep
   );
 });
 
+it('redirects to resubmit manuscript form when user clicks on Submit Revised Manuscript button', () => {
+  const history = createMemoryHistory({});
+  const { getByRole } = render(
+    <Router history={history}>
+      <Route path="">
+        <ManuscriptCard {...props} />
+      </Route>
+    </Router>,
+  );
+
+  userEvent.click(getByRole('button', { name: /Resubmit Manuscript Icon/i }));
+
+  expect(history.location.pathname).toBe(
+    `/network/teams/${props.teamId}/workspace/resubmit-manuscript/${props.id}`,
+  );
+});
+
 it('displays the confirmation modal when isComplianceReviewer is true and the user tries to change the manuscript status to a different one than it has started', () => {
   const { getByRole, getByTestId, getByText } = render(
     <ManuscriptCard

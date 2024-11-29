@@ -2,6 +2,8 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { createManuscriptResponse } from '@asap-hub/fixtures';
+import { AuthorResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import {
   act,
@@ -12,12 +14,12 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
+import { createMemoryHistory, MemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { createManuscript } from '../api';
+import { createManuscript, getManuscript, resubmitManuscript } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
@@ -37,6 +39,7 @@ jest.mock('../../users/api');
 jest.mock('../api', () => ({
   createManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
   getManuscript: jest.fn().mockResolvedValue(null),
+  resubmitManuscript: jest.fn().mockResolvedValue(null),
   uploadManuscriptFile: jest.fn().mockResolvedValue({
     filename: 'manuscript.pdf',
     url: 'https://example.com/manuscript.pdf',
@@ -57,15 +60,15 @@ beforeEach(() => {
 
 const renderPage = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
-) => {
-  const path =
-    network.template +
+  resubmit: boolean = false,
+  path: string = network.template +
     network({}).teams.template +
     network({}).teams({}).team.template +
     network({}).teams({}).team({ teamId }).workspace.template +
     network({}).teams({}).team({ teamId }).workspace({}).createManuscript
-      .template;
-
+      .template,
+  routerHistory: MemoryHistory = history,
+) => {
   const { container } = render(
     <RecoilRoot
       initializeState={({ set }) => {
@@ -75,11 +78,14 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router history={history}>
+            <Router history={routerHistory}>
               <Route path={path}>
                 <ManuscriptToastProvider>
                   <EligibilityReasonProvider>
-                    <TeamManuscript teamId={teamId} />
+                    <TeamManuscript
+                      teamId={teamId}
+                      resubmitManuscript={resubmit}
+                    />
                   </EligibilityReasonProvider>
                 </ManuscriptToastProvider>
               </Route>
@@ -241,3 +247,61 @@ it('can publish a form when the data is valid and navigates to team workspace', 
     );
   });
 }, 180_000);
+
+it('can resubmit a manuscript and navigates to team workspace', async () => {
+  const mockResubmitManuscript = resubmitManuscript as jest.MockedFunction<
+    typeof resubmitManuscript
+  >;
+  const mockGetManuscript = getManuscript as jest.MockedFunction<
+    typeof getManuscript
+  >;
+
+  const manuscript = createManuscriptResponse();
+  manuscript.versions[0]!.firstAuthors = [
+    {
+      label: 'Author 1',
+      value: 'author-1',
+      id: 'author-1',
+      displayName: 'Author 1',
+      email: 'author@email.com',
+    } as AuthorResponse,
+  ];
+
+  mockGetManuscript.mockResolvedValue(manuscript);
+  mockResubmitManuscript.mockResolvedValue(manuscript);
+
+  const resubmitPath = `/network/teams/${teamId}/workspace/resubmit-manuscript/:manuscriptId`;
+  const resubmitHistory = createMemoryHistory({
+    initialEntries: [
+      `/network/teams/${teamId}/workspace/resubmit-manuscript/${manuscript.id}`,
+    ],
+  });
+
+  await renderPage({}, true, resubmitPath, resubmitHistory);
+
+  const preprintDoi = '10.4444/test';
+
+  const preprintDoiTextbox = screen.getByRole('textbox', {
+    name: /Preprint DOI/i,
+  });
+  userEvent.type(preprintDoiTextbox, preprintDoi);
+
+  await act(async () => {
+    userEvent.click(await screen.findByRole('button', { name: /Submit/ }));
+  });
+
+  userEvent.click(screen.getByRole('button', { name: /Submit Manuscript/ }));
+
+  await waitFor(() => {
+    expect(mockResubmitManuscript).toHaveBeenCalledWith(
+      manuscript.id,
+      expect.objectContaining({
+        versions: [expect.objectContaining({ preprintDoi })],
+      }),
+      expect.anything(),
+    );
+    expect(resubmitHistory.location.pathname).toBe(
+      `/network/teams/${teamId}/workspace`,
+    );
+  });
+});

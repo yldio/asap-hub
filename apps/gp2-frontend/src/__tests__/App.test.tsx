@@ -24,9 +24,16 @@ const MockAuthenticatedApp = AuthenticatedApp as jest.MockedFunction<
 
 const originalCookie = document.cookie;
 
+const originalFetch = global.fetch;
+
 beforeEach(() => {
+  global.fetch = jest.fn();
   MockSignin.mockReset().mockReturnValue(<>Signin</>);
   MockAuthenticatedApp.mockReset().mockReturnValue(<>Authenticated</>);
+});
+
+afterEach(() => {
+  global.fetch = originalFetch;
 });
 
 it('changes routing for logged in users', async () => {
@@ -69,8 +76,6 @@ it('loads overrides for feature flags', async () => {
   document.cookie = originalCookie;
 });
 
-global.fetch = jest.fn();
-
 describe('Cookie Modal & Button', () => {
   beforeEach(() => {
     document.cookie = 'ASAP_DISPLAY_COOKIES=true;';
@@ -95,11 +100,20 @@ describe('Cookie Modal & Button', () => {
     expect(screen.queryByText('Privacy Preference Center')).toBeInTheDocument();
   });
 
-  it('shows the cookie modal if the DISPLAY_COOKIES flag is enabled and consent has been given before', () => {
-    document.cookie = `gp2-cookie-consent=${JSON.stringify({
+  it('hides the cookie modal if the DISPLAY_COOKIES flag is enabled and consent has been given before', () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookiesPreferences = {
       cookieId: 'a29956e6-897a-47c9-a2f6-3216986d20c7',
       preferences: { essential: true, analytics: false },
-    })};`;
+    };
+    document.cookie = `gp2-cookie-consent=${JSON.stringify(
+      mockCookiesPreferences,
+    )};`;
+
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockCookiesPreferences),
+    });
     render(<App />);
     expect(
       screen.queryByText('Privacy Preference Center'),

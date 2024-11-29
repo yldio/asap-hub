@@ -257,6 +257,7 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
   >;
 
   const manuscript = createManuscriptResponse();
+  manuscript.versions[0]!.lifecycle = 'Preprint';
   manuscript.versions[0]!.firstAuthors = [
     {
       label: 'Author 1',

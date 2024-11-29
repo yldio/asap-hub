@@ -89,10 +89,11 @@ const App: FC<Record<string, never>> = () => {
     cookieData,
     onSaveCookiePreferences,
     toggleCookieModal,
-  } = useCookieConsent(
-    COOKIE_CONSENT_NAME,
-    `${API_BASE_URL}/cookie-preferences/save`,
-  );
+  } = useCookieConsent({
+    name: COOKIE_CONSENT_NAME,
+    baseUrl: `${API_BASE_URL}/cookie-preferences`,
+    savePath: `save`,
+  });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises

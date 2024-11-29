@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 type CookieData = {
@@ -35,12 +35,57 @@ export const hasGivenCookieConsent = (name: string): boolean => {
   );
 };
 
-export const useCookieConsent = (name: string, url: string) => {
+export const useCookieConsent = ({
+  name,
+  baseUrl,
+  savePath,
+}: {
+  name: string;
+  baseUrl: string;
+  savePath: string;
+}) => {
+  const saveUrl = `${baseUrl}/${savePath}`;
   const [showCookieModal, setShowCookieModal] = useState(
     !hasGivenCookieConsent(name),
   );
 
   const cookieData = getConsentCookie(name);
+
+  const checkConsistencyWithRemote = useCallback(async () => {
+    if (!cookieData?.cookieId) return;
+    const getUrl = `${baseUrl}/${cookieData.cookieId}`;
+
+    const remoteCookieDataResponse = await fetch(getUrl, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+      },
+    });
+
+    const remoteCookieData = await remoteCookieDataResponse?.json();
+
+    if (!remoteCookieData || remoteCookieData?.error) return;
+
+    const {
+      cookieId: remoteCookieId,
+      preferences: { analytics: remoteAnalytics },
+    } = remoteCookieData;
+
+    const {
+      cookieId,
+      preferences: { analytics },
+    } = cookieData;
+
+    const isConsistent =
+      remoteCookieId === cookieId && remoteAnalytics === analytics;
+
+    if (isConsistent) {
+      setShowCookieModal(false);
+      return;
+    }
+
+    setShowCookieModal(true);
+  }, [cookieData, baseUrl]);
 
   const onSaveCookiePreferences = async (analytics: boolean) => {
     const updatedCookieData = {
@@ -53,7 +98,7 @@ export const useCookieConsent = (name: string, url: string) => {
 
     setConsentCookie(name, updatedCookieData);
 
-    await fetch(url, {
+    await fetch(saveUrl, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -64,10 +109,16 @@ export const useCookieConsent = (name: string, url: string) => {
     setShowCookieModal(false);
   };
 
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    checkConsistencyWithRemote();
+  }, [cookieData?.cookieId, checkConsistencyWithRemote]);
+
   return {
     showCookieModal,
     onSaveCookiePreferences,
     toggleCookieModal: () => setShowCookieModal((prev) => !prev),
     cookieData,
+    checkConsistencyWithRemote,
   };
 };

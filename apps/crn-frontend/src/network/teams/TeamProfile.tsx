@@ -84,7 +84,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
       .then(loadOutputs)
       .then(loadTeamOutput)
       .then(loadEventsList);
-  }, [team]);
+  }, [team, isStaff]);
 
   const canShareResearchOutput = useCanShareResearchOutput(
     'teams',

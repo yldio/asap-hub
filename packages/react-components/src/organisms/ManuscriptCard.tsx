@@ -21,7 +21,7 @@ import {
   StatusType,
   Subtitle,
 } from '..';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, perRem, rem, smallDesktopScreen } from '../pixels';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
 
@@ -84,7 +84,18 @@ const toastHeaderStyles = css({
 
 const buttonsContainerStyles = css({
   display: 'flex',
-  marginTop: `${16 / perRem}em`,
+  marginTop: rem(16),
+  gap: rem(16),
+  [`@media (max-width: ${smallDesktopScreen.max}px)`]: {
+    flexDirection: 'column',
+  },
+});
+
+const buttonStyles = css({
+  '> svg': { stroke: 'none' },
+  height: rem(24),
+  display: 'flex',
+  gap: rem(8),
 });
 
 const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
@@ -226,36 +237,25 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                     onClick={handleShareComplianceReport}
                     enabled={canSubmitComplianceReport}
                   >
-                    <span
-                      css={{ '> svg': { stroke: 'none' }, height: rem(24) }}
-                    >
+                    <span css={buttonStyles}>
                       {complianceReportIcon} Share Compliance Report
                     </span>
                   </Button>
                 </span>
               )}
-              {!isComplianceReviewer && (
-                <span>
-                  <Button
-                    primary
-                    small
-                    noMargin
-                    onClick={handleResubmitManuscript}
-                    enabled
-                  >
-                    <span
-                      css={{
-                        '> svg': { stroke: 'none' },
-                        height: rem(24),
-                        display: 'flex',
-                        gap: rem(8),
-                      }}
-                    >
-                      {resubmitManuscriptIcon} Submit Revised Manuscript
-                    </span>
-                  </Button>
-                </span>
-              )}
+              <span>
+                <Button
+                  primary
+                  small
+                  noMargin
+                  onClick={handleResubmitManuscript}
+                  enabled
+                >
+                  <span css={buttonStyles}>
+                    {resubmitManuscriptIcon} Submit Revised Manuscript
+                  </span>
+                </Button>
+              </span>
             </span>
           </span>
         </div>

@@ -70,7 +70,7 @@ it('displays share compliance report button if user has permission', () => {
   ).toBeVisible();
 });
 
-it('displays submit revised manuscript button if user has permission', () => {
+it('displays submit revised manuscript button', () => {
   const { getByRole } = render(<ManuscriptCard {...props} />);
 
   expect(

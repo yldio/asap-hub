@@ -101,7 +101,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   getDiscussion,
   setEligibilityReasons,
   isComplianceReviewer = false,
-  isTeamMember = false,
+  isTeamMember,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();

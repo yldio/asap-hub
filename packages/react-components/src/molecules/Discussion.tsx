@@ -40,7 +40,7 @@ const replyAvatarsStyles = css({
 
 const Discussion: FC<DiscussionProps> = ({
   id,
-  canReply = false,
+  canReply,
   getDiscussion,
   onReplyToDiscussion,
 }) => {

@@ -292,7 +292,7 @@ describe('Manuscript controller', () => {
 
     const manuscriptId = 'manuscript-id-1';
 
-    test('Should throw when fails to create the manuscript', async () => {
+    test('Should throw when fails to create the manuscript version', async () => {
       manuscriptDataProviderMock.createVersion.mockRejectedValueOnce(
         new GenericError(),
       );

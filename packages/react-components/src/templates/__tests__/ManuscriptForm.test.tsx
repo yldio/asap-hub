@@ -1770,7 +1770,7 @@ it('calls onUpdate when form is updated', async () => {
   });
 });
 
-it('calls onResubmit when form detsils are saved and resubmitManuscript prop is true', async () => {
+it('calls onResubmit when form details are saved and resubmitManuscript prop is true', async () => {
   const onResubmit = jest.fn();
   render(
     <StaticRouter>

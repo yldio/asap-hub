@@ -332,7 +332,7 @@ describe('/manuscripts/ route', () => {
     const manuscriptId = 'manuscript-id-1';
     const manuscriptResponse = getManuscriptResponse();
 
-    test('Should return 403 when not allowed to create a manuscript because user is not onboarded', async () => {
+    test('Should return 403 when not allowed resubmit a manuscript because user is not onboarded', async () => {
       const createManuscriptRequest = getManuscriptCreateDataObject();
 
       userMockFactory.mockReturnValueOnce({

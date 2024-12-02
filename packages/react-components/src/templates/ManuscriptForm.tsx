@@ -632,6 +632,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         modal={modal}
         setModal={setModal}
         handleSubmit={handleSubmit(onSubmit)}
+        isEditMode={isEditMode}
       />
       <main css={mainStyles}>
         <div css={contentStyles}>

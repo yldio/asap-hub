@@ -122,6 +122,7 @@ const iconStyles = css({
 });
 
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
+  readonly isStaff: boolean;
   readonly inactiveSince?: string;
   readonly tools?: ReadonlyArray<TeamTool>;
   readonly teamListElementId: string;
@@ -144,6 +145,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   teamOutputsCount = 0,
   pastEventsCount,
   teamDraftOutputsCount,
+  isStaff,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   const { canShareResearchOutput } = useContext(
@@ -246,7 +248,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
       </section>
       <TabNav>
         <TabLink href={route.about({}).$}>About</TabLink>
-        {tools && (
+        {(tools || isStaff) && (
           <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
         )}
 

@@ -12,7 +12,7 @@ import {
   DiscussionPatchRequest,
 } from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
-import { ToastContext } from '@asap-hub/react-context';
+import { ToastContext, useCurrentUserCRN } from '@asap-hub/react-context';
 
 import {
   useDiscussionById,
@@ -25,7 +25,8 @@ import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
 
 interface WorkspaceProps {
-  readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
+  readonly team: TeamResponse &
+    Required<Pick<TeamResponse, 'tools'>>;
 }
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const route = network({}).teams({}).team({ teamId: team.id }).workspace({});
@@ -41,12 +42,15 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const toast = useContext(ToastContext);
 
   const { setFormType } = useManuscriptToast();
+  const user = useCurrentUserCRN();
+  const isTeamMember = !!user?.teams.find(({ id }) => team.id === id);;
 
   return (
     <>
       <Route path={path}>
         <TeamProfileWorkspace
           {...team}
+          isTeamMember={isTeamMember}
           setEligibilityReasons={setEligibilityReasons}
           tools={team.tools}
           onUpdateManuscript={(

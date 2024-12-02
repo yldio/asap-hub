@@ -37,6 +37,7 @@ type ManuscriptCardProps = Pick<
     teamIdCode: string;
     grantId: string;
     isComplianceReviewer: boolean;
+    isTeamMember: boolean;
     onUpdateManuscript: (
       manuscriptId: string,
       payload: ManuscriptPutRequest,
@@ -98,6 +99,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   teamIdCode,
   grantId,
   isComplianceReviewer,
+  isTeamMember,
   onUpdateManuscript,
   getDiscussion,
   onReplyToDiscussion,

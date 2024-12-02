@@ -60,6 +60,7 @@ export default class TeamController {
       throw new NotFoundError(undefined, `team with id ${teamId} not found`);
     }
 
+    console.log(team);
     if (options?.showTools === false) {
       return {
         ...team,

@@ -24,6 +24,7 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   onUpdateManuscript: jest.fn(),
   onReplyToDiscussion: jest.fn(),
   getDiscussion: jest.fn(),
+  isTeamMember: true,
 };
 it('renders the team workspace page', () => {
   const { getByRole } = render(<TeamProfileWorkspace {...team} tools={[]} />);

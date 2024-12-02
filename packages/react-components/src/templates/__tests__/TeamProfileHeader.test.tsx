@@ -21,6 +21,7 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   labCount: 15,
   upcomingEventsCount: 0,
   pastEventsCount: 0,
+  isStaff: false,
 };
 
 it('renders the name as the top-level heading', () => {

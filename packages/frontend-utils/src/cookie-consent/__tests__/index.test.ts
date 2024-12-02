@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/dom';
 import { act, renderHook } from '@testing-library/react-hooks';
 import Cookies from 'js-cookie';
 import {
@@ -168,17 +169,13 @@ describe('useCookieConsent', () => {
   it('should not call fetch if no cookieId exists', async () => {
     (Cookies.get as jest.Mock).mockReturnValue(null);
 
-    const { result } = renderHook(() =>
+    renderHook(() =>
       useCookieConsent({
         name: mockCookieName,
         baseUrl: apiUrl,
         savePath: 'save',
       }),
     );
-
-    await act(async () => {
-      await result.current.checkConsistencyWithRemote();
-    });
 
     expect(global.fetch).not.toHaveBeenCalled();
   });
@@ -214,10 +211,6 @@ describe('useCookieConsent', () => {
       }),
     );
 
-    await act(async () => {
-      await result.current.checkConsistencyWithRemote();
-    });
-
     expect(result.current.showCookieModal).toBe(false);
     expect(global.fetch).toHaveBeenCalledWith(
       `${apiUrl}/test-id`,
@@ -226,6 +219,7 @@ describe('useCookieConsent', () => {
   });
 
   it('should show modal when remote data is inconsistent', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
     const mockCookieData = {
       cookieId: 'test-id',
       preferences: {
@@ -256,10 +250,42 @@ describe('useCookieConsent', () => {
       }),
     );
 
-    await act(async () => {
-      await result.current.checkConsistencyWithRemote();
+    await waitFor(() => {
+      expect(result.current.showCookieModal).toBe(true);
+    });
+  });
+
+  it('should show modal when cookie data is not found', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          error: 'Not found - mocked',
+          statusCode: 404,
+        }),
     });
 
-    expect(result.current.showCookieModal).toBe(true);
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await waitFor(() => {
+      expect(result.current.showCookieModal).toBe(true);
+    });
   });
 });

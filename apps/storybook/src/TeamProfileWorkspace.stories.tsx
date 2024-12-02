@@ -21,6 +21,7 @@ export const Normal = () => (
         description: 'Tool Description',
       },
     ]}
+    isTeamMember={true}
     isComplianceReviewer={false}
     onUpdateManuscript={() => Promise.resolve(createManuscriptResponse())}
     getDiscussion={() => createDiscussionResponse()}

@@ -4,7 +4,10 @@ import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
 import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
-import { ResearchOutputPermissionsContext, useCurrentUserCRN } from '@asap-hub/react-context';
+import {
+  ResearchOutputPermissionsContext,
+  useCurrentUserCRN,
+} from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
 import { usePaginationParams } from '../../hooks';

@@ -43,7 +43,7 @@ it('does not display Collaboration Tools section if user is not a team member', 
   expect(
     queryByRole('heading', { name: 'Collaboration Tools (Team Only)' }),
   ).not.toBeInTheDocument();
-})
+});
 
 describe('compliance section', () => {
   beforeAll(() => {

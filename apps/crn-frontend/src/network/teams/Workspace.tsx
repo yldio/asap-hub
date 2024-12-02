@@ -25,8 +25,7 @@ import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
 
 interface WorkspaceProps {
-  readonly team: TeamResponse &
-    Required<Pick<TeamResponse, 'tools'>>;
+  readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
 }
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const route = network({}).teams({}).team({ teamId: team.id }).workspace({});

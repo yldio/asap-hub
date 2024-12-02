@@ -54,7 +54,10 @@ const mockUpdateDiscussion = updateDiscussion as jest.MockedFunction<
 
 const id = '42';
 
-const renderWithWrapper = (children: ReactNode, user = {}): ReturnType<typeof render> =>
+const renderWithWrapper = (
+  children: ReactNode,
+  user = {},
+): ReturnType<typeof render> =>
   render(
     <RecoilRoot>
       <Suspense fallback="loading">
@@ -432,6 +435,7 @@ describe('manuscript quick check discussion', () => {
             }}
           />
         </ManuscriptToastProvider>,
+        user,
       );
 
     await act(async () => {

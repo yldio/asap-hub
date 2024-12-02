@@ -52,7 +52,8 @@ const Discussion: FC<DiscussionProps> = ({
   }
   const { message, replies } = discussion;
   const hasReplies = replies && replies.length > 0;
-  const displayReplyButton = canReply && (!hasReplies || (hasReplies && expandReplies));
+  const displayReplyButton =
+    canReply && (!hasReplies || (hasReplies && expandReplies));
   return (
     <>
       {replyToDiscussion && (

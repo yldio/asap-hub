@@ -170,7 +170,6 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                   teamIdCode={teamId || ''}
                   grantId={grantId || ''}
                   isComplianceReviewer={isComplianceReviewer}
-                  isTeamMember={isTeamMember}
                   onUpdateManuscript={onUpdateManuscript}
                   onReplyToDiscussion={onReplyToDiscussion}
                   getDiscussion={getDiscussion}

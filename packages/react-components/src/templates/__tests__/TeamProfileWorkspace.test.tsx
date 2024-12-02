@@ -26,6 +26,7 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   getDiscussion: jest.fn(),
   isTeamMember: true,
 };
+
 it('renders the team workspace page', () => {
   const { getByRole } = render(<TeamProfileWorkspace {...team} tools={[]} />);
 
@@ -33,6 +34,16 @@ it('renders the team workspace page', () => {
     getByRole('heading', { name: 'Collaboration Tools (Team Only)' }),
   ).toBeInTheDocument();
 });
+
+it('does not display Collaboration Tools section if user is not a team member', () => {
+  const { queryByRole } = render(
+    <TeamProfileWorkspace {...team} isTeamMember={false} tools={[]} />,
+  );
+
+  expect(
+    queryByRole('heading', { name: 'Collaboration Tools (Team Only)' }),
+  ).not.toBeInTheDocument();
+})
 
 describe('compliance section', () => {
   beforeAll(() => {
@@ -297,6 +308,25 @@ it('renders contact project manager when point of contact provided', () => {
 
   expect(link.href).toContain('test@example.com');
   expect(getByText('Team Contact Email')).toBeVisible();
+});
+
+it('does not render contact project manager when user is not part a team member', () => {
+  const { queryByText } = render(
+    <TeamProfileWorkspace
+      {...team}
+      isTeamMember={false}
+      pointOfContact={{
+        displayName: 'Mr PM',
+        firstName: 'Mr',
+        lastName: 'PM',
+        email: 'test@example.com',
+        id: '123',
+        role: 'Project Manager',
+      }}
+    />,
+  );
+
+  expect(queryByText('Team Contact Email')).not.toBeInTheDocument();
 });
 
 it('omits contact project manager when point of contact omitted', () => {

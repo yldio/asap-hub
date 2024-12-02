@@ -54,11 +54,11 @@ const mockUpdateDiscussion = updateDiscussion as jest.MockedFunction<
 
 const id = '42';
 
-const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
+const renderWithWrapper = (children: ReactNode, user = {}): ReturnType<typeof render> =>
   render(
     <RecoilRoot>
       <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
+        <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter
               initialEntries={[
@@ -81,6 +81,15 @@ const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
       </Suspense>
     </RecoilRoot>,
   );
+
+const user = {
+  teams: [
+    {
+      id,
+      role: 'Project Manager',
+    },
+  ],
+};
 
 afterEach(jest.resetAllMocks);
 
@@ -132,6 +141,7 @@ describe('a tool', () => {
           ],
         }}
       />,
+      user,
     );
 
     userEvent.click(await findByText(/delete/i));
@@ -158,6 +168,7 @@ describe('a tool', () => {
           ],
         }}
       />,
+      user,
     );
 
     mockConfirm.mockReturnValue(false);
@@ -185,6 +196,7 @@ describe('a tool', () => {
           }}
         />
       </ToastContext.Provider>,
+      user,
     );
 
     mockPatchTeam.mockRejectedValue(new Error('Nope'));
@@ -213,6 +225,7 @@ describe('a tool', () => {
           ],
         }}
       />,
+      user,
     );
     let resolvePatchTeam!: (team: TeamResponse) => void;
     mockPatchTeam.mockImplementation(
@@ -241,6 +254,7 @@ describe('the add tool dialog', () => {
     const { getByText, queryByTitle, findByText, findByTitle } =
       renderWithWrapper(
         <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
+        user,
       );
     userEvent.click(await findByText(/add/i));
 
@@ -253,6 +267,7 @@ describe('the add tool dialog', () => {
     const { queryByText, queryByDisplayValue, findByText, findByLabelText } =
       renderWithWrapper(
         <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
+        user,
       );
     userEvent.click(await findByText(/add/i));
     userEvent.type(await findByLabelText(/tool.+name/i), 'tool');
@@ -297,6 +312,7 @@ describe('the edit tool dialog', () => {
             ],
           }}
         />,
+        user,
       );
     userEvent.click(await findByText(/edit/i, { selector: 'li *' }));
 
@@ -326,6 +342,7 @@ describe('the edit tool dialog', () => {
             ],
           }}
         />,
+        user,
       );
     userEvent.click(
       getChildByText((await findByText('tool 2')).closest('li')!, /edit/i),

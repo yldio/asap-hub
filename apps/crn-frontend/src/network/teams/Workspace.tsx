@@ -43,7 +43,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
 
   const { setFormType } = useManuscriptToast();
   const user = useCurrentUserCRN();
-  const isTeamMember = !!user?.teams.find(({ id }) => team.id === id);;
+  const isTeamMember = !!user?.teams.find(({ id }) => team.id === id);
 
   return (
     <>

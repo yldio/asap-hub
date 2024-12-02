@@ -11,6 +11,7 @@ import {
   ManuscriptPutRequest,
   DiscussionPatchRequest,
   DiscussionResponse,
+  TeamDataObject,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useCallback } from 'react';
@@ -19,6 +20,7 @@ import {
   atomFamily,
   DefaultValue,
   selectorFamily,
+  SetterOrUpdater,
   useRecoilCallback,
   useRecoilState,
   useRecoilValue,
@@ -107,6 +109,11 @@ export const teamState = selectorFamily<TeamResponse | undefined, string>({
     (id) =>
     ({ get }) =>
       get(patchedTeamState(id)) ?? get(initialTeamState(id)),
+  set:
+    (id) =>
+    ({ set }, patchedTeam) => {
+      set(patchedTeamState(id), patchedTeam);
+    },
 });
 
 export const teamListState = atomFamily<
@@ -147,6 +154,8 @@ export const useTeams = (options: GetListOptions): ListTeamResponse => {
 };
 
 export const useTeamById = (id: string) => useRecoilValue(teamState(id));
+export const useSetTeamById = (id: string) => useSetRecoilState(teamState(id));
+
 export const usePatchTeamById = (id: string) => {
   const authorization = useRecoilValue(authorizationState);
   const setPatchedTeam = useSetRecoilState(patchedTeamState(id));
@@ -221,10 +230,29 @@ export const usePutManuscript = () => {
   const setManuscriptItem = useSetManuscriptItem();
   const invalidateManuscriptIndex = useInvalidateManuscriptIndex();
 
-  return async (id: string, payload: ManuscriptPutRequest) => {
+  return async (
+    id: string,
+    payload: ManuscriptPutRequest,
+    setTeam?: SetterOrUpdater<TeamDataObject | undefined>,
+  ) => {
     const manuscript = await updateManuscript(id, payload, authorization);
+
     setManuscriptItem(manuscript);
     invalidateManuscriptIndex();
+
+    if (setTeam && manuscript?.id) {
+      setTeam((prev) => {
+        if (prev) {
+          return {
+            ...prev,
+            manuscripts: prev.manuscripts.map((prevManuscript) =>
+              prevManuscript.id === id ? manuscript : prevManuscript,
+            ),
+          };
+        }
+        return prev;
+      });
+    }
     return manuscript;
   };
 };

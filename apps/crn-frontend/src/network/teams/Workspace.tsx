@@ -20,6 +20,7 @@ import {
   usePatchTeamById,
   usePutManuscript,
   useReplyToDiscussion,
+  useSetTeamById,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
@@ -39,8 +40,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const replyToDiscussion = useReplyToDiscussion();
   const getDiscussion = useDiscussionById;
   const toast = useContext(ToastContext);
-
   const { setFormType } = useManuscriptToast();
+  const setTeam = useSetTeamById(team.id);
 
   return (
     <>
@@ -52,7 +53,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           onUpdateManuscript={(
             manuscriptId: string,
             payload: ManuscriptPutRequest,
-          ) => updateManuscript(manuscriptId, payload)}
+          ) => updateManuscript(manuscriptId, payload, setTeam)}
           onDeleteTool={
             deleting
               ? undefined

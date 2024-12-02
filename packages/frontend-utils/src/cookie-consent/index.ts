@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { v4 as uuidv4, validate as isValidUUID } from 'uuid';
 
 type CookieData = {
@@ -49,9 +49,11 @@ export const useCookieConsent = ({
     !hasGivenCookieConsent(name),
   );
 
+  const [isSaving, setisSaving] = useState(false);
+
   const cookieData = getConsentCookie(name);
 
-  const checkConsistencyWithRemote = useCallback(async () => {
+  const checkConsistencyWithRemote = async () => {
     if (!cookieData?.cookieId) return;
     const getUrl = `${baseUrl}/${cookieData.cookieId}`;
 
@@ -64,9 +66,12 @@ export const useCookieConsent = ({
 
     const remoteCookieData = await remoteCookieDataResponse?.json();
 
-    if (remoteCookieData?.error && remoteCookieData?.statusCode === 404) {
+    if (
+      remoteCookieData?.error &&
+      remoteCookieData?.statusCode === 404 &&
+      !isSaving
+    ) {
       setShowCookieModal(true);
-      return;
     }
 
     if (!remoteCookieData || remoteCookieData?.error) return;
@@ -90,9 +95,11 @@ export const useCookieConsent = ({
     }
 
     setShowCookieModal(true);
-  }, [cookieData, baseUrl]);
+  };
 
   const onSaveCookiePreferences = async (analytics: boolean) => {
+    setisSaving(true);
+
     const updatedCookieData = {
       cookieId:
         cookieData?.cookieId && isValidUUID(cookieData.cookieId)
@@ -115,12 +122,14 @@ export const useCookieConsent = ({
     });
 
     setShowCookieModal(false);
+    setisSaving(false);
   };
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     checkConsistencyWithRemote();
-  }, [cookieData?.cookieId, checkConsistencyWithRemote]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     showCookieModal,

@@ -1,11 +1,12 @@
 import { waitFor } from '@testing-library/dom';
 import { act, renderHook } from '@testing-library/react-hooks';
 import Cookies from 'js-cookie';
+import { v4 as uuidv4, validate } from 'uuid';
 import {
-  useCookieConsent,
-  setConsentCookie,
   getConsentCookie,
   hasGivenCookieConsent,
+  setConsentCookie,
+  useCookieConsent,
 } from '../index';
 
 const originalFetch = global.fetch;
@@ -16,6 +17,7 @@ jest.mock('js-cookie');
 
 jest.mock('uuid', () => ({
   v4: jest.fn().mockReturnValue('mocked-uuid'),
+  validate: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -286,6 +288,71 @@ describe('useCookieConsent', () => {
 
     await waitFor(() => {
       expect(result.current.showCookieModal).toBe(true);
+    });
+  });
+
+  it('generates a new cookieId when no valid cookieId exists', async () => {
+    (Cookies.get as jest.Mock).mockReturnValueOnce(
+      JSON.stringify({
+        cookieId: 'mocked-uuid',
+        preferences: { essential: true, analytics: false },
+      }),
+    );
+
+    jest.spyOn(global, 'fetch').mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(),
+      } as Response),
+    );
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: COOKIE_NAME,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await act(async () => result.current.onSaveCookiePreferences(true));
+
+    await waitFor(() => {
+      expect(uuidv4).toHaveBeenCalled();
+    });
+  });
+
+  it('does not generates a new cookieId when cookieId is Valid', async () => {
+    jest.spyOn(global, 'fetch').mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(),
+      } as Response),
+    );
+
+    jest.spyOn(Cookies, 'get').mockReturnValue(
+      // @ts-expect-error Ignores jest mock expecting an object instead
+      JSON.stringify({
+        cookieId: 'ee8bb207-12a5-4567-9c78-1207ee174497',
+        preferences: { essential: true, analytics: false },
+      }),
+    );
+
+    (validate as jest.Mock).mockReturnValue(true);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: COOKIE_NAME,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await act(async () => result.current.onSaveCookiePreferences(true));
+
+    await waitFor(() => {
+      expect(uuidv4).not.toHaveBeenCalled();
     });
   });
 });

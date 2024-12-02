@@ -14,6 +14,7 @@ type DiscussionProps = Pick<
   'onReplyToDiscussion'
 > & {
   id: string;
+  canReply: boolean;
   getDiscussion: (id: string) => DiscussionDataObject | undefined;
 };
 
@@ -39,6 +40,7 @@ const replyAvatarsStyles = css({
 
 const Discussion: FC<DiscussionProps> = ({
   id,
+  canReply = false,
   getDiscussion,
   onReplyToDiscussion,
 }) => {
@@ -50,7 +52,7 @@ const Discussion: FC<DiscussionProps> = ({
   }
   const { message, replies } = discussion;
   const hasReplies = replies && replies.length > 0;
-  const displayReplyButton = !hasReplies || (hasReplies && expandReplies);
+  const displayReplyButton = canReply && (!hasReplies || (hasReplies && expandReplies));
   return (
     <>
       {replyToDiscussion && (

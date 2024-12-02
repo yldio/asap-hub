@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import { useCallback, useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, validate as isValidUUID } from 'uuid';
 
 type CookieData = {
   cookieId: string;
@@ -64,6 +64,11 @@ export const useCookieConsent = ({
 
     const remoteCookieData = await remoteCookieDataResponse?.json();
 
+    if (remoteCookieData?.error && remoteCookieData?.statusCode === 404) {
+      setShowCookieModal(true);
+      return;
+    }
+
     if (!remoteCookieData || remoteCookieData?.error) return;
 
     const {
@@ -89,7 +94,10 @@ export const useCookieConsent = ({
 
   const onSaveCookiePreferences = async (analytics: boolean) => {
     const updatedCookieData = {
-      cookieId: cookieData?.cookieId ?? uuidv4(),
+      cookieId:
+        cookieData?.cookieId && isValidUUID(cookieData.cookieId)
+          ? cookieData?.cookieId
+          : uuidv4(),
       preferences: {
         essential: true,
         analytics,
@@ -119,6 +127,5 @@ export const useCookieConsent = ({
     onSaveCookiePreferences,
     toggleCookieModal: () => setShowCookieModal((prev) => !prev),
     cookieData,
-    checkConsistencyWithRemote,
   };
 };

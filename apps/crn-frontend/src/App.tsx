@@ -89,10 +89,11 @@ const App: FC<Record<string, never>> = () => {
     cookieData,
     onSaveCookiePreferences,
     toggleCookieModal,
-  } = useCookieConsent(
-    COOKIE_CONSENT_NAME,
-    `${API_BASE_URL}/cookie-preferences/save`,
-  );
+  } = useCookieConsent({
+    name: COOKIE_CONSENT_NAME,
+    baseUrl: `${API_BASE_URL}/cookie-preferences`,
+    savePath: `save`,
+  });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -105,7 +106,9 @@ const App: FC<Record<string, never>> = () => {
   return (
     <LogoProvider appName="CRN">
       <Frame title="ASAP Hub">
-        <GoogleTagManager containerId={GTM_CONTAINER_ID} />
+        {(!isCookiesFlagEnabled || cookieData?.preferences.analytics) && (
+          <GoogleTagManager containerId={GTM_CONTAINER_ID} />
+        )}
         <AuthProvider>
           <SentryAuth0 />
           <Router history={history}>

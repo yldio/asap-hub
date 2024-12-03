@@ -213,6 +213,31 @@ export const updateManuscript = async (
   return response;
 };
 
+export const resubmitManuscript = async (
+  manuscriptId: string,
+  manuscript: ManuscriptPostRequest,
+  authorization: string,
+): Promise<ManuscriptResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/manuscripts/${manuscriptId}`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(manuscript),
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to resubmit manuscript with id ${manuscriptId}. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
+};
+
 export const getManuscript = async (
   id: string,
   authorization: string,

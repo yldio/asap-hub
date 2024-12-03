@@ -97,6 +97,12 @@ const team = (() => {
     { manuscriptId: stringParser },
     {},
   );
+  const resubmitManuscript = route(
+    '/resubmit-manuscript/:manuscriptId',
+    { manuscriptId: stringParser },
+    {},
+  );
+
   const createComplianceReport = route(
     '/create-compliance-report/:manuscriptId',
     { manuscriptId: stringParser },
@@ -105,7 +111,13 @@ const team = (() => {
   const workspace = route(
     '/workspace',
     {},
-    { tools, createManuscript, editManuscript, createComplianceReport },
+    {
+      tools,
+      createManuscript,
+      editManuscript,
+      resubmitManuscript,
+      createComplianceReport,
+    },
   );
   const createOutput = route(
     '/create-output/:outputDocumentType',

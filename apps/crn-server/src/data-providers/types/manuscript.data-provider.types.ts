@@ -3,6 +3,7 @@ import {
   ManuscriptDataObject,
   DataProvider,
   ManuscriptUpdateDataObject,
+  ManuscriptResubmitDataObject,
 } from '@asap-hub/model';
 
 export type ManuscriptDataProvider = DataProvider<
@@ -16,4 +17,8 @@ export type ManuscriptDataProvider = DataProvider<
     data: ManuscriptUpdateDataObject,
     userId: string,
   ): Promise<void>;
+  createVersion: (
+    id: string,
+    input: ManuscriptResubmitDataObject,
+  ) => Promise<void>;
 };

@@ -6,6 +6,7 @@ import {
   ManuscriptPostAuthor,
   ManuscriptPutRequest,
   ManuscriptResponse,
+  ManuscriptResubmitControllerDataObject,
 } from '@asap-hub/model';
 
 import {
@@ -41,37 +42,11 @@ export default class ManuscriptController {
     const version = manuscriptCreateData?.versions?.[0];
 
     if (version) {
-      const {
-        firstAuthors,
-        correspondingAuthor,
-        additionalAuthors,
-        ...versionData
-      } = version;
-
-      const firstAuthorsValues = await this.mapAuthorsPostRequestToId(
-        firstAuthors ?? [],
-      );
-      const correspondingAuthorValues = correspondingAuthor
-        ? await this.mapAuthorsPostRequestToId([correspondingAuthor] ?? [])
-        : [];
-
-      const additionalAuthorsValues = await this.mapAuthorsPostRequestToId(
-        additionalAuthors ?? [],
-      );
-
-      const getValidAuthorIds = (authorIds: (string | null)[]) =>
-        authorIds.filter((id): id is string => id !== null);
+      const versionData = await this.getManuscriptVersionData(version);
 
       const manuscriptId = await this.manuscriptDataProvider.create({
         ...manuscriptCreateData,
-        versions: [
-          {
-            ...versionData,
-            firstAuthors: getValidAuthorIds(firstAuthorsValues),
-            correspondingAuthor: getValidAuthorIds(correspondingAuthorValues),
-            additionalAuthors: getValidAuthorIds(additionalAuthorsValues),
-          },
-        ],
+        versions: [versionData],
       });
 
       return this.fetchById(manuscriptId);
@@ -81,6 +56,24 @@ export default class ManuscriptController {
       ...manuscriptCreateData,
       versions: [],
     });
+
+    return this.fetchById(manuscriptId);
+  }
+
+  async createVersion(
+    manuscriptId: string,
+    manuscriptResubmitData: ManuscriptResubmitControllerDataObject,
+  ): Promise<ManuscriptResponse | null> {
+    const version = manuscriptResubmitData?.versions?.[0];
+
+    if (version) {
+      const versionData = await this.getManuscriptVersionData(version);
+
+      await this.manuscriptDataProvider.createVersion(manuscriptId, {
+        ...manuscriptResubmitData,
+        versions: [versionData],
+      });
+    }
 
     return this.fetchById(manuscriptId);
   }
@@ -135,6 +128,38 @@ export default class ManuscriptController {
         return null;
       }),
     );
+
+  private getManuscriptVersionData = async (
+    version: ManuscriptCreateControllerDataObject['versions'][number],
+  ) => {
+    const {
+      firstAuthors,
+      correspondingAuthor,
+      additionalAuthors,
+      ...versionData
+    } = version;
+
+    const firstAuthorsValues = await this.mapAuthorsPostRequestToId(
+      firstAuthors ?? [],
+    );
+    const correspondingAuthorValues = correspondingAuthor
+      ? await this.mapAuthorsPostRequestToId([correspondingAuthor] ?? [])
+      : [];
+
+    const additionalAuthorsValues = await this.mapAuthorsPostRequestToId(
+      additionalAuthors ?? [],
+    );
+
+    const getValidAuthorIds = (authorIds: (string | null)[]) =>
+      authorIds.filter((id): id is string => id !== null);
+
+    return {
+      ...versionData,
+      firstAuthors: getValidAuthorIds(firstAuthorsValues),
+      correspondingAuthor: getValidAuthorIds(correspondingAuthorValues),
+      additionalAuthors: getValidAuthorIds(additionalAuthorsValues),
+    };
+  };
 
   async update(
     id: string,

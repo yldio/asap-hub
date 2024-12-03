@@ -28,6 +28,7 @@ import {
   plusRectIcon,
   QuickCheckReplyModal,
   Subtitle,
+  colors,
 } from '..';
 import { paddingStyles } from '../card';
 import { Discussion } from '../molecules';
@@ -329,7 +330,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   };
   return (
     <>
-      <div>
+      <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>
         {version.complianceReport && (
           <ComplianceReportCard {...version.complianceReport} />
         )}

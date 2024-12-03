@@ -5,8 +5,9 @@ import {
   ManuscriptHeader,
   usePushFromHere,
 } from '@asap-hub/react-components';
-import { network, useRouteParams } from '@asap-hub/routing';
+import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import {
   useAuthorSuggestions,
@@ -18,27 +19,23 @@ import {
   useManuscriptById,
   usePostManuscript,
   usePutManuscript,
+  useResubmitManuscript,
   useTeamById,
   useUploadManuscriptFile,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
 
-const useParamManuscriptVersion = (teamId: string): string => {
-  const route = network({})
-    .teams({})
-    .team({ teamId })
-    .workspace({}).editManuscript;
-  const { manuscriptId } = useRouteParams(route);
-  return manuscriptId;
-};
-
 type TeamManuscriptProps = {
   teamId: string;
+  resubmitManuscript?: boolean;
 };
-const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
+const TeamManuscript: React.FC<TeamManuscriptProps> = ({
+  teamId,
+  resubmitManuscript = false,
+}) => {
   const setRefreshTeamState = useSetRecoilState(refreshTeamState(teamId));
-  const manuscriptId = useParamManuscriptVersion(teamId);
+  const { manuscriptId } = useParams<{ manuscriptId: string }>();
   const manuscript = useManuscriptById(manuscriptId);
 
   const team = useTeamById(teamId);
@@ -48,6 +45,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
   const form = useForm();
   const createManuscript = usePostManuscript();
   const updateManuscript = usePutManuscript();
+  const handleResubmitManuscript = useResubmitManuscript();
   const handleFileUpload = useUploadManuscriptFile();
   const getTeamSuggestions = useTeamSuggestions();
   const getLabSuggestions = useLabSuggestions();
@@ -100,12 +98,13 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
   return (
     <FormProvider {...form}>
       <Frame title="Create Manuscript">
-        <ManuscriptHeader />
+        <ManuscriptHeader resubmitManuscript={resubmitManuscript} />
         <ManuscriptForm
           manuscriptId={manuscriptId}
           onSuccess={onSuccess}
           onCreate={createManuscript}
           onUpdate={updateManuscript}
+          onResubmit={handleResubmitManuscript}
           teamId={teamId}
           handleFileUpload={handleFileUpload}
           eligibilityReasons={eligibilityReasons}
@@ -130,6 +129,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
           additionalAuthors={convertAuthorsToSelectOptions(
             manuscriptAdditionalAuthors,
           )}
+          resubmitManuscript={resubmitManuscript}
           {...manuscriptVersion}
         />
       </Frame>

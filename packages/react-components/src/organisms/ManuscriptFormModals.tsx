@@ -56,12 +56,14 @@ type ManuscriptFormModalsProps = {
   modal: modal;
   setModal: (modal: modal) => void;
   handleSubmit: () => void;
+  isEditMode?: boolean;
 };
 
 const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
   modal,
   setModal,
   handleSubmit,
+  isEditMode = false,
 }) => {
   const history = useHistory();
   const clearModal = () => setModal(null);
@@ -116,12 +118,15 @@ const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
                 {crossIcon}
               </Button>
             </div>
-            <Headline3>Cancel manuscript submission?</Headline3>
+            <Headline3>
+              Cancel manuscript {isEditMode ? 'edits' : 'submission'}?
+            </Headline3>
           </header>
 
           <Paragraph>
-            Cancelling now will result in the loss of all entered data and will
-            exit you from the submission process.
+            {isEditMode
+              ? 'Cancelling now will result in the loss of all edited data and will exit you from the editing process.'
+              : 'Cancelling now will result in the loss of all entered data and will exit you from the submission process.'}
           </Paragraph>
           <div css={buttonContainerStyles}>
             <div css={backStyles}>

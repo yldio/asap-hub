@@ -156,6 +156,15 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   <TeamManuscript teamId={teamId} />
                 </Frame>
               </Route>
+              <Route
+                path={
+                  workspace({}).$ + workspace({}).resubmitManuscript.template
+                }
+              >
+                <Frame title="Resubmit Manuscript">
+                  <TeamManuscript teamId={teamId} resubmitManuscript />
+                </Frame>
+              </Route>
               {canCreateComplianceReport && (
                 <Route
                   path={

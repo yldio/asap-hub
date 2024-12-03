@@ -254,12 +254,17 @@ type ManuscriptFormProps = Omit<
     additionalFiles?: ManuscriptFileResponse[];
     description?: string | '';
     eligibilityReasons: Set<string>;
+    resubmitManuscript?: boolean;
     onCreate: (
       output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
     onUpdate: (
       id: string,
       output: ManuscriptPutRequest,
+    ) => Promise<ManuscriptResponse | void>;
+    onResubmit: (
+      id: string,
+      output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
     manuscriptId?: string;
     onSuccess: () => void;
@@ -289,6 +294,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   manuscriptId,
   onCreate,
   onUpdate,
+  onResubmit,
   onSuccess,
   handleFileUpload,
   teamId,
@@ -322,6 +328,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   firstAuthors,
   correspondingAuthor,
   additionalAuthors,
+  resubmitManuscript = false,
 }) => {
   const getDefaultQuickCheckValue = (quickCheckDetails: string | undefined) => {
     const isEditing = !!title;
@@ -333,7 +340,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     return undefined;
   };
 
-  const isEditMode = !!manuscriptId;
+  const isEditMode = !!manuscriptId && !resubmitManuscript;
   const methods = useForm<ManuscriptFormData>({
     mode: 'onBlur',
     defaultValues: {
@@ -578,6 +585,17 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             },
           ],
         });
+      } else if (resubmitManuscript) {
+        await onResubmit(manuscriptId, {
+          title: data.title,
+          teamId,
+          versions: [
+            {
+              ...requestVersionData,
+              ...versionDataPayload,
+            },
+          ],
+        });
       } else {
         await onUpdate(manuscriptId, {
           title: data.title,
@@ -590,7 +608,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           ],
         });
       }
-
       onSuccess();
     }
   };
@@ -615,6 +632,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         modal={modal}
         setModal={setModal}
         handleSubmit={handleSubmit(onSubmit)}
+        isEditMode={isEditMode}
       />
       <main css={mainStyles}>
         <div css={contentStyles}>
@@ -717,7 +735,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       message: 'Your preprint DOI must start with 10.',
                     },
                     required:
-                      watchLifecycle === 'Preprint' &&
+                      (watchLifecycle === 'Preprint' ||
+                        (resubmitManuscript &&
+                          [
+                            'Publication',
+                            'Publication with addendum or corrigendum',
+                          ].includes(watchLifecycle))) &&
                       'Please enter a Preprint DOI',
                   }}
                   render={({
@@ -727,7 +750,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     <LabeledTextField
                       title="Preprint DOI"
                       subtitle={
-                        watchLifecycle === 'Preprint'
+                        watchLifecycle === 'Preprint' || resubmitManuscript
                           ? '(required)'
                           : '(optional)'
                       }

@@ -70,6 +70,14 @@ it('displays share compliance report button if user has permission', () => {
   ).toBeVisible();
 });
 
+it('displays submit revised manuscript button', () => {
+  const { getByRole } = render(<ManuscriptCard {...props} />);
+
+  expect(
+    getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+  ).toBeVisible();
+});
+
 it('redirects to compliance report form when user clicks on share compliance report button', () => {
   const history = createMemoryHistory({});
   const { getByRole } = render(
@@ -86,6 +94,23 @@ it('redirects to compliance report form when user clicks on share compliance rep
 
   expect(history.location.pathname).toBe(
     `/network/teams/${props.teamId}/workspace/create-compliance-report/${props.id}`,
+  );
+});
+
+it('redirects to resubmit manuscript form when user clicks on Submit Revised Manuscript button', () => {
+  const history = createMemoryHistory({});
+  const { getByRole } = render(
+    <Router history={history}>
+      <Route path="">
+        <ManuscriptCard {...props} />
+      </Route>
+    </Router>,
+  );
+
+  userEvent.click(getByRole('button', { name: /Resubmit Manuscript Icon/i }));
+
+  expect(history.location.pathname).toBe(
+    `/network/teams/${props.teamId}/workspace/resubmit-manuscript/${props.id}`,
   );
 });
 

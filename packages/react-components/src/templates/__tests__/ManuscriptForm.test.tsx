@@ -49,6 +49,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   manuscriptId: undefined,
   onCreate: jest.fn(() => Promise.resolve()),
   onUpdate: jest.fn(() => Promise.resolve()),
+  onResubmit: jest.fn(() => Promise.resolve()),
   getAuthorSuggestions: jest.fn(),
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,
@@ -89,14 +90,10 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
 
 const submitForm = async () => {
   await act(async () => {
-    await userEvent.click(
-      await screen.findByRole('button', { name: /Submit/ }),
-    );
+    userEvent.click(await screen.findByRole('button', { name: /Submit/ }));
   });
 
-  await userEvent.click(
-    screen.getByRole('button', { name: /Submit Manuscript/ }),
-  );
+  userEvent.click(screen.getByRole('button', { name: /Submit Manuscript/ }));
 };
 
 it('renders the form', async () => {
@@ -852,21 +849,33 @@ describe('authors', () => {
 
 describe('preprintDoi', () => {
   it.each([
-    { lifecycle: 'Preprint', status: 'required' },
-    { lifecycle: 'Publication', status: 'optional' },
+    { lifecycle: 'Preprint', status: 'required', resubmitManuscript: false },
+    { lifecycle: 'Publication', status: 'optional', resubmitManuscript: false },
+    { lifecycle: 'Publication', status: 'required', resubmitManuscript: true },
     {
       lifecycle: 'Publication with addendum or corrigendum',
       status: 'optional',
+      resubmitManuscript: false,
     },
-  ] as { lifecycle: ManuscriptLifecycle; status: string }[])(
+    {
+      lifecycle: 'Publication with addendum or corrigendum',
+      status: 'required',
+      resubmitManuscript: true,
+    },
+  ] as {
+    lifecycle: ManuscriptLifecycle;
+    status: string;
+    resubmitManuscript: boolean;
+  }[])(
     'preprintDoi is $status when lifecycle is $lifecycle',
-    async ({ lifecycle, status }) => {
+    async ({ lifecycle, status, resubmitManuscript }) => {
       render(
         <StaticRouter>
           <ManuscriptForm
             {...defaultProps}
             type="Original Research"
             lifecycle={lifecycle}
+            resubmitManuscript={resubmitManuscript}
           />
         </StaticRouter>,
       );
@@ -1710,6 +1719,87 @@ it('calls onUpdate when form is updated', async () => {
 
   await waitFor(() => {
     expect(onUpdate).toHaveBeenCalledWith('manuscript-id', {
+      teamId: '1',
+      title: 'manuscript title',
+      versions: [
+        {
+          acknowledgedGrantNumber: 'Yes',
+          acknowledgedGrantNumberDetails: '',
+          additionalAuthors: [],
+          additionalFiles: undefined,
+          asapAffiliationIncluded: 'Yes',
+          asapAffiliationIncludedDetails: '',
+          availabilityStatement: 'Yes',
+          availabilityStatementDetails: '',
+          codeDeposited: 'Yes',
+          codeDepositedDetails: '',
+          correspondingAuthor: undefined,
+          datasetsDeposited: 'Yes',
+          datasetsDepositedDetails: '',
+          description: 'Some description',
+          firstAuthors: [],
+          keyResourceTable: {
+            filename: 'test.csv',
+            id: '124',
+            url: 'http://example.com/test.csv',
+          },
+          labMaterialsRegistered: 'Yes',
+          labMaterialsRegisteredDetails: '',
+          labs: [],
+          lifecycle: 'Draft Manuscript (prior to Publication)',
+          manuscriptFile: {
+            filename: 'test.pdf',
+            id: '123',
+            url: 'http://example.com/test.pdf',
+          },
+          manuscriptLicense: undefined,
+          manuscriptLicenseDetails: '',
+          otherDetails: undefined,
+          preprintDoi: undefined,
+          protocolsDeposited: 'Yes',
+          protocolsDepositedDetails: '',
+          publicationDoi: undefined,
+          requestingApcCoverage: undefined,
+          submissionDate: undefined,
+          submitterName: undefined,
+          teams: ['1'],
+          type: 'Original Research',
+        },
+      ],
+    });
+  });
+});
+
+it('calls onResubmit when form details are saved and resubmitManuscript prop is true', async () => {
+  const onResubmit = jest.fn();
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Draft Manuscript (prior to Publication)"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
+        keyResourceTable={{
+          id: '124',
+          filename: 'test.csv',
+          url: 'http://example.com/test.csv',
+        }}
+        onResubmit={onResubmit}
+        resubmitManuscript
+        manuscriptId="manuscript-id"
+      />
+    </StaticRouter>,
+  );
+
+  await submitForm();
+
+  await waitFor(() => {
+    expect(onResubmit).toHaveBeenCalledWith('manuscript-id', {
       teamId: '1',
       title: 'manuscript title',
       versions: [

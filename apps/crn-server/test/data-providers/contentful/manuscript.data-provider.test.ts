@@ -74,6 +74,107 @@ describe('Manuscripts Contentful Data Provider', () => {
       contentfulRestClientMock,
     );
 
+  const getManuscriptVersionCreateGraphQlObject = (
+    versionType: ManuscriptType,
+    versionLifeCycle: ManuscriptLifecycle,
+  ) => {
+    return {
+      type: {
+        'en-US': versionType,
+      },
+      lifecycle: {
+        'en-US': versionLifeCycle,
+      },
+      manuscriptFile: {
+        'en-US': {
+          sys: {
+            type: 'Link',
+            linkType: 'Asset',
+            id: 'file-id',
+          },
+        },
+      },
+      keyResourceTable: {
+        'en-US': null,
+      },
+      additionalFiles: {
+        'en-US': null,
+      },
+      description: { 'en-US': 'nice description' },
+      labs: { 'en-US': [] },
+      firstAuthors: {
+        'en-US': [
+          {
+            sys: {
+              id: 'author-1',
+
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        ],
+      },
+      submissionDate: { 'en-US': undefined },
+      correspondingAuthor: { 'en-US': [] },
+      count: { 'en-US': 1 },
+      additionalAuthors: { 'en-US': [] },
+      teams: {
+        'en-US': [
+          {
+            sys: {
+              id: 'team-1',
+
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        ],
+      },
+      createdBy: {
+        'en-US': {
+          sys: {
+            id: 'user-id-0',
+            linkType: 'Entry',
+            type: 'Link',
+          },
+        },
+      },
+      updatedBy: {
+        'en-US': {
+          sys: {
+            id: 'user-id-0',
+            linkType: 'Entry',
+            type: 'Link',
+          },
+        },
+      },
+      asapAffiliationIncludedDetails: {
+        'en-US': null,
+      },
+      acknowledgedGrantNumberDetails: {
+        'en-US': null,
+      },
+      availabilityStatementDetails: {
+        'en-US': null,
+      },
+      codeDepositedDetails: {
+        'en-US': null,
+      },
+      datasetsDepositedDetails: {
+        'en-US': null,
+      },
+      labMaterialsRegisteredDetails: {
+        'en-US': null,
+      },
+      manuscriptLicenseDetails: {
+        'en-US': null,
+      },
+      protocolsDepositedDetails: {
+        'en-US': null,
+      },
+    };
+  };
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -363,106 +464,7 @@ describe('Manuscripts Contentful Data Provider', () => {
   describe('Create', () => {
     const manuscriptId = 'manuscript-id-1';
     const manuscriptVersionId = 'manuscript-version-id-1';
-    const getManuscriptVersionCreateGraphQlObject = (
-      versionType: ManuscriptType,
-      versionLifeCycle: ManuscriptLifecycle,
-    ) => {
-      return {
-        type: {
-          'en-US': versionType,
-        },
-        lifecycle: {
-          'en-US': versionLifeCycle,
-        },
-        manuscriptFile: {
-          'en-US': {
-            sys: {
-              type: 'Link',
-              linkType: 'Asset',
-              id: 'file-id',
-            },
-          },
-        },
-        keyResourceTable: {
-          'en-US': null,
-        },
-        additionalFiles: {
-          'en-US': null,
-        },
-        description: { 'en-US': 'nice description' },
-        labs: { 'en-US': [] },
-        firstAuthors: {
-          'en-US': [
-            {
-              sys: {
-                id: 'author-1',
 
-                linkType: 'Entry',
-                type: 'Link',
-              },
-            },
-          ],
-        },
-        submissionDate: { 'en-US': undefined },
-        correspondingAuthor: { 'en-US': [] },
-        count: { 'en-US': 1 },
-        additionalAuthors: { 'en-US': [] },
-        teams: {
-          'en-US': [
-            {
-              sys: {
-                id: 'team-1',
-
-                linkType: 'Entry',
-                type: 'Link',
-              },
-            },
-          ],
-        },
-        createdBy: {
-          'en-US': {
-            sys: {
-              id: 'user-id-0',
-              linkType: 'Entry',
-              type: 'Link',
-            },
-          },
-        },
-        updatedBy: {
-          'en-US': {
-            sys: {
-              id: 'user-id-0',
-              linkType: 'Entry',
-              type: 'Link',
-            },
-          },
-        },
-        asapAffiliationIncludedDetails: {
-          'en-US': null,
-        },
-        acknowledgedGrantNumberDetails: {
-          'en-US': null,
-        },
-        availabilityStatementDetails: {
-          'en-US': null,
-        },
-        codeDepositedDetails: {
-          'en-US': null,
-        },
-        datasetsDepositedDetails: {
-          'en-US': null,
-        },
-        labMaterialsRegisteredDetails: {
-          'en-US': null,
-        },
-        manuscriptLicenseDetails: {
-          'en-US': null,
-        },
-        protocolsDepositedDetails: {
-          'en-US': null,
-        },
-      };
-    };
     const manuscriptCreateGraphQlObject = {
       title: {
         'en-US': 'Manuscript Title',
@@ -785,6 +787,126 @@ describe('Manuscripts Contentful Data Provider', () => {
           expect(result).toEqual(manuscriptId);
         },
       );
+    });
+  });
+
+  describe('Create-Version', () => {
+    const manuscriptId = 'manuscript-id-1';
+    const manuscriptVersionId = 'manuscript-version-id-1';
+
+    test('should throw if no versions are provided', async () => {
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
+      manuscriptCreateDataObject.versions = [];
+      await expect(
+        manuscriptDataProvider.createVersion(
+          manuscriptId,
+          manuscriptCreateDataObject,
+        ),
+      ).rejects.toThrow('No versions provided');
+    });
+
+    test('can create a new manuscript version', async () => {
+      const patch: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
+      const publish: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
+
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
+      manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
+
+      const manuscriptType = manuscriptCreateDataObject.versions[0]!
+        .type as ManuscriptType;
+      const manuscriptLifecycle = manuscriptCreateDataObject.versions[0]!
+        .lifecycle as ManuscriptLifecycle;
+
+      const manuscriptEntry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          versions: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'previous-version',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+
+      environmentMock.getEntry.mockResolvedValue(manuscriptEntry);
+      patch.mockResolvedValue(manuscriptEntry);
+      publish.mockResolvedValue(manuscriptEntry);
+
+      when(environmentMock.createEntry)
+        .calledWith('manuscriptVersions', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptVersionId },
+          publish,
+        } as unknown as Entry);
+
+      const assetMock = {
+        sys: { id: manuscriptId },
+        publish: jest.fn(),
+      } as unknown as Asset;
+      when(environmentMock.getAsset)
+        .calledWith(manuscriptCreateDataObject.versions[0]!.manuscriptFile.id)
+        .mockResolvedValue(assetMock);
+
+      await manuscriptDataProviderMockGraphql.createVersion(manuscriptId, {
+        ...manuscriptCreateDataObject,
+        userId: 'user-id-0',
+      });
+
+      expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+        1,
+        'manuscriptVersions',
+        {
+          fields: {
+            ...getManuscriptVersionCreateGraphQlObject(
+              manuscriptType,
+              manuscriptLifecycle,
+            ),
+            count: { 'en-US': 2 },
+          },
+        },
+      );
+
+      expect(assetMock.publish).toHaveBeenCalled();
+      expect(publish).toHaveBeenCalled();
+      expect(patch).toHaveBeenCalledWith([
+        {
+          op: 'replace',
+          path: '/fields/versions',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'previous-version',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'manuscript-version-id-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/title',
+          value: { 'en-US': 'Manuscript Title' },
+        },
+      ]);
     });
   });
 

@@ -315,7 +315,7 @@ export type ManuscriptPostAuthor =
   | ManuscriptPostInternalAuthor
   | ManuscriptPostExternalAuthor;
 
-export type ManuscriptPostRequest = Pick<
+export type ManuscriptPostCreateRequest = Pick<
   ManuscriptDataObject,
   'title' | 'teamId'
 > & {
@@ -359,6 +359,14 @@ export type ManuscriptPostRequest = Pick<
     additionalAuthors?: ManuscriptPostAuthor[];
   }[];
 };
+export type ManuscriptPostResubmitRequest = Omit<
+  ManuscriptPostCreateRequest,
+  'eligibilityReasons'
+>;
+
+export type ManuscriptPostRequest =
+  | ManuscriptPostCreateRequest
+  | ManuscriptPostResubmitRequest;
 
 export type ManuscriptUpdateStatus = Pick<ManuscriptDataObject, 'status'>;
 export type ManuscriptUpdateContent = Partial<ManuscriptPostRequest>;
@@ -398,7 +406,7 @@ export type AuthorEmailField = {
 };
 
 export type ManuscriptFormData = Pick<
-  ManuscriptPostRequest,
+  ManuscriptPostCreateRequest,
   'title' | 'teamId' | 'eligibilityReasons'
 > & {
   versions: (Pick<
@@ -444,12 +452,18 @@ export type ManuscriptFormData = Pick<
   })[];
 };
 
-export type ManuscriptCreateControllerDataObject = ManuscriptPostRequest & {
-  userId: string;
-};
+export type ManuscriptCreateControllerDataObject =
+  ManuscriptPostCreateRequest & {
+    userId: string;
+  };
+
+export type ManuscriptResubmitControllerDataObject = Omit<
+  ManuscriptCreateControllerDataObject,
+  'eligibilityReasons'
+>;
 
 export type ManuscriptCreateDataObject = Omit<
-  ManuscriptPostRequest,
+  ManuscriptPostCreateRequest,
   'versions'
 > & {
   userId: string;
@@ -462,6 +476,11 @@ export type ManuscriptCreateDataObject = Omit<
     additionalAuthors: string[];
   })[];
 };
+
+export type ManuscriptResubmitDataObject = Omit<
+  ManuscriptCreateDataObject,
+  'eligibilityReasons'
+>;
 
 export const manuscriptVersionSchema = {
   type: 'object',

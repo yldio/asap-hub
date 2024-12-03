@@ -16,11 +16,12 @@ import {
   complianceReportIcon,
   minusRectIcon,
   plusRectIcon,
+  resubmitManuscriptIcon,
   StatusButton,
   StatusType,
   Subtitle,
 } from '..';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, perRem, rem, smallDesktopScreen } from '../pixels';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
 
@@ -56,8 +57,6 @@ const manuscriptContainerStyles = css({
 
 const toastStyles = css({
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
   padding: `${15 / perRem}em ${24 / perRem}em`,
   borderRadius: `${rem(8)} ${rem(8)} 0 0`,
   backgroundColor: colors.pearl.rgb,
@@ -76,7 +75,7 @@ const iconStyles = css({
 
 const toastHeaderStyles = css({
   display: 'flex',
-  alignItems: 'center',
+  justifyContent: 'space-between',
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     alignItems: 'flex-start',
@@ -85,7 +84,18 @@ const toastHeaderStyles = css({
 
 const buttonsContainerStyles = css({
   display: 'flex',
-  gap: `${16 / perRem}em`,
+  marginTop: rem(16),
+  gap: rem(16),
+  [`@media (max-width: ${smallDesktopScreen.max}px)`]: {
+    flexDirection: 'column',
+  },
+});
+
+const buttonStyles = css({
+  '> svg': { stroke: 'none' },
+  height: rem(24),
+  display: 'flex',
+  gap: rem(8),
 });
 
 const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
@@ -118,8 +128,18 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     .workspace({})
     .createComplianceReport({ manuscriptId: id }).$;
 
+  const resubmitManuscriptRoute = network({})
+    .teams({})
+    .team({ teamId })
+    .workspace({})
+    .resubmitManuscript({ manuscriptId: id }).$;
+
   const handleShareComplianceReport = () => {
     history.push(complianceReportRoute);
+  };
+
+  const handleResubmitManuscript = () => {
+    history.push(resubmitManuscriptRoute);
   };
 
   const handleStatusClick = (statusItem: ManuscriptStatus) => {
@@ -175,53 +195,68 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
             toastStyles,
           ]}
         >
-          <span css={toastHeaderStyles}>
-            <span css={[iconStyles]}>
-              <Button
-                data-testid="collapsible-button"
-                linkStyle
-                onClick={() => setExpanded(!expanded)}
-              >
-                <span>{expanded ? minusRectIcon : plusRectIcon}</span>
-              </Button>
-            </span>
-            <Subtitle noMargin>{title}</Subtitle>
-          </span>
-          <span css={buttonsContainerStyles}>
-            <StatusButton
-              buttonChildren={() => <span>{selectedStatus}</span>}
-              canEdit={
-                isComplianceReviewer &&
-                !closedManuscriptStatuses.includes(selectedStatus)
-              }
-              selectedStatusType={getReviewerStatusType(
-                selectedStatus as (typeof manuscriptStatus)[number],
-              )}
+          <span css={[iconStyles]}>
+            <Button
+              data-testid="collapsible-button"
+              linkStyle
+              onClick={() => setExpanded(!expanded)}
             >
-              {manuscriptStatus.map((statusItem) => ({
-                item: statusItem,
-                type: getReviewerStatusType(statusItem),
-                onClick: () => {
-                  setNewSelectedStatus(statusItem);
-                  handleStatusClick(statusItem);
-                },
-              }))}
-            </StatusButton>
-            {isComplianceReviewer && (
+              <span>{expanded ? minusRectIcon : plusRectIcon}</span>
+            </Button>
+          </span>
+          <span css={{ width: '100%' }}>
+            <span css={toastHeaderStyles}>
+              <Subtitle noMargin>{title}</Subtitle>
+              <StatusButton
+                buttonChildren={() => <span>{selectedStatus}</span>}
+                canEdit={
+                  isComplianceReviewer &&
+                  !closedManuscriptStatuses.includes(selectedStatus)
+                }
+                selectedStatusType={getReviewerStatusType(
+                  selectedStatus as (typeof manuscriptStatus)[number],
+                )}
+              >
+                {manuscriptStatus.map((statusItem) => ({
+                  item: statusItem,
+                  type: getReviewerStatusType(statusItem),
+                  onClick: () => {
+                    setNewSelectedStatus(statusItem);
+                    handleStatusClick(statusItem);
+                  },
+                }))}
+              </StatusButton>
+            </span>
+            <span css={buttonsContainerStyles}>
+              {isComplianceReviewer && (
+                <span>
+                  <Button
+                    primary
+                    small
+                    noMargin
+                    onClick={handleShareComplianceReport}
+                    enabled={canSubmitComplianceReport}
+                  >
+                    <span css={buttonStyles}>
+                      {complianceReportIcon} Share Compliance Report
+                    </span>
+                  </Button>
+                </span>
+              )}
               <span>
                 <Button
                   primary
                   small
                   noMargin
-                  onClick={handleShareComplianceReport}
-                  enabled={canSubmitComplianceReport}
+                  onClick={handleResubmitManuscript}
+                  enabled
                 >
-                  <span css={{ '> svg': { stroke: 'none' }, height: rem(24) }}>
-                    {complianceReportIcon}
+                  <span css={buttonStyles}>
+                    {resubmitManuscriptIcon} Submit Revised Manuscript
                   </span>
                 </Button>
               </span>
-            )}
+            </span>
           </span>
         </div>
 

@@ -172,11 +172,66 @@ it('navigates to the outputs tab and is able to search', async () => {
   expect(await screen.findByRole('searchbox')).toHaveAttribute('value', 'test');
 });
 
+it('does not show workspace tab if user is not part of the team and is not hub Staff', async () => {
+  await renderPage(
+    {
+      ...createTeamResponse(),
+    },
+    {},
+    {
+      role: 'Grantee',
+      teams: [
+        {
+          id: 'another-team',
+          role: 'Project Manager',
+        },
+      ],
+    },
+  );
+
+  expect(
+    screen.queryByText(/Team Workspace/i, { selector: 'nav *' }),
+  ).not.toBeInTheDocument();
+});
+
+it('shows workspace tab if user is not part of the team and is hub Staff', async () => {
+  await renderPage(
+    {
+      ...createTeamResponse(),
+    },
+    {},
+    {
+      role: 'Staff',
+      teams: [
+        {
+          id: 'another-team',
+          role: 'Project Manager',
+        },
+      ],
+    },
+  );
+
+  expect(
+    screen.getByText(/Team Workspace/i, { selector: 'nav *' }),
+  ).toBeVisible();
+});
+
 it('navigates to the workspace tab', async () => {
-  await renderPage({
-    ...createTeamResponse(),
-    tools: [],
-  });
+  await renderPage(
+    {
+      ...createTeamResponse(),
+      tools: [],
+    },
+    {},
+    {
+      teams: [
+        {
+          id: 't0',
+          role: 'Project Manager',
+        },
+      ],
+    },
+  );
 
   userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
   expect(await screen.findByText(/tools/i)).toBeVisible();
@@ -185,10 +240,21 @@ it('navigates to the workspace tab', async () => {
 it('displays manuscript success toast message and user can dismiss toast', async () => {
   enable('DISPLAY_MANUSCRIPTS');
 
-  await renderPage({
-    ...createTeamResponse(),
-    tools: [],
-  });
+  await renderPage(
+    {
+      ...createTeamResponse(),
+      tools: [],
+    },
+    {},
+    {
+      teams: [
+        {
+          id: 't0',
+          role: 'Project Manager',
+        },
+      ],
+    },
+  );
 
   userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
 

@@ -13,6 +13,7 @@ export default {
 };
 
 const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
+  isStaff: false,
   id: '42',
   teamId: 'TI1',
   grantId: '000123',

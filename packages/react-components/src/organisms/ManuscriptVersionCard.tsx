@@ -45,6 +45,7 @@ type ManuscriptVersionCardProps = {
   teamIdCode: string;
   manuscriptCount: number;
   manuscriptId: string;
+  isTeamMember: boolean;
 } & Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
   Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
@@ -277,6 +278,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   onReplyToDiscussion,
   getDiscussion,
   manuscriptId,
+  isTeamMember,
 }) => {
   const history = useHistory();
 
@@ -463,6 +465,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                       <Subtitle>{question}</Subtitle>
                       <Suspense fallback={<Loading />}>
                         <Discussion
+                          canReply={isTeamMember}
                           id={discussion.id}
                           getDiscussion={getDiscussion}
                           onReplyToDiscussion={onReplyToDiscussion}

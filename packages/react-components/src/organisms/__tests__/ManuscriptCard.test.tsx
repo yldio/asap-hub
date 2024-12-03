@@ -18,6 +18,7 @@ const props: ComponentProps<typeof ManuscriptCard> = {
   onUpdateManuscript: jest.fn(),
   onReplyToDiscussion: jest.fn(),
   getDiscussion: jest.fn(),
+  isTeamMember: true,
 };
 
 const complianceReport = {

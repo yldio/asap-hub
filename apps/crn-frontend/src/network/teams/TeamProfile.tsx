@@ -4,7 +4,10 @@ import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
 import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import {
+  ResearchOutputPermissionsContext,
+  useCurrentUserCRN,
+} from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
 import { usePaginationParams } from '../../hooks';
@@ -71,15 +74,17 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const [teamListElementId] = useState(`team-list-${uuid()}`);
   const { teamId } = useRouteParams(route);
   const team = useTeamById(teamId);
+  const user = useCurrentUserCRN();
+  const isStaff = user?.role === 'Staff';
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAbout()
-      .then(team?.tools ? loadWorkspace : undefined)
+      .then(team?.tools || isStaff ? loadWorkspace : undefined)
       .then(loadOutputs)
       .then(loadTeamOutput)
       .then(loadEventsList);
-  }, [team]);
+  }, [team, isStaff]);
 
   const canShareResearchOutput = useCanShareResearchOutput(
     'teams',
@@ -193,6 +198,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               )}
               <TeamProfilePage
                 {...team}
+                isStaff={isStaff}
                 teamListElementId={teamListElementId}
                 upcomingEventsCount={upcomingEvents?.total || 0}
                 pastEventsCount={pastEvents?.total || 0}

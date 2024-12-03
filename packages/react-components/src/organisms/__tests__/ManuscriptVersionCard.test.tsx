@@ -47,6 +47,7 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   onReplyToDiscussion: jest.fn(),
   getDiscussion: jest.fn(),
   manuscriptId: 'manuscript-1',
+  isTeamMember: true,
 };
 
 it('displays quick checks when present', () => {

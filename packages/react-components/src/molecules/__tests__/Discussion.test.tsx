@@ -10,6 +10,7 @@ import Discussion from '../Discussion';
 
 const props: ComponentProps<typeof Discussion> = {
   id: 'discussion-id',
+  canReply: true,
   getDiscussion: jest.fn().mockReturnValue(createDiscussionResponse()),
   onReplyToDiscussion: jest.fn(),
 };
@@ -25,6 +26,17 @@ it('handles case when discussion is not found', () => {
   expect(getByText('Reply')).toBeVisible();
 
   rerender(<Discussion {...props} getDiscussion={getDiscussion} />);
+
+  expect(queryByText(/Reply/i)).not.toBeInTheDocument();
+});
+
+it('should not show reply button when canReply is false', () => {
+  const getDiscussion = jest
+    .fn()
+    .mockReturnValueOnce(createDiscussionResponse());
+  const { queryByText } = render(
+    <Discussion {...props} canReply={false} getDiscussion={getDiscussion} />,
+  );
 
   expect(queryByText(/Reply/i)).not.toBeInTheDocument();
 });

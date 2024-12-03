@@ -18,6 +18,7 @@ const boilerplateProps: Omit<
   teamListElementId: '',
   labCount: 15,
   upcomingEventsCount: 0,
+  isStaff: false,
 };
 
 it('renders the header', () => {

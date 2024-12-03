@@ -83,6 +83,7 @@ type TeamProfileWorkspaceProps = Readonly<
     readonly tools: ReadonlyArray<TeamTool>;
     readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
     readonly setEligibilityReasons: (newEligibilityReason: Set<string>) => void;
+    readonly isTeamMember: boolean;
   };
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
@@ -100,6 +101,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   getDiscussion,
   setEligibilityReasons,
   isComplianceReviewer = false,
+  isTeamMember,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
@@ -140,7 +142,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
             <div css={complianceContainerStyles}>
               <div css={complianceHeaderStyles}>
                 <Display styleAsHeading={3}>Compliance Review</Display>
-                {!inactiveSince && (
+                {!inactiveSince && isTeamMember && (
                   <div css={css(manuscriptButtonStyles)}>
                     <Button
                       onClick={handleShareManuscript}
@@ -168,6 +170,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                   teamIdCode={teamId || ''}
                   grantId={grantId || ''}
                   isComplianceReviewer={isComplianceReviewer}
+                  isTeamMember={isTeamMember}
                   onUpdateManuscript={onUpdateManuscript}
                   onReplyToDiscussion={onReplyToDiscussion}
                   getDiscussion={getDiscussion}
@@ -178,35 +181,37 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
         </>
       )}
 
-      <Card>
-        <Display styleAsHeading={3}>Collaboration Tools (Team Only)</Display>
-        <Paragraph accent="lead">
-          This directory contains the most important links for your team's
-          internally shared resources and what each link is used for.
-        </Paragraph>
-        {!!tools.length && (
-          <ul css={toolContainerStyles}>
-            {tools.map((tool, index) => (
-              <li key={`tool-${index}`}>
-                <ToolCard
-                  {...tool}
-                  editHref={toolsRoute.tool({ toolIndex: `${index}` }).$}
-                  onDelete={onDeleteTool && (() => onDeleteTool(index))}
-                />
-              </li>
-            ))}
-          </ul>
-        )}
-        <div css={newToolStyles}>
-          <Link href={toolsRoute.$} buttonStyle>
-            <span>Add a new team link</span>
-          </Link>
-        </div>
-        <Caption accent="lead" asParagraph>
-          Last edited on {formatDateAndTime(new Date(lastModifiedDate))}
-        </Caption>
-      </Card>
-      {pointOfContact && (
+      {isTeamMember && (
+        <Card>
+          <Display styleAsHeading={3}>Collaboration Tools (Team Only)</Display>
+          <Paragraph accent="lead">
+            This directory contains the most important links for your team's
+            internally shared resources and what each link is used for.
+          </Paragraph>
+          {!!tools.length && (
+            <ul css={toolContainerStyles}>
+              {tools.map((tool, index) => (
+                <li key={`tool-${index}`}>
+                  <ToolCard
+                    {...tool}
+                    editHref={toolsRoute.tool({ toolIndex: `${index}` }).$}
+                    onDelete={onDeleteTool && (() => onDeleteTool(index))}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+          <div css={newToolStyles}>
+            <Link href={toolsRoute.$} buttonStyle>
+              <span>Add a new team link</span>
+            </Link>
+          </div>
+          <Caption accent="lead" asParagraph>
+            Last edited on {formatDateAndTime(new Date(lastModifiedDate))}
+          </Caption>
+        </Card>
+      )}
+      {isTeamMember && pointOfContact && (
         <Card>
           <Headline2 styleAsHeading={3}>Team Contact Email</Headline2>
           <Paragraph accent="lead">

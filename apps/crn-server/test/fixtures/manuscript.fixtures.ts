@@ -191,6 +191,7 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
     id: _____,
     publishedAt: ______,
     teams: _______,
+    count: ________,
     ...version
   } = versions[0]!;
   return {

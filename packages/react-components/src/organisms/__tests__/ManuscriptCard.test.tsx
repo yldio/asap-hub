@@ -179,11 +179,18 @@ it('redirects to compliance report form when user clicks on share compliance rep
 });
 
 it('redirects to resubmit manuscript form when user clicks on Submit Revised Manuscript button', () => {
+  const manuscriptVersions = createManuscriptResponse().versions;
+  manuscriptVersions[0]!.firstAuthors = [user];
+  manuscriptVersions[0]!.complianceReport = {
+    url: 'https://example.com',
+    description: 'test compliance report',
+    count: 1,
+  };
   const history = createMemoryHistory({});
   const { getByRole } = render(
     <Router history={history}>
       <Route path="">
-        <ManuscriptCard {...props} />
+        <ManuscriptCard {...props} versions={manuscriptVersions} />
       </Route>
     </Router>,
   );

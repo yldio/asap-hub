@@ -17485,6 +17485,7 @@ export type ManuscriptsContentFragment = Pick<
           | 'type'
           | 'lifecycle'
           | 'description'
+          | 'count'
           | 'preprintDoi'
           | 'publicationDoi'
           | 'requestingApcCoverage'
@@ -18124,6 +18125,7 @@ export type FetchManuscriptByIdQuery = {
               | 'type'
               | 'lifecycle'
               | 'description'
+              | 'count'
               | 'preprintDoi'
               | 'publicationDoi'
               | 'requestingApcCoverage'
@@ -20400,6 +20402,7 @@ export type FetchTeamByIdQuery = {
                         | 'type'
                         | 'lifecycle'
                         | 'description'
+                        | 'count'
                         | 'preprintDoi'
                         | 'publicationDoi'
                         | 'requestingApcCoverage'
@@ -25055,7 +25058,10 @@ export const ManuscriptsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'sys_publishedAt_DESC' },
+                value: {
+                  kind: 'EnumValue',
+                  value: 'sys_firstPublishedAt_DESC',
+                },
               },
             ],
             selectionSet: {
@@ -25097,6 +25103,7 @@ export const ManuscriptsContentFragmentDoc = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'description' },
                       },
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'manuscriptFile' },

@@ -2,16 +2,21 @@ import {
   createManuscriptResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
+import { UserTeam } from '@asap-hub/model';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import ManuscriptCard from '../ManuscriptCard';
+import ManuscriptCard, {
+  isManuscriptAuthor,
+  isManuscriptLead,
+} from '../ManuscriptCard';
 
+const baseUser = createUserResponse({}, 1);
 const props: ComponentProps<typeof ManuscriptCard> = {
   ...createManuscriptResponse(),
-  user: { ...createUserResponse({}, 1), algoliaApiKey: 'algolia-mock-key' },
+  user: { ...baseUser, algoliaApiKey: 'algolia-mock-key' },
   teamIdCode: 'TI1',
   grantId: '000123',
   isComplianceReviewer: false,
@@ -26,6 +31,77 @@ const complianceReport = {
   description: 'description',
   count: '1',
 };
+
+const user = {
+  ...baseUser,
+  teams: [
+    {
+      ...baseUser.teams[0],
+      id: 'team-1',
+      role: 'Project Manager',
+    },
+  ] as UserTeam[],
+  algoliaApiKey: 'algolia-mock-key',
+};
+
+describe('isManuscriptAuthor', () => {
+  it('returns true when user is author', () => {
+    expect(
+      isManuscriptAuthor({
+        authors: [{ ...createUserResponse(), id: 'user-test' }],
+        user: {
+          ...user,
+          id: 'user-test',
+        },
+      }),
+    ).toBeTruthy();
+  });
+  it('returns false when user is not author', () => {
+    expect(
+      isManuscriptAuthor({
+        authors: [{ ...createUserResponse(), id: 'different-user' }],
+        user: {
+          ...user,
+        },
+      }),
+    ).not.toBeTruthy();
+  });
+});
+
+describe('isManuscriptLead', () => {
+  it('returns true when user is team lead', () => {
+    expect(
+      isManuscriptLead({
+        version: props.versions[0],
+        user: {
+          ...user,
+          teams: [
+            {
+              id: 'team-1',
+              role: 'Project Manager',
+            },
+          ],
+        },
+      }),
+    ).toBeTruthy();
+  });
+  it('returns false when user is not team lead', () => {
+    expect(
+      isManuscriptLead({
+        version: props.versions[0],
+        user: {
+          ...user,
+          teams: [
+            {
+              id: 'team-1',
+              role: 'Scientific Advisory Board',
+            },
+          ],
+        },
+      }),
+    ).not.toBeTruthy();
+  });
+});
 
 it('displays manuscript version card when expanded', () => {
   const { getByText, queryByText, getByTestId, rerender } = render(
@@ -71,8 +147,12 @@ it('displays share compliance report button if user has permission', () => {
   ).toBeVisible();
 });
 
-it('displays submit revised manuscript button', () => {
-  const { getByRole } = render(<ManuscriptCard {...props} />);
+it('displays submit revised manuscript button if user is an author', () => {
+  const manuscriptVersions = createManuscriptResponse().versions;
+  manuscriptVersions[0]!.firstAuthors = [user];
+  const { getByRole } = render(
+    <ManuscriptCard {...props} versions={manuscriptVersions} />,
+  );
 
   expect(
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),

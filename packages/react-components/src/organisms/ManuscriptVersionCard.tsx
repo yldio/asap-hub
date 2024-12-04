@@ -1,6 +1,4 @@
-import { User } from '@asap-hub/auth';
 import {
-  AuthorResponse,
   ManuscriptLifecycle,
   ManuscriptVersion,
   Message,
@@ -38,7 +36,6 @@ import { mobileScreen, perRem, rem } from '../pixels';
 import ComplianceReportCard from './ComplianceReportCard';
 
 type ManuscriptVersionCardProps = {
-  user: User | null;
   version: ManuscriptVersion;
   grantId: string;
   teamId: string;
@@ -46,6 +43,7 @@ type ManuscriptVersionCardProps = {
   manuscriptCount: number;
   manuscriptId: string;
   isTeamMember: boolean;
+  canEditManuscript: boolean;
 } & Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
   Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
@@ -203,48 +201,6 @@ export const getLifecycleCode = ({
   }
 };
 
-export type VersionUserProps = {
-  version: Pick<
-    ManuscriptVersion,
-    | 'teams'
-    | 'firstAuthors'
-    | 'correspondingAuthor'
-    | 'additionalAuthors'
-    | 'labs'
-  >;
-  user: User | null;
-};
-
-export const isManuscriptLead = ({ version, user }: VersionUserProps) =>
-  user &&
-  user.teams.find((team) =>
-    version.teams.find(
-      (versionTeam) =>
-        versionTeam.id === team.id &&
-        (team.role === 'Lead PI (Core Leadership)' ||
-          team.role === 'Project Manager'),
-    ),
-  );
-
-export const isManuscriptAuthor = ({
-  authors,
-  user,
-}: {
-  authors: AuthorResponse[];
-  user: User | null;
-}) => user && authors.find((author) => author.id === user.id);
-
-export const canEditManuscript = ({ version, user }: VersionUserProps) =>
-  isManuscriptLead({ version, user }) ||
-  isManuscriptAuthor({
-    authors: [
-      ...version.firstAuthors,
-      ...version.correspondingAuthor,
-      ...version.additionalAuthors,
-    ],
-    user,
-  });
-
 export const getManuscriptVersionUID = ({
   version,
   teamIdCode,
@@ -269,7 +225,6 @@ export const getManuscriptVersionUID = ({
 };
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
-  user,
   version,
   teamId,
   teamIdCode,
@@ -279,6 +234,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   getDiscussion,
   manuscriptId,
   isTeamMember,
+  canEditManuscript,
 }) => {
   const history = useHistory();
 
@@ -349,7 +305,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
             </span>
             <span css={iconStyles}>{article}</span>
             <div css={titleContainerStyles}>
-              <Subtitle noMargin>Manuscript</Subtitle>
+              <Subtitle noMargin>Manuscript #{version.count}</Subtitle>
 
               <div css={updatedByAndEditContainerStyles}>
                 <Caption accent="lead" noMargin>
@@ -368,7 +324,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                     </span>
                   </div>
                 </Caption>
-                {canEditManuscript({ version, user }) && (
+                {canEditManuscript && (
                   <Button
                     aria-label="Edit"
                     small

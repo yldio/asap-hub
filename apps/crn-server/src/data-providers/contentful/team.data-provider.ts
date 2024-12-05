@@ -198,9 +198,20 @@ export const parseContentfulGraphQlTeamListItem = (
   };
 };
 
+const mapManuscrips = (manuscript : any): TeamDataObject['manuscripts'][number] => ({
+  id: manuscript.sys.id,
+  count: manuscript.count || 1,
+  title: manuscript.title || '',
+  status: manuscriptMapStatus(manuscript.status) || undefined,
+  versions: parseGraphqlManuscriptVersion(
+    manuscript.versionsCollection?.items || [],
+  ),
+});
+
 export const parseContentfulGraphQlTeam = (
   item: TeamByIdItem,
 ): TeamDataObject => {
+  const teamId = item.sys.id;
   const tools = (item.toolsCollection?.items || []).reduce(
     (teamTools: TeamTool[], tool) => {
       if (!tool || !tool.name || !tool.url) {
@@ -314,6 +325,31 @@ export const parseContentfulGraphQlTeam = (
     };
   };
 
+  const filterManuscripts = () => {
+    const manuscripts = cleanArray(
+      item.linkedFrom?.manuscriptsCollection?.items,
+    );
+
+    return {
+      manuscripts: manuscripts
+        .filter(
+          (manuscript) =>
+            manuscript?.versionsCollection?.items[
+              manuscript.versionsCollection.items.length - 1
+            ]?.teamsCollection?.items[0]?.sys.id === teamId,
+        )
+        .map(mapManuscrips),
+      collaborationManuscripts: manuscripts
+        .filter(
+          (manuscript) =>
+            manuscript?.versionsCollection?.items[
+              manuscript.versionsCollection.items.length - 1
+            ]?.teamsCollection?.items[0]?.sys.id !== teamId,
+        )
+        .map(mapManuscrips),
+    };
+  };
+
   return {
     id: item.sys.id ?? '',
     grantId: item.grantId ?? undefined,
@@ -325,17 +361,7 @@ export const parseContentfulGraphQlTeam = (
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     tools,
     supplementGrant: getSupplementGrant(),
-    manuscripts: cleanArray(item.linkedFrom?.manuscriptsCollection?.items).map(
-      (manuscript): TeamDataObject['manuscripts'][number] => ({
-        id: manuscript.sys.id,
-        count: manuscript.count || 1,
-        title: manuscript.title || '',
-        status: manuscriptMapStatus(manuscript.status) || undefined,
-        versions: parseGraphqlManuscriptVersion(
-          manuscript.versionsCollection?.items || [],
-        ),
-      }),
-    ),
+    ...filterManuscripts(),
     projectSummary: item.projectSummary ?? undefined,
     members: members.sort(sortMembers),
     labCount,

@@ -69,6 +69,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   pointOfContact?: TeamMember;
   tools?: TeamTool[];
   manuscripts: TeamManuscript[];
+  collaborationManuscripts?: TeamManuscript[];
   labCount: number;
   inactiveSince?: string;
   supplementGrant?: TeamSupplementGrant;

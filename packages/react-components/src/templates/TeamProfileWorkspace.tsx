@@ -14,6 +14,7 @@ import {
   Headline2,
   Link,
   Paragraph,
+  Subtitle,
 } from '../atoms';
 import { formatDateAndTime } from '../date';
 import { plusIcon } from '../icons';
@@ -37,6 +38,7 @@ const newToolStyles = css({
 const complianceContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
+  gap: rem(12),
 });
 
 const complianceHeaderStyles = css({
@@ -60,6 +62,18 @@ const toolContainerStyles = css({
   gridRowGap: `${24 / perRem}em`,
 });
 
+const complianceCardContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(32),
+});
+
+const manuscriptsGroupStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(12),
+});
+
 type TeamProfileWorkspaceProps = Readonly<
   Pick<
     TeamResponse,
@@ -68,6 +82,7 @@ type TeamProfileWorkspaceProps = Readonly<
     | 'pointOfContact'
     | 'lastModifiedDate'
     | 'manuscripts'
+    | 'collaborationManuscripts'
     | 'teamId'
     | 'grantId'
   >
@@ -95,6 +110,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   pointOfContact,
   lastModifiedDate,
   manuscripts,
+  collaborationManuscripts,
   tools,
   onDeleteTool,
   onReplyToDiscussion,
@@ -138,7 +154,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
               setEligibilityReasons={setEligibilityReasons}
             />
           )}
-          <Card>
+          <Card overrideStyles={complianceCardContainerStyles}>
             <div css={complianceContainerStyles}>
               <div css={complianceHeaderStyles}>
                 <Display styleAsHeading={3}>Compliance Review</Display>
@@ -155,28 +171,63 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                   </div>
                 )}
               </div>
-              <Paragraph accent="lead">
-                Submit your manuscript to receive a report outlining where your
-                work meets ASAP's Open Science Policy and where changes are
-                needed for your work to be compliant
+              <Paragraph noMargin accent="lead">
+                This directory contains all manuscripts with their compliance
+                reports.
               </Paragraph>
             </div>
-            {manuscripts.map((manuscript) => (
-              <div key={manuscript.id}>
-                <ManuscriptCard
-                  {...manuscript}
-                  user={user}
-                  teamId={id}
-                  teamIdCode={teamId || ''}
-                  grantId={grantId || ''}
-                  isComplianceReviewer={isComplianceReviewer}
-                  isTeamMember={isTeamMember}
-                  onUpdateManuscript={onUpdateManuscript}
-                  onReplyToDiscussion={onReplyToDiscussion}
-                  getDiscussion={getDiscussion}
-                />
+            <div css={manuscriptsGroupStyles}>
+              <Subtitle noMargin>Team Submission</Subtitle>
+              <Paragraph noMargin accent="lead">
+                {manuscripts.length
+                  ? 'The following manuscripts were submitted by your team for a compliance review.'
+                  : 'Your team has not submitted a manuscript for compliance review.'}
+              </Paragraph>
+              <div>
+                {manuscripts.map((manuscript) => (
+                  <div key={manuscript.id}>
+                    <ManuscriptCard
+                      {...manuscript}
+                      user={user}
+                      teamId={id}
+                      teamIdCode={teamId || ''}
+                      grantId={grantId || ''}
+                      isComplianceReviewer={isComplianceReviewer}
+                      isTeamMember={isTeamMember}
+                      onUpdateManuscript={onUpdateManuscript}
+                      onReplyToDiscussion={onReplyToDiscussion}
+                      getDiscussion={getDiscussion}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+            <div css={manuscriptsGroupStyles}>
+              <Subtitle noMargin>Collaborator Submission</Subtitle>
+              <Paragraph noMargin accent="lead">
+                {collaborationManuscripts?.length
+                  ? 'The following manuscripts were submitted by another team for compliance review. Your team has been listed as a contributor to the manuscript.'
+                  : 'Your team has not been listed as a contributor on manuscripts that were submitted for compliance review by other teams.'}
+              </Paragraph>
+              <div>
+                {collaborationManuscripts?.map((manuscript) => (
+                  <div key={manuscript.id}>
+                    <ManuscriptCard
+                      {...manuscript}
+                      user={user}
+                      teamId={id}
+                      teamIdCode={teamId || ''}
+                      grantId={grantId || ''}
+                      isComplianceReviewer={isComplianceReviewer}
+                      isTeamMember={isTeamMember}
+                      onUpdateManuscript={onUpdateManuscript}
+                      onReplyToDiscussion={onReplyToDiscussion}
+                      getDiscussion={getDiscussion}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </Card>
         </>
       )}

@@ -56,6 +56,14 @@ export type Membership = NonNullable<
   >['items'][number]
 >;
 
+export type ManuscriptItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<FetchTeamByIdQuery['teams']>['linkedFrom']
+    >['manuscriptsCollection']
+  >['items'][number]
+>;
+
 export class TeamContentfulDataProvider implements TeamDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
@@ -198,7 +206,9 @@ export const parseContentfulGraphQlTeamListItem = (
   };
 };
 
-const mapManuscrips = (manuscript : any): TeamDataObject['manuscripts'][number] => ({
+const mapManuscrips = (
+  manuscript: ManuscriptItem,
+): TeamDataObject['manuscripts'][number] => ({
   id: manuscript.sys.id,
   count: manuscript.count || 1,
   title: manuscript.title || '',

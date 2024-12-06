@@ -242,7 +242,10 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                 </Paragraph>
               )}
             </div>
-            <div data-testid="collaboration-manuscripts" css={manuscriptsGroupStyles}>
+            <div
+              data-testid="collaboration-manuscripts"
+              css={manuscriptsGroupStyles}
+            >
               <Subtitle noMargin>Collaborator Submission</Subtitle>
               {collaborationManuscripts?.length ? (
                 <>

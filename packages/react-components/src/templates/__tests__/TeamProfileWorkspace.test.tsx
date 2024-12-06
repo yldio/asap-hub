@@ -7,7 +7,7 @@ import {
   screen,
   within,
   getByTestId,
-  getByRole,
+  getByRole as getByRoleInContainer,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
@@ -145,11 +145,13 @@ describe('compliance section', () => {
     expect(teamManuscriptsSection).toBeInTheDocument();
     expect(collaborationManuscriptsSection).toBeInTheDocument();
     expect(
-      getByRole(teamManuscriptsSection, 'heading', { name: 'Team Submission' }),
+      getByRoleInContainer(teamManuscriptsSection, 'heading', {
+        name: 'Team Submission',
+      }),
     ).toBeInTheDocument();
     expect(teamManuscriptsSection).toHaveTextContent('Nice manuscript');
     expect(
-      getByRole(collaborationManuscriptsSection, 'heading', {
+      getByRoleInContainer(collaborationManuscriptsSection, 'heading', {
         name: 'Collaborator Submission',
       }),
     ).toBeInTheDocument();

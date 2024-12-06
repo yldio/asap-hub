@@ -6,6 +6,8 @@ import {
   waitFor,
   screen,
   within,
+  getByTestId,
+  getByRole,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
@@ -108,6 +110,107 @@ describe('compliance section', () => {
     );
     expect(container).toHaveTextContent('Nice manuscript');
     expect(container).toHaveTextContent('A Good Manuscript');
+  });
+
+  it("should show team's manuscripts and contribution manuscripts in different sections", () => {
+    const props: ComponentProps<typeof TeamProfileWorkspace> = {
+      ...team,
+      manuscripts: [
+        {
+          id: '1',
+          count: 1,
+          title: 'Nice manuscript',
+          versions: [],
+        },
+      ],
+      collaborationManuscripts: [
+        {
+          id: '2',
+          count: 2,
+          title: 'A Good Manuscript',
+          versions: [],
+        },
+      ],
+    };
+
+    const { container } = render(
+      <TeamProfileWorkspace {...props} tools={[]} />,
+    );
+    const teamManuscriptsSection = getByTestId(container, 'team-manuscripts');
+    const collaborationManuscriptsSection = getByTestId(
+      container,
+      'collaboration-manuscripts',
+    );
+
+    expect(teamManuscriptsSection).toBeInTheDocument();
+    expect(collaborationManuscriptsSection).toBeInTheDocument();
+    expect(
+      getByRole(teamManuscriptsSection, 'heading', { name: 'Team Submission' }),
+    ).toBeInTheDocument();
+    expect(teamManuscriptsSection).toHaveTextContent('Nice manuscript');
+    expect(
+      getByRole(collaborationManuscriptsSection, 'heading', {
+        name: 'Collaborator Submission',
+      }),
+    ).toBeInTheDocument();
+    expect(collaborationManuscriptsSection).toHaveTextContent(
+      'A Good Manuscript',
+    );
+  });
+
+  it('should show a no results message for both team manuscripts and collaboration manuscripts - team member', () => {
+    const props: ComponentProps<typeof TeamProfileWorkspace> = {
+      ...team,
+      manuscripts: [],
+      collaborationManuscripts: [],
+    };
+
+    const { container } = render(
+      <TeamProfileWorkspace {...props} tools={[]} />,
+    );
+
+    const teamManuscriptsSection = getByTestId(container, 'team-manuscripts');
+    const collaborationManuscriptsSection = getByTestId(
+      container,
+      'collaboration-manuscripts',
+    );
+
+    expect(teamManuscriptsSection).toBeInTheDocument();
+    expect(collaborationManuscriptsSection).toBeInTheDocument();
+    expect(teamManuscriptsSection).toHaveTextContent(
+      'Your team has not submitted a manuscript for compliance review.',
+    );
+    expect(collaborationManuscriptsSection).toHaveTextContent(
+      'Your team has not been listed as a contributor on manuscripts that were submitted for compliance review by other teams.',
+    );
+  });
+
+  it('should show a no results message for both team manuscripts and collaboration manuscripts - hub staff, not team member', () => {
+    const props: ComponentProps<typeof TeamProfileWorkspace> = {
+      ...team,
+      isTeamMember: false,
+      manuscripts: [],
+      collaborationManuscripts: [],
+    };
+
+    const { container } = render(
+      <TeamProfileWorkspace {...props} tools={[]} />,
+    );
+
+    const teamManuscriptsSection = getByTestId(container, 'team-manuscripts');
+    const collaborationManuscriptsSection = getByTestId(
+      container,
+      'collaboration-manuscripts',
+    );
+
+    expect(teamManuscriptsSection).toBeInTheDocument();
+    expect(collaborationManuscriptsSection).toBeInTheDocument();
+    expect(teamManuscriptsSection).toHaveTextContent(
+      'This team has not submitted a manuscript for compliance review.',
+    );
+    expect(collaborationManuscriptsSection).toHaveTextContent(
+      'This team has not been listed as a contributor on manuscripts that were submitted for compliance review by other teams.',
+    );
   });
 
   it('renders type and lifecycle values when expanded', () => {

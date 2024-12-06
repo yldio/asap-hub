@@ -335,7 +335,7 @@ export const parseContentfulGraphQlTeam = (
     };
   };
 
-  const filterManuscripts = () => {
+  const parseManuscripts = () => {
     const manuscripts = cleanArray(
       item.linkedFrom?.manuscriptsCollection?.items,
     );
@@ -371,7 +371,7 @@ export const parseContentfulGraphQlTeam = (
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     tools,
     supplementGrant: getSupplementGrant(),
-    ...filterManuscripts(),
+    ...parseManuscripts(),
     projectSummary: item.projectSummary ?? undefined,
     members: members.sort(sortMembers),
     labCount,

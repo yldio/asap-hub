@@ -74,6 +74,28 @@ const manuscriptsGroupStyles = css({
   gap: rem(12),
 });
 
+const teamMemberCopy = {
+  manuscriptSubmissions:
+    'The following manuscripts were submitted by your team for compliance review.',
+  manuscriptCollaborations:
+    'The following manuscripts were submitted by another team for compliance review. Your team has been listed as a contributor to the manuscript.',
+  noManuscriptSubmissions:
+    'Your team has not submitted a manuscript for compliance review.',
+  noManuscriptCollaborations:
+    'Your team has not been listed as a contributor on manuscripts that were submitted for compliance review by other teams.',
+};
+
+const hubStaffCopy = {
+  manuscriptSubmissions:
+    'The following manuscripts were submitted by this team for compliance review.',
+  manuscriptCollaborations:
+    'The following manuscripts were submitted by another team for compliance review. This team has been listed as a contributor to the manuscript.',
+  noManuscriptSubmissions:
+    'This team has not submitted a manuscript for compliance review.',
+  noManuscriptCollaborations:
+    'This team has not been listed as a contributor on manuscripts that were submitted for compliance review by other teams.',
+};
+
 type TeamProfileWorkspaceProps = Readonly<
   Pick<
     TeamResponse,
@@ -122,6 +144,13 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
   const user = useCurrentUserCRN();
+
+  const {
+    manuscriptSubmissions,
+    manuscriptCollaborations,
+    noManuscriptSubmissions,
+    noManuscriptCollaborations,
+  } = isTeamMember ? teamMemberCopy : hubStaffCopy;
 
   const toolsRoute = network({})
     .teams({})
@@ -180,53 +209,70 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
               <Subtitle noMargin>Team Submission</Subtitle>
               <Paragraph noMargin accent="lead">
                 {manuscripts.length
-                  ? 'The following manuscripts were submitted by your team for a compliance review.'
-                  : 'Your team has not submitted a manuscript for compliance review.'}
+                  ? manuscriptSubmissions
+                  : noManuscriptSubmissions}
               </Paragraph>
-              <div>
-                {manuscripts.map((manuscript) => (
-                  <div key={manuscript.id}>
-                    <ManuscriptCard
-                      {...manuscript}
-                      user={user}
-                      teamId={id}
-                      teamIdCode={teamId || ''}
-                      grantId={grantId || ''}
-                      isComplianceReviewer={isComplianceReviewer}
-                      isTeamMember={isTeamMember}
-                      onUpdateManuscript={onUpdateManuscript}
-                      onReplyToDiscussion={onReplyToDiscussion}
-                      getDiscussion={getDiscussion}
-                    />
+              {manuscripts.length ? (
+                <>
+                  <Paragraph noMargin accent="lead">
+                    {manuscriptSubmissions}
+                  </Paragraph>
+                  <div>
+                    {manuscripts.map((manuscript) => (
+                      <div key={manuscript.id}>
+                        <ManuscriptCard
+                          {...manuscript}
+                          user={user}
+                          teamId={id}
+                          teamIdCode={teamId || ''}
+                          grantId={grantId || ''}
+                          isComplianceReviewer={isComplianceReviewer}
+                          isTeamMember={isTeamMember}
+                          onUpdateManuscript={onUpdateManuscript}
+                          onReplyToDiscussion={onReplyToDiscussion}
+                          getDiscussion={getDiscussion}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              ) : (
+                <Paragraph noMargin accent="lead">
+                  {noManuscriptSubmissions}
+                </Paragraph>
+              )}
             </div>
             <div css={manuscriptsGroupStyles}>
               <Subtitle noMargin>Collaborator Submission</Subtitle>
-              <Paragraph noMargin accent="lead">
-                {collaborationManuscripts?.length
-                  ? 'The following manuscripts were submitted by another team for compliance review. Your team has been listed as a contributor to the manuscript.'
-                  : 'Your team has not been listed as a contributor on manuscripts that were submitted for compliance review by other teams.'}
-              </Paragraph>
-              <div>
-                {collaborationManuscripts?.map((manuscript) => (
-                  <div key={manuscript.id}>
-                    <ManuscriptCard
-                      {...manuscript}
-                      user={user}
-                      teamId={id}
-                      teamIdCode={teamId || ''}
-                      grantId={grantId || ''}
-                      isComplianceReviewer={isComplianceReviewer}
-                      isTeamMember={isTeamMember}
-                      onUpdateManuscript={onUpdateManuscript}
-                      onReplyToDiscussion={onReplyToDiscussion}
-                      getDiscussion={getDiscussion}
-                    />
+              {collaborationManuscripts?.length ? (
+                <>
+                  <Paragraph noMargin accent="lead">
+                    {manuscriptCollaborations}
+                  </Paragraph>
+                  <div>
+                    {collaborationManuscripts?.map((manuscript) => (
+                      <div key={manuscript.id}>
+                        <ManuscriptCard
+                          {...manuscript}
+                          user={user}
+                          teamId={id}
+                          teamIdCode={teamId || ''}
+                          grantId={grantId || ''}
+                          isComplianceReviewer={isComplianceReviewer}
+                          isTeamMember={isTeamMember}
+                          onUpdateManuscript={onUpdateManuscript}
+                          onReplyToDiscussion={onReplyToDiscussion}
+                          getDiscussion={getDiscussion}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              ) : (
+                <Paragraph noMargin accent="lead">
+                  {noManuscriptCollaborations}
+                </Paragraph>
+              )}
             </div>
           </Card>
         </>

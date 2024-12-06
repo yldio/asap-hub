@@ -85,8 +85,9 @@ export const getUserDataById = (
               teamItem?.inactiveSinceDate ?? undefined,
           })) || [],
         labIds:
-          item?.labsCollection?.items.map((labItem) => labItem?.sys.id || '') ||
-          [],
+          item?.labsCollection?.items.map(
+            (labMembership) => labMembership?.lab?.sys.id || '',
+          ) || [],
         teamIds:
           item?.teamsCollection?.items.map(
             (teamItem) => teamItem?.team?.sys.id || '',

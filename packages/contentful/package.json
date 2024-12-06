@@ -10,6 +10,7 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
+    "migrate-user-labs": "ts-node ./scripts/migrate-user-labs.ts",
     "watch:babel": "../../scripts/build-babel.sh watch",
     "space:rollback-migration": "yarn ctf-migrate down -c $CONTENT_TYPE -d $DRY_RUN",
     "space:migrate:run": "yarn ctf-migrate up --all",

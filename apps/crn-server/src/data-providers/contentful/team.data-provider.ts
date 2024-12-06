@@ -177,7 +177,7 @@ export const parseContentfulGraphQlTeamListItem = (
         membership.linkedFrom?.usersCollection?.items[0] || {};
 
       const memberLabIds = labsCollection?.items
-        .map((labItem) => labItem?.sys.id)
+        .map((labMembership) => labMembership?.lab?.sys.id)
         .filter((x): x is string => x !== undefined);
 
       memberLabIds?.forEach((labId) => labIdsSet.add(labId));
@@ -249,16 +249,16 @@ export const parseContentfulGraphQlTeam = (
       } = membership.linkedFrom?.usersCollection?.items[0] || {};
 
       const labs: LabResponse[] = (labsCollection?.items || []).reduce(
-        (userLabs: LabResponse[], lab): LabResponse[] => {
-          if (!lab) {
+        (userLabs: LabResponse[], labMembership): LabResponse[] => {
+          if (!labMembership || !labMembership.lab) {
             return userLabs;
           }
 
           return [
             ...userLabs,
             {
-              id: lab.sys.id,
-              name: lab.name || '',
+              id: labMembership.lab.sys.id,
+              name: labMembership.lab.name || '',
             },
           ];
         },

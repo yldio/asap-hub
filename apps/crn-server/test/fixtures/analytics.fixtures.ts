@@ -453,8 +453,10 @@ export const getUserTotalResearchOutputsItem = ({
   alumniSinceDate: null,
   labsCollection: {
     items: labIds.map((labId) => ({
-      sys: {
-        id: labId,
+      lab: {
+        sys: {
+          id: labId,
+        },
       },
     })),
   },

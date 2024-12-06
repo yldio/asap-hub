@@ -503,8 +503,8 @@ export const getContentfulGraphqlUser = (
   role: 'Grantee',
   labsCollection: {
     items: [
-      { sys: { id: 'cd7be4902' }, name: 'Brighton' },
-      { sys: { id: 'cd7be4903' }, name: 'Liverpool' },
+      { lab: { sys: { id: 'cd7be4902' }, name: 'Brighton' } },
+      { lab: { sys: { id: 'cd7be4903' }, name: 'Liverpool' } },
     ],
   },
   teamsCollection: {
@@ -581,8 +581,8 @@ export const getContentfulGraphqlUserListItem = (
   role: 'Grantee',
   labsCollection: {
     items: [
-      { sys: { id: 'cd7be4902' }, name: 'Brighton' },
-      { sys: { id: 'cd7be4903' }, name: 'Liverpool' },
+      { lab: { sys: { id: 'cd7be4902' }, name: 'Brighton' } },
+      { lab: { sys: { id: 'cd7be4903' }, name: 'Liverpool' } },
     ],
   },
   teamsCollection: {

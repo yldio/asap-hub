@@ -228,16 +228,20 @@ describe('User data provider', () => {
           labsCollection: {
             items: [
               {
-                sys: {
-                  id: '1',
+                lab: {
+                  sys: {
+                    id: '1',
+                  },
+                  name: 'My lab',
                 },
-                name: 'My lab',
               },
               {
-                sys: {
-                  id: '2',
+                lab: {
+                  sys: {
+                    id: '2',
+                  },
+                  name: null,
                 },
-                name: null,
               },
             ],
           },

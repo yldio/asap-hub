@@ -1,0 +1,54 @@
+name: Migrate user labs
+on:
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        required: true
+        description: The environment name
+        type: choice
+        options:
+          - Branch
+          - Development
+          - Production
+      contentful-env:
+        required: true
+        type: string
+        description: Choose the Contentful environment to migrate user labs
+
+jobs:
+  migrate_user_labs:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Run User Labs Migration
+        run: |
+          yarn workspace @asap-hub/contentful migrate-user-labs
+        env:
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
+
+  notify_failure:
+    runs-on: ubuntu-latest
+    needs: [migrate_user_labs]
+    if: ${{ failure() && inputs.environment-name=='Production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/slack/
+        with:
+          message: Migrate user labs failed
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure

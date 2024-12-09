@@ -71,6 +71,7 @@ export type ManuscriptVersion = {
   type: ManuscriptType;
   lifecycle: ManuscriptLifecycle;
   description: string;
+  count: number;
   preprintDoi?: string;
   publicationDoi?: string;
   requestingApcCoverage?: ApcCoverageOption;
@@ -140,6 +141,7 @@ export const manuscriptFormFieldsMapping: Record<
       keyof Omit<
         ManuscriptVersion,
         | 'complianceReport'
+        | 'count'
         | 'createdBy'
         | 'createdDate'
         | 'id'

@@ -1,9 +1,11 @@
 import { User } from '@asap-hub/auth';
 import {
+  AuthorResponse,
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptStatus,
   manuscriptStatus,
+  ManuscriptVersion,
   TeamManuscript,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
@@ -99,6 +101,51 @@ const buttonStyles = css({
   gap: rem(8),
 });
 
+export type VersionUserProps = {
+  version:
+    | Pick<
+        ManuscriptVersion,
+        | 'teams'
+        | 'firstAuthors'
+        | 'correspondingAuthor'
+        | 'additionalAuthors'
+        | 'labs'
+      >
+    | undefined;
+  user: User | null;
+};
+
+export const isManuscriptLead = ({ version, user }: VersionUserProps) =>
+  user &&
+  version &&
+  user.teams.find((team) =>
+    version.teams.find(
+      (versionTeam) =>
+        versionTeam.id === team.id &&
+        (team.role === 'Lead PI (Core Leadership)' ||
+          team.role === 'Project Manager'),
+    ),
+  );
+
+export const isManuscriptAuthor = ({
+  authors,
+  user,
+}: {
+  authors: AuthorResponse[];
+  user: User | null;
+}) => user && authors.find((author) => author.id === user.id);
+
+const canUpdateManuscript = ({ version, user }: VersionUserProps) =>
+  !!isManuscriptLead({ version, user }) ||
+  !!isManuscriptAuthor({
+    authors: [
+      ...(version?.firstAuthors || []),
+      ...(version?.correspondingAuthor || []),
+      ...(version?.additionalAuthors || []),
+    ],
+    user,
+  });
+
 const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   id,
   title,
@@ -151,9 +198,16 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   };
 
   const closedManuscriptStatuses = ['Closed (other)', 'Compliant'];
+  const currentManuscriptVersion = versions[0];
+
   const canSubmitComplianceReport =
     !closedManuscriptStatuses.includes(status ?? '') &&
-    !versions[0]?.complianceReport;
+    !currentManuscriptVersion?.complianceReport;
+
+  const hasUpdateAccess = canUpdateManuscript({
+    version: currentManuscriptVersion,
+    user,
+  });
 
   const handleStatusChange = async () => {
     if (newSelectedStatus) {
@@ -245,19 +299,21 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                   </Button>
                 </span>
               )}
-              <span>
-                <Button
-                  primary
-                  small
-                  noMargin
-                  onClick={handleResubmitManuscript}
-                  enabled
-                >
-                  <span css={buttonStyles}>
-                    {resubmitManuscriptIcon} Submit Revised Manuscript
-                  </span>
-                </Button>
-              </span>
+              {hasUpdateAccess && (
+                <span>
+                  <Button
+                    primary
+                    small
+                    noMargin
+                    onClick={handleResubmitManuscript}
+                    enabled={!!currentManuscriptVersion?.complianceReport}
+                  >
+                    <span css={buttonStyles}>
+                      {resubmitManuscriptIcon} Submit Revised Manuscript
+                    </span>
+                  </Button>
+                </span>
+              )}
             </span>
           </span>
         </div>
@@ -275,7 +331,9 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 grantId={grantId}
                 manuscriptCount={count}
                 manuscriptId={id}
-                user={user}
+                canEditManuscript={
+                  hasUpdateAccess && version.id === currentManuscriptVersion?.id
+                }
                 isTeamMember={isTeamMember}
               />
             ))}

@@ -24,6 +24,7 @@ export const getManuscriptDataObject = (
       lifecycle: 'Preprint',
       type: 'Original Research',
       description: 'A good description',
+      count: 1,
       createdBy: manuscriptAuthor,
       updatedBy: manuscriptAuthor,
       createdDate: '2020-09-23T20:45:22.000Z',
@@ -92,6 +93,7 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
       type: 'Original Research',
       lifecycle: 'Preprint',
       description: 'A good description',
+      count: 1,
       manuscriptFile: {
         sys: { id: 'file-id' },
         fileName: 'manuscript.pdf',
@@ -189,6 +191,7 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
     id: _____,
     publishedAt: ______,
     teams: _______,
+    count: ________,
     ...version
   } = versions[0]!;
   return {

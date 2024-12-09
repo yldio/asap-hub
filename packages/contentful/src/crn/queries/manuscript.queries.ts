@@ -11,7 +11,7 @@ export const manuscriptContentQueryFragment = gql`
     title
     status
     count
-    versionsCollection(limit: 20, order: sys_publishedAt_DESC) {
+    versionsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
       items {
         sys {
           id
@@ -21,6 +21,7 @@ export const manuscriptContentQueryFragment = gql`
         type
         lifecycle
         description
+        count
         manuscriptFile {
           sys {
             id

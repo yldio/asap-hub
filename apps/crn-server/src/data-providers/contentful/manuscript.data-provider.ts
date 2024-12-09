@@ -379,6 +379,7 @@ export const parseGraphqlManuscriptVersion = (
       type: version?.type,
       lifecycle: version?.lifecycle,
       description: version?.description,
+      count: version?.count || 0,
       manuscriptFile: {
         url: version?.manuscriptFile?.url,
         filename: version?.manuscriptFile?.fileName,

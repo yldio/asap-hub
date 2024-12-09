@@ -207,11 +207,6 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
             </div>
             <div data-testid="team-manuscripts" css={manuscriptsGroupStyles}>
               <Subtitle noMargin>Team Submission</Subtitle>
-              <Paragraph noMargin accent="lead">
-                {manuscripts.length
-                  ? manuscriptSubmissions
-                  : noManuscriptSubmissions}
-              </Paragraph>
               {manuscripts.length ? (
                 <>
                   <Paragraph noMargin accent="lead">

@@ -206,7 +206,7 @@ export const parseContentfulGraphQlTeamListItem = (
   };
 };
 
-const mapManuscrips = (
+const mapManuscripts = (
   manuscript: ManuscriptItem,
 ): TeamDataObject['manuscripts'][number] => ({
   id: manuscript.sys.id,
@@ -340,23 +340,30 @@ export const parseContentfulGraphQlTeam = (
       item.linkedFrom?.manuscriptsCollection?.items,
     );
 
+    const getLastManuscriptVersion = (
+      manuscript: ManuscriptItem,
+    ):
+      | NonNullable<ManuscriptItem['versionsCollection']>['items'][number]
+      | undefined =>
+      manuscript?.versionsCollection?.items[
+        manuscript.versionsCollection.items.length - 1
+      ];
+
     return {
       manuscripts: manuscripts
         .filter(
           (manuscript) =>
-            manuscript?.versionsCollection?.items[
-              manuscript.versionsCollection.items.length - 1
-            ]?.teamsCollection?.items[0]?.sys.id === teamId,
+            getLastManuscriptVersion(manuscript)?.teamsCollection?.items[0]?.sys
+              .id === teamId,
         )
-        .map(mapManuscrips),
+        .map(mapManuscripts),
       collaborationManuscripts: manuscripts
         .filter(
           (manuscript) =>
-            manuscript?.versionsCollection?.items[
-              manuscript.versionsCollection.items.length - 1
-            ]?.teamsCollection?.items[0]?.sys.id !== teamId,
+            getLastManuscriptVersion(manuscript)?.teamsCollection?.items[0]?.sys
+              .id !== teamId,
         )
-        .map(mapManuscrips),
+        .map(mapManuscripts),
     };
   };
 

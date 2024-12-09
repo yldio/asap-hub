@@ -72,8 +72,8 @@ export type LeadershipAndMembershipFields =
 
 export type SortingDirection = 'asc' | 'desc';
 
-const ascending: SortingDirection = 'asc';
-const descending: SortingDirection = 'desc';
+export const ascending: SortingDirection = 'asc';
+export const descending: SortingDirection = 'desc';
 
 export const initialSortingDirection = {
   team: ascending,

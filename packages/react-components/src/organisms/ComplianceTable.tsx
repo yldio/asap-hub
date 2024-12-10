@@ -255,7 +255,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
             <span css={[titleStyles, rowTitleStyles]}>APC Coverage</span>
             <p>{row.requestingApcCoverage}</p>
             <span css={[titleStyles, rowTitleStyles]}>Assigned Users</span>
-            <div css={{ width: rem(32) }}>
+            <div css={{ width: rem(32), alignSelf: 'center' }}>
               {row.assignedUsers.map((user) => (
                 <Avatar
                   firstName={user.firstName}

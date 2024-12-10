@@ -8,7 +8,7 @@ describe('ComplianceDashboard', () => {
     data: [
       {
         id: '1',
-        publishedAt: '2023-01-01T08:00:00Z',
+        lastUpdated: '2023-01-01T08:00:00Z',
         requestingApcCoverage: 'Yes',
         status: 'Compliant',
         team: { id: 'team-1', displayName: 'Test Team' },

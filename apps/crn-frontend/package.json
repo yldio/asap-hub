@@ -65,7 +65,7 @@
     "@testing-library/user-event": "12.8.3",
     "@types/file-saver": "^2",
     "@types/history": "4.7.11",
-    "@types/jest": "29.5.12",
+    "@types/jest": "29.5.14",
     "@types/jest-when": "3.5.2",
     "@types/nock": "11.1.0",
     "@types/qs": "6.9.11",

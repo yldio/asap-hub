@@ -64,8 +64,8 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
         Manuscripts by status:
       </Paragraph>
       <div css={manuscriptStatusContainerStyles}>
-        {manuscriptStatus.map((status) => (
-          <Tag>{status}</Tag>
+        {manuscriptStatus.map((status, index) => (
+          <Tag key={index}>{status}</Tag>
         ))}
       </div>
     </Card>

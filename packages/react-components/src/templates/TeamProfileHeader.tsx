@@ -132,7 +132,7 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly pastEventsCount?: number;
   readonly teamDraftOutputsCount?: number;
   readonly isAsapTeam?: boolean;
-  readonly manuscriptCount?: number;
+  readonly manuscriptsCount?: number;
 };
 
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
@@ -149,7 +149,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   pastEventsCount,
   teamDraftOutputsCount,
   isStaff,
-  manuscriptCount,
+  manuscriptsCount,
   isAsapTeam = false,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
@@ -258,7 +258,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         )}
         {isAsapTeam && isEnabled('DISPLAY_MANUSCRIPTS') && (
           <TabLink href={route.compliance({}).$}>
-            Compliance ({manuscriptCount})
+            Compliance ({manuscriptsCount})
           </TabLink>
         )}
         <TabLink href={route.outputs({}).$}>

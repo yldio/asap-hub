@@ -222,7 +222,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                 teamDraftOutputsCount={
                   canShareResearchOutput ? outputDraftResults.total : undefined
                 }
-                manuscriptCount={manuscriptCount.total || 0}
+                manuscriptsCount={manuscriptCount.total || 0}
               >
                 <ProfileSwitch
                   About={() => (

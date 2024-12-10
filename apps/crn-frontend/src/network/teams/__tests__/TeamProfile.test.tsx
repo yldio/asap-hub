@@ -815,3 +815,40 @@ describe('The draft output tab', () => {
     expect(screen.getByText('Draft Outputs (0)')).toBeVisible();
   });
 });
+
+describe('The compliance tab', () => {
+  it('does not show compliance tab if not on Team ASAP', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+    await renderPage({
+      ...createTeamResponse(),
+      displayName: 'Test',
+    });
+
+    expect(
+      screen.queryByText(/Compliance/i, { selector: 'nav *' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows compliance tab on Team ASAP page', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+    await renderPage({
+      ...createTeamResponse(),
+      displayName: 'ASAP',
+    });
+
+    expect(
+      screen.getByText(/Compliance/i, { selector: 'nav *' }),
+    ).toBeVisible();
+  });
+
+  it('renders compliance dashboard on Team ASAP page', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+    await renderPage({
+      ...createTeamResponse(),
+      displayName: 'ASAP',
+    });
+
+    userEvent.click(screen.getByText(/Compliance/i, { selector: 'nav *' }));
+    expect(await screen.findByText(/No manuscripts available/i)).toBeVisible();
+  });
+});

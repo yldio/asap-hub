@@ -1,4 +1,5 @@
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
+import { enable } from '@asap-hub/flags';
 import { TeamRole } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { fireEvent } from '@testing-library/dom';
@@ -148,6 +149,22 @@ it('renders workspace tabs when tools provided', () => {
   ).toEqual([
     'About',
     'Team Workspace',
+    'Outputs (0)',
+    'Upcoming Events (0)',
+    'Past Events (0)',
+  ]);
+});
+
+it('renders compliance tabs when is ASAP team', () => {
+  enable('DISPLAY_MANUSCRIPTS');
+  render(
+    <TeamProfileHeader {...boilerplateProps} isAsapTeam manuscriptsCount={0} />,
+  );
+  expect(
+    screen.getAllByRole('link').map(({ textContent }) => textContent),
+  ).toEqual([
+    'About',
+    'Compliance (0)',
     'Outputs (0)',
     'Upcoming Events (0)',
     'Past Events (0)',

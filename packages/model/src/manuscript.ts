@@ -802,12 +802,12 @@ export type SortCompliance =
   | 'team_desc'
   | 'id_asc'
   | 'id_desc'
-  | 'lastUpdated_asc'
-  | 'lastUpdated_desc'
+  | 'last_updated_asc'
+  | 'last_updated_desc'
   | 'status_asc'
   | 'status_desc'
-  | 'apcCoverage_asc'
-  | 'apcCoverage_desc';
+  | 'apc_coverage_asc'
+  | 'apc_coverage_desc';
 
 export const complianceInitialSortingDirection = {
   team: ascending,
@@ -819,9 +819,10 @@ export const complianceInitialSortingDirection = {
 
 export type PartialManuscriptResponse = Pick<
   ManuscriptVersion,
-  'id' | 'publishedAt' | 'requestingApcCoverage'
+  'id' | 'requestingApcCoverage'
 > &
   Pick<ManuscriptResponse, 'status'> & {
+    lastUpdated: string;
     team: { id: string; displayName: string };
     assignedUsers: Pick<
       UserResponse,

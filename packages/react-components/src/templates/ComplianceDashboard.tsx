@@ -33,6 +33,11 @@ const cardStyles = css({
   marginTop: rem(32),
 });
 
+const statusDescriptionStyles = css({
+  fontWeight: 'bold',
+  marginBottom: rem(16),
+});
+
 const manuscriptStatusContainerStyles = css({
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr',
@@ -60,9 +65,9 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
 }) => (
   <article>
     <Card overrideStyles={cardStyles}>
-      <Paragraph styles={css({ fontWeight: 'bold', marginBottom: rem(16) })}>
-        Manuscripts by status:
-      </Paragraph>
+      <div css={statusDescriptionStyles}>
+        <Paragraph>Manuscripts by status:</Paragraph>
+      </div>
       <div css={manuscriptStatusContainerStyles}>
         {manuscriptStatus.map((status, index) => (
           <Tag key={index}>{status}</Tag>
@@ -84,7 +89,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
       </main>
     ) : (
       <main css={{ textAlign: 'center', paddingTop: rem(48) }}>
-        {<span css={iconStyles}>{article}</span>}
+        <span css={iconStyles}>{article}</span>
         <Headline3>No manuscripts available.</Headline3>
         <Paragraph accent="lead">
           When a team shares a manuscript for a compliance review, it will be

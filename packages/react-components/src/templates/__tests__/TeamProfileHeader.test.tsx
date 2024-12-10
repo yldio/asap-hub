@@ -155,15 +155,21 @@ it('renders workspace tabs when tools provided', () => {
   ]);
 });
 
-it('renders compliance tabs when is ASAP team', () => {
+it('renders compliance tabs when is ASAP team and is staff', () => {
   enable('DISPLAY_MANUSCRIPTS');
   render(
-    <TeamProfileHeader {...boilerplateProps} isAsapTeam manuscriptsCount={0} />,
+    <TeamProfileHeader
+      {...boilerplateProps}
+      isAsapTeam
+      isStaff
+      manuscriptsCount={0}
+    />,
   );
   expect(
     screen.getAllByRole('link').map(({ textContent }) => textContent),
   ).toEqual([
     'About',
+    'Team Workspace',
     'Compliance (0)',
     'Outputs (0)',
     'Upcoming Events (0)',

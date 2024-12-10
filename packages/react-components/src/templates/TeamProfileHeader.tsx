@@ -256,7 +256,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         {(tools || isStaff) && (
           <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
         )}
-        {isAsapTeam && isEnabled('DISPLAY_MANUSCRIPTS') && (
+        {isAsapTeam && isStaff && isEnabled('DISPLAY_MANUSCRIPTS') && (
           <TabLink href={route.compliance({}).$}>
             Compliance ({manuscriptsCount})
           </TabLink>

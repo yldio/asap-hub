@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SearchField } from '@asap-hub/react-components';
+import { SearchField, ComplianceDashboard } from '@asap-hub/react-components';
 import {
   complianceInitialSortingDirection,
   ComplianceSortingDirection,
@@ -7,7 +7,6 @@ import {
 } from '@asap-hub/model';
 
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { ComplianceDashboard } from '@asap-hub/react-components/src/templates';
 import { useManuscripts } from './state';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';

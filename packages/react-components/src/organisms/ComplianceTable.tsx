@@ -10,31 +10,31 @@ import { Avatar, Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import { AlphabeticalSortingIcon, NumericalSortingIcon } from '../icons';
-import { perRem, rem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 
 const container = css({
   display: 'grid',
-  paddingTop: `${32 / perRem}em`,
+  paddingTop: rem(32),
 });
 
 const gridTitleStyles = css({
   display: 'none',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     display: 'inherit',
-    paddingBottom: `${16 / perRem}em`,
+    paddingBottom: rem(16),
   },
 });
 
 const rowTitleStyles = css({
-  paddingTop: `${32 / perRem}em`,
-  paddingBottom: `${16 / perRem}em`,
+  paddingTop: rem(32),
+  paddingBottom: rem(16),
   ':first-of-type': { paddingTop: 0 },
   [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
 
 const rowStyles = css({
   display: 'grid',
-  padding: `${20 / perRem}em ${24 / perRem}em 0`,
+  padding: `${rem(20)} ${rem(24)} 0`,
   borderBottom: `1px solid ${steel.rgb}`,
   ':first-of-type': {
     borderBottom: 'none',
@@ -45,13 +45,13 @@ const rowStyles = css({
   ':last-child': {
     borderBottom: 'none',
     marginBottom: 0,
-    paddingBottom: `${15 / perRem}em`,
-    borderRadius: `${borderRadius / perRem}em`,
+    paddingBottom: rem(15),
+    borderRadius: rem(borderRadius),
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
-    columnGap: `${15 / perRem}em`,
-    paddingTop: `${0 / perRem}em`,
+    columnGap: rem(15),
+    paddingTop: 0,
     paddingBottom: 0,
     borderBottom: `1px solid ${steel.rgb}`,
   },
@@ -62,16 +62,16 @@ const titleStyles = css({
   alignItems: 'center',
   fontWeight: 'bold',
   color: charcoal.rgb,
-  gap: `${8 / perRem}em`,
+  gap: rem(8),
 });
 
 const teamNameStyles = css({
   display: 'flex',
-  gap: `${3 / perRem}em`,
+  gap: rem(3),
 });
 
 const buttonStyles = css({
-  width: `${24 / perRem}em`,
+  width: rem(24),
   margin: 0,
   padding: 0,
   border: 'none',
@@ -79,15 +79,6 @@ const buttonStyles = css({
   cursor: 'pointer',
   alignSelf: 'center',
 });
-
-export type TeamMetric = {
-  id: string;
-  name: string;
-  leadershipRoleCount: number;
-  previousLeadershipRoleCount: number;
-  memberCount: number;
-  previousMemberCount: number;
-};
 
 type ComplianceTableProps = {
   data: PartialManuscriptResponse[];
@@ -108,9 +99,9 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
 }) => {
   const isTeamSortActive = sort.includes('team');
   const isIdSortActive = sort.includes('id');
-  const isLastUpdatedSortActive = sort.includes('lastUpdated');
+  const isLastUpdatedSortActive = sort.includes('last_updated');
   const isStatusSortActive = sort.includes('status');
-  const isApcCoverageSortActive = sort.includes('apcCoverage');
+  const isApcCoverageSortActive = sort.includes('apc_coverage');
 
   return (
     <Card>
@@ -125,7 +116,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
                   ? sortingDirection.team === 'asc'
                     ? 'desc'
                     : 'asc'
-                  : 'desc';
+                  : 'asc';
 
                 setSort(`team_${newDirection}`);
                 setSortingDirection({
@@ -137,6 +128,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
               <AlphabeticalSortingIcon
                 active={isTeamSortActive}
                 ascending={sortingDirection.team === 'asc'}
+                description={'Team'}
               />
             </button>
           </span>
@@ -177,7 +169,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
                     : 'asc'
                   : 'desc';
 
-                setSort(`lastUpdated_${newDirection}`);
+                setSort(`last_updated_${newDirection}`);
                 setSortingDirection({
                   ...complianceInitialSortingDirection,
                   lastUpdated: newDirection,
@@ -201,7 +193,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
                   ? sortingDirection.status === 'asc'
                     ? 'desc'
                     : 'asc'
-                  : 'desc';
+                  : 'asc';
 
                 setSort(`status_${newDirection}`);
                 setSortingDirection({
@@ -213,6 +205,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
               <AlphabeticalSortingIcon
                 active={isStatusSortActive}
                 ascending={sortingDirection.status === 'asc'}
+                description={'Status'}
               />
             </button>
           </span>
@@ -225,9 +218,9 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
                   ? sortingDirection.apcCoverage === 'asc'
                     ? 'desc'
                     : 'asc'
-                  : 'desc';
+                  : 'asc';
 
-                setSort(`apcCoverage_${newDirection}`);
+                setSort(`apc_coverage_${newDirection}`);
                 setSortingDirection({
                   ...complianceInitialSortingDirection,
                   apcCoverage: newDirection,
@@ -237,6 +230,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
               <AlphabeticalSortingIcon
                 active={isApcCoverageSortActive}
                 ascending={sortingDirection.apcCoverage === 'asc'}
+                description={'APC Coverage'}
               />
             </button>
           </span>
@@ -255,13 +249,13 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
             <span css={[titleStyles, rowTitleStyles]}>ID</span>
             <p>{row.id}</p>
             <span css={[titleStyles, rowTitleStyles]}>Last Updated</span>
-            <p>{row.publishedAt}</p>
+            <p>{row.lastUpdated}</p>
             <span css={[titleStyles, rowTitleStyles]}>Status</span>
             <p>{row.status}</p>
             <span css={[titleStyles, rowTitleStyles]}>APC Coverage</span>
             <p>{row.requestingApcCoverage}</p>
             <span css={[titleStyles, rowTitleStyles]}>Assigned Users</span>
-            <p css={{ width: rem(32) }}>
+            <div css={{ width: rem(32) }}>
               {row.assignedUsers.map((user) => (
                 <Avatar
                   firstName={user.firstName}
@@ -270,7 +264,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
                   key={user.id}
                 />
               ))}
-            </p>
+            </div>
           </div>
         ))}
       </div>

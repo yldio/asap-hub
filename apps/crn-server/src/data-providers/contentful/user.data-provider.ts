@@ -182,7 +182,17 @@ export class UserContentfulDataProvider implements UserDataProvider {
         skip,
         id: options.filter.labId,
       });
-      return labs?.linkedFrom?.usersCollection || { total: 0, items: [] };
+
+      const labMembershipCollection = labs?.linkedFrom?.labMembershipCollection;
+      return labMembershipCollection
+        ? {
+            total: labMembershipCollection.total,
+            items: labMembershipCollection.items.map(
+              (labMembership) =>
+                labMembership?.linkedFrom?.usersCollection?.items[0],
+            ),
+          }
+        : { total: 0, items: [] };
     }
 
     if (options.filter?.teamId) {

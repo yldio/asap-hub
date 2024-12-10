@@ -307,10 +307,16 @@ export const FETCH_USERS_BY_LAB_ID = gql`
   query FetchUsersByLabId($id: String!, $limit: Int, $skip: Int) {
     labs(id: $id) {
       linkedFrom {
-        usersCollection(limit: $limit, skip: $skip) {
+        labMembershipCollection(limit: $limit, skip: $skip) {
           total
           items {
-            ...UserListItemContent
+            linkedFrom {
+              usersCollection(limit: 1) {
+                items {
+                  ...UserListItemContent
+                }
+              }
+            }
           }
         }
       }

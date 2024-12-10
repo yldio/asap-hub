@@ -550,6 +550,82 @@ describe('User data provider', () => {
       ]);
     });
 
+    describe('fetch by lab', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+      test('should return empty result when labs is null', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          labs: null,
+        });
+
+        const result = await userDataProvider.fetch({
+          filter: { labId: '1234567' },
+        });
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test('should return empty result when labMembershipCollection is null', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          labs: {
+            linkedFrom: {
+              labMembershipCollection: null,
+            },
+          },
+        });
+
+        const result = await userDataProvider.fetch({
+          filter: { labId: '1234567' },
+        });
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test('should return the users in the lab', async () => {
+        const contentfulGraphqlUser = getContentfulGraphqlUser();
+        const labByIdGraphqlResponse = {
+          labs: {
+            linkedFrom: {
+              labMembershipCollection: {
+                total: 1,
+                items: [
+                  {
+                    linkedFrom: {
+                      usersCollection: {
+                        items: [contentfulGraphqlUser],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          labByIdGraphqlResponse,
+        );
+
+        const result = await userDataProvider.fetch({
+          filter: { labId: '1234567' },
+        });
+
+        const userResponse = getUserListItemDataObject();
+        userResponse.avatarUrl = undefined;
+        expect(result).toEqual({
+          total: 1,
+          items: [userResponse],
+        });
+      });
+    });
+
     describe('query parameters', () => {
       beforeEach(() => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({

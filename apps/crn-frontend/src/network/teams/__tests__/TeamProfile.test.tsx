@@ -829,12 +829,34 @@ describe('The compliance tab', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('shows compliance tab on Team ASAP page', async () => {
+  it('does not show compliance tab if on Team ASAP but not Staff', async () => {
     enable('DISPLAY_MANUSCRIPTS');
-    await renderPage({
-      ...createTeamResponse(),
-      displayName: 'ASAP',
-    });
+    await renderPage(
+      {
+        ...createTeamResponse(),
+        displayName: 'Test',
+      },
+      {},
+      { role: 'Grantee' },
+    );
+
+    expect(
+      screen.queryByText(/Compliance/i, { selector: 'nav *' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows compliance tab on Team ASAP page if user is Staff', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+    await renderPage(
+      {
+        ...createTeamResponse(),
+        displayName: 'ASAP',
+      },
+      {},
+      {
+        role: 'Staff',
+      },
+    );
 
     expect(
       screen.getByText(/Compliance/i, { selector: 'nav *' }),
@@ -843,10 +865,16 @@ describe('The compliance tab', () => {
 
   it('renders compliance dashboard on Team ASAP page', async () => {
     enable('DISPLAY_MANUSCRIPTS');
-    await renderPage({
-      ...createTeamResponse(),
-      displayName: 'ASAP',
-    });
+    await renderPage(
+      {
+        ...createTeamResponse(),
+        displayName: 'ASAP',
+      },
+      {},
+      {
+        role: 'Staff',
+      },
+    );
 
     userEvent.click(screen.getByText(/Compliance/i, { selector: 'nav *' }));
     expect(await screen.findByText(/No manuscripts available/i)).toBeVisible();

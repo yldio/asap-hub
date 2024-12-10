@@ -538,10 +538,24 @@ describe('Teams data provider', () => {
   describe('Fetch-by-id method', () => {
     test('Should fetch the team from Contentful GraphQl', async () => {
       const teamId = 'team-id-0';
+      const teamName = 'Team A';
+
+      const expectedResult = getTeamDataObject();
+      expectedResult.manuscripts[0]!.versions[0]!.teams[0]!.id = teamId;
+      expectedResult.manuscripts[0]!.versions[0]!.teams[0]!.displayName =
+        teamName;
+      expectedResult.manuscripts[1]!.versions[0]!.teams[0]!.id = teamId;
+      expectedResult.manuscripts[1]!.versions[0]!.teams[0]!.displayName =
+        teamName;
 
       const teamById = true;
       const contentfulGraphqlClientMockServer =
-        getContentfulGraphqlClientMockServer(getContentfulGraphql(teamById));
+        getContentfulGraphqlClientMockServer({
+          ...getContentfulGraphql(teamById, teamId),
+          ManuscriptVersionsTeamsCollection: () => ({
+            items: [{ sys: { id: teamId }, displayName: teamName }],
+          }),
+        });
 
       const teamByIdDataProviderMock = new TeamContentfulDataProvider(
         contentfulGraphqlClientMockServer,
@@ -550,7 +564,7 @@ describe('Teams data provider', () => {
 
       const result = await teamByIdDataProviderMock.fetchById(teamId);
 
-      expect(result).toMatchObject(getTeamDataObject());
+      expect(result).toMatchObject(expectedResult);
     });
 
     test('Should return null when the team is not found', async () => {
@@ -579,8 +593,18 @@ describe('Teams data provider', () => {
 
     test('Should return the result when the team exists', async () => {
       const id = 'some-id';
+      const expectedResult = getTeamDataObject();
+      expectedResult.id = id;
+      expectedResult.manuscripts[0]!.versions[0]!.teams[0]!.id = id;
+      expectedResult.manuscripts[1]!.versions[0]!.teams[0]!.id = id;
+      expectedResult.collaborationManuscripts = [];
+      const teamByIdMock = getContentfulGraphqlTeamById(id);
+      teamByIdMock.linkedFrom!.manuscriptsCollection!.items[0]!.versionsCollection!.items[0]!.teamsCollection!.items[0]!.sys.id =
+        id;
+      teamByIdMock.linkedFrom!.manuscriptsCollection!.items[1]!.versionsCollection!.items[0]!.teamsCollection!.items[0]!.sys.id =
+        id;
       const contentfulGraphQLResponse = {
-        teams: getContentfulGraphqlTeamById(),
+        teams: teamByIdMock,
       };
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -589,7 +613,7 @@ describe('Teams data provider', () => {
 
       const result = await teamDataProvider.fetchById(id);
 
-      expect(result).toEqual(getTeamDataObject());
+      expect(result).toEqual(expectedResult);
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({

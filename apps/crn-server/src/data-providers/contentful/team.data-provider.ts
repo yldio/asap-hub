@@ -56,6 +56,14 @@ export type Membership = NonNullable<
   >['items'][number]
 >;
 
+export type ManuscriptItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<FetchTeamByIdQuery['teams']>['linkedFrom']
+    >['manuscriptsCollection']
+  >['items'][number]
+>;
+
 export class TeamContentfulDataProvider implements TeamDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
@@ -198,9 +206,22 @@ export const parseContentfulGraphQlTeamListItem = (
   };
 };
 
+const mapManuscripts = (
+  manuscript: ManuscriptItem,
+): TeamDataObject['manuscripts'][number] => ({
+  id: manuscript.sys.id,
+  count: manuscript.count || 1,
+  title: manuscript.title || '',
+  status: manuscriptMapStatus(manuscript.status) || undefined,
+  versions: parseGraphqlManuscriptVersion(
+    manuscript.versionsCollection?.items || [],
+  ),
+});
+
 export const parseContentfulGraphQlTeam = (
   item: TeamByIdItem,
 ): TeamDataObject => {
+  const teamId = item.sys.id;
   const tools = (item.toolsCollection?.items || []).reduce(
     (teamTools: TeamTool[], tool) => {
       if (!tool || !tool.name || !tool.url) {
@@ -314,6 +335,38 @@ export const parseContentfulGraphQlTeam = (
     };
   };
 
+  const parseManuscripts = () => {
+    const manuscripts = cleanArray(
+      item.linkedFrom?.manuscriptsCollection?.items,
+    );
+
+    const getLastManuscriptVersion = (
+      manuscript: ManuscriptItem,
+    ):
+      | NonNullable<ManuscriptItem['versionsCollection']>['items'][number]
+      | undefined =>
+      manuscript?.versionsCollection?.items[
+        manuscript.versionsCollection.items.length - 1
+      ];
+
+    return {
+      manuscripts: manuscripts
+        .filter(
+          (manuscript) =>
+            getLastManuscriptVersion(manuscript)?.teamsCollection?.items[0]?.sys
+              .id === teamId,
+        )
+        .map(mapManuscripts),
+      collaborationManuscripts: manuscripts
+        .filter(
+          (manuscript) =>
+            getLastManuscriptVersion(manuscript)?.teamsCollection?.items[0]?.sys
+              .id !== teamId,
+        )
+        .map(mapManuscripts),
+    };
+  };
+
   return {
     id: item.sys.id ?? '',
     grantId: item.grantId ?? undefined,
@@ -325,17 +378,7 @@ export const parseContentfulGraphQlTeam = (
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     tools,
     supplementGrant: getSupplementGrant(),
-    manuscripts: cleanArray(item.linkedFrom?.manuscriptsCollection?.items).map(
-      (manuscript): TeamDataObject['manuscripts'][number] => ({
-        id: manuscript.sys.id,
-        count: manuscript.count || 1,
-        title: manuscript.title || '',
-        status: manuscriptMapStatus(manuscript.status) || undefined,
-        versions: parseGraphqlManuscriptVersion(
-          manuscript.versionsCollection?.items || [],
-        ),
-      }),
-    ),
+    ...parseManuscripts(),
     projectSummary: item.projectSummary ?? undefined,
     members: members.sort(sortMembers),
     labCount,

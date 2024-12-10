@@ -20,10 +20,10 @@ import { TeamPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
 import { getContentfulGraphqlManuscriptVersions } from './manuscript.fixtures';
 
-export const getContentfulGraphql = (teamById = false) => ({
+export const getContentfulGraphql = (teamById = false, teamId?: string) => ({
   Teams: () =>
     teamById
-      ? { ...getContentfulGraphqlTeamById(), linkedFrom: () => {} }
+      ? { ...getContentfulGraphqlTeamById(teamId), linkedFrom: () => {} }
       : getContentfulGraphqlTeam(),
   TeamMembershipCollection: () => getContentfulGraphqlTeamMemberships(),
   Users: () => getContentfulGraphqlTeamMembers(),
@@ -48,11 +48,11 @@ export const getContentfulGraphql = (teamById = false) => ({
 export const getUsersTeamsCollection = () => ({
   items: [{ team: { sys: { id: 'team-id-0' }, displayName: 'Team A' } }],
 });
-export const getContentfulGraphqlTeamById = (): NonNullable<
-  NonNullable<FetchTeamByIdQuery['teams']>
-> => ({
+export const getContentfulGraphqlTeamById = (
+  teamId?: string,
+): NonNullable<NonNullable<FetchTeamByIdQuery['teams']>> => ({
   sys: {
-    id: 'team-id-0',
+    id: teamId || 'team-id-0',
     publishedAt: '2020-11-26T11:56:04.000Z',
   },
   displayName: 'Team A',

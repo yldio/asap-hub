@@ -538,16 +538,16 @@ export const parseLabsCollection = (
   labsCollection: LabsCollection,
 ): LabResponse[] =>
   (labsCollection?.items || []).reduce(
-    (userLabs: LabResponse[], lab): LabResponse[] => {
-      if (!lab || !lab.name) {
+    (userLabs: LabResponse[], labMembership): LabResponse[] => {
+      if (!labMembership || !labMembership.lab?.name) {
         return userLabs;
       }
 
       return [
         ...userLabs,
         {
-          id: lab.sys.id,
-          name: lab.name,
+          id: labMembership.lab.sys.id,
+          name: labMembership.lab.name,
         },
       ];
     },

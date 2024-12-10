@@ -179,8 +179,10 @@ export const FETCH_USER_TOTAL_RESEARCH_OUTPUTS = gql`
         alumniSinceDate
         labsCollection(limit: 5) {
           items {
-            sys {
-              id
+            lab {
+              sys {
+                id
+              }
             }
           }
         }

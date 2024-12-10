@@ -79,16 +79,18 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const team = useTeamById(teamId);
   const user = useCurrentUserCRN();
   const isStaff = user?.role === 'Staff';
+  const isAsapTeam = team?.displayName === 'ASAP';
+  const canDisplayCompliancePage = isStaff && isAsapTeam;
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAbout()
       .then(team?.tools || isStaff ? loadWorkspace : undefined)
-      .then(team?.displayName === 'ASAP' ? loadCompliance : undefined)
+      .then(canDisplayCompliancePage ? loadCompliance : undefined)
       .then(loadOutputs)
       .then(loadTeamOutput)
       .then(loadEventsList);
-  }, [team, isStaff]);
+  }, [team, isStaff, canDisplayCompliancePage]);
 
   const canShareResearchOutput = useCanShareResearchOutput(
     'teams',
@@ -152,8 +154,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
       workspace: path + workspace.template,
       draftOutputs: path + draftOutputs.template,
     };
-
-    const isAsapTeam = team.displayName === 'ASAP';
 
     return (
       <ResearchOutputPermissionsContext.Provider
@@ -250,7 +250,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   Workspace={() => (
                     <Workspace team={{ ...team, tools: team.tools ?? [] }} />
                   )}
-                  {...(isAsapTeam ? { Compliance: () => <Compliance /> } : {})}
+                  {...(canDisplayCompliancePage
+                    ? { Compliance: () => <Compliance /> }
+                    : {})}
                 />
               </TeamProfilePage>
             </Switch>

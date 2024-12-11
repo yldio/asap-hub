@@ -834,7 +834,7 @@ describe('The compliance tab', () => {
     await renderPage(
       {
         ...createTeamResponse(),
-        displayName: 'Test',
+        displayName: 'ASAP',
       },
       {},
       { role: 'Grantee' },

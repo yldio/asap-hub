@@ -19127,9 +19127,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack@npm:4.41.38":
-  version: 4.41.38
-  resolution: "@types/webpack@npm:4.41.38"
+"@types/webpack@npm:4.41.40":
+  version: 4.41.40
+  resolution: "@types/webpack@npm:4.41.40"
   dependencies:
     "@types/node": "*"
     "@types/tapable": ^1
@@ -19137,7 +19137,7 @@ __metadata:
     "@types/webpack-sources": "*"
     anymatch: ^3.0.0
     source-map: ^0.6.0
-  checksum: d3de65993ef3a7621f75548c2f6f509e8f87f586032238e999743d6067030655c67e38ec5f8b32e04fa5276c83bdfb7a761773bce0e6f28605da87e3fc388e3e
+  checksum: 3866c3177e1ca0810d9e3cb88fb35183f093b4bcf6cc29f6161425a2a5ea7b4faf5d429c6cf3ed58b780e36dc471a0f511cedb1dcd43f519e1df7d24185f5d4a
   languageName: node
   linkType: hard
 
@@ -21159,7 +21159,7 @@ __metadata:
     "@types/jest": 29.5.14
     "@types/react-test-renderer": 18.0.7
     "@types/uuid": 8.3.4
-    "@types/webpack": 4.41.38
+    "@types/webpack": 4.41.40
     "@yarnpkg/pnpify": 3.1.7
     babel-jest: 29.7.0
     babel-plugin-lodash: 3.3.4

@@ -11,6 +11,7 @@ import {
   ManuscriptPutRequest,
   DiscussionPatchRequest,
   DiscussionResponse,
+  ListPartialManuscriptResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useCallback } from 'react';
@@ -310,3 +311,10 @@ export const useReplyToDiscussion = () => {
     setDiscussion(discussion);
   };
 };
+
+export const useManuscripts = (
+  options: GetListOptions,
+): ListPartialManuscriptResponse => ({
+  total: 0,
+  items: [],
+});

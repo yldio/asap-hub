@@ -6,6 +6,7 @@ export { default as CaptionCard } from './CaptionCard';
 export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
 export { default as ComplianceReportHeader } from './ComplianceReportHeader';
+export { default as ComplianceTable } from './ComplianceTable';
 export { default as ConfirmModal } from './ConfirmModal';
 export { default as CookiesModal } from './CookiesModal';
 export { default as DashboardRecommendedUsers } from './DashboardRecommendedUsers';

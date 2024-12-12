@@ -119,6 +119,9 @@ const team = (() => {
       createComplianceReport,
     },
   );
+
+  const compliance = route('/compliance', {}, {});
+
   const createOutput = route(
     '/create-output/:outputDocumentType',
     { outputDocumentType: outputDocumentTypeParser },
@@ -135,6 +138,7 @@ const team = (() => {
     {
       about,
       workspace,
+      compliance,
       outputs,
       createOutput,
       duplicateOutput,

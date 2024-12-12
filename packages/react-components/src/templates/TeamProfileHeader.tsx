@@ -1,3 +1,4 @@
+import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
@@ -130,6 +131,8 @@ type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly teamOutputsCount?: number;
   readonly pastEventsCount?: number;
   readonly teamDraftOutputsCount?: number;
+  readonly isAsapTeam?: boolean;
+  readonly manuscriptsCount?: number;
 };
 
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
@@ -146,6 +149,8 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   pastEventsCount,
   teamDraftOutputsCount,
   isStaff,
+  manuscriptsCount,
+  isAsapTeam = false,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   const { canShareResearchOutput } = useContext(
@@ -251,7 +256,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         {(tools || isStaff) && (
           <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
         )}
-
+        {isAsapTeam && isStaff && isEnabled('DISPLAY_MANUSCRIPTS') && (
+          <TabLink href={route.compliance({}).$}>
+            Compliance ({manuscriptsCount})
+          </TabLink>
+        )}
         <TabLink href={route.outputs({}).$}>
           Outputs ({teamOutputsCount})
         </TabLink>

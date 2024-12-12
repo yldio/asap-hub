@@ -225,6 +225,7 @@ export {
   AnalyticsPageHeader,
   BasicLayout,
   BiographyModal,
+  ComplianceDashboard,
   ComplianceReportForm,
   ContactInfoModal,
   ContentPage,

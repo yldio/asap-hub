@@ -1,5 +1,7 @@
 import { JSONSchemaType } from 'ajv';
+import { ascending, descending, SortingDirection } from './analytics';
 import { AuthorAlgoliaResponse, AuthorResponse } from './authors';
+import { ListResponse } from './common';
 import { ComplianceReportDataObject } from './compliance-report';
 import { DiscussionDataObject } from './discussion';
 import { UserResponse } from './user';
@@ -783,3 +785,50 @@ export const asapFundingReasons = [
       'The manuscript is a thought leadership piece (review, communication, letter) pertaining to knowledge gaps in the field that the ASAP-funded proposal was addressing.',
   },
 ];
+
+export type SortComplianceFields =
+  | 'team'
+  | 'id'
+  | 'lastUpdated'
+  | 'status'
+  | 'apcCoverage';
+
+export type ComplianceSortingDirection = {
+  [key in SortComplianceFields]: SortingDirection;
+};
+
+export type SortCompliance =
+  | 'team_asc'
+  | 'team_desc'
+  | 'id_asc'
+  | 'id_desc'
+  | 'last_updated_asc'
+  | 'last_updated_desc'
+  | 'status_asc'
+  | 'status_desc'
+  | 'apc_coverage_asc'
+  | 'apc_coverage_desc';
+
+export const complianceInitialSortingDirection = {
+  team: ascending,
+  id: descending,
+  lastUpdated: descending,
+  status: ascending,
+  apcCoverage: ascending,
+};
+
+export type PartialManuscriptResponse = Pick<
+  ManuscriptVersion,
+  'id' | 'requestingApcCoverage'
+> &
+  Pick<ManuscriptResponse, 'status'> & {
+    lastUpdated: string;
+    team: { id: string; displayName: string };
+    assignedUsers: Pick<
+      UserResponse,
+      'id' | 'firstName' | 'lastName' | 'avatarUrl'
+    >[];
+  };
+
+export type ListPartialManuscriptResponse =
+  ListResponse<PartialManuscriptResponse>;

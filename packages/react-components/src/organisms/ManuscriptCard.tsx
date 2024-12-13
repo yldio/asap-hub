@@ -211,7 +211,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     user,
   });
   const isActiveManuscript =
-    !closedManuscriptStatuses.includes(status ?? '') && isActiveTeam;
+    !closedManuscriptStatuses.includes(selectedStatus ?? '') && isActiveTeam;
 
   const handleStatusChange = async () => {
     if (newSelectedStatus) {

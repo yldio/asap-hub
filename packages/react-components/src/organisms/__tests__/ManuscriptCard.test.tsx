@@ -1,6 +1,7 @@
 import {
   createManuscriptResponse,
   createUserResponse,
+  manuscriptAuthor,
 } from '@asap-hub/fixtures';
 import { UserTeam } from '@asap-hub/model';
 import { act, render, waitFor } from '@testing-library/react';
@@ -24,12 +25,15 @@ const props: ComponentProps<typeof ManuscriptCard> = {
   onReplyToDiscussion: jest.fn(),
   getDiscussion: jest.fn(),
   isTeamMember: true,
+  isActiveTeam: true,
 };
 
 const complianceReport = {
   url: 'https://example.com',
   description: 'description',
-  count: '1',
+  count: 1,
+  createdDate: '2024-09-23T20:45:22.000Z',
+  createdBy: manuscriptAuthor,
 };
 
 const user = {
@@ -185,6 +189,8 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
     url: 'https://example.com',
     description: 'test compliance report',
     count: 1,
+    createdDate: manuscriptVersions[0]!.createdDate,
+    createdBy: manuscriptVersions[0]!.createdBy,
   };
   const history = createMemoryHistory({});
   const { getByRole } = render(
@@ -328,30 +334,56 @@ it.each`
   },
 );
 
-it.each`
-  status                  | report
-  ${'Compliant'}          | ${complianceReport}
-  ${'Waiting for Report'} | ${complianceReport}
-  ${'Closed (other)'}     | ${null}
-`(
-  'submit compliance report button is disabled based on manuscript status and existing compliance report',
-  async ({ status, report }) => {
-    const manuscriptVersions = createManuscriptResponse().versions;
-    manuscriptVersions[0]!.complianceReport = report;
+// it.each`
+//   status                  | report
+//   ${'Compliant'}          | ${complianceReport}
+//   ${'Waiting for Report'} | ${complianceReport}
+//   ${'Closed (other)'}     | ${null}
+it('disables submit compliance report button when there is an existing compliance report', async () => {
+  const manuscriptVersions = createManuscriptResponse().versions;
+  manuscriptVersions[0]!.complianceReport = complianceReport;
 
-    const { getByRole } = render(
+  const { getByRole } = render(
+    <ManuscriptCard
+      {...props}
+      isComplianceReviewer
+      status="Waiting for Report"
+      id="manuscript-1"
+      versions={manuscriptVersions}
+    />,
+  );
+
+  const complianceReportButton = getByRole('button', {
+    name: /Share Compliance Report Icon/i,
+  });
+  expect(complianceReportButton).toBeDisabled();
+});
+
+it.each`
+  status                  | isActiveTeam
+  ${'Compliant'}          | ${true}
+  ${'Waiting for Report'} | ${false}
+  ${'Closed (other)'}     | ${true}
+`(
+  'does not display submit compliance report if team isActiveTeam is $isActiveTeam and status is $status',
+  async ({ status, isActiveTeam }) => {
+    const manuscriptVersions = createManuscriptResponse().versions;
+
+    const { queryByRole } = render(
       <ManuscriptCard
         {...props}
         isComplianceReviewer
         status={status}
         id="manuscript-1"
         versions={manuscriptVersions}
+        isActiveTeam={isActiveTeam}
       />,
     );
 
-    const complianceReportButton = getByRole('button', {
-      name: /Share Compliance Report Icon/i,
-    });
-    expect(complianceReportButton).toBeDisabled();
+    expect(
+      queryByRole('button', {
+        name: /Share Compliance Report Icon/i,
+      }),
+    ).not.toBeInTheDocument();
   },
 );

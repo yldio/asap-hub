@@ -41,6 +41,7 @@ type ManuscriptCardProps = Pick<
     grantId: string;
     isComplianceReviewer: boolean;
     isTeamMember: boolean;
+    isActiveTeam: boolean;
     onUpdateManuscript: (
       manuscriptId: string,
       payload: ManuscriptPutRequest,
@@ -157,6 +158,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   grantId,
   isComplianceReviewer,
   isTeamMember,
+  isActiveTeam,
   onUpdateManuscript,
   getDiscussion,
   onReplyToDiscussion,
@@ -208,6 +210,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     version: currentManuscriptVersion,
     user,
   });
+  const isActiveManuscript =
+    !closedManuscriptStatuses.includes(status ?? '') && isActiveTeam;
 
   const handleStatusChange = async () => {
     if (newSelectedStatus) {
@@ -283,38 +287,40 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 }))}
               </StatusButton>
             </span>
-            <span css={buttonsContainerStyles}>
-              {isComplianceReviewer && (
-                <span>
-                  <Button
-                    primary
-                    small
-                    noMargin
-                    onClick={handleShareComplianceReport}
-                    enabled={canSubmitComplianceReport}
-                  >
-                    <span css={buttonStyles}>
-                      {complianceReportIcon} Share Compliance Report
-                    </span>
-                  </Button>
-                </span>
-              )}
-              {hasUpdateAccess && (
-                <span>
-                  <Button
-                    primary
-                    small
-                    noMargin
-                    onClick={handleResubmitManuscript}
-                    enabled={!!currentManuscriptVersion?.complianceReport}
-                  >
-                    <span css={buttonStyles}>
-                      {resubmitManuscriptIcon} Submit Revised Manuscript
-                    </span>
-                  </Button>
-                </span>
-              )}
-            </span>
+            {isActiveManuscript && (
+              <span css={buttonsContainerStyles}>
+                {isComplianceReviewer && (
+                  <span>
+                    <Button
+                      primary
+                      small
+                      noMargin
+                      onClick={handleShareComplianceReport}
+                      enabled={canSubmitComplianceReport}
+                    >
+                      <span css={buttonStyles}>
+                        {complianceReportIcon} Share Compliance Report
+                      </span>
+                    </Button>
+                  </span>
+                )}
+                {hasUpdateAccess && (
+                  <span>
+                    <Button
+                      primary
+                      small
+                      noMargin
+                      onClick={handleResubmitManuscript}
+                      enabled={!!currentManuscriptVersion?.complianceReport}
+                    >
+                      <span css={buttonStyles}>
+                        {resubmitManuscriptIcon} Submit Revised Manuscript
+                      </span>
+                    </Button>
+                  </span>
+                )}
+              </span>
+            )}
           </span>
         </div>
 
@@ -334,6 +340,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 canEditManuscript={
                   hasUpdateAccess && version.id === currentManuscriptVersion?.id
                 }
+                isActiveManuscript={isActiveManuscript}
                 isTeamMember={isTeamMember}
               />
             ))}

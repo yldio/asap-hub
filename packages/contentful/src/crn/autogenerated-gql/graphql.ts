@@ -611,6 +611,7 @@ export type ComplianceReports = Entry &
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
     count?: Maybe<Scalars['Int']>;
+    createdBy?: Maybe<Users>;
     description?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ComplianceReportsLinkingCollections>;
     manuscriptVersion?: Maybe<ManuscriptVersions>;
@@ -621,6 +622,13 @@ export type ComplianceReports = Entry &
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
 export type ComplianceReportsCountArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
+export type ComplianceReportsCreatedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
@@ -665,6 +673,8 @@ export type ComplianceReportsFilter = {
   count_lte?: InputMaybe<Scalars['Int']>;
   count_not?: InputMaybe<Scalars['Int']>;
   count_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  createdBy?: InputMaybe<CfUsersNestedFilter>;
+  createdBy_exists?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
   description_exists?: InputMaybe<Scalars['Boolean']>;
@@ -10195,6 +10205,7 @@ export enum UsersLabsCollectionOrder {
 }
 
 export type UsersLinkingCollections = {
+  complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
   discoverCollection?: Maybe<DiscoverCollection>;
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
@@ -10205,6 +10216,16 @@ export type UsersLinkingCollections = {
   tutorialsCollection?: Maybe<TutorialsCollection>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
   workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
+};
+
+export type UsersLinkingCollectionsComplianceReportsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsComplianceReportsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
 };
 
 export type UsersLinkingCollectionsDiscoverCollectionArgs = {
@@ -10305,6 +10326,21 @@ export type UsersLinkingCollectionsWorkingGroupMembersCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum UsersLinkingCollectionsComplianceReportsCollectionOrder {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
 
 export enum UsersLinkingCollectionsDiscoverCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -18277,7 +18313,34 @@ export type ManuscriptsContentFragment = Pick<
           linkedFrom?: Maybe<{
             complianceReportsCollection?: Maybe<{
               items: Array<
-                Maybe<Pick<ComplianceReports, 'url' | 'description' | 'count'>>
+                Maybe<
+                  Pick<ComplianceReports, 'url' | 'description' | 'count'> & {
+                    sys: Pick<Sys, 'firstPublishedAt'>;
+                    createdBy?: Maybe<
+                      Pick<
+                        Users,
+                        | 'firstName'
+                        | 'nickname'
+                        | 'lastName'
+                        | 'alumniSinceDate'
+                      > & {
+                        sys: Pick<Sys, 'id'>;
+                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                        teamsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<{
+                              team?: Maybe<
+                                Pick<Teams, 'displayName'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >;
+                            }>
+                          >;
+                        }>;
+                      }
+                    >;
+                  }
+                >
               >;
             }>;
           }>;
@@ -18946,7 +19009,35 @@ export type FetchManuscriptByIdQuery = {
                 complianceReportsCollection?: Maybe<{
                   items: Array<
                     Maybe<
-                      Pick<ComplianceReports, 'url' | 'description' | 'count'>
+                      Pick<
+                        ComplianceReports,
+                        'url' | 'description' | 'count'
+                      > & {
+                        sys: Pick<Sys, 'firstPublishedAt'>;
+                        createdBy?: Maybe<
+                          Pick<
+                            Users,
+                            | 'firstName'
+                            | 'nickname'
+                            | 'lastName'
+                            | 'alumniSinceDate'
+                          > & {
+                            sys: Pick<Sys, 'id'>;
+                            avatar?: Maybe<Pick<Asset, 'url'>>;
+                            teamsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<{
+                                  team?: Maybe<
+                                    Pick<Teams, 'displayName'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >;
+                                }>
+                              >;
+                            }>;
+                          }
+                        >;
+                      }
                     >
                   >;
                 }>;
@@ -21268,7 +21359,32 @@ export type FetchTeamByIdQuery = {
                                 Pick<
                                   ComplianceReports,
                                   'url' | 'description' | 'count'
-                                >
+                                > & {
+                                  sys: Pick<Sys, 'firstPublishedAt'>;
+                                  createdBy?: Maybe<
+                                    Pick<
+                                      Users,
+                                      | 'firstName'
+                                      | 'nickname'
+                                      | 'lastName'
+                                      | 'alumniSinceDate'
+                                    > & {
+                                      sys: Pick<Sys, 'id'>;
+                                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                                      teamsCollection?: Maybe<{
+                                        items: Array<
+                                          Maybe<{
+                                            team?: Maybe<
+                                              Pick<Teams, 'displayName'> & {
+                                                sys: Pick<Sys, 'id'>;
+                                              }
+                                            >;
+                                          }>
+                                        >;
+                                      }>;
+                                    }
+                                  >;
+                                }
                               >
                             >;
                           }>;
@@ -26458,6 +26574,22 @@ export const ManuscriptsContentFragmentDoc = {
                                       selections: [
                                         {
                                           kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'firstPublishedAt',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
                                           name: { kind: 'Name', value: 'url' },
                                         },
                                         {
@@ -26472,6 +26604,164 @@ export const ManuscriptsContentFragmentDoc = {
                                           name: {
                                             kind: 'Name',
                                             value: 'count',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'createdBy',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'firstName',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'nickname',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'lastName',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'alumniSinceDate',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'avatar',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'url',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'teamsCollection',
+                                                },
+                                                arguments: [
+                                                  {
+                                                    kind: 'Argument',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'limit',
+                                                    },
+                                                    value: {
+                                                      kind: 'IntValue',
+                                                      value: '3',
+                                                    },
+                                                  },
+                                                ],
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'items',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'team',
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'sys',
+                                                                  },
+                                                                  selectionSet:
+                                                                    {
+                                                                      kind: 'SelectionSet',
+                                                                      selections:
+                                                                        [
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'id',
+                                                                            },
+                                                                          },
+                                                                        ],
+                                                                    },
+                                                                },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'displayName',
+                                                                  },
+                                                                },
+                                                              ],
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
                                           },
                                         },
                                       ],

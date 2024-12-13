@@ -1,12 +1,19 @@
+import { manuscriptAuthor } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ComplianceReportCard from '../ComplianceReportCard';
 
-it('displays compliance report description and url when expanded', () => {
+it('displays compliance report description, url and creation details when expanded', () => {
   const props = {
     url: 'http://example.com/',
     description: 'compliance report description',
     count: 1,
+    createdDate: '2024-12-10T20:36:54Z',
+    createdBy: {
+      ...manuscriptAuthor,
+      displayName: 'Test User',
+      id: 'test-user-id',
+    },
   };
   const { getByText, queryByText, getByRole, rerender } = render(
     <ComplianceReportCard {...props} />,
@@ -15,6 +22,8 @@ it('displays compliance report description and url when expanded', () => {
   expect(queryByText(/compliance report description/i)).not.toBeInTheDocument();
   expect(queryByText(/View Report/i)).not.toBeInTheDocument();
   expect(queryByText(/example.com/i)).not.toBeInTheDocument();
+  expect(queryByText('10th December 2024')).not.toBeInTheDocument();
+  expect(queryByText('Test User')).not.toBeInTheDocument();
 
   userEvent.click(getByRole('button'));
 
@@ -24,5 +33,9 @@ it('displays compliance report description and url when expanded', () => {
   expect(getByText(/View Report/i)).toBeVisible();
   expect(getByText(/View Report/i).closest('a')?.href).toBe(
     'http://example.com/',
+  );
+  expect(getByText('10th December 2024')).toBeVisible();
+  expect(getByText('Test User').closest('a')!.href!).toContain(
+    '/network/users/test-user-id',
   );
 });

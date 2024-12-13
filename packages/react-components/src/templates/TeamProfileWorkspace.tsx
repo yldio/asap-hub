@@ -226,6 +226,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           onUpdateManuscript={onUpdateManuscript}
                           onReplyToDiscussion={onReplyToDiscussion}
                           getDiscussion={getDiscussion}
+                          isActiveTeam={!inactiveSince}
                         />
                       </div>
                     ))}
@@ -258,6 +259,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           grantId={grantId || ''}
                           isComplianceReviewer={isComplianceReviewer}
                           isTeamMember={isTeamMember}
+                          isActiveTeam={!inactiveSince}
                           onUpdateManuscript={onUpdateManuscript}
                           onReplyToDiscussion={onReplyToDiscussion}
                           getDiscussion={getDiscussion}

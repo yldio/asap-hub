@@ -486,6 +486,9 @@ describe('Manuscripts Contentful Data Provider', () => {
       count: {
         'en-US': 3,
       },
+      status: {
+        'en-US': 'Waiting for Report',
+      },
       versions: {
         'en-US': [
           {
@@ -905,6 +908,13 @@ describe('Manuscripts Contentful Data Provider', () => {
           op: 'add',
           path: '/fields/title',
           value: { 'en-US': 'Manuscript Title' },
+        },
+        {
+          op: 'add',
+          path: '/fields/status',
+          value: {
+            'en-US': 'Manuscript Resubmitted',
+          },
         },
       ]);
     });

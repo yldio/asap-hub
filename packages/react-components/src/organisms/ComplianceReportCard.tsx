@@ -12,9 +12,13 @@ import {
   ExternalLinkIcon,
   Markdown,
   ExpandableText,
+  Caption,
+  formatDate,
 } from '..';
 import { paddingStyles } from '../card';
+import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
+import { getTeams, getUserHref } from './ManuscriptVersionCard';
 
 type ComplianceReportCardProps = ComplianceReportResponse;
 
@@ -59,10 +63,20 @@ const buttonStyles = css({
   },
 });
 
+const userContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: rem(8),
+  paddingTop: rem(32),
+});
+
 const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   url,
   description,
   count,
+  createdBy,
+  createdDate,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -92,6 +106,19 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                 </span>
               </Link>
             </div>
+            <Caption accent="lead" noMargin>
+              <div css={userContainerStyles}>
+                Date added:
+                <span>{formatDate(new Date(createdDate))}</span>
+                <span> · </span>
+                Submitted by:
+                <UserTeamInfo
+                  displayName={createdBy.displayName}
+                  userHref={getUserHref(createdBy.id)}
+                  teams={getTeams(createdBy.teams)}
+                />
+              </div>
+            </Caption>
           </div>
         </div>
       )}

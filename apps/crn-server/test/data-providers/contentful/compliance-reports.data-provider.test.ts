@@ -71,6 +71,15 @@ describe('Compliance Reports Contentful Data Provider', () => {
                 },
               },
             },
+            createdBy: {
+              'en-US': {
+                sys: {
+                  id: 'user-id',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            },
           },
         },
       );

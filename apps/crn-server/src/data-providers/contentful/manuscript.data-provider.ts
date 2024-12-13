@@ -208,6 +208,7 @@ export class ManuscriptContentfulDataProvider
         count: currentCount + 1,
         teams: getLinkEntities([teamId]),
         versions: getLinkEntities([manuscriptVersionId]),
+        status: 'Waiting for Report',
       }),
     });
 
@@ -245,6 +246,7 @@ export class ManuscriptContentfulDataProvider
     await patchAndPublish(manuscriptEntry, {
       versions: [...previousVersions, newVersion],
       title,
+      status: 'Manuscript Resubmitted',
     });
   }
 
@@ -520,6 +522,26 @@ const parseComplianceReport = (
     url: complianceReport.url,
     description: complianceReport.description,
     count: complianceReport.count,
+    createdDate: complianceReport.sys.firstPublishedAt,
+    createdBy: {
+      id: complianceReport.createdBy?.sys.id,
+      firstName: complianceReport.createdBy?.firstName || '',
+      lastName: complianceReport.createdBy?.lastName || '',
+      displayName: parseUserDisplayName(
+        complianceReport.createdBy?.firstName || '',
+        complianceReport.createdBy?.lastName || '',
+        undefined,
+        complianceReport.createdBy?.nickname || '',
+      ),
+      avatarUrl: complianceReport.createdBy?.avatar?.url || undefined,
+      alumniSinceDate: complianceReport.createdBy?.alumniSinceDate || undefined,
+      teams: complianceReport.createdBy?.teamsCollection?.items.map(
+        (teamItem) => ({
+          id: teamItem?.team?.sys.id,
+          name: teamItem?.team?.displayName,
+        }),
+      ),
+    },
   };
 
 const createQuickCheckDiscussions = async (

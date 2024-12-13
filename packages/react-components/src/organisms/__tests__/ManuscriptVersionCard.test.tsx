@@ -1,6 +1,7 @@
 import {
   createDiscussionResponse,
   createManuscriptResponse,
+  getComplianceReportDataObject,
 } from '@asap-hub/fixtures';
 import { ManuscriptLifecycle, ManuscriptVersion } from '@asap-hub/model';
 import { render } from '@testing-library/react';
@@ -41,6 +42,7 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   manuscriptId: 'manuscript-1',
   isTeamMember: true,
   canEditManuscript: true,
+  isActiveManuscript: true,
 };
 
 it('displays quick checks when present', () => {
@@ -205,6 +207,13 @@ describe('edit', () => {
   it('does not display the edit button when canEditManuscript is false', () => {
     const { queryByLabelText } = render(
       <ManuscriptVersionCard {...props} canEditManuscript={false} />,
+    );
+    expect(queryByLabelText('Edit')).not.toBeInTheDocument();
+  });
+
+  it('does not display the edit button when isActiveManuscript is false', () => {
+    const { queryByLabelText } = render(
+      <ManuscriptVersionCard {...props} isActiveManuscript={false} />,
     );
     expect(queryByLabelText('Edit')).not.toBeInTheDocument();
   });
@@ -468,11 +477,7 @@ it('displays compliance report section when present', () => {
       {...props}
       version={{
         ...baseVersion,
-        complianceReport: {
-          url: 'http://example.com',
-          description: 'compliance report description',
-          count: 1,
-        },
+        complianceReport: getComplianceReportDataObject(),
       }}
     />,
   );
@@ -511,6 +516,50 @@ it('displays manuscript description', () => {
   );
 
   expect(getByRole('button', { name: /show more/i })).toBeInTheDocument();
+});
+
+it('does not display reply button if isActiveManuscript is false', () => {
+  const asapAffiliationIncludedDetails = 'test discussion';
+  const commenter = {
+    id: 'commenter-id',
+    firstName: 'Connor',
+    lastName: 'Commenter',
+    displayName: 'Connor Commenter',
+    teams: [
+      {
+        id: 'team-commenter',
+        name: 'Team Commenter',
+      },
+    ],
+  };
+
+  const asapAffiliationIncludedDiscussion = createDiscussionResponse(
+    asapAffiliationIncludedDetails,
+  );
+  asapAffiliationIncludedDiscussion.message.createdBy = commenter;
+  asapAffiliationIncludedDiscussion.message.createdDate =
+    '2024-06-21T11:06:58.899Z';
+
+  const getDiscussion = jest.fn();
+  getDiscussion.mockReturnValueOnce(asapAffiliationIncludedDiscussion);
+
+  const updatedVersion = {
+    ...baseVersion,
+    asapAffiliationIncludedDetails: asapAffiliationIncludedDiscussion,
+  };
+
+  const { getByText, queryByRole, getByLabelText } = render(
+    <ManuscriptVersionCard
+      {...props}
+      version={updatedVersion}
+      getDiscussion={getDiscussion}
+      isActiveManuscript={false}
+    />,
+  );
+  userEvent.click(getByLabelText('Expand Version'));
+
+  expect(getByText(/test discussion/i)).toBeVisible();
+  expect(queryByRole('button', { name: /Reply/i })).not.toBeInTheDocument();
 });
 
 describe('getLifecycleCode', () => {

@@ -11,9 +11,7 @@ export const complianceReportRouteFactory = (
 
   complianceReportRoutes.post('/compliance-reports', async (req, res) => {
     const { body, loggedInUser } = req;
-    console.log('here first');
     const createRequest = validateComplianceReportPostRequestParameters(body);
-    console.log('here second');
 
     if (!loggedInUser || !isCMSAdministrator(loggedInUser.role)) {
       throw Boom.forbidden();

@@ -334,11 +334,6 @@ it.each`
   },
 );
 
-// it.each`
-//   status                  | report
-//   ${'Compliant'}          | ${complianceReport}
-//   ${'Waiting for Report'} | ${complianceReport}
-//   ${'Closed (other)'}     | ${null}
 it('disables submit compliance report button when there is an existing compliance report', async () => {
   const manuscriptVersions = createManuscriptResponse().versions;
   manuscriptVersions[0]!.complianceReport = complianceReport;

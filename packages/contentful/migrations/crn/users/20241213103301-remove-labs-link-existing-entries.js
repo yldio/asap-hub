@@ -13,7 +13,7 @@ module.exports.down = (migration) => {
   const users = migration.editContentType('users');
 
   users.changeFieldControl('labs', 'builtin', 'entryLinksEditor', {
-    showLinkEntityAction: false,
+    showLinkEntityAction: true,
     showCreateEntityAction: true,
   });
 };

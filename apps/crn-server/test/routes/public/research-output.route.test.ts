@@ -52,9 +52,16 @@ describe('/research-outputs/ route', () => {
       expect(response.body).toEqual(listPublicOutputResponse);
     });
 
-    test('Should return an output with an external user correctly', async () => {
+    test('Should return an output with both hub user and external user authors correctly', async () => {
       const listOutputResponse = getListResearchOutputResponse();
       listOutputResponse.items[0]!.authors = [
+        {
+          id: 'user-id',
+          email: 'user@test.com',
+          firstName: 'Jane',
+          lastName: 'Doe',
+          displayName: 'Jane Doe',
+        },
         {
           id: 'external-user-id',
           displayName: 'John Doe',
@@ -72,7 +79,10 @@ describe('/research-outputs/ route', () => {
       expect(response.body).toMatchObject({
         items: [
           {
-            authors: ['John Doe'],
+            authors: [
+              { id: 'user-id', name: 'Jane Doe' },
+              { name: 'John Doe' },
+            ],
           },
         ],
       });

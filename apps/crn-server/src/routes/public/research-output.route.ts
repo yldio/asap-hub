@@ -64,7 +64,10 @@ const mapToPublicResearchOutput = (
   sharingStatus: researchOutput.sharingStatus,
   asapFunded: researchOutput.asapFunded,
   teams: researchOutput.teams.map((team) => team.displayName),
-  authors: researchOutput.authors.map((author) => author.displayName),
+  authors: researchOutput.authors.map((author) => ({
+    name: author.displayName,
+    id: author.email && author.id,
+  })),
   title: researchOutput.title,
   description: researchOutput.descriptionMD || researchOutput.description,
   shortDescription: researchOutput.shortDescription,

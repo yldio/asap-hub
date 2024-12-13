@@ -365,7 +365,7 @@ export type PublicResearchOutputResponse = Pick<
 > & {
   hyperlink: ResearchOutputResponse['link'];
   teams: string[];
-  authors: string[];
+  authors: Array<{ id?: string; name: string; }>;
   tags: string[];
   persistentIdentifier: ResearchOutputResponse['doi'];
   finalPublishDate?: string;

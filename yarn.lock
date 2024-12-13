@@ -1093,7 +1093,7 @@ __metadata:
     esbuild: ^0.19.10
     express: 4.20.0
     express-async-errors: 3.1.1
-    form-data: 3.0.1
+    form-data: 3.0.2
     got: 11.8.6
     graphql: 15.8.0
     graphql-tag: 2.12.6
@@ -1550,7 +1550,7 @@ __metadata:
     esbuild: ^0.19.10
     express: 4.20.0
     express-async-errors: 3.1.1
-    form-data: 3.0.1
+    form-data: 3.0.2
     graphql: 15.8.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
@@ -29702,14 +29702,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:3.0.1, form-data@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "form-data@npm:3.0.1"
+"form-data@npm:3.0.2":
+  version: 3.0.2
+  resolution: "form-data@npm:3.0.2"
   dependencies:
-    asynckit: "npm:^0.4.0"
-    combined-stream: "npm:^1.0.8"
-    mime-types: "npm:^2.1.12"
-  checksum: b019e8d35c8afc14a2bd8a7a92fa4f525a4726b6d5a9740e8d2623c30e308fbb58dc8469f90415a856698933c8479b01646a9dff33c87cc4e76d72aedbbf860d
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: 25ffdeed693c8fc59b56082d15ad63f11688fabac2d14918fb339170020f66295e520a6659f3a698217f15c7924fbc593117ecd61d8391a146ea06d686793622
   languageName: node
   linkType: hard
 
@@ -29732,6 +29732,17 @@ __metadata:
     combined-stream: "npm:^1.0.8"
     mime-types: "npm:^2.1.12"
   checksum: 60ec3fe7e23154949ab6fef31baedf5afbfb8d6441ea8d19b211b43a5d0448be2918c9bba6218cade56a7cbd43f670d6e75f41f626f8d397d56bf8c60f4a829d
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "form-data@npm:3.0.1"
+  dependencies:
+    asynckit: "npm:^0.4.0"
+    combined-stream: "npm:^1.0.8"
+    mime-types: "npm:^2.1.12"
+  checksum: b019e8d35c8afc14a2bd8a7a92fa4f525a4726b6d5a9740e8d2623c30e308fbb58dc8469f90415a856698933c8479b01646a9dff33c87cc4e76d72aedbbf860d
   languageName: node
   linkType: hard
 

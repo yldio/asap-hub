@@ -269,10 +269,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
               <Subtitle noMargin>{title}</Subtitle>
               <StatusButton
                 buttonChildren={() => <span>{selectedStatus}</span>}
-                canEdit={
-                  isComplianceReviewer &&
-                  !closedManuscriptStatuses.includes(selectedStatus)
-                }
+                canEdit={isComplianceReviewer && isActiveManuscript}
                 selectedStatusType={getReviewerStatusType(
                   selectedStatus as (typeof manuscriptStatus)[number],
                 )}

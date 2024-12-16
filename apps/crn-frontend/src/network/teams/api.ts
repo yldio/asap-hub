@@ -360,3 +360,32 @@ export const getDiscussion = async (
   }
   return resp.json();
 };
+
+export const createComplianceDiscussion = async (
+  complianceReportId: string,
+  message: string,
+  authorization: string,
+): Promise<DiscussionResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/discussions`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify({
+      message,
+      id: complianceReportId,
+      type: 'compliance-report',
+    }),
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to create discussion. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
+};

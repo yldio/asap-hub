@@ -148,7 +148,10 @@ export const getPublicResearchOutputResponse =
       sharingStatus: 'Public',
       asapFunded: true,
       teams: researchOutput.teams.map((team) => team.displayName),
-      authors: researchOutput.authors.map((author) => author.displayName),
+      authors: researchOutput.authors.map((author) => ({
+        id: author.email && author.id,
+        name: author.displayName,
+      })),
       title: researchOutput.title,
       description: researchOutput.descriptionMD,
       shortDescription: researchOutput.shortDescription,

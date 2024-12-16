@@ -12,6 +12,7 @@ import {
   DiscussionPatchRequest,
   DiscussionResponse,
   ListPartialManuscriptResponse,
+  ManuscriptVersion,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useCallback } from 'react';
@@ -40,6 +41,7 @@ import {
   updateDiscussion,
   uploadManuscriptFile,
   resubmitManuscript,
+  createComplianceDiscussion,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -109,6 +111,20 @@ export const teamState = selectorFamily<TeamResponse | undefined, string>({
     (id) =>
     ({ get }) =>
       get(patchedTeamState(id)) ?? get(initialTeamState(id)),
+  set:
+    (id: string) =>
+    ({ set, reset }, newValue: TeamResponse | DefaultValue | undefined) => {
+      if (newValue === undefined || newValue instanceof DefaultValue) {
+        reset(patchedTeamState(id) ?? initialTeamState(id));
+      } else {
+        set(patchedTeamState(id) ?? initialTeamState(id), (prev) => {
+          if (prev) {
+            return { ...prev, ...newValue };
+          }
+          return newValue;
+        });
+      }
+    },
 });
 
 export const teamListState = atomFamily<
@@ -318,3 +334,100 @@ export const useManuscripts = (
   total: 0,
   items: [],
 });
+
+const versionSelector = selectorFamily<
+  ManuscriptVersion | undefined,
+  { teamId: string; manuscriptId: string; versionId: string }
+>({
+  key: 'versionSelector',
+  get:
+    (params) =>
+    ({ get }) => {
+      const { teamId, manuscriptId, versionId } = params;
+
+      const team = get(teamState(teamId));
+      if (!team) return;
+
+      const currentManuscript = team.manuscripts.find(
+        (manuscript) => manuscript.id === manuscriptId,
+      );
+      if (!currentManuscript) return;
+
+      return currentManuscript.versions.find(
+        (version) => version.id === versionId,
+      );
+    },
+  set:
+    (params) =>
+    ({ set, get }, newValue: ManuscriptVersion | DefaultValue | undefined) => {
+      const { teamId, manuscriptId, versionId } = params;
+
+      const team = get(teamState(teamId));
+      if (!team) return;
+
+      const manuscript = team.manuscripts.find(
+        (manuscript) => manuscript.id === manuscriptId,
+      );
+      if (!manuscript) return;
+
+      const version = manuscript.versions.find(
+        (version) => version.id === versionId,
+      );
+      if (!version) return;
+
+      set(teamState(teamId), (prev: TeamResponse | undefined) =>
+        prev
+          ? {
+              ...prev,
+              manuscripts: team.manuscripts.map((manuscript) => {
+                if (manuscript.id === manuscriptId) {
+                  return {
+                    ...manuscript,
+                    versions: manuscript.versions.map((version) =>
+                      version.id === versionId
+                        ? (newValue as ManuscriptVersion)
+                        : version,
+                    ),
+                  };
+                } else {
+                  return manuscript;
+                }
+              }),
+            }
+          : undefined,
+      );
+    },
+});
+
+export const useVersionById = (params: {
+  teamId: string;
+  manuscriptId: string;
+  versionId: string;
+}): [
+  ManuscriptVersion | undefined,
+  (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
+] => {
+  const [version, setVersion] = useRecoilState(versionSelector(params));
+  const setVersionCallback = (
+    callback: (prev: ManuscriptVersion) => ManuscriptVersion,
+  ) => {
+    setVersion((prev) => (prev ? callback(prev) : prev));
+  };
+  return [version, setVersionCallback];
+};
+
+export const useCreateComplianceDiscussion = (teamId: string) => {
+  const authorization = useRecoilValue(authorizationState);
+
+  return async (
+    complianceReportId: string,
+    message: string,
+  ): Promise<string> => {
+    const discussion = await createComplianceDiscussion(
+      complianceReportId,
+      message,
+      authorization,
+    );
+    return discussion.id;
+  };
+};

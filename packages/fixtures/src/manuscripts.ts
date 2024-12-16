@@ -1,4 +1,7 @@
-import { ManuscriptResponse } from '@asap-hub/model';
+import {
+  ComplianceReportDataObject,
+  ManuscriptResponse,
+} from '@asap-hub/model';
 
 export const manuscriptAuthor: ManuscriptResponse['versions'][number]['createdBy'] =
   {
@@ -65,3 +68,12 @@ export const createManuscriptResponse = (
     },
   ],
 });
+
+export const getComplianceReportDataObject =
+  (): ComplianceReportDataObject => ({
+    url: 'http://example.com',
+    description: 'compliance report description',
+    count: 1,
+    createdBy: manuscriptAuthor,
+    createdDate: '2020-09-23T20:45:22.000Z',
+  });

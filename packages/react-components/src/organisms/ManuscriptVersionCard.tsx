@@ -44,6 +44,7 @@ type ManuscriptVersionCardProps = {
   manuscriptId: string;
   isTeamMember: boolean;
   canEditManuscript: boolean;
+  isActiveManuscript: boolean;
 } & Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
   Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
@@ -224,6 +225,15 @@ export const getManuscriptVersionUID = ({
   )}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
 };
 
+export const getUserHref = (id: string) =>
+  network({}).users({}).user({ userId: id }).$;
+
+export const getTeams = (teams: Message['createdBy']['teams']) =>
+  teams.map((team) => ({
+    href: network({}).teams({}).team({ teamId: team.id }).$,
+    name: team.name,
+  }));
+
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   version,
   teamId,
@@ -234,6 +244,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   getDiscussion,
   manuscriptId,
   isTeamMember,
+  isActiveManuscript,
   canEditManuscript,
 }) => {
   const history = useHistory();
@@ -243,15 +254,6 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   const quickCheckDetails = quickCheckQuestions.filter(
     ({ field }) => version[`${field}Details`]?.message?.text?.length,
   );
-
-  const getUserHref = (id: string) =>
-    network({}).users({}).user({ userId: id }).$;
-
-  const getTeams = (teams: Message['createdBy']['teams']) =>
-    teams.map((team) => ({
-      href: network({}).teams({}).team({ teamId: team.id }).$,
-      name: team.name,
-    }));
 
   const getUpdatedByData = () => {
     if (
@@ -324,7 +326,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                     </span>
                   </div>
                 </Caption>
-                {canEditManuscript && (
+                {isActiveManuscript && canEditManuscript && (
                   <Button
                     aria-label="Edit"
                     small
@@ -354,7 +356,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                 teamIdCode,
                 grantId,
                 manuscriptCount,
-                manuscriptVersionCount: 1,
+                manuscriptVersionCount: version.count,
               })}
             </Pill>
           </div>
@@ -421,7 +423,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                       <Subtitle>{question}</Subtitle>
                       <Suspense fallback={<Loading />}>
                         <Discussion
-                          canReply={isTeamMember}
+                          canReply={isActiveManuscript && isTeamMember}
                           id={discussion.id}
                           getDiscussion={getDiscussion}
                           onReplyToDiscussion={onReplyToDiscussion}

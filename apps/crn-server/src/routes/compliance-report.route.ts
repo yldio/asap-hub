@@ -19,6 +19,7 @@ export const complianceReportRouteFactory = (
 
     const complianceReport = await complianceReportController.create({
       ...createRequest,
+      userId: loggedInUser.id,
     });
 
     res.status(201).json(complianceReport);

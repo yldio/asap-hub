@@ -31,7 +31,8 @@ describe('/compliance-reports/ route', () => {
 
   describe('POST /compliance-reports/', () => {
     const complianceReportId = 'compliance-report-id';
-    const createComplianceReportRequest = getComplianceReportCreateDataObject();
+    const { userId, ...createComplianceReportRequest } =
+      getComplianceReportCreateDataObject();
 
     test('Should return 403 when not allowed to create a compliance report because user is not onboarded', async () => {
       userMockFactory.mockReturnValueOnce({
@@ -64,10 +65,12 @@ describe('/compliance-reports/ route', () => {
     });
 
     test('Should return a 201 and pass input to the controller', async () => {
-      userMockFactory.mockReturnValueOnce({
+      const user = {
         ...createUserResponse(),
         role: 'Staff',
-      });
+      } as UserResponse;
+
+      userMockFactory.mockReturnValueOnce(user);
 
       complianceReportControllerMock.create.mockResolvedValueOnce(
         complianceReportId,
@@ -79,9 +82,10 @@ describe('/compliance-reports/ route', () => {
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(201);
-      expect(complianceReportControllerMock.create).toHaveBeenCalledWith(
-        createComplianceReportRequest,
-      );
+      expect(complianceReportControllerMock.create).toHaveBeenCalledWith({
+        ...createComplianceReportRequest,
+        userId: user.id,
+      });
 
       expect(response.body).toEqual(complianceReportId);
     });

@@ -45,7 +45,7 @@ export class ComplianceReportContentfulDataProvider
   async create(input: ComplianceReportCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
 
-    const { manuscriptVersionId, ...payload } = input;
+    const { manuscriptVersionId, userId, ...payload } = input;
 
     const currentComplianceReportCount =
       await this.fetchComplianceReportCountByManuscriptVersionId(
@@ -60,6 +60,7 @@ export class ComplianceReportContentfulDataProvider
             ...payload,
             count: currentComplianceReportCount + 1,
             manuscriptVersion: getLinkEntity(manuscriptVersionId),
+            createdBy: getLinkEntity(userId),
           }),
         },
       },

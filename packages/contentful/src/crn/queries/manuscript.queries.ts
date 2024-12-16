@@ -219,9 +219,34 @@ export const manuscriptContentQueryFragment = gql`
         linkedFrom {
           complianceReportsCollection(limit: 1) {
             items {
+              sys {
+                firstPublishedAt
+              }
               url
               description
               count
+              createdBy {
+                sys {
+                  id
+                }
+                firstName
+                nickname
+                lastName
+                alumniSinceDate
+                avatar {
+                  url
+                }
+                teamsCollection(limit: 3) {
+                  items {
+                    team {
+                      sys {
+                        id
+                      }
+                      displayName
+                    }
+                  }
+                }
+              }
             }
           }
         }

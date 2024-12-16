@@ -208,6 +208,7 @@ export class ManuscriptContentfulDataProvider
         count: currentCount + 1,
         teams: getLinkEntities([teamId]),
         versions: getLinkEntities([manuscriptVersionId]),
+        status: 'Waiting for Report',
       }),
     });
 
@@ -245,6 +246,7 @@ export class ManuscriptContentfulDataProvider
     await patchAndPublish(manuscriptEntry, {
       versions: [...previousVersions, newVersion],
       title,
+      status: 'Manuscript Resubmitted',
     });
   }
 
@@ -338,6 +340,8 @@ type AdditionalAuthorItem = NonNullable<
   >['items'][number]
 >;
 
+type ManuscriptUser = NonNullable<ManuscriptVersionItem['createdBy']>;
+
 const parseGraphqlAuthor = (
   authorItems:
     | FirstAuthorItem[]
@@ -367,6 +371,24 @@ const parseGraphqlAuthor = (
       email: author.email || '',
     };
   });
+
+const parseGraphqlManuscriptUser = (user: ManuscriptUser | undefined) => ({
+  id: user?.sys.id,
+  firstName: user?.firstName || '',
+  lastName: user?.lastName || '',
+  displayName: parseUserDisplayName(
+    user?.firstName || '',
+    user?.lastName || '',
+    undefined,
+    user?.nickname || '',
+  ),
+  avatarUrl: user?.avatar?.url || undefined,
+  alumniSinceDate: user?.alumniSinceDate || undefined,
+  teams: user?.teamsCollection?.items.map((teamItem) => ({
+    id: teamItem?.team?.sys.id,
+    name: teamItem?.team?.displayName,
+  })),
+});
 
 export const parseGraphqlManuscriptVersion = (
   versions: NonNullable<
@@ -437,40 +459,8 @@ export const parseGraphqlManuscriptVersion = (
         version?.availabilityStatement,
         version?.availabilityStatementDetails,
       ),
-      createdBy: {
-        id: version?.createdBy?.sys.id,
-        firstName: version?.createdBy?.firstName || '',
-        lastName: version?.createdBy?.lastName || '',
-        displayName: parseUserDisplayName(
-          version?.createdBy?.firstName || '',
-          version?.createdBy?.lastName || '',
-          undefined,
-          version?.createdBy?.nickname || '',
-        ),
-        avatarUrl: version?.createdBy?.avatar?.url || undefined,
-        alumniSinceDate: version?.createdBy?.alumniSinceDate || undefined,
-        teams: version?.createdBy?.teamsCollection?.items.map((teamItem) => ({
-          id: teamItem?.team?.sys.id,
-          name: teamItem?.team?.displayName,
-        })),
-      },
-      updatedBy: {
-        id: version?.updatedBy?.sys.id || '',
-        firstName: version?.updatedBy?.firstName || '',
-        lastName: version?.updatedBy?.lastName || '',
-        displayName: parseUserDisplayName(
-          version?.updatedBy?.firstName || '',
-          version?.updatedBy?.lastName || '',
-          undefined,
-          version?.updatedBy?.nickname || '',
-        ),
-        avatarUrl: version?.updatedBy?.avatar?.url || undefined,
-        alumniSinceDate: version?.updatedBy?.alumniSinceDate || undefined,
-        teams: version?.updatedBy?.teamsCollection?.items.map((teamItem) => ({
-          id: teamItem?.team?.sys.id,
-          name: teamItem?.team?.displayName,
-        })),
-      },
+      createdBy: parseGraphqlManuscriptUser(version?.createdBy || undefined),
+      updatedBy: parseGraphqlManuscriptUser(version?.updatedBy || undefined),
       createdDate: version?.sys.firstPublishedAt,
       publishedAt: version?.sys.publishedAt,
       teams: version?.teamsCollection?.items.map((teamItem) => ({
@@ -520,6 +510,10 @@ const parseComplianceReport = (
     url: complianceReport.url,
     description: complianceReport.description,
     count: complianceReport.count,
+    createdDate: complianceReport.sys.firstPublishedAt,
+    createdBy: parseGraphqlManuscriptUser(
+      complianceReport.createdBy || undefined,
+    ),
   };
 
 const createQuickCheckDiscussions = async (

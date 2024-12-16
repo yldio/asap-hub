@@ -1837,7 +1837,7 @@ __metadata:
     pino-http: 8.3.3
     pino-lambda: 4.4.0
     pino-noir: 2.2.1
-    pino-pretty: 10.3.0
+    pino-pretty: 10.3.1
     pump: 3.0.0
     source-map-support: 0.5.21
     supertest: 6.3.3
@@ -39287,9 +39287,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-pretty@npm:10.3.0":
-  version: 10.3.0
-  resolution: "pino-pretty@npm:10.3.0"
+"pino-pretty@npm:10.3.1":
+  version: 10.3.1
+  resolution: "pino-pretty@npm:10.3.1"
   dependencies:
     colorette: ^2.0.7
     dateformat: ^4.6.3
@@ -39307,7 +39307,7 @@ __metadata:
     strip-json-comments: ^3.1.1
   bin:
     pino-pretty: bin.js
-  checksum: ddad3dc2f107365221235220d8730b8e287280f59f039dc15b6b128885c6755037ca5883764417d5e462ee906941a04b068c302bcf13fcadc3fb4d82d17b16ae
+  checksum: 51e2d670745a396ddfd12da9f7ea5c2e4dc93a84589ffb29f64f4118d4b83ab636ee21f4aee7a47adb04664d5d921fb33e039e0ea961bb1c1cffefa28444563c
   languageName: node
   linkType: hard
 

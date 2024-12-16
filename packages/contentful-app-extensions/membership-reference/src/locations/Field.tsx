@@ -60,6 +60,7 @@ const MembershipCard = ({
         return `${data.fields.firstName?.['en-US']} ${data.fields.lastName?.['en-US']}`;
       case 'team':
         return data.fields.displayName?.['en-US'];
+      case 'lab':
       case 'contributingCohort':
         return data.fields.name?.['en-US'];
       default:

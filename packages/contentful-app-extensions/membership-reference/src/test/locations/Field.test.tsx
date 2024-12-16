@@ -66,6 +66,7 @@ describe('Field component', () => {
       entityName
       ${'team'}
       ${'user'}
+      ${'lab'}
       ${'contributingCohort'}
     `('common - $entityName', ({ entityName }) => {
       beforeEach(() => {

@@ -18353,7 +18353,7 @@ export type ManuscriptsContentFragment = Pick<
               items: Array<
                 Maybe<
                   Pick<ComplianceReports, 'url' | 'description' | 'count'> & {
-                    sys: Pick<Sys, 'firstPublishedAt'>;
+                    sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
                     createdBy?: Maybe<
                       Pick<
                         Users,
@@ -18377,6 +18377,7 @@ export type ManuscriptsContentFragment = Pick<
                         }>;
                       }
                     >;
+                    discussion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                   }
                 >
               >;
@@ -19051,7 +19052,7 @@ export type FetchManuscriptByIdQuery = {
                         ComplianceReports,
                         'url' | 'description' | 'count'
                       > & {
-                        sys: Pick<Sys, 'firstPublishedAt'>;
+                        sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
                         createdBy?: Maybe<
                           Pick<
                             Users,
@@ -19075,6 +19076,7 @@ export type FetchManuscriptByIdQuery = {
                             }>;
                           }
                         >;
+                        discussion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                       }
                     >
                   >;
@@ -21398,7 +21400,7 @@ export type FetchTeamByIdQuery = {
                                   ComplianceReports,
                                   'url' | 'description' | 'count'
                                 > & {
-                                  sys: Pick<Sys, 'firstPublishedAt'>;
+                                  sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
                                   createdBy?: Maybe<
                                     Pick<
                                       Users,
@@ -21422,6 +21424,7 @@ export type FetchTeamByIdQuery = {
                                       }>;
                                     }
                                   >;
+                                  discussion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                                 }
                               >
                             >;
@@ -26620,6 +26623,13 @@ export const ManuscriptsContentFragmentDoc = {
                                                 kind: 'Field',
                                                 name: {
                                                   kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
                                                   value: 'firstPublishedAt',
                                                 },
                                               },
@@ -26794,6 +26804,37 @@ export const ManuscriptsContentFragmentDoc = {
                                                             },
                                                           },
                                                         ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'discussion',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
                                                       },
                                                     },
                                                   ],

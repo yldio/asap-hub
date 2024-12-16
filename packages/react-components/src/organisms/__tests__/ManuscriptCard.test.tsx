@@ -31,6 +31,7 @@ const props: ComponentProps<typeof ManuscriptCard> = {
 };
 
 const complianceReport = {
+  id: 'compliance-report-id',
   url: 'https://example.com',
   description: 'description',
   count: 1,

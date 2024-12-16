@@ -1,5 +1,5 @@
 import { isEnabled } from '@asap-hub/flags';
-import { TeamResponse, TeamTool } from '@asap-hub/model';
+import { ManuscriptVersion, TeamResponse, TeamTool } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -121,6 +121,20 @@ type TeamProfileWorkspaceProps = Readonly<
     readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
     readonly setEligibilityReasons: (newEligibilityReason: Set<string>) => void;
     readonly isTeamMember: boolean;
+    readonly createComplianceDiscussion: (
+      message: string,
+      complianceReportId: string,
+      manuscriptId: string,
+      versionId: string,
+    ) => Promise<string>;
+    readonly useVersionById: (args: {
+      teamId: string;
+      manuscriptId: string;
+      versionId: string;
+    }) => [
+      ManuscriptVersion | undefined,
+      (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
+    ];
   };
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
@@ -140,6 +154,8 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   setEligibilityReasons,
   isComplianceReviewer = false,
   isTeamMember,
+  createComplianceDiscussion,
+  useVersionById,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
@@ -227,6 +243,10 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           onReplyToDiscussion={onReplyToDiscussion}
                           getDiscussion={getDiscussion}
                           isActiveTeam={!inactiveSince}
+                          createComplianceDiscussion={
+                            createComplianceDiscussion
+                          }
+                          useVersionById={useVersionById}
                         />
                       </div>
                     ))}
@@ -263,6 +283,10 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           onUpdateManuscript={onUpdateManuscript}
                           onReplyToDiscussion={onReplyToDiscussion}
                           getDiscussion={getDiscussion}
+                          createComplianceDiscussion={
+                            createComplianceDiscussion
+                          }
+                          useVersionById={useVersionById}
                         />
                       </div>
                     ))}

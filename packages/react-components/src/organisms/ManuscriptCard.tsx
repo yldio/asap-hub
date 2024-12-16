@@ -46,6 +46,20 @@ type ManuscriptCardProps = Pick<
       manuscriptId: string,
       payload: ManuscriptPutRequest,
     ) => Promise<ManuscriptResponse>;
+    createComplianceDiscussion: (
+      message: string,
+      complianceReportId: string,
+      manuscriptId: string,
+      versionId: string,
+    ) => Promise<string>;
+    useVersionById: (args: {
+      teamId: string;
+      manuscriptId: string;
+      versionId: string;
+    }) => [
+      ManuscriptVersion | undefined,
+      (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
+    ];
   };
 
 const manuscriptContainerStyles = css({
@@ -163,6 +177,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   getDiscussion,
   onReplyToDiscussion,
   user,
+  createComplianceDiscussion,
+  useVersionById,
 }) => {
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
@@ -339,6 +355,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 }
                 isActiveManuscript={isActiveManuscript}
                 isTeamMember={isTeamMember}
+                createComplianceDiscussion={createComplianceDiscussion}
+                useVersionById={useVersionById}
               />
             ))}
           </div>

@@ -15,11 +15,13 @@ import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext, useCurrentUserCRN } from '@asap-hub/react-context';
 
 import {
+  useCreateComplianceDiscussion,
   useDiscussionById,
   useIsComplianceReviewer,
   usePatchTeamById,
   usePutManuscript,
   useReplyToDiscussion,
+  useVersionById,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
@@ -37,6 +39,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const patchTeam = usePatchTeamById(team.id);
   const updateManuscript = usePutManuscript();
   const replyToDiscussion = useReplyToDiscussion();
+  const createComplianceDiscussion = useCreateComplianceDiscussion(team.id);
+
   const getDiscussion = useDiscussionById;
   const toast = useContext(ToastContext);
 
@@ -84,6 +88,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
             setFormType('quick-check');
           }}
           getDiscussion={getDiscussion}
+          createComplianceDiscussion={createComplianceDiscussion}
+          useVersionById={useVersionById}
         />
       </Route>
       <Route exact path={path + route.tools.template}>

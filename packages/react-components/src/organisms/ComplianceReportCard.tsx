@@ -1,6 +1,11 @@
-import { ComplianceReportResponse } from '@asap-hub/model';
+import {
+  ComplianceReportResponse,
+  DiscussionDataObject,
+  DiscussionPatchRequest,
+  ManuscriptVersion,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import {
   Button,
   minusRectIcon,
@@ -14,13 +19,32 @@ import {
   ExpandableText,
   Caption,
   formatDate,
+  Loading,
+  replyIcon,
 } from '..';
 import { paddingStyles } from '../card';
+import { Discussion } from '../molecules';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
 import { getTeams, getUserHref } from './ManuscriptVersionCard';
+import StartComplianceDiscussion from './StartDiscussionModal';
 
-type ComplianceReportCardProps = ComplianceReportResponse;
+type ComplianceReportCardProps = ComplianceReportResponse & {
+  createComplianceDiscussion: (
+    complianceReportId: string,
+    message: string,
+    manuscriptId: string,
+    versionId: string,
+  ) => Promise<string>;
+  getDiscussion: (id: string) => DiscussionDataObject | undefined;
+  onReplyToDiscussion: (
+    id: string,
+    patch: DiscussionPatchRequest,
+  ) => Promise<void>;
+  setVersion: (
+    callback: (prev: ManuscriptVersion) => ManuscriptVersion,
+  ) => void;
+};
 
 const toastStyles = css({
   padding: `${15 / perRem}em ${24 / perRem}em`,
@@ -72,13 +96,40 @@ const userContainerStyles = css({
 });
 
 const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
+  id,
   url,
   description,
   count,
   createdBy,
   createdDate,
+  discussionId,
+  manuscriptId,
+  versionId,
+  createComplianceDiscussion,
+  getDiscussion,
+  onReplyToDiscussion,
+  setVersion,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [startDiscussion, setStartDiscussion] = useState(false);
+
+  const startedDiscussionIdRef = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    return () => {
+      if (startedDiscussionIdRef.current) {
+        setVersion((prev) => ({
+          ...prev,
+          complianceReport: prev.complianceReport
+            ? {
+                ...prev.complianceReport,
+                discussionId: startedDiscussionIdRef.current ?? '',
+              }
+            : undefined,
+        }));
+      }
+    };
+  }, []);
 
   return (
     <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>
@@ -119,6 +170,48 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                 />
               </div>
             </Caption>
+
+            {!discussionId && !startedDiscussionIdRef.current && (
+              <>
+                <Button noMargin small onClick={() => setStartDiscussion(true)}>
+                  <span
+                    css={{
+                      display: 'inline-flex',
+                      gap: rem(8),
+                      margin: `0 ${rem(8)} 0 0`,
+                    }}
+                  >
+                    {replyIcon} Start a discussion
+                  </span>
+                </Button>
+                {startDiscussion && (
+                  <StartComplianceDiscussion
+                    complianceReportId={id}
+                    onDismiss={() => setStartDiscussion(false)}
+                    onSave={async (id: string, message: string) => {
+                      const discussionId = await createComplianceDiscussion(
+                        id,
+                        message,
+                        manuscriptId,
+                        versionId,
+                      );
+                      startedDiscussionIdRef.current = discussionId;
+                    }}
+                  />
+                )}
+              </>
+            )}
+            {(discussionId || startedDiscussionIdRef.current) && (
+              <Suspense fallback={<Loading />}>
+                <Discussion
+                  canReply
+                  id={discussionId ?? startedDiscussionIdRef.current}
+                  getDiscussion={getDiscussion}
+                  onReplyToDiscussion={onReplyToDiscussion}
+                  key={discussionId}
+                />
+              </Suspense>
+            )}
           </div>
         </div>
       )}

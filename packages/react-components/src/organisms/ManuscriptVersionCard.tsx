@@ -45,6 +45,20 @@ type ManuscriptVersionCardProps = {
   isTeamMember: boolean;
   canEditManuscript: boolean;
   isActiveManuscript: boolean;
+  createComplianceDiscussion: (
+    complianceReportId: string,
+    message: string,
+    manuscriptId: string,
+    versionId: string,
+  ) => Promise<string>;
+  useVersionById: (args: {
+    teamId: string;
+    manuscriptId: string;
+    versionId: string;
+  }) => [
+    ManuscriptVersion | undefined,
+    (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
+  ];
 } & Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
   Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
@@ -235,7 +249,7 @@ export const getTeams = (teams: Message['createdBy']['teams']) =>
   }));
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
-  version,
+  version: versionData,
   teamId,
   teamIdCode,
   grantId,
@@ -246,10 +260,20 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   isTeamMember,
   isActiveManuscript,
   canEditManuscript,
+  createComplianceDiscussion,
+  useVersionById,
 }) => {
+  const [version, setVersion] = useVersionById({
+    teamId,
+    manuscriptId,
+    versionId: versionData.id,
+  });
+
   const history = useHistory();
 
   const [expanded, setExpanded] = useState(false);
+
+  if (!version) return <Loading />;
 
   const quickCheckDetails = quickCheckQuestions.filter(
     ({ field }) => version[`${field}Details`]?.message?.text?.length,
@@ -288,11 +312,21 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
       history.push(editManuscriptRoute);
     }
   };
+
+  if (!version) return <Loading />;
   return (
     <>
       <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>
         {version.complianceReport && (
-          <ComplianceReportCard {...version.complianceReport} />
+          <ComplianceReportCard
+            {...version.complianceReport}
+            manuscriptId={manuscriptId}
+            versionId={version.id}
+            createComplianceDiscussion={createComplianceDiscussion}
+            getDiscussion={getDiscussion}
+            onReplyToDiscussion={onReplyToDiscussion}
+            setVersion={setVersion}
+          />
         )}
         <div css={toastStyles}>
           <span css={toastHeaderStyles}>

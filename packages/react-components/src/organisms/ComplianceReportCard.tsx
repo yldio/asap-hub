@@ -185,7 +185,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                     {replyIcon} Start a discussion
                   </span>
                 </Button>
-                {startDiscussion && (
+                {startDiscussion && id && (
                   <StartComplianceDiscussion
                     complianceReportId={id}
                     onDismiss={() => setStartDiscussion(false)}

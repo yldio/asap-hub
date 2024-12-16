@@ -28,4 +28,10 @@ export default class DiscussionController {
 
     return this.fetchById(id);
   }
+
+  async create(message: MessageCreateDataObject): Promise<DiscussionResponse> {
+    const id = await this.discussionDataProvider.create(message);
+
+    return this.fetchById(id);
+  }
 }

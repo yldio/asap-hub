@@ -109,6 +109,7 @@ export { default as WelcomeCard } from './WelcomeCard';
 export { default as WorkingGroupCard } from './WorkingGroupCard';
 export { default as WorkingGroupMembers } from './WorkingGroupMembers';
 export { default as WorkingGroupsTabbedCard } from './WorkingGroupsTabbedCard';
+export { default as StartComplianceDiscussion } from './StartComplianceDiscussion';
 export type { Association } from './SharedOutputDropdown';
 export type { TeamCollaborationMetric } from './TeamCollaborationTable';
 export type { UserCollaborationMetric } from './UserCollaborationTable';

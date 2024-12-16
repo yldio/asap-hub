@@ -313,7 +313,6 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
     }
   };
 
-  if (!version) return <Loading />;
   return (
     <>
       <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>

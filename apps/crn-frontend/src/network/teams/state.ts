@@ -346,12 +346,12 @@ const versionSelector = selectorFamily<
       const { teamId, manuscriptId, versionId } = params;
 
       const team = get(teamState(teamId));
-      if (!team) return;
+      if (!team) return undefined;
 
       const currentManuscript = team.manuscripts.find(
         (manuscript) => manuscript.id === manuscriptId,
       );
-      if (!currentManuscript) return;
+      if (!currentManuscript) return undefined;
 
       return currentManuscript.versions.find(
         (version) => version.id === versionId,
@@ -366,32 +366,29 @@ const versionSelector = selectorFamily<
       if (!team) return;
 
       const manuscript = team.manuscripts.find(
-        (manuscript) => manuscript.id === manuscriptId,
+        (item) => item.id === manuscriptId,
       );
       if (!manuscript) return;
 
-      const version = manuscript.versions.find(
-        (version) => version.id === versionId,
-      );
+      const version = manuscript.versions.find((item) => item.id === versionId);
       if (!version) return;
 
       set(teamState(teamId), (prev: TeamResponse | undefined) =>
         prev
           ? {
               ...prev,
-              manuscripts: team.manuscripts.map((manuscript) => {
-                if (manuscript.id === manuscriptId) {
+              manuscripts: team.manuscripts.map((manuscriptItem) => {
+                if (manuscriptItem.id === manuscriptId) {
                   return {
-                    ...manuscript,
-                    versions: manuscript.versions.map((version) =>
-                      version.id === versionId
+                    ...manuscriptItem,
+                    versions: manuscriptItem.versions.map((versionItem) =>
+                      versionItem.id === versionId
                         ? (newValue as ManuscriptVersion)
-                        : version,
+                        : versionItem,
                     ),
                   };
-                } else {
-                  return manuscript;
                 }
+                return manuscriptItem;
               }),
             }
           : undefined,

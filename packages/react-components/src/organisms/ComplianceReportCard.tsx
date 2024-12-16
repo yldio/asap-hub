@@ -27,7 +27,7 @@ import { Discussion } from '../molecules';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
 import { getTeams, getUserHref } from './ManuscriptVersionCard';
-import StartComplianceDiscussion from './StartDiscussionModal';
+import StartComplianceDiscussion from './StartComplianceDiscussion';
 
 type ComplianceReportCardProps = ComplianceReportResponse & {
   createComplianceDiscussion: (
@@ -115,8 +115,8 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
 
   const startedDiscussionIdRef = useRef<string | undefined>(undefined);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (startedDiscussionIdRef.current) {
         setVersion((prev) => ({
           ...prev,
@@ -128,8 +128,9 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
             : undefined,
         }));
       }
-    };
-  }, []);
+    },
+    [setVersion],
+  );
 
   return (
     <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>
@@ -188,15 +189,19 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                   <StartComplianceDiscussion
                     complianceReportId={id}
                     onDismiss={() => setStartDiscussion(false)}
-                    onSave={async (id: string, message: string) => {
+                    onSave={async (
+                      complianceReportId: string,
+                      message: string,
+                    ) => {
                       if (!manuscriptId || !versionId) return;
-                      const discussionId = await createComplianceDiscussion(
-                        id,
-                        message,
-                        manuscriptId,
-                        versionId,
-                      );
-                      startedDiscussionIdRef.current = discussionId;
+                      const createdDiscussionId =
+                        await createComplianceDiscussion(
+                          complianceReportId,
+                          message,
+                          manuscriptId,
+                          versionId,
+                        );
+                      startedDiscussionIdRef.current = createdDiscussionId;
                     }}
                   />
                 )}

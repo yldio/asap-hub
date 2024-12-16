@@ -1,9 +1,17 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-test-renderer';
-import StartComplianceDiscussion from '../StartDiscussionModal';
+import StartComplianceDiscussion from '../StartComplianceDiscussion';
 
-const renderStartComplianceDiscussion = async (props: any) => {
+type StartComplianceDiscussionProps = {
+  onDismiss: () => void;
+  complianceReportId: string;
+  onSave: (id: string, message: string) => Promise<void>;
+};
+
+const renderStartComplianceDiscussion = async (
+  props: StartComplianceDiscussionProps,
+) => {
   render(<StartComplianceDiscussion {...props} />);
   await waitFor(() => screen.queryByText(/loading/i));
 };

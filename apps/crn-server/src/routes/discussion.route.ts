@@ -51,9 +51,7 @@ export const discussionRouteFactory = (
     async (req, res: Response<DiscussionResponse>) => {
       const { body } = req;
 
-      const { message, id, type } = validateDiscussionCreateRequest(
-        body,
-      ) as any;
+      const { message, id, type } = validateDiscussionCreateRequest(body);
 
       if (!req.loggedInUser) throw Boom.forbidden();
 
@@ -61,11 +59,8 @@ export const discussionRouteFactory = (
         text: message,
         userId: req.loggedInUser.id,
         type,
-      } as any;
-
-      if (type === 'compliance-report') {
-        reply.complianceReportId = id;
-      }
+        ...(type === 'compliance-report' ? { complianceReportId: id } : {}),
+      };
 
       const result = await discussionController.create(reply);
 

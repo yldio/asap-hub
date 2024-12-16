@@ -71,7 +71,6 @@ export const createManuscriptResponse = (
 
 export const getComplianceReportDataObject =
   (): ComplianceReportDataObject => ({
-    id: 'compliance-report-1',
     url: 'http://example.com',
     description: 'compliance report description',
     count: 1,

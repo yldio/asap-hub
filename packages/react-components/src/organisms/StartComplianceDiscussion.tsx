@@ -17,6 +17,7 @@ const headerStyles = css(paddingStyles, {
 const controlsContainerStyles = css({
   display: 'flex',
   alignItems: 'flex-start',
+  marginBottom: `${-12 / perRem}em`,
 });
 
 const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;

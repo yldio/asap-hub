@@ -28,7 +28,7 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   getDiscussion: jest.fn(),
   isTeamMember: true,
   createComplianceDiscussion: jest.fn(),
-  useVersionById: jest.fn(),
+  useVersionById: jest.fn().mockImplementation(() => [undefined, jest.fn()]),
 };
 
 it('renders the team workspace page', () => {

@@ -1,7 +1,7 @@
 import { UserResponse } from './user';
 
 export type ComplianceReportDataObject = {
-  id: string;
+  id?: string;
   url: string;
   description: string;
   count: number;

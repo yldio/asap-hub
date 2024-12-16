@@ -249,7 +249,7 @@ export const getTeams = (teams: Message['createdBy']['teams']) =>
   }));
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
-  version: versionData,
+  version: versionProp,
   teamId,
   teamIdCode,
   grantId,
@@ -263,17 +263,17 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   createComplianceDiscussion,
   useVersionById,
 }) => {
-  const [version, setVersion] = useVersionById({
+  const [versionData, setVersion] = useVersionById({
     teamId,
     manuscriptId,
-    versionId: versionData.id,
+    versionId: versionProp.id,
   });
+
+  const version = versionData ?? versionProp;
 
   const history = useHistory();
 
   const [expanded, setExpanded] = useState(false);
-
-  if (!version) return <Loading />;
 
   const quickCheckDetails = quickCheckQuestions.filter(
     ({ field }) => version[`${field}Details`]?.message?.text?.length,

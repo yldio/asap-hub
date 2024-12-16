@@ -9,7 +9,7 @@ import {
   fireEvent,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TeamResponse } from '@asap-hub/model';
+import { ManuscriptVersion, TeamResponse } from '@asap-hub/model';
 import {
   createDiscussionResponse,
   createManuscriptResponse,
@@ -35,6 +35,7 @@ import {
 
 import Workspace from '../Workspace';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
+import { useVersionById } from '../state';
 
 jest.setTimeout(60000);
 jest.mock('../api', () => ({
@@ -42,6 +43,11 @@ jest.mock('../api', () => ({
   updateManuscript: jest.fn().mockResolvedValue({}),
   getDiscussion: jest.fn(),
   updateDiscussion: jest.fn(),
+}));
+
+jest.mock('../state', () => ({
+  ...jest.requireActual('../state'),
+  useVersionById: jest.fn(),
 }));
 
 const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
@@ -93,6 +99,25 @@ const user = {
     },
   ],
 };
+
+const mockSetVersion = jest.fn();
+
+const version = createManuscriptResponse().versions[0] as ManuscriptVersion;
+
+const mockVersionData = {
+  ...version,
+  complianceReport: {
+    ...version.complianceReport,
+    discussionId: 'discussion-id',
+  },
+};
+
+beforeEach(() => {
+  (useVersionById as jest.Mock).mockImplementation(() => [
+    mockVersionData,
+    mockSetVersion,
+  ]);
+});
 
 afterEach(jest.resetAllMocks);
 
@@ -390,8 +415,19 @@ describe('manuscript quick check discussion', () => {
 
   it('fetches quick check discussion details', async () => {
     enable('DISPLAY_MANUSCRIPTS');
+    mockGetDiscussion.mockImplementation(
+      async () => acknowledgedGrantNumberDiscussion,
+    );
 
-    mockGetDiscussion.mockResolvedValueOnce(acknowledgedGrantNumberDiscussion);
+    (useVersionById as jest.Mock).mockImplementation(() => [
+      {
+        ...mockVersionData,
+        acknowledgedGrantNumberDetails: acknowledgedGrantNumberDiscussion,
+        acknowledgedGrantNumber: 'No',
+      },
+      mockSetVersion,
+    ]);
+
     const { getByText, findByTestId, getByLabelText, getByTestId } =
       renderWithWrapper(
         <Workspace
@@ -421,6 +457,20 @@ describe('manuscript quick check discussion', () => {
 
   it('replies to a quick check discussion', async () => {
     enable('DISPLAY_MANUSCRIPTS');
+
+    mockGetDiscussion.mockImplementation(
+      async () => acknowledgedGrantNumberDiscussion,
+    );
+
+    (useVersionById as jest.Mock).mockImplementation(() => [
+      {
+        ...mockVersionData,
+        acknowledgedGrantNumberDetails: acknowledgedGrantNumberDiscussion,
+        acknowledgedGrantNumber: 'No',
+      },
+      mockSetVersion,
+    ]);
+
     mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
     mockUpdateDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
     const { findByTestId, getByRole, getByTestId, getByLabelText } =

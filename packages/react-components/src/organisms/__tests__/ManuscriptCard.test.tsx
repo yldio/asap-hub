@@ -3,7 +3,7 @@ import {
   createUserResponse,
   manuscriptAuthor,
 } from '@asap-hub/fixtures';
-import { UserTeam } from '@asap-hub/model';
+import { ManuscriptVersion, UserTeam } from '@asap-hub/model';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -13,6 +13,16 @@ import ManuscriptCard, {
   isManuscriptAuthor,
   isManuscriptLead,
 } from '../ManuscriptCard';
+
+const version = createManuscriptResponse().versions[0] as ManuscriptVersion;
+
+const mockVersionData = {
+  ...version,
+  complianceReport: {
+    ...version.complianceReport,
+    discussionId: 'discussion-id',
+  },
+};
 
 const baseUser = createUserResponse({}, 1);
 const props: ComponentProps<typeof ManuscriptCard> = {
@@ -111,8 +121,21 @@ describe('isManuscriptLead', () => {
 });
 
 it('displays manuscript version card when expanded', () => {
+  const useVersionById = jest.fn();
+
+  useVersionById
+    .mockImplementation(() => [
+      {
+        ...mockVersionData,
+        type: 'Original Research',
+        lifecycle: 'Preprint',
+      },
+      jest.fn(),
+    ])
+    .mockImplementationOnce(() => [mockVersionData, jest.fn()]);
+
   const { getByText, queryByText, getByTestId, rerender } = render(
-    <ManuscriptCard {...props} />,
+    <ManuscriptCard {...props} useVersionById={useVersionById} />,
   );
 
   expect(queryByText(/Original Research/i)).not.toBeInTheDocument();
@@ -131,6 +154,7 @@ it('displays manuscript version card when expanded', () => {
           lifecycle: 'Preprint',
         },
       ]}
+      useVersionById={useVersionById}
     />,
   );
 

@@ -48,8 +48,12 @@ export class DiscussionContentfulDataProvider
 
   async create(input: MessageCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
+    const { text, userId, complianceReportId, type } = input;
 
-    const messageId = await createAndPublishMessage(environment, input);
+    const messageId = await createAndPublishMessage(environment, {
+      text,
+      userId,
+    });
 
     const discussionEntry = await environment.createEntry('discussions', {
       fields: addLocaleToFields({
@@ -59,6 +63,13 @@ export class DiscussionContentfulDataProvider
 
     await discussionEntry.publish();
 
+    if (complianceReportId && type === 'compliance-report') {
+      const complianceReport = await environment.getEntry(complianceReportId);
+
+      await patchAndPublish(complianceReport, {
+        discussion: getLinkEntity(discussionEntry.sys.id),
+      });
+    }
     return discussionEntry.sys.id;
   }
 

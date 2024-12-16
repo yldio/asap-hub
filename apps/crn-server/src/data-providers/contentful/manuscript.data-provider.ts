@@ -507,6 +507,7 @@ const parseComplianceReport = (
   complianceReport: ComplianceReport | undefined,
 ) =>
   complianceReport && {
+    id: complianceReport.sys.id,
     url: complianceReport.url,
     description: complianceReport.description,
     count: complianceReport.count,
@@ -514,8 +515,8 @@ const parseComplianceReport = (
     createdBy: parseGraphqlManuscriptUser(
       complianceReport.createdBy || undefined,
     ),
+    discussionId: complianceReport.discussion?.sys.id,
   };
-
 const createQuickCheckDiscussions = async (
   environment: Environment,
   quickCheckDetails: QuickCheckDetailsObject,

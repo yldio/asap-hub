@@ -1,4 +1,7 @@
-import { DiscussionPatchRequest } from '@asap-hub/model';
+import {
+  DiscussionCreateRequest,
+  DiscussionPatchRequest,
+} from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 
@@ -36,6 +39,26 @@ const discussionPatchRequestValidationSchema: JSONSchemaType<DiscussionPatchRequ
 
 export const validateDiscussionPatchRequest = validateInput(
   discussionPatchRequestValidationSchema,
+  {
+    skipNull: true,
+    coerce: false,
+  },
+);
+
+const discussionCreateRequestValidationSchema: JSONSchemaType<DiscussionCreateRequest> =
+  {
+    type: 'object',
+    properties: {
+      message: { type: 'string', maxLength: 256 },
+      id: { type: 'string', maxLength: 256 },
+      type: { type: 'string', maxLength: 256 },
+    },
+    required: ['message'],
+    additionalProperties: false,
+  };
+
+export const validateDiscussionCreateRequest = validateInput(
+  discussionCreateRequestValidationSchema,
   {
     skipNull: true,
     coerce: false,

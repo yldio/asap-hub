@@ -28,5 +28,9 @@ export const Normal = () => (
     onReplyToDiscussion={() => Promise.resolve()}
     teamId={'team-id'}
     grantId={'grant-id'}
+    createComplianceDiscussion={() =>
+      Promise.resolve('compliance-discussion-id')
+    }
+    useVersionById={() => [undefined, () => {}]}
   />
 );

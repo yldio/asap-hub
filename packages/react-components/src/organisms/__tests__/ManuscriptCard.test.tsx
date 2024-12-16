@@ -26,6 +26,8 @@ const props: ComponentProps<typeof ManuscriptCard> = {
   getDiscussion: jest.fn(),
   isTeamMember: true,
   isActiveTeam: true,
+  createComplianceDiscussion: jest.fn(),
+  useVersionById: jest.fn(),
 };
 
 const complianceReport = {
@@ -186,6 +188,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
   const manuscriptVersions = createManuscriptResponse().versions;
   manuscriptVersions[0]!.firstAuthors = [user];
   manuscriptVersions[0]!.complianceReport = {
+    id: 'compliance-report-id',
     url: 'https://example.com',
     description: 'test compliance report',
     count: 1,

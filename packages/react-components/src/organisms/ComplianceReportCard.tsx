@@ -189,6 +189,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                     complianceReportId={id}
                     onDismiss={() => setStartDiscussion(false)}
                     onSave={async (id: string, message: string) => {
+                      if (!manuscriptId || !versionId) return;
                       const discussionId = await createComplianceDiscussion(
                         id,
                         message,
@@ -205,7 +206,9 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
               <Suspense fallback={<Loading />}>
                 <Discussion
                   canReply
-                  id={discussionId ?? startedDiscussionIdRef.current}
+                  id={
+                    (discussionId ?? startedDiscussionIdRef.current) as string
+                  }
                   getDiscussion={getDiscussion}
                   onReplyToDiscussion={onReplyToDiscussion}
                   key={discussionId}

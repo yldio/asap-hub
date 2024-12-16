@@ -27,6 +27,8 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   onReplyToDiscussion: jest.fn(),
   getDiscussion: jest.fn(),
   isTeamMember: true,
+  createComplianceDiscussion: jest.fn(),
+  useVersionById: jest.fn(),
 };
 
 it('renders the team workspace page', () => {

@@ -43,6 +43,8 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   isTeamMember: true,
   canEditManuscript: true,
   isActiveManuscript: true,
+  createComplianceDiscussion: jest.fn(),
+  useVersionById: jest.fn(),
 };
 
 it('displays quick checks when present', () => {

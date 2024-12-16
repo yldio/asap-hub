@@ -17,9 +17,9 @@ export type ComplianceReportDataObject = {
   > & {
     teams: { id: string; name: string }[];
   };
-  discussionId: string;
-  versionId: string;
-  manuscriptId: string;
+  discussionId?: string;
+  versionId?: string;
+  manuscriptId?: string;
 };
 export type ComplianceReportResponse = ComplianceReportDataObject;
 export type ComplianceReportFormData = Omit<

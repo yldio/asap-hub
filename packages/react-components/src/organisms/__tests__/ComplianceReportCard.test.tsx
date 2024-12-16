@@ -5,6 +5,7 @@ import ComplianceReportCard from '../ComplianceReportCard';
 
 it('displays compliance report description, url and creation details when expanded', () => {
   const props = {
+    id: 'compliance-report-id',
     url: 'http://example.com/',
     description: 'compliance report description',
     count: 1,
@@ -14,6 +15,10 @@ it('displays compliance report description, url and creation details when expand
       displayName: 'Test User',
       id: 'test-user-id',
     },
+    createComplianceDiscussion: jest.fn(),
+    getDiscussion: jest.fn(),
+    setVersion: jest.fn(),
+    onReplyToDiscussion: jest.fn(),
   };
   const { getByText, queryByText, getByRole, rerender } = render(
     <ComplianceReportCard {...props} />,

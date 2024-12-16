@@ -378,6 +378,7 @@ type ComplianceReports implements Entry & _Node {
   count(locale: String): Int
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   description(locale: String): String
+  discussion(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
   linkedFrom(allowedLocales: [String]): ComplianceReportsLinkingCollections
   manuscriptVersion(locale: String, preview: Boolean, where: ManuscriptVersionsFilter): ManuscriptVersions
   sys: Sys!
@@ -413,6 +414,8 @@ input ComplianceReportsFilter {
   description_not: String
   description_not_contains: String
   description_not_in: [String]
+  discussion: cfDiscussionsNestedFilter
+  discussion_exists: Boolean
   manuscriptVersion: cfManuscriptVersionsNestedFilter
   manuscriptVersion_exists: Boolean
   sys: SysFilter
@@ -898,8 +901,24 @@ input DiscussionsFilter {
 }
 
 type DiscussionsLinkingCollections {
+  complianceReportsCollection(limit: Int = 100, locale: String, order: [DiscussionsLinkingCollectionsComplianceReportsCollectionOrder], preview: Boolean, skip: Int = 0): ComplianceReportsCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
+}
+
+enum DiscussionsLinkingCollectionsComplianceReportsCollectionOrder {
+  count_ASC
+  count_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  url_ASC
+  url_DESC
 }
 
 enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {

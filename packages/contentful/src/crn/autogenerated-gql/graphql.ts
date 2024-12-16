@@ -613,6 +613,7 @@ export type ComplianceReports = Entry &
     count?: Maybe<Scalars['Int']>;
     createdBy?: Maybe<Users>;
     description?: Maybe<Scalars['String']>;
+    discussion?: Maybe<Discussions>;
     linkedFrom?: Maybe<ComplianceReportsLinkingCollections>;
     manuscriptVersion?: Maybe<ManuscriptVersions>;
     sys: Sys;
@@ -634,6 +635,13 @@ export type ComplianceReportsCreatedByArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
 export type ComplianceReportsDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
+export type ComplianceReportsDiscussionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
@@ -682,6 +690,8 @@ export type ComplianceReportsFilter = {
   description_not?: InputMaybe<Scalars['String']>;
   description_not_contains?: InputMaybe<Scalars['String']>;
   description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  discussion?: InputMaybe<CfDiscussionsNestedFilter>;
+  discussion_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptVersion?: InputMaybe<CfManuscriptVersionsNestedFilter>;
   manuscriptVersion_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
@@ -1276,8 +1286,21 @@ export type DiscussionsFilter = {
 };
 
 export type DiscussionsLinkingCollections = {
+  complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
   entryCollection?: Maybe<EntryCollection>;
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
+};
+
+export type DiscussionsLinkingCollectionsComplianceReportsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<DiscussionsLinkingCollectionsComplianceReportsCollectionOrder>
+    >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
 };
 
 export type DiscussionsLinkingCollectionsEntryCollectionArgs = {
@@ -1298,6 +1321,21 @@ export type DiscussionsLinkingCollectionsManuscriptVersionsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum DiscussionsLinkingCollectionsComplianceReportsCollectionOrder {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
 
 export enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',

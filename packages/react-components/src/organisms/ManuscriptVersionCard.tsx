@@ -48,8 +48,6 @@ type ManuscriptVersionCardProps = {
   createComplianceDiscussion: (
     complianceReportId: string,
     message: string,
-    manuscriptId: string,
-    versionId: string,
   ) => Promise<string>;
   useVersionById: (args: {
     teamId: string;

@@ -47,10 +47,8 @@ type ManuscriptCardProps = Pick<
       payload: ManuscriptPutRequest,
     ) => Promise<ManuscriptResponse>;
     createComplianceDiscussion: (
-      message: string,
       complianceReportId: string,
-      manuscriptId: string,
-      versionId: string,
+      message: string,
     ) => Promise<string>;
     useVersionById: (args: {
       teamId: string;

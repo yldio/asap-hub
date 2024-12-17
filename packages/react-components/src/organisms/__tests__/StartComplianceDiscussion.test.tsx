@@ -33,7 +33,7 @@ describe('StartComplianceDiscussion', () => {
       onSave,
     });
 
-    expect(screen.getByText('Start discussion')).toBeInTheDocument();
+    expect(screen.getByText('Start Discussion')).toBeInTheDocument();
     expect(screen.getByText('Please provide details')).toBeInTheDocument();
     expect(screen.getByText('Cancel')).toBeInTheDocument();
     expect(screen.getByText('Send')).toBeInTheDocument();

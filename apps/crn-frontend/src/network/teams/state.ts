@@ -413,7 +413,7 @@ export const useVersionById = (params: {
   return [version, setVersionCallback];
 };
 
-export const useCreateComplianceDiscussion = (teamId: string) => {
+export const useCreateComplianceDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);
 
   return async (

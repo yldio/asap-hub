@@ -5,7 +5,7 @@ import {
   ManuscriptVersion,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { memo, Suspense, useEffect, useRef, useState } from 'react';
 import {
   Button,
   minusRectIcon,
@@ -34,8 +34,6 @@ type ComplianceReportCardProps = ComplianceReportResponse & {
   createComplianceDiscussion: (
     complianceReportId: string,
     message: string,
-    manuscriptId: string,
-    versionId: string,
   ) => Promise<string>;
   getDiscussion: (id: string) => DiscussionDataObject | undefined;
   onReplyToDiscussion: (
@@ -191,7 +189,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                         margin: `0 ${rem(8)} 0 0`,
                       }}
                     >
-                      {replyIcon} Start discussion
+                      {replyIcon} Start Discussion
                     </span>
                   </Button>
                   {startDiscussion && id && (
@@ -207,8 +205,6 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                           await createComplianceDiscussion(
                             complianceReportId,
                             message,
-                            manuscriptId,
-                            versionId,
                           );
                         startedDiscussionIdRef.current = createdDiscussionId;
                       }}
@@ -254,4 +250,22 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   );
 };
 
-export default ComplianceReportCard;
+export default memo(ComplianceReportCard, (prevProps, props) => {
+  const {
+    createComplianceDiscussion: _createComplianceDiscussion,
+    getDiscussion: _getDiscussion,
+    onReplyToDiscussion: _onReplyToDiscussion,
+    setVersion: _setVersion,
+    ...restPrevProps
+  } = prevProps;
+
+  const {
+    createComplianceDiscussion: _createComplianceDiscussionNew,
+    getDiscussion: _getDiscussionNew,
+    onReplyToDiscussion: _onReplyToDiscussionNew,
+    setVersion: _setVersionNew,
+    ...restProps
+  } = props;
+
+  return JSON.stringify(restPrevProps) === JSON.stringify(restProps);
+});

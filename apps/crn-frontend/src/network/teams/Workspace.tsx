@@ -39,7 +39,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const patchTeam = usePatchTeamById(team.id);
   const updateManuscript = usePutManuscript();
   const replyToDiscussion = useReplyToDiscussion();
-  const createComplianceDiscussion = useCreateComplianceDiscussion(team.id);
+  const createComplianceDiscussion = useCreateComplianceDiscussion();
 
   const getDiscussion = useDiscussionById;
   const toast = useContext(ToastContext);
@@ -88,7 +88,17 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
             setFormType('quick-check');
           }}
           getDiscussion={getDiscussion}
-          createComplianceDiscussion={createComplianceDiscussion}
+          createComplianceDiscussion={async (
+            complianceReportId: string,
+            message: string,
+          ) => {
+            const discussionId = await createComplianceDiscussion(
+              complianceReportId,
+              message,
+            );
+            setFormType('compliance-report-discussion');
+            return discussionId;
+          }}
           useVersionById={useVersionById}
         />
       </Route>

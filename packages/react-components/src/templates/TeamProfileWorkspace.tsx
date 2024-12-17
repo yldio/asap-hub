@@ -122,10 +122,8 @@ type TeamProfileWorkspaceProps = Readonly<
     readonly setEligibilityReasons: (newEligibilityReason: Set<string>) => void;
     readonly isTeamMember: boolean;
     readonly createComplianceDiscussion: (
-      message: string,
       complianceReportId: string,
-      manuscriptId: string,
-      versionId: string,
+      message: string,
     ) => Promise<string>;
     readonly useVersionById: (args: {
       teamId: string;

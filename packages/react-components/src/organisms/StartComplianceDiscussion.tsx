@@ -104,12 +104,12 @@ const StartComplianceDiscussion: React.FC<StartComplianceDiscussionProps> = ({
               required: true,
               maxLength: {
                 value: 256,
-                message: 'Reply cannot exceed 256 characters.',
+                message: 'Discussion message cannot exceed 256 characters.',
               },
             }}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <LabeledTextEditor
-                title="Please provide details"
+                title="Please provide reasons why the compliance report isn’t correct"
                 subtitle="(required)"
                 onChange={onChange}
                 customValidationMessage={error?.message}

@@ -21,6 +21,7 @@ import {
   formatDate,
   Loading,
   replyIcon,
+  Divider,
 } from '..';
 import { paddingStyles } from '../card';
 import { Discussion } from '../molecules';
@@ -95,6 +96,21 @@ const userContainerStyles = css({
   paddingTop: rem(32),
 });
 
+const buttonsWrapperStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+});
+
+const startDiscussionButtonStyles = css({
+  width: 'fit-content',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  maxWidth: 'fit-content',
+  height: rem(40),
+});
+
 const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   id,
   url,
@@ -151,13 +167,73 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
             <ExpandableText>
               <Markdown value={description}></Markdown>
             </ExpandableText>
-            <div css={buttonStyles}>
-              <Link buttonStyle fullWidth small primary href={url}>
-                <span css={externalIconStyle}>
-                  <ExternalLinkIcon /> View Report
-                </span>
-              </Link>
+            <div css={buttonsWrapperStyles}>
+              <div css={buttonStyles}>
+                <Link buttonStyle fullWidth small primary href={url}>
+                  <span css={externalIconStyle}>
+                    <ExternalLinkIcon /> View Report
+                  </span>
+                </Link>
+              </div>
+
+              {!discussionId && !startedDiscussionIdRef.current && (
+                <>
+                  <Button
+                    noMargin
+                    small
+                    onClick={() => setStartDiscussion(true)}
+                    overrideStyles={startDiscussionButtonStyles}
+                  >
+                    <span
+                      css={{
+                        display: 'flex',
+                        gap: rem(8),
+                        margin: `0 ${rem(8)} 0 0`,
+                      }}
+                    >
+                      {replyIcon} Start discussion
+                    </span>
+                  </Button>
+                  {startDiscussion && id && (
+                    <StartComplianceDiscussion
+                      complianceReportId={id}
+                      onDismiss={() => setStartDiscussion(false)}
+                      onSave={async (
+                        complianceReportId: string,
+                        message: string,
+                      ) => {
+                        if (!manuscriptId || !versionId) return;
+                        const createdDiscussionId =
+                          await createComplianceDiscussion(
+                            complianceReportId,
+                            message,
+                            manuscriptId,
+                            versionId,
+                          );
+                        startedDiscussionIdRef.current = createdDiscussionId;
+                      }}
+                    />
+                  )}
+                </>
+              )}
             </div>
+            {(discussionId || startedDiscussionIdRef.current) && (
+              <>
+                <Divider />
+                <Subtitle>Discussion Started</Subtitle>
+                <Suspense fallback={<Loading />}>
+                  <Discussion
+                    canReply
+                    id={
+                      (discussionId ?? startedDiscussionIdRef.current) as string
+                    }
+                    getDiscussion={getDiscussion}
+                    onReplyToDiscussion={onReplyToDiscussion}
+                    key={discussionId}
+                  />
+                </Suspense>
+              </>
+            )}
             <Caption accent="lead" noMargin>
               <div css={userContainerStyles}>
                 Date added:
@@ -171,55 +247,6 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                 />
               </div>
             </Caption>
-
-            {!discussionId && !startedDiscussionIdRef.current && (
-              <>
-                <Button noMargin small onClick={() => setStartDiscussion(true)}>
-                  <span
-                    css={{
-                      display: 'inline-flex',
-                      gap: rem(8),
-                      margin: `0 ${rem(8)} 0 0`,
-                    }}
-                  >
-                    {replyIcon} Start discussion
-                  </span>
-                </Button>
-                {startDiscussion && id && (
-                  <StartComplianceDiscussion
-                    complianceReportId={id}
-                    onDismiss={() => setStartDiscussion(false)}
-                    onSave={async (
-                      complianceReportId: string,
-                      message: string,
-                    ) => {
-                      if (!manuscriptId || !versionId) return;
-                      const createdDiscussionId =
-                        await createComplianceDiscussion(
-                          complianceReportId,
-                          message,
-                          manuscriptId,
-                          versionId,
-                        );
-                      startedDiscussionIdRef.current = createdDiscussionId;
-                    }}
-                  />
-                )}
-              </>
-            )}
-            {(discussionId || startedDiscussionIdRef.current) && (
-              <Suspense fallback={<Loading />}>
-                <Discussion
-                  canReply
-                  id={
-                    (discussionId ?? startedDiscussionIdRef.current) as string
-                  }
-                  getDiscussion={getDiscussion}
-                  onReplyToDiscussion={onReplyToDiscussion}
-                  key={discussionId}
-                />
-              </Suspense>
-            )}
           </div>
         </div>
       )}

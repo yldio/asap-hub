@@ -182,7 +182,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                       margin: `0 ${rem(8)} 0 0`,
                     }}
                   >
-                    {replyIcon} Start a discussion
+                    {replyIcon} Start discussion
                   </span>
                 </Button>
                 {startDiscussion && id && (

@@ -94,7 +94,7 @@ const StartComplianceDiscussion: React.FC<StartComplianceDiscussionProps> = ({
               {crossIcon}
             </Button>
           </div>
-          <Headline3>Start a discussion</Headline3>
+          <Headline3>Start discussion</Headline3>
         </header>
         <div css={[paddingStyles, { paddingTop: 0 }]}>
           <Controller

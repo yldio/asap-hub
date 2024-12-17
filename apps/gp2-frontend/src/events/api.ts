@@ -33,11 +33,16 @@ export const getEvents = async (
   const filters = getAllFilters(options);
 
   return client
-    .search(['event'], options.searchQuery, {
-      filters,
-      page: options.currentPage ?? 0,
-      hitsPerPage: options.pageSize ?? 10,
-    })
+    .search(
+      ['event'],
+      options.searchQuery,
+      {
+        filters,
+        page: options.currentPage ?? 0,
+        hitsPerPage: options.pageSize ?? 10,
+      },
+      !!options.before,
+    )
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);
     });

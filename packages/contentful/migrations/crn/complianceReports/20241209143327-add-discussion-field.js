@@ -1,4 +1,4 @@
-module.exports.description = '<Put your description here>';
+module.exports.description = 'Add discussion to compliance reports';
 
 module.exports.up = (migration) => {
   const complianceReports = migration.editContentType('complianceReports');

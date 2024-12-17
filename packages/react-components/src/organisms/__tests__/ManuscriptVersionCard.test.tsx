@@ -41,7 +41,7 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   teamIdCode: 'TI1',
   teamId: 'team-id-0',
   manuscriptCount: 1,
-  onReplyToDiscussion: jest.fn(),
+  onSave: jest.fn(),
   getDiscussion: jest.fn(),
   manuscriptId: 'manuscript-1',
   isTeamMember: true,

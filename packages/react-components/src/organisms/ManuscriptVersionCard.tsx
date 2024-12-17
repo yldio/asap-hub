@@ -24,7 +24,7 @@ import {
   Pill,
   PencilIcon,
   plusRectIcon,
-  QuickCheckReplyModal,
+  DiscussionModal,
   Subtitle,
   colors,
 } from '..';
@@ -57,7 +57,7 @@ type ManuscriptVersionCardProps = {
     ManuscriptVersion | undefined,
     (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
   ];
-} & Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
+} & Pick<ComponentProps<typeof DiscussionModal>, 'onSave'> &
   Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
 const toastStyles = css({
@@ -252,7 +252,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   teamIdCode,
   grantId,
   manuscriptCount,
-  onReplyToDiscussion,
+  onSave,
   getDiscussion,
   manuscriptId,
   isTeamMember,
@@ -321,7 +321,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
             versionId={version.id}
             createComplianceDiscussion={createComplianceDiscussion}
             getDiscussion={getDiscussion}
-            onReplyToDiscussion={onReplyToDiscussion}
+            onSave={onSave}
             setVersion={setVersion}
           />
         )}
@@ -454,10 +454,11 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                       <Subtitle>{question}</Subtitle>
                       <Suspense fallback={<Loading />}>
                         <Discussion
+                          modalTitle="Reply to quick check"
                           canReply={isActiveManuscript && isTeamMember}
                           id={discussion.id}
                           getDiscussion={getDiscussion}
-                          onReplyToDiscussion={onReplyToDiscussion}
+                          onSave={onSave}
                           key={discussion.id}
                         />
                       </Suspense>

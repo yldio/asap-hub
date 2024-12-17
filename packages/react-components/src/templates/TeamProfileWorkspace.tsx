@@ -115,7 +115,7 @@ type TeamProfileWorkspaceProps = Readonly<
   > &
   Pick<
     ComponentProps<typeof ManuscriptCard>,
-    'onReplyToDiscussion' | 'isComplianceReviewer' | 'getDiscussion'
+    'onSave' | 'isComplianceReviewer' | 'getDiscussion'
   > & {
     readonly tools: ReadonlyArray<TeamTool>;
     readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
@@ -147,7 +147,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   collaborationManuscripts,
   tools,
   onDeleteTool,
-  onReplyToDiscussion,
+  onSave,
   getDiscussion,
   setEligibilityReasons,
   isComplianceReviewer = false,
@@ -238,7 +238,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           isComplianceReviewer={isComplianceReviewer}
                           isTeamMember={isTeamMember}
                           onUpdateManuscript={onUpdateManuscript}
-                          onReplyToDiscussion={onReplyToDiscussion}
+                          onSave={onSave}
                           getDiscussion={getDiscussion}
                           isActiveTeam={!inactiveSince}
                           createComplianceDiscussion={
@@ -279,7 +279,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           isTeamMember={isTeamMember}
                           isActiveTeam={!inactiveSince}
                           onUpdateManuscript={onUpdateManuscript}
-                          onReplyToDiscussion={onReplyToDiscussion}
+                          onSave={onSave}
                           getDiscussion={getDiscussion}
                           createComplianceDiscussion={
                             createComplianceDiscussion

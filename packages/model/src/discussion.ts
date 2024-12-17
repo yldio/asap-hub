@@ -41,6 +41,10 @@ export type DiscussionPatchRequest = {
   replyText: string;
 };
 
+export type DiscussionCreateData = {
+  message: string;
+};
+
 export type DiscussionCreateRequest = {
   message: string;
   id: string;

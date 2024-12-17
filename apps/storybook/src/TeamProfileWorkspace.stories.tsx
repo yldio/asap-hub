@@ -25,7 +25,7 @@ export const Normal = () => (
     isComplianceReviewer={false}
     onUpdateManuscript={() => Promise.resolve(createManuscriptResponse())}
     getDiscussion={() => createDiscussionResponse()}
-    onReplyToDiscussion={() => Promise.resolve()}
+    onSave={() => Promise.resolve()}
     teamId={'team-id'}
     grantId={'grant-id'}
     createComplianceDiscussion={() =>

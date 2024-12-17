@@ -65,6 +65,22 @@ export const createManuscriptResponse = (
       firstAuthors: [],
       correspondingAuthor: [],
       additionalAuthors: [],
+      complianceReport: {
+        id: 'compliance-report-id',
+        url: 'http://example.com/file.pdf',
+        description: 'A description',
+        count: 1,
+        createdDate: '2020-12-10T20:36:54Z',
+        createdBy: {
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          id: 'john-doe',
+          teams: [{ id: 'alessi', name: 'Alessi' }],
+          avatarUrl: '',
+          alumniSinceDate: undefined,
+        },
+      },
     },
   ],
 });

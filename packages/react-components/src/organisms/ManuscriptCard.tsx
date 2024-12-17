@@ -33,7 +33,7 @@ type ManuscriptCardProps = Pick<
 > &
   Pick<
     ComponentProps<typeof ManuscriptVersionCard>,
-    'onReplyToDiscussion' | 'getDiscussion'
+    'onSave' | 'getDiscussion'
   > & {
     user: User | null;
     teamId: string;
@@ -173,7 +173,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   isActiveTeam,
   onUpdateManuscript,
   getDiscussion,
-  onReplyToDiscussion,
+  onSave,
   user,
   createComplianceDiscussion,
   useVersionById,
@@ -339,7 +339,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           <div>
             {versions.map((version, index) => (
               <ManuscriptVersionCard
-                onReplyToDiscussion={onReplyToDiscussion}
+                onSave={onSave}
                 getDiscussion={getDiscussion}
                 key={index}
                 version={version}

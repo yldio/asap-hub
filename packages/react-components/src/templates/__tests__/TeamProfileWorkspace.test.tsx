@@ -1,5 +1,9 @@
-import { createTeamResponse } from '@asap-hub/fixtures';
+import {
+  createManuscriptResponse,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
 import { disable, enable } from '@asap-hub/flags';
+import { ManuscriptVersion } from '@asap-hub/model';
 import {
   getByText as getChildByText,
   render,
@@ -8,11 +12,13 @@ import {
   within,
   getByTestId,
   getByRole as getByRoleInContainer,
+  findByTestId,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps } from 'react';
 import { Route, Router } from 'react-router-dom';
+import { act } from 'react-test-renderer';
 
 import TeamProfileWorkspace from '../TeamProfileWorkspace';
 
@@ -24,7 +30,7 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   tools: [],
   isComplianceReviewer: false,
   onUpdateManuscript: jest.fn(),
-  onReplyToDiscussion: jest.fn(),
+  onSave: jest.fn(),
   getDiscussion: jest.fn(),
   isTeamMember: true,
   createComplianceDiscussion: jest.fn(),
@@ -393,6 +399,56 @@ describe('compliance section', () => {
     expect(history.location.pathname).toBe(
       '/network/teams/t0/workspace/create-manuscript',
     );
+  });
+
+  it('opens modal to create new discussion on compliance report', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCreateComplianceDiscussion = jest
+      .fn()
+      .mockResolvedValue('new-discussion-id');
+    const mockSetVersion = jest.fn();
+    const version = createManuscriptResponse().versions[0] as ManuscriptVersion;
+
+    const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
+      ...team,
+      manuscripts: [
+        {
+          id: 'manuscript-id',
+          title: 'Nice manuscript',
+          count: 1,
+          versions: [version],
+        },
+      ],
+      createComplianceDiscussion: mockCreateComplianceDiscussion,
+      useVersionById: jest
+        .fn()
+        .mockImplementation(() => [version, mockSetVersion]),
+    };
+
+    const { getByTestId, findByText, getByLabelText, unmount } = render(
+      <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
+    );
+
+    await act(async () => {
+      userEvent.click(getByTestId('collapsible-button'));
+      userEvent.click(getByLabelText('Expand Report'));
+      userEvent.click(await findByText(/Start Discussion/i));
+      userEvent.type(
+        await findByText(/Enter some text.../i),
+        'New discussion message',
+      );
+    });
+    expect(await findByText(/Send/i)).toBeInTheDocument();
+
+    userEvent.click(getByTestId('discussion-modal-submit'));
+    waitFor(() => {
+      expect(mockCreateComplianceDiscussion).toHaveBeenCalledWith(
+        'compliance-report-id',
+        'New discussion message',
+      );
+    });
+
+    unmount();
   });
 });
 

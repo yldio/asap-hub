@@ -32,7 +32,7 @@ const props: ComponentProps<typeof ManuscriptCard> = {
   grantId: '000123',
   isComplianceReviewer: false,
   onUpdateManuscript: jest.fn(),
-  onReplyToDiscussion: jest.fn(),
+  onSave: jest.fn(),
   getDiscussion: jest.fn(),
   isTeamMember: true,
   isActiveTeam: true,

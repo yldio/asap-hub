@@ -10,6 +10,7 @@ import {
   TeamResponse,
   ManuscriptPutRequest,
   DiscussionPatchRequest,
+  DiscussionCreateData,
 } from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext, useCurrentUserCRN } from '@asap-hub/react-context';
@@ -80,11 +81,11 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                 }
           }
           isComplianceReviewer={isComplianceReviewer}
-          onReplyToDiscussion={async (
+          onSave={async (
             id: string,
-            patch: DiscussionPatchRequest,
+            patch: DiscussionPatchRequest | DiscussionCreateData,
           ) => {
-            await replyToDiscussion(id, patch);
+            await replyToDiscussion(id, patch as DiscussionPatchRequest);
             setFormType('quick-check');
           }}
           getDiscussion={getDiscussion}

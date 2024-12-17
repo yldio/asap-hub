@@ -4,17 +4,18 @@ import { ComponentProps, FC, useState } from 'react';
 import { UserAvatarList } from '..';
 import { Button } from '../atoms';
 import { minusRectIcon, plusRectIcon, replyIcon } from '../icons';
-import { QuickCheckReplyModal } from '../organisms';
+import { DiscussionModal } from '../organisms';
 import { rem } from '../pixels';
 
 import UserComment from './UserComment';
 
 type DiscussionProps = Pick<
-  ComponentProps<typeof QuickCheckReplyModal>,
-  'onReplyToDiscussion'
+  ComponentProps<typeof DiscussionModal>,
+  'onSave'
 > & {
   id: string;
   canReply: boolean;
+  modalTitle: string;
   getDiscussion: (id: string) => DiscussionDataObject | undefined;
 };
 
@@ -41,8 +42,9 @@ const replyAvatarsStyles = css({
 const Discussion: FC<DiscussionProps> = ({
   id,
   canReply,
+  modalTitle,
   getDiscussion,
-  onReplyToDiscussion,
+  onSave,
 }) => {
   const discussion = getDiscussion(id);
   const [replyToDiscussion, setReplyToDiscussion] = useState<boolean>(false);
@@ -57,10 +59,14 @@ const Discussion: FC<DiscussionProps> = ({
   return (
     <>
       {replyToDiscussion && (
-        <QuickCheckReplyModal
+        <DiscussionModal
+          title={modalTitle}
+          editorLabel="Please provide details"
+          ruleMessage="Reply cannot exceed 256 characters."
+          discussionType="replyText"
           onDismiss={() => setReplyToDiscussion(false)}
           discussionId={id}
-          onReplyToDiscussion={onReplyToDiscussion}
+          onSave={onSave}
         />
       )}
       <UserComment {...message} />

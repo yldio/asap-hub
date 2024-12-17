@@ -166,7 +166,7 @@ export {
   ProfileCardList,
   ProfileExpertiseAndResources,
   QuestionsSection,
-  QuickCheckReplyModal,
+  DiscussionModal,
   RecentSharedOutputs,
   RelatedEventsCard,
   RelatedResearchCard,

@@ -1,5 +1,6 @@
 import {
   ComplianceReportResponse,
+  DiscussionCreateData,
   DiscussionDataObject,
   DiscussionPatchRequest,
   ManuscriptVersion,
@@ -22,13 +23,13 @@ import {
   Loading,
   replyIcon,
   Divider,
+  DiscussionModal,
 } from '..';
 import { paddingStyles } from '../card';
 import { Discussion } from '../molecules';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
 import { getTeams, getUserHref } from './ManuscriptVersionCard';
-import StartComplianceDiscussion from './StartComplianceDiscussion';
 
 type ComplianceReportCardProps = ComplianceReportResponse & {
   createComplianceDiscussion: (
@@ -36,9 +37,9 @@ type ComplianceReportCardProps = ComplianceReportResponse & {
     message: string,
   ) => Promise<string>;
   getDiscussion: (id: string) => DiscussionDataObject | undefined;
-  onReplyToDiscussion: (
+  onSave: (
     id: string,
-    patch: DiscussionPatchRequest,
+    data: DiscussionPatchRequest | DiscussionCreateData,
   ) => Promise<void>;
   setVersion: (
     callback: (prev: ManuscriptVersion) => ManuscriptVersion,
@@ -121,7 +122,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   versionId,
   createComplianceDiscussion,
   getDiscussion,
-  onReplyToDiscussion,
+  onSave,
   setVersion,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -151,7 +152,11 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
       <div css={toastStyles}>
         <span css={toastHeaderStyles}>
           <span css={[iconStyles]}>
-            <Button linkStyle onClick={() => setExpanded(!expanded)}>
+            <Button
+              aria-label={expanded ? 'Collapse Report' : 'Expand Report'}
+              linkStyle
+              onClick={() => setExpanded(!expanded)}
+            >
               <span>{expanded ? minusRectIcon : plusRectIcon}</span>
             </Button>
           </span>
@@ -193,18 +198,22 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                     </span>
                   </Button>
                   {startDiscussion && id && (
-                    <StartComplianceDiscussion
-                      complianceReportId={id}
+                    <DiscussionModal
+                      discussionId={id}
+                      title="Start Discussion"
+                      editorLabel="Please provide reasons why the compliance report isn’t correct"
+                      discussionType="message"
+                      ruleMessage="Message cannot exceed 256 characters."
                       onDismiss={() => setStartDiscussion(false)}
                       onSave={async (
                         complianceReportId: string,
-                        message: string,
+                        data: DiscussionPatchRequest | DiscussionCreateData,
                       ) => {
                         if (!manuscriptId || !versionId) return;
                         const createdDiscussionId =
                           await createComplianceDiscussion(
                             complianceReportId,
-                            message,
+                            (data as DiscussionCreateData).message,
                           );
                         startedDiscussionIdRef.current = createdDiscussionId;
                       }}
@@ -220,11 +229,12 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                 <Suspense fallback={<Loading />}>
                   <Discussion
                     canReply
+                    modalTitle="Reply to compliance report discussion"
                     id={
                       (discussionId ?? startedDiscussionIdRef.current) as string
                     }
                     getDiscussion={getDiscussion}
-                    onReplyToDiscussion={onReplyToDiscussion}
+                    onSave={onSave}
                     key={discussionId}
                   />
                 </Suspense>
@@ -254,7 +264,7 @@ export default memo(ComplianceReportCard, (prevProps, props) => {
   const {
     createComplianceDiscussion: _createComplianceDiscussion,
     getDiscussion: _getDiscussion,
-    onReplyToDiscussion: _onReplyToDiscussion,
+    onSave: _onSave,
     setVersion: _setVersion,
     ...restPrevProps
   } = prevProps;
@@ -262,7 +272,7 @@ export default memo(ComplianceReportCard, (prevProps, props) => {
   const {
     createComplianceDiscussion: _createComplianceDiscussionNew,
     getDiscussion: _getDiscussionNew,
-    onReplyToDiscussion: _onReplyToDiscussionNew,
+    onSave: _onSaveNew,
     setVersion: _setVersionNew,
     ...restProps
   } = props;

@@ -18,7 +18,7 @@ it('displays compliance report description, url and creation details when expand
     createComplianceDiscussion: jest.fn(),
     getDiscussion: jest.fn(),
     setVersion: jest.fn(),
-    onReplyToDiscussion: jest.fn(),
+    onSave: jest.fn(),
   };
   const { getByText, queryByText, getByRole, rerender } = render(
     <ComplianceReportCard {...props} />,

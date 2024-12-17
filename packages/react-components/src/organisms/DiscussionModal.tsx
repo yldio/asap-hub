@@ -1,3 +1,4 @@
+import { DiscussionCreateData, DiscussionPatchRequest } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -17,7 +18,6 @@ const headerStyles = css(paddingStyles, {
 const controlsContainerStyles = css({
   display: 'flex',
   alignItems: 'flex-start',
-  marginBottom: `${-12 / perRem}em`,
 });
 
 const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
@@ -53,24 +53,42 @@ const dismissButtonStyles = css({
   },
 });
 
-type StartComplianceDiscussionProps = {
+type DiscussionModalProps = {
+  title: string;
+  editorLabel: string;
+  discussionType: DiscussionType;
+  ruleMessage: string;
   onDismiss: () => void;
-  complianceReportId: string;
-  onSave: (id: string, message: string) => Promise<void>;
+  discussionId: string;
+  onSave: (
+    id: string,
+    data: DiscussionPatchRequest | DiscussionCreateData,
+  ) => Promise<void>;
 };
 
-type StartComplianceDiscussionData = {
-  message: string;
-};
-const StartComplianceDiscussion: React.FC<StartComplianceDiscussionProps> = ({
+type DiscussionModalData =
+  | {
+      replyText: string;
+    }
+  | {
+      message: string;
+    };
+
+type DiscussionType = 'replyText' | 'message';
+
+const DiscussionModal: React.FC<DiscussionModalProps> = ({
+  title,
+  editorLabel,
+  discussionType,
+  ruleMessage,
+  discussionId,
   onDismiss,
-  complianceReportId,
   onSave,
 }) => {
-  const methods = useForm<StartComplianceDiscussionData>({
+  const methods = useForm<DiscussionModalData>({
     mode: 'onChange',
     defaultValues: {
-      message: '',
+      [discussionType]: '',
     },
   });
 
@@ -80,8 +98,8 @@ const StartComplianceDiscussion: React.FC<StartComplianceDiscussionProps> = ({
     handleSubmit,
   } = methods;
 
-  const onSubmit = async (data: StartComplianceDiscussionData) => {
-    await onSave(complianceReportId, data.message);
+  const onSubmit = async (data: DiscussionModalData) => {
+    await onSave(discussionId, data);
     onDismiss();
   };
 
@@ -94,22 +112,22 @@ const StartComplianceDiscussion: React.FC<StartComplianceDiscussionProps> = ({
               {crossIcon}
             </Button>
           </div>
-          <Headline3>Start Discussion</Headline3>
+          <Headline3>{title}</Headline3>
         </header>
         <div css={[paddingStyles, { paddingTop: 0 }]}>
           <Controller
-            name="message"
+            name={discussionType}
             control={control}
             rules={{
               required: true,
               maxLength: {
                 value: 256,
-                message: 'Discussion message cannot exceed 256 characters.',
+                message: ruleMessage,
               },
             }}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <LabeledTextEditor
-                title="Please provide reasons why the compliance report isn’t correct"
+                title={editorLabel}
                 subtitle="(required)"
                 onChange={onChange}
                 customValidationMessage={error?.message}
@@ -133,6 +151,7 @@ const StartComplianceDiscussion: React.FC<StartComplianceDiscussionProps> = ({
                 enabled={!isSubmitting && isValid}
                 submit
                 preventDefault={false}
+                data-testid="discussion-modal-submit"
               >
                 Send
               </Button>
@@ -144,4 +163,4 @@ const StartComplianceDiscussion: React.FC<StartComplianceDiscussionProps> = ({
   );
 };
 
-export default StartComplianceDiscussion;
+export default DiscussionModal;

@@ -6,7 +6,7 @@ import {
 import {
   ComplianceReportPostRequest,
   ComplianceReportResponse,
-  DiscussionPatchRequest,
+  DiscussionRequest,
   DiscussionResponse,
   ListLabsResponse,
   ListTeamResponse,
@@ -317,7 +317,7 @@ export const createComplianceReport = async (
 
 export const updateDiscussion = async (
   discussionId: string,
-  discussion: DiscussionPatchRequest,
+  discussion: DiscussionRequest,
   authorization: string,
 ): Promise<DiscussionResponse> => {
   const resp = await fetch(`${API_BASE_URL}/discussions/${discussionId}`, {

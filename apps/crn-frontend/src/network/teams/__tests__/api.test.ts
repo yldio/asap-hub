@@ -559,7 +559,7 @@ describe('Discussion', () => {
 
   describe('updateDiscussion', () => {
     const patch = {
-      replyText: 'test reply',
+      text: 'test reply',
     };
     it('makes an authorized PATCH request for the discussion id', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

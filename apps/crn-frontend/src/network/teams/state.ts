@@ -9,7 +9,7 @@ import {
   ManuscriptFileType,
   ComplianceReportPostRequest,
   ManuscriptPutRequest,
-  DiscussionPatchRequest,
+  DiscussionRequest,
   DiscussionResponse,
   ListPartialManuscriptResponse,
   ManuscriptVersion,
@@ -322,7 +322,7 @@ export const useReplyToDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);
   const setDiscussion = useSetDiscussion();
 
-  return async (id: string, patch: DiscussionPatchRequest) => {
+  return async (id: string, patch: DiscussionRequest) => {
     const discussion = await updateDiscussion(id, patch, authorization);
     setDiscussion(discussion);
   };

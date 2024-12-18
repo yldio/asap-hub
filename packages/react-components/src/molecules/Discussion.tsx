@@ -63,7 +63,6 @@ const Discussion: FC<DiscussionProps> = ({
           title={modalTitle}
           editorLabel="Please provide details"
           ruleMessage="Reply cannot exceed 256 characters."
-          discussionType="replyText"
           onDismiss={() => setReplyToDiscussion(false)}
           discussionId={id}
           onSave={onSave}

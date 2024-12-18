@@ -1,8 +1,7 @@
 import {
   ComplianceReportResponse,
-  DiscussionCreateData,
+  DiscussionRequest,
   DiscussionDataObject,
-  DiscussionPatchRequest,
   ManuscriptVersion,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
@@ -37,10 +36,7 @@ type ComplianceReportCardProps = ComplianceReportResponse & {
     message: string,
   ) => Promise<string>;
   getDiscussion: (id: string) => DiscussionDataObject | undefined;
-  onSave: (
-    id: string,
-    data: DiscussionPatchRequest | DiscussionCreateData,
-  ) => Promise<void>;
+  onSave: (id: string, data: DiscussionRequest) => Promise<void>;
   setVersion: (
     callback: (prev: ManuscriptVersion) => ManuscriptVersion,
   ) => void;
@@ -202,18 +198,17 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                       discussionId={id}
                       title="Start Discussion"
                       editorLabel="Please provide reasons why the compliance report isn’t correct"
-                      discussionType="message"
                       ruleMessage="Message cannot exceed 256 characters."
                       onDismiss={() => setStartDiscussion(false)}
                       onSave={async (
                         complianceReportId: string,
-                        data: DiscussionPatchRequest | DiscussionCreateData,
+                        data: DiscussionRequest,
                       ) => {
                         if (!manuscriptId || !versionId) return;
                         const createdDiscussionId =
                           await createComplianceDiscussion(
                             complianceReportId,
-                            (data as DiscussionCreateData).message,
+                            data.text,
                           );
                         startedDiscussionIdRef.current = createdDiscussionId;
                       }}

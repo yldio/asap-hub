@@ -14,7 +14,6 @@ const discussionId = 'discussion-id';
 const defaultProps: ComponentProps<typeof DiscussionModal> = {
   title: 'Reply to quick check',
   editorLabel: 'Reply',
-  discussionType: 'replyText',
   ruleMessage: 'Reply cannot exceed 256 characters.',
   onDismiss: jest.fn(),
   discussionId,
@@ -45,7 +44,7 @@ it('data is sent on form submission', async () => {
   userEvent.click(shareButton);
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith(discussionId, {
-      replyText: 'test reply',
+      text: 'test reply',
     });
   });
 });

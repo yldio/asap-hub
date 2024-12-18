@@ -55,6 +55,8 @@ it('does not display Collaboration Tools section if user is not a team member', 
   ).not.toBeInTheDocument();
 });
 
+jest.setTimeout(30000);
+
 describe('compliance section', () => {
   beforeAll(() => {
     enable('DISPLAY_MANUSCRIPTS');
@@ -403,7 +405,6 @@ describe('compliance section', () => {
 
   it('opens modal to create new discussion on compliance report', async () => {
     jest.spyOn(console, 'error').mockImplementation();
-    jest.setTimeout(30000);
     const mockCreateComplianceDiscussion = jest
       .fn()
       .mockResolvedValue('new-discussion-id');

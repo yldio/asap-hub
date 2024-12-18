@@ -90,7 +90,7 @@ describe('/discussions/ route', () => {
       const response = await supertest(app)
         .patch(`/discussions/${discussionId}`)
         .send({
-          replyText: 'response',
+          text: 'response',
           additionalField: 'some-data',
         });
 
@@ -103,7 +103,7 @@ describe('/discussions/ route', () => {
       const response = await supertest(app)
         .patch(`/discussions/${discussionId}`)
         .send({
-          replyText: 'response',
+          text: 'response',
         });
 
       expect(response.status).toBe(404);
@@ -118,7 +118,7 @@ describe('/discussions/ route', () => {
       const response = await supertest(app)
         .patch(`/discussions/${discussionId}`)
         .send({
-          replyText: 'response',
+          text: 'response',
         });
 
       expect(response.status).toEqual(403);
@@ -130,7 +130,7 @@ describe('/discussions/ route', () => {
       const response = await supertest(app)
         .patch(`/discussions/${discussionId}`)
         .send({
-          replyText: 'A good reply',
+          text: 'A good reply',
         });
 
       expect(response.body).toEqual(discussionResponse);
@@ -138,12 +138,12 @@ describe('/discussions/ route', () => {
 
     test('Should call the controller with the right parameters', async () => {
       const discussionId = 'discussion-id-1';
-      const replyText = 'test reply';
+      const text = 'test reply';
 
-      const reply = { text: replyText, userId: 'user-id-0' };
+      const reply = { text, userId: 'user-id-0' };
 
       await supertest(app).patch(`/discussions/${discussionId}`).send({
-        replyText,
+        text,
       });
 
       expect(discussionControllerMock.update).toBeCalledWith(
@@ -158,7 +158,7 @@ describe('/discussions/ route', () => {
       const response = await supertest(app)
         .patch(`/discussions/${discussionId}`)
         .send({
-          replyText: 'x'.repeat(257),
+          text: 'x'.repeat(257),
         });
 
       expect(response.status).toBe(400);

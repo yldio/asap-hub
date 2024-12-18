@@ -35,12 +35,8 @@ export type DiscussionUpdateDataObject = {
   reply: MessageCreateDataObject;
 };
 
-export type DiscussionPatchRequest = {
-  replyText: string;
-};
-
-export type DiscussionCreateData = {
-  message: string;
+export type DiscussionRequest = {
+  text: string;
 };
 
 export type DiscussionCreateRequest = {

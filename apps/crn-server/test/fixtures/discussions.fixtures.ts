@@ -18,7 +18,7 @@ export const getDiscussionDataObject = (): DiscussionDataObject => ({
   replies: [getMessage('test reply')],
 });
 
-export const getDiscussionCreateDataObject = (): MessageCreateDataObject => ({
+export const getDiscussionRequestObject = (): MessageCreateDataObject => ({
   text: 'test message',
   userId: 'user-id-0',
 });

@@ -1,4 +1,4 @@
-import { DiscussionCreateData, DiscussionPatchRequest } from '@asap-hub/model';
+import { DiscussionRequest } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -56,30 +56,19 @@ const dismissButtonStyles = css({
 type DiscussionModalProps = {
   title: string;
   editorLabel: string;
-  discussionType: DiscussionType;
   ruleMessage: string;
   onDismiss: () => void;
   discussionId: string;
-  onSave: (
-    id: string,
-    data: DiscussionPatchRequest | DiscussionCreateData,
-  ) => Promise<void>;
+  onSave: (id: string, data: DiscussionRequest) => Promise<void>;
 };
 
-type DiscussionModalData =
-  | {
-      replyText: string;
-    }
-  | {
-      message: string;
-    };
-
-type DiscussionType = 'replyText' | 'message';
+type DiscussionModalData = {
+  text: string;
+};
 
 const DiscussionModal: React.FC<DiscussionModalProps> = ({
   title,
   editorLabel,
-  discussionType,
   ruleMessage,
   discussionId,
   onDismiss,
@@ -88,7 +77,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
   const methods = useForm<DiscussionModalData>({
     mode: 'onChange',
     defaultValues: {
-      [discussionType]: '',
+      text: '',
     },
   });
 
@@ -116,7 +105,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
         </header>
         <div css={[paddingStyles, { paddingTop: 0 }]}>
           <Controller
-            name={discussionType}
+            name="text"
             control={control}
             rules={{
               required: true,

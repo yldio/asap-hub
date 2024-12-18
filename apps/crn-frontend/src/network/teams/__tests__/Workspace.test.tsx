@@ -515,7 +515,7 @@ describe('manuscript quick check discussion', () => {
 
     expect(mockUpdateDiscussion).toHaveBeenLastCalledWith(
       acknowledgedGrantNumberDiscussion.id,
-      { replyText: 'new reply' },
+      { text: 'new reply' },
       expect.anything(),
     );
   });

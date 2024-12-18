@@ -10,7 +10,7 @@ import {
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlDiscussion,
-  getDiscussionCreateDataObject,
+  getDiscussionRequestObject,
   getDiscussionDataObject,
 } from '../../fixtures/discussions.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
@@ -35,7 +35,7 @@ describe('Discussions Contentful Data Provider', () => {
     test('can create a discussion', async () => {
       const discussionId = 'discussion-id-1';
       const messageId = 'message-id-1';
-      const discussionCreateDataObject = getDiscussionCreateDataObject();
+      const DiscussionRequestObject = getDiscussionRequestObject();
 
       const publish = jest.fn();
 
@@ -53,7 +53,7 @@ describe('Discussions Contentful Data Provider', () => {
         } as unknown as Entry);
 
       const result = await discussionDataProviderMock.create({
-        ...discussionCreateDataObject,
+        ...DiscussionRequestObject,
       });
 
       expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
@@ -64,14 +64,14 @@ describe('Discussions Contentful Data Provider', () => {
             createdBy: {
               'en-US': {
                 sys: {
-                  id: discussionCreateDataObject.userId,
+                  id: DiscussionRequestObject.userId,
                   linkType: 'Entry',
                   type: 'Link',
                 },
               },
             },
             text: {
-              'en-US': discussionCreateDataObject.text,
+              'en-US': DiscussionRequestObject.text,
             },
           },
         },
@@ -103,7 +103,7 @@ describe('Discussions Contentful Data Provider', () => {
         .fn()
         .mockImplementation(() => Promise.resolve({ publish: jest.fn() }));
 
-      const discussionCreateDataObject = {
+      const DiscussionRequestObject = {
         text: 'Test discussion message',
         userId: 'user-id-1',
         complianceReportId,
@@ -153,7 +153,7 @@ describe('Discussions Contentful Data Provider', () => {
         } as unknown as Entry);
 
       const result = await discussionDataProviderMock.create(
-        discussionCreateDataObject,
+        DiscussionRequestObject,
       );
 
       // Assert `createEntry` calls for `messages` and `discussions`
@@ -165,14 +165,14 @@ describe('Discussions Contentful Data Provider', () => {
             createdBy: {
               'en-US': {
                 sys: {
-                  id: discussionCreateDataObject.userId,
+                  id: DiscussionRequestObject.userId,
                   linkType: 'Entry',
                   type: 'Link',
                 },
               },
             },
             text: {
-              'en-US': discussionCreateDataObject.text,
+              'en-US': DiscussionRequestObject.text,
             },
           },
         },

@@ -128,6 +128,14 @@ describe('Manuscripts Contentful Data Provider', () => {
               type: 'Link',
             },
           },
+          {
+            sys: {
+              id: 'team-2',
+
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
         ],
       },
       createdBy: {
@@ -474,6 +482,13 @@ describe('Manuscripts Contentful Data Provider', () => {
           {
             sys: {
               id: 'team-1',
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+          {
+            sys: {
+              id: 'team-2',
               linkType: 'Entry',
               type: 'Link',
             },
@@ -911,6 +926,28 @@ describe('Manuscripts Contentful Data Provider', () => {
         },
         {
           op: 'add',
+          path: '/fields/teams',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'team-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'team-2',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+        {
+          op: 'add',
           path: '/fields/status',
           value: {
             'en-US': 'Manuscript Resubmitted',
@@ -954,7 +991,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       ]);
     });
 
-    test('can update the manuscript version content and title', async () => {
+    test('can update the manuscript version content, title and teams', async () => {
       const manuscriptId = 'manuscript-id-1';
       const versionId = 'version-id-1';
       const manuscriptEntry = {
@@ -1005,7 +1042,7 @@ describe('Manuscripts Contentful Data Provider', () => {
             {
               lifecycle: 'Preprint',
               type: 'Original Research',
-              teams: ['team-1'],
+              teams: ['team-1', 'team-2'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
               firstAuthors: ['author-1'],
@@ -1037,6 +1074,28 @@ describe('Manuscripts Contentful Data Provider', () => {
           path: '/fields/title',
           value: { 'en-US': 'New Title' },
         },
+        {
+          op: 'add',
+          path: '/fields/teams',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'team-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'team-2',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
       ]);
 
       expect(patch).toHaveBeenNthCalledWith(
@@ -1064,6 +1123,13 @@ describe('Manuscripts Contentful Data Provider', () => {
                 {
                   sys: {
                     id: 'team-1',
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+                {
+                  sys: {
+                    id: 'team-2',
                     linkType: 'Entry',
                     type: 'Link',
                   },
@@ -1182,6 +1248,90 @@ describe('Manuscripts Contentful Data Provider', () => {
       );
     });
 
+    test('fetches the manuscript last version so it can be updated', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      const oldVersionId = 'old-version-id';
+      const newVersionId = 'new-version-id';
+      const manuscriptEntry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          versions: {
+            'en-US': [
+              { sys: { id: oldVersionId } },
+              { sys: { id: newVersionId } },
+            ],
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {},
+        patch,
+        publish,
+      } as unknown as Entry;
+
+      const assetMock = {
+        sys: { id: manuscriptId },
+        publish: jest.fn(),
+      } as unknown as Asset;
+
+      when(environmentMock.getEntry)
+        .calledWith(manuscriptId)
+        .mockResolvedValue(manuscriptEntry);
+
+      when(environmentMock.getEntry)
+        .calledWith(newVersionId)
+        .mockResolvedValue(entry);
+
+      environmentMock.getAsset.mockResolvedValue(assetMock);
+
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        {
+          title: 'New Title',
+          versions: [
+            {
+              lifecycle: 'Preprint',
+              type: 'Original Research',
+              teams: ['team-1', 'team-2'],
+              manuscriptFile: getManuscriptFileResponse(),
+              description: 'edited description',
+              firstAuthors: ['author-1'],
+              correspondingAuthor: ['author-2'],
+              additionalAuthors: ['external-1'],
+              keyResourceTable: {
+                filename: 'manuscript.csv',
+                url: 'https://example.com/manuscript.csv',
+                id: 'file-table-id',
+              },
+              additionalFiles: [
+                {
+                  filename: 'manuscript.csv',
+                  url: 'https://example.com/manuscript.csv',
+                  id: 'file-additional-id',
+                },
+              ],
+            },
+          ],
+        },
+        'user-id-1',
+      );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(manuscriptId);
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(newVersionId);
+      expect(environmentMock.getEntry).not.toHaveBeenCalledWith(oldVersionId);
+    });
+
     test('can update the manuscript when keyResourceTable and additionalFiles are not passed', async () => {
       const manuscriptId = 'manuscript-id-1';
       const versionId = 'version-id-1';
@@ -1252,6 +1402,21 @@ describe('Manuscripts Contentful Data Provider', () => {
           op: 'add',
           path: '/fields/title',
           value: { 'en-US': 'New Title' },
+        },
+        {
+          op: 'add',
+          path: '/fields/teams',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'team-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
         },
       ]);
 

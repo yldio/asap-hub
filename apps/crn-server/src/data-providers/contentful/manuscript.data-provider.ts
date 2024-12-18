@@ -206,7 +206,7 @@ export class ManuscriptContentfulDataProvider
       fields: addLocaleToFields({
         ...plainFields,
         count: currentCount + 1,
-        teams: getLinkEntities([teamId]),
+        teams: getLinkEntities(version.teams),
         versions: getLinkEntities([manuscriptVersionId]),
         status: 'Waiting for Report',
       }),
@@ -246,6 +246,7 @@ export class ManuscriptContentfulDataProvider
     await patchAndPublish(manuscriptEntry, {
       versions: [...previousVersions, newVersion],
       title,
+      teams: getLinkEntities(version.teams),
       status: 'Manuscript Resubmitted',
     });
   }
@@ -273,14 +274,17 @@ export class ManuscriptContentfulDataProvider
         userId,
       );
 
-      const versionId = manuscriptEntry.fields.versions['en-US'][0].sys.id;
+      const versions = manuscriptEntry.fields.versions['en-US'];
+      const lastVersion = versions[versions.length - 1];
+      const lastVersionId = lastVersion.sys.id;
 
-      const versionEntry = await environment.getEntry(versionId);
+      const lastVersionEntry = await environment.getEntry(lastVersionId);
       await patchAndPublish(manuscriptEntry, {
         title: manuscriptData.title,
+        teams: getLinkEntities(version.teams),
       });
 
-      await patchAndPublish(versionEntry, {
+      await patchAndPublish(lastVersionEntry, {
         ...version,
         teams: getLinkEntities(version.teams),
         labs: version?.labs?.length ? getLinkEntities(version.labs) : [],

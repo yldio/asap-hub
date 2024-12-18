@@ -22,9 +22,7 @@ export type DiscussionDataObject = {
   replies?: Message[];
 };
 
-enum DiscussionType {
-  ComplianceReport = 'compliance-report',
-}
+export type DiscussionType = 'compliance-report' | '';
 
 export type MessageCreateDataObject = {
   text: string;

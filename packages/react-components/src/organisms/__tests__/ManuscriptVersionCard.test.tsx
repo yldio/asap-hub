@@ -28,9 +28,9 @@ const setScrollHeightMock = (height: number) => {
   jest.spyOn(React, 'useRef').mockReturnValue(ref);
 };
 
-const useVersionById = jest.fn();
-
-useVersionById.mockImplementation(() => [undefined, jest.fn()]);
+const useVersionById = jest
+  .fn()
+  .mockImplementation(() => [undefined, jest.fn()]);
 
 afterAll(jest.clearAllMocks);
 
@@ -500,13 +500,14 @@ it('renders additional files details and download link when provided', () => {
 });
 
 it('displays compliance report section when present', () => {
-  const { getByLabelText, queryByRole, rerender, getByRole } = render(
+  const { getByLabelText, queryByRole, rerender, getByRole, unmount } = render(
     <ManuscriptVersionCard {...props} useVersionById={useVersionById} />,
   );
   userEvent.click(getByLabelText('Expand Version'));
   expect(
     queryByRole('heading', { name: /Compliance Report/i }),
   ).not.toBeInTheDocument();
+  unmount();
 
   rerender(
     <ManuscriptVersionCard

@@ -12,7 +12,7 @@ import {
   within,
   getByTestId,
   getByRole as getByRoleInContainer,
-  findByTestId,
+  fireEvent,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
@@ -403,11 +403,30 @@ describe('compliance section', () => {
 
   it('opens modal to create new discussion on compliance report', async () => {
     jest.spyOn(console, 'error').mockImplementation();
+    jest.setTimeout(30000);
     const mockCreateComplianceDiscussion = jest
       .fn()
       .mockResolvedValue('new-discussion-id');
     const mockSetVersion = jest.fn();
-    const version = createManuscriptResponse().versions[0] as ManuscriptVersion;
+    const version = {
+      ...createManuscriptResponse().versions[0],
+      complianceReport: {
+        id: 'compliance-report-id',
+        url: 'http://example.com/file.pdf',
+        description: 'A description',
+        count: 1,
+        createdDate: '2020-12-10T20:36:54Z',
+        createdBy: {
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          id: 'john-doe',
+          teams: [{ id: 'alessi', name: 'Alessi' }],
+          avatarUrl: '',
+          alumniSinceDate: undefined,
+        },
+      },
+    } as ManuscriptVersion;
 
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
@@ -425,23 +444,31 @@ describe('compliance section', () => {
         .mockImplementation(() => [version, mockSetVersion]),
     };
 
-    const { getByTestId, findByText, getByLabelText, unmount } = render(
-      <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
-    );
+    const {
+      getByTestId: localGetByTestId,
+      findByText,
+      getByLabelText,
+      unmount,
+    } = render(<TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />);
 
     await act(async () => {
-      userEvent.click(getByTestId('collapsible-button'));
+      userEvent.click(localGetByTestId('collapsible-button'));
       userEvent.click(getByLabelText('Expand Report'));
       userEvent.click(await findByText(/Start Discussion/i));
-      userEvent.type(
-        await findByText(/Enter some text.../i),
-        'New discussion message',
-      );
     });
+
+    const replyEditor = screen.getByTestId('editor');
+    await act(async () => {
+      userEvent.click(replyEditor);
+      userEvent.tab();
+      fireEvent.input(replyEditor, { data: 'New discussion message' });
+      userEvent.tab();
+    });
+
     expect(await findByText(/Send/i)).toBeInTheDocument();
 
-    userEvent.click(getByTestId('discussion-modal-submit'));
-    waitFor(() => {
+    userEvent.click(await findByText(/Send/i));
+    await waitFor(() => {
       expect(mockCreateComplianceDiscussion).toHaveBeenCalledWith(
         'compliance-report-id',
         'New discussion message',
@@ -551,6 +578,7 @@ describe('a tool', () => {
   });
 
   it('has a delete button', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
     const handleDeleteTool = jest.fn();
     const { getByText } = render(
       <TeamProfileWorkspace

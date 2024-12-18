@@ -1,4 +1,5 @@
 import { Entry, Environment } from '@asap-hub/contentful';
+import { DiscussionType } from '@asap-hub/model';
 
 import { when } from 'jest-when';
 import {
@@ -89,6 +90,131 @@ describe('Discussions Contentful Data Provider', () => {
         },
       });
       expect(publish).toHaveBeenCalled();
+      expect(result).toEqual(discussionId);
+    });
+
+    test('creates a discussion and links it to a compliance report when complianceReportId is provided', async () => {
+      const discussionId = 'discussion-id-1';
+      const messageId = 'message-id-1';
+      const complianceReportId = 'compliance-report-id-1';
+
+      const publish = jest.fn().mockImplementation(() => Promise.resolve());
+      const patch = jest
+        .fn()
+        .mockImplementation(() => Promise.resolve({ publish: jest.fn() }));
+
+      const discussionCreateDataObject = {
+        text: 'Test discussion message',
+        userId: 'user-id-1',
+        complianceReportId,
+        type: 'compliance-report' as DiscussionType,
+      };
+
+      // Mock `createEntry` for messages and discussions
+      when(environmentMock.createEntry)
+        .calledWith('messages', expect.anything())
+        .mockResolvedValue({
+          sys: { id: messageId },
+          publish,
+          patch,
+        } as unknown as Entry);
+
+      when(environmentMock.createEntry)
+        .calledWith('discussions', expect.anything())
+        .mockResolvedValue({
+          sys: { id: discussionId },
+          publish,
+          patch,
+        } as unknown as Entry);
+
+      // Mock `getEntry` for compliance reports
+      when(environmentMock.getEntry)
+        .calledWith(complianceReportId)
+        .mockResolvedValue({
+          sys: {
+            id: complianceReportId,
+            type: 'Entry',
+            locale: 'en-US',
+            version: 1,
+          },
+          fields: {
+            discussion: {
+              'en-US': {
+                sys: {
+                  id: discussionId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            },
+          },
+          patch,
+          publish,
+        } as unknown as Entry);
+
+      const result = await discussionDataProviderMock.create(
+        discussionCreateDataObject,
+      );
+
+      // Assert `createEntry` calls for `messages` and `discussions`
+      expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+        1,
+        'messages',
+        {
+          fields: {
+            createdBy: {
+              'en-US': {
+                sys: {
+                  id: discussionCreateDataObject.userId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            },
+            text: {
+              'en-US': discussionCreateDataObject.text,
+            },
+          },
+        },
+      );
+
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('discussions', {
+        fields: {
+          message: {
+            'en-US': {
+              sys: {
+                id: messageId,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          },
+        },
+      });
+
+      // Assert `getEntry` was called for compliance report
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(complianceReportId);
+
+      // Assert `patch` and `publish` calls
+      expect(patch).toHaveBeenCalledWith([
+        {
+          op: 'replace',
+          path: '/fields/discussion',
+          value: {
+            'en-US': {
+              sys: {
+                id: discussionId,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          },
+        },
+      ]);
+
+      expect(publish).toHaveBeenCalledTimes(2); // Once for message, once for discussion
+
+      // Assert the result is the discussion ID
       expect(result).toEqual(discussionId);
     });
   });

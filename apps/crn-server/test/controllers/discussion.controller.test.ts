@@ -1,4 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
+import { DiscussionType } from '@asap-hub/model';
 import DiscussionController from '../../src/controllers/discussion.controller';
 import { DiscussionDataProvider } from '../../src/data-providers/types';
 import { getDiscussionDataObject } from '../fixtures/discussions.fixtures';
@@ -64,6 +65,33 @@ describe('Discussion Controller', () => {
           reply,
         },
       );
+    });
+  });
+
+  describe('Create method', () => {
+    const message = {
+      text: 'test message',
+      userId: 'user-id-0',
+      type: 'compliance-report' as DiscussionType,
+      complianceReportId: 'compliance-report-id',
+    };
+
+    test('Should return the created discussion', async () => {
+      const mockResponse = getDiscussionDataObject();
+      discussionDataProviderMock.fetchById.mockResolvedValue(mockResponse);
+      const result = await discussionController.create(message);
+
+      expect(result).toEqual(mockResponse);
+    });
+
+    test('Should call the data provider with input data', async () => {
+      discussionDataProviderMock.fetchById.mockResolvedValue(
+        getDiscussionDataObject(),
+      );
+
+      await discussionController.create(message);
+
+      expect(discussionDataProviderMock.create).toHaveBeenCalledWith(message);
     });
   });
 });

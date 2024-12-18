@@ -56,8 +56,8 @@ describe('getAlgoliaEvents', () => {
   });
   const options: EventListOptions = {
     filters: new Set<string>(),
-    after: new Date('1-1-2020').toDateString(),
-    before: undefined,
+    after: undefined,
+    before: new Date('1-1-2020').toDateString(),
     pageSize: PAGE_SIZE,
     currentPage: 0,
     searchQuery: '',
@@ -75,6 +75,7 @@ describe('getAlgoliaEvents', () => {
       ['event'],
       'test',
       expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+      true,
     );
   });
 
@@ -89,6 +90,7 @@ describe('getAlgoliaEvents', () => {
       ['event'],
       '',
       expect.objectContaining({ hitsPerPage: 20, page: 1 }),
+      true,
     );
   });
 
@@ -104,8 +106,9 @@ describe('getAlgoliaEvents', () => {
       ['event'],
       '',
       expect.objectContaining({
-        filters: 'endDateTimestamp > 1577836800 AND eventTypes:"GP2 Hub"',
+        filters: 'endDateTimestamp < 1577836800 AND eventTypes:"GP2 Hub"',
       }),
+      true,
     );
   });
 
@@ -122,8 +125,9 @@ describe('getAlgoliaEvents', () => {
       '',
       expect.objectContaining({
         filters:
-          'endDateTimestamp > 1577836800 AND eventTypes:"GP2 Hub" OR eventTypes:"Projects"',
+          'endDateTimestamp < 1577836800 AND eventTypes:"GP2 Hub" OR eventTypes:"Projects"',
       }),
+      true,
     );
   });
 

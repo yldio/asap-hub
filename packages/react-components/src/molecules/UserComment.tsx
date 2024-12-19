@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { FC } from 'react';
 
 import { UserCommentHeader } from '.';
-import { Markdown } from '../atoms';
+import { TextEditor } from '../atoms';
 import { rem } from '../pixels';
 
 type UserCommentProps = Message;
@@ -41,7 +41,12 @@ const UserComment: FC<UserCommentProps> = ({
       date={createdDate}
     />
     <div css={replyStyles}>
-      <Markdown value={text} />
+      <TextEditor
+        id={`discussion-${createdBy.id}-${createdDate}`}
+        value={text}
+        enabled={false}
+        isMarkdown
+      />
     </div>
   </div>
 );

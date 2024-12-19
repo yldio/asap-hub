@@ -461,12 +461,14 @@ describe('manuscript quick check discussion', () => {
 
     userEvent.click(getByTestId('discussion-collapsible-button'));
 
-    expect(getByText(quickCheckResponse)).toBeVisible();
-    expect(getByText(reply.text)).toBeVisible();
-    expect(mockGetDiscussion).toHaveBeenLastCalledWith(
-      acknowledgedGrantNumberDiscussion.id,
-      expect.anything(),
-    );
+    await waitFor(() => {
+      expect(getByText(quickCheckResponse)).toBeVisible();
+      expect(getByText(reply.text)).toBeVisible();
+      expect(mockGetDiscussion).toHaveBeenLastCalledWith(
+        acknowledgedGrantNumberDiscussion.id,
+        expect.anything(),
+      );
+    });
   });
 
   it('replies to a quick check discussion', async () => {
@@ -510,8 +512,10 @@ describe('manuscript quick check discussion', () => {
     userEvent.click(getByTestId('discussion-collapsible-button'));
 
     const replyButton = getByRole('button', { name: /Reply/i });
-    userEvent.click(replyButton);
 
+    act(() => {
+      userEvent.click(replyButton);
+    });
     const replyEditor = getByTestId('editor');
     userEvent.click(replyEditor);
     userEvent.tab();

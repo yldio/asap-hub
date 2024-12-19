@@ -3,7 +3,7 @@ import {
   createDiscussionResponse,
   createMessage,
 } from '@asap-hub/fixtures';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import Discussion from '../Discussion';
@@ -31,36 +31,42 @@ it('handles case when discussion is not found', () => {
   expect(queryByText(/Reply/i)).not.toBeInTheDocument();
 });
 
-it('should not show reply button when canReply is false', () => {
+it('should not show reply button when canReply is false', async () => {
   const getDiscussion = jest
     .fn()
     .mockReturnValueOnce(createDiscussionResponse());
   const { queryByText } = render(
     <Discussion {...props} canReply={false} getDiscussion={getDiscussion} />,
   );
-
-  expect(queryByText(/Reply/i)).not.toBeInTheDocument();
+  await waitFor(() => {
+    expect(queryByText(/Reply/i)).not.toBeInTheDocument();
+  });
 });
 
-it('displays discussion message', () => {
+it('displays discussion message', async () => {
   const message = 'test message';
   const discussion = createDiscussionResponse(message);
   const getDiscussion = jest.fn().mockReturnValueOnce(discussion);
   const { getByText } = render(
     <Discussion {...props} getDiscussion={getDiscussion} />,
   );
-
-  expect(getByText(message)).toBeVisible();
+  await waitFor(() => {
+    expect(getByText(message)).toBeVisible();
+  });
 });
 
-it('displays reply modal when user clicks reply button', () => {
+it('displays reply modal when user clicks reply button', async () => {
   const { queryByRole, getByRole } = render(<Discussion {...props} />);
 
-  expect(queryByRole('button', { name: /Send/i })).not.toBeInTheDocument();
+  await waitFor(() => {
+    expect(queryByRole('button', { name: /Send/i })).not.toBeInTheDocument();
+  });
 
   userEvent.click(getByRole('button', { name: /Reply Icon/i }));
 
-  expect(getByRole('button', { name: /Send/i })).toBeVisible();
+  await waitFor(() => {
+    expect(getByRole('button', { name: /Send/i })).toBeVisible();
+  });
 });
 
 it('removes reply modal when user clicks cancel button', () => {
@@ -94,45 +100,54 @@ describe('when there are replies', () => {
     const { getByText, getByTestId, queryByText } = render(
       <Discussion {...propsWithReplies} />,
     );
-
-    expect(queryByText(/test reply/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText(/test reply/i)).not.toBeInTheDocument();
+    });
 
     userEvent.click(getByTestId('discussion-collapsible-button'));
-    expect(getByText(/test reply/i)).toBeVisible();
+
+    await waitFor(() => {
+      expect(getByText(/test reply/i)).toBeVisible();
+    });
   });
 
-  it('displays number of replies', () => {
+  it('displays number of replies', async () => {
     const { getByText } = render(<Discussion {...propsWithReplies} />);
-
-    expect(getByText(/1 reply/i)).toBeVisible();
+    await waitFor(() => {
+      expect(getByText(/1 reply/i)).toBeVisible();
+    });
   });
 
-  it('displays count of extra replies when there are more than 5 replies', () => {
+  it('displays count of extra replies when there are more than 5 replies', async () => {
     const replies = createDiscussionReplies(6);
     const discussion = createDiscussionResponse(message, replies);
     getDiscussion.mockReturnValue(discussion);
     const { getByLabelText, getByText } = render(
       <Discussion {...propsWithReplies} />,
     );
+    await waitFor(() => {
+      expect(getByText(/6 replies/i)).toBeVisible();
 
-    expect(getByText(/6 replies/i)).toBeVisible();
-
-    expect(getByLabelText(/\+1/)).toBeVisible();
+      expect(getByLabelText(/\+1/)).toBeVisible();
+    });
   });
 
-  it('clicking on number of replies expands replies list', () => {
+  it('clicking on number of replies expands replies list', async () => {
     const { getByText, queryByText } = render(
       <Discussion {...propsWithReplies} />,
     );
-
-    expect(queryByText(/test reply/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText(/test reply/i)).not.toBeInTheDocument();
+    });
 
     userEvent.click(getByText(/1 reply/i));
 
-    expect(getByText(/test reply/i)).toBeVisible();
+    await waitFor(() => {
+      expect(getByText(/test reply/i)).toBeVisible();
+    });
   });
 
-  it('clicking on count of extra replies expands replies list', () => {
+  it('clicking on count of extra replies expands replies list', async () => {
     const replies = createDiscussionReplies(6);
     const discussion = createDiscussionResponse(message, replies);
     getDiscussion.mockReturnValue(discussion);
@@ -140,9 +155,13 @@ describe('when there are replies', () => {
     const { getByLabelText, getByText, queryByText } = render(
       <Discussion {...propsWithReplies} />,
     );
-
-    expect(queryByText(/test reply 1/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText(/test reply 1/i)).not.toBeInTheDocument();
+    });
     userEvent.click(getByLabelText(/\+1/));
-    expect(getByText(/test reply 1/i)).toBeVisible();
+
+    await waitFor(() => {
+      expect(getByText(/test reply 1/i)).toBeVisible();
+    });
   });
 });

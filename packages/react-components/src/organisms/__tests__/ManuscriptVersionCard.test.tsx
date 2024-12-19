@@ -4,7 +4,7 @@ import {
   getComplianceReportDataObject,
 } from '@asap-hub/fixtures';
 import { ManuscriptLifecycle, ManuscriptVersion } from '@asap-hub/model';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React, { ComponentProps } from 'react';
@@ -51,7 +51,7 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   useVersionById: jest.fn(),
 };
 
-it('displays quick checks when present', () => {
+it('displays quick checks when present', async () => {
   const asapAffiliationIncludedDetails =
     "Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations.";
   const commenter = {
@@ -116,11 +116,13 @@ it('displays quick checks when present', () => {
     );
   userEvent.click(getByLabelText('Expand Version'));
 
-  expect(
-    queryByText(
-      /Included ASAP as an affiliation within the author list for all ASAP-affiliated authors/i,
-    ),
-  ).not.toBeInTheDocument();
+  await waitFor(() => {
+    expect(
+      queryByText(
+        /Included ASAP as an affiliation within the author list for all ASAP-affiliated authors/i,
+      ),
+    ).not.toBeInTheDocument();
+  });
 
   const updatedVersion = {
     ...baseVersion,
@@ -141,39 +143,41 @@ it('displays quick checks when present', () => {
     />,
   );
 
-  expect(
-    getByText(
-      /Included ASAP as an affiliation within the author list for all ASAP-affiliated authors/i,
-    ),
-  ).toBeVisible();
-  expect(
-    getByText(
-      /Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations./i,
-    ),
-  ).toBeVisible();
+  await waitFor(() => {
+    expect(
+      getByText(
+        /Included ASAP as an affiliation within the author list for all ASAP-affiliated authors/i,
+      ),
+    ).toBeVisible();
+    expect(
+      getByText(
+        /Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations./i,
+      ),
+    ).toBeVisible();
 
-  expect(getAllByText('Arthur Author').length).toEqual(1);
-  expect(getAllByText('Edith Editor').length).toEqual(1);
-  expect(getAllByText('Connor Commenter').length).toEqual(1);
-  expect(getAllByText('Team Author').length).toEqual(1);
-  expect(getAllByText('Team Editor').length).toEqual(1);
-  expect(getAllByText('Team Commenter').length).toEqual(1);
-  expect(getAllByText('21st June 2024').length).toEqual(2);
-  expect(getAllByText('20th June 2024').length).toEqual(1);
+    expect(getAllByText('Arthur Author').length).toEqual(1);
+    expect(getAllByText('Edith Editor').length).toEqual(1);
+    expect(getAllByText('Connor Commenter').length).toEqual(1);
+    expect(getAllByText('Team Author').length).toEqual(1);
+    expect(getAllByText('Team Editor').length).toEqual(1);
+    expect(getAllByText('Team Commenter').length).toEqual(1);
+    expect(getAllByText('21st June 2024').length).toEqual(2);
+    expect(getAllByText('20th June 2024').length).toEqual(1);
 
-  expect(getAllByText('Arthur Author')[0]!.closest('a')!.href!).toContain(
-    '/network/users/author-id',
-  );
-  expect(getAllByText('Team Author')[0]!.closest('a')!.href!).toContain(
-    '/network/teams/team-author',
-  );
+    expect(getAllByText('Arthur Author')[0]!.closest('a')!.href!).toContain(
+      '/network/users/author-id',
+    );
+    expect(getAllByText('Team Author')[0]!.closest('a')!.href!).toContain(
+      '/network/teams/team-author',
+    );
 
-  expect(getAllByText('Connor Commenter')[0]!.closest('a')!.href!).toContain(
-    '/network/users/commenter-id',
-  );
-  expect(getAllByText('Team Commenter')[0]!.closest('a')!.href!).toContain(
-    '/network/teams/team-commenter',
-  );
+    expect(getAllByText('Connor Commenter')[0]!.closest('a')!.href!).toContain(
+      '/network/users/commenter-id',
+    );
+    expect(getAllByText('Team Commenter')[0]!.closest('a')!.href!).toContain(
+      '/network/teams/team-commenter',
+    );
+  });
 });
 it('displays createdBy as fallback for updatedBy when updatedBy is well defined', () => {
   const author = {
@@ -558,7 +562,7 @@ it('displays manuscript description', () => {
   expect(getByRole('button', { name: /show more/i })).toBeInTheDocument();
 });
 
-it('does not display reply button if isActiveManuscript is false', () => {
+it('does not display reply button if isActiveManuscript is false', async () => {
   const asapAffiliationIncludedDetails = 'test discussion';
   const commenter = {
     id: 'commenter-id',
@@ -599,8 +603,10 @@ it('does not display reply button if isActiveManuscript is false', () => {
   );
   userEvent.click(getByLabelText('Expand Version'));
 
-  expect(getByText(/test discussion/i)).toBeVisible();
-  expect(queryByRole('button', { name: /Reply/i })).not.toBeInTheDocument();
+  await waitFor(() => {
+    expect(getByText(/test discussion/i)).toBeVisible();
+    expect(queryByRole('button', { name: /Reply/i })).not.toBeInTheDocument();
+  });
 });
 
 describe('getLifecycleCode', () => {

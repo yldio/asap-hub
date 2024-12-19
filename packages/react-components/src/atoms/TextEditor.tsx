@@ -255,7 +255,7 @@ const TextEditor = ({
               <ContentEditable
                 id={id}
                 required={required}
-                data-testid={'editor'}
+                data-testid={isMarkdown ? 'markdown-test-id' : 'editor'}
                 css={({ colors }) =>
                   !isMarkdown
                     ? [

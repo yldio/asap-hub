@@ -248,7 +248,7 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
     versions: [
       {
         ...version,
-        teams: ['team-1'],
+        teams: ['team-1', 'team-2'],
         labs: [],
         description: 'nice description',
         firstAuthors: ['author-1'],

@@ -1,7 +1,6 @@
 import { pixels, TabLink, TabNav } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useFlags } from '@asap-hub/react-context';
 
 import { workingGroupsImage } from '../images';
 import { layoutContentStyles, mainStyles } from '../layout';
@@ -22,18 +21,13 @@ const navStyles = css({
 });
 
 const EventsPage: React.FC = ({ children }) => {
-  const { isEnabled } = useFlags();
   return (
     <article css={layoutContentStyles}>
       <PageBanner {...bannerProps} noMarginBottom>
         <div css={navStyles}>
           <TabNav>
-            {isEnabled('DISPLAY_EVENTS') && (
-              <TabLink href={gp2.events({}).upcoming({}).$}>Upcoming</TabLink>
-            )}
-            {isEnabled('DISPLAY_EVENTS') && (
-              <TabLink href={gp2.events({}).past({}).$}>Past</TabLink>
-            )}
+            <TabLink href={gp2.events({}).upcoming({}).$}>Upcoming</TabLink>
+            <TabLink href={gp2.events({}).past({}).$}>Past</TabLink>
             <TabLink href={gp2.events({}).calendar({}).$}>
               Subscribe to Calendars
             </TabLink>

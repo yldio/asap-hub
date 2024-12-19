@@ -19,7 +19,6 @@ import {
   NewsCard,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { useFlags } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
@@ -103,7 +102,6 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   recentOutputs,
   totalOutputs,
 }) => {
-  const { isEnabled } = useFlags();
   const history = useHistory();
   const latestNews = news.items[0];
   return (
@@ -191,7 +189,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           Here are some of the upcoming GP2 Hub events.
         </div>
         <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
-        {isEnabled('DISPLAY_EVENTS') && totalOfUpcomingEvents > 3 && (
+        {totalOfUpcomingEvents > 3 && (
           <p css={viewAllStyles}>
             <Button
               data-testid="view-upcoming-events"
@@ -212,7 +210,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           Explore previous events and learn about what was discussed.
         </div>
         <PastEventsDashboardCard events={pastEvents} />
-        {isEnabled('DISPLAY_EVENTS') && totalOfPastEvents > 3 && (
+        {totalOfPastEvents > 3 && (
           <p css={viewAllStyles}>
             <Button
               data-testid="view-past-events"

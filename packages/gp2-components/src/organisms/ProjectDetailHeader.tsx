@@ -14,7 +14,6 @@ import {
   TabNav,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { useFlags } from '@asap-hub/react-context';
 
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
@@ -115,7 +114,6 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   upcomingTotal,
   pastTotal,
 }) => {
-  const { isEnabled } = useFlags();
   const route = gp2Routing.projects({}).project({ projectId: id });
   const isExternalOpportunityLink = (link: string) =>
     new URL(link).origin !== window.location.origin;
@@ -198,14 +196,10 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
         <TabLink href={route.outputs({}).$}>
           Shared Outputs ({outputsTotal})
         </TabLink>
-        {isEnabled('DISPLAY_EVENTS') && (
-          <TabLink href={route.upcoming({}).$}>
-            Upcoming Events ({upcomingTotal})
-          </TabLink>
-        )}
-        {isEnabled('DISPLAY_EVENTS') && (
-          <TabLink href={route.past({}).$}>Past Events ({pastTotal})</TabLink>
-        )}
+        <TabLink href={route.upcoming({}).$}>
+          Upcoming Events ({upcomingTotal})
+        </TabLink>
+        <TabLink href={route.past({}).$}>Past Events ({pastTotal})</TabLink>
       </TabNav>
     </header>
   );

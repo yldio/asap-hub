@@ -1,4 +1,3 @@
-import { useFlags } from '@asap-hub/react-context';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
@@ -22,7 +21,6 @@ const Events: FC<Record<string, never>> = () => {
 
   const { path } = useRouteMatch();
   const [currentTime] = useState(new Date());
-  const { isEnabled } = useFlags();
 
   return (
     <Switch>
@@ -49,11 +47,7 @@ const Events: FC<Record<string, never>> = () => {
           <Event />
         </Frame>
       </Route>
-      {isEnabled('DISPLAY_EVENTS') ? (
-        <Redirect to={gp2.events({}).upcoming({}).$} />
-      ) : (
-        <Redirect to={gp2.events({}).calendar({}).$} />
-      )}
+      <Redirect to={gp2.events({}).upcoming({}).$} />
     </Switch>
   );
 };

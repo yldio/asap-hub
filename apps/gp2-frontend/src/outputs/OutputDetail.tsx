@@ -3,7 +3,6 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import {
   useCurrentUserGP2,
   useCurrentUserRoleGP2,
-  useFlags,
 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
@@ -20,7 +19,6 @@ const OutputDetail: FC = () => {
   const { outputId } = useRouteParams(gp2Routing.outputs({}).output);
   const { path } = useRouteMatch();
   const currentUser = useCurrentUserGP2();
-  const { isEnabled } = useFlags();
 
   const output = useOutputById(outputId);
 
@@ -43,11 +41,7 @@ const OutputDetail: FC = () => {
     <Switch>
       <Route exact path={path}>
         <Frame title="Output">
-          <OutputDetailPage
-            canVersion={isEnabled('VERSION_RESEARCH_OUTPUT')}
-            isAdministrator={isAdministrator}
-            {...output}
-          />
+          <OutputDetailPage isAdministrator={isAdministrator} {...output} />
         </Frame>
       </Route>
       <Route

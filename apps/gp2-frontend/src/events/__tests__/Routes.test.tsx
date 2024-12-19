@@ -1,12 +1,10 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
-import { useFlags } from '@asap-hub/react-context';
 import {
   render,
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -49,20 +47,12 @@ describe('Routes', () => {
     typeof getCalendars
   >;
   it('renders the title', async () => {
-    const {
-      result: { current },
-    } = renderHook(useFlags);
-    current.enable('DISPLAY_EVENTS');
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
     await renderRoutes();
     expect(screen.getByRole('heading', { name: 'Events' })).toBeInTheDocument();
   });
 
   it('renders the Calendar page as default when Upcoming Events is disabled', async () => {
-    const {
-      result: { current },
-    } = renderHook(useFlags);
-    current.disable('DISPLAY_EVENTS');
     mockGetCalendars.mockResolvedValue(gp2.createListCalendarResponse());
     await renderRoutes();
     expect(
@@ -71,10 +61,6 @@ describe('Routes', () => {
   });
 
   it('renders error message when the request is not a 2XX', async () => {
-    const {
-      result: { current },
-    } = renderHook(useFlags);
-    current.enable('DISPLAY_EVENTS');
     mockGetEvents.mockRejectedValueOnce(new Error('error'));
 
     await renderRoutes();

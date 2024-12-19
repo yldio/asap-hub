@@ -1,7 +1,5 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
-  | 'VERSION_RESEARCH_OUTPUT'
-  | 'DISPLAY_EVENTS'
   | 'DISPLAY_MANUSCRIPTS'
   | 'DISPLAY_COOKIES';
 
@@ -9,7 +7,6 @@ export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
-  DISPLAY_EVENTS: false,
   DISPLAY_MANUSCRIPTS: false,
   DISPLAY_COOKIES: false,
 };

@@ -55,7 +55,6 @@ describe('team selectors', () => {
 
     expect(result.current?.displayName).toBe('Team One');
     expect(result.current?.tags.length).toBe(1);
-    expect(result.current?.tags.length).toBe(1);
   });
 
   test('resets team state when newValue is undefined', () => {

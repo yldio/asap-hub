@@ -20,6 +20,7 @@ import {
   atom,
   atomFamily,
   DefaultValue,
+  RecoilState,
   selectorFamily,
   useRecoilCallback,
   useRecoilState,
@@ -100,7 +101,7 @@ const initialTeamState = selectorFamily<TeamResponse | undefined, string>({
     },
 });
 
-const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
+export const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
   key: 'patchedTeam',
   default: undefined,
 });
@@ -335,7 +336,7 @@ export const useManuscripts = (
   items: [],
 });
 
-const versionSelector = selectorFamily<
+export const versionSelector = selectorFamily<
   ManuscriptVersion | undefined,
   { teamId: string; manuscriptId: string; versionId: string }
 >({
@@ -373,25 +374,24 @@ const versionSelector = selectorFamily<
       const version = manuscript.versions.find((item) => item.id === versionId);
       if (!version) return;
 
-      set(teamState(teamId), (prev: TeamResponse | undefined) =>
-        prev
-          ? {
-              ...prev,
-              manuscripts: team.manuscripts.map((manuscriptItem) => {
-                if (manuscriptItem.id === manuscriptId) {
-                  return {
-                    ...manuscriptItem,
-                    versions: manuscriptItem.versions.map((versionItem) =>
-                      versionItem.id === versionId
-                        ? (newValue as ManuscriptVersion)
-                        : versionItem,
-                    ),
-                  };
-                }
-                return manuscriptItem;
-              }),
+      set(
+        teamState(teamId) as RecoilState<TeamResponse>,
+        (prev: TeamResponse) => ({
+          ...prev,
+          manuscripts: team.manuscripts.map((manuscriptItem) => {
+            if (manuscriptItem.id === manuscriptId) {
+              return {
+                ...manuscriptItem,
+                versions: manuscriptItem.versions.map((versionItem) =>
+                  versionItem.id === versionId
+                    ? (newValue as ManuscriptVersion)
+                    : versionItem,
+                ),
+              };
             }
-          : undefined,
+            return manuscriptItem;
+          }),
+        }),
       );
     },
 });

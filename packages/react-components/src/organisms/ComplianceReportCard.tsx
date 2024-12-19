@@ -3,6 +3,7 @@ import {
   DiscussionRequest,
   DiscussionDataObject,
   ManuscriptVersion,
+  ComplianceReportDataObject,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { memo, Suspense, useEffect, useRef, useState } from 'react';
@@ -124,19 +125,17 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   const [expanded, setExpanded] = useState(false);
   const [startDiscussion, setStartDiscussion] = useState(false);
 
-  const startedDiscussionIdRef = useRef<string | undefined>(undefined);
+  const startedDiscussionIdRef = useRef<string>('');
 
   useEffect(
     () => () => {
       if (startedDiscussionIdRef.current) {
         setVersion((prev) => ({
           ...prev,
-          complianceReport: prev.complianceReport
-            ? {
-                ...prev.complianceReport,
-                discussionId: startedDiscussionIdRef.current ?? '',
-              }
-            : undefined,
+          complianceReport: {
+            ...(prev.complianceReport as ComplianceReportDataObject),
+            discussionId: startedDiscussionIdRef.current,
+          },
         }));
       }
     },

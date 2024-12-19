@@ -1,5 +1,5 @@
 import { isEnabled } from '@asap-hub/flags';
-import { TeamResponse, TeamTool } from '@asap-hub/model';
+import { ManuscriptVersion, TeamResponse, TeamTool } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -115,12 +115,24 @@ type TeamProfileWorkspaceProps = Readonly<
   > &
   Pick<
     ComponentProps<typeof ManuscriptCard>,
-    'onReplyToDiscussion' | 'isComplianceReviewer' | 'getDiscussion'
+    'onSave' | 'isComplianceReviewer' | 'getDiscussion'
   > & {
     readonly tools: ReadonlyArray<TeamTool>;
     readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
     readonly setEligibilityReasons: (newEligibilityReason: Set<string>) => void;
     readonly isTeamMember: boolean;
+    readonly createComplianceDiscussion: (
+      complianceReportId: string,
+      message: string,
+    ) => Promise<string>;
+    readonly useVersionById: (args: {
+      teamId: string;
+      manuscriptId: string;
+      versionId: string;
+    }) => [
+      ManuscriptVersion | undefined,
+      (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
+    ];
   };
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
@@ -135,11 +147,13 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   collaborationManuscripts,
   tools,
   onDeleteTool,
-  onReplyToDiscussion,
+  onSave,
   getDiscussion,
   setEligibilityReasons,
   isComplianceReviewer = false,
   isTeamMember,
+  createComplianceDiscussion,
+  useVersionById,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
@@ -224,9 +238,13 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           isComplianceReviewer={isComplianceReviewer}
                           isTeamMember={isTeamMember}
                           onUpdateManuscript={onUpdateManuscript}
-                          onReplyToDiscussion={onReplyToDiscussion}
+                          onSave={onSave}
                           getDiscussion={getDiscussion}
                           isActiveTeam={!inactiveSince}
+                          createComplianceDiscussion={
+                            createComplianceDiscussion
+                          }
+                          useVersionById={useVersionById}
                         />
                       </div>
                     ))}
@@ -261,8 +279,12 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           isTeamMember={isTeamMember}
                           isActiveTeam={!inactiveSince}
                           onUpdateManuscript={onUpdateManuscript}
-                          onReplyToDiscussion={onReplyToDiscussion}
+                          onSave={onSave}
                           getDiscussion={getDiscussion}
+                          createComplianceDiscussion={
+                            createComplianceDiscussion
+                          }
+                          useVersionById={useVersionById}
                         />
                       </div>
                     ))}

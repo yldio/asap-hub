@@ -1,4 +1,4 @@
-import { DiscussionPatchRequest } from '@asap-hub/model';
+import { DiscussionRequest } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -53,27 +53,31 @@ const dismissButtonStyles = css({
   },
 });
 
-type QuickCheckReplyModalProps = {
+type DiscussionModalProps = {
+  title: string;
+  editorLabel: string;
+  ruleMessage: string;
   onDismiss: () => void;
   discussionId: string;
-  onReplyToDiscussion: (
-    id: string,
-    patch: DiscussionPatchRequest,
-  ) => Promise<void>;
+  onSave: (id: string, data: DiscussionRequest) => Promise<void>;
 };
 
-type QuickCheckReplyModalData = {
-  replyText: string;
+type DiscussionModalData = {
+  text: string;
 };
-const QuickCheckReplyModal: React.FC<QuickCheckReplyModalProps> = ({
-  onDismiss,
+
+const DiscussionModal: React.FC<DiscussionModalProps> = ({
+  title,
+  editorLabel,
+  ruleMessage,
   discussionId,
-  onReplyToDiscussion,
+  onDismiss,
+  onSave,
 }) => {
-  const methods = useForm<QuickCheckReplyModalData>({
+  const methods = useForm<DiscussionModalData>({
     mode: 'onChange',
     defaultValues: {
-      replyText: '',
+      text: '',
     },
   });
 
@@ -83,8 +87,8 @@ const QuickCheckReplyModal: React.FC<QuickCheckReplyModalProps> = ({
     handleSubmit,
   } = methods;
 
-  const onSubmit = async (data: QuickCheckReplyModalData) => {
-    await onReplyToDiscussion(discussionId, data);
+  const onSubmit = async (data: DiscussionModalData) => {
+    await onSave(discussionId, data);
     onDismiss();
   };
 
@@ -97,22 +101,22 @@ const QuickCheckReplyModal: React.FC<QuickCheckReplyModalProps> = ({
               {crossIcon}
             </Button>
           </div>
-          <Headline3>Reply to quick check</Headline3>
+          <Headline3>{title}</Headline3>
         </header>
         <div css={[paddingStyles, { paddingTop: 0 }]}>
           <Controller
-            name="replyText"
+            name="text"
             control={control}
             rules={{
               required: true,
               maxLength: {
                 value: 256,
-                message: 'Reply cannot exceed 256 characters.',
+                message: ruleMessage,
               },
             }}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <LabeledTextEditor
-                title="Please provide details"
+                title={editorLabel}
                 subtitle="(required)"
                 onChange={onChange}
                 customValidationMessage={error?.message}
@@ -136,6 +140,7 @@ const QuickCheckReplyModal: React.FC<QuickCheckReplyModalProps> = ({
                 enabled={!isSubmitting && isValid}
                 submit
                 preventDefault={false}
+                data-testid="discussion-modal-submit"
               >
                 Send
               </Button>
@@ -147,4 +152,4 @@ const QuickCheckReplyModal: React.FC<QuickCheckReplyModalProps> = ({
   );
 };
 
-export default QuickCheckReplyModal;
+export default DiscussionModal;

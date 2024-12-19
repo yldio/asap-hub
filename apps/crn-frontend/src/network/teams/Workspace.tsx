@@ -9,17 +9,19 @@ import {
   TeamTool,
   TeamResponse,
   ManuscriptPutRequest,
-  DiscussionPatchRequest,
+  DiscussionRequest,
 } from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext, useCurrentUserCRN } from '@asap-hub/react-context';
 
 import {
+  useCreateComplianceDiscussion,
   useDiscussionById,
   useIsComplianceReviewer,
   usePatchTeamById,
   usePutManuscript,
   useReplyToDiscussion,
+  useVersionById,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
@@ -37,6 +39,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const patchTeam = usePatchTeamById(team.id);
   const updateManuscript = usePutManuscript();
   const replyToDiscussion = useReplyToDiscussion();
+  const createComplianceDiscussion = useCreateComplianceDiscussion();
+
   const getDiscussion = useDiscussionById;
   const toast = useContext(ToastContext);
 
@@ -76,14 +80,23 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                 }
           }
           isComplianceReviewer={isComplianceReviewer}
-          onReplyToDiscussion={async (
-            id: string,
-            patch: DiscussionPatchRequest,
-          ) => {
-            await replyToDiscussion(id, patch);
+          onSave={async (id: string, patch: DiscussionRequest) => {
+            await replyToDiscussion(id, patch as DiscussionRequest);
             setFormType('quick-check');
           }}
           getDiscussion={getDiscussion}
+          createComplianceDiscussion={async (
+            complianceReportId: string,
+            message: string,
+          ) => {
+            const discussionId = await createComplianceDiscussion(
+              complianceReportId,
+              message,
+            );
+            setFormType('compliance-report-discussion');
+            return discussionId;
+          }}
+          useVersionById={useVersionById}
         />
       </Route>
       <Route exact path={path + route.tools.template}>

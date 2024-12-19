@@ -7,7 +7,7 @@ import {
   createTeamResponse,
 } from '@asap-hub/fixtures';
 import {
-  DiscussionPatchRequest,
+  DiscussionRequest,
   DiscussionResponse,
   ListLabsResponse,
   ListTeamResponse,
@@ -68,12 +68,9 @@ export const getDiscussion = jest.fn(
 );
 
 export const updateDiscussion = jest.fn(
-  async (
-    id: string,
-    patch: DiscussionPatchRequest,
-  ): Promise<DiscussionResponse> => {
+  async (id: string, patch: DiscussionRequest): Promise<DiscussionResponse> => {
     const discussion = await getDiscussion(id);
-    discussion.replies = [createMessage(patch.replyText)];
+    discussion.replies = [createMessage(patch.text)];
     return discussion;
   },
 );

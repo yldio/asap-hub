@@ -9,6 +9,7 @@ import {
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ComplianceReportPostRequest,
+  DiscussionDataObject,
   DiscussionResponse,
   ManuscriptFileResponse,
   ManuscriptPostRequest,
@@ -35,6 +36,7 @@ import {
   updateTeamResearchOutput,
   uploadManuscriptFile,
   resubmitManuscript,
+  createComplianceDiscussion,
 } from '../api';
 
 jest.mock('../../../config');
@@ -557,7 +559,7 @@ describe('Discussion', () => {
 
   describe('updateDiscussion', () => {
     const patch = {
-      replyText: 'test reply',
+      text: 'test reply',
     };
     it('makes an authorized PATCH request for the discussion id', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
@@ -591,6 +593,66 @@ describe('Discussion', () => {
         updateDiscussion('42', patch, ''),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Failed to update discussion with id 42. Expected status 200. Received status 500."`,
+      );
+    });
+  });
+
+  describe('createDiscussion', () => {
+    const message = 'test discussion message';
+    it('makes an authorized POST request to create compliance discussion', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .post('/discussions')
+        .reply(200, {});
+
+      await createComplianceDiscussion('42', message, 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('passes the post object in the body', async () => {
+      nock(API_BASE_URL)
+        .post('/discussions', {
+          message,
+          type: 'compliance-report',
+          id: '42',
+        })
+        .reply(200, {});
+
+      await createComplianceDiscussion('42', message, '');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('returns a successfully created discussion', async () => {
+      const created: Partial<DiscussionDataObject> = {
+        id: 'discussion-1',
+        message: createMessage(message),
+        replies: [],
+      };
+      nock(API_BASE_URL)
+        .post('/discussions', {
+          message,
+          type: 'compliance-report',
+          id: '42',
+        })
+        .reply(200, created);
+
+      expect(await createComplianceDiscussion('42', message, '')).toEqual(
+        created,
+      );
+    });
+
+    it('shows errors for an error status', async () => {
+      nock(API_BASE_URL)
+        .post('/discussions', {
+          message,
+          type: 'compliance-report',
+          id: '42',
+        })
+        .reply(500, {});
+
+      await expect(
+        createComplianceDiscussion('42', message, ''),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to create discussion. Expected status 201. Received status 500."`,
       );
     });
   });

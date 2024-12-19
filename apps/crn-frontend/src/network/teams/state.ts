@@ -9,9 +9,10 @@ import {
   ManuscriptFileType,
   ComplianceReportPostRequest,
   ManuscriptPutRequest,
-  DiscussionPatchRequest,
+  DiscussionRequest,
   DiscussionResponse,
   ListPartialManuscriptResponse,
+  ManuscriptVersion,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useCallback } from 'react';
@@ -19,6 +20,7 @@ import {
   atom,
   atomFamily,
   DefaultValue,
+  RecoilState,
   selectorFamily,
   useRecoilCallback,
   useRecoilState,
@@ -40,6 +42,7 @@ import {
   updateDiscussion,
   uploadManuscriptFile,
   resubmitManuscript,
+  createComplianceDiscussion,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -98,7 +101,7 @@ const initialTeamState = selectorFamily<TeamResponse | undefined, string>({
     },
 });
 
-const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
+export const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
   key: 'patchedTeam',
   default: undefined,
 });
@@ -109,6 +112,20 @@ export const teamState = selectorFamily<TeamResponse | undefined, string>({
     (id) =>
     ({ get }) =>
       get(patchedTeamState(id)) ?? get(initialTeamState(id)),
+  set:
+    (id: string) =>
+    ({ set, reset }, newValue: TeamResponse | DefaultValue | undefined) => {
+      if (newValue === undefined || newValue instanceof DefaultValue) {
+        reset(patchedTeamState(id) ?? initialTeamState(id));
+      } else {
+        set(patchedTeamState(id) ?? initialTeamState(id), (prev) => {
+          if (prev) {
+            return { ...prev, ...newValue };
+          }
+          return newValue;
+        });
+      }
+    },
 });
 
 export const teamListState = atomFamily<
@@ -306,7 +323,7 @@ export const useReplyToDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);
   const setDiscussion = useSetDiscussion();
 
-  return async (id: string, patch: DiscussionPatchRequest) => {
+  return async (id: string, patch: DiscussionRequest) => {
     const discussion = await updateDiscussion(id, patch, authorization);
     setDiscussion(discussion);
   };
@@ -318,3 +335,96 @@ export const useManuscripts = (
   total: 0,
   items: [],
 });
+
+export const versionSelector = selectorFamily<
+  ManuscriptVersion | undefined,
+  { teamId: string; manuscriptId: string; versionId: string }
+>({
+  key: 'versionSelector',
+  get:
+    (params) =>
+    ({ get }) => {
+      const { teamId, manuscriptId, versionId } = params;
+
+      const team = get(teamState(teamId));
+      if (!team) return undefined;
+
+      const currentManuscript = team.manuscripts.find(
+        (manuscript) => manuscript.id === manuscriptId,
+      );
+      if (!currentManuscript) return undefined;
+
+      return currentManuscript.versions.find(
+        (version) => version.id === versionId,
+      );
+    },
+  set:
+    (params) =>
+    ({ set, get }, newValue: ManuscriptVersion | DefaultValue | undefined) => {
+      const { teamId, manuscriptId, versionId } = params;
+
+      const team = get(teamState(teamId));
+      if (!team) return;
+
+      const manuscript = team.manuscripts.find(
+        (item) => item.id === manuscriptId,
+      );
+      if (!manuscript) return;
+
+      const version = manuscript.versions.find((item) => item.id === versionId);
+      if (!version) return;
+
+      set(
+        teamState(teamId) as RecoilState<TeamResponse>,
+        (prev: TeamResponse) => ({
+          ...prev,
+          manuscripts: team.manuscripts.map((manuscriptItem) => {
+            if (manuscriptItem.id === manuscriptId) {
+              return {
+                ...manuscriptItem,
+                versions: manuscriptItem.versions.map((versionItem) =>
+                  versionItem.id === versionId
+                    ? (newValue as ManuscriptVersion)
+                    : versionItem,
+                ),
+              };
+            }
+            return manuscriptItem;
+          }),
+        }),
+      );
+    },
+});
+
+export const useVersionById = (params: {
+  teamId: string;
+  manuscriptId: string;
+  versionId: string;
+}): [
+  ManuscriptVersion | undefined,
+  (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
+] => {
+  const [version, setVersion] = useRecoilState(versionSelector(params));
+  const setVersionCallback = (
+    callback: (prev: ManuscriptVersion) => ManuscriptVersion,
+  ) => {
+    setVersion((prev) => (prev ? callback(prev) : prev));
+  };
+  return [version, setVersionCallback];
+};
+
+export const useCreateComplianceDiscussion = () => {
+  const authorization = useRecoilValue(authorizationState);
+
+  return async (
+    complianceReportId: string,
+    message: string,
+  ): Promise<string> => {
+    const discussion = await createComplianceDiscussion(
+      complianceReportId,
+      message,
+      authorization,
+    );
+    return discussion.id;
+  };
+};

@@ -33,7 +33,7 @@ type ManuscriptCardProps = Pick<
 > &
   Pick<
     ComponentProps<typeof ManuscriptVersionCard>,
-    'onReplyToDiscussion' | 'getDiscussion'
+    'onSave' | 'getDiscussion'
   > & {
     user: User | null;
     teamId: string;
@@ -46,6 +46,18 @@ type ManuscriptCardProps = Pick<
       manuscriptId: string,
       payload: ManuscriptPutRequest,
     ) => Promise<ManuscriptResponse>;
+    createComplianceDiscussion: (
+      complianceReportId: string,
+      message: string,
+    ) => Promise<string>;
+    useVersionById: (args: {
+      teamId: string;
+      manuscriptId: string;
+      versionId: string;
+    }) => [
+      ManuscriptVersion | undefined,
+      (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
+    ];
   };
 
 const manuscriptContainerStyles = css({
@@ -161,8 +173,10 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   isActiveTeam,
   onUpdateManuscript,
   getDiscussion,
-  onReplyToDiscussion,
+  onSave,
   user,
+  createComplianceDiscussion,
+  useVersionById,
 }) => {
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
@@ -325,7 +339,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           <div>
             {versions.map((version, index) => (
               <ManuscriptVersionCard
-                onReplyToDiscussion={onReplyToDiscussion}
+                onSave={onSave}
                 getDiscussion={getDiscussion}
                 key={index}
                 version={version}
@@ -339,6 +353,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 }
                 isActiveManuscript={isActiveManuscript}
                 isTeamMember={isTeamMember}
+                createComplianceDiscussion={createComplianceDiscussion}
+                useVersionById={useVersionById}
               />
             ))}
           </div>

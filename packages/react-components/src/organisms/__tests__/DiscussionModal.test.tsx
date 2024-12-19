@@ -7,31 +7,29 @@ import {
 } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import userEvent from '@testing-library/user-event';
-import QuickCheckReplyModal from '../QuickCheckReplyModal';
+import DiscussionModal from '../DiscussionModal';
 
 const discussionId = 'discussion-id';
 
-const defaultProps: ComponentProps<typeof QuickCheckReplyModal> = {
+const defaultProps: ComponentProps<typeof DiscussionModal> = {
+  title: 'Reply to quick check',
+  editorLabel: 'Reply',
+  ruleMessage: 'Reply cannot exceed 256 characters.',
   onDismiss: jest.fn(),
   discussionId,
-  onReplyToDiscussion: jest.fn(),
+  onSave: jest.fn(),
 };
 
 it('renders the form', async () => {
-  render(<QuickCheckReplyModal {...defaultProps} />);
+  render(<DiscussionModal {...defaultProps} />);
 
   expect(await screen.findByText(/Reply to quick check/i)).toBeVisible();
   expect(screen.getByRole('button', { name: /Send/i })).toBeVisible();
 });
 
 it('data is sent on form submission', async () => {
-  const onReplyToDiscussion = jest.fn();
-  render(
-    <QuickCheckReplyModal
-      {...defaultProps}
-      onReplyToDiscussion={onReplyToDiscussion}
-    />,
-  );
+  const onSave = jest.fn();
+  render(<DiscussionModal {...defaultProps} onSave={onSave} />);
 
   const replyEditor = screen.getByTestId('editor');
   await act(async () => {
@@ -45,14 +43,14 @@ it('data is sent on form submission', async () => {
   await waitFor(() => expect(shareButton).toBeEnabled());
   userEvent.click(shareButton);
   await waitFor(() => {
-    expect(onReplyToDiscussion).toHaveBeenCalledWith(discussionId, {
-      replyText: 'test reply',
+    expect(onSave).toHaveBeenCalledWith(discussionId, {
+      text: 'test reply',
     });
   });
 });
 
 it('send button is enabled when reply is provided', async () => {
-  render(<QuickCheckReplyModal {...defaultProps} />);
+  render(<DiscussionModal {...defaultProps} />);
 
   const sendButton = screen.getByRole('button', { name: /Send/i });
 
@@ -70,7 +68,7 @@ it('send button is enabled when reply is provided', async () => {
 });
 
 it('displays error message when reply is bigger than 256 characters', async () => {
-  render(<QuickCheckReplyModal {...defaultProps} />);
+  render(<DiscussionModal {...defaultProps} />);
 
   const sendButton = screen.getByRole('button', { name: /Send/i });
 

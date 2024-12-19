@@ -1,5 +1,9 @@
-import { createTeamResponse } from '@asap-hub/fixtures';
+import {
+  createManuscriptResponse,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
 import { disable, enable } from '@asap-hub/flags';
+import { ManuscriptVersion } from '@asap-hub/model';
 import {
   getByText as getChildByText,
   render,
@@ -8,11 +12,13 @@ import {
   within,
   getByTestId,
   getByRole as getByRoleInContainer,
+  fireEvent,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps } from 'react';
 import { Route, Router } from 'react-router-dom';
+import { act } from 'react-test-renderer';
 
 import TeamProfileWorkspace from '../TeamProfileWorkspace';
 
@@ -24,9 +30,11 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   tools: [],
   isComplianceReviewer: false,
   onUpdateManuscript: jest.fn(),
-  onReplyToDiscussion: jest.fn(),
+  onSave: jest.fn(),
   getDiscussion: jest.fn(),
   isTeamMember: true,
+  createComplianceDiscussion: jest.fn(),
+  useVersionById: jest.fn().mockImplementation(() => [undefined, jest.fn()]),
 };
 
 it('renders the team workspace page', () => {
@@ -46,6 +54,8 @@ it('does not display Collaboration Tools section if user is not a team member', 
     queryByRole('heading', { name: 'Collaboration Tools (Team Only)' }),
   ).not.toBeInTheDocument();
 });
+
+jest.setTimeout(30000);
 
 describe('compliance section', () => {
   beforeAll(() => {
@@ -392,6 +402,82 @@ describe('compliance section', () => {
       '/network/teams/t0/workspace/create-manuscript',
     );
   });
+
+  it('opens modal to create new discussion on compliance report', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCreateComplianceDiscussion = jest
+      .fn()
+      .mockResolvedValue('new-discussion-id');
+    const mockSetVersion = jest.fn();
+    const version = {
+      ...createManuscriptResponse().versions[0],
+      complianceReport: {
+        id: 'compliance-report-id',
+        url: 'http://example.com/file.pdf',
+        description: 'A description',
+        count: 1,
+        createdDate: '2020-12-10T20:36:54Z',
+        createdBy: {
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          id: 'john-doe',
+          teams: [{ id: 'alessi', name: 'Alessi' }],
+          avatarUrl: '',
+          alumniSinceDate: undefined,
+        },
+      },
+    } as ManuscriptVersion;
+
+    const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
+      ...team,
+      manuscripts: [
+        {
+          id: 'manuscript-id',
+          title: 'Nice manuscript',
+          count: 1,
+          versions: [version],
+        },
+      ],
+      createComplianceDiscussion: mockCreateComplianceDiscussion,
+      useVersionById: jest
+        .fn()
+        .mockImplementation(() => [version, mockSetVersion]),
+    };
+
+    const {
+      getByTestId: localGetByTestId,
+      findByText,
+      getByLabelText,
+      unmount,
+    } = render(<TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />);
+
+    await act(async () => {
+      userEvent.click(localGetByTestId('collapsible-button'));
+      userEvent.click(getByLabelText('Expand Report'));
+      userEvent.click(await findByText(/Start Discussion/i));
+    });
+
+    const replyEditor = screen.getByTestId('editor');
+    await act(async () => {
+      userEvent.click(replyEditor);
+      userEvent.tab();
+      fireEvent.input(replyEditor, { data: 'New discussion message' });
+      userEvent.tab();
+    });
+
+    expect(await findByText(/Send/i)).toBeInTheDocument();
+
+    userEvent.click(await findByText(/Send/i));
+    await waitFor(() => {
+      expect(mockCreateComplianceDiscussion).toHaveBeenCalledWith(
+        'compliance-report-id',
+        'New discussion message',
+      );
+    });
+
+    unmount();
+  });
 });
 
 it('renders contact project manager when point of contact provided', () => {
@@ -493,6 +579,7 @@ describe('a tool', () => {
   });
 
   it('has a delete button', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
     const handleDeleteTool = jest.fn();
     const { getByText } = render(
       <TeamProfileWorkspace

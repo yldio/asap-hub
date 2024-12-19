@@ -220,6 +220,7 @@ export const manuscriptContentQueryFragment = gql`
           complianceReportsCollection(limit: 1) {
             items {
               sys {
+                id
                 firstPublishedAt
               }
               url
@@ -245,6 +246,11 @@ export const manuscriptContentQueryFragment = gql`
                       displayName
                     }
                   }
+                }
+              }
+              discussion {
+                sys {
+                  id
                 }
               }
             }

@@ -1,7 +1,12 @@
 import { Toast } from '@asap-hub/react-components';
 import React, { createContext, useState } from 'react';
 
-type FormType = 'manuscript' | 'compliance-report' | 'quick-check' | '';
+type FormType =
+  | 'manuscript'
+  | 'compliance-report'
+  | 'quick-check'
+  | 'compliance-report-discussion'
+  | '';
 
 type ManuscriptToastContextData = {
   setFormType: React.Dispatch<React.SetStateAction<FormType>>;
@@ -22,6 +27,7 @@ export const ManuscriptToastProvider = ({
     manuscript: 'Manuscript submitted successfully.',
     'compliance-report': 'Compliance Report submitted successfully.',
     'quick-check': 'Replied to quick check successfully.',
+    'compliance-report-discussion': 'Discussion started successfully.',
   };
 
   return (

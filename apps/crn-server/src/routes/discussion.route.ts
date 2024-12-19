@@ -3,8 +3,9 @@ import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import DiscussionController from '../controllers/discussion.controller';
 import {
+  validateDiscussionCreateRequest,
   validateDiscussionParameters,
-  validateDiscussionPatchRequest,
+  validateDiscussionRequest,
 } from '../validation/discussion.validation';
 
 export const discussionRouteFactory = (
@@ -33,13 +34,35 @@ export const discussionRouteFactory = (
       const { body, params } = req;
 
       const { discussionId } = validateDiscussionParameters(params);
-      const { replyText } = validateDiscussionPatchRequest(body);
+      const { text } = validateDiscussionRequest(body);
 
       if (!req.loggedInUser) throw Boom.forbidden();
 
-      const reply = { text: replyText, userId: req.loggedInUser.id };
+      const reply = { text, userId: req.loggedInUser.id };
 
       const result = await discussionController.update(discussionId, reply);
+
+      res.json(result);
+    },
+  );
+
+  discussionRoutes.post(
+    '/discussions',
+    async (req, res: Response<DiscussionResponse>) => {
+      const { body } = req;
+
+      const { message: text, id, type } = validateDiscussionCreateRequest(body);
+
+      if (!req.loggedInUser) throw Boom.forbidden();
+
+      const message = {
+        text,
+        userId: req.loggedInUser.id,
+        type,
+        ...(type === 'compliance-report' ? { complianceReportId: id } : {}),
+      };
+
+      const result = await discussionController.create(message);
 
       res.json(result);
     },

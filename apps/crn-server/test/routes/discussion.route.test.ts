@@ -90,7 +90,7 @@ describe('/discussions/ route', () => {
       const response = await supertest(app)
         .patch(`/discussions/${discussionId}`)
         .send({
-          replyText: 'response',
+          text: 'response',
           additionalField: 'some-data',
         });
 
@@ -103,7 +103,7 @@ describe('/discussions/ route', () => {
       const response = await supertest(app)
         .patch(`/discussions/${discussionId}`)
         .send({
-          replyText: 'response',
+          text: 'response',
         });
 
       expect(response.status).toBe(404);
@@ -118,7 +118,7 @@ describe('/discussions/ route', () => {
       const response = await supertest(app)
         .patch(`/discussions/${discussionId}`)
         .send({
-          replyText: 'response',
+          text: 'response',
         });
 
       expect(response.status).toEqual(403);
@@ -130,7 +130,7 @@ describe('/discussions/ route', () => {
       const response = await supertest(app)
         .patch(`/discussions/${discussionId}`)
         .send({
-          replyText: 'A good reply',
+          text: 'A good reply',
         });
 
       expect(response.body).toEqual(discussionResponse);
@@ -138,12 +138,12 @@ describe('/discussions/ route', () => {
 
     test('Should call the controller with the right parameters', async () => {
       const discussionId = 'discussion-id-1';
-      const replyText = 'test reply';
+      const text = 'test reply';
 
-      const reply = { text: replyText, userId: 'user-id-0' };
+      const reply = { text, userId: 'user-id-0' };
 
       await supertest(app).patch(`/discussions/${discussionId}`).send({
-        replyText,
+        text,
       });
 
       expect(discussionControllerMock.update).toBeCalledWith(
@@ -158,8 +158,92 @@ describe('/discussions/ route', () => {
       const response = await supertest(app)
         .patch(`/discussions/${discussionId}`)
         .send({
-          replyText: 'x'.repeat(257),
+          text: 'x'.repeat(257),
         });
+
+      expect(response.status).toBe(400);
+    });
+  });
+
+  describe('POST /discussions', () => {
+    test('Should return a 400 error when the payload is invalid', async () => {
+      const response = await supertest(app).post(`/discussions`).send({
+        message: 'something',
+        id: 'some-id',
+        type: 'wrong-type', // should be undefined or 'compliance-report' only
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    test('Should return a 400 error when additional properties exist', async () => {
+      const response = await supertest(app).post(`/discussions`).send({
+        id: 'some-id',
+        message: 'response',
+        additionalField: 'some-data',
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    test('Should return the results correctly', async () => {
+      discussionControllerMock.create.mockResolvedValueOnce(discussionResponse);
+
+      const response = await supertest(app).post(`/discussions`).send({
+        id: 'some-id',
+        message: 'A good message',
+      });
+
+      expect(response.body).toEqual(discussionResponse);
+    });
+
+    test('Should call the controller with the right parameters when type not set to compliance-report', async () => {
+      const id = 'compliance-report-id-0';
+      const message = 'test reply';
+
+      const discussion = {
+        text: message,
+        userId: 'user-id-0',
+        type: undefined,
+      };
+
+      await supertest(app).post(`/discussions`).send({
+        message,
+        id,
+      });
+
+      expect(discussionControllerMock.create).toBeCalledWith(discussion);
+    });
+
+    test('Should call the controller with the right parameters when type is set to compliance-report', async () => {
+      const id = 'compliance-report-id-0';
+      const message = 'test reply';
+      const type = 'compliance-report';
+
+      await supertest(app).post(`/discussions`).send({
+        message,
+        id,
+        type,
+      });
+
+      const discussion = {
+        text: message,
+        userId: 'user-id-0',
+        type,
+        complianceReportId: 'compliance-report-id-0',
+      };
+
+      expect(discussionControllerMock.create).toBeCalledWith(discussion);
+    });
+
+    test('Should not accept discussion message over 256 characters', async () => {
+      const id = 'compliance-report-id-0';
+      const message = 'A'.repeat(257);
+
+      const response = await supertest(app).post(`/discussions`).send({
+        message,
+        id,
+      });
 
       expect(response.status).toBe(400);
     });

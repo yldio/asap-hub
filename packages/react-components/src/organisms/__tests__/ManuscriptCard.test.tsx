@@ -3,7 +3,7 @@ import {
   createUserResponse,
   manuscriptAuthor,
 } from '@asap-hub/fixtures';
-import { UserTeam } from '@asap-hub/model';
+import { ManuscriptVersion, UserTeam } from '@asap-hub/model';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -14,6 +14,16 @@ import ManuscriptCard, {
   isManuscriptLead,
 } from '../ManuscriptCard';
 
+const version = createManuscriptResponse().versions[0] as ManuscriptVersion;
+
+const mockVersionData = {
+  ...version,
+  complianceReport: {
+    ...version.complianceReport,
+    discussionId: 'discussion-id',
+  },
+};
+
 const baseUser = createUserResponse({}, 1);
 const props: ComponentProps<typeof ManuscriptCard> = {
   ...createManuscriptResponse(),
@@ -22,13 +32,16 @@ const props: ComponentProps<typeof ManuscriptCard> = {
   grantId: '000123',
   isComplianceReviewer: false,
   onUpdateManuscript: jest.fn(),
-  onReplyToDiscussion: jest.fn(),
+  onSave: jest.fn(),
   getDiscussion: jest.fn(),
   isTeamMember: true,
   isActiveTeam: true,
+  createComplianceDiscussion: jest.fn(),
+  useVersionById: jest.fn(),
 };
 
 const complianceReport = {
+  id: 'compliance-report-id',
   url: 'https://example.com',
   description: 'description',
   count: 1,
@@ -108,8 +121,21 @@ describe('isManuscriptLead', () => {
 });
 
 it('displays manuscript version card when expanded', () => {
+  const useVersionById = jest.fn();
+
+  useVersionById
+    .mockImplementation(() => [
+      {
+        ...mockVersionData,
+        type: 'Original Research',
+        lifecycle: 'Preprint',
+      },
+      jest.fn(),
+    ])
+    .mockImplementationOnce(() => [mockVersionData, jest.fn()]);
+
   const { getByText, queryByText, getByTestId, rerender } = render(
-    <ManuscriptCard {...props} />,
+    <ManuscriptCard {...props} useVersionById={useVersionById} />,
   );
 
   expect(queryByText(/Original Research/i)).not.toBeInTheDocument();
@@ -128,6 +154,7 @@ it('displays manuscript version card when expanded', () => {
           lifecycle: 'Preprint',
         },
       ]}
+      useVersionById={useVersionById}
     />,
   );
 
@@ -186,6 +213,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
   const manuscriptVersions = createManuscriptResponse().versions;
   manuscriptVersions[0]!.firstAuthors = [user];
   manuscriptVersions[0]!.complianceReport = {
+    id: 'compliance-report-id',
     url: 'https://example.com',
     description: 'test compliance report',
     count: 1,

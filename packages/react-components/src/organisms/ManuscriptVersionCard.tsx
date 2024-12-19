@@ -24,7 +24,7 @@ import {
   Pill,
   PencilIcon,
   plusRectIcon,
-  QuickCheckReplyModal,
+  DiscussionModal,
   Subtitle,
   colors,
 } from '..';
@@ -45,7 +45,19 @@ type ManuscriptVersionCardProps = {
   isTeamMember: boolean;
   canEditManuscript: boolean;
   isActiveManuscript: boolean;
-} & Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
+  createComplianceDiscussion: (
+    complianceReportId: string,
+    message: string,
+  ) => Promise<string>;
+  useVersionById: (args: {
+    teamId: string;
+    manuscriptId: string;
+    versionId: string;
+  }) => [
+    ManuscriptVersion | undefined,
+    (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
+  ];
+} & Pick<ComponentProps<typeof DiscussionModal>, 'onSave'> &
   Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
 const toastStyles = css({
@@ -235,18 +247,28 @@ export const getTeams = (teams: Message['createdBy']['teams']) =>
   }));
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
-  version,
+  version: versionProp,
   teamId,
   teamIdCode,
   grantId,
   manuscriptCount,
-  onReplyToDiscussion,
+  onSave,
   getDiscussion,
   manuscriptId,
   isTeamMember,
   isActiveManuscript,
   canEditManuscript,
+  createComplianceDiscussion,
+  useVersionById,
 }) => {
+  const [versionData, setVersion] = useVersionById({
+    teamId,
+    manuscriptId,
+    versionId: versionProp.id,
+  });
+
+  const version = versionData ?? versionProp;
+
   const history = useHistory();
 
   const [expanded, setExpanded] = useState(false);
@@ -288,11 +310,20 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
       history.push(editManuscriptRoute);
     }
   };
+
   return (
     <>
       <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>
         {version.complianceReport && (
-          <ComplianceReportCard {...version.complianceReport} />
+          <ComplianceReportCard
+            {...version.complianceReport}
+            manuscriptId={manuscriptId}
+            versionId={version.id}
+            createComplianceDiscussion={createComplianceDiscussion}
+            getDiscussion={getDiscussion}
+            onSave={onSave}
+            setVersion={setVersion}
+          />
         )}
         <div css={toastStyles}>
           <span css={toastHeaderStyles}>
@@ -423,10 +454,11 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                       <Subtitle>{question}</Subtitle>
                       <Suspense fallback={<Loading />}>
                         <Discussion
+                          modalTitle="Reply to quick check"
                           canReply={isActiveManuscript && isTeamMember}
                           id={discussion.id}
                           getDiscussion={getDiscussion}
-                          onReplyToDiscussion={onReplyToDiscussion}
+                          onSave={onSave}
                           key={discussion.id}
                         />
                       </Suspense>

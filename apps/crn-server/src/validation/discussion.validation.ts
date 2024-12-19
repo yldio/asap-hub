@@ -1,4 +1,4 @@
-import { DiscussionPatchRequest } from '@asap-hub/model';
+import { DiscussionCreateRequest, DiscussionRequest } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 
@@ -24,18 +24,37 @@ export const validateDiscussionParameters = validateInput(
   },
 );
 
-const discussionPatchRequestValidationSchema: JSONSchemaType<DiscussionPatchRequest> =
+const DiscussionRequestValidationSchema: JSONSchemaType<DiscussionRequest> = {
+  type: 'object',
+  properties: {
+    text: { type: 'string', maxLength: 256 },
+  },
+  required: ['text'],
+  additionalProperties: false,
+};
+
+export const validateDiscussionRequest = validateInput(
+  DiscussionRequestValidationSchema,
+  {
+    skipNull: true,
+    coerce: false,
+  },
+);
+
+const discussionCreateRequestValidationSchema: JSONSchemaType<DiscussionCreateRequest> =
   {
     type: 'object',
     properties: {
-      replyText: { type: 'string', maxLength: 256 },
+      message: { type: 'string', maxLength: 256 },
+      id: { type: 'string', maxLength: 256 },
+      type: { type: 'string', enum: ['compliance-report'], maxLength: 256 },
     },
-    required: ['replyText'],
+    required: ['message', 'id'],
     additionalProperties: false,
   };
 
-export const validateDiscussionPatchRequest = validateInput(
-  discussionPatchRequestValidationSchema,
+export const validateDiscussionCreateRequest = validateInput(
+  discussionCreateRequestValidationSchema,
   {
     skipNull: true,
     coerce: false,

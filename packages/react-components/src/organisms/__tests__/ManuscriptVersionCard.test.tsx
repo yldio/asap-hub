@@ -28,6 +28,10 @@ const setScrollHeightMock = (height: number) => {
   jest.spyOn(React, 'useRef').mockReturnValue(ref);
 };
 
+const useVersionById = jest
+  .fn()
+  .mockImplementation(() => [undefined, jest.fn()]);
+
 afterAll(jest.clearAllMocks);
 
 const baseVersion = createManuscriptResponse().versions[0] as ManuscriptVersion;
@@ -37,12 +41,14 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   teamIdCode: 'TI1',
   teamId: 'team-id-0',
   manuscriptCount: 1,
-  onReplyToDiscussion: jest.fn(),
+  onSave: jest.fn(),
   getDiscussion: jest.fn(),
   manuscriptId: 'manuscript-1',
   isTeamMember: true,
   canEditManuscript: true,
   isActiveManuscript: true,
+  createComplianceDiscussion: jest.fn(),
+  useVersionById: jest.fn(),
 };
 
 it('displays quick checks when present', () => {
@@ -101,7 +107,13 @@ it('displays quick checks when present', () => {
     ],
   };
   const { getByText, queryByText, getByLabelText, rerender, getAllByText } =
-    render(<ManuscriptVersionCard {...props} getDiscussion={getDiscussion} />);
+    render(
+      <ManuscriptVersionCard
+        {...props}
+        getDiscussion={getDiscussion}
+        useVersionById={useVersionById}
+      />,
+    );
   userEvent.click(getByLabelText('Expand Version'));
 
   expect(
@@ -125,6 +137,7 @@ it('displays quick checks when present', () => {
       {...props}
       version={updatedVersion}
       getDiscussion={getDiscussion}
+      useVersionById={useVersionById}
     />,
   );
 
@@ -189,6 +202,7 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
           id: '',
         },
       }}
+      useVersionById={useVersionById}
     />,
   );
 
@@ -206,14 +220,22 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
 describe('edit', () => {
   it('does not display the edit button when canEditManuscript is false', () => {
     const { queryByLabelText } = render(
-      <ManuscriptVersionCard {...props} canEditManuscript={false} />,
+      <ManuscriptVersionCard
+        {...props}
+        canEditManuscript={false}
+        useVersionById={useVersionById}
+      />,
     );
     expect(queryByLabelText('Edit')).not.toBeInTheDocument();
   });
 
   it('does not display the edit button when isActiveManuscript is false', () => {
     const { queryByLabelText } = render(
-      <ManuscriptVersionCard {...props} isActiveManuscript={false} />,
+      <ManuscriptVersionCard
+        {...props}
+        isActiveManuscript={false}
+        useVersionById={useVersionById}
+      />,
     );
     expect(queryByLabelText('Edit')).not.toBeInTheDocument();
   });
@@ -224,7 +246,7 @@ describe('edit', () => {
 
     const { getByLabelText } = render(
       <Router history={history}>
-        <ManuscriptVersionCard {...props} />
+        <ManuscriptVersionCard {...props} useVersionById={useVersionById} />
       </Router>,
     );
     userEvent.click(getByLabelText('Edit'));
@@ -236,7 +258,7 @@ describe('edit', () => {
 
 it('displays Additional Information section when present', () => {
   const { getByRole, queryByRole, rerender, getByLabelText } = render(
-    <ManuscriptVersionCard {...props} />,
+    <ManuscriptVersionCard {...props} useVersionById={useVersionById} />,
   );
   userEvent.click(getByLabelText('Expand Version'));
   expect(
@@ -252,6 +274,7 @@ it('displays Additional Information section when present', () => {
       {...props}
       version={{ ...baseVersion, otherDetails: 'Necessary info' }}
       getDiscussion={getDiscussion}
+      useVersionById={useVersionById}
     />,
   );
 
@@ -271,6 +294,7 @@ it('renders a divider between fields in Additional Information section and files
         requestingApcCoverage: 'Already submitted',
         otherDetails: 'Necessary info',
       }}
+      useVersionById={useVersionById}
     />,
   );
 
@@ -286,7 +310,7 @@ it.each`
   ${'otherDetails'}          | ${'Other details'}           | ${'new details'}
 `(`displays field $field when present`, async ({ field, title, newValue }) => {
   const { getByLabelText, getByText, queryByText, rerender } = render(
-    <ManuscriptVersionCard {...props} />,
+    <ManuscriptVersionCard {...props} useVersionById={useVersionById} />,
   );
   userEvent.click(getByLabelText('Expand Version'));
   expect(queryByText(title)).not.toBeInTheDocument();
@@ -296,7 +320,13 @@ it.each`
     [field]: newValue,
   };
 
-  rerender(<ManuscriptVersionCard {...props} version={updatedVersion} />);
+  rerender(
+    <ManuscriptVersionCard
+      {...props}
+      version={updatedVersion}
+      useVersionById={useVersionById}
+    />,
+  );
 
   expect(getByText(title)).toBeVisible();
   expect(getByText(newValue)).toBeVisible();
@@ -320,6 +350,7 @@ it('builds the correct href for doi fields', () => {
         preprintDoi: preprintDoiValue,
         publicationDoi: publicationDoiValue,
       }}
+      useVersionById={useVersionById}
     />,
   );
   userEvent.click(getByLabelText('Expand Version'));
@@ -347,6 +378,7 @@ it('renders manuscript main file details and download link', () => {
         },
         keyResourceTable: undefined,
       }}
+      useVersionById={useVersionById}
     />,
   );
   userEvent.click(getByLabelText('Expand Version'));
@@ -375,6 +407,7 @@ it('renders key resource table file details and download link', () => {
           id: 'file-2',
         },
       }}
+      useVersionById={useVersionById}
     />,
   );
   userEvent.click(getByLabelText('Expand Version'));
@@ -396,6 +429,7 @@ it("does not display Submitter's Name and Submission Date if submitterName and s
         submissionDate: undefined,
         submitterName: undefined,
       }}
+      useVersionById={useVersionById}
     />,
   );
   userEvent.click(getByLabelText('Expand Version'));
@@ -418,6 +452,7 @@ it('displays apc coverage information', () => {
         submissionDate: new Date('2024-10-03'),
         submitterName: 'Janet Doe',
       }}
+      useVersionById={useVersionById}
     />,
   );
   userEvent.click(getByLabelText('Expand Version'));
@@ -452,6 +487,7 @@ it('renders additional files details and download link when provided', () => {
           },
         ],
       }}
+      useVersionById={useVersionById}
     />,
   );
   userEvent.click(getByLabelText('Expand Version'));
@@ -464,13 +500,14 @@ it('renders additional files details and download link when provided', () => {
 });
 
 it('displays compliance report section when present', () => {
-  const { getByLabelText, queryByRole, rerender, getByRole } = render(
-    <ManuscriptVersionCard {...props} />,
+  const { getByLabelText, queryByRole, rerender, getByRole, unmount } = render(
+    <ManuscriptVersionCard {...props} useVersionById={useVersionById} />,
   );
   userEvent.click(getByLabelText('Expand Version'));
   expect(
     queryByRole('heading', { name: /Compliance Report/i }),
   ).not.toBeInTheDocument();
+  unmount();
 
   rerender(
     <ManuscriptVersionCard
@@ -479,6 +516,7 @@ it('displays compliance report section when present', () => {
         ...baseVersion,
         complianceReport: getComplianceReportDataObject(),
       }}
+      useVersionById={useVersionById}
     />,
   );
 
@@ -498,6 +536,7 @@ it('displays manuscript description', () => {
           ...baseVersion,
           description: shortDescription,
         }}
+        useVersionById={useVersionById}
       />,
     );
   userEvent.click(getByLabelText('Expand Version'));
@@ -512,6 +551,7 @@ it('displays manuscript description', () => {
         ...baseVersion,
         description: longDescription,
       }}
+      useVersionById={useVersionById}
     />,
   );
 
@@ -554,6 +594,7 @@ it('does not display reply button if isActiveManuscript is false', () => {
       version={updatedVersion}
       getDiscussion={getDiscussion}
       isActiveManuscript={false}
+      useVersionById={useVersionById}
     />,
   );
   userEvent.click(getByLabelText('Expand Version'));

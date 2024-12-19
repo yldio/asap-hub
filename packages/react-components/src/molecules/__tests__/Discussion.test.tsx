@@ -10,9 +10,10 @@ import Discussion from '../Discussion';
 
 const props: ComponentProps<typeof Discussion> = {
   id: 'discussion-id',
+  modalTitle: 'Reply to quick check',
   canReply: true,
   getDiscussion: jest.fn().mockReturnValue(createDiscussionResponse()),
-  onReplyToDiscussion: jest.fn(),
+  onSave: jest.fn(),
 };
 
 it('handles case when discussion is not found', () => {

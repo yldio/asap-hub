@@ -47,9 +47,9 @@ const discussionCreateRequestValidationSchema: JSONSchemaType<DiscussionCreateRe
     properties: {
       message: { type: 'string', maxLength: 256 },
       id: { type: 'string', maxLength: 256 },
-      type: { type: 'string', maxLength: 256 },
+      type: { type: 'string', enum: ['compliance-report'], maxLength: 256 },
     },
-    required: ['message'],
+    required: ['message', 'id'],
     additionalProperties: false,
   };
 

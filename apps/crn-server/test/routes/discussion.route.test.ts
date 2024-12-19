@@ -164,4 +164,88 @@ describe('/discussions/ route', () => {
       expect(response.status).toBe(400);
     });
   });
+
+  describe('POST /discussions', () => {
+    test('Should return a 400 error when the payload is invalid', async () => {
+      const response = await supertest(app).post(`/discussions`).send({
+        message: 'something',
+        id: 'some-id',
+        type: 'wrong-type', // should be undefined or 'compliance-report' only
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    test('Should return a 400 error when additional properties exist', async () => {
+      const response = await supertest(app).post(`/discussions`).send({
+        id: 'some-id',
+        message: 'response',
+        additionalField: 'some-data',
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    test('Should return the results correctly', async () => {
+      discussionControllerMock.create.mockResolvedValueOnce(discussionResponse);
+
+      const response = await supertest(app).post(`/discussions`).send({
+        id: 'some-id',
+        message: 'A good message',
+      });
+
+      expect(response.body).toEqual(discussionResponse);
+    });
+
+    test('Should call the controller with the right parameters when type not set to compliance-report', async () => {
+      const id = 'compliance-report-id-0';
+      const message = 'test reply';
+
+      const discussion = {
+        text: message,
+        userId: 'user-id-0',
+        type: undefined,
+      };
+
+      await supertest(app).post(`/discussions`).send({
+        message,
+        id,
+      });
+
+      expect(discussionControllerMock.create).toBeCalledWith(discussion);
+    });
+
+    test('Should call the controller with the right parameters when type is set to compliance-report', async () => {
+      const id = 'compliance-report-id-0';
+      const message = 'test reply';
+      const type = 'compliance-report';
+
+      await supertest(app).post(`/discussions`).send({
+        message,
+        id,
+        type,
+      });
+
+      const discussion = {
+        text: message,
+        userId: 'user-id-0',
+        type,
+        complianceReportId: 'compliance-report-id-0',
+      };
+
+      expect(discussionControllerMock.create).toBeCalledWith(discussion);
+    });
+
+    test('Should not accept discussion message over 256 characters', async () => {
+      const id = 'compliance-report-id-0';
+      const message = 'A'.repeat(257);
+
+      const response = await supertest(app).post(`/discussions`).send({
+        message,
+        id,
+      });
+
+      expect(response.status).toBe(400);
+    });
+  });
 });

@@ -73,12 +73,13 @@ export const getTimeElapsed = (isoDate: string): string => {
   const secondsElapsed = (now.getTime() - date.getTime()) / 1000;
 
   const oneHourInSeconds = 3600;
-  const oneDayInSeconds = 86400;
-
   if (secondsElapsed < oneHourInSeconds) {
     const minutes = Math.floor(secondsElapsed / 60);
     return `${minutes}m`;
-  } else if (secondsElapsed < oneDayInSeconds) {
+  }
+
+  const oneDayInSeconds = 86400;
+  if (secondsElapsed < oneDayInSeconds) {
     const hours = Math.floor(secondsElapsed / 3600);
     return `${hours}h`;
   }

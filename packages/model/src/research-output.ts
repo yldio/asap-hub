@@ -370,6 +370,11 @@ export type PublicResearchOutputResponse = Pick<
   persistentIdentifier: ResearchOutputResponse['doi'];
   finalPublishDate?: string;
   preprintPublishDate?: string;
+  preprint?: {
+    title?: string;
+    link?: string;
+    addedDate?: string;
+  };
 };
 
 export type ListPublicOutputResponse =

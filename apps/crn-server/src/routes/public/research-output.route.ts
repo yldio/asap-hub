@@ -59,36 +59,59 @@ export const researchOutputRouteFactory = (
 
 const mapToPublicResearchOutput = (
   researchOutput: ResearchOutputResponse,
-): PublicResearchOutputResponse => ({
-  id: researchOutput.id,
-  sharingStatus: researchOutput.sharingStatus,
-  asapFunded: researchOutput.asapFunded,
-  teams: researchOutput.teams.map((team) => team.displayName),
-  authors: researchOutput.authors.map((author) => ({
-    name: author.displayName,
-    id: author.email && author.id,
-  })),
-  title: researchOutput.title,
-  description: researchOutput.descriptionMD || researchOutput.description,
-  shortDescription: researchOutput.shortDescription,
-  tags: [
-    ...researchOutput.methods,
-    ...researchOutput.organisms,
-    ...researchOutput.environments,
-    ...(researchOutput.subtype ? [researchOutput.subtype] : []),
-    ...researchOutput.keywords,
-  ],
-  hyperlink: researchOutput.link,
-  type: researchOutput.type,
-  documentType: researchOutput.documentType,
-  persistentIdentifier: researchOutput.doi,
-  relatedResearch: researchOutput.relatedResearch,
-  created: researchOutput.created,
-  researchTheme: researchOutput.researchTheme,
-  finalPublishDate:
-    researchOutput.type === 'Published'
-      ? researchOutput.publishDate
-      : undefined,
-  preprintPublishDate:
-    researchOutput.type === 'Preprint' ? researchOutput.publishDate : undefined,
-});
+): PublicResearchOutputResponse => {
+  console.log(researchOutput.versions);
+  const firstPreprintVersion =
+    researchOutput.documentType === 'Article'
+      ? researchOutput.versions
+          .filter((version) => version.type === 'Preprint')
+          .sort(
+            (a, b) =>
+              new Date(a?.addedDate || '').getTime() -
+              new Date(b?.addedDate || '').getTime(),
+          )[0]
+      : undefined;
+
+  const preprint = {
+    title: firstPreprintVersion?.title,
+    link: firstPreprintVersion?.link,
+    addedDate: firstPreprintVersion?.addedDate,
+  };
+
+  return {
+    id: researchOutput.id,
+    sharingStatus: researchOutput.sharingStatus,
+    asapFunded: researchOutput.asapFunded,
+    teams: researchOutput.teams.map((team) => team.displayName),
+    authors: researchOutput.authors.map((author) => ({
+      name: author.displayName,
+      id: author.email && author.id,
+    })),
+    title: researchOutput.title,
+    description: researchOutput.descriptionMD || researchOutput.description,
+    shortDescription: researchOutput.shortDescription,
+    tags: [
+      ...researchOutput.methods,
+      ...researchOutput.organisms,
+      ...researchOutput.environments,
+      ...(researchOutput.subtype ? [researchOutput.subtype] : []),
+      ...researchOutput.keywords,
+    ],
+    hyperlink: researchOutput.link,
+    type: researchOutput.type,
+    documentType: researchOutput.documentType,
+    persistentIdentifier: researchOutput.doi,
+    relatedResearch: researchOutput.relatedResearch,
+    created: researchOutput.created,
+    researchTheme: researchOutput.researchTheme,
+    finalPublishDate:
+      researchOutput.type === 'Published'
+        ? researchOutput.publishDate
+        : undefined,
+    preprintPublishDate:
+      researchOutput.type === 'Preprint'
+        ? researchOutput.publishDate
+        : undefined,
+    ...(preprint.title ? { preprint } : {}),
+  };
+};

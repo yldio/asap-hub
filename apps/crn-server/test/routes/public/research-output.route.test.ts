@@ -103,6 +103,42 @@ describe('/research-outputs/ route', () => {
       );
     });
 
+    test('Should return the first preprint data when the document type is Article', async () => {
+      const listOutputResponse = getListResearchOutputResponse();
+      listOutputResponse.items[0]!.documentType = 'Article';
+      listOutputResponse.items[0]!.versions = [
+        {
+          addedDate: '2024-01-07T00:00:00.000Z',
+          id: '2',
+          title: 'Preprint Article 2',
+          documentType: 'Article',
+          type: 'Preprint',
+          link: 'https://version2.com',
+        },
+        {
+          addedDate: '2024-01-01T00:00:00.000Z',
+          id: '1',
+          title: 'Preprint Article 1',
+          documentType: 'Article',
+          type: 'Preprint',
+          link: 'https://version1.com',
+        },
+      ];
+
+      researchOutputControllerMock.fetch.mockResolvedValueOnce(
+        listOutputResponse,
+      );
+      const response = await supertest(publicApp).get(
+        '/public/research-outputs',
+      );
+
+      expect(response.body.items[0].preprint).toEqual({
+        title: 'Preprint Article 1',
+        link: 'https://version1.com',
+        addedDate: '2024-01-01T00:00:00.000Z',
+      });
+    });
+
     describe('Parameter validation', () => {
       beforeEach(() => {
         researchOutputControllerMock.fetch.mockResolvedValueOnce({

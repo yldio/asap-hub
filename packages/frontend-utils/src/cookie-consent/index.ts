@@ -10,6 +10,8 @@ type CookieData = {
   };
 };
 
+const GA_COOKIES_PREFIX = '_ga';
+
 export const setConsentCookie = (
   name: string,
   preferences: CookieData,
@@ -33,6 +35,15 @@ export const hasGivenCookieConsent = (name: string): boolean => {
     typeof cookie.preferences.essential === 'boolean' &&
     typeof cookie.preferences.analytics === 'boolean'
   );
+};
+
+export const clearCookiesWithPrefix = (prefix: string): void => {
+  const allCookies = Cookies.get();
+  Object.keys(allCookies).forEach((cookieName) => {
+    if (cookieName.startsWith(prefix)) {
+      Cookies.remove(cookieName);
+    }
+  });
 };
 
 export const useCookieConsent = ({
@@ -99,6 +110,14 @@ export const useCookieConsent = ({
 
   const onSaveCookiePreferences = async (analytics: boolean) => {
     setisSaving(true);
+    if (!analytics) {
+      Object.defineProperty(window, 'dataLayer', {
+        value: [],
+        writable: true,
+      });
+
+      clearCookiesWithPrefix(GA_COOKIES_PREFIX);
+    }
 
     const updatedCookieData = {
       cookieId:

@@ -60,7 +60,6 @@ export const researchOutputRouteFactory = (
 const mapToPublicResearchOutput = (
   researchOutput: ResearchOutputResponse,
 ): PublicResearchOutputResponse => {
-  console.log(researchOutput.versions);
   const firstPreprintVersion =
     researchOutput.documentType === 'Article'
       ? researchOutput.versions

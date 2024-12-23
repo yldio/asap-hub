@@ -20720,6 +20720,9 @@ export type FetchTeamByIdQuery = {
           items: Array<
             Maybe<
               Pick<Manuscripts, 'title' | 'status' | 'count'> & {
+                teamsCollection?: Maybe<{
+                  items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                }>;
                 sys: Pick<Sys, 'id'>;
                 versionsCollection?: Maybe<{
                   items: Array<
@@ -37696,6 +37699,56 @@ export const FetchTeamByIdDocument = {
                                     name: {
                                       kind: 'Name',
                                       value: 'ManuscriptsContent',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'teamsCollection',
+                                    },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'limit' },
+                                        value: { kind: 'IntValue', value: '1' },
+                                      },
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
                                     },
                                   },
                                 ],

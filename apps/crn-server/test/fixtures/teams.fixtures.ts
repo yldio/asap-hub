@@ -72,7 +72,7 @@ export const getContentfulGraphqlTeamById = (
     },
   },
   linkedFrom: {
-    manuscriptsCollection: getContentfulGraphqlManuscripts(),
+    manuscriptsCollection: getContentfulGraphqlManuscripts(teamId),
     teamMembershipCollection: {
       items: [
         {
@@ -171,7 +171,9 @@ export const getContentfulGraphqlTeamMemberLabs = (): LabsCollectionType => ({
   ],
 });
 
-export const getContentfulGraphqlManuscripts = (): NonNullable<
+export const getContentfulGraphqlManuscripts = (
+  teamId?: string,
+): NonNullable<
   NonNullable<FetchTeamByIdQuery['teams']>['linkedFrom']
 >['manuscriptsCollection'] => ({
   items: [
@@ -180,12 +182,18 @@ export const getContentfulGraphqlManuscripts = (): NonNullable<
       count: 1,
       title: 'Manuscript 1',
       status: 'Compliant',
+      teamsCollection: {
+        items: [{ sys: { id: teamId || 'team-id-0' } }],
+      },
       versionsCollection: getContentfulGraphqlManuscriptVersions(),
     },
     {
       sys: { id: '2' },
       count: 2,
       title: 'Manuscript 2',
+      teamsCollection: {
+        items: [{ sys: { id: teamId || 'team-id-0' } }],
+      },
       versionsCollection: getContentfulGraphqlManuscriptVersions(),
     },
   ],

@@ -42,3 +42,17 @@ it('does not re-init if GTM is already loaded', () => {
   render(<GoogleTagManager containerId="containerId" />);
   expect(globalThis.window.dataLayer).toStrictEqual(oldDataLayer);
 });
+
+it('disables tracking when disabledTracking is true', () => {
+  render(<GoogleTagManager containerId="containerId" disabledTracking />);
+  expect(globalThis.window[`ga-disable-containerId`]).toBe(true);
+  expect(window.dataLayer).not.toBeDefined();
+});
+
+it('enables tracking when disabledTracking is false', () => {
+  render(
+    <GoogleTagManager containerId="containerId" disabledTracking={false} />,
+  );
+  expect(globalThis.window[`ga-disable-containerId`]).toBe(false);
+  expect(window.dataLayer).toBeDefined();
+});

@@ -6,7 +6,11 @@ import {
   ResearchOutputPublishedDataObject,
 } from './research-output';
 
-type ReminderEntity = 'Research Output' | 'Event' | 'Research Output Version';
+type ReminderEntity =
+  | 'Research Output'
+  | 'Event'
+  | 'Research Output Version'
+  | 'Manuscript';
 
 type ResearchOutputReminderType =
   | 'Published'
@@ -223,6 +227,8 @@ export type FetchRemindersOptions = {
 
 export type ReminderResponse = {
   description: string;
+  subtext?: string;
+  date?: string;
   entity: ReminderEntity;
   href?: string;
   id: string;

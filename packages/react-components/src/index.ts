@@ -100,6 +100,7 @@ export {
   OrcidSigninButton,
   PageControls,
   PillList,
+  ReminderItem,
   SearchField,
   StatusButton,
   TabbedCard,
@@ -303,7 +304,7 @@ export {
 } from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant, SwitchProps } from './atoms';
-export type { ItemType, StatusType } from './molecules';
+export type { ItemType, StatusType, ReminderEntity } from './molecules';
 export type {
   Association,
   UserCollaborationMetric,

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import ReminderItem from '../ReminderItem';
+import ReminderItem, { getTimeElapsed } from '../ReminderItem';
 
 it('renders reminder item with default icon', () => {
   render(<ReminderItem description="description" />);
@@ -40,4 +40,53 @@ it('renders a markdown text correctly', () => {
   expect(getByText('description').closest('strong')?.textContent).toContain(
     'description',
   );
+});
+
+it('renders the subtext correctly', () => {
+  const { getByText } = render(
+    <ReminderItem
+      entity="Event"
+      description="**description**"
+      subtext="subtext"
+      href="http://example.com"
+    />,
+  );
+
+  expect(getByText('subtext')).toBeInTheDocument();
+});
+
+describe('getTimeElapsed', () => {
+  const MINUTES_IN_MILLISECONDS = 60 * 1000;
+  const HOURS_IN_MILLISECONDS = 3600 * 1000;
+  const DAYS_IN_MILLISECONDS = 86400 * 1000;
+
+  it('returns the correct time elapsed in minutes', () => {
+    const now = new Date();
+    const tenMinutesAgo = new Date(
+      now.getTime() - 10 * MINUTES_IN_MILLISECONDS,
+    ).toISOString();
+    expect(getTimeElapsed(tenMinutesAgo)).toBe('10m');
+  });
+
+  it('returns the correct time elapsed in hours', () => {
+    const now = new Date();
+    const threeHoursAgo = new Date(
+      now.getTime() - 3 * HOURS_IN_MILLISECONDS,
+    ).toISOString();
+    expect(getTimeElapsed(threeHoursAgo)).toBe('3h');
+  });
+
+  it('returns the correct time elapsed in days', () => {
+    const now = new Date();
+    const fiveDaysAgo = new Date(
+      now.getTime() - 5 * DAYS_IN_MILLISECONDS,
+    ).toISOString();
+    expect(getTimeElapsed(fiveDaysAgo)).toBe('5d');
+  });
+
+  it('returns 0m for times less than a minute ago', () => {
+    const now = new Date();
+    const thirtySecondsAgo = new Date(now.getTime() - 30 * 1000).toISOString();
+    expect(getTimeElapsed(thirtySecondsAgo)).toBe('0m');
+  });
 });

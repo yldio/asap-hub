@@ -373,12 +373,6 @@ describe('useCookieConsent', () => {
 
     const mockRemove = jest.spyOn(Cookies, 'remove');
 
-    const originalDataLayer = window.dataLayer;
-    Object.defineProperty(window, 'dataLayer', {
-      writable: true,
-      value: [{ 'gtm.start': new Date().getTime(), event: 'gtm.js' }],
-    });
-
     const { result } = renderHook(() =>
       useCookieConsent({
         name: COOKIE_NAME,
@@ -392,13 +386,5 @@ describe('useCookieConsent', () => {
     expect(mockRemove).toHaveBeenCalledWith('_ga123');
     expect(mockRemove).toHaveBeenCalledWith('_ga456');
     expect(mockRemove).not.toHaveBeenCalledWith('unrelatedCookie');
-
-    expect(window.dataLayer).toBeDefined();
-    expect(window.dataLayer).toEqual([]);
-
-    Object.defineProperty(window, 'dataLayer', {
-      writable: true,
-      value: originalDataLayer,
-    });
   });
 });

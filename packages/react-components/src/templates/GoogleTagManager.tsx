@@ -6,16 +6,20 @@ import { useEffect } from 'react';
 type DataLayerValue = string | number | ReadonlyArray<DataLayerValue>;
 declare global {
   interface Window {
-    readonly dataLayer?: Array<Record<string, DataLayerValue | undefined>>;
+    dataLayer?: Array<Record<string, DataLayerValue | undefined>>;
+    [key: `ga-disable-${string}`]: boolean | undefined;
   }
 }
-
 interface GoogleTagManagerProps {
   containerId?: string;
+  disabledTracking?: boolean;
 }
-const GoogleTagManager: React.FC<GoogleTagManagerProps> = ({ containerId }) => {
+const GoogleTagManager: React.FC<GoogleTagManagerProps> = ({
+  containerId,
+  disabledTracking,
+}) => {
   useEffect(() => {
-    if (containerId && !('dataLayer' in window)) {
+    if (containerId && (!('dataLayer' in window) || !window.dataLayer)) {
       Object.defineProperty(window, 'dataLayer', {
         writable: true,
         value: [{ 'gtm.start': new Date().getTime(), event: 'gtm.js' }],
@@ -24,7 +28,14 @@ const GoogleTagManager: React.FC<GoogleTagManagerProps> = ({ containerId }) => {
       scriptUrl.searchParams.set('id', containerId);
       import(/* @vite-ignore */ scriptUrl.href);
     }
-  });
+
+    if (disabledTracking) {
+      window.dataLayer = undefined;
+      window[`ga-disable-${containerId}`] = true;
+    } else {
+      window[`ga-disable-${containerId}`] = false;
+    }
+  }, [containerId, disabledTracking]);
 
   return null;
 };

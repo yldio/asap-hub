@@ -111,11 +111,6 @@ export const useCookieConsent = ({
   const onSaveCookiePreferences = async (analytics: boolean) => {
     setisSaving(true);
     if (!analytics) {
-      Object.defineProperty(window, 'dataLayer', {
-        value: [],
-        writable: true,
-      });
-
       clearCookiesWithPrefix(GA_COOKIES_PREFIX);
     }
 

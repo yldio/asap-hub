@@ -106,9 +106,13 @@ const App: FC<Record<string, never>> = () => {
   return (
     <LogoProvider appName="CRN">
       <Frame title="ASAP Hub">
-        {(!isCookiesFlagEnabled || cookieData?.preferences.analytics) && (
-          <GoogleTagManager containerId={GTM_CONTAINER_ID} />
-        )}
+        <GoogleTagManager
+          containerId={GTM_CONTAINER_ID}
+          disabledTracking={
+            !isCookiesFlagEnabled || !cookieData?.preferences.analytics
+          }
+        />
+
         <AuthProvider>
           <SentryAuth0 />
           <Router history={history}>

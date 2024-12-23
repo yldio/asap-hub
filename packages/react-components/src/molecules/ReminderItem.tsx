@@ -81,27 +81,6 @@ export const getTimeElapsed = (isoDate: string): string => {
   return `${Math.floor(secondsElapsed / 86400)}d`;
 };
 
-  const date = new Date(isoDate);
-  const now = new Date();
-
-  const secondsElapsed = (now.getTime() - date.getTime()) / 1000;
-
-  const oneHourInSeconds = 3600;
-  if (secondsElapsed < oneHourInSeconds) {
-    const minutes = Math.floor(secondsElapsed / 60);
-    return `${minutes}m`;
-  }
-
-  const oneDayInSeconds = 86400;
-  if (secondsElapsed < oneDayInSeconds) {
-    const hours = Math.floor(secondsElapsed / 3600);
-    return `${hours}h`;
-  }
-
-  const days = Math.floor(secondsElapsed / 86400);
-  return `${days}d`;
-};
-
 const ReminderItem: React.FC<ReminderProps> = ({
   entity,
   description,

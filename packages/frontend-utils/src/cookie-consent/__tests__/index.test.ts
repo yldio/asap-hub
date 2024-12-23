@@ -355,4 +355,50 @@ describe('useCookieConsent', () => {
       expect(uuidv4).not.toHaveBeenCalled();
     });
   });
+
+  it('clears cookies with prefix "_ga" and clears window.dataLayer when analytics is false', async () => {
+    (Cookies.get as jest.Mock).mockImplementation((name) => {
+      if (name) {
+        return JSON.stringify({
+          cookieId: 'mocked-uuid',
+          preferences: { essential: true, analytics: false },
+        });
+      }
+      return {
+        _ga123: 'value1',
+        _ga456: 'value2',
+        unrelatedCookie: 'value3',
+      };
+    });
+
+    const mockRemove = jest.spyOn(Cookies, 'remove');
+
+    const originalDataLayer = window.dataLayer;
+    Object.defineProperty(window, 'dataLayer', {
+      writable: true,
+      value: [{ 'gtm.start': new Date().getTime(), event: 'gtm.js' }],
+    });
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: COOKIE_NAME,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await act(async () => result.current.onSaveCookiePreferences(false));
+
+    expect(mockRemove).toHaveBeenCalledWith('_ga123');
+    expect(mockRemove).toHaveBeenCalledWith('_ga456');
+    expect(mockRemove).not.toHaveBeenCalledWith('unrelatedCookie');
+
+    expect(window.dataLayer).toBeDefined();
+    expect(window.dataLayer).toEqual([]);
+
+    Object.defineProperty(window, 'dataLayer', {
+      writable: true,
+      value: originalDataLayer,
+    });
+  });
 });

@@ -19,21 +19,24 @@ const GoogleTagManager: React.FC<GoogleTagManagerProps> = ({
   disabledTracking,
 }) => {
   useEffect(() => {
-    if (containerId && (!('dataLayer' in window) || !window.dataLayer)) {
-      Object.defineProperty(window, 'dataLayer', {
-        writable: true,
-        value: [{ 'gtm.start': new Date().getTime(), event: 'gtm.js' }],
-      });
-      const scriptUrl = new URL('https://www.googletagmanager.com/gtm.js');
-      scriptUrl.searchParams.set('id', containerId);
-      import(/* @vite-ignore */ scriptUrl.href);
-    }
+    if (!containerId) return;
+
+    window[`ga-disable-${containerId}`] = Boolean(disabledTracking);
 
     if (disabledTracking) {
       window.dataLayer = undefined;
-      window[`ga-disable-${containerId}`] = true;
-    } else {
-      window[`ga-disable-${containerId}`] = false;
+      return;
+    }
+
+    if (!window.dataLayer) {
+      window.dataLayer = [
+        { 'gtm.start': new Date().getTime(), event: 'gtm.js' },
+      ];
+
+      const scriptUrl = new URL('https://www.googletagmanager.com/gtm.js');
+      scriptUrl.searchParams.set('id', containerId);
+
+      import(/* @vite-ignore */ scriptUrl.href);
     }
   }, [containerId, disabledTracking]);
 

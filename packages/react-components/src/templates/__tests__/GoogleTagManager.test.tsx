@@ -17,6 +17,11 @@ afterEach(() => {
   delete (globalThis.window as any).dataLayer;
 });
 
+beforeAll(() => {
+  const mockDate = new Date('2024-01-01T00:00:00Z');
+  jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+});
+
 it('initializes the data layer', () => {
   render(<GoogleTagManager containerId="containerId" />);
   expect(globalThis.window).toHaveProperty('dataLayer');
@@ -30,8 +35,12 @@ it('creates a gtm.js event', () => {
 });
 
 it('loads the GTM script', () => {
-  render(<GoogleTagManager containerId="containerId" />);
-  expect(globalThis.window.dataLayer).toContainEqual({ key: 'val' });
+  render(
+    <GoogleTagManager containerId="containerId" disabledTracking={false} />,
+  );
+  expect(globalThis.window.dataLayer).toEqual([
+    { event: 'gtm.js', 'gtm.start': 1704067200000 },
+  ]);
 });
 
 it('does not re-init if GTM is already loaded', () => {

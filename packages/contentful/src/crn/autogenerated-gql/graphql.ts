@@ -14104,8 +14104,14 @@ export type FetchDiscoverQuery = {
   }>;
 };
 
-export type DiscussionsContentFragment = {
+export type DiscussionsContentFragment = Pick<Discussions, 'endedAt'> & {
   sys: Pick<Sys, 'id'>;
+  endedBy?: Maybe<
+    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+      sys: Pick<Sys, 'id'>;
+      avatar?: Maybe<Pick<Asset, 'url'>>;
+    }
+  >;
   message?: Maybe<
     Pick<Messages, 'text'> & {
       sys: Pick<Sys, 'publishedAt'>;
@@ -14164,59 +14170,67 @@ export type FetchDiscussionByIdQueryVariables = Exact<{
 }>;
 
 export type FetchDiscussionByIdQuery = {
-  discussions?: Maybe<{
-    sys: Pick<Sys, 'id'>;
-    message?: Maybe<
-      Pick<Messages, 'text'> & {
-        sys: Pick<Sys, 'publishedAt'>;
-        createdBy?: Maybe<
-          Pick<
-            Users,
-            'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-          > & {
-            sys: Pick<Sys, 'id'>;
-            avatar?: Maybe<Pick<Asset, 'url'>>;
-            teamsCollection?: Maybe<{
-              items: Array<
-                Maybe<{
-                  team?: Maybe<
-                    Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
-                  >;
-                }>
-              >;
-            }>;
-          }
-        >;
-      }
-    >;
-    repliesCollection?: Maybe<{
-      items: Array<
-        Maybe<
-          Pick<Messages, 'text'> & {
-            sys: Pick<Sys, 'publishedAt'>;
-            createdBy?: Maybe<
-              Pick<
-                Users,
-                'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-              > & {
-                sys: Pick<Sys, 'id'>;
-                avatar?: Maybe<Pick<Asset, 'url'>>;
-                teamsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<{
-                      team?: Maybe<
-                        Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
-                      >;
-                    }>
-                  >;
-                }>;
-              }
-            >;
-          }
-        >
+  discussions?: Maybe<
+    Pick<Discussions, 'endedAt'> & {
+      sys: Pick<Sys, 'id'>;
+      endedBy?: Maybe<
+        Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+          sys: Pick<Sys, 'id'>;
+          avatar?: Maybe<Pick<Asset, 'url'>>;
+        }
       >;
-    }>;
-  }>;
+      message?: Maybe<
+        Pick<Messages, 'text'> & {
+          sys: Pick<Sys, 'publishedAt'>;
+          createdBy?: Maybe<
+            Pick<
+              Users,
+              'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+            > & {
+              sys: Pick<Sys, 'id'>;
+              avatar?: Maybe<Pick<Asset, 'url'>>;
+              teamsCollection?: Maybe<{
+                items: Array<
+                  Maybe<{
+                    team?: Maybe<
+                      Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                    >;
+                  }>
+                >;
+              }>;
+            }
+          >;
+        }
+      >;
+      repliesCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<Messages, 'text'> & {
+              sys: Pick<Sys, 'publishedAt'>;
+              createdBy?: Maybe<
+                Pick<
+                  Users,
+                  'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                > & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                  teamsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<{
+                        team?: Maybe<
+                          Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                        >;
+                      }>
+                    >;
+                  }>;
+                }
+              >;
+            }
+          >
+        >;
+      }>;
+    }
+  >;
 };
 
 export type EventsContentFragment = Pick<
@@ -17769,486 +17783,550 @@ export type ManuscriptsContentFragment = Pick<
               Maybe<Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }>
             >;
           }>;
-          acknowledgedGrantNumberDetails?: Maybe<{
-            sys: Pick<Sys, 'id'>;
-            message?: Maybe<
-              Pick<Messages, 'text'> & {
-                sys: Pick<Sys, 'publishedAt'>;
-                createdBy?: Maybe<
-                  Pick<
-                    Users,
-                    'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                  > & {
-                    sys: Pick<Sys, 'id'>;
-                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<{
-                          team?: Maybe<
-                            Pick<Teams, 'displayName'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
-                          >;
-                        }>
-                      >;
-                    }>;
-                  }
-                >;
-              }
-            >;
-            repliesCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >
+          acknowledgedGrantNumberDetails?: Maybe<
+            Pick<Discussions, 'endedAt'> & {
+              sys: Pick<Sys, 'id'>;
+              endedBy?: Maybe<
+                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                }
               >;
-            }>;
-          }>;
-          asapAffiliationIncludedDetails?: Maybe<{
-            sys: Pick<Sys, 'id'>;
-            message?: Maybe<
-              Pick<Messages, 'text'> & {
-                sys: Pick<Sys, 'publishedAt'>;
-                createdBy?: Maybe<
-                  Pick<
-                    Users,
-                    'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                  > & {
-                    sys: Pick<Sys, 'id'>;
-                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<{
-                          team?: Maybe<
-                            Pick<Teams, 'displayName'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
-                          >;
-                        }>
-                      >;
-                    }>;
-                  }
-                >;
-              }
-            >;
-            repliesCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >
+              message?: Maybe<
+                Pick<Messages, 'text'> & {
+                  sys: Pick<Sys, 'publishedAt'>;
+                  createdBy?: Maybe<
+                    Pick<
+                      Users,
+                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }>
+                        >;
+                      }>;
+                    }
+                  >;
+                }
               >;
-            }>;
-          }>;
-          manuscriptLicenseDetails?: Maybe<{
-            sys: Pick<Sys, 'id'>;
-            message?: Maybe<
-              Pick<Messages, 'text'> & {
-                sys: Pick<Sys, 'publishedAt'>;
-                createdBy?: Maybe<
-                  Pick<
-                    Users,
-                    'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                  > & {
-                    sys: Pick<Sys, 'id'>;
-                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<{
-                          team?: Maybe<
-                            Pick<Teams, 'displayName'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
-                          >;
-                        }>
+              repliesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
                       >;
-                    }>;
-                  }
+                    }
+                  >
                 >;
-              }
-            >;
-            repliesCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >
+              }>;
+            }
+          >;
+          asapAffiliationIncludedDetails?: Maybe<
+            Pick<Discussions, 'endedAt'> & {
+              sys: Pick<Sys, 'id'>;
+              endedBy?: Maybe<
+                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                }
               >;
-            }>;
-          }>;
-          datasetsDepositedDetails?: Maybe<{
-            sys: Pick<Sys, 'id'>;
-            message?: Maybe<
-              Pick<Messages, 'text'> & {
-                sys: Pick<Sys, 'publishedAt'>;
-                createdBy?: Maybe<
-                  Pick<
-                    Users,
-                    'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                  > & {
-                    sys: Pick<Sys, 'id'>;
-                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<{
-                          team?: Maybe<
-                            Pick<Teams, 'displayName'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
-                          >;
-                        }>
+              message?: Maybe<
+                Pick<Messages, 'text'> & {
+                  sys: Pick<Sys, 'publishedAt'>;
+                  createdBy?: Maybe<
+                    Pick<
+                      Users,
+                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }>
+                        >;
+                      }>;
+                    }
+                  >;
+                }
+              >;
+              repliesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
                       >;
-                    }>;
-                  }
+                    }
+                  >
                 >;
-              }
-            >;
-            repliesCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >
+              }>;
+            }
+          >;
+          manuscriptLicenseDetails?: Maybe<
+            Pick<Discussions, 'endedAt'> & {
+              sys: Pick<Sys, 'id'>;
+              endedBy?: Maybe<
+                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                }
               >;
-            }>;
-          }>;
-          codeDepositedDetails?: Maybe<{
-            sys: Pick<Sys, 'id'>;
-            message?: Maybe<
-              Pick<Messages, 'text'> & {
-                sys: Pick<Sys, 'publishedAt'>;
-                createdBy?: Maybe<
-                  Pick<
-                    Users,
-                    'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                  > & {
-                    sys: Pick<Sys, 'id'>;
-                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<{
-                          team?: Maybe<
-                            Pick<Teams, 'displayName'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
-                          >;
-                        }>
+              message?: Maybe<
+                Pick<Messages, 'text'> & {
+                  sys: Pick<Sys, 'publishedAt'>;
+                  createdBy?: Maybe<
+                    Pick<
+                      Users,
+                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }>
+                        >;
+                      }>;
+                    }
+                  >;
+                }
+              >;
+              repliesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
                       >;
-                    }>;
-                  }
+                    }
+                  >
                 >;
-              }
-            >;
-            repliesCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >
+              }>;
+            }
+          >;
+          datasetsDepositedDetails?: Maybe<
+            Pick<Discussions, 'endedAt'> & {
+              sys: Pick<Sys, 'id'>;
+              endedBy?: Maybe<
+                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                }
               >;
-            }>;
-          }>;
-          protocolsDepositedDetails?: Maybe<{
-            sys: Pick<Sys, 'id'>;
-            message?: Maybe<
-              Pick<Messages, 'text'> & {
-                sys: Pick<Sys, 'publishedAt'>;
-                createdBy?: Maybe<
-                  Pick<
-                    Users,
-                    'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                  > & {
-                    sys: Pick<Sys, 'id'>;
-                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<{
-                          team?: Maybe<
-                            Pick<Teams, 'displayName'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
-                          >;
-                        }>
+              message?: Maybe<
+                Pick<Messages, 'text'> & {
+                  sys: Pick<Sys, 'publishedAt'>;
+                  createdBy?: Maybe<
+                    Pick<
+                      Users,
+                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }>
+                        >;
+                      }>;
+                    }
+                  >;
+                }
+              >;
+              repliesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
                       >;
-                    }>;
-                  }
+                    }
+                  >
                 >;
-              }
-            >;
-            repliesCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >
+              }>;
+            }
+          >;
+          codeDepositedDetails?: Maybe<
+            Pick<Discussions, 'endedAt'> & {
+              sys: Pick<Sys, 'id'>;
+              endedBy?: Maybe<
+                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                }
               >;
-            }>;
-          }>;
-          labMaterialsRegisteredDetails?: Maybe<{
-            sys: Pick<Sys, 'id'>;
-            message?: Maybe<
-              Pick<Messages, 'text'> & {
-                sys: Pick<Sys, 'publishedAt'>;
-                createdBy?: Maybe<
-                  Pick<
-                    Users,
-                    'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                  > & {
-                    sys: Pick<Sys, 'id'>;
-                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<{
-                          team?: Maybe<
-                            Pick<Teams, 'displayName'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
-                          >;
-                        }>
+              message?: Maybe<
+                Pick<Messages, 'text'> & {
+                  sys: Pick<Sys, 'publishedAt'>;
+                  createdBy?: Maybe<
+                    Pick<
+                      Users,
+                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }>
+                        >;
+                      }>;
+                    }
+                  >;
+                }
+              >;
+              repliesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
                       >;
-                    }>;
-                  }
+                    }
+                  >
                 >;
-              }
-            >;
-            repliesCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >
+              }>;
+            }
+          >;
+          protocolsDepositedDetails?: Maybe<
+            Pick<Discussions, 'endedAt'> & {
+              sys: Pick<Sys, 'id'>;
+              endedBy?: Maybe<
+                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                }
               >;
-            }>;
-          }>;
-          availabilityStatementDetails?: Maybe<{
-            sys: Pick<Sys, 'id'>;
-            message?: Maybe<
-              Pick<Messages, 'text'> & {
-                sys: Pick<Sys, 'publishedAt'>;
-                createdBy?: Maybe<
-                  Pick<
-                    Users,
-                    'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                  > & {
-                    sys: Pick<Sys, 'id'>;
-                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<{
-                          team?: Maybe<
-                            Pick<Teams, 'displayName'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
-                          >;
-                        }>
+              message?: Maybe<
+                Pick<Messages, 'text'> & {
+                  sys: Pick<Sys, 'publishedAt'>;
+                  createdBy?: Maybe<
+                    Pick<
+                      Users,
+                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }>
+                        >;
+                      }>;
+                    }
+                  >;
+                }
+              >;
+              repliesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
                       >;
-                    }>;
-                  }
+                    }
+                  >
                 >;
-              }
-            >;
-            repliesCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >
+              }>;
+            }
+          >;
+          labMaterialsRegisteredDetails?: Maybe<
+            Pick<Discussions, 'endedAt'> & {
+              sys: Pick<Sys, 'id'>;
+              endedBy?: Maybe<
+                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                }
               >;
-            }>;
-          }>;
+              message?: Maybe<
+                Pick<Messages, 'text'> & {
+                  sys: Pick<Sys, 'publishedAt'>;
+                  createdBy?: Maybe<
+                    Pick<
+                      Users,
+                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }>
+                        >;
+                      }>;
+                    }
+                  >;
+                }
+              >;
+              repliesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }>;
+            }
+          >;
+          availabilityStatementDetails?: Maybe<
+            Pick<Discussions, 'endedAt'> & {
+              sys: Pick<Sys, 'id'>;
+              endedBy?: Maybe<
+                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                }
+              >;
+              message?: Maybe<
+                Pick<Messages, 'text'> & {
+                  sys: Pick<Sys, 'publishedAt'>;
+                  createdBy?: Maybe<
+                    Pick<
+                      Users,
+                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }>
+                        >;
+                      }>;
+                    }
+                  >;
+                }
+              >;
+              repliesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }>;
+            }
+          >;
           teamsCollection?: Maybe<{
             items: Array<
               Maybe<
@@ -18439,510 +18517,574 @@ export type FetchManuscriptByIdQuery = {
                   >
                 >;
               }>;
-              acknowledgedGrantNumberDetails?: Maybe<{
-                sys: Pick<Sys, 'id'>;
-                message?: Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >;
-                repliesCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<Messages, 'text'> & {
-                        sys: Pick<Sys, 'publishedAt'>;
-                        createdBy?: Maybe<
-                          Pick<
-                            Users,
-                            | 'firstName'
-                            | 'nickname'
-                            | 'lastName'
-                            | 'alumniSinceDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            avatar?: Maybe<Pick<Asset, 'url'>>;
-                            teamsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<{
-                                  team?: Maybe<
-                                    Pick<Teams, 'displayName'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >;
-                                }>
-                              >;
-                            }>;
-                          }
-                        >;
-                      }
-                    >
+              acknowledgedGrantNumberDetails?: Maybe<
+                Pick<Discussions, 'endedAt'> & {
+                  sys: Pick<Sys, 'id'>;
+                  endedBy?: Maybe<
+                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    }
                   >;
-                }>;
-              }>;
-              asapAffiliationIncludedDetails?: Maybe<{
-                sys: Pick<Sys, 'id'>;
-                message?: Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >;
-                repliesCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<Messages, 'text'> & {
-                        sys: Pick<Sys, 'publishedAt'>;
-                        createdBy?: Maybe<
-                          Pick<
-                            Users,
-                            | 'firstName'
-                            | 'nickname'
-                            | 'lastName'
-                            | 'alumniSinceDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            avatar?: Maybe<Pick<Asset, 'url'>>;
-                            teamsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<{
-                                  team?: Maybe<
-                                    Pick<Teams, 'displayName'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >;
-                                }>
-                              >;
-                            }>;
-                          }
-                        >;
-                      }
-                    >
+                  message?: Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
                   >;
-                }>;
-              }>;
-              manuscriptLicenseDetails?: Maybe<{
-                sys: Pick<Sys, 'id'>;
-                message?: Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
+                  repliesCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Messages, 'text'> & {
+                          sys: Pick<Sys, 'publishedAt'>;
+                          createdBy?: Maybe<
+                            Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'alumniSinceDate'
+                            > & {
+                              sys: Pick<Sys, 'id'>;
+                              avatar?: Maybe<Pick<Asset, 'url'>>;
+                              teamsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<{
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }>
+                                >;
+                              }>;
+                            }
                           >;
-                        }>;
-                      }
+                        }
+                      >
                     >;
-                  }
-                >;
-                repliesCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<Messages, 'text'> & {
-                        sys: Pick<Sys, 'publishedAt'>;
-                        createdBy?: Maybe<
-                          Pick<
-                            Users,
-                            | 'firstName'
-                            | 'nickname'
-                            | 'lastName'
-                            | 'alumniSinceDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            avatar?: Maybe<Pick<Asset, 'url'>>;
-                            teamsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<{
-                                  team?: Maybe<
-                                    Pick<Teams, 'displayName'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >;
-                                }>
-                              >;
-                            }>;
-                          }
-                        >;
-                      }
-                    >
+                  }>;
+                }
+              >;
+              asapAffiliationIncludedDetails?: Maybe<
+                Pick<Discussions, 'endedAt'> & {
+                  sys: Pick<Sys, 'id'>;
+                  endedBy?: Maybe<
+                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    }
                   >;
-                }>;
-              }>;
-              datasetsDepositedDetails?: Maybe<{
-                sys: Pick<Sys, 'id'>;
-                message?: Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
+                  message?: Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >;
+                  repliesCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Messages, 'text'> & {
+                          sys: Pick<Sys, 'publishedAt'>;
+                          createdBy?: Maybe<
+                            Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'alumniSinceDate'
+                            > & {
+                              sys: Pick<Sys, 'id'>;
+                              avatar?: Maybe<Pick<Asset, 'url'>>;
+                              teamsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<{
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }>
+                                >;
+                              }>;
+                            }
                           >;
-                        }>;
-                      }
+                        }
+                      >
                     >;
-                  }
-                >;
-                repliesCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<Messages, 'text'> & {
-                        sys: Pick<Sys, 'publishedAt'>;
-                        createdBy?: Maybe<
-                          Pick<
-                            Users,
-                            | 'firstName'
-                            | 'nickname'
-                            | 'lastName'
-                            | 'alumniSinceDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            avatar?: Maybe<Pick<Asset, 'url'>>;
-                            teamsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<{
-                                  team?: Maybe<
-                                    Pick<Teams, 'displayName'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >;
-                                }>
-                              >;
-                            }>;
-                          }
-                        >;
-                      }
-                    >
+                  }>;
+                }
+              >;
+              manuscriptLicenseDetails?: Maybe<
+                Pick<Discussions, 'endedAt'> & {
+                  sys: Pick<Sys, 'id'>;
+                  endedBy?: Maybe<
+                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    }
                   >;
-                }>;
-              }>;
-              codeDepositedDetails?: Maybe<{
-                sys: Pick<Sys, 'id'>;
-                message?: Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
+                  message?: Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >;
+                  repliesCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Messages, 'text'> & {
+                          sys: Pick<Sys, 'publishedAt'>;
+                          createdBy?: Maybe<
+                            Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'alumniSinceDate'
+                            > & {
+                              sys: Pick<Sys, 'id'>;
+                              avatar?: Maybe<Pick<Asset, 'url'>>;
+                              teamsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<{
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }>
+                                >;
+                              }>;
+                            }
                           >;
-                        }>;
-                      }
+                        }
+                      >
                     >;
-                  }
-                >;
-                repliesCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<Messages, 'text'> & {
-                        sys: Pick<Sys, 'publishedAt'>;
-                        createdBy?: Maybe<
-                          Pick<
-                            Users,
-                            | 'firstName'
-                            | 'nickname'
-                            | 'lastName'
-                            | 'alumniSinceDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            avatar?: Maybe<Pick<Asset, 'url'>>;
-                            teamsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<{
-                                  team?: Maybe<
-                                    Pick<Teams, 'displayName'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >;
-                                }>
-                              >;
-                            }>;
-                          }
-                        >;
-                      }
-                    >
+                  }>;
+                }
+              >;
+              datasetsDepositedDetails?: Maybe<
+                Pick<Discussions, 'endedAt'> & {
+                  sys: Pick<Sys, 'id'>;
+                  endedBy?: Maybe<
+                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    }
                   >;
-                }>;
-              }>;
-              protocolsDepositedDetails?: Maybe<{
-                sys: Pick<Sys, 'id'>;
-                message?: Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
+                  message?: Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >;
+                  repliesCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Messages, 'text'> & {
+                          sys: Pick<Sys, 'publishedAt'>;
+                          createdBy?: Maybe<
+                            Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'alumniSinceDate'
+                            > & {
+                              sys: Pick<Sys, 'id'>;
+                              avatar?: Maybe<Pick<Asset, 'url'>>;
+                              teamsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<{
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }>
+                                >;
+                              }>;
+                            }
                           >;
-                        }>;
-                      }
+                        }
+                      >
                     >;
-                  }
-                >;
-                repliesCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<Messages, 'text'> & {
-                        sys: Pick<Sys, 'publishedAt'>;
-                        createdBy?: Maybe<
-                          Pick<
-                            Users,
-                            | 'firstName'
-                            | 'nickname'
-                            | 'lastName'
-                            | 'alumniSinceDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            avatar?: Maybe<Pick<Asset, 'url'>>;
-                            teamsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<{
-                                  team?: Maybe<
-                                    Pick<Teams, 'displayName'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >;
-                                }>
-                              >;
-                            }>;
-                          }
-                        >;
-                      }
-                    >
+                  }>;
+                }
+              >;
+              codeDepositedDetails?: Maybe<
+                Pick<Discussions, 'endedAt'> & {
+                  sys: Pick<Sys, 'id'>;
+                  endedBy?: Maybe<
+                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    }
                   >;
-                }>;
-              }>;
-              labMaterialsRegisteredDetails?: Maybe<{
-                sys: Pick<Sys, 'id'>;
-                message?: Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
+                  message?: Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >;
+                  repliesCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Messages, 'text'> & {
+                          sys: Pick<Sys, 'publishedAt'>;
+                          createdBy?: Maybe<
+                            Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'alumniSinceDate'
+                            > & {
+                              sys: Pick<Sys, 'id'>;
+                              avatar?: Maybe<Pick<Asset, 'url'>>;
+                              teamsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<{
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }>
+                                >;
+                              }>;
+                            }
                           >;
-                        }>;
-                      }
+                        }
+                      >
                     >;
-                  }
-                >;
-                repliesCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<Messages, 'text'> & {
-                        sys: Pick<Sys, 'publishedAt'>;
-                        createdBy?: Maybe<
-                          Pick<
-                            Users,
-                            | 'firstName'
-                            | 'nickname'
-                            | 'lastName'
-                            | 'alumniSinceDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            avatar?: Maybe<Pick<Asset, 'url'>>;
-                            teamsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<{
-                                  team?: Maybe<
-                                    Pick<Teams, 'displayName'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >;
-                                }>
-                              >;
-                            }>;
-                          }
-                        >;
-                      }
-                    >
+                  }>;
+                }
+              >;
+              protocolsDepositedDetails?: Maybe<
+                Pick<Discussions, 'endedAt'> & {
+                  sys: Pick<Sys, 'id'>;
+                  endedBy?: Maybe<
+                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    }
                   >;
-                }>;
-              }>;
-              availabilityStatementDetails?: Maybe<{
-                sys: Pick<Sys, 'id'>;
-                message?: Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
+                  message?: Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >;
+                  repliesCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Messages, 'text'> & {
+                          sys: Pick<Sys, 'publishedAt'>;
+                          createdBy?: Maybe<
+                            Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'alumniSinceDate'
+                            > & {
+                              sys: Pick<Sys, 'id'>;
+                              avatar?: Maybe<Pick<Asset, 'url'>>;
+                              teamsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<{
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }>
+                                >;
+                              }>;
+                            }
                           >;
-                        }>;
-                      }
+                        }
+                      >
                     >;
-                  }
-                >;
-                repliesCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<Messages, 'text'> & {
-                        sys: Pick<Sys, 'publishedAt'>;
-                        createdBy?: Maybe<
-                          Pick<
-                            Users,
-                            | 'firstName'
-                            | 'nickname'
-                            | 'lastName'
-                            | 'alumniSinceDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            avatar?: Maybe<Pick<Asset, 'url'>>;
-                            teamsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<{
-                                  team?: Maybe<
-                                    Pick<Teams, 'displayName'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >;
-                                }>
-                              >;
-                            }>;
-                          }
-                        >;
-                      }
-                    >
+                  }>;
+                }
+              >;
+              labMaterialsRegisteredDetails?: Maybe<
+                Pick<Discussions, 'endedAt'> & {
+                  sys: Pick<Sys, 'id'>;
+                  endedBy?: Maybe<
+                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    }
                   >;
-                }>;
-              }>;
+                  message?: Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >;
+                  repliesCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Messages, 'text'> & {
+                          sys: Pick<Sys, 'publishedAt'>;
+                          createdBy?: Maybe<
+                            Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'alumniSinceDate'
+                            > & {
+                              sys: Pick<Sys, 'id'>;
+                              avatar?: Maybe<Pick<Asset, 'url'>>;
+                              teamsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<{
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }>
+                                >;
+                              }>;
+                            }
+                          >;
+                        }
+                      >
+                    >;
+                  }>;
+                }
+              >;
+              availabilityStatementDetails?: Maybe<
+                Pick<Discussions, 'endedAt'> & {
+                  sys: Pick<Sys, 'id'>;
+                  endedBy?: Maybe<
+                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    }
+                  >;
+                  message?: Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >;
+                  repliesCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Messages, 'text'> & {
+                          sys: Pick<Sys, 'publishedAt'>;
+                          createdBy?: Maybe<
+                            Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'alumniSinceDate'
+                            > & {
+                              sys: Pick<Sys, 'id'>;
+                              avatar?: Maybe<Pick<Asset, 'url'>>;
+                              teamsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<{
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }>
+                                >;
+                              }>;
+                            }
+                          >;
+                        }
+                      >
+                    >;
+                  }>;
+                }
+              >;
               teamsCollection?: Maybe<{
                 items: Array<
                   Maybe<
@@ -20777,510 +20919,598 @@ export type FetchTeamByIdQuery = {
                             >
                           >;
                         }>;
-                        acknowledgedGrantNumberDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                          message?: Maybe<
-                            Pick<Messages, 'text'> & {
-                              sys: Pick<Sys, 'publishedAt'>;
-                              createdBy?: Maybe<
-                                Pick<
-                                  Users,
-                                  | 'firstName'
-                                  | 'nickname'
-                                  | 'lastName'
-                                  | 'alumniSinceDate'
-                                > & {
-                                  sys: Pick<Sys, 'id'>;
-                                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                                  teamsCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<{
-                                        team?: Maybe<
-                                          Pick<Teams, 'displayName'> & {
-                                            sys: Pick<Sys, 'id'>;
-                                          }
-                                        >;
-                                      }>
-                                    >;
-                                  }>;
-                                }
-                              >;
-                            }
-                          >;
-                          repliesCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<Messages, 'text'> & {
-                                  sys: Pick<Sys, 'publishedAt'>;
-                                  createdBy?: Maybe<
-                                    Pick<
-                                      Users,
-                                      | 'firstName'
-                                      | 'nickname'
-                                      | 'lastName'
-                                      | 'alumniSinceDate'
-                                    > & {
-                                      sys: Pick<Sys, 'id'>;
-                                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                                      teamsCollection?: Maybe<{
-                                        items: Array<
-                                          Maybe<{
-                                            team?: Maybe<
-                                              Pick<Teams, 'displayName'> & {
-                                                sys: Pick<Sys, 'id'>;
-                                              }
-                                            >;
-                                          }>
-                                        >;
-                                      }>;
-                                    }
-                                  >;
-                                }
-                              >
+                        acknowledgedGrantNumberDetails?: Maybe<
+                          Pick<Discussions, 'endedAt'> & {
+                            sys: Pick<Sys, 'id'>;
+                            endedBy?: Maybe<
+                              Pick<
+                                Users,
+                                'firstName' | 'nickname' | 'lastName'
+                              > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              }
                             >;
-                          }>;
-                        }>;
-                        asapAffiliationIncludedDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                          message?: Maybe<
-                            Pick<Messages, 'text'> & {
-                              sys: Pick<Sys, 'publishedAt'>;
-                              createdBy?: Maybe<
-                                Pick<
-                                  Users,
-                                  | 'firstName'
-                                  | 'nickname'
-                                  | 'lastName'
-                                  | 'alumniSinceDate'
-                                > & {
-                                  sys: Pick<Sys, 'id'>;
-                                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                                  teamsCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<{
-                                        team?: Maybe<
-                                          Pick<Teams, 'displayName'> & {
-                                            sys: Pick<Sys, 'id'>;
-                                          }
-                                        >;
-                                      }>
-                                    >;
-                                  }>;
-                                }
-                              >;
-                            }
-                          >;
-                          repliesCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<Messages, 'text'> & {
-                                  sys: Pick<Sys, 'publishedAt'>;
-                                  createdBy?: Maybe<
-                                    Pick<
-                                      Users,
-                                      | 'firstName'
-                                      | 'nickname'
-                                      | 'lastName'
-                                      | 'alumniSinceDate'
-                                    > & {
-                                      sys: Pick<Sys, 'id'>;
-                                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                                      teamsCollection?: Maybe<{
-                                        items: Array<
-                                          Maybe<{
-                                            team?: Maybe<
-                                              Pick<Teams, 'displayName'> & {
-                                                sys: Pick<Sys, 'id'>;
-                                              }
-                                            >;
-                                          }>
-                                        >;
-                                      }>;
-                                    }
-                                  >;
-                                }
-                              >
+                            message?: Maybe<
+                              Pick<Messages, 'text'> & {
+                                sys: Pick<Sys, 'publishedAt'>;
+                                createdBy?: Maybe<
+                                  Pick<
+                                    Users,
+                                    | 'firstName'
+                                    | 'nickname'
+                                    | 'lastName'
+                                    | 'alumniSinceDate'
+                                  > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<
+                                            Pick<Teams, 'displayName'> & {
+                                              sys: Pick<Sys, 'id'>;
+                                            }
+                                          >;
+                                        }>
+                                      >;
+                                    }>;
+                                  }
+                                >;
+                              }
                             >;
-                          }>;
-                        }>;
-                        manuscriptLicenseDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                          message?: Maybe<
-                            Pick<Messages, 'text'> & {
-                              sys: Pick<Sys, 'publishedAt'>;
-                              createdBy?: Maybe<
-                                Pick<
-                                  Users,
-                                  | 'firstName'
-                                  | 'nickname'
-                                  | 'lastName'
-                                  | 'alumniSinceDate'
-                                > & {
-                                  sys: Pick<Sys, 'id'>;
-                                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                                  teamsCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<{
-                                        team?: Maybe<
-                                          Pick<Teams, 'displayName'> & {
-                                            sys: Pick<Sys, 'id'>;
-                                          }
-                                        >;
-                                      }>
+                            repliesCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Messages, 'text'> & {
+                                    sys: Pick<Sys, 'publishedAt'>;
+                                    createdBy?: Maybe<
+                                      Pick<
+                                        Users,
+                                        | 'firstName'
+                                        | 'nickname'
+                                        | 'lastName'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                        sys: Pick<Sys, 'id'>;
+                                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                                        teamsCollection?: Maybe<{
+                                          items: Array<
+                                            Maybe<{
+                                              team?: Maybe<
+                                                Pick<Teams, 'displayName'> & {
+                                                  sys: Pick<Sys, 'id'>;
+                                                }
+                                              >;
+                                            }>
+                                          >;
+                                        }>;
+                                      }
                                     >;
-                                  }>;
-                                }
+                                  }
+                                >
                               >;
-                            }
-                          >;
-                          repliesCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<Messages, 'text'> & {
-                                  sys: Pick<Sys, 'publishedAt'>;
-                                  createdBy?: Maybe<
-                                    Pick<
-                                      Users,
-                                      | 'firstName'
-                                      | 'nickname'
-                                      | 'lastName'
-                                      | 'alumniSinceDate'
-                                    > & {
-                                      sys: Pick<Sys, 'id'>;
-                                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                                      teamsCollection?: Maybe<{
-                                        items: Array<
-                                          Maybe<{
-                                            team?: Maybe<
-                                              Pick<Teams, 'displayName'> & {
-                                                sys: Pick<Sys, 'id'>;
-                                              }
-                                            >;
-                                          }>
-                                        >;
-                                      }>;
-                                    }
-                                  >;
-                                }
-                              >
+                            }>;
+                          }
+                        >;
+                        asapAffiliationIncludedDetails?: Maybe<
+                          Pick<Discussions, 'endedAt'> & {
+                            sys: Pick<Sys, 'id'>;
+                            endedBy?: Maybe<
+                              Pick<
+                                Users,
+                                'firstName' | 'nickname' | 'lastName'
+                              > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              }
                             >;
-                          }>;
-                        }>;
-                        datasetsDepositedDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                          message?: Maybe<
-                            Pick<Messages, 'text'> & {
-                              sys: Pick<Sys, 'publishedAt'>;
-                              createdBy?: Maybe<
-                                Pick<
-                                  Users,
-                                  | 'firstName'
-                                  | 'nickname'
-                                  | 'lastName'
-                                  | 'alumniSinceDate'
-                                > & {
-                                  sys: Pick<Sys, 'id'>;
-                                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                                  teamsCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<{
-                                        team?: Maybe<
-                                          Pick<Teams, 'displayName'> & {
-                                            sys: Pick<Sys, 'id'>;
-                                          }
-                                        >;
-                                      }>
+                            message?: Maybe<
+                              Pick<Messages, 'text'> & {
+                                sys: Pick<Sys, 'publishedAt'>;
+                                createdBy?: Maybe<
+                                  Pick<
+                                    Users,
+                                    | 'firstName'
+                                    | 'nickname'
+                                    | 'lastName'
+                                    | 'alumniSinceDate'
+                                  > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<
+                                            Pick<Teams, 'displayName'> & {
+                                              sys: Pick<Sys, 'id'>;
+                                            }
+                                          >;
+                                        }>
+                                      >;
+                                    }>;
+                                  }
+                                >;
+                              }
+                            >;
+                            repliesCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Messages, 'text'> & {
+                                    sys: Pick<Sys, 'publishedAt'>;
+                                    createdBy?: Maybe<
+                                      Pick<
+                                        Users,
+                                        | 'firstName'
+                                        | 'nickname'
+                                        | 'lastName'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                        sys: Pick<Sys, 'id'>;
+                                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                                        teamsCollection?: Maybe<{
+                                          items: Array<
+                                            Maybe<{
+                                              team?: Maybe<
+                                                Pick<Teams, 'displayName'> & {
+                                                  sys: Pick<Sys, 'id'>;
+                                                }
+                                              >;
+                                            }>
+                                          >;
+                                        }>;
+                                      }
                                     >;
-                                  }>;
-                                }
+                                  }
+                                >
                               >;
-                            }
-                          >;
-                          repliesCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<Messages, 'text'> & {
-                                  sys: Pick<Sys, 'publishedAt'>;
-                                  createdBy?: Maybe<
-                                    Pick<
-                                      Users,
-                                      | 'firstName'
-                                      | 'nickname'
-                                      | 'lastName'
-                                      | 'alumniSinceDate'
-                                    > & {
-                                      sys: Pick<Sys, 'id'>;
-                                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                                      teamsCollection?: Maybe<{
-                                        items: Array<
-                                          Maybe<{
-                                            team?: Maybe<
-                                              Pick<Teams, 'displayName'> & {
-                                                sys: Pick<Sys, 'id'>;
-                                              }
-                                            >;
-                                          }>
-                                        >;
-                                      }>;
-                                    }
-                                  >;
-                                }
-                              >
+                            }>;
+                          }
+                        >;
+                        manuscriptLicenseDetails?: Maybe<
+                          Pick<Discussions, 'endedAt'> & {
+                            sys: Pick<Sys, 'id'>;
+                            endedBy?: Maybe<
+                              Pick<
+                                Users,
+                                'firstName' | 'nickname' | 'lastName'
+                              > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              }
                             >;
-                          }>;
-                        }>;
-                        codeDepositedDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                          message?: Maybe<
-                            Pick<Messages, 'text'> & {
-                              sys: Pick<Sys, 'publishedAt'>;
-                              createdBy?: Maybe<
-                                Pick<
-                                  Users,
-                                  | 'firstName'
-                                  | 'nickname'
-                                  | 'lastName'
-                                  | 'alumniSinceDate'
-                                > & {
-                                  sys: Pick<Sys, 'id'>;
-                                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                                  teamsCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<{
-                                        team?: Maybe<
-                                          Pick<Teams, 'displayName'> & {
-                                            sys: Pick<Sys, 'id'>;
-                                          }
-                                        >;
-                                      }>
+                            message?: Maybe<
+                              Pick<Messages, 'text'> & {
+                                sys: Pick<Sys, 'publishedAt'>;
+                                createdBy?: Maybe<
+                                  Pick<
+                                    Users,
+                                    | 'firstName'
+                                    | 'nickname'
+                                    | 'lastName'
+                                    | 'alumniSinceDate'
+                                  > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<
+                                            Pick<Teams, 'displayName'> & {
+                                              sys: Pick<Sys, 'id'>;
+                                            }
+                                          >;
+                                        }>
+                                      >;
+                                    }>;
+                                  }
+                                >;
+                              }
+                            >;
+                            repliesCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Messages, 'text'> & {
+                                    sys: Pick<Sys, 'publishedAt'>;
+                                    createdBy?: Maybe<
+                                      Pick<
+                                        Users,
+                                        | 'firstName'
+                                        | 'nickname'
+                                        | 'lastName'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                        sys: Pick<Sys, 'id'>;
+                                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                                        teamsCollection?: Maybe<{
+                                          items: Array<
+                                            Maybe<{
+                                              team?: Maybe<
+                                                Pick<Teams, 'displayName'> & {
+                                                  sys: Pick<Sys, 'id'>;
+                                                }
+                                              >;
+                                            }>
+                                          >;
+                                        }>;
+                                      }
                                     >;
-                                  }>;
-                                }
+                                  }
+                                >
                               >;
-                            }
-                          >;
-                          repliesCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<Messages, 'text'> & {
-                                  sys: Pick<Sys, 'publishedAt'>;
-                                  createdBy?: Maybe<
-                                    Pick<
-                                      Users,
-                                      | 'firstName'
-                                      | 'nickname'
-                                      | 'lastName'
-                                      | 'alumniSinceDate'
-                                    > & {
-                                      sys: Pick<Sys, 'id'>;
-                                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                                      teamsCollection?: Maybe<{
-                                        items: Array<
-                                          Maybe<{
-                                            team?: Maybe<
-                                              Pick<Teams, 'displayName'> & {
-                                                sys: Pick<Sys, 'id'>;
-                                              }
-                                            >;
-                                          }>
-                                        >;
-                                      }>;
-                                    }
-                                  >;
-                                }
-                              >
+                            }>;
+                          }
+                        >;
+                        datasetsDepositedDetails?: Maybe<
+                          Pick<Discussions, 'endedAt'> & {
+                            sys: Pick<Sys, 'id'>;
+                            endedBy?: Maybe<
+                              Pick<
+                                Users,
+                                'firstName' | 'nickname' | 'lastName'
+                              > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              }
                             >;
-                          }>;
-                        }>;
-                        protocolsDepositedDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                          message?: Maybe<
-                            Pick<Messages, 'text'> & {
-                              sys: Pick<Sys, 'publishedAt'>;
-                              createdBy?: Maybe<
-                                Pick<
-                                  Users,
-                                  | 'firstName'
-                                  | 'nickname'
-                                  | 'lastName'
-                                  | 'alumniSinceDate'
-                                > & {
-                                  sys: Pick<Sys, 'id'>;
-                                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                                  teamsCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<{
-                                        team?: Maybe<
-                                          Pick<Teams, 'displayName'> & {
-                                            sys: Pick<Sys, 'id'>;
-                                          }
-                                        >;
-                                      }>
+                            message?: Maybe<
+                              Pick<Messages, 'text'> & {
+                                sys: Pick<Sys, 'publishedAt'>;
+                                createdBy?: Maybe<
+                                  Pick<
+                                    Users,
+                                    | 'firstName'
+                                    | 'nickname'
+                                    | 'lastName'
+                                    | 'alumniSinceDate'
+                                  > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<
+                                            Pick<Teams, 'displayName'> & {
+                                              sys: Pick<Sys, 'id'>;
+                                            }
+                                          >;
+                                        }>
+                                      >;
+                                    }>;
+                                  }
+                                >;
+                              }
+                            >;
+                            repliesCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Messages, 'text'> & {
+                                    sys: Pick<Sys, 'publishedAt'>;
+                                    createdBy?: Maybe<
+                                      Pick<
+                                        Users,
+                                        | 'firstName'
+                                        | 'nickname'
+                                        | 'lastName'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                        sys: Pick<Sys, 'id'>;
+                                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                                        teamsCollection?: Maybe<{
+                                          items: Array<
+                                            Maybe<{
+                                              team?: Maybe<
+                                                Pick<Teams, 'displayName'> & {
+                                                  sys: Pick<Sys, 'id'>;
+                                                }
+                                              >;
+                                            }>
+                                          >;
+                                        }>;
+                                      }
                                     >;
-                                  }>;
-                                }
+                                  }
+                                >
                               >;
-                            }
-                          >;
-                          repliesCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<Messages, 'text'> & {
-                                  sys: Pick<Sys, 'publishedAt'>;
-                                  createdBy?: Maybe<
-                                    Pick<
-                                      Users,
-                                      | 'firstName'
-                                      | 'nickname'
-                                      | 'lastName'
-                                      | 'alumniSinceDate'
-                                    > & {
-                                      sys: Pick<Sys, 'id'>;
-                                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                                      teamsCollection?: Maybe<{
-                                        items: Array<
-                                          Maybe<{
-                                            team?: Maybe<
-                                              Pick<Teams, 'displayName'> & {
-                                                sys: Pick<Sys, 'id'>;
-                                              }
-                                            >;
-                                          }>
-                                        >;
-                                      }>;
-                                    }
-                                  >;
-                                }
-                              >
+                            }>;
+                          }
+                        >;
+                        codeDepositedDetails?: Maybe<
+                          Pick<Discussions, 'endedAt'> & {
+                            sys: Pick<Sys, 'id'>;
+                            endedBy?: Maybe<
+                              Pick<
+                                Users,
+                                'firstName' | 'nickname' | 'lastName'
+                              > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              }
                             >;
-                          }>;
-                        }>;
-                        labMaterialsRegisteredDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                          message?: Maybe<
-                            Pick<Messages, 'text'> & {
-                              sys: Pick<Sys, 'publishedAt'>;
-                              createdBy?: Maybe<
-                                Pick<
-                                  Users,
-                                  | 'firstName'
-                                  | 'nickname'
-                                  | 'lastName'
-                                  | 'alumniSinceDate'
-                                > & {
-                                  sys: Pick<Sys, 'id'>;
-                                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                                  teamsCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<{
-                                        team?: Maybe<
-                                          Pick<Teams, 'displayName'> & {
-                                            sys: Pick<Sys, 'id'>;
-                                          }
-                                        >;
-                                      }>
+                            message?: Maybe<
+                              Pick<Messages, 'text'> & {
+                                sys: Pick<Sys, 'publishedAt'>;
+                                createdBy?: Maybe<
+                                  Pick<
+                                    Users,
+                                    | 'firstName'
+                                    | 'nickname'
+                                    | 'lastName'
+                                    | 'alumniSinceDate'
+                                  > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<
+                                            Pick<Teams, 'displayName'> & {
+                                              sys: Pick<Sys, 'id'>;
+                                            }
+                                          >;
+                                        }>
+                                      >;
+                                    }>;
+                                  }
+                                >;
+                              }
+                            >;
+                            repliesCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Messages, 'text'> & {
+                                    sys: Pick<Sys, 'publishedAt'>;
+                                    createdBy?: Maybe<
+                                      Pick<
+                                        Users,
+                                        | 'firstName'
+                                        | 'nickname'
+                                        | 'lastName'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                        sys: Pick<Sys, 'id'>;
+                                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                                        teamsCollection?: Maybe<{
+                                          items: Array<
+                                            Maybe<{
+                                              team?: Maybe<
+                                                Pick<Teams, 'displayName'> & {
+                                                  sys: Pick<Sys, 'id'>;
+                                                }
+                                              >;
+                                            }>
+                                          >;
+                                        }>;
+                                      }
                                     >;
-                                  }>;
-                                }
+                                  }
+                                >
                               >;
-                            }
-                          >;
-                          repliesCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<Messages, 'text'> & {
-                                  sys: Pick<Sys, 'publishedAt'>;
-                                  createdBy?: Maybe<
-                                    Pick<
-                                      Users,
-                                      | 'firstName'
-                                      | 'nickname'
-                                      | 'lastName'
-                                      | 'alumniSinceDate'
-                                    > & {
-                                      sys: Pick<Sys, 'id'>;
-                                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                                      teamsCollection?: Maybe<{
-                                        items: Array<
-                                          Maybe<{
-                                            team?: Maybe<
-                                              Pick<Teams, 'displayName'> & {
-                                                sys: Pick<Sys, 'id'>;
-                                              }
-                                            >;
-                                          }>
-                                        >;
-                                      }>;
-                                    }
-                                  >;
-                                }
-                              >
+                            }>;
+                          }
+                        >;
+                        protocolsDepositedDetails?: Maybe<
+                          Pick<Discussions, 'endedAt'> & {
+                            sys: Pick<Sys, 'id'>;
+                            endedBy?: Maybe<
+                              Pick<
+                                Users,
+                                'firstName' | 'nickname' | 'lastName'
+                              > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              }
                             >;
-                          }>;
-                        }>;
-                        availabilityStatementDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                          message?: Maybe<
-                            Pick<Messages, 'text'> & {
-                              sys: Pick<Sys, 'publishedAt'>;
-                              createdBy?: Maybe<
-                                Pick<
-                                  Users,
-                                  | 'firstName'
-                                  | 'nickname'
-                                  | 'lastName'
-                                  | 'alumniSinceDate'
-                                > & {
-                                  sys: Pick<Sys, 'id'>;
-                                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                                  teamsCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<{
-                                        team?: Maybe<
-                                          Pick<Teams, 'displayName'> & {
-                                            sys: Pick<Sys, 'id'>;
-                                          }
-                                        >;
-                                      }>
+                            message?: Maybe<
+                              Pick<Messages, 'text'> & {
+                                sys: Pick<Sys, 'publishedAt'>;
+                                createdBy?: Maybe<
+                                  Pick<
+                                    Users,
+                                    | 'firstName'
+                                    | 'nickname'
+                                    | 'lastName'
+                                    | 'alumniSinceDate'
+                                  > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<
+                                            Pick<Teams, 'displayName'> & {
+                                              sys: Pick<Sys, 'id'>;
+                                            }
+                                          >;
+                                        }>
+                                      >;
+                                    }>;
+                                  }
+                                >;
+                              }
+                            >;
+                            repliesCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Messages, 'text'> & {
+                                    sys: Pick<Sys, 'publishedAt'>;
+                                    createdBy?: Maybe<
+                                      Pick<
+                                        Users,
+                                        | 'firstName'
+                                        | 'nickname'
+                                        | 'lastName'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                        sys: Pick<Sys, 'id'>;
+                                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                                        teamsCollection?: Maybe<{
+                                          items: Array<
+                                            Maybe<{
+                                              team?: Maybe<
+                                                Pick<Teams, 'displayName'> & {
+                                                  sys: Pick<Sys, 'id'>;
+                                                }
+                                              >;
+                                            }>
+                                          >;
+                                        }>;
+                                      }
                                     >;
-                                  }>;
-                                }
+                                  }
+                                >
                               >;
-                            }
-                          >;
-                          repliesCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<Messages, 'text'> & {
-                                  sys: Pick<Sys, 'publishedAt'>;
-                                  createdBy?: Maybe<
-                                    Pick<
-                                      Users,
-                                      | 'firstName'
-                                      | 'nickname'
-                                      | 'lastName'
-                                      | 'alumniSinceDate'
-                                    > & {
-                                      sys: Pick<Sys, 'id'>;
-                                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                                      teamsCollection?: Maybe<{
-                                        items: Array<
-                                          Maybe<{
-                                            team?: Maybe<
-                                              Pick<Teams, 'displayName'> & {
-                                                sys: Pick<Sys, 'id'>;
-                                              }
-                                            >;
-                                          }>
-                                        >;
-                                      }>;
-                                    }
-                                  >;
-                                }
-                              >
+                            }>;
+                          }
+                        >;
+                        labMaterialsRegisteredDetails?: Maybe<
+                          Pick<Discussions, 'endedAt'> & {
+                            sys: Pick<Sys, 'id'>;
+                            endedBy?: Maybe<
+                              Pick<
+                                Users,
+                                'firstName' | 'nickname' | 'lastName'
+                              > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              }
                             >;
-                          }>;
-                        }>;
+                            message?: Maybe<
+                              Pick<Messages, 'text'> & {
+                                sys: Pick<Sys, 'publishedAt'>;
+                                createdBy?: Maybe<
+                                  Pick<
+                                    Users,
+                                    | 'firstName'
+                                    | 'nickname'
+                                    | 'lastName'
+                                    | 'alumniSinceDate'
+                                  > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<
+                                            Pick<Teams, 'displayName'> & {
+                                              sys: Pick<Sys, 'id'>;
+                                            }
+                                          >;
+                                        }>
+                                      >;
+                                    }>;
+                                  }
+                                >;
+                              }
+                            >;
+                            repliesCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Messages, 'text'> & {
+                                    sys: Pick<Sys, 'publishedAt'>;
+                                    createdBy?: Maybe<
+                                      Pick<
+                                        Users,
+                                        | 'firstName'
+                                        | 'nickname'
+                                        | 'lastName'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                        sys: Pick<Sys, 'id'>;
+                                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                                        teamsCollection?: Maybe<{
+                                          items: Array<
+                                            Maybe<{
+                                              team?: Maybe<
+                                                Pick<Teams, 'displayName'> & {
+                                                  sys: Pick<Sys, 'id'>;
+                                                }
+                                              >;
+                                            }>
+                                          >;
+                                        }>;
+                                      }
+                                    >;
+                                  }
+                                >
+                              >;
+                            }>;
+                          }
+                        >;
+                        availabilityStatementDetails?: Maybe<
+                          Pick<Discussions, 'endedAt'> & {
+                            sys: Pick<Sys, 'id'>;
+                            endedBy?: Maybe<
+                              Pick<
+                                Users,
+                                'firstName' | 'nickname' | 'lastName'
+                              > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              }
+                            >;
+                            message?: Maybe<
+                              Pick<Messages, 'text'> & {
+                                sys: Pick<Sys, 'publishedAt'>;
+                                createdBy?: Maybe<
+                                  Pick<
+                                    Users,
+                                    | 'firstName'
+                                    | 'nickname'
+                                    | 'lastName'
+                                    | 'alumniSinceDate'
+                                  > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<
+                                            Pick<Teams, 'displayName'> & {
+                                              sys: Pick<Sys, 'id'>;
+                                            }
+                                          >;
+                                        }>
+                                      >;
+                                    }>;
+                                  }
+                                >;
+                              }
+                            >;
+                            repliesCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Messages, 'text'> & {
+                                    sys: Pick<Sys, 'publishedAt'>;
+                                    createdBy?: Maybe<
+                                      Pick<
+                                        Users,
+                                        | 'firstName'
+                                        | 'nickname'
+                                        | 'lastName'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                        sys: Pick<Sys, 'id'>;
+                                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                                        teamsCollection?: Maybe<{
+                                          items: Array<
+                                            Maybe<{
+                                              team?: Maybe<
+                                                Pick<Teams, 'displayName'> & {
+                                                  sys: Pick<Sys, 'id'>;
+                                                }
+                                              >;
+                                            }>
+                                          >;
+                                        }>;
+                                      }
+                                    >;
+                                  }
+                                >
+                              >;
+                            }>;
+                          }
+                        >;
                         teamsCollection?: Maybe<{
                           items: Array<
                             Maybe<
@@ -25125,6 +25355,39 @@ export const DiscussionsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'endedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'endedBy' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'avatar' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
               ],
             },
           },

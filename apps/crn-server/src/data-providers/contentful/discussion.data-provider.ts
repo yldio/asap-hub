@@ -142,4 +142,19 @@ export const parseGraphQLDiscussion = (
   id: discussion.sys.id,
   message: parseGraphQLMessage(discussion.message),
   replies: discussion.repliesCollection?.items.map(parseGraphQLMessage),
+  endedAt: discussion.endedAt,
+  endedBy: discussion.endedBy
+    ? {
+        id: discussion.endedBy.sys.id,
+        firstName: discussion.endedBy.firstName ?? '',
+        lastName: discussion.endedBy.lastName ?? '',
+        displayName: parseUserDisplayName(
+          discussion?.endedBy?.firstName || '',
+          discussion?.endedBy?.lastName || '',
+          undefined,
+          discussion?.endedBy?.nickname || '',
+        ),
+        avatarUrl: discussion.endedBy.avatar?.url ?? '',
+      }
+    : undefined,
 });

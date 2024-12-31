@@ -52,7 +52,7 @@ export const discussionContentQueryFragment = gql`
           avatar {
             url
           }
-          teamsCollection(limit: 1) {
+          teamsCollection(limit: 2) {
             items {
               team {
                 sys {

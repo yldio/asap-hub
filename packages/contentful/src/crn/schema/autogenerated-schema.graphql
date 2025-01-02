@@ -876,6 +876,8 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
 type Discussions implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
+  endedAt(locale: String): DateTime
+  endedBy(locale: String, preview: Boolean, where: UsersFilter): Users
   linkedFrom(allowedLocales: [String]): DiscussionsLinkingCollections
   message(locale: String, preview: Boolean, where: MessagesFilter): Messages
   repliesCollection(limit: Int = 100, locale: String, order: [DiscussionsRepliesCollectionOrder], preview: Boolean, skip: Int = 0, where: MessagesFilter): DiscussionsRepliesCollection
@@ -893,6 +895,17 @@ input DiscussionsFilter {
   AND: [DiscussionsFilter]
   OR: [DiscussionsFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  endedAt: DateTime
+  endedAt_exists: Boolean
+  endedAt_gt: DateTime
+  endedAt_gte: DateTime
+  endedAt_in: [DateTime]
+  endedAt_lt: DateTime
+  endedAt_lte: DateTime
+  endedAt_not: DateTime
+  endedAt_not_in: [DateTime]
+  endedBy: cfUsersNestedFilter
+  endedBy_exists: Boolean
   message: cfMessagesNestedFilter
   message_exists: Boolean
   replies: cfMessagesNestedFilter
@@ -967,6 +980,8 @@ enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 enum DiscussionsOrder {
+  endedAt_ASC
+  endedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3565,6 +3580,8 @@ type MessagesLinkingCollections {
 }
 
 enum MessagesLinkingCollectionsDiscussionsCollectionOrder {
+  endedAt_ASC
+  endedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -6817,6 +6834,7 @@ enum UsersLabsCollectionOrder {
 type UsersLinkingCollections {
   complianceReportsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsComplianceReportsCollectionOrder], preview: Boolean, skip: Int = 0): ComplianceReportsCollection
   discoverCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsDiscoverCollectionOrder], preview: Boolean, skip: Int = 0): DiscoverCollection
+  discussionsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsDiscussionsCollectionOrder], preview: Boolean, skip: Int = 0): DiscussionsCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsInterestGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
@@ -6844,6 +6862,19 @@ enum UsersLinkingCollectionsComplianceReportsCollectionOrder {
 }
 
 enum UsersLinkingCollectionsDiscoverCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsDiscussionsCollectionOrder {
+  endedAt_ASC
+  endedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -7722,6 +7753,16 @@ input cfDiscussionsNestedFilter {
   AND: [cfDiscussionsNestedFilter]
   OR: [cfDiscussionsNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  endedAt: DateTime
+  endedAt_exists: Boolean
+  endedAt_gt: DateTime
+  endedAt_gte: DateTime
+  endedAt_in: [DateTime]
+  endedAt_lt: DateTime
+  endedAt_lte: DateTime
+  endedAt_not: DateTime
+  endedAt_not_in: [DateTime]
+  endedBy_exists: Boolean
   message_exists: Boolean
   repliesCollection_exists: Boolean
   sys: SysFilter

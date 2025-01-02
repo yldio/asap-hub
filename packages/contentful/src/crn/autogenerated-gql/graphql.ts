@@ -1239,11 +1239,25 @@ export type Discussions = Entry &
   _Node & {
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
+    endedAt?: Maybe<Scalars['DateTime']>;
+    endedBy?: Maybe<Users>;
     linkedFrom?: Maybe<DiscussionsLinkingCollections>;
     message?: Maybe<Messages>;
     repliesCollection?: Maybe<DiscussionsRepliesCollection>;
     sys: Sys;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
+export type DiscussionsEndedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
+export type DiscussionsEndedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
 export type DiscussionsLinkedFromArgs = {
@@ -1278,6 +1292,17 @@ export type DiscussionsFilter = {
   AND?: InputMaybe<Array<InputMaybe<DiscussionsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<DiscussionsFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  endedAt?: InputMaybe<Scalars['DateTime']>;
+  endedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  endedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  endedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  endedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  endedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  endedAt_not?: InputMaybe<Scalars['DateTime']>;
+  endedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endedBy?: InputMaybe<CfUsersNestedFilter>;
+  endedBy_exists?: InputMaybe<Scalars['Boolean']>;
   message?: InputMaybe<CfMessagesNestedFilter>;
   message_exists?: InputMaybe<Scalars['Boolean']>;
   replies?: InputMaybe<CfMessagesNestedFilter>;
@@ -1383,6 +1408,8 @@ export enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 export enum DiscussionsOrder {
+  EndedAtAsc = 'endedAt_ASC',
+  EndedAtDesc = 'endedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5076,6 +5103,8 @@ export type MessagesLinkingCollectionsEntryCollectionArgs = {
 };
 
 export enum MessagesLinkingCollectionsDiscussionsCollectionOrder {
+  EndedAtAsc = 'endedAt_ASC',
+  EndedAtDesc = 'endedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -10245,6 +10274,7 @@ export enum UsersLabsCollectionOrder {
 export type UsersLinkingCollections = {
   complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
   discoverCollection?: Maybe<DiscoverCollection>;
+  discussionsCollection?: Maybe<DiscussionsCollection>;
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
   interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
@@ -10271,6 +10301,16 @@ export type UsersLinkingCollectionsDiscoverCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<UsersLinkingCollectionsDiscoverCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsDiscussionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsDiscussionsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -10381,6 +10421,19 @@ export enum UsersLinkingCollectionsComplianceReportsCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsDiscoverCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum UsersLinkingCollectionsDiscussionsCollectionOrder {
+  EndedAtAsc = 'endedAt_ASC',
+  EndedAtDesc = 'endedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -11474,6 +11527,16 @@ export type CfDiscussionsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfDiscussionsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfDiscussionsNestedFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  endedAt?: InputMaybe<Scalars['DateTime']>;
+  endedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  endedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  endedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  endedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  endedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  endedAt_not?: InputMaybe<Scalars['DateTime']>;
+  endedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endedBy_exists?: InputMaybe<Scalars['Boolean']>;
   message_exists?: InputMaybe<Scalars['Boolean']>;
   repliesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
@@ -25354,7 +25417,7 @@ export const DiscussionsContentFragmentDoc = {
                                 {
                                   kind: 'Argument',
                                   name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '1' },
+                                  value: { kind: 'IntValue', value: '2' },
                                 },
                               ],
                               selectionSet: {

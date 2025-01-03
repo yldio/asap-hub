@@ -12,7 +12,6 @@ import {
 } from '@asap-hub/model';
 import { GraphQLError } from 'graphql';
 import { when } from 'jest-when';
-import { DateTime } from 'luxon';
 
 import { ManuscriptContentfulDataProvider } from '../../../src/data-providers/contentful/manuscript.data-provider';
 import { getContentfulGraphqlDiscussion } from '../../fixtures/discussions.fixtures';

@@ -133,6 +133,7 @@ type TeamProfileWorkspaceProps = Readonly<
       ManuscriptVersion | undefined,
       (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
     ];
+    readonly onEndDiscussion: (id: string) => Promise<void>;
   };
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
@@ -154,6 +155,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   isTeamMember,
   createComplianceDiscussion,
   useVersionById,
+  onEndDiscussion,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
@@ -245,6 +247,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                             createComplianceDiscussion
                           }
                           useVersionById={useVersionById}
+                          onEndDiscussion={onEndDiscussion}
                         />
                       </div>
                     ))}
@@ -285,6 +288,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                             createComplianceDiscussion
                           }
                           useVersionById={useVersionById}
+                          onEndDiscussion={onEndDiscussion}
                         />
                       </div>
                     ))}

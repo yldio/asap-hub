@@ -4,7 +4,8 @@ import { ComponentProps, FC, useState } from 'react';
 import { UserAvatarList } from '..';
 import { Button } from '../atoms';
 import { minusRectIcon, plusRectIcon, replyIcon } from '../icons';
-import { DiscussionModal } from '../organisms';
+import endDiscussionIcon from '../icons/endDiscussionIcon';
+import { DiscussionModal, EndDiscussionModal } from '../organisms';
 import { rem } from '../pixels';
 
 import UserComment from './UserComment';
@@ -15,8 +16,10 @@ type DiscussionProps = Pick<
 > & {
   id: string;
   canReply: boolean;
+  canEndDiscussion?: boolean;
   modalTitle: string;
   getDiscussion: (id: string) => DiscussionDataObject | undefined;
+  onEndDiscussion?: (id: string) => Promise<void>;
 };
 
 const iconStyles = css({
@@ -42,20 +45,29 @@ const replyAvatarsStyles = css({
 const Discussion: FC<DiscussionProps> = ({
   id,
   canReply,
+  canEndDiscussion = false,
   modalTitle,
   getDiscussion,
   onSave,
+  onEndDiscussion,
 }) => {
   const discussion = getDiscussion(id);
   const [replyToDiscussion, setReplyToDiscussion] = useState<boolean>(false);
   const [expandReplies, setExpandReplies] = useState<boolean>(false);
+
+  const [isEndDiscussionModalOpen, setIsEndDiscussionModalOpen] =
+    useState(false);
+
   if (!discussion) {
     return null;
   }
   const { message, replies } = discussion;
   const hasReplies = replies && replies.length > 0;
   const displayReplyButton =
-    canReply && (!hasReplies || (hasReplies && expandReplies));
+    canReply &&
+    !discussion.endedAt &&
+    (!hasReplies || (hasReplies && expandReplies));
+
   return (
     <>
       {replyToDiscussion && (
@@ -104,21 +116,52 @@ const Discussion: FC<DiscussionProps> = ({
           </div>
         </div>
       )}
-      {displayReplyButton && (
-        <div css={hasReplies && { paddingLeft: rem(36) }}>
-          <Button noMargin small onClick={() => setReplyToDiscussion(true)}>
-            <span
-              css={{
-                display: 'inline-flex',
-                gap: rem(8),
-                margin: `0 ${rem(8)} 0 0`,
-              }}
+
+      <div css={{ display: 'flex', gap: rem(10) }}>
+        {displayReplyButton && (
+          <div css={hasReplies && { paddingLeft: rem(36) }}>
+            <Button noMargin small onClick={() => setReplyToDiscussion(true)}>
+              <span
+                css={{
+                  display: 'inline-flex',
+                  gap: rem(8),
+                  margin: `0 ${rem(8)} 0 0`,
+                }}
+              >
+                {replyIcon} Reply
+              </span>
+            </Button>
+          </div>
+        )}
+
+        {canEndDiscussion && !discussion.endedAt && (
+          <div css={!displayReplyButton && { paddingLeft: rem(36) }}>
+            <Button
+              noMargin
+              small
+              onClick={() => setIsEndDiscussionModalOpen(true)}
             >
-              {replyIcon} Reply
-            </span>
-          </Button>
-        </div>
-      )}
+              <span
+                css={{
+                  display: 'inline-flex',
+                  gap: rem(8),
+                  margin: `0 ${rem(8)} 0 0`,
+                }}
+              >
+                {endDiscussionIcon} End of Discussion
+              </span>
+            </Button>
+            {isEndDiscussionModalOpen && (
+              <EndDiscussionModal
+                handleSubmit={async () => {
+                  onEndDiscussion && (await onEndDiscussion(id));
+                }}
+                handleCancel={() => setIsEndDiscussionModalOpen(false)}
+              />
+            )}
+          </div>
+        )}
+      </div>
     </>
   );
 };

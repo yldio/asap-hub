@@ -37,11 +37,16 @@ export type MessageCreateDataObject = {
 };
 
 export type DiscussionUpdateDataObject = {
-  reply: MessageCreateDataObject;
+  reply?: MessageCreateDataObject;
+  endedBy?: string;
 };
 
 export type DiscussionRequest = {
   text: string;
+};
+
+export type DiscussionEndRequest = {
+  endedBy: string;
 };
 
 export type DiscussionCreateRequest = {

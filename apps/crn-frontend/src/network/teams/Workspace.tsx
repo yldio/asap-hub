@@ -17,6 +17,7 @@ import { ToastContext, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   useCreateComplianceDiscussion,
   useDiscussionById,
+  useEndDiscussion,
   useIsComplianceReviewer,
   usePatchTeamById,
   usePutManuscript,
@@ -39,6 +40,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const patchTeam = usePatchTeamById(team.id);
   const updateManuscript = usePutManuscript();
   const replyToDiscussion = useReplyToDiscussion();
+  const endDiscussion = useEndDiscussion();
   const createComplianceDiscussion = useCreateComplianceDiscussion();
 
   const getDiscussion = useDiscussionById;
@@ -83,6 +85,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           onSave={async (id: string, patch: DiscussionRequest) => {
             await replyToDiscussion(id, patch as DiscussionRequest);
             setFormType('quick-check');
+          }}
+          onEndDiscussion={async (id: string) => {
+            await endDiscussion(id);
+            setFormType('compliance-report-discussion-end');
           }}
           getDiscussion={getDiscussion}
           createComplianceDiscussion={async (

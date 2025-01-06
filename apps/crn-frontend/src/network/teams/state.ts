@@ -43,6 +43,7 @@ import {
   uploadManuscriptFile,
   resubmitManuscript,
   createComplianceDiscussion,
+  endDiscussion,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -325,6 +326,16 @@ export const useReplyToDiscussion = () => {
 
   return async (id: string, patch: DiscussionRequest) => {
     const discussion = await updateDiscussion(id, patch, authorization);
+    setDiscussion(discussion);
+  };
+};
+
+export const useEndDiscussion = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const setDiscussion = useSetDiscussion();
+
+  return async (id: string) => {
+    const discussion = await endDiscussion(id, authorization);
     setDiscussion(discussion);
   };
 };

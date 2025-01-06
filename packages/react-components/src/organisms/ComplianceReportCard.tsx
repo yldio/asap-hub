@@ -41,6 +41,8 @@ type ComplianceReportCardProps = ComplianceReportResponse & {
   setVersion: (
     callback: (prev: ManuscriptVersion) => ManuscriptVersion,
   ) => void;
+  onEndDiscussion: (id: string) => Promise<void>;
+  isComplianceReviewer?: boolean;
 };
 
 const toastStyles = css({
@@ -117,15 +119,19 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   discussionId,
   manuscriptId,
   versionId,
+  isComplianceReviewer,
   createComplianceDiscussion,
   getDiscussion,
   onSave,
   setVersion,
+  onEndDiscussion,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [startDiscussion, setStartDiscussion] = useState(false);
-
   const startedDiscussionIdRef = useRef<string>('');
+  const discussion = getDiscussion(
+    discussionId || startedDiscussionIdRef.current,
+  );
 
   useEffect(
     () => () => {
@@ -219,10 +225,16 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
             {(discussionId || startedDiscussionIdRef.current) && (
               <>
                 <Divider />
-                <Subtitle>Discussion Started</Subtitle>
+                <Subtitle>
+                  {discussion?.endedAt
+                    ? 'Discussion Ended'
+                    : 'Discussion Started'}
+                </Subtitle>
                 <Suspense fallback={<Loading />}>
                   <Discussion
                     canReply
+                    canEndDiscussion={isComplianceReviewer}
+                    onEndDiscussion={onEndDiscussion}
                     modalTitle="Reply to compliance report discussion"
                     id={
                       (discussionId ?? startedDiscussionIdRef.current) as string

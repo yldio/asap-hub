@@ -233,8 +233,8 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           {...manuscript}
                           user={user}
                           teamId={id}
-                          teamIdCode={teamId || ''}
-                          grantId={grantId || ''}
+                          teamIdCode={manuscript.teamId}
+                          grantId={manuscript.grantId}
                           isComplianceReviewer={isComplianceReviewer}
                           isTeamMember={isTeamMember}
                           onUpdateManuscript={onUpdateManuscript}
@@ -273,8 +273,8 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           {...manuscript}
                           user={user}
                           teamId={id}
-                          teamIdCode={teamId || ''}
-                          grantId={grantId || ''}
+                          teamIdCode={manuscript.teamId}
+                          grantId={manuscript.grantId}
                           isComplianceReviewer={isComplianceReviewer}
                           isTeamMember={isTeamMember}
                           isActiveTeam={!inactiveSince}

@@ -75,12 +75,16 @@ describe('compliance section', () => {
           count: 1,
           title: 'Nice manuscript',
           versions: [],
+          teamId: 'WH1',
+          grantId: '000282',
         },
         {
           id: '2',
           count: 2,
           title: 'A Good Manuscript',
           versions: [],
+          teamId: 'WH1',
+          grantId: '000282',
         },
       ],
     };
@@ -106,12 +110,16 @@ describe('compliance section', () => {
           count: 1,
           title: 'Nice manuscript',
           versions: [],
+          teamId: 'WH1',
+          grantId: '000282',
         },
         {
           id: '2',
           count: 2,
           title: 'A Good Manuscript',
           versions: [],
+          teamId: 'WH1',
+          grantId: '000282',
         },
       ],
     };
@@ -131,6 +139,8 @@ describe('compliance section', () => {
           count: 1,
           title: 'Nice manuscript',
           versions: [],
+          teamId: 'WH1',
+          grantId: '000282',
         },
       ],
       collaborationManuscripts: [
@@ -139,6 +149,8 @@ describe('compliance section', () => {
           count: 2,
           title: 'A Good Manuscript',
           versions: [],
+          teamId: 'CS1',
+          grantId: '000301',
         },
       ],
     };
@@ -242,6 +254,8 @@ describe('compliance section', () => {
           id: '1',
           count: 1,
           title: 'Nice manuscript',
+          teamId: 'WH1',
+          grantId: '000282',
           versions: [
             {
               id: 'version-1',
@@ -281,6 +295,8 @@ describe('compliance section', () => {
           id: '2',
           count: 2,
           title: 'A Good Manuscript',
+          teamId: 'WH1',
+          grantId: '000282',
           versions: [
             {
               id: 'version-1',
@@ -436,6 +452,8 @@ describe('compliance section', () => {
           id: 'manuscript-id',
           title: 'Nice manuscript',
           count: 1,
+          teamId: 'WH1',
+          grantId: '000282',
           versions: [version],
         },
       ],

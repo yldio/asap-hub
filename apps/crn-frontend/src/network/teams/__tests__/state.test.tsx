@@ -1,8 +1,8 @@
 import { createManuscriptResponse } from '@asap-hub/fixtures';
 import {
-  ManuscriptDataObject,
   ManuscriptVersion,
   TeamDataObject,
+  TeamManuscript,
 } from '@asap-hub/model';
 import { act, renderHook } from '@testing-library/react-hooks';
 import {
@@ -113,7 +113,7 @@ describe('versionSelector', () => {
               },
             ],
           },
-        ] as ManuscriptDataObject[],
+        ] as TeamManuscript[],
       };
 
       set(teamState(teamId), mockTeam);
@@ -150,7 +150,7 @@ describe('versionSelector', () => {
               },
             ],
           },
-        ] as ManuscriptDataObject[],
+        ] as TeamManuscript[],
       };
 
       set(teamState(teamId), mockTeam);
@@ -185,7 +185,7 @@ describe('versionSelector', () => {
               { id: 'version-id-2', description: 'Original Version 2' },
             ],
           },
-        ] as ManuscriptDataObject[],
+        ] as TeamManuscript[],
       };
 
       set(teamState(teamId), mockTeam);
@@ -240,7 +240,7 @@ describe('useVersionById hook', () => {
             id: manuscriptId,
             versions: [mockVersionData],
           },
-        ] as ManuscriptDataObject[],
+        ] as TeamManuscript[],
       };
 
       set(teamState(teamId), mockTeam);
@@ -302,7 +302,7 @@ describe('useVersionById hook', () => {
               },
             ],
           },
-        ] as ManuscriptDataObject[],
+        ] as TeamManuscript[],
       };
 
       set(teamState(teamId), mockTeam);

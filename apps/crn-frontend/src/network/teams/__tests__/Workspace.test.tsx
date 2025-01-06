@@ -16,7 +16,7 @@ import {
 } from '@asap-hub/model';
 import {
   createDiscussionResponse,
-  createManuscriptResponse,
+  createTeamManuscriptResponse,
   createMessage,
   createTeamResponse,
 } from '@asap-hub/fixtures';
@@ -113,7 +113,7 @@ const user = {
 
 const mockSetVersion = jest.fn();
 
-const version = createManuscriptResponse().versions[0] as ManuscriptVersion;
+const version = createTeamManuscriptResponse().versions[0] as ManuscriptVersion;
 
 const mockVersionData = {
   ...version,
@@ -145,7 +145,7 @@ describe('Manuscript', () => {
           ...createTeamResponse(),
           id,
           tools: [],
-          manuscripts: [createManuscriptResponse()],
+          manuscripts: [createTeamManuscriptResponse()],
         }}
       />,
     );
@@ -416,7 +416,7 @@ describe('the edit tool dialog', () => {
 });
 
 describe('manuscript quick check discussion', () => {
-  const manuscript = createManuscriptResponse();
+  const manuscript = createTeamManuscriptResponse();
   manuscript.versions[0]!.acknowledgedGrantNumber = 'No';
   const reply = createMessage('when can this be completed?');
   const quickCheckResponse = 'We have not been able to complete this yet';

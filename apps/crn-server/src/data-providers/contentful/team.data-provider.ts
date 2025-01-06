@@ -212,6 +212,8 @@ const mapManuscripts = (
   id: manuscript.sys.id,
   count: manuscript.count || 1,
   title: manuscript.title || '',
+  teamId: manuscript.teamsCollection?.items[0]?.teamId || '',
+  grantId: manuscript.teamsCollection?.items[0]?.grantId || '',
   status: manuscriptMapStatus(manuscript.status) || undefined,
   versions: parseGraphqlManuscriptVersion(
     manuscript.versionsCollection?.items || [],
@@ -340,28 +342,17 @@ export const parseContentfulGraphQlTeam = (
       item.linkedFrom?.manuscriptsCollection?.items,
     );
 
-    const getLastManuscriptVersion = (
-      manuscript: ManuscriptItem,
-    ):
-      | NonNullable<ManuscriptItem['versionsCollection']>['items'][number]
-      | undefined =>
-      manuscript?.versionsCollection?.items[
-        manuscript.versionsCollection.items.length - 1
-      ];
-
     return {
       manuscripts: manuscripts
         .filter(
           (manuscript) =>
-            getLastManuscriptVersion(manuscript)?.teamsCollection?.items[0]?.sys
-              .id === teamId,
+            manuscript.teamsCollection?.items[0]?.sys.id === teamId,
         )
         .map(mapManuscripts),
       collaborationManuscripts: manuscripts
         .filter(
           (manuscript) =>
-            getLastManuscriptVersion(manuscript)?.teamsCollection?.items[0]?.sys
-              .id !== teamId,
+            manuscript.teamsCollection?.items[0]?.sys.id !== teamId,
         )
         .map(mapManuscripts),
     };

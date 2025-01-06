@@ -4,8 +4,10 @@ import {
   TeamResponse,
   TeamListItemResponse,
   ListTeamResponse,
+  TeamManuscript,
 } from '@asap-hub/model';
 import { createLabs } from './labs';
+import { createManuscriptResponse } from './manuscripts';
 
 export const teamMember: Omit<TeamResponse['members'][number], 'id'> = {
   firstName: 'Mason',
@@ -83,4 +85,11 @@ export const createListTeamResponse = (items: number): ListTeamResponse => ({
   items: Array.from({ length: items }, (_, itemIndex) =>
     createTeamListItemResponse(itemIndex),
   ),
+});
+
+export const createTeamManuscriptResponse = (
+  grantId: string = '000282',
+): TeamManuscript => ({
+  ...createManuscriptResponse(),
+  grantId,
 });

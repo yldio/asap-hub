@@ -51,6 +51,15 @@ export const FETCH_TEAM_BY_ID = gql`
         manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
           items {
             ...ManuscriptsContent
+            teamsCollection(limit: 1) {
+              items {
+                sys {
+                  id
+                }
+                teamId
+                grantId
+              }
+            }
           }
         }
         teamMembershipCollection(limit: 100) {

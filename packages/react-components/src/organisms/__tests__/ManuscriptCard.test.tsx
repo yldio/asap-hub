@@ -38,6 +38,7 @@ const props: ComponentProps<typeof ManuscriptCard> = {
   isActiveTeam: true,
   createComplianceDiscussion: jest.fn(),
   useVersionById: jest.fn(),
+  onEndDiscussion: jest.fn(),
 };
 
 const complianceReport = {

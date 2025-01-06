@@ -23,6 +23,7 @@ const props = {
   getDiscussion: jest.fn(),
   setVersion: jest.fn(),
   onSave: jest.fn(),
+  onEndDiscussion: jest.fn(),
 };
 
 it('displays compliance report description, url and creation details when expanded', () => {

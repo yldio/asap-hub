@@ -83,12 +83,22 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           }
           isComplianceReviewer={isComplianceReviewer}
           onSave={async (id: string, patch: DiscussionRequest) => {
-            await replyToDiscussion(id, patch as DiscussionRequest);
-            setFormType('quick-check');
+            try {
+              await replyToDiscussion(id, patch as DiscussionRequest);
+              setFormType({ type: 'quick-check', accent: 'successLarge' });
+            } catch (error) {
+              setFormType({
+                type: 'discussion-already-closed',
+                accent: 'error',
+              });
+            }
           }}
           onEndDiscussion={async (id: string) => {
             await endDiscussion(id);
-            setFormType('compliance-report-discussion-end');
+            setFormType({
+              type: 'compliance-report-discussion-end',
+              accent: 'successLarge',
+            });
           }}
           getDiscussion={getDiscussion}
           createComplianceDiscussion={async (
@@ -99,7 +109,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
               complianceReportId,
               message,
             );
-            setFormType('compliance-report-discussion');
+            setFormType({
+              type: 'compliance-report-discussion',
+              accent: 'successLarge',
+            });
             return discussionId;
           }}
           useVersionById={useVersionById}

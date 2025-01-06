@@ -84,6 +84,10 @@ export class DiscussionContentfulDataProvider
 
       const discussion = await environment.getEntry(id);
 
+      if (discussion.fields.endedAt) {
+        throw new Error('Cannot reply to a discussion that has ended.');
+      }
+
       const previousReplies = discussion.fields.replies
         ? discussion.fields.replies['en-US']
         : [];

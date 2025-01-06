@@ -35,7 +35,10 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
   if (manuscript && manuscript.versions[0]) {
     const onSuccess = () => {
       const path = network({}).teams({}).team({ teamId }).workspace({}).$;
-      setFormType('compliance-report');
+      setFormType({
+        type: 'compliance-report',
+        accent: 'successLarge',
+      });
       setRefreshTeamState((value) => value + 1);
       pushFromHere(path);
     };

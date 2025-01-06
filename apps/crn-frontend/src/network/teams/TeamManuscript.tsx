@@ -55,7 +55,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
 
   const onSuccess = () => {
     const path = network({}).teams({}).team({ teamId }).workspace({}).$;
-    setFormType('manuscript');
+    setFormType({ type: 'manuscript', accent: 'successLarge' });
     setRefreshTeamState((value) => value + 1);
     pushFromHere(path);
   };

@@ -36,6 +36,17 @@ jest.mock('@asap-hub/contentful', () => ({
 }));
 
 describe('Manuscripts Contentful Data Provider', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
   const environmentMock = getContentfulEnvironmentMock();
   const contentfulRestClientMock: () => Promise<Environment> = () =>
@@ -962,11 +973,17 @@ describe('Manuscripts Contentful Data Provider', () => {
     const publish: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
 
     test('can update the manuscript status', async () => {
+      jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
+
       const entry = {
         sys: {
           publishedVersion: 1,
         },
-        fields: {},
+        fields: {
+          status: {
+            'en-US': `Waiting for Grantee's Reply`,
+          },
+        },
         patch,
         publish,
       } as unknown as Entry;
@@ -984,9 +1001,30 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(environmentMock.getEntry).toHaveBeenCalledWith(manuscriptId);
       expect(patch).toHaveBeenCalledWith([
         {
-          op: 'add',
+          op: 'replace',
           path: '/fields/status',
           value: { 'en-US': 'Manuscript Resubmitted' },
+        },
+        {
+          op: 'add',
+          path: '/fields/previousStatus',
+          value: { 'en-US': "Waiting for Grantee's Reply" },
+        },
+        {
+          op: 'add',
+          path: '/fields/statusUpdatedBy',
+          value: {
+            'en-US': {
+              sys: { id: 'user-id-1', linkType: 'Entry', type: 'Link' },
+            },
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/statusUpdatedAt',
+          value: {
+            'en-US': new Date('2025-01-03T10:00:00.000Z'),
+          },
         },
       ]);
     });

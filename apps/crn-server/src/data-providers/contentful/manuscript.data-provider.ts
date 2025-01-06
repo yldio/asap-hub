@@ -260,8 +260,13 @@ export class ManuscriptContentfulDataProvider
     const manuscriptEntry = await environment.getEntry(id);
 
     if ('status' in manuscriptData) {
+      const previousStatus = manuscriptEntry.fields.status['en-US'];
+
       await patchAndPublish(manuscriptEntry, {
         status: manuscriptData.status,
+        previousStatus,
+        statusUpdatedBy: getLinkEntity(userId),
+        statusUpdatedAt: new Date(),
       });
     }
 

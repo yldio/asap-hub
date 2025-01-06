@@ -77,7 +77,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const [teamListElementId] = useState(`team-list-${uuid()}`);
   const { teamId } = useRouteParams(route);
   const team = useTeamById(teamId);
-  console.log('team', team);
   const user = useCurrentUserCRN();
   const isStaff = user?.role === 'Staff';
   const isAsapTeam = team?.displayName === 'ASAP';

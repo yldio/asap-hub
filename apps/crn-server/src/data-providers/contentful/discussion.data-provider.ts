@@ -76,22 +76,35 @@ export class DiscussionContentfulDataProvider
   async update(id: string, update: DiscussionUpdateDataObject): Promise<void> {
     const environment = await this.getRestClient();
 
-    const publishedReplyId = await createAndPublishMessage(
-      environment,
-      update.reply,
-    );
+    if (update.reply) {
+      const publishedReplyId = await createAndPublishMessage(
+        environment,
+        update.reply,
+      );
 
-    const discussion = await environment.getEntry(id);
+      const discussion = await environment.getEntry(id);
 
-    const previousReplies = discussion.fields.replies
-      ? discussion.fields.replies['en-US']
-      : [];
+      const previousReplies = discussion.fields.replies
+        ? discussion.fields.replies['en-US']
+        : [];
 
-    const newReply = getLinkEntity(publishedReplyId);
+      const newReply = getLinkEntity(publishedReplyId);
 
-    await patchAndPublish(discussion, {
-      replies: [...previousReplies, newReply],
-    });
+      await patchAndPublish(discussion, {
+        replies: [...previousReplies, newReply],
+      });
+      return;
+    }
+
+    if (update.endedBy) {
+      const discussion = await environment.getEntry(id);
+      const endedBy = getLinkEntity(update.endedBy);
+
+      await patchAndPublish(discussion, {
+        endedAt: new Date().toISOString(),
+        endedBy,
+      });
+    }
   }
 }
 

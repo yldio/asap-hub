@@ -29,6 +29,15 @@ export default class DiscussionController {
     return this.fetchById(id);
   }
 
+  async endDiscussion(
+    id: string,
+    endedBy: string,
+  ): Promise<DiscussionResponse> {
+    await this.discussionDataProvider.update(id, { endedBy });
+
+    return this.fetchById(id);
+  }
+
   async create(message: MessageCreateDataObject): Promise<DiscussionResponse> {
     const id = await this.discussionDataProvider.create(message);
 

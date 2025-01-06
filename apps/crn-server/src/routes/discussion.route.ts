@@ -46,6 +46,24 @@ export const discussionRouteFactory = (
     },
   );
 
+  discussionRoutes.patch<{ discussionId: string }>(
+    '/discussions/:discussionId/end',
+    async (req, res: Response<DiscussionResponse>) => {
+      const { params } = req;
+
+      const { discussionId } = validateDiscussionParameters(params);
+
+      if (!req.loggedInUser) throw Boom.forbidden();
+
+      const result = await discussionController.endDiscussion(
+        discussionId,
+        req.loggedInUser.id,
+      );
+
+      res.json(result);
+    },
+  );
+
   discussionRoutes.post(
     '/discussions',
     async (req, res: Response<DiscussionResponse>) => {

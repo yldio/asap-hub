@@ -340,6 +340,29 @@ export const updateDiscussion = async (
   return response;
 };
 
+export const endDiscussion = async (
+  discussionId: string,
+  authorization: string,
+): Promise<DiscussionResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/discussions/${discussionId}/end`, {
+    method: 'PATCH',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to end discussion with id ${discussionId}. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
+};
+
 export const getDiscussion = async (
   id: string,
   authorization: string,

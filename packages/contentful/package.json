@@ -11,6 +11,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "migrate-user-labs": "ts-node ./scripts/migrate-user-labs.ts",
+    "migrate-preprint-versions": "ts-node ./scripts/migrate-research-output-versions.ts",
     "watch:babel": "../../scripts/build-babel.sh watch",
     "space:rollback-migration": "yarn ctf-migrate down -c $CONTENT_TYPE -d $DRY_RUN",
     "space:migrate:run": "yarn ctf-migrate up --all",
@@ -38,6 +39,7 @@
     "contentful": "^10.1.8",
     "contentful-management": "10.46.4",
     "contentful-migrate": "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212",
+    "csv-parse": "4.16.3",
     "graphql": "15.8.0",
     "graphql-request": "6.1.0",
     "graphql-tag": "2.12.6",

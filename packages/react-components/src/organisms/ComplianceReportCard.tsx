@@ -267,6 +267,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
 };
 
 export default memo(ComplianceReportCard, (prevProps, props) => {
+  if (!prevProps) return true;
   const {
     createComplianceDiscussion: _createComplianceDiscussion,
     getDiscussion: _getDiscussion,

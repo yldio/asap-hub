@@ -5,8 +5,8 @@ import {
 import {
   createListEventResponse,
   createListResearchOutputResponse,
-  createManuscriptResponse,
   createResearchOutputResponse,
+  createTeamManuscriptResponse,
   createTeamResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
@@ -572,7 +572,7 @@ describe('Create Compliance Report', () => {
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
 
-    teamResponse.manuscripts = [createManuscriptResponse()];
+    teamResponse.manuscripts = [createTeamManuscriptResponse()];
     userResponse.role = 'Staff';
     userResponse.openScienceTeamMember = true;
 
@@ -606,7 +606,7 @@ describe('Create Compliance Report', () => {
     enable('DISPLAY_MANUSCRIPTS');
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
-    const teamManuscript = createManuscriptResponse();
+    const teamManuscript = createTeamManuscriptResponse();
     teamResponse.manuscripts = [teamManuscript];
     userResponse.role = 'Staff';
     userResponse.openScienceTeamMember = true;

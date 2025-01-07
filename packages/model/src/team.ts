@@ -48,8 +48,10 @@ export interface TeamMember {
 
 export type TeamManuscript = Pick<
   ManuscriptResponse,
-  'id' | 'title' | 'versions' | 'status' | 'count'
->;
+  'id' | 'title' | 'versions' | 'status' | 'count' | 'teamId'
+> & {
+  grantId: string;
+};
 
 export type TeamSupplementGrant = {
   title: string;

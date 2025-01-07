@@ -78,11 +78,13 @@ export const getContentfulGraphqlManuscript = (
   ...props,
 });
 
-export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
+export const getContentfulGraphqlManuscriptVersions = (
+  teamId?: string,
+): NonNullable<
   NonNullable<
     NonNullable<FetchManuscriptByIdQuery>['manuscripts']
   >['versionsCollection']
-> = () => ({
+> => ({
   items: [
     {
       sys: {
@@ -107,7 +109,7 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
       teamsCollection: {
         items: [
           {
-            sys: { id: 'team-1' },
+            sys: { id: teamId || 'team-1' },
             displayName: 'Test 1',
             inactiveSince: null,
           },

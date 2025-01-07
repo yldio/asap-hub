@@ -599,10 +599,6 @@ describe('Teams data provider', () => {
       expectedResult.manuscripts[1]!.versions[0]!.teams[0]!.id = id;
       expectedResult.collaborationManuscripts = [];
       const teamByIdMock = getContentfulGraphqlTeamById(id);
-      teamByIdMock.linkedFrom!.manuscriptsCollection!.items[0]!.versionsCollection!.items[0]!.teamsCollection!.items[0]!.sys.id =
-        id;
-      teamByIdMock.linkedFrom!.manuscriptsCollection!.items[1]!.versionsCollection!.items[0]!.teamsCollection!.items[0]!.sys.id =
-        id;
       const contentfulGraphQLResponse = {
         teams: teamByIdMock,
       };

@@ -840,6 +840,7 @@ __metadata:
     contentful-cli: 1.19.1
     contentful-management: 10.46.4
     contentful-migrate: "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212"
+    csv-parse: 4.16.3
     graphql: 15.8.0
     graphql-request: 6.1.0
     graphql-tag: 2.12.6

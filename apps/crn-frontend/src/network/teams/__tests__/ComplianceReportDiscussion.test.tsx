@@ -79,6 +79,7 @@ const mockManuscript = {
   status: 'Waiting for Report',
   count: 1,
   versions: [manuscriptVersion],
+  grantId: 'grand-id',
 };
 const version = createManuscriptResponse().versions[0] as ManuscriptVersion;
 

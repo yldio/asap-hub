@@ -373,14 +373,12 @@ describe('useEndDiscussion', () => {
     status: 'closed',
   };
   beforeEach(() => {
-    jest
-      .spyOn(require('recoil'), 'useRecoilValue')
-      .mockImplementation((state) => {
-        if (state === authorizationState) {
-          return mockAuthorization;
-        }
-        return undefined;
-      });
+    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
+      if (state === authorizationState) {
+        return mockAuthorization;
+      }
+      return undefined;
+    });
   });
 
   afterEach(() => {

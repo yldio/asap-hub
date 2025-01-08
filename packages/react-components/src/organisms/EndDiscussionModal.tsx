@@ -65,7 +65,7 @@ const EndDiscussionModal: React.FC<EndDiscussionModalProps> = ({
     <Modal>
       <header css={headerStyles}>
         <div css={controlsContainerStyles}>
-          <Button small onClick={handleCancel}>
+          <Button small onClick={handleCancel} data-testid="close-button">
             {crossIcon}
           </Button>
         </div>

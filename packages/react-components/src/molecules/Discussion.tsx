@@ -120,7 +120,12 @@ const Discussion: FC<DiscussionProps> = ({
       <div css={{ display: 'flex', gap: rem(10) }}>
         {displayReplyButton && (
           <div css={hasReplies && { paddingLeft: rem(36) }}>
-            <Button noMargin small onClick={() => setReplyToDiscussion(true)}>
+            <Button
+              noMargin
+              small
+              onClick={() => setReplyToDiscussion(true)}
+              data-testid="discussion-reply-button"
+            >
               <span
                 css={{
                   display: 'inline-flex',

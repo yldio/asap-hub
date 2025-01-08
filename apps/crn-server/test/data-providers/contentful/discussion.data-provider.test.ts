@@ -396,6 +396,48 @@ describe('Discussions Contentful Data Provider', () => {
 
       expect(discussionMockUpdated.publish).toHaveBeenCalled();
     });
+
+    test('Should update a discussion with endedBy', async () => {
+      const discussionId = 'discussion-id-1';
+      const endedByUserId = 'user-id-2';
+
+      const discussionMock = getEntry({});
+      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
+      const discussionMockUpdated = getEntry({});
+      discussionMock.patch = jest
+        .fn()
+        .mockResolvedValueOnce(discussionMockUpdated);
+
+      const endedBy = endedByUserId;
+
+      await discussionDataProviderMock.update(discussionId, { endedBy });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(discussionId);
+      expect(discussionMock.patch).toHaveBeenCalledWith([
+        {
+          op: 'add', // 'replace' may not be the correct operation here, if you're adding a new field
+          path: '/fields/endedAt',
+          value: {
+            'en-US': expect.any(String), // ISO string timestamp
+          },
+        },
+        {
+          op: 'add', // 'replace' may not be the correct operation here, if you're adding a new field
+          path: '/fields/endedBy',
+          value: {
+            'en-US': {
+              sys: {
+                id: endedBy,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          },
+        },
+      ]);
+
+      expect(discussionMockUpdated.publish).toHaveBeenCalled();
+    });
   });
 
   describe('parseGraphqlDiscussion', () => {

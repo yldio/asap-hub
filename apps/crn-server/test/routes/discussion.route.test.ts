@@ -248,4 +248,41 @@ describe('/discussions/ route', () => {
       expect(response.status).toBe(400);
     });
   });
+
+  describe('PATCH /discussions/{discussion_id}/end', () => {
+    test('Should return 403 when user not allowed to end the discussion', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: false,
+      });
+
+      const response = await supertest(app)
+        .patch(`/discussions/${discussionId}/end`)
+        .send({
+          text: 'response',
+        });
+
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should return 404 when the discussion does not exist', async () => {
+      discussionControllerMock.endDiscussion.mockRejectedValueOnce(
+        Boom.notFound(),
+      );
+
+      const response = await supertest(app).patch(
+        `/discussions/${discussionId}-wrong/end`,
+      );
+
+      expect(response.status).toBe(404);
+    });
+
+    test('Should return 200 when the discussion id is invalid', async () => {
+      const response = await supertest(app).patch(
+        `/discussions/${discussionId}/end`,
+      );
+
+      expect(response.status).toBe(200);
+    });
+  });
 });

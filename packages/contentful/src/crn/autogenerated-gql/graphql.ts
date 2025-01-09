@@ -17928,550 +17928,14 @@ export type ManuscriptsContentFragment = Pick<
               Maybe<Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }>
             >;
           }>;
-          acknowledgedGrantNumberDetails?: Maybe<
-            Pick<Discussions, 'endedAt'> & {
-              sys: Pick<Sys, 'id'>;
-              endedBy?: Maybe<
-                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                  sys: Pick<Sys, 'id'>;
-                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                }
-              >;
-              message?: Maybe<
-                Pick<Messages, 'text'> & {
-                  sys: Pick<Sys, 'publishedAt'>;
-                  createdBy?: Maybe<
-                    Pick<
-                      Users,
-                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                    > & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                      teamsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<{
-                            team?: Maybe<
-                              Pick<Teams, 'displayName'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >;
-                          }>
-                        >;
-                      }>;
-                    }
-                  >;
-                }
-              >;
-              repliesCollection?: Maybe<{
-                items: Array<
-                  Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >
-                >;
-              }>;
-            }
-          >;
-          asapAffiliationIncludedDetails?: Maybe<
-            Pick<Discussions, 'endedAt'> & {
-              sys: Pick<Sys, 'id'>;
-              endedBy?: Maybe<
-                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                  sys: Pick<Sys, 'id'>;
-                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                }
-              >;
-              message?: Maybe<
-                Pick<Messages, 'text'> & {
-                  sys: Pick<Sys, 'publishedAt'>;
-                  createdBy?: Maybe<
-                    Pick<
-                      Users,
-                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                    > & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                      teamsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<{
-                            team?: Maybe<
-                              Pick<Teams, 'displayName'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >;
-                          }>
-                        >;
-                      }>;
-                    }
-                  >;
-                }
-              >;
-              repliesCollection?: Maybe<{
-                items: Array<
-                  Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >
-                >;
-              }>;
-            }
-          >;
-          manuscriptLicenseDetails?: Maybe<
-            Pick<Discussions, 'endedAt'> & {
-              sys: Pick<Sys, 'id'>;
-              endedBy?: Maybe<
-                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                  sys: Pick<Sys, 'id'>;
-                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                }
-              >;
-              message?: Maybe<
-                Pick<Messages, 'text'> & {
-                  sys: Pick<Sys, 'publishedAt'>;
-                  createdBy?: Maybe<
-                    Pick<
-                      Users,
-                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                    > & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                      teamsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<{
-                            team?: Maybe<
-                              Pick<Teams, 'displayName'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >;
-                          }>
-                        >;
-                      }>;
-                    }
-                  >;
-                }
-              >;
-              repliesCollection?: Maybe<{
-                items: Array<
-                  Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >
-                >;
-              }>;
-            }
-          >;
-          datasetsDepositedDetails?: Maybe<
-            Pick<Discussions, 'endedAt'> & {
-              sys: Pick<Sys, 'id'>;
-              endedBy?: Maybe<
-                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                  sys: Pick<Sys, 'id'>;
-                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                }
-              >;
-              message?: Maybe<
-                Pick<Messages, 'text'> & {
-                  sys: Pick<Sys, 'publishedAt'>;
-                  createdBy?: Maybe<
-                    Pick<
-                      Users,
-                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                    > & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                      teamsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<{
-                            team?: Maybe<
-                              Pick<Teams, 'displayName'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >;
-                          }>
-                        >;
-                      }>;
-                    }
-                  >;
-                }
-              >;
-              repliesCollection?: Maybe<{
-                items: Array<
-                  Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >
-                >;
-              }>;
-            }
-          >;
-          codeDepositedDetails?: Maybe<
-            Pick<Discussions, 'endedAt'> & {
-              sys: Pick<Sys, 'id'>;
-              endedBy?: Maybe<
-                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                  sys: Pick<Sys, 'id'>;
-                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                }
-              >;
-              message?: Maybe<
-                Pick<Messages, 'text'> & {
-                  sys: Pick<Sys, 'publishedAt'>;
-                  createdBy?: Maybe<
-                    Pick<
-                      Users,
-                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                    > & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                      teamsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<{
-                            team?: Maybe<
-                              Pick<Teams, 'displayName'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >;
-                          }>
-                        >;
-                      }>;
-                    }
-                  >;
-                }
-              >;
-              repliesCollection?: Maybe<{
-                items: Array<
-                  Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >
-                >;
-              }>;
-            }
-          >;
-          protocolsDepositedDetails?: Maybe<
-            Pick<Discussions, 'endedAt'> & {
-              sys: Pick<Sys, 'id'>;
-              endedBy?: Maybe<
-                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                  sys: Pick<Sys, 'id'>;
-                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                }
-              >;
-              message?: Maybe<
-                Pick<Messages, 'text'> & {
-                  sys: Pick<Sys, 'publishedAt'>;
-                  createdBy?: Maybe<
-                    Pick<
-                      Users,
-                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                    > & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                      teamsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<{
-                            team?: Maybe<
-                              Pick<Teams, 'displayName'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >;
-                          }>
-                        >;
-                      }>;
-                    }
-                  >;
-                }
-              >;
-              repliesCollection?: Maybe<{
-                items: Array<
-                  Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >
-                >;
-              }>;
-            }
-          >;
-          labMaterialsRegisteredDetails?: Maybe<
-            Pick<Discussions, 'endedAt'> & {
-              sys: Pick<Sys, 'id'>;
-              endedBy?: Maybe<
-                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                  sys: Pick<Sys, 'id'>;
-                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                }
-              >;
-              message?: Maybe<
-                Pick<Messages, 'text'> & {
-                  sys: Pick<Sys, 'publishedAt'>;
-                  createdBy?: Maybe<
-                    Pick<
-                      Users,
-                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                    > & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                      teamsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<{
-                            team?: Maybe<
-                              Pick<Teams, 'displayName'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >;
-                          }>
-                        >;
-                      }>;
-                    }
-                  >;
-                }
-              >;
-              repliesCollection?: Maybe<{
-                items: Array<
-                  Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >
-                >;
-              }>;
-            }
-          >;
-          availabilityStatementDetails?: Maybe<
-            Pick<Discussions, 'endedAt'> & {
-              sys: Pick<Sys, 'id'>;
-              endedBy?: Maybe<
-                Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                  sys: Pick<Sys, 'id'>;
-                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                }
-              >;
-              message?: Maybe<
-                Pick<Messages, 'text'> & {
-                  sys: Pick<Sys, 'publishedAt'>;
-                  createdBy?: Maybe<
-                    Pick<
-                      Users,
-                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                    > & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                      teamsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<{
-                            team?: Maybe<
-                              Pick<Teams, 'displayName'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >;
-                          }>
-                        >;
-                      }>;
-                    }
-                  >;
-                }
-              >;
-              repliesCollection?: Maybe<{
-                items: Array<
-                  Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >
-                >;
-              }>;
-            }
-          >;
+          acknowledgedGrantNumberDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+          asapAffiliationIncludedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+          manuscriptLicenseDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+          datasetsDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+          codeDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+          protocolsDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+          labMaterialsRegisteredDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+          availabilityStatementDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
           teamsCollection?: Maybe<{
             items: Array<
               Maybe<
@@ -18614,7 +18078,6 @@ export type ManuscriptsContentFragment = Pick<
 
 export type FetchManuscriptByIdQueryVariables = Exact<{
   id: Scalars['String'];
-  fetchReplies?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchManuscriptByIdQuery = {
@@ -18662,574 +18125,14 @@ export type FetchManuscriptByIdQuery = {
                   >
                 >;
               }>;
-              acknowledgedGrantNumberDetails?: Maybe<
-                Pick<Discussions, 'endedAt'> & {
-                  sys: Pick<Sys, 'id'>;
-                  endedBy?: Maybe<
-                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                    }
-                  >;
-                  message?: Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >;
-                  repliesCollection?: Maybe<{
-                    items: Array<
-                      Maybe<
-                        Pick<Messages, 'text'> & {
-                          sys: Pick<Sys, 'publishedAt'>;
-                          createdBy?: Maybe<
-                            Pick<
-                              Users,
-                              | 'firstName'
-                              | 'nickname'
-                              | 'lastName'
-                              | 'alumniSinceDate'
-                            > & {
-                              sys: Pick<Sys, 'id'>;
-                              avatar?: Maybe<Pick<Asset, 'url'>>;
-                              teamsCollection?: Maybe<{
-                                items: Array<
-                                  Maybe<{
-                                    team?: Maybe<
-                                      Pick<Teams, 'displayName'> & {
-                                        sys: Pick<Sys, 'id'>;
-                                      }
-                                    >;
-                                  }>
-                                >;
-                              }>;
-                            }
-                          >;
-                        }
-                      >
-                    >;
-                  }>;
-                }
-              >;
-              asapAffiliationIncludedDetails?: Maybe<
-                Pick<Discussions, 'endedAt'> & {
-                  sys: Pick<Sys, 'id'>;
-                  endedBy?: Maybe<
-                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                    }
-                  >;
-                  message?: Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >;
-                  repliesCollection?: Maybe<{
-                    items: Array<
-                      Maybe<
-                        Pick<Messages, 'text'> & {
-                          sys: Pick<Sys, 'publishedAt'>;
-                          createdBy?: Maybe<
-                            Pick<
-                              Users,
-                              | 'firstName'
-                              | 'nickname'
-                              | 'lastName'
-                              | 'alumniSinceDate'
-                            > & {
-                              sys: Pick<Sys, 'id'>;
-                              avatar?: Maybe<Pick<Asset, 'url'>>;
-                              teamsCollection?: Maybe<{
-                                items: Array<
-                                  Maybe<{
-                                    team?: Maybe<
-                                      Pick<Teams, 'displayName'> & {
-                                        sys: Pick<Sys, 'id'>;
-                                      }
-                                    >;
-                                  }>
-                                >;
-                              }>;
-                            }
-                          >;
-                        }
-                      >
-                    >;
-                  }>;
-                }
-              >;
-              manuscriptLicenseDetails?: Maybe<
-                Pick<Discussions, 'endedAt'> & {
-                  sys: Pick<Sys, 'id'>;
-                  endedBy?: Maybe<
-                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                    }
-                  >;
-                  message?: Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >;
-                  repliesCollection?: Maybe<{
-                    items: Array<
-                      Maybe<
-                        Pick<Messages, 'text'> & {
-                          sys: Pick<Sys, 'publishedAt'>;
-                          createdBy?: Maybe<
-                            Pick<
-                              Users,
-                              | 'firstName'
-                              | 'nickname'
-                              | 'lastName'
-                              | 'alumniSinceDate'
-                            > & {
-                              sys: Pick<Sys, 'id'>;
-                              avatar?: Maybe<Pick<Asset, 'url'>>;
-                              teamsCollection?: Maybe<{
-                                items: Array<
-                                  Maybe<{
-                                    team?: Maybe<
-                                      Pick<Teams, 'displayName'> & {
-                                        sys: Pick<Sys, 'id'>;
-                                      }
-                                    >;
-                                  }>
-                                >;
-                              }>;
-                            }
-                          >;
-                        }
-                      >
-                    >;
-                  }>;
-                }
-              >;
-              datasetsDepositedDetails?: Maybe<
-                Pick<Discussions, 'endedAt'> & {
-                  sys: Pick<Sys, 'id'>;
-                  endedBy?: Maybe<
-                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                    }
-                  >;
-                  message?: Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >;
-                  repliesCollection?: Maybe<{
-                    items: Array<
-                      Maybe<
-                        Pick<Messages, 'text'> & {
-                          sys: Pick<Sys, 'publishedAt'>;
-                          createdBy?: Maybe<
-                            Pick<
-                              Users,
-                              | 'firstName'
-                              | 'nickname'
-                              | 'lastName'
-                              | 'alumniSinceDate'
-                            > & {
-                              sys: Pick<Sys, 'id'>;
-                              avatar?: Maybe<Pick<Asset, 'url'>>;
-                              teamsCollection?: Maybe<{
-                                items: Array<
-                                  Maybe<{
-                                    team?: Maybe<
-                                      Pick<Teams, 'displayName'> & {
-                                        sys: Pick<Sys, 'id'>;
-                                      }
-                                    >;
-                                  }>
-                                >;
-                              }>;
-                            }
-                          >;
-                        }
-                      >
-                    >;
-                  }>;
-                }
-              >;
-              codeDepositedDetails?: Maybe<
-                Pick<Discussions, 'endedAt'> & {
-                  sys: Pick<Sys, 'id'>;
-                  endedBy?: Maybe<
-                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                    }
-                  >;
-                  message?: Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >;
-                  repliesCollection?: Maybe<{
-                    items: Array<
-                      Maybe<
-                        Pick<Messages, 'text'> & {
-                          sys: Pick<Sys, 'publishedAt'>;
-                          createdBy?: Maybe<
-                            Pick<
-                              Users,
-                              | 'firstName'
-                              | 'nickname'
-                              | 'lastName'
-                              | 'alumniSinceDate'
-                            > & {
-                              sys: Pick<Sys, 'id'>;
-                              avatar?: Maybe<Pick<Asset, 'url'>>;
-                              teamsCollection?: Maybe<{
-                                items: Array<
-                                  Maybe<{
-                                    team?: Maybe<
-                                      Pick<Teams, 'displayName'> & {
-                                        sys: Pick<Sys, 'id'>;
-                                      }
-                                    >;
-                                  }>
-                                >;
-                              }>;
-                            }
-                          >;
-                        }
-                      >
-                    >;
-                  }>;
-                }
-              >;
-              protocolsDepositedDetails?: Maybe<
-                Pick<Discussions, 'endedAt'> & {
-                  sys: Pick<Sys, 'id'>;
-                  endedBy?: Maybe<
-                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                    }
-                  >;
-                  message?: Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >;
-                  repliesCollection?: Maybe<{
-                    items: Array<
-                      Maybe<
-                        Pick<Messages, 'text'> & {
-                          sys: Pick<Sys, 'publishedAt'>;
-                          createdBy?: Maybe<
-                            Pick<
-                              Users,
-                              | 'firstName'
-                              | 'nickname'
-                              | 'lastName'
-                              | 'alumniSinceDate'
-                            > & {
-                              sys: Pick<Sys, 'id'>;
-                              avatar?: Maybe<Pick<Asset, 'url'>>;
-                              teamsCollection?: Maybe<{
-                                items: Array<
-                                  Maybe<{
-                                    team?: Maybe<
-                                      Pick<Teams, 'displayName'> & {
-                                        sys: Pick<Sys, 'id'>;
-                                      }
-                                    >;
-                                  }>
-                                >;
-                              }>;
-                            }
-                          >;
-                        }
-                      >
-                    >;
-                  }>;
-                }
-              >;
-              labMaterialsRegisteredDetails?: Maybe<
-                Pick<Discussions, 'endedAt'> & {
-                  sys: Pick<Sys, 'id'>;
-                  endedBy?: Maybe<
-                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                    }
-                  >;
-                  message?: Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >;
-                  repliesCollection?: Maybe<{
-                    items: Array<
-                      Maybe<
-                        Pick<Messages, 'text'> & {
-                          sys: Pick<Sys, 'publishedAt'>;
-                          createdBy?: Maybe<
-                            Pick<
-                              Users,
-                              | 'firstName'
-                              | 'nickname'
-                              | 'lastName'
-                              | 'alumniSinceDate'
-                            > & {
-                              sys: Pick<Sys, 'id'>;
-                              avatar?: Maybe<Pick<Asset, 'url'>>;
-                              teamsCollection?: Maybe<{
-                                items: Array<
-                                  Maybe<{
-                                    team?: Maybe<
-                                      Pick<Teams, 'displayName'> & {
-                                        sys: Pick<Sys, 'id'>;
-                                      }
-                                    >;
-                                  }>
-                                >;
-                              }>;
-                            }
-                          >;
-                        }
-                      >
-                    >;
-                  }>;
-                }
-              >;
-              availabilityStatementDetails?: Maybe<
-                Pick<Discussions, 'endedAt'> & {
-                  sys: Pick<Sys, 'id'>;
-                  endedBy?: Maybe<
-                    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                    }
-                  >;
-                  message?: Maybe<
-                    Pick<Messages, 'text'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                      createdBy?: Maybe<
-                        Pick<
-                          Users,
-                          | 'firstName'
-                          | 'nickname'
-                          | 'lastName'
-                          | 'alumniSinceDate'
-                        > & {
-                          sys: Pick<Sys, 'id'>;
-                          avatar?: Maybe<Pick<Asset, 'url'>>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{
-                                team?: Maybe<
-                                  Pick<Teams, 'displayName'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >;
-                              }>
-                            >;
-                          }>;
-                        }
-                      >;
-                    }
-                  >;
-                  repliesCollection?: Maybe<{
-                    items: Array<
-                      Maybe<
-                        Pick<Messages, 'text'> & {
-                          sys: Pick<Sys, 'publishedAt'>;
-                          createdBy?: Maybe<
-                            Pick<
-                              Users,
-                              | 'firstName'
-                              | 'nickname'
-                              | 'lastName'
-                              | 'alumniSinceDate'
-                            > & {
-                              sys: Pick<Sys, 'id'>;
-                              avatar?: Maybe<Pick<Asset, 'url'>>;
-                              teamsCollection?: Maybe<{
-                                items: Array<
-                                  Maybe<{
-                                    team?: Maybe<
-                                      Pick<Teams, 'displayName'> & {
-                                        sys: Pick<Sys, 'id'>;
-                                      }
-                                    >;
-                                  }>
-                                >;
-                              }>;
-                            }
-                          >;
-                        }
-                      >
-                    >;
-                  }>;
-                }
-              >;
+              acknowledgedGrantNumberDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+              asapAffiliationIncludedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+              manuscriptLicenseDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+              datasetsDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+              codeDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+              protocolsDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+              labMaterialsRegisteredDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+              availabilityStatementDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
               teamsCollection?: Maybe<{
                 items: Array<
                   Maybe<
@@ -20970,7 +19873,6 @@ export type FetchResearchTagsByIdQuery = {
 
 export type FetchTeamByIdQueryVariables = Exact<{
   id: Scalars['String'];
-  fetchReplies?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchTeamByIdQuery = {
@@ -21064,598 +19966,28 @@ export type FetchTeamByIdQuery = {
                             >
                           >;
                         }>;
-                        acknowledgedGrantNumberDetails?: Maybe<
-                          Pick<Discussions, 'endedAt'> & {
-                            sys: Pick<Sys, 'id'>;
-                            endedBy?: Maybe<
-                              Pick<
-                                Users,
-                                'firstName' | 'nickname' | 'lastName'
-                              > & {
-                                sys: Pick<Sys, 'id'>;
-                                avatar?: Maybe<Pick<Asset, 'url'>>;
-                              }
-                            >;
-                            message?: Maybe<
-                              Pick<Messages, 'text'> & {
-                                sys: Pick<Sys, 'publishedAt'>;
-                                createdBy?: Maybe<
-                                  Pick<
-                                    Users,
-                                    | 'firstName'
-                                    | 'nickname'
-                                    | 'lastName'
-                                    | 'alumniSinceDate'
-                                  > & {
-                                    sys: Pick<Sys, 'id'>;
-                                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                                    teamsCollection?: Maybe<{
-                                      items: Array<
-                                        Maybe<{
-                                          team?: Maybe<
-                                            Pick<Teams, 'displayName'> & {
-                                              sys: Pick<Sys, 'id'>;
-                                            }
-                                          >;
-                                        }>
-                                      >;
-                                    }>;
-                                  }
-                                >;
-                              }
-                            >;
-                            repliesCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Messages, 'text'> & {
-                                    sys: Pick<Sys, 'publishedAt'>;
-                                    createdBy?: Maybe<
-                                      Pick<
-                                        Users,
-                                        | 'firstName'
-                                        | 'nickname'
-                                        | 'lastName'
-                                        | 'alumniSinceDate'
-                                      > & {
-                                        sys: Pick<Sys, 'id'>;
-                                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                                        teamsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<{
-                                              team?: Maybe<
-                                                Pick<Teams, 'displayName'> & {
-                                                  sys: Pick<Sys, 'id'>;
-                                                }
-                                              >;
-                                            }>
-                                          >;
-                                        }>;
-                                      }
-                                    >;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }
-                        >;
-                        asapAffiliationIncludedDetails?: Maybe<
-                          Pick<Discussions, 'endedAt'> & {
-                            sys: Pick<Sys, 'id'>;
-                            endedBy?: Maybe<
-                              Pick<
-                                Users,
-                                'firstName' | 'nickname' | 'lastName'
-                              > & {
-                                sys: Pick<Sys, 'id'>;
-                                avatar?: Maybe<Pick<Asset, 'url'>>;
-                              }
-                            >;
-                            message?: Maybe<
-                              Pick<Messages, 'text'> & {
-                                sys: Pick<Sys, 'publishedAt'>;
-                                createdBy?: Maybe<
-                                  Pick<
-                                    Users,
-                                    | 'firstName'
-                                    | 'nickname'
-                                    | 'lastName'
-                                    | 'alumniSinceDate'
-                                  > & {
-                                    sys: Pick<Sys, 'id'>;
-                                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                                    teamsCollection?: Maybe<{
-                                      items: Array<
-                                        Maybe<{
-                                          team?: Maybe<
-                                            Pick<Teams, 'displayName'> & {
-                                              sys: Pick<Sys, 'id'>;
-                                            }
-                                          >;
-                                        }>
-                                      >;
-                                    }>;
-                                  }
-                                >;
-                              }
-                            >;
-                            repliesCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Messages, 'text'> & {
-                                    sys: Pick<Sys, 'publishedAt'>;
-                                    createdBy?: Maybe<
-                                      Pick<
-                                        Users,
-                                        | 'firstName'
-                                        | 'nickname'
-                                        | 'lastName'
-                                        | 'alumniSinceDate'
-                                      > & {
-                                        sys: Pick<Sys, 'id'>;
-                                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                                        teamsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<{
-                                              team?: Maybe<
-                                                Pick<Teams, 'displayName'> & {
-                                                  sys: Pick<Sys, 'id'>;
-                                                }
-                                              >;
-                                            }>
-                                          >;
-                                        }>;
-                                      }
-                                    >;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }
-                        >;
-                        manuscriptLicenseDetails?: Maybe<
-                          Pick<Discussions, 'endedAt'> & {
-                            sys: Pick<Sys, 'id'>;
-                            endedBy?: Maybe<
-                              Pick<
-                                Users,
-                                'firstName' | 'nickname' | 'lastName'
-                              > & {
-                                sys: Pick<Sys, 'id'>;
-                                avatar?: Maybe<Pick<Asset, 'url'>>;
-                              }
-                            >;
-                            message?: Maybe<
-                              Pick<Messages, 'text'> & {
-                                sys: Pick<Sys, 'publishedAt'>;
-                                createdBy?: Maybe<
-                                  Pick<
-                                    Users,
-                                    | 'firstName'
-                                    | 'nickname'
-                                    | 'lastName'
-                                    | 'alumniSinceDate'
-                                  > & {
-                                    sys: Pick<Sys, 'id'>;
-                                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                                    teamsCollection?: Maybe<{
-                                      items: Array<
-                                        Maybe<{
-                                          team?: Maybe<
-                                            Pick<Teams, 'displayName'> & {
-                                              sys: Pick<Sys, 'id'>;
-                                            }
-                                          >;
-                                        }>
-                                      >;
-                                    }>;
-                                  }
-                                >;
-                              }
-                            >;
-                            repliesCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Messages, 'text'> & {
-                                    sys: Pick<Sys, 'publishedAt'>;
-                                    createdBy?: Maybe<
-                                      Pick<
-                                        Users,
-                                        | 'firstName'
-                                        | 'nickname'
-                                        | 'lastName'
-                                        | 'alumniSinceDate'
-                                      > & {
-                                        sys: Pick<Sys, 'id'>;
-                                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                                        teamsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<{
-                                              team?: Maybe<
-                                                Pick<Teams, 'displayName'> & {
-                                                  sys: Pick<Sys, 'id'>;
-                                                }
-                                              >;
-                                            }>
-                                          >;
-                                        }>;
-                                      }
-                                    >;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }
-                        >;
-                        datasetsDepositedDetails?: Maybe<
-                          Pick<Discussions, 'endedAt'> & {
-                            sys: Pick<Sys, 'id'>;
-                            endedBy?: Maybe<
-                              Pick<
-                                Users,
-                                'firstName' | 'nickname' | 'lastName'
-                              > & {
-                                sys: Pick<Sys, 'id'>;
-                                avatar?: Maybe<Pick<Asset, 'url'>>;
-                              }
-                            >;
-                            message?: Maybe<
-                              Pick<Messages, 'text'> & {
-                                sys: Pick<Sys, 'publishedAt'>;
-                                createdBy?: Maybe<
-                                  Pick<
-                                    Users,
-                                    | 'firstName'
-                                    | 'nickname'
-                                    | 'lastName'
-                                    | 'alumniSinceDate'
-                                  > & {
-                                    sys: Pick<Sys, 'id'>;
-                                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                                    teamsCollection?: Maybe<{
-                                      items: Array<
-                                        Maybe<{
-                                          team?: Maybe<
-                                            Pick<Teams, 'displayName'> & {
-                                              sys: Pick<Sys, 'id'>;
-                                            }
-                                          >;
-                                        }>
-                                      >;
-                                    }>;
-                                  }
-                                >;
-                              }
-                            >;
-                            repliesCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Messages, 'text'> & {
-                                    sys: Pick<Sys, 'publishedAt'>;
-                                    createdBy?: Maybe<
-                                      Pick<
-                                        Users,
-                                        | 'firstName'
-                                        | 'nickname'
-                                        | 'lastName'
-                                        | 'alumniSinceDate'
-                                      > & {
-                                        sys: Pick<Sys, 'id'>;
-                                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                                        teamsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<{
-                                              team?: Maybe<
-                                                Pick<Teams, 'displayName'> & {
-                                                  sys: Pick<Sys, 'id'>;
-                                                }
-                                              >;
-                                            }>
-                                          >;
-                                        }>;
-                                      }
-                                    >;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }
-                        >;
-                        codeDepositedDetails?: Maybe<
-                          Pick<Discussions, 'endedAt'> & {
-                            sys: Pick<Sys, 'id'>;
-                            endedBy?: Maybe<
-                              Pick<
-                                Users,
-                                'firstName' | 'nickname' | 'lastName'
-                              > & {
-                                sys: Pick<Sys, 'id'>;
-                                avatar?: Maybe<Pick<Asset, 'url'>>;
-                              }
-                            >;
-                            message?: Maybe<
-                              Pick<Messages, 'text'> & {
-                                sys: Pick<Sys, 'publishedAt'>;
-                                createdBy?: Maybe<
-                                  Pick<
-                                    Users,
-                                    | 'firstName'
-                                    | 'nickname'
-                                    | 'lastName'
-                                    | 'alumniSinceDate'
-                                  > & {
-                                    sys: Pick<Sys, 'id'>;
-                                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                                    teamsCollection?: Maybe<{
-                                      items: Array<
-                                        Maybe<{
-                                          team?: Maybe<
-                                            Pick<Teams, 'displayName'> & {
-                                              sys: Pick<Sys, 'id'>;
-                                            }
-                                          >;
-                                        }>
-                                      >;
-                                    }>;
-                                  }
-                                >;
-                              }
-                            >;
-                            repliesCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Messages, 'text'> & {
-                                    sys: Pick<Sys, 'publishedAt'>;
-                                    createdBy?: Maybe<
-                                      Pick<
-                                        Users,
-                                        | 'firstName'
-                                        | 'nickname'
-                                        | 'lastName'
-                                        | 'alumniSinceDate'
-                                      > & {
-                                        sys: Pick<Sys, 'id'>;
-                                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                                        teamsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<{
-                                              team?: Maybe<
-                                                Pick<Teams, 'displayName'> & {
-                                                  sys: Pick<Sys, 'id'>;
-                                                }
-                                              >;
-                                            }>
-                                          >;
-                                        }>;
-                                      }
-                                    >;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }
-                        >;
-                        protocolsDepositedDetails?: Maybe<
-                          Pick<Discussions, 'endedAt'> & {
-                            sys: Pick<Sys, 'id'>;
-                            endedBy?: Maybe<
-                              Pick<
-                                Users,
-                                'firstName' | 'nickname' | 'lastName'
-                              > & {
-                                sys: Pick<Sys, 'id'>;
-                                avatar?: Maybe<Pick<Asset, 'url'>>;
-                              }
-                            >;
-                            message?: Maybe<
-                              Pick<Messages, 'text'> & {
-                                sys: Pick<Sys, 'publishedAt'>;
-                                createdBy?: Maybe<
-                                  Pick<
-                                    Users,
-                                    | 'firstName'
-                                    | 'nickname'
-                                    | 'lastName'
-                                    | 'alumniSinceDate'
-                                  > & {
-                                    sys: Pick<Sys, 'id'>;
-                                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                                    teamsCollection?: Maybe<{
-                                      items: Array<
-                                        Maybe<{
-                                          team?: Maybe<
-                                            Pick<Teams, 'displayName'> & {
-                                              sys: Pick<Sys, 'id'>;
-                                            }
-                                          >;
-                                        }>
-                                      >;
-                                    }>;
-                                  }
-                                >;
-                              }
-                            >;
-                            repliesCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Messages, 'text'> & {
-                                    sys: Pick<Sys, 'publishedAt'>;
-                                    createdBy?: Maybe<
-                                      Pick<
-                                        Users,
-                                        | 'firstName'
-                                        | 'nickname'
-                                        | 'lastName'
-                                        | 'alumniSinceDate'
-                                      > & {
-                                        sys: Pick<Sys, 'id'>;
-                                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                                        teamsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<{
-                                              team?: Maybe<
-                                                Pick<Teams, 'displayName'> & {
-                                                  sys: Pick<Sys, 'id'>;
-                                                }
-                                              >;
-                                            }>
-                                          >;
-                                        }>;
-                                      }
-                                    >;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }
-                        >;
-                        labMaterialsRegisteredDetails?: Maybe<
-                          Pick<Discussions, 'endedAt'> & {
-                            sys: Pick<Sys, 'id'>;
-                            endedBy?: Maybe<
-                              Pick<
-                                Users,
-                                'firstName' | 'nickname' | 'lastName'
-                              > & {
-                                sys: Pick<Sys, 'id'>;
-                                avatar?: Maybe<Pick<Asset, 'url'>>;
-                              }
-                            >;
-                            message?: Maybe<
-                              Pick<Messages, 'text'> & {
-                                sys: Pick<Sys, 'publishedAt'>;
-                                createdBy?: Maybe<
-                                  Pick<
-                                    Users,
-                                    | 'firstName'
-                                    | 'nickname'
-                                    | 'lastName'
-                                    | 'alumniSinceDate'
-                                  > & {
-                                    sys: Pick<Sys, 'id'>;
-                                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                                    teamsCollection?: Maybe<{
-                                      items: Array<
-                                        Maybe<{
-                                          team?: Maybe<
-                                            Pick<Teams, 'displayName'> & {
-                                              sys: Pick<Sys, 'id'>;
-                                            }
-                                          >;
-                                        }>
-                                      >;
-                                    }>;
-                                  }
-                                >;
-                              }
-                            >;
-                            repliesCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Messages, 'text'> & {
-                                    sys: Pick<Sys, 'publishedAt'>;
-                                    createdBy?: Maybe<
-                                      Pick<
-                                        Users,
-                                        | 'firstName'
-                                        | 'nickname'
-                                        | 'lastName'
-                                        | 'alumniSinceDate'
-                                      > & {
-                                        sys: Pick<Sys, 'id'>;
-                                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                                        teamsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<{
-                                              team?: Maybe<
-                                                Pick<Teams, 'displayName'> & {
-                                                  sys: Pick<Sys, 'id'>;
-                                                }
-                                              >;
-                                            }>
-                                          >;
-                                        }>;
-                                      }
-                                    >;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }
-                        >;
-                        availabilityStatementDetails?: Maybe<
-                          Pick<Discussions, 'endedAt'> & {
-                            sys: Pick<Sys, 'id'>;
-                            endedBy?: Maybe<
-                              Pick<
-                                Users,
-                                'firstName' | 'nickname' | 'lastName'
-                              > & {
-                                sys: Pick<Sys, 'id'>;
-                                avatar?: Maybe<Pick<Asset, 'url'>>;
-                              }
-                            >;
-                            message?: Maybe<
-                              Pick<Messages, 'text'> & {
-                                sys: Pick<Sys, 'publishedAt'>;
-                                createdBy?: Maybe<
-                                  Pick<
-                                    Users,
-                                    | 'firstName'
-                                    | 'nickname'
-                                    | 'lastName'
-                                    | 'alumniSinceDate'
-                                  > & {
-                                    sys: Pick<Sys, 'id'>;
-                                    avatar?: Maybe<Pick<Asset, 'url'>>;
-                                    teamsCollection?: Maybe<{
-                                      items: Array<
-                                        Maybe<{
-                                          team?: Maybe<
-                                            Pick<Teams, 'displayName'> & {
-                                              sys: Pick<Sys, 'id'>;
-                                            }
-                                          >;
-                                        }>
-                                      >;
-                                    }>;
-                                  }
-                                >;
-                              }
-                            >;
-                            repliesCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Messages, 'text'> & {
-                                    sys: Pick<Sys, 'publishedAt'>;
-                                    createdBy?: Maybe<
-                                      Pick<
-                                        Users,
-                                        | 'firstName'
-                                        | 'nickname'
-                                        | 'lastName'
-                                        | 'alumniSinceDate'
-                                      > & {
-                                        sys: Pick<Sys, 'id'>;
-                                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                                        teamsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<{
-                                              team?: Maybe<
-                                                Pick<Teams, 'displayName'> & {
-                                                  sys: Pick<Sys, 'id'>;
-                                                }
-                                              >;
-                                            }>
-                                          >;
-                                        }>;
-                                      }
-                                    >;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }
-                        >;
+                        acknowledgedGrantNumberDetails?: Maybe<{
+                          sys: Pick<Sys, 'id'>;
+                        }>;
+                        asapAffiliationIncludedDetails?: Maybe<{
+                          sys: Pick<Sys, 'id'>;
+                        }>;
+                        manuscriptLicenseDetails?: Maybe<{
+                          sys: Pick<Sys, 'id'>;
+                        }>;
+                        datasetsDepositedDetails?: Maybe<{
+                          sys: Pick<Sys, 'id'>;
+                        }>;
+                        codeDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                        protocolsDepositedDetails?: Maybe<{
+                          sys: Pick<Sys, 'id'>;
+                        }>;
+                        labMaterialsRegisteredDetails?: Maybe<{
+                          sys: Pick<Sys, 'id'>;
+                        }>;
+                        availabilityStatementDetails?: Maybe<{
+                          sys: Pick<Sys, 'id'>;
+                        }>;
                         teamsCollection?: Maybe<{
                           items: Array<
                             Maybe<
@@ -23970,6 +22302,364 @@ export const PartialUsersContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PartialUsersContentFragment, unknown>;
+export const DiscussionsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'DiscussionsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Discussions' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'endedAt' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'endedBy' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'avatar' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'message' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publishedAt' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdBy' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'firstName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'nickname' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'alumniSinceDate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avatar' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teamsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '3' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'team' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'displayName',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'repliesCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            directives: [
+              {
+                kind: 'Directive',
+                name: { kind: 'Name', value: 'include' },
+                arguments: [
+                  {
+                    kind: 'Argument',
+                    name: { kind: 'Name', value: 'if' },
+                    value: {
+                      kind: 'Variable',
+                      name: { kind: 'Name', value: 'fetchReplies' },
+                    },
+                  },
+                ],
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'publishedAt' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'alumniSinceDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teamsCollection' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '2' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'team' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'displayName',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DiscussionsContentFragment, unknown>;
 export const EventsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -25480,364 +24170,6 @@ export const InterestGroupsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<InterestGroupsContentFragment, unknown>;
-export const DiscussionsContentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'DiscussionsContent' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Discussions' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'sys' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'endedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'endedBy' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'sys' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'avatar' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'message' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'sys' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'publishedAt' },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'createdBy' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'firstName' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'nickname' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastName' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'alumniSinceDate' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'avatar' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'teamsCollection' },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '3' },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'team' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'sys' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'id',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'displayName',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'repliesCollection' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '10' },
-              },
-            ],
-            directives: [
-              {
-                kind: 'Directive',
-                name: { kind: 'Name', value: 'include' },
-                arguments: [
-                  {
-                    kind: 'Argument',
-                    name: { kind: 'Name', value: 'if' },
-                    value: {
-                      kind: 'Variable',
-                      name: { kind: 'Name', value: 'fetchReplies' },
-                    },
-                  },
-                ],
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'publishedAt' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'text' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'createdBy' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'nickname' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'alumniSinceDate' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'avatar' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'url' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'teamsCollection' },
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '2' },
-                                },
-                              ],
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'items' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'team' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'sys',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'id',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'displayName',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<DiscussionsContentFragment, unknown>;
 export const ManuscriptsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -26072,10 +24404,16 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'DiscussionsContent',
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
                               },
                             },
                           ],
@@ -26098,10 +24436,16 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'DiscussionsContent',
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
                               },
                             },
                           ],
@@ -26121,10 +24465,16 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'DiscussionsContent',
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
                               },
                             },
                           ],
@@ -26144,10 +24494,16 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'DiscussionsContent',
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
                               },
                             },
                           ],
@@ -26164,10 +24520,16 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'DiscussionsContent',
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
                               },
                             },
                           ],
@@ -26187,10 +24549,16 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'DiscussionsContent',
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
                               },
                             },
                           ],
@@ -26210,10 +24578,16 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'DiscussionsContent',
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
                               },
                             },
                           ],
@@ -26233,10 +24607,16 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'DiscussionsContent',
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
                               },
                             },
                           ],
@@ -27278,7 +25658,6 @@ export const ManuscriptsContentFragmentDoc = {
         ],
       },
     },
-    ...DiscussionsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<ManuscriptsContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
@@ -35827,15 +34206,6 @@ export const FetchManuscriptByIdDocument = {
             },
           },
         },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'fetchReplies' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: false },
-        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -37878,15 +36248,6 @@ export const FetchTeamByIdDocument = {
               name: { kind: 'Name', value: 'String' },
             },
           },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'fetchReplies' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: false },
         },
       ],
       selectionSet: {

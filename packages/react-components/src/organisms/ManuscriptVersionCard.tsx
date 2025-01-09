@@ -278,7 +278,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   const [expanded, setExpanded] = useState(false);
 
   const quickCheckDetails = quickCheckQuestions.filter(
-    ({ field }) => version[`${field}Details`]?.message?.text?.length,
+    ({ field }) => version[`${field}Details`]?.id,
   );
 
   const getUpdatedByData = () => {

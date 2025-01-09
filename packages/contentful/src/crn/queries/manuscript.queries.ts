@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
-import { discussionContentQueryFragment } from './discussions.queries';
 
 export const manuscriptContentQueryFragment = gql`
   fragment ManuscriptsContent on Manuscripts {
@@ -53,35 +52,51 @@ export const manuscriptContentQueryFragment = gql`
         otherDetails
         acknowledgedGrantNumber
         acknowledgedGrantNumberDetails {
-          ...DiscussionsContent
+          sys {
+            id
+          }
         }
         asapAffiliationIncluded
         asapAffiliationIncludedDetails {
-          ...DiscussionsContent
+          sys {
+            id
+          }
         }
         manuscriptLicense
         manuscriptLicenseDetails {
-          ...DiscussionsContent
+          sys {
+            id
+          }
         }
         datasetsDeposited
         datasetsDepositedDetails {
-          ...DiscussionsContent
+          sys {
+            id
+          }
         }
         codeDeposited
         codeDepositedDetails {
-          ...DiscussionsContent
+          sys {
+            id
+          }
         }
         protocolsDeposited
         protocolsDepositedDetails {
-          ...DiscussionsContent
+          sys {
+            id
+          }
         }
         labMaterialsRegistered
         labMaterialsRegisteredDetails {
-          ...DiscussionsContent
+          sys {
+            id
+          }
         }
         availabilityStatement
         availabilityStatementDetails {
-          ...DiscussionsContent
+          sys {
+            id
+          }
         }
         teamsCollection(limit: 10) {
           items {
@@ -259,11 +274,10 @@ export const manuscriptContentQueryFragment = gql`
       }
     }
   }
-  ${discussionContentQueryFragment}
 `;
 
 export const FETCH_MANUSCRIPT_BY_ID = gql`
-  query FetchManuscriptById($id: String!, $fetchReplies: Boolean = false) {
+  query FetchManuscriptById($id: String!) {
     manuscripts(id: $id) {
       ...ManuscriptsContent
       teamsCollection(limit: 10) {

@@ -12,6 +12,7 @@ import {
   getContentfulGraphqlDiscussion,
   getDiscussionRequestObject,
   getDiscussionDataObject,
+  getContentfulGraphqlCreatedBy,
 } from '../../fixtures/discussions.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -397,9 +398,22 @@ describe('Discussions Contentful Data Provider', () => {
       expect(discussionMockUpdated.publish).toHaveBeenCalled();
     });
 
-    test('Should update a discussion with endedBy', async () => {
+    test('Should fail to update a discussion that already ended', async () => {
+      const discussionMock = getEntry({
+        endedAt: '2025-01-01T10:00:00.000Z',
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
       const discussionId = 'discussion-id-1';
-      const endedByUserId = 'user-id-2';
+      const userId = 'user-id-1';
+
+      await expect(
+        discussionDataProviderMock.update(discussionId, { endedBy: userId }),
+      ).rejects.toThrow('Cannot update a discussion that has ended.');
+    });
+
+    test('Should update a discussion with endedBy and endedAt', async () => {
+      const discussionId = 'discussion-id-1';
+      const userId = 'user-id-1';
 
       const discussionMock = getEntry({});
       environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
@@ -408,26 +422,26 @@ describe('Discussions Contentful Data Provider', () => {
         .fn()
         .mockResolvedValueOnce(discussionMockUpdated);
 
-      const endedBy = endedByUserId;
-
-      await discussionDataProviderMock.update(discussionId, { endedBy });
+      await discussionDataProviderMock.update(discussionId, {
+        endedBy: userId,
+      });
 
       expect(environmentMock.getEntry).toHaveBeenCalledWith(discussionId);
       expect(discussionMock.patch).toHaveBeenCalledWith([
         {
-          op: 'add', // 'replace' may not be the correct operation here, if you're adding a new field
+          op: 'add',
           path: '/fields/endedAt',
           value: {
-            'en-US': expect.any(String), // ISO string timestamp
+            'en-US': expect.any(String),
           },
         },
         {
-          op: 'add', // 'replace' may not be the correct operation here, if you're adding a new field
+          op: 'add',
           path: '/fields/endedBy',
           value: {
             'en-US': {
               sys: {
-                id: endedBy,
+                id: userId,
                 linkType: 'Entry',
                 type: 'Link',
               },
@@ -454,6 +468,33 @@ describe('Discussions Contentful Data Provider', () => {
       expect(parsedDiscussion.message.createdBy.firstName).toBe(
         graphqlDiscussion?.message?.createdBy?.firstName,
       );
+
+      expect(parsedDiscussion.endedBy).not.toBeDefined();
+      expect(parsedDiscussion.endedAt).not.toBeDefined();
+    });
+    test('Should parse graphql discussion when discussion has ended', async () => {
+      const graphqlDiscussion = getContentfulGraphqlDiscussion();
+      graphqlDiscussion!.message!.createdBy!.teamsCollection = null;
+
+      const parsedDiscussion = parseGraphQLDiscussion({
+        ...graphqlDiscussion!,
+        endedAt: '2025-01-01T10:00:00.000Z',
+        endedBy: getContentfulGraphqlCreatedBy(),
+      });
+
+      expect(parsedDiscussion.id).toBe(graphqlDiscussion?.sys.id);
+      expect(parsedDiscussion.message.text).toBe(
+        graphqlDiscussion?.message?.text,
+      );
+      expect(parsedDiscussion.message.createdBy.firstName).toBe(
+        graphqlDiscussion?.message?.createdBy?.firstName,
+      );
+
+      expect(parsedDiscussion.endedAt).toBe('2025-01-01T10:00:00.000Z');
+      expect(parsedDiscussion.endedBy?.firstName).toBe('John');
+      expect(parsedDiscussion.endedBy?.lastName).toBe('Doe');
+      expect(parsedDiscussion.endedBy?.displayName).toBe('John (Tim) Doe');
+      expect(parsedDiscussion.endedBy?.avatarUrl).toBe('http://image');
     });
   });
 });

@@ -75,18 +75,17 @@ export class DiscussionContentfulDataProvider
 
   async update(id: string, update: DiscussionUpdateDataObject): Promise<void> {
     const environment = await this.getRestClient();
+    const discussion = await environment.getEntry(id);
+
+    if (discussion.fields.endedAt) {
+      throw new Error('Cannot update a discussion that has ended.');
+    }
 
     if (update.reply) {
       const publishedReplyId = await createAndPublishMessage(
         environment,
         update.reply,
       );
-
-      const discussion = await environment.getEntry(id);
-
-      if (discussion.fields.endedAt) {
-        throw new Error('Cannot reply to a discussion that has ended.');
-      }
 
       const previousReplies = discussion.fields.replies
         ? discussion.fields.replies['en-US']
@@ -101,7 +100,6 @@ export class DiscussionContentfulDataProvider
     }
 
     if (update.endedBy) {
-      const discussion = await environment.getEntry(id);
       const endedBy = getLinkEntity(update.endedBy);
 
       await patchAndPublish(discussion, {

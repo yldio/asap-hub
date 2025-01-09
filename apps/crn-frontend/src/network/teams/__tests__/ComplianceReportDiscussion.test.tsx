@@ -21,6 +21,7 @@ import {
   useIsComplianceReviewer,
   useReplyToDiscussion,
   useVersionById,
+  useEndDiscussion,
 } from '../state';
 import { useManuscriptToast } from '../useManuscriptToast';
 import Workspace from '../Workspace';
@@ -40,6 +41,7 @@ jest.mock('../state', () => ({
   useVersionById: jest.fn(),
   useReplyToDiscussion: jest.fn(),
   useIsComplianceReviewer: jest.fn(),
+  useEndDiscussion: jest.fn(),
 }));
 
 jest.mock('../useManuscriptToast', () => ({
@@ -97,6 +99,8 @@ const mockGetDiscussion = getDiscussion as jest.MockedFunction<
 const mockUpdateDiscussion = updateDiscussion as jest.MockedFunction<
   typeof updateDiscussion
 >;
+
+const endDiscussion = jest.fn();
 
 const id = '42';
 
@@ -405,6 +409,121 @@ describe('compliance report discussion', () => {
         type: 'quick-check',
         accent: 'successLarge',
       });
+    });
+  });
+
+  it('calls endDiscussion and setFormType with success when ending a discussion', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    enable('DISPLAY_MANUSCRIPTS');
+
+    (getDiscussion as jest.Mock).mockImplementation(() => ({
+      id: 'discussion-id',
+      message: {
+        text: 'Nam adipiscing',
+        createdBy: {
+          id: '6D9SxLvttLIYKHqpfW7slJ',
+          firstName: 'Amin',
+          lastName: 'Aimeur',
+          displayName: 'Amin Aimeur',
+          teams: [
+            {
+              id: 'team-id',
+              name: 'test-team',
+            },
+          ],
+        },
+        createdDate: '2024-12-31T05:28:42.353Z',
+      },
+      replies: [],
+    }));
+
+    const mockSetFormType = jest.fn();
+    (useManuscriptToast as jest.Mock).mockImplementation(() => ({
+      setFormType: mockSetFormType,
+    }));
+
+    const replyToDiscussion = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        id: 'discussionId',
+      }),
+    );
+
+    (useReplyToDiscussion as jest.Mock).mockReturnValue(replyToDiscussion);
+
+    mockGetDiscussion.mockImplementation(
+      async () => acknowledgedGrantNumberDiscussion,
+    );
+
+    (useVersionById as jest.Mock).mockImplementation(() => [
+      {
+        ...mockVersionData,
+        complianceReport: {
+          ...complianceReport,
+          discussionId: 'discussion-id',
+        },
+      },
+      mockSetVersion,
+    ]);
+
+    (useIsComplianceReviewer as jest.Mock).mockImplementation(() => true);
+
+    (useEndDiscussion as jest.Mock).mockImplementation(() => endDiscussion);
+
+    const { findByTestId, getByText, getByTestId, getByLabelText } =
+      renderWithWrapper(
+        <Workspace
+          team={{
+            ...createTeamResponse(),
+            manuscripts: [
+              {
+                ...mockManuscript,
+                versions: [
+                  {
+                    ...manuscriptVersion,
+                    complianceReport: {
+                      ...complianceReport,
+                      discussionId: 'mock-discussion-id',
+                    },
+                  },
+                ],
+              } as TeamManuscript,
+            ],
+            tools: [],
+          }}
+        />,
+      );
+
+    await act(async () => {
+      userEvent.click(await findByTestId('collapsible-button'));
+      await waitFor(() => {
+        expect(getByLabelText('Expand Version')).toBeInTheDocument();
+      });
+      userEvent.click(getByLabelText('Expand Version'));
+      await waitFor(() => {
+        expect(getByLabelText('Expand Report')).toBeInTheDocument();
+      });
+      userEvent.click(getByLabelText('Expand Report'));
+      await waitFor(() => {
+        expect(getByText('1 reply')).toBeInTheDocument();
+      });
+      userEvent.click(getByText('1 reply'));
+    });
+
+    expect(getByTestId('end-discussion-button')).toBeInTheDocument();
+
+    await act(() => {
+      userEvent.click(getByTestId('end-discussion-button'));
+    });
+
+    expect(getByTestId('submit-end-discussion')).toBeInTheDocument();
+
+    await act(() => {
+      userEvent.click(getByTestId('submit-end-discussion'));
+    });
+    expect(endDiscussion).toHaveBeenCalled();
+    expect(mockSetFormType).toHaveBeenCalledWith({
+      type: 'compliance-report-discussion-end',
+      accent: 'successLarge',
     });
   });
 });

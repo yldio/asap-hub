@@ -145,6 +145,7 @@ const Discussion: FC<DiscussionProps> = ({
               noMargin
               small
               onClick={() => setIsEndDiscussionModalOpen(true)}
+              data-testid="end-discussion-button"
             >
               <span
                 css={{

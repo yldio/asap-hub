@@ -82,7 +82,11 @@ const EndDiscussionModal: React.FC<EndDiscussionModalProps> = ({
           <Button onClick={handleCancel}>Cancel</Button>
         </div>
         <div css={confirmStyles}>
-          <Button primary onClick={handleEndDiscussion}>
+          <Button
+            primary
+            onClick={handleEndDiscussion}
+            data-testid="submit-end-discussion"
+          >
             End Discussion and Notify
           </Button>
         </div>

@@ -6,6 +6,7 @@ import {
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
+import { act } from 'react-dom/test-utils';
 import Discussion from '../Discussion';
 
 const props: ComponentProps<typeof Discussion> = {
@@ -162,6 +163,116 @@ describe('when there are replies', () => {
 
     await waitFor(() => {
       expect(getByText(/test reply 1/i)).toBeVisible();
+    });
+  });
+
+  it('shows end of discussion button when canEndDiscussion is true and discussion not ended', async () => {
+    const replies = createDiscussionReplies(6);
+    const discussion = createDiscussionResponse(message, replies);
+    getDiscussion.mockReturnValue(discussion);
+
+    const { queryByTestId } = render(
+      <Discussion {...propsWithReplies} canEndDiscussion />,
+    );
+    await waitFor(() => {
+      expect(queryByTestId('end-discussion-button')).toBeInTheDocument();
+    });
+  });
+
+  it('doesnt show end of discussion button when canEndDiscussion is false', async () => {
+    const replies = createDiscussionReplies(6);
+    const discussion = createDiscussionResponse(message, replies);
+    getDiscussion.mockReturnValue(discussion);
+
+    const { queryByTestId } = render(
+      <Discussion {...propsWithReplies} canEndDiscussion={false} />,
+    );
+
+    await waitFor(() => {
+      expect(queryByTestId('end-discussion-button')).not.toBeInTheDocument();
+    });
+  });
+  it('doesnt show end of discussion button when discussion has ended', async () => {
+    const replies = createDiscussionReplies(6);
+    const discussion = createDiscussionResponse(message, replies);
+    getDiscussion.mockReturnValue({
+      ...discussion,
+      endedAt: '2025-01-01T10:00:00.000Z',
+    });
+
+    const { queryByTestId } = render(
+      <Discussion {...propsWithReplies} canEndDiscussion />,
+    );
+
+    await waitFor(() => {
+      expect(queryByTestId('end-discussion-button')).not.toBeInTheDocument();
+    });
+  });
+
+  it('shows end of discussion modal and calls onEndDiscussion method', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const replies = createDiscussionReplies(6);
+    const discussion = createDiscussionResponse(message, replies);
+    getDiscussion.mockReturnValue(discussion);
+    const onEndDiscussion = jest.fn();
+    const { getByTestId, queryByText } = render(
+      <Discussion
+        {...propsWithReplies}
+        canEndDiscussion
+        onEndDiscussion={onEndDiscussion}
+      />,
+    );
+    act(() => {
+      userEvent.click(getByTestId('end-discussion-button'));
+    });
+
+    await waitFor(() => {
+      expect(queryByText(/End discussion and notify\?/i)).toBeInTheDocument();
+    });
+
+    act(() => {
+      userEvent.click(getByTestId('submit-end-discussion'));
+    });
+
+    await waitFor(() => {
+      expect(onEndDiscussion).toHaveBeenCalled();
+      expect(
+        queryByText(/End discussion and notify\?/i),
+      ).not.toBeInTheDocument();
+    });
+
+    // re-opens end discussion modal to test cancel button
+    act(() => {
+      userEvent.click(getByTestId('end-discussion-button'));
+    });
+
+    await waitFor(() => {
+      expect(queryByText(/End discussion and notify\?/i)).toBeInTheDocument();
+    });
+
+    act(() => {
+      userEvent.click(getByTestId('cancel-end-discussion-button'));
+    });
+  });
+
+  it('doesnt show end of discussion modal when onEndDiscussion is not defined', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const replies = createDiscussionReplies(6);
+    const discussion = createDiscussionResponse(message, replies);
+    getDiscussion.mockReturnValue(discussion);
+
+    const { getByTestId, queryByText } = render(
+      <Discussion {...propsWithReplies} canEndDiscussion />,
+    );
+
+    act(() => {
+      userEvent.click(getByTestId('end-discussion-button'));
+    });
+
+    await waitFor(() => {
+      expect(
+        queryByText(/End discussion and notify\?/i),
+      ).not.toBeInTheDocument();
     });
   });
 });

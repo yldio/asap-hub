@@ -1,8 +1,10 @@
-import { manuscriptAuthor } from '@asap-hub/fixtures';
+import { createDiscussionResponse, manuscriptAuthor } from '@asap-hub/fixtures';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import ComplianceReportCard from '../ComplianceReportCard';
+
+const getDiscussion = jest.fn();
 
 const props = {
   id: 'compliance-report-id',
@@ -20,7 +22,7 @@ const props = {
   createComplianceDiscussion: jest
     .fn()
     .mockImplementation(() => 'discussion-id'),
-  getDiscussion: jest.fn(),
+  getDiscussion,
   setVersion: jest.fn(),
   onSave: jest.fn(),
   onEndDiscussion: jest.fn(),
@@ -82,4 +84,45 @@ it('calls setVersion when component is unmouted and a discussion was created', a
   unmount();
 
   expect(props.setVersion).toHaveBeenCalled();
+});
+
+it('should show discusion started as a title', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
+  const { getByLabelText, getByText } = render(
+    <ComplianceReportCard
+      {...props}
+      discussionId="mock-id"
+      getDiscussion={getDiscussion}
+    />,
+  );
+
+  await act(async () => {
+    userEvent.click(getByLabelText('Expand Report'));
+  });
+
+  await waitFor(() => {
+    expect(getByText(/Discussion Started/i)).toBeInTheDocument();
+  });
+});
+
+it('should show discusion ended as a title', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
+  const { getByLabelText, getByText } = render(
+    <ComplianceReportCard
+      {...props}
+      discussionId="mock-id"
+      getDiscussion={getDiscussion.mockImplementation(() => ({
+        ...createDiscussionResponse(),
+        endedAt: '2025-01-01T10:00:00.000Z',
+      }))}
+    />,
+  );
+
+  await act(async () => {
+    userEvent.click(getByLabelText('Expand Report'));
+  });
+
+  await waitFor(() => {
+    expect(getByText(/Discussion Ended/i)).toBeInTheDocument();
+  });
 });

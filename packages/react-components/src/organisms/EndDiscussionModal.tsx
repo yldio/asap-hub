@@ -79,7 +79,12 @@ const EndDiscussionModal: React.FC<EndDiscussionModalProps> = ({
       </Paragraph>
       <div css={buttonContainerStyles}>
         <div css={backStyles}>
-          <Button onClick={handleCancel}>Cancel</Button>
+          <Button
+            onClick={handleCancel}
+            data-testid="cancel-end-discussion-button"
+          >
+            Cancel
+          </Button>
         </div>
         <div css={confirmStyles}>
           <Button

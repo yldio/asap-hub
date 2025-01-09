@@ -157,10 +157,11 @@ const Discussion: FC<DiscussionProps> = ({
                 {endDiscussionIcon} End of Discussion
               </span>
             </Button>
-            {isEndDiscussionModalOpen && (
+            {isEndDiscussionModalOpen && onEndDiscussion && (
               <EndDiscussionModal
                 handleSubmit={async () => {
-                  onEndDiscussion && (await onEndDiscussion(id));
+                  await onEndDiscussion(id);
+                  setIsEndDiscussionModalOpen(false);
                 }}
                 handleCancel={() => setIsEndDiscussionModalOpen(false)}
               />

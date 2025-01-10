@@ -319,17 +319,19 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
     <>
       <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>
         {version.complianceReport && (
-          <ComplianceReportCard
-            {...version.complianceReport}
-            manuscriptId={manuscriptId}
-            versionId={version.id}
-            createComplianceDiscussion={createComplianceDiscussion}
-            getDiscussion={getDiscussion}
-            onSave={onSave}
-            setVersion={setVersion}
-            onEndDiscussion={onEndDiscussion}
-            isComplianceReviewer={isComplianceReviewer}
-          />
+          <Suspense fallback={<Loading />}>
+            <ComplianceReportCard
+              {...version.complianceReport}
+              manuscriptId={manuscriptId}
+              versionId={version.id}
+              createComplianceDiscussion={createComplianceDiscussion}
+              getDiscussion={getDiscussion}
+              onSave={onSave}
+              setVersion={setVersion}
+              onEndDiscussion={onEndDiscussion}
+              isComplianceReviewer={isComplianceReviewer}
+            />
+          </Suspense>
         )}
         <div css={toastStyles}>
           <span css={toastHeaderStyles}>

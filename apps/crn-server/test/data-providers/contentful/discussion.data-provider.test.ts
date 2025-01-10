@@ -10,12 +10,16 @@ import {
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlDiscussion,
-  getDiscussionRequestObject,
   getDiscussionDataObject,
-  getContentfulGraphqlCreatedBy,
+  getDiscussionRequestObject,
 } from '../../fixtures/discussions.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
+
+jest.mock('@asap-hub/contentful', () => ({
+  ...jest.requireActual('@asap-hub/contentful'),
+  pollContentfulGql: jest.fn().mockResolvedValue(undefined),
+}));
 
 describe('Discussions Contentful Data Provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -415,12 +419,46 @@ describe('Discussions Contentful Data Provider', () => {
       const discussionId = 'discussion-id-1';
       const userId = 'user-id-1';
 
-      const discussionMock = getEntry({});
+      const discussionMock = getEntry(
+        {
+          // initial fields
+        },
+        {
+          // initial sys
+          id: discussionId,
+          publishedVersion: 1,
+        },
+      );
       environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
-      const discussionMockUpdated = getEntry({});
+      const discussionMockUpdated = getEntry(
+        {
+          // updated fields
+          endedBy: {
+            'en-US': {
+              sys: {
+                id: userId,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          },
+          endedAt: {
+            'en-US': new Date().toISOString(),
+          },
+        },
+        {
+          // updated sys
+          id: discussionId,
+          publishedVersion: 2,
+        },
+      );
+
       discussionMock.patch = jest
         .fn()
         .mockResolvedValueOnce(discussionMockUpdated);
+      discussionMockUpdated.publish = jest
+        .fn()
+        .mockReturnValue(discussionMockUpdated);
 
       await discussionDataProviderMock.update(discussionId, {
         endedBy: userId,

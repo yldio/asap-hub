@@ -228,50 +228,41 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
 }
 
 export const getSortDate = (reminder: ReminderDataObject): DateTime => {
-  if (reminder.entity === 'Research Output') {
-    if (reminder.type === 'Published') {
-      return DateTime.fromISO(reminder.data.addedDate);
-    }
-    if (reminder.type === 'Switch To Draft') {
-      return DateTime.fromISO(reminder.data.statusChangedAt);
-    }
+  const typeToDateField: Record<
+    ReminderDataObject['entity'],
+    Partial<Record<ReminderDataObject['type'], string>>
+  > = {
+    'Research Output': {
+      Published: 'addedDate',
+      Draft: 'createdDate',
+      'In Review': 'createdDate',
+      'Switch To Draft': 'statusChangedAt',
+    },
+    'Research Output Version': {
+      Published: 'publishedAt',
+    },
+    Manuscript: {
+      'Manuscript Created': 'publishedAt',
+      'Manuscript Status Updated': 'updatedAt',
+      'Manuscript Resubmitted': 'resubmittedAt',
+    },
+    Event: {
+      'Happening Today': 'startDate',
+      'Happening Now': 'endDate',
+      'Video Updated': 'videoRecordingUpdatedAt',
+      'Presentation Updated': 'presentationUpdatedAt',
+      'Notes Updated': 'notesUpdatedAt',
+      'Share Presentation': 'endDate',
+      'Publish Material': 'endDate',
+      'Upload Presentation': 'endDate',
+    },
+  };
 
-    return DateTime.fromISO(reminder.data.createdDate);
-  }
-
-  if (reminder.entity === 'Research Output Version') {
-    return DateTime.fromISO(reminder.data.publishedAt);
-  }
-
-  if (reminder.type === 'Happening Today') {
-    return DateTime.fromISO(reminder.data.startDate);
-  }
-
-  if (reminder.type === 'Video Updated') {
-    return DateTime.fromISO(reminder.data.videoRecordingUpdatedAt);
-  }
-
-  if (reminder.type === 'Presentation Updated') {
-    return DateTime.fromISO(reminder.data.presentationUpdatedAt);
-  }
-
-  if (reminder.type === 'Notes Updated') {
-    return DateTime.fromISO(reminder.data.notesUpdatedAt);
-  }
-
-  if (reminder.type === 'Manuscript Created') {
-    return DateTime.fromISO(reminder.data.publishedAt);
-  }
-
-  if (reminder.type === 'Manuscript Status Updated') {
-    return DateTime.fromISO(reminder.data.updatedAt);
-  }
-
-  if (reminder.type === 'Manuscript Resubmitted') {
-    return DateTime.fromISO(reminder.data.resubmittedAt);
-  }
-
-  return DateTime.fromISO(reminder.data.endDate);
+  const dateField =
+    typeToDateField[reminder.entity][reminder.type] || 'endDate';
+  return DateTime.fromISO(
+    reminder.data[dateField as keyof typeof reminder.data],
+  );
 };
 
 export const getManuscriptFilter = (zone: string): ManuscriptsFilter => {

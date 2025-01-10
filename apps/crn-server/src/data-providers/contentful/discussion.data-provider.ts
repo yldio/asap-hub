@@ -108,8 +108,8 @@ export class DiscussionContentfulDataProvider
         endedBy,
       });
 
-      const fetchDiscussionById = async () =>
-        await this.contentfulClient.request<
+      const fetchDiscussionById = () =>
+        this.contentfulClient.request<
           FetchDiscussionByIdQuery,
           FetchDiscussionByIdQueryVariables
         >(FETCH_DISCUSSION_BY_ID, { id });

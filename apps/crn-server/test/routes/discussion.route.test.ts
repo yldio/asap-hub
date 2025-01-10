@@ -277,7 +277,7 @@ describe('/discussions/ route', () => {
       expect(response.status).toBe(404);
     });
 
-    test('Should return 200 when the discussion id is invalid', async () => {
+    test('Should return 200 when the discussion id is valid', async () => {
       const response = await supertest(app).patch(
         `/discussions/${discussionId}/end`,
       );

@@ -7,6 +7,7 @@ import {
   getLinkEntity,
   GraphQLClient,
   patchAndPublish,
+  pollContentfulGql,
 } from '@asap-hub/contentful';
 import {
   DiscussionDataObject,
@@ -102,10 +103,22 @@ export class DiscussionContentfulDataProvider
     if (update.endedBy) {
       const endedBy = getLinkEntity(update.endedBy);
 
-      await patchAndPublish(discussion, {
+      const published = await patchAndPublish(discussion, {
         endedAt: new Date().toISOString(),
         endedBy,
       });
+
+      const fetchDiscussionById = async () =>
+        await this.contentfulClient.request<
+          FetchDiscussionByIdQuery,
+          FetchDiscussionByIdQueryVariables
+        >(FETCH_DISCUSSION_BY_ID, { id });
+
+      await pollContentfulGql<FetchDiscussionByIdQuery>(
+        published.sys.publishedVersion || Infinity,
+        fetchDiscussionById,
+        'discussions',
+      );
     }
   }
 }

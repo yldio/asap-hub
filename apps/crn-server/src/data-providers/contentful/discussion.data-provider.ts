@@ -170,4 +170,5 @@ export const parseGraphQLDiscussion = (
   id: discussion.sys.id,
   message: parseGraphQLMessage(discussion.message),
   replies: discussion.repliesCollection?.items.map(parseGraphQLMessage),
+  endedAt: discussion.endedAt,
 });

@@ -14250,7 +14250,7 @@ export type FetchDiscoverQuery = {
 };
 
 export type DiscussionsContentFragment = Pick<Discussions, 'endedAt'> & {
-  sys: Pick<Sys, 'id'>;
+  sys: Pick<Sys, 'id' | 'publishedVersion'>;
   message?: Maybe<
     Pick<Messages, 'text'> & {
       sys: Pick<Sys, 'publishedAt'>;
@@ -14311,7 +14311,7 @@ export type FetchDiscussionByIdQueryVariables = Exact<{
 export type FetchDiscussionByIdQuery = {
   discussions?: Maybe<
     Pick<Discussions, 'endedAt'> & {
-      sys: Pick<Sys, 'id'>;
+      sys: Pick<Sys, 'id' | 'publishedVersion'>;
       message?: Maybe<
         Pick<Messages, 'text'> & {
           sys: Pick<Sys, 'publishedAt'>;
@@ -22310,6 +22310,10 @@ export const DiscussionsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
               ],
             },
           },

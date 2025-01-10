@@ -51,7 +51,7 @@ import { cleanArray } from '../../utils/clean-array';
 type EventCollection = FetchRemindersQuery['eventsCollection'];
 type EventItem = NonNullable<NonNullable<EventCollection>['items'][number]>;
 type ManuscriptCollection = FetchRemindersQuery['manuscriptsCollection'];
-type ManuscriptItem = NonNullable<
+export type ManuscriptItem = NonNullable<
   NonNullable<ManuscriptCollection>['items'][number]
 >;
 type ResearchOutputCollection =

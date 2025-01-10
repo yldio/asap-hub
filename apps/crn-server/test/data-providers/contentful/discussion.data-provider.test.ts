@@ -1,4 +1,9 @@
-import { Entry, Environment } from '@asap-hub/contentful';
+import {
+  Entry,
+  Environment,
+  FETCH_DISCUSSION_BY_ID,
+  pollContentfulGql,
+} from '@asap-hub/contentful';
 import { DiscussionType } from '@asap-hub/model';
 
 import { when } from 'jest-when';
@@ -18,7 +23,12 @@ import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
-  pollContentfulGql: jest.fn().mockResolvedValue(undefined),
+  pollContentfulGql: jest
+    .fn()
+    .mockImplementation(async (_version, fetchData, _entity) => {
+      await fetchData();
+      return Promise.resolve();
+    }),
 }));
 
 describe('Discussions Contentful Data Provider', () => {
@@ -489,6 +499,17 @@ describe('Discussions Contentful Data Provider', () => {
       ]);
 
       expect(discussionMockUpdated.publish).toHaveBeenCalled();
+
+      expect(pollContentfulGql).toHaveBeenCalledWith(
+        discussionMockUpdated.sys.publishedVersion || Infinity,
+        expect.any(Function),
+        'discussions',
+      );
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_DISCUSSION_BY_ID,
+        { id: discussionId },
+      );
     });
   });
 

@@ -17,6 +17,7 @@ import {
   getManuscriptResubmittedReminder,
   getManuscriptCreatedReminder,
   getManuscriptStatusUpdatedReminder,
+  getManuscriptVersion,
 } from '../../../fixtures/reminders.fixtures';
 import { FetchRemindersQuery } from '@asap-hub/contentful';
 
@@ -256,65 +257,24 @@ describe('Reminders data provider', () => {
       manuscriptResubmitted!.versionsCollection = {
         total: 2,
         items: [
-          {
+          getManuscriptVersion({
             count: 1,
-            additionalAuthorsCollection: {
-              items: [],
-            },
-            correspondingAuthorCollection: {
-              items: [],
-            },
-            firstAuthorsCollection: {
-              items: [
-                {
-                  __typename: 'Users',
-                  sys: {
-                    id: 'first-author-user',
-                  },
-                },
-              ],
-            },
-            createdBy: {
-              sys: {
-                id: 'user-who-created-manuscript',
-              },
-              firstName: 'Jane',
-              lastName: 'Doe',
-            },
-          },
-          {
+            firstAuthorIds: ['first-author-user'],
+            additionalAuthorIds: [],
+            correspondingAuthorIds: [],
+            createdById: 'user-who-created-manuscript',
+            createdByFirstName: 'Jane',
+            createdByLastName: 'Doe',
+          }),
+          getManuscriptVersion({
             count: 2,
-            correspondingAuthorCollection: {
-              items: [],
-            },
-            firstAuthorsCollection: {
-              items: [
-                {
-                  __typename: 'Users',
-                  sys: {
-                    id: 'first-author-user',
-                  },
-                },
-              ],
-            },
-            additionalAuthorsCollection: {
-              items: [
-                {
-                  __typename: 'Users',
-                  sys: {
-                    id: 'additional-author-user',
-                  },
-                },
-              ],
-            },
-            createdBy: {
-              sys: {
-                id: 'user-who-resubmitted-manuscript',
-              },
-              firstName: 'John',
-              lastName: 'Doe',
-            },
-          },
+            firstAuthorIds: ['first-author-user'],
+            additionalAuthorIds: ['additional-author-user'],
+            correspondingAuthorIds: [],
+            createdById: 'user-who-resubmitted-manuscript',
+            createdByFirstName: 'John',
+            createdByLastName: 'Doe',
+          }),
         ],
       };
 

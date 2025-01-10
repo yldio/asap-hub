@@ -543,6 +543,63 @@ export const getResearchOutputSwitchToDraftWorkingGroupReminder =
     };
   };
 
+export const getManuscriptVersion = ({
+  count,
+  firstAuthorIds,
+  additionalAuthorIds,
+  correspondingAuthorIds,
+  createdById,
+  createdByFirstName,
+  createdByLastName,
+}: {
+  count: number;
+  firstAuthorIds: string[];
+  additionalAuthorIds: string[];
+  correspondingAuthorIds: string[];
+  createdById: string;
+  createdByFirstName: string;
+  createdByLastName: string;
+}): NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<FetchRemindersQuery['manuscriptsCollection']>['items'][number]
+    >['versionsCollection']
+  >['items'][number]
+> => ({
+  count,
+  additionalAuthorsCollection: {
+    items: additionalAuthorIds.map((id) => ({
+      __typename: 'Users',
+      sys: {
+        id,
+      },
+    })),
+  },
+  correspondingAuthorCollection: {
+    items: correspondingAuthorIds.map((id) => ({
+      __typename: 'Users',
+      sys: {
+        id,
+      },
+    })),
+  },
+  firstAuthorsCollection: {
+    items: firstAuthorIds.map((id) => ({
+      __typename: 'Users',
+      sys: {
+        id,
+      },
+    })),
+  },
+  createdBy: {
+    sys: {
+      id: createdById,
+    },
+    firstName: createdByFirstName,
+    lastName: createdByLastName,
+  },
+});
+
 export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
   FetchRemindersQuery['manuscriptsCollection']
 >['items'][number] => ({
@@ -569,32 +626,15 @@ export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
   versionsCollection: {
     total: 1,
     items: [
-      {
+      getManuscriptVersion({
         count: 1,
-        additionalAuthorsCollection: {
-          items: [],
-        },
-        correspondingAuthorCollection: {
-          items: [],
-        },
-        firstAuthorsCollection: {
-          items: [
-            {
-              __typename: 'Users',
-              sys: {
-                id: 'first-author-user',
-              },
-            },
-          ],
-        },
-        createdBy: {
-          sys: {
-            id: 'user-who-created-manuscript',
-          },
-          firstName: 'Jane',
-          lastName: 'Doe',
-        },
-      },
+        firstAuthorIds: ['first-author-user'],
+        additionalAuthorIds: [],
+        correspondingAuthorIds: [],
+        createdById: 'user-who-created-manuscript',
+        createdByFirstName: 'Jane',
+        createdByLastName: 'Doe',
+      }),
     ],
   },
 });

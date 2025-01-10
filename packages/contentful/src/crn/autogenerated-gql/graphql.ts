@@ -14251,12 +14251,6 @@ export type FetchDiscoverQuery = {
 
 export type DiscussionsContentFragment = Pick<Discussions, 'endedAt'> & {
   sys: Pick<Sys, 'id'>;
-  endedBy?: Maybe<
-    Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-      sys: Pick<Sys, 'id'>;
-      avatar?: Maybe<Pick<Asset, 'url'>>;
-    }
-  >;
   message?: Maybe<
     Pick<Messages, 'text'> & {
       sys: Pick<Sys, 'publishedAt'>;
@@ -14318,12 +14312,6 @@ export type FetchDiscussionByIdQuery = {
   discussions?: Maybe<
     Pick<Discussions, 'endedAt'> & {
       sys: Pick<Sys, 'id'>;
-      endedBy?: Maybe<
-        Pick<Users, 'firstName' | 'nickname' | 'lastName'> & {
-          sys: Pick<Sys, 'id'>;
-          avatar?: Maybe<Pick<Asset, 'url'>>;
-        }
-      >;
       message?: Maybe<
         Pick<Messages, 'text'> & {
           sys: Pick<Sys, 'publishedAt'>;
@@ -22326,38 +22314,6 @@ export const DiscussionsContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'endedAt' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'endedBy' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'sys' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'avatar' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'message' },

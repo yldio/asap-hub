@@ -8,17 +8,6 @@ export const discussionContentQueryFragment = gql`
       id
     }
     endedAt
-    endedBy {
-      sys {
-        id
-      }
-      firstName
-      nickname
-      lastName
-      avatar {
-        url
-      }
-    }
     message {
       sys {
         publishedAt

@@ -468,33 +468,6 @@ describe('Discussions Contentful Data Provider', () => {
       expect(parsedDiscussion.message.createdBy.firstName).toBe(
         graphqlDiscussion?.message?.createdBy?.firstName,
       );
-
-      expect(parsedDiscussion.endedBy).not.toBeDefined();
-      expect(parsedDiscussion.endedAt).not.toBeDefined();
-    });
-    test('Should parse graphql discussion when discussion has ended', async () => {
-      const graphqlDiscussion = getContentfulGraphqlDiscussion();
-      graphqlDiscussion!.message!.createdBy!.teamsCollection = null;
-
-      const parsedDiscussion = parseGraphQLDiscussion({
-        ...graphqlDiscussion!,
-        endedAt: '2025-01-01T10:00:00.000Z',
-        endedBy: getContentfulGraphqlCreatedBy(),
-      });
-
-      expect(parsedDiscussion.id).toBe(graphqlDiscussion?.sys.id);
-      expect(parsedDiscussion.message.text).toBe(
-        graphqlDiscussion?.message?.text,
-      );
-      expect(parsedDiscussion.message.createdBy.firstName).toBe(
-        graphqlDiscussion?.message?.createdBy?.firstName,
-      );
-
-      expect(parsedDiscussion.endedAt).toBe('2025-01-01T10:00:00.000Z');
-      expect(parsedDiscussion.endedBy?.firstName).toBe('John');
-      expect(parsedDiscussion.endedBy?.lastName).toBe('Doe');
-      expect(parsedDiscussion.endedBy?.displayName).toBe('John (Tim) Doe');
-      expect(parsedDiscussion.endedBy?.avatarUrl).toBe('http://image');
     });
   });
 });

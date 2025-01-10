@@ -1003,6 +1003,23 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
   );
 };
 
+type ValidManuscriptItem = ManuscriptItem & {
+  teamsCollection: { items: { displayName: string }[] };
+  versionsCollection: {
+    items: { createdBy: { firstName: string; lastName: string } }[];
+  };
+};
+
+const isValidManuscriptItem = (
+  manuscript: ManuscriptItem,
+): manuscript is ValidManuscriptItem =>
+  !!manuscript.teamsCollection?.items &&
+  manuscript.teamsCollection.items.length > 0 &&
+  !!manuscript.teamsCollection.items[0]?.displayName &&
+  !!manuscript.versionsCollection?.items &&
+  manuscript.versionsCollection.items.length > 0 &&
+  !!manuscript.versionsCollection.items[0]?.createdBy;
+
 const getManuscriptRemindersFromQuery = (
   manuscriptsCollectionItems: ManuscriptItem[],
   user: User,
@@ -1016,13 +1033,7 @@ const getManuscriptRemindersFromQuery = (
 
   return manuscriptsCollectionItems.reduce<ManuscriptReminder[]>(
     (reminders, manuscript) => {
-      if (
-        !manuscript ||
-        !manuscript.teamsCollection?.items[0]?.displayName ||
-        !manuscript.versionsCollection?.items[0] ||
-        !manuscript.versionsCollection.items[0]?.createdBy
-      )
-        return reminders;
+      if (!isValidManuscriptItem(manuscript)) return reminders;
 
       const manuscriptVersions = manuscript.versionsCollection.items;
       const isManuscriptResubmitted = manuscriptVersions.length > 1;
@@ -1103,10 +1114,7 @@ const isManuscriptStatusUpdatedByAnotherUser = (
   userId: string,
 ): boolean => manuscript.statusUpdatedBy?.sys.id !== userId;
 
-export const getTeamNames = (manuscript: ManuscriptItem): string => {
-  if (!manuscript.teamsCollection || !manuscript.teamsCollection.items)
-    return '';
-
+export const getTeamNames = (manuscript: ValidManuscriptItem): string => {
   const teamNames = manuscript.teamsCollection.items
     .map((team) => team?.displayName)
     .filter((teamName): teamName is string => teamName !== undefined)
@@ -1119,7 +1127,7 @@ export const getTeamNames = (manuscript: ManuscriptItem): string => {
 };
 
 const createManuscriptCreatedReminder = (
-  manuscript: ManuscriptItem,
+  manuscript: ValidManuscriptItem,
 ): ManuscriptCreatedReminder => ({
   id: `manuscript-created-${manuscript.sys.id}`,
   entity: 'Manuscript',
@@ -1129,15 +1137,15 @@ const createManuscriptCreatedReminder = (
     title: manuscript.title || '',
     status: manuscript.status as ManuscriptStatus,
     teams: getTeamNames(manuscript),
-    createdBy: `${manuscript.versionsCollection?.items[0]?.createdBy?.firstName} ${manuscript.versionsCollection?.items[0]?.createdBy?.lastName}`,
+    createdBy: `${manuscript.versionsCollection.items[0]?.createdBy?.firstName} ${manuscript.versionsCollection.items[0]?.createdBy?.lastName}`,
     publishedAt: manuscript.sys.firstPublishedAt,
   },
 });
 
 const createManuscriptResubmittedReminder = (
-  manuscript: ManuscriptItem,
+  manuscript: ValidManuscriptItem,
 ): ManuscriptResubmittedReminder => {
-  const manuscriptVersions = manuscript.versionsCollection?.items || [];
+  const manuscriptVersions = manuscript.versionsCollection.items || [];
 
   const lastVersion = manuscriptVersions[manuscriptVersions.length - 1];
 
@@ -1156,7 +1164,7 @@ const createManuscriptResubmittedReminder = (
 };
 
 const createManuscriptStatusUpdatedReminder = (
-  manuscript: NonNullable<ManuscriptItem>,
+  manuscript: ValidManuscriptItem,
 ): ManuscriptStatusUpdatedReminder => ({
   id: `manuscript-status-updated-${manuscript.sys.id}`,
   entity: 'Manuscript',

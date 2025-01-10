@@ -109,6 +109,45 @@ export default class ReminderController {
         }
 
         if (
+          reminder.entity === 'Manuscript' &&
+          reminder.type === 'Manuscript Created'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            description: `**${reminder.data.createdBy}** submitted a manuscript for **${reminder.data.teams}** and its status is '${reminder.data.status}':`,
+            subtext: reminder.data.title,
+            date: reminder.data.publishedAt,
+          };
+        }
+
+        if (
+          reminder.entity === 'Manuscript' &&
+          reminder.type === 'Manuscript Resubmitted'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            description: `**${reminder.data.resubmittedBy}** resubmitted a manuscript for **${reminder.data.teams}** and its status changed to 'Manuscript Re-Submitted':`,
+            subtext: reminder.data.title,
+            date: reminder.data.resubmittedAt,
+          };
+        }
+
+        if (
+          reminder.entity === 'Manuscript' &&
+          reminder.type === 'Manuscript Status Updated'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            description: `**${reminder.data.updatedBy}** on **Team ASAP** changed a compliance status from ${reminder.data.previousStatus} to ${reminder.data.status}:`,
+            subtext: reminder.data.title,
+            date: reminder.data.updatedAt,
+          };
+        }
+
+        if (
           reminder.entity === 'Event' &&
           reminder.type === 'Happening Today'
         ) {

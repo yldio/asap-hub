@@ -8,7 +8,79 @@ export const FETCH_REMINDERS = gql`
     $eventFilter: EventsFilter
     $userId: String!
     $researchOutputVersionsFilter: ResearchOutputVersionsFilter
+    $manuscriptFilter: ManuscriptsFilter
   ) {
+    manuscriptsCollection(where: $manuscriptFilter) {
+      items {
+        sys {
+          id
+          publishedAt
+          firstPublishedAt
+        }
+        title
+        status
+        previousStatus
+        statusUpdatedAt
+        statusUpdatedBy {
+          sys {
+            id
+          }
+          firstName
+          lastName
+        }
+        teamsCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            displayName
+          }
+        }
+        versionsCollection(limit: 10) {
+          total
+          items {
+            count
+            createdBy {
+              sys {
+                id
+              }
+              firstName
+              lastName
+            }
+            firstAuthorsCollection(limit: 10) {
+              items {
+                __typename
+                ... on Users {
+                  sys {
+                    id
+                  }
+                }
+              }
+            }
+            additionalAuthorsCollection(limit: 10) {
+              items {
+                __typename
+                ... on Users {
+                  sys {
+                    id
+                  }
+                }
+              }
+            }
+            correspondingAuthorCollection(limit: 10) {
+              items {
+                __typename
+                ... on Users {
+                  sys {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
     researchOutputsCollection(where: $researchOutputFilter, preview: true) {
       items {
         sys {
@@ -75,6 +147,7 @@ export const FETCH_REMINDERS = gql`
     }
     users(id: $userId) {
       role
+      openScienceTeamMember
       teamsCollection {
         items {
           team {

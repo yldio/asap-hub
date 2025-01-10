@@ -1,5 +1,6 @@
 import { ListResponse } from './common';
 import { EventResponse } from './event';
+import { ManuscriptDataObject } from './manuscript';
 import {
   ResearchOutputDataObject,
   ResearchOutputDraftDataObject,
@@ -27,7 +28,16 @@ export type EventReminderType =
   | 'Share Presentation'
   | 'Publish Material'
   | 'Upload Presentation';
-type ReminderType = ResearchOutputReminderType | EventReminderType;
+
+type ManuscriptReminderType =
+  | 'Manuscript Created'
+  | 'Manuscript Resubmitted'
+  | 'Manuscript Status Updated';
+
+type ReminderType =
+  | ResearchOutputReminderType
+  | EventReminderType
+  | ManuscriptReminderType;
 interface Reminder {
   id: string;
   entity: ReminderEntity;
@@ -121,6 +131,44 @@ export interface ResearchOutputVersionPublishedReminder extends Reminder {
   };
 }
 
+export interface ManuscriptCreatedReminder extends Reminder {
+  entity: 'Manuscript';
+  type: 'Manuscript Created';
+  data: {
+    manuscriptId: ManuscriptDataObject['id'];
+    title: ManuscriptDataObject['title'];
+    teams: string;
+    status: ManuscriptDataObject['status'];
+    createdBy: string;
+    publishedAt: string;
+  };
+}
+
+export interface ManuscriptResubmittedReminder extends Reminder {
+  entity: 'Manuscript';
+  type: 'Manuscript Resubmitted';
+  data: {
+    manuscriptId: ManuscriptDataObject['id'];
+    title: ManuscriptDataObject['title'];
+    teams: string;
+    resubmittedBy: string;
+    resubmittedAt: string;
+  };
+}
+
+export interface ManuscriptStatusUpdatedReminder extends Reminder {
+  entity: 'Manuscript';
+  type: 'Manuscript Status Updated';
+  data: {
+    manuscriptId: ManuscriptDataObject['id'];
+    title: ManuscriptDataObject['title'];
+    status: ManuscriptDataObject['status'];
+    previousStatus: ManuscriptDataObject['status'];
+    updatedBy: string;
+    updatedAt: string;
+  };
+}
+
 export interface EventHappeningTodayReminder extends EventReminder {
   entity: 'Event';
   type: 'Happening Today';
@@ -203,6 +251,11 @@ export interface PresentationUpdatedReminder extends EventReminder {
   };
 }
 
+export type ManuscriptReminder =
+  | ManuscriptCreatedReminder
+  | ManuscriptResubmittedReminder
+  | ManuscriptStatusUpdatedReminder;
+
 export type ReminderDataObject =
   | ResearchOutputPublishedReminder
   | ResearchOutputDraftReminder
@@ -216,7 +269,8 @@ export type ReminderDataObject =
   | EventNotesReminder
   | SharePresentationReminder
   | PublishMaterialReminder
-  | UploadPresentationReminder;
+  | UploadPresentationReminder
+  | ManuscriptReminder;
 
 export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 

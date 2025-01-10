@@ -4631,6 +4631,10 @@ export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder
 export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -4726,7 +4730,10 @@ export type Manuscripts = Entry &
     count?: Maybe<Scalars['Int']>;
     eligibilityReasons?: Maybe<Array<Maybe<Scalars['String']>>>;
     linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
+    previousStatus?: Maybe<Scalars['String']>;
     status?: Maybe<Scalars['String']>;
+    statusUpdatedAt?: Maybe<Scalars['DateTime']>;
+    statusUpdatedBy?: Maybe<Users>;
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptsTeamsCollection>;
     title?: Maybe<Scalars['String']>;
@@ -4749,8 +4756,25 @@ export type ManuscriptsLinkedFromArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsPreviousStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsStatusUpdatedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsStatusUpdatedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
@@ -4808,7 +4832,25 @@ export type ManuscriptsFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   eligibilityReasons_exists?: InputMaybe<Scalars['Boolean']>;
+  previousStatus?: InputMaybe<Scalars['String']>;
+  previousStatus_contains?: InputMaybe<Scalars['String']>;
+  previousStatus_exists?: InputMaybe<Scalars['Boolean']>;
+  previousStatus_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  previousStatus_not?: InputMaybe<Scalars['String']>;
+  previousStatus_not_contains?: InputMaybe<Scalars['String']>;
+  previousStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   status?: InputMaybe<Scalars['String']>;
+  statusUpdatedAt?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  statusUpdatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  statusUpdatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  statusUpdatedBy?: InputMaybe<CfUsersNestedFilter>;
+  statusUpdatedBy_exists?: InputMaybe<Scalars['Boolean']>;
   status_contains?: InputMaybe<Scalars['String']>;
   status_exists?: InputMaybe<Scalars['Boolean']>;
   status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4843,6 +4885,10 @@ export type ManuscriptsLinkingCollectionsEntryCollectionArgs = {
 export enum ManuscriptsOrder {
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -8889,6 +8935,10 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
 export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -10249,6 +10299,7 @@ export type UsersLinkingCollections = {
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
   interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
+  manuscriptsCollection?: Maybe<ManuscriptsCollection>;
   messagesCollection?: Maybe<MessagesCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
@@ -10310,6 +10361,16 @@ export type UsersLinkingCollectionsManuscriptVersionsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<UsersLinkingCollectionsManuscriptVersionsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsManuscriptsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsManuscriptsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -10460,6 +10521,27 @@ export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+}
+
+export enum UsersLinkingCollectionsManuscriptsCollectionOrder {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
 }
 
 export enum UsersLinkingCollectionsMessagesCollectionOrder {
@@ -19685,9 +19767,69 @@ export type FetchRemindersQueryVariables = Exact<{
   eventFilter?: InputMaybe<EventsFilter>;
   userId: Scalars['String'];
   researchOutputVersionsFilter?: InputMaybe<ResearchOutputVersionsFilter>;
+  manuscriptFilter?: InputMaybe<ManuscriptsFilter>;
 }>;
 
 export type FetchRemindersQuery = {
+  manuscriptsCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<
+          Manuscripts,
+          'title' | 'status' | 'previousStatus' | 'statusUpdatedAt'
+        > & {
+          sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
+          statusUpdatedBy?: Maybe<
+            Pick<Users, 'firstName' | 'lastName'> & { sys: Pick<Sys, 'id'> }
+          >;
+          teamsCollection?: Maybe<{
+            items: Array<
+              Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
+            >;
+          }>;
+          versionsCollection?: Maybe<
+            Pick<ManuscriptsVersionsCollection, 'total'> & {
+              items: Array<
+                Maybe<
+                  Pick<ManuscriptVersions, 'count'> & {
+                    createdBy?: Maybe<
+                      Pick<Users, 'firstName' | 'lastName'> & {
+                        sys: Pick<Sys, 'id'>;
+                      }
+                    >;
+                    firstAuthorsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          | { __typename: 'ExternalAuthors' }
+                          | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        >
+                      >;
+                    }>;
+                    additionalAuthorsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          | { __typename: 'ExternalAuthors' }
+                          | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        >
+                      >;
+                    }>;
+                    correspondingAuthorCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          | { __typename: 'ExternalAuthors' }
+                          | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        >
+                      >;
+                    }>;
+                  }
+                >
+              >;
+            }
+          >;
+        }
+      >
+    >;
+  }>;
   researchOutputsCollection?: Maybe<{
     items: Array<
       Maybe<
@@ -19740,7 +19882,7 @@ export type FetchRemindersQuery = {
     >;
   }>;
   users?: Maybe<
-    Pick<Users, 'role'> & {
+    Pick<Users, 'role' | 'openScienceTeamMember'> & {
       teamsCollection?: Maybe<{
         items: Array<
           Maybe<
@@ -35916,10 +36058,455 @@ export const FetchRemindersDocument = {
             name: { kind: 'Name', value: 'ResearchOutputVersionsFilter' },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'manuscriptFilter' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ManuscriptsFilter' },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'manuscriptsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'manuscriptFilter' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'publishedAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstPublishedAt' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'previousStatus' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'statusUpdatedAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'statusUpdatedBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teamsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '10' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'displayName',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'versionsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '10' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'count' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'createdBy' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'firstName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'lastName',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'firstAuthorsCollection',
+                                    },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'limit' },
+                                        value: {
+                                          kind: 'IntValue',
+                                          value: '10',
+                                        },
+                                      },
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: '__typename',
+                                                },
+                                              },
+                                              {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                  kind: 'NamedType',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: 'Users',
+                                                  },
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'sys',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'additionalAuthorsCollection',
+                                    },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'limit' },
+                                        value: {
+                                          kind: 'IntValue',
+                                          value: '10',
+                                        },
+                                      },
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: '__typename',
+                                                },
+                                              },
+                                              {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                  kind: 'NamedType',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: 'Users',
+                                                  },
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'sys',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'correspondingAuthorCollection',
+                                    },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'limit' },
+                                        value: {
+                                          kind: 'IntValue',
+                                          value: '10',
+                                        },
+                                      },
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: '__typename',
+                                                },
+                                              },
+                                              {
+                                                kind: 'InlineFragment',
+                                                typeCondition: {
+                                                  kind: 'NamedType',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: 'Users',
+                                                  },
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'sys',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'researchOutputsCollection' },
@@ -36254,6 +36841,10 @@ export const FetchRemindersDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'openScienceTeamMember' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'teamsCollection' },

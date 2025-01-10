@@ -26,6 +26,12 @@ export const getReferenceDates = (zone: string) => {
     .minus({ hours: 72 })
     .toUTC();
 
+  const last7DaysISO = DateTime.fromObject({
+    zone,
+  })
+    .minus({ days: 7 })
+    .toUTC();
+
   const now = DateTime.fromObject({
     zone,
   }).toUTC();
@@ -35,6 +41,7 @@ export const getReferenceDates = (zone: string) => {
     todayMidnightISO,
     last24HoursISO,
     last72HoursISO,
+    last7DaysISO,
     now,
   };
 };
@@ -47,6 +54,13 @@ export const inLast24Hours = (date: string, zone: string) => {
   const { last24HoursISO, now } = getReferenceDates(zone);
 
   return convertedDate >= last24HoursISO && convertedDate <= now;
+};
+
+export const inLast7Days = (date: string, zone: string) => {
+  const convertedDate = convertDate(date, zone);
+  const { last7DaysISO, now } = getReferenceDates(zone);
+
+  return convertedDate >= last7DaysISO && convertedDate <= now;
 };
 
 export const cleanArray = <Item>(

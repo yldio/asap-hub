@@ -20,6 +20,7 @@ const Compliance: React.FC = () => {
     pageSize,
     filters,
   });
+
   const { numberOfPages, renderPageHref } = usePagination(
     result.total,
     pageSize,

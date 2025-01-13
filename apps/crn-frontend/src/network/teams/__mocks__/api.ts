@@ -10,6 +10,7 @@ import {
   DiscussionRequest,
   DiscussionResponse,
   ListLabsResponse,
+  ListPartialManuscriptResponse,
   ListTeamResponse,
   TeamPatchRequest,
   TeamResponse,
@@ -73,4 +74,21 @@ export const updateDiscussion = jest.fn(
     discussion.replies = [createMessage(patch.text)];
     return discussion;
   },
+);
+
+export const getManuscripts = jest.fn(
+  async (): Promise<ListPartialManuscriptResponse> => ({
+    total: 1,
+    items: [
+      {
+        id: 'manuscript-1',
+        lastUpdated: '2020-09-23T20:45:22.000Z',
+        team: {
+          id: 'team-id-1',
+          displayName: 'Team 1',
+        },
+        status: 'Compliant',
+      },
+    ],
+  }),
 );

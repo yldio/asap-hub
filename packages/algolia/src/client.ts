@@ -122,7 +122,7 @@ export type EntityResponses = {
     >;
     [CRN_NEWS_ENTITY_TYPE]: WithMeta<NewsResponse, typeof CRN_NEWS_ENTITY_TYPE>;
     [MANUSCRIPT_ENTITY_TYPE]: WithMeta<
-      NewsResponse,
+      PartialManuscriptResponse,
       typeof MANUSCRIPT_ENTITY_TYPE
     >;
   };
@@ -300,7 +300,7 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
 export type CRNEntities = keyof EntityResponses['crn'];
 
 // we don't show external author cards
-export type CRNTagSearchEntities = Exclude<CRNEntities, 'external-author'>;
+export type CRNTagSearchEntities = Exclude<CRNEntities, 'external-author' | 'manuscript'>;
 
 export type CRNTagSearchEntitiesList = Array<CRNTagSearchEntities>;
 

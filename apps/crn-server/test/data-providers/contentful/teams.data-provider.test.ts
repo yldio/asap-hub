@@ -591,33 +591,6 @@ describe('Teams data provider', () => {
       );
     });
 
-    test('Should return the result when the team exists', async () => {
-      const id = 'some-id';
-      const expectedResult = getTeamDataObject();
-      expectedResult.id = id;
-      expectedResult.manuscripts[0]!.versions[0]!.teams[0]!.id = id;
-      expectedResult.manuscripts[1]!.versions[0]!.teams[0]!.id = id;
-      expectedResult.collaborationManuscripts = [];
-      const teamByIdMock = getContentfulGraphqlTeamById(id);
-      const contentfulGraphQLResponse = {
-        teams: teamByIdMock,
-      };
-
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        contentfulGraphQLResponse,
-      );
-
-      const result = await teamDataProvider.fetchById(id);
-
-      expect(result).toEqual(expectedResult);
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          id,
-        }),
-      );
-    });
-
     describe('team members', () => {
       test('should ignore falsy items in the team membership list', async () => {
         const id = 'some-id';

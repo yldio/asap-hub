@@ -216,28 +216,28 @@ export const getLifecycleCode = ({
   }
 };
 
-export const getManuscriptVersionUID = ({
-  version,
-  teamIdCode,
-  grantId,
-  manuscriptCount,
-  manuscriptVersionCount,
-}: {
-  version: Pick<ManuscriptVersion, 'type' | 'lifecycle'>;
-  teamIdCode: string;
-  grantId: string;
-  manuscriptCount: number;
-  manuscriptVersionCount: number;
-}) => {
-  const manuscriptTypeCode =
-    version.type === 'Original Research' ? 'org' : 'rev';
+// export const getManuscriptVersionUID = ({
+//   version,
+//   teamIdCode,
+//   grantId,
+//   manuscriptCount,
+//   manuscriptVersionCount,
+// }: {
+//   version: Pick<ManuscriptVersion, 'type' | 'lifecycle'>;
+//   teamIdCode: string;
+//   grantId: string;
+//   manuscriptCount: number;
+//   manuscriptVersionCount: number;
+// }) => {
+//   const manuscriptTypeCode =
+//     version.type === 'Original Research' ? 'org' : 'rev';
 
-  const lifecycleCode = getLifecycleCode(version);
-  return `${teamIdCode}-${grantId}-${String(manuscriptCount).padStart(
-    3,
-    '0',
-  )}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
-};
+//   const lifecycleCode = getLifecycleCode(version);
+//   return `${teamIdCode}-${grantId}-${String(manuscriptCount).padStart(
+//     3,
+//     '0',
+//   )}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
+// };
 
 export const getUserHref = (id: string) =>
   network({}).users({}).user({ userId: id }).$;
@@ -390,13 +390,13 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
             <Pill accent="gray">{version.type}</Pill>
             <Pill accent="gray">{version.lifecycle}</Pill>
             <Pill accent="blue">
-              {getManuscriptVersionUID({
+              {/* {getManuscriptVersionUID({
                 version,
                 teamIdCode,
                 grantId,
                 manuscriptCount,
                 manuscriptVersionCount: version.count,
-              })}
+              })} */}
             </Pill>
           </div>
         </div>

@@ -37,7 +37,7 @@ import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/a
 import { createResearchOutput, getTeam } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import { refreshTeamState } from '../state';
+import { manuscriptsState, refreshTeamState } from '../state';
 import TeamProfile from '../TeamProfile';
 
 const manuscriptResponse = {
@@ -111,9 +111,17 @@ const renderPage = async (
 
   const { container } = render(
     <RecoilRoot
-      initializeState={({ set }) => {
+      initializeState={({ set, reset }) => {
         set(refreshTeamState(teamResponse.id), Math.random());
         set(refreshResearchOutputState('123'), Math.random());
+        reset(
+          manuscriptsState({
+            currentPage: 0,
+            pageSize: 10,
+            filters: new Set(),
+            searchQuery: '',
+          }),
+        );
       }}
     >
       <Suspense fallback="loading">

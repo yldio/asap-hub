@@ -13,7 +13,10 @@ import {
 import { GraphQLError } from 'graphql';
 import { when } from 'jest-when';
 
-import { ManuscriptContentfulDataProvider } from '../../../src/data-providers/contentful/manuscript.data-provider';
+import {
+  getLifecycleCode,
+  ManuscriptContentfulDataProvider,
+} from '../../../src/data-providers/contentful/manuscript.data-provider';
 import { getContentfulGraphqlDiscussion } from '../../fixtures/discussions.fixtures';
 import {
   getContentfulGraphqlManuscript,
@@ -1506,6 +1509,22 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         ]),
       );
+    });
+  });
+});
+
+describe('getLifecycleCode', () => {
+  it('returns all appropriate values', () => {
+    const lifecyclePairs: { name: ManuscriptLifecycle; value: string }[] = [
+      { name: 'Draft Manuscript (prior to Publication)', value: 'G' },
+      { name: 'Preprint', value: 'P' },
+      { name: 'Publication', value: 'D' },
+      { name: 'Publication with addendum or corrigendum', value: 'C' },
+      { name: 'Typeset proof', value: 'T' },
+      { name: 'Other', value: 'O' },
+    ];
+    lifecyclePairs.forEach(({ name, value }) => {
+      expect(getLifecycleCode(name)).toBe(value);
     });
   });
 });

@@ -1,14 +1,10 @@
-export type Flag =
-  | 'PERSISTENT_EXAMPLE'
-  | 'DISPLAY_MANUSCRIPTS'
-  | 'DISPLAY_COOKIES';
+export type Flag = 'PERSISTENT_EXAMPLE' | 'DISPLAY_MANUSCRIPTS';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   DISPLAY_MANUSCRIPTS: false,
-  DISPLAY_COOKIES: false,
 };
 
 const envDefaults: Record<string, boolean> = {

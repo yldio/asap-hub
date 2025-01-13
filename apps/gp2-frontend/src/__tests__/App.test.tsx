@@ -77,30 +77,17 @@ it('loads overrides for feature flags', async () => {
 });
 
 describe('Cookie Modal & Button', () => {
-  beforeEach(() => {
-    document.cookie = 'ASAP_DISPLAY_COOKIES=true;';
-  });
-
   afterEach(() => {
-    document.cookie = 'ASAP_DISPLAY_COOKIES=false;';
     document.cookie = `gp2-cookie-consent=;`;
     cleanup();
   });
 
-  it('does not show the cookie modal if the DISPLAY_COOKIES flag is disabled', () => {
-    document.cookie = 'ASAP_DISPLAY_COOKIES=false;';
-    render(<App />);
-    expect(
-      screen.queryByText('Privacy Preference Center'),
-    ).not.toBeInTheDocument();
-  });
-
-  it('shows the cookie modal if the DISPLAY_COOKIES flag is enabled and showCookieModal is true', () => {
+  it('shows the cookie modal if showCookieModal is true', () => {
     render(<App />);
     expect(screen.queryByText('Privacy Preference Center')).toBeInTheDocument();
   });
 
-  it('hides the cookie modal if the DISPLAY_COOKIES flag is enabled and consent has been given before', () => {
+  it('hides the cookie modal if consent has been given before', () => {
     jest.spyOn(console, 'error').mockImplementation();
     const mockCookiesPreferences = {
       cookieId: 'a29956e6-897a-47c9-a2f6-3216986d20c7',

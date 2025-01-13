@@ -11,7 +11,7 @@ import { useFlags } from '@asap-hub/react-context';
 import { logout, staticPages, welcome } from '@asap-hub/routing';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
-import { FC, lazy, useEffect, useState } from 'react';
+import { FC, lazy, useEffect } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
 
@@ -80,7 +80,6 @@ const Welcome = lazy(loadWelcome);
 
 const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides, setEnvironment, isEnabled } = useFlags();
-  const [isCookiesFlagEnabled, setDisplayCookies] = useState(false);
 
   const {
     showCookieModal,
@@ -98,16 +97,16 @@ const App: FC<Record<string, never>> = () => {
     loadAuthenticatedApp().then(loadContent).then(loadWelcome);
     setEnvironment(ENVIRONMENT);
     setCurrentOverrides();
-    setDisplayCookies(isEnabled('DISPLAY_COOKIES'));
   }, [setCurrentOverrides, setEnvironment, isEnabled]);
 
   return (
     <LogoProvider appName="GP2">
       <Frame title="GP2 Hub">
         <Theme>
-          {(!isCookiesFlagEnabled || cookieData?.preferences.analytics) && (
-            <GoogleTagManager containerId={GTM_CONTAINER_ID} />
-          )}
+          <GoogleTagManager
+            containerId={GTM_CONTAINER_ID}
+            disabledTracking={!cookieData?.preferences.analytics}
+          />
           <AuthProvider>
             <SentryAuth0 />
             <Router history={history}>
@@ -160,23 +159,21 @@ const App: FC<Record<string, never>> = () => {
               </LastLocationProvider>
             </Router>
           </AuthProvider>
-          {isCookiesFlagEnabled && (
-            <CookiesModal
-              cookieData={cookieData}
-              onSaveCookiePreferences={onSaveCookiePreferences}
-              toggleCookieModal={toggleCookieModal}
-              showCookieModal={showCookieModal}
-              customStyles={[
-                {
-                  '& .cookie-button': {
-                    position: 'fixed',
-                    left: '1em',
-                    bottom: '1em',
-                  },
+          <CookiesModal
+            cookieData={cookieData}
+            onSaveCookiePreferences={onSaveCookiePreferences}
+            toggleCookieModal={toggleCookieModal}
+            showCookieModal={showCookieModal}
+            customStyles={[
+              {
+                '& .cookie-button': {
+                  position: 'fixed',
+                  left: '1em',
+                  bottom: '1em',
                 },
-              ]}
-            />
-          )}
+              },
+            ]}
+          />
         </Theme>
       </Frame>
     </LogoProvider>

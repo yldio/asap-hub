@@ -83,7 +83,6 @@ const AuthenticatedApp = lazy(loadAuthenticatedApp);
 const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides, setEnvironment, isEnabled } = useFlags();
   const [isOnboardable, setIsOnboardable] = useState(false);
-  const [isCookiesFlagEnabled, setDisplayCookies] = useState(false);
   const {
     showCookieModal,
     cookieData,
@@ -100,7 +99,6 @@ const App: FC<Record<string, never>> = () => {
     loadAuthenticatedApp().then(loadContent).then(loadWelcome);
     setEnvironment(ENVIRONMENT);
     setCurrentOverrides();
-    setDisplayCookies(isEnabled('DISPLAY_COOKIES'));
   }, [setCurrentOverrides, setEnvironment, isEnabled]);
 
   return (
@@ -108,9 +106,7 @@ const App: FC<Record<string, never>> = () => {
       <Frame title="ASAP Hub">
         <GoogleTagManager
           containerId={GTM_CONTAINER_ID}
-          disabledTracking={
-            !isCookiesFlagEnabled || !cookieData?.preferences.analytics
-          }
+          disabledTracking={!cookieData?.preferences.analytics}
         />
 
         <AuthProvider>
@@ -168,24 +164,21 @@ const App: FC<Record<string, never>> = () => {
           </Router>
         </AuthProvider>
       </Frame>
-
-      {isCookiesFlagEnabled && (
-        <CookiesModal
-          cookieData={cookieData}
-          onSaveCookiePreferences={onSaveCookiePreferences}
-          toggleCookieModal={toggleCookieModal}
-          showCookieModal={showCookieModal}
-          customStyles={[
-            {
-              '& .cookie-button': {
-                position: 'fixed',
-                left: '1em',
-                bottom: isOnboardable ? '7em' : '1em',
-              },
+      <CookiesModal
+        cookieData={cookieData}
+        onSaveCookiePreferences={onSaveCookiePreferences}
+        toggleCookieModal={toggleCookieModal}
+        showCookieModal={showCookieModal}
+        customStyles={[
+          {
+            '& .cookie-button': {
+              position: 'fixed',
+              left: '1em',
+              bottom: isOnboardable ? '7em' : '1em',
             },
-          ]}
-        />
-      )}
+          },
+        ]}
+      />
     </LogoProvider>
   );
 };

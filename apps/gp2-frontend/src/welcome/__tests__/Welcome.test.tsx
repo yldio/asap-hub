@@ -1,5 +1,4 @@
 import { mockLocation } from '@asap-hub/dom-test-utils';
-import { disable } from '@asap-hub/flags';
 import { authTestUtils } from '@asap-hub/gp2-components';
 import { ToastContext } from '@asap-hub/react-context';
 import { render, RenderResult, waitFor, screen } from '@testing-library/react';
@@ -14,7 +13,6 @@ describe('the welcome page', () => {
   beforeEach(() => {
     nock.cleanAll();
     nock(API_BASE_URL).get('/users/invites/42').reply(200, {});
-    disable('DISPLAY_COOKIES');
   });
   afterEach(async () => {
     await waitFor(() => expect(nock.isDone()).toBe(true));

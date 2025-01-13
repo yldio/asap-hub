@@ -13,6 +13,7 @@ import {
   DiscussionResponse,
   ListPartialManuscriptResponse,
   ManuscriptVersion,
+  PartialManuscriptResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useCallback } from 'react';
@@ -30,6 +31,7 @@ import {
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
+import { useAlgolia } from '../../hooks/algolia';
 import {
   createComplianceReport,
   createManuscript,
@@ -44,6 +46,7 @@ import {
   resubmitManuscript,
   createComplianceDiscussion,
   endDiscussion,
+  getManuscripts,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -340,12 +343,81 @@ export const useEndDiscussion = () => {
   };
 };
 
+export const manuscriptListState = atomFamily<
+  PartialManuscriptResponse | undefined,
+  string
+>({
+  key: 'manuscriptList',
+  default: undefined,
+});
+
+const manuscriptIndexState = atomFamily<
+  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
+  GetListOptions
+>({
+  key: 'manuscriptIndex',
+  default: undefined,
+});
+
+export const manuscriptsState = selectorFamily<
+  ListPartialManuscriptResponse | Error | undefined,
+  GetListOptions
+>({
+  key: 'manuscripts',
+  get:
+    (options) =>
+    ({ get }) => {
+      const index = get(manuscriptIndexState(options));
+      if (index === undefined || index instanceof Error) return index;
+      const manuscripts: PartialManuscriptResponse[] = [];
+      for (const id of index.ids) {
+        const manuscript = get(manuscriptListState(id));
+        if (manuscript === undefined) return undefined;
+        manuscripts.push(manuscript);
+      }
+      return { total: index.total, items: manuscripts };
+    },
+  set:
+    (options) =>
+    ({ get, set, reset }, newManuscripts) => {
+      if (
+        newManuscripts === undefined ||
+        newManuscripts instanceof DefaultValue
+      ) {
+        reset(manuscriptIndexState(options));
+      } else if (newManuscripts instanceof Error) {
+        set(manuscriptIndexState(options), newManuscripts);
+      } else {
+        newManuscripts?.items.forEach((manuscript) =>
+          set(manuscriptListState(manuscript.id), manuscript),
+        );
+        set(manuscriptIndexState(options), {
+          total: newManuscripts.total,
+          ids: newManuscripts.items.map((team) => team.id),
+        });
+      }
+    },
+});
+
 export const useManuscripts = (
   options: GetListOptions,
-): ListPartialManuscriptResponse => ({
-  total: 0,
-  items: [],
-});
+): ListPartialManuscriptResponse => {
+  const [manuscripts, setManuscripts] = useRecoilState(
+    manuscriptsState(options),
+  );
+
+  const algoliaClient = useAlgolia();
+
+  if (manuscripts === undefined) {
+    throw getManuscripts(algoliaClient.client, options)
+      .then(setManuscripts)
+      .catch(setManuscripts);
+  }
+  if (manuscripts instanceof Error) {
+    throw manuscripts;
+  }
+  return manuscripts;
+};
 
 export const versionSelector = selectorFamily<
   ManuscriptVersion | undefined,

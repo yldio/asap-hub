@@ -1,3 +1,4 @@
+import { AlgoliaClient } from '@asap-hub/algolia';
 import {
   BackendError,
   createSentryHeaders,
@@ -9,6 +10,7 @@ import {
   DiscussionRequest,
   DiscussionResponse,
   ListLabsResponse,
+  ListPartialManuscriptResponse,
   ListTeamResponse,
   ManuscriptFileResponse,
   ManuscriptFileType,
@@ -236,6 +238,24 @@ export const resubmitManuscript = async (
     );
   }
   return response;
+};
+
+export const getManuscripts = async (
+  algoliaClient: AlgoliaClient<'crn'>,
+  { searchQuery, filters, currentPage, pageSize }: GetListOptions,
+): Promise<ListPartialManuscriptResponse> => {
+  const result = await algoliaClient.search(['manuscript'], searchQuery, {
+    filters: undefined,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
+
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };
 
 export const getManuscript = async (

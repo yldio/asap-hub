@@ -242,7 +242,7 @@ export const resubmitManuscript = async (
 
 export const getManuscripts = async (
   algoliaClient: AlgoliaClient<'crn'>,
-  { searchQuery, filters, currentPage, pageSize }: GetListOptions,
+  { searchQuery, currentPage, pageSize }: GetListOptions,
 ): Promise<ListPartialManuscriptResponse> => {
   const result = await algoliaClient.search(['manuscript'], searchQuery, {
     filters: undefined,

@@ -46,6 +46,21 @@ const manuscriptResponse = {
   versions: [{ id: 'manuscript-version-1' }],
 };
 
+const algoliaManuscriptsResponse = {
+  total: 1,
+  items: [
+    {
+      id: 'manuscript-1',
+      lastUpdated: '2020-09-23T20:45:22.000Z',
+      team: {
+        id: 'team-id-1',
+        displayName: 'Team 1',
+      },
+      status: 'Compliant',
+    },
+  ],
+};
+
 jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
   getTeam: jest.fn(),
@@ -59,6 +74,7 @@ jest.mock('../api', () => ({
     .fn()
     .mockResolvedValue({ title: 'A manuscript', id: '1' }),
   getManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
+  getManuscripts: jest.fn().mockResolvedValue(algoliaManuscriptsResponse),
 }));
 
 jest.mock('../interest-groups/api');
@@ -865,6 +881,8 @@ describe('The compliance tab', () => {
 
   it('renders compliance dashboard on Team ASAP page', async () => {
     enable('DISPLAY_MANUSCRIPTS');
+    const manuscriptTeamName =
+      algoliaManuscriptsResponse.items[0]!.team.displayName;
     await renderPage(
       {
         ...createTeamResponse(),
@@ -877,6 +895,6 @@ describe('The compliance tab', () => {
     );
 
     userEvent.click(screen.getByText(/Compliance/i, { selector: 'nav *' }));
-    expect(await screen.findByText(/No manuscripts available/i)).toBeVisible();
+    expect(await screen.findByText(manuscriptTeamName)).toBeVisible();
   });
 });

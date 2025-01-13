@@ -1,4 +1,9 @@
 import {
+  AlgoliaSearchClient,
+  ClientSearchResponse,
+  createAlgoliaResponse,
+} from '@asap-hub/algolia';
+import {
   createDiscussionResponse,
   createListLabsResponse,
   createListTeamResponse,
@@ -38,6 +43,7 @@ import {
   resubmitManuscript,
   createComplianceDiscussion,
   endDiscussion,
+  getManuscripts,
 } from '../api';
 
 jest.mock('../../../config');
@@ -360,6 +366,62 @@ describe('Manuscript', () => {
         getManuscript('42', ''),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Failed to fetch manuscript with id 42. Expected status 2xx or 404. Received status 500."`,
+      );
+    });
+  });
+
+  describe('getManuscripts', () => {
+    type Search = () => Promise<ClientSearchResponse<'crn', 'manuscript'>>;
+
+    const search: jest.MockedFunction<Search> = jest.fn();
+
+    const algoliaSearchClient = {
+      search,
+    } as unknown as AlgoliaSearchClient<'crn'>;
+
+    const defaultOptions: GetListOptions = {
+      searchQuery: '',
+      pageSize: null,
+      currentPage: null,
+      filters: new Set(),
+    };
+
+    const manuscriptResponse = createManuscriptResponse();
+    const algoliaManuscriptResponse = {
+      id: manuscriptResponse.id,
+      lastUpdated: manuscriptResponse.versions[0]!.publishedAt,
+      team: {
+        ...manuscriptResponse.versions[0]!.teams[0]!,
+      },
+      status: manuscriptResponse.status,
+    };
+
+    search.mockResolvedValue(
+      createAlgoliaResponse<'crn', 'manuscript'>([
+        {
+          ...algoliaManuscriptResponse,
+          objectID: manuscriptResponse.id,
+          __meta: { type: 'manuscript' },
+        },
+      ]),
+    );
+
+    it('should return successfully fetched manuscripts', async () => {
+      const workingGroups = await getManuscripts(
+        algoliaSearchClient,
+        defaultOptions,
+      );
+      expect(workingGroups).toEqual(
+        expect.objectContaining({
+          items: [
+            {
+              ...algoliaManuscriptResponse,
+              __meta: { type: 'manuscript' },
+              objectID: manuscriptResponse.id,
+            },
+          ],
+          total: 1,
+        }),
       );
     });
   });

@@ -539,6 +539,7 @@ describe('manuscript quick check discussion', () => {
   });
 
   it('creates a new discussion to compliance report', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
     enable('DISPLAY_MANUSCRIPTS');
     (createComplianceDiscussion as jest.Mock).mockResolvedValue({
       id: 'discussion-id',

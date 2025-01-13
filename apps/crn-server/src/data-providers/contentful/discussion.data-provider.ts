@@ -7,6 +7,7 @@ import {
   getLinkEntity,
   GraphQLClient,
   patchAndPublish,
+  pollContentfulGql,
 } from '@asap-hub/contentful';
 import {
   DiscussionDataObject,
@@ -75,23 +76,50 @@ export class DiscussionContentfulDataProvider
 
   async update(id: string, update: DiscussionUpdateDataObject): Promise<void> {
     const environment = await this.getRestClient();
-
-    const publishedReplyId = await createAndPublishMessage(
-      environment,
-      update.reply,
-    );
-
     const discussion = await environment.getEntry(id);
 
-    const previousReplies = discussion.fields.replies
-      ? discussion.fields.replies['en-US']
-      : [];
+    if (discussion.fields.endedAt) {
+      throw new Error('Cannot update a discussion that has ended.');
+    }
 
-    const newReply = getLinkEntity(publishedReplyId);
+    if (update.reply) {
+      const publishedReplyId = await createAndPublishMessage(
+        environment,
+        update.reply,
+      );
 
-    await patchAndPublish(discussion, {
-      replies: [...previousReplies, newReply],
-    });
+      const previousReplies = discussion.fields.replies
+        ? discussion.fields.replies['en-US']
+        : [];
+
+      const newReply = getLinkEntity(publishedReplyId);
+
+      await patchAndPublish(discussion, {
+        replies: [...previousReplies, newReply],
+      });
+      return;
+    }
+
+    if (update.endedBy) {
+      const endedBy = getLinkEntity(update.endedBy);
+
+      const published = await patchAndPublish(discussion, {
+        endedAt: new Date().toISOString(),
+        endedBy,
+      });
+
+      const fetchDiscussionById = () =>
+        this.contentfulClient.request<
+          FetchDiscussionByIdQuery,
+          FetchDiscussionByIdQueryVariables
+        >(FETCH_DISCUSSION_BY_ID, { id });
+
+      await pollContentfulGql<FetchDiscussionByIdQuery>(
+        published.sys.publishedVersion || Infinity,
+        fetchDiscussionById,
+        'discussions',
+      );
+    }
   }
 }
 
@@ -142,4 +170,5 @@ export const parseGraphQLDiscussion = (
   id: discussion.sys.id,
   message: parseGraphQLMessage(discussion.message),
   replies: discussion.repliesCollection?.items.map(parseGraphQLMessage),
+  endedAt: discussion.endedAt,
 });

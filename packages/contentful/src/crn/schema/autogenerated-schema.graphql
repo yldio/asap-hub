@@ -4,6 +4,9 @@ schema {
 
 directive @contentSourceMaps on QUERY
 
+"Indicates exactly one field must be supplied and this field must not be `null`."
+directive @oneOf on INPUT_OBJECT
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements)"""
 type Announcements implements Entry & _Node {
   _id: ID!
@@ -876,6 +879,8 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
 type Discussions implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
+  endedAt(locale: String): DateTime
+  endedBy(locale: String, preview: Boolean, where: UsersFilter): Users
   linkedFrom(allowedLocales: [String]): DiscussionsLinkingCollections
   message(locale: String, preview: Boolean, where: MessagesFilter): Messages
   repliesCollection(limit: Int = 100, locale: String, order: [DiscussionsRepliesCollectionOrder], preview: Boolean, skip: Int = 0, where: MessagesFilter): DiscussionsRepliesCollection
@@ -893,6 +898,17 @@ input DiscussionsFilter {
   AND: [DiscussionsFilter]
   OR: [DiscussionsFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  endedAt: DateTime
+  endedAt_exists: Boolean
+  endedAt_gt: DateTime
+  endedAt_gte: DateTime
+  endedAt_in: [DateTime]
+  endedAt_lt: DateTime
+  endedAt_lte: DateTime
+  endedAt_not: DateTime
+  endedAt_not_in: [DateTime]
+  endedBy: cfUsersNestedFilter
+  endedBy_exists: Boolean
   message: cfMessagesNestedFilter
   message_exists: Boolean
   replies: cfMessagesNestedFilter
@@ -967,6 +983,8 @@ enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 enum DiscussionsOrder {
+  endedAt_ASC
+  endedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3232,6 +3250,10 @@ enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
 enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
   count_ASC
   count_DESC
+  previousStatus_ASC
+  previousStatus_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -3326,7 +3348,10 @@ type Manuscripts implements Entry & _Node {
   count(locale: String): Int
   eligibilityReasons(locale: String): [String]
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
+  previousStatus(locale: String): String
   status(locale: String): String
+  statusUpdatedAt(locale: String): DateTime
+  statusUpdatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptsTeamsCollection
   title(locale: String): String
@@ -3357,7 +3382,25 @@ input ManuscriptsFilter {
   eligibilityReasons_contains_none: [String]
   eligibilityReasons_contains_some: [String]
   eligibilityReasons_exists: Boolean
+  previousStatus: String
+  previousStatus_contains: String
+  previousStatus_exists: Boolean
+  previousStatus_in: [String]
+  previousStatus_not: String
+  previousStatus_not_contains: String
+  previousStatus_not_in: [String]
   status: String
+  statusUpdatedAt: DateTime
+  statusUpdatedAt_exists: Boolean
+  statusUpdatedAt_gt: DateTime
+  statusUpdatedAt_gte: DateTime
+  statusUpdatedAt_in: [DateTime]
+  statusUpdatedAt_lt: DateTime
+  statusUpdatedAt_lte: DateTime
+  statusUpdatedAt_not: DateTime
+  statusUpdatedAt_not_in: [DateTime]
+  statusUpdatedBy: cfUsersNestedFilter
+  statusUpdatedBy_exists: Boolean
   status_contains: String
   status_exists: Boolean
   status_in: [String]
@@ -3385,6 +3428,10 @@ type ManuscriptsLinkingCollections {
 enum ManuscriptsOrder {
   count_ASC
   count_DESC
+  previousStatus_ASC
+  previousStatus_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -3565,6 +3612,8 @@ type MessagesLinkingCollections {
 }
 
 enum MessagesLinkingCollectionsDiscussionsCollectionOrder {
+  endedAt_ASC
+  endedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -5858,6 +5907,10 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
 enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
   count_ASC
   count_DESC
+  previousStatus_ASC
+  previousStatus_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -6817,10 +6870,12 @@ enum UsersLabsCollectionOrder {
 type UsersLinkingCollections {
   complianceReportsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsComplianceReportsCollectionOrder], preview: Boolean, skip: Int = 0): ComplianceReportsCollection
   discoverCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsDiscoverCollectionOrder], preview: Boolean, skip: Int = 0): DiscoverCollection
+  discussionsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsDiscussionsCollectionOrder], preview: Boolean, skip: Int = 0): DiscussionsCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsInterestGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
   manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
+  manuscriptsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
   messagesCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsMessagesCollectionOrder], preview: Boolean, skip: Int = 0): MessagesCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
@@ -6844,6 +6899,19 @@ enum UsersLinkingCollectionsComplianceReportsCollectionOrder {
 }
 
 enum UsersLinkingCollectionsDiscoverCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsDiscussionsCollectionOrder {
+  endedAt_ASC
+  endedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -6923,6 +6991,27 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   sys_publishedVersion_DESC
   type_ASC
   type_DESC
+}
+
+enum UsersLinkingCollectionsManuscriptsCollectionOrder {
+  count_ASC
+  count_DESC
+  previousStatus_ASC
+  previousStatus_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum UsersLinkingCollectionsMessagesCollectionOrder {
@@ -7722,6 +7811,16 @@ input cfDiscussionsNestedFilter {
   AND: [cfDiscussionsNestedFilter]
   OR: [cfDiscussionsNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  endedAt: DateTime
+  endedAt_exists: Boolean
+  endedAt_gt: DateTime
+  endedAt_gte: DateTime
+  endedAt_in: [DateTime]
+  endedAt_lt: DateTime
+  endedAt_lte: DateTime
+  endedAt_not: DateTime
+  endedAt_not_in: [DateTime]
+  endedBy_exists: Boolean
   message_exists: Boolean
   repliesCollection_exists: Boolean
   sys: SysFilter

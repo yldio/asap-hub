@@ -12,7 +12,8 @@ type Entity =
   | 'workingGroups'
   | 'projects'
   | 'outputs'
-  | 'researchOutputs';
+  | 'researchOutputs'
+  | 'discussions';
 type OptionalExceptFor<T, TRequired extends keyof T> = Partial<T> &
   Pick<T, TRequired>;
 

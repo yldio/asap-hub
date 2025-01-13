@@ -20,6 +20,11 @@ export type DiscussionDataObject = {
   id: string;
   message: Message;
   replies?: Message[];
+  endedAt?: string;
+  endedBy?: Pick<
+    UserResponse,
+    'id' | 'firstName' | 'lastName' | 'displayName' | 'avatarUrl'
+  >;
 };
 
 export type DiscussionType = 'compliance-report' | '';
@@ -32,11 +37,16 @@ export type MessageCreateDataObject = {
 };
 
 export type DiscussionUpdateDataObject = {
-  reply: MessageCreateDataObject;
+  reply?: MessageCreateDataObject;
+  endedBy?: string;
 };
 
 export type DiscussionRequest = {
   text: string;
+};
+
+export type DiscussionEndRequest = {
+  endedBy: string;
 };
 
 export type DiscussionCreateRequest = {

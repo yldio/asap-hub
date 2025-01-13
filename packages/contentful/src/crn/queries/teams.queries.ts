@@ -4,7 +4,7 @@ import { gql } from 'graphql-tag';
 import { manuscriptContentQueryFragment } from './manuscript.queries';
 
 export const FETCH_TEAM_BY_ID = gql`
-  query FetchTeamById($id: String!, $fetchReplies: Boolean = false) {
+  query FetchTeamById($id: String!) {
     teams(id: $id) {
       sys {
         id

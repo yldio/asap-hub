@@ -32,5 +32,6 @@ export const Normal = () => (
       Promise.resolve('compliance-discussion-id')
     }
     useVersionById={() => [undefined, () => {}]}
+    onEndDiscussion={() => Promise.resolve()}
   />
 );

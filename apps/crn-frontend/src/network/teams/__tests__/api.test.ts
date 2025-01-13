@@ -37,6 +37,7 @@ import {
   uploadManuscriptFile,
   resubmitManuscript,
   createComplianceDiscussion,
+  endDiscussion,
 } from '../api';
 
 jest.mock('../../../config');
@@ -653,6 +654,43 @@ describe('Discussion', () => {
         createComplianceDiscussion('42', message, ''),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Failed to create discussion. Expected status 201. Received status 500."`,
+      );
+    });
+  });
+
+  describe('endDiscussion', () => {
+    it('makes an authorized PATCH request for the discussion id', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .patch('/discussions/42/end')
+        .reply(200, {});
+
+      await endDiscussion('42', 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('passes the patch object in the body', async () => {
+      nock(API_BASE_URL).patch('/discussions/42/end').reply(200, {});
+
+      await endDiscussion('42', '');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('returns a successfully ended discussion', async () => {
+      const updated: Partial<DiscussionResponse> = {
+        replies: [createMessage('')],
+      };
+      nock(API_BASE_URL).patch('/discussions/42/end').reply(200, updated);
+
+      expect(await endDiscussion('42', '')).toEqual(updated);
+    });
+
+    it('errors when failing to end discussion', async () => {
+      nock(API_BASE_URL).patch('/discussions/42/end').reply(500, {});
+
+      await expect(
+        endDiscussion('42', ''),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to end discussion with id 42. Expected status 200. Received status 500."`,
       );
     });
   });

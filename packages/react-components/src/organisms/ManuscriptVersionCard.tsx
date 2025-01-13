@@ -57,6 +57,8 @@ type ManuscriptVersionCardProps = {
     ManuscriptVersion | undefined,
     (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
   ];
+  onEndDiscussion: (id: string) => Promise<void>;
+  isComplianceReviewer?: boolean;
 } & Pick<ComponentProps<typeof DiscussionModal>, 'onSave'> &
   Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
@@ -260,6 +262,8 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   canEditManuscript,
   createComplianceDiscussion,
   useVersionById,
+  onEndDiscussion,
+  isComplianceReviewer,
 }) => {
   const [versionData, setVersion] = useVersionById({
     teamId,
@@ -274,7 +278,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   const [expanded, setExpanded] = useState(false);
 
   const quickCheckDetails = quickCheckQuestions.filter(
-    ({ field }) => version[`${field}Details`]?.message?.text?.length,
+    ({ field }) => version[`${field}Details`]?.id,
   );
 
   const getUpdatedByData = () => {
@@ -315,15 +319,19 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
     <>
       <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>
         {version.complianceReport && (
-          <ComplianceReportCard
-            {...version.complianceReport}
-            manuscriptId={manuscriptId}
-            versionId={version.id}
-            createComplianceDiscussion={createComplianceDiscussion}
-            getDiscussion={getDiscussion}
-            onSave={onSave}
-            setVersion={setVersion}
-          />
+          <Suspense fallback={<Loading />}>
+            <ComplianceReportCard
+              {...version.complianceReport}
+              manuscriptId={manuscriptId}
+              versionId={version.id}
+              createComplianceDiscussion={createComplianceDiscussion}
+              getDiscussion={getDiscussion}
+              onSave={onSave}
+              setVersion={setVersion}
+              onEndDiscussion={onEndDiscussion}
+              isComplianceReviewer={isComplianceReviewer}
+            />
+          </Suspense>
         )}
         <div css={toastStyles}>
           <span css={toastHeaderStyles}>

@@ -23,7 +23,7 @@ export const getDiscussionRequestObject = (): MessageCreateDataObject => ({
   userId: 'user-id-0',
 });
 
-const getContentfulGraphqlCreatedBy = () => ({
+export const getContentfulGraphqlCreatedBy = () => ({
   sys: {
     id: manuscriptAuthor.id,
   },

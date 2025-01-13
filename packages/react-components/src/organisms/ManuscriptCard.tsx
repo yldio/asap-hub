@@ -58,6 +58,7 @@ type ManuscriptCardProps = Pick<
       ManuscriptVersion | undefined,
       (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
     ];
+    onEndDiscussion: (id: string) => Promise<void>;
   };
 
 const manuscriptContainerStyles = css({
@@ -177,6 +178,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   user,
   createComplianceDiscussion,
   useVersionById,
+  onEndDiscussion,
 }) => {
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
@@ -355,6 +357,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 isTeamMember={isTeamMember}
                 createComplianceDiscussion={createComplianceDiscussion}
                 useVersionById={useVersionById}
+                onEndDiscussion={onEndDiscussion}
+                isComplianceReviewer={isComplianceReviewer}
               />
             ))}
           </div>

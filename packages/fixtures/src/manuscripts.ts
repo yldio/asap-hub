@@ -36,8 +36,8 @@ export const createManuscriptResponse = (
       count: 1,
       createdBy: manuscriptAuthor,
       updatedBy: manuscriptAuthor,
-      createdDate: '2020-12-10T20:36:54Z',
-      publishedAt: '2020-12-10T20:36:54Z',
+      createdDate: '2020-12-10T20:36:54.000Z',
+      publishedAt: '2020-12-10T20:36:54.000Z',
       manuscriptFile: {
         id: `file-id-${itemIndex}`,
         url: `https://example.com/manuscript_${itemIndex}.pdf`,

@@ -6,7 +6,9 @@ export const discussionContentQueryFragment = gql`
   fragment DiscussionsContent on Discussions {
     sys {
       id
+      publishedVersion
     }
+    endedAt
     message {
       sys {
         publishedAt

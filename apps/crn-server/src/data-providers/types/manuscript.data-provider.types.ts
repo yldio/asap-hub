@@ -4,12 +4,14 @@ import {
   DataProvider,
   ManuscriptUpdateDataObject,
   ManuscriptResubmitDataObject,
+  FetchOptions,
+  PartialManuscriptResponse,
 } from '@asap-hub/model';
 
 export type ManuscriptDataProvider = DataProvider<
   ManuscriptDataObject,
-  ManuscriptDataObject,
-  null,
+  PartialManuscriptResponse,
+  FetchOptions,
   ManuscriptCreateDataObject
 > & {
   update(

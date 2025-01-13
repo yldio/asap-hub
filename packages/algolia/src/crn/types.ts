@@ -4,6 +4,7 @@ import {
   InterestGroupResponse,
   LabResponse,
   NewsResponse,
+  PartialManuscriptResponse,
   ResearchOutputResponse,
   TeamListItemResponse,
   TutorialsResponse,
@@ -22,6 +23,7 @@ export const TEAM_ENTITY_TYPE = 'team';
 export const TUTORIAL_ENTITY_TYPE = 'tutorial';
 export const USER_ENTITY_TYPE = 'user';
 export const WORKING_GROUP_ENTITY_TYPE = 'working-group';
+export const MANUSCRIPT_ENTITY_TYPE = 'manuscript';
 
 export type Payload =
   | {
@@ -63,4 +65,8 @@ export type Payload =
   | {
       data: WorkingGroupResponse;
       type: typeof WORKING_GROUP_ENTITY_TYPE;
+    }
+  | {
+      data: PartialManuscriptResponse;
+      type: typeof MANUSCRIPT_ENTITY_TYPE;
     };

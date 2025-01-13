@@ -17,14 +17,17 @@ import { ManuscriptContentfulDataProvider } from '../../../src/data-providers/co
 import { getContentfulGraphqlDiscussion } from '../../fixtures/discussions.fixtures';
 import {
   getContentfulGraphqlManuscript,
+  getContentfulGraphqlManuscriptsCollection,
   getContentfulGraphqlManuscriptVersions,
   getManuscriptCreateDataObject,
   getManuscriptDataObject,
   getManuscriptFileResponse,
+  getManuscriptsListResponse,
   getManuscriptUpdateStatusDataObject,
 } from '../../fixtures/manuscript.fixtures';
 import {
   getContentfulGraphql,
+  getContentfulGraphqlManuscripts,
   getUsersTeamsCollection,
 } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
@@ -61,6 +64,10 @@ describe('Manuscripts Contentful Data Provider', () => {
     getContentfulGraphqlClientMockServer({
       ...getContentfulGraphql(),
       UsersTeamsCollection: () => getUsersTeamsCollection(),
+      ManuscriptsCollection: () => ({
+        ...getContentfulGraphqlManuscripts(),
+        total: 2,
+      }),
       Manuscripts: () => getContentfulGraphqlManuscript(),
       ManuscriptsVersionsCollection: () =>
         getContentfulGraphqlManuscriptVersions(),
@@ -77,6 +84,12 @@ describe('Manuscripts Contentful Data Provider', () => {
       ManuscriptVersionsAdditionalAuthorsCollection: () =>
         getContentfulGraphqlManuscriptVersions().items[0]
           ?.additionalAuthorsCollection,
+      Teams: () => ({
+        sys: { id: 'team-1' },
+        displayName: 'Team A',
+        teamId: 'ID01',
+        grantId: 'grant',
+      }),
     });
 
   const manuscriptDataProviderMockGraphql =
@@ -198,11 +211,30 @@ describe('Manuscripts Contentful Data Provider', () => {
     jest.clearAllMocks();
   });
 
-  describe('Fetch method', () => {
-    test('should throw an error', async () => {
-      await expect(manuscriptDataProvider.fetch()).rejects.toThrow(
-        'Method not implemented.',
+  describe('Fetch', () => {
+    test('Should fetch the manuscripts from Contentful graphql', async () => {
+      const result = await manuscriptDataProviderMockGraphql.fetch({});
+
+      const expectedResult = getManuscriptsListResponse();
+      expect(result).toMatchObject(expectedResult);
+    });
+
+    test('Should return an empty result when the client returns an empty array of data', async () => {
+      const contentfulGraphQLResponse =
+        getContentfulGraphqlManuscriptsCollection();
+      contentfulGraphQLResponse.total = 0;
+      contentfulGraphQLResponse.items = [];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
       );
+
+      const result = await manuscriptDataProvider.fetch({});
+
+      expect(result).toEqual({
+        items: [],
+        total: 0,
+      });
     });
   });
 
@@ -419,6 +451,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       manuscript.title = null;
       manuscript.teamsCollection = null;
       manuscript.versionsCollection = null;
+      manuscript.status = null;
 
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,

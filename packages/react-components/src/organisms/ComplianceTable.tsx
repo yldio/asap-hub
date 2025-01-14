@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { noop, StatusButton } from '..';
 import { Avatar, Card, Link, Pill } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
@@ -50,7 +51,7 @@ const rowStyles = css({
     borderRadius: rem(borderRadius),
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 0.5fr 1fr',
+    gridTemplateColumns: '0.5fr 0.7fr 0.7fr 1fr 0.5fr 1fr',
     columnGap: rem(15),
     paddingTop: 0,
     paddingBottom: 0,
@@ -81,11 +82,6 @@ type ComplianceTableProps = {
   >;
 };
 
-const getStatusAccent = (status: (typeof manuscriptStatus)[number]) => {
-  const type = getReviewerStatusType(status);
-  return type === 'warning' ? 'warning' : type === 'final' ? 'green' : 'blue';
-};
-
 const ComplianceTable: React.FC<ComplianceTableProps> = ({ data }) => (
   <Card>
     <div css={container}>
@@ -106,17 +102,37 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({ data }) => (
             </Link>
           </p>
           <span css={[titleStyles, rowTitleStyles]}>ID</span>
-          <p>{<Pill accent="blue">{row.id}</Pill>}</p>
+          <p>
+            {
+              <Pill accent="blue" numberOfLines={2}>
+                {row.id}
+              </Pill>
+            }
+          </p>
           <span css={[titleStyles, rowTitleStyles]}>Last Updated</span>
           <p>
-            {formatDateToTimezone(row.lastUpdated, 'E, d MMM y').toUpperCase()}
+            {row.lastUpdated &&
+              formatDateToTimezone(row.lastUpdated, 'E, d MMM y').toUpperCase()}
           </p>
           <span css={[titleStyles, rowTitleStyles]}>Status</span>
-          <p css={{ '> span': { borderRadius: rem(24) } }}>
-            <Pill accent={row.status ? getStatusAccent(row.status) : 'blue'}>
-              {row.status}
-            </Pill>
-          </p>
+          <span css={{ margin: `${rem(17)} 0` }}>
+            <StatusButton
+              buttonChildren={() => <span>{row.status}</span>}
+              canEdit={
+                !['Closed (other)', 'Compliant'].includes(row.status ?? '')
+              }
+              selectedStatusType={getReviewerStatusType(
+                row.status as (typeof manuscriptStatus)[number],
+              )}
+              wrap
+            >
+              {manuscriptStatus.map((statusItem) => ({
+                item: statusItem,
+                type: getReviewerStatusType(statusItem),
+                onClick: noop,
+              }))}
+            </StatusButton>
+          </span>
           <span css={[titleStyles, rowTitleStyles]}>APC Coverage</span>
           <p>{row.requestingApcCoverage}</p>
           <span css={[titleStyles, rowTitleStyles]}>Assigned Users</span>

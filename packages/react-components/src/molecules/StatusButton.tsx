@@ -131,6 +131,7 @@ const alignLeftStyles = css({
 export const statusButtonStyles = (
   type: StatusType,
   isComplianceReviewer: boolean,
+  noWrap: boolean,
 ) =>
   css({
     borderRadius: `${24 / perRem}em`,
@@ -159,14 +160,14 @@ export const statusButtonStyles = (
     },
     paddingLeft: `${16 / perRem}em`,
     paddingRight: `${8 / perRem}em !important`,
-    textWrap: 'nowrap',
+    ...(noWrap ? { textWrap: 'nowrap' } : {}),
     maxWidth: 'fit-content',
     display: 'flex',
     alignItems: 'center',
     gap: `${8 / perRem}em`,
   });
 
-export const statusTagStyles = (type: StatusType) =>
+export const statusTagStyles = (type: StatusType, noWrap: boolean) =>
   css({
     borderRadius: `${24 / perRem}em`,
     fontWeight: 400,
@@ -186,7 +187,7 @@ export const statusTagStyles = (type: StatusType) =>
         : {}),
     paddingLeft: `${16 / perRem}em`,
     paddingRight: `${16 / perRem}em`,
-    textWrap: 'nowrap',
+    ...(noWrap ? { textWrap: 'nowrap' } : {}),
     maxWidth: 'fit-content',
     display: 'flex',
     alignItems: 'center',
@@ -250,6 +251,7 @@ type StatusButtonProps = {
   alignLeft?: boolean;
   canEdit?: boolean;
   selectedStatusType?: StatusType;
+  wrap?: boolean;
 } & Partial<Pick<ComponentProps<typeof Button>, 'primary'>>;
 
 const StatusButton: React.FC<StatusButtonProps> = ({
@@ -259,6 +261,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({
   primary,
   canEdit = false,
   selectedStatusType = 'none',
+  wrap = false,
 }) => {
   const reference = useRef<HTMLDivElement>(null);
   const handleClick = () => setMenuShown(!menuShown);
@@ -295,8 +298,8 @@ const StatusButton: React.FC<StatusButtonProps> = ({
         enabled={canEdit}
         overrideStyles={
           canEdit
-            ? statusButtonStyles(selectedStatusType, canEdit)
-            : statusTagStyles(selectedStatusType)
+            ? statusButtonStyles(selectedStatusType, canEdit, !wrap)
+            : statusTagStyles(selectedStatusType, !wrap)
         }
       >
         {hasIcon && (

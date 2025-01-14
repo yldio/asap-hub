@@ -138,7 +138,6 @@ export interface ManuscriptCreatedReminder extends Reminder {
     manuscriptId: ManuscriptDataObject['id'];
     title: ManuscriptDataObject['title'];
     teams: string;
-    status: ManuscriptDataObject['status'];
     createdBy: string;
     publishedAt: string;
   };
@@ -164,6 +163,7 @@ export interface ManuscriptStatusUpdatedReminder extends Reminder {
     title: ManuscriptDataObject['title'];
     status: ManuscriptDataObject['status'];
     previousStatus: ManuscriptDataObject['status'];
+    teams: string;
     updatedBy: string;
     updatedAt: string;
   };

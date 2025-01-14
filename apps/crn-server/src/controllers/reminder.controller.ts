@@ -115,7 +115,7 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            description: `**${reminder.data.createdBy}** submitted a manuscript for **${reminder.data.teams}** and its status is '${reminder.data.status}':`,
+            description: `**${reminder.data.createdBy}** submitted a manuscript for **${reminder.data.teams}** and its status is 'Waiting for Report':`,
             subtext: reminder.data.title,
             date: reminder.data.publishedAt,
           };
@@ -141,7 +141,7 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            description: `**${reminder.data.updatedBy}** on **Team ASAP** changed a compliance status from ${reminder.data.previousStatus} to ${reminder.data.status}:`,
+            description: `**${reminder.data.updatedBy}** on **${reminder.data.teams}** changed a compliance status from ${reminder.data.previousStatus} to ${reminder.data.status}:`,
             subtext: reminder.data.title,
             date: reminder.data.updatedAt,
           };

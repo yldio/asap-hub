@@ -104,8 +104,8 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({ data }) => (
           <span css={[titleStyles, rowTitleStyles]}>ID</span>
           <p>
             {
-              <Pill accent="blue" numberOfLines={2}>
-                {row.id}
+              <Pill accent="blue" numberOfLines={3}>
+                <p css={{ margin: `0 0 0 7px` }}>{row.id}</p>
               </Pill>
             }
           </p>

@@ -4,6 +4,9 @@ import {
   EventNotesReminder,
   ListReminderDataObject,
   ListReminderResponse,
+  ManuscriptCreatedReminder,
+  ManuscriptResubmittedReminder,
+  ManuscriptStatusUpdatedReminder,
   PresentationUpdatedReminder,
   PublishMaterialReminder,
   ReminderEventResponse,
@@ -539,3 +542,142 @@ export const getResearchOutputSwitchToDraftWorkingGroupReminder =
       },
     };
   };
+
+export const getManuscriptVersion = ({
+  count,
+  firstAuthorIds,
+  additionalAuthorIds,
+  correspondingAuthorIds,
+  createdById,
+  createdByFirstName,
+  createdByLastName,
+}: {
+  count: number;
+  firstAuthorIds: string[];
+  additionalAuthorIds: string[];
+  correspondingAuthorIds: string[];
+  createdById: string;
+  createdByFirstName: string;
+  createdByLastName: string;
+}): NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<FetchRemindersQuery['manuscriptsCollection']>['items'][number]
+    >['versionsCollection']
+  >['items'][number]
+> => ({
+  count,
+  additionalAuthorsCollection: {
+    items: additionalAuthorIds.map((id) => ({
+      __typename: 'Users',
+      sys: {
+        id,
+      },
+    })),
+  },
+  correspondingAuthorCollection: {
+    items: correspondingAuthorIds.map((id) => ({
+      __typename: 'Users',
+      sys: {
+        id,
+      },
+    })),
+  },
+  firstAuthorsCollection: {
+    items: firstAuthorIds.map((id) => ({
+      __typename: 'Users',
+      sys: {
+        id,
+      },
+    })),
+  },
+  createdBy: {
+    sys: {
+      id: createdById,
+    },
+    firstName: createdByFirstName,
+    lastName: createdByLastName,
+  },
+});
+
+export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
+  FetchRemindersQuery['manuscriptsCollection']
+>['items'][number] => ({
+  sys: {
+    id: 'manuscript-id-1',
+    publishedAt: '2025-01-07T16:21:33.824Z',
+    firstPublishedAt: '2025-01-07T16:21:33.824Z',
+  },
+  title: 'Contextual AI models for single-cell protein biology',
+  status: 'Waiting for Report',
+  previousStatus: null,
+  statusUpdatedAt: null,
+  statusUpdatedBy: null,
+  teamsCollection: {
+    items: [
+      {
+        sys: {
+          id: 'reminder-team',
+        },
+        displayName: 'Reminder',
+      },
+    ],
+  },
+  versionsCollection: {
+    total: 1,
+    items: [
+      getManuscriptVersion({
+        count: 1,
+        firstAuthorIds: ['first-author-user'],
+        additionalAuthorIds: [],
+        correspondingAuthorIds: [],
+        createdById: 'user-who-created-manuscript',
+        createdByFirstName: 'Jane',
+        createdByLastName: 'Doe',
+      }),
+    ],
+  },
+});
+
+export const getManuscriptCreatedReminder = (): ManuscriptCreatedReminder => ({
+  id: 'manuscript-created-manuscript-id-1',
+  entity: 'Manuscript',
+  type: 'Manuscript Created',
+  data: {
+    createdBy: 'Jane Doe',
+    manuscriptId: 'manuscript-id-1',
+    publishedAt: '2025-01-07T16:21:33.824Z',
+    teams: 'Team Reminder',
+    title: 'Contextual AI models for single-cell protein biology',
+  },
+});
+
+export const getManuscriptResubmittedReminder =
+  (): ManuscriptResubmittedReminder => ({
+    id: 'manuscript-resubmitted-manuscript-id-1',
+    entity: 'Manuscript',
+    type: 'Manuscript Resubmitted',
+    data: {
+      resubmittedBy: 'John Doe',
+      manuscriptId: 'manuscript-id-1',
+      resubmittedAt: '2025-01-07T16:21:33.824Z',
+      teams: 'Team Reminder',
+      title: 'Contextual AI models for single-cell protein biology',
+    },
+  });
+
+export const getManuscriptStatusUpdatedReminder =
+  (): ManuscriptStatusUpdatedReminder => ({
+    id: 'manuscript-status-updated-manuscript-id-1',
+    entity: 'Manuscript',
+    type: 'Manuscript Status Updated',
+    data: {
+      manuscriptId: 'manuscript-id-1',
+      updatedBy: 'Jannet Doe',
+      updatedAt: '2025-01-08T10:00:00.000Z',
+      title: 'Contextual AI models for single-cell protein biology',
+      teams: 'Team ASAP',
+      status: 'Review Compliance Report',
+      previousStatus: 'Waiting for Report',
+    },
+  });

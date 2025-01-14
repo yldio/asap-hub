@@ -7,6 +7,7 @@ import {
   filterUndefined,
   getUserName,
   capitalizeFirstLetter,
+  inLast7Days,
 } from '../../src/utils/reminder';
 
 describe('getReferenceDates', () => {
@@ -83,6 +84,31 @@ describe('inLast24Hours', () => {
     'returns $expected when timezone is $timezone and date is $date',
     ({ date, timezone, expected }) => {
       expect(inLast24Hours(date, timezone)).toEqual(expected);
+    },
+  );
+});
+
+describe('inLast7Days', () => {
+  beforeEach(() => {
+    Settings.now = () => new Date(2024, 0, 20, 10, 0, 0, 0).valueOf();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  test.each`
+    date                         | timezone               | expected
+    ${'2024-01-13T06:00:00.000'} | ${'America/Sao_Paulo'} | ${false}
+    ${'2024-01-13T11:00:00.000'} | ${'America/Sao_Paulo'} | ${true}
+    ${'2024-01-20T09:00:00.000'} | ${'America/Sao_Paulo'} | ${false}
+    ${'2024-01-13T06:00:00.000'} | ${'Europe/London'}     | ${false}
+    ${'2024-01-13T11:00:00.000'} | ${'Europe/London'}     | ${true}
+    ${'2024-01-20T09:00:00.000'} | ${'Europe/London'}     | ${true}
+  `(
+    'returns $expected when timezone is $timezone and date is $date',
+    ({ date, timezone, expected }) => {
+      expect(inLast7Days(date, timezone)).toEqual(expected);
     },
   );
 });

@@ -16,6 +16,9 @@ import Reminders, {
 import {
   getEventHappeningNowReminder,
   getEventHappeningTodayReminder,
+  getManuscriptCreatedReminder,
+  getManuscriptResubmittedReminder,
+  getManuscriptStatusUpdatedReminder,
   getNotesUpdatedReminder,
   getPresentationUpdatedReminder,
   getPublishMaterialReminder,
@@ -277,6 +280,57 @@ describe('Reminder Controller', () => {
         expect(items[0]).toMatchObject({
           description: `**${reminder.data.statusChangedBy}** on working group **${reminder.data.associationName}** requested PMs to review a working group ${reminder.data.documentType} output: ${reminder.data.title}.`,
           href: `/shared-research/some-research-output-id`,
+        });
+      });
+
+      test('Should return the correct description and subtext for the manuscript created reminder', async () => {
+        const reminderDataObject = getManuscriptCreatedReminder();
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            "**Jane Doe** submitted a manuscript for **Team Reminder** and its status is 'Waiting for Report':",
+          subtext: 'Contextual AI models for single-cell protein biology',
+        });
+      });
+
+      test('Should return the correct description and subtext for the manuscript resubmitted reminder', async () => {
+        const reminderDataObject = getManuscriptResubmittedReminder();
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            "**John Doe** resubmitted a manuscript for **Team Reminder** and its status changed to 'Manuscript Re-Submitted':",
+          subtext: 'Contextual AI models for single-cell protein biology',
+        });
+      });
+
+      test('Should return the correct description and subtext for the manuscript status changed reminder', async () => {
+        const reminderDataObject = getManuscriptStatusUpdatedReminder();
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            '**Jannet Doe** on **Team ASAP** changed a compliance status from Waiting for Report to Review Compliance Report:',
+          subtext: 'Contextual AI models for single-cell protein biology',
         });
       });
 

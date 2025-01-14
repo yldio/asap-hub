@@ -21,6 +21,7 @@ const getFilter = (filters: string[], constraint?: EventConstraint) => {
       `interestGroup.id: "${constraint.interestGroupId}"`,
     constraint?.workingGroupId &&
       `workingGroup.id: "${constraint.workingGroupId}"`,
+    constraint?.projectId && `project.id: "${constraint.projectId}"`,
     constraint?.notStatus && `NOT status:${constraint.notStatus}`,
   ]
     .filter(Boolean)

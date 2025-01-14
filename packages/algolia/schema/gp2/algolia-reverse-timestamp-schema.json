@@ -10,6 +10,7 @@
     "authors.id",
     "documentType",
     "eventTypes",
+    "project.id",
     "projects.id",
     "projectIds",
     "region",

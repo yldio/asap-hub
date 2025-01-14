@@ -44,6 +44,7 @@
     "documentType",
     "eventTypes",
     "id",
+    "project.id",
     "projects.id",
     "projectIds",
     "region",

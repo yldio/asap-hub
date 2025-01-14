@@ -82,6 +82,7 @@ export type EventConstraint = {
   userId?: string;
   teamId?: string;
   notStatus?: string;
+  projectId?: string;
 };
 
 export type EventCreateDataObject = Pick<

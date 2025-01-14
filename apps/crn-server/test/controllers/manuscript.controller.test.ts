@@ -65,7 +65,7 @@ describe('Manuscript controller', () => {
       expect(result).toEqual({ items: [manuscriptResponse], total: 1 });
     });
 
-    test('Should return empty list when there are no users', async () => {
+    test('Should return empty list when there are no manuscripts', async () => {
       manuscriptDataProviderMock.fetch.mockResolvedValue({
         total: 0,
         items: [],

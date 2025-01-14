@@ -1,6 +1,7 @@
 import {
   ComplianceReportDataObject,
   ManuscriptResponse,
+  PartialManuscriptResponse,
 } from '@asap-hub/model';
 
 export const manuscriptAuthor: ManuscriptResponse['versions'][number]['createdBy'] =
@@ -76,4 +77,15 @@ export const getComplianceReportDataObject =
     count: 1,
     createdBy: manuscriptAuthor,
     createdDate: '2020-09-23T20:45:22.000Z',
+  });
+
+export const createPartialManuscriptResponse =
+  (): PartialManuscriptResponse => ({
+    id: 'manuscript-1',
+    lastUpdated: '2020-09-23T20:45:22.000Z',
+    team: {
+      id: 'team-id-1',
+      displayName: 'Team 1',
+    },
+    status: 'Compliant',
   });

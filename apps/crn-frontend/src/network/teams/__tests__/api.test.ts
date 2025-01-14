@@ -8,6 +8,7 @@ import {
   createListLabsResponse,
   createListTeamResponse,
   createManuscriptResponse,
+  createPartialManuscriptResponse,
   createTeamResponse,
   createMessage,
 } from '@asap-hub/fixtures';
@@ -386,21 +387,13 @@ describe('Manuscript', () => {
       filters: new Set(),
     };
 
-    const manuscriptResponse = createManuscriptResponse();
-    const algoliaManuscriptResponse = {
-      id: manuscriptResponse.id,
-      lastUpdated: manuscriptResponse.versions[0]!.publishedAt,
-      team: {
-        ...manuscriptResponse.versions[0]!.teams[0]!,
-      },
-      status: manuscriptResponse.status,
-    };
+    const algoliaManuscriptResponse = createPartialManuscriptResponse();
 
     search.mockResolvedValue(
       createAlgoliaResponse<'crn', 'manuscript'>([
         {
           ...algoliaManuscriptResponse,
-          objectID: manuscriptResponse.id,
+          objectID: algoliaManuscriptResponse.id,
           __meta: { type: 'manuscript' },
         },
       ]),
@@ -417,7 +410,7 @@ describe('Manuscript', () => {
             {
               ...algoliaManuscriptResponse,
               __meta: { type: 'manuscript' },
-              objectID: manuscriptResponse.id,
+              objectID: algoliaManuscriptResponse.id,
             },
           ],
           total: 1,

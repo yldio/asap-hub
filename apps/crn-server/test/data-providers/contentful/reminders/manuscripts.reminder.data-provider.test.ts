@@ -441,6 +441,7 @@ describe('Reminders data provider', () => {
           id: 'user-who-updated-manuscript-status',
         },
       };
+      manuscriptStatusUpdated!.teamsCollection!.items[0]!.displayName = 'ASAP';
 
       const mockContentfulGraphqlResponse = (
         manuscript: ManuscriptItem | null = manuscriptStatusUpdated,
@@ -812,6 +813,8 @@ describe('Reminders data provider', () => {
             id: 'user-who-updated-manuscript-status',
           },
         };
+        manuscriptStatusUpdated!.teamsCollection!.items[0]!.displayName =
+          'ASAP';
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscriptsCollection: {
@@ -848,7 +851,6 @@ describe('Reminders data provider', () => {
               publishedAt: '2025-01-05T08:00:00.000Z',
               teams: 'Team Reminder',
               title: 'Contextual AI models for single-cell protein biology',
-              status: 'Waiting for Report',
             },
           } as ManuscriptCreatedReminder,
           {
@@ -862,6 +864,7 @@ describe('Reminders data provider', () => {
               previousStatus: 'Waiting for Report',
               status: 'Review Compliance Report',
               title: 'Contextual AI models for single-cell protein biology',
+              teams: 'Team ASAP',
             },
           } as ManuscriptStatusUpdatedReminder,
         ]);

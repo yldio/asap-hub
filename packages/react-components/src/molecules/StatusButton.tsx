@@ -131,7 +131,7 @@ const alignLeftStyles = css({
 export const statusButtonStyles = (
   type: StatusType,
   isComplianceReviewer: boolean,
-  noWrap: boolean,
+  noWrap: boolean = true,
 ) =>
   css({
     borderRadius: `${24 / perRem}em`,
@@ -167,7 +167,7 @@ export const statusButtonStyles = (
     gap: `${8 / perRem}em`,
   });
 
-export const statusTagStyles = (type: StatusType, noWrap: boolean) =>
+export const statusTagStyles = (type: StatusType, noWrap: boolean = true) =>
   css({
     borderRadius: `${24 / perRem}em`,
     fontWeight: 400,

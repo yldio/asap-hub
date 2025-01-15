@@ -47,6 +47,11 @@ describe('Filters', () => {
       'speakers.team.id: "1103"',
     );
   });
+  test('only status is passed', () => {
+    expect(getEventFilters({}, { notStatus: 'Cancelled' })).toEqual(
+      'NOT status:Cancelled',
+    );
+  });
   test('throws when both userId and teamId are passed', () => {
     expect(() =>
       getEventFilters({}, { userId: '1103', teamId: '1103' }),
@@ -57,6 +62,7 @@ describe('Filters', () => {
     groupName           | entity             | field
     ${`interest group`} | ${`interestGroup`} | ${`interestGroupId`}
     ${`working group`}  | ${`workingGroup`}  | ${`workingGroupId`}
+    ${`project`}        | ${`project`}       | ${`projectId`}
   `('$groupName', ({ groupName, entity, field }) => {
     test(`dates constrained by ${groupName}`, () => {
       expect(

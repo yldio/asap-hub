@@ -4,6 +4,9 @@ import {
   FetchManuscriptByIdQuery,
   FetchManuscriptByIdQueryVariables,
   FetchManuscriptsByTeamIdQuery,
+  FetchManuscriptsQuery,
+  FetchManuscriptsQueryVariables,
+  FETCH_MANUSCRIPTS,
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
   getLinkAsset,
@@ -16,7 +19,9 @@ import {
   patchAndPublish,
 } from '@asap-hub/contentful';
 import {
-  ListResponse,
+  ApcCoverageOption,
+  FetchOptions,
+  ListPartialManuscriptResponse,
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
   ManuscriptLifecycle,
@@ -36,6 +41,10 @@ import { ManuscriptDataProvider } from '../types';
 import { Discussion, parseGraphQLDiscussion } from './discussion.data-provider';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
+type ManuscriptListItem = NonNullable<
+  NonNullable<FetchManuscriptsQuery['manuscriptsCollection']>['items'][number]
+>;
+
 type ComplianceReport = NonNullable<
   NonNullable<
     NonNullable<
@@ -52,8 +61,53 @@ export class ManuscriptContentfulDataProvider
     private getRestClient: () => Promise<Environment>,
   ) {}
 
-  async fetch(): Promise<ListResponse<ManuscriptDataObject>> {
-    throw new Error('Method not implemented.');
+  async fetch(options: FetchOptions): Promise<ListPartialManuscriptResponse> {
+    const { take = 8, skip = 0 } = options;
+
+    const { manuscriptsCollection } = await this.contentfulClient.request<
+      FetchManuscriptsQuery,
+      FetchManuscriptsQueryVariables
+    >(FETCH_MANUSCRIPTS, {
+      limit: take,
+      skip,
+    });
+
+    if (!manuscriptsCollection?.items) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    return {
+      total: manuscriptsCollection?.total,
+      items: manuscriptsCollection?.items
+        .filter((x): x is ManuscriptListItem => x !== null)
+        .map((manuscript) => {
+          const version = manuscript.versionsCollection?.items[0];
+          const team = manuscript.teamsCollection?.items[0];
+          return {
+            status: manuscriptMapStatus(manuscript.status) || undefined,
+            id: getManuscriptVersionUID({
+              version: {
+                type: version?.type,
+                count: version?.count,
+                lifecycle: version?.lifecycle,
+              },
+              teamIdCode: team?.teamId || '',
+              grantId: team?.grantId || '',
+              manuscriptCount: manuscript.count || 0,
+            }),
+            requestingApcCoverage:
+              version?.requestingApcCoverage as ApcCoverageOption,
+            lastUpdated: version?.sys.publishedAt,
+            team: {
+              id: team?.sys.id || '',
+              displayName: team?.displayName || '',
+            },
+          };
+        }),
+    };
   }
 
   async fetchCountByTeamId(id: string) {
@@ -573,3 +627,47 @@ const parseQuickCheckDetails = (
   field: Maybe<string> | undefined,
   details: Maybe<Discussion> | undefined,
 ) => (field === 'No' && details ? parseGraphQLDiscussion(details) : undefined);
+
+export const getLifecycleCode = (lifecycle: string) => {
+  switch (lifecycle) {
+    case 'Draft Manuscript (prior to Publication)':
+      return 'G';
+    case 'Preprint':
+      return 'P';
+    case 'Publication':
+      return 'D';
+    case 'Publication with addendum or corrigendum':
+      return 'C';
+    case 'Typeset proof':
+      return 'T';
+    case 'Other':
+    default:
+      return 'O';
+  }
+};
+
+export const getManuscriptVersionUID = ({
+  version,
+  teamIdCode,
+  grantId,
+  manuscriptCount,
+}: {
+  version: Pick<
+    NonNullable<
+      NonNullable<ManuscriptListItem['versionsCollection']>['items'][number]
+    >,
+    'count' | 'lifecycle' | 'type'
+  >;
+  teamIdCode: string;
+  grantId: string;
+  manuscriptCount: number;
+}) => {
+  const manuscriptTypeCode =
+    version.type === 'Original Research' ? 'org' : 'rev';
+
+  const lifecycleCode = getLifecycleCode(version.lifecycle || '');
+  return `${teamIdCode}-${grantId}-${String(manuscriptCount).padStart(
+    3,
+    '0',
+  )}-${manuscriptTypeCode}-${lifecycleCode}-${version.count}`;
+};

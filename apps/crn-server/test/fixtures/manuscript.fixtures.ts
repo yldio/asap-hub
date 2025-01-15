@@ -1,6 +1,10 @@
-import { FetchManuscriptByIdQuery } from '@asap-hub/contentful';
+import {
+  FetchManuscriptByIdQuery,
+  FetchManuscriptsQuery,
+} from '@asap-hub/contentful';
 import { manuscriptAuthor } from '@asap-hub/fixtures';
 import {
+  ListPartialManuscriptResponse,
   ManuscriptCreateControllerDataObject,
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
@@ -71,6 +75,7 @@ export const getContentfulGraphqlManuscript = (
   },
   title: 'Manuscript Title',
   count: 1,
+  status: 'Compliant',
   teamsCollection: {
     items: [{ sys: { id: 'team-1' } }],
   },
@@ -96,6 +101,7 @@ export const getContentfulGraphqlManuscriptVersions = (
       lifecycle: 'Preprint',
       description: 'A good description',
       count: 1,
+      requestingApcCoverage: 'Yes',
       manuscriptFile: {
         sys: { id: 'file-id' },
         fileName: 'manuscript.pdf',
@@ -179,6 +185,77 @@ export const getContentfulGraphqlManuscriptVersions = (
     },
   ],
 });
+
+export const getContentfulGraphqlManuscriptsCollection = (
+  props: Partial<
+    NonNullable<NonNullable<FetchManuscriptsQuery>['manuscriptsCollection']>
+  > = {},
+): NonNullable<
+  NonNullable<FetchManuscriptsQuery>['manuscriptsCollection']
+> => ({
+  total: 1,
+  items: [
+    {
+      sys: {
+        id: 'manuscript-id-1',
+      },
+      title: 'Manuscript Title',
+      status: 'Compliant',
+      count: 1,
+      teamsCollection: {
+        items: [
+          {
+            sys: { id: 'team-1' },
+            displayName: 'Test Team',
+            teamId: '',
+            grantId: '',
+          },
+        ],
+      },
+      versionsCollection: {
+        items: [
+          {
+            sys: {
+              id: '',
+              publishedAt: '2020-09-23T20:45:22.000Z',
+            },
+            requestingApcCoverage: 'Yes',
+            type: '',
+            lifecycle: '',
+            count: 1,
+          },
+        ],
+      },
+    },
+  ],
+});
+
+export const getManuscriptsListResponse =
+  (): ListPartialManuscriptResponse => ({
+    total: 2,
+    items: [
+      {
+        id: 'ID01-grant-001-org-P-1',
+        requestingApcCoverage: 'Yes',
+        lastUpdated: '2020-09-23T20:45:22.000Z',
+        status: 'Compliant',
+        team: {
+          id: 'team-1',
+          displayName: 'Team A',
+        },
+      },
+      {
+        id: 'ID01-grant-002-org-P-1',
+        requestingApcCoverage: 'Yes',
+        lastUpdated: '2020-09-23T20:45:22.000Z',
+        status: 'Compliant',
+        team: {
+          id: 'team-1',
+          displayName: 'Team A',
+        },
+      },
+    ],
+  });
 
 export const getManuscriptPostBody = (): ManuscriptPostRequest => {
   const { title, teamId, versions } = getManuscriptDataObject();

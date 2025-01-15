@@ -824,7 +824,7 @@ export type PartialManuscriptResponse = Pick<
   Pick<ManuscriptResponse, 'status'> & {
     lastUpdated: string;
     team: { id: string; displayName: string };
-    assignedUsers: Pick<
+    assignedUsers?: Pick<
       UserResponse,
       'id' | 'firstName' | 'lastName' | 'avatarUrl'
     >[];

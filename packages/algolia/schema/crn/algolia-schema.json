@@ -89,7 +89,8 @@
   "customRanking": [
     "asc(endDateTimestamp)",
     "desc(addedDate)",
-    "desc(createdDate)"
+    "desc(createdDate)",
+    "asc(team.displayName)"
   ],
   "separatorsToIndex": "",
   "removeWordsIfNoResults": "none",

@@ -292,6 +292,44 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
   ${manuscriptContentQueryFragment}
 `;
 
+export const FETCH_MANUSCRIPTS = gql`
+  query FetchManuscripts($limit: Int, $skip: Int) {
+    manuscriptsCollection(limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        title
+        status
+        count
+        teamsCollection(limit: 1) {
+          items {
+            sys {
+              id
+            }
+            displayName
+            teamId
+            grantId
+          }
+        }
+        versionsCollection(limit: 1, order: sys_firstPublishedAt_DESC) {
+          items {
+            sys {
+              id
+              publishedAt
+            }
+            requestingApcCoverage
+            type
+            lifecycle
+            count
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const FETCH_MANUSCRIPTS_BY_TEAM_ID = gql`
   query FetchManuscriptsByTeamId($id: String!) {
     teams(id: $id) {

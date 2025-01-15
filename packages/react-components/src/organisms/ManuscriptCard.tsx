@@ -160,6 +160,25 @@ const canUpdateManuscript = ({ version, user }: VersionUserProps) =>
     user,
   });
 
+export const closedManuscriptStatuses = ['Closed (other)', 'Compliant'];
+
+export const getReviewerStatusType = (
+  statusItem: (typeof manuscriptStatus)[number],
+): StatusType =>
+  (
+    ({
+      [manuscriptStatus[0]]: 'warning',
+      [manuscriptStatus[1]]: 'default',
+      [manuscriptStatus[2]]: 'warning',
+      [manuscriptStatus[3]]: 'default',
+      [manuscriptStatus[4]]: 'warning',
+      [manuscriptStatus[5]]: 'default',
+      [manuscriptStatus[6]]: 'warning',
+      [manuscriptStatus[7]]: 'final',
+      [manuscriptStatus[8]]: 'final',
+    }) as Record<string, StatusType>
+  )[statusItem] || 'none';
+
 const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   id,
   title,
@@ -215,7 +234,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     }
   };
 
-  const closedManuscriptStatuses = ['Closed (other)', 'Compliant'];
   const currentManuscriptVersion = versions[0];
 
   const canSubmitComplianceReport =
@@ -235,23 +253,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       setSelectedStatus(newSelectedStatus);
     }
   };
-
-  const getReviewerStatusType = (
-    statusItem: (typeof manuscriptStatus)[number],
-  ): StatusType =>
-    (
-      ({
-        [manuscriptStatus[0]]: 'warning',
-        [manuscriptStatus[1]]: 'default',
-        [manuscriptStatus[2]]: 'warning',
-        [manuscriptStatus[3]]: 'default',
-        [manuscriptStatus[4]]: 'warning',
-        [manuscriptStatus[5]]: 'default',
-        [manuscriptStatus[6]]: 'warning',
-        [manuscriptStatus[7]]: 'final',
-        [manuscriptStatus[8]]: 'final',
-      }) as Record<string, StatusType>
-    )[statusItem] || 'none';
 
   return (
     <>

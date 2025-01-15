@@ -25,7 +25,7 @@ describe('ComplianceDashboard', () => {
   };
 
   it('renders the manuscript status card', () => {
-    const { getByText } = render(<ComplianceDashboard {...props} />);
+    const { getByText } = render(<ComplianceDashboard {...props} data={[]} />);
 
     expect(getByText('Manuscripts by status:')).toBeInTheDocument();
     expect(getByText('Waiting for Report')).toBeInTheDocument();

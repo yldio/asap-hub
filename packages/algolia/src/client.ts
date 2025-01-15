@@ -33,6 +33,7 @@ import {
   OutputTypeOption,
   EngagementResponse,
   EngagementPerformance,
+  PartialManuscriptResponse,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
@@ -52,6 +53,7 @@ import {
   EVENT_ENTITY_TYPE,
   EXTERNAL_AUTHOR_ENTITY_TYPE,
   INTEREST_GROUP_ENTITY_TYPE,
+  MANUSCRIPT_ENTITY_TYPE,
   NEWS_ENTITY_TYPE as CRN_NEWS_ENTITY_TYPE,
   Payload,
   RESEARCH_OUTPUT_ENTITY_TYPE,
@@ -82,7 +84,8 @@ export type EntityData =
   | TeamListItemResponse
   | TutorialsResponse
   | UserResponse
-  | WorkingGroupResponse;
+  | WorkingGroupResponse
+  | PartialManuscriptResponse;
 
 export type AnalyticsData =
   | AnalyticsTeamLeadershipResponse
@@ -118,6 +121,10 @@ export type EntityResponses = {
       typeof TUTORIAL_ENTITY_TYPE
     >;
     [CRN_NEWS_ENTITY_TYPE]: WithMeta<NewsResponse, typeof CRN_NEWS_ENTITY_TYPE>;
+    [MANUSCRIPT_ENTITY_TYPE]: WithMeta<
+      PartialManuscriptResponse,
+      typeof MANUSCRIPT_ENTITY_TYPE
+    >;
   };
   [GP2]: {
     [EVENT_ENTITY_TYPE]: gp2Model.EventResponse;
@@ -293,7 +300,10 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
 export type CRNEntities = keyof EntityResponses['crn'];
 
 // we don't show external author cards
-export type CRNTagSearchEntities = Exclude<CRNEntities, 'external-author'>;
+export type CRNTagSearchEntities = Exclude<
+  CRNEntities,
+  'external-author' | 'manuscript'
+>;
 
 export type CRNTagSearchEntitiesList = Array<CRNTagSearchEntities>;
 

@@ -37,13 +37,28 @@ import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/a
 import { createResearchOutput, getTeam } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import { refreshTeamState } from '../state';
+import { manuscriptsState, refreshTeamState } from '../state';
 import TeamProfile from '../TeamProfile';
 
 const manuscriptResponse = {
   id: 'manuscript-1',
   title: 'The Manuscript',
   versions: [{ id: 'manuscript-version-1' }],
+};
+
+const algoliaManuscriptsResponse = {
+  total: 1,
+  items: [
+    {
+      id: 'manuscript-1',
+      lastUpdated: '2020-09-23T20:45:22.000Z',
+      team: {
+        id: 'team-id-1',
+        displayName: 'Team 1',
+      },
+      status: 'Compliant',
+    },
+  ],
 };
 
 jest.mock('../api', () => ({
@@ -59,6 +74,7 @@ jest.mock('../api', () => ({
     .fn()
     .mockResolvedValue({ title: 'A manuscript', id: '1' }),
   getManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
+  getManuscripts: jest.fn().mockResolvedValue(algoliaManuscriptsResponse),
 }));
 
 jest.mock('../interest-groups/api');
@@ -95,9 +111,17 @@ const renderPage = async (
 
   const { container } = render(
     <RecoilRoot
-      initializeState={({ set }) => {
+      initializeState={({ set, reset }) => {
         set(refreshTeamState(teamResponse.id), Math.random());
         set(refreshResearchOutputState('123'), Math.random());
+        reset(
+          manuscriptsState({
+            currentPage: 0,
+            pageSize: 10,
+            filters: new Set(),
+            searchQuery: '',
+          }),
+        );
       }}
     >
       <Suspense fallback="loading">
@@ -865,6 +889,8 @@ describe('The compliance tab', () => {
 
   it('renders compliance dashboard on Team ASAP page', async () => {
     enable('DISPLAY_MANUSCRIPTS');
+    const manuscriptTeamName =
+      algoliaManuscriptsResponse.items[0]!.team.displayName;
     await renderPage(
       {
         ...createTeamResponse(),
@@ -877,6 +903,6 @@ describe('The compliance tab', () => {
     );
 
     userEvent.click(screen.getByText(/Compliance/i, { selector: 'nav *' }));
-    expect(await screen.findByText(/No manuscripts available/i)).toBeVisible();
+    expect(await screen.findByText(manuscriptTeamName)).toBeVisible();
   });
 });

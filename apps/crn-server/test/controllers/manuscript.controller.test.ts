@@ -15,6 +15,7 @@ import {
   getManuscriptFileResponse,
   getManuscriptCreateControllerDataObject,
   getManuscriptUpdateStatusDataObject,
+  getManuscriptsListResponse,
 } from '../fixtures/manuscript.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 import { manuscriptDataProviderMock as manuscriptDataProviderContentfulMock } from '../mocks/manuscript.data-provider.mock';
@@ -49,6 +50,29 @@ describe('Manuscript controller', () => {
       const result = await manuscriptController.fetchById('manuscript-id');
 
       expect(result).toEqual(getManuscriptResponse());
+    });
+  });
+
+  describe('Fetch', () => {
+    test('Should return the manuscripts', async () => {
+      const manuscriptResponse = getManuscriptsListResponse().items[0]!;
+      manuscriptDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [manuscriptResponse],
+      });
+      const result = await manuscriptController.fetch({});
+
+      expect(result).toEqual({ items: [manuscriptResponse], total: 1 });
+    });
+
+    test('Should return empty list when there are no manuscripts', async () => {
+      manuscriptDataProviderMock.fetch.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+      const result = await manuscriptController.fetch({});
+
+      expect(result).toEqual({ items: [], total: 0 });
     });
   });
 

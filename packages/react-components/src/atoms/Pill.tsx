@@ -20,7 +20,7 @@ const styles = css({
 
 const modernStyles = css({
   borderRadius: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
+  height: 'fit-content',
   margin: 0,
 });
 
@@ -87,12 +87,14 @@ type PillProps = {
   readonly children?: React.ReactNode;
   readonly small?: boolean;
   readonly accent?: AccentVariant;
+  readonly numberOfLines?: number;
 };
 
 const Pill: React.FC<PillProps> = ({
   children,
   small = true,
   accent = 'default',
+  numberOfLines = 1,
 }) => (
   <span
     css={({ components }) => [
@@ -102,7 +104,9 @@ const Pill: React.FC<PillProps> = ({
       ...(accent === 'gray' || accent === 'blue' ? [modernStyles] : []),
     ]}
   >
-    <Ellipsis>{small ? <small>{children}</small> : children}</Ellipsis>
+    <Ellipsis numberOfLines={numberOfLines}>
+      {small ? <small>{children}</small> : children}
+    </Ellipsis>
   </span>
 );
 

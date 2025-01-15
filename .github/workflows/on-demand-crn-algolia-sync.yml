@@ -11,6 +11,7 @@ on:
           - events
           - external-authors
           - interest-groups
+          - manuscripts
           - news
           - research-outputs
           - teams

@@ -48,7 +48,7 @@ const getFilter = (filters: string[], constraint?: EventConstraint) => {
     constraintFiltersList.push(`project.id: "${constraint.projectId}"`);
   }
 
-  const constraintFilters = constraintFiltersList.filter(Boolean).join(' AND ');
+  const constraintFilters = constraintFiltersList.join(' AND ');
 
   if (filters.length === 0) {
     return constraintFilters;

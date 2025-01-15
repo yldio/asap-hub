@@ -1,6 +1,4 @@
-import { usePrefetchCalendars } from '@asap-hub/crn-frontend/src/events/calendar/state';
-import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/crn-frontend/src/hooks';
-import { usePrefetchTeams } from '@asap-hub/crn-frontend/src/network/teams/state';
+import { isEnabled } from '@asap-hub/flags';
 import { Frame } from '@asap-hub/frontend-utils';
 import { ConfirmModal, DashboardPage } from '@asap-hub/react-components';
 import {
@@ -11,9 +9,13 @@ import { dashboard as dashboardRoute } from '@asap-hub/routing';
 import { FC, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 
+import { usePrefetchCalendars } from '../events/calendar/state';
+import { CARD_VIEW_PAGE_SIZE } from '../hooks';
+import { usePrefetchTeams } from '../network/teams/state';
 import { usePatchUserById, useUserById } from '../network/users/state';
-import { useDashboardState, useReminderState } from './state';
+
 import Body from './Body';
+import { useDashboardState, useReminderState } from './state';
 
 const Dashboard: FC<Record<string, never>> = () => {
   const [date] = useState(new Date());
@@ -29,6 +31,9 @@ const Dashboard: FC<Record<string, never>> = () => {
   const { firstName, id, teams } = currentUser;
   const dashboard = useDashboardState();
   const { items } = useReminderState();
+  const reminders = isEnabled('DISPLAY_MANUSCRIPTS')
+    ? items
+    : items.filter((item) => item.entity !== 'Manuscript');
 
   const roles = useCurrentUserTeamRolesCRN();
   usePrefetchTeams({
@@ -47,7 +52,7 @@ const Dashboard: FC<Record<string, never>> = () => {
         <Frame title={null}>
           <Body
             {...dashboard}
-            reminders={items}
+            reminders={reminders}
             date={date}
             user={currentUser}
             dismissedGettingStarted={user?.dismissedGettingStarted}

@@ -1,23 +1,24 @@
-import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
-import { render, waitFor, screen } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import {
   createListReminderResponse,
-  createUserListItemResponse,
   createListUserResponse,
+  createUserListItemResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
+import { disable, enable } from '@asap-hub/flags';
 import { activeUserMembershipStatus } from '@asap-hub/model';
-import { MemoryRouter } from 'react-router-dom';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Suspense } from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 
-import Dashboard from '../Dashboard';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshDashboardState } from '../state';
-import { getDashboard, getReminders } from '../api';
 import { getUser, getUsers, patchUser } from '../../network/users/api';
 import { refreshUserState } from '../../network/users/state';
+import { getDashboard, getReminders } from '../api';
+import Dashboard from '../Dashboard';
+import { refreshDashboardState } from '../state';
 
 jest.mock('../api');
 jest.mock('../../events/api');
@@ -144,6 +145,44 @@ it('renders reminders', async () => {
   expect(mockGetReminders).toHaveBeenCalled();
   expect(await screen.findByText(/Example Reminder/i)).toBeVisible();
   expect(screen.getByTitle('Event')).toBeInTheDocument();
+});
+
+it('renders manuscripts reminders if DISPLAY_MANUSCRIPTS is enabled', async () => {
+  enable('DISPLAY_MANUSCRIPTS');
+
+  const reminderResponse = createListReminderResponse(1);
+
+  mockGetReminders.mockResolvedValue({
+    ...reminderResponse,
+    items: reminderResponse.items.map((reminder) => ({
+      ...reminder,
+      description: 'Manuscript Reminder',
+      entity: 'Manuscript',
+    })),
+  });
+
+  await renderDashboard({});
+  expect(mockGetReminders).toHaveBeenCalled();
+  expect(await screen.findByText(/Manuscript Reminder/i)).toBeVisible();
+});
+
+it('does not render manuscripts reminders if DISPLAY_MANUSCRIPTS is disabled', async () => {
+  disable('DISPLAY_MANUSCRIPTS');
+
+  const reminderResponse = createListReminderResponse(1);
+
+  mockGetReminders.mockResolvedValue({
+    ...reminderResponse,
+    items: reminderResponse.items.map((reminder) => ({
+      ...reminder,
+      description: 'Manuscript Reminder',
+      entity: 'Manuscript',
+    })),
+  });
+
+  await renderDashboard({});
+  expect(mockGetReminders).toHaveBeenCalled();
+  expect(screen.queryByText(/Manuscript Reminder/i)).toBeNull();
 });
 
 describe('dismissing the getting started option', () => {

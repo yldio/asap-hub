@@ -99,13 +99,13 @@ jobs:
       - name: move coverage
         shell: bash
         run: |
-          PACKAGE_NAME="$(echo ${{ matrix.package }} | cut -c 11-)"
+          PACKAGE_NAME="$(echo ${{ matrix.package }} | cut -c 11-)" >> $GITHUB_ENV
           ## get package directory
           mkdir -p coverage
           yarn workspace ${{ matrix.package }} exec mv coverage/coverage-final.json ../../coverage/$PACKAGE_NAME.json
       - uses: actions/upload-artifact@v4
         with:
-          name: coverage-artifacts-${{ matrix.package.replace('/', '-') }}
+          name: coverage-artifacts-${{ env.PACKAGE_NAME }}
           path: coverage/
   merge:
     runs-on: ubuntu-latest

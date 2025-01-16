@@ -369,17 +369,27 @@ export class ManuscriptContentfulDataProvider
 }
 
 const parseGraphQLManuscript = (
-  manuscripts: ManuscriptItem,
-): ManuscriptDataObject => ({
-  id: manuscripts.sys.id,
-  count: manuscripts.count || 0,
-  title: manuscripts.title || '',
-  teamId: manuscripts.teamsCollection?.items[0]?.sys.id || '',
-  status: manuscriptMapStatus(manuscripts.status) || undefined,
-  versions: parseGraphqlManuscriptVersion(
-    manuscripts.versionsCollection?.items || [],
-  ),
-});
+  manuscript: ManuscriptItem,
+): ManuscriptDataObject => {
+  const teamData = manuscript.teamsCollection?.items[0];
+
+  const teamId = teamData?.teamId || '';
+  const grantId = teamData?.grantId || '';
+  const count = manuscript.count || 1;
+  return {
+    id: manuscript.sys.id,
+    count,
+    title: manuscript.title || '',
+    teamId: teamData?.sys.id || '',
+    status: manuscriptMapStatus(manuscript.status) || undefined,
+    versions: parseGraphqlManuscriptVersion(
+      manuscript.versionsCollection?.items || [],
+      grantId,
+      teamId,
+      count,
+    ),
+  };
+};
 
 type ManuscriptVersionItem = NonNullable<
   NonNullable<

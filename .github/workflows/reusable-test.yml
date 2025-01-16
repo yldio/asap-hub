@@ -105,7 +105,7 @@ jobs:
           yarn workspace ${{ matrix.package }} exec mv coverage/coverage-final.json ../../coverage/$PACKAGE_NAME.json
       - uses: actions/upload-artifact@v4
         with:
-          name: coverage-artifacts-${{ matrix.package }}
+          name: coverage-artifacts-${{ matrix.package//\//- }}
           path: coverage/
   merge:
     runs-on: ubuntu-latest

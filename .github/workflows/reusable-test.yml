@@ -99,13 +99,16 @@ jobs:
       - name: move coverage
         shell: bash
         run: |
-          PACKAGE_NAME="$(echo ${{ matrix.package }} | cut -c 11-)" >> $GITHUB_ENV
+          PACKAGE_NAME="$(echo ${{ matrix.package }} | cut -c 11-)"
           ## get package directory
           mkdir -p coverage
           yarn workspace ${{ matrix.package }} exec mv coverage/coverage-final.json ../../coverage/$PACKAGE_NAME.json
+      - name: Sanitize package name
+        id: sanitize
+        run: echo "MATRIX_PACKAGE_NAME=${{ matrix.package }}" | sed 's/\//-/g' >> $GITHUB_ENV
       - uses: actions/upload-artifact@v4
         with:
-          name: coverage-artifacts-${{ env.PACKAGE_NAME }}
+          name: coverage-artifacts-${{ env.MATRIX_PACKAGE_NAME }}
           path: coverage/
   merge:
     runs-on: ubuntu-latest

@@ -1,5 +1,4 @@
 import {
-  ManuscriptLifecycle,
   ManuscriptVersion,
   Message,
   quickCheckQuestions,
@@ -37,10 +36,7 @@ import ComplianceReportCard from './ComplianceReportCard';
 
 type ManuscriptVersionCardProps = {
   version: ManuscriptVersion;
-  grantId: string;
   teamId: string;
-  teamIdCode: string;
-  manuscriptCount: number;
   manuscriptId: string;
   isTeamMember: boolean;
   canEditManuscript: boolean;
@@ -194,51 +190,6 @@ const hasAdditionalInfo = (version: ManuscriptVersion) =>
   version.requestingApcCoverage ||
   version.otherDetails;
 
-export const getLifecycleCode = ({
-  lifecycle,
-}: {
-  lifecycle: ManuscriptLifecycle;
-}) => {
-  switch (lifecycle) {
-    case 'Draft Manuscript (prior to Publication)':
-      return 'G';
-    case 'Preprint':
-      return 'P';
-    case 'Publication':
-      return 'D';
-    case 'Publication with addendum or corrigendum':
-      return 'C';
-    case 'Typeset proof':
-      return 'T';
-    case 'Other':
-    default:
-      return 'O';
-  }
-};
-
-export const getManuscriptVersionUID = ({
-  version,
-  teamIdCode,
-  grantId,
-  manuscriptCount,
-  manuscriptVersionCount,
-}: {
-  version: Pick<ManuscriptVersion, 'type' | 'lifecycle'>;
-  teamIdCode: string;
-  grantId: string;
-  manuscriptCount: number;
-  manuscriptVersionCount: number;
-}) => {
-  const manuscriptTypeCode =
-    version.type === 'Original Research' ? 'org' : 'rev';
-
-  const lifecycleCode = getLifecycleCode(version);
-  return `${teamIdCode}-${grantId}-${String(manuscriptCount).padStart(
-    3,
-    '0',
-  )}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
-};
-
 export const getUserHref = (id: string) =>
   network({}).users({}).user({ userId: id }).$;
 
@@ -251,9 +202,6 @@ export const getTeams = (teams: Message['createdBy']['teams']) =>
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   version: versionProp,
   teamId,
-  teamIdCode,
-  grantId,
-  manuscriptCount,
   onSave,
   getDiscussion,
   manuscriptId,
@@ -389,15 +337,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
           >
             <Pill accent="gray">{version.type}</Pill>
             <Pill accent="gray">{version.lifecycle}</Pill>
-            <Pill accent="blue">
-              {getManuscriptVersionUID({
-                version,
-                teamIdCode,
-                grantId,
-                manuscriptCount,
-                manuscriptVersionCount: version.count,
-              })}
-            </Pill>
+            <Pill accent="blue">{version.versionUID}</Pill>
           </div>
         </div>
 

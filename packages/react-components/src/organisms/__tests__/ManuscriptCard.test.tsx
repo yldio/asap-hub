@@ -28,8 +28,6 @@ const baseUser = createUserResponse({}, 1);
 const props: ComponentProps<typeof ManuscriptCard> = {
   ...createManuscriptResponse(),
   user: { ...baseUser, algoliaApiKey: 'algolia-mock-key' },
-  teamIdCode: 'TI1',
-  grantId: '000123',
   isComplianceReviewer: false,
   onUpdateManuscript: jest.fn(),
   onSave: jest.fn(),

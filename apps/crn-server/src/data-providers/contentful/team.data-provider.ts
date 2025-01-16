@@ -208,17 +208,26 @@ export const parseContentfulGraphQlTeamListItem = (
 
 const mapManuscripts = (
   manuscript: ManuscriptItem,
-): TeamDataObject['manuscripts'][number] => ({
-  id: manuscript.sys.id,
-  count: manuscript.count || 1,
-  title: manuscript.title || '',
-  teamId: manuscript.teamsCollection?.items[0]?.teamId || '',
-  grantId: manuscript.teamsCollection?.items[0]?.grantId || '',
-  status: manuscriptMapStatus(manuscript.status) || undefined,
-  versions: parseGraphqlManuscriptVersion(
-    manuscript.versionsCollection?.items || [],
-  ),
-});
+): TeamDataObject['manuscripts'][number] => {
+  const teamId = manuscript.teamsCollection?.items[0]?.teamId || '';
+  const grantId = manuscript.teamsCollection?.items[0]?.grantId || '';
+  const count = manuscript.count || 1;
+
+  return {
+    id: manuscript.sys.id,
+    count,
+    title: manuscript.title || '',
+    teamId,
+    grantId,
+    status: manuscriptMapStatus(manuscript.status) || undefined,
+    versions: parseGraphqlManuscriptVersion(
+      manuscript.versionsCollection?.items || [],
+      grantId,
+      teamId,
+      count,
+    ),
+  };
+};
 
 export const parseContentfulGraphQlTeam = (
   item: TeamByIdItem,

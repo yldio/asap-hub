@@ -457,6 +457,9 @@ export const parseGraphqlManuscriptVersion = (
   versions: NonNullable<
     NonNullable<ManuscriptItem['versionsCollection']>['items']
   >,
+  teamGrantId?: string,
+  teamIdCode?: string,
+  manuscriptCount?: number,
 ): ManuscriptVersion[] =>
   versions
     .map((version) => ({
@@ -465,6 +468,16 @@ export const parseGraphqlManuscriptVersion = (
       lifecycle: version?.lifecycle,
       description: version?.description,
       count: version?.count || 0,
+      versionUID: getManuscriptVersionUID({
+        version: {
+          type: version?.type,
+          count: version?.count,
+          lifecycle: version?.lifecycle,
+        },
+        teamIdCode: teamIdCode || '',
+        grantId: teamGrantId || '',
+        manuscriptCount: manuscriptCount || 0,
+      }),
       manuscriptFile: {
         url: version?.manuscriptFile?.url,
         filename: version?.manuscriptFile?.fileName,

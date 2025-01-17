@@ -242,13 +242,13 @@ jobs:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
           environment-name: ${{ inputs.environment-name }}
       - name: CRN Auth frontend artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: crn-auth-frontend-${{ inputs.environment-name }}
           path: apps/crn-auth-frontend/dist
           retention-days: 5
       - name: GP2 Auth frontend artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gp2-auth-frontend-${{ inputs.environment-name }}
           path: apps/gp2-auth-frontend/dist

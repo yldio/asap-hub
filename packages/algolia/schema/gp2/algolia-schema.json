@@ -52,6 +52,7 @@
     "status",
     "type",
     "tagIds",
+    "workingGroup.id",
     "workingGroups.id",
     "workingGroupIds"
   ],

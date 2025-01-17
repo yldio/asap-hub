@@ -110,6 +110,16 @@ jobs:
         with:
           name: coverage-artifacts-${{ env.MATRIX_PACKAGE_NAME }}
           path: coverage/
+  merge-artifacts:
+    runs-on: ubuntu-latest
+    needs: [unit]
+    steps:
+      - name: Merge artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: coverage-artifacts
+          pattern: coverage-artifacts-*
+          delete-merged: true
   report-coverage:
     runs-on: ubuntu-latest
     needs: [unit]

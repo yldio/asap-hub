@@ -103,19 +103,23 @@ jobs:
           ## get package directory
           mkdir -p coverage
           yarn workspace ${{ matrix.package }} exec mv coverage/coverage-final.json ../../coverage/$PACKAGE_NAME.json
-      - uses: actions/upload-artifact@v3
+      - name: Sanitize package name
+        id: sanitize
+        run: echo "MATRIX_PACKAGE_NAME=${{ matrix.package }}" | sed 's/\//-/g' >> $GITHUB_ENV
+      - uses: actions/upload-artifact@v4
         with:
-          name: coverage-artifacts
+          name: coverage-artifacts-${{ env.MATRIX_PACKAGE_NAME }}
           path: coverage/
   report-coverage:
     runs-on: ubuntu-latest
     needs: [unit]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
-          name: coverage-artifacts
           path: coverage
+          pattern: coverage-artifacts-*
+          merge-multiple: true
       - name: Merge Code Coverage
         run: npx nyc merge coverage/ merged-output/merged-coverage.json
       - uses: codecov/codecov-action@v3

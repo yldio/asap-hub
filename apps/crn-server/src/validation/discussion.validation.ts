@@ -28,6 +28,7 @@ const DiscussionRequestValidationSchema: JSONSchemaType<DiscussionRequest> = {
   type: 'object',
   properties: {
     text: { type: 'string', maxLength: 256 },
+    manuscriptId: { type: 'string', nullable: true },
   },
   required: ['text'],
   additionalProperties: false,

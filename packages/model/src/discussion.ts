@@ -43,6 +43,7 @@ export type DiscussionUpdateDataObject = {
 
 export type DiscussionRequest = {
   text: string;
+  manuscriptId?: string;
 };
 
 export type DiscussionEndRequest = {

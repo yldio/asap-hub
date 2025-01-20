@@ -133,7 +133,7 @@ describe('/discussions/ route', () => {
           text: 'A good reply',
         });
 
-      expect(response.body).toEqual(discussionResponse);
+      expect(response.body.discussion).toEqual(discussionResponse);
     });
 
     test('Should call the controller with the right parameters', async () => {

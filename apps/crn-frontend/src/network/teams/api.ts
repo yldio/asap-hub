@@ -339,7 +339,11 @@ export const updateDiscussion = async (
   discussionId: string,
   discussion: DiscussionRequest,
   authorization: string,
-): Promise<DiscussionResponse> => {
+  manuscriptId?: string,
+): Promise<{
+  discussion: DiscussionResponse;
+  manuscript?: ManuscriptResponse;
+}> => {
   const resp = await fetch(`${API_BASE_URL}/discussions/${discussionId}`, {
     method: 'PATCH',
     headers: {
@@ -347,7 +351,7 @@ export const updateDiscussion = async (
       'content-type': 'application/json',
       ...createSentryHeaders(),
     },
-    body: JSON.stringify(discussion),
+    body: JSON.stringify({ ...discussion, manuscriptId }),
   });
   const response = await resp.json();
   if (!resp.ok) {

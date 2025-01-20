@@ -285,6 +285,8 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
           sys {
             id
           }
+          teamId
+          grantId
         }
       }
     }

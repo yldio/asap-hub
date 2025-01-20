@@ -18072,7 +18072,9 @@ export type FetchManuscriptByIdQuery = {
   manuscripts?: Maybe<
     Pick<Manuscripts, 'title' | 'status' | 'count'> & {
       teamsCollection?: Maybe<{
-        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+        items: Array<
+          Maybe<Pick<Teams, 'teamId' | 'grantId'> & { sys: Pick<Sys, 'id'> }>
+        >;
       }>;
       sys: Pick<Sys, 'id'>;
       versionsCollection?: Maybe<{
@@ -34319,6 +34321,14 @@ export const FetchManuscriptByIdDocument = {
                                   },
                                 ],
                               },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teamId' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'grantId' },
                             },
                           ],
                         },

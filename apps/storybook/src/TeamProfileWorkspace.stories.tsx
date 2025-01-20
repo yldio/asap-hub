@@ -26,8 +26,6 @@ export const Normal = () => (
     onUpdateManuscript={() => Promise.resolve(createManuscriptResponse())}
     getDiscussion={() => createDiscussionResponse()}
     onSave={() => Promise.resolve()}
-    teamId={'team-id'}
-    grantId={'grant-id'}
     createComplianceDiscussion={() =>
       Promise.resolve('compliance-discussion-id')
     }

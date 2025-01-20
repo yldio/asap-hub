@@ -98,6 +98,7 @@ type OptionalVersionFields = Array<
     | 'firstAuthors'
     | 'correspondingAuthor'
     | 'additionalAuthors'
+    | 'versionUID'
   >
 >;
 
@@ -247,6 +248,7 @@ type ManuscriptFormProps = Omit<
   | 'publishedAt'
   | 'teams'
   | 'labs'
+  | 'versionUID'
 > &
   Partial<Pick<ManuscriptPostRequest, 'title'>> & {
     type?: ManuscriptVersion['type'] | '';

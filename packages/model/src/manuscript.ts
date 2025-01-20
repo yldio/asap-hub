@@ -74,6 +74,7 @@ export type ManuscriptVersion = {
   lifecycle: ManuscriptLifecycle;
   description: string;
   count: number;
+  versionUID?: string;
   preprintDoi?: string;
   publicationDoi?: string;
   requestingApcCoverage?: ApcCoverageOption;
@@ -152,6 +153,7 @@ export const manuscriptFormFieldsMapping: Record<
         | 'firstAuthors'
         | 'correspondingAuthor'
         | 'additionalAuthors'
+        | 'versionUID'
       >
     >
   >

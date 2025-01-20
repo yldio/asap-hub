@@ -3,16 +3,13 @@ import {
   createManuscriptResponse,
   getComplianceReportDataObject,
 } from '@asap-hub/fixtures';
-import { ManuscriptLifecycle, ManuscriptVersion } from '@asap-hub/model';
+import { ManuscriptVersion } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React, { ComponentProps } from 'react';
 import { Router } from 'react-router-dom';
-import ManuscriptVersionCard, {
-  getLifecycleCode,
-  getManuscriptVersionUID,
-} from '../ManuscriptVersionCard';
+import ManuscriptVersionCard from '../ManuscriptVersionCard';
 
 const setScrollHeightMock = (height: number) => {
   const ref = { current: { scrollHeight: height } };
@@ -37,10 +34,7 @@ afterAll(jest.clearAllMocks);
 const baseVersion = createManuscriptResponse().versions[0] as ManuscriptVersion;
 const props: ComponentProps<typeof ManuscriptVersionCard> = {
   version: baseVersion,
-  grantId: '000123',
-  teamIdCode: 'TI1',
   teamId: 'team-id-0',
-  manuscriptCount: 1,
   onSave: jest.fn(),
   getDiscussion: jest.fn(),
   manuscriptId: 'manuscript-1',
@@ -607,59 +601,5 @@ it('does not display reply button if isActiveManuscript is false', async () => {
   await waitFor(() => {
     expect(getByText(/test discussion/i)).toBeVisible();
     expect(queryByRole('button', { name: /Reply/i })).not.toBeInTheDocument();
-  });
-});
-
-describe('getLifecycleCode', () => {
-  it('returns all appropriate values', () => {
-    const lifecyclePairs: { name: ManuscriptLifecycle; value: string }[] = [
-      { name: 'Draft Manuscript (prior to Publication)', value: 'G' },
-      { name: 'Preprint', value: 'P' },
-      { name: 'Publication', value: 'D' },
-      { name: 'Publication with addendum or corrigendum', value: 'C' },
-      { name: 'Typeset proof', value: 'T' },
-      { name: 'Other', value: 'O' },
-    ];
-    lifecyclePairs.forEach(({ name, value }) => {
-      expect(getLifecycleCode({ lifecycle: name })).toBe(value);
-    });
-  });
-});
-
-describe('getManuscriptversionUID', () => {
-  it('outputs a manuscript ID in the required format', () => {
-    expect(
-      getManuscriptVersionUID({
-        version: { type: 'Original Research', lifecycle: 'Preprint' },
-        grantId: '000AAA',
-        teamIdCode: 'AT1',
-        manuscriptVersionCount: 9,
-        manuscriptCount: 234,
-      }),
-    ).toBe('AT1-000AAA-234-org-P-9');
-
-    expect(
-      getManuscriptVersionUID({
-        version: {
-          type: 'Review / Op-Ed / Letter / Hot Topic',
-          lifecycle: 'Preprint',
-        },
-        grantId: '000AAA',
-        teamIdCode: 'AT1',
-        manuscriptVersionCount: 9,
-        manuscriptCount: 234,
-      }),
-    ).toBe('AT1-000AAA-234-rev-P-9');
-  });
-  it('pads manuscript count with leading 0s', () => {
-    expect(
-      getManuscriptVersionUID({
-        version: { type: 'Original Research', lifecycle: 'Preprint' },
-        grantId: '000AAA',
-        teamIdCode: 'AT1',
-        manuscriptVersionCount: 9,
-        manuscriptCount: 4,
-      }),
-    ).toBe('AT1-000AAA-004-org-P-9');
   });
 });

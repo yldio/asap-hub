@@ -29,7 +29,7 @@ import ManuscriptVersionCard from './ManuscriptVersionCard';
 
 type ManuscriptCardProps = Pick<
   TeamManuscript,
-  'id' | 'title' | 'versions' | 'status' | 'count'
+  'id' | 'title' | 'versions' | 'status'
 > &
   Pick<
     ComponentProps<typeof ManuscriptVersionCard>,
@@ -37,8 +37,6 @@ type ManuscriptCardProps = Pick<
   > & {
     user: User | null;
     teamId: string;
-    teamIdCode: string;
-    grantId: string;
     isComplianceReviewer: boolean;
     isTeamMember: boolean;
     isActiveTeam: boolean;
@@ -183,11 +181,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   id,
   title,
   versions,
-  count,
   status,
   teamId,
-  teamIdCode,
-  grantId,
   isComplianceReviewer,
   isTeamMember,
   isActiveTeam,
@@ -347,9 +342,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 key={index}
                 version={version}
                 teamId={teamId}
-                teamIdCode={teamIdCode}
-                grantId={grantId}
-                manuscriptCount={count}
                 manuscriptId={id}
                 canEditManuscript={
                   hasUpdateAccess && version.id === currentManuscriptVersion?.id

@@ -105,8 +105,6 @@ type TeamProfileWorkspaceProps = Readonly<
     | 'lastModifiedDate'
     | 'manuscripts'
     | 'collaborationManuscripts'
-    | 'teamId'
-    | 'grantId'
   >
 > &
   Pick<
@@ -139,8 +137,6 @@ type TeamProfileWorkspaceProps = Readonly<
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   id,
   inactiveSince,
-  teamId,
-  grantId,
   onUpdateManuscript,
   pointOfContact,
   lastModifiedDate,
@@ -235,8 +231,6 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           {...manuscript}
                           user={user}
                           teamId={id}
-                          teamIdCode={manuscript.teamId}
-                          grantId={manuscript.grantId}
                           isComplianceReviewer={isComplianceReviewer}
                           isTeamMember={isTeamMember}
                           onUpdateManuscript={onUpdateManuscript}
@@ -276,8 +270,6 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           {...manuscript}
                           user={user}
                           teamId={id}
-                          teamIdCode={manuscript.teamId}
-                          grantId={manuscript.grantId}
                           isComplianceReviewer={isComplianceReviewer}
                           isTeamMember={isTeamMember}
                           isActiveTeam={!inactiveSince}

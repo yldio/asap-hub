@@ -369,17 +369,27 @@ export class ManuscriptContentfulDataProvider
 }
 
 const parseGraphQLManuscript = (
-  manuscripts: ManuscriptItem,
-): ManuscriptDataObject => ({
-  id: manuscripts.sys.id,
-  count: manuscripts.count || 0,
-  title: manuscripts.title || '',
-  teamId: manuscripts.teamsCollection?.items[0]?.sys.id || '',
-  status: manuscriptMapStatus(manuscripts.status) || undefined,
-  versions: parseGraphqlManuscriptVersion(
-    manuscripts.versionsCollection?.items || [],
-  ),
-});
+  manuscript: ManuscriptItem,
+): ManuscriptDataObject => {
+  const teamData = manuscript.teamsCollection?.items[0];
+
+  const teamId = teamData?.teamId || '';
+  const grantId = teamData?.grantId || '';
+  const count = manuscript.count || 1;
+  return {
+    id: manuscript.sys.id,
+    count,
+    title: manuscript.title || '',
+    teamId: teamData?.sys.id || '',
+    status: manuscriptMapStatus(manuscript.status) || undefined,
+    versions: parseGraphqlManuscriptVersion(
+      manuscript.versionsCollection?.items || [],
+      grantId,
+      teamId,
+      count,
+    ),
+  };
+};
 
 type ManuscriptVersionItem = NonNullable<
   NonNullable<
@@ -457,6 +467,9 @@ export const parseGraphqlManuscriptVersion = (
   versions: NonNullable<
     NonNullable<ManuscriptItem['versionsCollection']>['items']
   >,
+  teamGrantId?: string,
+  teamIdCode?: string,
+  manuscriptCount?: number,
 ): ManuscriptVersion[] =>
   versions
     .map((version) => ({
@@ -465,6 +478,16 @@ export const parseGraphqlManuscriptVersion = (
       lifecycle: version?.lifecycle,
       description: version?.description,
       count: version?.count || 0,
+      versionUID: getManuscriptVersionUID({
+        version: {
+          type: version?.type,
+          count: version?.count,
+          lifecycle: version?.lifecycle,
+        },
+        teamIdCode: teamIdCode || '',
+        grantId: teamGrantId || '',
+        manuscriptCount: manuscriptCount || 0,
+      }),
       manuscriptFile: {
         url: version?.manuscriptFile?.url,
         filename: version?.manuscriptFile?.fileName,

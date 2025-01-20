@@ -42,7 +42,9 @@ type ComplianceReportCardProps = ComplianceReportResponse & {
     callback: (prev: ManuscriptVersion) => ManuscriptVersion,
   ) => void;
   onEndDiscussion: (id: string) => Promise<void>;
-  isComplianceReviewer?: boolean;
+  isComplianceReviewer: boolean;
+  canUpdateDiscussion: boolean;
+  isActiveReport: boolean;
 };
 
 const toastStyles = css({
@@ -120,6 +122,8 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   manuscriptId,
   versionId,
   isComplianceReviewer,
+  canUpdateDiscussion,
+  isActiveReport,
   createComplianceDiscussion,
   getDiscussion,
   onSave,
@@ -180,47 +184,49 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                 </Link>
               </div>
 
-              {!discussionId && !startedDiscussionIdRef.current && (
-                <>
-                  <Button
-                    noMargin
-                    small
-                    onClick={() => setStartDiscussion(true)}
-                    overrideStyles={startDiscussionButtonStyles}
-                  >
-                    <span
-                      css={{
-                        display: 'flex',
-                        gap: rem(8),
-                        margin: `0 ${rem(8)} 0 0`,
-                      }}
+              {!discussionId &&
+                !startedDiscussionIdRef.current &&
+                canUpdateDiscussion && (
+                  <>
+                    <Button
+                      noMargin
+                      small
+                      onClick={() => setStartDiscussion(true)}
+                      overrideStyles={startDiscussionButtonStyles}
                     >
-                      {replyIcon} Start Discussion
-                    </span>
-                  </Button>
-                  {startDiscussion && id && (
-                    <DiscussionModal
-                      discussionId={id}
-                      title="Start Discussion"
-                      editorLabel="Please provide reasons why the compliance report isn’t correct"
-                      ruleMessage="Message cannot exceed 256 characters."
-                      onDismiss={() => setStartDiscussion(false)}
-                      onSave={async (
-                        complianceReportId: string,
-                        data: DiscussionRequest,
-                      ) => {
-                        if (!manuscriptId || !versionId) return;
-                        const createdDiscussionId =
-                          await createComplianceDiscussion(
-                            complianceReportId,
-                            data.text,
-                          );
-                        startedDiscussionIdRef.current = createdDiscussionId;
-                      }}
-                    />
-                  )}
-                </>
-              )}
+                      <span
+                        css={{
+                          display: 'flex',
+                          gap: rem(8),
+                          margin: `0 ${rem(8)} 0 0`,
+                        }}
+                      >
+                        {replyIcon} Start Discussion
+                      </span>
+                    </Button>
+                    {startDiscussion && id && (
+                      <DiscussionModal
+                        discussionId={id}
+                        title="Start Discussion"
+                        editorLabel="Please provide reasons why the compliance report isn’t correct"
+                        ruleMessage="Message cannot exceed 256 characters."
+                        onDismiss={() => setStartDiscussion(false)}
+                        onSave={async (
+                          complianceReportId: string,
+                          data: DiscussionRequest,
+                        ) => {
+                          if (!manuscriptId || !versionId) return;
+                          const createdDiscussionId =
+                            await createComplianceDiscussion(
+                              complianceReportId,
+                              data.text,
+                            );
+                          startedDiscussionIdRef.current = createdDiscussionId;
+                        }}
+                      />
+                    )}
+                  </>
+                )}
             </div>
             {(discussionId || startedDiscussionIdRef.current) && (
               <>
@@ -232,8 +238,8 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                 </Subtitle>
                 <Suspense fallback={<Loading />}>
                   <Discussion
-                    canReply
-                    canEndDiscussion={isComplianceReviewer}
+                    canReply={canUpdateDiscussion}
+                    canEndDiscussion={isActiveReport && isComplianceReviewer}
                     onEndDiscussion={onEndDiscussion}
                     modalTitle="Reply to compliance report discussion"
                     id={

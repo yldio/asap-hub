@@ -38,9 +38,9 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   onSave: jest.fn(),
   getDiscussion: jest.fn(),
   manuscriptId: 'manuscript-1',
-  isTeamMember: true,
-  canEditManuscript: true,
-  isActiveManuscript: true,
+  isActiveVersion: true,
+  isComplianceReviewer: true,
+  isManuscriptContributor: true,
   createComplianceDiscussion: jest.fn(),
   useVersionById: jest.fn(),
   onEndDiscussion: jest.fn(),
@@ -217,22 +217,22 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
 });
 
 describe('edit', () => {
-  it('does not display the edit button when canEditManuscript is false', () => {
+  it('does not display the edit button when isManuscriptContributor is false', () => {
     const { queryByLabelText } = render(
       <ManuscriptVersionCard
         {...props}
-        canEditManuscript={false}
+        isManuscriptContributor={false}
         useVersionById={useVersionById}
       />,
     );
     expect(queryByLabelText('Edit')).not.toBeInTheDocument();
   });
 
-  it('does not display the edit button when isActiveManuscript is false', () => {
+  it('does not display the edit button when isActiveVersion is false', () => {
     const { queryByLabelText } = render(
       <ManuscriptVersionCard
         {...props}
-        isActiveManuscript={false}
+        isActiveVersion={false}
         useVersionById={useVersionById}
       />,
     );
@@ -557,7 +557,7 @@ it('displays manuscript description', () => {
   expect(getByRole('button', { name: /show more/i })).toBeInTheDocument();
 });
 
-it('does not display reply button if isActiveManuscript is false', async () => {
+it('does not display reply button if isActiveVersion is false', async () => {
   const asapAffiliationIncludedDetails = 'test discussion';
   const commenter = {
     id: 'commenter-id',
@@ -592,7 +592,7 @@ it('does not display reply button if isActiveManuscript is false', async () => {
       {...props}
       version={updatedVersion}
       getDiscussion={getDiscussion}
-      isActiveManuscript={false}
+      isActiveVersion={false}
       useVersionById={useVersionById}
     />,
   );

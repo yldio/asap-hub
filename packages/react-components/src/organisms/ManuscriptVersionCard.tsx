@@ -38,9 +38,9 @@ type ManuscriptVersionCardProps = {
   version: ManuscriptVersion;
   teamId: string;
   manuscriptId: string;
-  isTeamMember: boolean;
-  canEditManuscript: boolean;
-  isActiveManuscript: boolean;
+  isActiveVersion?: boolean;
+  isComplianceReviewer?: boolean;
+  isManuscriptContributor?: boolean;
   createComplianceDiscussion: (
     complianceReportId: string,
     message: string,
@@ -54,7 +54,6 @@ type ManuscriptVersionCardProps = {
     (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
   ];
   onEndDiscussion: (id: string) => Promise<void>;
-  isComplianceReviewer?: boolean;
 } & Pick<ComponentProps<typeof DiscussionModal>, 'onSave'> &
   Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
@@ -205,13 +204,12 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   onSave,
   getDiscussion,
   manuscriptId,
-  isTeamMember,
-  isActiveManuscript,
-  canEditManuscript,
+  isActiveVersion = false,
   createComplianceDiscussion,
   useVersionById,
   onEndDiscussion,
-  isComplianceReviewer,
+  isComplianceReviewer = false,
+  isManuscriptContributor = false,
 }) => {
   const [versionData, setVersion] = useVersionById({
     teamId,
@@ -263,6 +261,11 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
     }
   };
 
+  const canUpdateDiscussion =
+    isActiveVersion && (isManuscriptContributor || isComplianceReviewer);
+
+  const canEditManuscript = isActiveVersion && isManuscriptContributor;
+
   return (
     <>
       <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>
@@ -278,6 +281,8 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
               setVersion={setVersion}
               onEndDiscussion={onEndDiscussion}
               isComplianceReviewer={isComplianceReviewer}
+              canUpdateDiscussion={canUpdateDiscussion}
+              isActiveReport={isActiveVersion}
             />
           </Suspense>
         )}
@@ -313,7 +318,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                     </span>
                   </div>
                 </Caption>
-                {isActiveManuscript && canEditManuscript && (
+                {canEditManuscript && (
                   <Button
                     aria-label="Edit"
                     small
@@ -403,7 +408,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                       <Suspense fallback={<Loading />}>
                         <Discussion
                           modalTitle="Reply to quick check"
-                          canReply={isActiveManuscript && isTeamMember}
+                          canReply={isActiveVersion && canUpdateDiscussion}
                           id={discussion.id}
                           getDiscussion={getDiscussion}
                           onSave={onSave}

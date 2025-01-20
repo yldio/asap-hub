@@ -32,7 +32,6 @@ const props: ComponentProps<typeof ManuscriptCard> = {
   onUpdateManuscript: jest.fn(),
   onSave: jest.fn(),
   getDiscussion: jest.fn(),
-  isTeamMember: true,
   isActiveTeam: true,
   createComplianceDiscussion: jest.fn(),
   useVersionById: jest.fn(),

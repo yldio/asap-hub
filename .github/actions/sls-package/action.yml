@@ -136,8 +136,9 @@ runs:
         SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
         SLS_STAGE: ${{ inputs.sls-stage }}
         S3_SYNC_ENABLED: 'false'
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.app }}-sls-package-${{ inputs.environment-name }}
         path: '${{ inputs.app }}-sls-package'
         retention-days: 1
+        overwrite: true

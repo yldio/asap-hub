@@ -323,13 +323,38 @@ export const useSetDiscussion = () =>
 export const useDiscussionById = (id: string) =>
   useRecoilValue(discussionState(id));
 
-export const useReplyToDiscussion = () => {
+export const useReplyToDiscussion = (teamId: string) => {
   const authorization = useRecoilValue(authorizationState);
   const setDiscussion = useSetDiscussion();
-
-  return async (id: string, patch: DiscussionRequest) => {
-    const discussion = await updateDiscussion(id, patch, authorization);
-    setDiscussion(discussion);
+  const setTeam = useSetRecoilState(teamState(teamId));
+  return async (
+    id: string,
+    patch: DiscussionRequest,
+    manuscriptId?: string,
+  ) => {
+    const response = await updateDiscussion(
+      id,
+      patch,
+      authorization,
+      manuscriptId,
+    );
+    setDiscussion(response.discussion);
+    if (response.manuscript) {
+      setTeam((team) =>
+        team
+          ? {
+              ...team,
+              manuscripts: [
+                ...team.manuscripts.map((manuscript) =>
+                  manuscript.id === manuscriptId
+                    ? { ...manuscript, ...response.manuscript }
+                    : manuscript,
+                ),
+              ],
+            }
+          : team,
+      );
+    }
   };
 };
 

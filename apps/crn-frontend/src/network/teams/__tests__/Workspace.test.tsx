@@ -498,7 +498,9 @@ describe('manuscript quick check discussion', () => {
     ]);
 
     mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
-    mockUpdateDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
+    mockUpdateDiscussion.mockResolvedValue({
+      discussion: acknowledgedGrantNumberDiscussion,
+    });
     const { findByTestId, getByRole, getByTestId, getByLabelText } =
       renderWithWrapper(
         <ManuscriptToastProvider>
@@ -545,6 +547,7 @@ describe('manuscript quick check discussion', () => {
       acknowledgedGrantNumberDiscussion.id,
       { text: 'new reply' },
       expect.anything(),
+      undefined,
     );
   });
 
@@ -603,7 +606,9 @@ describe('manuscript quick check discussion', () => {
     ]);
 
     mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
-    mockUpdateDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
+    mockUpdateDiscussion.mockResolvedValue({
+      discussion: acknowledgedGrantNumberDiscussion,
+    });
     const { findByTestId, getByText, getByLabelText, getByTestId, findByText } =
       renderWithWrapper(
         <ManuscriptToastProvider>

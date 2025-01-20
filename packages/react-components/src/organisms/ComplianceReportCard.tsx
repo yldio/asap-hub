@@ -245,6 +245,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                     id={
                       (discussionId ?? startedDiscussionIdRef.current) as string
                     }
+                    manuscriptId={manuscriptId}
                     getDiscussion={getDiscussion}
                     onSave={onSave}
                     key={discussionId}

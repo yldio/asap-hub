@@ -15,6 +15,7 @@ type DiscussionProps = Pick<
   'onSave'
 > & {
   id: string;
+  manuscriptId?: string;
   canReply: boolean;
   canEndDiscussion?: boolean;
   modalTitle: string;
@@ -44,6 +45,7 @@ const replyAvatarsStyles = css({
 
 const Discussion: FC<DiscussionProps> = ({
   id,
+  manuscriptId,
   canReply,
   canEndDiscussion = false,
   modalTitle,
@@ -77,6 +79,7 @@ const Discussion: FC<DiscussionProps> = ({
           ruleMessage="Reply cannot exceed 256 characters."
           onDismiss={() => setReplyToDiscussion(false)}
           discussionId={id}
+          manuscriptId={manuscriptId}
           onSave={onSave}
         />
       )}

@@ -23,7 +23,7 @@ describe('ConfirmStatusChangeModal', () => {
     newStatus                        | title                                                           | content                                             | submissionButtonText
     ${'Waiting for Report'}          | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
     ${'Review Compliance Report'}    | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
-    ${'Waiting for ASAP Reply'}      | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
+    ${'Waiting for OS Team Reply'}   | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
     ${"Waiting for Grantee's Reply"} | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
     ${'Manuscript Resubmitted'}      | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
     ${'Submit Final Publication'}    | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
@@ -73,7 +73,7 @@ describe('ConfirmStatusChangeModal', () => {
     newStatus                        | submissionButtonText
     ${'Waiting for Report'}          | ${'Update Status and Notify'}
     ${'Review Compliance Report'}    | ${'Update Status and Notify'}
-    ${'Waiting for ASAP Reply'}      | ${'Update Status and Notify'}
+    ${'Waiting for OS Team Reply'}   | ${'Update Status and Notify'}
     ${"Waiting for Grantee's Reply"} | ${'Update Status and Notify'}
     ${'Manuscript Resubmitted'}      | ${'Update Status and Notify'}
     ${'Submit Final Publication'}    | ${'Update Status and Notify'}

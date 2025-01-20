@@ -319,7 +319,7 @@ describe('Manuscript', () => {
   describe('PUT', () => {
     const manuscriptId = 'manuscript-1';
     const payload: ManuscriptPutRequest = {
-      status: 'Waiting for ASAP Reply',
+      status: 'Waiting for OS Team Reply',
     };
     it('makes an authorized PUT request to update a manuscript', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

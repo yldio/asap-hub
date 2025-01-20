@@ -59,7 +59,12 @@ type DiscussionModalProps = {
   ruleMessage: string;
   onDismiss: () => void;
   discussionId: string;
-  onSave: (id: string, data: DiscussionRequest) => Promise<void>;
+  manuscriptId?: string;
+  onSave: (
+    id: string,
+    data: DiscussionRequest,
+    manuscriptId?: string,
+  ) => Promise<void>;
 };
 
 type DiscussionModalData = {
@@ -71,6 +76,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
   editorLabel,
   ruleMessage,
   discussionId,
+  manuscriptId,
   onDismiss,
   onSave,
 }) => {
@@ -88,7 +94,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
   } = methods;
 
   const onSubmit = async (data: DiscussionModalData) => {
-    await onSave(discussionId, data);
+    await onSave(discussionId, data, manuscriptId);
     onDismiss();
   };
 

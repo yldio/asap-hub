@@ -161,7 +161,9 @@ describe('compliance report discussion', () => {
     ]);
 
     mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
-    mockUpdateDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
+    mockUpdateDiscussion.mockResolvedValue({
+      discussion: acknowledgedGrantNumberDiscussion,
+    });
   });
 
   it('calls setFormType with error when replyToDiscussion fails', async () => {

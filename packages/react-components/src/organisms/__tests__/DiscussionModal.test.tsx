@@ -43,9 +43,13 @@ it('data is sent on form submission', async () => {
   await waitFor(() => expect(shareButton).toBeEnabled());
   userEvent.click(shareButton);
   await waitFor(() => {
-    expect(onSave).toHaveBeenCalledWith(discussionId, {
-      text: 'test reply',
-    });
+    expect(onSave).toHaveBeenCalledWith(
+      discussionId,
+      {
+        text: 'test reply',
+      },
+      undefined,
+    );
   });
 });
 

@@ -39,7 +39,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);
   const updateManuscript = usePutManuscript();
-  const replyToDiscussion = useReplyToDiscussion();
+  const replyToDiscussion = useReplyToDiscussion(team.id);
   const endDiscussion = useEndDiscussion();
   const createComplianceDiscussion = useCreateComplianceDiscussion();
 
@@ -82,9 +82,17 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                 }
           }
           isComplianceReviewer={isComplianceReviewer}
-          onSave={async (id: string, patch: DiscussionRequest) => {
+          onSave={async (
+            id: string,
+            patch: DiscussionRequest,
+            manuscriptId?: string,
+          ) => {
             try {
-              await replyToDiscussion(id, patch as DiscussionRequest);
+              await replyToDiscussion(
+                id,
+                patch as DiscussionRequest,
+                manuscriptId,
+              );
               setFormType({ type: 'quick-check', accent: 'successLarge' });
             } catch (error) {
               setFormType({

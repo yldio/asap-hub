@@ -272,7 +272,7 @@ export const manuscriptFormFieldsMapping: Record<
 export const manuscriptStatus = [
   'Waiting for Report',
   'Review Compliance Report',
-  'Waiting for ASAP Reply',
+  'Waiting for OS Team Reply',
   "Waiting for Grantee's Reply",
   'Manuscript Resubmitted',
   'Submit Final Publication',

@@ -14,9 +14,7 @@ import { ComplianceReportDataProvider } from '../types';
 export class ComplianceReportContentfulDataProvider
   implements ComplianceReportDataProvider
 {
-  constructor(
-    private getRestClient: () => Promise<Environment>,
-  ) {}
+  constructor(private getRestClient: () => Promise<Environment>) {}
 
   async fetch(): Promise<ListResponse<ComplianceReportDataObject>> {
     throw new Error('Method not implemented.');

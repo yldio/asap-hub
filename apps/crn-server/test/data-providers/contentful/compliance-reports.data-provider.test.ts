@@ -1,7 +1,4 @@
-import {
-  Entry,
-  Environment,
-} from '@asap-hub/contentful';
+import { Entry, Environment } from '@asap-hub/contentful';
 
 import { when } from 'jest-when';
 import { ComplianceReportContentfulDataProvider } from '../../../src/data-providers/contentful/compliance-report.data-provider';
@@ -15,9 +12,7 @@ describe('Compliance Reports Contentful Data Provider', () => {
     Promise.resolve(environmentMock);
 
   const complianceReportDataProvider =
-    new ComplianceReportContentfulDataProvider(
-      contentfulRestClientMock,
-    );
+    new ComplianceReportContentfulDataProvider(contentfulRestClientMock);
 
   afterEach(() => {
     jest.clearAllMocks();

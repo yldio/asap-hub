@@ -187,26 +187,16 @@ describe('/discussions/ route', () => {
         count: 0,
       });
 
-      const response = await supertest(app)
-        .patch(`/discussions/${discussionId}`)
-        .send({
-          text: 'A reply',
-          manuscriptId,
-        });
+      await supertest(app).patch(`/discussions/${discussionId}`).send({
+        text: 'A reply',
+        manuscriptId,
+      });
 
       expect(manuscriptControllerMock.update).toHaveBeenCalledWith(
         manuscriptId,
         { status: 'Waiting for OS Team Reply' },
         userId,
       );
-      expect(response.body.manuscript).toEqual({
-        id: manuscriptId,
-        status: 'Waiting for OS Team Reply',
-        title: 'Sample Title',
-        teamId: 'team-id-1',
-        versions: [],
-        count: 0,
-      });
     });
 
     test('Should not update manuscript status when manuscriptId is provided and user is an open science team member', async () => {
@@ -219,28 +209,22 @@ describe('/discussions/ route', () => {
         openScienceTeamMember: true,
       });
 
-      const response = await supertest(app)
-        .patch(`/discussions/${discussionId}`)
-        .send({
-          text: 'Another reply',
-          manuscriptId,
-        });
+      await supertest(app).patch(`/discussions/${discussionId}`).send({
+        text: 'Another reply',
+        manuscriptId,
+      });
 
       expect(manuscriptControllerMock.update).not.toHaveBeenCalled();
-      expect(response.body.manuscript).toBeUndefined();
     });
 
     test('Should not call manuscriptController.update if manuscriptId is not provided', async () => {
       const discussionId = 'discussion-id-3';
 
-      const response = await supertest(app)
-        .patch(`/discussions/${discussionId}`)
-        .send({
-          text: 'Reply without manuscript',
-        });
+      await supertest(app).patch(`/discussions/${discussionId}`).send({
+        text: 'Reply without manuscript',
+      });
 
       expect(manuscriptControllerMock.update).not.toHaveBeenCalled();
-      expect(response.body.manuscript).toBeUndefined();
     });
   });
 

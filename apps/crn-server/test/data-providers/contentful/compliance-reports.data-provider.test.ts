@@ -1,7 +1,7 @@
 import {
   Entry,
   Environment,
-  getContentfulGraphqlClientMockServer,
+  // getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
 
 import { when } from 'jest-when';
@@ -15,14 +15,14 @@ describe('Compliance Reports Contentful Data Provider', () => {
   const contentfulRestClientMock: () => Promise<Environment> = () =>
     Promise.resolve(environmentMock);
 
-  const contentfulGraphqlClientMockServer =
-    getContentfulGraphqlClientMockServer({
-      ComplianceReportsCollection: () => ({ total: 0 }),
-    });
+  // const contentfulGraphqlClientMockServer =
+  //   getContentfulGraphqlClientMockServer({
+  //     ComplianceReportsCollection: () => ({ total: 0 }),
+  //   });
 
   const complianceReportDataProvider =
     new ComplianceReportContentfulDataProvider(
-      contentfulGraphqlClientMockServer,
+      // contentfulGraphqlClientMockServer,
       contentfulRestClientMock,
     );
 

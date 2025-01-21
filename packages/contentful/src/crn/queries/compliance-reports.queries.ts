@@ -2,14 +2,10 @@
 
 import { gql } from 'graphql-tag';
 
-export const FETCH_COMPLIANCE_REPORTS_BY_MANUSCRIPT_VERSION_ID = gql`
+export const FETCH_COMPLIANCE_REPORT_COUNT_BY_MANUSCRIPT_VERSION_ID = gql`
   query FetchComplianceReportsByManuscriptVersionID($id: String!) {
     manuscriptVersions(id: $id) {
-      linkedFrom {
-        complianceReportsCollection {
-          total
-        }
-      }
+      count
     }
   }
 `;

@@ -13730,13 +13730,7 @@ export type FetchComplianceReportsByManuscriptVersionIdQueryVariables = Exact<{
 }>;
 
 export type FetchComplianceReportsByManuscriptVersionIdQuery = {
-  manuscriptVersions?: Maybe<{
-    linkedFrom?: Maybe<{
-      complianceReportsCollection?: Maybe<
-        Pick<ComplianceReportsCollection, 'total'>
-      >;
-    }>;
-  }>;
+  manuscriptVersions?: Maybe<Pick<ManuscriptVersions, 'count'>>;
 };
 
 export type FetchDashboardQueryVariables = Exact<{ [key: string]: never }>;
@@ -18027,7 +18021,7 @@ export type ManuscriptsContentFragment = Pick<
             complianceReportsCollection?: Maybe<{
               items: Array<
                 Maybe<
-                  Pick<ComplianceReports, 'url' | 'description' | 'count'> & {
+                  Pick<ComplianceReports, 'url' | 'description'> & {
                     sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
                     createdBy?: Maybe<
                       Pick<
@@ -18228,10 +18222,7 @@ export type FetchManuscriptByIdQuery = {
                 complianceReportsCollection?: Maybe<{
                   items: Array<
                     Maybe<
-                      Pick<
-                        ComplianceReports,
-                        'url' | 'description' | 'count'
-                      > & {
+                      Pick<ComplianceReports, 'url' | 'description'> & {
                         sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
                         createdBy?: Maybe<
                           Pick<
@@ -20202,7 +20193,7 @@ export type FetchTeamByIdQuery = {
                               Maybe<
                                 Pick<
                                   ComplianceReports,
-                                  'url' | 'description' | 'count'
+                                  'url' | 'description'
                                 > & {
                                   sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
                                   createdBy?: Maybe<
@@ -25502,13 +25493,6 @@ export const ManuscriptsContentFragmentDoc = {
                                           name: {
                                             kind: 'Name',
                                             value: 'description',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'count',
                                           },
                                         },
                                         {
@@ -32018,31 +32002,7 @@ export const FetchComplianceReportsByManuscriptVersionIdDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'linkedFrom' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: {
-                          kind: 'Name',
-                          value: 'complianceReportsCollection',
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'total' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
               ],
             },
           },

@@ -240,7 +240,6 @@ export const manuscriptContentQueryFragment = gql`
               }
               url
               description
-              count
               createdBy {
                 sys {
                   id

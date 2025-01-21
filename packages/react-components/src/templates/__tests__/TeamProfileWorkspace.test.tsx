@@ -469,7 +469,13 @@ describe('compliance section', () => {
       findByText,
       getByLabelText,
       unmount,
-    } = render(<TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />);
+    } = render(
+      <TeamProfileWorkspace
+        {...teamWithManuscripts}
+        tools={[]}
+        isComplianceReviewer
+      />,
+    );
 
     await act(async () => {
       userEvent.click(localGetByTestId('collapsible-button'));

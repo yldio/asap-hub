@@ -103,6 +103,7 @@ const renderWithWrapper = (
   );
 
 const user = {
+  id: 'test-user-1',
   teams: [
     {
       id,
@@ -427,6 +428,15 @@ describe('manuscript quick check discussion', () => {
   manuscript.versions[0]!.acknowledgedGrantNumberDetails =
     acknowledgedGrantNumberDiscussion;
 
+  manuscript.versions[0]!.firstAuthors = [
+    {
+      id: 'test-user-1',
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'test@gmail.com',
+      displayName: 'Test User',
+    },
+  ];
   it('fetches quick check discussion details', async () => {
     enable('DISPLAY_MANUSCRIPTS');
     mockGetDiscussion.mockImplementation(

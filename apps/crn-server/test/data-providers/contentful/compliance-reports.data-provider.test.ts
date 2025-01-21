@@ -56,9 +56,9 @@ describe('Compliance Reports Contentful Data Provider', () => {
             url: {
               'en-US': 'http://example.com',
             },
-            count: {
-              'en-US': 1,
-            },
+            // count: {
+            //   'en-US': 1,
+            // },
             description: {
               'en-US': 'compliance report description',
             },

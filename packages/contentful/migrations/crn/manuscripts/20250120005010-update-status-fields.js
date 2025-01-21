@@ -1,6 +1,19 @@
 module.exports.description =
   "Updates 'Waiting for ASAP Reply' to 'Waiting for OS Team Reply' in status field validation";
 
+const transformField =
+  (fieldName, fromValue, toValue) => (fromFields, currentLocale) => {
+    if (
+      fromFields[fieldName] &&
+      fromFields[fieldName][currentLocale] === fromValue
+    ) {
+      return {
+        [fieldName]: toValue,
+      };
+    }
+    return undefined;
+  };
+
 module.exports.up = (migration) => {
   const manuscripts = migration.editContentType('manuscripts');
 
@@ -35,6 +48,28 @@ module.exports.up = (migration) => {
       ],
     },
   ]);
+
+  migration.transformEntries({
+    contentType: 'manuscripts',
+    from: ['status'],
+    to: ['status'],
+    transformEntryForLocale: transformField(
+      'status', // field name
+      'Waiting for ASAP Reply', // old value
+      'Waiting for OS Team Reply', // new value
+    ),
+  });
+
+  migration.transformEntries({
+    contentType: 'manuscripts',
+    from: ['previousStatus'],
+    to: ['previousStatus'],
+    transformEntryForLocale: transformField(
+      'previousStatus', //field name
+      'Waiting for ASAP Reply', // old value
+      'Waiting for OS Team Reply', // new value
+    ),
+  });
 };
 
 module.exports.down = (migration) => {
@@ -71,4 +106,26 @@ module.exports.down = (migration) => {
       ],
     },
   ]);
+
+  migration.transformEntries({
+    contentType: 'manuscripts',
+    from: ['status'],
+    to: ['status'],
+    transformEntryForLocale: transformField(
+      'status', // field name
+      'Waiting for OS Team Reply', // old value
+      'Waiting for ASAP Reply', // new value
+    ),
+  });
+
+  migration.transformEntries({
+    contentType: 'manuscripts',
+    from: ['previousStatus'],
+    to: ['previousStatus'],
+    transformEntryForLocale: transformField(
+      'previousStatus', // field name
+      'Waiting for OS Team Reply', // old value
+      'Waiting for ASAP Reply', // new value
+    ),
+  });
 };

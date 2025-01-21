@@ -1,11 +1,7 @@
 import {
   addLocaleToFields,
   Environment,
-  // FetchComplianceReportsByManuscriptVersionIdQuery,
-  // FetchComplianceReportsByManuscriptVersionIdQueryVariables,
-  // FETCH_COMPLIANCE_REPORT_COUNT_BY_MANUSCRIPT_VERSION_ID,
   getLinkEntity,
-  // GraphQLClient,
 } from '@asap-hub/contentful';
 import {
   ComplianceReportCreateDataObject,
@@ -19,7 +15,6 @@ export class ComplianceReportContentfulDataProvider
   implements ComplianceReportDataProvider
 {
   constructor(
-    // private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
 
@@ -31,26 +26,10 @@ export class ComplianceReportContentfulDataProvider
     throw new Error('Method not implemented.');
   }
 
-  // async fetchComplianceReportCountByManuscriptVersionId(id: string) {
-  //   const { manuscriptVersions } = await this.contentfulClient.request<
-  //     FetchComplianceReportsByManuscriptVersionIdQuery,
-  //     FetchComplianceReportsByManuscriptVersionIdQueryVariables
-  //   >(FETCH_COMPLIANCE_REPORT_COUNT_BY_MANUSCRIPT_VERSION_ID, { id });
-
-  //   return (
-  //     manuscriptVersions?.count || 0
-  //   );
-  // }
-
   async create(input: ComplianceReportCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
 
     const { manuscriptVersionId, userId, ...payload } = input;
-
-    // const complianceReportCount =
-    //   await this.fetchComplianceReportCountByManuscriptVersionId(
-    //     manuscriptVersionId,
-    //   );
 
     const complianceReport = await environment.createEntry(
       'complianceReports',
@@ -58,7 +37,6 @@ export class ComplianceReportContentfulDataProvider
         fields: {
           ...addLocaleToFields({
             ...payload,
-            // count: complianceReportCount,
             manuscriptVersion: getLinkEntity(manuscriptVersionId),
             createdBy: getLinkEntity(userId),
           }),

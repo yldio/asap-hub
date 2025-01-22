@@ -1,8 +1,4 @@
-import {
-  Entry,
-  Environment,
-  getContentfulGraphqlClientMockServer,
-} from '@asap-hub/contentful';
+import { Entry, Environment } from '@asap-hub/contentful';
 
 import { when } from 'jest-when';
 import { ComplianceReportContentfulDataProvider } from '../../../src/data-providers/contentful/compliance-report.data-provider';
@@ -15,16 +11,8 @@ describe('Compliance Reports Contentful Data Provider', () => {
   const contentfulRestClientMock: () => Promise<Environment> = () =>
     Promise.resolve(environmentMock);
 
-  const contentfulGraphqlClientMockServer =
-    getContentfulGraphqlClientMockServer({
-      ComplianceReportsCollection: () => ({ total: 0 }),
-    });
-
   const complianceReportDataProvider =
-    new ComplianceReportContentfulDataProvider(
-      contentfulGraphqlClientMockServer,
-      contentfulRestClientMock,
-    );
+    new ComplianceReportContentfulDataProvider(contentfulRestClientMock);
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -55,9 +43,6 @@ describe('Compliance Reports Contentful Data Provider', () => {
           fields: {
             url: {
               'en-US': 'http://example.com',
-            },
-            count: {
-              'en-US': 1,
             },
             description: {
               'en-US': 'compliance report description',

@@ -378,7 +378,6 @@ enum CalendarsOrder {
 type ComplianceReports implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
-  count(locale: String): Int
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   description(locale: String): String
   discussion(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
@@ -399,15 +398,6 @@ input ComplianceReportsFilter {
   AND: [ComplianceReportsFilter]
   OR: [ComplianceReportsFilter]
   contentfulMetadata: ContentfulMetadataFilter
-  count: Int
-  count_exists: Boolean
-  count_gt: Int
-  count_gte: Int
-  count_in: [Int]
-  count_lt: Int
-  count_lte: Int
-  count_not: Int
-  count_not_in: [Int]
   createdBy: cfUsersNestedFilter
   createdBy_exists: Boolean
   description: String
@@ -436,8 +426,6 @@ type ComplianceReportsLinkingCollections {
 }
 
 enum ComplianceReportsOrder {
-  count_ASC
-  count_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -923,8 +911,6 @@ type DiscussionsLinkingCollections {
 }
 
 enum DiscussionsLinkingCollectionsComplianceReportsCollectionOrder {
-  count_ASC
-  count_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3233,8 +3219,6 @@ type ManuscriptVersionsLinkingCollections {
 }
 
 enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
-  count_ASC
-  count_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -5564,7 +5548,7 @@ input SysFilter {
 }
 
 """
-Represents a tag entity for finding and organizing content easily.
+Represents a taxonomy concept entity for finding and organizing content easily.
         Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-concepts
 """
 type TaxonomyConcept {
@@ -6884,8 +6868,6 @@ type UsersLinkingCollections {
 }
 
 enum UsersLinkingCollectionsComplianceReportsCollectionOrder {
-  count_ASC
-  count_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC

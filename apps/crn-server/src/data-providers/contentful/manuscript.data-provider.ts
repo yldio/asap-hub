@@ -560,6 +560,7 @@ export const parseGraphqlManuscriptVersion = (
       })),
       complianceReport: parseComplianceReport(
         version?.linkedFrom?.complianceReportsCollection?.items[0],
+        version?.count || 0,
       ),
       firstAuthors: parseGraphqlAuthor(
         (version?.firstAuthorsCollection?.items || []).filter(
@@ -591,12 +592,13 @@ export const parseGraphqlManuscriptVersion = (
 
 const parseComplianceReport = (
   complianceReport: ComplianceReport | undefined,
+  versionCount: number,
 ) =>
   complianceReport && {
     id: complianceReport.sys.id,
     url: complianceReport.url,
     description: complianceReport.description,
-    count: complianceReport.count,
+    count: versionCount,
     createdDate: complianceReport.sys.firstPublishedAt,
     createdBy: parseGraphqlManuscriptUser(
       complianceReport.createdBy || undefined,

@@ -16,15 +16,11 @@ on:
 jobs:
   push-templates:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
 
       - name: Install Postmark CLI
         run: npm install -g postmark-cli

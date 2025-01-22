@@ -408,7 +408,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                       <Suspense fallback={<Loading />}>
                         <Discussion
                           modalTitle="Reply to quick check"
-                          canReply={isActiveVersion && canUpdateDiscussion}
+                          canReply={canUpdateDiscussion}
                           id={discussion.id}
                           getDiscussion={getDiscussion}
                           onSave={onSave}

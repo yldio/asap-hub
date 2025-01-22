@@ -32,4 +32,4 @@ jobs:
       - name: Push templates to Postmark
         run: yarn postmark:push:templates
         env:
-          POSTMARK_SERVER_API_TOKEN: ${{ secrets.POSTMARK_SERVER_API_TOKEN }}
+          POSTMARK_SERVER_TOKEN: ${{ secrets.POSTMARK_SERVER_TOKEN }}

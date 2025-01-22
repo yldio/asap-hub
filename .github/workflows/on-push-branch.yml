@@ -134,6 +134,14 @@ jobs:
       GP2_OPENAI_API_KEY: ${{ secrets.GP2_OPENAI_API_KEY }}
       SLACK_WEBHOOK: 'n-a'
 
+  push-postmark-templates:
+    needs: [setup, deployment]
+    uses: ./.github/workflows/reusable-push-postmark-templates.yml
+    with:
+      environment-name: Branch
+    secrets:
+      POSTMARK_SERVER_TOKEN: ${{ secrets.POSTMARK_SERVER_TOKEN }}
+
   verify:
     needs: [setup, deployment]
     uses: ./.github/workflows/reusable-verify.yml

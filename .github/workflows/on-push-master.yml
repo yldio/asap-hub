@@ -108,6 +108,14 @@ jobs:
       GP2_OPENAI_API_KEY: ${{ secrets.GP2_OPENAI_API_KEY }}
       SLACK_WEBHOOK: 'n-a'
 
+  push-postmark-templates-development:
+    needs: [deployment-development]
+    uses: ./.github/workflows/reusable-push-postmark-templates.yml
+    with:
+      environment-name: Development
+    secrets:
+      POSTMARK_SERVER_TOKEN: ${{ secrets.POSTMARK_SERVER_TOKEN }}
+
   crn-contentful-migrate-empty:
     needs: [deployment-development]
     runs-on: ubuntu-latest
@@ -196,6 +204,14 @@ jobs:
       GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
       GP2_OPENAI_API_KEY: ${{ secrets.GP2_OPENAI_API_KEY }}
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+  push-postmark-templates-production:
+    needs: [deployment-production]
+    uses: ./.github/workflows/reusable-push-postmark-templates.yml
+    with:
+      environment-name: Production
+    secrets:
+      POSTMARK_SERVER_TOKEN: ${{ secrets.POSTMARK_SERVER_TOKEN }}
 
   algolia-sync-production-crn:
     needs: [deployment-production]

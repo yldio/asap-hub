@@ -1,0 +1,35 @@
+name: Reusable push postmark templates
+
+on:
+  workflow_call:
+    inputs:
+      environment-name:
+        description: 'The environment name'
+        required: true
+        type: string
+
+    secrets:
+      POSTMARK_SERVER_TOKEN:
+        description: 'Postmark Server Token'
+        required: true
+
+jobs:
+  push-templates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+
+      - name: Install Postmark CLI
+        run: npm install -g postmark-cli
+
+      - name: Push templates to Postmark
+        run: yarn postmark:push:templates
+        env:
+          POSTMARK_SERVER_API_TOKEN: ${{ secrets.POSTMARK_SERVER_API_TOKEN }}

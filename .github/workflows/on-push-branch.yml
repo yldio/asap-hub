@@ -135,7 +135,7 @@ jobs:
       SLACK_WEBHOOK: 'n-a'
 
   push-postmark-templates:
-    needs: [setup, deployment]
+    needs: [setup]
     uses: ./.github/workflows/reusable-push-postmark-templates.yml
     with:
       environment-name: Branch

@@ -38,7 +38,6 @@ type ManuscriptCardProps = Pick<
     user: User | null;
     teamId: string;
     isComplianceReviewer: boolean;
-    isTeamMember: boolean;
     isActiveTeam: boolean;
     onUpdateManuscript: (
       manuscriptId: string,
@@ -184,7 +183,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   status,
   teamId,
   isComplianceReviewer,
-  isTeamMember,
   isActiveTeam,
   onUpdateManuscript,
   getDiscussion,
@@ -343,15 +341,15 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 version={version}
                 teamId={teamId}
                 manuscriptId={id}
-                canEditManuscript={
-                  hasUpdateAccess && version.id === currentManuscriptVersion?.id
+                isActiveVersion={
+                  isActiveManuscript &&
+                  version.id === currentManuscriptVersion?.id
                 }
-                isActiveManuscript={isActiveManuscript}
-                isTeamMember={isTeamMember}
                 createComplianceDiscussion={createComplianceDiscussion}
                 useVersionById={useVersionById}
                 onEndDiscussion={onEndDiscussion}
                 isComplianceReviewer={isComplianceReviewer}
+                isManuscriptContributor={hasUpdateAccess}
               />
             ))}
           </div>

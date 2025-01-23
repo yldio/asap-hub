@@ -38,9 +38,6 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   onSave: jest.fn(),
   getDiscussion: jest.fn(),
   manuscriptId: 'manuscript-1',
-  isTeamMember: true,
-  canEditManuscript: true,
-  isActiveManuscript: true,
   createComplianceDiscussion: jest.fn(),
   useVersionById: jest.fn(),
   onEndDiscussion: jest.fn(),
@@ -217,22 +214,22 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
 });
 
 describe('edit', () => {
-  it('does not display the edit button when canEditManuscript is false', () => {
+  it('does not display the edit button when isManuscriptContributor is false', () => {
     const { queryByLabelText } = render(
       <ManuscriptVersionCard
         {...props}
-        canEditManuscript={false}
+        isManuscriptContributor={false}
         useVersionById={useVersionById}
       />,
     );
     expect(queryByLabelText('Edit')).not.toBeInTheDocument();
   });
 
-  it('does not display the edit button when isActiveManuscript is false', () => {
+  it('does not display the edit button when isActiveVersion is false', () => {
     const { queryByLabelText } = render(
       <ManuscriptVersionCard
         {...props}
-        isActiveManuscript={false}
+        isActiveVersion={false}
         useVersionById={useVersionById}
       />,
     );
@@ -245,7 +242,12 @@ describe('edit', () => {
 
     const { getByLabelText } = render(
       <Router history={history}>
-        <ManuscriptVersionCard {...props} useVersionById={useVersionById} />
+        <ManuscriptVersionCard
+          {...props}
+          useVersionById={useVersionById}
+          isActiveVersion
+          isManuscriptContributor
+        />
       </Router>,
     );
     userEvent.click(getByLabelText('Edit'));
@@ -557,7 +559,7 @@ it('displays manuscript description', () => {
   expect(getByRole('button', { name: /show more/i })).toBeInTheDocument();
 });
 
-it('does not display reply button if isActiveManuscript is false', async () => {
+it('does not display edit button by default', async () => {
   const asapAffiliationIncludedDetails = 'test discussion';
   const commenter = {
     id: 'commenter-id',
@@ -592,7 +594,54 @@ it('does not display reply button if isActiveManuscript is false', async () => {
       {...props}
       version={updatedVersion}
       getDiscussion={getDiscussion}
-      isActiveManuscript={false}
+      isActiveVersion={false}
+      useVersionById={useVersionById}
+    />,
+  );
+  userEvent.click(getByLabelText('Expand Version'));
+
+  await waitFor(() => {
+    expect(getByText(/test discussion/i)).toBeVisible();
+    expect(queryByRole('button', { name: /Reply/i })).not.toBeInTheDocument();
+  });
+});
+
+it('does not display reply button if isActiveVersion is false', async () => {
+  const asapAffiliationIncludedDetails = 'test discussion';
+  const commenter = {
+    id: 'commenter-id',
+    firstName: 'Connor',
+    lastName: 'Commenter',
+    displayName: 'Connor Commenter',
+    teams: [
+      {
+        id: 'team-commenter',
+        name: 'Team Commenter',
+      },
+    ],
+  };
+
+  const asapAffiliationIncludedDiscussion = createDiscussionResponse(
+    asapAffiliationIncludedDetails,
+  );
+  asapAffiliationIncludedDiscussion.message.createdBy = commenter;
+  asapAffiliationIncludedDiscussion.message.createdDate =
+    '2024-06-21T11:06:58.899Z';
+
+  const getDiscussion = jest.fn();
+  getDiscussion.mockReturnValueOnce(asapAffiliationIncludedDiscussion);
+
+  const updatedVersion = {
+    ...baseVersion,
+    asapAffiliationIncludedDetails: asapAffiliationIncludedDiscussion,
+  };
+
+  const { getByText, queryByRole, getByLabelText } = render(
+    <ManuscriptVersionCard
+      {...props}
+      version={updatedVersion}
+      getDiscussion={getDiscussion}
+      isActiveVersion={false}
       useVersionById={useVersionById}
     />,
   );

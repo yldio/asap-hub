@@ -19,6 +19,9 @@ const props = {
   },
   versionId: 'version-id',
   manuscriptId: 'manuscript-id',
+  isComplianceReviewer: false,
+  canUpdateDiscussion: false,
+  isActiveReport: true,
   createComplianceDiscussion: jest
     .fn()
     .mockImplementation(() => 'discussion-id'),
@@ -56,7 +59,7 @@ it('displays compliance report description, url and creation details when expand
 
 it('calls setVersion when component is unmouted and a discussion was created', async () => {
   const { getByLabelText, findByText, unmount } = render(
-    <ComplianceReportCard {...props} />,
+    <ComplianceReportCard {...props} canUpdateDiscussion />,
   );
 
   await act(async () => {

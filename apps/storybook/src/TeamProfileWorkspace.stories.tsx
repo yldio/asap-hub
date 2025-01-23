@@ -25,11 +25,12 @@ export const Normal = () => (
     isComplianceReviewer={false}
     onUpdateManuscript={() => Promise.resolve(createManuscriptResponse())}
     getDiscussion={() => createDiscussionResponse()}
-    onSave={() => Promise.resolve()}
+    onSave={() => Promise.resolve(createManuscriptResponse())}
     createComplianceDiscussion={() =>
       Promise.resolve('compliance-discussion-id')
     }
     useVersionById={() => [undefined, () => {}]}
     onEndDiscussion={() => Promise.resolve()}
+    useManuscriptById={() => [undefined, () => {}]}
   />
 );

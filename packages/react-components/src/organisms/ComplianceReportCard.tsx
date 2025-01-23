@@ -4,6 +4,7 @@ import {
   DiscussionDataObject,
   ManuscriptVersion,
   ComplianceReportDataObject,
+  ManuscriptDataObject,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { memo, Suspense, useEffect, useRef, useState } from 'react';
@@ -37,7 +38,10 @@ type ComplianceReportCardProps = ComplianceReportResponse & {
     message: string,
   ) => Promise<string>;
   getDiscussion: (id: string) => DiscussionDataObject | undefined;
-  onSave: (id: string, data: DiscussionRequest) => Promise<void>;
+  onSave: (
+    id: string,
+    data: DiscussionRequest,
+  ) => Promise<ManuscriptDataObject | undefined>;
   setVersion: (
     callback: (prev: ManuscriptVersion) => ManuscriptVersion,
   ) => void;
@@ -45,6 +49,9 @@ type ComplianceReportCardProps = ComplianceReportResponse & {
   isComplianceReviewer: boolean;
   canUpdateDiscussion: boolean;
   isActiveReport: boolean;
+  setManuscript: React.Dispatch<
+    React.SetStateAction<ManuscriptDataObject | undefined>
+  >;
 };
 
 const toastStyles = css({
@@ -129,6 +136,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   onSave,
   setVersion,
   onEndDiscussion,
+  setManuscript,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [startDiscussion, setStartDiscussion] = useState(false);
@@ -215,14 +223,16 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                           complianceReportId: string,
                           data: DiscussionRequest,
                         ) => {
-                          if (!manuscriptId || !versionId) return;
+                          if (!manuscriptId || !versionId) return undefined;
                           const createdDiscussionId =
                             await createComplianceDiscussion(
                               complianceReportId,
                               data.text,
                             );
                           startedDiscussionIdRef.current = createdDiscussionId;
+                          return undefined;
                         }}
+                        setManuscript={setManuscript}
                       />
                     )}
                   </>
@@ -249,6 +259,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                     getDiscussion={getDiscussion}
                     onSave={onSave}
                     key={discussionId}
+                    setManuscript={setManuscript}
                   />
                 </Suspense>
               </>

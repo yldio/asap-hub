@@ -219,7 +219,7 @@ export const useInvalidateManuscriptIndex = () => {
 };
 
 export const useManuscriptById = (id: string) =>
-  useRecoilValue(manuscriptState(id));
+  useRecoilState(manuscriptState(id));
 
 export const useSetManuscriptItem = () => {
   const [refresh, setRefresh] = useRecoilState(refreshManuscriptIndex);
@@ -323,11 +323,9 @@ export const useSetDiscussion = () =>
 export const useDiscussionById = (id: string) =>
   useRecoilValue(discussionState(id));
 
-export const useReplyToDiscussion = (teamId: string) => {
+export const useReplyToDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);
   const setDiscussion = useSetDiscussion();
-  const setTeam = useSetRecoilState(teamState(teamId));
-
   return async (
     id: string,
     patch: DiscussionRequest,
@@ -340,19 +338,8 @@ export const useReplyToDiscussion = (teamId: string) => {
       manuscriptId,
     );
     setDiscussion(response.discussion);
-    if (response.manuscript) {
-      setTeam(
-        (team) =>
-          team && {
-            ...team,
-            manuscripts: team.manuscripts.map((manuscript) =>
-              manuscript.id === manuscriptId
-                ? { ...manuscript, ...response.manuscript }
-                : manuscript,
-            ),
-          },
-      );
-    }
+
+    return response.manuscript;
   };
 };
 

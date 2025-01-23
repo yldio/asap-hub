@@ -25,8 +25,13 @@ const mockVersionData = {
 };
 
 const baseUser = createUserResponse({}, 1);
-const props: ComponentProps<typeof ManuscriptCard> = {
-  ...createManuscriptResponse(),
+const props: ComponentProps<typeof ManuscriptCard> & {
+  teamId: string;
+  useManuscriptById: jest.Mock;
+} = {
+  teamId: 'team-1',
+  useManuscriptById: jest.fn(),
+  id: `manuscript_0`,
   user: { ...baseUser, algoliaApiKey: 'algolia-mock-key' },
   isComplianceReviewer: false,
   onUpdateManuscript: jest.fn(),
@@ -87,7 +92,7 @@ describe('isManuscriptLead', () => {
   it('returns true when user is team lead', () => {
     expect(
       isManuscriptLead({
-        version: props.versions[0],
+        version: createManuscriptResponse().versions[0]!,
         user: {
           ...user,
           teams: [
@@ -103,7 +108,7 @@ describe('isManuscriptLead', () => {
   it('returns false when user is not team lead', () => {
     expect(
       isManuscriptLead({
-        version: props.versions[0],
+        version: createManuscriptResponse().versions[0]!,
         user: {
           ...user,
           teams: [
@@ -145,13 +150,13 @@ it('displays manuscript version card when expanded', () => {
   rerender(
     <ManuscriptCard
       {...props}
-      versions={[
-        {
-          ...props.versions[0]!,
-          type: 'Original Research',
-          lifecycle: 'Preprint',
-        },
-      ]}
+      // versions={[
+      //   {
+      //     ...createManuscriptResponse().versions[0]!,
+      //     type: 'Original Research',
+      //     lifecycle: 'Preprint',
+      //   },
+      // ]}
       useVersionById={useVersionById}
     />,
   );
@@ -179,9 +184,7 @@ it('displays share compliance report button if user has permission', () => {
 it('displays submit revised manuscript button if user is an author', () => {
   const manuscriptVersions = createManuscriptResponse().versions;
   manuscriptVersions[0]!.firstAuthors = [user];
-  const { getByRole } = render(
-    <ManuscriptCard {...props} versions={manuscriptVersions} />,
-  );
+  const { getByRole } = render(<ManuscriptCard {...props} />);
 
   expect(
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
@@ -222,7 +225,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
   const { getByRole } = render(
     <Router history={history}>
       <Route path="">
-        <ManuscriptCard {...props} versions={manuscriptVersions} />
+        <ManuscriptCard {...props} />
       </Route>
     </Router>,
   );
@@ -236,11 +239,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
 
 it('displays the confirmation modal when isComplianceReviewer is true and the user tries to change the manuscript status to a different one than it has started', () => {
   const { getByRole, getByTestId, getByText } = render(
-    <ManuscriptCard
-      {...props}
-      isComplianceReviewer
-      status="Addendum Required"
-    />,
+    <ManuscriptCard {...props} isComplianceReviewer />,
   );
 
   const statusButton = getByTestId('status-button');
@@ -254,11 +253,7 @@ it('displays the confirmation modal when isComplianceReviewer is true and the us
 
 it('does not display confirmation modal when isComplianceReviewer is true but the user tries to select the same manuscript status it is currently', () => {
   const { getByRole, getByTestId, queryByText } = render(
-    <ManuscriptCard
-      {...props}
-      isComplianceReviewer
-      status="Addendum Required"
-    />,
+    <ManuscriptCard {...props} isComplianceReviewer />,
   );
 
   const statusButton = getByTestId('status-button');
@@ -284,7 +279,6 @@ it('calls onUpdateManuscript when user confirms status change', async () => {
     <ManuscriptCard
       {...props}
       isComplianceReviewer
-      status="Addendum Required"
       id="manuscript-1"
       onUpdateManuscript={onUpdateManuscript}
     />,
@@ -332,7 +326,6 @@ it.each`
       <ManuscriptCard
         {...props}
         isComplianceReviewer
-        status="Addendum Required"
         id="manuscript-1"
         onUpdateManuscript={onUpdateManuscript}
       />,
@@ -365,13 +358,7 @@ it('disables submit compliance report button when there is an existing complianc
   manuscriptVersions[0]!.complianceReport = complianceReport;
 
   const { getByRole } = render(
-    <ManuscriptCard
-      {...props}
-      isComplianceReviewer
-      status="Waiting for Report"
-      id="manuscript-1"
-      versions={manuscriptVersions}
-    />,
+    <ManuscriptCard {...props} isComplianceReviewer id="manuscript-1" />,
   );
 
   const complianceReportButton = getByRole('button', {
@@ -387,16 +374,24 @@ it.each`
   ${'Closed (other)'}     | ${true}
 `(
   'does not display submit compliance report if team isActiveTeam is $isActiveTeam and status is $status',
-  async ({ status, isActiveTeam }) => {
-    const manuscriptVersions = createManuscriptResponse().versions;
-
+  async ({ isActiveTeam }) => {
+    // const manuscriptVersions = createManuscriptResponse().versions;
+    jest.mock('../../hooks/useManuscriptById', () => ({
+      useManuscriptById: jest.fn().mockImplementation((id) => [
+        {
+          id,
+          title: 'Mock Manuscript Title',
+          status: 'Mock Status',
+          versions: [],
+        },
+        jest.fn(),
+      ]),
+    }));
     const { queryByRole } = render(
       <ManuscriptCard
         {...props}
         isComplianceReviewer
-        status={status}
         id="manuscript-1"
-        versions={manuscriptVersions}
         isActiveTeam={isActiveTeam}
       />,
     );

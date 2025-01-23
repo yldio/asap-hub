@@ -481,7 +481,7 @@ describe('useReplyToDiscussion', () => {
       <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
     );
 
-    const { result } = renderHook(() => useReplyToDiscussion(teamId), {
+    const { result } = renderHook(() => useReplyToDiscussion(), {
       wrapper,
     });
 
@@ -522,14 +522,14 @@ describe('useReplyToDiscussion', () => {
       <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
     );
 
-    const { result } = renderHook(() => useReplyToDiscussion(teamId), {
+    const { result } = renderHook(() => useReplyToDiscussion(), {
       wrapper,
     });
 
     const patch = { text: 'Reply message' };
 
     await act(async () => {
-      await result.current(discussionId, patch, manuscriptId);
+      await result.current(discussionId, patch);
     });
 
     const { result: stateResult } = renderHook(
@@ -565,14 +565,14 @@ describe('useReplyToDiscussion', () => {
       <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
     );
 
-    const { result } = renderHook(() => useReplyToDiscussion(teamId), {
+    const { result } = renderHook(() => useReplyToDiscussion(), {
       wrapper,
     });
 
     const patch = { text: 'Reply message' };
 
     await act(async () => {
-      await result.current(discussionId, patch, manuscriptId);
+      await result.current(discussionId, patch);
     });
 
     const { result: stateResult } = renderHook(
@@ -601,14 +601,14 @@ describe('useReplyToDiscussion', () => {
       <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
     );
 
-    const { result } = renderHook(() => useReplyToDiscussion(teamId), {
+    const { result } = renderHook(() => useReplyToDiscussion(), {
       wrapper,
     });
 
     const patch = { text: 'Reply message' };
 
     await act(async () => {
-      await result.current(discussionId, patch, manuscriptId);
+      await result.current(discussionId, patch);
     });
 
     const { result: stateResult } = renderHook(
@@ -631,7 +631,7 @@ describe('useReplyToDiscussion', () => {
       <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
     );
 
-    const { result } = renderHook(() => useReplyToDiscussion(teamId), {
+    const { result } = renderHook(() => useReplyToDiscussion(), {
       wrapper,
     });
 
@@ -639,7 +639,7 @@ describe('useReplyToDiscussion', () => {
 
     await expect(
       act(async () => {
-        await result.current(discussionId, patch, manuscriptId);
+        await result.current(discussionId, patch);
       }),
     ).rejects.toThrow();
 

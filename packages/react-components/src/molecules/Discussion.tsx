@@ -1,4 +1,4 @@
-import { DiscussionDataObject } from '@asap-hub/model';
+import { DiscussionDataObject, ManuscriptDataObject } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, FC, useState } from 'react';
 import { UserAvatarList } from '..';
@@ -21,6 +21,9 @@ type DiscussionProps = Pick<
   modalTitle: string;
   getDiscussion: (id: string) => DiscussionDataObject | undefined;
   onEndDiscussion?: (id: string) => Promise<void>;
+  setManuscript: React.Dispatch<
+    React.SetStateAction<ManuscriptDataObject | undefined>
+  >;
 };
 
 const iconStyles = css({
@@ -52,6 +55,7 @@ const Discussion: FC<DiscussionProps> = ({
   getDiscussion,
   onSave,
   onEndDiscussion,
+  setManuscript,
 }) => {
   const discussion = getDiscussion(id);
   const [replyToDiscussion, setReplyToDiscussion] = useState<boolean>(false);
@@ -81,6 +85,7 @@ const Discussion: FC<DiscussionProps> = ({
           discussionId={id}
           manuscriptId={manuscriptId}
           onSave={onSave}
+          setManuscript={setManuscript}
         />
       )}
       <UserComment {...message} />

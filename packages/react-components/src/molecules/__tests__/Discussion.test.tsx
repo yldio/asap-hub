@@ -15,6 +15,7 @@ const props: ComponentProps<typeof Discussion> = {
   canReply: true,
   getDiscussion: jest.fn().mockReturnValue(createDiscussionResponse()),
   onSave: jest.fn(),
+  setManuscript: jest.fn(),
 };
 
 it('handles case when discussion is not found', () => {

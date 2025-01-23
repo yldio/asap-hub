@@ -23,7 +23,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
   teamId,
 }) => {
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
-  const manuscript = useManuscriptById(manuscriptId);
+  const [manuscript] = useManuscriptById(manuscriptId);
   const { setFormType } = useManuscriptToast();
 
   const pushFromHere = usePushFromHere();

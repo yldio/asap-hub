@@ -1,6 +1,7 @@
 import { User } from '@asap-hub/auth';
 import {
   AuthorResponse,
+  ManuscriptDataObject,
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptStatus,
@@ -27,10 +28,7 @@ import { mobileScreen, perRem, rem, smallDesktopScreen } from '../pixels';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
 
-type ManuscriptCardProps = Pick<
-  TeamManuscript,
-  'id' | 'title' | 'versions' | 'status'
-> &
+type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
   Pick<
     ComponentProps<typeof ManuscriptVersionCard>,
     'onSave' | 'getDiscussion'
@@ -56,6 +54,12 @@ type ManuscriptCardProps = Pick<
       (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
     ];
     onEndDiscussion: (id: string) => Promise<void>;
+    useManuscriptById: (
+      id: string,
+    ) => [
+      ManuscriptDataObject | undefined,
+      React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
+    ];
   };
 
 const manuscriptContainerStyles = css({
@@ -178,9 +182,6 @@ export const getReviewerStatusType = (
 
 const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   id,
-  title,
-  versions,
-  status,
   teamId,
   isComplianceReviewer,
   isActiveTeam,
@@ -191,12 +192,14 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   createComplianceDiscussion,
   useVersionById,
   onEndDiscussion,
+  useManuscriptById,
 }) => {
+  const [manuscript, setManuscript] = useManuscriptById(id);
+  const { title, status, versions } = manuscript ?? { versions: [] };
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
 
   const [expanded, setExpanded] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(status || '');
   const [newSelectedStatus, setNewSelectedStatus] =
     useState<ManuscriptStatus>();
   const history = useHistory();
@@ -222,7 +225,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   };
 
   const handleStatusClick = (statusItem: ManuscriptStatus) => {
-    if (statusItem !== selectedStatus) {
+    if (statusItem !== status) {
       setDisplayConfirmStatusChangeModal(true);
     }
   };
@@ -238,12 +241,14 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     user,
   });
   const isActiveManuscript =
-    !closedManuscriptStatuses.includes(selectedStatus ?? '') && isActiveTeam;
+    !closedManuscriptStatuses.includes(status ?? '') && isActiveTeam;
 
   const handleStatusChange = async () => {
     if (newSelectedStatus) {
-      await onUpdateManuscript(id, { status: newSelectedStatus });
-      setSelectedStatus(newSelectedStatus);
+      const updatedManuscript = await onUpdateManuscript(id, {
+        status: newSelectedStatus,
+      });
+      setManuscript(updatedManuscript);
     }
   };
 
@@ -278,10 +283,10 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
             <span css={toastHeaderStyles}>
               <Subtitle noMargin>{title}</Subtitle>
               <StatusButton
-                buttonChildren={() => <span>{selectedStatus}</span>}
+                buttonChildren={() => <span>{status}</span>}
                 canEdit={isComplianceReviewer && isActiveManuscript}
                 selectedStatusType={getReviewerStatusType(
-                  selectedStatus as (typeof manuscriptStatus)[number],
+                  status as (typeof manuscriptStatus)[number],
                 )}
               >
                 {manuscriptStatus.map((statusItem) => ({
@@ -350,6 +355,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 onEndDiscussion={onEndDiscussion}
                 isComplianceReviewer={isComplianceReviewer}
                 isManuscriptContributor={hasUpdateAccess}
+                setManuscrit={setManuscript}
               />
             ))}
           </div>

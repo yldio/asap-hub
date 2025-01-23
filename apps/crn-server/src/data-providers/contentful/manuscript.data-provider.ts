@@ -17,6 +17,7 @@ import {
   Link,
   Maybe,
   patchAndPublish,
+  pollContentfulGql,
 } from '@asap-hub/contentful';
 import {
   ApcCoverageOption,
@@ -312,11 +313,11 @@ export class ManuscriptContentfulDataProvider
   ): Promise<void> {
     const environment = await this.getRestClient();
     const manuscriptEntry = await environment.getEntry(id);
-
+    let published = manuscriptEntry;
     if ('status' in manuscriptData) {
       const previousStatus = manuscriptEntry.fields.status['en-US'];
 
-      await patchAndPublish(manuscriptEntry, {
+      published = await patchAndPublish(manuscriptEntry, {
         status: manuscriptData.status,
         previousStatus,
         statusUpdatedBy: getLinkEntity(userId),
@@ -338,7 +339,7 @@ export class ManuscriptContentfulDataProvider
       const lastVersionId = lastVersion.sys.id;
 
       const lastVersionEntry = await environment.getEntry(lastVersionId);
-      await patchAndPublish(manuscriptEntry, {
+      published = await patchAndPublish(manuscriptEntry, {
         title: manuscriptData.title,
         teams: getLinkEntities(version.teams),
       });
@@ -365,6 +366,18 @@ export class ManuscriptContentfulDataProvider
         ...quickCheckDiscussions,
       });
     }
+
+    const fetchManuscriptById = () =>
+      this.contentfulClient.request<
+        FetchManuscriptByIdQuery,
+        FetchManuscriptByIdQueryVariables
+      >(FETCH_MANUSCRIPT_BY_ID, { id });
+
+    await pollContentfulGql<FetchManuscriptByIdQuery>(
+      published.sys.publishedVersion || Infinity,
+      fetchManuscriptById,
+      'manuscripts',
+    );
   }
 }
 

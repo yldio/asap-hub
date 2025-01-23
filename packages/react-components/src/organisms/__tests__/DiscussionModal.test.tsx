@@ -18,6 +18,7 @@ const defaultProps: ComponentProps<typeof DiscussionModal> = {
   onDismiss: jest.fn(),
   discussionId,
   onSave: jest.fn(),
+  setManuscript: jest.fn(),
 };
 
 it('renders the form', async () => {

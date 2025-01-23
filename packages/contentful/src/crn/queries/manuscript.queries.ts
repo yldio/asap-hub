@@ -6,6 +6,7 @@ export const manuscriptContentQueryFragment = gql`
   fragment ManuscriptsContent on Manuscripts {
     sys {
       id
+      publishedVersion
     }
     title
     status

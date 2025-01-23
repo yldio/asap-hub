@@ -1,5 +1,10 @@
 import { isEnabled } from '@asap-hub/flags';
-import { ManuscriptVersion, TeamResponse, TeamTool } from '@asap-hub/model';
+import {
+  ManuscriptDataObject,
+  ManuscriptVersion,
+  TeamResponse,
+  TeamTool,
+} from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -132,6 +137,12 @@ type TeamProfileWorkspaceProps = Readonly<
       (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
     ];
     readonly onEndDiscussion: (id: string) => Promise<void>;
+    readonly useManuscriptById: (
+      id: string,
+    ) => [
+      ManuscriptDataObject | undefined,
+      React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
+    ];
   };
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
@@ -152,6 +163,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   createComplianceDiscussion,
   useVersionById,
   onEndDiscussion,
+  useManuscriptById,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
@@ -228,7 +240,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                     {manuscripts.map((manuscript) => (
                       <div key={manuscript.id}>
                         <ManuscriptCard
-                          {...manuscript}
+                          id={manuscript.id}
                           user={user}
                           teamId={id}
                           isComplianceReviewer={isComplianceReviewer}
@@ -241,6 +253,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           }
                           useVersionById={useVersionById}
                           onEndDiscussion={onEndDiscussion}
+                          useManuscriptById={useManuscriptById}
                         />
                       </div>
                     ))}
@@ -279,6 +292,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           }
                           useVersionById={useVersionById}
                           onEndDiscussion={onEndDiscussion}
+                          useManuscriptById={useManuscriptById}
                         />
                       </div>
                     ))}

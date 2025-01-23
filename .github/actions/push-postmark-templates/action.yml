@@ -11,8 +11,10 @@ runs:
   using: 'composite'
   steps:
     - name: Install Postmark CLI
+      shell: bash
       run: npm install -g postmark-cli
     - name: Push templates to Postmark
+      shell: bash
       run: yarn postmark:push:templates
       env:
         POSTMARK_SERVER_TOKEN: ${{ inputs.postmark-server-token }}

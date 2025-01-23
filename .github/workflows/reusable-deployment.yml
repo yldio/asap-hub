@@ -69,6 +69,9 @@ on:
       CONTENTFUL_MANAGEMENT_TOKEN:
         description: 'Contentful Management Token'
         required: true
+      POSTMARK_SERVER_TOKEN:
+        description: 'Postmark Server Token'
+        required: true
       SLACK_WEBHOOK:
         description: 'Slack webhook URL'
         required: false
@@ -495,3 +498,18 @@ jobs:
           API_URL: ${{ steps.setup.outputs.gp2-api-url }}
           AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-additional-claim-domain }}
           AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
+
+  postmark-templates:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment:
+      name: ${{ inputs.environment-name }}
+    steps:
+      - name: Push templates to Postmark
+        uses: ./.github/actions/push-postmark-templates
+        with:
+          postmark-server-token: ${{ secrets.POSTMARK_SERVER_TOKEN }}

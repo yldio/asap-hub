@@ -1,0 +1,20 @@
+name: Push postmark templates action
+description: Reusable push postmark templates
+
+inputs:
+  postmark-server-token:
+    description: 'Postmark Server Token'
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Install Postmark CLI
+      run: npm install -g postmark-cli
+    - name: Push templates to Postmark
+      run: yarn postmark:push:templates
+      env:
+        POSTMARK_SERVER_TOKEN: ${{ inputs.postmark-server-token }}

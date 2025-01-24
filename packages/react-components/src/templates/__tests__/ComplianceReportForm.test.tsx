@@ -20,6 +20,7 @@ beforeEach(() => {
 const defaultProps: ComponentProps<typeof ComplianceReportForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   onSuccess: jest.fn(),
+  setManuscript: jest.fn(),
   manuscriptTitle: 'manuscript title',
   manuscriptVersionId: 'manuscript-version-1',
 };

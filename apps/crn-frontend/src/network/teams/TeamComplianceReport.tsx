@@ -23,7 +23,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
   teamId,
 }) => {
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
-  const [manuscript] = useManuscriptById(manuscriptId);
+  const [manuscript, setManuscript] = useManuscriptById(manuscriptId);
   const { setFormType } = useManuscriptToast();
 
   const pushFromHere = usePushFromHere();
@@ -52,6 +52,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
             onSave={createComplianceReport}
             manuscriptTitle={manuscript.title}
             manuscriptVersionId={manuscript.versions[0].id}
+            setManuscript={setManuscript}
           />
         </Frame>
       </FormProvider>

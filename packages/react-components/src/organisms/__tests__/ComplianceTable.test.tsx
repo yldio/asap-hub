@@ -11,6 +11,7 @@ describe('ComplianceTable', () => {
     numberOfPages: 1,
     currentPageIndex: 0,
     renderPageHref: () => '',
+    onUpdateManuscript: jest.fn(),
   };
 
   const complianceData: PartialManuscriptResponse = {

@@ -87,6 +87,7 @@ export class ManuscriptContentfulDataProvider
           const version = manuscript.versionsCollection?.items[0];
           const team = manuscript.teamsCollection?.items[0];
           return {
+            manuscriptId: manuscript.sys.id,
             status: manuscriptMapStatus(manuscript.status) || undefined,
             id: getManuscriptVersionUID({
               version: {

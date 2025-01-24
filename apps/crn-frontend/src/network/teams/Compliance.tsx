@@ -7,7 +7,7 @@ import {
 } from '@asap-hub/model';
 
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { useManuscripts } from './state';
+import { useManuscripts, usePutManuscript } from './state';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 
@@ -29,6 +29,7 @@ const Compliance: React.FC = () => {
 
   const [sortingDirection, setSortingDirection] =
     useState<ComplianceSortingDirection>(complianceInitialSortingDirection);
+  const updateManuscript = usePutManuscript();
 
   return (
     <article>
@@ -47,6 +48,7 @@ const Compliance: React.FC = () => {
           currentPageIndex={currentPage}
           numberOfPages={numberOfPages}
           renderPageHref={renderPageHref}
+          onUpdateManuscript={updateManuscript}
         />
       </SearchFrame>
     </article>

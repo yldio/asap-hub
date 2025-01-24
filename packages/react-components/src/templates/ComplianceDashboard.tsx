@@ -1,5 +1,7 @@
 import {
   ComplianceSortingDirection,
+  ManuscriptPutRequest,
+  ManuscriptResponse,
   manuscriptStatus,
   PartialManuscriptResponse,
   SortCompliance,
@@ -53,6 +55,10 @@ type ComplianceDashboardProps = ComponentProps<typeof PageControls> & {
   setSortingDirection: React.Dispatch<
     React.SetStateAction<ComplianceSortingDirection>
   >;
+  onUpdateManuscript: (
+    manuscriptId: string,
+    payload: ManuscriptPutRequest,
+  ) => Promise<ManuscriptResponse>;
 };
 
 const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
@@ -61,6 +67,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
   sortingDirection,
   setSort,
   setSortingDirection,
+  onUpdateManuscript,
   ...pageControlsProps
 }) => (
   <article>
@@ -82,6 +89,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
           sortingDirection={sortingDirection}
           setSort={setSort}
           setSortingDirection={setSortingDirection}
+          onUpdateManuscript={onUpdateManuscript}
         />
         <section css={pageControlsStyles}>
           <PageControls {...pageControlsProps} />

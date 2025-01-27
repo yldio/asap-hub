@@ -830,6 +830,7 @@ export type PartialManuscriptResponse = Pick<
       UserResponse,
       'id' | 'firstName' | 'lastName' | 'avatarUrl'
     >[];
+    manuscriptId: string;
   };
 
 export type ListPartialManuscriptResponse =

@@ -2,22 +2,15 @@ import {
   ComplianceSortingDirection,
   ManuscriptPutRequest,
   ManuscriptResponse,
-  manuscriptStatus,
-  ManuscriptStatus,
   PartialManuscriptResponse,
   SortCompliance,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useState } from 'react';
-import { StatusButton } from '..';
-import { Avatar, Card, Link, Pill } from '../atoms';
+import { Card } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
-import { formatDateToTimezone } from '../date';
 import { rem, tabletScreen } from '../pixels';
-import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
-import { getReviewerStatusType } from './ManuscriptCard';
+import ComplianceTableRow from './ComplianceTableRow';
 
 const container = css({
   display: 'grid',
@@ -30,13 +23,6 @@ const gridTitleStyles = css({
     display: 'inherit',
     paddingBottom: rem(16),
   },
-});
-
-const rowTitleStyles = css({
-  paddingTop: rem(32),
-  paddingBottom: rem(16),
-  ':first-of-type': { paddingTop: 0 },
-  [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
 
 const rowStyles = css({
@@ -72,11 +58,6 @@ const titleStyles = css({
   gap: rem(8),
 });
 
-const teamNameStyles = css({
-  display: 'flex',
-  gap: rem(3),
-});
-
 type ComplianceTableProps = {
   data: PartialManuscriptResponse[];
   sort?: SortCompliance;
@@ -106,105 +87,13 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
           <span css={titleStyles}>APC Coverage</span>
           <span css={titleStyles}>Assigned Users</span>
         </div>
-        {data.map((row) => {
-          const [
-            displayConfirmStatusChangeModal,
-            setDisplayConfirmStatusChangeModal,
-          ] = useState(false);
-          const [newSelectedStatus, setNewSelectedStatus] =
-            useState<ManuscriptStatus>();
-          const [selectedStatus, setSelectedStatus] = useState(status || '');
-
-          const handleStatusClick = (statusItem: ManuscriptStatus) => {
-            if (statusItem !== selectedStatus) {
-              setDisplayConfirmStatusChangeModal(true);
-            }
-          };
-          const handleStatusChange = async () => {
-            if (newSelectedStatus) {
-              await onUpdateManuscript(row.id, {
-                status: newSelectedStatus,
-              });
-              setSelectedStatus(newSelectedStatus);
-            }
-          };
-          return (
-            <>
-              {displayConfirmStatusChangeModal && newSelectedStatus && (
-                <ConfirmStatusChangeModal
-                  onDismiss={() => setDisplayConfirmStatusChangeModal(false)}
-                  onConfirm={handleStatusChange}
-                  newStatus={newSelectedStatus}
-                />
-              )}
-              <div key={row.id} css={[rowStyles]}>
-                <span css={[titleStyles, rowTitleStyles]}>Team</span>
-                <p css={teamNameStyles}>
-                  <Link
-                    href={network({}).teams({}).team({ teamId: row.team.id }).$}
-                  >
-                    {row.team.displayName}
-                  </Link>
-                </p>
-                <span css={[titleStyles, rowTitleStyles]}>ID</span>
-                <p>
-                  {
-                    <Pill accent="blue" numberOfLines={3}>
-                      <span css={{ marginLeft: '7px', display: 'block' }}>
-                        {row.id}
-                      </span>
-                    </Pill>
-                  }
-                </p>
-                <span css={[titleStyles, rowTitleStyles]}>Last Updated</span>
-                <p>
-                  {row.lastUpdated &&
-                    formatDateToTimezone(
-                      row.lastUpdated,
-                      'E, d MMM y',
-                    ).toUpperCase()}
-                </p>
-                <span css={[titleStyles, rowTitleStyles]}>Status</span>
-                <span css={{ margin: `${rem(17)} 0` }}>
-                  <StatusButton
-                    buttonChildren={() => <span>{row.status}</span>}
-                    canEdit={
-                      !['Closed (other)', 'Compliant'].includes(
-                        row.status ?? '',
-                      )
-                    }
-                    selectedStatusType={getReviewerStatusType(
-                      row.status as (typeof manuscriptStatus)[number],
-                    )}
-                    wrap
-                  >
-                    {manuscriptStatus.map((statusItem) => ({
-                      item: statusItem,
-                      type: getReviewerStatusType(statusItem),
-                      onClick: () => {
-                        setNewSelectedStatus(statusItem);
-                        handleStatusClick(statusItem);
-                      },
-                    }))}
-                  </StatusButton>
-                </span>
-                <span css={[titleStyles, rowTitleStyles]}>APC Coverage</span>
-                <p>{row.requestingApcCoverage}</p>
-                <span css={[titleStyles, rowTitleStyles]}>Assigned Users</span>
-                <div css={{ width: rem(32), alignSelf: 'center' }}>
-                  {row.assignedUsers?.map((user) => (
-                    <Avatar
-                      firstName={user.firstName}
-                      lastName={user.lastName}
-                      imageUrl={user.avatarUrl}
-                      key={user.id}
-                    />
-                  ))}
-                </div>
-              </div>
-            </>
-          );
-        })}
+        {data.map((row) => (
+          <ComplianceTableRow
+            key={row.id}
+            data={row}
+            onUpdateManuscript={onUpdateManuscript}
+          />
+        ))}
       </div>
     </Card>
   );

@@ -418,10 +418,7 @@ export class ManuscriptContentfulDataProvider
       status: 'Manuscript Resubmitted',
     });
 
-    await this.sendEmailNotification(
-      'manuscript_resubmitted',
-      manuscriptEntry.sys.id,
-    );
+    await this.sendEmailNotification('manuscript_resubmitted', id);
   }
 
   async update(

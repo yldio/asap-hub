@@ -4,6 +4,7 @@ export type ContentfulWebhookPayloadType =
   | 'externalAuthors'
   | 'interestGroups'
   | 'labs'
+  | 'manuscripts'
   | 'news'
   | 'researchOutputs'
   | 'teams'

@@ -294,8 +294,8 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
 `;
 
 export const FETCH_MANUSCRIPTS = gql`
-  query FetchManuscripts($limit: Int, $skip: Int) {
-    manuscriptsCollection(limit: $limit, skip: $skip) {
+  query FetchManuscripts($limit: Int, $skip: Int, $where: ManuscriptsFilter) {
+    manuscriptsCollection(limit: $limit, skip: $skip, where: $where) {
       total
       items {
         sys {

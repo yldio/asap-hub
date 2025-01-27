@@ -1,3 +1,4 @@
+import { ManuscriptsFilter } from '@asap-hub/contentful';
 import { NotFoundError } from '@asap-hub/errors';
 import {
   FetchOptions,
@@ -38,7 +39,9 @@ export default class ManuscriptController {
     return manuscript;
   }
 
-  async fetch(options: FetchOptions): Promise<ListPartialManuscriptResponse> {
+  async fetch(
+    options: FetchOptions<ManuscriptsFilter>,
+  ): Promise<ListPartialManuscriptResponse> {
     const { take = 8, skip = 0 } = options;
 
     return this.manuscriptDataProvider.fetch({

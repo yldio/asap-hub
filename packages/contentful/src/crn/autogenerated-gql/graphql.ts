@@ -18233,6 +18233,7 @@ export type FetchManuscriptByIdQuery = {
 export type FetchManuscriptsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ManuscriptsFilter>;
 }>;
 
 export type FetchManuscriptsQuery = {
@@ -34244,6 +34245,17 @@ export const FetchManuscriptsDocument = {
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ManuscriptsFilter' },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -34266,6 +34278,14 @@ export const FetchManuscriptsDocument = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
                 },
               },
             ],

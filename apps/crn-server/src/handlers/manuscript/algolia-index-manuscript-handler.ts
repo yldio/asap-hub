@@ -1,13 +1,13 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import { NotFoundError } from '@asap-hub/errors';
 import { ManuscriptEvent } from '@asap-hub/model';
 import { EventBridgeHandler, ManuscriptPayload } from '@asap-hub/server-common';
-import { NotFoundError } from '@asap-hub/errors';
 import { Boom, isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ManuscriptController from '../../controllers/manuscript.controller';
-import { getManuscriptsDataProvider } from '../../dependencies/manuscripts.dependencies';
 import { getExternalAuthorDataProvider } from '../../dependencies/external-authors.dependencies';
+import { getManuscriptsDataProvider } from '../../dependencies/manuscripts.dependencies';
 import { getAssetDataProvider } from '../../dependencies/users.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';

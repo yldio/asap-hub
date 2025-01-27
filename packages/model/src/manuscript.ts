@@ -834,3 +834,59 @@ export type PartialManuscriptResponse = Pick<
 
 export type ListPartialManuscriptResponse =
   ListResponse<PartialManuscriptResponse>;
+
+export type ManuscriptUpdateAction =
+  | 'manuscript_submitted'
+  | 'manuscript_resubmitted'
+  | 'status_changed_waiting_for_grantee_reply'
+  | 'status_changed_review_compliance_report'
+  | 'status_changed_submit_final_publication'
+  | 'status_changed_addendum_required'
+  | 'status_changed_compliant'
+  | 'status_changed_closed_other';
+
+export type TemplateName =
+  | 'Waiting for Report (Grantees)'
+  | 'Waiting for Report (OS Team)'
+  | 'Manuscript Re-Submitted (For Grantees)'
+  | 'Manuscript Re-Submitted (For OS Team)'
+  | 'Waiting for Grantee Reply'
+  | 'Review Compliance Report'
+  | 'Submit Final Publication'
+  | 'Addendum Required'
+  | 'Compliant'
+  | 'Closed (Other)';
+
+type ManuscriptNotifications = Record<
+  ManuscriptUpdateAction,
+  Partial<Record<'open_science_team' | 'grantee', TemplateName>>
+>;
+
+export const manuscriptNotificationMapping: ManuscriptNotifications = {
+  manuscript_submitted: {
+    grantee: 'Waiting for Report (Grantees)',
+    open_science_team: 'Waiting for Report (OS Team)',
+  },
+  manuscript_resubmitted: {
+    grantee: 'Manuscript Re-Submitted (For Grantees)',
+    open_science_team: 'Manuscript Re-Submitted (For OS Team)',
+  },
+  status_changed_waiting_for_grantee_reply: {
+    grantee: 'Waiting for Grantee Reply',
+  },
+  status_changed_review_compliance_report: {
+    grantee: 'Review Compliance Report',
+  },
+  status_changed_submit_final_publication: {
+    grantee: 'Submit Final Publication',
+  },
+  status_changed_addendum_required: {
+    grantee: 'Addendum Required',
+  },
+  status_changed_compliant: {
+    grantee: 'Compliant',
+  },
+  status_changed_closed_other: {
+    grantee: 'Closed (Other)',
+  },
+};

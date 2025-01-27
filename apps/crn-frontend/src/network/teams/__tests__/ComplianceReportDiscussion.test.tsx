@@ -22,6 +22,7 @@ import {
   useReplyToDiscussion,
   useVersionById,
   useEndDiscussion,
+  useManuscriptById,
 } from '../state';
 import { useManuscriptToast } from '../useManuscriptToast';
 import Workspace from '../Workspace';
@@ -42,6 +43,7 @@ jest.mock('../state', () => ({
   useReplyToDiscussion: jest.fn(),
   useIsComplianceReviewer: jest.fn(),
   useEndDiscussion: jest.fn(),
+  useManuscriptById: jest.fn(),
 }));
 
 jest.mock('../useManuscriptToast', () => ({
@@ -158,6 +160,11 @@ describe('compliance report discussion', () => {
         acknowledgedGrantNumber: 'No',
       },
       mockSetVersion,
+    ]);
+
+    (useManuscriptById as jest.Mock).mockImplementation(() => [
+      mockManuscript,
+      jest.fn(),
     ]);
 
     mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);

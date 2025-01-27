@@ -226,6 +226,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
 
   const handleStatusClick = (statusItem: ManuscriptStatus) => {
     if (statusItem !== status) {
+      setNewSelectedStatus(statusItem);
       setDisplayConfirmStatusChangeModal(true);
     }
   };
@@ -293,7 +294,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                   item: statusItem,
                   type: getReviewerStatusType(statusItem),
                   onClick: () => {
-                    setNewSelectedStatus(statusItem);
                     handleStatusClick(statusItem);
                   },
                 }))}

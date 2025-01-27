@@ -40,7 +40,7 @@ import {
 
 import Workspace from '../Workspace';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import { useVersionById } from '../state';
+import { useManuscriptById, useVersionById } from '../state';
 import { useManuscriptToast } from '../useManuscriptToast';
 
 jest.setTimeout(60000);
@@ -55,6 +55,7 @@ jest.mock('../api', () => ({
 jest.mock('../state', () => ({
   ...jest.requireActual('../state'),
   useVersionById: jest.fn(),
+  useManuscriptById: jest.fn(),
 }));
 
 jest.mock('../useManuscriptToast', () => ({
@@ -132,6 +133,10 @@ beforeEach(() => {
   (useManuscriptToast as jest.Mock).mockImplementation(() => ({
     setFormType: jest.fn(),
   }));
+  (useManuscriptById as jest.Mock).mockImplementation(() => [
+    createTeamManuscriptResponse(),
+    jest.fn(),
+  ]);
 });
 
 afterEach(jest.resetAllMocks);
@@ -497,6 +502,11 @@ describe('manuscript quick check discussion', () => {
       mockSetVersion,
     ]);
 
+    (useManuscriptById as jest.Mock).mockImplementation(() => [
+      manuscript,
+      jest.fn(),
+    ]);
+
     mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
     mockUpdateDiscussion.mockResolvedValue({
       discussion: acknowledgedGrantNumberDiscussion,
@@ -591,6 +601,11 @@ describe('manuscript quick check discussion', () => {
         } as ManuscriptVersion,
       ],
     };
+
+    (useManuscriptById as jest.Mock).mockImplementation(() => [
+      mockManuscript,
+      jest.fn(),
+    ]);
 
     mockGetDiscussion.mockImplementation(
       async () => acknowledgedGrantNumberDiscussion,

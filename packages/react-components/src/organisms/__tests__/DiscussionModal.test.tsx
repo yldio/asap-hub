@@ -28,9 +28,18 @@ it('renders the form', async () => {
   expect(screen.getByRole('button', { name: /Send/i })).toBeVisible();
 });
 
-it('data is sent on form submission', async () => {
-  const onSave = jest.fn();
-  render(<DiscussionModal {...defaultProps} onSave={onSave} />);
+it('data is sent on form submission with setManuscript called', async () => {
+  const onSave = jest.fn().mockResolvedValue({
+    id: 'manuscript-id',
+  });
+  const setManuscript = jest.fn();
+  render(
+    <DiscussionModal
+      {...defaultProps}
+      setManuscript={setManuscript}
+      onSave={onSave}
+    />,
+  );
 
   const replyEditor = screen.getByTestId('editor');
   await act(async () => {
@@ -52,6 +61,45 @@ it('data is sent on form submission', async () => {
       undefined,
     );
   });
+
+  expect(setManuscript).toHaveBeenCalledWith({
+    id: 'manuscript-id',
+  });
+});
+
+it('data is sent on form submission without calling setManuscript', async () => {
+  const onSave = jest.fn().mockResolvedValue(undefined);
+  const setManuscript = jest.fn();
+  render(
+    <DiscussionModal
+      {...defaultProps}
+      setManuscript={setManuscript}
+      onSave={onSave}
+    />,
+  );
+
+  const replyEditor = screen.getByTestId('editor');
+  await act(async () => {
+    userEvent.click(replyEditor);
+    userEvent.tab();
+    fireEvent.input(replyEditor, { data: 'test reply' });
+    userEvent.tab();
+  });
+
+  const shareButton = screen.getByRole('button', { name: /Send/i });
+  await waitFor(() => expect(shareButton).toBeEnabled());
+  userEvent.click(shareButton);
+  await waitFor(() => {
+    expect(onSave).toHaveBeenCalledWith(
+      discussionId,
+      {
+        text: 'test reply',
+      },
+      undefined,
+    );
+  });
+
+  expect(setManuscript).not.toHaveBeenCalled();
 });
 
 it('send button is enabled when reply is provided', async () => {

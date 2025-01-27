@@ -4,15 +4,30 @@ import {
   manuscriptAuthor,
 } from '@asap-hub/fixtures';
 import { ManuscriptVersion, UserTeam } from '@asap-hub/model';
-import { act, render, waitFor } from '@testing-library/react';
+import { act, cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
-import { Router, Route } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { ComponentProps } from 'react';
+import { Route, Router } from 'react-router-dom';
 import ManuscriptCard, {
   isManuscriptAuthor,
   isManuscriptLead,
 } from '../ManuscriptCard';
+
+const useManuscriptById = jest.fn().mockImplementation(() => {
+  const manuscript = {
+    id: 'manuscript_0',
+    title: 'Mock Manuscript Title',
+    status: 'Waiting for Report',
+    versions: [],
+  };
+
+  const setManuscript = jest.fn((newData) => {
+    Object.assign(manuscript, newData);
+  });
+
+  return [manuscript, setManuscript];
+});
 
 const version = createManuscriptResponse().versions[0] as ManuscriptVersion;
 
@@ -30,7 +45,7 @@ const props: ComponentProps<typeof ManuscriptCard> & {
   useManuscriptById: jest.Mock;
 } = {
   teamId: 'team-1',
-  useManuscriptById: jest.fn(),
+  useManuscriptById,
   id: `manuscript_0`,
   user: { ...baseUser, algoliaApiKey: 'algolia-mock-key' },
   isComplianceReviewer: false,
@@ -123,22 +138,35 @@ describe('isManuscriptLead', () => {
   });
 });
 
+afterEach(() => {
+  cleanup();
+});
+
 it('displays manuscript version card when expanded', () => {
   const useVersionById = jest.fn();
-
+  const versionMock = {
+    ...mockVersionData,
+    type: 'Original Research',
+    lifecycle: 'Preprint',
+  };
   useVersionById
-    .mockImplementation(() => [
-      {
-        ...mockVersionData,
-        type: 'Original Research',
-        lifecycle: 'Preprint',
-      },
-      jest.fn(),
-    ])
+    .mockImplementation(() => [versionMock, jest.fn()])
     .mockImplementationOnce(() => [mockVersionData, jest.fn()]);
 
   const { getByText, queryByText, getByTestId, rerender } = render(
-    <ManuscriptCard {...props} useVersionById={useVersionById} />,
+    <ManuscriptCard
+      {...props}
+      useManuscriptById={useManuscriptById.mockImplementation(() => [
+        {
+          id: 'manuscript_0',
+          title: 'Mock Manuscript Title',
+          status: 'Waiting for Report',
+          versions: [version],
+        },
+        jest.fn(),
+      ])}
+      useVersionById={useVersionById}
+    />,
   );
 
   expect(queryByText(/Original Research/i)).not.toBeInTheDocument();
@@ -184,7 +212,20 @@ it('displays share compliance report button if user has permission', () => {
 it('displays submit revised manuscript button if user is an author', () => {
   const manuscriptVersions = createManuscriptResponse().versions;
   manuscriptVersions[0]!.firstAuthors = [user];
-  const { getByRole } = render(<ManuscriptCard {...props} />);
+  const { getByRole } = render(
+    <ManuscriptCard
+      {...props}
+      useManuscriptById={useManuscriptById.mockImplementation(() => [
+        {
+          id: 'manuscript_0',
+          title: 'Mock Manuscript Title',
+          status: 'Waiting for Report',
+          versions: manuscriptVersions,
+        },
+        jest.fn(),
+      ])}
+    />,
+  );
 
   expect(
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
@@ -225,7 +266,18 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
   const { getByRole } = render(
     <Router history={history}>
       <Route path="">
-        <ManuscriptCard {...props} />
+        <ManuscriptCard
+          {...props}
+          useVersionById={useManuscriptById.mockImplementation(() => [
+            {
+              id: 'manuscript_0',
+              title: 'Mock Manuscript Title',
+              status: 'Waiting for Report',
+              versions: manuscriptVersions,
+            },
+            jest.fn(),
+          ])}
+        />
       </Route>
     </Router>,
   );
@@ -253,7 +305,19 @@ it('displays the confirmation modal when isComplianceReviewer is true and the us
 
 it('does not display confirmation modal when isComplianceReviewer is true but the user tries to select the same manuscript status it is currently', () => {
   const { getByRole, getByTestId, queryByText } = render(
-    <ManuscriptCard {...props} isComplianceReviewer />,
+    <ManuscriptCard
+      {...props}
+      useVersionById={useManuscriptById.mockImplementation(() => [
+        {
+          id: 'manuscript_0',
+          title: 'Mock Manuscript Title',
+          status: 'Addendum Required',
+          versions: [],
+        },
+        jest.fn(),
+      ])}
+      isComplianceReviewer
+    />,
   );
 
   const statusButton = getByTestId('status-button');
@@ -270,12 +334,13 @@ it('does not allow to change the manuscript status if isComplianceReviewer is fa
 
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeDisabled();
+  cleanup();
 });
 
 it('calls onUpdateManuscript when user confirms status change', async () => {
   const onUpdateManuscript = jest.fn();
 
-  const { getByRole, getByTestId, queryByText, queryByRole } = render(
+  const { getByRole, getByTestId, queryByRole } = render(
     <ManuscriptCard
       {...props}
       isComplianceReviewer
@@ -309,22 +374,62 @@ it('calls onUpdateManuscript when user confirms status change', async () => {
       name: 'Update Status and Notify',
     }),
   ).not.toBeInTheDocument();
-  expect(queryByText('Addendum Required')).not.toBeVisible();
-  expect(statusButton).toBeEnabled();
+  await waitFor(() => {
+    expect(statusButton).toBeEnabled();
+  });
 });
 
+it.each`
+  status
+  ${'Compliant'}
+  ${'Closed (other)'}
+`(
+  'user cannot change the status anymore if they set status to $newStatus',
+  async ({ status }) => {
+    const onUpdateManuscript = jest.fn();
+    cleanup();
+    const { getByTestId } = render(
+      <ManuscriptCard
+        {...props}
+        useManuscriptById={useManuscriptById.mockImplementation(() => [
+          {
+            id: 'manuscript_0',
+            title: 'Mock Manuscript Title',
+            status,
+            versions: [],
+          },
+          jest.fn(),
+        ])}
+        isComplianceReviewer
+        id="manuscript-1"
+        onUpdateManuscript={onUpdateManuscript}
+      />,
+    );
+
+    expect(getByTestId('status-button')).toBeDisabled();
+  },
+);
 it.each`
   newStatus           | submissionButtonText
   ${'Compliant'}      | ${'Set to Compliant and Notify'}
   ${'Closed (other)'} | ${'Set to Closed (other) and Notify'}
 `(
-  'user cannot change the status anymore if they set status to $newStatus',
+  'shows correct modal when updating to $newStatus and calls onUpdateManuscript with correct status',
   async ({ newStatus, submissionButtonText }) => {
     const onUpdateManuscript = jest.fn();
-
-    const { getByRole, getByTestId, queryByRole } = render(
+    cleanup();
+    const { getByRole, getByTestId, queryByRole, getByText } = render(
       <ManuscriptCard
         {...props}
+        useManuscriptById={useManuscriptById.mockImplementation(() => [
+          {
+            id: 'manuscript_0',
+            title: 'Mock Manuscript Title',
+            status: 'Waiting for Report',
+            versions: [],
+          },
+          jest.fn(),
+        ])}
         isComplianceReviewer
         id="manuscript-1"
         onUpdateManuscript={onUpdateManuscript}
@@ -333,7 +438,20 @@ it.each`
 
     const statusButton = getByTestId('status-button');
     userEvent.click(statusButton);
-    userEvent.click(getByRole('button', { name: newStatus }));
+    await waitFor(() => {
+      getByRole('button', { name: newStatus });
+    });
+    await act(async () => {
+      userEvent.click(getByRole('button', { name: newStatus }));
+    });
+
+    await waitFor(() => {
+      expect(
+        getByRole('button', {
+          name: submissionButtonText,
+        }),
+      ).toBeInTheDocument();
+    });
 
     await act(async () => {
       userEvent.click(
@@ -343,13 +461,20 @@ it.each`
       );
     });
 
-    expect(
-      queryByRole('button', {
-        name: submissionButtonText,
-      }),
-    ).not.toBeInTheDocument();
+    await waitFor(async () => {
+      expect(
+        queryByRole('button', {
+          name: submissionButtonText,
+        }),
+      ).not.toBeInTheDocument();
+    });
 
-    expect(statusButton).toBeDisabled();
+    await waitFor(() => {
+      expect(onUpdateManuscript).toHaveBeenCalledWith('manuscript-1', {
+        status: newStatus,
+      });
+      expect(getByText(newStatus)).toBeInTheDocument();
+    });
   },
 );
 
@@ -358,7 +483,21 @@ it('disables submit compliance report button when there is an existing complianc
   manuscriptVersions[0]!.complianceReport = complianceReport;
 
   const { getByRole } = render(
-    <ManuscriptCard {...props} isComplianceReviewer id="manuscript-1" />,
+    <ManuscriptCard
+      {...props}
+      useVersionById={useManuscriptById.mockImplementation(() => [
+        {
+          id: 'manuscript_0',
+          title: 'Mock Manuscript Title',
+          status: 'Waiting for Report',
+          versions: manuscriptVersions,
+        },
+        jest.fn(),
+      ])}
+      isComplianceReviewer
+      id="manuscript-1"
+      useManuscriptById={useManuscriptById}
+    />,
   );
 
   const complianceReportButton = getByRole('button', {
@@ -374,22 +513,19 @@ it.each`
   ${'Closed (other)'}     | ${true}
 `(
   'does not display submit compliance report if team isActiveTeam is $isActiveTeam and status is $status',
-  async ({ isActiveTeam }) => {
-    // const manuscriptVersions = createManuscriptResponse().versions;
-    jest.mock('../../hooks/useManuscriptById', () => ({
-      useManuscriptById: jest.fn().mockImplementation((id) => [
-        {
-          id,
-          title: 'Mock Manuscript Title',
-          status: 'Mock Status',
-          versions: [],
-        },
-        jest.fn(),
-      ]),
-    }));
+  async ({ status, isActiveTeam }) => {
     const { queryByRole } = render(
       <ManuscriptCard
         {...props}
+        useManuscriptById={useManuscriptById.mockImplementation(() => [
+          {
+            id: 'manuscript_0',
+            title: 'Mock Manuscript Title',
+            status,
+            versions: [],
+          },
+          jest.fn(),
+        ])}
         isComplianceReviewer
         id="manuscript-1"
         isActiveTeam={isActiveTeam}

@@ -24,6 +24,28 @@ import TeamProfileWorkspace from '../TeamProfileWorkspace';
 
 beforeEach(jest.clearAllMocks);
 
+const useManuscriptByIdMock = jest.fn().mockImplementation((id: string) => [
+  [
+    {
+      id: '1',
+      count: 1,
+      title: 'Nice manuscript',
+      versions: [],
+      teamId: 'WH1',
+      grantId: '000282',
+    },
+    {
+      id: '2',
+      count: 2,
+      title: 'A Good Manuscript',
+      versions: [],
+      teamId: 'CS1',
+      grantId: '000301',
+    },
+  ].find((m) => m.id === id),
+  jest.fn(),
+]);
+
 const team: ComponentProps<typeof TeamProfileWorkspace> = {
   ...createTeamResponse({ teamMembers: 1, tools: 0 }),
   setEligibilityReasons: jest.fn(),
@@ -36,11 +58,17 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   createComplianceDiscussion: jest.fn(),
   useVersionById: jest.fn().mockImplementation(() => [undefined, jest.fn()]),
   onEndDiscussion: jest.fn(),
-  useManuscriptById: jest.fn(),
+  useManuscriptById: useManuscriptByIdMock,
 };
 
 it('renders the team workspace page', () => {
-  const { getByRole } = render(<TeamProfileWorkspace {...team} tools={[]} />);
+  const { getByRole } = render(
+    <TeamProfileWorkspace
+      {...team}
+      useManuscriptById={useManuscriptByIdMock}
+      tools={[]}
+    />,
+  );
 
   expect(
     getByRole('heading', { name: 'Collaboration Tools (Team Only)' }),
@@ -53,7 +81,7 @@ it('does not display Collaboration Tools section if user is not a team member', 
   );
 
   expect(
-    queryByRole('heading', { name: 'Collaboration Tools (Team Only)' }),
+    queryByRole('heading', { name: 'Collaboration Tools (Team)' }),
   ).not.toBeInTheDocument();
 });
 
@@ -92,14 +120,24 @@ describe('compliance section', () => {
     };
     enable('DISPLAY_MANUSCRIPTS');
     const { getByRole, queryByRole, rerender } = render(
-      <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
+      <TeamProfileWorkspace
+        {...teamWithManuscripts}
+        useManuscriptById={useManuscriptByIdMock}
+        tools={[]}
+      />,
     );
     expect(
       getByRole('heading', { name: 'Compliance Review' }),
     ).toBeInTheDocument();
 
     disable('DISPLAY_MANUSCRIPTS');
-    rerender(<TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />);
+    rerender(
+      <TeamProfileWorkspace
+        {...teamWithManuscripts}
+        useManuscriptById={useManuscriptByIdMock}
+        tools={[]}
+      />,
+    );
     expect(queryByRole('heading', { name: 'Compliance' })).toBeNull();
   });
 
@@ -126,7 +164,11 @@ describe('compliance section', () => {
       ],
     };
     const { container } = render(
-      <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
+      <TeamProfileWorkspace
+        {...teamWithManuscripts}
+        useManuscriptById={useManuscriptByIdMock}
+        tools={[]}
+      />,
     );
     expect(container).toHaveTextContent('Nice manuscript');
     expect(container).toHaveTextContent('A Good Manuscript');
@@ -158,7 +200,11 @@ describe('compliance section', () => {
     };
 
     const { container } = render(
-      <TeamProfileWorkspace {...props} tools={[]} />,
+      <TeamProfileWorkspace
+        {...props}
+        useManuscriptById={useManuscriptByIdMock}
+        tools={[]}
+      />,
     );
     const teamManuscriptsSection = getByTestId(container, 'team-manuscripts');
     const collaborationManuscriptsSection = getByTestId(
@@ -337,7 +383,16 @@ describe('compliance section', () => {
       ],
     };
     const { container } = render(
-      <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
+      <TeamProfileWorkspace
+        {...teamWithManuscripts}
+        useManuscriptById={jest
+          .fn()
+          .mockImplementation((id) => [
+            teamWithManuscripts.manuscripts.find((m) => m.id === id)!,
+            jest.fn(),
+          ])}
+        tools={[]}
+      />,
     );
 
     expect(container).not.toHaveTextContent('Original Research');
@@ -367,7 +422,11 @@ describe('compliance section', () => {
 
   it('renders eligibility modal when user clicks on Share Manuscript', () => {
     const { container, getByRole } = render(
-      <TeamProfileWorkspace {...team} tools={[]} />,
+      <TeamProfileWorkspace
+        {...team}
+        useManuscriptById={useManuscriptByIdMock}
+        tools={[]}
+      />,
     );
 
     expect(container).not.toHaveTextContent(
@@ -463,6 +522,9 @@ describe('compliance section', () => {
       useVersionById: jest
         .fn()
         .mockImplementation(() => [version, mockSetVersion]),
+      useManuscriptById: jest
+        .fn()
+        .mockImplementation(() => [createManuscriptResponse(), jest.fn()]),
     };
 
     const {

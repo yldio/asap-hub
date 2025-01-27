@@ -29,6 +29,7 @@ const props = {
   setVersion: jest.fn(),
   onSave: jest.fn(),
   onEndDiscussion: jest.fn(),
+  setManuscript: jest.fn(),
 };
 
 it('displays compliance report description, url and creation details when expanded', () => {

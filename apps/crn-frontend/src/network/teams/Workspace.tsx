@@ -19,6 +19,7 @@ import {
   useDiscussionById,
   useEndDiscussion,
   useIsComplianceReviewer,
+  useManuscriptById,
   usePatchTeamById,
   usePutManuscript,
   useReplyToDiscussion,
@@ -82,15 +83,25 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                 }
           }
           isComplianceReviewer={isComplianceReviewer}
-          onSave={async (id: string, patch: DiscussionRequest) => {
+          onSave={async (
+            id: string,
+            patch: DiscussionRequest,
+            manuscriptId?: string,
+          ) => {
             try {
-              await replyToDiscussion(id, patch as DiscussionRequest);
+              const updatedManuscript = await replyToDiscussion(
+                id,
+                patch as DiscussionRequest,
+                manuscriptId,
+              );
               setFormType({ type: 'quick-check', accent: 'successLarge' });
+              return updatedManuscript;
             } catch (error) {
               setFormType({
                 type: 'discussion-already-closed',
                 accent: 'error',
               });
+              return undefined;
             }
           }}
           onEndDiscussion={async (id: string) => {
@@ -116,6 +127,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
             return discussionId;
           }}
           useVersionById={useVersionById}
+          useManuscriptById={useManuscriptById}
         />
       </Route>
       <Route exact path={path + route.tools.template}>

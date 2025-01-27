@@ -37,7 +37,11 @@ import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/a
 import { createResearchOutput, getTeam } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import { manuscriptsState, refreshTeamState } from '../state';
+import {
+  manuscriptsState,
+  refreshTeamState,
+  useManuscriptById,
+} from '../state';
 import TeamProfile from '../TeamProfile';
 
 const manuscriptResponse = {
@@ -80,6 +84,12 @@ jest.mock('../api', () => ({
 jest.mock('../interest-groups/api');
 jest.mock('../../../shared-research/api');
 jest.mock('../../../events/api');
+
+jest.mock('../state', () => ({
+  ...jest.requireActual('../state'),
+  useManuscriptById: jest.fn(),
+}));
+
 const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
 >;
@@ -96,6 +106,12 @@ const mockGetResearchOutput = getResearchOutput as jest.MockedFunction<
 >;
 
 afterEach(jest.clearAllMocks);
+beforeEach(() => {
+  (useManuscriptById as jest.Mock).mockImplementation(() => [
+    createTeamManuscriptResponse(),
+    jest.fn(),
+  ]);
+});
 const renderPage = async (
   teamResponse: TeamResponse = createTeamResponse(),
   { teamId = teamResponse.id, currentTime = new Date() } = {},
@@ -299,7 +315,7 @@ it('displays manuscript success toast message and user can dismiss toast', async
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
 
-  const submitButton = screen.getByRole('button', { name: /Submit/i });
+  const submitButton = screen.getByRole('button', { name: /^Submit$/i });
 
   await waitFor(() => {
     expect(submitButton).toBeVisible();

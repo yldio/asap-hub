@@ -4,20 +4,23 @@ import {
   TeamDataObject,
   TeamManuscript,
 } from '@asap-hub/model';
+import { waitFor } from '@testing-library/dom';
 import { act, renderHook } from '@testing-library/react-hooks';
 import * as recoilModule from 'recoil';
 import {
-  RecoilRoot,
   MutableSnapshot,
-  useRecoilValue,
+  RecoilRoot,
   useRecoilState,
+  useRecoilValue,
 } from 'recoil';
 import { authorizationState } from '../../../auth/state';
-import { endDiscussion } from '../api';
+import { endDiscussion, updateDiscussion } from '../api';
+import * as stateModule from '../state';
 import {
   patchedTeamState,
   teamState,
   useEndDiscussion,
+  useReplyToDiscussion,
   useVersionById,
   versionSelector,
 } from '../state';
@@ -26,6 +29,7 @@ const mockSetDiscussion = jest.fn();
 
 jest.mock('../api', () => ({
   endDiscussion: jest.fn(),
+  updateDiscussion: jest.fn(),
 }));
 
 const teamId = 'team-id-0';
@@ -414,5 +418,239 @@ describe('useEndDiscussion', () => {
     ).rejects.toThrow();
 
     expect(mockSetDiscussion).not.toHaveBeenCalled();
+  });
+});
+
+const discussionId = 'discussion-id-0';
+const manuscriptId = 'manuscript-id-0';
+const manuscriptId2 = 'manuscript-id-1';
+
+const mockTeam = {
+  id: 'id-0',
+  teamId,
+  manuscripts: [
+    {
+      id: manuscriptId,
+      status: 'Waiting for Report',
+    },
+  ],
+};
+
+const mockDiscussion = {
+  id: discussionId,
+  title: 'Updated Discussion',
+  status: 'Waiting for OS Team Reply',
+};
+
+const mockUpdatedManuscript = {
+  id: manuscriptId,
+  status: 'Waiting for OS Team Reply',
+};
+
+const mockAuthorization = 'mock-token';
+
+describe('useReplyToDiscussion', () => {
+  beforeEach(() => {
+    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
+      if (state === authorizationState) {
+        return mockAuthorization;
+      }
+      return undefined;
+    });
+
+    jest
+      .spyOn(stateModule, 'useSetDiscussion')
+      .mockReturnValue(mockSetDiscussion);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('calls updateDiscussion API with the correct parameters', async () => {
+    (updateDiscussion as jest.Mock).mockResolvedValue({
+      discussion: mockDiscussion,
+      manuscript: mockUpdatedManuscript,
+    });
+
+    const initialState = ({ set }: MutableSnapshot) => {
+      set(teamState(teamId), mockTeam as TeamDataObject);
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(() => useReplyToDiscussion(), {
+      wrapper,
+    });
+
+    const patch = { text: 'Reply message' };
+
+    await act(async () => {
+      await result.current(discussionId, patch, manuscriptId);
+    });
+
+    expect(updateDiscussion).toHaveBeenCalledWith(
+      discussionId,
+      patch,
+      mockAuthorization,
+      manuscriptId,
+    );
+  });
+
+  test('updates teamState with the updated manuscript status', async () => {
+    (updateDiscussion as jest.Mock).mockResolvedValue({
+      discussion: mockDiscussion,
+      manuscript: mockUpdatedManuscript,
+    });
+
+    const initialState = ({ set }: MutableSnapshot) => {
+      set(teamState(teamId), {
+        ...mockTeam,
+        manuscripts: [
+          ...mockTeam.manuscripts,
+          {
+            id: manuscriptId2,
+            status: 'Waiting for Report',
+          },
+        ],
+      } as TeamDataObject);
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(() => useReplyToDiscussion(), {
+      wrapper,
+    });
+
+    const patch = { text: 'Reply message' };
+
+    await act(async () => {
+      await result.current(discussionId, patch);
+    });
+
+    const { result: stateResult } = renderHook(
+      () => useRecoilValue(teamState(teamId)),
+      { wrapper },
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    waitFor(() => {
+      expect(stateResult.current?.manuscripts).toEqual([
+        {
+          id: manuscriptId,
+          status: 'Waiting for OS Team Reply',
+        },
+        {
+          id: manuscriptId2,
+          status: 'Waiting for Report',
+        },
+      ]);
+    });
+  });
+
+  test('does not update teamState if the response does not include manuscript updates', async () => {
+    (updateDiscussion as jest.Mock).mockResolvedValue({
+      discussion: mockDiscussion,
+    });
+
+    const initialState = ({ set }: MutableSnapshot) => {
+      set(teamState(teamId), mockTeam as TeamDataObject);
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(() => useReplyToDiscussion(), {
+      wrapper,
+    });
+
+    const patch = { text: 'Reply message' };
+
+    await act(async () => {
+      await result.current(discussionId, patch);
+    });
+
+    const { result: stateResult } = renderHook(
+      () => useRecoilValue(teamState(teamId)),
+      { wrapper },
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    waitFor(() => {
+      expect(stateResult.current?.manuscripts).toEqual(mockTeam.manuscripts);
+    });
+  });
+
+  test('handles nonexistant team gracefully', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    (updateDiscussion as jest.Mock).mockResolvedValue({
+      discussion: mockDiscussion,
+      manuscript: mockUpdatedManuscript,
+    });
+
+    const initialState = ({ set }: MutableSnapshot) => {
+      set(teamState(teamId), mockTeam as TeamDataObject);
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(() => useReplyToDiscussion(), {
+      wrapper,
+    });
+
+    const patch = { text: 'Reply message' };
+
+    await act(async () => {
+      await result.current(discussionId, patch);
+    });
+
+    const { result: stateResult } = renderHook(
+      () => useRecoilValue(teamState(`${teamId}-nonexistent`)),
+      { wrapper },
+    );
+
+    expect(stateResult.current).toBeUndefined();
+  });
+
+  test('handles API errors without updating state', async () => {
+    const mockError = new Error('API error');
+    (updateDiscussion as jest.Mock).mockRejectedValue(mockError);
+
+    const initialState = ({ set }: MutableSnapshot) => {
+      set(teamState(teamId), mockTeam as TeamDataObject);
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(() => useReplyToDiscussion(), {
+      wrapper,
+    });
+
+    const patch = { text: 'Reply message' };
+
+    await expect(
+      act(async () => {
+        await result.current(discussionId, patch);
+      }),
+    ).rejects.toThrow();
+
+    const { result: stateResult } = renderHook(
+      () => useRecoilValue(teamState(teamId)),
+      { wrapper },
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    waitFor(() => {
+      expect(stateResult.current?.manuscripts).toEqual(mockTeam.manuscripts);
+    });
   });
 });

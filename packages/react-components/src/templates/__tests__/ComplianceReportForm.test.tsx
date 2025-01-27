@@ -20,6 +20,7 @@ beforeEach(() => {
 const defaultProps: ComponentProps<typeof ComplianceReportForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   onSuccess: jest.fn(),
+  setManuscript: jest.fn(),
   manuscriptTitle: 'manuscript title',
   manuscriptVersionId: 'manuscript-version-1',
 };
@@ -34,14 +35,27 @@ it('renders the form', async () => {
   expect(screen.getByRole('button', { name: /Share/i })).toBeVisible();
 });
 
-it('data is sent on form submission', async () => {
-  const onSave = jest.fn();
+it('data is sent on form submission and calls setManuscript', async () => {
+  const onSave = jest.fn().mockResolvedValue({
+    id: 'compliance-report-id',
+  });
+
+  const initialManuscript = {
+    versions: [
+      {
+        id: 'version-1',
+        complianceReport: null,
+      },
+    ],
+  };
+  const setManuscript = jest.fn();
   render(
     <StaticRouter>
       <ComplianceReportForm
         {...defaultProps}
         url="http://example.com"
         description="manuscript description"
+        setManuscript={setManuscript}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -62,6 +76,49 @@ it('data is sent on form submission', async () => {
       description: 'manuscript description',
       manuscriptVersionId: defaultProps.manuscriptVersionId,
     });
+    expect(setManuscript).toHaveBeenCalled();
+
+    // Simulate the state update inside the function
+    const manuscriptUpdater = setManuscript.mock.calls[0][0];
+    const updatedManuscript = manuscriptUpdater(initialManuscript);
+
+    expect(updatedManuscript.versions[0].complianceReport).toEqual({
+      id: 'compliance-report-id',
+    });
+  });
+});
+
+it('data is sent on form submission without calling setManuscript', async () => {
+  const onSave = jest.fn().mockResolvedValue(undefined);
+  const setManuscript = jest.fn();
+  render(
+    <StaticRouter>
+      <ComplianceReportForm
+        {...defaultProps}
+        url="http://example.com"
+        description="manuscript description"
+        setManuscript={setManuscript}
+        onSave={onSave}
+      />
+    </StaticRouter>,
+  );
+
+  const shareButton = screen.getByRole('button', { name: /Share/i });
+  await waitFor(() => expect(shareButton).toBeEnabled());
+  userEvent.click(shareButton);
+
+  const confirmButton = screen.getByRole('button', {
+    name: /Share Compliance Report/i,
+  });
+  userEvent.click(confirmButton);
+
+  await waitFor(() => {
+    expect(onSave).toHaveBeenCalledWith({
+      url: 'http://example.com',
+      description: 'manuscript description',
+      manuscriptVersionId: defaultProps.manuscriptVersionId,
+    });
+    expect(setManuscript).not.toHaveBeenCalled();
   });
 });
 

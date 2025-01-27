@@ -1,7 +1,8 @@
-import { DiscussionResponse } from '@asap-hub/model';
+import { DiscussionResponse, ManuscriptResponse } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import DiscussionController from '../controllers/discussion.controller';
+import ManuscriptController from '../controllers/manuscript.controller';
 import {
   validateDiscussionCreateRequest,
   validateDiscussionParameters,
@@ -10,6 +11,7 @@ import {
 
 export const discussionRouteFactory = (
   discussionController: DiscussionController,
+  manuscriptController: ManuscriptController,
 ): Router => {
   const discussionRoutes = Router();
 
@@ -30,19 +32,36 @@ export const discussionRouteFactory = (
 
   discussionRoutes.patch<{ discussionId: string }>(
     '/discussions/:discussionId',
-    async (req, res: Response<DiscussionResponse>) => {
+    async (
+      req,
+      res: Response<{
+        discussion: DiscussionResponse;
+        manuscript?: ManuscriptResponse;
+      }>,
+    ) => {
       const { body, params } = req;
 
       const { discussionId } = validateDiscussionParameters(params);
-      const { text } = validateDiscussionRequest(body);
+      const { text, manuscriptId } = validateDiscussionRequest(body);
 
       if (!req.loggedInUser) throw Boom.forbidden();
 
       const reply = { text, userId: req.loggedInUser.id };
 
-      const result = await discussionController.update(discussionId, reply);
+      const discussion = await discussionController.update(discussionId, reply);
 
-      res.json(result);
+      let manuscript;
+      if (!req.loggedInUser.openScienceTeamMember && manuscriptId) {
+        manuscript = await manuscriptController.update(
+          manuscriptId,
+          {
+            status: 'Waiting for OS Team Reply',
+          },
+          req.loggedInUser.id,
+        );
+      }
+
+      res.json({ discussion, manuscript });
     },
   );
 

@@ -40,7 +40,7 @@ import {
 
 import Workspace from '../Workspace';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import { useVersionById } from '../state';
+import { useManuscriptById, useVersionById } from '../state';
 import { useManuscriptToast } from '../useManuscriptToast';
 
 jest.setTimeout(60000);
@@ -55,6 +55,7 @@ jest.mock('../api', () => ({
 jest.mock('../state', () => ({
   ...jest.requireActual('../state'),
   useVersionById: jest.fn(),
+  useManuscriptById: jest.fn(),
 }));
 
 jest.mock('../useManuscriptToast', () => ({
@@ -132,6 +133,10 @@ beforeEach(() => {
   (useManuscriptToast as jest.Mock).mockImplementation(() => ({
     setFormType: jest.fn(),
   }));
+  (useManuscriptById as jest.Mock).mockImplementation(() => [
+    createTeamManuscriptResponse(),
+    jest.fn(),
+  ]);
 });
 
 afterEach(jest.resetAllMocks);
@@ -497,8 +502,15 @@ describe('manuscript quick check discussion', () => {
       mockSetVersion,
     ]);
 
+    (useManuscriptById as jest.Mock).mockImplementation(() => [
+      manuscript,
+      jest.fn(),
+    ]);
+
     mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
-    mockUpdateDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
+    mockUpdateDiscussion.mockResolvedValue({
+      discussion: acknowledgedGrantNumberDiscussion,
+    });
     const { findByTestId, getByRole, getByTestId, getByLabelText } =
       renderWithWrapper(
         <ManuscriptToastProvider>
@@ -545,6 +557,7 @@ describe('manuscript quick check discussion', () => {
       acknowledgedGrantNumberDiscussion.id,
       { text: 'new reply' },
       expect.anything(),
+      undefined,
     );
   });
 
@@ -589,6 +602,11 @@ describe('manuscript quick check discussion', () => {
       ],
     };
 
+    (useManuscriptById as jest.Mock).mockImplementation(() => [
+      mockManuscript,
+      jest.fn(),
+    ]);
+
     mockGetDiscussion.mockImplementation(
       async () => acknowledgedGrantNumberDiscussion,
     );
@@ -603,7 +621,9 @@ describe('manuscript quick check discussion', () => {
     ]);
 
     mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
-    mockUpdateDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
+    mockUpdateDiscussion.mockResolvedValue({
+      discussion: acknowledgedGrantNumberDiscussion,
+    });
     const { findByTestId, getByText, getByLabelText, getByTestId, findByText } =
       renderWithWrapper(
         <ManuscriptToastProvider>

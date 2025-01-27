@@ -2,6 +2,7 @@ import {
   ComplianceReportFormData,
   ComplianceReportPostRequest,
   ComplianceReportResponse,
+  ManuscriptDataObject,
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -61,6 +62,9 @@ type ComplianceReportFormProps = {
     output: ComplianceReportPostRequest,
   ) => Promise<ComplianceReportResponse | void>;
   onSuccess: () => void;
+  setManuscript: React.Dispatch<
+    React.SetStateAction<ManuscriptDataObject | undefined>
+  >;
 };
 
 type FormAction = 'cancel' | 'confirm' | '';
@@ -92,6 +96,7 @@ const getModalContent = (
 const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   onSave,
   onSuccess,
+  setManuscript,
   manuscriptTitle,
   manuscriptVersionId,
   url,
@@ -114,10 +119,26 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   } = methods;
 
   const onSubmit = async (data: ComplianceReportFormData) => {
-    await onSave({
+    const complianceReport = await onSave({
       ...data,
       manuscriptVersionId,
     });
+    if (complianceReport) {
+      setManuscript(
+        (manuscript) =>
+          manuscript && {
+            ...manuscript,
+            versions: [
+              {
+                // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+                ...manuscript.versions[0]!,
+                complianceReport,
+              },
+              ...manuscript.versions.slice(1),
+            ],
+          },
+      );
+    }
     onSuccess();
   };
 

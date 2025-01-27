@@ -17842,7 +17842,7 @@ export type ManuscriptsContentFragment = Pick<
   Manuscripts,
   'title' | 'status' | 'count'
 > & {
-  sys: Pick<Sys, 'id'>;
+  sys: Pick<Sys, 'id' | 'publishedVersion'>;
   versionsCollection?: Maybe<{
     items: Array<
       Maybe<
@@ -18039,7 +18039,7 @@ export type FetchManuscriptByIdQuery = {
           Maybe<Pick<Teams, 'teamId' | 'grantId'> & { sys: Pick<Sys, 'id'> }>
         >;
       }>;
-      sys: Pick<Sys, 'id'>;
+      sys: Pick<Sys, 'id' | 'publishedVersion'>;
       versionsCollection?: Maybe<{
         items: Array<
           Maybe<
@@ -19966,7 +19966,7 @@ export type FetchTeamByIdQuery = {
                     >
                   >;
                 }>;
-                sys: Pick<Sys, 'id'>;
+                sys: Pick<Sys, 'id' | 'publishedVersion'>;
                 versionsCollection?: Maybe<{
                   items: Array<
                     Maybe<
@@ -24210,6 +24210,10 @@ export const ManuscriptsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
               ],
             },
           },

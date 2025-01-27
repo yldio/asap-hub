@@ -1642,6 +1642,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/postmark@workspace:packages/postmark":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/postmark@workspace:packages/postmark"
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/react-components@workspace:*, @asap-hub/react-components@workspace:packages/react-components":
   version: 0.0.0-use.local
   resolution: "@asap-hub/react-components@workspace:packages/react-components"

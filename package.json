@@ -52,6 +52,7 @@
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint": "yarn test --config=jest-eslint.config.js",
+    "postmark:push:templates": "yarn workspace @asap-hub/postmark push:templates",
     "release:frontend": "yarn workspace @asap-hub/crn-frontend release:frontend && yarn workspace @asap-hub/gp2-frontend release:frontend",
     "schema:update": "yarn schema:update:crn",
     "schema:update:crn": "./apps/crn-server/scripts/schema-update.sh",

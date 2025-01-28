@@ -1588,13 +1588,13 @@ describe('Manuscripts Contentful Data Provider', () => {
   });
 
   describe('sendEmailNotification', () => {
-    const consoleMock = jest.spyOn(console, 'log');
-
     test('Should not log to console when there is no manuscript', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: null,
       });
       const manuscriptId = 'manuscript-id-1';
+      const consoleMock = jest.spyOn(console, 'log');
+
       await manuscriptDataProvider.sendEmailNotification(
         'manuscript_submitted',
         manuscriptId,
@@ -1604,6 +1604,7 @@ describe('Manuscripts Contentful Data Provider', () => {
     });
 
     test('returns contributing authors as recipients', async () => {
+      const consoleMock = jest.spyOn(console, 'log');
       const manuscript = getContentfulGraphqlManuscript() as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
@@ -1645,6 +1646,7 @@ describe('Manuscripts Contentful Data Provider', () => {
     });
 
     test('returns Project Managers and Lead PIs of contributing teams as recipients', async () => {
+      const consoleMock = jest.spyOn(console, 'log');
       const manuscript = getContentfulGraphqlManuscript() as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;

@@ -462,6 +462,7 @@ export class ManuscriptContentfulDataProvider
           .filter(
             (membership) =>
               !membership?.inactiveSinceDate &&
+              membership?.linkedFrom?.usersCollection?.items[0] &&
               !membership?.linkedFrom?.usersCollection?.items[0]
                 ?.alumniSinceDate,
           )

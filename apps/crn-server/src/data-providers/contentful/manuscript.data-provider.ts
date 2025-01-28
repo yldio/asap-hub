@@ -245,104 +245,6 @@ export class ManuscriptContentfulDataProvider
     return manuscriptVersionEntry.sys.id;
   }
 
-  private async sendEmailNotification(
-    action: ManuscriptUpdateAction,
-    manuscriptId: string,
-  ): Promise<void> {
-    const { manuscripts } = await this.contentfulClient.request<
-      FetchManuscriptNotificationDetailsQuery,
-      FetchManuscriptNotificationDetailsQueryVariables
-    >(FETCH_MANUSCRIPT_NOTIFICATION_DETAILS, { id: manuscriptId });
-
-    const versionData = manuscripts?.versionsCollection?.items[0];
-
-    if (!manuscripts || !versionData) {
-      return;
-    }
-
-    const contributingTeams = cleanArray(versionData.teamsCollection?.items)
-      .map((team) => team?.displayName || '')
-      .filter(Boolean);
-    const submittingTeam = manuscripts.teamsCollection?.items[0];
-
-    const notificationData: TemplateModel = {
-      manuscript: {
-        title: manuscripts.title || '',
-        type: versionData.type || '',
-        id: getManuscriptVersionUID({
-          version: {
-            type: versionData.type,
-            count: versionData.count,
-            lifecycle: versionData.lifecycle,
-          },
-          teamIdCode: submittingTeam?.teamId || '',
-          grantId: submittingTeam?.grantId || '',
-          manuscriptCount: manuscripts.count || 0,
-        }),
-      },
-      teams: getCommaAndString(contributingTeams),
-      submittingTeam: {
-        name: submittingTeam?.displayName || '',
-        workspaceLink: `${origin}/teams/${submittingTeam?.sys.id}/workspace`,
-      },
-    };
-
-    const contributingAuthors = [
-      ...(versionData.firstAuthorsCollection?.items.map(
-        (firstAuthor) => firstAuthor?.email,
-      ) || []),
-      ...(versionData.additionalAuthorsCollection?.items.map(
-        (additionalAuthor) => additionalAuthor?.email,
-      ) || []),
-      ...(versionData.correspondingAuthorCollection?.items.map(
-        (correspondingAuthor) => correspondingAuthor?.email,
-      ) || []),
-    ];
-
-    const teamLeaders = versionData.teamsCollection?.items.map((team) => {
-      const activeMemberships =
-        team?.linkedFrom?.teamMembershipCollection?.items
-          .filter(
-            (membership) =>
-              !membership?.inactiveSinceDate &&
-              !membership?.linkedFrom?.usersCollection?.items[0]
-                ?.alumniSinceDate,
-          )
-          .map((membership) => ({
-            email: membership?.linkedFrom?.usersCollection?.items[0]?.email,
-            role: membership?.role,
-          }));
-
-      return activeMemberships
-        ?.filter(
-          (member) =>
-            member.role === 'Project Manager' ||
-            member.role === 'Lead PI (Core Leadership)',
-        )
-        .map((member) => member.email);
-    });
-
-    const recipients = [
-      ...new Set([...contributingAuthors, ...(teamLeaders || [])]),
-    ].join(',');
-
-    const templateDetails = manuscriptNotificationMapping[action];
-    if (templateDetails.grantee)
-      dummySendEmail({
-        from: 'hub@asap.science',
-        to: recipients,
-        templateName: templateDetails.grantee,
-        templateModel: notificationData,
-      });
-    if (templateDetails.open_science_team)
-      dummySendEmail({
-        from: 'hub@asap.science',
-        to: 'openscience@parkinsonsroadmap.org',
-        templateName: templateDetails.open_science_team,
-        templateModel: notificationData,
-      });
-  }
-
   async create(input: ManuscriptCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
 
@@ -440,10 +342,7 @@ export class ManuscriptContentfulDataProvider
       });
       const statusUpdateAction = getStatusUpdateAction(manuscriptData.status);
       if (statusUpdateAction)
-        await this.sendEmailNotification(
-          statusUpdateAction,
-          manuscriptEntry.sys.id,
-        );
+        await this.sendEmailNotification(statusUpdateAction, id);
     }
 
     if ('versions' in manuscriptData && manuscriptData.versions?.[0]) {
@@ -499,6 +398,107 @@ export class ManuscriptContentfulDataProvider
       fetchManuscriptById,
       'manuscripts',
     );
+  }
+
+  async sendEmailNotification(
+    action: ManuscriptUpdateAction,
+    manuscriptId: string,
+  ): Promise<void> {
+    const { manuscripts } = await this.contentfulClient.request<
+      FetchManuscriptNotificationDetailsQuery,
+      FetchManuscriptNotificationDetailsQueryVariables
+    >(FETCH_MANUSCRIPT_NOTIFICATION_DETAILS, { id: manuscriptId });
+
+    const versionData = manuscripts?.versionsCollection?.items[0];
+
+    if (!manuscripts || !versionData) {
+      return;
+    }
+
+    const contributingTeams = cleanArray(versionData.teamsCollection?.items)
+      .map((team) => team?.displayName || '')
+      .filter(Boolean);
+    const submittingTeam = manuscripts.teamsCollection?.items[0];
+
+    const notificationData: TemplateModel = {
+      manuscript: {
+        title: manuscripts.title || '',
+        type: versionData.type || '',
+        id: getManuscriptVersionUID({
+          version: {
+            type: versionData.type,
+            count: versionData.count,
+            lifecycle: versionData.lifecycle,
+          },
+          teamIdCode: submittingTeam?.teamId || '',
+          grantId: submittingTeam?.grantId || '',
+          manuscriptCount: manuscripts.count || 0,
+        }),
+      },
+      teams: getCommaAndString(contributingTeams),
+      submittingTeam: {
+        name: submittingTeam?.displayName || '',
+        workspaceLink: `${origin}/teams/${submittingTeam?.sys.id}/workspace`,
+      },
+    };
+
+    const contributingAuthors = [
+      ...(versionData.firstAuthorsCollection?.items.map(
+        (firstAuthor) => firstAuthor?.email,
+      ) || []),
+      ...(versionData.additionalAuthorsCollection?.items.map(
+        (additionalAuthor) => additionalAuthor?.email,
+      ) || []),
+      ...(versionData.correspondingAuthorCollection?.items.map(
+        (correspondingAuthor) => correspondingAuthor?.email,
+      ) || []),
+    ];
+
+    const teamLeaders = cleanArray(versionData.teamsCollection?.items).map(
+      (team) => {
+        const activeMemberships = cleanArray(
+          team?.linkedFrom?.teamMembershipCollection?.items,
+        )
+          .filter(
+            (membership) =>
+              !membership?.inactiveSinceDate &&
+              !membership?.linkedFrom?.usersCollection?.items[0]
+                ?.alumniSinceDate,
+          )
+          .map((membership) => ({
+            email: membership?.linkedFrom?.usersCollection?.items[0]?.email,
+            role: membership?.role,
+          }));
+
+        return activeMemberships
+          ?.filter(
+            (member) =>
+              member.role === 'Project Manager' ||
+              member.role === 'Lead PI (Core Leadership)',
+          )
+          .map((member) => member.email);
+      },
+    );
+
+    const recipients = [
+      ...new Set([...contributingAuthors, ...teamLeaders.flat()]),
+    ].join(',');
+
+    const templateDetails = manuscriptNotificationMapping[action];
+    if (templateDetails.grantee)
+      dummySendEmail({
+        from: 'hub@asap.science',
+        to: recipients,
+        templateName: templateDetails.grantee,
+        templateModel: notificationData,
+      });
+    if (templateDetails.open_science_team)
+      dummySendEmail({
+        from: 'hub@asap.science',
+        to: 'openscience@parkinsonsroadmap.org',
+        templateName: templateDetails.open_science_team,
+        templateModel: notificationData,
+      });
   }
 }
 

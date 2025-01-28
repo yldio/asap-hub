@@ -1645,7 +1645,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(consoleMock).toHaveBeenCalledWith('TO: ', recipients);
     });
 
-    test('returns Project Managers and Lead PIs of contributing teams as recipients', async () => {
+    test('returns active Project Managers and Lead PIs of contributing teams as recipients', async () => {
       const consoleMock = jest.spyOn(console, 'log');
       const manuscript = getContentfulGraphqlManuscript() as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
@@ -1745,6 +1745,12 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         },
       ];
+      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection =
+        undefined;
+      manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection =
+        undefined;
+      manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection =
+        undefined;
 
       const recipients = 'active.pm@example.com,lead.pi@example.com';
 

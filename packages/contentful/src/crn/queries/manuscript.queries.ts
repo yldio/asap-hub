@@ -362,6 +362,7 @@ export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
                 id
               }
               displayName
+              inactiveSince
               linkedFrom {
                 teamMembershipCollection(limit: 100) {
                   items {

@@ -415,10 +415,14 @@ export class ManuscriptContentfulDataProvider
       return;
     }
 
-    const contributingTeams = cleanArray(versionData.teamsCollection?.items)
+    const submittingTeam = manuscripts.teamsCollection?.items[0];
+    const activeContributingTeams = cleanArray(
+      versionData.teamsCollection?.items,
+    ).filter((team) => !team.inactiveSince);
+
+    const contributingTeamNames = activeContributingTeams
       .map((team) => team?.displayName || '')
       .filter(Boolean);
-    const submittingTeam = manuscripts.teamsCollection?.items[0];
 
     const notificationData: TemplateModel = {
       manuscript: {
@@ -435,7 +439,7 @@ export class ManuscriptContentfulDataProvider
           manuscriptCount: manuscripts.count || 0,
         }),
       },
-      teams: getCommaAndString(contributingTeams),
+      teams: getCommaAndString(contributingTeamNames),
       submittingTeam: {
         name: submittingTeam?.displayName || '',
         workspaceLink: `${origin}/teams/${submittingTeam?.sys.id}/workspace`,
@@ -454,32 +458,29 @@ export class ManuscriptContentfulDataProvider
       ) || []),
     ];
 
-    const teamLeaders = cleanArray(versionData.teamsCollection?.items).map(
-      (team) => {
-        const activeMemberships = cleanArray(
-          team?.linkedFrom?.teamMembershipCollection?.items,
+    const teamLeaders = activeContributingTeams.map((team) => {
+      const activeMemberships = cleanArray(
+        team?.linkedFrom?.teamMembershipCollection?.items,
+      )
+        .filter(
+          (membership) =>
+            !membership?.inactiveSinceDate &&
+            membership?.linkedFrom?.usersCollection?.items[0] &&
+            !membership?.linkedFrom?.usersCollection?.items[0]?.alumniSinceDate,
         )
-          .filter(
-            (membership) =>
-              !membership?.inactiveSinceDate &&
-              membership?.linkedFrom?.usersCollection?.items[0] &&
-              !membership?.linkedFrom?.usersCollection?.items[0]
-                ?.alumniSinceDate,
-          )
-          .map((membership) => ({
-            email: membership?.linkedFrom?.usersCollection?.items[0]?.email,
-            role: membership?.role,
-          }));
+        .map((membership) => ({
+          email: membership?.linkedFrom?.usersCollection?.items[0]?.email,
+          role: membership?.role,
+        }));
 
-        return activeMemberships
-          ?.filter(
-            (member) =>
-              member.role === 'Project Manager' ||
-              member.role === 'Lead PI (Core Leadership)',
-          )
-          .map((member) => member.email);
-      },
-    );
+      return activeMemberships
+        ?.filter(
+          (member) =>
+            member.role === 'Project Manager' ||
+            member.role === 'Lead PI (Core Leadership)',
+        )
+        .map((member) => member.email);
+    });
 
     const recipients = [
       ...new Set([...contributingAuthors, ...teamLeaders.flat()]),

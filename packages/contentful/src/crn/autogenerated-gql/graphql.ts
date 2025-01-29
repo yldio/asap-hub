@@ -18293,7 +18293,7 @@ export type FetchManuscriptNotificationDetailsQuery = {
               teamsCollection?: Maybe<{
                 items: Array<
                   Maybe<
-                    Pick<Teams, 'displayName'> & {
+                    Pick<Teams, 'displayName' | 'inactiveSince'> & {
                       sys: Pick<Sys, 'id'>;
                       linkedFrom?: Maybe<{
                         teamMembershipCollection?: Maybe<{
@@ -34723,6 +34723,13 @@ export const FetchManuscriptNotificationDetailsDocument = {
                                           name: {
                                             kind: 'Name',
                                             value: 'displayName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'inactiveSince',
                                           },
                                         },
                                         {

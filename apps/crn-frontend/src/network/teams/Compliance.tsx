@@ -3,11 +3,12 @@ import { SearchField, ComplianceDashboard } from '@asap-hub/react-components';
 import {
   complianceInitialSortingDirection,
   ComplianceSortingDirection,
+  ManuscriptPutRequest,
   SortCompliance,
 } from '@asap-hub/model';
 
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { useManuscripts } from './state';
+import { useManuscripts, usePutManuscript } from './state';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 
@@ -29,6 +30,16 @@ const Compliance: React.FC = () => {
 
   const [sortingDirection, setSortingDirection] =
     useState<ComplianceSortingDirection>(complianceInitialSortingDirection);
+  const updateManuscript = usePutManuscript();
+
+  const handleUpdateManuscript = async (
+    id: string,
+    manuscript: ManuscriptPutRequest,
+  ) => {
+    const manuscriptResponse = await updateManuscript(id, manuscript);
+    result.refresh(manuscriptResponse);
+    return manuscriptResponse;
+  };
 
   return (
     <article>
@@ -47,6 +58,7 @@ const Compliance: React.FC = () => {
           currentPageIndex={currentPage}
           numberOfPages={numberOfPages}
           renderPageHref={renderPageHref}
+          onUpdateManuscript={handleUpdateManuscript}
         />
       </SearchFrame>
     </article>

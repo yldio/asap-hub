@@ -15,6 +15,7 @@ import {
   getLinkEntity,
   GraphQLClient,
   Link,
+  ManuscriptsFilter,
   Maybe,
   patchAndPublish,
   pollContentfulGql,
@@ -62,8 +63,10 @@ export class ManuscriptContentfulDataProvider
     private getRestClient: () => Promise<Environment>,
   ) {}
 
-  async fetch(options: FetchOptions): Promise<ListPartialManuscriptResponse> {
-    const { take = 8, skip = 0 } = options;
+  async fetch(
+    options: FetchOptions<ManuscriptsFilter>,
+  ): Promise<ListPartialManuscriptResponse> {
+    const { take = 8, skip = 0, filter = {} } = options;
 
     const { manuscriptsCollection } = await this.contentfulClient.request<
       FetchManuscriptsQuery,
@@ -71,6 +74,7 @@ export class ManuscriptContentfulDataProvider
     >(FETCH_MANUSCRIPTS, {
       limit: take,
       skip,
+      where: filter,
     });
 
     if (!manuscriptsCollection?.items) {
@@ -88,6 +92,7 @@ export class ManuscriptContentfulDataProvider
           const version = manuscript.versionsCollection?.items[0];
           const team = manuscript.teamsCollection?.items[0];
           return {
+            manuscriptId: manuscript.sys.id,
             status: manuscriptMapStatus(manuscript.status) || undefined,
             id: getManuscriptVersionUID({
               version: {

@@ -181,7 +181,7 @@ export const getContentfulGraphqlManuscripts = (
 >['manuscriptsCollection'] => ({
   items: [
     {
-      sys: { id: '1' },
+      sys: { id: 'manuscript-id-1' },
       count: 1,
       title: 'Manuscript 1',
       status: 'Compliant',
@@ -197,7 +197,7 @@ export const getContentfulGraphqlManuscripts = (
       versionsCollection: getContentfulGraphqlManuscriptVersions(teamId),
     },
     {
-      sys: { id: '2' },
+      sys: { id: 'manuscript-id-2' },
       count: 2,
       title: 'Manuscript 2',
       teamsCollection: {
@@ -256,7 +256,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
   ],
   manuscripts: [
     {
-      id: '1',
+      id: 'manuscript-id-1',
       count: 1,
       title: 'Manuscript 1',
       status: 'Compliant',
@@ -297,7 +297,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
       ],
     },
     {
-      id: '2',
+      id: 'manuscript-id-2',
       count: 2,
       title: 'Manuscript 2',
       teamId: 'WH1',

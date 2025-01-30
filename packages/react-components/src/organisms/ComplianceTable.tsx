@@ -59,6 +59,7 @@ const titleStyles = css({
 });
 
 type ComplianceTableProps = {
+  isComplianceReviewer: boolean;
   data: PartialManuscriptResponse[];
   sort?: SortCompliance;
   setSort?: React.Dispatch<React.SetStateAction<SortCompliance>>;
@@ -73,6 +74,7 @@ type ComplianceTableProps = {
 };
 
 const ComplianceTable: React.FC<ComplianceTableProps> = ({
+  isComplianceReviewer,
   onUpdateManuscript,
   data,
 }) => (
@@ -91,6 +93,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
           key={`${row.id}-${row.status}`}
           data={row}
           onUpdateManuscript={onUpdateManuscript}
+          isComplianceReviewer={isComplianceReviewer}
         />
       ))}
     </div>

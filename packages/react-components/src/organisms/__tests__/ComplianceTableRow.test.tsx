@@ -19,6 +19,7 @@ describe('ComplianceTableRow', () => {
 
   const defaultProps: ComponentProps<typeof ComplianceTableRow> = {
     data,
+    isComplianceReviewer: true,
     onUpdateManuscript: mockOnUpdateManuscript,
   };
 
@@ -36,6 +37,16 @@ describe('ComplianceTableRow', () => {
       screen.getByRole('button', { name: /Addendum Required/i }),
     ).toBeInTheDocument();
     expect(screen.getByText('Yes')).toBeInTheDocument();
+  });
+
+  it('user can not change status when not a compliance reviewer', () => {
+    render(
+      <ComplianceTableRow {...defaultProps} isComplianceReviewer={false} />,
+    );
+
+    expect(
+      screen.getByRole('button', { name: /Addendum Required/i }),
+    ).toBeDisabled();
   });
 
   it('opens status change modal when selecting a different status', async () => {

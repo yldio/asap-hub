@@ -62,6 +62,7 @@ const teamNameStyles = css({
 });
 
 type ComplianceTableRowProps = {
+  isComplianceReviewer: boolean;
   data: PartialManuscriptResponse;
   onUpdateManuscript: (
     manuscriptId: string,
@@ -70,6 +71,7 @@ type ComplianceTableRowProps = {
 };
 
 const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
+  isComplianceReviewer,
   data,
   onUpdateManuscript,
 }) => {
@@ -133,7 +135,10 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
         <span css={{ margin: `${rem(17)} 0` }}>
           <StatusButton
             buttonChildren={() => <span>{status}</span>}
-            canEdit={!['Closed (other)', 'Compliant'].includes(status ?? '')}
+            canEdit={
+              !['Closed (other)', 'Compliant'].includes(status ?? '') &&
+              isComplianceReviewer
+            }
             selectedStatusType={getReviewerStatusType(
               status as (typeof manuscriptStatus)[number],
             )}

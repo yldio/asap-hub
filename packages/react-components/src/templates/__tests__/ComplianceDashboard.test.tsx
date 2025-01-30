@@ -5,6 +5,7 @@ import { ComplianceDashboard } from '..';
 
 describe('ComplianceDashboard', () => {
   const props: ComponentProps<typeof ComplianceDashboard> = {
+    isComplianceReviewer: true,
     data: [
       {
         id: 'DA1-000463-002-org-G-1',

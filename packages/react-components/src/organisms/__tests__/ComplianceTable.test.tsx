@@ -38,6 +38,7 @@ describe('ComplianceTable', () => {
     setSort: jest.fn(),
     sortingDirection: complianceInitialSortingDirection,
     setSortingDirection: jest.fn(),
+    isComplianceReviewer: true,
   };
 
   it('renders data', () => {

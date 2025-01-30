@@ -8,7 +8,11 @@ import {
 } from '@asap-hub/model';
 
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { useManuscripts, usePutManuscript } from './state';
+import {
+  useIsComplianceReviewer,
+  useManuscripts,
+  usePutManuscript,
+} from './state';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 
@@ -25,6 +29,7 @@ const Compliance: React.FC = () => {
     result.total,
     pageSize,
   );
+  const isComplianceReviewer = useIsComplianceReviewer();
 
   const [sort, setSort] = useState<SortCompliance>('team_asc');
 
@@ -50,6 +55,7 @@ const Compliance: React.FC = () => {
       />
       <SearchFrame title="">
         <ComplianceDashboard
+          isComplianceReviewer={isComplianceReviewer}
           data={result.items}
           setSort={setSort}
           setSortingDirection={setSortingDirection}

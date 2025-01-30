@@ -2,6 +2,7 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   createManuscriptResponse,
   createPartialManuscriptResponse,
+  createUserResponse,
 } from '@asap-hub/fixtures';
 import { Frame } from '@asap-hub/frontend-utils';
 import { PartialManuscriptResponse } from '@asap-hub/model';
@@ -33,6 +34,10 @@ const mockUpdateManuscript = updateManuscript as jest.MockedFunction<
   typeof updateManuscript
 >;
 
+const user = createUserResponse({}, 1);
+user.role = 'Staff';
+user.openScienceTeamMember = true;
+
 const renderCompliancePage = async () => {
   const result = render(
     <RecoilRoot
@@ -48,7 +53,7 @@ const renderCompliancePage = async () => {
       }}
     >
       <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
+        <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: '/' }]}>
               <Route path="/">

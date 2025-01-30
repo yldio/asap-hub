@@ -14,6 +14,7 @@ import {
   ListPartialManuscriptResponse,
   ManuscriptVersion,
   PartialManuscriptResponse,
+  ManuscriptDataObject,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useCallback } from 'react';
@@ -411,12 +412,37 @@ export const manuscriptsState = selectorFamily<
 
 export const useManuscripts = (
   options: GetListOptions,
-): ListPartialManuscriptResponse => {
+): ListPartialManuscriptResponse & {
+  refresh: (manuscript: ManuscriptDataObject) => void;
+} => {
   const [manuscripts, setManuscripts] = useRecoilState(
     manuscriptsState(options),
   );
 
   const algoliaClient = useAlgolia();
+
+  const refreshManuscripts = useCallback(
+    (updatedManuscriptItem: ManuscriptDataObject) => {
+      setManuscripts((previousManuscripts) => {
+        /* istanbul ignore next */
+        if (!previousManuscripts || previousManuscripts instanceof Error)
+          return undefined;
+
+        return {
+          ...previousManuscripts,
+          items: previousManuscripts.items.map((previousManuscriptItem) =>
+            previousManuscriptItem.manuscriptId === updatedManuscriptItem.id
+              ? {
+                  ...previousManuscriptItem,
+                  status: updatedManuscriptItem.status,
+                }
+              : previousManuscriptItem,
+          ),
+        };
+      });
+    },
+    [setManuscripts],
+  );
 
   if (manuscripts === undefined) {
     throw getManuscripts(algoliaClient.client, options)
@@ -426,7 +452,7 @@ export const useManuscripts = (
   if (manuscripts instanceof Error) {
     throw manuscripts;
   }
-  return manuscripts;
+  return { ...manuscripts, refresh: refreshManuscripts };
 };
 
 export const versionSelector = selectorFamily<

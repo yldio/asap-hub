@@ -1,3 +1,4 @@
+import { ManuscriptsFilter } from '@asap-hub/contentful';
 import {
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
@@ -11,7 +12,7 @@ import {
 export type ManuscriptDataProvider = DataProvider<
   ManuscriptDataObject,
   PartialManuscriptResponse,
-  FetchOptions,
+  FetchOptions<ManuscriptsFilter>,
   ManuscriptCreateDataObject
 > & {
   update(

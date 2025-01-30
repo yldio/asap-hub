@@ -1,5 +1,7 @@
 import {
   ComplianceSortingDirection,
+  ManuscriptPutRequest,
+  ManuscriptResponse,
   manuscriptStatus,
   PartialManuscriptResponse,
   SortCompliance,
@@ -46,6 +48,7 @@ const manuscriptStatusContainerStyles = css({
 });
 
 type ComplianceDashboardProps = ComponentProps<typeof PageControls> & {
+  isComplianceReviewer: boolean;
   data: PartialManuscriptResponse[];
   sort: SortCompliance;
   setSort: React.Dispatch<React.SetStateAction<SortCompliance>>;
@@ -53,14 +56,20 @@ type ComplianceDashboardProps = ComponentProps<typeof PageControls> & {
   setSortingDirection: React.Dispatch<
     React.SetStateAction<ComplianceSortingDirection>
   >;
+  onUpdateManuscript: (
+    manuscriptId: string,
+    payload: ManuscriptPutRequest,
+  ) => Promise<ManuscriptResponse>;
 };
 
 const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
+  isComplianceReviewer,
   data,
   sort,
   sortingDirection,
   setSort,
   setSortingDirection,
+  onUpdateManuscript,
   ...pageControlsProps
 }) => (
   <article>
@@ -77,11 +86,13 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
     {data.length > 0 ? (
       <main css={{ paddingTop: rem(32) }}>
         <ComplianceTable
+          isComplianceReviewer={isComplianceReviewer}
           data={data}
           sort={sort}
           sortingDirection={sortingDirection}
           setSort={setSort}
           setSortingDirection={setSortingDirection}
+          onUpdateManuscript={onUpdateManuscript}
         />
         <section css={pageControlsStyles}>
           <PageControls {...pageControlsProps} />

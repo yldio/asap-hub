@@ -5,14 +5,16 @@ import { ComplianceDashboard } from '..';
 
 describe('ComplianceDashboard', () => {
   const props: ComponentProps<typeof ComplianceDashboard> = {
+    isComplianceReviewer: true,
     data: [
       {
-        id: '1',
+        id: 'DA1-000463-002-org-G-1',
         lastUpdated: '2023-01-01T08:00:00Z',
         requestingApcCoverage: 'Yes',
         status: 'Compliant',
         team: { id: 'team-1', displayName: 'Test Team' },
         assignedUsers: [],
+        manuscriptId: '1',
       },
     ],
     numberOfPages: 1,
@@ -22,6 +24,7 @@ describe('ComplianceDashboard', () => {
     setSort: jest.fn(),
     sortingDirection: complianceInitialSortingDirection,
     setSortingDirection: jest.fn(),
+    onUpdateManuscript: jest.fn(),
   };
 
   it('renders the manuscript status card', () => {

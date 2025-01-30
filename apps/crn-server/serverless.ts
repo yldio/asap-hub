@@ -919,6 +919,26 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    algoliaIndexManuscripts: {
+      handler:
+        './src/handlers/manuscript/algolia-index-manuscript-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['ManuscriptsPublished', 'ManuscriptsUnpublished'],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
     updateContentfulWorkingGroupDeliverables: {
       handler:
         './src/handlers/working-group/update-deliverables-handler.handler',

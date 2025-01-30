@@ -3,6 +3,7 @@ export type EntityEventAction = 'Published' | 'Unpublished';
 export type EventEvent = `Events${EntityEventAction}`;
 export type ExternalAuthorEvent = `ExternalAuthors${EntityEventAction}`;
 export type InterestGroupEvent = `InterestGroups${EntityEventAction}`;
+export type ManuscriptEvent = `Manuscripts${EntityEventAction}`;
 export type TeamEvent = `Teams${EntityEventAction}`;
 export type ResearchOutputEvent = `ResearchOutputs${EntityEventAction}`;
 export type WorkingGroupEvent = `WorkingGroups${EntityEventAction}`;
@@ -18,6 +19,7 @@ export type WebhookDetailType =
   | ExternalAuthorEvent
   | InterestGroupEvent
   | LabEvent
+  | ManuscriptEvent
   | NewsEvent
   | ResearchOutputEvent
   | TeamEvent

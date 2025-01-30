@@ -81,7 +81,8 @@ export const getComplianceReportDataObject =
 
 export const createPartialManuscriptResponse =
   (): PartialManuscriptResponse => ({
-    id: 'manuscript-1',
+    id: 'DA1-000463-003-org-G-1',
+    manuscriptId: 'manuscript-1',
     lastUpdated: '2020-09-23T20:45:22.000Z',
     team: {
       id: 'team-id-1',

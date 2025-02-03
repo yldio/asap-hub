@@ -45,6 +45,7 @@ type UserAvatarListProps = {
   fullListRoute?: string;
   onClick?: () => void;
   small?: boolean;
+  maxAvatars?: number;
 };
 
 const UserAvatarList: React.FC<UserAvatarListProps> = ({
@@ -52,16 +53,17 @@ const UserAvatarList: React.FC<UserAvatarListProps> = ({
   fullListRoute,
   onClick,
   small = false,
+  maxAvatars = MAX_USER_AVATARS,
 }) => (
   <div
     css={membersContainerStyles(
       small ? 24 : 36,
-      members.length > MAX_USER_AVATARS ? MAX_USER_AVATARS + 1 : members.length,
+      members.length > maxAvatars ? maxAvatars + 1 : members.length,
     )}
   >
     <ul css={membersListStyles}>
       {members
-        .slice(0, MAX_USER_AVATARS)
+        .slice(0, maxAvatars)
         .map(({ id: userId, avatarUrl, firstName, lastName }, i) => (
           <li
             key={`${userId}${i}`}
@@ -76,11 +78,11 @@ const UserAvatarList: React.FC<UserAvatarListProps> = ({
             </Anchor>
           </li>
         ))}
-      {members.length > MAX_USER_AVATARS && (
+      {members.length > maxAvatars && (
         <li css={extraUsersStyles}>
           {fullListRoute && (
             <Anchor href={fullListRoute}>
-              <Avatar placeholder={`+${members.length - MAX_USER_AVATARS}`} />
+              <Avatar placeholder={`+${members.length - maxAvatars}`} />
             </Anchor>
           )}
           {onClick && (
@@ -89,7 +91,7 @@ const UserAvatarList: React.FC<UserAvatarListProps> = ({
               linkStyle
               overrideStyles={css({ display: 'flex', margin: rem(1) })}
             >
-              <Avatar placeholder={`+${members.length - MAX_USER_AVATARS}`} />
+              <Avatar placeholder={`+${members.length - maxAvatars}`} />
             </Button>
           )}
         </li>

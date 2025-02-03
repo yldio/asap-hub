@@ -11,6 +11,18 @@ export const manuscriptContentQueryFragment = gql`
     title
     status
     count
+    assignedUsersCollection(limit: 30) {
+      items {
+        sys {
+          id
+        }
+        firstName
+        lastName
+        avatar {
+          url
+        }
+      }
+    }
     versionsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
       items {
         sys {
@@ -306,7 +318,6 @@ export const FETCH_MANUSCRIPTS = gql`
         status
         count
         assignedUsersCollection(limit: 30) {
-          total
           items {
             sys {
               id

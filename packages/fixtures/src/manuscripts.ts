@@ -28,6 +28,7 @@ export const createManuscriptResponse = (
   teamId: 'team-1',
   status: 'Waiting for Report',
   count: 1,
+  assignedUsers: [],
   versions: [
     {
       id: 'version-1',
@@ -91,5 +92,5 @@ export const createPartialManuscriptResponse =
       displayName: 'Team 1',
     },
     status: 'Compliant',
-    assignedUsers: []
+    assignedUsers: [],
   });

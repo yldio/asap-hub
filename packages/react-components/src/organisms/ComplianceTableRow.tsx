@@ -14,10 +14,12 @@ import {
   charcoal,
   lead,
   neutral200,
+  PencilIcon,
   StatusButton,
   steel,
+  UserAvatarList,
 } from '..';
-import { Avatar, Button, Link, Pill } from '../atoms';
+import { Button, Link, Pill } from '../atoms';
 import { borderRadius } from '../card';
 import { formatDateToTimezone } from '../date';
 import { rem, tabletScreen } from '../pixels';
@@ -80,7 +82,7 @@ const assignedUsersContainerStyles = css({
   alignItems: 'center',
 });
 
-const noUsersContainerStyles = css({
+const assignedUsersInnerContainerStyles = css({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
@@ -97,10 +99,18 @@ const noUsersStyles = css({
   maxWidth: rem(90),
 });
 
-const addUserButtonStyles = css({
+const assignUsersButtonStyles = css({
+  display: 'flex',
+  alignSelf: 'center',
   flexGrow: 0,
   height: rem(40),
   width: rem(40),
+});
+
+const editUsersButtonStyles = css({
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 0,
 });
 
 type ComplianceTableRowProps = {
@@ -157,9 +167,11 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
     }
   };
 
-  const handleAssignUsersConfirm = async (data: AssignedUsersFormData) => {
+  const handleAssignUsersConfirm = async (
+    assignedUsersData: AssignedUsersFormData,
+  ) => {
     await onUpdateManuscript(manuscriptId, {
-      assignedUsers: data.assignedUsers.map((user) => user.value),
+      assignedUsers: assignedUsersData.assignedUsers.map((user) => user.value),
     });
     setDisplayAssignUsersModal(false);
   };
@@ -188,6 +200,17 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
           apcCoverage={requestingApcCoverage ?? ''}
           manuscriptTitle={title}
           getAuthorSuggestions={getAuthorSuggestions}
+          assignedUsers={assignedUsers.map((user) => ({
+            author: {
+              id: user.id,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              displayName: `${user.firstName} ${user.lastName}`,
+              avatarUrl: user.avatarUrl,
+            },
+            label: `${user.firstName} ${user.lastName}`,
+            value: user.id,
+          }))}
         />
       )}
       <div key={id} css={[rowStyles]} data-testid="compliance-table-row">
@@ -234,21 +257,28 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
         <span css={[titleStyles, rowTitleStyles]}>Assigned Users</span>
         <div css={assignedUsersContainerStyles}>
           {assignedUsers?.length ? (
-            assignedUsers.map((user) => (
-              <Avatar
-                firstName={user.firstName}
-                lastName={user.lastName}
-                imageUrl={user.avatarUrl}
-                key={user.id}
-              />
-            ))
+            <div css={assignedUsersInnerContainerStyles}>
+              <UserAvatarList members={assignedUsers} maxAvatars={2} />
+              <Button
+                aria-label="Edit Assigned Users"
+                noMargin
+                onClick={() => setDisplayAssignUsersModal(true)}
+                overrideStyles={css([
+                  assignUsersButtonStyles,
+                  editUsersButtonStyles,
+                ])}
+              >
+                <PencilIcon />
+              </Button>
+            </div>
           ) : (
-            <div css={noUsersContainerStyles}>
+            <div css={assignedUsersInnerContainerStyles}>
               <span css={noUsersStyles}>No users assigned</span>
               <Button
+                aria-label="Assign Users"
                 noMargin
                 small
-                overrideStyles={addUserButtonStyles}
+                overrideStyles={assignUsersButtonStyles}
                 onClick={handleAssignUsersClick}
               >
                 {addUserIcon}

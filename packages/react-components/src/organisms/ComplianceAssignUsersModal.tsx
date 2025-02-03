@@ -59,19 +59,17 @@ const InformationRow: React.FC<{
   title: string;
   value?: string;
   children?: React.ReactNode;
-}> = ({ title, value, children }) => {
-  return (
-    <div css={{ display: 'flex', flexDirection: 'column', gap: rem(8) }}>
-      <Subtitle noMargin>{title}</Subtitle>
-      {value && (
-        <Paragraph noMargin accent="lead">
-          {value}
-        </Paragraph>
-      )}
-      {children}
-    </div>
-  );
-};
+}> = ({ title, value, children }) => (
+  <div css={{ display: 'flex', flexDirection: 'column', gap: rem(8) }}>
+    <Subtitle noMargin>{title}</Subtitle>
+    {value && (
+      <Paragraph noMargin accent="lead">
+        {value}
+      </Paragraph>
+    )}
+    {children}
+  </div>
+);
 
 export type AssignedUsersFormData = {
   assignedUsers: OptionsType<AuthorOption>;
@@ -87,6 +85,7 @@ type ComplianceAssignUsersModalProps = Pick<
   teams: string;
   apcCoverage: string;
   manuscriptTitle: string;
+  assignedUsers: OptionsType<AuthorOption>;
 };
 
 const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
@@ -97,11 +96,12 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
   apcCoverage,
   manuscriptTitle,
   getAuthorSuggestions,
+  assignedUsers,
 }) => {
   const methods = useForm<AssignedUsersFormData>({
     mode: 'onBlur',
     defaultValues: {
-      assignedUsers: [],
+      assignedUsers,
     },
   });
   const { setValue, watch, handleSubmit } = methods;
@@ -115,7 +115,7 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
 
   return (
     <form>
-      <Modal padding={false}>
+      <Modal padding={false} overrideModalStyles={css({ minWidth: '50%' })}>
         <header css={headerStyles}>
           <div css={controlsContainerStyles}>
             <Button small onClick={onDismiss} enabled={!isRequestInProgress}>
@@ -124,7 +124,7 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
           </div>
           <Headline3>Assign User</Headline3>
         </header>
-        <div css={[paddingStyles, { paddingTop: 0}]}>
+        <div css={[paddingStyles, css({ paddingTop: 0 })]}>
           <div
             css={{
               display: 'flex',
@@ -144,7 +144,6 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
               isMulti
               title="Assign User"
               subtitle="(required)"
-              // enabled={!isSubmitting}
               placeholder="Start typing..."
               loadOptions={getAuthorSuggestions}
               onChange={(

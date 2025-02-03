@@ -23,6 +23,7 @@ import {
 import {
   ApcCoverageOption,
   FetchOptions,
+  ManuscriptAssignedUser,
   ListPartialManuscriptResponse,
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
@@ -37,7 +38,7 @@ import {
   QuickCheckDetails,
   QuickCheckDetailsObject,
 } from '@asap-hub/model';
-import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 import { getCommaAndString } from '../../utils/text';
 
 import { ManuscriptDataProvider } from '../types';
@@ -100,13 +101,8 @@ export class ManuscriptContentfulDataProvider
                 (teamItem) => teamItem?.displayName || '',
               ),
             ),
-            assignedUsers: cleanArray(
-              (manuscript.assignedUsersCollection?.items || []).map((user) => ({
-                id: user?.sys.id || '',
-                firstName: user?.firstName || '',
-                lastName: user?.lastName || '',
-                avatarUrl: user?.avatar?.url || '',
-              })),
+            assignedUsers: parseGraphQLManuscriptAssignedUsers(
+              manuscript.assignedUsersCollection,
             ),
             status: manuscriptMapStatus(manuscript.status) || undefined,
             id: getManuscriptVersionUID({
@@ -408,6 +404,24 @@ export class ManuscriptContentfulDataProvider
   }
 }
 
+const parseGraphQLManuscriptAssignedUsers = (
+  assignedUsersCollection?:
+    | NonNullable<
+        NonNullable<
+          FetchManuscriptsQuery['manuscriptsCollection']
+        >['items'][number]
+      >['assignedUsersCollection']
+    | NonNullable<
+        NonNullable<FetchManuscriptByIdQuery['manuscripts']>
+      >['assignedUsersCollection'],
+): ManuscriptAssignedUser[] =>
+  assignedUsersCollection?.items.map((user) => ({
+    id: user?.sys.id || '',
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    avatarUrl: user?.avatar?.url || '',
+  })) || [];
+
 const parseGraphQLManuscript = (
   manuscript: ManuscriptItem,
 ): ManuscriptDataObject => {
@@ -422,6 +436,9 @@ const parseGraphQLManuscript = (
     title: manuscript.title || '',
     teamId: teamData?.sys.id || '',
     status: manuscriptMapStatus(manuscript.status) || undefined,
+    assignedUsers: parseGraphQLManuscriptAssignedUsers(
+      manuscript.assignedUsersCollection,
+    ),
     versions: parseGraphqlManuscriptVersion(
       manuscript.versionsCollection?.items || [],
       grantId,

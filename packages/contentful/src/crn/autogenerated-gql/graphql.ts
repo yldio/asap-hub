@@ -17940,6 +17940,16 @@ export type ManuscriptsContentFragment = Pick<
   'title' | 'status' | 'count'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
+  assignedUsersCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<Users, 'firstName' | 'lastName'> & {
+          sys: Pick<Sys, 'id'>;
+          avatar?: Maybe<Pick<Asset, 'url'>>;
+        }
+      >
+    >;
+  }>;
   versionsCollection?: Maybe<{
     items: Array<
       Maybe<
@@ -18137,6 +18147,16 @@ export type FetchManuscriptByIdQuery = {
         >;
       }>;
       sys: Pick<Sys, 'id' | 'publishedVersion'>;
+      assignedUsersCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<Users, 'firstName' | 'lastName'> & {
+              sys: Pick<Sys, 'id'>;
+              avatar?: Maybe<Pick<Asset, 'url'>>;
+            }
+          >
+        >;
+      }>;
       versionsCollection?: Maybe<{
         items: Array<
           Maybe<
@@ -18340,18 +18360,16 @@ export type FetchManuscriptsQuery = {
         Maybe<
           Pick<Manuscripts, 'title' | 'status' | 'count'> & {
             sys: Pick<Sys, 'id'>;
-            assignedUsersCollection?: Maybe<
-              Pick<ManuscriptsAssignedUsersCollection, 'total'> & {
-                items: Array<
-                  Maybe<
-                    Pick<Users, 'firstName' | 'lastName'> & {
-                      sys: Pick<Sys, 'id'>;
-                      avatar?: Maybe<Pick<Asset, 'url'>>;
-                    }
-                  >
-                >;
-              }
-            >;
+            assignedUsersCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<Users, 'firstName' | 'lastName'> & {
+                    sys: Pick<Sys, 'id'>;
+                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                  }
+                >
+              >;
+            }>;
             teamsCollection?: Maybe<{
               items: Array<
                 Maybe<
@@ -20077,6 +20095,16 @@ export type FetchTeamByIdQuery = {
                   >;
                 }>;
                 sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                assignedUsersCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<Users, 'firstName' | 'lastName'> & {
+                        sys: Pick<Sys, 'id'>;
+                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                      }
+                    >
+                  >;
+                }>;
                 versionsCollection?: Maybe<{
                   items: Array<
                     Maybe<
@@ -24330,6 +24358,65 @@ export const ManuscriptsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'assignedUsersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '30' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'firstName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avatar' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'versionsCollection' },
@@ -34447,10 +34534,6 @@ export const FetchManuscriptsDocument = {
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'total' },
-                            },
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'items' },

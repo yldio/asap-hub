@@ -185,6 +185,7 @@ describe('/discussions/ route', () => {
         teamId: 'team-id-1',
         versions: [],
         count: 0,
+        assignedUsers: [],
       });
 
       await supertest(app).patch(`/discussions/${discussionId}`).send({

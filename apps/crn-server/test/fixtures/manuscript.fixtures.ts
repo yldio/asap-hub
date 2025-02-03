@@ -22,6 +22,7 @@ export const getManuscriptDataObject = (
   title: 'Manuscript Title',
   teamId: 'team-1',
   count: 1,
+  assignedUsers: [],
   versions: [
     {
       id: 'version-1',

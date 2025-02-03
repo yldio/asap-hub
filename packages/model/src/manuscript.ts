@@ -303,6 +303,7 @@ export type ManuscriptDataObject = {
   teamId: string;
   versions: ManuscriptVersion[];
   count: number;
+  assignedUsers: ManuscriptAssignedUser[];
 };
 
 export type ManuscriptResponse = ManuscriptDataObject;

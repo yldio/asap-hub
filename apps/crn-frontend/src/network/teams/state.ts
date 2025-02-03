@@ -435,6 +435,7 @@ export const useManuscripts = (
               ? {
                   ...previousManuscriptItem,
                   status: updatedManuscriptItem.status,
+                  assignedUsers: updatedManuscriptItem.assignedUsers,
                 }
               : previousManuscriptItem,
           ),

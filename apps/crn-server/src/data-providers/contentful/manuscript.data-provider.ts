@@ -23,6 +23,7 @@ import {
 import {
   ApcCoverageOption,
   FetchOptions,
+  ManuscriptAssignedUser,
   ListPartialManuscriptResponse,
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
@@ -38,6 +39,7 @@ import {
   QuickCheckDetailsObject,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
+import { getCommaAndString } from '../../utils/text';
 
 import { ManuscriptDataProvider } from '../types';
 import { Discussion, parseGraphQLDiscussion } from './discussion.data-provider';
@@ -93,6 +95,15 @@ export class ManuscriptContentfulDataProvider
           const team = manuscript.teamsCollection?.items[0];
           return {
             manuscriptId: manuscript.sys.id,
+            title: manuscript.title || '',
+            teams: getCommaAndString(
+              (manuscript.teamsCollection?.items || []).map(
+                (teamItem) => teamItem?.displayName || '',
+              ),
+            ),
+            assignedUsers: parseGraphQLManuscriptAssignedUsers(
+              manuscript.assignedUsersCollection,
+            ),
             status: manuscriptMapStatus(manuscript.status) || undefined,
             id: getManuscriptVersionUID({
               version: {
@@ -319,6 +330,13 @@ export class ManuscriptContentfulDataProvider
     const environment = await this.getRestClient();
     const manuscriptEntry = await environment.getEntry(id);
     let published = manuscriptEntry;
+
+    if ('assignedUsers' in manuscriptData) {
+      published = await patchAndPublish(manuscriptEntry, {
+        assignedUsers: getLinkEntities(manuscriptData.assignedUsers),
+      });
+    }
+
     if ('status' in manuscriptData) {
       const previousStatus = manuscriptEntry.fields.status['en-US'];
 
@@ -386,6 +404,24 @@ export class ManuscriptContentfulDataProvider
   }
 }
 
+const parseGraphQLManuscriptAssignedUsers = (
+  assignedUsersCollection?:
+    | NonNullable<
+        NonNullable<
+          FetchManuscriptsQuery['manuscriptsCollection']
+        >['items'][number]
+      >['assignedUsersCollection']
+    | NonNullable<
+        NonNullable<FetchManuscriptByIdQuery['manuscripts']>
+      >['assignedUsersCollection'],
+): ManuscriptAssignedUser[] =>
+  assignedUsersCollection?.items.map((user) => ({
+    id: user?.sys.id || '',
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    avatarUrl: user?.avatar?.url || '',
+  })) || [];
+
 const parseGraphQLManuscript = (
   manuscript: ManuscriptItem,
 ): ManuscriptDataObject => {
@@ -400,6 +436,9 @@ const parseGraphQLManuscript = (
     title: manuscript.title || '',
     teamId: teamData?.sys.id || '',
     status: manuscriptMapStatus(manuscript.status) || undefined,
+    assignedUsers: parseGraphQLManuscriptAssignedUsers(
+      manuscript.assignedUsersCollection,
+    ),
     versions: parseGraphqlManuscriptVersion(
       manuscript.versionsCollection?.items || [],
       grantId,

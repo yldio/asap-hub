@@ -13,6 +13,8 @@ describe('ComplianceTableRow', () => {
     requestingApcCoverage: 'Yes',
     manuscriptId: 'manuscript-id-1',
     assignedUsers: [],
+    title: 'Manuscript 1',
+    teams: 'Test Team',
   };
 
   const mockOnUpdateManuscript = jest.fn();
@@ -21,6 +23,7 @@ describe('ComplianceTableRow', () => {
     data,
     isComplianceReviewer: true,
     onUpdateManuscript: mockOnUpdateManuscript,
+    getAuthorSuggestions: jest.fn(),
   };
 
   beforeEach(() => {

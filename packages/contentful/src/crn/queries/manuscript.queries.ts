@@ -332,6 +332,97 @@ export const FETCH_MANUSCRIPTS = gql`
   }
 `;
 
+export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
+  query FetchManuscriptNotificationDetails($id: String!) {
+    manuscripts(id: $id) {
+      sys {
+        id
+      }
+      title
+      count
+      teamsCollection(limit: 1) {
+        items {
+          sys {
+            id
+          }
+          displayName
+          teamId
+          grantId
+        }
+      }
+      versionsCollection(limit: 1, order: sys_firstPublishedAt_DESC) {
+        items {
+          sys {
+            id
+            publishedAt
+          }
+          teamsCollection(limit: 10) {
+            items {
+              sys {
+                id
+              }
+              displayName
+              inactiveSince
+              linkedFrom {
+                teamMembershipCollection(limit: 100) {
+                  items {
+                    role
+                    inactiveSinceDate
+                    linkedFrom {
+                      usersCollection(limit: 1) {
+                        items {
+                          alumniSinceDate
+                          email
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          firstAuthorsCollection(limit: 15) {
+            items {
+              __typename
+              ... on ExternalAuthors {
+                email
+              }
+              ... on Users {
+                email
+              }
+            }
+          }
+          additionalAuthorsCollection(limit: 15) {
+            items {
+              __typename
+              ... on ExternalAuthors {
+                email
+              }
+              ... on Users {
+                email
+              }
+            }
+          }
+          correspondingAuthorCollection(limit: 1) {
+            items {
+              __typename
+              ... on ExternalAuthors {
+                email
+              }
+              ... on Users {
+                email
+              }
+            }
+          }
+          type
+          lifecycle
+          count
+        }
+      }
+    }
+  }
+`;
+
 export const FETCH_MANUSCRIPTS_BY_TEAM_ID = gql`
   query FetchManuscriptsByTeamId($id: String!) {
     teams(id: $id) {

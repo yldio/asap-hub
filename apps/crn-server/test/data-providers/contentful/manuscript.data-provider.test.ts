@@ -2,6 +2,7 @@ import {
   Asset,
   Entry,
   Environment,
+  FetchManuscriptNotificationDetailsQuery,
   FETCH_MANUSCRIPT_BY_ID,
   getContentfulGraphqlClientMockServer,
   pollContentfulGql,
@@ -236,7 +237,6 @@ describe('Manuscripts Contentful Data Provider', () => {
       jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
       const manuscriptId = 'manuscript-id-1';
 
-      manuscriptDataProviderMockGraphql.fetchById(manuscriptId);
       const entry = {
         sys: {
           publishedVersion: 1,
@@ -298,6 +298,57 @@ describe('Manuscripts Contentful Data Provider', () => {
         { id: manuscriptId },
       );
     });
+
+    test.each`
+      status                           | emailSubject
+      ${"Waiting for Grantee's Reply"} | ${'Waiting for Grantee Reply'}
+      ${'Review Compliance Report'}    | ${'Review Compliance Report'}
+      ${'Submit Final Publication'}    | ${'Submit Final Publication'}
+      ${'Addendum Required'}           | ${'Addendum Required'}
+      ${'Compliant'}                   | ${'Compliant'}
+      ${'Closed (other)'}              | ${'Closed (Other)'}
+    `(
+      'sends email notification when status is changed to $status',
+      async ({ status, emailSubject }) => {
+        jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
+        const consoleMock = jest.spyOn(console, 'log');
+        const manuscriptId = 'manuscript-id-1';
+
+        const manuscript = getContentfulGraphqlManuscript();
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          manuscripts: manuscript,
+        });
+
+        const entry = {
+          sys: {
+            publishedVersion: 1,
+          },
+          fields: {
+            status: {
+              'en-US': `Waiting for Report`,
+            },
+          },
+          patch,
+          publish,
+        } as unknown as Entry;
+        environmentMock.getEntry.mockResolvedValue(entry);
+        patch.mockResolvedValue(entry);
+        publish.mockResolvedValue(entry);
+
+        await manuscriptDataProvider.update(
+          manuscriptId,
+          {
+            status: status,
+          },
+          'user-id-1',
+        );
+
+        expect(consoleMock).toHaveBeenCalledWith(
+          expect.stringContaining(emailSubject),
+        );
+      },
+    );
 
     test('can update the manuscript version content, title and teams', async () => {
       const manuscriptId = 'manuscript-id-1';
@@ -1533,6 +1584,185 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         },
       ]);
+    });
+  });
+
+  describe('sendEmailNotification', () => {
+    test('Should not log to console when there is no manuscript', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: null,
+      });
+      const manuscriptId = 'manuscript-id-1';
+      const consoleMock = jest.spyOn(console, 'log');
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscriptId,
+      );
+
+      expect(consoleMock).not.toHaveBeenCalled();
+    });
+
+    test('returns contributing authors as recipients', async () => {
+      const consoleMock = jest.spyOn(console, 'log');
+      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+        NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+      >;
+      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
+        {
+          __typename: 'Users',
+          email: 'fiona.first@email.com',
+        },
+      ];
+
+      manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection!.items =
+        [
+          {
+            __typename: 'Users',
+            email: 'connor.corresponding@email.com',
+          },
+        ];
+
+      manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection!.items =
+        [
+          {
+            __typename: 'ExternalAuthors',
+            email: 'second.external@email.com',
+          },
+        ];
+
+      const recipients =
+        'fiona.first@email.com,second.external@email.com,connor.corresponding@email.com';
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+      );
+      expect(consoleMock).toHaveBeenCalledWith('TO: ', recipients);
+    });
+
+    test('returns active Project Managers and Lead PIs of contributing teams as recipients', async () => {
+      const consoleMock = jest.spyOn(console, 'log');
+      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+        NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+      >;
+
+      manuscript.versionsCollection!.items[0]!.teamsCollection!.items = [
+        {
+          sys: {
+            id: 'team-1',
+          },
+          linkedFrom: {
+            teamMembershipCollection: {
+              items: [
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: '2022-01-03T10:00:00.000Z',
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          alumniSinceDate: null,
+                          email: 'inactive.membership@example.com',
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          alumniSinceDate: '2022-01-03T10:00:00.000Z',
+                          email: 'inactive.user@example.com',
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          alumniSinceDate: null,
+                          email: 'active.pm@example.com',
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        {
+          sys: {
+            id: 'team-2',
+          },
+          linkedFrom: {
+            teamMembershipCollection: {
+              items: [
+                {
+                  role: 'Trainee',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          alumniSinceDate: null,
+                          email: 'trainee@example.com',
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Lead PI (Core Leadership)',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          alumniSinceDate: null,
+                          email: 'lead.pi@example.com',
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ];
+      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection =
+        undefined;
+      manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection =
+        undefined;
+      manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection =
+        undefined;
+
+      const recipients = 'active.pm@example.com,lead.pi@example.com';
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+      );
+      expect(consoleMock).toHaveBeenCalledWith('TO: ', recipients);
     });
   });
 });

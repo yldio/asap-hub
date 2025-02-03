@@ -3,12 +3,15 @@ import {
   Environment,
   FetchManuscriptByIdQuery,
   FetchManuscriptByIdQueryVariables,
+  FetchManuscriptNotificationDetailsQuery,
+  FetchManuscriptNotificationDetailsQueryVariables,
   FetchManuscriptsByTeamIdQuery,
   FetchManuscriptsQuery,
   FetchManuscriptsQueryVariables,
   FETCH_MANUSCRIPTS,
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
+  FETCH_MANUSCRIPT_NOTIFICATION_DETAILS,
   getLinkAsset,
   getLinkAssets,
   getLinkEntities,
@@ -29,15 +32,22 @@ import {
   ManuscriptLifecycle,
   manuscriptLifecycles,
   manuscriptMapStatus,
+  manuscriptNotificationMapping,
   ManuscriptResubmitDataObject,
+  ManuscriptStatus,
   ManuscriptType,
   manuscriptTypes,
+  ManuscriptUpdateAction,
   ManuscriptUpdateDataObject,
   ManuscriptVersion,
   QuickCheckDetails,
   QuickCheckDetailsObject,
+  TemplateName,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
+import { origin } from '../../config';
+import { cleanArray } from '../../utils/clean-array';
+import { getCommaAndString } from '../../utils/text';
 
 import { ManuscriptDataProvider } from '../types';
 import { Discussion, parseGraphQLDiscussion } from './discussion.data-provider';
@@ -274,6 +284,11 @@ export class ManuscriptContentfulDataProvider
 
     await manuscriptEntry.publish();
 
+    await this.sendEmailNotification(
+      'manuscript_submitted',
+      manuscriptEntry.sys.id,
+    );
+
     return manuscriptEntry.sys.id;
   }
 
@@ -309,6 +324,8 @@ export class ManuscriptContentfulDataProvider
       teams: getLinkEntities(version.teams),
       status: 'Manuscript Resubmitted',
     });
+
+    await this.sendEmailNotification('manuscript_resubmitted', id);
   }
 
   async update(
@@ -328,6 +345,9 @@ export class ManuscriptContentfulDataProvider
         statusUpdatedBy: getLinkEntity(userId),
         statusUpdatedAt: new Date(),
       });
+      const statusUpdateAction = getStatusUpdateAction(manuscriptData.status);
+      if (statusUpdateAction)
+        await this.sendEmailNotification(statusUpdateAction, id);
     }
 
     if ('versions' in manuscriptData && manuscriptData.versions?.[0]) {
@@ -383,6 +403,109 @@ export class ManuscriptContentfulDataProvider
       fetchManuscriptById,
       'manuscripts',
     );
+  }
+
+  async sendEmailNotification(
+    action: ManuscriptUpdateAction,
+    manuscriptId: string,
+  ): Promise<void> {
+    const { manuscripts } = await this.contentfulClient.request<
+      FetchManuscriptNotificationDetailsQuery,
+      FetchManuscriptNotificationDetailsQueryVariables
+    >(FETCH_MANUSCRIPT_NOTIFICATION_DETAILS, { id: manuscriptId });
+
+    const versionData = manuscripts?.versionsCollection?.items[0];
+
+    if (!manuscripts || !versionData) {
+      return;
+    }
+
+    const submittingTeam = manuscripts.teamsCollection?.items[0];
+    const activeContributingTeams = cleanArray(
+      versionData.teamsCollection?.items,
+    ).filter((team) => !team.inactiveSince);
+
+    const contributingTeamNames = activeContributingTeams
+      .map((team) => team?.displayName || '')
+      .filter(Boolean);
+
+    const notificationData: TemplateModel = {
+      manuscript: {
+        title: manuscripts.title || '',
+        type: versionData.type || '',
+        id: getManuscriptVersionUID({
+          version: {
+            type: versionData.type,
+            count: versionData.count,
+            lifecycle: versionData.lifecycle,
+          },
+          teamIdCode: submittingTeam?.teamId || '',
+          grantId: submittingTeam?.grantId || '',
+          manuscriptCount: manuscripts.count || 0,
+        }),
+      },
+      teams: getCommaAndString(contributingTeamNames),
+      submittingTeam: {
+        name: submittingTeam?.displayName || '',
+        workspaceLink: `${origin}/teams/${submittingTeam?.sys.id}/workspace`,
+      },
+    };
+
+    const contributingAuthors = [
+      ...(versionData.firstAuthorsCollection?.items.map(
+        (firstAuthor) => firstAuthor?.email,
+      ) || []),
+      ...(versionData.additionalAuthorsCollection?.items.map(
+        (additionalAuthor) => additionalAuthor?.email,
+      ) || []),
+      ...(versionData.correspondingAuthorCollection?.items.map(
+        (correspondingAuthor) => correspondingAuthor?.email,
+      ) || []),
+    ];
+
+    const teamLeaders = activeContributingTeams.map((team) => {
+      const activeMemberships = cleanArray(
+        team?.linkedFrom?.teamMembershipCollection?.items,
+      )
+        .filter(
+          (membership) =>
+            !membership?.inactiveSinceDate &&
+            membership?.linkedFrom?.usersCollection?.items[0] &&
+            !membership?.linkedFrom?.usersCollection?.items[0]?.alumniSinceDate,
+        )
+        .map((membership) => ({
+          email: membership?.linkedFrom?.usersCollection?.items[0]?.email,
+          role: membership?.role,
+        }));
+
+      return activeMemberships
+        ?.filter(
+          (member) =>
+            member.role === 'Project Manager' ||
+            member.role === 'Lead PI (Core Leadership)',
+        )
+        .map((member) => member.email);
+    });
+
+    const recipients = [
+      ...new Set([...contributingAuthors, ...teamLeaders.flat()]),
+    ].join(',');
+
+    const templateDetails = manuscriptNotificationMapping[action];
+    if (templateDetails.grantee)
+      dummySendEmail({
+        from: 'hub@asap.science',
+        to: recipients,
+        templateName: templateDetails.grantee,
+        templateModel: notificationData,
+      });
+    if (templateDetails.open_science_team)
+      dummySendEmail({
+        from: 'hub@asap.science',
+        to: 'openscience@parkinsonsroadmap.org',
+        templateName: templateDetails.open_science_team,
+        templateModel: notificationData,
+      });
   }
 }
 
@@ -713,4 +836,107 @@ export const getManuscriptVersionUID = ({
     3,
     '0',
   )}-${manuscriptTypeCode}-${lifecycleCode}-${version.count}`;
+};
+
+const getStatusUpdateAction = (
+  status: ManuscriptStatus | undefined,
+): ManuscriptUpdateAction | null => {
+  switch (status) {
+    case "Waiting for Grantee's Reply":
+      return 'status_changed_waiting_for_grantee_reply';
+    case 'Review Compliance Report':
+      return 'status_changed_review_compliance_report';
+    case 'Submit Final Publication':
+      return 'status_changed_submit_final_publication';
+    case 'Addendum Required':
+      return 'status_changed_addendum_required';
+    case 'Compliant':
+      return 'status_changed_compliant';
+    case 'Closed (other)':
+      return 'status_changed_closed_other';
+    default:
+      return null;
+  }
+};
+const dummySendEmail = ({
+  from,
+  to,
+  templateName,
+  templateModel,
+}: {
+  from: string;
+  to: string;
+  templateName: TemplateName;
+  templateModel: TemplateModel;
+}) => {
+  const templates = {
+    'Waiting for Report (Grantees)': `Waiting for Report (Grantees):
+      [manuscript title] - ${templateModel.manuscript.title}
+      [manuscript ID] - ${templateModel.manuscript.id}
+      [manuscript type] - ${templateModel.manuscript.type}
+      [Team Names mentioned in the Manuscript] - ${templateModel.teams}`,
+    'Waiting for Report (OS Team)': `Waiting for Report (OS Team):
+      [submitting Team] - ${templateModel.submittingTeam.name}
+      [manuscript title] - ${templateModel.manuscript.title}
+      [manuscript ID] - ${templateModel.manuscript.id} 
+      [manuscript type] - ${templateModel.manuscript.type}
+      [link to Team's workspace] - ${templateModel.submittingTeam.workspaceLink}`,
+    'Manuscript Re-Submitted (For Grantees)': `Manuscript Re-Submitted (For Grantees):
+      [manuscript title] - ${templateModel.manuscript.title}
+      [manuscript ID] - ${templateModel.manuscript.id}
+      [Team Names mentioned in the Manuscript] - ${templateModel.teams}`,
+    'Manuscript Re-Submitted (For OS Team)': `Manuscript Re-Submitted (For OS Team):
+      [manuscript title] - ${templateModel.manuscript.title}
+      [manuscript ID] - ${templateModel.manuscript.id}
+      [manuscript type] - ${templateModel.manuscript.type}`,
+    'Waiting for Grantee Reply': `Waiting for Grantee Reply:
+      [manuscript title] - ${templateModel.manuscript.title}
+      [manuscript ID] - ${templateModel.manuscript.id}
+      [manuscript type] - ${templateModel.manuscript.type}
+      [Team Names mentioned in the Manuscript] - ${templateModel.teams}`,
+    'Review Compliance Report': `Review Compliance Report:
+      [manuscript title] - ${templateModel.manuscript.title}
+      [manuscript ID] - ${templateModel.manuscript.id}
+      [manuscript type] - ${templateModel.manuscript.type}
+      [Team Names mentioned in the Manuscript] - ${templateModel.teams}`,
+    'Submit Final Publication': `Submit Final Publication:
+      [manuscript title] - ${templateModel.manuscript.title}
+      [manuscript ID] - ${templateModel.manuscript.id}
+      [manuscript type] - ${templateModel.manuscript.type}
+      [Team Names mentioned in the Manuscript] - ${templateModel.teams}`,
+    'Addendum Required': `Addendum Required:
+      [manuscript title] - ${templateModel.manuscript.title}
+      [manuscript ID] - ${templateModel.manuscript.id}
+      [Team Names mentioned in the Manuscript] - ${templateModel.teams}`,
+    Compliant: `Compliant:
+      [manuscript title] - ${templateModel.manuscript.title}
+      [manuscript ID] - ${templateModel.manuscript.id}
+      [manuscript type] - ${templateModel.manuscript.type}
+      [Team Names mentioned in the Manuscript] - ${templateModel.teams}`,
+    'Closed (Other)': `Closed (Other):
+      [manuscript title] - ${templateModel.manuscript.title}
+      [manuscript ID] - ${templateModel.manuscript.id}
+      [Team Names mentioned in the Manuscript] - ${templateModel.teams}`,
+  };
+
+  // eslint-disable-next-line no-console
+  console.log('FROM: ', from);
+  // eslint-disable-next-line no-console
+  console.log('TO: ', to);
+
+  // eslint-disable-next-line no-console
+  console.log(templates[templateName]);
+};
+
+type TemplateModel = {
+  manuscript: {
+    title: string;
+    type: string;
+    id: string;
+  };
+  teams: string;
+  submittingTeam: {
+    name: string;
+    workspaceLink: string;
+  };
 };

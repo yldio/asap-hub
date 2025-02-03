@@ -37,7 +37,8 @@ import {
   QuickCheckDetails,
   QuickCheckDetailsObject,
 } from '@asap-hub/model';
-import { parseUserDisplayName } from '@asap-hub/server-common';
+import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import { getCommaAndString } from '../../utils/text';
 
 import { ManuscriptDataProvider } from '../types';
 import { Discussion, parseGraphQLDiscussion } from './discussion.data-provider';
@@ -93,6 +94,20 @@ export class ManuscriptContentfulDataProvider
           const team = manuscript.teamsCollection?.items[0];
           return {
             manuscriptId: manuscript.sys.id,
+            title: manuscript.title || '',
+            teams: getCommaAndString(
+              (manuscript.teamsCollection?.items || []).map(
+                (teamItem) => teamItem?.displayName || '',
+              ),
+            ),
+            assignedUsers: cleanArray(
+              (manuscript.assignedUsersCollection?.items || []).map((user) => ({
+                id: user?.sys.id || '',
+                firstName: user?.firstName || '',
+                lastName: user?.lastName || '',
+                avatarUrl: user?.avatar?.url || '',
+              })),
+            ),
             status: manuscriptMapStatus(manuscript.status) || undefined,
             id: getManuscriptVersionUID({
               version: {
@@ -319,6 +334,13 @@ export class ManuscriptContentfulDataProvider
     const environment = await this.getRestClient();
     const manuscriptEntry = await environment.getEntry(id);
     let published = manuscriptEntry;
+
+    if ('assignedUsers' in manuscriptData) {
+      published = await patchAndPublish(manuscriptEntry, {
+        assignedUsers: getLinkEntities(manuscriptData.assignedUsers),
+      });
+    }
+
     if ('status' in manuscriptData) {
       const previousStatus = manuscriptEntry.fields.status['en-US'];
 

@@ -237,6 +237,9 @@ export const getManuscriptsListResponse =
       {
         id: 'ID01-grant-001-org-P-1',
         manuscriptId: 'manuscript-id-1',
+        title: 'Manuscript 1',
+        teams: 'Team A',
+        assignedUsers: [],
         requestingApcCoverage: 'Yes',
         lastUpdated: '2020-09-23T20:45:22.000Z',
         status: 'Compliant',
@@ -248,6 +251,9 @@ export const getManuscriptsListResponse =
       {
         id: 'ID01-grant-002-org-P-1',
         manuscriptId: 'manuscript-id-2',
+        title: 'Manuscript 2',
+        teams: 'Team A',
+        assignedUsers: [],
         requestingApcCoverage: 'Yes',
         lastUpdated: '2020-09-23T20:45:22.000Z',
         status: 'Compliant',

@@ -374,13 +374,18 @@ export type ManuscriptPostRequest =
   | ManuscriptPostCreateRequest
   | ManuscriptPostResubmitRequest;
 
+export type ManuscriptUpdateAssignedUsers = {
+  assignedUsers: string[];
+};
 export type ManuscriptUpdateStatus = Pick<ManuscriptDataObject, 'status'>;
 export type ManuscriptUpdateContent = Partial<ManuscriptPostRequest>;
 export type ManuscriptPutRequest =
+  | ManuscriptUpdateAssignedUsers
   | ManuscriptUpdateStatus
   | ManuscriptUpdateContent;
 
 export type ManuscriptUpdateDataObject =
+  | ManuscriptUpdateAssignedUsers
   | ManuscriptUpdateStatus
   | Partial<
       Omit<ManuscriptPostRequest, 'versions'> & {
@@ -665,6 +670,11 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
     properties: {
       title: { type: 'string', nullable: true },
       teamId: { type: 'string', nullable: true },
+      assignedUsers: {
+        type: 'array',
+        items: { type: 'string' },
+        nullable: true,
+      },
       status: { enum: manuscriptStatus, type: 'string', nullable: true },
       versions: {
         type: 'array',
@@ -819,18 +829,21 @@ export const complianceInitialSortingDirection = {
   apcCoverage: ascending,
 };
 
+export type ManuscriptAssignedUser = Pick<
+  UserResponse,
+  'id' | 'firstName' | 'lastName' | 'avatarUrl'
+>;
+
 export type PartialManuscriptResponse = Pick<
   ManuscriptVersion,
   'id' | 'requestingApcCoverage'
 > &
-  Pick<ManuscriptResponse, 'status'> & {
+  Pick<ManuscriptResponse, 'status' | 'title'> & {
     lastUpdated: string;
     team: { id: string; displayName: string };
-    assignedUsers?: Pick<
-      UserResponse,
-      'id' | 'firstName' | 'lastName' | 'avatarUrl'
-    >[];
+    assignedUsers: ManuscriptAssignedUser[];
     manuscriptId: string;
+    teams: string;
   };
 
 export type ListPartialManuscriptResponse =

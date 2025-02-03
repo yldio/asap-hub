@@ -305,7 +305,20 @@ export const FETCH_MANUSCRIPTS = gql`
         title
         status
         count
-        teamsCollection(limit: 1) {
+        assignedUsersCollection(limit: 30) {
+          total
+          items {
+            sys {
+              id
+            }
+            firstName
+            lastName
+            avatar {
+              url
+            }
+          }
+        }
+        teamsCollection(limit: 15) {
           items {
             sys {
               id

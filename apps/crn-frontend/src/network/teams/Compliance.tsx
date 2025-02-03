@@ -15,6 +15,7 @@ import {
 } from './state';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+import { useAuthorSuggestions } from '../../shared-state/shared-research';
 
 const Compliance: React.FC = () => {
   const { currentPage, pageSize } = usePaginationParams();
@@ -30,7 +31,7 @@ const Compliance: React.FC = () => {
     pageSize,
   );
   const isComplianceReviewer = useIsComplianceReviewer();
-
+  const getAuthorSuggestions = useAuthorSuggestions();
   const [sort, setSort] = useState<SortCompliance>('team_asc');
 
   const [sortingDirection, setSortingDirection] =
@@ -65,6 +66,15 @@ const Compliance: React.FC = () => {
           numberOfPages={numberOfPages}
           renderPageHref={renderPageHref}
           onUpdateManuscript={handleUpdateManuscript}
+          getAuthorSuggestions={(input) =>
+            getAuthorSuggestions(input).then((authors) =>
+              authors.map((author) => ({
+                author,
+                label: author.displayName,
+                value: author.id,
+              })),
+            )
+          }
         />
       </SearchFrame>
     </article>

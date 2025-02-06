@@ -69,6 +69,15 @@ describe('Reminders data provider', () => {
           },
           users: getContentfulReminderUsersContent(),
         });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
+        });
       };
 
       const expectEmptyResult = async () => {
@@ -119,6 +128,15 @@ describe('Reminders data provider', () => {
             items: [manuscript],
           },
           users: user,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
         });
       };
 
@@ -208,6 +226,14 @@ describe('Reminders data provider', () => {
             },
             users: user,
           });
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            discussionsCollection: {
+              items: [],
+            },
+            messagesCollection: {
+              items: [],
+            },
+          });
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -291,9 +317,18 @@ describe('Reminders data provider', () => {
           },
           users: user,
         });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
+        });
       };
 
-      test('the person who resubmitted the manuscript should not see manuscript created reminders', async () => {
+      test('the person who resubmitted the manuscript should not see manuscript resubmitted reminders', async () => {
         const userId = 'user-who-resubmitted-manuscript';
         const fetchRemindersOptions: FetchRemindersOptions = {
           userId,
@@ -305,6 +340,15 @@ describe('Reminders data provider', () => {
             items: [manuscriptResubmitted],
           },
           users: getContentfulReminderUsersContent(),
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
         });
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
@@ -452,6 +496,15 @@ describe('Reminders data provider', () => {
             items: [manuscript],
           },
           users: user,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
         });
       };
 
@@ -615,6 +668,14 @@ describe('Reminders data provider', () => {
           },
           users: getContentfulReminderUsersContent(),
         });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
+        });
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result.items[0]!.data).toEqual(
@@ -654,6 +715,15 @@ describe('Reminders data provider', () => {
             items: [manuscript],
           },
           users: getContentfulReminderUsersContent(),
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
         });
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
@@ -706,6 +776,15 @@ describe('Reminders data provider', () => {
             items: [manuscript],
           },
           users: getContentfulReminderUsersContent(),
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
         });
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
@@ -825,6 +904,15 @@ describe('Reminders data provider', () => {
             ],
           },
           users: getContentfulReminderUsersContent(),
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
         });
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);

@@ -22,6 +22,7 @@ import {
   getUploadPresentationReminder,
   getVideoEventUpdatedReminder,
 } from '../../../fixtures/reminders.fixtures';
+import { FetchRemindersQuery } from '@asap-hub/contentful';
 
 describe('Reminders data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -57,6 +58,29 @@ describe('Reminders data provider', () => {
     const timezone = 'Europe/London';
     const fetchRemindersOptions: FetchRemindersOptions = { userId, timezone };
 
+    const setContentfulMock = (
+      eventMockResponse: NonNullable<
+        FetchRemindersQuery['eventsCollection']
+      >['items'][number],
+      users: FetchRemindersQuery['users'] | null,
+    ) => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        eventsCollection: {
+          items: [eventMockResponse],
+        },
+        users,
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        discussionsCollection: {
+          items: [],
+        },
+        messagesCollection: {
+          items: [],
+        },
+      });
+    };
+
     describe('Event Happening Now Reminder', () => {
       test('Should fetch the reminder when it has already started', async () => {
         const startDate = '2023-01-01T08:00:00Z';
@@ -67,11 +91,7 @@ describe('Reminders data provider', () => {
         eventMockResponse!.startDate = startDate;
         eventMockResponse!.endDate = endDate;
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-        });
+        setContentfulMock(eventMockResponse, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -96,11 +116,7 @@ describe('Reminders data provider', () => {
         eventMockResponse!.startDate = startDate;
         eventMockResponse!.endDate = endDate;
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-        });
+        setContentfulMock(eventMockResponse, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -116,11 +132,7 @@ describe('Reminders data provider', () => {
         eventMockResponse!.startDate = startDate;
         eventMockResponse!.endDate = endDate;
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-        });
+        setContentfulMock(eventMockResponse, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -138,11 +150,7 @@ describe('Reminders data provider', () => {
         eventMockResponse!.startDate = startDate;
         eventMockResponse!.endDate = endDate;
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-        });
+        setContentfulMock(eventMockResponse, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -166,11 +174,7 @@ describe('Reminders data provider', () => {
         eventMockResponse!.startDate = startDate;
         eventMockResponse!.endDate = endDate;
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-        });
+        setContentfulMock(eventMockResponse, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -188,11 +192,7 @@ describe('Reminders data provider', () => {
         eventMockResponse!.startDate = startDate;
         eventMockResponse!.endDate = endDate;
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-        });
+        setContentfulMock(eventMockResponse, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -227,12 +227,7 @@ describe('Reminders data provider', () => {
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = teamRole;
 
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            eventsCollection: {
-              items: [eventMockResponse],
-            },
-            users,
-          });
+          setContentfulMock(eventMockResponse, users);
 
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             getTeamProjectManagerResponse(),
@@ -281,12 +276,7 @@ describe('Reminders data provider', () => {
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = teamRole;
 
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            eventsCollection: {
-              items: [eventMockResponse],
-            },
-            users,
-          });
+          setContentfulMock(eventMockResponse, users);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -310,12 +300,7 @@ describe('Reminders data provider', () => {
         const users = getContentfulReminderUsersContent();
         users!.linkedFrom!.eventSpeakersCollection!.items = [];
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -335,12 +320,7 @@ describe('Reminders data provider', () => {
 
         const users = getContentfulReminderUsersContent();
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -368,12 +348,7 @@ describe('Reminders data provider', () => {
 
         const users = getContentfulReminderUsersContent();
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -393,12 +368,7 @@ describe('Reminders data provider', () => {
 
         const users = getContentfulReminderUsersContent();
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -418,12 +388,7 @@ describe('Reminders data provider', () => {
 
         const users = getContentfulReminderUsersContent();
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -446,12 +411,7 @@ describe('Reminders data provider', () => {
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -487,12 +447,7 @@ describe('Reminders data provider', () => {
           const users = getContentfulReminderUsersContent();
           users!.role = asapRole;
 
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            eventsCollection: {
-              items: [eventMockResponse],
-            },
-            users,
-          });
+          setContentfulMock(eventMockResponse, users);
 
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             getTeamProjectManagerResponse(),
@@ -520,12 +475,7 @@ describe('Reminders data provider', () => {
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -553,12 +503,7 @@ describe('Reminders data provider', () => {
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -579,12 +524,7 @@ describe('Reminders data provider', () => {
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -605,12 +545,7 @@ describe('Reminders data provider', () => {
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -643,12 +578,7 @@ describe('Reminders data provider', () => {
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            eventsCollection: {
-              items: [eventMockResponse],
-            },
-            users,
-          });
+          setContentfulMock(eventMockResponse, users);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -700,12 +630,7 @@ describe('Reminders data provider', () => {
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = teamRole;
 
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            eventsCollection: {
-              items: [eventMockResponse],
-            },
-            users,
-          });
+          setContentfulMock(eventMockResponse, users);
 
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             getTeamProjectManagerResponse(),
@@ -738,12 +663,7 @@ describe('Reminders data provider', () => {
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
         users!.teamsCollection!.items[0]!.team!.sys.id = 'team-2';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -773,12 +693,7 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -808,12 +723,7 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -842,12 +752,7 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -877,12 +782,7 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -907,12 +807,7 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -937,12 +832,7 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -990,12 +880,7 @@ describe('Reminders data provider', () => {
 
           const users = getContentfulReminderUsersContent();
 
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            eventsCollection: {
-              items: [eventMockResponse],
-            },
-            users,
-          });
+          setContentfulMock(eventMockResponse, users);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -1026,12 +911,7 @@ describe('Reminders data provider', () => {
 
           const users = getContentfulReminderUsersContent();
 
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            eventsCollection: {
-              items: [eventMockResponse],
-            },
-            users,
-          });
+          setContentfulMock(eventMockResponse, users);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -1053,12 +933,7 @@ describe('Reminders data provider', () => {
 
           const users = getContentfulReminderUsersContent();
 
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            eventsCollection: {
-              items: [eventMockResponse],
-            },
-            users,
-          });
+          setContentfulMock(eventMockResponse, users);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -1083,12 +958,7 @@ describe('Reminders data provider', () => {
 
         const users = getContentfulReminderUsersContent();
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          eventsCollection: {
-            items: [eventMockResponse],
-          },
-          users,
-        });
+        setContentfulMock(eventMockResponse, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 

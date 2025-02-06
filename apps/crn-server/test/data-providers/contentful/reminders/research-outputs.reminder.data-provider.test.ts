@@ -79,6 +79,15 @@ describe('Reminders data provider', () => {
           users:
             users === undefined ? getContentfulReminderUsersContent() : users,
         });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
+        });
       };
 
       beforeEach(() => {
@@ -1030,6 +1039,15 @@ describe('Reminders data provider', () => {
           researchOutputVersionsCollection,
           users:
             users === undefined ? getContentfulReminderUsersContent() : users,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [],
+          },
         });
       };
 

@@ -19,6 +19,8 @@ import {
   getDiscussionEndedByGranteeReminder,
   getContentfulReminderMessageCollectionItem,
   getDiscussionRepliedToByGranteeReminder,
+  getDiscussionStartedByOpenScienceMemberReminder,
+  getDiscussionRepliedToByOpenScienceMemberReminder,
 } from '../../../fixtures/reminders.fixtures';
 import { FetchRemindersQuery } from '@asap-hub/contentful';
 
@@ -228,26 +230,6 @@ describe('Reminders data provider', () => {
         },
       );
 
-      // test('the open science team member should see manuscript created reminders', async () => {
-      //   const userId = 'open-science-team-member-user';
-      //   const fetchRemindersOptions: FetchRemindersOptions = {
-      //     userId,
-      //     timezone,
-      //   };
-
-      //   const user = getContentfulReminderUsersContent();
-      //   user!.role = 'Staff';
-      //   user!.openScienceTeamMember = true;
-
-      //   mockContentfulGraphqlResponse(
-      //     getContentfulReminderManuscriptCollectionItem(),
-      //     user,
-      //   );
-
-      //   const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-      //   expect(result.items).toEqual([expectedReminder]);
-      // });
-
       test('first author of the related manuscript should see discussion started reminders', async () => {
         const userId = 'first-author-user';
         const fetchRemindersOptions: FetchRemindersOptions = {
@@ -256,6 +238,31 @@ describe('Reminders data provider', () => {
         };
 
         mockContentfulGraphqlResponse();
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result.items).toEqual([expectedReminder]);
+      });
+
+      test('returns reminder if discussion was started by open science member', async () => {
+        const discussionItem = getContentfulReminderDiscussionCollectionItem();
+        const user = getContentfulReminderUsersContent();
+        discussionItem!.message!.createdBy = {
+          ...discussionItem!.message!.createdBy,
+          openScienceTeamMember: true,
+          role: 'Staff',
+          sys: { id: 'user-who-started-discussion' },
+        };
+
+        const expectedReminder =
+          getDiscussionStartedByOpenScienceMemberReminder();
+
+        const userId = 'first-author-user';
+        const fetchRemindersOptions: FetchRemindersOptions = {
+          userId,
+          timezone,
+        };
+
+        mockContentfulGraphqlResponse(discussionItem, user);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result.items).toEqual([expectedReminder]);
@@ -411,7 +418,7 @@ describe('Reminders data provider', () => {
       });
     });
 
-    describe('Discussion Replied To', () => {
+    describe('Discussion Replied To Compliance Report', () => {
       const messageItem =
         getContentfulReminderMessageCollectionItem('compliance-report');
 
@@ -539,6 +546,36 @@ describe('Reminders data provider', () => {
         );
       });
 
+      test('returns reminder if discussion was replied to by open science member', async () => {
+        const messageItem =
+          getContentfulReminderMessageCollectionItem('compliance-report');
+        const expectedReminder =
+          getDiscussionRepliedToByOpenScienceMemberReminder(
+            'compliance-report',
+          );
+
+        const user = getContentfulReminderUsersContent();
+        messageItem!.createdBy = {
+          ...messageItem!.createdBy,
+          openScienceTeamMember: true,
+          role: 'Staff',
+          sys: { id: 'user-who-started-discussion' },
+        };
+
+        const userId = 'first-author-user';
+        const fetchRemindersOptions: FetchRemindersOptions = {
+          userId,
+          timezone,
+        };
+
+        mockContentfulGraphqlResponse(messageItem, user);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result.items).toEqual(
+          expect.arrayContaining([expectedReminder]),
+        );
+      });
+
       // test('the corresponding author of the manuscript should see manuscript status updated reminders', async () => {
       //   const userId = 'corresponding-author-user';
       //   const fetchRemindersOptions: FetchRemindersOptions = {
@@ -565,6 +602,163 @@ describe('Reminders data provider', () => {
       //     expect.arrayContaining([expectedReminder]),
       //   );
       // });
+    });
+
+    describe('Discussion Replied To Quick Check', () => {
+      const messageItem =
+        getContentfulReminderMessageCollectionItem('quick-check');
+
+      const mockContentfulGraphqlResponse = (
+        message: MessageItem | null = messageItem,
+        user: FetchRemindersQuery['users'] = getContentfulReminderUsersContent(),
+      ) => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: user,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          discussionsCollection: {
+            items: [],
+          },
+          messagesCollection: {
+            items: [message],
+          },
+        });
+      };
+
+      const expectedReminder: DiscussionRepliedToReminder =
+        getDiscussionRepliedToByGranteeReminder('quick-check');
+
+      test('the person who replied to the discussion should not see discussion replied reminders', async () => {
+        const userId = 'user-who-replied-discussion';
+        const fetchRemindersOptions: FetchRemindersOptions = {
+          userId,
+          timezone,
+        };
+
+        mockContentfulGraphqlResponse();
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result.items).toEqual([]);
+      });
+
+      test.each`
+        userId                    | role
+        ${'project-manager-user'} | ${'Project Manager'}
+        ${'lead-pi-user'}         | ${'Lead PI (Core Leadership)'}
+      `(
+        'the team member with role $role should see discussion replied to reminders',
+        async ({ userId, role }) => {
+          const fetchRemindersOptions: FetchRemindersOptions = {
+            userId,
+            timezone,
+          };
+
+          const user = getContentfulReminderUsersContent();
+          user!.teamsCollection! = {
+            items: [
+              {
+                role,
+                team: {
+                  sys: {
+                    id: 'team-1',
+                  },
+                },
+              },
+            ],
+          };
+
+          mockContentfulGraphqlResponse(messageItem, user);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items).toEqual(
+            expect.arrayContaining([expectedReminder]),
+          );
+        },
+      );
+
+      test.each`
+        userId                              | role
+        ${'co-pi-user'}                     | ${'Co-PI (Core Leadership)'}
+        ${'key-personnel-user'}             | ${'Key Personnel'}
+        ${'scientific-advisory-board-user'} | ${'Scientific Advisory Board'}
+        ${'asap-staff-user'}                | ${'ASAP Staff'}
+        ${'trainee-user'}                   | ${'Trainee'}
+      `(
+        'the team member with role $role should not see discussion replied to reminders',
+        async ({ userId, role }) => {
+          const fetchRemindersOptions: FetchRemindersOptions = {
+            userId,
+            timezone,
+          };
+
+          const user = getContentfulReminderUsersContent();
+          user!.teamsCollection = {
+            items: [
+              {
+                role,
+                team: {
+                  sys: {
+                    id: 'team-1',
+                  },
+                },
+              },
+            ],
+          };
+
+          mockContentfulGraphqlResponse(messageItem, user);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items).toEqual([]);
+        },
+      );
+
+      test('first author of the manuscript should see discussion replied to reminders', async () => {
+        const userId = 'first-author-user';
+        const fetchRemindersOptions: FetchRemindersOptions = {
+          userId,
+          timezone,
+        };
+
+        mockContentfulGraphqlResponse(messageItem);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result.items).toEqual(
+          expect.arrayContaining([expectedReminder]),
+        );
+      });
+
+      test('returns reminder if discussion was replied to by open science member', async () => {
+        const messageItem =
+          getContentfulReminderMessageCollectionItem('quick-check');
+        const expectedReminder =
+          getDiscussionRepliedToByOpenScienceMemberReminder('quick-check');
+
+        const user = getContentfulReminderUsersContent();
+        messageItem!.createdBy = {
+          ...messageItem!.createdBy,
+          openScienceTeamMember: true,
+          role: 'Staff',
+          sys: { id: 'user-who-started-discussion' },
+        };
+
+        const userId = 'first-author-user';
+        const fetchRemindersOptions: FetchRemindersOptions = {
+          userId,
+          timezone,
+        };
+
+        mockContentfulGraphqlResponse(messageItem, user);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result.items).toEqual(
+          expect.arrayContaining([expectedReminder]),
+        );
+      });
     });
   });
 });

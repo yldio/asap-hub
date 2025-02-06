@@ -1416,15 +1416,20 @@ const isManuscriptStatusUpdatedByAnotherUser = (
   userId: string,
 ): boolean => manuscript.statusUpdatedBy?.sys.id !== userId;
 
-export const getTeamNames = (teams: Maybe<string | undefined>[]): string => {
-  const teamNames = teams
-    .filter((teamName): teamName is string => teamName !== undefined)
-    .map((teamName) => `Team ${teamName}`);
+export const getTeamNames = (
+  teams: Maybe<string | undefined>[] | undefined,
+): string => {
+  if (teams) {
+    const teamNames = teams
+      .filter((teamName): teamName is string => teamName !== undefined)
+      .map((teamName) => `Team ${teamName}`);
 
-  if (teamNames.length === 1 && teamNames[0]) return teamNames[0];
-  if (teamNames.length === 2) return teamNames.join(' and ');
+    if (teamNames.length === 1 && teamNames[0]) return teamNames[0];
+    if (teamNames.length === 2) return teamNames.join(' and ');
 
-  return `${teamNames.slice(0, -1).join(', ')} and ${teamNames.slice(-1)}`;
+    return `${teamNames.slice(0, -1).join(', ')} and ${teamNames.slice(-1)}`;
+  }
+  return '';
 };
 
 const createManuscriptCreatedReminder = (
@@ -1480,15 +1485,11 @@ const createDiscussionCreatedReminder = (
   const userTeams = discussion.message.createdBy?.teamsCollection?.items.map(
     (member) => member?.team?.displayName,
   );
-  const manuscriptTeams =
-    !!manuscriptVersion?.teamsCollection?.items &&
-    manuscriptVersion?.teamsCollection?.items.length > 0
-      ? getTeamNames(
-          manuscriptVersion.teamsCollection.items.map(
-            (teams) => teams?.displayName,
-          ),
-        )
-      : '';
+  const manuscriptTeams = getTeamNames(
+    manuscriptVersion?.teamsCollection?.items.map(
+      (teams) => teams?.displayName,
+    ),
+  );
 
   return {
     id: `discussion-created-${discussion.sys.id}`,
@@ -1501,7 +1502,7 @@ const createDiscussionCreatedReminder = (
       title: manuscript?.title || '',
       manuscriptTeams,
       createdBy: `${discussion.message.createdBy.firstName} ${discussion.message.createdBy.lastName}`,
-      userTeams: userTeams ? getTeamNames(userTeams) : '',
+      userTeams: getTeamNames(userTeams),
       publishedAt: discussion.sys.firstPublishedAt,
     },
   };
@@ -1516,15 +1517,11 @@ const createDiscussionEndedReminder = (
 
   const manuscript =
     manuscriptVersion?.linkedFrom?.manuscriptsCollection?.items[0];
-  const manuscriptTeams =
-    !!manuscriptVersion?.teamsCollection?.items &&
-    manuscriptVersion?.teamsCollection?.items.length > 0
-      ? getTeamNames(
-          manuscriptVersion.teamsCollection.items.map(
-            (teams) => teams?.displayName,
-          ),
-        )
-      : '';
+  const manuscriptTeams = getTeamNames(
+    manuscriptVersion?.teamsCollection?.items.map(
+      (teams) => teams?.displayName,
+    ),
+  );
   const userTeams = discussion.endedBy?.teamsCollection?.items.map(
     (member) => member?.team?.displayName,
   );
@@ -1536,7 +1533,7 @@ const createDiscussionEndedReminder = (
     data: {
       title: manuscript?.title || '',
       manuscriptTeams,
-      userTeams: userTeams ? getTeamNames(userTeams) : '',
+      userTeams: getTeamNames(userTeams),
       endedBy: `${discussion.endedBy.firstName} ${discussion.endedBy.lastName}`,
       endedAt: discussion.endedAt,
     },
@@ -1553,20 +1550,18 @@ const createDiscussionRepliedToReminder = (
   const discussion = message.linkedFrom.discussionsCollection.items[0];
 
   const manuscriptVersion =
-    discussion?.linkedFrom?.complianceReportsCollection?.items[0]
-      ?.manuscriptVersion;
+    replyType === 'compliance-report-discussion-reply'
+      ? discussion?.linkedFrom?.complianceReportsCollection?.items[0]
+          ?.manuscriptVersion
+      : discussion?.linkedFrom?.manuscriptVersionsCollection?.items[0];
 
   const manuscript =
     manuscriptVersion?.linkedFrom?.manuscriptsCollection?.items[0];
-  const manuscriptTeams =
-    !!manuscriptVersion?.teamsCollection?.items &&
-    manuscriptVersion?.teamsCollection?.items.length > 0
-      ? getTeamNames(
-          manuscriptVersion.teamsCollection.items.map(
-            (teams) => teams?.displayName,
-          ),
-        )
-      : '';
+  const manuscriptTeams = getTeamNames(
+    manuscriptVersion?.teamsCollection?.items.map(
+      (teams) => teams?.displayName,
+    ),
+  );
   const userTeams = message.createdBy?.teamsCollection?.items.map(
     (member) => member?.team?.displayName,
   );
@@ -1582,7 +1577,7 @@ const createDiscussionRepliedToReminder = (
       data: {
         title: manuscript?.title || '',
         manuscriptTeams,
-        userTeams: userTeams ? getTeamNames(userTeams) : '',
+        userTeams: getTeamNames(userTeams),
         createdBy: `${message.createdBy.firstName} ${message.createdBy.lastName}`,
         publishedAt: message.sys.firstPublishedAt,
       },
@@ -1598,7 +1593,7 @@ const createDiscussionRepliedToReminder = (
     data: {
       title: manuscript?.title || '',
       manuscriptTeams,
-      userTeams: userTeams ? getTeamNames(userTeams) : '',
+      userTeams: getTeamNames(userTeams),
       createdBy: `${message.createdBy.firstName} ${message.createdBy.lastName}`,
       publishedAt: message.sys.firstPublishedAt,
     },

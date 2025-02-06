@@ -918,19 +918,32 @@ export const getDiscussionStartedByGranteeReminder =
     },
   });
 
-export const getDiscussionEndedByGranteeReminder =
-  (): DiscussionEndedReminder => ({
-    id: 'discussion-ended-discussion-id-1',
+export const getDiscussionStartedByOpenScienceMemberReminder =
+  (): DiscussionCreatedReminder => ({
+    id: 'discussion-created-discussion-id-1',
     entity: 'Discussion',
-    type: 'Discussion Ended',
+    type: 'Discussion Created by Open Science Member',
     data: {
-      endedBy: 'Tom Hardy',
-      endedAt: '2025-01-08T16:21:33.824Z',
+      createdBy: 'Tom Hardy',
+      publishedAt: '2025-01-07T16:21:33.824Z',
       manuscriptTeams: 'Team Alessi',
       userTeams: 'Team Alessi',
       title: 'Contextual AI models for single-cell protein biology',
     },
   });
+
+export const getDiscussionEndedReminder = (): DiscussionEndedReminder => ({
+  id: 'discussion-ended-discussion-id-1',
+  entity: 'Discussion',
+  type: 'Discussion Ended',
+  data: {
+    endedBy: 'Tom Hardy',
+    endedAt: '2025-01-08T16:21:33.824Z',
+    manuscriptTeams: 'Team Alessi',
+    userTeams: 'Team Alessi',
+    title: 'Contextual AI models for single-cell protein biology',
+  },
+});
 
 export const getDiscussionRepliedToByGranteeReminder = (
   discussionType: 'quick-check' | 'compliance-report',
@@ -941,6 +954,24 @@ export const getDiscussionRepliedToByGranteeReminder = (
     discussionType === 'quick-check'
       ? 'Quick Check Discussion Replied To by Grantee'
       : 'Compliance Report Discussion Replied To by Grantee',
+  data: {
+    createdBy: 'Tom Hardy',
+    publishedAt: '2025-01-07T16:21:33.824Z',
+    manuscriptTeams: 'Team Alessi',
+    userTeams: 'Team Alessi',
+    title: 'Contextual AI models for single-cell protein biology',
+  },
+});
+
+export const getDiscussionRepliedToByOpenScienceMemberReminder = (
+  discussionType: 'quick-check' | 'compliance-report',
+): DiscussionRepliedToReminder => ({
+  id: 'discussion-replied-reply-id-1',
+  entity: 'Discussion',
+  type:
+    discussionType === 'quick-check'
+      ? 'Quick Check Discussion Replied To by Open Science Member'
+      : 'Compliance Report Discussion Replied To by Open Science Member',
   data: {
     createdBy: 'Tom Hardy',
     publishedAt: '2025-01-07T16:21:33.824Z',

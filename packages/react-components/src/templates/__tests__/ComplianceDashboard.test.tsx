@@ -6,6 +6,7 @@ import { ComplianceDashboard } from '..';
 describe('ComplianceDashboard', () => {
   const props: ComponentProps<typeof ComplianceDashboard> = {
     isComplianceReviewer: true,
+    getAssignedUsersSuggestions: jest.fn(),
     data: [
       {
         id: 'DA1-000463-002-org-G-1',
@@ -15,6 +16,8 @@ describe('ComplianceDashboard', () => {
         team: { id: 'team-1', displayName: 'Test Team' },
         assignedUsers: [],
         manuscriptId: '1',
+        title: 'Manuscript 1',
+        teams: 'Test Team',
       },
     ],
     numberOfPages: 1,

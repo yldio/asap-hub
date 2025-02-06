@@ -7,12 +7,25 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import React, { useState } from 'react';
-import { charcoal, neutral200, StatusButton, steel } from '..';
-import { Avatar, Link, Pill } from '../atoms';
+import React, { ComponentProps, useState } from 'react';
+import {
+  addUserIcon,
+  AssignedUsersAvatarList,
+  AuthorSelect,
+  charcoal,
+  lead,
+  neutral200,
+  PencilIcon,
+  StatusButton,
+  steel,
+} from '..';
+import { Button, Link, Pill } from '../atoms';
 import { borderRadius } from '../card';
 import { formatDateToTimezone } from '../date';
 import { rem, tabletScreen } from '../pixels';
+import ComplianceAssignUsersModal, {
+  AssignedUsersFormData,
+} from './ComplianceAssignUsersModal';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 import { getReviewerStatusType } from './ManuscriptCard';
 
@@ -56,7 +69,63 @@ const titleStyles = css({
   gap: rem(8),
 });
 
-const teamNameStyles = css({
+const apcCoverageStyles = css({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  fontSize: rem(14),
+  color: lead.rgb,
+});
+
+const assignedUsersContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  width: '100%',
+  maxWidth: rem(160),
+  alignItems: 'center',
+});
+
+const assignedUsersInnerContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: '100%',
+  gap: rem(8),
+});
+
+const noUsersStyles = css({
+  display: 'flex',
+  fontStyle: 'italic',
+  fontSize: rem(14),
+  color: lead.rgb,
+  width: '100%',
+  maxWidth: rem(90),
+});
+
+const assignUsersButtonStyles = css({
+  display: 'flex',
+  alignSelf: 'center',
+  flexGrow: 0,
+  height: rem(40),
+  width: rem(40),
+});
+
+const editUsersButtonStyles = css({
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 0,
+});
+
+const pillIdStyles = css({
+  marginLeft: '7px',
+  display: 'block',
+});
+
+const statusButtonContainerStyles = css({
+  margin: `${rem(17)} 0`,
+});
+
+const teamLinkStyles = css({
   display: 'flex',
   gap: rem(3),
 });
@@ -68,15 +137,22 @@ type ComplianceTableRowProps = {
     manuscriptId: string,
     payload: ManuscriptPutRequest,
   ) => Promise<ManuscriptResponse>;
+  getAssignedUsersSuggestions: NonNullable<
+    ComponentProps<typeof AuthorSelect>['loadOptions']
+  >;
 };
+
+const completeStatuses = ['Closed (other)', 'Compliant'];
 
 const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
   isComplianceReviewer,
   data,
   onUpdateManuscript,
+  getAssignedUsersSuggestions,
 }) => {
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
+  const [displayAssignUsersModal, setDisplayAssignUsersModal] = useState(false);
   const {
     manuscriptId,
     team,
@@ -85,9 +161,17 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
     status,
     requestingApcCoverage,
     assignedUsers,
+    title,
+    teams,
   } = data;
   const [newSelectedStatus, setNewSelectedStatus] =
     useState<ManuscriptStatus>();
+  const canEdit =
+    !completeStatuses.includes(status ?? '') && isComplianceReviewer;
+
+  const handleAssignUsersClick = () => {
+    setDisplayAssignUsersModal(true);
+  };
 
   const handleStatusClick = (statusItem: ManuscriptStatus) => {
     if (statusItem !== status) {
@@ -104,6 +188,21 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
     }
   };
 
+  const handleAssignUsersConfirm = async (
+    assignedUsersData: AssignedUsersFormData,
+  ) => {
+    await onUpdateManuscript(manuscriptId, {
+      assignedUsers: assignedUsersData.assignedUsers.map((user) => user.value),
+    });
+    setDisplayAssignUsersModal(false);
+  };
+
+  const PillId = () => (
+    <Pill accent="blue" numberOfLines={3}>
+      <span css={pillIdStyles}>{id}</span>
+    </Pill>
+  );
+
   return (
     <>
       {displayConfirmStatusChangeModal && newSelectedStatus && (
@@ -113,18 +212,38 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
           newStatus={newSelectedStatus}
         />
       )}
+      {displayAssignUsersModal && (
+        <ComplianceAssignUsersModal
+          onDismiss={() => setDisplayAssignUsersModal(false)}
+          onConfirm={handleAssignUsersConfirm}
+          PillId={PillId}
+          teams={teams ?? ''}
+          apcCoverage={requestingApcCoverage ?? 'N/A'}
+          manuscriptTitle={title}
+          getAssignedUsersSuggestions={getAssignedUsersSuggestions}
+          assignedUsers={assignedUsers.map((user) => ({
+            author: {
+              id: user.id,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              displayName: `${user.firstName} ${user.lastName}`,
+              avatarUrl: user.avatarUrl,
+            },
+            label: `${user.firstName} ${user.lastName}`,
+            value: user.id,
+          }))}
+        />
+      )}
       <div key={id} css={[rowStyles]} data-testid="compliance-table-row">
         <span css={[titleStyles, rowTitleStyles]}>Team</span>
-        <p css={teamNameStyles}>
+        <p css={teamLinkStyles}>
           <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
             {team.displayName}
           </Link>
         </p>
         <span css={[titleStyles, rowTitleStyles]}>ID</span>
         <p>
-          <Pill accent="blue" numberOfLines={3}>
-            <span css={{ marginLeft: '7px', display: 'block' }}>{id}</span>
-          </Pill>
+          <PillId />
         </p>
         <span css={[titleStyles, rowTitleStyles]}>Last Updated</span>
         <p>
@@ -132,13 +251,10 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
             formatDateToTimezone(lastUpdated, 'E, d MMM y').toUpperCase()}
         </p>
         <span css={[titleStyles, rowTitleStyles]}>Status</span>
-        <span css={{ margin: `${rem(17)} 0` }}>
+        <span css={statusButtonContainerStyles}>
           <StatusButton
             buttonChildren={() => <span>{status}</span>}
-            canEdit={
-              !['Closed (other)', 'Compliant'].includes(status ?? '') &&
-              isComplianceReviewer
-            }
+            canEdit={canEdit}
             selectedStatusType={getReviewerStatusType(
               status as (typeof manuscriptStatus)[number],
             )}
@@ -155,17 +271,42 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
           </StatusButton>
         </span>
         <span css={[titleStyles, rowTitleStyles]}>APC Coverage</span>
-        <p>{requestingApcCoverage}</p>
+        <p css={apcCoverageStyles}>{requestingApcCoverage ?? 'N/A'}</p>
         <span css={[titleStyles, rowTitleStyles]}>Assigned Users</span>
-        <div css={{ width: rem(32), alignSelf: 'center' }}>
-          {assignedUsers?.map((user) => (
-            <Avatar
-              firstName={user.firstName}
-              lastName={user.lastName}
-              imageUrl={user.avatarUrl}
-              key={user.id}
-            />
-          ))}
+        <div css={assignedUsersContainerStyles}>
+          {assignedUsers?.length ? (
+            <div css={assignedUsersInnerContainerStyles}>
+              <AssignedUsersAvatarList members={assignedUsers} />
+              {canEdit ? (
+                <Button
+                  aria-label="Edit Assigned Users"
+                  noMargin
+                  onClick={() => setDisplayAssignUsersModal(true)}
+                  overrideStyles={css([
+                    assignUsersButtonStyles,
+                    editUsersButtonStyles,
+                  ])}
+                >
+                  <PencilIcon />
+                </Button>
+              ) : null}
+            </div>
+          ) : (
+            <div css={assignedUsersInnerContainerStyles}>
+              <span css={noUsersStyles}>No users assigned</span>
+              {canEdit ? (
+                <Button
+                  aria-label="Assign Users"
+                  noMargin
+                  small
+                  overrideStyles={assignUsersButtonStyles}
+                  onClick={handleAssignUsersClick}
+                >
+                  {addUserIcon}
+                </Button>
+              ) : null}
+            </div>
+          )}
         </div>
       </div>
     </>

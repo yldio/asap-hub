@@ -15,6 +15,8 @@ import {
 } from './state';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+import { useAssignedUsersSuggestions } from '../../shared-state/shared-research';
+import { useManuscriptToast } from './useManuscriptToast';
 
 const Compliance: React.FC = () => {
   const { currentPage, pageSize } = usePaginationParams();
@@ -30,7 +32,7 @@ const Compliance: React.FC = () => {
     pageSize,
   );
   const isComplianceReviewer = useIsComplianceReviewer();
-
+  const getAssignedUsersSuggestions = useAssignedUsersSuggestions();
   const [sort, setSort] = useState<SortCompliance>('team_asc');
 
   const [sortingDirection, setSortingDirection] =
@@ -43,8 +45,11 @@ const Compliance: React.FC = () => {
   ) => {
     const manuscriptResponse = await updateManuscript(id, manuscript);
     result.refresh(manuscriptResponse);
+    setFormType({ type: 'assigned-users', accent: 'successLarge' });
     return manuscriptResponse;
   };
+
+  const { setFormType } = useManuscriptToast();
 
   return (
     <article>
@@ -65,6 +70,15 @@ const Compliance: React.FC = () => {
           numberOfPages={numberOfPages}
           renderPageHref={renderPageHref}
           onUpdateManuscript={handleUpdateManuscript}
+          getAssignedUsersSuggestions={(input) =>
+            getAssignedUsersSuggestions(input).then((authors) =>
+              authors.map((author) => ({
+                author,
+                label: author.displayName,
+                value: author.id,
+              })),
+            )
+          }
         />
       </SearchFrame>
     </article>

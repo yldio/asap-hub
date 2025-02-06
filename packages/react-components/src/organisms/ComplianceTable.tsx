@@ -1,11 +1,10 @@
 import {
   ComplianceSortingDirection,
-  ManuscriptPutRequest,
-  ManuscriptResponse,
   PartialManuscriptResponse,
   SortCompliance,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 import { Card } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
@@ -58,8 +57,10 @@ const titleStyles = css({
   gap: rem(8),
 });
 
-type ComplianceTableProps = {
-  isComplianceReviewer: boolean;
+type ComplianceTableProps = Pick<
+  ComponentProps<typeof ComplianceTableRow>,
+  'onUpdateManuscript' | 'getAssignedUsersSuggestions' | 'isComplianceReviewer'
+> & {
   data: PartialManuscriptResponse[];
   sort?: SortCompliance;
   setSort?: React.Dispatch<React.SetStateAction<SortCompliance>>;
@@ -67,16 +68,13 @@ type ComplianceTableProps = {
   setSortingDirection?: React.Dispatch<
     React.SetStateAction<ComplianceSortingDirection>
   >;
-  onUpdateManuscript: (
-    manuscriptId: string,
-    payload: ManuscriptPutRequest,
-  ) => Promise<ManuscriptResponse>;
 };
 
 const ComplianceTable: React.FC<ComplianceTableProps> = ({
   isComplianceReviewer,
   onUpdateManuscript,
   data,
+  getAssignedUsersSuggestions,
 }) => (
   <Card>
     <div css={container}>
@@ -94,6 +92,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
           data={row}
           onUpdateManuscript={onUpdateManuscript}
           isComplianceReviewer={isComplianceReviewer}
+          getAssignedUsersSuggestions={getAssignedUsersSuggestions}
         />
       ))}
     </div>

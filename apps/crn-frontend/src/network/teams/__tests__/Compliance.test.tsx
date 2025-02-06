@@ -1,3 +1,4 @@
+import { createAlgoliaResponse } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   createManuscriptResponse,
@@ -11,19 +12,25 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { getOpenScienceMembers } from '../../users/api';
 import { getManuscripts, updateManuscript } from '../api';
-import { manuscriptsState } from '../state';
-
 import Compliance from '../Compliance';
+import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
+import { manuscriptsState } from '../state';
 
 mockConsoleError();
 
 jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
+  getOpenScienceMembers: jest.fn(),
   getManuscripts: jest.fn(),
   updateManuscript: jest.fn(),
+}));
+
+jest.mock('../../users/api', () => ({
+  ...jest.requireActual('../api'),
+  getOpenScienceMembers: jest.fn(),
 }));
 
 const mockGetManuscripts = getManuscripts as jest.MockedFunction<
@@ -32,6 +39,10 @@ const mockGetManuscripts = getManuscripts as jest.MockedFunction<
 
 const mockUpdateManuscript = updateManuscript as jest.MockedFunction<
   typeof updateManuscript
+>;
+
+const mockGetOpenScienceMembers = getOpenScienceMembers as jest.MockedFunction<
+  typeof getOpenScienceMembers
 >;
 
 const user = createUserResponse({}, 1);
@@ -56,11 +67,13 @@ const renderCompliancePage = async () => {
         <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: '/' }]}>
-              <Route path="/">
-                <Frame title={null}>
-                  <Compliance />
-                </Frame>
-              </Route>
+              <ManuscriptToastProvider>
+                <Route path="/">
+                  <Frame title={null}>
+                    <Compliance />
+                  </Frame>
+                </Route>
+              </ManuscriptToastProvider>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -75,6 +88,7 @@ const renderCompliancePage = async () => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
 it('renders error message when the request is not a 2XX', async () => {
@@ -248,4 +262,97 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
       name: /Manuscript Resubmitted/i,
     }),
   ).not.toBeInTheDocument();
+});
+
+it('fetches assigned users suggestions and displays them properly', async () => {
+  const mockManuscript: PartialManuscriptResponse = {
+    ...createPartialManuscriptResponse(),
+    manuscriptId: 'manuscript-id-1',
+    status: 'Review Compliance Report',
+  };
+
+  mockGetManuscripts.mockResolvedValue({
+    items: [mockManuscript],
+    total: 1,
+  });
+
+  const userResponse = createUserResponse();
+
+  const algoliaUsersResponse = createAlgoliaResponse<'crn', 'user'>([
+    {
+      ...userResponse,
+      firstName: 'Billie',
+      lastName: 'Eilish',
+      displayName: 'Billie Eilish',
+      objectID: userResponse.id,
+      __meta: { type: 'user' },
+      _tags: userResponse.tags?.map(({ name }) => name) || [],
+    },
+  ]);
+  mockGetOpenScienceMembers.mockResolvedValue({
+    items: algoliaUsersResponse.hits,
+    total: algoliaUsersResponse.nbHits,
+  });
+
+  await renderCompliancePage();
+
+  expect(screen.queryByText(/Billie Eilish/i)).not.toBeInTheDocument();
+
+  userEvent.click(screen.getByTitle(/Add user/i));
+
+  userEvent.type(
+    screen.getByRole('textbox', { name: /Assign User/i }),
+    'Billie',
+  );
+
+  expect(mockGetOpenScienceMembers).toHaveBeenCalled();
+
+  await waitFor(() => {
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+  });
+
+  expect(screen.getAllByText(/Billie Eilish/i).length > 0).toBe(true);
+});
+
+it('displays success message when assigning users', async () => {
+  const mockManuscript: PartialManuscriptResponse = {
+    ...createPartialManuscriptResponse(),
+    manuscriptId: 'manuscript-id-1',
+    status: 'Review Compliance Report',
+    assignedUsers: [
+      {
+        id: 'user-id-1',
+        firstName: 'Taylor',
+        lastName: 'Swift',
+        avatarUrl: 'https://example.com',
+      },
+    ],
+  };
+
+  mockGetManuscripts.mockResolvedValue({
+    items: [mockManuscript],
+    total: 1,
+  });
+
+  mockUpdateManuscript.mockResolvedValue({
+    ...createManuscriptResponse(),
+    id: 'manuscript-id-1',
+  });
+
+  mockGetOpenScienceMembers.mockResolvedValue({
+    items: [],
+    total: 0,
+  });
+
+  await renderCompliancePage();
+
+  userEvent.click(screen.getByLabelText(/Edit Assigned Users/i));
+
+  userEvent.click(screen.getByRole('button', { name: 'Assign' }));
+
+  await waitFor(() => {
+    expect(
+      screen.getByText('User(s) assigned to a manuscript successfully.'),
+    ).toBeInTheDocument();
+  });
 });

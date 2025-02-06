@@ -19,7 +19,10 @@ import {
   createResearchOutput,
   updateTeamResearchOutput,
 } from '../network/teams/api';
-import { getUsersAndExternalAuthors } from '../network/users/api';
+import {
+  getOpenScienceMembers,
+  getUsersAndExternalAuthors,
+} from '../network/users/api';
 import {
   getResearchTags,
   getResearchOutputs,
@@ -109,6 +112,18 @@ export const useRelatedEventsSuggestions = () => {
         endDate,
       })),
     );
+};
+
+export const useAssignedUsersSuggestions = () => {
+  const algoliaClient = useAlgolia();
+
+  return (searchQuery: string) =>
+    getOpenScienceMembers(algoliaClient.client, {
+      searchQuery,
+      currentPage: null,
+      pageSize: 100,
+      filters: new Set(),
+    }).then(({ items }) => items);
 };
 
 export const useAuthorSuggestions = () => {

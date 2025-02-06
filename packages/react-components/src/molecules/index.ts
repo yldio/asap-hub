@@ -1,6 +1,7 @@
 export { default as Accordion } from './Accordion';
 export { default as AgreeToTerms } from './AgreeToTerms';
 export { default as AnalyticsControls } from './AnalyticsControls';
+export { default as AssignedUsersAvatarList } from './AssignedUsersAvatarList';
 export { default as AssociationList } from './AssociationList';
 export { default as BackLink } from './BackLink';
 export { default as BannerCard } from './BannerCard';

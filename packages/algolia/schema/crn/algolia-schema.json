@@ -67,7 +67,8 @@
     "workingGroups.id",
     "_tags",
     "publishingEntity",
-    "complete"
+    "complete",
+    "openScienceTeamMember"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

@@ -18,7 +18,8 @@
     "workingGroup.id",
     "workingGroups.id",
     "publishingEntity",
-    "complete"
+    "complete",
+    "openScienceTeamMember"
   ],
   "attributesToIndex": [
     "displayName",

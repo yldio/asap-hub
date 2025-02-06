@@ -90,12 +90,13 @@ type AuthorSelectProps = LabeledMultiSelectProps<AuthorOption, boolean> & {
 const AuthorSelect: React.FC<AuthorSelectProps> = ({
   externalLabel = 'Non CRN',
   isMulti,
+  creatable = true,
   ...props
 }) => (
   <LabeledMultiSelect<AuthorOption, boolean>
     {...props}
     isMulti={isMulti}
-    creatable={true}
+    creatable={creatable}
     getValidationMessage={() => 'Please select at least one author.'}
     components={{
       SingleValue: (singleValueLabelProps) => (
@@ -138,6 +139,13 @@ const AuthorSelect: React.FC<AuthorSelectProps> = ({
             </LabelWithAvatar>
           </div>
         </components.MultiValueLabel>
+      ),
+      MultiValueRemove: (multiValueRemoveProps) => (
+        <components.MultiValueRemove {...multiValueRemoveProps}>
+          <span aria-label={`Remove ${multiValueRemoveProps.data.label}`}>
+            {crossIcon}
+          </span>
+        </components.MultiValueRemove>
       ),
       Option: (optionProps) => (
         <components.Option {...optionProps}>

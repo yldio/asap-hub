@@ -28,7 +28,9 @@ import {
   getManuscriptCreateDataObject,
   getManuscriptDataObject,
   getManuscriptFileResponse,
+  getManuscriptGraphqlAssignedUsersCollection,
   getManuscriptsListResponse,
+  getManuscriptUpdateAssignedUsersDataObject,
   getManuscriptUpdateStatusDataObject,
 } from '../../fixtures/manuscript.fixtures';
 import {
@@ -84,6 +86,8 @@ describe('Manuscripts Contentful Data Provider', () => {
         total: 2,
       }),
       Manuscripts: () => getContentfulGraphqlManuscript(),
+      ManuscriptsAssignedUsersCollection: () =>
+        getManuscriptGraphqlAssignedUsersCollection(),
       ManuscriptsVersionsCollection: () =>
         getContentfulGraphqlManuscriptVersions(),
       ManuscriptVersionsTeamsCollection: () =>
@@ -297,6 +301,59 @@ describe('Manuscripts Contentful Data Provider', () => {
         FETCH_MANUSCRIPT_BY_ID,
         { id: manuscriptId },
       );
+    });
+
+    test('can update assigned users', async () => {
+      jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
+      const manuscriptId = 'manuscript-id-1';
+
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          assignedUsers: {
+            'en-US': [],
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+      environmentMock.getEntry.mockResolvedValue(entry);
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        getManuscriptUpdateAssignedUsersDataObject(),
+        'user-id-1',
+      );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(manuscriptId);
+      expect(patch).toHaveBeenCalledWith([
+        {
+          op: 'replace',
+          path: '/fields/assignedUsers',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'user-id-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'user-id-2',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+      ]);
     });
 
     test.each`
@@ -1038,7 +1095,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       manuscript.teamsCollection = null;
       manuscript.versionsCollection = null;
       manuscript.status = null;
-
+      manuscript.assignedUsersCollection = null;
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
       });
@@ -1050,6 +1107,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         teamId: '',
         title: '',
         versions: [],
+        assignedUsers: [],
       });
     });
 

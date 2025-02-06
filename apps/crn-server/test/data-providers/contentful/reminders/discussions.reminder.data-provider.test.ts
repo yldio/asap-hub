@@ -16,7 +16,7 @@ import {
   getContentfulReminderUsersContent,
   getContentfulReminderDiscussionCollectionItem,
   getDiscussionStartedByGranteeReminder,
-  getDiscussionEndedByGranteeReminder,
+  getDiscussionEndedReminder,
   getContentfulReminderMessageCollectionItem,
   getDiscussionRepliedToByGranteeReminder,
   getDiscussionStartedByOpenScienceMemberReminder,
@@ -106,14 +106,6 @@ describe('Reminders data provider', () => {
         mockContentfulGraphqlResponse(discussion, null);
         await expectEmptyResult();
       });
-
-      // test('does not return the reminder if discussion is not linked  created by is null', async () => {
-      //   const manuscript = getContentfulReminderManuscriptCollectionItem();
-      //   manuscript!.versionsCollection!.items[0]!.createdBy = null;
-
-      //   mockContentfulGraphqlResponse(manuscript, null);
-      //   await expectEmptyResult();
-      // });
     });
 
     describe('Discussion started', () => {
@@ -281,7 +273,7 @@ describe('Reminders data provider', () => {
       discussionItem!.endedBy = endDiscussionUser;
 
       const expectedReminder: DiscussionEndedReminder =
-        getDiscussionEndedByGranteeReminder();
+        getDiscussionEndedReminder();
 
       const mockContentfulGraphqlResponse = (
         discussion: DiscussionItem | null = discussionItem,
@@ -386,23 +378,6 @@ describe('Reminders data provider', () => {
           expect(result.items).toEqual([]);
         },
       );
-
-      // test('the open science team member should see manuscript resubmitted reminder', async () => {
-      //   const userId = 'open-science-team-member-user';
-      //   const fetchRemindersOptions: FetchRemindersOptions = {
-      //     userId,
-      //     timezone,
-      //   };
-
-      //   const user = getContentfulReminderUsersContent();
-      //   user!.role = 'Staff';
-      //   user!.openScienceTeamMember = true;
-
-      //   mockContentfulGraphqlResponse(manuscriptResubmitted, user);
-
-      //   const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-      //   expect(result.items).toEqual([expectedReminder]);
-      // });
 
       test('first author of the manuscript should see discussion ended reminder', async () => {
         const userId = 'first-author-user';
@@ -575,33 +550,6 @@ describe('Reminders data provider', () => {
           expect.arrayContaining([expectedReminder]),
         );
       });
-
-      // test('the corresponding author of the manuscript should see manuscript status updated reminders', async () => {
-      //   const userId = 'corresponding-author-user';
-      //   const fetchRemindersOptions: FetchRemindersOptions = {
-      //     userId,
-      //     timezone,
-      //   };
-
-      //   manuscriptStatusUpdated!.versionsCollection!.items[0]!.correspondingAuthorCollection =
-      //     {
-      //       items: [
-      //         {
-      //           __typename: 'Users',
-      //           sys: {
-      //             id: userId,
-      //           },
-      //         },
-      //       ],
-      //     };
-
-      //   mockContentfulGraphqlResponse(manuscriptStatusUpdated);
-
-      //   const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-      //   expect(result.items).toEqual(
-      //     expect.arrayContaining([expectedReminder]),
-      //   );
-      // });
     });
 
     describe('Discussion Replied To Quick Check', () => {

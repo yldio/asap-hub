@@ -65,7 +65,9 @@ export const getRemainingMembersText = (remainingMembers: Member[]) =>
     .map((member, index) => {
       if (remainingMembers.length === 1) {
         return `${member.firstName} ${member.lastName}`;
-      } else if (remainingMembers.length === 2) {
+      }
+
+      if (remainingMembers.length === 2) {
         return index === 0
           ? `${member.firstName} ${member.lastName} and`
           : `${member.firstName} ${member.lastName}`;

@@ -269,3 +269,270 @@ export const FETCH_TEAM_PROJECT_MANAGER = gql`
     }
   }
 `;
+
+export const FETCH_DISCUSSION_REMINDERS = gql`
+  query FetchDiscussionReminders(
+    $discussionFilter: DiscussionsFilter
+    $messageFilter: MessagesFilter
+  ) {
+    discussionsCollection(where: $discussionFilter) {
+      items {
+        sys {
+          id
+          firstPublishedAt
+        }
+        endedAt
+        endedBy {
+          sys {
+            id
+          }
+          firstName
+          lastName
+          teamsCollection(
+            limit: 10
+            where: { inactiveSinceDate_exists: false }
+          ) {
+            items {
+              team {
+                sys {
+                  id
+                }
+                displayName
+                inactiveSince
+              }
+            }
+          }
+        }
+        message {
+          createdBy {
+            sys {
+              id
+            }
+            firstName
+            lastName
+            role
+            openScienceTeamMember
+            teamsCollection(
+              limit: 10
+              where: { inactiveSinceDate_exists: false }
+            ) {
+              items {
+                team {
+                  sys {
+                    id
+                  }
+                  displayName
+                  inactiveSince
+                }
+              }
+            }
+          }
+        }
+        linkedFrom {
+          complianceReportsCollection(limit: 1) {
+            items {
+              manuscriptVersion {
+                teamsCollection(limit: 10) {
+                  items {
+                    sys {
+                      id
+                    }
+                    displayName
+                  }
+                }
+                firstAuthorsCollection(limit: 10) {
+                  items {
+                    __typename
+                    ... on Users {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
+                additionalAuthorsCollection(limit: 10) {
+                  items {
+                    __typename
+                    ... on Users {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
+                correspondingAuthorCollection(limit: 10) {
+                  items {
+                    __typename
+                    ... on Users {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
+                linkedFrom {
+                  manuscriptsCollection(limit: 1) {
+                    items {
+                      title
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    messagesCollection(where: $messageFilter) {
+      items {
+        sys {
+          id
+          firstPublishedAt
+        }
+        createdBy {
+          sys {
+            id
+          }
+          firstName
+          lastName
+          role
+          openScienceTeamMember
+          teamsCollection(
+            limit: 10
+            where: { inactiveSinceDate_exists: false }
+          ) {
+            items {
+              team {
+                sys {
+                  id
+                }
+                displayName
+                inactiveSince
+              }
+            }
+          }
+        }
+        linkedFrom {
+          discussionsCollection(limit: 1) {
+            items {
+              message {
+                sys {
+                  id
+                }
+              }
+              repliesCollection(limit: 100) {
+                items {
+                  sys {
+                    id
+                  }
+                }
+              }
+              linkedFrom {
+                complianceReportsCollection(limit: 1) {
+                  items {
+                    manuscriptVersion {
+                      teamsCollection(limit: 10) {
+                        items {
+                          sys {
+                            id
+                          }
+                          displayName
+                        }
+                      }
+                      firstAuthorsCollection(limit: 10) {
+                        items {
+                          __typename
+                          ... on Users {
+                            sys {
+                              id
+                            }
+                          }
+                        }
+                      }
+                      additionalAuthorsCollection(limit: 10) {
+                        items {
+                          __typename
+                          ... on Users {
+                            sys {
+                              id
+                            }
+                          }
+                        }
+                      }
+                      correspondingAuthorCollection(limit: 10) {
+                        items {
+                          __typename
+                          ... on Users {
+                            sys {
+                              id
+                            }
+                          }
+                        }
+                      }
+                      linkedFrom {
+                        manuscriptsCollection(limit: 1) {
+                          items {
+                            title
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                manuscriptVersionsCollection(limit: 1) {
+                  items {
+                    teamsCollection(limit: 10) {
+                      items {
+                        sys {
+                          id
+                        }
+                        displayName
+                      }
+                    }
+                    firstAuthorsCollection(limit: 10) {
+                      items {
+                        __typename
+                        ... on Users {
+                          sys {
+                            id
+                          }
+                        }
+                      }
+                    }
+                    additionalAuthorsCollection(limit: 10) {
+                      items {
+                        __typename
+                        ... on Users {
+                          sys {
+                            id
+                          }
+                        }
+                      }
+                    }
+                    correspondingAuthorCollection(limit: 10) {
+                      items {
+                        __typename
+                        ... on Users {
+                          sys {
+                            id
+                          }
+                        }
+                      }
+                    }
+                    linkedFrom {
+                      manuscriptsCollection(limit: 1) {
+                        items {
+                          title
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

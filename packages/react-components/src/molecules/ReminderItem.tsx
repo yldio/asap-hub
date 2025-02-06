@@ -57,6 +57,7 @@ const iconMap: Record<ReminderEntity, React.ReactElement> = {
   'Research Output Version': <LibraryIcon />,
   Event: <EventIcon />,
   Manuscript: <LibraryIcon />,
+  Discussion: <LibraryIcon />,
 };
 
 type ReminderProps = Pick<

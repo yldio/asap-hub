@@ -644,6 +644,66 @@ export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
   },
 });
 
+const getDiscussionCreatedByUser = (id: string) => ({
+  sys: {
+    id,
+  },
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  role: 'Grantee',
+  openScienceTeamMember: false,
+  teamsCollection: {
+    items: [
+      {
+        team: {
+          sys: {
+            id: 'team-1',
+          },
+          displayName: 'Alessi',
+          inactiveSince: null,
+        },
+      },
+    ],
+  },
+});
+
+const getDiscussionComplianceReportCollection = () => ({
+  items: [
+    {
+      manuscriptVersion: {
+        teamsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'team-1',
+              },
+              displayName: 'Alessi',
+            },
+          ],
+        },
+        linkedFrom: {
+          manuscriptsCollection: {
+            items: [
+              {
+                title: 'Contextual AI models for single-cell protein biology',
+              },
+            ],
+          },
+        },
+        ...getManuscriptVersion({
+          count: 1,
+          firstAuthorIds: ['first-author-user'],
+          additionalAuthorIds: [],
+          correspondingAuthorIds: [],
+          createdById: 'user-who-created-manuscript',
+          createdByFirstName: 'Jane',
+          createdByLastName: 'Doe',
+        }),
+      },
+    },
+  ],
+});
+
 export const getContentfulReminderDiscussionCollectionItem = (): NonNullable<
   FetchDiscussionRemindersQuery['discussionsCollection']
 >['items'][number] => ({
@@ -654,67 +714,10 @@ export const getContentfulReminderDiscussionCollectionItem = (): NonNullable<
   endedAt: null,
   endedBy: null,
   message: {
-    createdBy: {
-      sys: {
-        id: 'user-who-started-discussion',
-      },
-      firstName: 'Tom',
-      lastName: 'Hardy',
-      role: 'Grantee',
-      openScienceTeamMember: false,
-      teamsCollection: {
-        items: [
-          {
-            team: {
-              sys: {
-                id: 'team-1',
-              },
-              displayName: 'Alessi',
-              inactiveSince: null,
-            },
-          },
-        ],
-      },
-    },
+    createdBy: getDiscussionCreatedByUser('user-who-started-discussion'),
   },
   linkedFrom: {
-    complianceReportsCollection: {
-      items: [
-        {
-          manuscriptVersion: {
-            teamsCollection: {
-              items: [
-                {
-                  sys: {
-                    id: 'team-1',
-                  },
-                  displayName: 'Alessi',
-                },
-              ],
-            },
-            linkedFrom: {
-              manuscriptsCollection: {
-                items: [
-                  {
-                    title:
-                      'Contextual AI models for single-cell protein biology',
-                  },
-                ],
-              },
-            },
-            ...getManuscriptVersion({
-              count: 1,
-              firstAuthorIds: ['first-author-user'],
-              additionalAuthorIds: [],
-              correspondingAuthorIds: [],
-              createdById: 'user-who-created-manuscript',
-              createdByFirstName: 'Jane',
-              createdByLastName: 'Doe',
-            }),
-          },
-        },
-      ],
-    },
+    complianceReportsCollection: getDiscussionComplianceReportCollection(),
   },
 });
 
@@ -725,28 +728,7 @@ const getReminderMessageCollectionItem = (): NonNullable<
     id: 'reply-id-1',
     firstPublishedAt: '2025-01-07T16:21:33.824Z',
   },
-  createdBy: {
-    sys: {
-      id: 'user-who-replied-discussion',
-    },
-    firstName: 'Tom',
-    lastName: 'Hardy',
-    role: 'Grantee',
-    openScienceTeamMember: false,
-    teamsCollection: {
-      items: [
-        {
-          team: {
-            sys: {
-              id: 'team-1',
-            },
-            displayName: 'Alessi',
-            inactiveSince: null,
-          },
-        },
-      ],
-    },
-  },
+  createdBy: getDiscussionCreatedByUser('user-who-replied-discussion'),
   linkedFrom: {
     discussionsCollection: {
       items: [
@@ -766,43 +748,8 @@ const getReminderMessageCollectionItem = (): NonNullable<
             ],
           },
           linkedFrom: {
-            complianceReportsCollection: {
-              items: [
-                {
-                  manuscriptVersion: {
-                    teamsCollection: {
-                      items: [
-                        {
-                          sys: {
-                            id: 'team-1',
-                          },
-                          displayName: 'Alessi',
-                        },
-                      ],
-                    },
-                    linkedFrom: {
-                      manuscriptsCollection: {
-                        items: [
-                          {
-                            title:
-                              'Contextual AI models for single-cell protein biology',
-                          },
-                        ],
-                      },
-                    },
-                    ...getManuscriptVersion({
-                      count: 1,
-                      firstAuthorIds: ['first-author-user'],
-                      additionalAuthorIds: [],
-                      correspondingAuthorIds: [],
-                      createdById: 'user-who-created-manuscript',
-                      createdByFirstName: 'Jane',
-                      createdByLastName: 'Doe',
-                    }),
-                  },
-                },
-              ],
-            },
+            complianceReportsCollection:
+              getDiscussionComplianceReportCollection(),
             manuscriptVersionsCollection: {
               items: [
                 {

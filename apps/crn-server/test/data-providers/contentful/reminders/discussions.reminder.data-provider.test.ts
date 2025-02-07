@@ -10,6 +10,7 @@ import {
   ReminderContentfulDataProvider,
   DiscussionItem,
   MessageItem,
+  getTeamNames,
 } from '../../../../src/data-providers/contentful/reminder.data-provider';
 import { getContentfulGraphqlClientMock } from '../../../mocks/contentful-graphql-client.mock';
 import {
@@ -707,6 +708,10 @@ describe('Reminders data provider', () => {
           expect.arrayContaining([expectedReminder]),
         );
       });
+    });
+
+    test('getTeamNames returns empty string when no teams provided', async () => {
+      expect(getTeamNames(undefined)).toEqual('');
     });
   });
 });

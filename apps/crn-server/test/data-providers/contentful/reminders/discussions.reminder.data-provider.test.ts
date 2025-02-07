@@ -394,14 +394,16 @@ describe('Reminders data provider', () => {
       });
     });
 
-    describe('Discussion Replied To Compliance Report', () => {
-      const messageItem =
-        getContentfulReminderMessageCollectionItem('compliance-report');
-
+    describe('Discussion Replies Reminders', () => {
       const mockContentfulGraphqlResponse = (
-        message: MessageItem | null = messageItem,
+        replyType: 'compliance-report' | 'quick-check' = 'compliance-report',
+        replyAuthor: 'open-science-member' | 'grantee' = 'grantee',
+        message: MessageItem | null = null,
         user: FetchRemindersQuery['users'] = getContentfulReminderUsersContent(),
-      ) => {
+      ): DiscussionRepliedToReminder => {
+        const messageItem =
+          getContentfulReminderMessageCollectionItem(replyType);
+
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           users: user,
         });
@@ -411,213 +413,128 @@ describe('Reminders data provider', () => {
             items: [],
           },
           messagesCollection: {
-            items: [message],
+            items: [message || messageItem],
           },
         });
+
+        return replyAuthor === 'grantee'
+          ? getDiscussionRepliedToByGranteeReminder(replyType)
+          : getDiscussionRepliedToByOpenScienceMemberReminder(replyType);
       };
 
-      const expectedReminder: DiscussionRepliedToReminder =
-        getDiscussionRepliedToByGranteeReminder('compliance-report');
-
-      test('the person who replied to the discussion should not see discussion replied reminders', async () => {
-        const userId = 'user-who-replied-discussion';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
-
-        mockContentfulGraphqlResponse();
-
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual([]);
-      });
-
-      test.each`
-        userId                    | role
-        ${'project-manager-user'} | ${'Project Manager'}
-        ${'lead-pi-user'}         | ${'Lead PI (Core Leadership)'}
-      `(
-        'the team member with role $role should see discussion replied to reminders',
-        async ({ userId, role }) => {
+      describe('Discussion Replied To Compliance Report', () => {
+        test('the person who replied to the discussion should not see discussion replied reminders', async () => {
+          const userId = 'user-who-replied-discussion';
           const fetchRemindersOptions: FetchRemindersOptions = {
             userId,
             timezone,
           };
 
-          const user = getContentfulReminderUsersContent();
-          user!.teamsCollection! = {
-            items: [
-              {
-                role,
-                team: {
-                  sys: {
-                    id: 'team-1',
-                  },
-                },
-              },
-            ],
-          };
-
-          mockContentfulGraphqlResponse(messageItem, user);
-
-          const result = await remindersDataProvider.fetch(
-            fetchRemindersOptions,
-          );
-          expect(result.items).toEqual(
-            expect.arrayContaining([expectedReminder]),
-          );
-        },
-      );
-
-      test.each`
-        userId                              | role
-        ${'co-pi-user'}                     | ${'Co-PI (Core Leadership)'}
-        ${'key-personnel-user'}             | ${'Key Personnel'}
-        ${'scientific-advisory-board-user'} | ${'Scientific Advisory Board'}
-        ${'asap-staff-user'}                | ${'ASAP Staff'}
-        ${'trainee-user'}                   | ${'Trainee'}
-      `(
-        'the team member with role $role should not see discussion replied to reminders',
-        async ({ userId, role }) => {
-          const fetchRemindersOptions: FetchRemindersOptions = {
-            userId,
-            timezone,
-          };
-
-          const user = getContentfulReminderUsersContent();
-          user!.teamsCollection = {
-            items: [
-              {
-                role,
-                team: {
-                  sys: {
-                    id: 'team-1',
-                  },
-                },
-              },
-            ],
-          };
-
-          mockContentfulGraphqlResponse(messageItem, user);
+          mockContentfulGraphqlResponse();
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
           );
           expect(result.items).toEqual([]);
-        },
-      );
+        });
 
-      test('first author of the manuscript should see discussion replied to reminders', async () => {
-        const userId = 'first-author-user';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
+        test.each`
+          userId                    | role
+          ${'project-manager-user'} | ${'Project Manager'}
+          ${'lead-pi-user'}         | ${'Lead PI (Core Leadership)'}
+        `(
+          'the team member with role $role should see discussion replied to reminders',
+          async ({ userId, role }) => {
+            const fetchRemindersOptions: FetchRemindersOptions = {
+              userId,
+              timezone,
+            };
 
-        mockContentfulGraphqlResponse(messageItem);
+            const user = getContentfulReminderUsersContent();
+            user!.teamsCollection! = {
+              items: [
+                {
+                  role,
+                  team: {
+                    sys: {
+                      id: 'team-1',
+                    },
+                  },
+                },
+              ],
+            };
 
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual(
-          expect.arrayContaining([expectedReminder]),
+            const expectedReminder = mockContentfulGraphqlResponse(
+              'compliance-report',
+              'grantee',
+              null,
+              user,
+            );
+
+            const result = await remindersDataProvider.fetch(
+              fetchRemindersOptions,
+            );
+            expect(result.items).toEqual(
+              expect.arrayContaining([expectedReminder]),
+            );
+          },
         );
-      });
 
-      test('returns reminder if discussion was replied to by open science member', async () => {
-        const messageItem =
-          getContentfulReminderMessageCollectionItem('compliance-report');
-        const expectedReminder =
-          getDiscussionRepliedToByOpenScienceMemberReminder(
+        test.each`
+          userId                              | role
+          ${'co-pi-user'}                     | ${'Co-PI (Core Leadership)'}
+          ${'key-personnel-user'}             | ${'Key Personnel'}
+          ${'scientific-advisory-board-user'} | ${'Scientific Advisory Board'}
+          ${'asap-staff-user'}                | ${'ASAP Staff'}
+          ${'trainee-user'}                   | ${'Trainee'}
+        `(
+          'the team member with role $role should not see discussion replied to reminders',
+          async ({ userId, role }) => {
+            const fetchRemindersOptions: FetchRemindersOptions = {
+              userId,
+              timezone,
+            };
+
+            const user = getContentfulReminderUsersContent();
+            user!.teamsCollection = {
+              items: [
+                {
+                  role,
+                  team: {
+                    sys: {
+                      id: 'team-1',
+                    },
+                  },
+                },
+              ],
+            };
+
+            mockContentfulGraphqlResponse(
+              'compliance-report',
+              'grantee',
+              null,
+              user,
+            );
+
+            const result = await remindersDataProvider.fetch(
+              fetchRemindersOptions,
+            );
+            expect(result.items).toEqual([]);
+          },
+        );
+
+        test('first author of the manuscript should see discussion replied to reminders', async () => {
+          const userId = 'first-author-user';
+          const fetchRemindersOptions: FetchRemindersOptions = {
+            userId,
+            timezone,
+          };
+
+          const expectedReminder = mockContentfulGraphqlResponse(
             'compliance-report',
+            'grantee',
+            null,
           );
-
-        const user = getContentfulReminderUsersContent();
-        messageItem!.createdBy = {
-          ...messageItem!.createdBy,
-          openScienceTeamMember: true,
-          role: 'Staff',
-          sys: { id: 'user-who-started-discussion' },
-        };
-
-        const userId = 'first-author-user';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
-
-        mockContentfulGraphqlResponse(messageItem, user);
-
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual(
-          expect.arrayContaining([expectedReminder]),
-        );
-      });
-    });
-
-    describe('Discussion Replied To Quick Check', () => {
-      const messageItem =
-        getContentfulReminderMessageCollectionItem('quick-check');
-
-      const mockContentfulGraphqlResponse = (
-        message: MessageItem | null = messageItem,
-        user: FetchRemindersQuery['users'] = getContentfulReminderUsersContent(),
-      ) => {
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          users: user,
-        });
-
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          discussionsCollection: {
-            items: [],
-          },
-          messagesCollection: {
-            items: [message],
-          },
-        });
-      };
-
-      const expectedReminder: DiscussionRepliedToReminder =
-        getDiscussionRepliedToByGranteeReminder('quick-check');
-
-      test('the person who replied to the discussion should not see discussion replied reminders', async () => {
-        const userId = 'user-who-replied-discussion';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
-
-        mockContentfulGraphqlResponse();
-
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual([]);
-      });
-
-      test.each`
-        userId                    | role
-        ${'project-manager-user'} | ${'Project Manager'}
-        ${'lead-pi-user'}         | ${'Lead PI (Core Leadership)'}
-      `(
-        'the team member with role $role should see discussion replied to reminders',
-        async ({ userId, role }) => {
-          const fetchRemindersOptions: FetchRemindersOptions = {
-            userId,
-            timezone,
-          };
-
-          const user = getContentfulReminderUsersContent();
-          user!.teamsCollection! = {
-            items: [
-              {
-                role,
-                team: {
-                  sys: {
-                    id: 'team-1',
-                  },
-                },
-              },
-            ],
-          };
-
-          mockContentfulGraphqlResponse(messageItem, user);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -625,88 +542,189 @@ describe('Reminders data provider', () => {
           expect(result.items).toEqual(
             expect.arrayContaining([expectedReminder]),
           );
-        },
-      );
+        });
 
-      test.each`
-        userId                              | role
-        ${'co-pi-user'}                     | ${'Co-PI (Core Leadership)'}
-        ${'key-personnel-user'}             | ${'Key Personnel'}
-        ${'scientific-advisory-board-user'} | ${'Scientific Advisory Board'}
-        ${'asap-staff-user'}                | ${'ASAP Staff'}
-        ${'trainee-user'}                   | ${'Trainee'}
-      `(
-        'the team member with role $role should not see discussion replied to reminders',
-        async ({ userId, role }) => {
+        test('returns reminder if discussion was replied to by open science member', async () => {
+          const messageItem =
+            getContentfulReminderMessageCollectionItem('compliance-report');
+
+          messageItem!.createdBy = {
+            ...messageItem!.createdBy,
+            openScienceTeamMember: true,
+            role: 'Staff',
+            sys: { id: 'user-who-started-discussion' },
+          };
+
+          const userId = 'first-author-user';
           const fetchRemindersOptions: FetchRemindersOptions = {
             userId,
             timezone,
           };
 
-          const user = getContentfulReminderUsersContent();
-          user!.teamsCollection = {
-            items: [
-              {
-                role,
-                team: {
-                  sys: {
-                    id: 'team-1',
-                  },
-                },
-              },
-            ],
+          const expectedReminder = mockContentfulGraphqlResponse(
+            'compliance-report',
+            'open-science-member',
+            messageItem,
+          );
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items).toEqual(
+            expect.arrayContaining([expectedReminder]),
+          );
+        });
+      });
+
+      describe('Discussion Replied To Quick Check', () => {
+        test('the person who replied to the discussion should not see discussion replied reminders', async () => {
+          const userId = 'user-who-replied-discussion';
+          const fetchRemindersOptions: FetchRemindersOptions = {
+            userId,
+            timezone,
           };
 
-          mockContentfulGraphqlResponse(messageItem, user);
+          mockContentfulGraphqlResponse();
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
           );
           expect(result.items).toEqual([]);
-        },
-      );
+        });
 
-      test('first author of the manuscript should see discussion replied to reminders', async () => {
-        const userId = 'first-author-user';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
+        test.each`
+          userId                    | role
+          ${'project-manager-user'} | ${'Project Manager'}
+          ${'lead-pi-user'}         | ${'Lead PI (Core Leadership)'}
+        `(
+          'the team member with role $role should see discussion replied to reminders',
+          async ({ userId, role }) => {
+            const fetchRemindersOptions: FetchRemindersOptions = {
+              userId,
+              timezone,
+            };
 
-        mockContentfulGraphqlResponse(messageItem);
+            const user = getContentfulReminderUsersContent();
+            user!.teamsCollection! = {
+              items: [
+                {
+                  role,
+                  team: {
+                    sys: {
+                      id: 'team-1',
+                    },
+                  },
+                },
+              ],
+            };
 
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual(
-          expect.arrayContaining([expectedReminder]),
+            const expectedReminder = mockContentfulGraphqlResponse(
+              'quick-check',
+              'grantee',
+              null,
+              user,
+            );
+
+            const result = await remindersDataProvider.fetch(
+              fetchRemindersOptions,
+            );
+            expect(result.items).toEqual(
+              expect.arrayContaining([expectedReminder]),
+            );
+          },
         );
-      });
 
-      test('returns reminder if discussion was replied to by open science member', async () => {
-        const messageItem =
-          getContentfulReminderMessageCollectionItem('quick-check');
-        const expectedReminder =
-          getDiscussionRepliedToByOpenScienceMemberReminder('quick-check');
+        test.each`
+          userId                              | role
+          ${'co-pi-user'}                     | ${'Co-PI (Core Leadership)'}
+          ${'key-personnel-user'}             | ${'Key Personnel'}
+          ${'scientific-advisory-board-user'} | ${'Scientific Advisory Board'}
+          ${'asap-staff-user'}                | ${'ASAP Staff'}
+          ${'trainee-user'}                   | ${'Trainee'}
+        `(
+          'the team member with role $role should not see discussion replied to reminders',
+          async ({ userId, role }) => {
+            const fetchRemindersOptions: FetchRemindersOptions = {
+              userId,
+              timezone,
+            };
 
-        const user = getContentfulReminderUsersContent();
-        messageItem!.createdBy = {
-          ...messageItem!.createdBy,
-          openScienceTeamMember: true,
-          role: 'Staff',
-          sys: { id: 'user-who-started-discussion' },
-        };
+            const user = getContentfulReminderUsersContent();
+            user!.teamsCollection = {
+              items: [
+                {
+                  role,
+                  team: {
+                    sys: {
+                      id: 'team-1',
+                    },
+                  },
+                },
+              ],
+            };
 
-        const userId = 'first-author-user';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
+            mockContentfulGraphqlResponse('quick-check', 'grantee', null, user);
 
-        mockContentfulGraphqlResponse(messageItem, user);
-
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual(
-          expect.arrayContaining([expectedReminder]),
+            const result = await remindersDataProvider.fetch(
+              fetchRemindersOptions,
+            );
+            expect(result.items).toEqual([]);
+          },
         );
+
+        test('first author of the manuscript should see discussion replied to reminders', async () => {
+          const userId = 'first-author-user';
+          const fetchRemindersOptions: FetchRemindersOptions = {
+            userId,
+            timezone,
+          };
+
+          const expectedReminder = mockContentfulGraphqlResponse(
+            'quick-check',
+            'grantee',
+            null,
+          );
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items).toEqual(
+            expect.arrayContaining([expectedReminder]),
+          );
+        });
+
+        test('returns reminder if discussion was replied to by open science member', async () => {
+          const messageItem =
+            getContentfulReminderMessageCollectionItem('quick-check');
+
+          const user = getContentfulReminderUsersContent();
+          messageItem!.createdBy = {
+            ...messageItem!.createdBy,
+            openScienceTeamMember: true,
+            role: 'Staff',
+            sys: { id: 'user-who-started-discussion' },
+          };
+
+          const userId = 'first-author-user';
+          const fetchRemindersOptions: FetchRemindersOptions = {
+            userId,
+            timezone,
+          };
+
+          const expectedReminder = mockContentfulGraphqlResponse(
+            'quick-check',
+            'open-science-member',
+            messageItem,
+            user,
+          );
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items).toEqual(
+            expect.arrayContaining([expectedReminder]),
+          );
+        });
       });
     });
 

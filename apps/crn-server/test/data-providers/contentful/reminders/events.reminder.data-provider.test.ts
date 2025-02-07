@@ -59,11 +59,24 @@ describe('Reminders data provider', () => {
     const fetchRemindersOptions: FetchRemindersOptions = { userId, timezone };
 
     const setContentfulMock = (
-      eventMockResponse: NonNullable<
+      startDate: string,
+      endDate: string,
+      systemTime: string,
+      users:
+        | FetchRemindersQuery['users']
+        | null = getContentfulReminderUsersContent(),
+      eventResponse?: NonNullable<
         FetchRemindersQuery['eventsCollection']
       >['items'][number],
-      users: FetchRemindersQuery['users'] | null,
+      // users: FetchRemindersQuery['users'] | null,
     ) => {
+      jest.setSystemTime(DateTime.fromISO(systemTime).toJSDate());
+
+      const eventMockResponse =
+        eventResponse || getContentfulReminderEventsCollectionItem();
+      eventMockResponse!.startDate = startDate;
+      eventMockResponse!.endDate = endDate;
+
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         eventsCollection: {
           items: [eventMockResponse],
@@ -85,13 +98,9 @@ describe('Reminders data provider', () => {
       test('Should fetch the reminder when it has already started', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-01T08:01:00Z').toJSDate());
+        const systemTime = '2023-01-01T08:01:00Z';
 
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
-
-        setContentfulMock(eventMockResponse, null);
+        setContentfulMock(startDate, endDate, systemTime, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -110,13 +119,9 @@ describe('Reminders data provider', () => {
       test('Should not fetch the reminder when it has already ended', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-01T10:01:00Z').toJSDate());
+        const systemTime = '2023-01-01T10:01:00Z';
 
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
-
-        setContentfulMock(eventMockResponse, null);
+        setContentfulMock(startDate, endDate, systemTime, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -126,13 +131,9 @@ describe('Reminders data provider', () => {
       test('Should not fetch the reminder when it is a future event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2022-12-31T08:01:00Z').toJSDate());
+        const systemTime = '2022-12-31T08:01:00Z';
 
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
-
-        setContentfulMock(eventMockResponse, null);
+        setContentfulMock(startDate, endDate, systemTime, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -144,13 +145,9 @@ describe('Reminders data provider', () => {
       test('Should fetch the reminder if it has not started yet', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-01T07:59:00Z').toJSDate());
+        const systemTime = '2023-01-01T07:59:00Z';
 
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
-
-        setContentfulMock(eventMockResponse, null);
+        setContentfulMock(startDate, endDate, systemTime, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -168,13 +165,9 @@ describe('Reminders data provider', () => {
       test('Should not fetch the reminder if it has already started', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-01T08:01:00Z').toJSDate());
+        const systemTime = '2023-01-01T08:01:00Z';
 
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
-
-        setContentfulMock(eventMockResponse, null);
+        setContentfulMock(startDate, endDate, systemTime, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -186,13 +179,9 @@ describe('Reminders data provider', () => {
       test('Should not fetch the reminder if it is a future event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2022-12-31T08:01:00Z').toJSDate());
+        const systemTime = '2022-12-31T08:01:00Z';
 
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
-
-        setContentfulMock(eventMockResponse, null);
+        setContentfulMock(startDate, endDate, systemTime, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -215,19 +204,13 @@ describe('Reminders data provider', () => {
         async ({ asapRole, teamRole }) => {
           const startDate = '2023-01-01T08:00:00Z';
           const endDate = '2023-01-01T10:00:00Z';
-          jest.setSystemTime(
-            DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
-          );
-
-          const eventMockResponse = getContentfulReminderEventsCollectionItem();
-          eventMockResponse!.startDate = startDate;
-          eventMockResponse!.endDate = endDate;
+          const systemTime = '2023-01-02T09:00:00Z';
 
           const users = getContentfulReminderUsersContent();
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = teamRole;
 
-          setContentfulMock(eventMockResponse, users);
+          setContentfulMock(startDate, endDate, systemTime, users);
 
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             getTeamProjectManagerResponse(),
@@ -264,19 +247,13 @@ describe('Reminders data provider', () => {
         async ({ asapRole, teamRole }) => {
           const startDate = '2023-01-01T08:00:00Z';
           const endDate = '2023-01-01T10:00:00Z';
-          jest.setSystemTime(
-            DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
-          );
-
-          const eventMockResponse = getContentfulReminderEventsCollectionItem();
-          eventMockResponse!.startDate = startDate;
-          eventMockResponse!.endDate = endDate;
+          const systemTime = '2023-01-02T09:00:00Z';
 
           const users = getContentfulReminderUsersContent();
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = teamRole;
 
-          setContentfulMock(eventMockResponse, users);
+          setContentfulMock(startDate, endDate, systemTime, users);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -291,16 +268,12 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder when user is not one of the speakers', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate());
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
+        const systemTime = '2023-01-02T09:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.linkedFrom!.eventSpeakersCollection!.items = [];
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -312,15 +285,9 @@ describe('Reminders data provider', () => {
       it('Should fetch the reminder up until 72 hours of the end of the event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-04T09:58:00Z').toJSDate());
+        const systemTime = '2023-01-04T09:58:00Z';
 
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
-
-        const users = getContentfulReminderUsersContent();
-
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -340,15 +307,9 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder when it passed more than 72 hours of the end of the event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-04T10:01:00Z').toJSDate());
+        const systemTime = '2023-01-04T10:01:00Z';
 
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
-
-        const users = getContentfulReminderUsersContent();
-
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -360,15 +321,9 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder when the event is a future event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2022-12-31T10:00:00Z').toJSDate());
+        const systemTime = '2022-12-31T10:00:00Z';
 
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
-
-        const users = getContentfulReminderUsersContent();
-
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -380,15 +335,9 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder if it has not ended', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-01T09:00:00Z').toJSDate());
+        const systemTime = '2023-01-01T09:00:00Z';
 
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
-
-        const users = getContentfulReminderUsersContent();
-
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -402,16 +351,12 @@ describe('Reminders data provider', () => {
       it('Should fetch the reminder if the user asap role is Staff', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate());
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
+        const systemTime = '2023-01-02T09:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -436,9 +381,7 @@ describe('Reminders data provider', () => {
         async ({ asapRole }) => {
           const startDate = '2023-01-01T08:00:00Z';
           const endDate = '2023-01-01T10:00:00Z';
-          jest.setSystemTime(
-            DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
-          );
+          const systemTime = '2023-01-02T09:00:00Z';
 
           const eventMockResponse = getContentfulReminderEventsCollectionItem();
           eventMockResponse!.startDate = startDate;
@@ -447,7 +390,7 @@ describe('Reminders data provider', () => {
           const users = getContentfulReminderUsersContent();
           users!.role = asapRole;
 
-          setContentfulMock(eventMockResponse, users);
+          setContentfulMock(startDate, endDate, systemTime, users);
 
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             getTeamProjectManagerResponse(),
@@ -466,16 +409,12 @@ describe('Reminders data provider', () => {
       it('Should fetch the reminder up until 72 hours of the end of the event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-04T09:58:00Z').toJSDate());
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
+        const systemTime = '2023-01-04T09:58:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -494,16 +433,12 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder when it passed more than 72 hours of the end of the event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-04T10:01:00Z').toJSDate());
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
+        const systemTime = '2023-01-04T10:01:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -515,16 +450,12 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder when the event is a future event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2022-12-31T10:00:00Z').toJSDate());
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
+        const systemTime = '2022-12-31T10:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -536,16 +467,12 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder if it has not ended', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-01T09:00:00Z').toJSDate());
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
+        const systemTime = '2023-01-01T09:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -566,19 +493,13 @@ describe('Reminders data provider', () => {
         async ({ asapRole }) => {
           const startDate = '2023-01-01T08:00:00Z';
           const endDate = '2023-01-01T10:00:00Z';
-          jest.setSystemTime(
-            DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
-          );
-
-          const eventMockResponse = getContentfulReminderEventsCollectionItem();
-          eventMockResponse!.startDate = startDate;
-          eventMockResponse!.endDate = endDate;
+          const systemTime = '2023-01-02T09:00:00Z';
 
           const users = getContentfulReminderUsersContent();
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-          setContentfulMock(eventMockResponse, users);
+          setContentfulMock(startDate, endDate, systemTime, users);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -618,19 +539,13 @@ describe('Reminders data provider', () => {
         async ({ asapRole, teamRole }) => {
           const startDate = '2023-01-01T08:00:00Z';
           const endDate = '2023-01-01T10:00:00Z';
-          jest.setSystemTime(
-            DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
-          );
-
-          const eventMockResponse = getContentfulReminderEventsCollectionItem();
-          eventMockResponse!.startDate = startDate;
-          eventMockResponse!.endDate = endDate;
+          const systemTime = '2023-01-02T09:00:00Z';
 
           const users = getContentfulReminderUsersContent();
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = teamRole;
 
-          setContentfulMock(eventMockResponse, users);
+          setContentfulMock(startDate, endDate, systemTime, users);
 
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             getTeamProjectManagerResponse(),
@@ -652,18 +567,14 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder when user is a PM but not one of a team which is associated to a speaker', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate());
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
+        const systemTime = '2023-01-02T09:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
         users!.teamsCollection!.items[0]!.team!.sys.id = 'team-2';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -682,7 +593,7 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder when the event does not have speakers', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate());
+        const systemTime = '2023-01-02T09:00:00Z';
 
         const eventMockResponse = getContentfulReminderEventsCollectionItem();
         eventMockResponse!.startDate = startDate;
@@ -693,7 +604,13 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(
+          startDate,
+          endDate,
+          systemTime,
+          users,
+          eventMockResponse,
+        );
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -712,7 +629,7 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder when event speakersCollection come as null', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate());
+        const systemTime = '2023-01-02T09:00:00Z';
 
         const eventMockResponse = getContentfulReminderEventsCollectionItem();
         eventMockResponse!.startDate = startDate;
@@ -723,7 +640,13 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(
+          startDate,
+          endDate,
+          systemTime,
+          users,
+          eventMockResponse,
+        );
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -742,7 +665,7 @@ describe('Reminders data provider', () => {
       it('Should fetch the reminder up until 72 hours of the end of the event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-04T09:58:00Z').toJSDate());
+        const systemTime = '2023-01-04T09:58:00Z';
 
         const eventMockResponse = getContentfulReminderEventsCollectionItem();
         eventMockResponse!.startDate = startDate;
@@ -752,7 +675,7 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -772,17 +695,13 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder when it passed more than 72 hours of the end of the event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-04T10:01:00Z').toJSDate());
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
+        const systemTime = '2023-01-04T10:01:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -797,17 +716,13 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder when the event is a future event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2022-12-31T10:00:00Z').toJSDate());
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
+        const systemTime = '2022-12-31T10:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -822,17 +737,13 @@ describe('Reminders data provider', () => {
       it('Should not fetch the reminder if it has not ended', async () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-01T09:00:00Z').toJSDate());
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
-        eventMockResponse!.startDate = startDate;
-        eventMockResponse!.endDate = endDate;
+        const systemTime = '2023-01-01T09:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock(startDate, endDate, systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -871,16 +782,12 @@ describe('Reminders data provider', () => {
       }: MaterialTestProps) => {
         test(`Should fetch the reminder if a ${material} was updated in an event between now and 24 hours ago`, async () => {
           const materialUpdatedAt = '2023-01-01T08:00:00Z';
-          jest.setSystemTime(
-            DateTime.fromISO('2023-01-02T07:59:00Z').toJSDate(),
-          );
+          const systemTime = '2023-01-02T07:59:00Z';
 
           const eventMockResponse = getContentfulReminderEventsCollectionItem();
           eventMockResponse![materialUpdatedAtName] = materialUpdatedAt;
 
-          const users = getContentfulReminderUsersContent();
-
-          setContentfulMock(eventMockResponse, users);
+          setContentfulMock('', '', systemTime, null, eventMockResponse);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -902,16 +809,12 @@ describe('Reminders data provider', () => {
 
         test(`Should not fetch the reminder if a ${material} in an event was updated more that 24 hours ago`, async () => {
           const materialUpdatedAt = '2023-01-01T08:00:00Z';
-          jest.setSystemTime(
-            DateTime.fromISO('2023-01-02T08:10:00Z').toJSDate(),
-          );
+          const systemTime = '2023-01-02T08:10:00Z';
 
           const eventMockResponse = getContentfulReminderEventsCollectionItem();
           eventMockResponse![materialUpdatedAtName] = materialUpdatedAt;
 
-          const users = getContentfulReminderUsersContent();
-
-          setContentfulMock(eventMockResponse, users);
+          setContentfulMock('', '', systemTime, null, eventMockResponse);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -924,16 +827,12 @@ describe('Reminders data provider', () => {
 
         test(`Should not fetch the reminder if a ${material} in an event was updated after the current time`, async () => {
           const materialUpdatedAt = '2023-01-01T08:00:00Z';
-          jest.setSystemTime(
-            DateTime.fromISO('2023-01-01T07:00:00Z').toJSDate(),
-          );
+          const systemTime = '2023-01-01T07:00:00Z';
 
           const eventMockResponse = getContentfulReminderEventsCollectionItem();
           eventMockResponse![materialUpdatedAtName] = materialUpdatedAt;
 
-          const users = getContentfulReminderUsersContent();
-
-          setContentfulMock(eventMockResponse, users);
+          setContentfulMock('', '', systemTime, null, eventMockResponse);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -949,16 +848,14 @@ describe('Reminders data provider', () => {
     describe('Multiple material reminders', () => {
       test(`Should fetch the reminders if more than one material was updated in an event between now and 24 hours ago`, async () => {
         const materialUpdatedAt = '2023-01-01T08:00:00Z';
-        jest.setSystemTime(DateTime.fromISO('2023-01-02T07:59:00Z').toJSDate());
+        const systemTime = '2023-01-02T07:59:00Z';
 
         const eventMockResponse = getContentfulReminderEventsCollectionItem();
         eventMockResponse!.videoRecordingUpdatedAt = materialUpdatedAt;
         eventMockResponse!.presentationUpdatedAt = materialUpdatedAt;
         eventMockResponse!.notesUpdatedAt = materialUpdatedAt;
 
-        const users = getContentfulReminderUsersContent();
-
-        setContentfulMock(eventMockResponse, users);
+        setContentfulMock('', '', systemTime, null, eventMockResponse);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 

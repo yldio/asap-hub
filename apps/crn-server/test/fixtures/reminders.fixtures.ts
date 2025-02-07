@@ -752,37 +752,8 @@ const getReminderMessageCollectionItem = (): NonNullable<
               getDiscussionComplianceReportCollection(),
             manuscriptVersionsCollection: {
               items: [
-                {
-                  teamsCollection: {
-                    items: [
-                      {
-                        sys: {
-                          id: 'team-1',
-                        },
-                        displayName: 'Alessi',
-                      },
-                    ],
-                  },
-                  linkedFrom: {
-                    manuscriptsCollection: {
-                      items: [
-                        {
-                          title:
-                            'Contextual AI models for single-cell protein biology',
-                        },
-                      ],
-                    },
-                  },
-                  ...getManuscriptVersion({
-                    count: 1,
-                    firstAuthorIds: ['first-author-user'],
-                    additionalAuthorIds: [],
-                    correspondingAuthorIds: [],
-                    createdById: 'user-who-created-manuscript',
-                    createdByFirstName: 'Jane',
-                    createdByLastName: 'Doe',
-                  }),
-                },
+                getDiscussionComplianceReportCollection().items[0]!
+                  .manuscriptVersion,
               ],
             },
           },

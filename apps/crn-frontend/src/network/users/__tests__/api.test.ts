@@ -315,7 +315,7 @@ describe('getOpenScienceMembers', () => {
     );
   });
 
-  it('will not default to not specifying page and limits hits per page by default', async () => {
+  it('does not specify page and limits hits per page by default', async () => {
     await getOpenScienceMembers(algoliaSearchClient, {
       ...defaultOptions,
     });

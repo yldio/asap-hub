@@ -34,7 +34,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Run User Assignment as Lab PI Migration
         run: |
-          yarn workspace @asap-hub/contentful assign-users-as-lab-pi
+          yarn workspace @asap-hub/contentful migrate-assign-users-as-lab-pi
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}

@@ -95,12 +95,10 @@ export const usersContentQueryFragment = gql`
     }
     labsCollection(limit: 10) {
       items {
-        lab {
-          sys {
-            id
-          }
-          name
+        sys {
+          id
         }
+        name
       }
     }
     linkedFrom {
@@ -227,12 +225,10 @@ export const userListItemContentQueryFragment = gql`
     jobTitle
     labsCollection(limit: 10) {
       items {
-        lab {
-          sys {
-            id
-          }
-          name
+        sys {
+          id
         }
+        name
       }
     }
     lastName

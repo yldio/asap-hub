@@ -2732,6 +2732,7 @@ enum LabMembershipOrder {
 type Labs implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
+  labPi(locale: String, preview: Boolean, where: UsersFilter): Users
   linkedFrom(allowedLocales: [String]): LabsLinkingCollections
   name(locale: String): String
   sys: Sys!
@@ -2748,6 +2749,8 @@ input LabsFilter {
   AND: [LabsFilter]
   OR: [LabsFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  labPI: cfUsersNestedFilter
+  labPI_exists: Boolean
   name: String
   name_contains: String
   name_exists: Boolean
@@ -2763,6 +2766,7 @@ type LabsLinkingCollections {
   labMembershipCollection(limit: Int = 100, locale: String, order: [LabsLinkingCollectionsLabMembershipCollectionOrder], preview: Boolean, skip: Int = 0): LabMembershipCollection
   manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [LabsLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [LabsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+  usersCollection(limit: Int = 100, locale: String, order: [LabsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
 }
 
 enum LabsLinkingCollectionsLabMembershipCollectionOrder {
@@ -2866,6 +2870,81 @@ enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
   type_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
+}
+
+enum LabsLinkingCollectionsUsersCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  city_ASC
+  city_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  country_ASC
+  country_DESC
+  createdDate_ASC
+  createdDate_DESC
+  degree_ASC
+  degree_DESC
+  dismissedGettingStarted_ASC
+  dismissedGettingStarted_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  institution_ASC
+  institution_DESC
+  lastName_ASC
+  lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
+  onboarded_ASC
+  onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  twitter_ASC
+  twitter_DESC
+  website1_ASC
+  website1_DESC
+  website2_ASC
+  website2_DESC
 }
 
 enum LabsOrder {
@@ -6587,13 +6666,14 @@ type Users implements Entry & _Node {
   googleScholar(locale: String): String
   institution(locale: String): String
   jobTitle(locale: String): String
-  labsCollection(limit: Int = 100, locale: String, order: [UsersLabsCollectionOrder], preview: Boolean, skip: Int = 0, where: LabMembershipFilter): UsersLabsCollection
+  labsCollection(limit: Int = 100, locale: String, order: [UsersLabsCollectionOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): UsersLabsCollection
   lastName(locale: String): String
   lastUpdated(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): UsersLinkingCollections
   linkedIn(locale: String): String
   middleName(locale: String): String
   nickname(locale: String): String
+  oldLabsCollection(limit: Int = 100, locale: String, order: [UsersOldLabsCollectionOrder], preview: Boolean, skip: Int = 0, where: LabMembershipFilter): UsersOldLabsCollection
   onboarded(locale: String): Boolean
   openScienceTeamMember(locale: String): Boolean
   orcid(locale: String): String
@@ -6767,7 +6847,7 @@ input UsersFilter {
   jobTitle_not: String
   jobTitle_not_contains: String
   jobTitle_not_in: [String]
-  labs: cfLabMembershipNestedFilter
+  labs: cfLabsNestedFilter
   labsCollection_exists: Boolean
   lastName: String
   lastName_contains: String
@@ -6806,6 +6886,8 @@ input UsersFilter {
   nickname_not: String
   nickname_not_contains: String
   nickname_not_in: [String]
+  oldLabs: cfLabMembershipNestedFilter
+  oldLabsCollection_exists: Boolean
   onboarded: Boolean
   onboarded_exists: Boolean
   onboarded_not: Boolean
@@ -6917,15 +6999,15 @@ input UsersFilter {
 }
 
 type UsersLabsCollection {
-  items: [LabMembership]!
+  items: [Labs]!
   limit: Int!
   skip: Int!
   total: Int!
 }
 
 enum UsersLabsCollectionOrder {
-  role_ASC
-  role_DESC
+  name_ASC
+  name_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -6943,6 +7025,7 @@ type UsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsInterestGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
+  labsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsLabsCollectionOrder], preview: Boolean, skip: Int = 0): LabsCollection
   manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
   messagesCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsMessagesCollectionOrder], preview: Boolean, skip: Int = 0): MessagesCollection
@@ -7005,6 +7088,19 @@ enum UsersLinkingCollectionsInterestGroupLeadersCollectionOrder {
   inactiveSinceDate_DESC
   role_ASC
   role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsLabsCollectionOrder {
+  name_ASC
+  name_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -7190,6 +7286,26 @@ enum UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder {
 enum UsersLinkingCollectionsWorkingGroupMembersCollectionOrder {
   inactiveSinceDate_ASC
   inactiveSinceDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type UsersOldLabsCollection {
+  items: [LabMembership]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum UsersOldLabsCollectionOrder {
+  role_ASC
+  role_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -8188,6 +8304,7 @@ input cfLabsNestedFilter {
   AND: [cfLabsNestedFilter]
   OR: [cfLabsNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  labPI_exists: Boolean
   name: String
   name_contains: String
   name_exists: Boolean
@@ -9156,6 +9273,7 @@ input cfUsersNestedFilter {
   nickname_not: String
   nickname_not_contains: String
   nickname_not_in: [String]
+  oldLabsCollection_exists: Boolean
   onboarded: Boolean
   onboarded_exists: Boolean
   onboarded_not: Boolean

@@ -83,12 +83,10 @@ export const FETCH_TEAM_BY_ID = gql`
                   }
                   labsCollection(limit: 5) {
                     items {
-                      lab {
-                        sys {
-                          id
-                        }
-                        name
+                      sys {
+                        id
                       }
+                      name
                     }
                   }
                 }
@@ -139,10 +137,8 @@ export const FETCH_TEAMS = gql`
                     onboarded
                     labsCollection(limit: 5) {
                       items {
-                        lab {
-                          sys {
-                            id
-                          }
+                        sys {
+                          id
                         }
                       }
                     }

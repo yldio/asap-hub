@@ -394,8 +394,8 @@ describe('Teams data provider', () => {
                           ...getContentfulGraphqlTeamMembers(),
                           labsCollection: {
                             items: [
-                              { lab: { sys: { id: 'lab-1' } } },
-                              { lab: { sys: { id: 'lab-2' } } },
+                              { sys: { id: 'lab-1' } },
+                              { sys: { id: 'lab-2' } },
                             ],
                           },
                         },
@@ -439,7 +439,7 @@ describe('Teams data provider', () => {
                         {
                           ...getContentfulGraphqlTeamMembers(),
                           labsCollection: {
-                            items: [null, { lab: { sys: { id: 'lab-2' } } }],
+                            items: [null, { sys: { id: 'lab-2' } }],
                           },
                         },
                       ],
@@ -483,9 +483,9 @@ describe('Teams data provider', () => {
                           ...getContentfulGraphqlTeamMembers(),
                           labsCollection: {
                             items: [
-                              { lab: { sys: { id: 'lab-1' } } },
-                              { lab: { sys: { id: 'lab-2' } } },
-                              { lab: { sys: { id: 'lab-3' } } },
+                              { sys: { id: 'lab-1' } },
+                              { sys: { id: 'lab-2' } },
+                              { sys: { id: 'lab-3' } },
                             ],
                           },
                         },
@@ -504,9 +504,9 @@ describe('Teams data provider', () => {
                           ...getContentfulGraphqlTeamMembers(),
                           labsCollection: {
                             items: [
-                              { lab: { sys: { id: 'lab-1' } } },
-                              { lab: { sys: { id: 'lab-2' } } },
-                              { lab: { sys: { id: 'lab-4' } } },
+                              { sys: { id: 'lab-1' } },
+                              { sys: { id: 'lab-2' } },
+                              { sys: { id: 'lab-4' } },
                             ],
                           },
                         },

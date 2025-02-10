@@ -19442,9 +19442,6 @@ export type FetchDiscussionRemindersQuery = {
             items: Array<
               Maybe<{
                 message?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                repliesCollection?: Maybe<{
-                  items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
-                }>;
                 linkedFrom?: Maybe<{
                   complianceReportsCollection?: Maybe<{
                     items: Array<
@@ -38643,62 +38640,6 @@ export const FetchDiscussionRemindersDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value: 'id',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'repliesCollection',
-                                          },
-                                          arguments: [
-                                            {
-                                              kind: 'Argument',
-                                              name: {
-                                                kind: 'Name',
-                                                value: 'limit',
-                                              },
-                                              value: {
-                                                kind: 'IntValue',
-                                                value: '100',
-                                              },
-                                            },
-                                          ],
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'items',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'sys',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'id',
-                                                            },
-                                                          },
-                                                        ],
                                                       },
                                                     },
                                                   ],

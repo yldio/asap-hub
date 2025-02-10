@@ -1239,7 +1239,7 @@ describe('manuscript file', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 25)], 'test.txt', {
+    const mockFile = new File(['1'.repeat(1024 * 1024 * 100)], 'test.txt', {
       type: 'text/plain',
     });
 
@@ -1352,7 +1352,7 @@ describe('key resource table', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 25)], 'test.txt', {
+    const mockFile = new File(['1'.repeat(1024 * 1024 * 100)], 'test.txt', {
       type: 'text/plain',
     });
 
@@ -1541,7 +1541,7 @@ describe('additional files', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 25)], 'test.txt', {
+    const mockFile = new File(['1'.repeat(1024 * 1024 * 100)], 'test.txt', {
       type: 'text/plain',
     });
 

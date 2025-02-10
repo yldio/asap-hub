@@ -1,11 +1,4 @@
-import {
-  ComplianceSortingDirection,
-  ManuscriptPutRequest,
-  ManuscriptResponse,
-  manuscriptStatus,
-  PartialManuscriptResponse,
-  SortCompliance,
-} from '@asap-hub/model';
+import { manuscriptStatus } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
@@ -47,20 +40,18 @@ const manuscriptStatusContainerStyles = css({
   justifyItems: 'start',
 });
 
-type ComplianceDashboardProps = ComponentProps<typeof PageControls> & {
-  isComplianceReviewer: boolean;
-  data: PartialManuscriptResponse[];
-  sort: SortCompliance;
-  setSort: React.Dispatch<React.SetStateAction<SortCompliance>>;
-  sortingDirection: ComplianceSortingDirection;
-  setSortingDirection: React.Dispatch<
-    React.SetStateAction<ComplianceSortingDirection>
+type ComplianceDashboardProps = ComponentProps<typeof PageControls> &
+  Pick<
+    ComponentProps<typeof ComplianceTable>,
+    | 'onUpdateManuscript'
+    | 'getAssignedUsersSuggestions'
+    | 'isComplianceReviewer'
+    | 'data'
+    | 'sort'
+    | 'sortingDirection'
+    | 'setSort'
+    | 'setSortingDirection'
   >;
-  onUpdateManuscript: (
-    manuscriptId: string,
-    payload: ManuscriptPutRequest,
-  ) => Promise<ManuscriptResponse>;
-};
 
 const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
   isComplianceReviewer,
@@ -70,6 +61,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
   setSort,
   setSortingDirection,
   onUpdateManuscript,
+  getAssignedUsersSuggestions,
   ...pageControlsProps
 }) => (
   <article>
@@ -93,6 +85,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
           setSort={setSort}
           setSortingDirection={setSortingDirection}
           onUpdateManuscript={onUpdateManuscript}
+          getAssignedUsersSuggestions={getAssignedUsersSuggestions}
         />
         <section css={pageControlsStyles}>
           <PageControls {...pageControlsProps} />

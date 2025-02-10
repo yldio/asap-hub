@@ -21,6 +21,8 @@ describe('ComplianceTable', () => {
     team: { id: 'team-id', displayName: 'Test Team' },
     requestingApcCoverage: 'Yes',
     manuscriptId: 'manuscript-id-1',
+    title: 'Manuscript 1',
+    teams: 'Test Team',
     assignedUsers: [
       {
         id: 'user-id',
@@ -39,6 +41,7 @@ describe('ComplianceTable', () => {
     sortingDirection: complianceInitialSortingDirection,
     setSortingDirection: jest.fn(),
     isComplianceReviewer: true,
+    getAssignedUsersSuggestions: jest.fn(),
   };
 
   it('renders data', () => {

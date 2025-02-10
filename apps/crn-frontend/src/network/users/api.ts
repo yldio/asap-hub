@@ -72,6 +72,25 @@ export const getUsers = async (
   };
 };
 
+export const getOpenScienceMembers = async (
+  algoliaClient: AlgoliaClient<'crn'>,
+  { searchQuery, currentPage, pageSize }: GetListOptions,
+): Promise<ListResponse<UserResponse | ExternalAuthorResponse>> => {
+  const result = await algoliaClient.search(['user'], searchQuery, {
+    filters: 'openScienceTeamMember:true',
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+    restrictSearchableAttributes: ['displayName'],
+  });
+
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
+};
+
 export const getUsersAndExternalAuthors = async (
   algoliaClient: AlgoliaClient<'crn'>,
   { searchQuery, currentPage, pageSize }: GetListOptions,

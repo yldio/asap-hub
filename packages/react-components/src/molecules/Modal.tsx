@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 
 import { Card, Overlay } from '../atoms';
 
@@ -56,14 +56,19 @@ const scrollStyles = css({
 
 type ModalProps = Pick<ComponentProps<typeof Card>, 'padding'> & {
   children: React.ReactNode;
+  readonly overrideModalStyles?: SerializedStyles;
 };
-const Modal: React.FC<ModalProps> = ({ padding, children }) => (
+const Modal: React.FC<ModalProps> = ({
+  padding,
+  children,
+  overrideModalStyles,
+}) => (
   <div css={overlayContainerStyles}>
     <div css={modalContainerStyles}>
       <div css={overlayStyles}>
         <Overlay />
       </div>
-      <div role="dialog" css={modalStyles}>
+      <div role="dialog" css={css([modalStyles, overrideModalStyles])}>
         <Card padding={padding}>
           <div css={scrollStyles}>{children}</div>
         </Card>

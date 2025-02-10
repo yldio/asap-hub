@@ -23,6 +23,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../../../config';
 import {
   getInstitutions,
+  getOpenScienceMembers,
   getUser,
   getUsers,
   getUsersAndExternalAuthors,
@@ -263,6 +264,78 @@ describe('getUsersAndExternalAuthors', () => {
     });
     expect(search).toHaveBeenCalledWith(
       ['user', 'external-author'],
+      'Hello World!',
+      expect.objectContaining({}),
+    );
+  });
+});
+
+describe('getOpenScienceMembers', () => {
+  const search: jest.MockedFunction<Search> = jest.fn();
+
+  const algoliaSearchClient = {
+    search,
+  } as unknown as AlgoliaSearchClient<'crn'>;
+
+  const defaultOptions: GetListOptions = {
+    searchQuery: '',
+    pageSize: null,
+    currentPage: null,
+    filters: new Set(),
+  };
+
+  beforeEach(() => {
+    const userResponse = createUserResponse();
+    const algoliaUsersResponse = createAlgoliaResponse<'crn', 'user'>([
+      {
+        ...userResponse,
+        objectID: userResponse.id,
+        __meta: { type: 'user' },
+        _tags: userResponse.tags?.map(({ name }) => name) || [],
+      },
+    ]);
+
+    search.mockReset();
+    search.mockResolvedValue({
+      ...algoliaUsersResponse,
+      hits: algoliaUsersResponse.hits,
+    });
+  });
+
+  it('will filter users by openScienceTeamMember:true by default', async () => {
+    await getOpenScienceMembers(algoliaSearchClient, {
+      ...defaultOptions,
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({
+        filters: 'openScienceTeamMember:true',
+      }),
+    );
+  });
+
+  it('does not specify page and limits hits per page by default', async () => {
+    await getOpenScienceMembers(algoliaSearchClient, {
+      ...defaultOptions,
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({
+        hitsPerPage: undefined,
+        page: undefined,
+      }),
+    );
+  });
+
+  it('will pass the search query to algolia', async () => {
+    await getOpenScienceMembers(algoliaSearchClient, {
+      ...defaultOptions,
+      searchQuery: 'Hello World!',
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['user'],
       'Hello World!',
       expect.objectContaining({}),
     );

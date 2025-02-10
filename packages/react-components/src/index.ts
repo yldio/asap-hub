@@ -61,6 +61,7 @@ export * from './date';
 export { MessageLayout, WelcomeMessage } from './messages';
 export {
   Accordion,
+  AssignedUsersAvatarList,
   AssociationList,
   BackLink,
   BannerCard,

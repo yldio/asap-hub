@@ -22,6 +22,14 @@ export const getManuscriptDataObject = (
   title: 'Manuscript Title',
   teamId: 'team-1',
   count: 1,
+  assignedUsers: [
+    {
+      id: 'user-id-1',
+      firstName: 'John',
+      lastName: 'Doe',
+      avatarUrl: 'https://example.com/avatar.png',
+    },
+  ],
   versions: [
     {
       id: 'version-1',
@@ -63,6 +71,23 @@ export const getManuscriptFileResponse = (): ManuscriptFileResponse => ({
   filename: 'manuscript.pdf',
   url: 'https://example.com/manuscript.pdf',
   id: 'file-id',
+});
+
+export const getManuscriptGraphqlAssignedUsersCollection = (): NonNullable<
+  NonNullable<
+    NonNullable<FetchManuscriptByIdQuery>['manuscripts']
+  >['assignedUsersCollection']
+> => ({
+  items: [
+    {
+      sys: { id: 'user-id-1' },
+      firstName: 'John',
+      lastName: 'Doe',
+      avatar: {
+        url: 'https://example.com/avatar.png',
+      },
+    },
+  ],
 });
 
 export const getContentfulGraphqlManuscript = (
@@ -237,6 +262,16 @@ export const getManuscriptsListResponse =
       {
         id: 'ID01-grant-001-org-P-1',
         manuscriptId: 'manuscript-id-1',
+        title: 'Manuscript 1',
+        teams: 'Team A',
+        assignedUsers: [
+          {
+            id: 'user-id-1',
+            firstName: 'John',
+            lastName: 'Doe',
+            avatarUrl: 'https://example.com/avatar.png',
+          },
+        ],
         requestingApcCoverage: 'Yes',
         lastUpdated: '2020-09-23T20:45:22.000Z',
         status: 'Compliant',
@@ -248,6 +283,16 @@ export const getManuscriptsListResponse =
       {
         id: 'ID01-grant-002-org-P-1',
         manuscriptId: 'manuscript-id-2',
+        title: 'Manuscript 2',
+        teams: 'Team A',
+        assignedUsers: [
+          {
+            id: 'user-id-1',
+            firstName: 'John',
+            lastName: 'Doe',
+            avatarUrl: 'https://example.com/avatar.png',
+          },
+        ],
         requestingApcCoverage: 'Yes',
         lastUpdated: '2020-09-23T20:45:22.000Z',
         status: 'Compliant',
@@ -348,6 +393,15 @@ export const getManuscriptUpdateStatusDataObject = (
 ): ManuscriptUpdateDataObject => {
   return {
     status: 'Manuscript Resubmitted',
+    ...overrides,
+  };
+};
+
+export const getManuscriptUpdateAssignedUsersDataObject = (
+  overrides?: Partial<ManuscriptUpdateDataObject>,
+): ManuscriptUpdateDataObject => {
+  return {
+    assignedUsers: ['user-id-1', 'user-id-2'],
     ...overrides,
   };
 };

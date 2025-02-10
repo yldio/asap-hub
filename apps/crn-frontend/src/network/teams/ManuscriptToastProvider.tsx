@@ -2,6 +2,7 @@ import { Toast } from '@asap-hub/react-components';
 import React, { createContext, useState } from 'react';
 
 type FormType =
+  | 'assigned-users'
   | 'manuscript'
   | 'compliance-report'
   | 'quick-check'
@@ -36,6 +37,7 @@ export const ManuscriptToastProvider = ({
   });
 
   const formTypeMapping = {
+    'assigned-users': 'User(s) assigned to a manuscript successfully.',
     manuscript: 'Manuscript submitted successfully.',
     'compliance-report': 'Compliance Report submitted successfully.',
     'quick-check': 'Replied to quick check successfully.',

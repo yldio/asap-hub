@@ -4732,6 +4732,7 @@ export enum ManuscriptVersionsTeamsCollectionOrder {
 export type Manuscripts = Entry &
   _Node & {
     _id: Scalars['ID'];
+    assignedUsersCollection?: Maybe<ManuscriptsAssignedUsersCollection>;
     contentfulMetadata: ContentfulMetadata;
     count?: Maybe<Scalars['Int']>;
     eligibilityReasons?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -4745,6 +4746,18 @@ export type Manuscripts = Entry &
     title?: Maybe<Scalars['String']>;
     versionsCollection?: Maybe<ManuscriptsVersionsCollection>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsAssignedUsersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ManuscriptsAssignedUsersCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<UsersFilter>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsCountArgs = {
@@ -4808,6 +4821,88 @@ export type ManuscriptsVersionsCollectionArgs = {
   where?: InputMaybe<ManuscriptVersionsFilter>;
 };
 
+export type ManuscriptsAssignedUsersCollection = {
+  items: Array<Maybe<Users>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum ManuscriptsAssignedUsersCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
 export type ManuscriptsCollection = {
   items: Array<Maybe<Manuscripts>>;
   limit: Scalars['Int'];
@@ -4818,6 +4913,8 @@ export type ManuscriptsCollection = {
 export type ManuscriptsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
+  assignedUsers?: InputMaybe<CfUsersNestedFilter>;
+  assignedUsersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   count?: InputMaybe<Scalars['Int']>;
   count_exists?: InputMaybe<Scalars['Boolean']>;
@@ -17843,6 +17940,16 @@ export type ManuscriptsContentFragment = Pick<
   'title' | 'status' | 'count'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
+  assignedUsersCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<Users, 'firstName' | 'lastName'> & {
+          sys: Pick<Sys, 'id'>;
+          avatar?: Maybe<Pick<Asset, 'url'>>;
+        }
+      >
+    >;
+  }>;
   versionsCollection?: Maybe<{
     items: Array<
       Maybe<
@@ -18040,6 +18147,16 @@ export type FetchManuscriptByIdQuery = {
         >;
       }>;
       sys: Pick<Sys, 'id' | 'publishedVersion'>;
+      assignedUsersCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<Users, 'firstName' | 'lastName'> & {
+              sys: Pick<Sys, 'id'>;
+              avatar?: Maybe<Pick<Asset, 'url'>>;
+            }
+          >
+        >;
+      }>;
       versionsCollection?: Maybe<{
         items: Array<
           Maybe<
@@ -18243,6 +18360,16 @@ export type FetchManuscriptsQuery = {
         Maybe<
           Pick<Manuscripts, 'title' | 'status' | 'count'> & {
             sys: Pick<Sys, 'id'>;
+            assignedUsersCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<Users, 'firstName' | 'lastName'> & {
+                    sys: Pick<Sys, 'id'>;
+                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                  }
+                >
+              >;
+            }>;
             teamsCollection?: Maybe<{
               items: Array<
                 Maybe<
@@ -20062,6 +20189,16 @@ export type FetchTeamByIdQuery = {
                   >;
                 }>;
                 sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                assignedUsersCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<Users, 'firstName' | 'lastName'> & {
+                        sys: Pick<Sys, 'id'>;
+                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                      }
+                    >
+                  >;
+                }>;
                 versionsCollection?: Maybe<{
                   items: Array<
                     Maybe<
@@ -24315,6 +24452,65 @@ export const ManuscriptsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'assignedUsersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '30' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'firstName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avatar' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'versionsCollection' },
@@ -34418,12 +34614,74 @@ export const FetchManuscriptsDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'count' } },
                       {
                         kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'assignedUsersCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '30' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'teamsCollection' },
                         arguments: [
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '1' },
+                            value: { kind: 'IntValue', value: '15' },
                           },
                         ],
                         selectionSet: {

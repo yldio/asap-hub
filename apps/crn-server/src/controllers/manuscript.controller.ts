@@ -186,7 +186,10 @@ export default class ManuscriptController {
       throw new NotFoundError(undefined, `manuscript with id ${id} not found`);
     }
 
-    if ('status' in manuscriptData && manuscriptData.status) {
+    if (
+      ('status' in manuscriptData && manuscriptData.status) ||
+      ('assignedUsers' in manuscriptData && manuscriptData.assignedUsers)
+    ) {
       await this.manuscriptDataProvider.update(id, manuscriptData, userId);
       return this.fetchById(id);
     }

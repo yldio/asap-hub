@@ -738,15 +738,6 @@ const getReminderMessageCollectionItem = (): NonNullable<
               id: 'message-id',
             },
           },
-          repliesCollection: {
-            items: [
-              {
-                sys: {
-                  id: 'reply-id-1',
-                },
-              },
-            ],
-          },
           linkedFrom: {
             complianceReportsCollection:
               getDiscussionComplianceReportCollection(),

@@ -147,6 +147,7 @@ export type MultiSelectProps<
   readonly id?: string;
   readonly enabled?: boolean;
   readonly placeholder?: string;
+  readonly onFocus?: () => void;
   readonly onChange?: M extends true
     ? MultiSelectOnChange<T>
     : SingleSelectOnChange<T>;
@@ -191,6 +192,7 @@ const MultiSelect = <
   placeholder = '',
   maxMenuHeight,
   noOptionsMessage,
+  onFocus = noop,
   onChange = noop,
   sortable = true,
   creatable = false,
@@ -278,7 +280,13 @@ const MultiSelect = <
     ref: (ref: RefType<T>) => {
       inputRef = ref;
     },
-    onFocus: checkValidation,
+    onFocus: () => {
+      if (onFocus) {
+        onFocus();
+      }
+
+      checkValidation();
+    },
     onBlur: checkValidation,
     onChange: (
       options: M extends true ? OptionsType<T> : T | null,
@@ -333,6 +341,7 @@ const MultiSelect = <
           loadOptions={loadOptions}
           cacheOptions
           defaultOptions
+          maxMenuHeight={maxMenuHeight}
         />
       )}
       <input

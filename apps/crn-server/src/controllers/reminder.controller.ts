@@ -154,7 +154,8 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            description: `**${reminder.data.createdBy}** started a discussion on a compliance report: ${reminder.data.title} for **${reminder.data.manuscriptTeams}**`,
+            description: `**${reminder.data.createdBy}** started a discussion on a compliance report for **${reminder.data.manuscriptTeams}**`,
+            subtext: reminder.data.title,
             date: reminder.data.publishedAt,
           };
         }
@@ -192,7 +193,8 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            description: `**${reminder.data.createdBy}** replied to a discussion on a compliance report: ${reminder.data.title} for **${reminder.data.manuscriptTeams}**`,
+            description: `**${reminder.data.createdBy}** replied to a discussion on a compliance report for **${reminder.data.manuscriptTeams}**`,
+            subtext: reminder.data.title,
             date: reminder.data.publishedAt,
           };
         }
@@ -218,7 +220,8 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            description: `**${reminder.data.createdBy}** replied to a quick check on the manuscript: ${reminder.data.title} for **${reminder.data.manuscriptTeams}**`,
+            description: `**${reminder.data.createdBy}** replied to a quick check on a manuscript for **${reminder.data.manuscriptTeams}**`,
+            subtext: reminder.data.title,
             date: reminder.data.publishedAt,
           };
         }

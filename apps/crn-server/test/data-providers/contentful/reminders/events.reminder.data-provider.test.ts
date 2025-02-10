@@ -59,16 +59,15 @@ describe('Reminders data provider', () => {
     const fetchRemindersOptions: FetchRemindersOptions = { userId, timezone };
 
     const setContentfulMock = (
-      startDate: string,
-      endDate: string,
       systemTime: string,
       users:
         | FetchRemindersQuery['users']
         | null = getContentfulReminderUsersContent(),
+      startDate: string = '2023-01-01T08:00:00Z',
+      endDate: string = '2023-01-01T10:00:00Z',
       eventResponse?: NonNullable<
         FetchRemindersQuery['eventsCollection']
       >['items'][number],
-      // users: FetchRemindersQuery['users'] | null,
     ) => {
       jest.setSystemTime(DateTime.fromISO(systemTime).toJSDate());
 
@@ -100,7 +99,7 @@ describe('Reminders data provider', () => {
         const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-01T08:01:00Z';
 
-        setContentfulMock(startDate, endDate, systemTime, null);
+        setContentfulMock(systemTime, null, startDate, endDate);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -117,11 +116,9 @@ describe('Reminders data provider', () => {
       });
 
       test('Should not fetch the reminder when it has already ended', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-01T10:01:00Z';
 
-        setContentfulMock(startDate, endDate, systemTime, null);
+        setContentfulMock(systemTime, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -129,11 +126,9 @@ describe('Reminders data provider', () => {
       });
 
       test('Should not fetch the reminder when it is a future event', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2022-12-31T08:01:00Z';
 
-        setContentfulMock(startDate, endDate, systemTime, null);
+        setContentfulMock(systemTime, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -144,10 +139,9 @@ describe('Reminders data provider', () => {
     describe('Event Happening Today Reminder', () => {
       test('Should fetch the reminder if it has not started yet', async () => {
         const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-01T07:59:00Z';
 
-        setContentfulMock(startDate, endDate, systemTime, null);
+        setContentfulMock(systemTime, null, startDate);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -163,11 +157,9 @@ describe('Reminders data provider', () => {
       });
 
       test('Should not fetch the reminder if it has already started', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-01T08:01:00Z';
 
-        setContentfulMock(startDate, endDate, systemTime, null);
+        setContentfulMock(systemTime, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -177,11 +169,9 @@ describe('Reminders data provider', () => {
       });
 
       test('Should not fetch the reminder if it is a future event', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2022-12-31T08:01:00Z';
 
-        setContentfulMock(startDate, endDate, systemTime, null);
+        setContentfulMock(systemTime, null);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -195,10 +185,10 @@ describe('Reminders data provider', () => {
       it.each`
         asapRole     | teamRole
         ${`Grantee`} | ${`Lead PI (Core Leadership)`}
-        ${`Grantee`} | ${'Co-PI (Core Leadership)'}
-        ${`Grantee`} | ${'Collaborating PI'}
         ${`Grantee`} | ${`Key Personnel`}
+        ${`Grantee`} | ${'Co-PI (Core Leadership)'}
         ${`Grantee`} | ${`Scientific Advisory Board`}
+        ${`Grantee`} | ${'Collaborating PI'}
       `(
         `Should fetch the reminder when user has asap role $asapRole and team role $teamRole`,
         async ({ asapRole, teamRole }) => {
@@ -210,7 +200,7 @@ describe('Reminders data provider', () => {
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = teamRole;
 
-          setContentfulMock(startDate, endDate, systemTime, users);
+          setContentfulMock(systemTime, users, startDate, endDate);
 
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             getTeamProjectManagerResponse(),
@@ -245,15 +235,13 @@ describe('Reminders data provider', () => {
       `(
         `Should not fetch the reminder when user has asap role $asapRole and team role $teamRole`,
         async ({ asapRole, teamRole }) => {
-          const startDate = '2023-01-01T08:00:00Z';
-          const endDate = '2023-01-01T10:00:00Z';
           const systemTime = '2023-01-02T09:00:00Z';
 
           const users = getContentfulReminderUsersContent();
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = teamRole;
 
-          setContentfulMock(startDate, endDate, systemTime, users);
+          setContentfulMock(systemTime, users);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -266,14 +254,12 @@ describe('Reminders data provider', () => {
       );
 
       it('Should not fetch the reminder when user is not one of the speakers', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-02T09:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.linkedFrom!.eventSpeakersCollection!.items = [];
 
-        setContentfulMock(startDate, endDate, systemTime, users);
+        setContentfulMock(systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -286,8 +272,9 @@ describe('Reminders data provider', () => {
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-04T09:58:00Z';
+        const users = getContentfulReminderUsersContent();
 
-        setContentfulMock(startDate, endDate, systemTime);
+        setContentfulMock(systemTime, users, startDate, endDate);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -305,11 +292,12 @@ describe('Reminders data provider', () => {
       });
 
       it('Should not fetch the reminder when it passed more than 72 hours of the end of the event', async () => {
+        const users = getContentfulReminderUsersContent();
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-04T10:01:00Z';
 
-        setContentfulMock(startDate, endDate, systemTime);
+        setContentfulMock(systemTime, users, startDate, endDate);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -319,11 +307,9 @@ describe('Reminders data provider', () => {
       });
 
       it('Should not fetch the reminder when the event is a future event', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2022-12-31T10:00:00Z';
 
-        setContentfulMock(startDate, endDate, systemTime);
+        setContentfulMock(systemTime);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -333,11 +319,9 @@ describe('Reminders data provider', () => {
       });
 
       it('Should not fetch the reminder if it has not ended', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-01T09:00:00Z';
 
-        setContentfulMock(startDate, endDate, systemTime);
+        setContentfulMock(systemTime);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -349,14 +333,13 @@ describe('Reminders data provider', () => {
 
     describe('Publish Material Reminder', () => {
       it('Should fetch the reminder if the user asap role is Staff', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-02T09:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        setContentfulMock(startDate, endDate, systemTime, users);
+        setContentfulMock(systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -379,18 +362,11 @@ describe('Reminders data provider', () => {
       `(
         `Should not fetch the reminder if user has asap role $asapRole`,
         async ({ asapRole }) => {
-          const startDate = '2023-01-01T08:00:00Z';
-          const endDate = '2023-01-01T10:00:00Z';
-          const systemTime = '2023-01-02T09:00:00Z';
-
-          const eventMockResponse = getContentfulReminderEventsCollectionItem();
-          eventMockResponse!.startDate = startDate;
-          eventMockResponse!.endDate = endDate;
-
           const users = getContentfulReminderUsersContent();
           users!.role = asapRole;
 
-          setContentfulMock(startDate, endDate, systemTime, users);
+          const systemTime = '2023-01-02T09:00:00Z';
+          setContentfulMock(systemTime, users);
 
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             getTeamProjectManagerResponse(),
@@ -407,14 +383,12 @@ describe('Reminders data provider', () => {
       );
 
       it('Should fetch the reminder up until 72 hours of the end of the event', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-04T09:58:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
-
-        setContentfulMock(startDate, endDate, systemTime, users);
+        setContentfulMock(systemTime, users);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -431,14 +405,12 @@ describe('Reminders data provider', () => {
       });
 
       it('Should not fetch the reminder when it passed more than 72 hours of the end of the event', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-04T10:01:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        setContentfulMock(startDate, endDate, systemTime, users);
+        setContentfulMock(systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -448,14 +420,11 @@ describe('Reminders data provider', () => {
       });
 
       it('Should not fetch the reminder when the event is a future event', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
-        const systemTime = '2022-12-31T10:00:00Z';
-
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        setContentfulMock(startDate, endDate, systemTime, users);
+        const systemTime = '2022-12-31T10:00:00Z';
+        setContentfulMock(systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -465,14 +434,12 @@ describe('Reminders data provider', () => {
       });
 
       it('Should not fetch the reminder if it has not ended', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-01T09:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Staff';
 
-        setContentfulMock(startDate, endDate, systemTime, users);
+        setContentfulMock(systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -491,22 +458,18 @@ describe('Reminders data provider', () => {
       `(
         `Should fetch the reminder when user asap role is $asapRole and user is Project Manager of one of the speakers team`,
         async ({ asapRole }) => {
-          const startDate = '2023-01-01T08:00:00Z';
-          const endDate = '2023-01-01T10:00:00Z';
-          const systemTime = '2023-01-02T09:00:00Z';
-
           const users = getContentfulReminderUsersContent();
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-          setContentfulMock(startDate, endDate, systemTime, users);
+          setContentfulMock('2023-01-02T09:00:00Z', users);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
           );
 
           const uploadPresentationReminder = getUploadPresentationReminder();
-          uploadPresentationReminder.data.endDate = endDate;
+          uploadPresentationReminder.data.endDate = '2023-01-01T10:00:00Z';
 
           expect(result.items.map((r) => r.type)).toContain(
             'Upload Presentation',
@@ -527,17 +490,16 @@ describe('Reminders data provider', () => {
         ${`Grantee`} | ${`Key Personnel`}
         ${`Grantee`} | ${`Scientific Advisory Board`}
         ${`Grantee`} | ${`ASAP Staff`}
-        ${`Staff`}   | ${`Lead PI (Core Leadership)`}
-        ${`Staff`}   | ${'Co-PI (Core Leadership)'}
         ${`Staff`}   | ${'Collaborating PI'}
         ${`Staff`}   | ${`Key Personnel`}
-        ${`Staff`}   | ${`Scientific Advisory Board`}
+        ${`Staff`}   | ${`Lead PI (Core Leadership)`}
         ${`Staff`}   | ${`Project Manager`}
+        ${`Staff`}   | ${'Co-PI (Core Leadership)'}
+        ${`Staff`}   | ${`Scientific Advisory Board`}
         ${`Staff`}   | ${`ASAP Staff`}
       `(
         `Should not fetch the reminder when user has asap role $asapRole and team role $teamRole`,
         async ({ asapRole, teamRole }) => {
-          const startDate = '2023-01-01T08:00:00Z';
           const endDate = '2023-01-01T10:00:00Z';
           const systemTime = '2023-01-02T09:00:00Z';
 
@@ -545,7 +507,7 @@ describe('Reminders data provider', () => {
           users!.role = asapRole;
           users!.teamsCollection!.items[0]!.role = teamRole;
 
-          setContentfulMock(startDate, endDate, systemTime, users);
+          setContentfulMock(systemTime, users);
 
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             getTeamProjectManagerResponse(),
@@ -565,16 +527,15 @@ describe('Reminders data provider', () => {
       );
 
       it('Should not fetch the reminder when user is a PM but not one of a team which is associated to a speaker', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-02T09:00:00Z';
+        const endDate = '2023-01-01T10:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
         users!.teamsCollection!.items[0]!.team!.sys.id = 'team-2';
 
-        setContentfulMock(startDate, endDate, systemTime, users);
+        setContentfulMock(systemTime, users);
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getTeamProjectManagerResponse(),
@@ -591,8 +552,8 @@ describe('Reminders data provider', () => {
       });
 
       it('Should not fetch the reminder when the event does not have speakers', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
+        const startDate = '2023-01-01T08:00:00Z';
         const systemTime = '2023-01-02T09:00:00Z';
 
         const eventMockResponse = getContentfulReminderEventsCollectionItem();
@@ -605,10 +566,10 @@ describe('Reminders data provider', () => {
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
         setContentfulMock(
-          startDate,
-          endDate,
           systemTime,
           users,
+          startDate,
+          endDate,
           eventMockResponse,
         );
 
@@ -641,10 +602,10 @@ describe('Reminders data provider', () => {
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
         setContentfulMock(
-          startDate,
-          endDate,
           systemTime,
           users,
+          startDate,
+          endDate,
           eventMockResponse,
         );
 
@@ -663,11 +624,9 @@ describe('Reminders data provider', () => {
       });
 
       it('Should fetch the reminder up until 72 hours of the end of the event', async () => {
+        const eventMockResponse = getContentfulReminderEventsCollectionItem();
         const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
-        const systemTime = '2023-01-04T09:58:00Z';
-
-        const eventMockResponse = getContentfulReminderEventsCollectionItem();
         eventMockResponse!.startDate = startDate;
         eventMockResponse!.endDate = endDate;
 
@@ -675,7 +634,7 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        setContentfulMock(startDate, endDate, systemTime, users);
+        setContentfulMock('2023-01-04T09:58:00Z', users, startDate, endDate);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -693,7 +652,6 @@ describe('Reminders data provider', () => {
       });
 
       it('Should not fetch the reminder when it passed more than 72 hours of the end of the event', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
         const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-04T10:01:00Z';
 
@@ -701,7 +659,7 @@ describe('Reminders data provider', () => {
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        setContentfulMock(startDate, endDate, systemTime, users);
+        setContentfulMock(systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
@@ -714,20 +672,18 @@ describe('Reminders data provider', () => {
       });
 
       it('Should not fetch the reminder when the event is a future event', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2022-12-31T10:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        setContentfulMock(startDate, endDate, systemTime, users);
+        setContentfulMock(systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
         const uploadPresentationReminder = getUploadPresentationReminder();
-        uploadPresentationReminder.data.endDate = endDate;
+        uploadPresentationReminder.data.endDate = '2023-01-01T10:00:00Z';
 
         expect(result.items.map((r) => r.type)).not.toContain(
           'Upload Presentation',
@@ -735,18 +691,17 @@ describe('Reminders data provider', () => {
       });
 
       it('Should not fetch the reminder if it has not ended', async () => {
-        const startDate = '2023-01-01T08:00:00Z';
-        const endDate = '2023-01-01T10:00:00Z';
         const systemTime = '2023-01-01T09:00:00Z';
 
         const users = getContentfulReminderUsersContent();
         users!.role = 'Grantee';
         users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-        setContentfulMock(startDate, endDate, systemTime, users);
+        setContentfulMock(systemTime, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
+        const endDate = '2023-01-01T10:00:00Z';
         const uploadPresentationReminder = getUploadPresentationReminder();
         uploadPresentationReminder.data.endDate = endDate;
 
@@ -787,7 +742,7 @@ describe('Reminders data provider', () => {
           const eventMockResponse = getContentfulReminderEventsCollectionItem();
           eventMockResponse![materialUpdatedAtName] = materialUpdatedAt;
 
-          setContentfulMock('', '', systemTime, null, eventMockResponse);
+          setContentfulMock(systemTime, null, '', '', eventMockResponse);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -814,7 +769,7 @@ describe('Reminders data provider', () => {
           const eventMockResponse = getContentfulReminderEventsCollectionItem();
           eventMockResponse![materialUpdatedAtName] = materialUpdatedAt;
 
-          setContentfulMock('', '', systemTime, null, eventMockResponse);
+          setContentfulMock(systemTime, null, '', '', eventMockResponse);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -832,7 +787,7 @@ describe('Reminders data provider', () => {
           const eventMockResponse = getContentfulReminderEventsCollectionItem();
           eventMockResponse![materialUpdatedAtName] = materialUpdatedAt;
 
-          setContentfulMock('', '', systemTime, null, eventMockResponse);
+          setContentfulMock(systemTime, null, '', '', eventMockResponse);
 
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
@@ -855,7 +810,7 @@ describe('Reminders data provider', () => {
         eventMockResponse!.presentationUpdatedAt = materialUpdatedAt;
         eventMockResponse!.notesUpdatedAt = materialUpdatedAt;
 
-        setContentfulMock('', '', systemTime, null, eventMockResponse);
+        setContentfulMock(systemTime, null, '', '', eventMockResponse);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 

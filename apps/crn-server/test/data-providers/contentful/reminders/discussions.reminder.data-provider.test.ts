@@ -56,6 +56,11 @@ describe('Reminders data provider', () => {
 
   describe('Fetch discussion reminders', () => {
     const timezone = 'Europe/London';
+    const team = {
+      sys: {
+        id: 'team-1',
+      },
+    };
 
     describe('Missing Data', () => {
       const userId = 'first-author-user';
@@ -161,11 +166,7 @@ describe('Reminders data provider', () => {
             items: [
               {
                 role,
-                team: {
-                  sys: {
-                    id: 'team-1',
-                  },
-                },
+                team,
               },
             ],
           };
@@ -202,11 +203,7 @@ describe('Reminders data provider', () => {
             items: [
               {
                 role,
-                team: {
-                  sys: {
-                    id: 'team-1',
-                  },
-                },
+                team,
               },
             ],
           };
@@ -324,11 +321,7 @@ describe('Reminders data provider', () => {
             items: [
               {
                 role,
-                team: {
-                  sys: {
-                    id: 'team-1',
-                  },
-                },
+                team,
               },
             ],
           };
@@ -362,11 +355,7 @@ describe('Reminders data provider', () => {
             items: [
               {
                 role,
-                team: {
-                  sys: {
-                    id: 'team-1',
-                  },
-                },
+                team,
               },
             ],
           };
@@ -445,31 +434,26 @@ describe('Reminders data provider', () => {
         `(
           'the team member with role $role should see discussion replied to reminders',
           async ({ userId, role }) => {
-            const fetchRemindersOptions: FetchRemindersOptions = {
-              userId,
-              timezone,
-            };
-
             const user = getContentfulReminderUsersContent();
             user!.teamsCollection! = {
               items: [
                 {
                   role,
-                  team: {
-                    sys: {
-                      id: 'team-1',
-                    },
-                  },
+                  team,
                 },
               ],
             };
-
             const expectedReminder = mockContentfulGraphqlResponse(
               'compliance-report',
               'grantee',
               null,
               user,
             );
+
+            const fetchRemindersOptions: FetchRemindersOptions = {
+              userId,
+              timezone,
+            };
 
             const result = await remindersDataProvider.fetch(
               fetchRemindersOptions,
@@ -483,10 +467,10 @@ describe('Reminders data provider', () => {
         test.each`
           userId                              | role
           ${'co-pi-user'}                     | ${'Co-PI (Core Leadership)'}
-          ${'key-personnel-user'}             | ${'Key Personnel'}
-          ${'scientific-advisory-board-user'} | ${'Scientific Advisory Board'}
           ${'asap-staff-user'}                | ${'ASAP Staff'}
+          ${'key-personnel-user'}             | ${'Key Personnel'}
           ${'trainee-user'}                   | ${'Trainee'}
+          ${'scientific-advisory-board-user'} | ${'Scientific Advisory Board'}
         `(
           'the team member with role $role should not see discussion replied to reminders',
           async ({ userId, role }) => {
@@ -500,11 +484,7 @@ describe('Reminders data provider', () => {
               items: [
                 {
                   role,
-                  team: {
-                    sys: {
-                      id: 'team-1',
-                    },
-                  },
+                  team,
                 },
               ],
             };
@@ -609,11 +589,7 @@ describe('Reminders data provider', () => {
               items: [
                 {
                   role,
-                  team: {
-                    sys: {
-                      id: 'team-1',
-                    },
-                  },
+                  team,
                 },
               ],
             };
@@ -631,44 +607,6 @@ describe('Reminders data provider', () => {
             expect(result.items).toEqual(
               expect.arrayContaining([expectedReminder]),
             );
-          },
-        );
-
-        test.each`
-          userId                              | role
-          ${'co-pi-user'}                     | ${'Co-PI (Core Leadership)'}
-          ${'key-personnel-user'}             | ${'Key Personnel'}
-          ${'scientific-advisory-board-user'} | ${'Scientific Advisory Board'}
-          ${'asap-staff-user'}                | ${'ASAP Staff'}
-          ${'trainee-user'}                   | ${'Trainee'}
-        `(
-          'the team member with role $role should not see discussion replied to reminders',
-          async ({ userId, role }) => {
-            const fetchRemindersOptions: FetchRemindersOptions = {
-              userId,
-              timezone,
-            };
-
-            const user = getContentfulReminderUsersContent();
-            user!.teamsCollection = {
-              items: [
-                {
-                  role,
-                  team: {
-                    sys: {
-                      id: 'team-1',
-                    },
-                  },
-                },
-              ],
-            };
-
-            mockContentfulGraphqlResponse('quick-check', 'grantee', null, user);
-
-            const result = await remindersDataProvider.fetch(
-              fetchRemindersOptions,
-            );
-            expect(result.items).toEqual([]);
           },
         );
 
@@ -692,6 +630,40 @@ describe('Reminders data provider', () => {
             expect.arrayContaining([expectedReminder]),
           );
         });
+
+        test.each`
+          userId                              | role
+          ${'co-pi-user'}                     | ${'Co-PI (Core Leadership)'}
+          ${'asap-staff-user'}                | ${'ASAP Staff'}
+          ${'trainee-user'}                   | ${'Trainee'}
+          ${'key-personnel-user'}             | ${'Key Personnel'}
+          ${'scientific-advisory-board-user'} | ${'Scientific Advisory Board'}
+        `(
+          'the team member with role $role should not see discussion replied to reminders',
+          async ({ userId, role }) => {
+            const fetchRemindersOptions: FetchRemindersOptions = {
+              userId,
+              timezone,
+            };
+
+            const user = getContentfulReminderUsersContent();
+            user!.teamsCollection = {
+              items: [
+                {
+                  role,
+                  team,
+                },
+              ],
+            };
+
+            mockContentfulGraphqlResponse('quick-check', 'grantee', null, user);
+
+            const result = await remindersDataProvider.fetch(
+              fetchRemindersOptions,
+            );
+            expect(result.items).toEqual([]);
+          },
+        );
 
         test('returns reminder if discussion was replied to by open science member', async () => {
           const messageItem =

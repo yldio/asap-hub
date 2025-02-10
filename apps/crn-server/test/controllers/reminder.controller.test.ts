@@ -367,7 +367,7 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
         expect(items[0]).toMatchObject({
           description:
-            '**Tom Hardy** started a discussion on a compliance report: Contextual AI models for single-cell protein biology for **Team Alessi**',
+            '**Tom Hardy** started a discussion on a compliance report for **Team Alessi**',
         });
       });
 
@@ -435,7 +435,7 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
         expect(items[0]).toMatchObject({
           description:
-            '**Tom Hardy** replied to a quick check on the manuscript: Contextual AI models for single-cell protein biology for **Team Alessi**',
+            '**Tom Hardy** replied to a quick check on a manuscript for **Team Alessi**',
         });
       });
 
@@ -451,7 +451,7 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
         expect(items[0]).toMatchObject({
           description:
-            '**Tom Hardy** replied to a discussion on a compliance report: Contextual AI models for single-cell protein biology for **Team Alessi**',
+            '**Tom Hardy** replied to a discussion on a compliance report for **Team Alessi**',
         });
       });
 

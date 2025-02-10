@@ -981,7 +981,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   <LabeledFileField
                     title="Upload the main manuscript file"
                     subtitle="(required)"
-                    description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures."
+                    description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures. The file size must not exceed 100 MB."
                     placeholder="Upload Manuscript File"
                     onRemove={() => {
                       resetField('versions.0.manuscriptFile');

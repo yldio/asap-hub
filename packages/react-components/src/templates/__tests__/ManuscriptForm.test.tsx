@@ -1181,7 +1181,7 @@ describe('manuscript file', () => {
     expect(screen.getByText(mockError)).toBeInTheDocument();
   });
 
-  it('should show error when file size is greater than 25MB', async () => {
+  it('should show error when file size is greater than 100MB', async () => {
     const handleFileUpload: jest.MockedFunction<
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
@@ -1210,7 +1210,7 @@ describe('manuscript file', () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText('File is larger than 25MB.')).toBeInTheDocument();
+    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
   });
 
   it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
@@ -1294,7 +1294,7 @@ describe('key resource table', () => {
     expect(screen.getByText(mockError)).toBeInTheDocument();
   });
 
-  it('should show error when file size is greater than 25MB', async () => {
+  it('should show error when file size is greater than 100MB', async () => {
     const handleFileUpload: jest.MockedFunction<
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
@@ -1323,7 +1323,7 @@ describe('key resource table', () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText('File is larger than 25MB.')).toBeInTheDocument();
+    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
   });
 
   it('should upload and remove file when user clicks on upload key resource table and remove button', async () => {
@@ -1483,7 +1483,7 @@ describe('additional files', () => {
     ).toBeInTheDocument();
   });
 
-  it('should show error when file size is greater than 25MB', async () => {
+  it('should show error when file size is greater than 100MB', async () => {
     const handleFileUpload: jest.MockedFunction<
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
@@ -1512,7 +1512,7 @@ describe('additional files', () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText('File is larger than 25MB.')).toBeInTheDocument();
+    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
   });
 
   it('should remove one of the additional files without removing the others', async () => {

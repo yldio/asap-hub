@@ -420,13 +420,6 @@ export const FETCH_DISCUSSION_REMINDERS = gql`
                   id
                 }
               }
-              repliesCollection(limit: 100) {
-                items {
-                  sys {
-                    id
-                  }
-                }
-              }
               linkedFrom {
                 complianceReportsCollection(limit: 1) {
                   items {

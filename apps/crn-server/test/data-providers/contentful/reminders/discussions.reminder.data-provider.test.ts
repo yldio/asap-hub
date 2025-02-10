@@ -132,7 +132,7 @@ describe('Reminders data provider', () => {
       };
 
       test('the person who started the discussion should not see discussion started reminders', async () => {
-        const userId = 'user-who-created-manuscript';
+        const userId = 'user-who-started-discussion';
         const fetchRemindersOptions: FetchRemindersOptions = {
           userId,
           timezone,
@@ -350,7 +350,7 @@ describe('Reminders data provider', () => {
         ${'asap-staff-user'}                | ${'ASAP Staff'}
         ${'trainee-user'}                   | ${'Trainee'}
       `(
-        'the team member with role $role should not see manuscript created reminders',
+        'the team member with role $role should not see the discussion ended reminders',
         async ({ userId, role }) => {
           const fetchRemindersOptions: FetchRemindersOptions = {
             userId,

@@ -42,7 +42,7 @@ import { defaultPageLayoutPaddingStyle } from '../layout';
 import { ManuscriptFormModals } from '../organisms';
 import { mobileScreen, rem } from '../pixels';
 
-const MAX_FILE_SIZE = 25_000_000;
+const MAX_FILE_SIZE = 100_000_000;
 const KRT_GUIDANCE_FILE =
   'https://docs.google.com/document/d/1FCnqC3VpvLFPLcshLSkmGPtRIFfh70MR7KkrXi7IMX4/edit?usp=sharing';
 const mainStyles = css({
@@ -990,7 +990,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       if (file.size > MAX_FILE_SIZE) {
                         setError('versions.0.manuscriptFile', {
                           type: 'custom',
-                          message: 'File is larger than 25MB.',
+                          message: 'File is larger than 100MB.',
                         });
                       } else {
                         setIsUploadingManuscriptFile(true);
@@ -1055,7 +1055,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         if (file.size > MAX_FILE_SIZE) {
                           setError('versions.0.keyResourceTable', {
                             type: 'custom',
-                            message: 'File is larger than 25MB.',
+                            message: 'File is larger than 100MB.',
                           });
                         } else {
                           setIsUploadingKeyResourceTable(true);
@@ -1125,7 +1125,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         if (file.size > MAX_FILE_SIZE) {
                           setError('versions.0.additionalFiles', {
                             type: 'custom',
-                            message: 'File is larger than 25MB.',
+                            message: 'File is larger than 100MB.',
                           });
                         } else {
                           setIsUploadingAdditionalFiles(true);

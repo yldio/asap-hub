@@ -14,6 +14,11 @@ import Reminders, {
   formattedMaterialByEventType,
 } from '../../src/controllers/reminder.controller';
 import {
+  getDiscussionEndedReminder,
+  getDiscussionRepliedToByGranteeReminder,
+  getDiscussionRepliedToByOpenScienceMemberReminder,
+  getDiscussionStartedByGranteeReminder,
+  getDiscussionStartedByOpenScienceMemberReminder,
   getEventHappeningNowReminder,
   getEventHappeningTodayReminder,
   getManuscriptCreatedReminder,
@@ -331,6 +336,122 @@ describe('Reminder Controller', () => {
           description:
             '**Jannet Doe** on **Team ASAP** changed a compliance status from Waiting for Report to Review Compliance Report:',
           subtext: 'Contextual AI models for single-cell protein biology',
+        });
+      });
+
+      test('Should return the correct description and subtext for the discussion started by open science member reminder', async () => {
+        const reminderDataObject =
+          getDiscussionStartedByOpenScienceMemberReminder();
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+        expect(items[0]).toMatchObject({
+          description:
+            '**Tom Hardy** on **Team Alessi** started a discussion on a compliance report:',
+          subtext: 'Contextual AI models for single-cell protein biology',
+        });
+      });
+
+      test('Should return the correct description for the discussion started by grantee reminder', async () => {
+        const reminderDataObject = getDiscussionStartedByGranteeReminder();
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+        expect(items[0]).toMatchObject({
+          description:
+            '**Tom Hardy** started a discussion on a compliance report for **Team Alessi**',
+        });
+      });
+
+      test('Should return the correct description and subtext for the discussion ended reminder', async () => {
+        const reminderDataObject = getDiscussionEndedReminder();
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+        expect(items[0]).toMatchObject({
+          description:
+            '**Tom Hardy** on **Team Alessi** ended a discussion on a compliance report:',
+          subtext: 'Contextual AI models for single-cell protein biology',
+        });
+      });
+
+      test('Should return the correct description and subtext for the quick check discussion replied to by open science member reminder', async () => {
+        const reminderDataObject =
+          getDiscussionRepliedToByOpenScienceMemberReminder('quick-check');
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+        expect(items[0]).toMatchObject({
+          description:
+            '**Tom Hardy** on **Team Alessi** replied to a quick check on the manuscript:',
+          subtext: 'Contextual AI models for single-cell protein biology',
+        });
+      });
+
+      test('Should return the correct description and subtext for the compliance report discussion replied to by open science member reminder', async () => {
+        const reminderDataObject =
+          getDiscussionRepliedToByOpenScienceMemberReminder(
+            'compliance-report',
+          );
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+        expect(items[0]).toMatchObject({
+          description:
+            '**Tom Hardy** on **Team Alessi** replied to a discussion on a compliance report:',
+          subtext: 'Contextual AI models for single-cell protein biology',
+        });
+      });
+
+      test('Should return the correct description for the quick check discussion replied to by grantee reminder', async () => {
+        const reminderDataObject =
+          getDiscussionRepliedToByGranteeReminder('quick-check');
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+        expect(items[0]).toMatchObject({
+          description:
+            '**Tom Hardy** replied to a quick check on a manuscript for **Team Alessi**',
+        });
+      });
+
+      test('Should return the correct description for the compliance report discussion replied to by grantee reminder', async () => {
+        const reminderDataObject =
+          getDiscussionRepliedToByGranteeReminder('compliance-report');
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+        expect(items[0]).toMatchObject({
+          description:
+            '**Tom Hardy** replied to a discussion on a compliance report for **Team Alessi**',
         });
       });
 

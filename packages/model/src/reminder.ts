@@ -11,7 +11,8 @@ type ReminderEntity =
   | 'Research Output'
   | 'Event'
   | 'Research Output Version'
-  | 'Manuscript';
+  | 'Manuscript'
+  | 'Discussion';
 
 type ResearchOutputReminderType =
   | 'Published'
@@ -34,10 +35,21 @@ type ManuscriptReminderType =
   | 'Manuscript Resubmitted'
   | 'Manuscript Status Updated';
 
+type DiscussionReminderType =
+  | 'Discussion Created by Grantee'
+  | 'Discussion Created by Open Science Member'
+  | 'Quick Check Discussion Replied To by Grantee'
+  | 'Quick Check Discussion Replied To by Open Science Member'
+  | 'Compliance Report Discussion Replied To by Grantee'
+  | 'Compliance Report Discussion Replied To by Open Science Member'
+  | 'Discussion Ended';
+
 type ReminderType =
   | ResearchOutputReminderType
   | EventReminderType
-  | ManuscriptReminderType;
+  | ManuscriptReminderType
+  | DiscussionReminderType;
+
 interface Reminder {
   id: string;
   entity: ReminderEntity;
@@ -169,6 +181,64 @@ export interface ManuscriptStatusUpdatedReminder extends Reminder {
   };
 }
 
+export interface DiscussionCreatedReminder extends Reminder {
+  entity: 'Discussion';
+  type:
+    | 'Discussion Created by Open Science Member'
+    | 'Discussion Created by Grantee';
+  data: {
+    title: ManuscriptDataObject['title'];
+    manuscriptTeams: string;
+    userTeams: string;
+    createdBy: string;
+    publishedAt: string;
+  };
+}
+
+export interface QuickCheckDiscussionRepliedToReminder extends Reminder {
+  entity: 'Discussion';
+  type:
+    | 'Quick Check Discussion Replied To by Open Science Member'
+    | 'Quick Check Discussion Replied To by Grantee';
+  data: {
+    title: ManuscriptDataObject['title'];
+    manuscriptTeams: string;
+    userTeams: string;
+    createdBy: string;
+    publishedAt: string;
+  };
+}
+
+export interface ComplianceReportDiscussionRepliedToReminder extends Reminder {
+  entity: 'Discussion';
+  type:
+    | 'Compliance Report Discussion Replied To by Open Science Member'
+    | 'Compliance Report Discussion Replied To by Grantee';
+  data: {
+    title: ManuscriptDataObject['title'];
+    manuscriptTeams: string;
+    userTeams: string;
+    createdBy: string;
+    publishedAt: string;
+  };
+}
+
+export interface DiscussionEndedReminder extends Reminder {
+  entity: 'Discussion';
+  type: 'Discussion Ended';
+  data: {
+    title: ManuscriptDataObject['title'];
+    manuscriptTeams: string;
+    userTeams: string;
+    endedBy: string;
+    endedAt: string;
+  };
+}
+
+export type DiscussionRepliedToReminder =
+  | QuickCheckDiscussionRepliedToReminder
+  | ComplianceReportDiscussionRepliedToReminder;
+
 export interface EventHappeningTodayReminder extends EventReminder {
   entity: 'Event';
   type: 'Happening Today';
@@ -256,6 +326,11 @@ export type ManuscriptReminder =
   | ManuscriptResubmittedReminder
   | ManuscriptStatusUpdatedReminder;
 
+export type DiscussionReminder =
+  | DiscussionCreatedReminder
+  | DiscussionRepliedToReminder
+  | DiscussionEndedReminder;
+
 export type ReminderDataObject =
   | ResearchOutputPublishedReminder
   | ResearchOutputDraftReminder
@@ -270,7 +345,8 @@ export type ReminderDataObject =
   | SharePresentationReminder
   | PublishMaterialReminder
   | UploadPresentationReminder
-  | ManuscriptReminder;
+  | ManuscriptReminder
+  | DiscussionReminder;
 
 export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 

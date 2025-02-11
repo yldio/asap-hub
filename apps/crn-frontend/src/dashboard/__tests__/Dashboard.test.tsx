@@ -185,6 +185,44 @@ it('does not render manuscripts reminders if DISPLAY_MANUSCRIPTS is disabled', a
   expect(screen.queryByText(/Manuscript Reminder/i)).toBeNull();
 });
 
+it('renders discussion reminders if DISPLAY_MANUSCRIPTS is enabled', async () => {
+  enable('DISPLAY_MANUSCRIPTS');
+
+  const reminderResponse = createListReminderResponse(1);
+
+  mockGetReminders.mockResolvedValue({
+    ...reminderResponse,
+    items: reminderResponse.items.map((reminder) => ({
+      ...reminder,
+      description: 'Discussion Reminder',
+      entity: 'Discussion',
+    })),
+  });
+
+  await renderDashboard({});
+  expect(mockGetReminders).toHaveBeenCalled();
+  expect(await screen.findByText(/Discussion Reminder/i)).toBeVisible();
+});
+
+it('does not render discussion reminders if DISPLAY_MANUSCRIPTS is disabled', async () => {
+  disable('DISPLAY_MANUSCRIPTS');
+
+  const reminderResponse = createListReminderResponse(1);
+
+  mockGetReminders.mockResolvedValue({
+    ...reminderResponse,
+    items: reminderResponse.items.map((reminder) => ({
+      ...reminder,
+      description: 'Discussion Reminder',
+      entity: 'Discussion',
+    })),
+  });
+
+  await renderDashboard({});
+  expect(mockGetReminders).toHaveBeenCalled();
+  expect(screen.queryByText(/Discussion Reminder/i)).toBeNull();
+});
+
 describe('dismissing the getting started option', () => {
   it('toggles the not show getting started', async () => {
     mockGetUser.mockResolvedValue({

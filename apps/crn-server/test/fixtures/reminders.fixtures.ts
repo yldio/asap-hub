@@ -1,4 +1,7 @@
 import {
+  DiscussionCreatedReminder,
+  DiscussionEndedReminder,
+  DiscussionRepliedToReminder,
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   EventNotesReminder,
@@ -21,6 +24,7 @@ import {
   VideoEventReminder,
 } from '@asap-hub/model';
 import {
+  FetchDiscussionRemindersQuery,
   FetchRemindersQuery,
   FetchTeamProjectManagerQuery,
 } from '@asap-hub/contentful';
@@ -29,6 +33,7 @@ import {
   getContentfulResearchOutputGraphqlResponse,
   getResearchOutputDataObject,
 } from './research-output.fixtures';
+import { MessageItem } from '../../src/data-providers/contentful/reminder.data-provider';
 
 export const getResearchOutputVersionPublishedReminder =
   (): ResearchOutputVersionPublishedReminder => {
@@ -639,6 +644,132 @@ export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
   },
 });
 
+const getDiscussionCreatedByUser = (id: string) => ({
+  sys: {
+    id,
+  },
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  role: 'Grantee',
+  openScienceTeamMember: false,
+  teamsCollection: {
+    items: [
+      {
+        team: {
+          sys: {
+            id: 'team-1',
+          },
+          displayName: 'Alessi',
+          inactiveSince: null,
+        },
+      },
+    ],
+  },
+});
+
+const getDiscussionComplianceReportCollection = () => ({
+  items: [
+    {
+      manuscriptVersion: {
+        teamsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'team-1',
+              },
+              displayName: 'Alessi',
+            },
+          ],
+        },
+        linkedFrom: {
+          manuscriptsCollection: {
+            items: [
+              {
+                title: 'Contextual AI models for single-cell protein biology',
+              },
+            ],
+          },
+        },
+        ...getManuscriptVersion({
+          count: 1,
+          firstAuthorIds: ['first-author-user'],
+          additionalAuthorIds: [],
+          correspondingAuthorIds: [],
+          createdById: 'user-who-created-manuscript',
+          createdByFirstName: 'Jane',
+          createdByLastName: 'Doe',
+        }),
+      },
+    },
+  ],
+});
+
+export const getContentfulReminderDiscussionCollectionItem = (): NonNullable<
+  FetchDiscussionRemindersQuery['discussionsCollection']
+>['items'][number] => ({
+  sys: {
+    id: 'discussion-id-1',
+    firstPublishedAt: '2025-01-07T16:21:33.824Z',
+  },
+  endedAt: null,
+  endedBy: null,
+  message: {
+    createdBy: getDiscussionCreatedByUser('user-who-started-discussion'),
+  },
+  linkedFrom: {
+    complianceReportsCollection: getDiscussionComplianceReportCollection(),
+  },
+});
+
+const getReminderMessageCollectionItem = (): NonNullable<
+  FetchDiscussionRemindersQuery['messagesCollection']
+>['items'][number] => ({
+  sys: {
+    id: 'reply-id-1',
+    firstPublishedAt: '2025-01-07T16:21:33.824Z',
+  },
+  createdBy: getDiscussionCreatedByUser('user-who-replied-discussion'),
+  linkedFrom: {
+    discussionsCollection: {
+      items: [
+        {
+          message: {
+            sys: {
+              id: 'message-id',
+            },
+          },
+          linkedFrom: {
+            complianceReportsCollection:
+              getDiscussionComplianceReportCollection(),
+            manuscriptVersionsCollection: {
+              items: [
+                getDiscussionComplianceReportCollection().items[0]!
+                  .manuscriptVersion,
+              ],
+            },
+          },
+        },
+      ],
+    },
+  },
+});
+
+export const getContentfulReminderMessageCollectionItem = (
+  type: 'quick-check' | 'compliance-report',
+): NonNullable<
+  FetchDiscussionRemindersQuery['messagesCollection']
+>['items'][number] => {
+  const messageItem = { ...getReminderMessageCollectionItem() } as MessageItem;
+  if (type === 'quick-check') {
+    messageItem.linkedFrom!.discussionsCollection!.items[0]!.linkedFrom!.complianceReportsCollection =
+      null;
+  } else {
+    messageItem.linkedFrom!.discussionsCollection!.items[0]!.linkedFrom!.manuscriptVersionsCollection =
+      null;
+  }
+  return messageItem;
+};
+
 export const getManuscriptCreatedReminder = (): ManuscriptCreatedReminder => ({
   id: 'manuscript-created-manuscript-id-1',
   entity: 'Manuscript',
@@ -681,3 +812,80 @@ export const getManuscriptStatusUpdatedReminder =
       previousStatus: 'Waiting for Report',
     },
   });
+
+export const getDiscussionStartedByGranteeReminder =
+  (): DiscussionCreatedReminder => ({
+    id: 'discussion-created-discussion-id-1',
+    entity: 'Discussion',
+    type: 'Discussion Created by Grantee',
+    data: {
+      createdBy: 'Tom Hardy',
+      publishedAt: '2025-01-07T16:21:33.824Z',
+      manuscriptTeams: 'Team Alessi',
+      userTeams: 'Team Alessi',
+      title: 'Contextual AI models for single-cell protein biology',
+    },
+  });
+
+export const getDiscussionStartedByOpenScienceMemberReminder =
+  (): DiscussionCreatedReminder => ({
+    id: 'discussion-created-discussion-id-1',
+    entity: 'Discussion',
+    type: 'Discussion Created by Open Science Member',
+    data: {
+      createdBy: 'Tom Hardy',
+      publishedAt: '2025-01-07T16:21:33.824Z',
+      manuscriptTeams: 'Team Alessi',
+      userTeams: 'Team Alessi',
+      title: 'Contextual AI models for single-cell protein biology',
+    },
+  });
+
+export const getDiscussionEndedReminder = (): DiscussionEndedReminder => ({
+  id: 'discussion-ended-discussion-id-1',
+  entity: 'Discussion',
+  type: 'Discussion Ended',
+  data: {
+    endedBy: 'Tom Hardy',
+    endedAt: '2025-01-08T16:21:33.824Z',
+    manuscriptTeams: 'Team Alessi',
+    userTeams: 'Team Alessi',
+    title: 'Contextual AI models for single-cell protein biology',
+  },
+});
+
+export const getDiscussionRepliedToByGranteeReminder = (
+  discussionType: 'quick-check' | 'compliance-report',
+): DiscussionRepliedToReminder => ({
+  id: 'discussion-replied-reply-id-1',
+  entity: 'Discussion',
+  type:
+    discussionType === 'quick-check'
+      ? 'Quick Check Discussion Replied To by Grantee'
+      : 'Compliance Report Discussion Replied To by Grantee',
+  data: {
+    createdBy: 'Tom Hardy',
+    publishedAt: '2025-01-07T16:21:33.824Z',
+    manuscriptTeams: 'Team Alessi',
+    userTeams: 'Team Alessi',
+    title: 'Contextual AI models for single-cell protein biology',
+  },
+});
+
+export const getDiscussionRepliedToByOpenScienceMemberReminder = (
+  discussionType: 'quick-check' | 'compliance-report',
+): DiscussionRepliedToReminder => ({
+  id: 'discussion-replied-reply-id-1',
+  entity: 'Discussion',
+  type:
+    discussionType === 'quick-check'
+      ? 'Quick Check Discussion Replied To by Open Science Member'
+      : 'Compliance Report Discussion Replied To by Open Science Member',
+  data: {
+    createdBy: 'Tom Hardy',
+    publishedAt: '2025-01-07T16:21:33.824Z',
+    manuscriptTeams: 'Team Alessi',
+    userTeams: 'Team Alessi',
+    title: 'Contextual AI models for single-cell protein biology',
+  },
+});

@@ -33,7 +33,9 @@ const Dashboard: FC<Record<string, never>> = () => {
   const { items } = useReminderState();
   const reminders = isEnabled('DISPLAY_MANUSCRIPTS')
     ? items
-    : items.filter((item) => item.entity !== 'Manuscript');
+    : items.filter(
+        (item) => !['Manuscript', 'Discussion'].includes(item.entity),
+      );
 
   const roles = useCurrentUserTeamRolesCRN();
   usePrefetchTeams({

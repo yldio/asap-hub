@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, useEffect } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 
 import { Card, Overlay } from '../atoms';
@@ -17,6 +17,7 @@ const overlayContainerStyles = css({
   top: 0,
   left: 0,
   zIndex: 1,
+  overflow: 'hidden',
 });
 
 const modalContainerStyles = css({
@@ -29,6 +30,7 @@ const modalContainerStyles = css({
 });
 const overlayStyles = css({
   gridArea: '1 / 1',
+  overflow: 'hidden',
 });
 const modalStyles = css({
   gridArea: '1 / 1',
@@ -62,19 +64,30 @@ const Modal: React.FC<ModalProps> = ({
   padding,
   children,
   overrideModalStyles,
-}) => (
-  <div css={overlayContainerStyles}>
-    <div css={modalContainerStyles}>
-      <div css={overlayStyles}>
-        <Overlay />
-      </div>
-      <div role="dialog" css={css([modalStyles, overrideModalStyles])}>
-        <Card padding={padding}>
-          <div css={scrollStyles}>{children}</div>
-        </Card>
+}) => {
+  useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = originalStyle;
+    };
+  }, []);
+
+  return (
+    <div css={overlayContainerStyles}>
+      <div css={modalContainerStyles}>
+        <div css={overlayStyles}>
+          <Overlay />
+        </div>
+        <div role="dialog" css={css([modalStyles, overrideModalStyles])}>
+          <Card padding={padding}>
+            <div css={scrollStyles}>{children}</div>
+          </Card>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Modal;

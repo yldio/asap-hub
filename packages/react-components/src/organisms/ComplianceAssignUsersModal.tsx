@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AuthorSelect, OptionsType } from '..';
 import { Button, Headline3, Paragraph, Subtitle } from '../atoms';
@@ -118,6 +118,7 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
   getAssignedUsersSuggestions,
   assignedUsers,
 }) => {
+  const bottomDivRef = useRef<HTMLDivElement>(null);
   const { setValue, watch, handleSubmit } = useForm<AssignedUsersFormData>({
     mode: 'onBlur',
     defaultValues: {
@@ -164,6 +165,14 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
             <InformationRow title="APC Coverage" value={apcCoverage} />
 
             <AuthorSelect
+              maxMenuHeight={170}
+              onFocus={() => {
+                if (bottomDivRef.current) {
+                  bottomDivRef.current.scrollIntoView({
+                    behavior: 'smooth',
+                  });
+                }
+              }}
               isMulti
               creatable={false}
               title="Assign User"
@@ -181,7 +190,7 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
             />
           </div>
 
-          <div css={buttonContainerStyles}>
+          <div css={buttonContainerStyles} ref={bottomDivRef}>
             <div css={dismissButtonStyles}>
               <Button enabled={!isSubmitting} onClick={onDismiss}>
                 Cancel

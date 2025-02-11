@@ -5,6 +5,8 @@ import { ComplianceDashboard } from '..';
 
 describe('ComplianceDashboard', () => {
   const props: ComponentProps<typeof ComplianceDashboard> = {
+    completedStatus: 'show',
+    requestedAPCCoverage: 'all',
     isComplianceReviewer: true,
     getAssignedUsersSuggestions: jest.fn(),
     data: [

@@ -1,42 +1,58 @@
-import { useState } from 'react';
-import { SearchField, ComplianceDashboard } from '@asap-hub/react-components';
+import { SearchFrame } from '@asap-hub/frontend-utils';
 import {
+  CompletedStatusOption,
   complianceInitialSortingDirection,
   ComplianceSortingDirection,
+  DEFAULT_COMPLETED_STATUS,
+  DEFAULT_REQUESTED_APC_COVERAGE,
   ManuscriptPutRequest,
+  RequestedAPCCoverageOption,
   SortCompliance,
 } from '@asap-hub/model';
-
-import { SearchFrame } from '@asap-hub/frontend-utils';
+import { ComplianceDashboard, SearchField } from '@asap-hub/react-components';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+import { useAssignedUsersSuggestions } from '../../shared-state/shared-research';
 import {
   useIsComplianceReviewer,
   useManuscripts,
   usePutManuscript,
 } from './state';
-
-import { usePagination, usePaginationParams, useSearch } from '../../hooks';
-import { useAssignedUsersSuggestions } from '../../shared-state/shared-research';
 import { useManuscriptToast } from './useManuscriptToast';
 
 const Compliance: React.FC = () => {
+  const { searchQuery, debouncedSearchQuery, setSearchQuery } = useSearch();
   const { currentPage, pageSize } = usePaginationParams();
-  const { filters, searchQuery, setSearchQuery } = useSearch();
+  const currentUrlParams = new URLSearchParams(useLocation().search);
+  const completedStatus =
+    (currentUrlParams.get('completedStatus') as CompletedStatusOption) ??
+    DEFAULT_COMPLETED_STATUS;
+  const requestedAPCCoverage =
+    (currentUrlParams.get(
+      'requestedAPCCoverage',
+    ) as RequestedAPCCoverageOption) ?? DEFAULT_REQUESTED_APC_COVERAGE;
+
+  const { setFormType } = useManuscriptToast();
   const result = useManuscripts({
-    searchQuery,
+    searchQuery: debouncedSearchQuery,
     currentPage,
     pageSize,
-    filters,
+    requestedAPCCoverage,
+    completedStatus,
   });
+
   const { numberOfPages, renderPageHref } = usePagination(
     result.total,
     pageSize,
   );
+
   const isComplianceReviewer = useIsComplianceReviewer();
   const getAssignedUsersSuggestions = useAssignedUsersSuggestions();
   const [sort, setSort] = useState<SortCompliance>('team_asc');
-
   const [sortingDirection, setSortingDirection] =
     useState<ComplianceSortingDirection>(complianceInitialSortingDirection);
+
   const updateManuscript = usePutManuscript();
 
   const handleUpdateManuscript = async (
@@ -49,8 +65,6 @@ const Compliance: React.FC = () => {
     return manuscriptResponse;
   };
 
-  const { setFormType } = useManuscriptToast();
-
   return (
     <article>
       <SearchField
@@ -60,6 +74,10 @@ const Compliance: React.FC = () => {
       />
       <SearchFrame title="">
         <ComplianceDashboard
+          completedStatus={completedStatus as CompletedStatusOption}
+          requestedAPCCoverage={
+            requestedAPCCoverage as RequestedAPCCoverageOption
+          }
           isComplianceReviewer={isComplianceReviewer}
           data={result.items}
           setSort={setSort}

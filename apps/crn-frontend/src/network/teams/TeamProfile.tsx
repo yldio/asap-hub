@@ -87,6 +87,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     loadAbout()
       .then(team?.tools || isStaff ? loadWorkspace : undefined)
       .then(canDisplayCompliancePage ? loadCompliance : undefined)
+      .then(loadCompliance)
       .then(loadOutputs)
       .then(loadTeamOutput)
       .then(loadEventsList);
@@ -128,7 +129,8 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     searchQuery: '',
     currentPage: 0,
     pageSize,
-    filters: new Set(),
+    requestedAPCCoverage: 'all',
+    completedStatus: 'show',
   });
 
   if (team) {
@@ -251,7 +253,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                     <Workspace team={{ ...team, tools: team.tools ?? [] }} />
                   )}
                   {...(canDisplayCompliancePage
-                    ? { Compliance: () => <Compliance /> }
+                    ? { Compliance: <Compliance /> }
                     : {})}
                 />
               </TeamProfilePage>

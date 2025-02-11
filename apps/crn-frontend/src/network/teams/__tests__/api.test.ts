@@ -8,18 +8,20 @@ import {
   createListLabsResponse,
   createListTeamResponse,
   createManuscriptResponse,
+  createMessage,
   createPartialManuscriptResponse,
   createTeamResponse,
-  createMessage,
 } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
+  CompletedStatusOption,
   ComplianceReportPostRequest,
   DiscussionDataObject,
   DiscussionResponse,
   ManuscriptFileResponse,
   ManuscriptPostRequest,
   ManuscriptPutRequest,
+  RequestedAPCCoverageOption,
   ResearchOutputPostRequest,
   TeamResponse,
 } from '@asap-hub/model';
@@ -28,23 +30,23 @@ import nock from 'nock';
 import { API_BASE_URL } from '../../../config';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import {
+  createComplianceDiscussion,
   createComplianceReport,
   createManuscript,
   createResearchOutput,
+  endDiscussion,
   getDiscussion,
   getLabs,
   getManuscript,
+  getManuscripts,
   getTeam,
   getTeams,
   patchTeam,
-  updateManuscript,
+  resubmitManuscript,
   updateDiscussion,
+  updateManuscript,
   updateTeamResearchOutput,
   uploadManuscriptFile,
-  resubmitManuscript,
-  createComplianceDiscussion,
-  endDiscussion,
-  getManuscripts,
 } from '../api';
 
 jest.mock('../../../config');
@@ -373,37 +375,34 @@ describe('Manuscript', () => {
 
   describe('getManuscripts', () => {
     type Search = () => Promise<ClientSearchResponse<'crn', 'manuscript'>>;
-
     const search: jest.MockedFunction<Search> = jest.fn();
-
     const algoliaSearchClient = {
       search,
     } as unknown as AlgoliaSearchClient<'crn'>;
 
-    const defaultOptions: GetListOptions = {
-      searchQuery: '',
-      pageSize: null,
-      currentPage: null,
-      filters: new Set(),
-    };
-
     const algoliaManuscriptResponse = createPartialManuscriptResponse();
 
-    search.mockResolvedValue(
-      createAlgoliaResponse<'crn', 'manuscript'>([
-        {
-          ...algoliaManuscriptResponse,
-          objectID: algoliaManuscriptResponse.id,
-          __meta: { type: 'manuscript' },
-        },
-      ]),
-    );
+    beforeEach(() => {
+      search.mockReset();
+      search.mockResolvedValue(
+        createAlgoliaResponse<'crn', 'manuscript'>([
+          {
+            ...algoliaManuscriptResponse,
+            objectID: algoliaManuscriptResponse.id,
+            __meta: { type: 'manuscript' },
+          },
+        ]),
+      );
+    });
 
     it('should return successfully fetched manuscripts', async () => {
-      const workingGroups = await getManuscripts(
-        algoliaSearchClient,
-        defaultOptions,
-      );
+      const workingGroups = await getManuscripts(algoliaSearchClient, {
+        searchQuery: '',
+        pageSize: null,
+        currentPage: null,
+        requestedAPCCoverage: 'all',
+        completedStatus: 'show',
+      });
       expect(workingGroups).toEqual(
         expect.objectContaining({
           items: [
@@ -414,6 +413,110 @@ describe('Manuscript', () => {
             },
           ],
           total: 1,
+        }),
+      );
+    });
+
+    describe('filter combinations', () => {
+      it.each([
+        {
+          requestedAPCCoverage: 'all',
+          completedStatus: 'show',
+          expectedFilter: '',
+        },
+        {
+          requestedAPCCoverage: 'submitted',
+          completedStatus: 'show',
+          expectedFilter: 'requestingApcCoverage:"Already Submitted"',
+        },
+        {
+          requestedAPCCoverage: 'yes',
+          completedStatus: 'show',
+          expectedFilter: 'requestingApcCoverage:Yes',
+        },
+        {
+          requestedAPCCoverage: 'no',
+          completedStatus: 'show',
+          expectedFilter: 'requestingApcCoverage:No',
+        },
+        {
+          requestedAPCCoverage: 'all',
+          completedStatus: 'hide',
+          expectedFilter:
+            '(NOT status:Compliant AND NOT status:"Closed (other)")',
+        },
+        {
+          requestedAPCCoverage: 'submitted',
+          completedStatus: 'hide',
+          expectedFilter:
+            'requestingApcCoverage:"Already Submitted" AND (NOT status:Compliant AND NOT status:"Closed (other)")',
+        },
+        {
+          requestedAPCCoverage: 'yes',
+          completedStatus: 'hide',
+          expectedFilter:
+            'requestingApcCoverage:Yes AND (NOT status:Compliant AND NOT status:"Closed (other)")',
+        },
+        {
+          requestedAPCCoverage: 'no',
+          completedStatus: 'hide',
+          expectedFilter:
+            'requestingApcCoverage:No AND (NOT status:Compliant AND NOT status:"Closed (other)")',
+        },
+      ])(
+        'should generate correct filter for requestedAPCCoverage=$requestedAPCCoverage and completedStatus=$completedStatus',
+        async ({ requestedAPCCoverage, completedStatus, expectedFilter }) => {
+          await getManuscripts(algoliaSearchClient, {
+            searchQuery: '',
+            pageSize: null,
+            currentPage: null,
+            requestedAPCCoverage:
+              requestedAPCCoverage as RequestedAPCCoverageOption,
+            completedStatus: completedStatus as CompletedStatusOption,
+          });
+
+          expect(search).toHaveBeenCalledWith(
+            ['manuscript'],
+            '',
+            expect.objectContaining({
+              filters: expectedFilter,
+            }),
+          );
+        },
+      );
+    });
+
+    it('should pass through search query', async () => {
+      await getManuscripts(algoliaSearchClient, {
+        searchQuery: 'test query',
+        pageSize: null,
+        currentPage: null,
+        requestedAPCCoverage: 'all',
+        completedStatus: 'show',
+      });
+
+      expect(search).toHaveBeenCalledWith(
+        ['manuscript'],
+        'test query',
+        expect.any(Object),
+      );
+    });
+
+    it('should pass through pagination parameters', async () => {
+      await getManuscripts(algoliaSearchClient, {
+        searchQuery: '',
+        pageSize: 25,
+        currentPage: 2,
+        requestedAPCCoverage: 'all',
+        completedStatus: 'show',
+      });
+
+      expect(search).toHaveBeenCalledWith(
+        ['manuscript'],
+        '',
+        expect.objectContaining({
+          hitsPerPage: 25,
+          page: 2,
         }),
       );
     });

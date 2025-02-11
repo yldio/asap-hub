@@ -85,3 +85,19 @@ it('can render title and inner items', () => {
   fireEvent.click(getByRole('button'));
   getAllByRole('listitem').forEach((e) => expect(e).toBeVisible());
 });
+
+it('closes menu when clicking an option', () => {
+  const { getByRole, getByText, queryByText } = render(
+    <DropdownButton buttonChildren={() => <>test</>}>
+      {{ item: 'Option 1', href: '#' }}
+      {{ item: 'Option 2', href: '#' }}
+    </DropdownButton>,
+  );
+
+  fireEvent.click(getByRole('button'));
+  expect(getByText('Option 1')).toBeVisible();
+
+  fireEvent.click(getByText('Option 1'));
+
+  expect(queryByText('Option 1')).not.toBeVisible();
+});

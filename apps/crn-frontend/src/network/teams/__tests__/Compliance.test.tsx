@@ -57,7 +57,8 @@ const renderCompliancePage = async () => {
           manuscriptsState({
             currentPage: 0,
             pageSize: 10,
-            filters: new Set(),
+            requestedAPCCoverage: 'all',
+            completedStatus: 'show',
             searchQuery: '',
           }),
         );

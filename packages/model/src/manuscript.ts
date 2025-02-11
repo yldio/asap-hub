@@ -905,3 +905,23 @@ export const manuscriptNotificationMapping: ManuscriptNotifications = {
     grantee: 'Closed (Other)',
   },
 };
+
+export const completedStatusOptions = {
+  show: 'Show',
+  hide: 'Hide',
+};
+
+export type CompletedStatusOption = keyof typeof completedStatusOptions;
+export const DEFAULT_COMPLETED_STATUS: CompletedStatusOption = 'hide';
+
+export const requestedAPCCoverageOptions = {
+  all: 'Show all',
+  yes: 'Yes',
+  no: 'No',
+  submitted: 'Submitted',
+};
+
+export type RequestedAPCCoverageOption =
+  keyof typeof requestedAPCCoverageOptions;
+
+export const DEFAULT_REQUESTED_APC_COVERAGE: RequestedAPCCoverageOption = 'all';

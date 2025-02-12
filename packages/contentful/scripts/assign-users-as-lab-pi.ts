@@ -81,13 +81,26 @@ async function rollbackLabsMembership() {
 
       // Update the labs field
       userEntry.fields.labs = userEntry.fields.labs || {};
-      userEntry.fields.labs['en-US'] = labsMemberships.map((lab) => ({
-        sys: {
-          type: 'Link',
-          linkType: 'Entry',
-          id: lab.sys.id,
-        },
-      })) as Link<'Entry'>[];
+      const labLinks = await Promise.all(
+        labsMemberships.map(async (lab) => {
+          const referencedLabMembership = await environment.getEntry(
+            lab.sys.id,
+          );
+          return referencedLabMembership.fields.lab
+            ? {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: referencedLabMembership.fields.lab['en-US'].sys.id,
+                },
+              }
+            : undefined;
+        }),
+      );
+
+      userEntry.fields.labs['en-US'] = labLinks.filter(
+        Boolean,
+      ) as Link<'Entry'>[];
 
       // Save and publish the updated entry (if it was previously published)
       try {

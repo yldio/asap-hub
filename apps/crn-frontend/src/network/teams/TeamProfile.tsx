@@ -87,7 +87,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     loadAbout()
       .then(team?.tools || isStaff ? loadWorkspace : undefined)
       .then(canDisplayCompliancePage ? loadCompliance : undefined)
-      .then(loadCompliance)
       .then(loadOutputs)
       .then(loadTeamOutput)
       .then(loadEventsList);

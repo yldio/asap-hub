@@ -125,53 +125,34 @@ async function assignLabPI() {
     const space = await client.getSpace(spaceId);
     const environment: Environment = await space.getEnvironment(environmentId);
 
-    const users = await environment.getEntries({
-      content_type: 'users',
-      'fields.oldLabs.sys.id[exists]': true, // Ensures oldLabs is not empty
-      include: 2, // Attempts to resolve references
-    } as QueryOptions);
-
-    const labMembershipIds = users.items.flatMap(
-      (user) =>
-        user.fields.oldLabs?.['en-US'].map(
-          (membershipRef: any) => membershipRef.sys.id,
-        ) || [],
-    );
-
-    const labMemberships = await environment.getEntries({
+    const leadPILabMemberships = await environment.getEntries({
       content_type: 'labMembership',
-      'sys.id[in]': labMembershipIds.join(','),
-      include: 2, // Fetches referenced `lab` entries too
+      'fields.role': 'Lead PI',
     } as QueryOptions);
 
-    const membershipsById = Object.fromEntries(
-      labMemberships.items.map((m) => [m.sys.id, m]),
+    const labIdsByLabMembershipId = leadPILabMemberships.items.reduce(
+      (acc, labMembership) => {
+        acc[labMembership.sys.id] = labMembership.fields.lab['en-US'].sys.id;
+        return acc;
+      },
+      {} as Record<string, string>,
     );
 
-    for (const membership of labMemberships.items) {
-      if (!membership.fields.lab || !membership.fields.lab['en-US']) {
-        console.log('No lab found, skipping');
+    for (const [labMembershipId, labId] of Object.entries(
+      labIdsByLabMembershipId,
+    )) {
+      const users = await environment.getEntries({
+        content_type: 'users',
+        'fields.oldLabs.sys.id[in]': labMembershipId,
+        include: 2,
+        select: 'fields.email,sys',
+      } as QueryOptions);
+
+      if (users.items.length === 0) {
+        console.log(`No users found for lab ${labId}`);
         continue;
       }
-
-      const labId = membership.fields.lab['en-US'].sys.id;
-
-      const leadPiUsers = users.items.filter((user) => {
-        return user.fields.oldLabs?.['en-US'].some((membershipRef: any) => {
-          const membership = membershipsById[membershipRef.sys.id]; // Get full LabMembership entry
-          return (
-            membership &&
-            membership.fields.lab?.['en-US'].sys.id === labId &&
-            membership.fields.role?.['en-US'] === 'Lead PI'
-          );
-        });
-      });
-      if (!leadPiUsers.length) {
-        console.log('No lead PI users found, skipping');
-        continue;
-      }
-
-      const leadPi = leadPiUsers.length ? leadPiUsers[0] : users.items[0];
+      const userEntry = users.items[0];
 
       // Fetch the existing lab entry to update it
       const labEntry: Entry = await environment.getEntry(labId);
@@ -182,7 +163,7 @@ async function assignLabPI() {
         sys: {
           type: 'Link',
           linkType: 'Entry',
-          id: leadPi.sys.id,
+          id: userEntry.sys.id,
         },
       } as Link<'Entry'>;
 
@@ -195,7 +176,6 @@ async function assignLabPI() {
         console.log(`Error updating lab ${labEntry.sys.id}: ${err}`);
       }
     }
-
     console.log('Lab PI assignment completed successfully!');
   } catch (error) {
     console.error('Error assigning Lab PI:', error);

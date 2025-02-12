@@ -153,24 +153,10 @@ export const getContentfulGraphqlTeamMembers = () => ({
   onboarded: true,
 });
 
-type LabsCollectionType = NonNullable<
-  NonNullable<
-    NonNullable<
-      NonNullable<
-        NonNullable<
-          NonNullable<
-            NonNullable<FetchTeamByIdQuery['teams']>['linkedFrom']
-          >['teamMembershipCollection']
-        >['items'][number]
-      >['linkedFrom']
-    >['usersCollection']
-  >['items'][number]
->['labsCollection'];
-
-export const getContentfulGraphqlTeamMemberLabs = (): LabsCollectionType => ({
+export const getContentfulGraphqlTeamMemberLabs = () => ({
   items: [
-    { lab: { sys: { id: 'cd7be4902' }, name: 'Brighton' } },
-    { lab: { sys: { id: 'cd7be4903' }, name: 'Liverpool' } },
+    { sys: { id: 'cd7be4902' }, name: 'Brighton' },
+    { sys: { id: 'cd7be4903' }, name: 'Liverpool' },
   ],
 });
 

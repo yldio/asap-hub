@@ -3,6 +3,7 @@ import { ascending, descending, SortingDirection } from './analytics';
 import { AuthorAlgoliaResponse, AuthorResponse } from './authors';
 import { ListResponse } from './common';
 import { ComplianceReportDataObject } from './compliance-report';
+import { DiscussionDataObject } from './discussion';
 import { UserResponse } from './user';
 
 export const manuscriptTypes = [
@@ -93,14 +94,14 @@ export type ManuscriptVersion = {
   labMaterialsRegistered?: string;
   availabilityStatement?: string;
 
-  acknowledgedGrantNumberDetails?: { id: string };
-  asapAffiliationIncludedDetails?: { id: string };
-  manuscriptLicenseDetails?: { id: string };
-  datasetsDepositedDetails?: { id: string };
-  codeDepositedDetails?: { id: string };
-  protocolsDepositedDetails?: { id: string };
-  labMaterialsRegisteredDetails?: { id: string };
-  availabilityStatementDetails?: { id: string };
+  acknowledgedGrantNumberDetails?: DiscussionDataObject;
+  asapAffiliationIncludedDetails?: DiscussionDataObject;
+  manuscriptLicenseDetails?: DiscussionDataObject;
+  datasetsDepositedDetails?: DiscussionDataObject;
+  codeDepositedDetails?: DiscussionDataObject;
+  protocolsDepositedDetails?: DiscussionDataObject;
+  labMaterialsRegisteredDetails?: DiscussionDataObject;
+  availabilityStatementDetails?: DiscussionDataObject;
 
   teams: { displayName: string; id: string; inactiveSince?: string }[];
   labs: { name: string; id: string }[];

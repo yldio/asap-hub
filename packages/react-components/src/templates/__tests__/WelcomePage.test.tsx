@@ -33,3 +33,19 @@ it('shows an alumni no-access error message', () => {
   render(<WelcomePage authFailed={'alumni'} onClick={noop} />);
   expect(screen.getByText(/alumni/i)).toBeVisible();
 });
+
+it('shows custom email addres if provided', () => {
+  render(
+    <WelcomePage
+      supportEmail="custom@mail.com"
+      authFailed={'alumni'}
+      onClick={noop}
+    />,
+  );
+  const supportLink = screen.getByRole('link', { name: 'ASAP Support' });
+  expect(supportLink).toBeInTheDocument();
+  expect(supportLink).toHaveAttribute(
+    'href',
+    'mailto:custom@mail.com?subject=ASAP%20Hub%3A%20Tech%20support',
+  );
+});

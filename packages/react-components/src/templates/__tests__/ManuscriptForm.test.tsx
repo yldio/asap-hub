@@ -10,6 +10,7 @@ import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
 import userEvent, { specialChars } from '@testing-library/user-event';
+import { createMessage } from '@asap-hub/fixtures';
 import {
   AuthorResponse,
   AuthorSelectOption,
@@ -202,10 +203,15 @@ test.each`
     fieldDetails: QuickCheckDetails;
   }) => {
     const onCreate = jest.fn();
+    const getDiscussion = jest.fn(() => ({
+      id: 'discussion-1',
+      message: createMessage('Explanation'),
+    }));
     const props = {
       ...defaultProps,
       [field]: 'No',
-      [fieldDetails]: { message: { text: 'Explanation' } },
+      [fieldDetails]: { id: 'discussion-1' },
+      getDiscussion,
     };
     render(
       <StaticRouter>

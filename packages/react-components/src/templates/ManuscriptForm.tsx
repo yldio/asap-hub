@@ -2,6 +2,7 @@ import {
   ApcCoverageOption,
   AuthorEmailField,
   AuthorSelectOption,
+  DiscussionDataObject,
   ManuscriptFileResponse,
   ManuscriptFileType,
   ManuscriptFormData,
@@ -289,6 +290,7 @@ type ManuscriptFormProps = Omit<
     getAuthorSuggestions: NonNullable<
       ComponentProps<typeof AuthorSelect>['loadOptions']
     >;
+    getDiscussion?: (id: string) => DiscussionDataObject | undefined;
     firstAuthors?: AuthorSelectOption[];
     correspondingAuthor?: AuthorSelectOption[];
     additionalAuthors?: AuthorSelectOption[];
@@ -328,19 +330,28 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   getLabSuggestions,
   selectedLabs,
   getAuthorSuggestions,
+  getDiscussion,
   description,
   firstAuthors,
   correspondingAuthor,
   additionalAuthors,
   resubmitManuscript = false,
 }) => {
-  const getDefaultQuickCheckValue = (quickCheckDetails: string | undefined) => {
+  const getDefaultQuickCheckValue = (quickCheckId: string | undefined) => {
     const isEditing = !!title;
 
     if (isEditing) {
-      return quickCheckDetails ? 'No' : 'Yes';
+      return quickCheckId ? 'No' : 'Yes';
     }
 
+    return undefined;
+  };
+
+  const getDefaultQuickCheckDetails = (quickCheckId: string | undefined) => {
+    if (quickCheckId && getDiscussion) {
+      const discussion = getDiscussion(quickCheckId);
+      return discussion?.message.text;
+    }
     return undefined;
   };
 
@@ -364,44 +375,51 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           additionalFiles: additionalFiles || undefined,
 
           acknowledgedGrantNumber: getDefaultQuickCheckValue(
-            acknowledgedGrantNumberDetails?.message.text,
+            acknowledgedGrantNumberDetails?.id,
           ),
           asapAffiliationIncluded: getDefaultQuickCheckValue(
-            asapAffiliationIncludedDetails?.message.text,
+            asapAffiliationIncludedDetails?.id,
           ),
           manuscriptLicense: getDefaultQuickCheckValue(
-            manuscriptLicenseDetails?.message.text,
+            manuscriptLicenseDetails?.id,
           ),
           datasetsDeposited: getDefaultQuickCheckValue(
-            datasetsDepositedDetails?.message.text,
+            datasetsDepositedDetails?.id,
           ),
-          codeDeposited: getDefaultQuickCheckValue(
-            codeDepositedDetails?.message.text,
-          ),
+          codeDeposited: getDefaultQuickCheckValue(codeDepositedDetails?.id),
           protocolsDeposited: getDefaultQuickCheckValue(
-            protocolsDepositedDetails?.message.text,
+            protocolsDepositedDetails?.id,
           ),
           labMaterialsRegistered: getDefaultQuickCheckValue(
-            labMaterialsRegisteredDetails?.message.text,
+            labMaterialsRegisteredDetails?.id,
           ),
           availabilityStatement: getDefaultQuickCheckValue(
-            availabilityStatementDetails?.message.text,
+            availabilityStatementDetails?.id,
           ),
-          acknowledgedGrantNumberDetails:
-            acknowledgedGrantNumberDetails?.message.text || '',
-          asapAffiliationIncludedDetails:
-            asapAffiliationIncludedDetails?.message.text || '',
-          manuscriptLicenseDetails:
-            manuscriptLicenseDetails?.message.text || '',
-          datasetsDepositedDetails:
-            datasetsDepositedDetails?.message.text || '',
-          codeDepositedDetails: codeDepositedDetails?.message.text || '',
-          protocolsDepositedDetails:
-            protocolsDepositedDetails?.message.text || '',
-          labMaterialsRegisteredDetails:
-            labMaterialsRegisteredDetails?.message.text || '',
-          availabilityStatementDetails:
-            availabilityStatementDetails?.message.text || '',
+          acknowledgedGrantNumberDetails: getDefaultQuickCheckDetails(
+            acknowledgedGrantNumberDetails?.id,
+          ),
+          asapAffiliationIncludedDetails: getDefaultQuickCheckDetails(
+            asapAffiliationIncludedDetails?.id,
+          ),
+          manuscriptLicenseDetails: getDefaultQuickCheckDetails(
+            manuscriptLicenseDetails?.id,
+          ),
+          datasetsDepositedDetails: getDefaultQuickCheckDetails(
+            datasetsDepositedDetails?.id,
+          ),
+          codeDepositedDetails: getDefaultQuickCheckDetails(
+            codeDepositedDetails?.id,
+          ),
+          protocolsDepositedDetails: getDefaultQuickCheckDetails(
+            protocolsDepositedDetails?.id,
+          ),
+          labMaterialsRegisteredDetails: getDefaultQuickCheckDetails(
+            labMaterialsRegisteredDetails?.id,
+          ),
+          availabilityStatementDetails: getDefaultQuickCheckDetails(
+            availabilityStatementDetails?.id,
+          ),
           teams: selectedTeams || [],
           labs: selectedLabs || [],
           description: description || '',

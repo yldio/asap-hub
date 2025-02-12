@@ -4,6 +4,7 @@ import { ComponentProps } from 'react';
 
 import { article, PageControls } from '..';
 import { Card, Headline3, Paragraph, Tag } from '../atoms';
+import ComplianceControls from '../molecules/ComplianceControls';
 import { ComplianceTable } from '../organisms';
 import { rem } from '../pixels';
 
@@ -42,6 +43,10 @@ const manuscriptStatusContainerStyles = css({
 
 type ComplianceDashboardProps = ComponentProps<typeof PageControls> &
   Pick<
+    ComponentProps<typeof ComplianceControls>,
+    'completedStatus' | 'requestedAPCCoverage'
+  > &
+  Pick<
     ComponentProps<typeof ComplianceTable>,
     | 'onUpdateManuscript'
     | 'getAssignedUsersSuggestions'
@@ -75,6 +80,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
         ))}
       </div>
     </Card>
+    <ComplianceControls {...pageControlsProps} />
     {data.length > 0 ? (
       <main css={{ paddingTop: rem(32) }}>
         <ComplianceTable

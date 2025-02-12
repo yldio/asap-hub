@@ -32,7 +32,7 @@ type ProfileSwitchProps = {
   paths: Record<RequiredPaths, string> & Partial<Record<OptionalPaths, string>>;
   type: ComponentProps<typeof NoEvents>['type'];
   Workspace?: FC;
-  Compliance?: FC;
+  Compliance?: ReactElement;
 };
 
 const ProfileSwitch: FC<ProfileSwitchProps> = ({
@@ -80,9 +80,7 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
       )}
       {Compliance && (
         <Route path={paths.compliance}>
-          <Frame title="Compliance">
-            <Compliance />
-          </Frame>
+          <SearchFrame title="Compliance">{Compliance}</SearchFrame>
         </Route>
       )}
       {isActive && (

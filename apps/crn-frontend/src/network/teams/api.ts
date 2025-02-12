@@ -5,6 +5,7 @@ import {
   GetListOptions,
 } from '@asap-hub/frontend-utils';
 import {
+  CompletedStatusOption,
   ComplianceReportPostRequest,
   ComplianceReportResponse,
   DiscussionRequest,
@@ -17,6 +18,7 @@ import {
   ManuscriptPostRequest,
   ManuscriptPutRequest,
   ManuscriptResponse,
+  RequestedAPCCoverageOption,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   TeamPatchRequest,
@@ -240,12 +242,46 @@ export const resubmitManuscript = async (
   return response;
 };
 
+export type ManuscriptsOptions = Omit<GetListOptions, 'filters'> & {
+  requestedAPCCoverage: RequestedAPCCoverageOption;
+  completedStatus: CompletedStatusOption;
+};
+
 export const getManuscripts = async (
   algoliaClient: AlgoliaClient<'crn'>,
-  { searchQuery, currentPage, pageSize }: GetListOptions,
+  {
+    searchQuery,
+    currentPage,
+    pageSize,
+    requestedAPCCoverage,
+    completedStatus,
+  }: ManuscriptsOptions,
 ): Promise<ListPartialManuscriptResponse> => {
+  const getApcCoverageFilter = (apcCoverage: RequestedAPCCoverageOption) => {
+    switch (apcCoverage) {
+      case 'submitted':
+        return `requestingApcCoverage:"Already Submitted"`;
+      case 'yes':
+        return 'requestingApcCoverage:Yes';
+      case 'no':
+        return 'requestingApcCoverage:No';
+      default:
+        return '';
+    }
+  };
+
+  const apcCoverageFilter = getApcCoverageFilter(requestedAPCCoverage);
+  const completedStatusFilter =
+    completedStatus === 'hide'
+      ? `(NOT status:Compliant AND NOT status:"Closed (other)")`
+      : '';
+
+  const filters = [apcCoverageFilter, completedStatusFilter]
+    .filter(Boolean)
+    .join(' AND ');
+
   const result = await algoliaClient.search(['manuscript'], searchQuery, {
-    filters: undefined,
+    filters,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });

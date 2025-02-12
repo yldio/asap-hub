@@ -204,7 +204,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
                   css={({ colors }) => itemStyles({ ...colors, type })}
                 >
                   {href ? (
-                    <Anchor href={href}>
+                    <Anchor href={href} onClick={() => setMenuShown(false)}>
                       <span css={itemContentStyles}>{item}</span>
                     </Anchor>
                   ) : (

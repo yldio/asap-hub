@@ -48,6 +48,7 @@ import {
   createComplianceDiscussion,
   endDiscussion,
   getManuscripts,
+  ManuscriptsOptions,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -364,7 +365,7 @@ export const manuscriptListState = atomFamily<
 
 const manuscriptIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  GetListOptions
+  ManuscriptsOptions
 >({
   key: 'manuscriptIndex',
   default: undefined,
@@ -372,7 +373,7 @@ const manuscriptIndexState = atomFamily<
 
 export const manuscriptsState = selectorFamily<
   ListPartialManuscriptResponse | Error | undefined,
-  GetListOptions
+  ManuscriptsOptions
 >({
   key: 'manuscripts',
   get:
@@ -411,7 +412,7 @@ export const manuscriptsState = selectorFamily<
 });
 
 export const useManuscripts = (
-  options: GetListOptions,
+  options: ManuscriptsOptions,
 ): ListPartialManuscriptResponse & {
   refresh: (manuscript: ManuscriptDataObject) => void;
 } => {

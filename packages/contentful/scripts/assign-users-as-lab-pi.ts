@@ -68,29 +68,12 @@ async function rollbackLabsMembership() {
         continue;
       }
 
-      const labMemberships: Entry[] = user.fields.oldLabs?.['en-US'] || [];
+      const labsMemberships: Entry[] = user.fields.oldLabs?.['en-US'] || [];
 
-      if (!labMemberships.length) {
+      if (!labsMemberships.length) {
         console.log('No labs, skipping - 2');
         continue;
       }
-
-      // Fetch labs referenced in `oldLabs`
-      const labs = await environment.getEntries({
-        content_type: 'labMembership',
-        'sys.id[in]': labMemberships
-          .map((labMembership) => labMembership.sys.id)
-          .join(','),
-      });
-
-      if (!labs.items.length) {
-        console.log(`No labs found for user: ${user.fields.email['en-US']}`);
-        continue;
-      }
-
-      const labIds = labs.items
-        .map((lab) => lab.fields.lab?.['en-US'].sys.id)
-        .filter(Boolean);
 
       const isPublished = user.isPublished();
 
@@ -98,11 +81,11 @@ async function rollbackLabsMembership() {
 
       // Update the labs field
       userEntry.fields.labs = userEntry.fields.labs || {};
-      userEntry.fields.labs['en-US'] = labIds.map((labId) => ({
+      userEntry.fields.labs['en-US'] = labsMemberships.map((lab) => ({
         sys: {
           type: 'Link',
           linkType: 'Entry',
-          id: labId,
+          id: lab.sys.id,
         },
       })) as Link<'Entry'>[];
 
@@ -129,31 +112,53 @@ async function assignLabPI() {
     const space = await client.getSpace(spaceId);
     const environment: Environment = await space.getEnvironment(environmentId);
 
-    // Fetch all labs
-    const labs = await environment.getEntries({
-      content_type: 'labMembership',
-    });
+    const users = await environment.getEntries({
+      content_type: 'users',
+      'fields.oldLabs.sys.id[exists]': true, // Ensures oldLabs is not empty
+      include: 2, // Attempts to resolve references
+    } as QueryOptions);
 
-    for (const lab of labs.items) {
-      if (!lab.fields.lab || !lab.fields.lab['en-US']) {
+    const labMembershipIds = users.items.flatMap(
+      (user) =>
+        user.fields.oldLabs?.['en-US'].map(
+          (membershipRef: any) => membershipRef.sys.id,
+        ) || [],
+    );
+
+    const labMemberships = await environment.getEntries({
+      content_type: 'labMembership',
+      'sys.id[in]': labMembershipIds.join(','),
+      include: 2, // Fetches referenced `lab` entries too
+    } as QueryOptions);
+
+    const membershipsById = Object.fromEntries(
+      labMemberships.items.map((m) => [m.sys.id, m]),
+    );
+
+    for (const membership of labMemberships.items) {
+      if (!membership.fields.lab || !membership.fields.lab['en-US']) {
         console.log('No lab found, skipping');
         continue;
       }
 
-      const labId = lab.fields.lab['en-US'].sys.id;
+      const labId = membership.fields.lab['en-US'].sys.id;
 
-      // Fetch users who reference this lab in `oldLabs`
-      const users = await environment.getEntries({
-        content_type: 'users',
-        'fields.oldLabs.sys.id': lab.sys.id,
-      } as QueryOptions);
-
-      if (!users.items.length) {
-        console.log(`No users found for lab: ${labId}`);
+      const leadPiUsers = users.items.filter((user) => {
+        return user.fields.oldLabs?.['en-US'].some((membershipRef: any) => {
+          const membership = membershipsById[membershipRef.sys.id]; // Get full LabMembership entry
+          return (
+            membership &&
+            membership.fields.lab?.['en-US'].sys.id === labId &&
+            membership.fields.role?.['en-US'] === 'Lead PI'
+          );
+        });
+      });
+      if (!leadPiUsers.length) {
+        console.log('No lead PI users found, skipping');
         continue;
       }
 
-      const firstUser = users.items[0]; // Pick the first user - maybe the last user would be better? - also maybe checking if the user is published would be a good idea?
+      const leadPi = leadPiUsers.length ? leadPiUsers[0] : users.items[0];
 
       // Fetch the existing lab entry to update it
       const labEntry: Entry = await environment.getEntry(labId);
@@ -164,7 +169,7 @@ async function assignLabPI() {
         sys: {
           type: 'Link',
           linkType: 'Entry',
-          id: firstUser.sys.id,
+          id: leadPi.sys.id,
         },
       } as Link<'Entry'>;
 
@@ -172,9 +177,9 @@ async function assignLabPI() {
         // // Save and publish the updated entry
         const updatedLab = await labEntry.update();
         await updatedLab.publish();
-        console.log(`Updated user ${labEntry.sys.id}`);
+        console.log(`Updated lab ${labEntry.sys.id}`);
       } catch (err) {
-        console.log(`Error updating user ${labEntry.sys.id}: ${err}`);
+        console.log(`Error updating lab ${labEntry.sys.id}: ${err}`);
       }
     }
 

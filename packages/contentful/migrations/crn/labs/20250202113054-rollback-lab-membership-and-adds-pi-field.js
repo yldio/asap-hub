@@ -6,7 +6,7 @@ module.exports.up = (migration) => {
 
   labs
     .createField('labPI')
-    .name('Lab PI')
+    .name('Principle Investigator')
     .type('Link')
     .linkType('Entry')
     .validations([

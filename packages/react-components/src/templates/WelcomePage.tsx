@@ -86,6 +86,7 @@ type WelcomeCopy = {
 type WelcomePageProps = Pick<ComponentProps<typeof WelcomeCard>, 'onClick'> & {
   readonly allowSignup?: boolean;
   readonly authFailed?: 'alumni' | 'invalid';
+  readonly supportEmail?: string;
   readonly onCloseAuthFailedToast?: () => void;
   readonly values?: { signup: WelcomeCopy; welcome: WelcomeCopy };
 };
@@ -95,6 +96,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
   authFailed,
   onCloseAuthFailedToast = noop,
   values = defaultValues,
+  supportEmail,
   ...props
 }) => {
   const copy = allowSignup ? values.signup : values.welcome;
@@ -107,7 +109,11 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
           {authFailed === 'alumni'
             ? 'As an Alumni user, you no longer have access to this account. Please contact '
             : 'There was a problem with your account. If this issue persists, please contact '}
-          <Anchor href={mailToSupport()}>
+          <Anchor
+            href={mailToSupport({
+              email: supportEmail,
+            })}
+          >
             <span css={{ textDecoration: 'underline' }}>ASAP Support</span>
           </Anchor>
           {authFailed === 'alumni' ? ' for further assistance.' : '.'}

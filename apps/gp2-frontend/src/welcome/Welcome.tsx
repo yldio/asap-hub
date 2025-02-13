@@ -1,10 +1,11 @@
-import { WelcomePage } from '@asap-hub/react-components';
+import { WelcomePage, mail } from '@asap-hub/react-components';
 import { ToastContext, useAuth0GP2 } from '@asap-hub/react-context';
 import { useRouteParams, welcome } from '@asap-hub/routing';
 import { useContext, useEffect, useRef } from 'react';
 import { API_BASE_URL } from '../config';
 
 const Welcome: React.FC<Record<string, never>> = () => {
+  const { INVITE_SUPPORT_EMAIL } = mail;
   const { code } = useRouteParams(welcome({}).invited);
 
   const { loginWithRedirect } = useAuth0GP2();
@@ -63,6 +64,7 @@ const Welcome: React.FC<Record<string, never>> = () => {
     <WelcomePage
       allowSignup
       values={values}
+      supportEmail={INVITE_SUPPORT_EMAIL}
       onClick={() =>
         // Effect should populate this ref before a click can occur
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -16,6 +16,7 @@ import {
 } from '../../shared-state';
 import {
   refreshTeamState,
+  useDiscussionById,
   useManuscriptById,
   usePostManuscript,
   usePutManuscript,
@@ -50,6 +51,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   const getTeamSuggestions = useTeamSuggestions();
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
+  const getDiscussion = useDiscussionById;
 
   const pushFromHere = usePushFromHere();
 
@@ -121,6 +123,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
               })),
             )
           }
+          getDiscussion={getDiscussion}
           title={manuscript?.title}
           firstAuthors={convertAuthorsToSelectOptions(manuscriptFirstAuthors)}
           correspondingAuthor={convertAuthorsToSelectOptions(

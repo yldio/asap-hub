@@ -363,12 +363,15 @@ export const uploadManuscriptFile = async (
   const tempId = uuidv4();
 
   try {
-    const uploadPromises = Array.from({ length: totalChunks }, async (_, i) => {
+    const chunkIndexes = Array.from({ length: totalChunks }, (_, i) => i);
+
+    for (const i of chunkIndexes) {
       const start = i * CHUNK_SIZE;
       const end = Math.min(start + CHUNK_SIZE, file.size);
       const chunk = file.slice(start, end);
 
-      return uploadChunk(
+      // eslint-disable-next-line no-await-in-loop
+      resp = await uploadChunk(
         chunk,
         totalChunks,
         i,
@@ -376,12 +379,7 @@ export const uploadManuscriptFile = async (
         tempId,
         authorization,
       );
-    });
-
-    // Execute all chunk uploads in parallel and filter out any undefined values
-    resp = (await Promise.all(uploadPromises)).find(
-      (res) => res.status === 201,
-    );
+    }
   } catch (error) {
     handleError(
       `Failed to upload ${fileType.toLowerCase()}: ${(error as Error).message}`,

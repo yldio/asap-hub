@@ -1,6 +1,5 @@
 import {
   ManuscriptFileResponse,
-  ManuscriptFileType,
   ManuscriptPostCreateRequest,
   ManuscriptPostResubmitRequest,
   ManuscriptResponse,
@@ -17,6 +16,11 @@ import {
 } from '../validation/manuscript.validation';
 
 const upload = multer();
+// Store chunks in memory (use a Map for better performance)
+const chunksMap = new Map<
+  string,
+  { chunks: (Buffer | null)[]; totalChunks: number }
+>();
 
 export const manuscriptRouteFactory = (
   manuscriptController: ManuscriptController,
@@ -43,39 +47,57 @@ export const manuscriptRouteFactory = (
     upload.single('file') as RequestHandler<unknown, ManuscriptFileResponse>,
     async (req, res) => {
       const { file, body } = req;
-      const fileType = body.fileType as ManuscriptFileType;
+      const { fileName, fileId, chunkIndex, totalChunks, fileType } = body;
 
-      if (
-        fileType === 'Manuscript File' &&
-        (!file || file.mimetype !== 'application/pdf')
-      ) {
-        throw Boom.badRequest('No file provided or file is not a PDF.');
-      }
-      if (
-        fileType === 'Key Resource Table' &&
-        (!file || file.mimetype !== 'text/csv')
-      ) {
-        throw Boom.badRequest('No file provided or file is not a CSV.');
-      }
-      if (
-        fileType === 'Additional Files' &&
-        (!file ||
-          (file.mimetype !== 'text/csv' && file.mimetype !== 'application/pdf'))
-      ) {
-        throw Boom.badRequest('No file provided or file is not a CSV or PDF.');
-      }
       if (!file) {
         throw Boom.badRequest('No file provided.');
       }
 
-      const manuscript = await manuscriptController.createFile({
-        fileType,
-        content: file.buffer,
-        contentType: file.mimetype,
-        filename: file.originalname,
-      });
+      const chunkIdx = parseInt(chunkIndex, 10);
+      const totalChunksNum = parseInt(totalChunks, 10);
 
-      res.status(201).json(manuscript);
+      if (Number.isNaN(chunkIdx) || Number.isNaN(totalChunksNum)) {
+        throw Boom.badRequest('Invalid chunk index or total chunks.');
+      }
+
+      // Initialize storage if it doesn't exist
+      if (!chunksMap.has(fileId)) {
+        chunksMap.set(fileId, {
+          chunks: new Array(totalChunksNum).fill(null), // Ensure all are empty Buffers
+          totalChunks: totalChunksNum,
+        });
+      }
+
+      // Retrieve chunk storage
+      const chunkData = chunksMap.get(fileId);
+
+      if (!chunkData) {
+        throw Boom.badRequest('Invalid fileId or chunk data not initialized.');
+      }
+
+      chunkData.chunks[chunkIdx] = file.buffer;
+
+      // Check if all chunks have been received
+      if (chunkData.chunks.every((chunk) => chunk !== null)) {
+        const fileBuffer = Buffer.concat(
+          chunkData.chunks.filter((chunk): chunk is Buffer => chunk !== null),
+        );
+
+        const manuscript = await manuscriptController.createFile({
+          fileType,
+          content: fileBuffer,
+          contentType: file.mimetype,
+          filename: fileName,
+        });
+
+        // Clean up stored chunks
+        chunksMap.delete(fileId);
+
+        return res.status(201).json(manuscript);
+      }
+
+      // Send response to acknowledge chunk reception
+      return res.status(200).send();
     },
   );
 

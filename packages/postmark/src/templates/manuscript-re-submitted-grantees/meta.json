@@ -1,7 +1,7 @@
 {
-  "Name": "Waiting for Report (Grantees)",
-  "Alias": "waiting-for-report-grantees",
-  "Subject": "Submission Received for {{ manuscript.title }} {{ manuscript.id }}",
+  "Name": "Manuscript re-submitted (Grantees)",
+  "Alias": "manuscript-re-submitted-grantees",
+  "Subject": "Updated Submission Received for {{ manuscript.title }} {{ manuscript.id }}",
   "TemplateType": "Standard",
   "LayoutTemplate": "email-layout-grantees",
   "TestRenderModel": {
@@ -9,7 +9,6 @@
       "name": "Alessi, De Camilli and Edwards"
     },
     "manuscript": {
-      "type": "Original Research",
       "title": "Targeting mitophagy in neurodegenerative diseases",
       "id": "SC1-000129-001-org-G-1"
     }

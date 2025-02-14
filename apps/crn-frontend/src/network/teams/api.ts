@@ -315,7 +315,7 @@ export const getManuscript = async (
   }
   return resp.json();
 };
-const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks
+const CHUNK_SIZE = 3 * 1024 * 1024; // 5MB chunks
 
 const uploadChunk = async (
   chunk: Blob,
@@ -379,9 +379,9 @@ export const uploadManuscriptFile = async (
     });
 
     // Execute all chunk uploads in parallel and filter out any undefined values
-    const [finalResponse] = (await Promise.all(uploadPromises)).filter(Boolean);
-
-    resp = finalResponse;
+    resp = (await Promise.all(uploadPromises)).find(
+      (res) => res.status === 201,
+    );
   } catch (error) {
     handleError(
       `Failed to upload ${fileType.toLowerCase()}: ${(error as Error).message}`,

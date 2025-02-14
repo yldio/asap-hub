@@ -47,7 +47,8 @@ export const manuscriptRouteFactory = (
     upload.single('file') as RequestHandler<unknown, ManuscriptFileResponse>,
     async (req, res) => {
       const { file, body } = req;
-      const { fileName, fileId, chunkIndex, totalChunks, fileType } = body;
+      const { fileName, fileId, chunkIndex, totalChunks, fileType, mimeType } =
+        body;
 
       if (!file) {
         throw Boom.badRequest('No file provided.');
@@ -86,7 +87,7 @@ export const manuscriptRouteFactory = (
         const manuscript = await manuscriptController.createFile({
           fileType,
           content: fileBuffer,
-          contentType: file.mimetype,
+          contentType: mimeType,
           filename: fileName,
         });
 

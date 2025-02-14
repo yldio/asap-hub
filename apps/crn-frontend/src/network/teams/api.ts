@@ -323,6 +323,7 @@ const uploadChunk = async (
   i: number,
   fileName: string,
   tempId: string,
+  mimeType: string,
   authorization: string,
 ) => {
   const formData = new FormData();
@@ -332,6 +333,7 @@ const uploadChunk = async (
   formData.append('totalChunks', totalChunks.toString());
   formData.append('fileType', 'Manuscript File');
   formData.append('fileId', tempId);
+  formData.append('mimeType', mimeType);
 
   const response = await fetch(`${API_BASE_URL}/manuscripts/file-upload`, {
     method: 'POST',
@@ -358,7 +360,7 @@ export const uploadManuscriptFile = async (
   handleError: (errorMessage: string) => void,
 ): Promise<ManuscriptFileResponse | undefined> => {
   const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-
+  const mimeType = file.type;
   let resp: Response | undefined;
   const tempId = uuidv4();
 
@@ -377,6 +379,7 @@ export const uploadManuscriptFile = async (
         i,
         file.name,
         tempId,
+        mimeType,
         authorization,
       );
     }

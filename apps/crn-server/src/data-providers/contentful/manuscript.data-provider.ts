@@ -505,7 +505,7 @@ export class ManuscriptContentfulDataProvider
     });
 
     const labPIs = cleanArray(versionData.labsCollection?.items)
-      .filter((lab) => !lab.labPi?.alumniSinceDate)
+      .filter((lab) => lab.labPi && !lab.labPi?.alumniSinceDate)
       .map((lab) => lab.labPi?.email);
 
     const recipients = [

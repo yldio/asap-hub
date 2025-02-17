@@ -77,6 +77,15 @@ export const FETCH_REMINDERS = gql`
                 }
               }
             }
+            labsCollection(limit: 10) {
+              items {
+                labPi {
+                  sys {
+                    id
+                  }
+                }
+              }
+            }
           }
         }
       }

@@ -1190,7 +1190,8 @@ const getManuscriptRemindersFromQuery = (
           isManuscriptProjectManagerOrLeadPI(
             manuscript.teamsCollection,
             userProjectManagerOrLeadPITeamIds,
-          )) &&
+          ) ||
+          isManuscriptLabPI(manuscriptLastVersion.labsCollection, userId)) &&
         isReminderForDifferentUser(
           manuscriptLastVersion.createdBy?.sys.id,
           userId,
@@ -1207,7 +1208,8 @@ const getManuscriptRemindersFromQuery = (
           isManuscriptProjectManagerOrLeadPI(
             manuscript.teamsCollection,
             userProjectManagerOrLeadPITeamIds,
-          ))
+          ) ||
+          isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId))
       ) {
         reminders.push(createManuscriptCreatedReminder(manuscript));
       }
@@ -1219,7 +1221,8 @@ const getManuscriptRemindersFromQuery = (
           isManuscriptProjectManagerOrLeadPI(
             manuscript.teamsCollection,
             userProjectManagerOrLeadPITeamIds,
-          ))
+          ) ||
+          isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId))
       ) {
         reminders.push(createManuscriptStatusUpdatedReminder(manuscript));
       }
@@ -1252,7 +1255,9 @@ const getDiscussionRemindersFromQuery = (
         isManuscriptProjectManagerOrLeadPI(
           manuscriptVersion.teamsCollection,
           userProjectManagerOrLeadPITeamIds,
-        ) || isManuscriptAuthor(manuscriptVersion, userId);
+        ) ||
+        isManuscriptAuthor(manuscriptVersion, userId) ||
+        isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
 
       if (
         inLast7Days(discussion.sys.firstPublishedAt, timezone) &&
@@ -1649,6 +1654,14 @@ const isManuscriptProjectManagerOrLeadPI = (
     (teamItem) =>
       teamItem?.sys.id &&
       userProjectManagerOrLeadPITeamIds.includes(teamItem.sys.id),
+  );
+
+const isManuscriptLabPI = (
+  manuscriptLabs: ManuscriptVersion['labsCollection'],
+  userId: string,
+): boolean =>
+  !!manuscriptLabs?.items.some(
+    (lab) => lab?.labPi && lab.labPi.sys.id === userId,
   );
 
 const isStaffAndMemberOfOpenScienceTeam = (user: NonNullable<User>): boolean =>

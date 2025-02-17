@@ -125,6 +125,11 @@ export const manuscriptContentQueryFragment = gql`
             sys {
               id
             }
+            labPi {
+              sys {
+                id
+              }
+            }
             name
           }
         }
@@ -434,6 +439,14 @@ export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
                 email
               }
               ... on Users {
+                email
+              }
+            }
+          }
+          labsCollection(limit: 10) {
+            items {
+              labPi {
+                alumniSinceDate
                 email
               }
             }

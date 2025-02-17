@@ -150,6 +150,14 @@ export const isManuscriptAuthor = ({
   user: User | null;
 }) => user && authors.find((author) => author.id === user.id);
 
+const isManuscriptLabPi = ({
+  labs,
+  user,
+}: {
+  labs: ManuscriptVersion['labs'] | undefined;
+  user: User | null;
+}) => user && labs && labs.some((lab) => lab.labPi === user.id);
+
 const canUpdateManuscript = ({ version, user }: VersionUserProps) =>
   !!isManuscriptLead({ version, user }) ||
   !!isManuscriptAuthor({
@@ -159,7 +167,8 @@ const canUpdateManuscript = ({ version, user }: VersionUserProps) =>
       ...(version?.additionalAuthors || []),
     ],
     user,
-  });
+  }) ||
+  !!isManuscriptLabPi({ labs: version?.labs, user });
 
 export const closedManuscriptStatuses = ['Closed (other)', 'Compliant'];
 

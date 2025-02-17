@@ -232,6 +232,31 @@ it('displays submit revised manuscript button if user is an author', () => {
   ).toBeVisible();
 });
 
+it('displays submit revised manuscript button if user is a PI on a manuscript lab', () => {
+  const manuscriptVersions = createManuscriptResponse().versions;
+  manuscriptVersions[0]!.labs = [
+    { name: 'Lab 1', id: 'lab-1', labPi: user.id },
+  ];
+  const { getByRole } = render(
+    <ManuscriptCard
+      {...props}
+      useManuscriptById={useManuscriptById.mockImplementation(() => [
+        {
+          id: 'manuscript_0',
+          title: 'Mock Manuscript Title',
+          status: 'Waiting for Report',
+          versions: manuscriptVersions,
+        },
+        jest.fn(),
+      ])}
+    />,
+  );
+
+  expect(
+    getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+  ).toBeVisible();
+});
+
 it('redirects to compliance report form when user clicks on share compliance report button', () => {
   const history = createMemoryHistory({});
   const { getByRole } = render(

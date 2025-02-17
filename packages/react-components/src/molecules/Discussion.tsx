@@ -162,7 +162,7 @@ const Discussion: FC<DiscussionProps> = ({
                   margin: `0 ${rem(8)} 0 0`,
                 }}
               >
-                {endDiscussionIcon} End of Discussion
+                {endDiscussionIcon} End Discussion
               </span>
             </Button>
             {isEndDiscussionModalOpen && onEndDiscussion && (

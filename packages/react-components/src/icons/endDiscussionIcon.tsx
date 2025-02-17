@@ -8,7 +8,7 @@ const endDiscussionIcon = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <title>{'End of Discussion Icon'}</title>
+    <title>{'End Discussion Icon'}</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

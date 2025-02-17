@@ -216,7 +216,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                       <DiscussionModal
                         discussionId={id}
                         title="Start Discussion"
-                        editorLabel="Please provide reasons why the compliance report isn’t correct"
+                        editorLabel="Please initiate a discussion about the manuscript below."
                         ruleMessage="Message cannot exceed 256 characters."
                         onDismiss={() => setStartDiscussion(false)}
                         onSave={async (

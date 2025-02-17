@@ -134,7 +134,7 @@ const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
             </div>
             <div css={confirmStyles}>
               <Button warning onClick={handleCancelManuscriptSubmission}>
-                Cancel Manuscript Submission
+                Cancel Manuscript {isEditMode ? 'Edits' : 'Submission'}
               </Button>
             </div>
           </div>

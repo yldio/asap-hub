@@ -31,6 +31,7 @@ type ComplianceDashboardProps = ComponentProps<typeof PageControls> &
     | 'requestedAPCCoverage'
     | 'selectedStatuses'
     | 'onSelectStatus'
+    | 'generateLink'
   > &
   Pick<
     ComponentProps<typeof ComplianceTable>,
@@ -55,6 +56,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
   getAssignedUsersSuggestions,
   selectedStatuses,
   onSelectStatus,
+  generateLink,
   ...pageControlsProps
 }) => (
   <article>
@@ -63,6 +65,7 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
       selectedStatuses={selectedStatuses}
       isComplianceReviewer={isComplianceReviewer}
       onSelectStatus={onSelectStatus}
+      generateLink={generateLink}
     />
     {data.length > 0 ? (
       <main css={{ paddingTop: rem(32) }}>

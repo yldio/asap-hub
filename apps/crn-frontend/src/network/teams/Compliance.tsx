@@ -28,6 +28,7 @@ const Compliance: React.FC = () => {
     selectedStatuses,
     setSearchQuery,
     setStatus,
+    generateLink,
   } = useComplianceSearch();
   const { currentPage, pageSize } = usePaginationParams();
 
@@ -98,6 +99,7 @@ const Compliance: React.FC = () => {
               })),
             )
           }
+          generateLink={generateLink}
         />
       </SearchFrame>
     </article>

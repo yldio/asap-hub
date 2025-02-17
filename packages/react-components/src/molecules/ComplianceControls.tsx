@@ -41,24 +41,6 @@ const filterContainerStyles = css({
   },
 });
 
-const generateLink = (
-  href: string,
-  currentPage: number,
-  completedStatus: string,
-  requestedAPCCoverage: string,
-  statuses: string[],
-) => {
-  const params = new URLSearchParams();
-  params.set('completedStatus', completedStatus);
-  if (requestedAPCCoverage) {
-    params.set('requestedAPCCoverage', requestedAPCCoverage);
-  }
-  params.set('currentPage', currentPage.toString());
-  statuses.forEach((status) => params.append('status', status));
-
-  return `${href}?${params.toString()}`;
-};
-
 type ComplianceControlsProps = ComponentProps<typeof PageControls> &
   Pick<
     ComponentProps<typeof ManuscriptByStatus>,
@@ -67,6 +49,13 @@ type ComplianceControlsProps = ComponentProps<typeof PageControls> &
     completedStatus: CompletedStatusOption;
     requestedAPCCoverage: RequestedAPCCoverageOption;
     isComplianceReviewer: boolean;
+    generateLink: (
+      href: string,
+      currentPage: number,
+      completedStatus: string,
+      requestedAPCCoverage: string,
+      statuses: string[],
+    ) => string;
   };
 
 const ComplianceControls = ({
@@ -77,6 +66,7 @@ const ComplianceControls = ({
   renderPageHref,
   requestedAPCCoverage,
   selectedStatuses,
+  generateLink,
 }: ComplianceControlsProps) => {
   const href = renderPageHref(currentPageIndex);
   return (

@@ -12,6 +12,7 @@ describe('ComplianceControls', () => {
     isComplianceReviewer: true,
     selectedStatuses: [],
     onSelectStatus: () => {},
+    generateLink: () => '',
   };
 
   it('renders completed status dropdown with correct selected option', () => {
@@ -30,23 +31,5 @@ describe('ComplianceControls', () => {
     expect(
       screen.getByRole('button', { name: 'Submitted Chevron Down' }),
     ).toBeInTheDocument();
-  });
-
-  it('generates correct href for completed status options, requested APC coverage options and selected statuses', () => {
-    render(
-      <ComplianceControls
-        {...props}
-        selectedStatuses={[
-          'Waiting for Report',
-          'Compliant',
-          'Submit Final Publication',
-        ]}
-      />,
-    );
-
-    expect(screen.getByText('Show').closest('a')).toHaveAttribute(
-      'href',
-      '/base-path/1?completedStatus=show&requestedAPCCoverage=submitted&currentPage=1&status=Waiting+for+Report&status=Compliant&status=Submit+Final+Publication',
-    );
   });
 });

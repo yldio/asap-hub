@@ -1,5 +1,3 @@
-import { useHistory, useLocation } from 'react-router-dom';
-import { searchQueryParam } from '@asap-hub/routing';
 import {
   CompletedStatusOption,
   DEFAULT_COMPLETED_STATUS,
@@ -7,8 +5,37 @@ import {
   ManuscriptStatus,
   RequestedAPCCoverageOption,
 } from '@asap-hub/model';
+import { searchQueryParam } from '@asap-hub/routing';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from '../../hooks';
+
+const generateLink = (
+  href: string,
+  currentPage: number,
+  completedStatus: string,
+  requestedAPCCoverage: string,
+  statuses: string[],
+) => {
+  const params = new URLSearchParams();
+  params.set('completedStatus', completedStatus);
+  params.set('currentPage', currentPage.toString());
+
+  if (requestedAPCCoverage) {
+    params.set('requestedAPCCoverage', requestedAPCCoverage);
+  }
+
+  const filteredStatuses =
+    completedStatus === 'hide'
+      ? statuses.filter(
+          (status) => !['Compliant', 'Closed (other)'].includes(status),
+        )
+      : statuses;
+
+  filteredStatuses.forEach((status) => params.append('status', status));
+
+  return `${href}?${params.toString()}`;
+};
 
 export const useComplianceSearch = () => {
   const currentUrlParams = new URLSearchParams(useLocation().search);
@@ -71,5 +98,6 @@ export const useComplianceSearch = () => {
     selectedStatuses,
     setSearchQuery,
     setStatus,
+    generateLink,
   };
 };

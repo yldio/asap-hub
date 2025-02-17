@@ -32,6 +32,7 @@ describe('ComplianceDashboard', () => {
     sortingDirection: complianceInitialSortingDirection,
     setSortingDirection: jest.fn(),
     onUpdateManuscript: jest.fn(),
+    generateLink: jest.fn(),
   };
 
   it('renders the manuscript status card', () => {

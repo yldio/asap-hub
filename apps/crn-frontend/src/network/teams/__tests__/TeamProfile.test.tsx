@@ -137,6 +137,7 @@ const renderPage = async (
             requestedAPCCoverage: 'all',
             completedStatus: 'show',
             searchQuery: '',
+            selectedStatuses: [],
           }),
         );
       }}

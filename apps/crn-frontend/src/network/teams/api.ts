@@ -18,6 +18,7 @@ import {
   ManuscriptPostRequest,
   ManuscriptPutRequest,
   ManuscriptResponse,
+  ManuscriptStatus,
   RequestedAPCCoverageOption,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
@@ -245,6 +246,7 @@ export const resubmitManuscript = async (
 export type ManuscriptsOptions = Omit<GetListOptions, 'filters'> & {
   requestedAPCCoverage: RequestedAPCCoverageOption;
   completedStatus: CompletedStatusOption;
+  selectedStatuses: ManuscriptStatus[];
 };
 
 export const getManuscripts = async (
@@ -255,6 +257,7 @@ export const getManuscripts = async (
     pageSize,
     requestedAPCCoverage,
     completedStatus,
+    selectedStatuses,
   }: ManuscriptsOptions,
 ): Promise<ListPartialManuscriptResponse> => {
   const getApcCoverageFilter = (apcCoverage: RequestedAPCCoverageOption) => {
@@ -276,7 +279,18 @@ export const getManuscripts = async (
       ? `(NOT status:Compliant AND NOT status:"Closed (other)")`
       : '';
 
-  const filters = [apcCoverageFilter, completedStatusFilter]
+  const selectedStatusesList = selectedStatuses.map(
+    (status) => `status:"${status}"`,
+  );
+  const selectedStatusesFilter = selectedStatusesList.length
+    ? `(${selectedStatusesList.join(' OR ')})`
+    : '';
+
+  const filters = [
+    apcCoverageFilter,
+    completedStatusFilter,
+    selectedStatusesFilter,
+  ]
     .filter(Boolean)
     .join(' AND ');
 

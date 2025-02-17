@@ -60,6 +60,7 @@ const renderCompliancePage = async () => {
             requestedAPCCoverage: 'all',
             completedStatus: 'show',
             searchQuery: '',
+            selectedStatuses: [],
           }),
         );
       }}
@@ -128,7 +129,9 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   });
   userEvent.click(statusButton);
 
-  const newStatusButton = screen.getByRole('button', {
+  const newStatusButton = within(
+    screen.getByTestId('compliance-table-row'),
+  ).getByRole('button', {
     name: /Manuscript Resubmitted/i,
   });
   userEvent.click(newStatusButton);
@@ -182,7 +185,9 @@ it('manuscripts remain the same when there is not a match between the manuscript
   });
   userEvent.click(statusButton);
 
-  const newStatusButton = screen.getByRole('button', {
+  const newStatusButton = within(
+    screen.getByTestId('compliance-table-row'),
+  ).getByRole('button', {
     name: /Manuscript Resubmitted/i,
   });
   userEvent.click(newStatusButton);
@@ -238,7 +243,9 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
   });
   userEvent.click(statusButton);
 
-  const newStatusButton = screen.getByRole('button', {
+  const newStatusButton = within(
+    screen.getByTestId('compliance-table-row'),
+  ).getByRole('button', {
     name: /Manuscript Resubmitted/i,
   });
   userEvent.click(newStatusButton);

@@ -9,6 +9,9 @@ describe('ComplianceControls', () => {
     renderPageHref: (page: number) => `/base-path/${page}`,
     completedStatus: 'hide' as const,
     requestedAPCCoverage: 'submitted' as const,
+    isComplianceReviewer: true,
+    selectedStatuses: [],
+    onSelectStatus: () => {},
   };
 
   it('renders completed status dropdown with correct selected option', () => {
@@ -29,12 +32,21 @@ describe('ComplianceControls', () => {
     ).toBeInTheDocument();
   });
 
-  it('generates correct href for completed status options', () => {
-    render(<ComplianceControls {...props} />);
+  it('generates correct href for completed status options, requested APC coverage options and selected statuses', () => {
+    render(
+      <ComplianceControls
+        {...props}
+        selectedStatuses={[
+          'Waiting for Report',
+          'Compliant',
+          'Submit Final Publication',
+        ]}
+      />,
+    );
 
     expect(screen.getByText('Show').closest('a')).toHaveAttribute(
       'href',
-      '/base-path/1?completedStatus=show&requestedAPCCoverage=submitted&currentPage=1',
+      '/base-path/1?completedStatus=show&requestedAPCCoverage=submitted&currentPage=1&status=Waiting+for+Report&status=Compliant&status=Submit+Final+Publication',
     );
   });
 });

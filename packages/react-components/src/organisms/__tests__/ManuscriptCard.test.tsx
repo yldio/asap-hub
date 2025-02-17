@@ -323,9 +323,7 @@ it('does not display confirmation modal when isComplianceReviewer is true but th
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeEnabled();
   userEvent.click(statusButton);
-  userEvent.click(
-    getByRole('button', { name: 'Information Addendum Required' }),
-  );
+  userEvent.click(getByRole('button', { name: 'Addendum Required' }));
   expect(queryByText('Update status and notify?')).not.toBeInTheDocument();
 });
 

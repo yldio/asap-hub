@@ -16,7 +16,7 @@ import {
 } from '../../colors';
 import ManuscriptByStatus from '../ManuscriptByStatus';
 
-describe('ManuscriptBySt    atus', () => {
+describe('ManuscriptByStatus', () => {
   const mockOnSelectStatus = jest.fn();
 
   beforeEach(() => {
@@ -142,5 +142,24 @@ describe('ManuscriptBySt    atus', () => {
     expect(
       reviewComplianceReportButton?.querySelector('svg'),
     ).not.toBeInTheDocument();
+  });
+
+  it('does not render status buttons with type "none"', () => {
+    jest
+      .spyOn(require('../ManuscriptCard'), 'getReviewerStatusType')
+      .mockImplementation((status) =>
+        status === 'Closed (other)' ? 'none' : 'default',
+      );
+
+    render(
+      <ManuscriptByStatus
+        isComplianceReviewer={false}
+        selectedStatuses={[]}
+        onSelectStatus={mockOnSelectStatus}
+        shouldHideCompleteStatus={false}
+      />,
+    );
+
+    expect(screen.queryByText('Closed (other)')).not.toBeInTheDocument();
   });
 });

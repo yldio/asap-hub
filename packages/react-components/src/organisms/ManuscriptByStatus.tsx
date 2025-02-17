@@ -35,43 +35,29 @@ const manuscriptStatusContainerStyles = css({
   justifyItems: 'start',
 });
 
-const getbuttonStyles = (type: StatusType, isSelected: boolean) => {
-  const getBackgroundColor = () => {
-    if (!isSelected) {
-      return 'white';
-    }
-    if (type === 'warning') {
-      return warning100.rgb;
-    }
+type ColorByType = Record<Exclude<StatusType, 'none'>, string>;
 
-    if (type === 'final') {
-      return success100.rgb;
-    }
-
-    return info100.rgb;
+const getbuttonStyles = (
+  type: Exclude<StatusType, 'none'>,
+  isSelected: boolean,
+) => {
+  const backgroundColors = {
+    warning: warning100.rgb,
+    final: success100.rgb,
+    default: info100.rgb,
+    none: info100.rgb,
   };
 
-  const getBorderColor = () => {
-    if (type === 'warning') {
-      return warning150.rgb;
-    }
-
-    if (type === 'final') {
-      return info200.rgb;
-    }
-
-    return isSelected ? info500.rgb : steel.rgb;
+  const borderColors: ColorByType = {
+    warning: warning150.rgb,
+    final: info200.rgb,
+    default: isSelected ? info500.rgb : steel.rgb,
   };
 
-  const getColor = () => {
-    if (type === 'warning') {
-      return warning500.rgb;
-    }
-    if (type === 'final') {
-      return success500.rgb;
-    }
-
-    return isSelected ? info500.rgb : lead.rgb;
+  const textColors: ColorByType = {
+    warning: warning500.rgb,
+    final: success500.rgb,
+    default: isSelected ? info500.rgb : lead.rgb,
   };
 
   return css({
@@ -84,12 +70,14 @@ const getbuttonStyles = (type: StatusType, isSelected: boolean) => {
     justifyContent: 'center',
     alignItems: 'center',
 
-    backgroundColor: getBackgroundColor(),
+    backgroundColor: isSelected
+      ? backgroundColors[type] || backgroundColors.default
+      : 'white',
     borderStyle: 'solid',
     borderWidth: '1px !important',
-    borderColor: getBorderColor(),
+    borderColor: borderColors[type],
     borderRadius: '24px',
-    color: getColor(),
+    color: textColors[type],
     gap: '4px',
   });
 };
@@ -129,6 +117,11 @@ const ManuscriptByStatus: React.FC<ManuscriptByStatusProps> = ({
           const type = getReviewerStatusType(
             status as (typeof manuscriptStatus)[number],
           );
+
+          if (type === 'none') {
+            return null;
+          }
+
           const hasIcon = ['warning', 'final'].includes(type);
 
           const buttonStyles = getbuttonStyles(type, isSelected);

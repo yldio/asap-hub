@@ -167,7 +167,7 @@ describe('when there are replies', () => {
     });
   });
 
-  it('shows end of discussion button when canEndDiscussion is true and discussion not ended', async () => {
+  it('shows end discussion button when canEndDiscussion is true and discussion not ended', async () => {
     const replies = createDiscussionReplies(6);
     const discussion = createDiscussionResponse(message, replies);
     getDiscussion.mockReturnValue(discussion);
@@ -180,7 +180,7 @@ describe('when there are replies', () => {
     });
   });
 
-  it('doesnt show end of discussion button when canEndDiscussion is false', async () => {
+  it("doesn't show end discussion button when canEndDiscussion is false", async () => {
     const replies = createDiscussionReplies(6);
     const discussion = createDiscussionResponse(message, replies);
     getDiscussion.mockReturnValue(discussion);
@@ -193,7 +193,8 @@ describe('when there are replies', () => {
       expect(queryByTestId('end-discussion-button')).not.toBeInTheDocument();
     });
   });
-  it('doesnt show end of discussion button when discussion has ended', async () => {
+
+  it("doesn't show end discussion button when discussion has ended", async () => {
     const replies = createDiscussionReplies(6);
     const discussion = createDiscussionResponse(message, replies);
     getDiscussion.mockReturnValue({
@@ -210,7 +211,7 @@ describe('when there are replies', () => {
     });
   });
 
-  it('shows end of discussion modal and calls onEndDiscussion method', async () => {
+  it('shows end discussion modal and calls onEndDiscussion method', async () => {
     jest.spyOn(console, 'error').mockImplementation();
     const replies = createDiscussionReplies(6);
     const discussion = createDiscussionResponse(message, replies);
@@ -256,7 +257,7 @@ describe('when there are replies', () => {
     });
   });
 
-  it('doesnt show end of discussion modal when onEndDiscussion is not defined', async () => {
+  it("doesn't show end discussion modal when onEndDiscussion is not defined", async () => {
     jest.spyOn(console, 'error').mockImplementation();
     const replies = createDiscussionReplies(6);
     const discussion = createDiscussionResponse(message, replies);

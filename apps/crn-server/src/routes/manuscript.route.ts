@@ -91,12 +91,29 @@ export const manuscriptRouteFactory = (
 
     if (!loggedInUser || !userBelongsToTeam) throw Boom.forbidden();
 
-    const manuscript = await manuscriptController.create({
-      ...createRequest,
-      userId: loggedInUser.id,
-    });
+    try {
+      const manuscript = await manuscriptController.create({
+        ...createRequest,
+        userId: loggedInUser.id,
+      });
 
-    res.status(201).json(manuscript);
+      res.status(201).json(manuscript);
+    } catch (error) {
+      if (error instanceof Error) {
+        try {
+          const errorMessage = error.message as string;
+          const contentfulError = JSON.parse(errorMessage);
+          res.status(Number(contentfulError.status) || 500).json({
+            message: contentfulError.message || 'An error occurred',
+            errors: contentfulError.details?.errors || [],
+          });
+          return;
+        } catch {
+          throw error;
+        }
+      }
+      res.status(500).json({ message: 'Unexpected error' });
+    }
   });
 
   manuscriptRoutes.post<{ manuscriptId: string }>(

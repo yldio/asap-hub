@@ -30,6 +30,22 @@ type TeamManuscriptProps = {
   teamId: string;
   resubmitManuscript?: boolean;
 };
+
+type ErrorDetails = {
+  details: string;
+  path: string[];
+  value: string;
+  name: string;
+};
+
+type ManuscriptError = {
+  statusCode: number;
+  response?: {
+    errors?: ErrorDetails[];
+    message: string;
+  };
+};
+
 const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   teamId,
   resubmitManuscript = false,
@@ -58,6 +74,21 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
     setFormType({ type: 'manuscript', accent: 'successLarge' });
     setRefreshTeamState((value) => value + 1);
     pushFromHere(path);
+  };
+
+  const onError = (error: ManuscriptError | Error) => {
+    if (
+      'statusCode' in error &&
+      error.statusCode === 422 &&
+      error.response?.errors?.length &&
+      error.response?.errors.find(
+        (err: ErrorDetails) => err.path[1] === 'title' && err.name === 'unique',
+      )
+    ) {
+      setFormType({ type: 'duplicate-manuscript', accent: 'error' });
+    } else {
+      setFormType({ type: 'default-error', accent: 'error' });
+    }
   };
 
   const {
@@ -103,6 +134,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           manuscriptId={manuscriptId}
           onSuccess={onSuccess}
           onCreate={createManuscript}
+          onError={onError}
           onUpdate={updateManuscript}
           onResubmit={handleResubmitManuscript}
           teamId={teamId}

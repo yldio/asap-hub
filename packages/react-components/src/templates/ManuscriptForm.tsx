@@ -83,6 +83,21 @@ const apcCoverageLifecycles = [
   'Publication with addendum or corrigendum',
 ];
 
+type ErrorDetails = {
+  details: string;
+  path: string[];
+  value: string;
+  name: string;
+};
+
+type ManuscriptError = {
+  statusCode: number;
+  response?: {
+    errors?: ErrorDetails[];
+    message: string;
+  };
+};
+
 type OptionalVersionFields = Array<
   keyof Omit<
     ManuscriptVersion,
@@ -292,6 +307,7 @@ type ManuscriptFormProps = Omit<
     firstAuthors?: AuthorSelectOption[];
     correspondingAuthor?: AuthorSelectOption[];
     additionalAuthors?: AuthorSelectOption[];
+    onError: (error: ManuscriptError | Error) => void;
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
@@ -300,6 +316,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onUpdate,
   onResubmit,
   onSuccess,
+  onError,
   handleFileUpload,
   teamId,
   title,
@@ -577,42 +594,46 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           additionalAuthorsEmails,
         ),
       };
-      if (!manuscriptId) {
-        await onCreate({
-          ...data,
-          teamId,
-          eligibilityReasons: [...eligibilityReasons],
-          versions: [
-            {
-              ...requestVersionData,
-              ...versionDataPayload,
-            },
-          ],
-        });
-      } else if (resubmitManuscript) {
-        await onResubmit(manuscriptId, {
-          title: data.title,
-          teamId,
-          versions: [
-            {
-              ...requestVersionData,
-              ...versionDataPayload,
-            },
-          ],
-        });
-      } else {
-        await onUpdate(manuscriptId, {
-          title: data.title,
-          teamId,
-          versions: [
-            {
-              ...requestVersionData,
-              ...versionDataPayload,
-            },
-          ],
-        });
+      try {
+        if (!manuscriptId) {
+          await onCreate({
+            ...data,
+            teamId,
+            eligibilityReasons: [...eligibilityReasons],
+            versions: [
+              {
+                ...requestVersionData,
+                ...versionDataPayload,
+              },
+            ],
+          });
+        } else if (resubmitManuscript) {
+          await onResubmit(manuscriptId, {
+            title: data.title,
+            teamId,
+            versions: [
+              {
+                ...requestVersionData,
+                ...versionDataPayload,
+              },
+            ],
+          });
+        } else {
+          await onUpdate(manuscriptId, {
+            title: data.title,
+            teamId,
+            versions: [
+              {
+                ...requestVersionData,
+                ...versionDataPayload,
+              },
+            ],
+          });
+        }
+        onSuccess();
+      } catch (error) {
+        onError(error as ManuscriptError | Error);
       }
-      onSuccess();
     }
   };
 

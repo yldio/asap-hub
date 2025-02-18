@@ -678,7 +678,7 @@ describe('Reminders data provider', () => {
           );
         });
 
-        test('PI of the manuscript lab should see discussion replied to reminders', async () => {
+        test('PI of the manuscript lab should see quick check replied to reminders', async () => {
           const userId = 'lab-pi-id';
           const fetchRemindersOptions: FetchRemindersOptions = {
             userId,

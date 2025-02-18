@@ -5,6 +5,8 @@ import { ComplianceDashboard } from '..';
 
 describe('ComplianceDashboard', () => {
   const props: ComponentProps<typeof ComplianceDashboard> = {
+    selectedStatuses: [],
+    onSelectStatus: jest.fn(),
     completedStatus: 'show',
     requestedAPCCoverage: 'all',
     isComplianceReviewer: true,
@@ -30,6 +32,7 @@ describe('ComplianceDashboard', () => {
     sortingDirection: complianceInitialSortingDirection,
     setSortingDirection: jest.fn(),
     onUpdateManuscript: jest.fn(),
+    generateLink: jest.fn(),
   };
 
   it('renders the manuscript status card', () => {

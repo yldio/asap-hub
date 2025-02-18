@@ -130,6 +130,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     pageSize,
     requestedAPCCoverage: 'all',
     completedStatus: 'show',
+    selectedStatuses: [],
   });
 
   if (team) {

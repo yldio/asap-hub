@@ -3,35 +3,34 @@ import {
   CompletedStatusOption,
   complianceInitialSortingDirection,
   ComplianceSortingDirection,
-  DEFAULT_COMPLETED_STATUS,
-  DEFAULT_REQUESTED_APC_COVERAGE,
   ManuscriptPutRequest,
   RequestedAPCCoverageOption,
   SortCompliance,
 } from '@asap-hub/model';
 import { ComplianceDashboard, SearchField } from '@asap-hub/react-components';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+import { usePagination, usePaginationParams } from '../../hooks';
 import { useAssignedUsersSuggestions } from '../../shared-state/shared-research';
 import {
   useIsComplianceReviewer,
   useManuscripts,
   usePutManuscript,
 } from './state';
+import { useComplianceSearch } from './useComplianceSearch';
 import { useManuscriptToast } from './useManuscriptToast';
 
 const Compliance: React.FC = () => {
-  const { searchQuery, debouncedSearchQuery, setSearchQuery } = useSearch();
+  const {
+    completedStatus,
+    debouncedSearchQuery,
+    requestedAPCCoverage,
+    searchQuery,
+    selectedStatuses,
+    setSearchQuery,
+    setStatus,
+    generateLink,
+  } = useComplianceSearch();
   const { currentPage, pageSize } = usePaginationParams();
-  const currentUrlParams = new URLSearchParams(useLocation().search);
-  const completedStatus =
-    (currentUrlParams.get('completedStatus') as CompletedStatusOption) ??
-    DEFAULT_COMPLETED_STATUS;
-  const requestedAPCCoverage =
-    (currentUrlParams.get(
-      'requestedAPCCoverage',
-    ) as RequestedAPCCoverageOption) ?? DEFAULT_REQUESTED_APC_COVERAGE;
 
   const { setFormType } = useManuscriptToast();
   const result = useManuscripts({
@@ -40,6 +39,7 @@ const Compliance: React.FC = () => {
     pageSize,
     requestedAPCCoverage,
     completedStatus,
+    selectedStatuses,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(
@@ -74,6 +74,8 @@ const Compliance: React.FC = () => {
       />
       <SearchFrame title="">
         <ComplianceDashboard
+          selectedStatuses={selectedStatuses}
+          onSelectStatus={setStatus}
           completedStatus={completedStatus as CompletedStatusOption}
           requestedAPCCoverage={
             requestedAPCCoverage as RequestedAPCCoverageOption
@@ -97,6 +99,7 @@ const Compliance: React.FC = () => {
               })),
             )
           }
+          generateLink={generateLink}
         />
       </SearchFrame>
     </article>

@@ -402,6 +402,7 @@ describe('Manuscript', () => {
         currentPage: null,
         requestedAPCCoverage: 'all',
         completedStatus: 'show',
+        selectedStatuses: [],
       });
       expect(workingGroups).toEqual(
         expect.objectContaining({
@@ -473,6 +474,7 @@ describe('Manuscript', () => {
             requestedAPCCoverage:
               requestedAPCCoverage as RequestedAPCCoverageOption,
             completedStatus: completedStatus as CompletedStatusOption,
+            selectedStatuses: [],
           });
 
           expect(search).toHaveBeenCalledWith(
@@ -493,6 +495,7 @@ describe('Manuscript', () => {
         currentPage: null,
         requestedAPCCoverage: 'all',
         completedStatus: 'show',
+        selectedStatuses: [],
       });
 
       expect(search).toHaveBeenCalledWith(
@@ -509,6 +512,7 @@ describe('Manuscript', () => {
         currentPage: 2,
         requestedAPCCoverage: 'all',
         completedStatus: 'show',
+        selectedStatuses: [],
       });
 
       expect(search).toHaveBeenCalledWith(
@@ -519,6 +523,107 @@ describe('Manuscript', () => {
           page: 2,
         }),
       );
+    });
+
+    describe('status filters', () => {
+      it('should generate correct filter for single status', async () => {
+        await getManuscripts(algoliaSearchClient, {
+          searchQuery: '',
+          pageSize: null,
+          currentPage: null,
+          requestedAPCCoverage: 'all',
+          completedStatus: 'show',
+          selectedStatuses: ['Waiting for Report'],
+        });
+
+        expect(search).toHaveBeenCalledWith(
+          ['manuscript'],
+          '',
+          expect.objectContaining({
+            filters: '(status:"Waiting for Report")',
+          }),
+        );
+      });
+
+      it('should generate correct filter for multiple statuses', async () => {
+        await getManuscripts(algoliaSearchClient, {
+          searchQuery: '',
+          pageSize: null,
+          currentPage: null,
+          requestedAPCCoverage: 'all',
+          completedStatus: 'show',
+          selectedStatuses: ['Waiting for Report', 'Review Compliance Report'],
+        });
+
+        expect(search).toHaveBeenCalledWith(
+          ['manuscript'],
+          '',
+          expect.objectContaining({
+            filters:
+              '(status:"Waiting for Report" OR status:"Review Compliance Report")',
+          }),
+        );
+      });
+
+      it('should combine status filters with APC coverage filter', async () => {
+        await getManuscripts(algoliaSearchClient, {
+          searchQuery: '',
+          pageSize: null,
+          currentPage: null,
+          requestedAPCCoverage: 'yes',
+          completedStatus: 'show',
+          selectedStatuses: ['Waiting for Report', 'Compliant'],
+        });
+
+        expect(search).toHaveBeenCalledWith(
+          ['manuscript'],
+          '',
+          expect.objectContaining({
+            filters:
+              'requestingApcCoverage:Yes AND (status:"Waiting for Report" OR status:"Compliant")',
+          }),
+        );
+      });
+
+      it('should combine status filters with completed status filter', async () => {
+        await getManuscripts(algoliaSearchClient, {
+          searchQuery: '',
+          pageSize: null,
+          currentPage: null,
+          requestedAPCCoverage: 'all',
+          completedStatus: 'hide',
+          selectedStatuses: ['Waiting for Report', 'Review Compliance Report'],
+        });
+
+        expect(search).toHaveBeenCalledWith(
+          ['manuscript'],
+          '',
+          expect.objectContaining({
+            filters:
+              '(NOT status:Compliant AND NOT status:"Closed (other)") AND (status:"Waiting for Report" OR status:"Review Compliance Report")',
+          }),
+        );
+      });
+
+      it('should combine status filters with both APC coverage and completed status filters', async () => {
+        await getManuscripts(algoliaSearchClient, {
+          searchQuery: '',
+          pageSize: null,
+          currentPage: null,
+          requestedAPCCoverage: 'yes',
+          completedStatus: 'hide',
+          selectedStatuses: ['Waiting for Report', 'Review Compliance Report'],
+        });
+
+        expect(search).toHaveBeenCalledWith(
+          ['manuscript'],
+          '',
+          expect.objectContaining({
+            filters:
+              'requestingApcCoverage:Yes AND (NOT status:Compliant AND NOT status:"Closed (other)") AND (status:"Waiting for Report" OR status:"Review Compliance Report")',
+          }),
+        );
+      });
     });
   });
 

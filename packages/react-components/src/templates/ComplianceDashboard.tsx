@@ -1,10 +1,9 @@
-import { manuscriptStatus } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
 import { article, PageControls } from '..';
-import { Card, Headline3, Paragraph, Tag } from '../atoms';
-import ComplianceControls from '../molecules/ComplianceControls';
+import { Headline3, Paragraph } from '../atoms';
+import { ComplianceControls } from '../molecules';
 import { ComplianceTable } from '../organisms';
 import { rem } from '../pixels';
 
@@ -25,26 +24,14 @@ const iconStyles = css({
   },
 });
 
-const cardStyles = css({
-  marginTop: rem(32),
-});
-
-const statusDescriptionStyles = css({
-  fontWeight: 'bold',
-  marginBottom: rem(16),
-});
-
-const manuscriptStatusContainerStyles = css({
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr',
-  gap: '16px',
-  justifyItems: 'start',
-});
-
 type ComplianceDashboardProps = ComponentProps<typeof PageControls> &
   Pick<
     ComponentProps<typeof ComplianceControls>,
-    'completedStatus' | 'requestedAPCCoverage'
+    | 'completedStatus'
+    | 'requestedAPCCoverage'
+    | 'selectedStatuses'
+    | 'onSelectStatus'
+    | 'generateLink'
   > &
   Pick<
     ComponentProps<typeof ComplianceTable>,
@@ -67,20 +54,19 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
   setSortingDirection,
   onUpdateManuscript,
   getAssignedUsersSuggestions,
+  selectedStatuses,
+  onSelectStatus,
+  generateLink,
   ...pageControlsProps
 }) => (
   <article>
-    <Card overrideStyles={cardStyles}>
-      <div css={statusDescriptionStyles}>
-        <Paragraph>Manuscripts by status:</Paragraph>
-      </div>
-      <div css={manuscriptStatusContainerStyles}>
-        {manuscriptStatus.map((status, index) => (
-          <Tag key={index}>{status}</Tag>
-        ))}
-      </div>
-    </Card>
-    <ComplianceControls {...pageControlsProps} />
+    <ComplianceControls
+      {...pageControlsProps}
+      selectedStatuses={selectedStatuses}
+      isComplianceReviewer={isComplianceReviewer}
+      onSelectStatus={onSelectStatus}
+      generateLink={generateLink}
+    />
     {data.length > 0 ? (
       <main css={{ paddingTop: rem(32) }}>
         <ComplianceTable

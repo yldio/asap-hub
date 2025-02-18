@@ -174,7 +174,7 @@ export const getReviewerStatusType = (
       [manuscriptStatus[3]]: 'default',
       [manuscriptStatus[4]]: 'warning',
       [manuscriptStatus[5]]: 'default',
-      [manuscriptStatus[6]]: 'warning',
+      [manuscriptStatus[6]]: 'default',
       [manuscriptStatus[7]]: 'final',
       [manuscriptStatus[8]]: 'final',
     }) as Record<string, StatusType>

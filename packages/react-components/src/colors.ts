@@ -116,5 +116,6 @@ export const success500 = color(52, 162, 112);
 export const success900 = color(40, 121, 83);
 
 export const warning100 = color(248, 237, 222);
+export const warning150 = color(242, 225, 203);
 export const warning500 = color(206, 128, 26);
 export const warning900 = color(181, 107, 11);

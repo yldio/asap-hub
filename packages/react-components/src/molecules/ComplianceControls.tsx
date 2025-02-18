@@ -10,8 +10,9 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls } from '..';
 import { dropdownChevronIcon } from '../icons';
+import { ManuscriptByStatus } from '../organisms';
 import { rem, tabletScreen } from '../pixels';
-import DropdownButton from './DropdownButton';
+import { DropdownButton } from '.';
 
 const filterContainerStyles = css({
   display: 'flex',
@@ -40,85 +41,69 @@ const filterContainerStyles = css({
   },
 });
 
-const generateLink = (
-  href: string,
-  currentPage: number,
-  completedStatus: string,
-  requestedAPCCoverage: string,
-) =>
-  `${href}?completedStatus=${completedStatus}${
-    requestedAPCCoverage ? `&requestedAPCCoverage=${requestedAPCCoverage}` : ''
-  }&currentPage=${currentPage}`;
-
-type ComplianceControlsProps = ComponentProps<typeof PageControls> & {
-  completedStatus: CompletedStatusOption;
-  requestedAPCCoverage: RequestedAPCCoverageOption;
-};
+type ComplianceControlsProps = ComponentProps<typeof PageControls> &
+  Pick<
+    ComponentProps<typeof ManuscriptByStatus>,
+    'selectedStatuses' | 'onSelectStatus'
+  > & {
+    completedStatus: CompletedStatusOption;
+    requestedAPCCoverage: RequestedAPCCoverageOption;
+    isComplianceReviewer: boolean;
+    generateLink: (
+      href: string,
+      currentPage: number,
+      completedStatus: string,
+      requestedAPCCoverage: string,
+      statuses: string[],
+    ) => string;
+  };
 
 const ComplianceControls = ({
-  currentPageIndex,
-  renderPageHref,
   completedStatus,
+  currentPageIndex,
+  isComplianceReviewer,
+  onSelectStatus,
+  renderPageHref,
   requestedAPCCoverage,
+  selectedStatuses,
+  generateLink,
 }: ComplianceControlsProps) => {
   const href = renderPageHref(currentPageIndex);
   return (
-    <div
-      css={css({
-        display: 'flex',
-        flexDirection: 'row',
-        gap: rem(15),
-        paddingTop: rem(32),
-      })}
-    >
-      <div css={filterContainerStyles}>
-        <strong>Completed Status:</strong>
-        <DropdownButton
-          noMargin
-          buttonChildren={() => (
-            <>
-              <span css={{ marginRight: rem(8) }}>
-                {completedStatusOptions[completedStatus]}
-              </span>
-              {dropdownChevronIcon}
-            </>
-          )}
-        >
-          {Object.keys(completedStatusOptions).map((statusOption) => ({
-            item: (
+    <>
+      <ManuscriptByStatus
+        shouldHideCompleteStatus={completedStatus === 'hide'}
+        isComplianceReviewer={isComplianceReviewer}
+        selectedStatuses={selectedStatuses}
+        onSelectStatus={onSelectStatus}
+      />
+      <div
+        css={css({
+          display: 'flex',
+          flexDirection: 'row',
+          gap: rem(15),
+          paddingTop: rem(32),
+        })}
+      >
+        <div css={filterContainerStyles}>
+          <strong>Completed Status:</strong>
+          <DropdownButton
+            noMargin
+            buttonChildren={() => (
               <>
-                {completedStatusOptions[statusOption as CompletedStatusOption]}
+                <span css={{ marginRight: rem(8) }}>
+                  {completedStatusOptions[completedStatus]}
+                </span>
+                {dropdownChevronIcon}
               </>
-            ),
-            href: generateLink(
-              href,
-              currentPageIndex,
-              statusOption,
-              requestedAPCCoverage,
-            ),
-          }))}
-        </DropdownButton>
-      </div>
-      <div css={filterContainerStyles}>
-        <strong>Requested APC Coverage:</strong>
-        <DropdownButton
-          noMargin
-          buttonChildren={() => (
-            <>
-              <span css={{ marginRight: rem(8) }}>
-                {requestedAPCCoverageOptions[requestedAPCCoverage]}
-              </span>
-              {dropdownChevronIcon}
-            </>
-          )}
-        >
-          {Object.keys(requestedAPCCoverageOptions).map(
-            (apcCoverageOption) => ({
+            )}
+          >
+            {Object.keys(completedStatusOptions).map((statusOption) => ({
               item: (
                 <>
                   {
-                    requestedAPCCoverageOptions[
-                      apcCoverageOption as RequestedAPCCoverageOption
+                    completedStatusOptions[
+                      statusOption as CompletedStatusOption
                     ]
                   }
                 </>
@@ -126,14 +111,50 @@ const ComplianceControls = ({
               href: generateLink(
                 href,
                 currentPageIndex,
-                completedStatus,
-                apcCoverageOption,
+                statusOption,
+                requestedAPCCoverage,
+                selectedStatuses,
               ),
-            }),
-          )}
-        </DropdownButton>
+            }))}
+          </DropdownButton>
+        </div>
+        <div css={filterContainerStyles}>
+          <strong>Requested APC Coverage:</strong>
+          <DropdownButton
+            noMargin
+            buttonChildren={() => (
+              <>
+                <span css={{ marginRight: rem(8) }}>
+                  {requestedAPCCoverageOptions[requestedAPCCoverage]}
+                </span>
+                {dropdownChevronIcon}
+              </>
+            )}
+          >
+            {Object.keys(requestedAPCCoverageOptions).map(
+              (apcCoverageOption) => ({
+                item: (
+                  <>
+                    {
+                      requestedAPCCoverageOptions[
+                        apcCoverageOption as RequestedAPCCoverageOption
+                      ]
+                    }
+                  </>
+                ),
+                href: generateLink(
+                  href,
+                  currentPageIndex,
+                  completedStatus,
+                  apcCoverageOption,
+                  selectedStatuses,
+                ),
+              }),
+            )}
+          </DropdownButton>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

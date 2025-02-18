@@ -9,6 +9,10 @@ describe('ComplianceControls', () => {
     renderPageHref: (page: number) => `/base-path/${page}`,
     completedStatus: 'hide' as const,
     requestedAPCCoverage: 'submitted' as const,
+    isComplianceReviewer: true,
+    selectedStatuses: [],
+    onSelectStatus: () => {},
+    generateLink: () => '',
   };
 
   it('renders completed status dropdown with correct selected option', () => {
@@ -27,14 +31,5 @@ describe('ComplianceControls', () => {
     expect(
       screen.getByRole('button', { name: 'Submitted Chevron Down' }),
     ).toBeInTheDocument();
-  });
-
-  it('generates correct href for completed status options', () => {
-    render(<ComplianceControls {...props} />);
-
-    expect(screen.getByText('Show').closest('a')).toHaveAttribute(
-      'href',
-      '/base-path/1?completedStatus=show&requestedAPCCoverage=submitted&currentPage=1',
-    );
   });
 });

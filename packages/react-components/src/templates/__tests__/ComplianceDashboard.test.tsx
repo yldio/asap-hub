@@ -5,6 +5,7 @@ import { ComplianceDashboard } from '..';
 
 describe('ComplianceDashboard', () => {
   const props: ComponentProps<typeof ComplianceDashboard> = {
+    hasAppliedFilters: false,
     selectedStatuses: [],
     onSelectStatus: jest.fn(),
     completedStatus: 'show',
@@ -33,6 +34,7 @@ describe('ComplianceDashboard', () => {
     setSortingDirection: jest.fn(),
     onUpdateManuscript: jest.fn(),
     generateLink: jest.fn(),
+    manuscriptCount: 1,
   };
 
   it('renders the manuscript status card', () => {
@@ -46,6 +48,14 @@ describe('ComplianceDashboard', () => {
     const { getByText } = render(<ComplianceDashboard {...props} data={[]} />);
 
     expect(getByText('No manuscripts available.')).toBeInTheDocument();
+  });
+
+  it('renders the empty results view when there are no results after applying filters', () => {
+    const { getByText } = render(
+      <ComplianceDashboard {...props} data={[]} hasAppliedFilters={true} />,
+    );
+
+    expect(getByText('No results found.')).toBeInTheDocument();
   });
 
   it('renders compliance table when there are manuscripts', () => {

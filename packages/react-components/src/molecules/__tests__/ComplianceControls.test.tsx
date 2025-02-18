@@ -13,7 +13,20 @@ describe('ComplianceControls', () => {
     selectedStatuses: [],
     onSelectStatus: () => {},
     generateLink: () => '',
+    manuscriptCount: 1,
   };
+
+  it('renders manuscript count with correct text when there is only one result', () => {
+    render(<ComplianceControls {...props} />);
+
+    expect(screen.getByText('1 result found')).toBeInTheDocument();
+  });
+
+  it('renders manuscript count with correct text when there are multiple results', () => {
+    render(<ComplianceControls {...props} manuscriptCount={32} />);
+
+    expect(screen.getByText('32 results found')).toBeInTheDocument();
+  });
 
   it('renders completed status dropdown with correct selected option', () => {
     render(<ComplianceControls {...props} />);

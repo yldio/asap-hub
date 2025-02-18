@@ -14,6 +14,11 @@ import { ManuscriptByStatus } from '../organisms';
 import { rem, tabletScreen } from '../pixels';
 import { DropdownButton } from '.';
 
+const countContainerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+});
+
 const filterContainerStyles = css({
   display: 'flex',
   alignItems: 'center',
@@ -41,6 +46,23 @@ const filterContainerStyles = css({
   },
 });
 
+const controlsContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  paddingTop: rem(32),
+  justifyContent: 'space-between',
+});
+
+const filtersWrapperStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  gap: rem(32),
+});
+
+const dropdownLabelStyles = css({
+  marginRight: rem(8),
+});
+
 type ComplianceControlsProps = ComponentProps<typeof PageControls> &
   Pick<
     ComponentProps<typeof ManuscriptByStatus>,
@@ -49,6 +71,7 @@ type ComplianceControlsProps = ComponentProps<typeof PageControls> &
     completedStatus: CompletedStatusOption;
     requestedAPCCoverage: RequestedAPCCoverageOption;
     isComplianceReviewer: boolean;
+    manuscriptCount: number;
     generateLink: (
       href: string,
       currentPage: number,
@@ -67,8 +90,13 @@ const ComplianceControls = ({
   requestedAPCCoverage,
   selectedStatuses,
   generateLink,
+  manuscriptCount,
 }: ComplianceControlsProps) => {
   const href = renderPageHref(currentPageIndex);
+  const resultsFoundText =
+    manuscriptCount === 1
+      ? `${manuscriptCount} result found`
+      : `${manuscriptCount} results found`;
   return (
     <>
       <ManuscriptByStatus
@@ -77,67 +105,30 @@ const ComplianceControls = ({
         selectedStatuses={selectedStatuses}
         onSelectStatus={onSelectStatus}
       />
-      <div
-        css={css({
-          display: 'flex',
-          flexDirection: 'row',
-          gap: rem(15),
-          paddingTop: rem(32),
-        })}
-      >
-        <div css={filterContainerStyles}>
-          <strong>Completed Status:</strong>
-          <DropdownButton
-            noMargin
-            buttonChildren={() => (
-              <>
-                <span css={{ marginRight: rem(8) }}>
-                  {completedStatusOptions[completedStatus]}
-                </span>
-                {dropdownChevronIcon}
-              </>
-            )}
-          >
-            {Object.keys(completedStatusOptions).map((statusOption) => ({
-              item: (
-                <>
-                  {
-                    completedStatusOptions[
-                      statusOption as CompletedStatusOption
-                    ]
-                  }
-                </>
-              ),
-              href: generateLink(
-                href,
-                currentPageIndex,
-                statusOption,
-                requestedAPCCoverage,
-                selectedStatuses,
-              ),
-            }))}
-          </DropdownButton>
+      <div css={controlsContainerStyles}>
+        <div css={countContainerStyles}>
+          <strong>{resultsFoundText}</strong>
         </div>
-        <div css={filterContainerStyles}>
-          <strong>Requested APC Coverage:</strong>
-          <DropdownButton
-            noMargin
-            buttonChildren={() => (
-              <>
-                <span css={{ marginRight: rem(8) }}>
-                  {requestedAPCCoverageOptions[requestedAPCCoverage]}
-                </span>
-                {dropdownChevronIcon}
-              </>
-            )}
-          >
-            {Object.keys(requestedAPCCoverageOptions).map(
-              (apcCoverageOption) => ({
+        <div css={filtersWrapperStyles}>
+          <div css={filterContainerStyles}>
+            <strong>Completed Status:</strong>
+            <DropdownButton
+              noMargin
+              buttonChildren={() => (
+                <>
+                  <span css={dropdownLabelStyles}>
+                    {completedStatusOptions[completedStatus]}
+                  </span>
+                  {dropdownChevronIcon}
+                </>
+              )}
+            >
+              {Object.keys(completedStatusOptions).map((statusOption) => ({
                 item: (
                   <>
                     {
-                      requestedAPCCoverageOptions[
-                        apcCoverageOption as RequestedAPCCoverageOption
+                      completedStatusOptions[
+                        statusOption as CompletedStatusOption
                       ]
                     }
                   </>
@@ -145,13 +136,48 @@ const ComplianceControls = ({
                 href: generateLink(
                   href,
                   currentPageIndex,
-                  completedStatus,
-                  apcCoverageOption,
+                  statusOption,
+                  requestedAPCCoverage,
                   selectedStatuses,
                 ),
-              }),
-            )}
-          </DropdownButton>
+              }))}
+            </DropdownButton>
+          </div>
+          <div css={filterContainerStyles}>
+            <strong>Requested APC Coverage:</strong>
+            <DropdownButton
+              noMargin
+              buttonChildren={() => (
+                <>
+                  <span css={dropdownLabelStyles}>
+                    {requestedAPCCoverageOptions[requestedAPCCoverage]}
+                  </span>
+                  {dropdownChevronIcon}
+                </>
+              )}
+            >
+              {Object.keys(requestedAPCCoverageOptions).map(
+                (apcCoverageOption) => ({
+                  item: (
+                    <>
+                      {
+                        requestedAPCCoverageOptions[
+                          apcCoverageOption as RequestedAPCCoverageOption
+                        ]
+                      }
+                    </>
+                  ),
+                  href: generateLink(
+                    href,
+                    currentPageIndex,
+                    completedStatus,
+                    apcCoverageOption,
+                    selectedStatuses,
+                  ),
+                }),
+              )}
+            </DropdownButton>
+          </div>
         </div>
       </div>
     </>

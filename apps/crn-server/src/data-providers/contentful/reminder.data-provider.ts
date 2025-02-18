@@ -1316,7 +1316,9 @@ const getReplyRemindersFromQuery = (
         isManuscriptProjectManagerOrLeadPI(
           manuscriptVersion.teamsCollection,
           userProjectManagerOrLeadPITeamIds,
-        ) || isManuscriptAuthor(manuscriptVersion, userId);
+        ) ||
+        isManuscriptAuthor(manuscriptVersion, userId) ||
+        isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
 
       if (
         isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
@@ -1351,7 +1353,9 @@ const getReplyRemindersFromQuery = (
         isManuscriptProjectManagerOrLeadPI(
           manuscriptVersion.teamsCollection,
           userProjectManagerOrLeadPITeamIds,
-        ) || isManuscriptAuthor(manuscriptVersion, userId);
+        ) ||
+        isManuscriptAuthor(manuscriptVersion, userId) ||
+        isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
 
       if (
         isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&

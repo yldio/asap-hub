@@ -3,6 +3,8 @@ import {
   CompletedStatusOption,
   complianceInitialSortingDirection,
   ComplianceSortingDirection,
+  DEFAULT_COMPLETED_STATUS,
+  DEFAULT_REQUESTED_APC_COVERAGE,
   ManuscriptPutRequest,
   RequestedAPCCoverageOption,
   SortCompliance,
@@ -30,6 +32,12 @@ const Compliance: React.FC = () => {
     setStatus,
     generateLink,
   } = useComplianceSearch();
+  const hasAppliedFilters =
+    selectedStatuses.length > 0 ||
+    searchQuery.trim() !== '' ||
+    completedStatus !== DEFAULT_COMPLETED_STATUS ||
+    requestedAPCCoverage !== DEFAULT_REQUESTED_APC_COVERAGE;
+
   const { currentPage, pageSize } = usePaginationParams();
 
   const { setFormType } = useManuscriptToast();
@@ -74,6 +82,7 @@ const Compliance: React.FC = () => {
       />
       <SearchFrame title="">
         <ComplianceDashboard
+          hasAppliedFilters={hasAppliedFilters}
           selectedStatuses={selectedStatuses}
           onSelectStatus={setStatus}
           completedStatus={completedStatus as CompletedStatusOption}
@@ -100,6 +109,7 @@ const Compliance: React.FC = () => {
             )
           }
           generateLink={generateLink}
+          manuscriptCount={result.total}
         />
       </SearchFrame>
     </article>

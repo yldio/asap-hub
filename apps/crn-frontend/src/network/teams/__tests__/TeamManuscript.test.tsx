@@ -28,7 +28,7 @@ import TeamManuscript from '../TeamManuscript';
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 
 const teamId = '42';
-const history = createMemoryHistory({
+let history = createMemoryHistory({
   initialEntries: [
     network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$,
   ],
@@ -56,6 +56,13 @@ beforeEach(() => {
   jest.resetModules();
 
   jest.spyOn(console, 'error').mockImplementation();
+
+  history = createMemoryHistory({
+    initialEntries: [
+      network({}).teams({}).team({ teamId }).workspace({}).createManuscript({})
+        .$,
+    ],
+  });
 });
 
 const renderPage = async (
@@ -245,6 +252,204 @@ it('can publish a form when the data is valid and navigates to team workspace', 
     expect(history.location.pathname).toBe(
       `/network/teams/${teamId}/workspace`,
     );
+  });
+}, 180_000);
+
+it('shows duplicate manuscript toast when submitting with duplicate title', async () => {
+  const duplicateTitleError = {
+    statusCode: 422,
+    response: {
+      errors: [
+        {
+          path: ['versions', 'title'],
+          name: 'unique',
+          details: 'Title must be unique',
+          value: 'The Manuscript',
+        },
+      ],
+      message: 'Validation Error',
+    },
+  };
+
+  (createManuscript as jest.Mock).mockRejectedValueOnce(duplicateTitleError);
+  const title = 'The Manuscript';
+
+  await renderPage();
+
+  userEvent.type(
+    screen.getByRole('textbox', { name: /title of manuscript/i }),
+    title,
+  );
+  const typeTextbox = screen.getByRole('textbox', {
+    name: /Type of Manuscript/i,
+  });
+  userEvent.type(typeTextbox, 'Original');
+  userEvent.type(typeTextbox, specialChars.enter);
+  typeTextbox.blur();
+
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+  userEvent.type(lifecycleTextbox, 'Typeset proof');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
+  const apcCoverage = screen.getByRole('group', {
+    name: /Will you be requesting APC coverage/i,
+  });
+
+  userEvent.click(within(apcCoverage).getByRole('radio', { name: /no/i }));
+
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const manuscriptFileInput = screen.getByLabelText(/Upload Manuscript File/i);
+  const keyResourceTableInput = screen.getByLabelText(
+    /Upload Key Resource Table/i,
+  );
+
+  const descriptionTextbox = screen.getByRole('textbox', {
+    name: /Manuscript Description/i,
+  });
+  userEvent.type(descriptionTextbox, 'Some description');
+
+  userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+
+  userEvent.click(screen.getByText(/Non CRN/i));
+
+  expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
+  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+
+  userEvent.upload(manuscriptFileInput, testFile);
+  userEvent.upload(keyResourceTableInput, testFile);
+
+  const submitButton = screen.getByRole('button', { name: /Submit/ });
+
+  await waitFor(() => {
+    expect(submitButton).toBeEnabled();
+  });
+
+  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
+
+  within(quickChecks)
+    .getAllByText('Yes')
+    .forEach((button) => {
+      userEvent.click(button);
+    });
+
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole('button', { name: /Submit/ }),
+    );
+  });
+
+  await userEvent.click(
+    screen.getByRole('button', { name: /Submit Manuscript/ }),
+  );
+
+  await waitFor(() => {
+    expect(
+      screen.getByText('A manuscript with the same title already exists'),
+    ).toBeInTheDocument();
+  });
+}, 180_000);
+
+it('shows default error toast when submitting with any other error', async () => {
+  const genericError = {
+    statusCode: 500,
+    response: {
+      message: 'Internal Server Error',
+    },
+  };
+
+  (createManuscript as jest.Mock).mockRejectedValueOnce(genericError);
+  const title = 'The Manuscript';
+
+  await renderPage();
+
+  userEvent.type(
+    screen.getByRole('textbox', { name: /title of manuscript/i }),
+    title,
+  );
+  const typeTextbox = screen.getByRole('textbox', {
+    name: /Type of Manuscript/i,
+  });
+  userEvent.type(typeTextbox, 'Original');
+  userEvent.type(typeTextbox, specialChars.enter);
+  typeTextbox.blur();
+
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+  userEvent.type(lifecycleTextbox, 'Typeset proof');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
+  const apcCoverage = screen.getByRole('group', {
+    name: /Will you be requesting APC coverage/i,
+  });
+
+  userEvent.click(within(apcCoverage).getByRole('radio', { name: /no/i }));
+
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const manuscriptFileInput = screen.getByLabelText(/Upload Manuscript File/i);
+  const keyResourceTableInput = screen.getByLabelText(
+    /Upload Key Resource Table/i,
+  );
+
+  const descriptionTextbox = screen.getByRole('textbox', {
+    name: /Manuscript Description/i,
+  });
+  userEvent.type(descriptionTextbox, 'Some description');
+
+  userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+
+  userEvent.click(screen.getByText(/Non CRN/i));
+
+  expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
+  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+
+  userEvent.upload(manuscriptFileInput, testFile);
+  userEvent.upload(keyResourceTableInput, testFile);
+
+  const submitButton = screen.getByRole('button', { name: /Submit/ });
+
+  await waitFor(() => {
+    expect(submitButton).toBeEnabled();
+  });
+
+  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
+
+  within(quickChecks)
+    .getAllByText('Yes')
+    .forEach((button) => {
+      userEvent.click(button);
+    });
+
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole('button', { name: /Submit/ }),
+    );
+  });
+
+  await userEvent.click(
+    screen.getByRole('button', { name: /Submit Manuscript/ }),
+  );
+
+  await waitFor(() => {
+    expect(
+      screen.getByText('An error has occurred. Please try again later.'),
+    ).toBeInTheDocument();
   });
 }, 180_000);
 

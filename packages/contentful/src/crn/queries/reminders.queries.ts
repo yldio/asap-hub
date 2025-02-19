@@ -77,6 +77,15 @@ export const FETCH_REMINDERS = gql`
                 }
               }
             }
+            labsCollection(limit: 10) {
+              items {
+                labPi {
+                  sys {
+                    id
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -370,6 +379,15 @@ export const FETCH_DISCUSSION_REMINDERS = gql`
                     }
                   }
                 }
+                labsCollection(limit: 10) {
+                  items {
+                    labPi {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
                 linkedFrom {
                   manuscriptsCollection(limit: 1) {
                     items {
@@ -462,6 +480,15 @@ export const FETCH_DISCUSSION_REMINDERS = gql`
                           }
                         }
                       }
+                      labsCollection(limit: 10) {
+                        items {
+                          labPi {
+                            sys {
+                              id
+                            }
+                          }
+                        }
+                      }
                       linkedFrom {
                         manuscriptsCollection(limit: 1) {
                           items {
@@ -506,6 +533,15 @@ export const FETCH_DISCUSSION_REMINDERS = gql`
                       items {
                         __typename
                         ... on Users {
+                          sys {
+                            id
+                          }
+                        }
+                      }
+                    }
+                    labsCollection(limit: 10) {
+                      items {
+                        labPi {
                           sys {
                             id
                           }

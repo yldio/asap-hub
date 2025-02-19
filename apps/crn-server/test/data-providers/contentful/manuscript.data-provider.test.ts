@@ -1822,6 +1822,46 @@ describe('Manuscripts Contentful Data Provider', () => {
       );
       expect(consoleMock).toHaveBeenCalledWith('TO: ', recipients);
     });
+
+    test('returns active PIs of contributing labs as recipients', async () => {
+      const consoleMock = jest.spyOn(console, 'log');
+      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+        NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+      >;
+
+      manuscript.versionsCollection!.items[0]!.labsCollection!.items = [
+        {
+          labPi: {
+            alumniSinceDate: '2022-01-03T10:00:00.000Z',
+            email: 'inactive.pi@example.com',
+          },
+        },
+        {
+          labPi: {
+            alumniSinceDate: null,
+            email: 'active.pi@example.com',
+          },
+        },
+      ];
+      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection =
+        undefined;
+      manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection =
+        undefined;
+      manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection =
+        undefined;
+
+      const recipients = 'active.pi@example.com';
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+      );
+      expect(consoleMock).toHaveBeenCalledWith('TO: ', recipients);
+    });
   });
 });
 

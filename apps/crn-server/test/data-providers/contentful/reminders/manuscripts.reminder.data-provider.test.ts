@@ -246,6 +246,28 @@ describe('Reminders data provider', () => {
         });
         expect(result.items).toEqual([expectedReminder]);
       });
+
+      test('PIs of the manuscript labs should see manuscript created reminders', async () => {
+        const manuscript = getContentfulReminderManuscriptCollectionItem();
+        manuscript!.versionsCollection!.items[0]!.labsCollection = {
+          items: [
+            {
+              labPi: {
+                sys: {
+                  id: 'lab-pi-user',
+                },
+              },
+            },
+          ],
+        };
+        mockContentfulGraphqlResponse(manuscript);
+
+        const result = await remindersDataProvider.fetch({
+          userId: 'lab-pi-user',
+          timezone,
+        });
+        expect(result.items).toEqual([expectedReminder]);
+      });
     });
 
     describe('Manuscript resubmitted', () => {
@@ -263,6 +285,7 @@ describe('Reminders data provider', () => {
             createdById: 'user-who-created-manuscript',
             createdByFirstName: 'Jane',
             createdByLastName: 'Doe',
+            labPI: 'lab-pi-on-manuscript',
           }),
           getManuscriptVersion({
             count: 2,
@@ -272,6 +295,7 @@ describe('Reminders data provider', () => {
             createdById: 'user-who-resubmitted-manuscript',
             createdByFirstName: 'John',
             createdByLastName: 'Doe',
+            labPI: 'lab-pi-on-manuscript',
           }),
         ],
       };
@@ -407,6 +431,19 @@ describe('Reminders data provider', () => {
 
       test('the additional author of the manuscript should see manuscript resubmitted reminder', async () => {
         const userId = 'additional-author-user';
+        const fetchRemindersOptions: FetchRemindersOptions = {
+          userId,
+          timezone,
+        };
+
+        mockContentfulGraphqlResponse(manuscriptResubmitted);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result.items).toEqual([expectedReminder]);
+      });
+
+      test('the PIs of the manuscript labs should see manuscript resubmitted reminder', async () => {
+        const userId = 'lab-pi-on-manuscript';
         const fetchRemindersOptions: FetchRemindersOptions = {
           userId,
           timezone,

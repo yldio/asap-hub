@@ -556,6 +556,7 @@ export const getManuscriptVersion = ({
   createdById,
   createdByFirstName,
   createdByLastName,
+  labPI = 'lab-pi-id',
 }: {
   count: number;
   firstAuthorIds: string[];
@@ -564,6 +565,7 @@ export const getManuscriptVersion = ({
   createdById: string;
   createdByFirstName: string;
   createdByLastName: string;
+  labPI?: string;
 }): NonNullable<
   NonNullable<
     NonNullable<
@@ -602,6 +604,17 @@ export const getManuscriptVersion = ({
     },
     firstName: createdByFirstName,
     lastName: createdByLastName,
+  },
+  labsCollection: {
+    items: [
+      {
+        labPi: {
+          sys: {
+            id: labPI,
+          },
+        },
+      },
+    ],
   },
 });
 

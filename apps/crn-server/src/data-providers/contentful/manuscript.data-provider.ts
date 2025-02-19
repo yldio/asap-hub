@@ -504,8 +504,12 @@ export class ManuscriptContentfulDataProvider
         .map((member) => member.email);
     });
 
+    const labPIs = cleanArray(versionData.labsCollection?.items)
+      .filter((lab) => lab.labPi && !lab.labPi?.alumniSinceDate)
+      .map((lab) => lab.labPi?.email);
+
     const recipients = [
-      ...new Set([...contributingAuthors, ...teamLeaders.flat()]),
+      ...new Set([...contributingAuthors, ...teamLeaders.flat(), ...labPIs]),
     ].join(',');
 
     const templateDetails = manuscriptNotificationMapping[action];
@@ -736,6 +740,7 @@ export const parseGraphqlManuscriptVersion = (
       labs: version?.labsCollection?.items.map((labItem) => ({
         id: labItem?.sys.id,
         name: labItem?.name,
+        labPi: labItem?.labPi?.sys.id,
       })),
       complianceReport: parseComplianceReport(
         version?.linkedFrom?.complianceReportsCollection?.items[0],

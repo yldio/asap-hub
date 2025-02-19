@@ -233,6 +233,19 @@ describe('Reminders data provider', () => {
         expect(result.items).toEqual([expectedReminder]);
       });
 
+      test('PI of the related manuscript lab should see discussion started reminders', async () => {
+        const userId = 'lab-pi-id';
+        const fetchRemindersOptions: FetchRemindersOptions = {
+          userId,
+          timezone,
+        };
+
+        mockContentfulGraphqlResponse();
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result.items).toEqual([expectedReminder]);
+      });
+
       test('returns reminder if discussion was started by open science member', async () => {
         const discussionItem = getContentfulReminderDiscussionCollectionItem();
         const user = getContentfulReminderUsersContent();
@@ -371,6 +384,19 @@ describe('Reminders data provider', () => {
 
       test('first author of the manuscript should see discussion ended reminder', async () => {
         const userId = 'first-author-user';
+        const fetchRemindersOptions: FetchRemindersOptions = {
+          userId,
+          timezone,
+        };
+
+        mockContentfulGraphqlResponse();
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result.items).toEqual([expectedReminder]);
+      });
+
+      test('PI of the related manuscript lab should see discussion ended reminder', async () => {
+        const userId = 'lab-pi-id';
         const fetchRemindersOptions: FetchRemindersOptions = {
           userId,
           timezone,
@@ -524,6 +550,27 @@ describe('Reminders data provider', () => {
           );
         });
 
+        test('PI of the manuscript lab should see discussion replied to reminders', async () => {
+          const userId = 'lab-pi-id';
+          const fetchRemindersOptions: FetchRemindersOptions = {
+            userId,
+            timezone,
+          };
+
+          const expectedReminder = mockContentfulGraphqlResponse(
+            'compliance-report',
+            'grantee',
+            null,
+          );
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items).toEqual(
+            expect.arrayContaining([expectedReminder]),
+          );
+        });
+
         test('returns reminder if discussion was replied to by open science member', async () => {
           const messageItem =
             getContentfulReminderMessageCollectionItem('compliance-report');
@@ -612,6 +659,27 @@ describe('Reminders data provider', () => {
 
         test('first author of the manuscript should see discussion replied to reminders', async () => {
           const userId = 'first-author-user';
+          const fetchRemindersOptions: FetchRemindersOptions = {
+            userId,
+            timezone,
+          };
+
+          const expectedReminder = mockContentfulGraphqlResponse(
+            'quick-check',
+            'grantee',
+            null,
+          );
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items).toEqual(
+            expect.arrayContaining([expectedReminder]),
+          );
+        });
+
+        test('PI of the manuscript lab should see quick check replied to reminders', async () => {
+          const userId = 'lab-pi-id';
           const fetchRemindersOptions: FetchRemindersOptions = {
             userId,
             timezone,

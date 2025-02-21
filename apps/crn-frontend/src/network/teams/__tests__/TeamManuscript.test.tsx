@@ -52,6 +52,19 @@ jest.mock('../api', () => ({
     .mockResolvedValue([{ id: teamId, displayName: 'Team A' }]),
 }));
 
+const mockSetFormType = jest.fn();
+// mock useManuscriptToast hook
+jest.mock('../useManuscriptToast', () => {
+  const originalModule = jest.requireActual('../useManuscriptToast');
+  return {
+    ...originalModule,
+    useManuscriptToast: jest.fn(() => ({
+      setFormType: mockSetFormType,
+      eligibilityReasons: [],
+    })),
+  };
+});
+
 beforeEach(() => {
   jest.resetModules();
 
@@ -197,6 +210,11 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   );
 
   await waitFor(() => {
+    // expect setFormType to be called with successLarge
+    expect(mockSetFormType).toHaveBeenCalledWith({
+      type: '',
+      accent: 'successLarge',
+    });
     expect(createManuscript).toHaveBeenCalledWith(
       {
         title,
@@ -352,9 +370,10 @@ it('shows duplicate manuscript toast when submitting with duplicate title', asyn
   );
 
   await waitFor(() => {
-    expect(
-      screen.getByText('A manuscript with the same title already exists'),
-    ).toBeInTheDocument();
+    expect(mockSetFormType).toHaveBeenCalledWith({
+      type: 'duplicate-manuscript',
+      accent: 'error',
+    });
   });
 }, 180_000);
 
@@ -447,9 +466,10 @@ it('shows default error toast when submitting with any other error', async () =>
   );
 
   await waitFor(() => {
-    expect(
-      screen.getByText('An error has occurred. Please try again later.'),
-    ).toBeInTheDocument();
+    expect(mockSetFormType).toHaveBeenCalledWith({
+      type: 'default-error',
+      accent: 'error',
+    });
   });
 }, 180_000);
 

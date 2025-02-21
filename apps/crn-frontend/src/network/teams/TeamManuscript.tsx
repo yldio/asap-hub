@@ -162,6 +162,9 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
             manuscriptAdditionalAuthors,
           )}
           resubmitManuscript={resubmitManuscript}
+          clearFormToast={() => {
+            setFormType({ type: '', accent: 'successLarge' });
+          }}
           {...manuscriptVersion}
         />
       </Frame>

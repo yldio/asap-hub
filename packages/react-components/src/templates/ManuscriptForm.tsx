@@ -308,6 +308,7 @@ type ManuscriptFormProps = Omit<
     correspondingAuthor?: AuthorSelectOption[];
     additionalAuthors?: AuthorSelectOption[];
     onError: (error: ManuscriptError | Error) => void;
+    clearFormToast: () => void;
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
@@ -350,6 +351,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   correspondingAuthor,
   additionalAuthors,
   resubmitManuscript = false,
+  clearFormToast,
 }) => {
   const getDefaultQuickCheckValue = (quickCheckDetails: string | undefined) => {
     const isEditing = !!title;
@@ -492,11 +494,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               ...fieldDefaultValueMap,
               teams: selectedTeams,
               labs: selectedLabs,
-              manuscriptFile: undefined,
-              keyResourceTable: undefined,
-              additionalFiles: undefined,
-              submissionDate: undefined,
-              submitterName: undefined,
+              manuscriptFile: watch('versions.0.manuscriptFile'),
+              keyResourceTable: watch('versions.0.keyResourceTable'),
+              additionalFiles: watch('versions.0.additionalFiles'),
+              submissionDate: watch('versions.0.submissionDate'),
+              submitterName: watch('versions.0.submitterName'),
             },
           ],
         },
@@ -508,6 +510,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   }, [getValues, reset, watchType, watchLifecycle, selectedTeams]);
 
   const onSubmit = async (data: ManuscriptFormData) => {
+    clearFormToast();
     const versionData = data.versions[0];
 
     if (versionData?.type && versionData.lifecycle) {

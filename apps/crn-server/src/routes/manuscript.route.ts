@@ -126,24 +126,49 @@ export const manuscriptRouteFactory = (
 
       if (!loggedInUser) throw Boom.forbidden();
 
-      const manuscript = await manuscriptController.createVersion(
-        params.manuscriptId,
-        {
-          ...createRequest,
-          userId: loggedInUser.id,
-        },
-      );
+      try {
+        const manuscript = await manuscriptController.createVersion(
+          params.manuscriptId,
+          {
+            ...createRequest,
+            userId: loggedInUser.id,
+          },
+        );
 
-      res.status(201).json(manuscript);
+        res.status(201).json(manuscript);
+      } catch (error) {
+        if (error instanceof Error) {
+          try {
+            const errorMessage = error.message as string;
+            const contentfulError = JSON.parse(errorMessage);
+            res.status(Number(contentfulError.status) || 500).json({
+              message: contentfulError.message || 'An error occurred',
+              errors: contentfulError.details?.errors || [],
+            });
+            return;
+          } catch {
+            throw error;
+          }
+        }
+        res.status(500).json({ message: 'Unexpected error' });
+      }
     },
   );
 
   manuscriptRoutes.put<{ manuscriptId: string }>(
     '/manuscripts/:manuscriptId',
-    async (req, res: Response<ManuscriptResponse>) => {
+    async (
+      req,
+      res: Response<
+        | ManuscriptResponse
+        | {
+            message: string;
+            errors?: { message: string; path: string }[];
+          }
+      >,
+    ) => {
       const { params, loggedInUser, body } = req;
       const payload = validateManuscriptPutRequestParameters(body);
-
       if (
         !loggedInUser ||
         ('status' in payload &&
@@ -155,14 +180,30 @@ export const manuscriptRouteFactory = (
         throw Boom.forbidden();
 
       const { manuscriptId } = params;
+      try {
+        const result = await manuscriptController.update(
+          manuscriptId,
+          payload,
+          loggedInUser.id,
+        );
 
-      const result = await manuscriptController.update(
-        manuscriptId,
-        payload,
-        loggedInUser.id,
-      );
-
-      res.json(result);
+        res.json(result);
+      } catch (error) {
+        if (error instanceof Error) {
+          try {
+            const errorMessage = error.message as string;
+            const contentfulError = JSON.parse(errorMessage);
+            res.status(Number(contentfulError.status) || 500).json({
+              message: contentfulError.message || 'An error occurred',
+              errors: contentfulError.details?.errors || [],
+            });
+            return;
+          } catch {
+            throw error;
+          }
+        }
+        res.status(500).json({ message: 'Unexpected error' });
+      }
     },
   );
 

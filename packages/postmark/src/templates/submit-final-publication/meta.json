@@ -1,9 +1,9 @@
 {
-  "Name": "Waiting for Report (OS Team)",
-  "Alias": "waiting-for-report-os-team",
-  "Subject": "Manuscript  Submission Received from {{ team.name }} {{ manuscript.title }}({{ manuscript.id }})",
+  "Name": "Submit final publication",
+  "Alias": "submit-final-publication",
+  "Subject": "Submit Publication for Final Review for {{ manuscript.title }} {{ manuscript.type }} {{ manuscript.id }}",
   "TemplateType": "Standard",
-  "LayoutTemplate": "email-layout-os-team",
+  "LayoutTemplate": "email-layout-grantees",
   "TestRenderModel": {
     "team": {
       "name": "Alessi, De Camilli and Edwards"

@@ -268,14 +268,38 @@ describe('/manuscripts/ route', () => {
         manuscriptFileResponse,
       );
 
-      const response = await supertest(app)
-        .post('/manuscripts/file-upload')
-        .attach('file', Buffer.from('file content'), {
-          filename: 'file.pdf',
-          contentType: 'application/pdf',
-        })
-        .field('fileType', 'Manuscript File');
+      const tempId = 'test-temp-id';
+      const fileContent = Buffer.from('file content');
+      const chunkSize = 4; // Simulate small chunks
+      const totalChunks = Math.ceil(fileContent.length / chunkSize);
 
+      // Upload all chunks in parallel using Promise.all
+      const uploadResponses = await Promise.all(
+        Array.from({ length: totalChunks }, async (_, i) => {
+          const start = i * chunkSize;
+          const end = Math.min(start + chunkSize, fileContent.length);
+          const chunk = fileContent.slice(start, end);
+
+          return supertest(app)
+            .post('/manuscripts/file-upload')
+            .attach('file', chunk, {
+              filename: 'file.pdf',
+              contentType: 'application/pdf',
+            })
+            .field('fileType', 'Manuscript File')
+            .field('fileId', tempId)
+            .field('chunkIndex', i.toString())
+            .field('totalChunks', totalChunks.toString())
+            .field('fileName', 'file.pdf');
+        }),
+      );
+
+      // Extract the first valid response
+      const response = uploadResponses.find(
+        (resp) => resp.status === 201,
+      ) as supertest.Response;
+
+      // After all chunks are uploaded, `createFile` should be called
       expect(manuscriptControllerMock.createFile).toHaveBeenCalledWith({
         filename: 'file.pdf',
         fileType: 'Manuscript File',
@@ -283,6 +307,10 @@ describe('/manuscripts/ route', () => {
         contentType: 'application/pdf',
       });
 
+      // Ensure `createFile` was only called once
+      expect(manuscriptControllerMock.createFile).toHaveBeenCalledTimes(1);
+
+      // Validate the final response
       expect(response.status).toBe(201);
       expect(response.body).toEqual(manuscriptFileResponse);
     });

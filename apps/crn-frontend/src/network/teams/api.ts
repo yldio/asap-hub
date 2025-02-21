@@ -26,6 +26,7 @@ import {
   TeamResponse,
 } from '@asap-hub/model';
 import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
+import { v4 as uuidv4 } from 'uuid';
 import { API_BASE_URL } from '../../config';
 import createListApiUrl from '../../CreateListApiUrl';
 
@@ -328,18 +329,27 @@ export const getManuscript = async (
   }
   return resp.json();
 };
+const CHUNK_SIZE = 3 * 1024 * 1024; // 5MB chunks
 
-export const uploadManuscriptFile = async (
-  file: File,
-  fileType: ManuscriptFileType,
+const uploadChunk = async (
+  chunk: Blob,
+  totalChunks: number,
+  i: number,
+  fileName: string,
+  tempId: string,
+  mimeType: string,
   authorization: string,
-  handleError: (errorMessage: string) => void,
-): Promise<ManuscriptFileResponse | undefined> => {
+) => {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('fileType', fileType);
+  formData.append('file', chunk);
+  formData.append('fileName', fileName);
+  formData.append('chunkIndex', i.toString());
+  formData.append('totalChunks', totalChunks.toString());
+  formData.append('fileType', 'Manuscript File');
+  formData.append('fileId', tempId);
+  formData.append('mimeType', mimeType);
 
-  const resp = await fetch(`${API_BASE_URL}/manuscripts/file-upload`, {
+  const response = await fetch(`${API_BASE_URL}/manuscripts/file-upload`, {
     method: 'POST',
     headers: {
       authorization,
@@ -348,14 +358,54 @@ export const uploadManuscriptFile = async (
     body: formData,
   });
 
-  if (!resp.ok) {
-    if (resp.status === 400 && handleError) {
-      handleError((await resp.json()).message);
-      return undefined;
-    }
+  if (!response.ok) {
     throw new Error(
-      `Failed to upload ${fileType.toLowerCase()}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Chunk ${i} failed to upload with status ${response.status}`,
     );
+  }
+
+  return response;
+};
+
+export const uploadManuscriptFile = async (
+  file: File,
+  fileType: ManuscriptFileType,
+  authorization: string,
+  handleError: (errorMessage: string) => void,
+): Promise<ManuscriptFileResponse | undefined> => {
+  const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+  const mimeType = file.type;
+  let resp: Response | undefined;
+  const tempId = uuidv4();
+
+  try {
+    const chunkIndexes = Array.from({ length: totalChunks }, (_, i) => i);
+
+    for (const i of chunkIndexes) {
+      const start = i * CHUNK_SIZE;
+      const end = Math.min(start + CHUNK_SIZE, file.size);
+      const chunk = file.slice(start, end);
+
+      // eslint-disable-next-line no-await-in-loop
+      resp = await uploadChunk(
+        chunk,
+        totalChunks,
+        i,
+        file.name,
+        tempId,
+        mimeType,
+        authorization,
+      );
+    }
+  } catch (error) {
+    handleError(
+      `Failed to upload ${fileType.toLowerCase()}: ${(error as Error).message}`,
+    );
+    return undefined;
+  }
+
+  if (!resp) {
+    throw new Error(`Failed to upload ${fileType.toLowerCase()}.`);
   }
 
   return resp.json();

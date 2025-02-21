@@ -48,7 +48,7 @@
         margin: 24px 0;
       }
 
-      .email-content p:first-child {
+      .email-message p:first-child {
         margin: 0 0 24px 0;
       }
 
@@ -96,10 +96,10 @@
 
   <body>
     <div class="email-wrapper">
-      <img class="email-header" alt="ASAP logo" />
+      <img class="email-header" />
 
       <div class="email-content">
-        {{{ @content }}}
+        <div class="email-message">{{{ @content }}}</div>
 
         <div class="email-signature">
           <p>Kind regards,</p>

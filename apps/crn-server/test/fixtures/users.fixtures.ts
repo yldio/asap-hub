@@ -379,6 +379,12 @@ export const getUserDataObject = (): UserDataObject => ({
 export const getPublicUserDataObject = (): PublicUserDataObject => ({
   ...getUserDataObject(),
   researchOutputs: ['research-output-id'],
+  teams: [
+    {
+      role: 'Lead PI (Core Leadership)',
+      displayName: 'Team A',
+    },
+  ],
   interestGroups: [
     {
       id: 'interest-group-1',
@@ -388,11 +394,16 @@ export const getPublicUserDataObject = (): PublicUserDataObject => ({
   ],
   workingGroups: [
     {
-      id: 'working-group-1',
       name: 'Active Working Group 1',
-      active: true,
       role: 'Chair',
     },
+  ],
+  tags: [
+    'expertise 1',
+    'expertise 2',
+    'expertise 3',
+    'expertise 4',
+    'expertise 5',
   ],
 });
 

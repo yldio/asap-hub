@@ -10,7 +10,10 @@ import {
 } from '@asap-hub/contentful';
 import { UserDataObject, UserSocialLinks } from '@asap-hub/model';
 import {
+  GroupLeaderItemPublic,
+  GroupMemberItemPublic,
   parseToWorkingGroups,
+  parseToWorkingGroupsForPublicUser,
   UserContentfulDataProvider,
 } from '../../../src/data-providers/contentful/user.data-provider';
 import { UserDataProvider } from '../../../src/data-providers/types';
@@ -18,7 +21,6 @@ import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlUser,
   getContentfulGraphqlUserListItem,
-  getPublicUserDataObject,
   getUserCreateDataObject,
   getUserDataObject,
   getUserListItemDataObject,
@@ -788,47 +790,57 @@ describe('User data provider', () => {
         },
       });
 
-      const expectation = {
-        ...getPublicUserDataObject(),
-        researchOutputs: [],
-        workingGroups: [
-          {
-            active: false,
-            id: 'wg-1',
-            name: 'working-group-1',
-            role: 'Project Manager',
-          },
-          {
-            active: false,
-            id: 'wg-1',
-            name: 'working-group-1',
-            role: 'Member',
-          },
-        ],
-        interestGroups: [
-          {
-            active: true,
-            id: 'ig-1',
-            name: 'interest-group-1',
-          },
-          {
-            active: false,
-            id: 'ig-2',
-            name: 'interest-group-2',
-          },
-          {
-            active: true,
-            role: 'Project Manager',
-            id: 'interest-group-leader-1',
-            name: 'Interest Group Leader 1',
-          },
-        ],
-      };
-
       const result = await userDataProvider.fetchPublicUsers({});
 
       expect(result.total).toEqual(1);
-      expect(result.items).toEqual([expectation]);
+      expect(result.items[0]).toEqual({
+        biography: 'some bio',
+        city: 'London',
+        country: 'United Kingdom',
+        createdDate: '2020-09-23T20:45:22.000Z',
+        degree: 'MPH',
+        firstName: 'Tom',
+        id: 'user-id-1',
+        institution: 'some institution',
+        interestGroups: [
+          { active: true, id: 'ig-1', name: 'interest-group-1' },
+          { active: false, id: 'ig-2', name: 'interest-group-2' },
+          {
+            active: true,
+            id: 'interest-group-leader-1',
+            name: 'Interest Group Leader 1',
+            role: 'Project Manager',
+          },
+        ],
+        labs: [
+          { id: 'cd7be4902', name: 'Brighton' },
+          { id: 'cd7be4903', name: 'Liverpool' },
+        ],
+        lastModifiedDate: '2021-09-23T20:45:22.000Z',
+        lastName: 'Hardy',
+        researchOutputs: [],
+        researchTheme: ['PD Functional Genomics'],
+        social: {
+          github: undefined,
+          googleScholar: undefined,
+          linkedIn: undefined,
+          orcid: '123-456-789',
+          researchGate: undefined,
+          researcherId: undefined,
+          twitter: undefined,
+          website1: undefined,
+          website2: undefined,
+        },
+        tags: [
+          'expertise 1',
+          'expertise 2',
+          'expertise 3',
+          'expertise 4',
+          'expertise 5',
+        ],
+        teams: [{ displayName: 'Team A', role: 'Lead PI (Core Leadership)' }],
+        workingGroups: [],
+      });
     });
 
     test('should return an empty response if there is no result', async () => {
@@ -1320,6 +1332,186 @@ describe('User data provider', () => {
       await expect(
         userDataProvider.create(getUserCreateDataObject()),
       ).rejects.toThrow();
+    });
+  });
+
+  describe('parseToWorkingGroupsForPublicUser', () => {
+    test('should filter out roles not linked to any working group', async () => {
+      const workingGroupGQLResponse: (
+        | GroupMemberItemPublic
+        | GroupLeaderItemPublic
+      )[] = [
+        {
+          inactiveSinceDate: '',
+          role: 'Project Manager',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+        },
+        {
+          inactiveSinceDate: '',
+          role: 'Chair',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [],
+            },
+          },
+        },
+      ];
+      const isAlumni = false;
+      const parsedWorkingGroups = parseToWorkingGroupsForPublicUser(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups).toEqual([
+        {
+          name: 'working-group-1',
+          role: 'Project Manager',
+        },
+      ]);
+    });
+
+    test('should assign the correct role when user is a leader', () => {
+      const workingGroupGQLResponse: (
+        | GroupMemberItemPublic
+        | GroupLeaderItemPublic
+      )[] = [
+        {
+          inactiveSinceDate: '',
+          role: 'Project Manager',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+        },
+      ];
+      const isAlumni = false;
+      const parsedWorkingGroups = parseToWorkingGroupsForPublicUser(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups[0]!.role).toBe('Project Manager');
+    });
+
+    test('should assign the correct role when user is a member', () => {
+      const workingGroupGQLResponse: (
+        | GroupMemberItemPublic
+        | GroupLeaderItemPublic
+      )[] = [
+        {
+          inactiveSinceDate: '',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+        },
+      ];
+      const isAlumni = false;
+      const parsedWorkingGroups = parseToWorkingGroupsForPublicUser(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups[0]!.role).toBe('Member');
+    });
+
+    test('should not return inactive working group membership', () => {
+      const workingGroupGQLResponse: (
+        | GroupMemberItemPublic
+        | GroupLeaderItemPublic
+      )[] = [
+        {
+          inactiveSinceDate: '2020-09-23T20:45:22Z',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+        },
+      ];
+      const isAlumni = false;
+      const parsedWorkingGroups = parseToWorkingGroupsForPublicUser(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups.length).toBe(0);
+    });
+
+    test('should not return working groups if user is set as alumni', () => {
+      const workingGroupGQLResponse: (
+        | GroupMemberItemPublic
+        | GroupLeaderItemPublic
+      )[] = [
+        {
+          inactiveSinceDate: '',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+        },
+      ];
+      const isAlumni = true;
+      const parsedWorkingGroups = parseToWorkingGroupsForPublicUser(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups.length).toBe(0);
+    });
+
+    test('should not return complete working groups', () => {
+      const workingGroupGQLResponse: (
+        | GroupMemberItemPublic
+        | GroupLeaderItemPublic
+      )[] = [
+        {
+          inactiveSinceDate: '',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  title: 'working-group-1',
+                  complete: true,
+                },
+              ],
+            },
+          },
+        },
+      ];
+      const isAlumni = false;
+      const parsedWorkingGroups = parseToWorkingGroupsForPublicUser(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups.length).toBe(0);
     });
   });
 

@@ -5,7 +5,9 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import { validateFetchPaginationOptions } from '@asap-hub/server-common';
+import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
+
 import UserController from '../../controllers/user.controller';
 
 export const userRouteFactory = (userController: UserController): Router => {
@@ -17,6 +19,10 @@ export const userRouteFactory = (userController: UserController): Router => {
       const { query } = req;
 
       const options = validateFetchPaginationOptions(query);
+
+      if (options.take && options.take > 100) {
+        throw Boom.badRequest('take must be less than or equal to 100');
+      }
 
       const result = await userController.fetchPublicUsers({
         ...options,

@@ -9,6 +9,8 @@ import {
   ListPublicUserDataObject,
   ListUserDataObject,
   OrcidWork,
+  PublicUserDataObject,
+  TeamRole,
   UserDataObject,
   UserListItemDataObject,
   UserListItemTeam,
@@ -54,6 +56,25 @@ export type QueryUserListItem = NonNullable<
 >;
 
 export type UserItem = NonNullable<NonNullable<FetchUserByIdQuery['users']>>;
+
+export type PublicUserItem = NonNullable<
+  NonNullable<FetchPublicUsersQuery['usersCollection']>['items'][number]
+>;
+
+export type TeamMembershipPublic = NonNullable<
+  NonNullable<PublicUserItem['teamsCollection']>['items'][number]
+>;
+
+export type GroupMemberItemPublic = NonNullable<
+  NonNullable<
+    NonNullable<PublicUserItem['linkedFrom']>['workingGroupMembersCollection']
+  >['items'][number]
+>;
+export type GroupLeaderItemPublic = NonNullable<
+  NonNullable<
+    NonNullable<PublicUserItem['linkedFrom']>['workingGroupLeadersCollection']
+  >['items'][number]
+>;
 
 export type LabsCollection = UserItem['labsCollection'];
 
@@ -149,8 +170,8 @@ export class UserContentfulDataProvider implements UserDataProvider {
     return {
       total: result?.total,
       items: result?.items
-        .filter((user): user is UserItem => user !== null)
-        .map(parseContentfulGraphQlUsers),
+        .filter((user): user is PublicUserItem => user !== null)
+        .map(parseContentfulGraphQlPublicUsers),
     };
   }
 
@@ -327,6 +348,103 @@ const cleanUser = ({
     },
     {} as { [key: string]: unknown },
   );
+
+export const parseContentfulGraphQlPublicUsers = (
+  item: PublicUserItem,
+): PublicUserDataObject => {
+  const userId = item.sys.id;
+  const degree =
+    item.degree && isUserDegree(item.degree) ? item.degree : undefined;
+
+  const teams: PublicUserDataObject['teams'] = cleanArray(
+    item.teamsCollection?.items,
+  )?.map((teamItem) => ({
+    displayName: teamItem?.team?.displayName || '',
+    role: teamItem?.role as TeamRole,
+  }));
+
+  const labs: LabResponse[] = cleanArray(item.labsCollection?.items).map(
+    (labItem) => ({
+      id: labItem?.sys.id || '',
+      name: labItem?.name || '',
+    }),
+  );
+
+  const tags = cleanArray(item.researchTagsCollection?.items || []).map(
+    (tagItem) => tagItem?.name || '',
+  );
+
+  const isAlumni = !!item.alumniSinceDate;
+
+  const workingGroupLeadersCollection = cleanArray(
+    item.linkedFrom?.workingGroupLeadersCollection?.items,
+  );
+  const workingGroupMembersCollection = cleanArray(
+    item.linkedFrom?.workingGroupMembersCollection?.items,
+  );
+  const interestGroupLeadersCollection = cleanArray(
+    item?.linkedFrom?.interestGroupLeadersCollection?.items,
+  );
+
+  const teamsCollection = cleanArray(item?.teamsCollection?.items);
+
+  const workingGroups = [
+    ...parseToWorkingGroupsForPublicUser(
+      workingGroupLeadersCollection,
+      isAlumni,
+    ),
+    ...parseToWorkingGroupsForPublicUser(
+      workingGroupMembersCollection,
+      isAlumni,
+    ),
+  ];
+
+  const interestGroups = removeDuplicates([
+    ...parseToInterestGroups(teamsCollection),
+    ...parseLeadersToInterestGroups(interestGroupLeadersCollection),
+  ]);
+
+  const researchOutputs = parseResearchOutputsCollection(
+    item?.linkedFrom?.researchOutputsCollection,
+    userId,
+  );
+
+  return {
+    id: userId,
+    biography: item.biography ?? undefined,
+    city: item.city ?? undefined,
+    country: item.country ?? undefined,
+    createdDate: item.createdDate || item.sys.firstPublishedAt,
+    lastModifiedDate: item.lastUpdated,
+    degree,
+    firstName: item.firstName ?? '',
+    lastName: item.lastName ?? '',
+    institution: item.institution ?? undefined,
+    researchTheme: teamsCollection
+      .map((teamItem) => teamItem.team?.researchTheme?.name)
+      .filter(
+        (researchThemeName): researchThemeName is string =>
+          researchThemeName !== undefined,
+      ),
+    researchOutputs,
+    tags,
+    teams,
+    labs,
+    interestGroups,
+    workingGroups,
+    social: {
+      website1: item.website1 ?? undefined,
+      website2: item.website2 ?? undefined,
+      linkedIn: item.linkedIn ?? undefined,
+      orcid: item.orcid ?? undefined,
+      researcherId: item.researcherId ?? undefined,
+      twitter: item.twitter ?? undefined,
+      github: item.github ?? undefined,
+      googleScholar: item.googleScholar ?? undefined,
+      researchGate: item.researchGate ?? undefined,
+    },
+  };
+};
 
 export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
   const normaliseArray = (
@@ -616,6 +734,42 @@ export const parseResearchOutputsCollection = (
     [],
   );
 
+export const parseToWorkingGroupsForPublicUser = (
+  users: (GroupMemberItemPublic | GroupLeaderItemPublic)[],
+  isAlumni: boolean,
+): PublicUserDataObject['workingGroups'] =>
+  users.reduce(
+    (
+      workingGroups: PublicUserDataObject['workingGroups'],
+      user: GroupMemberItemPublic | GroupLeaderItemPublic,
+    ) => {
+      const workingGroup = user.linkedFrom?.workingGroupsCollection?.items[0];
+
+      if (!workingGroup) {
+        return workingGroups;
+      }
+
+      const isUserInactiveInWorkingGroup = !!user.inactiveSinceDate;
+      const isWorkingGroupComplete = workingGroup.complete;
+      const isUserActiveInWorkingGroup =
+        !isAlumni && !isUserInactiveInWorkingGroup;
+      const isActive = !isWorkingGroupComplete && isUserActiveInWorkingGroup;
+
+      if (isActive) {
+        workingGroups.push({
+          name: workingGroup.title || '',
+          role:
+            'role' in user
+              ? (user.role as WorkingGroupMembership['role'])
+              : 'Member',
+        });
+      }
+
+      return workingGroups;
+    },
+    [],
+  );
+
 export const parseToWorkingGroups = (
   users: (GroupMemberItem | GroupLeaderItem)[],
   isAlumni: boolean,
@@ -642,7 +796,7 @@ export const parseToWorkingGroups = (
   );
 
 const parseToInterestGroups = (
-  teams: TeamMembership[],
+  teams: TeamMembership[] | TeamMembershipPublic[],
 ): InterestGroupMembership[] =>
   teams.flatMap(({ team }) => {
     const items = cleanArray(team?.linkedFrom?.interestGroupsCollection?.items);

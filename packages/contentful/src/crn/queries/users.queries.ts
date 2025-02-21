@@ -184,16 +184,138 @@ export const FETCH_PUBLIC_USERS = gql`
     $skip: Int
     $order: [UsersOrder]
     $where: UsersFilter
-    $publicUser: Boolean = true
   ) {
     usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
       total
       items {
-        ...UsersContent
+        sys {
+          id
+          publishedAt
+          firstPublishedAt
+        }
+        avatar {
+          url
+        }
+        alumniSinceDate
+        biography
+        city
+        country
+        createdDate
+        lastUpdated
+        degree
+        firstName
+        lastName
+        institution
+        website1
+        website2
+        linkedIn
+        orcid
+        researcherId
+        twitter
+        github
+        googleScholar
+        researchGate
+        researchTagsCollection(limit: 20) {
+          items {
+            name
+          }
+        }
+        teamsCollection(limit: 10) {
+          items {
+            team {
+              displayName
+              researchTheme {
+                name
+              }
+              linkedFrom {
+                interestGroupsCollection(limit: 10) {
+                  items {
+                    sys {
+                      id
+                    }
+                    active
+                    name
+                  }
+                }
+              }
+            }
+            role
+            inactiveSinceDate
+          }
+        }
+        labsCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            name
+          }
+        }
+        linkedFrom {
+          workingGroupMembersCollection(limit: 10) {
+            items {
+              inactiveSinceDate
+              linkedFrom {
+                workingGroupsCollection(limit: 1) {
+                  items {
+                    title
+                    complete
+                  }
+                }
+              }
+            }
+          }
+          workingGroupLeadersCollection(limit: 10) {
+            items {
+              role
+              inactiveSinceDate
+              linkedFrom {
+                workingGroupsCollection(limit: 1) {
+                  items {
+                    title
+                    complete
+                  }
+                }
+              }
+            }
+          }
+          interestGroupLeadersCollection(limit: 10) {
+            items {
+              role
+              linkedFrom {
+                interestGroupsCollection(limit: 1) {
+                  items {
+                    sys {
+                      id
+                    }
+                    active
+                    name
+                  }
+                }
+              }
+            }
+          }
+          researchOutputsCollection(limit: 20) {
+            items {
+              sys {
+                id
+              }
+              authorsCollection(limit: 20) {
+                items {
+                  __typename
+                  ... on Users {
+                    sys {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
-  ${usersContentQueryFragment}
 `;
 
 export const FETCH_USER_BY_ID = gql`

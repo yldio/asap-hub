@@ -81,6 +81,22 @@ describe('/users/ route', () => {
 
         expect(response.status).toBe(400);
       });
+
+      test('Should return a validation error when take is greater than 100', async () => {
+        const response = await supertest(publicApp).get(`/public/users`).query({
+          take: 101,
+        });
+
+        expect(response.status).toBe(400);
+      });
+
+      test('Should not return a validation error when take is equal to 100', async () => {
+        const response = await supertest(publicApp).get(`/public/users`).query({
+          take: 100,
+        });
+
+        expect(response.status).toBe(200);
+      });
     });
   });
 

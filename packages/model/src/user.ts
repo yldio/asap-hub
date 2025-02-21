@@ -109,6 +109,11 @@ export interface UserDataObject extends Invitee {
   researchTheme?: string[];
 }
 
+export interface PublicUserTeam {
+  displayName: string;
+  role: TeamRole;
+}
+
 export type PublicUserDataObject = Pick<
   UserDataObject,
   | 'avatarUrl'
@@ -128,10 +133,11 @@ export type PublicUserDataObject = Pick<
   | 'researchOutputs'
   | 'researchTheme'
   | 'social'
-  | 'tags'
-  | 'teams'
-  | 'workingGroups'
->;
+> & {
+  teams: PublicUserTeam[];
+  tags: string[];
+  workingGroups: Pick<WorkingGroupMembership, 'name' | 'role'>[];
+};
 
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {
@@ -140,22 +146,11 @@ export interface UserResponse
   fullDisplayName: string;
 }
 
-export interface PublicUserTeam {
-  displayName: string;
-  role: TeamRole;
-}
-
 export interface PublicUserResponse
-  extends Omit<
-      PublicUserDataObject,
-      'interestGroups' | 'orcid' | 'social' | 'tags' | 'teams' | 'workingGroups'
-    >,
+  extends Omit<PublicUserDataObject, 'interestGroups' | 'orcid' | 'social'>,
     UserSocialLinks {
   interestGroups: Pick<InterestGroupMembership, 'name'>[];
   researchOutputs: string[];
-  tags: string[];
-  teams: PublicUserTeam[];
-  workingGroups: Pick<WorkingGroupMembership, 'name' | 'role'>[];
 }
 
 export type UserListItemTeam = Pick<UserTeam, 'id' | 'displayName' | 'role'>;

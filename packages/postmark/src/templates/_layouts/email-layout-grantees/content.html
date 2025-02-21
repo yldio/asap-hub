@@ -29,14 +29,18 @@
       }
 
       .email-content {
-        padding: 40px 20px 20px 20px;
+        padding: 40px 20px;
         text-align: start;
         color: #333333;
         line-height: 1.6;
       }
 
+      .email-disclaimer {
+        font-size: 14px;
+      }
+
       .email-content p {
-        margin: 10px 0;
+        margin: 20px 0;
       }
 
       .email-content a {
@@ -44,7 +48,7 @@
       }
 
       .email-signature {
-        padding: 20px;
+        margin: 20px 0 0 0;
       }
 
       .email-signature p {
@@ -92,14 +96,16 @@
     <div class="email-wrapper">
       <img class="email-header" />
 
-      <div class="email-content">{{{ @content }}}</div>
+      <div class="email-content">
+        {{{ @content }}}
 
-      <div class="email-signature">
-        <p>Kind regards,</p>
-        <p><strong>ASAP Open Science Team</strong></p>
-        <a href="https://parkinsonsroadmap.org" target="_blank"
-          >parkinsonsroadmap.org</a
-        >
+        <div class="email-signature">
+          <p>Kind regards,</p>
+          <p><strong>ASAP Open Science Team</strong></p>
+          <a href="https://parkinsonsroadmap.org" target="_blank"
+            >parkinsonsroadmap.org</a
+          >
+        </div>
       </div>
       <div class="email-footer">
         <img

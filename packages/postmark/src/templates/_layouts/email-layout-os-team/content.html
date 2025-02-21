@@ -39,12 +39,17 @@
         font-size: 14px;
       }
 
-      .email-content p {
-        margin: 20px 0;
+      .email-content a {
+        color: #34a270;
+        text-decoration: none;
       }
 
-      .email-content a {
-        font-size: 16px;
+      .email-content p {
+        margin: 24px 0;
+      }
+
+      .email-content p:first-child {
+        margin: 0 0 24px 0;
       }
 
       .email-signature {
@@ -52,7 +57,11 @@
       }
 
       .email-signature p {
-        margin: 10px 0;
+        margin: 0;
+      }
+
+      .email-signature a {
+        font-size: 14px;
       }
 
       .email-footer {
@@ -70,13 +79,6 @@
 
       .footer-icon {
         width: 80px;
-        //margin-top: 10px;
-      }
-
-      a {
-        color: #34a270;
-        font-size: 14px;
-        text-decoration: none;
       }
 
       a:hover {
@@ -94,7 +96,7 @@
 
   <body>
     <div class="email-wrapper">
-      <img class="email-header" />
+      <img class="email-header" alt="ASAP logo" />
 
       <div class="email-content">
         {{{ @content }}}

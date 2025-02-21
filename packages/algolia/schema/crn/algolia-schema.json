@@ -44,7 +44,10 @@
     "interestGroup.id",
     "workingGroup.id",
     "workingGroups.id",
-    "publishingEntity"
+    "publishingEntity",
+    "teams",
+    "assignedUsers",
+    "manuscriptId"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,

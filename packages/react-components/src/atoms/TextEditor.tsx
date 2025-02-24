@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { CodeNode } from '@lexical/code';
 import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { ListItemNode, ListNode } from '@lexical/list';
@@ -188,6 +188,7 @@ export type TextEditorProps = {
   readonly value: string;
   readonly enabled?: boolean;
   readonly isMarkdown?: boolean;
+  readonly editorStyles?: SerializedStyles;
   onChange?: (content: string) => void;
   onBlur?: () => void;
 };
@@ -211,6 +212,7 @@ const TextEditor = ({
   getValidationMessage,
   isMarkdown = false,
   onBlur,
+  editorStyles,
 }: TextEditorProps) => {
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLTextAreaElement>(
@@ -245,7 +247,7 @@ const TextEditor = ({
   }
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div css={containerStyles}>
+      <div css={css([containerStyles, editorStyles])}>
         <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
         {!isMarkdown && <ToolbarPlugin />}
         {onChange && (

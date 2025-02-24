@@ -228,6 +228,9 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   onBlur={onBlur}
                   required
                   enabled={!isSubmitting}
+                  editorStyles={css({
+                    marginBlock: 0,
+                  })}
                 />
               )}
             />

@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 
 import { perRem } from '../pixels';
 import { Label, Paragraph, TextEditor } from '../atoms';
@@ -24,6 +24,7 @@ type LabeledTextEditorProps = {
   readonly subtitle?: React.ReactNode;
   readonly tip?: React.ReactNode;
   readonly info?: React.ReactNode;
+  readonly editorStyles?: SerializedStyles;
 } & Exclude<ComponentProps<typeof TextEditor>, 'id'>;
 
 const LabeledTextEditor: React.FC<LabeledTextEditorProps> = ({

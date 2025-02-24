@@ -87,14 +87,18 @@ export type MessageItem = NonNullable<
   NonNullable<MessageCollection>['items'][number]
 >;
 
-type ManuscriptVersionTeamsCollection = NonNullable<
+type DiscussionManuscriptVersion = NonNullable<
   NonNullable<
-    NonNullable<
-      NonNullable<
-        NonNullable<DiscussionItem['linkedFrom']>['complianceReportsCollection']
-      >['items'][number]
-    >['manuscriptVersion']
-  >['teamsCollection']
+    NonNullable<DiscussionItem['linkedFrom']>['complianceReportsCollection']
+  >['items'][number]
+>['manuscriptVersion'];
+
+type ManuscriptVersionTeamsCollection = NonNullable<
+  NonNullable<DiscussionManuscriptVersion>['teamsCollection']
+>;
+
+type ManuscriptVersionLinkedFrom = NonNullable<
+  NonNullable<DiscussionManuscriptVersion>['linkedFrom']
 >;
 
 export class ReminderContentfulDataProvider implements ReminderDataProvider {
@@ -1078,6 +1082,7 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
 };
 
 type ValidManuscriptItem = ManuscriptItem & {
+  assignedUsersCollection: { items: { sys: { id: string } }[] };
   teamsCollection: { items: { displayName: string }[] };
   versionsCollection: {
     items: { createdBy: { firstName: string; lastName: string } }[];
@@ -1095,7 +1100,6 @@ type ValidDiscussionItem = DiscussionItem & {
       sys: { id: string };
     };
   };
-  manuscriptVersion: ManuscriptVersion;
 };
 
 type ValidMessageItem = MessageItem & {
@@ -1159,6 +1163,9 @@ const getManuscriptRemindersFromQuery = (
       const manuscriptLastVersion = manuscriptVersions[
         manuscriptVersions.length - 1
       ] as ManuscriptVersion;
+      const isAssignedUser = manuscript.assignedUsersCollection.items.some(
+        (assignedUser) => assignedUser?.sys.id === userId,
+      );
 
       if (isStaffAndMemberOfOpenScienceTeam(user)) {
         if (
@@ -1167,7 +1174,8 @@ const getManuscriptRemindersFromQuery = (
           isReminderForDifferentUser(
             manuscriptLastVersion.createdBy?.sys.id,
             userId,
-          )
+          ) &&
+          isAssignedUser
         ) {
           reminders.push(createManuscriptResubmittedReminder(manuscript));
         } else if (
@@ -1258,6 +1266,10 @@ const getDiscussionRemindersFromQuery = (
         ) ||
         isManuscriptAuthor(manuscriptVersion, userId) ||
         isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
+      const isAssignedUser =
+        manuscriptVersion.linkedFrom?.manuscriptsCollection?.items[0]?.assignedUsersCollection?.items.some(
+          (assignedUser) => assignedUser?.sys.id === userId,
+        );
 
       if (
         inLast7Days(discussion.sys.firstPublishedAt, timezone) &&
@@ -1270,7 +1282,7 @@ const getDiscussionRemindersFromQuery = (
           reminders.push(
             createDiscussionCreatedReminder(discussion, 'Open Science Member'),
           );
-        } else if (isManuscriptContributor) {
+        } else if (isManuscriptContributor || isAssignedUser) {
           reminders.push(
             createDiscussionCreatedReminder(discussion, 'Grantee'),
           );
@@ -1312,6 +1324,11 @@ const getReplyRemindersFromQuery = (
       const manuscriptVersion = message.linkedFrom?.discussionsCollection
         ?.items[0]?.linkedFrom?.complianceReportsCollection?.items[0]
         ?.manuscriptVersion as ManuscriptVersion;
+      const isAssignedUser =
+        manuscriptVersion.linkedFrom?.manuscriptsCollection?.items[0]?.assignedUsersCollection?.items.some(
+          (assignedUser) => assignedUser?.sys.id === userId,
+        );
+
       const isManuscriptContributor =
         isManuscriptProjectManagerOrLeadPI(
           manuscriptVersion.teamsCollection,
@@ -1331,7 +1348,7 @@ const getReplyRemindersFromQuery = (
             'compliance-report-discussion-reply',
           ),
         );
-      } else if (isManuscriptContributor) {
+      } else if (isManuscriptContributor || isAssignedUser) {
         reminders.push(
           createDiscussionRepliedToReminder(
             message,
@@ -1356,6 +1373,10 @@ const getReplyRemindersFromQuery = (
         ) ||
         isManuscriptAuthor(manuscriptVersion, userId) ||
         isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
+      const isAssignedUser =
+        manuscriptVersion.linkedFrom?.manuscriptsCollection?.items[0]?.assignedUsersCollection?.items.some(
+          (assignedUser) => assignedUser?.sys.id === userId,
+        );
 
       if (
         isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
@@ -1368,7 +1389,7 @@ const getReplyRemindersFromQuery = (
             'quick-check-discussion-reply',
           ),
         );
-      } else if (isManuscriptContributor) {
+      } else if (isManuscriptContributor || isAssignedUser) {
         reminders.push(
           createDiscussionRepliedToReminder(
             message,
@@ -1413,6 +1434,7 @@ type ManuscriptVersion = NonNullable<
   NonNullable<ManuscriptItem['versionsCollection']>['items'][0]
 > & {
   teamsCollection?: ManuscriptVersionTeamsCollection;
+  linkedFrom?: ManuscriptVersionLinkedFrom;
 };
 
 const isReminderForDifferentUser = (

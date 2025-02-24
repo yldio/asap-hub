@@ -454,6 +454,24 @@ describe('Reminders data provider', () => {
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result.items).toEqual([expectedReminder]);
       });
+
+      test('the manuscript assigned users should see manuscript resubmitted reminder', async () => {
+        const userId = 'assigned-os-member-id';
+
+        const user = getContentfulReminderUsersContent();
+        user!.role = 'Staff';
+        user!.openScienceTeamMember = true;
+
+        const fetchRemindersOptions: FetchRemindersOptions = {
+          userId,
+          timezone,
+        };
+
+        mockContentfulGraphqlResponse(manuscriptResubmitted, user);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result.items).toEqual([expectedReminder]);
+      });
     });
 
     describe('Manuscript status updated', () => {

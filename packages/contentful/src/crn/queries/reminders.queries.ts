@@ -36,6 +36,13 @@ export const FETCH_REMINDERS = gql`
             displayName
           }
         }
+        assignedUsersCollection(limit: 30) {
+          items {
+            sys {
+              id
+            }
+          }
+        }
         versionsCollection(limit: 10) {
           total
           items {
@@ -392,6 +399,13 @@ export const FETCH_DISCUSSION_REMINDERS = gql`
                   manuscriptsCollection(limit: 1) {
                     items {
                       title
+                      assignedUsersCollection(limit: 30) {
+                        items {
+                          sys {
+                            id
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -493,6 +507,13 @@ export const FETCH_DISCUSSION_REMINDERS = gql`
                         manuscriptsCollection(limit: 1) {
                           items {
                             title
+                            assignedUsersCollection(limit: 30) {
+                              items {
+                                sys {
+                                  id
+                                }
+                              }
+                            }
                           }
                         }
                       }
@@ -552,6 +573,13 @@ export const FETCH_DISCUSSION_REMINDERS = gql`
                       manuscriptsCollection(limit: 1) {
                         items {
                           title
+                          assignedUsersCollection(limit: 30) {
+                            items {
+                              sys {
+                                id
+                              }
+                            }
+                          }
                         }
                       }
                     }

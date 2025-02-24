@@ -618,6 +618,16 @@ export const getManuscriptVersion = ({
   },
 });
 
+const assignedUsersCollection = {
+  items: [
+    {
+      sys: {
+        id: 'assigned-os-member-id',
+      },
+    },
+  ],
+};
+
 export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
   FetchRemindersQuery['manuscriptsCollection']
 >['items'][number] => ({
@@ -641,15 +651,7 @@ export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
       },
     ],
   },
-  assignedUsersCollection: {
-    items: [
-      {
-        sys: {
-          id: 'assigned-os-member-id',
-        },
-      },
-    ],
-  },
+  assignedUsersCollection,
   versionsCollection: {
     total: 1,
     items: [
@@ -708,15 +710,7 @@ const getDiscussionComplianceReportCollection = () => ({
             items: [
               {
                 title: 'Contextual AI models for single-cell protein biology',
-                assignedUsersCollection: {
-                  items: [
-                    {
-                      sys: {
-                        id: 'assigned-os-member-id',
-                      },
-                    },
-                  ],
-                },
+                assignedUsersCollection,
               },
             ],
           },

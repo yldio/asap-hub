@@ -59,17 +59,7 @@ describe('Reminders data provider', () => {
   describe('Fetch manuscript reminders', () => {
     const timezone = 'Europe/London';
 
-    const mockContentfulGraphqlResponse = (
-      manuscript: ManuscriptItem | null = getContentfulReminderManuscriptCollectionItem(),
-      user: FetchRemindersQuery['users'] = getContentfulReminderUsersContent(),
-    ) => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        manuscriptsCollection: {
-          items: [manuscript],
-        },
-        users: user,
-      });
-
+    const mockEmptyDiscussionGraphqlResponse = () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         discussionsCollection: {
           items: [],
@@ -81,6 +71,19 @@ describe('Reminders data provider', () => {
           items: [],
         },
       });
+    };
+    const mockContentfulGraphqlResponse = (
+      manuscript: ManuscriptItem | null = getContentfulReminderManuscriptCollectionItem(),
+      user: FetchRemindersQuery['users'] = getContentfulReminderUsersContent(),
+    ) => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: {
+          items: [manuscript],
+        },
+        users: user,
+      });
+
+      mockEmptyDiscussionGraphqlResponse();
     };
 
     describe('Missing Data', () => {
@@ -168,16 +171,7 @@ describe('Reminders data provider', () => {
             },
             users: user,
           });
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            discussionsCollection: {
-              items: [],
-            },
-          });
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            messagesCollection: {
-              items: [],
-            },
-          });
+          mockEmptyDiscussionGraphqlResponse();
 
           const result = await remindersDataProvider.fetch({
             userId,
@@ -320,17 +314,7 @@ describe('Reminders data provider', () => {
           users: getContentfulReminderUsersContent(),
         });
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          discussionsCollection: {
-            items: [],
-          },
-        });
-
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          messagesCollection: {
-            items: [],
-          },
-        });
+        mockEmptyDiscussionGraphqlResponse();
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result.items).toEqual([]);
@@ -621,16 +605,7 @@ describe('Reminders data provider', () => {
           },
           users: getContentfulReminderUsersContent(),
         });
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          discussionsCollection: {
-            items: [],
-          },
-        });
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          messagesCollection: {
-            items: [],
-          },
-        });
+        mockEmptyDiscussionGraphqlResponse();
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result.items[0]!.data).toEqual(
@@ -672,17 +647,7 @@ describe('Reminders data provider', () => {
           users: getContentfulReminderUsersContent(),
         });
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          discussionsCollection: {
-            items: [],
-          },
-        });
-
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          messagesCollection: {
-            items: [],
-          },
-        });
+        mockEmptyDiscussionGraphqlResponse();
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result.items[0]!.data).toEqual(
@@ -736,17 +701,7 @@ describe('Reminders data provider', () => {
           users: getContentfulReminderUsersContent(),
         });
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          discussionsCollection: {
-            items: [],
-          },
-        });
-
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          messagesCollection: {
-            items: [],
-          },
-        });
+        mockEmptyDiscussionGraphqlResponse();
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result.items[0]!.data).toEqual(
@@ -867,17 +822,7 @@ describe('Reminders data provider', () => {
           users: getContentfulReminderUsersContent(),
         });
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          discussionsCollection: {
-            items: [],
-          },
-        });
-
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          messagesCollection: {
-            items: [],
-          },
-        });
+        mockEmptyDiscussionGraphqlResponse();
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result.items).toEqual([

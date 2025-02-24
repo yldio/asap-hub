@@ -55,6 +55,20 @@ describe('Reminders data provider', () => {
     const timezone = 'Europe/London';
     const fetchRemindersOptions: FetchRemindersOptions = { userId, timezone };
 
+    const mockEmptyDiscussionGraphqlResponse = () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        discussionsCollection: {
+          items: [],
+        },
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        messagesCollection: {
+          items: [],
+        },
+      });
+    };
+
     test('Should fetch the reminders from contentful graphql', async () => {
       const result = await remindersDataProviderMockGraphql.fetch(
         fetchRemindersOptions,
@@ -97,17 +111,8 @@ describe('Reminders data provider', () => {
           items: [eventMockResponse],
         },
       });
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        discussionsCollection: {
-          items: [],
-        },
-      });
 
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        messagesCollection: {
-          items: [],
-        },
-      });
+      mockEmptyDiscussionGraphqlResponse();
 
       const result = await remindersDataProvider.fetch({
         ...fetchRemindersOptions,
@@ -176,17 +181,7 @@ describe('Reminders data provider', () => {
           users,
         });
 
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          discussionsCollection: {
-            items: [],
-          },
-        });
-
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          messagesCollection: {
-            items: [],
-          },
-        });
+        mockEmptyDiscussionGraphqlResponse();
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 

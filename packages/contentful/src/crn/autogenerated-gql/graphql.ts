@@ -19500,7 +19500,6 @@ export type FetchTeamProjectManagerQuery = {
 
 export type FetchDiscussionRemindersQueryVariables = Exact<{
   discussionFilter?: InputMaybe<DiscussionsFilter>;
-  messageFilter?: InputMaybe<MessagesFilter>;
 }>;
 
 export type FetchDiscussionRemindersQuery = {
@@ -19609,6 +19608,13 @@ export type FetchDiscussionRemindersQuery = {
       >
     >;
   }>;
+};
+
+export type FetchMessageRemindersQueryVariables = Exact<{
+  messageFilter?: InputMaybe<MessagesFilter>;
+}>;
+
+export type FetchMessageRemindersQuery = {
   messagesCollection?: Maybe<{
     items: Array<
       Maybe<{
@@ -37981,17 +37987,6 @@ export const FetchDiscussionRemindersDocument = {
             name: { kind: 'Name', value: 'DiscussionsFilter' },
           },
         },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'messageFilter' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'MessagesFilter' },
-          },
-        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -38875,6 +38870,37 @@ export const FetchDiscussionRemindersDocument = {
               ],
             },
           },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchDiscussionRemindersQuery,
+  FetchDiscussionRemindersQueryVariables
+>;
+export const FetchMessageRemindersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchMessageReminders' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'messageFilter' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'MessagesFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'messagesCollection' },
@@ -40371,8 +40397,8 @@ export const FetchDiscussionRemindersDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  FetchDiscussionRemindersQuery,
-  FetchDiscussionRemindersQueryVariables
+  FetchMessageRemindersQuery,
+  FetchMessageRemindersQueryVariables
 >;
 export const FetchResearchOutputByIdDocument = {
   kind: 'Document',

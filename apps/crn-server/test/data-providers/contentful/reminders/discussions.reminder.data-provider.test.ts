@@ -81,6 +81,9 @@ describe('Reminders data provider', () => {
           discussionsCollection: {
             items: [discussion],
           },
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           messagesCollection: {
             items: [message],
           },
@@ -130,6 +133,8 @@ describe('Reminders data provider', () => {
           discussionsCollection: {
             items: [discussion],
           },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           messagesCollection: {
             items: [],
           },
@@ -314,6 +319,9 @@ describe('Reminders data provider', () => {
           discussionsCollection: {
             items: [discussion],
           },
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           messagesCollection: {
             items: [],
           },
@@ -443,6 +451,9 @@ describe('Reminders data provider', () => {
           discussionsCollection: {
             items: [],
           },
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           messagesCollection: {
             items: [message || messageItem],
           },

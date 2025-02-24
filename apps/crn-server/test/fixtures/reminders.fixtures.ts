@@ -25,6 +25,7 @@ import {
 } from '@asap-hub/model';
 import {
   FetchDiscussionRemindersQuery,
+  FetchMessageRemindersQuery,
   FetchRemindersQuery,
   FetchTeamProjectManagerQuery,
 } from '@asap-hub/contentful';
@@ -747,7 +748,7 @@ export const getContentfulReminderDiscussionCollectionItem = (): NonNullable<
 });
 
 const getReminderMessageCollectionItem = (): NonNullable<
-  FetchDiscussionRemindersQuery['messagesCollection']
+  FetchMessageRemindersQuery['messagesCollection']
 >['items'][number] => ({
   sys: {
     id: 'reply-id-1',
@@ -782,7 +783,7 @@ const getReminderMessageCollectionItem = (): NonNullable<
 export const getContentfulReminderMessageCollectionItem = (
   type: 'quick-check' | 'compliance-report',
 ): NonNullable<
-  FetchDiscussionRemindersQuery['messagesCollection']
+  FetchMessageRemindersQuery['messagesCollection']
 >['items'][number] => {
   const messageItem = { ...getReminderMessageCollectionItem() } as MessageItem;
   if (type === 'quick-check') {

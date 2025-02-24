@@ -16,6 +16,9 @@ import {
   DiscussionsFilter,
   MessagesFilter,
   Maybe,
+  FetchMessageRemindersQuery,
+  FETCH_MESSAGE_REMINDERS,
+  FetchMessageRemindersQueryVariables,
 } from '@asap-hub/contentful';
 import {
   DiscussionCreatedReminder,
@@ -79,7 +82,7 @@ type User = FetchRemindersQuery['users'];
 
 type DiscussionCollection =
   FetchDiscussionRemindersQuery['discussionsCollection'];
-type MessageCollection = FetchDiscussionRemindersQuery['messagesCollection'];
+type MessageCollection = FetchMessageRemindersQuery['messagesCollection'];
 export type DiscussionItem = NonNullable<
   NonNullable<DiscussionCollection>['items'][number]
 >;
@@ -135,14 +138,19 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       manuscriptFilter,
     });
 
-    const { discussionsCollection, messagesCollection } =
-      await this.contentfulClient.request<
-        FetchDiscussionRemindersQuery,
-        FetchDiscussionRemindersQueryVariables
-      >(FETCH_DISCUSSION_REMINDERS, {
-        discussionFilter,
-        messageFilter,
-      });
+    const { discussionsCollection } = await this.contentfulClient.request<
+      FetchDiscussionRemindersQuery,
+      FetchDiscussionRemindersQueryVariables
+    >(FETCH_DISCUSSION_REMINDERS, {
+      discussionFilter,
+    });
+
+    const { messagesCollection } = await this.contentfulClient.request<
+      FetchMessageRemindersQuery,
+      FetchMessageRemindersQueryVariables
+    >(FETCH_MESSAGE_REMINDERS, {
+      messageFilter,
+    });
 
     const fetchTeamProjectManager = async (
       teamId: string,

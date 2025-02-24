@@ -189,6 +189,7 @@ export type TextEditorProps = {
   readonly enabled?: boolean;
   readonly isMarkdown?: boolean;
   onChange?: (content: string) => void;
+  onBlur?: () => void;
 };
 
 const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
@@ -209,6 +210,7 @@ const TextEditor = ({
   enabled = true,
   getValidationMessage,
   isMarkdown = false,
+  onBlur,
 }: TextEditorProps) => {
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLTextAreaElement>(
@@ -238,6 +240,9 @@ const TextEditor = ({
 
   if (isMarkdown && !value) return <></>;
 
+  if (onBlur) {
+    onBlur();
+  }
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div css={containerStyles}>

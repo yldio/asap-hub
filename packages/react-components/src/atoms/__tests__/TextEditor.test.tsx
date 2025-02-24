@@ -41,6 +41,7 @@ describe('EnablePlugin', () => {
 describe('TextEditorToolbar', () => {
   describe('actions', () => {
     const onChange = jest.fn();
+    const onBlur = jest.fn();
 
     beforeEach(() => {
       jest.resetAllMocks();
@@ -76,6 +77,21 @@ describe('TextEditorToolbar', () => {
         [''],
         ['**text**'],
       ]);
+    });
+    it('calls onBlur if provided', async () => {
+      const { getByTestId } = render(
+        <TextEditor onChange={onChange} onBlur={onBlur} value="" />,
+      );
+      const editor = getByTestId('editor');
+
+      await act(async () => {
+        userEvent.click(editor);
+        userEvent.tab();
+        fireEvent.input(editor, { data: 'text' });
+        userEvent.tab();
+      });
+
+      expect(onBlur).toHaveBeenCalled();
     });
 
     describe('format', () => {

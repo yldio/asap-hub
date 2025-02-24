@@ -89,6 +89,8 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
     } else {
       setFormType({ type: 'default-error', accent: 'error' });
     }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const {

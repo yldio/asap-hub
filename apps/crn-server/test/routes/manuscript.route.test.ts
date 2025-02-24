@@ -127,6 +127,112 @@ describe('/manuscripts/ route', () => {
       expect(response.status).toEqual(403);
     });
 
+    test('Should return a Contentful error when Contentful API fails', async () => {
+      const teamId = 'team-1';
+
+      const createManuscriptRequest: ManuscriptPostRequest = {
+        ...getManuscriptPostBody(),
+        teamId,
+      };
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        teams: [
+          {
+            role: 'Key Personnel',
+            displayName: 'Test 1',
+            id: teamId,
+          },
+        ],
+      });
+      const contentfulError = {
+        status: 400,
+        message: 'Invalid request to Contentful',
+        details: {
+          errors: [{ message: 'Field X is required' }],
+        },
+      };
+
+      manuscriptControllerMock.create.mockRejectedValueOnce(
+        new Error(JSON.stringify(contentfulError)),
+      );
+
+      const response = await supertest(app)
+        .post('/manuscripts')
+        .send(createManuscriptRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        message: 'Invalid request to Contentful',
+        errors: contentfulError.details.errors,
+      });
+    });
+
+    test('Should throw a generic error when an unexpected error occurs', async () => {
+      const teamId = 'team-1';
+
+      const createManuscriptRequest: ManuscriptPostRequest = {
+        ...getManuscriptPostBody(),
+        teamId,
+      };
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        teams: [
+          {
+            role: 'Key Personnel',
+            displayName: 'Test 1',
+            id: teamId,
+          },
+        ],
+      });
+
+      manuscriptControllerMock.create.mockRejectedValueOnce(
+        new Error('Unexpected error'),
+      );
+
+      const response = await supertest(app)
+        .post('/manuscripts')
+        .send(createManuscriptRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty('message', 'Unexpected error');
+    });
+
+    test('Should throw an unexpected error if it is not an instance of Error', async () => {
+      const teamId = 'team-1';
+
+      const createManuscriptRequest: ManuscriptPostRequest = {
+        ...getManuscriptPostBody(),
+        teamId,
+      };
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        teams: [
+          {
+            role: 'Key Personnel',
+            displayName: 'Test 1',
+            id: teamId,
+          },
+        ],
+      });
+
+      manuscriptControllerMock.create.mockRejectedValueOnce(
+        'NonErrorException error',
+      );
+
+      const response = await supertest(app)
+        .post('/manuscripts')
+        .send(createManuscriptRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty('message', 'Unexpected error');
+    });
+
     test('Should return a 201 and pass input to the controller', async () => {
       const teamId = 'team-1';
 
@@ -348,6 +454,75 @@ describe('/manuscripts/ route', () => {
       expect(response.status).toEqual(403);
     });
 
+    test('Should return a Contentful error when Contentful API fails', async () => {
+      const createManuscriptRequest: ManuscriptPostRequest =
+        getManuscriptPostBody();
+
+      userMockFactory.mockReturnValueOnce(createUserResponse());
+
+      const contentfulError = {
+        status: 400,
+        message: 'Invalid request to Contentful',
+        details: {
+          errors: [{ message: 'Field X is required' }],
+        },
+      };
+
+      manuscriptControllerMock.createVersion.mockRejectedValueOnce(
+        new Error(JSON.stringify(contentfulError)),
+      );
+
+      const response = await supertest(app)
+        .post(`/manuscripts/${manuscriptId}`)
+        .send(createManuscriptRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        message: 'Invalid request to Contentful',
+        errors: contentfulError.details.errors,
+      });
+    });
+
+    test('Should throw a generic error when an unexpected error occurs', async () => {
+      const createManuscriptRequest: ManuscriptPostRequest =
+        getManuscriptPostBody();
+
+      userMockFactory.mockReturnValueOnce(createUserResponse());
+
+      manuscriptControllerMock.createVersion.mockRejectedValue(
+        new Error('Unexpected error'),
+      );
+
+      const response = await supertest(app)
+        .post(`/manuscripts/${manuscriptId}`)
+        .send(createManuscriptRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(500);
+
+      expect(response.body).toHaveProperty('message', 'Unexpected error');
+    });
+
+    test('Should throw an unexpected error if it is not an instance of Error', async () => {
+      const createManuscriptRequest: ManuscriptPostRequest =
+        getManuscriptPostBody();
+
+      userMockFactory.mockReturnValueOnce(createUserResponse());
+
+      manuscriptControllerMock.createVersion.mockRejectedValueOnce(
+        'NonErrorException error',
+      );
+
+      const response = await supertest(app)
+        .post(`/manuscripts/${manuscriptId}`)
+        .send(createManuscriptRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty('message', 'Unexpected error');
+    });
+
     test('Should return a 201 and pass input to the controller', async () => {
       const createManuscriptRequest: ManuscriptPostRequest =
         getManuscriptPostBody();
@@ -420,6 +595,78 @@ describe('/manuscripts/ route', () => {
         .send(manuscriptPutRequest)
         .set('Accept', 'application/json');
       expect(response.status).toEqual(403);
+    });
+
+    test('Should return a Contentful error when Contentful API fails', async () => {
+      const contentfulError = {
+        status: 400,
+        message: 'Invalid request to Contentful',
+        details: {
+          errors: [{ message: 'Field X is required' }],
+        },
+      };
+
+      manuscriptControllerMock.update.mockRejectedValue(
+        new Error(JSON.stringify(contentfulError)),
+      );
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        role: 'Staff',
+        openScienceTeamMember: true,
+      });
+
+      const response = await supertest(app)
+        .put(`/manuscripts/${manuscriptId}`)
+        .send(manuscriptPutRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        message: 'Invalid request to Contentful',
+        errors: contentfulError.details.errors,
+      });
+    });
+
+    test('Should throw a generic error when an unexpected error occurs', async () => {
+      manuscriptControllerMock.update.mockRejectedValue(
+        new Error('Unexpected error'),
+      );
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        role: 'Staff',
+        openScienceTeamMember: true,
+      });
+
+      const response = await supertest(app)
+        .put(`/manuscripts/${manuscriptId}`)
+        .send(manuscriptPutRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(500);
+
+      expect(response.body).toHaveProperty('message', 'Unexpected error');
+    });
+
+    test('Should throw an unexpected error if it is not an instance of Error', async () => {
+      manuscriptControllerMock.update.mockRejectedValue(
+        'NonErrorException error',
+      );
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        role: 'Staff',
+        openScienceTeamMember: true,
+      });
+
+      const response = await supertest(app)
+        .put(`/manuscripts/${manuscriptId}`)
+        .send(manuscriptPutRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty('message', 'Unexpected error');
     });
 
     test('Should send the data to the controller and return status 200 along with all the manuscript data', async () => {

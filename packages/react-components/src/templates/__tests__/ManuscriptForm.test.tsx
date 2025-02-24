@@ -87,6 +87,8 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   additionalAuthors: [],
   submitterName: 'John Doe',
   submissionDate: new Date('2024-10-01'),
+  onError: jest.fn(),
+  clearFormToast: jest.fn(),
 };
 
 const submitForm = async () => {

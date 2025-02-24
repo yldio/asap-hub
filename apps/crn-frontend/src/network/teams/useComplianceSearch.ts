@@ -88,7 +88,7 @@ export const useComplianceSearch = () => {
     history.replace({ search: newUrlParams.toString() });
   };
 
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 400);
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 600);
 
   return {
     completedStatus,

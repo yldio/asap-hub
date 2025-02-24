@@ -1290,7 +1290,10 @@ const getDiscussionRemindersFromQuery = (
           reminders.push(
             createDiscussionCreatedReminder(discussion, 'Open Science Member'),
           );
-        } else if (isManuscriptContributor || isAssignedUser) {
+        } else if (
+          !isStaffAndMemberOfOpenScienceTeam(discussion.message?.createdBy) &&
+          (isManuscriptContributor || isAssignedUser)
+        ) {
           reminders.push(
             createDiscussionCreatedReminder(discussion, 'Grantee'),
           );
@@ -1356,7 +1359,10 @@ const getReplyRemindersFromQuery = (
             'compliance-report-discussion-reply',
           ),
         );
-      } else if (isManuscriptContributor || isAssignedUser) {
+      } else if (
+        !isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
+        (isManuscriptContributor || isAssignedUser)
+      ) {
         reminders.push(
           createDiscussionRepliedToReminder(
             message,
@@ -1397,7 +1403,10 @@ const getReplyRemindersFromQuery = (
             'quick-check-discussion-reply',
           ),
         );
-      } else if (isManuscriptContributor || isAssignedUser) {
+      } else if (
+        !isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
+        (isManuscriptContributor || isAssignedUser)
+      ) {
         reminders.push(
           createDiscussionRepliedToReminder(
             message,

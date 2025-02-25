@@ -68,6 +68,7 @@ export {
   CalendarLink,
   CaptionItem,
   Collapsible,
+  ComplianceControls,
   CtaCard,
   DropdownButton,
   ErrorCard,

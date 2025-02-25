@@ -3,7 +3,6 @@ import { ComponentProps } from 'react';
 
 import { article, PageControls, TeamIcon } from '..';
 import { Headline3, Paragraph } from '../atoms';
-import { ComplianceControls } from '../molecules';
 import { ComplianceTable } from '../organisms';
 import { rem } from '../pixels';
 
@@ -35,15 +34,6 @@ const iconStyles = css({
 
 type ComplianceDashboardProps = ComponentProps<typeof PageControls> &
   Pick<
-    ComponentProps<typeof ComplianceControls>,
-    | 'completedStatus'
-    | 'requestedAPCCoverage'
-    | 'selectedStatuses'
-    | 'onSelectStatus'
-    | 'generateLink'
-    | 'manuscriptCount'
-  > &
-  Pick<
     ComponentProps<typeof ComplianceTable>,
     | 'onUpdateManuscript'
     | 'getAssignedUsersSuggestions'
@@ -67,21 +57,9 @@ const ComplianceDashboard: React.FC<ComplianceDashboardProps> = ({
   setSortingDirection,
   onUpdateManuscript,
   getAssignedUsersSuggestions,
-  selectedStatuses,
-  onSelectStatus,
-  generateLink,
-  manuscriptCount,
   ...pageControlsProps
 }) => (
   <article>
-    <ComplianceControls
-      {...pageControlsProps}
-      selectedStatuses={selectedStatuses}
-      isComplianceReviewer={isComplianceReviewer}
-      onSelectStatus={onSelectStatus}
-      generateLink={generateLink}
-      manuscriptCount={manuscriptCount}
-    />
     {data.length > 0 ? (
       <main css={{ paddingTop: rem(32) }}>
         <ComplianceTable

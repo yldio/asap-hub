@@ -5,13 +5,11 @@ import ComplianceControls from '../ComplianceControls';
 describe('ComplianceControls', () => {
   const props: ComponentProps<typeof ComplianceControls> = {
     currentPageIndex: 1,
-    numberOfPages: 5,
     renderPageHref: (page: number) => `/base-path/${page}`,
     completedStatus: 'hide' as const,
     requestedAPCCoverage: 'submitted' as const,
     isComplianceReviewer: true,
     selectedStatuses: [],
-    onSelectStatus: () => {},
     generateLink: () => '',
     manuscriptCount: 1,
   };

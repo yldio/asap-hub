@@ -49,7 +49,7 @@ const user = createUserResponse({}, 1);
 user.role = 'Staff';
 user.openScienceTeamMember = true;
 
-const renderCompliancePage = async () => {
+const renderCompliancePage = async (hasError = false) => {
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) => {
@@ -82,9 +82,17 @@ const renderCompliancePage = async () => {
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
+  await waitFor(() => {
+    expect(result.queryByText(/loading/i)).not.toBeInTheDocument();
+
+    if (hasError) {
+      expect(
+        screen.queryByTestId('compliance-table-row'),
+      ).not.toBeInTheDocument();
+    } else {
+      expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+    }
+  });
   return result;
 };
 
@@ -96,7 +104,8 @@ beforeEach(() => {
 it('renders error message when the request is not a 2XX', async () => {
   mockGetManuscripts.mockRejectedValue(new Error('error'));
 
-  await renderCompliancePage();
+  const hasError = true;
+  await renderCompliancePage(hasError);
   expect(mockGetManuscripts).toHaveBeenCalled();
   expect(screen.getByText(/Something went wrong/i)).toBeVisible();
 });

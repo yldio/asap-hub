@@ -15,6 +15,7 @@ let history!: History;
 
 beforeEach(() => {
   history = createMemoryHistory();
+  jest.spyOn(console, 'error').mockImplementation();
 });
 
 const defaultProps: ComponentProps<typeof ComplianceReportForm> = {
@@ -130,6 +131,7 @@ it('displays error message when url is missing', async () => {
   );
 
   const input = screen.getByRole('textbox', { name: /url/i });
+
   fireEvent.blur(input);
 
   await waitFor(() => {
@@ -147,28 +149,32 @@ it('displays error message when url is missing', async () => {
 });
 
 it('displays error message when description is missing', async () => {
-  render(
+  const { getByTestId, queryByText, getAllByText } = render(
     <StaticRouter>
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
 
-  const input = screen.getByRole('textbox', {
-    name: /compliance report description/i,
-  });
-  fireEvent.blur(input);
+  const editor = await waitFor(() => getByTestId('editor'));
+
+  fireEvent.blur(editor);
 
   await waitFor(() => {
     expect(
-      screen.getAllByText(/Please enter a description/i).length,
+      getAllByText(/Please enter a description/i).length,
     ).toBeGreaterThanOrEqual(1);
   });
 
-  userEvent.type(input, 'manuscription description');
-  fireEvent.blur(input);
+  await act(async () => {
+    userEvent.click(editor);
+    userEvent.tab();
+    fireEvent.input(editor, { data: 'manuscription description' });
+    userEvent.tab();
+  });
 
+  fireEvent.blur(editor);
   await waitFor(() => {
-    expect(screen.queryByText(/Please enter a description/i)).toBeNull();
+    expect(queryByText(/Please enter a description/i)).toBeNull();
   });
 });
 

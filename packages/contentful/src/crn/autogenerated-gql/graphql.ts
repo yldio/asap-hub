@@ -19279,6 +19279,9 @@ export type FetchRemindersQuery = {
               Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
             >;
           }>;
+          assignedUsersCollection?: Maybe<{
+            items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+          }>;
           versionsCollection?: Maybe<
             Pick<ManuscriptsVersionsCollection, 'total'> & {
               items: Array<
@@ -19497,7 +19500,6 @@ export type FetchTeamProjectManagerQuery = {
 
 export type FetchDiscussionRemindersQueryVariables = Exact<{
   discussionFilter?: InputMaybe<DiscussionsFilter>;
-  messageFilter?: InputMaybe<MessagesFilter>;
 }>;
 
 export type FetchDiscussionRemindersQuery = {
@@ -19586,7 +19588,15 @@ export type FetchDiscussionRemindersQuery = {
                     }>;
                     linkedFrom?: Maybe<{
                       manuscriptsCollection?: Maybe<{
-                        items: Array<Maybe<Pick<Manuscripts, 'title'>>>;
+                        items: Array<
+                          Maybe<
+                            Pick<Manuscripts, 'title'> & {
+                              assignedUsersCollection?: Maybe<{
+                                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                              }>;
+                            }
+                          >
+                        >;
                       }>;
                     }>;
                   }>;
@@ -19598,6 +19608,13 @@ export type FetchDiscussionRemindersQuery = {
       >
     >;
   }>;
+};
+
+export type FetchMessageRemindersQueryVariables = Exact<{
+  messageFilter?: InputMaybe<MessagesFilter>;
+}>;
+
+export type FetchMessageRemindersQuery = {
   messagesCollection?: Maybe<{
     items: Array<
       Maybe<{
@@ -19677,7 +19694,17 @@ export type FetchDiscussionRemindersQuery = {
                           }>;
                           linkedFrom?: Maybe<{
                             manuscriptsCollection?: Maybe<{
-                              items: Array<Maybe<Pick<Manuscripts, 'title'>>>;
+                              items: Array<
+                                Maybe<
+                                  Pick<Manuscripts, 'title'> & {
+                                    assignedUsersCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{ sys: Pick<Sys, 'id'> }>
+                                      >;
+                                    }>;
+                                  }
+                                >
+                              >;
                             }>;
                           }>;
                         }>;
@@ -19733,7 +19760,17 @@ export type FetchDiscussionRemindersQuery = {
                         }>;
                         linkedFrom?: Maybe<{
                           manuscriptsCollection?: Maybe<{
-                            items: Array<Maybe<Pick<Manuscripts, 'title'>>>;
+                            items: Array<
+                              Maybe<
+                                Pick<Manuscripts, 'title'> & {
+                                  assignedUsersCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<{ sys: Pick<Sys, 'id'> }>
+                                    >;
+                                  }>;
+                                }
+                              >
+                            >;
                           }>;
                         }>;
                       }>
@@ -36398,6 +36435,47 @@ export const FetchRemindersDocument = {
                       },
                       {
                         kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'assignedUsersCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '30' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'versionsCollection' },
                         arguments: [
                           {
@@ -37909,17 +37987,6 @@ export const FetchDiscussionRemindersDocument = {
             name: { kind: 'Name', value: 'DiscussionsFilter' },
           },
         },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'messageFilter' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'MessagesFilter' },
-          },
-        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -38708,6 +38775,74 @@ export const FetchDiscussionRemindersDocument = {
                                                                       'title',
                                                                   },
                                                                 },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'assignedUsersCollection',
+                                                                  },
+                                                                  arguments: [
+                                                                    {
+                                                                      kind: 'Argument',
+                                                                      name: {
+                                                                        kind: 'Name',
+                                                                        value:
+                                                                          'limit',
+                                                                      },
+                                                                      value: {
+                                                                        kind: 'IntValue',
+                                                                        value:
+                                                                          '30',
+                                                                      },
+                                                                    },
+                                                                  ],
+                                                                  selectionSet:
+                                                                    {
+                                                                      kind: 'SelectionSet',
+                                                                      selections:
+                                                                        [
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'items',
+                                                                            },
+                                                                            selectionSet:
+                                                                              {
+                                                                                kind: 'SelectionSet',
+                                                                                selections:
+                                                                                  [
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'sys',
+                                                                                      },
+                                                                                      selectionSet:
+                                                                                        {
+                                                                                          kind: 'SelectionSet',
+                                                                                          selections:
+                                                                                            [
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'id',
+                                                                                                },
+                                                                                              },
+                                                                                            ],
+                                                                                        },
+                                                                                    },
+                                                                                  ],
+                                                                              },
+                                                                          },
+                                                                        ],
+                                                                    },
+                                                                },
                                                               ],
                                                             },
                                                           },
@@ -38735,6 +38870,37 @@ export const FetchDiscussionRemindersDocument = {
               ],
             },
           },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchDiscussionRemindersQuery,
+  FetchDiscussionRemindersQueryVariables
+>;
+export const FetchMessageRemindersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchMessageReminders' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'messageFilter' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'MessagesFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'messagesCollection' },
@@ -39517,6 +39683,76 @@ export const FetchDiscussionRemindersDocument = {
                                                                                                     'title',
                                                                                                 },
                                                                                               },
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'assignedUsersCollection',
+                                                                                                },
+                                                                                                arguments:
+                                                                                                  [
+                                                                                                    {
+                                                                                                      kind: 'Argument',
+                                                                                                      name: {
+                                                                                                        kind: 'Name',
+                                                                                                        value:
+                                                                                                          'limit',
+                                                                                                      },
+                                                                                                      value:
+                                                                                                        {
+                                                                                                          kind: 'IntValue',
+                                                                                                          value:
+                                                                                                            '30',
+                                                                                                        },
+                                                                                                    },
+                                                                                                  ],
+                                                                                                selectionSet:
+                                                                                                  {
+                                                                                                    kind: 'SelectionSet',
+                                                                                                    selections:
+                                                                                                      [
+                                                                                                        {
+                                                                                                          kind: 'Field',
+                                                                                                          name: {
+                                                                                                            kind: 'Name',
+                                                                                                            value:
+                                                                                                              'items',
+                                                                                                          },
+                                                                                                          selectionSet:
+                                                                                                            {
+                                                                                                              kind: 'SelectionSet',
+                                                                                                              selections:
+                                                                                                                [
+                                                                                                                  {
+                                                                                                                    kind: 'Field',
+                                                                                                                    name: {
+                                                                                                                      kind: 'Name',
+                                                                                                                      value:
+                                                                                                                        'sys',
+                                                                                                                    },
+                                                                                                                    selectionSet:
+                                                                                                                      {
+                                                                                                                        kind: 'SelectionSet',
+                                                                                                                        selections:
+                                                                                                                          [
+                                                                                                                            {
+                                                                                                                              kind: 'Field',
+                                                                                                                              name: {
+                                                                                                                                kind: 'Name',
+                                                                                                                                value:
+                                                                                                                                  'id',
+                                                                                                                              },
+                                                                                                                            },
+                                                                                                                          ],
+                                                                                                                      },
+                                                                                                                  },
+                                                                                                                ],
+                                                                                                            },
+                                                                                                        },
+                                                                                                      ],
+                                                                                                  },
+                                                                                              },
                                                                                             ],
                                                                                         },
                                                                                     },
@@ -40053,6 +40289,76 @@ export const FetchDiscussionRemindersDocument = {
                                                                                           'title',
                                                                                       },
                                                                                     },
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'assignedUsersCollection',
+                                                                                      },
+                                                                                      arguments:
+                                                                                        [
+                                                                                          {
+                                                                                            kind: 'Argument',
+                                                                                            name: {
+                                                                                              kind: 'Name',
+                                                                                              value:
+                                                                                                'limit',
+                                                                                            },
+                                                                                            value:
+                                                                                              {
+                                                                                                kind: 'IntValue',
+                                                                                                value:
+                                                                                                  '30',
+                                                                                              },
+                                                                                          },
+                                                                                        ],
+                                                                                      selectionSet:
+                                                                                        {
+                                                                                          kind: 'SelectionSet',
+                                                                                          selections:
+                                                                                            [
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'items',
+                                                                                                },
+                                                                                                selectionSet:
+                                                                                                  {
+                                                                                                    kind: 'SelectionSet',
+                                                                                                    selections:
+                                                                                                      [
+                                                                                                        {
+                                                                                                          kind: 'Field',
+                                                                                                          name: {
+                                                                                                            kind: 'Name',
+                                                                                                            value:
+                                                                                                              'sys',
+                                                                                                          },
+                                                                                                          selectionSet:
+                                                                                                            {
+                                                                                                              kind: 'SelectionSet',
+                                                                                                              selections:
+                                                                                                                [
+                                                                                                                  {
+                                                                                                                    kind: 'Field',
+                                                                                                                    name: {
+                                                                                                                      kind: 'Name',
+                                                                                                                      value:
+                                                                                                                        'id',
+                                                                                                                    },
+                                                                                                                  },
+                                                                                                                ],
+                                                                                                            },
+                                                                                                        },
+                                                                                                      ],
+                                                                                                  },
+                                                                                              },
+                                                                                            ],
+                                                                                        },
+                                                                                    },
                                                                                   ],
                                                                               },
                                                                           },
@@ -40091,8 +40397,8 @@ export const FetchDiscussionRemindersDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  FetchDiscussionRemindersQuery,
-  FetchDiscussionRemindersQueryVariables
+  FetchMessageRemindersQuery,
+  FetchMessageRemindersQueryVariables
 >;
 export const FetchResearchOutputByIdDocument = {
   kind: 'Document',

@@ -25,6 +25,7 @@ import {
 } from '@asap-hub/model';
 import {
   FetchDiscussionRemindersQuery,
+  FetchMessageRemindersQuery,
   FetchRemindersQuery,
   FetchTeamProjectManagerQuery,
 } from '@asap-hub/contentful';
@@ -618,6 +619,16 @@ export const getManuscriptVersion = ({
   },
 });
 
+const assignedUsersCollection = {
+  items: [
+    {
+      sys: {
+        id: 'assigned-os-member-id',
+      },
+    },
+  ],
+};
+
 export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
   FetchRemindersQuery['manuscriptsCollection']
 >['items'][number] => ({
@@ -641,6 +652,7 @@ export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
       },
     ],
   },
+  assignedUsersCollection,
   versionsCollection: {
     total: 1,
     items: [
@@ -699,6 +711,7 @@ const getDiscussionComplianceReportCollection = () => ({
             items: [
               {
                 title: 'Contextual AI models for single-cell protein biology',
+                assignedUsersCollection,
               },
             ],
           },
@@ -735,7 +748,7 @@ export const getContentfulReminderDiscussionCollectionItem = (): NonNullable<
 });
 
 const getReminderMessageCollectionItem = (): NonNullable<
-  FetchDiscussionRemindersQuery['messagesCollection']
+  FetchMessageRemindersQuery['messagesCollection']
 >['items'][number] => ({
   sys: {
     id: 'reply-id-1',
@@ -770,7 +783,7 @@ const getReminderMessageCollectionItem = (): NonNullable<
 export const getContentfulReminderMessageCollectionItem = (
   type: 'quick-check' | 'compliance-report',
 ): NonNullable<
-  FetchDiscussionRemindersQuery['messagesCollection']
+  FetchMessageRemindersQuery['messagesCollection']
 >['items'][number] => {
   const messageItem = { ...getReminderMessageCollectionItem() } as MessageItem;
   if (type === 'quick-check') {

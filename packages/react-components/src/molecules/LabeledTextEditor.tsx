@@ -26,6 +26,7 @@ type LabeledTextEditorProps = {
   readonly info?: React.ReactNode;
   readonly editorStyles?: SerializedStyles;
   readonly hasError?: boolean;
+  readonly autofocus?: boolean;
 } & Exclude<ComponentProps<typeof TextEditor>, 'id'>;
 
 const LabeledTextEditor: React.FC<LabeledTextEditorProps> = ({

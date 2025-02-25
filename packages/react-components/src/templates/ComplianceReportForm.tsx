@@ -232,6 +232,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                     marginBlock: 0,
                   })}
                   hasError={Boolean(error)}
+                  autofocus={false}
                 />
               )}
             />

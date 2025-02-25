@@ -190,6 +190,7 @@ export type TextEditorProps = {
   readonly isMarkdown?: boolean;
   readonly editorStyles?: SerializedStyles;
   readonly hasError?: boolean;
+  readonly autofocus?: boolean;
   onChange?: (content: string) => void;
   onBlur?: () => void;
 };
@@ -215,6 +216,7 @@ const TextEditor = ({
   onBlur,
   editorStyles,
   hasError = false,
+  autofocus = true,
 }: TextEditorProps) => {
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLTextAreaElement>(
@@ -312,7 +314,7 @@ const TextEditor = ({
           )}
           <ListPlugin />
           <HistoryPlugin />
-          <AutoFocusPlugin />
+          {autofocus && <AutoFocusPlugin />}
         </div>
       </div>
       <div css={validationMessageStyles}>{validationMessage}</div>

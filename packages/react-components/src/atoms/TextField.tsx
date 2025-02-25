@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css, Theme } from '@emotion/react';
-import React, { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes } from 'react';
 import { ember, lead, paper, pine, rose, silver, steel, tin } from '../colors';
 import {
   indicatorPadding,
@@ -138,117 +138,102 @@ type TextFieldProps = {
 
   readonly value: string;
   readonly onChange?: (newValue: string) => void;
-  readonly skipValidation?: boolean;
 } & Pick<
   InputHTMLAttributes<HTMLInputElement>,
   'id' | 'placeholder' | 'required' | 'maxLength' | 'pattern' | 'max' | 'onBlur'
 >;
+const TextField: React.FC<TextFieldProps> = ({
+  type = 'text',
+  enabled = true,
 
-const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
-  (
-    {
-      type = 'text',
-      enabled = true,
+  required,
+  maxLength,
+  max,
+  pattern,
 
-      required,
-      maxLength,
-      max,
-      pattern,
+  customValidationMessage = '',
 
-      customValidationMessage = '',
+  leftIndicator,
+  rightIndicator,
 
-      leftIndicator,
-      rightIndicator,
+  labelIndicator,
 
-      labelIndicator,
+  getValidationMessage,
 
+  value,
+  onChange = noop,
+  onBlur,
+
+  ...props
+}) => {
+  const { validationMessage, validationTargetProps } =
+    useValidation<HTMLInputElement>(
+      customValidationMessage,
       getValidationMessage,
-
-      value,
-      onChange = noop,
-      onBlur,
-      skipValidation = false,
-
-      ...props
-    },
-    ref,
-  ) => {
-    const { validationMessage, validationTargetProps } =
-      useValidation<HTMLInputElement>(
-        customValidationMessage,
-        getValidationMessage,
-        skipValidation,
-      );
-
-    return (
-      <div css={containerStyles}>
-        <input
-          {...props}
-          {...(!skipValidation && validationTargetProps)}
-          ref={ref}
-          type={type}
-          disabled={!enabled}
-          required={required}
-          maxLength={maxLength}
-          max={max}
-          pattern={pattern}
-          value={value}
-          onChange={({ currentTarget: { value: newValue } }) =>
-            onChange(newValue)
-          }
-          css={({ colors }) => [
-            styles,
-            textFieldStyles(colors),
-            enabled || disabledStyles,
-
-            validationMessage && invalidStyles,
-            !labelIndicator && { gridColumn: '1 / span 2' },
-
-            leftIndicator && {
-              paddingLeft: getIndicatorPadding(leftIndicator),
-            },
-
-            rightIndicator && {
-              paddingRight: getIndicatorPadding(rightIndicator),
-            },
-            colors?.primary500 && {
-              ':focus': { borderColor: colors.primary500.rgba },
-            },
-          ]}
-          {...(onBlur ? { onBlur } : {})}
-        />
-
-        {labelIndicator && (
-          <div
-            className={LABEL_INDICATOR_CLASS_NAME}
-            css={labelIndicatorStyles}
-          >
-            {labelIndicator}
-          </div>
-        )}
-
-        {leftIndicator && (
-          <div
-            css={getIndicatorStyles(getSvgAspectRatio(leftIndicator), 'left')}
-          >
-            {leftIndicator}
-          </div>
-        )}
-
-        {rightIndicator && (
-          <div
-            css={getIndicatorStyles(getSvgAspectRatio(rightIndicator), 'right')}
-          >
-            {rightIndicator}
-          </div>
-        )}
-
-        <div css={[validationMessageStyles, { gridColumn: '1 / span 2' }]}>
-          {validationMessage}
-        </div>
-      </div>
     );
-  },
-);
+
+  return (
+    <div css={containerStyles}>
+      <input
+        {...props}
+        {...validationTargetProps}
+        type={type}
+        disabled={!enabled}
+        required={required}
+        maxLength={maxLength}
+        max={max}
+        pattern={pattern}
+        value={value}
+        onChange={({ currentTarget: { value: newValue } }) =>
+          onChange(newValue)
+        }
+        css={({ colors }) => [
+          styles,
+          textFieldStyles(colors),
+          enabled || disabledStyles,
+
+          validationMessage && invalidStyles,
+          !labelIndicator && { gridColumn: '1 / span 2' },
+
+          leftIndicator && {
+            paddingLeft: getIndicatorPadding(leftIndicator),
+          },
+
+          rightIndicator && {
+            paddingRight: getIndicatorPadding(rightIndicator),
+          },
+          colors?.primary500 && {
+            ':focus': { borderColor: colors.primary500.rgba },
+          },
+        ]}
+        {...(onBlur ? { onBlur } : {})}
+      />
+
+      {labelIndicator && (
+        <div className={LABEL_INDICATOR_CLASS_NAME} css={labelIndicatorStyles}>
+          {labelIndicator}
+        </div>
+      )}
+
+      {leftIndicator && (
+        <div css={getIndicatorStyles(getSvgAspectRatio(leftIndicator), 'left')}>
+          {leftIndicator}
+        </div>
+      )}
+
+      {rightIndicator && (
+        <div
+          css={getIndicatorStyles(getSvgAspectRatio(rightIndicator), 'right')}
+        >
+          {rightIndicator}
+        </div>
+      )}
+
+      <div css={[validationMessageStyles, { gridColumn: '1 / span 2' }]}>
+        {validationMessage}
+      </div>
+    </div>
+  );
+};
 
 export default TextField;

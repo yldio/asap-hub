@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { ComponentProps, forwardRef, useEffect } from 'react';
+import { ComponentProps, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 import {
   SEARCH_EVENT,
@@ -35,52 +35,48 @@ type SearchProps = Pick<
   Required<Pick<ComponentProps<typeof TextField>, 'placeholder'>> & {
     padding?: boolean;
   };
-const SearchField = forwardRef<HTMLInputElement, SearchProps>(
-  ({ padding = true, ...props }, ref) => {
-    const [debouncedValue] = useDebounce(props.value, 5000);
+const SearchField: React.FC<SearchProps> = ({ padding = true, ...props }) => {
+  const [debouncedValue] = useDebounce(props.value, 5000);
 
-    useEffect(() => {
-      if (props.value && props.value === debouncedValue) {
-        window.dataLayer?.push({
-          [SEARCH_QUERY_KEY]: props.value,
-          [SEARCH_PLACEHOLDER_KEY]: props.placeholder,
-          event: SEARCH_EVENT,
-        });
-      }
+  useEffect(() => {
+    if (props.value && props.value === debouncedValue) {
+      window.dataLayer?.push({
+        [SEARCH_QUERY_KEY]: props.value,
+        [SEARCH_PLACEHOLDER_KEY]: props.placeholder,
+        event: SEARCH_EVENT,
+      });
+    }
 
-      return () => {
-        window.dataLayer?.push({
-          [SEARCH_QUERY_KEY]: undefined,
-          [SEARCH_PLACEHOLDER_KEY]: undefined,
-        });
-      };
-    }, [debouncedValue, props.placeholder, props.value]);
+    return () => {
+      window.dataLayer?.push({
+        [SEARCH_QUERY_KEY]: undefined,
+        [SEARCH_PLACEHOLDER_KEY]: undefined,
+      });
+    };
+  }, [debouncedValue, props.placeholder, props.value]);
 
-    return (
-      <div css={[clearButtonStyles, !padding && { padding: 0 }]}>
-        <TextField
-          {...props}
-          maxLength={MAX_ALGOLIA_QUERY_LENGTH}
-          type="search"
-          leftIndicator={searchIcon}
-          skipValidation
-          ref={ref}
-          rightIndicator={
-            props.value ? (
-              <div css={rightIndicatorStyles}>
-                <Button
-                  linkStyle
-                  onClick={() => props.onChange && props.onChange('')}
-                >
-                  {crossIcon}
-                </Button>
-              </div>
-            ) : undefined
-          }
-        />
-      </div>
-    );
-  },
-);
+  return (
+    <div css={[clearButtonStyles, !padding && { padding: 0 }]}>
+      <TextField
+        {...props}
+        maxLength={MAX_ALGOLIA_QUERY_LENGTH}
+        type="search"
+        leftIndicator={searchIcon}
+        rightIndicator={
+          props.value ? (
+            <div css={rightIndicatorStyles}>
+              <Button
+                linkStyle
+                onClick={() => props.onChange && props.onChange('')}
+              >
+                {crossIcon}
+              </Button>
+            </div>
+          ) : undefined
+        }
+      />
+    </div>
+  );
+};
 
 export default SearchField;

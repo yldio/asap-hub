@@ -10,7 +10,7 @@ import {
   SortCompliance,
 } from '@asap-hub/model';
 import { ComplianceDashboard, SearchField } from '@asap-hub/react-components';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAssignedUsersSuggestions } from '../../shared-state/shared-research';
 import {
@@ -22,8 +22,6 @@ import { useComplianceSearch } from './useComplianceSearch';
 import { useManuscriptToast } from './useManuscriptToast';
 
 const Compliance: React.FC = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const {
     completedStatus,
     debouncedSearchQuery,
@@ -57,10 +55,6 @@ const Compliance: React.FC = () => {
     pageSize,
   );
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [result.items]);
-
   const isComplianceReviewer = useIsComplianceReviewer();
   const getAssignedUsersSuggestions = useAssignedUsersSuggestions();
   const [sort, setSort] = useState<SortCompliance>('team_asc');
@@ -85,7 +79,6 @@ const Compliance: React.FC = () => {
         placeholder="Enter team name, ID, assigned users..."
         value={searchQuery}
         onChange={setSearchQuery}
-        ref={inputRef}
       />
       <SearchFrame title="">
         <ComplianceDashboard

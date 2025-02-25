@@ -21,7 +21,7 @@ import {
 } from '@lexical/markdown';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { EditorState } from 'lexical';
-import { ember } from '../colors';
+import { ember, rose } from '../colors';
 import { styles, useValidation, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import ToolbarPlugin from './TextEditorToolbar';
@@ -189,6 +189,7 @@ export type TextEditorProps = {
   readonly enabled?: boolean;
   readonly isMarkdown?: boolean;
   readonly editorStyles?: SerializedStyles;
+  readonly hasError?: boolean;
   onChange?: (content: string) => void;
   onBlur?: () => void;
 };
@@ -213,6 +214,7 @@ const TextEditor = ({
   isMarkdown = false,
   onBlur,
   editorStyles,
+  hasError = false,
 }: TextEditorProps) => {
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLTextAreaElement>(
@@ -242,9 +244,6 @@ const TextEditor = ({
 
   if (isMarkdown && !value) return <></>;
 
-  if (onBlur) {
-    onBlur();
-  }
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div css={css([containerStyles, editorStyles])}>
@@ -276,9 +275,14 @@ const TextEditor = ({
                             borderColor: colors?.primary500.rgba,
                           },
                         },
+                        hasError && {
+                          backgroundColor: rose.rgb,
+                          borderColor: `${ember.rgb}!important`,
+                        },
                       ]
                     : [markdownStyles]
                 }
+                onBlur={onBlur}
               />
             }
             placeholder={

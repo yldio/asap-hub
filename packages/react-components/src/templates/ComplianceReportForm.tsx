@@ -231,6 +231,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   editorStyles={css({
                     marginBlock: 0,
                   })}
+                  hasError={Boolean(error)}
                 />
               )}
             />

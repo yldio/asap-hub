@@ -21,6 +21,7 @@ import { getReviewerStatusType } from './ManuscriptCard';
 
 const cardStyles = css({
   marginTop: rem(32),
+  marginBottom: rem(32),
 });
 
 const statusDescriptionStyles = css({

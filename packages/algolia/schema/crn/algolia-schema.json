@@ -44,7 +44,9 @@
     "interestGroup.id",
     "workingGroup.id",
     "workingGroups.id",
-    "publishingEntity"
+    "publishingEntity",
+    "teams",
+    "assignedUsers"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,

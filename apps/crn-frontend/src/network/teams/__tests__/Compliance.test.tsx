@@ -82,9 +82,9 @@ const renderCompliancePage = async () => {
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
+  await waitFor(() => {
+    expect(result.queryByText(/loading/i)).not.toBeInTheDocument();
+  });
   return result;
 };
 
@@ -98,7 +98,9 @@ it('renders error message when the request is not a 2XX', async () => {
 
   await renderCompliancePage();
   expect(mockGetManuscripts).toHaveBeenCalled();
-  expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  await waitFor(() => {
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
 });
 
 it('updates manuscript and refreshes data when handleUpdateManuscript is called and the status is changed', async () => {
@@ -121,6 +123,10 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   });
 
   await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
 
   const statusButton = within(
     screen.getByTestId('compliance-table-row'),
@@ -177,6 +183,10 @@ it('manuscripts remain the same when there is not a match between the manuscript
   });
 
   await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
 
   const statusButton = within(
     screen.getByTestId('compliance-table-row'),
@@ -235,6 +245,10 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
   });
 
   await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
 
   const statusButton = within(
     screen.getByTestId('compliance-table-row'),
@@ -304,6 +318,10 @@ it('fetches assigned users suggestions and displays them properly', async () => 
 
   await renderCompliancePage();
 
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
+
   expect(screen.queryByText(/Billie Eilish/i)).not.toBeInTheDocument();
 
   userEvent.click(screen.getByTitle(/Add user/i));
@@ -353,6 +371,10 @@ it('displays success message when assigning users', async () => {
   });
 
   await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
 
   userEvent.click(screen.getByLabelText(/Edit Assigned Users/i));
 

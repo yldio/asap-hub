@@ -6,11 +6,17 @@ import {
   DEFAULT_COMPLETED_STATUS,
   DEFAULT_REQUESTED_APC_COVERAGE,
   ManuscriptPutRequest,
+  ManuscriptStatus,
   RequestedAPCCoverageOption,
   SortCompliance,
 } from '@asap-hub/model';
-import { ComplianceDashboard, SearchField } from '@asap-hub/react-components';
-import { useState } from 'react';
+import {
+  ComplianceControls,
+  ComplianceDashboard,
+  ManuscriptByStatus,
+  SearchField,
+} from '@asap-hub/react-components';
+import { ComponentProps, useState } from 'react';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAssignedUsersSuggestions } from '../../shared-state/shared-research';
 import {
@@ -21,28 +27,32 @@ import {
 import { useComplianceSearch } from './useComplianceSearch';
 import { useManuscriptToast } from './useManuscriptToast';
 
-const Compliance: React.FC = () => {
-  const {
-    completedStatus,
-    debouncedSearchQuery,
-    requestedAPCCoverage,
-    searchQuery,
-    selectedStatuses,
-    setSearchQuery,
-    setStatus,
-    generateLink,
-  } = useComplianceSearch();
-  const hasAppliedFilters =
-    selectedStatuses.length > 0 ||
-    searchQuery.trim() !== '' ||
-    completedStatus !== DEFAULT_COMPLETED_STATUS ||
-    requestedAPCCoverage !== DEFAULT_REQUESTED_APC_COVERAGE;
+type ComplianceListProps = Pick<
+  ComponentProps<typeof ComplianceControls>,
+  'requestedAPCCoverage' | 'completedStatus'
+> & {
+  selectedStatuses: ManuscriptStatus[];
+  isComplianceReviewer: boolean;
+  searchQuery: string;
+  pageSize: number;
+  currentPage: number;
+  generateLinkFactory: ReturnType<
+    typeof useComplianceSearch
+  >['generateLinkFactory'];
+};
 
-  const { currentPage, pageSize } = usePaginationParams();
-
-  const { setFormType } = useManuscriptToast();
+const ComplianceList: React.FC<ComplianceListProps> = ({
+  searchQuery,
+  pageSize,
+  currentPage,
+  requestedAPCCoverage,
+  completedStatus,
+  selectedStatuses,
+  isComplianceReviewer,
+  generateLinkFactory,
+}) => {
   const result = useManuscripts({
-    searchQuery: debouncedSearchQuery,
+    searchQuery,
     currentPage,
     pageSize,
     requestedAPCCoverage,
@@ -50,16 +60,18 @@ const Compliance: React.FC = () => {
     selectedStatuses,
   });
 
+  const { setFormType } = useManuscriptToast();
+
   const { numberOfPages, renderPageHref } = usePagination(
     result.total,
     pageSize,
   );
 
-  const isComplianceReviewer = useIsComplianceReviewer();
-  const getAssignedUsersSuggestions = useAssignedUsersSuggestions();
-  const [sort, setSort] = useState<SortCompliance>('team_asc');
-  const [sortingDirection, setSortingDirection] =
-    useState<ComplianceSortingDirection>(complianceInitialSortingDirection);
+  const hasAppliedFilters =
+    selectedStatuses.length > 0 ||
+    searchQuery.trim() !== '' ||
+    completedStatus !== DEFAULT_COMPLETED_STATUS ||
+    requestedAPCCoverage !== DEFAULT_REQUESTED_APC_COVERAGE;
 
   const updateManuscript = usePutManuscript();
 
@@ -73,6 +85,69 @@ const Compliance: React.FC = () => {
     return manuscriptResponse;
   };
 
+  const getAssignedUsersSuggestions = useAssignedUsersSuggestions();
+  const [sort, setSort] = useState<SortCompliance>('team_asc');
+  const [sortingDirection, setSortingDirection] =
+    useState<ComplianceSortingDirection>(complianceInitialSortingDirection);
+  const href = renderPageHref(currentPage);
+
+  return (
+    <article>
+      <ComplianceControls
+        generateLink={generateLinkFactory(
+          href,
+          currentPage,
+          selectedStatuses,
+          searchQuery,
+        )}
+        manuscriptCount={result.total}
+        completedStatus={completedStatus as CompletedStatusOption}
+        requestedAPCCoverage={
+          requestedAPCCoverage as RequestedAPCCoverageOption
+        }
+      />
+      <ComplianceDashboard
+        hasAppliedFilters={hasAppliedFilters}
+        isComplianceReviewer={isComplianceReviewer}
+        data={result.items}
+        setSort={setSort}
+        setSortingDirection={setSortingDirection}
+        sort={sort}
+        sortingDirection={sortingDirection}
+        currentPageIndex={currentPage}
+        numberOfPages={numberOfPages}
+        renderPageHref={renderPageHref}
+        onUpdateManuscript={handleUpdateManuscript}
+        getAssignedUsersSuggestions={(input) =>
+          getAssignedUsersSuggestions(input).then((authors) =>
+            authors.map((author) => ({
+              author,
+              label: author.displayName,
+              value: author.id,
+            })),
+          )
+        }
+      />
+    </article>
+  );
+};
+
+const Compliance: React.FC = () => {
+  const {
+    completedStatus,
+    debouncedSearchQuery,
+    requestedAPCCoverage,
+    searchQuery,
+    selectedStatuses,
+    setSearchQuery,
+    setStatus,
+    generateLinkFactory,
+  } = useComplianceSearch();
+
+  const { currentPage, pageSize } = usePaginationParams();
+
+  const isComplianceReviewer = useIsComplianceReviewer();
+
   return (
     <article>
       <SearchField
@@ -80,36 +155,22 @@ const Compliance: React.FC = () => {
         value={searchQuery}
         onChange={setSearchQuery}
       />
-      <SearchFrame title="">
-        <ComplianceDashboard
-          hasAppliedFilters={hasAppliedFilters}
-          selectedStatuses={selectedStatuses}
-          onSelectStatus={setStatus}
-          completedStatus={completedStatus as CompletedStatusOption}
-          requestedAPCCoverage={
-            requestedAPCCoverage as RequestedAPCCoverageOption
-          }
+      <ManuscriptByStatus
+        shouldHideCompleteStatus={completedStatus === 'hide'}
+        isComplianceReviewer={isComplianceReviewer}
+        selectedStatuses={selectedStatuses}
+        onSelectStatus={setStatus}
+      />
+      <SearchFrame title="Compliance">
+        <ComplianceList
+          generateLinkFactory={generateLinkFactory}
           isComplianceReviewer={isComplianceReviewer}
-          data={result.items}
-          setSort={setSort}
-          setSortingDirection={setSortingDirection}
-          sort={sort}
-          sortingDirection={sortingDirection}
-          currentPageIndex={currentPage}
-          numberOfPages={numberOfPages}
-          renderPageHref={renderPageHref}
-          onUpdateManuscript={handleUpdateManuscript}
-          getAssignedUsersSuggestions={(input) =>
-            getAssignedUsersSuggestions(input).then((authors) =>
-              authors.map((author) => ({
-                author,
-                label: author.displayName,
-                value: author.id,
-              })),
-            )
-          }
-          generateLink={generateLink}
-          manuscriptCount={result.total}
+          searchQuery={debouncedSearchQuery}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          requestedAPCCoverage={requestedAPCCoverage}
+          completedStatus={completedStatus}
+          selectedStatuses={selectedStatuses}
         />
       </SearchFrame>
     </article>

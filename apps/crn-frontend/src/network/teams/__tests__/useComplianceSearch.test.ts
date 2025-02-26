@@ -156,29 +156,18 @@ describe('useComplianceSearch', () => {
   });
 });
 
-describe('generateLink', () => {
-  it('generates basic URL with required parameters', () => {
+describe('generateLinkFactory', () => {
+  it('generates URL with given parameters', () => {
     const { result } = renderHook(() => useComplianceSearch(), {
       wrapper: MemoryRouter,
     });
 
-    const url = result.current.generateLink('/base-path', 1, 'show', '', []);
-
-    expect(url).toBe('/base-path?completedStatus=show&currentPage=1');
-  });
-
-  it('includes requestedAPCCoverage when provided', () => {
-    const { result } = renderHook(() => useComplianceSearch(), {
-      wrapper: MemoryRouter,
-    });
-
-    const url = result.current.generateLink(
+    const url = result.current.generateLinkFactory(
       '/base-path',
       1,
-      'show',
-      'submitted',
       [],
-    );
+      '',
+    )('show', 'submitted');
 
     expect(url).toBe(
       '/base-path?completedStatus=show&currentPage=1&requestedAPCCoverage=submitted',
@@ -190,13 +179,15 @@ describe('generateLink', () => {
       wrapper: MemoryRouter,
     });
 
-    const url = result.current.generateLink('/base-path', 1, 'show', '', [
-      'Compliant',
-      'Waiting for Report',
-    ]);
+    const url = result.current.generateLinkFactory(
+      '/base-path',
+      1,
+      ['Compliant', 'Waiting for Report'],
+      '',
+    )('show', 'submitted');
 
     expect(url).toBe(
-      `/base-path?completedStatus=show&currentPage=1&status=Compliant&status=Waiting+for+Report`,
+      `/base-path?completedStatus=show&currentPage=1&requestedAPCCoverage=submitted&status=Compliant&status=Waiting+for+Report`,
     );
   });
 
@@ -205,14 +196,15 @@ describe('generateLink', () => {
       wrapper: MemoryRouter,
     });
 
-    const url = result.current.generateLink('/base-path', 1, 'hide', '', [
-      'Compliant',
-      'Waiting for Report',
-      'Closed (other)',
-    ]);
+    const url = result.current.generateLinkFactory(
+      '/base-path',
+      1,
+      ['Compliant', 'Waiting for Report', 'Closed (other)'],
+      '',
+    )('hide', 'submitted');
 
     expect(url).toBe(
-      '/base-path?completedStatus=hide&currentPage=1&status=Waiting+for+Report',
+      '/base-path?completedStatus=hide&currentPage=1&requestedAPCCoverage=submitted&status=Waiting+for+Report',
     );
   });
 
@@ -221,16 +213,15 @@ describe('generateLink', () => {
       wrapper: MemoryRouter,
     });
 
-    const url = result.current.generateLink(
+    const url = result.current.generateLinkFactory(
       '/base-path',
       2,
-      'hide',
-      'submitted',
       ['Compliant', 'Waiting for Report', 'Manuscript Resubmitted'],
-    );
+      'Alessi',
+    )('hide', 'submitted');
 
     expect(url).toBe(
-      '/base-path?completedStatus=hide&currentPage=2&requestedAPCCoverage=submitted&status=Waiting+for+Report&status=Manuscript+Resubmitted',
+      '/base-path?completedStatus=hide&currentPage=2&searchQuery=Alessi&requestedAPCCoverage=submitted&status=Waiting+for+Report&status=Manuscript+Resubmitted',
     );
   });
 });

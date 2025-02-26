@@ -168,7 +168,7 @@ it('displays error message when description is missing', async () => {
   await act(async () => {
     userEvent.click(editor);
     userEvent.tab();
-    fireEvent.input(editor, { data: 'manuscription description' });
+    userEvent.type(editor, 'manuscription description');
     userEvent.tab();
   });
 

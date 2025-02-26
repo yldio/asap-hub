@@ -64,7 +64,7 @@ const renderPage = async (
     network({}).teams({}).team({ teamId }).workspace({}).createComplianceReport
       .template;
 
-  const { container, getByTestId } = render(
+  const { container, getByTestId, getByRole } = render(
     <RecoilRoot
       initializeState={({ set }) => {
         set(refreshTeamState(teamId), Math.random());
@@ -86,7 +86,7 @@ const renderPage = async (
     </RecoilRoot>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-  return { container, getByTestId };
+  return { container, getByTestId, getByRole };
 };
 
 it('renders compliance report form page', async () => {
@@ -111,24 +111,24 @@ it('can publish a form when the data is valid and navigates to team workspace', 
     ],
   });
 
-  const { getByTestId } = await renderPage({}, history);
+  const { getByTestId, getByRole } = await renderPage({}, history);
 
-  userEvent.type(screen.getByRole('textbox', { name: /url/i }), url);
+  userEvent.type(getByRole('textbox', { name: /url/i }), url);
   const editor = getByTestId('editor');
-
   await act(async () => {
     userEvent.click(editor);
-    userEvent.tab();
-    fireEvent.input(editor, { data: description });
+    // combining these two events to trigger validation and set the value in the editor
+    userEvent.type(editor, description); // needed to trigger validation but only types the first character
+    fireEvent.input(editor, { data: description.slice(1) }); // types all the characters but doesn't trigger validation
     userEvent.tab();
   });
 
-  const shareButton = screen.getByRole('button', { name: /Share/i });
+  const shareButton = getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
 
   userEvent.click(shareButton);
 
-  const confirmButton = screen.getByRole('button', {
+  const confirmButton = getByRole('button', {
     name: /Share Compliance Report/i,
   });
   userEvent.click(confirmButton);

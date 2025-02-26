@@ -17,7 +17,6 @@ import {
   crnReportIcon,
   colors,
   ExternalLinkIcon,
-  Markdown,
   ExpandableText,
   Caption,
   formatDate,
@@ -25,6 +24,7 @@ import {
   replyIcon,
   Divider,
   DiscussionModal,
+  TextEditor,
 } from '..';
 import { paddingStyles } from '../card';
 import { Discussion } from '../molecules';
@@ -181,7 +181,12 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
         <div>
           <div css={[paddingStyles, toastContentStyles]}>
             <ExpandableText>
-              <Markdown value={description}></Markdown>
+              <TextEditor
+                id={`discussion-${createdBy.id}-${createdDate}`}
+                value={description}
+                enabled={false}
+                isMarkdown
+              />
             </ExpandableText>
             <div css={buttonsWrapperStyles}>
               <div css={buttonStyles}>

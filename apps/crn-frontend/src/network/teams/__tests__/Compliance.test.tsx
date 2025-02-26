@@ -98,7 +98,9 @@ it('renders error message when the request is not a 2XX', async () => {
 
   await renderCompliancePage();
   expect(mockGetManuscripts).toHaveBeenCalled();
-  expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  await waitFor(() => {
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
 });
 
 it('updates manuscript and refreshes data when handleUpdateManuscript is called and the status is changed', async () => {

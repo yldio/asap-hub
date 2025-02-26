@@ -31,9 +31,7 @@ const expandableTextStyles = css({
     colorWithTransparency(lead, 0).rgba
   } 100%)`,
   WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
-  textFillColor: 'transparent',
   transition: 'max-height 300ms linear',
 });
 

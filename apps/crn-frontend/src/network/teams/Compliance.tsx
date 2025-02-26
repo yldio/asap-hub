@@ -12,9 +12,9 @@ import {
 import {
   ComplianceControls,
   ComplianceDashboard,
+  ManuscriptByStatus,
   SearchField,
 } from '@asap-hub/react-components';
-import { ManuscriptByStatus } from '@asap-hub/react-components/src/organisms';
 import { ComponentProps, useState } from 'react';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAssignedUsersSuggestions } from '../../shared-state/shared-research';

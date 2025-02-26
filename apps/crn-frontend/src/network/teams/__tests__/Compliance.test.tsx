@@ -49,7 +49,7 @@ const user = createUserResponse({}, 1);
 user.role = 'Staff';
 user.openScienceTeamMember = true;
 
-const renderCompliancePage = async (hasError = false) => {
+const renderCompliancePage = async () => {
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) => {
@@ -84,14 +84,6 @@ const renderCompliancePage = async (hasError = false) => {
   );
   await waitFor(() => {
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument();
-
-    if (hasError) {
-      expect(
-        screen.queryByTestId('compliance-table-row'),
-      ).not.toBeInTheDocument();
-    } else {
-      expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
-    }
   });
   return result;
 };
@@ -104,8 +96,7 @@ beforeEach(() => {
 it('renders error message when the request is not a 2XX', async () => {
   mockGetManuscripts.mockRejectedValue(new Error('error'));
 
-  const hasError = true;
-  await renderCompliancePage(hasError);
+  await renderCompliancePage();
   expect(mockGetManuscripts).toHaveBeenCalled();
   expect(screen.getByText(/Something went wrong/i)).toBeVisible();
 });
@@ -130,6 +121,10 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   });
 
   await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
 
   const statusButton = within(
     screen.getByTestId('compliance-table-row'),
@@ -186,6 +181,10 @@ it('manuscripts remain the same when there is not a match between the manuscript
   });
 
   await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
 
   const statusButton = within(
     screen.getByTestId('compliance-table-row'),
@@ -244,6 +243,10 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
   });
 
   await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
 
   const statusButton = within(
     screen.getByTestId('compliance-table-row'),
@@ -313,6 +316,10 @@ it('fetches assigned users suggestions and displays them properly', async () => 
 
   await renderCompliancePage();
 
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
+
   expect(screen.queryByText(/Billie Eilish/i)).not.toBeInTheDocument();
 
   userEvent.click(screen.getByTitle(/Add user/i));
@@ -362,6 +369,10 @@ it('displays success message when assigning users', async () => {
   });
 
   await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
 
   userEvent.click(screen.getByLabelText(/Edit Assigned Users/i));
 

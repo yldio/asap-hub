@@ -154,6 +154,7 @@ export {
   MainNavigation,
   ManuscriptAuthors,
   ManuscriptHeader,
+  ManuscriptByStatus,
   MenuHeader,
   NewsCard,
   NewsSection,

@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { CodeNode } from '@lexical/code';
 import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { ListItemNode, ListNode } from '@lexical/list';
@@ -21,7 +21,7 @@ import {
 } from '@lexical/markdown';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { EditorState } from 'lexical';
-import { ember } from '../colors';
+import { ember, rose } from '../colors';
 import { styles, useValidation, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import ToolbarPlugin from './TextEditorToolbar';
@@ -188,7 +188,11 @@ export type TextEditorProps = {
   readonly value: string;
   readonly enabled?: boolean;
   readonly isMarkdown?: boolean;
+  readonly editorStyles?: SerializedStyles;
+  readonly hasError?: boolean;
+  readonly autofocus?: boolean;
   onChange?: (content: string) => void;
+  onBlur?: () => void;
 };
 
 const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
@@ -209,6 +213,10 @@ const TextEditor = ({
   enabled = true,
   getValidationMessage,
   isMarkdown = false,
+  onBlur,
+  editorStyles,
+  hasError = false,
+  autofocus = true,
 }: TextEditorProps) => {
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLTextAreaElement>(
@@ -240,7 +248,7 @@ const TextEditor = ({
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div css={containerStyles}>
+      <div css={css([containerStyles, editorStyles])}>
         <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
         {!isMarkdown && <ToolbarPlugin />}
         {onChange && (
@@ -269,9 +277,14 @@ const TextEditor = ({
                             borderColor: colors?.primary500.rgba,
                           },
                         },
+                        hasError && {
+                          backgroundColor: rose.rgb,
+                          borderColor: `${ember.rgb}!important`,
+                        },
                       ]
                     : [markdownStyles]
                 }
+                onBlur={onBlur}
               />
             }
             placeholder={
@@ -301,7 +314,7 @@ const TextEditor = ({
           )}
           <ListPlugin />
           <HistoryPlugin />
-          <AutoFocusPlugin />
+          {autofocus && <AutoFocusPlugin />}
         </div>
       </div>
       <div css={validationMessageStyles}>{validationMessage}</div>

@@ -9,9 +9,10 @@ import { css } from '@emotion/react';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { GlobeIcon, LabeledTextArea, LabeledTextField } from '..';
+import { GlobeIcon, LabeledTextField } from '..';
 import { Button, Card, Paragraph } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
+import { LabeledTextEditor } from '../molecules';
 import { ConfirmModal } from '../organisms';
 import { mobileScreen, rem } from '../pixels';
 
@@ -212,7 +213,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 field: { value, onBlur, onChange },
                 fieldState: { error },
               }) => (
-                <LabeledTextArea
+                <LabeledTextEditor
                   title="Compliance Report Description"
                   subtitle="(required)"
                   tip={
@@ -225,7 +226,13 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   value={value || ''}
                   onChange={onChange}
                   onBlur={onBlur}
+                  required
                   enabled={!isSubmitting}
+                  editorStyles={css({
+                    marginBlock: 0,
+                  })}
+                  hasError={Boolean(error)}
+                  autofocus={false}
                 />
               )}
             />

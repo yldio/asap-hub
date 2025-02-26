@@ -1,6 +1,5 @@
 import type {
   CompletedStatusOption,
-  ManuscriptStatus,
   RequestedAPCCoverageOption,
 } from '@asap-hub/model';
 import {
@@ -8,9 +7,7 @@ import {
   requestedAPCCoverageOptions,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { ComponentProps } from 'react';
 import { DropdownButton } from '.';
-import { PageControls } from '..';
 import { dropdownChevronIcon } from '../icons';
 import { rem, tabletScreen } from '../pixels';
 
@@ -62,34 +59,22 @@ const dropdownLabelStyles = css({
   marginRight: rem(8),
 });
 
-type ComplianceControlsProps = Pick<
-  ComponentProps<typeof PageControls>,
-  'currentPageIndex' | 'renderPageHref'
-> & {
+type ComplianceControlsProps = {
   completedStatus: CompletedStatusOption;
   requestedAPCCoverage: RequestedAPCCoverageOption;
-  selectedStatuses: ManuscriptStatus[];
-  isComplianceReviewer: boolean;
   manuscriptCount: number;
   generateLink: (
-    href: string,
-    currentPage: number,
     completedStatus: string,
     requestedAPCCoverage: string,
-    statuses: string[],
   ) => string;
 };
 
 const ComplianceControls = ({
   completedStatus,
-  currentPageIndex,
-  renderPageHref,
   requestedAPCCoverage,
-  selectedStatuses,
   generateLink,
   manuscriptCount,
 }: ComplianceControlsProps) => {
-  const href = renderPageHref(currentPageIndex);
   const resultsFoundText =
     manuscriptCount === 1
       ? `${manuscriptCount} result found`
@@ -123,13 +108,7 @@ const ComplianceControls = ({
                   }
                 </>
               ),
-              href: generateLink(
-                href,
-                currentPageIndex,
-                statusOption,
-                requestedAPCCoverage,
-                selectedStatuses,
-              ),
+              href: generateLink(statusOption, requestedAPCCoverage),
             }))}
           </DropdownButton>
         </div>
@@ -157,13 +136,7 @@ const ComplianceControls = ({
                     }
                   </>
                 ),
-                href: generateLink(
-                  href,
-                  currentPageIndex,
-                  completedStatus,
-                  apcCoverageOption,
-                  selectedStatuses,
-                ),
+                href: generateLink(completedStatus, apcCoverageOption),
               }),
             )}
           </DropdownButton>

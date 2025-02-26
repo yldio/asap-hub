@@ -10,32 +10,37 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from '../../hooks';
 
-const generateLink = (
-  href: string,
-  currentPage: number,
-  completedStatus: string,
-  requestedAPCCoverage: string,
-  statuses: string[],
-) => {
-  const params = new URLSearchParams();
-  params.set('completedStatus', completedStatus);
-  params.set('currentPage', currentPage.toString());
+const generateLinkFactory =
+  (
+    href: string,
+    currentPage: number,
+    statuses: string[],
+    searchQuery: string,
+  ) =>
+  (completedStatus: string, requestedAPCCoverage: string) => {
+    const params = new URLSearchParams();
+    params.set('completedStatus', completedStatus);
+    params.set('currentPage', currentPage.toString());
 
-  if (requestedAPCCoverage) {
-    params.set('requestedAPCCoverage', requestedAPCCoverage);
-  }
+    if (searchQuery) {
+      params.set('searchQuery', searchQuery);
+    }
 
-  const filteredStatuses =
-    completedStatus === 'hide'
-      ? statuses.filter(
-          (status) => !['Compliant', 'Closed (other)'].includes(status),
-        )
-      : statuses;
+    if (requestedAPCCoverage) {
+      params.set('requestedAPCCoverage', requestedAPCCoverage);
+    }
 
-  filteredStatuses.forEach((status) => params.append('status', status));
+    const filteredStatuses =
+      completedStatus === 'hide'
+        ? statuses.filter(
+            (status) => !['Compliant', 'Closed (other)'].includes(status),
+          )
+        : statuses;
 
-  return `${href}?${params.toString()}`;
-};
+    filteredStatuses.forEach((status) => params.append('status', status));
+
+    return `${href}?${params.toString()}`;
+  };
 
 export const useComplianceSearch = () => {
   const currentUrlParams = new URLSearchParams(useLocation().search);
@@ -98,6 +103,6 @@ export const useComplianceSearch = () => {
     selectedStatuses,
     setSearchQuery,
     setStatus,
-    generateLink,
+    generateLinkFactory,
   };
 };

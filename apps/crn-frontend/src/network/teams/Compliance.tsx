@@ -6,6 +6,7 @@ import {
   DEFAULT_COMPLETED_STATUS,
   DEFAULT_REQUESTED_APC_COVERAGE,
   ManuscriptPutRequest,
+  ManuscriptStatus,
   RequestedAPCCoverageOption,
   SortCompliance,
 } from '@asap-hub/model';
@@ -28,15 +29,16 @@ import { useManuscriptToast } from './useManuscriptToast';
 
 type ComplianceListProps = Pick<
   ComponentProps<typeof ComplianceControls>,
-  | 'isComplianceReviewer'
-  | 'generateLink'
-  | 'requestedAPCCoverage'
-  | 'completedStatus'
-  | 'selectedStatuses'
+  'requestedAPCCoverage' | 'completedStatus'
 > & {
+  selectedStatuses: ManuscriptStatus[];
+  isComplianceReviewer: boolean;
   searchQuery: string;
   pageSize: number;
   currentPage: number;
+  generateLinkFactory: ReturnType<
+    typeof useComplianceSearch
+  >['generateLinkFactory'];
 };
 
 const ComplianceList: React.FC<ComplianceListProps> = ({
@@ -47,7 +49,7 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   completedStatus,
   selectedStatuses,
   isComplianceReviewer,
-  generateLink,
+  generateLinkFactory,
 }) => {
   const result = useManuscripts({
     searchQuery,
@@ -87,15 +89,17 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   const [sort, setSort] = useState<SortCompliance>('team_asc');
   const [sortingDirection, setSortingDirection] =
     useState<ComplianceSortingDirection>(complianceInitialSortingDirection);
+  const href = renderPageHref(currentPage);
 
   return (
     <article>
       <ComplianceControls
-        currentPageIndex={currentPage}
-        renderPageHref={renderPageHref}
-        selectedStatuses={selectedStatuses}
-        isComplianceReviewer={isComplianceReviewer}
-        generateLink={generateLink}
+        generateLink={generateLinkFactory(
+          href,
+          currentPage,
+          selectedStatuses,
+          searchQuery,
+        )}
         manuscriptCount={result.total}
         completedStatus={completedStatus as CompletedStatusOption}
         requestedAPCCoverage={
@@ -137,7 +141,7 @@ const Compliance: React.FC = () => {
     selectedStatuses,
     setSearchQuery,
     setStatus,
-    generateLink,
+    generateLinkFactory,
   } = useComplianceSearch();
 
   const { currentPage, pageSize } = usePaginationParams();
@@ -159,7 +163,7 @@ const Compliance: React.FC = () => {
       />
       <SearchFrame title="Compliance">
         <ComplianceList
-          generateLink={generateLink}
+          generateLinkFactory={generateLinkFactory}
           isComplianceReviewer={isComplianceReviewer}
           searchQuery={debouncedSearchQuery}
           pageSize={pageSize}

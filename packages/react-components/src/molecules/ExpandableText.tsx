@@ -32,7 +32,8 @@ const expandableTextStyles = css({
   } 100%)`,
   WebkitBackgroundClip: 'text',
   backgroundClip: 'text',
-  transition: 'max-height 300ms linear',
+  maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))',
+  WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))',
 });
 
 const buttonContainerStyles = css({

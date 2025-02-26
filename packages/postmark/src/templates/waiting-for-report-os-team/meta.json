@@ -1,7 +1,7 @@
 {
   "Name": "Waiting for Report (OS Team)",
   "Alias": "waiting-for-report-os-team",
-  "Subject": "Manuscript  Submission Received from {{ team.name }} {{ manuscript.title }}({{ manuscript.id }})",
+  "Subject": "Manuscript Submission Received from {{ team.name }} {{ manuscript.title }}({{ manuscript.id }})",
   "TemplateType": "Standard",
   "LayoutTemplate": "email-layout-os-team",
   "TestRenderModel": {

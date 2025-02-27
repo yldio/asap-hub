@@ -1123,6 +1123,26 @@ const serverlessConfig: AWS = {
           ],
         },
       },
+      FilesBucket: {
+        Type: 'AWS::S3::Bucket',
+        DeletionPolicy: 'Delete',
+        Properties: {
+          BucketName: '${self:service}-${self:provider.stage}-files',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'BucketOwnerPreferred',
+              },
+            ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+            BlockPublicAcls: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
+        },
+      },
       FrontendBucket: {
         Type: 'AWS::S3::Bucket',
         DeletionPolicy: 'Delete',

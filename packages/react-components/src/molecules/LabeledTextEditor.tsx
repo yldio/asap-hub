@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, forwardRef } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 
 import { perRem } from '../pixels';
@@ -29,15 +29,14 @@ type LabeledTextEditorProps = {
   readonly autofocus?: boolean;
 } & Exclude<ComponentProps<typeof TextEditor>, 'id'>;
 
-const LabeledTextEditor: React.FC<LabeledTextEditorProps> = ({
-  title,
-  subtitle,
-  tip,
-  info,
-  ...textEditorProps
-}) => (
+const LabeledTextEditor: React.FC<LabeledTextEditorProps> = forwardRef<
+  HTMLDivElement,
+  LabeledTextEditorProps
+>(({ title, subtitle, tip, info, ...textEditorProps }, ref) => (
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
-    <Label forContent={(id) => <TextEditor {...textEditorProps} id={id} />}>
+    <Label
+      forContent={(id) => <TextEditor {...textEditorProps} id={id} ref={ref} />}
+    >
       <Paragraph>
         <span css={{ display: 'flex', marginBottom: 0 }}>
           <strong>{title}</strong>
@@ -47,6 +46,6 @@ const LabeledTextEditor: React.FC<LabeledTextEditorProps> = ({
       </Paragraph>
     </Label>
   </div>
-);
+));
 
 export default LabeledTextEditor;

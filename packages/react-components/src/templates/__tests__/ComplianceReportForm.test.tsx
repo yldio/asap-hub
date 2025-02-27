@@ -228,3 +228,29 @@ it('should dismiss confirmation modal when Keep Editing button is clicked', () =
     queryByText(/Cancel sharing of compliance report?/i),
   ).not.toBeInTheDocument();
 });
+
+it('should focus the Lexical editor when pressing Tab on the URL input', async () => {
+  render(
+    <StaticRouter>
+      <ComplianceReportForm {...defaultProps} />
+    </StaticRouter>,
+  );
+
+  const urlInput = screen.getByRole('textbox', { name: /url/i });
+  const editor = screen.getByTestId('editor');
+
+  const keyDownEvent = new KeyboardEvent('keydown', {
+    key: 'Tab',
+    bubbles: true, // Ensure event propagates to parent elements
+    cancelable: true,
+  });
+  jest.spyOn(keyDownEvent, 'preventDefault');
+
+  urlInput.focus();
+  fireEvent(urlInput, keyDownEvent);
+
+  await waitFor(() => {
+    expect(keyDownEvent.preventDefault).toHaveBeenCalled();
+    expect(editor).toHaveFocus();
+  });
+});

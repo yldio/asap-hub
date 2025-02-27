@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { GlobeIcon, LabeledTextField } from '..';
@@ -150,6 +150,8 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   const { title, confirmButtonText, confirmButtonStyle, content } =
     getModalContent(complianceReportFormAction);
 
+  const editorRef = useRef<HTMLDivElement>(null);
+
   return (
     <form>
       <main css={mainStyles}>
@@ -199,6 +201,12 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   enabled={!isSubmitting}
                   labelIndicator={<GlobeIcon />}
                   placeholder="https://example.com"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Tab' && !e.shiftKey && editorRef.current) {
+                      e.preventDefault(); // Stop default tab behavior
+                      editorRef.current.focus();
+                    }
+                  }}
                 />
               )}
             />
@@ -214,6 +222,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 fieldState: { error },
               }) => (
                 <LabeledTextEditor
+                  ref={editorRef}
                   title="Compliance Report Description"
                   subtitle="(required)"
                   tip={

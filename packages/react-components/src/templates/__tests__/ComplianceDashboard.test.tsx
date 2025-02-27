@@ -6,10 +6,6 @@ import { ComplianceDashboard } from '..';
 describe('ComplianceDashboard', () => {
   const props: ComponentProps<typeof ComplianceDashboard> = {
     hasAppliedFilters: false,
-    selectedStatuses: [],
-    onSelectStatus: jest.fn(),
-    completedStatus: 'show',
-    requestedAPCCoverage: 'all',
     isComplianceReviewer: true,
     getAssignedUsersSuggestions: jest.fn(),
     data: [
@@ -33,16 +29,7 @@ describe('ComplianceDashboard', () => {
     sortingDirection: complianceInitialSortingDirection,
     setSortingDirection: jest.fn(),
     onUpdateManuscript: jest.fn(),
-    generateLink: jest.fn(),
-    manuscriptCount: 1,
   };
-
-  it('renders the manuscript status card', () => {
-    const { getByText } = render(<ComplianceDashboard {...props} data={[]} />);
-
-    expect(getByText('Manuscripts by status:')).toBeInTheDocument();
-    expect(getByText('Waiting for Report')).toBeInTheDocument();
-  });
 
   it('renders the empty manuscript view when there are no manuscripts', () => {
     const { getByText } = render(<ComplianceDashboard {...props} data={[]} />);

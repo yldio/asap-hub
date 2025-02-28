@@ -177,6 +177,20 @@ const serverlessConfig: AWS = {
         statements: [
           {
             Effect: 'Allow',
+            Action: ['s3:PutObject', 's3:GetObject', 's3:DeleteObject'],
+            Resource: {
+              'Fn::Join': [
+                '',
+                [
+                  'arn:aws:s3:::',
+                  '${self:service}-${self:provider.stage}-files',
+                  '/*',
+                ],
+              ],
+            },
+          },
+          {
+            Effect: 'Allow',
             Action: [
               'dynamodb:PutItem',
               'dynamodb:Get*',
@@ -1033,6 +1047,21 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    getPresignedUrl: {
+      handler: './src/handlers/files-upload/get-presigned-url-handler.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/files/upload-url',
+          },
+        },
+      ],
+      environment: {
+        FILES_BUCKET: '${self:service}-${self:provider.stage}-files',
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
 
     cronjobSyncOrcidContentful: {
       handler: './src/handlers/user/cronjob-sync-orcid.handler',
@@ -1121,6 +1150,26 @@ const serverlessConfig: AWS = {
               },
             },
           ],
+        },
+      },
+      FilesBucket: {
+        Type: 'AWS::S3::Bucket',
+        DeletionPolicy: 'Delete',
+        Properties: {
+          BucketName: '${self:service}-${self:provider.stage}-files',
+          OwnershipControls: {
+            Rules: [
+              {
+                ObjectOwnership: 'BucketOwnerPreferred',
+              },
+            ],
+          },
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+            BlockPublicAcls: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
         },
       },
       FrontendBucket: {

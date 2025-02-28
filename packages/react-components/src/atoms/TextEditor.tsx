@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { CodeNode } from '@lexical/code';
 import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { ListItemNode, ListNode } from '@lexical/list';
@@ -12,7 +12,7 @@ import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
-import { useEffect } from 'react';
+import { forwardRef, useEffect } from 'react';
 
 import {
   $convertFromMarkdownString,
@@ -21,7 +21,7 @@ import {
 } from '@lexical/markdown';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { EditorState } from 'lexical';
-import { ember } from '../colors';
+import { ember, rose } from '../colors';
 import { styles, useValidation, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import ToolbarPlugin from './TextEditorToolbar';
@@ -188,7 +188,11 @@ export type TextEditorProps = {
   readonly value: string;
   readonly enabled?: boolean;
   readonly isMarkdown?: boolean;
+  readonly editorStyles?: SerializedStyles;
+  readonly hasError?: boolean;
+  readonly autofocus?: boolean;
   onChange?: (content: string) => void;
+  onBlur?: () => void;
 };
 
 const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
@@ -199,114 +203,129 @@ const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
   return <></>;
 };
 
-const TextEditor = ({
-  id,
-  value,
-  onChange,
-  required,
-  maxLength,
-  customValidationMessage = '',
-  enabled = true,
-  getValidationMessage,
-  isMarkdown = false,
-}: TextEditorProps) => {
-  const { validationMessage, validationTargetProps } =
-    useValidation<HTMLTextAreaElement>(
-      customValidationMessage,
+const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
+  (
+    {
+      id,
+      value,
+      onChange,
+      required,
+      maxLength,
+      customValidationMessage = '',
+      enabled = true,
       getValidationMessage,
-      isMarkdown,
-    );
+      isMarkdown = false,
+      onBlur,
+      editorStyles,
+      hasError = false,
+      autofocus = true,
+    }: TextEditorProps,
+    ref,
+  ) => {
+    const { validationMessage, validationTargetProps } =
+      useValidation<HTMLTextAreaElement>(
+        customValidationMessage,
+        getValidationMessage,
+        isMarkdown,
+      );
 
-  const initialConfig = {
-    editorState: () => {
-      $convertFromMarkdownString(value, TRANSFORMERS);
-    },
-    namespace: 'Editor',
-    nodes: [
-      AutoLinkNode,
-      LinkNode,
-      ListNode,
-      ListItemNode,
-      HeadingNode,
-      QuoteNode,
-      CodeNode,
-    ],
-    theme,
-    // eslint-disable-next-line no-console
-    onError: console.error,
-  };
+    const initialConfig = {
+      editorState: () => {
+        $convertFromMarkdownString(value, TRANSFORMERS);
+      },
+      namespace: 'Editor',
+      nodes: [
+        AutoLinkNode,
+        LinkNode,
+        ListNode,
+        ListItemNode,
+        HeadingNode,
+        QuoteNode,
+        CodeNode,
+      ],
+      theme,
+      // eslint-disable-next-line no-console
+      onError: console.error,
+    };
 
-  if (isMarkdown && !value) return <></>;
+    if (isMarkdown && !value) return <></>;
 
-  return (
-    <LexicalComposer initialConfig={initialConfig}>
-      <div css={containerStyles}>
-        <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-        {!isMarkdown && <ToolbarPlugin />}
-        {onChange && (
-          <OnChangePlugin
-            onChange={(editorState) => onChangeHandler(editorState, onChange)}
-          />
-        )}
-        <EnablePlugin enabled={enabled} />
-        <div css={innerStyles}>
-          <RichTextPlugin
-            contentEditable={
-              <ContentEditable
-                id={id}
-                required={required}
-                data-testid={isMarkdown ? 'markdown-test-id' : 'editor'}
-                css={({ colors }) =>
-                  !isMarkdown
-                    ? [
-                        styles,
-                        inputStyles,
-                        validationMessage && {
-                          borderColor: ember.rgb,
-                        },
-                        colors?.primary500 && {
-                          ':focus': {
-                            borderColor: colors?.primary500.rgba,
-                          },
-                        },
-                      ]
-                    : [markdownStyles]
-                }
-              />
-            }
-            placeholder={
-              <div
-                css={[
-                  placeholderStyles,
-                  validationMessage && {
-                    color: ember.rgb,
-                    opacity: 0.4,
-                  },
-                ]}
-              >
-                Enter some text...
-              </div>
-            }
-            ErrorBoundary={LexicalErrorBoundary}
-          />
-          {!isMarkdown && (
-            <textarea
-              {...validationTargetProps}
-              onChange={noop}
-              css={{ display: 'none' }}
-              required={required}
-              maxLength={maxLength}
-              value={value}
+    return (
+      <LexicalComposer initialConfig={initialConfig}>
+        <div css={css([containerStyles, editorStyles])}>
+          <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+          {!isMarkdown && <ToolbarPlugin />}
+          {onChange && (
+            <OnChangePlugin
+              onChange={(editorState) => onChangeHandler(editorState, onChange)}
             />
           )}
-          <ListPlugin />
-          <HistoryPlugin />
-          <AutoFocusPlugin />
+          <EnablePlugin enabled={enabled} />
+          <div css={innerStyles}>
+            <RichTextPlugin
+              contentEditable={
+                <ContentEditable
+                  ref={ref}
+                  id={id}
+                  required={required}
+                  data-testid={isMarkdown ? 'markdown-test-id' : 'editor'}
+                  css={({ colors }) =>
+                    !isMarkdown
+                      ? [
+                          styles,
+                          inputStyles,
+                          validationMessage && {
+                            borderColor: ember.rgb,
+                          },
+                          colors?.primary500 && {
+                            ':focus': {
+                              borderColor: colors?.primary500.rgba,
+                            },
+                          },
+                          hasError && {
+                            backgroundColor: rose.rgb,
+                            borderColor: `${ember.rgb}!important`,
+                          },
+                        ]
+                      : [markdownStyles]
+                  }
+                  onBlur={onBlur}
+                />
+              }
+              placeholder={
+                <div
+                  css={[
+                    placeholderStyles,
+                    validationMessage && {
+                      color: ember.rgb,
+                      opacity: 0.4,
+                    },
+                  ]}
+                >
+                  Enter some text...
+                </div>
+              }
+              ErrorBoundary={LexicalErrorBoundary}
+            />
+            {!isMarkdown && (
+              <textarea
+                {...validationTargetProps}
+                onChange={noop}
+                css={{ display: 'none' }}
+                required={required}
+                maxLength={maxLength}
+                value={value}
+              />
+            )}
+            <ListPlugin />
+            <HistoryPlugin />
+            {autofocus && <AutoFocusPlugin />}
+          </div>
         </div>
-      </div>
-      <div css={validationMessageStyles}>{validationMessage}</div>
-    </LexicalComposer>
-  );
-};
+        <div css={validationMessageStyles}>{validationMessage}</div>
+      </LexicalComposer>
+    );
+  },
+);
 
 export default TextEditor;

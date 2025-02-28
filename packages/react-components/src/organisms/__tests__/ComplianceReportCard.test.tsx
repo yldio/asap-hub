@@ -33,6 +33,7 @@ const props = {
 };
 
 it('displays compliance report description, url and creation details when expanded', () => {
+  jest.spyOn(console, 'error').mockImplementation();
   const { getByText, queryByText, getByRole, rerender } = render(
     <ComplianceReportCard {...props} />,
   );

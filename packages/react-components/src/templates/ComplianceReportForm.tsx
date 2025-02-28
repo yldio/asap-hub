@@ -6,12 +6,13 @@ import {
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { GlobeIcon, LabeledTextArea, LabeledTextField } from '..';
+import { GlobeIcon, LabeledTextField } from '..';
 import { Button, Card, Paragraph } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
+import { LabeledTextEditor } from '../molecules';
 import { ConfirmModal } from '../organisms';
 import { mobileScreen, rem } from '../pixels';
 
@@ -149,6 +150,8 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   const { title, confirmButtonText, confirmButtonStyle, content } =
     getModalContent(complianceReportFormAction);
 
+  const editorRef = useRef<HTMLDivElement>(null);
+
   return (
     <form>
       <main css={mainStyles}>
@@ -198,6 +201,12 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   enabled={!isSubmitting}
                   labelIndicator={<GlobeIcon />}
                   placeholder="https://example.com"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Tab' && !e.shiftKey && editorRef.current) {
+                      e.preventDefault(); // Stop default tab behavior
+                      editorRef.current.focus();
+                    }
+                  }}
                 />
               )}
             />
@@ -212,7 +221,8 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 field: { value, onBlur, onChange },
                 fieldState: { error },
               }) => (
-                <LabeledTextArea
+                <LabeledTextEditor
+                  ref={editorRef}
                   title="Compliance Report Description"
                   subtitle="(required)"
                   tip={
@@ -225,7 +235,13 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   value={value || ''}
                   onChange={onChange}
                   onBlur={onBlur}
+                  required
                   enabled={!isSubmitting}
+                  editorStyles={css({
+                    marginBlock: 0,
+                  })}
+                  hasError={Boolean(error)}
+                  autofocus={false}
                 />
               )}
             />

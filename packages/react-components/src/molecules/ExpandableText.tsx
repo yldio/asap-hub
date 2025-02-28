@@ -31,10 +31,9 @@ const expandableTextStyles = css({
     colorWithTransparency(lead, 0).rgba
   } 100%)`,
   WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
-  textFillColor: 'transparent',
-  transition: 'max-height 300ms linear',
+  maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))',
+  WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))',
 });
 
 const buttonContainerStyles = css({

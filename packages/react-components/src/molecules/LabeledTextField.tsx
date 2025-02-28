@@ -26,6 +26,7 @@ type LabeledTextFieldProps = {
   readonly subtitle?: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly hint?: React.ReactNode;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 } & Exclude<ComponentProps<typeof TextField>, 'id'>;
 
 const subtitleStyles = css({
@@ -37,7 +38,6 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   subtitle,
   description,
   hint,
-
   ...textFieldProps
 }) => (
   <div css={containerStyles}>

@@ -22,7 +22,8 @@ const container = css({
   overflowX: 'auto',
   table: {
     borderSpacing: 0,
-    width: 'max-content',
+    width: '100%',
+    minWidth: 'max-content',
   },
   'th, td': {
     textAlign: 'left',

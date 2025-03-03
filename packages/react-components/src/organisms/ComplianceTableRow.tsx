@@ -45,9 +45,6 @@ const rowStyles = css({
 });
 
 const apcCoverageStyles = css({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
   fontSize: rem(14),
   color: lead.rgb,
 });

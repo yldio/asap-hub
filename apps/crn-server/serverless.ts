@@ -1059,6 +1059,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         FILES_BUCKET: '${self:service}-${self:provider.stage}-files',
+        region,
         SENTRY_DSN: sentryDsnHandlers,
       },
     },

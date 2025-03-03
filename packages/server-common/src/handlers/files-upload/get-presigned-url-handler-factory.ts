@@ -1,12 +1,13 @@
 import { framework as lambda } from '@asap-hub/services-common';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
-import { Logger } from '../../utils';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-
-const s3 = new S3Client({ apiVersion: '2006-03-01' });
+import { Logger } from '../../utils';
 
 export const getPresignedUrlHandlerFactory =
-  (logger: Logger, bucket: string) => async (request: lambda.Request) => {
+  (logger: Logger, bucket: string, region: string) =>
+  async (request: lambda.Request) => {
+    const s3 = new S3Client({ apiVersion: '2006-03-01', region });
+
     try {
       logger.debug(`request: ${JSON.stringify(request)}`);
 

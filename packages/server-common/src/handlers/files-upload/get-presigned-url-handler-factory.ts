@@ -1,13 +1,13 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Logger } from '../../utils';
 
 export const getPresignedUrlHandlerFactory =
   (logger: Logger, bucket: string, region: string) =>
   async (request: lambda.Request) => {
-    const s3 = new S3Client({ apiVersion: '2006-03-01', region });
-
+    const s3 = new S3Client({ region });
+    logger.debug(`used region: ${region}`);
     try {
       logger.debug(`request: ${JSON.stringify(request)}`);
 
@@ -21,12 +21,13 @@ export const getPresignedUrlHandlerFactory =
         };
       }
 
-      const command = {
+      const command = new PutObjectCommand({
         Bucket: bucket,
         Key: body.filename,
-      };
+        ContentType: body.contentType,
+      });
 
-      const uploadUrl = await getSignedUrl(s3, new GetObjectCommand(command), {
+      const uploadUrl = await getSignedUrl(s3, command, {
         expiresIn: 300,
       });
 
@@ -35,9 +36,13 @@ export const getPresignedUrlHandlerFactory =
         body: JSON.stringify({ uploadUrl }),
       };
     } catch (error) {
+      logger.error('Error generating pre-signed URL', error);
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: 'Error generating URL', details: error }),
+        body: JSON.stringify({
+          error: 'Error generating URL',
+          details: (error as Error).message,
+        }),
       };
     }
   };

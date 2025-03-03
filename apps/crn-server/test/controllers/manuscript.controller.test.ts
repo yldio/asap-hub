@@ -338,7 +338,7 @@ describe('Manuscript controller', () => {
 
       const manuscriptResponse = getManuscriptsListResponse().items[0]!;
       manuscriptResponse.title = 'Unique Title';
-      manuscriptResponse.id = 'another-manuscript-id';
+      manuscriptResponse.manuscriptId = 'another-manuscript-id';
       manuscriptDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
         items: [manuscriptResponse],
@@ -392,7 +392,7 @@ describe('Manuscript controller', () => {
 
       const manuscriptResponse = getManuscriptsListResponse().items[0]!;
       manuscriptResponse.title = 'Unique Title';
-      manuscriptResponse.id = 'another-manuscript-id';
+      manuscriptResponse.manuscriptId = 'another-manuscript-id';
       manuscriptDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
         items: [manuscriptResponse],
@@ -412,7 +412,7 @@ describe('Manuscript controller', () => {
 
       const manuscriptResponse = getManuscriptsListResponse().items[0]!;
       manuscriptResponse.title = 'Unique Title';
-      manuscriptResponse.id = manuscriptId;
+      manuscriptResponse.manuscriptId = manuscriptId;
       manuscriptDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
         items: [manuscriptResponse],

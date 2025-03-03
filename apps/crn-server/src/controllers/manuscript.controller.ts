@@ -71,7 +71,7 @@ export default class ManuscriptController {
       return null;
     }
 
-    if (result.total === 1 && result.items[0]?.id === manuscriptId) {
+    if (result.total === 1 && result.items[0]?.manuscriptId === manuscriptId) {
       return null;
     }
 

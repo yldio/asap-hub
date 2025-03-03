@@ -277,15 +277,7 @@ it('shows duplicate manuscript toast when submitting with duplicate title', asyn
   const duplicateTitleError = {
     statusCode: 422,
     response: {
-      errors: [
-        {
-          path: ['versions', 'title'],
-          name: 'unique',
-          details: 'Title must be unique',
-          value: 'The Manuscript',
-        },
-      ],
-      message: 'Validation Error',
+      message: 'Title must be unique',
     },
   };
 

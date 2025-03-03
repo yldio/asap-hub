@@ -1,5 +1,6 @@
 import { NotFoundError, GenericError } from '@asap-hub/errors';
 import { ManuscriptFileType, ManuscriptPostAuthor } from '@asap-hub/model';
+import Boom from '@hapi/boom';
 import { when } from 'jest-when';
 import ManuscriptController from '../../src/controllers/manuscript.controller';
 import { AssetContentfulDataProvider } from '../../src/data-providers/contentful/asset.data-provider';
@@ -78,6 +79,22 @@ describe('Manuscript controller', () => {
 
   describe('Create method', () => {
     beforeEach(jest.clearAllMocks);
+
+    test('Should throw when title is not unique', async () => {
+      const manuscriptResponse = getManuscriptsListResponse().items[0]!;
+      manuscriptResponse.title = 'Unique Title';
+      manuscriptDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [manuscriptResponse],
+      });
+
+      const payload = getManuscriptCreateControllerDataObject();
+      payload.title = 'Unique Title';
+
+      await expect(manuscriptController.create(payload)).rejects.toThrow(
+        Boom.badData('Title must be unique'),
+      );
+    });
 
     test('Should throw when fails to create the manuscript', async () => {
       manuscriptDataProviderMock.create.mockRejectedValueOnce(
@@ -316,6 +333,25 @@ describe('Manuscript controller', () => {
 
     const manuscriptId = 'manuscript-id-1';
 
+    test('Should throw when creating a manuscript version with a title that is not unique', async () => {
+      const manuscriptId = 'manuscript-id-1';
+
+      const manuscriptResponse = getManuscriptsListResponse().items[0]!;
+      manuscriptResponse.title = 'Unique Title';
+      manuscriptResponse.id = 'another-manuscript-id';
+      manuscriptDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [manuscriptResponse],
+      });
+
+      const payload = getManuscriptCreateControllerDataObject();
+      payload.title = 'Unique Title';
+
+      await expect(
+        manuscriptController.createVersion(manuscriptId, payload),
+      ).rejects.toThrow(Boom.badData('Title must be unique'));
+    });
+
     test('Should throw when fails to create the manuscript version', async () => {
       manuscriptDataProviderMock.createVersion.mockRejectedValueOnce(
         new GenericError(),
@@ -350,6 +386,49 @@ describe('Manuscript controller', () => {
 
   describe('Update method', () => {
     beforeEach(jest.resetAllMocks);
+
+    test('Should throw when updating a manuscript with a title that is not unique', async () => {
+      const manuscriptId = 'manuscript-id-1';
+
+      const manuscriptResponse = getManuscriptsListResponse().items[0]!;
+      manuscriptResponse.title = 'Unique Title';
+      manuscriptResponse.id = 'another-manuscript-id';
+      manuscriptDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [manuscriptResponse],
+      });
+
+      await expect(
+        manuscriptController.update(
+          manuscriptId,
+          { title: 'Unique Title' },
+          'user-id',
+        ),
+      ).rejects.toThrow(Boom.badData('Title must be unique'));
+    });
+
+    test('Should not throw when updating a manuscript with the same title as before', async () => {
+      const manuscriptId = 'manuscript-id-1';
+
+      const manuscriptResponse = getManuscriptsListResponse().items[0]!;
+      manuscriptResponse.title = 'Unique Title';
+      manuscriptResponse.id = manuscriptId;
+      manuscriptDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [manuscriptResponse],
+      });
+      manuscriptDataProviderMock.fetchById.mockResolvedValue(
+        getManuscriptDataObject(manuscriptResponse),
+      );
+
+      await expect(
+        manuscriptController.update(
+          manuscriptId,
+          { title: 'Unique Title' },
+          'user-id',
+        ),
+      ).resolves.not.toThrow();
+    });
 
     test('Should throw when fails to update the manuscript', async () => {
       const manuscriptId = 'manuscript-id-1';

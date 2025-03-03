@@ -3,8 +3,7 @@ import {
   ManuscriptStatus,
   PartialManuscriptResponse,
 } from '@asap-hub/model';
-import { render, screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import ComplianceTableRow from '../ComplianceTableRow';
 
@@ -21,17 +20,22 @@ describe('ComplianceTableRow', () => {
     teams: 'Test Team',
   };
 
-  const mockOnUpdateManuscript = jest.fn();
-
   const defaultProps: ComponentProps<typeof ComplianceTableRow> = {
     data,
     isComplianceReviewer: true,
-    onUpdateManuscript: mockOnUpdateManuscript,
     getAssignedUsersSuggestions: jest.fn(),
+    handleAssignUsersClick: jest.fn(),
+    handleStatusClick: jest.fn(),
   };
 
   const renderComponent = (props = {}) =>
-    render(<ComplianceTableRow {...defaultProps} {...props} />);
+    render(
+      <table>
+        <tbody>
+          <ComplianceTableRow {...defaultProps} {...props} />
+        </tbody>
+      </table>,
+    );
 
   const closedStatuses: ManuscriptStatus[] = ['Closed (other)', 'Compliant'];
   const notClosedStatuses = manuscriptStatus.filter(
@@ -50,7 +54,7 @@ describe('ComplianceTableRow', () => {
   });
 
   it('renders all manuscript information correctly', () => {
-    render(<ComplianceTableRow {...defaultProps} />);
+    renderComponent();
 
     expect(screen.getByText('Test Team')).toBeInTheDocument();
     expect(screen.getByText('DA1-000463-002-org-G-1')).toBeInTheDocument();
@@ -62,88 +66,11 @@ describe('ComplianceTableRow', () => {
   });
 
   it('user can not change status when not a compliance reviewer', () => {
-    render(
-      <ComplianceTableRow {...defaultProps} isComplianceReviewer={false} />,
-    );
+    renderComponent({ isComplianceReviewer: false });
 
     expect(
       screen.getByRole('button', { name: /Addendum Required/i }),
     ).toBeDisabled();
-  });
-
-  it('opens status change modal when selecting a different status', async () => {
-    render(<ComplianceTableRow {...defaultProps} />);
-
-    const statusButton = screen.getByRole('button', {
-      name: /Addendum Required/i,
-    });
-    userEvent.click(statusButton);
-
-    const newStatus = screen.getByRole('button', { name: /Compliant/i });
-    userEvent.click(newStatus);
-
-    expect(screen.getByText(/Set status to compliant\?/i)).toBeInTheDocument();
-  });
-
-  it('calls onUpdateManuscript when confirming status change', async () => {
-    render(<ComplianceTableRow {...defaultProps} />);
-
-    const statusButton = screen.getByRole('button', {
-      name: /Addendum Required/i,
-    });
-    userEvent.click(statusButton);
-
-    const newStatus = screen.getByRole('button', { name: /Compliant/i });
-    userEvent.click(newStatus);
-
-    const confirmButton = screen.getByRole('button', {
-      name: /Set to Compliant and Notify/i,
-    });
-
-    await waitFor(() => {
-      userEvent.click(confirmButton);
-    });
-
-    await waitFor(() => {
-      expect(mockOnUpdateManuscript).toHaveBeenCalledWith('manuscript-id-1', {
-        status: 'Compliant',
-      });
-    });
-  });
-
-  it('opens modal when clicking in a different status than the current one', () => {
-    render(<ComplianceTableRow {...defaultProps} />);
-
-    const statusButton = screen.getByRole('button', {
-      name: /Addendum Required/i,
-    });
-    userEvent.click(statusButton);
-
-    const differentStatus = screen.getByRole('button', {
-      name: /Submit Final Publication/i,
-    });
-    userEvent.click(differentStatus);
-
-    expect(screen.getByText(/Update status and notify\?/i)).toBeInTheDocument();
-  });
-
-  it('does not open modal when clicking the current status', () => {
-    render(<ComplianceTableRow {...defaultProps} />);
-
-    const statusButton = screen.getByRole('button', {
-      name: /Addendum Required/i,
-    });
-    userEvent.click(statusButton);
-
-    const menu = screen.getByRole('list');
-    const sameStatus = within(menu).getByRole('button', {
-      name: /Addendum Required/i,
-    });
-    userEvent.click(sameStatus);
-
-    expect(
-      screen.queryByText(/Update status and notify\?/i),
-    ).not.toBeInTheDocument();
   });
 
   it('disables status change for Closed (other) status', () => {
@@ -151,8 +78,7 @@ describe('ComplianceTableRow', () => {
       ...data,
       status: 'Closed (other)' as ManuscriptStatus,
     };
-
-    render(<ComplianceTableRow {...defaultProps} data={closedManuscript} />);
+    renderComponent({ data: closedManuscript });
 
     const statusButton = screen.getByRole('button', {
       name: /Closed \(other\)/i,
@@ -161,7 +87,7 @@ describe('ComplianceTableRow', () => {
   });
 
   it('renders team name as a link', () => {
-    render(<ComplianceTableRow {...defaultProps} />);
+    renderComponent();
 
     const teamLink = screen.getByText('Test Team');
     expect(teamLink.tagName).toBe('A');
@@ -169,74 +95,6 @@ describe('ComplianceTableRow', () => {
       'href',
       expect.stringContaining('team-id'),
     );
-  });
-
-  describe('status changes', () => {
-    it('disables status button when not a compliance reviewer', () => {
-      renderComponent({ isComplianceReviewer: false });
-      expect(
-        screen.getByRole('button', { name: /Addendum Required/i }),
-      ).toBeDisabled();
-    });
-
-    it('disables status change for Closed (other) status', () => {
-      renderComponent({
-        data: { ...data, status: 'Closed (other)' as ManuscriptStatus },
-      });
-      expect(
-        screen.getByRole('button', { name: /Closed \(other\)/i }),
-      ).toBeDisabled();
-    });
-
-    describe('status change modal', () => {
-      const openStatusMenu = () => {
-        userEvent.click(
-          screen.getByRole('button', { name: /Addendum Required/i }),
-        );
-      };
-
-      it('opens when selecting a different status', () => {
-        renderComponent();
-        openStatusMenu();
-        userEvent.click(screen.getByRole('button', { name: /Compliant/i }));
-        expect(
-          screen.getByText(/Set status to compliant\?/i),
-        ).toBeInTheDocument();
-      });
-
-      it('does not open when selecting current status', () => {
-        renderComponent();
-        openStatusMenu();
-        const menu = screen.getByRole('list');
-        userEvent.click(
-          within(menu).getByRole('button', { name: /Addendum Required/i }),
-        );
-        expect(
-          screen.queryByText(/Update status and notify\?/i),
-        ).not.toBeInTheDocument();
-      });
-
-      it('updates manuscript when confirming status change', async () => {
-        renderComponent();
-        openStatusMenu();
-        userEvent.click(screen.getByRole('button', { name: /Compliant/i }));
-        await waitFor(() => {
-          userEvent.click(
-            screen.getByRole('button', {
-              name: /Set to Compliant and Notify/i,
-            }),
-          );
-        });
-        await waitFor(() => {
-          expect(mockOnUpdateManuscript).toHaveBeenCalledWith(
-            'manuscript-id-1',
-            {
-              status: 'Compliant',
-            },
-          );
-        });
-      });
-    });
   });
 
   describe('assigned users', () => {
@@ -365,67 +223,6 @@ describe('ComplianceTableRow', () => {
           });
         },
       );
-    });
-
-    describe('assign users modal', () => {
-      it('opens when clicking the assign button', () => {
-        renderComponent({
-          data: {
-            ...data,
-            requestingApcCoverage: null,
-            assignedUsers: [],
-          },
-        });
-        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-
-        userEvent.click(screen.getByLabelText(/Assign Users/i));
-        expect(
-          within(screen.getByRole('dialog')).getByText(/Assign User/i, {
-            selector: 'h3',
-          }),
-        ).toBeInTheDocument();
-        expect(
-          within(screen.getByRole('dialog')).getByText(/N\/A/i),
-        ).toBeInTheDocument();
-      });
-
-      it('closes modal when clicking the close button', () => {
-        renderComponent();
-        userEvent.click(screen.getByLabelText(/Assign Users/i));
-
-        userEvent.click(
-          within(screen.getByRole('dialog')).getByTitle(/close/i),
-        );
-
-        expect(
-          screen.queryByText(/Assign User/i, {
-            selector: 'h3',
-          }),
-        ).not.toBeInTheDocument();
-      });
-
-      it('calls onUpdateManuscript when assigning users and closes modal', async () => {
-        renderComponent({
-          data: {
-            ...data,
-            assignedUsers: [assignedUser],
-          },
-        });
-        userEvent.click(screen.getByLabelText(/Edit Assigned Users/i));
-        userEvent.click(screen.getByRole('button', { name: 'Assign' }));
-        await waitFor(() => {
-          expect(mockOnUpdateManuscript).toHaveBeenCalledWith(
-            'manuscript-id-1',
-            { assignedUsers: [assignedUser.id] },
-          );
-        });
-
-        expect(
-          screen.queryByText(/Assign User/i, {
-            selector: 'h3',
-          }),
-        ).not.toBeInTheDocument();
-      });
     });
   });
 });

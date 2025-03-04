@@ -1,5 +1,6 @@
 import { ManuscriptsFilter } from '@asap-hub/contentful';
 import { NotFoundError } from '@asap-hub/errors';
+import Boom from '@hapi/boom';
 import {
   FetchOptions,
   ListPartialManuscriptResponse,
@@ -10,6 +11,7 @@ import {
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptResubmitControllerDataObject,
+  ValidationErrorResponse,
 } from '@asap-hub/model';
 
 import {
@@ -50,9 +52,37 @@ export default class ManuscriptController {
     });
   }
 
+  private async validateTitleUniqueness(
+    manuscriptData:
+      | ManuscriptCreateControllerDataObject
+      | ManuscriptResubmitControllerDataObject
+      | ManuscriptPutRequest,
+    manuscriptId?: string,
+  ): Promise<ValidationErrorResponse['data'][0] | null> {
+    if (!('title' in manuscriptData)) return null;
+
+    const result = await this.manuscriptDataProvider.fetch({
+      filter: {
+        title: manuscriptData.title,
+      },
+    });
+
+    if (result.total === 0) {
+      return null;
+    }
+
+    if (result.total === 1 && result.items[0]?.manuscriptId === manuscriptId) {
+      return null;
+    }
+
+    throw Boom.badData('Title must be unique');
+  }
+
   async create(
     manuscriptCreateData: ManuscriptCreateControllerDataObject,
   ): Promise<ManuscriptResponse | null> {
+    await this.validateTitleUniqueness(manuscriptCreateData);
+
     const version = manuscriptCreateData?.versions?.[0];
 
     if (version) {
@@ -78,6 +108,8 @@ export default class ManuscriptController {
     manuscriptId: string,
     manuscriptResubmitData: ManuscriptResubmitControllerDataObject,
   ): Promise<ManuscriptResponse | null> {
+    await this.validateTitleUniqueness(manuscriptResubmitData, manuscriptId);
+
     const version = manuscriptResubmitData?.versions?.[0];
 
     if (version) {
@@ -180,6 +212,8 @@ export default class ManuscriptController {
     manuscriptData: ManuscriptPutRequest,
     userId: string,
   ): Promise<ManuscriptResponse> {
+    await this.validateTitleUniqueness(manuscriptData, id);
+
     const currentManuscript = await this.manuscriptDataProvider.fetchById(id);
 
     if (!currentManuscript) {

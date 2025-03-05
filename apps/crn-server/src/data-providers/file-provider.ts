@@ -3,13 +3,15 @@ import {
   InvokeCommand,
   InvocationType,
 } from '@aws-sdk/client-lambda';
-import { region } from '../config';
+import { region, environment } from '../config';
 
 export default class FileProvider {
   private lambda: LambdaClient;
+  private stage: string;
 
   constructor() {
     this.lambda = new LambdaClient({ region });
+    this.stage = environment === 'development' ? 'dev' : environment || 'dev';
   }
 
   async getPresignedUrl(
@@ -17,7 +19,7 @@ export default class FileProvider {
     contentType: string,
   ): Promise<string> {
     const lambdaParams = {
-      FunctionName: 'getPresignedUrl',
+      FunctionName: `asap-hub-${this.stage}-getPresignedUrl`,
       InvocationType: InvocationType.RequestResponse,
       Payload: JSON.stringify({ filename, contentType }),
     };

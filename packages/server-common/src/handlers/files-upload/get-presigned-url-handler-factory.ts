@@ -6,7 +6,7 @@ import { Logger } from '../../utils';
 export const getPresignedUrlHandlerFactory =
   (logger: Logger, bucket: string, region: string) =>
   async (request: lambda.Request) => {
-    const s3 = new S3Client({ region });
+    const s3 = new S3Client({ region, apiVersion: '2006-03-01' });
     logger.debug(`used region: ${region}`);
     try {
       logger.debug(`request: ${JSON.stringify(request)}`);

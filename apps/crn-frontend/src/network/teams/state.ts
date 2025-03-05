@@ -17,7 +17,7 @@ import {
   ManuscriptDataObject,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   atom,
   atomFamily,
@@ -49,6 +49,7 @@ import {
   endDiscussion,
   getManuscripts,
   ManuscriptsOptions,
+  getPresignedUrl,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -548,4 +549,30 @@ export const useCreateComplianceDiscussion = () => {
     );
     return discussion.id;
   };
+};
+
+export const usePresignedUrl = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const authorization = useRecoilValue(authorizationState);
+
+  const fetchPresignedUrl = async (filename: string, contentType: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { uploadUrl } = await getPresignedUrl(
+        filename,
+        contentType,
+        authorization,
+      );
+      return uploadUrl;
+    } catch (err) {
+      setError('Failed to generate pre-signed URL');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { fetchPresignedUrl, loading, error };
 };

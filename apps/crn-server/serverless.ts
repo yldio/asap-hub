@@ -191,6 +191,13 @@ const serverlessConfig: AWS = {
           },
           {
             Effect: 'Allow',
+            Action: ['lambda:InvokeFunction'],
+            Resource: {
+              'Fn::Sub': 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:getPresignedUrl',
+            },
+          },
+          {
+            Effect: 'Allow',
             Action: [
               'dynamodb:PutItem',
               'dynamodb:Get*',

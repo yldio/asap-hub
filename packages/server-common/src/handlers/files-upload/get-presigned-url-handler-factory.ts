@@ -5,14 +5,18 @@ import { Logger } from '../../utils';
 
 export const getPresignedUrlHandlerFactory =
   (logger: Logger, bucket: string, region: string) =>
-  async (request: lambda.Request) => {
+  async (
+    request: lambda.Request<{ filename?: string; contentType?: string }>,
+  ) => {
     const s3 = new S3Client({ region, apiVersion: '2006-03-01' });
-    logger.debug(`used region: ${region}`);
-    try {
-      logger.debug(`request: ${JSON.stringify(request)}`);
 
-      const body = request.params;
-      if (!body || !body.filename || !body.contentType) {
+    logger.debug(`Used region: ${region}`);
+    logger.debug(`Full request: ${JSON.stringify(request)}`);
+
+    try {
+      const { filename, contentType } = request.payload;
+
+      if (!filename || !contentType) {
         return {
           statusCode: 400,
           body: JSON.stringify({
@@ -23,20 +27,20 @@ export const getPresignedUrlHandlerFactory =
 
       const command = new PutObjectCommand({
         Bucket: bucket,
-        Key: body.filename,
-        ContentType: body.contentType,
+        Key: filename,
+        ContentType: contentType,
       });
 
-      const uploadUrl = await getSignedUrl(s3, command, {
-        expiresIn: 300,
-      });
+      const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
+
+      logger.info(`Generated pre-signed URL: ${uploadUrl}`);
 
       return {
         statusCode: 200,
         body: JSON.stringify({ uploadUrl }),
       };
     } catch (error) {
-      logger.error('Error generating pre-signed URL', error);
+      logger.error('Error generating pre-signed URL', { error });
       return {
         statusCode: 500,
         body: JSON.stringify({

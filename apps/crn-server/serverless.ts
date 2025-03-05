@@ -194,7 +194,7 @@ const serverlessConfig: AWS = {
             Action: ['lambda:InvokeFunction'],
             Resource: {
               'Fn::Sub':
-                'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:getPresignedUrl',
+                'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:asap-hub-${self:provider.stage}-getPresignedUrl',
             },
           },
           {

@@ -1048,7 +1048,6 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/async-retry": ^1
     "@types/aws-lambda": 8.10.146
-    "@types/aws-sdk": ^2.7.4
     "@types/babel__preset-env": 7.9.7
     "@types/chance": 1.1.6
     "@types/cors": 2.8.17
@@ -1087,7 +1086,6 @@ __metadata:
     apr-intercept: 3.0.4
     async-retry: 1.3.3
     aws-lambda: 1.0.7
-    aws-sdk: 2.1524.0
     babel-loader: 8.3.0
     chance: 1.1.12
     contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.19"
@@ -18735,15 +18733,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/aws-sdk@npm:^2.7.4":
-  version: 2.7.4
-  resolution: "@types/aws-sdk@npm:2.7.4"
-  dependencies:
-    aws-sdk: "*"
-  checksum: 4cc60d3cf54141a798b11b483908fbb76ff945f69015d86077a297a6434bf6981a0aad16be23d8ed3345abe01762b13b84c3b9c74c92021292b0e8431f2d025c
-  languageName: node
-  linkType: hard
-
 "@types/babel__core@npm:7.20.5, @types/babel__core@npm:^7.0.0, @types/babel__core@npm:^7.1.12, @types/babel__core@npm:^7.18.0, @types/babel__core@npm:^7.20.5":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -22786,24 +22775,6 @@ __metadata:
   bin:
     lambda: bin/lambda
   checksum: 11316e87b5c4fc36e6bd0495742a3c0ed13befc9527a7b251a58180d141d9afd68b684f37aeb3b53d117d3c2f96747eace31826b683543f1edddc03f392865fd
-  languageName: node
-  linkType: hard
-
-"aws-sdk@npm:*":
-  version: 2.1692.0
-  resolution: "aws-sdk@npm:2.1692.0"
-  dependencies:
-    buffer: 4.9.2
-    events: 1.1.1
-    ieee754: 1.1.13
-    jmespath: 0.16.0
-    querystring: 0.2.0
-    sax: 1.2.1
-    url: 0.10.3
-    util: ^0.12.4
-    uuid: 8.0.0
-    xml2js: 0.6.2
-  checksum: 7b245fab02afebeb731db68feeb63c60475511a28bee3ae763c1199e4816f2b2c12315d873c93d827fef5997271d44e00c412ceab2329ca3079797429467c782
   languageName: node
   linkType: hard
 
@@ -50393,16 +50364,6 @@ __metadata:
     sax: ">=0.6.0"
     xmlbuilder: ~11.0.0
   checksum: 1aa71d62e5bc2d89138e3929b9ea46459157727759cbc62ef99484b778641c0cd21fb637696c052d901a22f82d092a3e740a16b4ce218e81ac59b933535124ea
-  languageName: node
-  linkType: hard
-
-"xml2js@npm:0.6.2":
-  version: 0.6.2
-  resolution: "xml2js@npm:0.6.2"
-  dependencies:
-    sax: ">=0.6.0"
-    xmlbuilder: ~11.0.0
-  checksum: 458a83806193008edff44562c0bdb982801d61ee7867ae58fd35fab781e69e17f40dfeb8fc05391a4648c9c54012066d3955fe5d993ffbe4dc63399023f32ac2
   languageName: node
   linkType: hard
 

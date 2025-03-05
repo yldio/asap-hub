@@ -1,11 +1,15 @@
-import * as AWS from "@aws-sdk/client-lambda";
+import {
+  LambdaClient,
+  InvokeCommand,
+  InvocationType,
+} from '@aws-sdk/client-lambda';
 import { region } from '../config';
 
 export default class FileProvider {
-  private lambda: AWS.Lambda;
+  private lambda: LambdaClient;
 
   constructor() {
-    this.lambda = new AWS.Lambda({ region });
+    this.lambda = new LambdaClient({ region });
   }
 
   async getPresignedUrl(
@@ -14,12 +18,18 @@ export default class FileProvider {
   ): Promise<string> {
     const lambdaParams = {
       FunctionName: 'getPresignedUrl',
-      InvocationType: 'RequestResponse',
+      InvocationType: InvocationType.RequestResponse,
       Payload: JSON.stringify({ filename, contentType }),
     };
 
-    const response = await this.lambda.invoke(lambdaParams).promise();
-    const payload = JSON.parse(response.Payload as string);
+    const command = new InvokeCommand(lambdaParams);
+    const response = await this.lambda.send(command);
+
+    if (!response.Payload) {
+      throw new Error('Lambda returned an empty response');
+    }
+
+    const payload = JSON.parse(response.Payload.toString());
 
     if (payload.statusCode !== 200) {
       throw new Error(`Lambda returned an error: ${JSON.stringify(payload)}`);

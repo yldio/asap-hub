@@ -1,8 +1,10 @@
 import { css } from '@emotion/react';
 import { useHistory } from 'react-router-dom';
+import Lottie from 'react-lottie';
 import { Button, crossIcon, Headline3, Link, Modal, Paragraph } from '..';
 import { mailToSupport } from '../mail';
 import { mobileScreen, rem } from '../pixels';
+import loading from '../lotties/loading.json';
 
 type modal = 'submit' | 'cancel' | null;
 
@@ -57,6 +59,7 @@ type ManuscriptFormModalsProps = {
   setModal: (modal: modal) => void;
   handleSubmit: () => void;
   isEditMode?: boolean;
+  isSubmitting: boolean;
 };
 
 const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
@@ -64,14 +67,10 @@ const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
   setModal,
   handleSubmit,
   isEditMode = false,
+  isSubmitting,
 }) => {
   const history = useHistory();
   const clearModal = () => setModal(null);
-
-  const handleSubmitConfirmationConfirm = () => {
-    handleSubmit();
-    clearModal();
-  };
 
   const handleCancelManuscriptSubmission = () => {
     clearModal();
@@ -103,8 +102,30 @@ const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
               <Button onClick={clearModal}>Keep Editing</Button>
             </div>
             <div css={confirmStyles}>
-              <Button primary onClick={handleSubmitConfirmationConfirm}>
+              <Button
+                primary
+                enabled={!isSubmitting}
+                preventDefault
+                onClick={handleSubmit}
+                overrideStyles={css({
+                  gap: rem(8),
+                })}
+              >
                 Submit Manuscript
+                {isSubmitting && (
+                  <Lottie
+                    options={{
+                      loop: true,
+                      autoplay: true,
+                      animationData: loading,
+                      rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice',
+                      },
+                    }}
+                    height={24}
+                    width={24}
+                  />
+                )}
               </Button>
             </div>
           </div>

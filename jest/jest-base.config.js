@@ -29,6 +29,7 @@ module.exports = {
     '\\.(png|jpg|ico|jpeg|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       require.resolve('./imageMock.js'),
     uuid: require.resolve('uuid'),
+    '^react-lottie$': require.resolve('./react-lottie.js'),
   },
   modulePathIgnorePatterns: [
     '<rootDir>/build(-cjs)?',

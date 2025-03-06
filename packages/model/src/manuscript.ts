@@ -925,3 +925,10 @@ export type RequestedAPCCoverageOption =
   keyof typeof requestedAPCCoverageOptions;
 
 export const DEFAULT_REQUESTED_APC_COVERAGE: RequestedAPCCoverageOption = 'all';
+
+export type ManuscriptError = {
+  statusCode: number;
+  response?: {
+    message: string;
+  };
+};

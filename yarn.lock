@@ -931,6 +931,7 @@ __metadata:
     "@types/qs": 6.9.11
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
+    "@types/react-lottie": ^1
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 18.0.7
     "@types/streamsaver": 2.0.5
@@ -962,6 +963,7 @@ __metadata:
     react-dom: 17.0.2
     react-error-boundary: 3.1.4
     react-hook-form: ^7.51.4
+    react-lottie: ^1.2.10
     react-router-dom: 5.3.4
     react-router-last-location: 2.0.1
     react-test-renderer: 17.0.2
@@ -1690,6 +1692,7 @@ __metadata:
     "@types/ramda": 0.27.20
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
+    "@types/react-lottie": ^1
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 2.4.9
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
@@ -1714,6 +1717,7 @@ __metadata:
     react: 17.0.2
     react-dom: 17.0.2
     react-hook-form: ^7.51.4
+    react-lottie: ^1.2.10
     react-router-dom: 5.3.4
     react-router-hash-link: 2.4.3
     react-select: 4.3.1
@@ -18623,6 +18627,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-lottie@npm:^1":
+  version: 1.2.10
+  resolution: "@types/react-lottie@npm:1.2.10"
+  dependencies:
+    "@types/react": "*"
+  checksum: 83eb419d636a7a7f61af58bfdad9cbe6a4beda4bf4e608a5c489eb77b6c2d99ac29efbd99c73d080c73ffcba3de65e0f33835a5b8bf984217e1f66bb687fccdb
+  languageName: node
+  linkType: hard
+
 "@types/react-modal@npm:^3.13.1":
   version: 3.16.3
   resolution: "@types/react-modal@npm:3.16.3"
@@ -22179,6 +22192,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-runtime@npm:^6.26.0":
+  version: 6.26.0
+  resolution: "babel-runtime@npm:6.26.0"
+  dependencies:
+    core-js: ^2.4.0
+    regenerator-runtime: ^0.11.0
+  checksum: 8aeade94665e67a73c1ccc10f6fd42ba0c689b980032b70929de7a6d9a12eb87ef51902733f8fefede35afea7a5c3ef7e916a64d503446c1eedc9e3284bd3d50
+  languageName: node
+  linkType: hard
+
 "babel-walk@npm:3.0.0-canary-5":
   version: 3.0.0-canary-5
   resolution: "babel-walk@npm:3.0.0-canary-5"
@@ -24836,6 +24859,13 @@ __metadata:
   version: 3.34.0
   resolution: "core-js@npm:3.34.0"
   checksum: 26b0d103716b33fc660ee8737da7bc9475fbc655f93bbf1360ab692966449d18f2fc393805095937283db9f919ca2aa5c88d86d16f2846217983ad7da707e31e
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^2.4.0":
+  version: 2.6.12
+  resolution: "core-js@npm:2.6.12"
+  checksum: 44fa9934a85f8c78d61e0c8b7b22436330471ffe59ec5076fe7f324d6e8cf7f824b14b1c81ca73608b13bdb0fef035bd820989bf059767ad6fa13123bb8bd016
   languageName: node
   linkType: hard
 
@@ -36341,6 +36371,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lottie-web@npm:^5.12.2":
+  version: 5.12.2
+  resolution: "lottie-web@npm:5.12.2"
+  checksum: af5bc3bc405fd760de8b17a36158d5a8c3e8c586c711d0c63681ddf056b65bc6b54ea36b1fcad782fb02dbe12e696a40e0ba72daf41b8f10ab5b5d1113793636
+  languageName: node
+  linkType: hard
+
 "loupe@npm:^2.3.6, loupe@npm:^2.3.7":
   version: 2.3.7
   resolution: "loupe@npm:2.3.7"
@@ -40668,7 +40705,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.7, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.7, prop-types@npm:^15.6.1, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -41503,6 +41540,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-lottie@npm:^1.2.10":
+  version: 1.2.10
+  resolution: "react-lottie@npm:1.2.10"
+  dependencies:
+    babel-runtime: ^6.26.0
+    lottie-web: ^5.12.2
+    prop-types: ^15.6.1
+  peerDependencies:
+    react: ">=15.0.0"
+  checksum: 0be8bcff63118a2b3ebc905c0a0de3edde9bfe11fb11fd1ed0512ddad045a2230ff05543ded8da261a9c11cf5c9750822338762f29cb655c8163606463337bdc
+  languageName: node
+  linkType: hard
+
 "react-modal@npm:^3.16.1":
   version: 3.16.1
   resolution: "react-modal@npm:3.16.1"
@@ -42079,6 +42129,13 @@ __metadata:
   version: 0.14.0
   resolution: "regenerator-runtime@npm:0.14.0"
   checksum: 1c977ad82a82a4412e4f639d65d22be376d3ebdd30da2c003eeafdaaacd03fc00c2320f18120007ee700900979284fc78a9f00da7fb593f6e6eeebc673fba9a3
+  languageName: node
+  linkType: hard
+
+"regenerator-runtime@npm:^0.11.0":
+  version: 0.11.1
+  resolution: "regenerator-runtime@npm:0.11.1"
+  checksum: 3c97bd2c7b2b3247e6f8e2147a002eb78c995323732dad5dc70fac8d8d0b758d0295e7015b90d3d444446ae77cbd24b9f9123ec3a77018e81d8999818301b4f4
   languageName: node
   linkType: hard
 

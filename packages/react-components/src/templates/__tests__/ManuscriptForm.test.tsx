@@ -25,6 +25,14 @@ import {
 } from '@asap-hub/model';
 import ManuscriptForm from '../ManuscriptForm';
 
+jest.mock(
+  'react-lottie',
+  () =>
+    function MockLottie() {
+      return <div>Loading...</div>;
+    },
+);
+
 let history!: History;
 
 jest.setTimeout(30_000);
@@ -504,6 +512,51 @@ it('displays error message when manuscript title is missing', async () => {
     expect(submitButton).toBeEnabled();
   });
   expect(screen.queryByText(/Please enter a title/i)).toBeNull();
+});
+
+it('displays error message when manuscript title is not unique', async () => {
+  const onUpdate = jest.fn().mockRejectedValueOnce({
+    statusCode: 422,
+    response: {
+      message: 'Title must be unique',
+    },
+  });
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Draft Manuscript (prior to Publication)"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
+        keyResourceTable={{
+          id: '124',
+          filename: 'test.csv',
+          url: 'http://example.com/test.csv',
+        }}
+        manuscriptId="manuscript-id"
+        onUpdate={onUpdate}
+      />
+    </StaticRouter>,
+  );
+
+  await submitForm();
+
+  await waitFor(() => {
+    expect(onUpdate).toHaveBeenCalled();
+  });
+
+  await waitFor(() => {
+    expect(
+      screen.getAllByText(
+        'This title is already in use. Please choose a different one.',
+      ).length,
+    ).toBeGreaterThan(0);
+  });
 });
 
 it('displays error message when no type was found', async () => {

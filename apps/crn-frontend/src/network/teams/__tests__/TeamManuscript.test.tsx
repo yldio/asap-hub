@@ -25,6 +25,16 @@ import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
 import TeamManuscript from '../TeamManuscript';
 
+jest.mock(
+  'react-lottie',
+  () =>
+    function MockLottie() {
+      return <div>Loading...</div>;
+    },
+);
+
+jest.setTimeout(30_000);
+
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 
 const teamId = '42';
@@ -273,7 +283,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   });
 }, 180_000);
 
-it('shows duplicate manuscript toast when submitting with duplicate title', async () => {
+it('shows server validation error toast and a message when submitting with duplicate title', async () => {
   const duplicateTitleError = {
     statusCode: 422,
     response: {
@@ -363,10 +373,16 @@ it('shows duplicate manuscript toast when submitting with duplicate title', asyn
 
   await waitFor(() => {
     expect(mockSetFormType).toHaveBeenCalledWith({
-      type: 'duplicate-manuscript',
+      type: 'server-validation-error',
       accent: 'error',
     });
   });
+
+  expect(
+    screen.getAllByText(
+      /This title is already in use. Please choose a different one./i,
+    ).length,
+  ).toBeGreaterThan(0);
 }, 180_000);
 
 it('shows default error toast when submitting with any other error', async () => {

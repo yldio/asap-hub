@@ -44,6 +44,14 @@ import {
 } from '../state';
 import TeamProfile from '../TeamProfile';
 
+jest.mock(
+  'react-lottie',
+  () =>
+    function MockLottie() {
+      return <div>Loading...</div>;
+    },
+);
+
 const manuscriptResponse = {
   id: 'manuscript-1',
   title: 'The Manuscript',

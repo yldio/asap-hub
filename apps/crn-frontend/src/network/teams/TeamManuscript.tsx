@@ -1,5 +1,9 @@
 import { Frame } from '@asap-hub/frontend-utils';
-import { AuthorResponse, AuthorSelectOption } from '@asap-hub/model';
+import {
+  AuthorResponse,
+  AuthorSelectOption,
+  ManuscriptError,
+} from '@asap-hub/model';
 import {
   ManuscriptForm,
   ManuscriptHeader,
@@ -30,13 +34,6 @@ import { useManuscriptToast } from './useManuscriptToast';
 type TeamManuscriptProps = {
   teamId: string;
   resubmitManuscript?: boolean;
-};
-
-type ManuscriptError = {
-  statusCode: number;
-  response?: {
-    message: string;
-  };
 };
 
 const TeamManuscript: React.FC<TeamManuscriptProps> = ({
@@ -71,12 +68,8 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   };
 
   const onError = (error: ManuscriptError | Error) => {
-    if (
-      'statusCode' in error &&
-      error.statusCode === 422 &&
-      error.response?.message === 'Title must be unique'
-    ) {
-      setFormType({ type: 'duplicate-manuscript', accent: 'error' });
+    if ('statusCode' in error && error.statusCode === 422) {
+      setFormType({ type: 'server-validation-error', accent: 'error' });
     } else {
       setFormType({ type: 'default-error', accent: 'error' });
     }

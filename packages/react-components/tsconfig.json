@@ -8,7 +8,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react"
   },
-  "include": ["src"],
+  "include": ["src", "src/lotties/*.json"],
   "references": [
     { "path": "../algolia" },
     { "path": "../auth" },

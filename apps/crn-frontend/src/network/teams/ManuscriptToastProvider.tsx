@@ -4,7 +4,7 @@ import React, { createContext, useState } from 'react';
 type FormType =
   | 'assigned-users'
   | 'manuscript'
-  | 'duplicate-manuscript'
+  | 'server-validation-error'
   | 'default-error'
   | 'compliance-report'
   | 'quick-check'
@@ -41,7 +41,8 @@ export const ManuscriptToastProvider = ({
   const formTypeMapping = {
     'assigned-users': 'User(s) assigned to a manuscript successfully.',
     manuscript: 'Manuscript submitted successfully.',
-    'duplicate-manuscript': 'A manuscript with the same title already exists',
+    'server-validation-error':
+      'There are some errors in the form. Please correct the fields below.',
     'default-error': 'An error has occurred. Please try again later.',
     'compliance-report': 'Compliance Report submitted successfully.',
     'quick-check': 'Replied to quick check successfully.',

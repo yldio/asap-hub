@@ -8,6 +8,7 @@ it('renders default cancellation title and description', () => {
       modal={'cancel'}
       setModal={jest.fn}
       handleSubmit={jest.fn}
+      isSubmitting={false}
     />,
   );
   expect(
@@ -27,6 +28,7 @@ it('renders edit cancellation title and description when isEditMode is true', ()
       setModal={jest.fn}
       handleSubmit={jest.fn}
       isEditMode
+      isSubmitting={false}
     />,
   );
   expect(

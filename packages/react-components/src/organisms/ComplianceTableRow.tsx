@@ -40,7 +40,7 @@ const rowStyles = css({
     borderRadius: rem(borderRadius),
     td: {
       paddingBottom: rem(16),
-    }
+    },
   },
   paddingTop: 0,
   paddingBottom: 0,

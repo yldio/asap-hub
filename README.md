@@ -110,6 +110,14 @@ This will run the github action workflow to create a new environment with a copy
 
 To avoid incurring in extra costs you should only use this if you need to make changes in Analytics indexes and make sure they are deleted when you close/merge your PR.
 
+### Update Postmark templates
+
+If you need to create or update templates on Postmark you can have your branch deploying your changes to Postmarks Branch server. For that you'll need to add the following label to your PR:
+
+- postmark-templates-update
+
+Note: this DOES NOT create a dedicated server. The same server will be used if there are multiple branches using it.
+
 ## Editor setup
 
 Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks) for how to integrate your editor with the TypeScript compiler and ESLint linter in this repository. You will also need to set up your editor to run ESLint with the same CLI options that the scripts do — they are in [this file](jest-runner-eslint.config.js).

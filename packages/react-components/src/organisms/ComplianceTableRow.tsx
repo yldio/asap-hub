@@ -37,14 +37,19 @@ const rowStyles = css({
   ':last-child': {
     borderBottom: 'none',
     marginBottom: 0,
-    paddingBottom: rem(15),
     borderRadius: rem(borderRadius),
+    td: {
+      paddingBottom: rem(16),
+    }
   },
   paddingTop: 0,
   paddingBottom: 0,
 });
 
 const apcCoverageStyles = css({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   fontSize: rem(14),
   color: lead.rgb,
 });

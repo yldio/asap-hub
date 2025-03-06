@@ -36,6 +36,7 @@ const container = css({
   'th.sticky, td.sticky': {
     borderRight: `1px solid ${steel.rgb}`,
     position: 'sticky',
+    paddingLeft: rem(24),
     left: 0,
   },
 });
@@ -50,6 +51,9 @@ const titleStyles = css({
   fontWeight: 'bold',
   color: charcoal.rgb,
   background: '#fff',
+  verticalAlign: 'top',
+  paddingTop: rem(24),
+  paddingBottom: rem(16),
 });
 
 type ComplianceTableProps = Pick<
@@ -128,7 +132,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
   );
 
   return (
-    <Card>
+    <Card padding={false}>
       {displayConfirmStatusChangeModal && newSelectedStatus && (
         <ConfirmStatusChangeModal
           onDismiss={() => setDisplayConfirmStatusChangeModal(false)}

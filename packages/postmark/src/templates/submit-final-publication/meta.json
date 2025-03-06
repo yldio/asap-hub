@@ -1,7 +1,7 @@
 {
-  "Name": "Waiting for Report (Grantees)",
-  "Alias": "waiting-for-report-grantees",
-  "Subject": "Submission Received for {{ manuscript.title }} {{ manuscript.id }}",
+  "Name": "Submit final publication",
+  "Alias": "submit-final-publication",
+  "Subject": "Submit Publication for Final Review for {{ manuscript.title }} {{ manuscript.type }} {{ manuscript.id }}",
   "TemplateType": "Standard",
   "LayoutTemplate": "email-layout-grantees",
   "TestRenderModel": {

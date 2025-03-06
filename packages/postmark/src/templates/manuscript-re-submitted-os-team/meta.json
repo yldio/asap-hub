@@ -1,10 +1,11 @@
 {
-  "Name": "Waiting for Report (OS Team)",
-  "Alias": "waiting-for-report-os-team",
-  "Subject": "Manuscript Submission Received from {{ team.name }} {{ manuscript.title }}({{ manuscript.id }})",
+  "Name": "Manuscript re-submitted (OS Team)",
+  "Alias": "manuscript-resubmitted-os-team",
+  "Subject": "For {{ assignedOSMembers }}: {{ manuscript.id }} Updated Submission Received for {{ manuscript.title }}",
   "TemplateType": "Standard",
   "LayoutTemplate": "email-layout-os-team",
   "TestRenderModel": {
+    "assignedOSMembers": "Devin Snyder and Sonya Dumanis",
     "team": {
       "name": "Alessi, De Camilli and Edwards",
       "workspace": "https://dev.hub.asap.science/network/teams/463705c4-e70b-470c-918d-b0ceb84a3415/workspace"

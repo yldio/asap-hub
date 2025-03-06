@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+      body {
+        font-family: 'Roboto', Arial, sans-serif;
+        font-size: 16px;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+      .email-wrapper {
+        width: 100%;
+        max-width: 620px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .email-header {
+        width: 100%;
+      }
+
+      .email-content {
+        padding: 48px 24px;
+        text-align: start;
+        color: #333333;
+        line-height: 1.6;
+      }
+
+      .email-disclaimer {
+        font-size: 14px;
+      }
+
+      .email-content a {
+        color: #34a270;
+        text-decoration: none;
+      }
+
+      .email-content p {
+        margin: 24px 0;
+      }
+
+      .email-message p:first-child {
+        margin: 0 0 24px 0;
+      }
+
+      .email-signature {
+        margin: 20px 0 0 0;
+      }
+
+      .email-signature p {
+        margin: 0;
+      }
+
+      .email-signature a {
+        font-size: 14px;
+      }
+
+      .email-footer {
+        text-align: center;
+        padding: 25px;
+        background-color: #f9f9f9;
+        border-top: 1px solid #eaeaea;
+      }
+
+      .footer-icon {
+        width: 190px;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .unsubscribe {
+        color: #888888;
+        font-size: 14px;
+        margin-top: 15px;
+        display: block;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="email-wrapper">
+      <img class="email-header" src="cid:asaplogo" />
+
+      <div class="email-content">
+        <div class="email-message">{{{ @content }}}</div>
+
+        <div class="email-signature">
+          <p>Kind regards,</p>
+          <p><strong>ASAP Open Science Team</strong></p>
+          <a href="https://parkinsonsroadmap.org" target="_blank"
+            >parkinsonsroadmap.org</a
+          >
+        </div>
+      </div>
+      <div class="email-footer">
+        <img
+          class="footer-icon"
+          src="https://parkinsonsroadmap.org/wp-content/uploads/2020/10/cropped-ASAP_Logo_FullColor@2x.png"
+          alt="ASAP Logo"
+        />
+        <a href="{{{ pm:unsubscribe }}}" class="unsubscribe">Unsubscribe</a>
+      </div>
+    </div>
+  </body>
+</html>

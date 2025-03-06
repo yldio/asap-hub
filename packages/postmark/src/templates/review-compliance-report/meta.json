@@ -1,7 +1,7 @@
 {
-  "Name": "Waiting for Report (Grantees)",
-  "Alias": "waiting-for-report-grantees",
-  "Subject": "Submission Received for {{ manuscript.title }} {{ manuscript.id }}",
+  "Name": "Review compliance report",
+  "Alias": "review-compliance-report",
+  "Subject": "ASAP Compliance Report for {{ manuscript.title }} {{ manuscript.id }}",
   "TemplateType": "Standard",
   "LayoutTemplate": "email-layout-grantees",
   "TestRenderModel": {

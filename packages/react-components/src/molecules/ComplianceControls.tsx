@@ -7,7 +7,7 @@ import {
   requestedAPCCoverageOptions,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { DropdownButton } from '.';
+import { DropdownButton, ExportButton } from '.';
 import { dropdownChevronIcon } from '../icons';
 import { rem, tabletScreen } from '../pixels';
 
@@ -67,6 +67,7 @@ type ComplianceControlsProps = {
     completedStatus: string,
     requestedAPCCoverage: string,
   ) => string;
+  exportResults?: () => Promise<void>;
 };
 
 const ComplianceControls = ({
@@ -74,6 +75,7 @@ const ComplianceControls = ({
   requestedAPCCoverage,
   generateLink,
   manuscriptCount,
+  exportResults,
 }: ComplianceControlsProps) => {
   const resultsFoundText =
     manuscriptCount === 1
@@ -140,6 +142,9 @@ const ComplianceControls = ({
               }),
             )}
           </DropdownButton>
+        </div>
+        <div css={filterContainerStyles}>
+          <ExportButton exportResults={exportResults} />
         </div>
       </div>
     </div>

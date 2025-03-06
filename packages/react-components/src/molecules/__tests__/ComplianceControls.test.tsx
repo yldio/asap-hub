@@ -39,4 +39,12 @@ describe('ComplianceControls', () => {
       screen.getByRole('button', { name: 'Submitted Chevron Down' }),
     ).toBeInTheDocument();
   });
+
+  it('renders export csv button', () => {
+    const mockExport = jest.fn(() => Promise.resolve());
+
+    render(<ComplianceControls {...props} exportResults={mockExport} />);
+
+    expect(screen.getByText(/export as:/i)).toBeVisible();
+  });
 });

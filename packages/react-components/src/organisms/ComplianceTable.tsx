@@ -18,7 +18,6 @@ import ComplianceTableRow from './ComplianceTableRow';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 
 const container = css({
-  paddingTop: rem(8),
   overflowX: 'auto',
   table: {
     borderSpacing: 0,
@@ -52,7 +51,7 @@ const titleStyles = css({
   color: charcoal.rgb,
   background: '#fff',
   verticalAlign: 'top',
-  paddingTop: rem(24),
+  paddingTop: rem(32),
   paddingBottom: rem(16),
 });
 

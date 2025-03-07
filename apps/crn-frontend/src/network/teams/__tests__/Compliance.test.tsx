@@ -5,7 +5,7 @@ import {
   createPartialManuscriptResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { Frame } from '@asap-hub/frontend-utils';
+import { createCsvFileStream, Frame } from '@asap-hub/frontend-utils';
 import { PartialManuscriptResponse } from '@asap-hub/model';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -18,6 +18,16 @@ import { getManuscripts, updateManuscript } from '../api';
 import Compliance from '../Compliance';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { manuscriptsState } from '../state';
+
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
 
 mockConsoleError();
 
@@ -32,6 +42,10 @@ jest.mock('../../users/api', () => ({
   ...jest.requireActual('../api'),
   getOpenScienceMembers: jest.fn(),
 }));
+
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
 
 const mockGetManuscripts = getManuscripts as jest.MockedFunction<
   typeof getManuscripts
@@ -384,5 +398,40 @@ it('displays success message when assigning users', async () => {
     expect(
       screen.getByText('User(s) assigned to a manuscript successfully.'),
     ).toBeInTheDocument();
+  });
+});
+
+describe('csv export', () => {
+  it('exports analytics for user', async () => {
+    const manuscriptId = 'manuscript-id-1';
+    const mockManuscript: PartialManuscriptResponse = {
+      ...createPartialManuscriptResponse(),
+      manuscriptId,
+      id: 'SC1-000129-002-org-G-2',
+      status: 'Review Compliance Report',
+    };
+
+    mockGetManuscripts.mockResolvedValue({
+      items: [mockManuscript],
+      total: 1,
+    });
+    mockUpdateManuscript.mockResolvedValue({
+      ...createManuscriptResponse(),
+      id: 'manuscript-id-2',
+      status: 'Manuscript Resubmitted',
+    });
+
+    await renderCompliancePage();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+    });
+
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/manuscripts_\d+\.csv/),
+      expect.anything(),
+    );
+    expect(mockGetManuscripts).toHaveBeenCalledWith('gabi');
   });
 });

@@ -23,6 +23,9 @@ export default class FileProvider {
     filename: string,
     contentType: string,
   ): Promise<string> {
+    logger.info(`Function name: asap-hub-${this.stage}-getPresignedUrl`);
+    logger.info(`Filename: ${filename}`);
+    logger.info(`Content Type: ${contentType}`);
     const lambdaParams = {
       FunctionName: `asap-hub-${this.stage}-getPresignedUrl`,
       InvocationType: InvocationType.RequestResponse,
@@ -43,7 +46,6 @@ export default class FileProvider {
     const payloadText = response.Payload.toString().trim();
     logger.info(`Raw Payload from Lambda: ${payloadText}`);
 
-    // Attempt JSON parsing
     try {
       const payload = JSON.parse(payloadText);
       logger.info(`Parsed Payload: ${JSON.stringify(payload)}`);
@@ -58,15 +60,13 @@ export default class FileProvider {
         );
       }
 
-      const parsedBody = JSON.parse(payload.body);
-      if (!parsedBody.uploadUrl) {
-        throw new Error(
-          `Lambda response missing uploadUrl: ${JSON.stringify(parsedBody)}`,
-        );
+      const uploadUrl = payload.body;
+      if (!uploadUrl) {
+        throw new Error(`Lambda response missing uploadUrl`);
       }
 
-      logger.info(`Pre-signed URL generated: ${parsedBody.uploadUrl}`);
-      return parsedBody.uploadUrl;
+      logger.info(`Pre-signed URL generated: ${uploadUrl}`);
+      return uploadUrl;
     } catch (parseError) {
       logger.error('Error parsing Lambda response', {
         rawPayload: payloadText,

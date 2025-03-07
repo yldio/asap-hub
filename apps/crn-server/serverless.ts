@@ -1060,7 +1060,7 @@ const serverlessConfig: AWS = {
       events: [
         {
           httpApi: {
-            method: 'GET',
+            method: 'POST',
             path: '/files/upload-url',
           },
         },

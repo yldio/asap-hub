@@ -36,7 +36,10 @@ export const fileRouteFactory = (fileController: FileController): Router => {
         message: 'Successfully generated pre-signed URL',
         user: loggedInUser.id,
         filename,
+        uploadUrl,
       });
+
+      logger.debug(`Upload URL before sending response: ${uploadUrl}`);
 
       res.json({ uploadUrl });
     } catch (error) {

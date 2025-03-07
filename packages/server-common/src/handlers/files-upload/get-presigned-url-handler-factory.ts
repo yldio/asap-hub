@@ -35,13 +35,13 @@ export const getPresignedUrlHandlerFactory =
       });
 
       // Generate the pre-signed URL
-      const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
+      const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 3000 });
 
       logger.info(`Generated pre-signed URL: ${uploadUrl}`);
 
       return {
         statusCode: 200,
-        body: uploadUrl,
+        body: JSON.stringify(uploadUrl),
       };
     } catch (error) {
       logger.error('Error generating pre-signed URL', { error });

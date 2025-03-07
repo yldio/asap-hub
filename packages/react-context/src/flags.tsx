@@ -23,21 +23,19 @@ type Flags = Pick<
 const parseCookie = (cookies: string) =>
   cookies
     .split(';')
-    .reduce<Record<string, boolean> | undefined>((acc, cookie) => {
+    .reduce<Record<string, boolean | string> | undefined>((acc, cookie) => {
       const [key, val] = cookie.split('=');
       const flagName = key!.split('_').slice(1).join('_');
       const getFlag = (str: string) => {
         try {
-          const parsed = JSON.parse(str);
-          return typeof parsed === 'boolean'
-            ? { [flagName]: parsed }
+          return ['boolean', 'string'].includes(typeof str) 
+            ? { [flagName]: str }
             : undefined;
         } catch (e) {
           return undefined;
         }
       };
-
-      return key!.trim().startsWith('ASAP') ? getFlag(val!) : acc;
+      return key!.trim().startsWith('ASAP') ? {...acc, ...getFlag(val!)} : acc;
     }, undefined);
 
 export const FlagsContext = createContext<Flags>({

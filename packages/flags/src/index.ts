@@ -1,10 +1,12 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'DISPLAY_MANUSCRIPTS';
+export type Flag = 'PERSISTENT_EXAMPLE' | 'DISPLAY_MANUSCRIPTS' | 'SEND_COMPLIANCE_NOTIFICATIONS' | 'COMPLIANCE_NOTIFICATION_LIST';
 
-export type Flags = Partial<Record<Flag, boolean | undefined>>;
+export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   DISPLAY_MANUSCRIPTS: false,
+  SEND_COMPLIANCE_NOTIFICATIONS: false,
+  COMPLIANCE_NOTIFICATION_LIST: '',
 };
 
 const envDefaults: Record<string, boolean> = {
@@ -21,24 +23,24 @@ export const setEnvironment = (environment?: string) => {
 };
 
 export const isEnabled = (flag: Flag): boolean =>
-  overrides[flag] ?? envDefaults[currentEnvironment ?? 'development'] ?? false;
+  !!overrides[flag] ?? envDefaults[currentEnvironment ?? 'development'] ?? false;
 export const getOverrides = (): Flags => overrides;
 
-export const setCurrentOverrides = (flags?: Record<string, boolean>): void => {
+export const setCurrentOverrides = (flags?: Record<string, boolean | string>): void => {
   if (flags) {
     overrides = Object.entries(flags).reduce<
-      Record<string, boolean | undefined>
+      Record<string, boolean | string | undefined>
     >((acc, [name, val]) => {
       acc[name] = flags && flags[name] !== undefined ? flags[name] : val;
       return acc;
     }, overrides);
   }
 };
-const setOverride = (flag: Flag, value: boolean): void => {
+const setOverride = (flag: Flag, value: boolean | string): void => {
   overrides = { ...overrides, [flag]: value };
 };
 export const disable = (flag: Flag): void => setOverride(flag, false);
-export const enable = (flag: Flag): void => setOverride(flag, true);
+export const enable = (flag: Flag, value?: string): void => setOverride(flag, value ?? true);
 
 export const reset = (): void => {
   overrides = {};

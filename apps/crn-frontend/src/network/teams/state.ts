@@ -1,3 +1,4 @@
+import { getOverrides, isEnabled } from '@asap-hub/flags';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamResponse,
@@ -235,7 +236,9 @@ export const usePostManuscript = () => {
   const authorization = useRecoilValue(authorizationState);
   const setManuscriptItem = useSetManuscriptItem();
   return async (payload: ManuscriptPostRequest) => {
-    const manuscript = await createManuscript(payload, authorization);
+    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
+    const notificationList = getOverrides()['COMPLIANCE_NOTIFICATION_LIST'] as string;
+    const manuscript = await createManuscript({...payload, sendNotifications, notificationList }, authorization);
     setManuscriptItem(manuscript);
     return manuscript;
   };
@@ -245,7 +248,9 @@ export const useResubmitManuscript = () => {
   const authorization = useRecoilValue(authorizationState);
   const setManuscriptItem = useSetManuscriptItem();
   return async (id: string, payload: ManuscriptPostRequest) => {
-    const manuscript = await resubmitManuscript(id, payload, authorization);
+    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
+    const notificationList = getOverrides()['COMPLIANCE_NOTIFICATION_LIST'] as string;
+    const manuscript = await resubmitManuscript(id, {...payload, sendNotifications, notificationList}, authorization);
     setManuscriptItem(manuscript);
     return manuscript;
   };
@@ -257,7 +262,9 @@ export const usePutManuscript = () => {
   const invalidateManuscriptIndex = useInvalidateManuscriptIndex();
 
   return async (id: string, payload: ManuscriptPutRequest) => {
-    const manuscript = await updateManuscript(id, payload, authorization);
+    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
+    const notificationList = getOverrides()['COMPLIANCE_NOTIFICATION_LIST'] as string;
+    const manuscript = await updateManuscript(id, {...payload, sendNotifications, notificationList}, authorization);
     setManuscriptItem(manuscript);
     invalidateManuscriptIndex();
     return manuscript;

@@ -266,6 +266,8 @@ export class ManuscriptContentfulDataProvider
     const {
       teamId,
       userId,
+      sendNotifications = false,
+      notificationList = '',
       versions: [version],
       ...plainFields
     } = input;
@@ -297,6 +299,8 @@ export class ManuscriptContentfulDataProvider
     await this.sendEmailNotification(
       'manuscript_submitted',
       manuscriptEntry.sys.id,
+      sendNotifications,
+      notificationList
     );
 
     return manuscriptEntry.sys.id;
@@ -308,6 +312,8 @@ export class ManuscriptContentfulDataProvider
   ): Promise<void> {
     const {
       userId,
+      sendNotifications = false,
+      notificationList = '',
       versions: [version],
       title,
     } = input;
@@ -335,7 +341,7 @@ export class ManuscriptContentfulDataProvider
       status: 'Manuscript Resubmitted',
     });
 
-    await this.sendEmailNotification('manuscript_resubmitted', id);
+    await this.sendEmailNotification('manuscript_resubmitted', id, sendNotifications, notificationList);
   }
 
   async update(
@@ -363,8 +369,11 @@ export class ManuscriptContentfulDataProvider
         statusUpdatedAt: new Date(),
       });
       const statusUpdateAction = getStatusUpdateAction(manuscriptData.status);
-      if (statusUpdateAction)
-        await this.sendEmailNotification(statusUpdateAction, id);
+      if (statusUpdateAction) {
+        const sendEmailNotification = 'sendNotifications' in manuscriptData ? manuscriptData.sendNotifications as boolean: false;
+        const notificationList = 'notificationList' in manuscriptData ? manuscriptData.notificationList as string : '';
+        await this.sendEmailNotification(statusUpdateAction, id, sendEmailNotification, notificationList);
+      }
     }
 
     if ('versions' in manuscriptData && manuscriptData.versions?.[0]) {
@@ -425,7 +434,12 @@ export class ManuscriptContentfulDataProvider
   async sendEmailNotification(
     action: ManuscriptUpdateAction,
     manuscriptId: string,
+    flagEnabled: boolean,
+    emailList: string,
   ): Promise<void> {
+    if (!flagEnabled && !emailList)
+      return;
+    
     const { manuscripts } = await this.contentfulClient.request<
       FetchManuscriptNotificationDetailsQuery,
       FetchManuscriptNotificationDetailsQueryVariables
@@ -508,22 +522,29 @@ export class ManuscriptContentfulDataProvider
       .filter((lab) => lab.labPi && !lab.labPi?.alumniSinceDate)
       .map((lab) => lab.labPi?.email);
 
-    const recipients = [
+    let granteeRecipients = [
       ...new Set([...contributingAuthors, ...teamLeaders.flat(), ...labPIs]),
-    ].join(',');
+    ];
+    let openScienceRecipients = ['openscience@parkinsonsroadmap.org']
+    
+    if (!flagEnabled){
+      granteeRecipients = granteeRecipients.filter((email) => email && emailList.includes(email));
+      openScienceRecipients = openScienceRecipients.filter((email) => email && emailList.includes(email));
+    }
+      
 
     const templateDetails = manuscriptNotificationMapping[action];
-    if (templateDetails.grantee)
+    if (templateDetails.grantee && granteeRecipients.length >= 1)
       dummySendEmail({
         from: 'hub@asap.science',
-        to: recipients,
+        to: granteeRecipients.join(','),
         templateName: templateDetails.grantee,
         templateModel: notificationData,
       });
-    if (templateDetails.open_science_team)
+    if (templateDetails.open_science_team && openScienceRecipients.length >= 1)
       dummySendEmail({
         from: 'hub@asap.science',
-        to: 'openscience@parkinsonsroadmap.org',
+        to: openScienceRecipients.join(','),
         templateName: templateDetails.open_science_team,
         templateModel: notificationData,
       });

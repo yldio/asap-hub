@@ -370,6 +370,8 @@ export type ManuscriptPostCreateRequest = Pick<
     correspondingAuthor?: ManuscriptPostAuthor;
     additionalAuthors?: ManuscriptPostAuthor[];
   }[];
+  sendNotifications?: boolean;
+  notificationList?: string; 
 };
 export type ManuscriptPostResubmitRequest = Omit<
   ManuscriptPostCreateRequest,
@@ -383,7 +385,11 @@ export type ManuscriptPostRequest =
 export type ManuscriptUpdateAssignedUsers = {
   assignedUsers: string[];
 };
-export type ManuscriptUpdateStatus = Pick<ManuscriptDataObject, 'status'>;
+export type ManuscriptUpdateStatus = Pick<ManuscriptDataObject, 'status'>
+& {
+  sendNotifications?: boolean;
+  notificationList?: string;
+};
 export type ManuscriptUpdateContent = Partial<ManuscriptPostRequest>;
 export type ManuscriptPutRequest =
   | ManuscriptUpdateAssignedUsers
@@ -472,6 +478,8 @@ export type ManuscriptFormData = Pick<
 export type ManuscriptCreateControllerDataObject =
   ManuscriptPostCreateRequest & {
     userId: string;
+    sendNotifications?: boolean;
+    notificationList?: string;
   };
 
 export type ManuscriptResubmitControllerDataObject = Omit<
@@ -492,6 +500,8 @@ export type ManuscriptCreateDataObject = Omit<
     correspondingAuthor: string[];
     additionalAuthors: string[];
   })[];
+  sendNotifications?: boolean;
+  notificationList?: string;
 };
 
 export type ManuscriptResubmitDataObject = Omit<
@@ -665,6 +675,8 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
         minItems: 1,
         items: manuscriptVersionSchema,
       },
+      sendNotifications: { type: 'boolean', nullable: true },
+      notificationList: { type: 'string', nullable: true },
     },
     required: ['title', 'teamId', 'versions'],
     additionalProperties: false,
@@ -688,6 +700,8 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
         items: manuscriptVersionSchema,
         nullable: true,
       },
+      sendNotifications: { type: 'boolean', nullable: true },
+      notificationList: { type: 'string', nullable: true },
     },
     additionalProperties: false,
   };

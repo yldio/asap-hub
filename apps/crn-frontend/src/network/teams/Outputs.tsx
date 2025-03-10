@@ -1,5 +1,8 @@
-import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
-import { createCsvFileStream, SearchFrame } from '@asap-hub/frontend-utils';
+import {
+  algoliaResultsToStream,
+  createCsvFileStream,
+  SearchFrame,
+} from '@asap-hub/frontend-utils';
 import {
   ProfileOutputs,
   ResearchOutputsSearch,
@@ -20,7 +23,7 @@ import {
   getResearchOutputs,
 } from '../../shared-research/api';
 import {
-  algoliaResultsToStream,
+  MAX_ALGOLIA_RESULTS,
   researchOutputToCSV,
   squidexResultsToStream,
 } from '../../shared-research/export';
@@ -102,7 +105,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
             ),
           researchOutputToCSV,
         )
-      : algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+      : algoliaResultsToStream<ResearchOutputResponse>(
           createCsvFileStream(
             `SharedOutputs_Team_${utils
               .titleCase(displayName)
@@ -115,8 +118,14 @@ const OutputsList: React.FC<OutputsListProps> = ({
               searchQuery,
               teamId,
               ...paginationParams,
-            }),
+            }).then((response) => ({
+              items: response.hits,
+              total: response.nbHits,
+              algoliaIndexName: response.index,
+              algoliaQueryId: response.queryID,
+            })),
           researchOutputToCSV,
+          MAX_ALGOLIA_RESULTS,
         );
   return (
     <ProfileOutputs

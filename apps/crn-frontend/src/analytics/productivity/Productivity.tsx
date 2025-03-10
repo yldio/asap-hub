@@ -1,4 +1,7 @@
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  algoliaResultsToStream,
+  createCsvFileStream,
+} from '@asap-hub/frontend-utils';
 import {
   SortTeamProductivity,
   SortUserProductivity,
@@ -12,7 +15,6 @@ import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { algoliaResultsToStream } from '../utils/export';
 import { getAlgoliaIndexName } from '../utils/state';
 import { getTeamProductivity, getUserProductivity } from './api';
 import { teamProductivityToCSV, userProductivityToCSV } from './export';

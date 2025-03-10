@@ -1,4 +1,7 @@
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  algoliaResultsToStream,
+  createCsvFileStream,
+} from '@asap-hub/frontend-utils';
 import {
   AnalyticsTeamLeadershipResponse,
   initialSortingDirection,
@@ -12,7 +15,6 @@ import { FC, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
-import { algoliaResultsToStream } from '../utils/export';
 import { getAnalyticsLeadership } from './api';
 import { leadershipToCSV } from './export';
 import { useAnalyticsLeadership } from './state';

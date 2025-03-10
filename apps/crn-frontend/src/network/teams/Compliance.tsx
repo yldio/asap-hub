@@ -1,4 +1,8 @@
-import { SearchFrame } from '@asap-hub/frontend-utils';
+import {
+  algoliaResultsToStream,
+  createCsvFileStream,
+  SearchFrame,
+} from '@asap-hub/frontend-utils';
 import {
   CompletedStatusOption,
   complianceInitialSortingDirection,
@@ -7,6 +11,7 @@ import {
   DEFAULT_REQUESTED_APC_COVERAGE,
   ManuscriptPutRequest,
   ManuscriptStatus,
+  PartialManuscriptResponse,
   RequestedAPCCoverageOption,
   SortCompliance,
 } from '@asap-hub/model';
@@ -16,9 +21,13 @@ import {
   ManuscriptByStatus,
   SearchField,
 } from '@asap-hub/react-components';
+import { format } from 'date-fns';
 import { ComponentProps, useState } from 'react';
 import { usePagination, usePaginationParams } from '../../hooks';
+import { useAlgolia } from '../../hooks/algolia';
 import { useAssignedUsersSuggestions } from '../../shared-state/shared-research';
+import { getManuscripts } from './api';
+import { manuscriptToCSV } from './export';
 import {
   useIsComplianceReviewer,
   useManuscripts,
@@ -51,6 +60,8 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   isComplianceReviewer,
   generateLinkFactory,
 }) => {
+  const { client } = useAlgolia();
+
   const result = useManuscripts({
     searchQuery,
     currentPage,
@@ -91,9 +102,26 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
     useState<ComplianceSortingDirection>(complianceInitialSortingDirection);
   const href = renderPageHref(currentPage);
 
+  const exportResults = () =>
+    algoliaResultsToStream<PartialManuscriptResponse>(
+      createCsvFileStream(`manuscripts_${format(new Date(), 'MMddyy')}.csv`, {
+        header: true,
+      }),
+      (paginationParams) =>
+        getManuscripts(client, {
+          searchQuery,
+          requestedAPCCoverage,
+          completedStatus,
+          selectedStatuses,
+          ...paginationParams,
+        }),
+      manuscriptToCSV,
+    );
+
   return (
     <article>
       <ComplianceControls
+        exportResults={exportResults}
         generateLink={generateLinkFactory(
           href,
           currentPage,

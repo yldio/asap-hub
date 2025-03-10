@@ -1,5 +1,8 @@
-import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
-import { SearchFrame, createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  SearchFrame,
+  createCsvFileStream,
+  algoliaResultsToStream,
+} from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
   WorkingGroupDataObject,
@@ -22,7 +25,7 @@ import {
   getResearchOutputs,
 } from '../../shared-research/api';
 import {
-  algoliaResultsToStream,
+  MAX_ALGOLIA_RESULTS,
   researchOutputToCSV,
   squidexResultsToStream,
 } from '../../shared-research/export';
@@ -96,7 +99,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
             ),
           researchOutputToCSV,
         )
-      : algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+      : algoliaResultsToStream<ResearchOutputResponse>(
           createCsvFileStream(
             `SharedOutputs_WorkingGroup_${utils
               .titleCase(displayName)
@@ -109,8 +112,14 @@ const OutputsList: React.FC<OutputsListProps> = ({
               searchQuery,
               workingGroupId,
               ...paginationParams,
-            }),
+            }).then((response) => ({
+              items: response.hits,
+              total: response.nbHits,
+              algoliaIndexName: response.index,
+              algoliaQueryId: response.queryID,
+            })),
           researchOutputToCSV,
+          MAX_ALGOLIA_RESULTS,
         );
 
   const { numberOfPages, renderPageHref } = usePagination(

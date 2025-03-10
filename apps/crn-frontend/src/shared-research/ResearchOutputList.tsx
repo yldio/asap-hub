@@ -1,14 +1,17 @@
 import { format } from 'date-fns';
+import { ResearchOutputResponse } from '@asap-hub/model';
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
-import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  algoliaResultsToStream,
+  createCsvFileStream,
+} from '@asap-hub/frontend-utils';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
 import { useAlgolia } from '../hooks/algolia';
 import { getResearchOutputs } from './api';
-import { algoliaResultsToStream, researchOutputToCSV } from './export';
+import { MAX_ALGOLIA_RESULTS, researchOutputToCSV } from './export';
 
 interface ResearchOutputListProps {
   searchQuery?: string;
@@ -34,7 +37,7 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
     pageSize,
   );
   const exportResults = () =>
-    algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+    algoliaResultsToStream<ResearchOutputResponse>(
       createCsvFileStream(`SharedOutputs_${format(new Date(), 'MMddyy')}.csv`, {
         header: true,
       }),
@@ -43,8 +46,14 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
           filters,
           searchQuery,
           ...paginationParams,
-        }),
+        }).then((response) => ({
+          items: response.hits,
+          total: response.nbHits,
+          algoliaIndexName: response.index,
+          algoliaQueryId: response.queryID,
+        })),
       researchOutputToCSV,
+      MAX_ALGOLIA_RESULTS,
     );
 
   return (

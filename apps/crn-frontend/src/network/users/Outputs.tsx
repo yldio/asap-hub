@@ -1,6 +1,9 @@
-import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
-import { createCsvFileStream, SearchFrame } from '@asap-hub/frontend-utils';
-import { UserResponse } from '@asap-hub/model';
+import {
+  algoliaResultsToStream,
+  createCsvFileStream,
+  SearchFrame,
+} from '@asap-hub/frontend-utils';
+import { ResearchOutputResponse, UserResponse } from '@asap-hub/model';
 import {
   UserProfileResearchOutputs,
   UserProfileSearchAndFilter,
@@ -15,7 +18,7 @@ import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
 import { getResearchOutputs } from '../../shared-research/api';
 import {
-  algoliaResultsToStream,
+  MAX_ALGOLIA_RESULTS,
   researchOutputToCSV,
 } from '../../shared-research/export';
 import { useResearchOutputs } from '../../shared-research/state';
@@ -61,7 +64,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   );
   const { client } = useAlgolia();
   const exportResults = () =>
-    algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+    algoliaResultsToStream<ResearchOutputResponse>(
       createCsvFileStream(
         `SharedOutputs_${utils.titleCase(firstName)}${utils.titleCase(
           lastName,
@@ -74,8 +77,14 @@ const OutputsList: React.FC<OutputsListProps> = ({
           searchQuery,
           userId,
           ...paginationParams,
-        }),
+        }).then((response) => ({
+          items: response.hits,
+          total: response.nbHits,
+          algoliaIndexName: response.index,
+          algoliaQueryId: response.queryID,
+        })),
       researchOutputToCSV,
+      MAX_ALGOLIA_RESULTS,
     );
   return (
     <UserProfileResearchOutputs

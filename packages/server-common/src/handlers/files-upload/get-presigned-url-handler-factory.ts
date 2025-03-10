@@ -41,7 +41,7 @@ export const getPresignedUrlHandlerFactory =
 
       return {
         statusCode: 200,
-        body: JSON.stringify(uploadUrl),
+        body: JSON.stringify({ uploadUrl }),
       };
     } catch (error) {
       logger.error('Error generating pre-signed URL', { error });

@@ -54,13 +54,13 @@ export default class FileProvider {
         throw new Error(`Lambda returned an error: ${JSON.stringify(payload)}`);
       }
 
-      if (!payload.body) {
+      if (!payload.body || !payload.body.uploadUrl) {
         throw new Error(
           `Lambda response missing body: ${JSON.stringify(payload)}`,
         );
       }
 
-      const uploadUrl = payload.body;
+      const { uploadUrl } = payload.body;
       if (!uploadUrl) {
         throw new Error(`Lambda response missing uploadUrl`);
       }

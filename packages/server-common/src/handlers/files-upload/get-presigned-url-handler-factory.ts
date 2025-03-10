@@ -8,9 +8,14 @@ type Input = {
   contentType?: string;
 };
 
-type Output = {
-  uploadUrl: string;
-};
+type Output =
+  | {
+      uploadUrl: string;
+    }
+  | {
+      error: string;
+      details?: string;
+    };
 
 export const getPresignedUrlHandlerFactory =
   (
@@ -26,9 +31,9 @@ export const getPresignedUrlHandlerFactory =
     if (!filename || !contentType) {
       return {
         statusCode: 400,
-        body: JSON.stringify({
+        payload: {
           error: 'filename and contentType are required',
-        }),
+        },
       };
     }
 
@@ -47,17 +52,17 @@ export const getPresignedUrlHandlerFactory =
 
       return {
         statusCode: 200,
-        body: JSON.stringify({ uploadUrl }),
+        payload: { uploadUrl },
       };
     } catch (error) {
       logger.error('Error generating pre-signed URL', { error });
 
       return {
         statusCode: 500,
-        body: JSON.stringify({
+        payload: {
           error: 'Error generating URL',
           details: (error as Error).message,
-        }),
+        },
       };
     }
   };

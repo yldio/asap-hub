@@ -54,19 +54,20 @@ export default class FileProvider {
         throw new Error(`Lambda returned an error: ${JSON.stringify(payload)}`);
       }
 
-      if (!payload.body || !payload.body.uploadUrl) {
-        throw new Error(
-          `Lambda response missing body: ${JSON.stringify(payload)}`,
-        );
+      if (!payload.body) {
+        throw new Error(`Lambda response missing body`);
       }
 
-      const { uploadUrl } = payload.body;
-      if (!uploadUrl) {
+      const parsedBody =
+        typeof payload.body === 'string'
+          ? JSON.parse(payload.body)
+          : payload.body;
+
+      if (!parsedBody.uploadUrl) {
         throw new Error(`Lambda response missing uploadUrl`);
       }
 
-      logger.info(`Pre-signed URL generated: ${uploadUrl}`);
-      return uploadUrl;
+      return parsedBody.uploadUrl;
     } catch (parseError) {
       logger.error('Error parsing Lambda response', {
         rawPayload: payloadText,

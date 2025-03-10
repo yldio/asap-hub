@@ -3,20 +3,26 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Logger } from '../../utils';
 
+type Input = {
+  filename?: string;
+  contentType?: string;
+};
+
+type Output = {
+  uploadUrl: string;
+};
+
 export const getPresignedUrlHandlerFactory =
   (
     logger: Logger,
     bucket: string,
     region: string,
-  ): ((
-    request: lambda.Request<{ filename?: string; contentType?: string }>,
-  ) => Promise<{ statusCode: number; body: string }>) =>
-  async (
-    request: lambda.Request<{ filename?: string; contentType?: string }>,
-  ) => {
+  ): ((request: lambda.Request<Input>) => Promise<lambda.Response<Output>>) =>
+  async (request) => {
+    const { filename, contentType } = request.payload;
+
     logger.info(`Received request: ${JSON.stringify(request)}`);
 
-    const { filename, contentType } = request.payload;
     if (!filename || !contentType) {
       return {
         statusCode: 400,

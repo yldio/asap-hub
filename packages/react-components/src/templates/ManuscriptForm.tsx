@@ -3,6 +3,7 @@ import {
   AuthorEmailField,
   AuthorSelectOption,
   DiscussionDataObject,
+  ManuscriptError,
   ManuscriptFileResponse,
   ManuscriptFileType,
   ManuscriptFormData,
@@ -83,21 +84,6 @@ const apcCoverageLifecycles = [
   'Publication',
   'Publication with addendum or corrigendum',
 ];
-
-type ErrorDetails = {
-  details: string;
-  path: string[];
-  value: string;
-  name: string;
-};
-
-type ManuscriptError = {
-  statusCode: number;
-  response?: {
-    errors?: ErrorDetails[];
-    message: string;
-  };
-};
 
 type OptionalVersionFields = Array<
   keyof Omit<
@@ -356,6 +342,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   resubmitManuscript = false,
   clearFormToast,
 }) => {
+  const [titleServerError, setTitleServerError] = useState<
+    string | undefined
+  >();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const getDefaultQuickCheckValue = (quickCheckId: string | undefined) => {
     const isEditing = !!title;
 
@@ -463,7 +453,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const {
     handleSubmit,
     control,
-    formState: { isSubmitting },
     getValues,
     watch,
     setValue,
@@ -528,6 +517,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   }, [getValues, reset, watchType, watchLifecycle, selectedTeams]);
 
   const onSubmit = async (data: ManuscriptFormData) => {
+    setIsSubmitting(true);
+
     clearFormToast();
     const versionData = data.versions[0];
 
@@ -653,7 +644,19 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         }
         onSuccess();
       } catch (error) {
+        if (
+          (error as ManuscriptError).statusCode === 422 &&
+          (error as ManuscriptError).response?.message ===
+            'Title must be unique'
+        ) {
+          setTitleServerError(
+            'This title is already in use. Please choose a different one.',
+          );
+        }
         onError(error as ManuscriptError | Error);
+      } finally {
+        setModal(null);
+        setIsSubmitting(false);
       }
     }
   };
@@ -675,9 +678,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   return (
     <form onSubmit={handleSubmit(handleSubmitConfirmation)}>
       <ManuscriptFormModals
+        isSubmitting={isSubmitting}
         modal={modal}
-        setModal={setModal}
         handleSubmit={handleSubmit(onSubmit)}
+        setModal={setModal}
         isEditMode={isEditMode}
       />
       <main css={mainStyles}>
@@ -700,9 +704,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 <LabeledTextField
                   title="Title of Manuscript"
                   subtitle="(required)"
-                  customValidationMessage={error?.message}
+                  customValidationMessage={titleServerError || error?.message}
                   value={value}
-                  onChange={onChange}
+                  onChange={(titleText) => {
+                    setTitleServerError(undefined);
+                    onChange(titleText);
+                  }}
                   enabled={!isSubmitting}
                 />
               )}
@@ -1359,7 +1366,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               <Button
                 primary
                 noMargin
-                submit
                 enabled={
                   !isSubmitting &&
                   !isUploadingManuscriptFile &&

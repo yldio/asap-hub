@@ -10,6 +10,7 @@ import {
   AssetCreateData,
   AssetCreateDataObject,
 } from '../types';
+import logger from '../../utils/logger';
 
 export class AssetContentfulDataProvider implements AssetDataProvider {
   constructor(private getRestClient: () => Promise<Environment>) {}
@@ -31,6 +32,7 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
     filename,
     publish = true,
   }: AssetCreateData): Promise<AssetCreateDataObject> {
+    logger.info('Creating asset');
     const assetFilename = filename ?? `${id}.${mime.extension(contentType)}`;
 
     const environment = await this.getRestClient();
@@ -68,21 +70,25 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
     fileType?: string;
     publish?: boolean;
   }): Promise<AssetCreateDataObject> {
+    logger.info('Creating asset from URL');
+
     const contentType =
       mime.lookup(filename || url) || 'application/octet-stream';
 
     const environment = await this.getRestClient();
 
     const asset = await environment.createAsset({
-      fields: addLocaleToFields({
-        title: filename,
-        description: fileType,
+      fields: {
+        title: { 'en-US': filename },
+        description: { 'en-US': fileType },
         file: {
-          contentType,
-          fileName: filename,
-          upload: url,
+          'en-US': {
+            contentType,
+            fileName: filename,
+            upload: url,
+          },
         },
-      }) as AssetFileProp['fields'],
+      },
     });
 
     const processed = await asset.processForAllLocales();

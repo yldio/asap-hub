@@ -47,6 +47,25 @@ export const manuscriptRouteFactory = (
   );
 
   manuscriptRoutes.post<unknown, ManuscriptFileResponse>(
+    '/manuscripts/file-upload-from-url',
+    async (
+      req: { body: FileUploadFromUrlRequest },
+      res: Response<ManuscriptFileResponse>,
+    ) => {
+      const body = validateFileUploadFromUrl(req.body);
+
+      const manuscriptFile = await manuscriptController.createFile({
+        fileType: body.fileType,
+        filename: body.filename,
+        contentType: body.contentType,
+        content: body.url, // S3 direct upload
+      });
+
+      return res.status(201).json(manuscriptFile);
+    },
+  );
+
+  manuscriptRoutes.post<unknown, ManuscriptFileResponse>(
     '/manuscripts/file-upload',
     upload.single('file') as RequestHandler<unknown, ManuscriptFileResponse>,
     async (req, res) => {
@@ -152,25 +171,6 @@ export const manuscriptRouteFactory = (
       );
 
       res.json(result);
-    },
-  );
-
-  manuscriptRoutes.post<unknown, ManuscriptFileResponse>(
-    '/manuscripts/file-upload-from-url',
-    async (
-      req: { body: FileUploadFromUrlRequest },
-      res: Response<ManuscriptFileResponse>,
-    ) => {
-      const body = validateFileUploadFromUrl(req.body);
-
-      const manuscriptFile = await manuscriptController.createFile({
-        fileType: body.fileType,
-        filename: body.filename,
-        contentType: body.contentType,
-        content: body.url, // S3 direct upload
-      });
-
-      return res.status(201).json(manuscriptFile);
     },
   );
 

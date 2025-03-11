@@ -550,7 +550,6 @@ export const uploadManuscriptFileViaPresignedUrl = async (
 
     return await resp.json();
   } catch (error) {
-    console.error(error);
     handleError(
       error instanceof Error
         ? error.message

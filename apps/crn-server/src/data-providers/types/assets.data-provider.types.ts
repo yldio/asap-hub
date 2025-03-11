@@ -18,5 +18,7 @@ export type AssetCreateDataObject = {
 
 export interface AssetDataProvider extends DataProvider {
   create(data: AssetCreateData): Promise<AssetCreateDataObject>;
-  createFromUrl(data: AssetCreateDataObject): Promise<AssetCreateDataObject>;
+  createFromUrl(
+    data: AssetCreateDataObject & { fileType?: string },
+  ): Promise<AssetCreateDataObject>;
 }

@@ -60,17 +60,12 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
 
   // Creates an asset in contentful from a URL
   async createFromUrl({
-    title,
-    description,
     url,
     filename,
+    fileType = '',
     publish = true,
-  }: {
-    id: string;
-    title: string;
-    description: string;
-    url: string;
-    filename: string;
+  }: AssetCreateDataObject & {
+    fileType?: string;
     publish?: boolean;
   }): Promise<AssetCreateDataObject> {
     const contentType =
@@ -80,8 +75,8 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
 
     const asset = await environment.createAsset({
       fields: addLocaleToFields({
-        title,
-        description,
+        title: filename,
+        description: fileType,
         file: {
           contentType,
           fileName: filename,

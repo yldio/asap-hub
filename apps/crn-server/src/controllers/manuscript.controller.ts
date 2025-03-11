@@ -137,6 +137,7 @@ export default class ManuscriptController {
           id: '',
           url: content,
           filename,
+          fileType,
         })
       : await this.assetDataProvider.create({
           id: '',

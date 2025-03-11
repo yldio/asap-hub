@@ -64,7 +64,7 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
   async createFromUrl({
     url,
     filename,
-    fileType = '',
+    fileType,
     publish = true,
   }: AssetCreateDataObject & {
     fileType?: string;
@@ -72,35 +72,45 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
   }): Promise<AssetCreateDataObject> {
     logger.info('Creating asset from URL');
 
-    const contentType =
-      mime.lookup(filename || url) || 'application/octet-stream';
-
     const environment = await this.getRestClient();
 
-    const asset = await environment.createAsset({
-      fields: {
-        title: { 'en-US': filename },
-        description: { 'en-US': fileType },
-        file: {
-          'en-US': {
-            contentType,
-            fileName: filename,
-            upload: url,
+    try {
+      const asset = await environment.createAsset({
+        fields: {
+          title: { 'en-US': filename },
+          description: {
+            'en-US':
+              fileType || mime.lookup(filename) || 'application/octet-stream',
+          },
+          file: {
+            'en-US': {
+              contentType:
+                fileType || mime.lookup(filename) || 'application/octet-stream',
+              fileName: filename,
+              upload: url,
+            },
           },
         },
-      },
-    });
+      });
 
-    const processed = await asset.processForAllLocales();
+      const processed = await asset.processForAllLocales();
 
-    if (publish) {
-      await processed.publish();
+      if (publish) {
+        await processed.publish();
+      }
+
+      return {
+        id: asset.sys.id,
+        filename: asset.fields.file['en-US']?.fileName || filename,
+        url: asset.fields.file['en-US']?.url || '',
+      };
+    } catch (error) {
+      logger.error('Failed to create asset from URL', {
+        url,
+        filename,
+        error: error instanceof Error ? error.message : error,
+      });
+      throw Error('Failed to create asset from URL');
     }
-
-    return {
-      id: asset.sys.id,
-      filename: asset.fields.file['en-US']?.fileName || filename,
-      url: asset.fields.file['en-US']?.url || '',
-    };
   }
 }

@@ -1192,6 +1192,33 @@ const serverlessConfig: AWS = {
           },
         },
       },
+      BucketPolicyFiles: {
+        Type: 'AWS::S3::BucketPolicy',
+        Properties: {
+          Bucket: '${self:service}-${self:provider.stage}-files',
+          PolicyDocument: {
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Sid: 'AllowPublicRead',
+                Effect: 'Allow',
+                Principal: '*',
+                Action: 's3:GetObject',
+                Resource: {
+                  'Fn::Join': [
+                    '',
+                    [
+                      'arn:aws:s3:::',
+                      '${self:service}-${self:provider.stage}-files',
+                      '/*',
+                    ],
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
       FrontendBucket: {
         Type: 'AWS::S3::Bucket',
         DeletionPolicy: 'Delete',

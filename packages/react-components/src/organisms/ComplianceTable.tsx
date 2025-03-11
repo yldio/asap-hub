@@ -1,67 +1,69 @@
 import {
   ComplianceSortingDirection,
+  ManuscriptPutRequest,
+  ManuscriptResponse,
+  ManuscriptStatus,
   PartialManuscriptResponse,
   SortCompliance,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { ComponentProps } from 'react';
-import { Card } from '../atoms';
-import { borderRadius } from '../card';
-import { charcoal, neutral200, steel } from '../colors';
-import { rem, tabletScreen } from '../pixels';
+import { ComponentProps, useState } from 'react';
+import { Card, Pill } from '../atoms';
+import { charcoal, steel } from '../colors';
+import { rem } from '../pixels';
+import ComplianceAssignUsersModal, {
+  AssignedUsersFormData,
+} from './ComplianceAssignUsersModal';
 import ComplianceTableRow from './ComplianceTableRow';
+import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 
 const container = css({
-  display: 'grid',
-  paddingTop: rem(32),
-});
-
-const gridTitleStyles = css({
-  display: 'none',
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    display: 'inherit',
-    paddingBottom: rem(16),
+  overflowX: 'auto',
+  table: {
+    borderSpacing: 0,
+    width: '100%',
+    minWidth: 'max-content',
   },
-});
-
-const rowStyles = css({
-  display: 'grid',
-  padding: `${rem(20)} ${rem(24)} 0`,
-  borderBottom: `1px solid ${steel.rgb}`,
-  ':first-of-type': {
-    borderBottom: 'none',
-  },
-  ':nth-of-type(2n+3)': {
-    background: neutral200.rgb,
-  },
-  ':last-child': {
-    borderBottom: 'none',
-    marginBottom: 0,
-    paddingBottom: rem(15),
-    borderRadius: rem(borderRadius),
-  },
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: '0.5fr 0.7fr 0.7fr 1fr 0.5fr 1fr',
-    columnGap: rem(15),
-    paddingTop: 0,
-    paddingBottom: 0,
+  'th, td': {
+    textAlign: 'left',
     borderBottom: `1px solid ${steel.rgb}`,
+    paddingRight: rem(32),
+    ':nth-of-type(2)': {
+      paddingLeft: rem(32),
+    },
   },
+  'th.sticky, td.sticky': {
+    borderRight: `1px solid ${steel.rgb}`,
+    position: 'sticky',
+    paddingLeft: rem(24),
+    left: 0,
+  },
+});
+
+const pillIdStyles = css({
+  marginLeft: '7px',
+  display: 'block',
 });
 
 const titleStyles = css({
-  display: 'flex',
   alignItems: 'center',
   fontWeight: 'bold',
   color: charcoal.rgb,
-  gap: rem(8),
+  background: '#fff',
+  verticalAlign: 'top',
+  paddingTop: rem(32),
+  paddingBottom: rem(16),
 });
 
 type ComplianceTableProps = Pick<
   ComponentProps<typeof ComplianceTableRow>,
-  'onUpdateManuscript' | 'getAssignedUsersSuggestions' | 'isComplianceReviewer'
+  'getAssignedUsersSuggestions' | 'isComplianceReviewer'
 > & {
   data: PartialManuscriptResponse[];
+  onUpdateManuscript: (
+    manuscriptId: string,
+    payload: ManuscriptPutRequest,
+  ) => Promise<ManuscriptResponse>;
   sort?: SortCompliance;
   setSort?: React.Dispatch<React.SetStateAction<SortCompliance>>;
   sortingDirection?: ComplianceSortingDirection;
@@ -75,28 +77,123 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
   onUpdateManuscript,
   data,
   getAssignedUsersSuggestions,
-}) => (
-  <Card>
-    <div css={container}>
-      <div css={[rowStyles, gridTitleStyles]}>
-        <span css={titleStyles}>Team</span>
-        <span css={titleStyles}>ID</span>
-        <span css={titleStyles}>Last Updated</span>
-        <span css={titleStyles}>Status</span>
-        <span css={titleStyles}>APC Coverage</span>
-        <span css={titleStyles}>Assigned Users</span>
-      </div>
-      {data.map((row) => (
-        <ComplianceTableRow
-          key={`${row.id}-${row.status}`}
-          data={row}
-          onUpdateManuscript={onUpdateManuscript}
-          isComplianceReviewer={isComplianceReviewer}
-          getAssignedUsersSuggestions={getAssignedUsersSuggestions}
+}) => {
+  const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
+    useState(false);
+  const [displayAssignUsersModal, setDisplayAssignUsersModal] = useState(false);
+  const [newSelectedStatus, setNewSelectedStatus] =
+    useState<ManuscriptStatus>();
+  const [manuscriptDetails, setManuscriptDetails] =
+    useState<PartialManuscriptResponse>();
+
+  const handleAssignUsersClick = (manuscript: PartialManuscriptResponse) => {
+    setManuscriptDetails(manuscript);
+    setDisplayAssignUsersModal(true);
+  };
+
+  const handleStatusClick = (
+    statusItem: ManuscriptStatus,
+    manuscript: PartialManuscriptResponse,
+  ) => {
+    if (statusItem !== manuscript.status) {
+      setManuscriptDetails(manuscript);
+      setNewSelectedStatus(statusItem);
+      setDisplayConfirmStatusChangeModal(true);
+    }
+  };
+
+  const handleStatusChange = async () => {
+    if (newSelectedStatus && manuscriptDetails) {
+      await onUpdateManuscript(manuscriptDetails.manuscriptId, {
+        status: newSelectedStatus,
+      });
+      setManuscriptDetails(undefined);
+    }
+  };
+
+  const handleAssignUsersConfirm = async (
+    assignedUsersData: AssignedUsersFormData,
+  ) => {
+    if (manuscriptDetails) {
+      await onUpdateManuscript(manuscriptDetails.manuscriptId, {
+        assignedUsers: assignedUsersData.assignedUsers.map(
+          (user) => user.value,
+        ),
+      });
+      setManuscriptDetails(undefined);
+    }
+  };
+
+  const PillId = () => (
+    <Pill accent="blue" numberOfLines={1}>
+      <span css={pillIdStyles}>{manuscriptDetails?.id}</span>
+    </Pill>
+  );
+
+  return (
+    <Card padding={false}>
+      {displayConfirmStatusChangeModal && newSelectedStatus && (
+        <ConfirmStatusChangeModal
+          onDismiss={() => setDisplayConfirmStatusChangeModal(false)}
+          onConfirm={handleStatusChange}
+          newStatus={newSelectedStatus}
         />
-      ))}
-    </div>
-  </Card>
-);
+      )}
+      {displayAssignUsersModal && manuscriptDetails && (
+        <ComplianceAssignUsersModal
+          onDismiss={() => setDisplayAssignUsersModal(false)}
+          onConfirm={handleAssignUsersConfirm}
+          PillId={PillId}
+          teams={manuscriptDetails.teams ?? ''}
+          apcCoverage={manuscriptDetails.requestingApcCoverage ?? 'N/A'}
+          manuscriptTitle={manuscriptDetails.title}
+          getAssignedUsersSuggestions={getAssignedUsersSuggestions}
+          assignedUsers={manuscriptDetails.assignedUsers.map((user) => ({
+            author: {
+              id: user.id,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              displayName: `${user.firstName} ${user.lastName}`,
+              avatarUrl: user.avatarUrl,
+            },
+            label: `${user.firstName} ${user.lastName}`,
+            value: user.id,
+          }))}
+        />
+      )}
+      <div css={container}>
+        <table>
+          <thead>
+            <tr>
+              <th css={titleStyles} className={'sticky'}>
+                ID
+              </th>
+              <th css={titleStyles}>Team</th>
+              <th css={titleStyles}>Last Updated</th>
+              <th css={titleStyles}>Status</th>
+              <th css={titleStyles}>
+                APC <br />
+                Coverage
+              </th>
+              <th css={titleStyles}>Assigned Users</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row) => (
+              <ComplianceTableRow
+                key={`${row.id}-${row.status}`}
+                data={row}
+                isComplianceReviewer={isComplianceReviewer}
+                getAssignedUsersSuggestions={getAssignedUsersSuggestions}
+                handleAssignUsersClick={handleAssignUsersClick}
+                handleStatusClick={handleStatusClick}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
+  );
+};
 
 export default ComplianceTable;

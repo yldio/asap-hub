@@ -274,6 +274,8 @@ it('can publish a form when the data is valid and navigates to team workspace', 
             additionalAuthors: [],
           },
         ],
+        notificationList: '',
+        sendNotifications: false,
       },
       expect.anything(),
     );

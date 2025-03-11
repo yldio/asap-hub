@@ -27,9 +27,11 @@ export const setEnvironment = (environment?: string) => {
 };
 
 export const isEnabled = (flag: Flag): boolean =>
-  !!overrides[flag] ??
-  envDefaults[currentEnvironment ?? 'development'] ??
-  false;
+  !!(
+    overrides[flag] ??
+    envDefaults[currentEnvironment ?? 'development'] ??
+    false
+  );
 export const getOverrides = (): Flags => overrides;
 
 export const setCurrentOverrides = (

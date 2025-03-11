@@ -27,13 +27,17 @@ const parseCookie = (cookies: string) =>
       const [key, val] = cookie.split('=');
       const flagName = key!.split('_').slice(1).join('_');
       const getFlag = (str: string) => {
-        try {
-          return ['boolean', 'string'].includes(typeof str)
-            ? { [flagName]: str }
-            : undefined;
-        } catch (e) {
-          return undefined;
+        if (flagName !== 'COMPLIANCE_NOTIFICATION_LIST') {
+          try {
+            const parsed = JSON.parse(str);
+            return typeof parsed === 'boolean'
+              ? { [flagName]: parsed }
+              : undefined;
+          } catch (e) {
+            return undefined;
+          }
         }
+        return { [flagName]: str };
       };
       return key!.trim().startsWith('ASAP')
         ? { ...acc, ...getFlag(val!) }

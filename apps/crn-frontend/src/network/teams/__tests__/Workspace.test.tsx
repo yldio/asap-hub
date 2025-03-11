@@ -164,7 +164,11 @@ describe('Manuscript', () => {
     await waitFor(() => {
       expect(updateManuscript).toHaveBeenCalledWith(
         'manuscript_0',
-        { status: 'Manuscript Resubmitted' },
+        {
+          notificationList: '',
+          status: 'Manuscript Resubmitted',
+          sendNotifications: false,
+        },
         expect.anything(),
       );
     });

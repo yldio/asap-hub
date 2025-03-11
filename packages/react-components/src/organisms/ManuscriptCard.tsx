@@ -10,14 +10,17 @@ import {
   TeamManuscript,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
+  charcoal,
   colors,
   complianceReportIcon,
+  fern,
   minusRectIcon,
+  neutral900,
   plusRectIcon,
   resubmitManuscriptIcon,
   StatusButton,
@@ -130,6 +133,22 @@ export type VersionUserProps = {
   user: User | null;
 };
 
+const tabButtonStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
+  css({
+    paddingLeft: rem(0),
+    paddingRight: rem(0),
+    paddingBottom: rem(20),
+    color: neutral900.rgb,
+    backgroundColor: 'transparent',
+    border: 'none',
+    '&.active': {
+      paddingBottom: rem(16),
+      color: charcoal.rgb,
+      fontWeight: 'bold',
+      borderBottom: `${rem(4)} solid ${primary500.rgba}`,
+    },
+  });
+
 export const isManuscriptLead = ({ version, user }: VersionUserProps) =>
   user &&
   version &&
@@ -203,6 +222,9 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   onEndDiscussion,
   useManuscriptById,
 }) => {
+  const [activeTab, setActiveTab] = useState<
+    'manuscripts-and-reports' | 'discussions'
+  >('manuscripts-and-reports');
   const [manuscript, setManuscript] = useManuscriptById(id);
   const { title, status, versions } = manuscript ?? { versions: [] };
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
@@ -347,26 +369,59 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
 
         {expanded && (
           <div>
-            {versions.map((version, index) => (
-              <ManuscriptVersionCard
-                onSave={onSave}
-                getDiscussion={getDiscussion}
-                key={index}
-                version={version}
-                teamId={teamId}
-                manuscriptId={id}
-                isActiveVersion={
-                  isActiveManuscript &&
-                  version.id === currentManuscriptVersion?.id
+            <div
+              style={{
+                display: 'flex',
+                gap: rem(32),
+                marginLeft: rem(60),
+                marginBottom: rem(16),
+                marginTop: rem(12),
+              }}
+            >
+              <button
+                className={
+                  activeTab === 'manuscripts-and-reports' ? 'active' : ''
                 }
-                createComplianceDiscussion={createComplianceDiscussion}
-                useVersionById={useVersionById}
-                onEndDiscussion={onEndDiscussion}
-                isComplianceReviewer={isComplianceReviewer}
-                isManuscriptContributor={hasUpdateAccess}
-                setManuscrit={setManuscript}
-              />
-            ))}
+                css={tabButtonStyles}
+                onClick={() => setActiveTab('manuscripts-and-reports')}
+              >
+                Manuscripts and Reports
+              </button>
+              <button
+                className={activeTab === 'discussions' ? 'active' : ''}
+                css={tabButtonStyles}
+                onClick={() => setActiveTab('discussions')}
+              >
+                Discussions
+              </button>
+            </div>
+
+            {activeTab === 'manuscripts-and-reports' &&
+              versions.map((version, index) => (
+                <ManuscriptVersionCard
+                  onSave={onSave}
+                  getDiscussion={getDiscussion}
+                  key={index}
+                  version={version}
+                  teamId={teamId}
+                  manuscriptId={id}
+                  isActiveVersion={
+                    isActiveManuscript &&
+                    version.id === currentManuscriptVersion?.id
+                  }
+                  createComplianceDiscussion={createComplianceDiscussion}
+                  useVersionById={useVersionById}
+                  onEndDiscussion={onEndDiscussion}
+                  isComplianceReviewer={isComplianceReviewer}
+                  isManuscriptContributor={hasUpdateAccess}
+                  setManuscrit={setManuscript}
+                />
+              ))}
+            {activeTab === 'discussions' && (
+              <div css={css({ margin: `${rem(12)} ${rem(60)}` })}>
+                <h2>Discussions</h2>
+              </div>
+            )}
           </div>
         )}
       </div>

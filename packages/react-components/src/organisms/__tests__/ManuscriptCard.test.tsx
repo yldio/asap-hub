@@ -562,3 +562,25 @@ it.each`
     ).not.toBeInTheDocument();
   },
 );
+
+describe('Tabs', () => {
+  it('displays the manuscript and reports tab as active by default', () => {
+    const { getByRole, getByTestId } = render(<ManuscriptCard {...props} />);
+
+    userEvent.click(getByTestId('collapsible-button'));
+
+    expect(
+      getByRole('button', { name: 'Manuscripts and Reports' }),
+    ).toHaveClass('active');
+  });
+
+  it('displays the discussions tab as active when the user clicks on the discussions tab', () => {
+    const { getByRole, getByTestId } = render(<ManuscriptCard {...props} />);
+
+    userEvent.click(getByTestId('collapsible-button'));
+
+    userEvent.click(getByRole('button', { name: 'Discussions' }));
+
+    expect(getByRole('button', { name: 'Discussions' })).toHaveClass('active');
+  });
+});

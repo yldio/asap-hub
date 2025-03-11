@@ -1,6 +1,8 @@
-import { Options, stringify } from 'csv-stringify/browser/esm';
+import { ListResponse } from '@asap-hub/model';
+import { Options, Stringifier, stringify } from 'csv-stringify/browser/esm';
 import streamSaver from 'streamsaver';
 import { WritableStream } from 'web-streams-polyfill/ponyfill';
+import { GetListOptions } from '../api-util/api-util';
 
 export type CSVValue = string | undefined | boolean;
 
@@ -45,4 +47,37 @@ export const createCsvFileStream = (fileName: string, csvOptions?: Options) => {
       await processRow();
     })
     .on('end', () => fileWriter.close());
+};
+
+export const algoliaResultsToStream = async <T>(
+  csvStream: Stringifier,
+  getResults: ({
+    currentPage,
+    pageSize,
+  }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
+    Promise<ListResponse<T> | undefined>
+  >,
+  transform: (result: T) => Record<string, unknown>,
+  pageSize: number = 10,
+) => {
+  let morePages = true;
+  let currentPage = 0;
+  while (morePages) {
+    // eslint-disable-next-line no-await-in-loop
+    const data = await getResults({
+      currentPage,
+      pageSize,
+    });
+    if (data) {
+      const nbPages = data.total / pageSize;
+      data.items.map(transform).forEach((row) => {
+        csvStream.write(row);
+      });
+      currentPage += 1;
+      morePages = currentPage <= nbPages;
+    } else {
+      morePages = false;
+    }
+  }
+  csvStream.end();
 };

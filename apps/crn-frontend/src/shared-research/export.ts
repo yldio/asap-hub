@@ -1,4 +1,3 @@
-import { ClientSearchResponse, EntityResponses } from '@asap-hub/algolia';
 import {
   caseInsensitive,
   CSVValue,
@@ -141,36 +140,6 @@ export const researchOutputToCSV = (
   isInReview: output.isInReview,
   ...getFirstVersionData(output.versions),
 });
-
-export const algoliaResultsToStream = async <
-  EntityType extends keyof EntityResponses['crn'],
->(
-  csvStream: Stringifier,
-  getResults: ({
-    currentPage,
-    pageSize,
-  }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    Promise<ClientSearchResponse<'crn', EntityType>>
-  >,
-  transform: (
-    result: ClientSearchResponse<'crn', EntityType>['hits'][number],
-  ) => Record<string, unknown>,
-) => {
-  let morePages = true;
-  let currentPage = 0;
-  while (morePages) {
-    // We are doing this in chunks and streams to avoid blob/ram limits.
-    // eslint-disable-next-line no-await-in-loop
-    const data = await getResults({
-      currentPage,
-      pageSize: MAX_ALGOLIA_RESULTS,
-    });
-    data.hits.map(transform).forEach((row) => csvStream.write(row));
-    currentPage += 1;
-    morePages = currentPage <= data.nbPages - 1;
-  }
-  csvStream.end();
-};
 
 export const squidexResultsToStream = async <T>(
   csvStream: Stringifier,

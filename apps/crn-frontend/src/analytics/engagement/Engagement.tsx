@@ -1,4 +1,7 @@
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  algoliaResultsToStream,
+  createCsvFileStream,
+} from '@asap-hub/frontend-utils';
 import {
   engagementInitialSortingDirection,
   EngagementResponse,
@@ -16,7 +19,6 @@ import {
   useSearch,
 } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { algoliaResultsToStream } from '../utils/export';
 import { useAnalyticsEngagement, useEngagementPerformance } from './state';
 import { getEngagement } from './api';
 import { engagementToCSV } from './export';

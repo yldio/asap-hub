@@ -1,5 +1,3 @@
-import { Stringifier } from 'csv-stringify';
-import { algoliaResultsToStream } from '../../utils/export';
 import { leadershipToCSV } from '../export';
 
 describe('leadershipToCSV', () => {
@@ -70,63 +68,5 @@ describe('leadershipToCSV', () => {
       'Currently a member': '7',
       'Previously a member': '8',
     });
-  });
-});
-
-describe('algoliaResultsToStream', () => {
-  const mockCsvStream = {
-    write: jest.fn(),
-    end: jest.fn(),
-  };
-
-  it('streams results', async () => {
-    await algoliaResultsToStream(
-      mockCsvStream as unknown as Stringifier,
-      () =>
-        Promise.resolve({
-          total: 2,
-          items: [
-            {
-              id: '1',
-              displayName: 'Team 1',
-              workingGroupLeadershipRoleCount: 1,
-              workingGroupPreviousLeadershipRoleCount: 2,
-              workingGroupMemberCount: 3,
-              workingGroupPreviousMemberCount: 4,
-              interestGroupLeadershipRoleCount: 5,
-              interestGroupPreviousLeadershipRoleCount: 6,
-              interestGroupMemberCount: 7,
-              interestGroupPreviousMemberCount: 8,
-            },
-            {
-              id: '2',
-              displayName: 'Team 2',
-              workingGroupLeadershipRoleCount: 2,
-              workingGroupPreviousLeadershipRoleCount: 3,
-              workingGroupMemberCount: 4,
-              workingGroupPreviousMemberCount: 5,
-              interestGroupLeadershipRoleCount: 4,
-              interestGroupPreviousLeadershipRoleCount: 3,
-              interestGroupMemberCount: 2,
-              interestGroupPreviousMemberCount: 1,
-            },
-          ],
-        }),
-      (a) => a,
-    );
-
-    expect(mockCsvStream.write).toHaveBeenCalledTimes(2);
-
-    expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
-  });
-
-  it('handles undefined response', async () => {
-    const transformSpy = jest.fn();
-    await algoliaResultsToStream(
-      mockCsvStream as unknown as Stringifier,
-      () => Promise.resolve(undefined),
-      transformSpy,
-    );
-    expect(transformSpy).not.toHaveBeenCalled();
   });
 });

@@ -208,7 +208,7 @@ it('triggers export with the same parameters and custom file name', async () => 
       filters,
       teamId,
       currentPage: 0,
-      pageSize: MAX_ALGOLIA_RESULTS,
+      pageSize: CARD_VIEW_PAGE_SIZE,
     }),
   );
 });

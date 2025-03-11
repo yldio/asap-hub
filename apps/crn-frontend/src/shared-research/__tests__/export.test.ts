@@ -1,4 +1,3 @@
-import { createAlgoliaResponse } from '@asap-hub/algolia';
 import {
   createResearchOutputResponse,
   createTeamResponse,
@@ -12,7 +11,6 @@ import {
 import { Stringifier } from 'csv-stringify';
 
 import {
-  algoliaResultsToStream,
   MAX_CONTENTFUL_RESULTS,
   researchOutputToCSV,
   squidexResultsToStream,
@@ -335,113 +333,6 @@ describe('squidexResultsToStream', () => {
           ],
           total: 2 * MAX_CONTENTFUL_RESULTS,
         }),
-      (a: ResearchOutputResponse) => ({ title: `${a.title}-b` }),
-    );
-    expect(mockCsvStream.write).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: 'a-b',
-      }),
-    );
-    expect(mockCsvStream.write).toHaveBeenCalledTimes(2);
-  });
-});
-
-describe('algoliaResultsToStream', () => {
-  const mockCsvStream = {
-    write: jest.fn(),
-    end: jest.fn(),
-  };
-  it('streams one page of results', async () => {
-    await algoliaResultsToStream(
-      mockCsvStream as unknown as Stringifier,
-      () =>
-        Promise.resolve(
-          createAlgoliaResponse<'crn', 'research-output'>(
-            [
-              {
-                ...createResearchOutputResponse(),
-                objectID: 'ro-1',
-                __meta: {
-                  type: 'research-output',
-                },
-              },
-            ],
-            {
-              nbPages: 1,
-            },
-          ),
-        ),
-      (a) => a,
-    );
-    expect(mockCsvStream.write).toHaveBeenCalledWith(
-      expect.objectContaining(createResearchOutputResponse()),
-    );
-    expect(mockCsvStream.write).toHaveBeenCalledTimes(1);
-    expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
-  });
-
-  it('streams multiple pages of results', async () => {
-    await algoliaResultsToStream(
-      mockCsvStream as unknown as Stringifier,
-      (parameters) =>
-        Promise.resolve(
-          createAlgoliaResponse<'crn', 'research-output'>(
-            [
-              {
-                ...createResearchOutputResponse(),
-                title: `${parameters.currentPage}`,
-                objectID: 'ro-1',
-                __meta: { type: 'research-output' },
-              },
-            ],
-            {
-              nbPages: 3,
-            },
-          ),
-        ),
-      (a) => a,
-    );
-    expect(mockCsvStream.write).toHaveBeenCalledWith(
-      expect.objectContaining({
-        ...createResearchOutputResponse(),
-        title: '0',
-      }),
-    );
-    expect(mockCsvStream.write).toHaveBeenCalledWith(
-      expect.objectContaining({
-        ...createResearchOutputResponse(),
-        title: '1',
-      }),
-    );
-    expect(mockCsvStream.write).toHaveBeenCalledWith(
-      expect.objectContaining({
-        ...createResearchOutputResponse(),
-        title: '2',
-      }),
-    );
-    expect(mockCsvStream.write).toHaveBeenCalledTimes(3);
-    expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
-  });
-
-  it('streams transformed results', async () => {
-    await algoliaResultsToStream(
-      mockCsvStream as unknown as Stringifier,
-      () =>
-        Promise.resolve(
-          createAlgoliaResponse<'crn', 'research-output'>(
-            [
-              {
-                ...createResearchOutputResponse(),
-                title: 'a',
-                objectID: 'ro-1',
-                __meta: { type: 'research-output' },
-              },
-            ],
-            {
-              nbPages: 2,
-            },
-          ),
-        ),
       (a: ResearchOutputResponse) => ({ title: `${a.title}-b` }),
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(

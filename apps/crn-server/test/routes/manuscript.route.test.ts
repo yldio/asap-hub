@@ -239,6 +239,35 @@ describe('/manuscripts/ route', () => {
     });
   });
 
+  describe('POST /manuscripts/file-upload-from-url', () => {
+    const manuscriptFileResponse = getManuscriptFileResponse();
+    test('should ...', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+      });
+      manuscriptControllerMock.createFile.mockResolvedValueOnce(
+        manuscriptFileResponse,
+      );
+
+      const response = await supertest(app)
+        .post('/manuscripts/file-upload-from-url')
+        .send({
+          fileType: 'Manuscript File',
+          filename: 'file.pdf',
+          contentType: 'application/pdf',
+          url: 'https://example.com/manuscript.pdf',
+        });
+
+      expect(response.status).toBe(201);
+      expect(manuscriptControllerMock.createFile).toHaveBeenCalledWith({
+        fileType: 'Manuscript File',
+        filename: 'file.pdf',
+        content:  'https://example.com/manuscript.pdf',
+        contentType: 'application/pdf',
+      });
+    });
+  });
+
   describe('POST /manuscripts/file-upload', () => {
     const manuscriptFileResponse = getManuscriptFileResponse();
 

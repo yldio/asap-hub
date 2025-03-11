@@ -57,4 +57,49 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
       url: asset.fields.file['en-US']?.url || '',
     };
   }
+
+  // Creates an asset in contentful from a URL
+  async createFromUrl({
+    title,
+    description,
+    url,
+    filename,
+    publish = true,
+  }: {
+    id: string;
+    title: string;
+    description: string;
+    url: string;
+    filename: string;
+    publish?: boolean;
+  }): Promise<AssetCreateDataObject> {
+    const contentType =
+      mime.lookup(filename || url) || 'application/octet-stream';
+
+    const environment = await this.getRestClient();
+
+    const asset = await environment.createAsset({
+      fields: addLocaleToFields({
+        title,
+        description,
+        file: {
+          contentType,
+          fileName: filename,
+          upload: url,
+        },
+      }) as AssetFileProp['fields'],
+    });
+
+    const processed = await asset.processForAllLocales();
+
+    if (publish) {
+      await processed.publish();
+    }
+
+    return {
+      id: asset.sys.id,
+      filename: asset.fields.file['en-US']?.fileName || filename,
+      url: asset.fields.file['en-US']?.url || '',
+    };
+  }
 }

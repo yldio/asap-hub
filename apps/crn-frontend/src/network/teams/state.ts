@@ -50,6 +50,7 @@ import {
   getManuscripts,
   ManuscriptsOptions,
   getPresignedUrl,
+  uploadManuscriptFileViaPresignedUrl,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -289,6 +290,23 @@ export const useUploadManuscriptFile = () => {
     fileType: ManuscriptFileType,
     handleError: (errorMessage: string) => void,
   ) => uploadManuscriptFile(file, fileType, authorization, handleError);
+};
+
+// Uses S3 presigned URL to upload file
+export const useUploadManuscriptFileViaPresignedUrl = () => {
+  const authorization = useRecoilValue(authorizationState);
+
+  return (
+    file: File,
+    fileType: ManuscriptFileType,
+    handleError: (errorMessage: string) => void,
+  ) =>
+    uploadManuscriptFileViaPresignedUrl(
+      file,
+      fileType,
+      authorization,
+      handleError,
+    );
 };
 
 export const refreshDiscussionState = atomFamily<number, string>({

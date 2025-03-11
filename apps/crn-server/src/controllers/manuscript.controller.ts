@@ -130,15 +130,23 @@ export default class ManuscriptController {
     content,
     contentType,
   }: ManuscruptFileCreateDataObject): Promise<ManuscriptFileResponse> {
-    const manuscriptFileAsset = await this.assetDataProvider.create({
-      id: '',
-      title: fileType,
-      description: fileType,
-      content,
-      contentType,
-      filename,
-      publish: false,
-    });
+    const isS3Url = typeof content === 'string';
+
+    const manuscriptFileAsset = isS3Url
+      ? await this.assetDataProvider.createFromUrl({
+          id: '',
+          url: content,
+          filename,
+        })
+      : await this.assetDataProvider.create({
+          id: '',
+          title: fileType,
+          description: fileType,
+          content,
+          contentType,
+          filename,
+          publish: false,
+        });
 
     return manuscriptFileAsset;
   }
@@ -274,6 +282,6 @@ export default class ManuscriptController {
 export type ManuscruptFileCreateDataObject = {
   fileType: ManuscriptFileType;
   filename: string;
-  content: Buffer;
+  content: Buffer | string;
   contentType: string;
 };

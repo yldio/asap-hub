@@ -4,7 +4,7 @@ export type AssetCreateData = {
   id: string;
   title: string;
   description: string;
-  content: Buffer;
+  content: Buffer | string;
   contentType: string;
   filename?: string;
   publish?: boolean;
@@ -18,4 +18,5 @@ export type AssetCreateDataObject = {
 
 export interface AssetDataProvider extends DataProvider {
   create(data: AssetCreateData): Promise<AssetCreateDataObject>;
+  createFromUrl(data: AssetCreateDataObject): Promise<AssetCreateDataObject>;
 }

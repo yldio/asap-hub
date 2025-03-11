@@ -342,8 +342,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const workingGroupsController =
     libs.workingGroupController ||
     new WorkingGroupController(workingGroupDataProvider);
-
-  const filesController = new FilesController(new FileProvider());
+  const filesController =
+    libs.filesController || new FilesController(new FileProvider());
 
   // Handlers
   const authHandler =
@@ -484,6 +484,7 @@ export type Libs = {
   guideController?: GuideController;
   eventController?: EventController;
   interestGroupController?: InterestGroupController;
+  filesController?: FilesController;
   labController?: LabController;
   manuscriptController?: ManuscriptController;
   newsController?: NewsController;

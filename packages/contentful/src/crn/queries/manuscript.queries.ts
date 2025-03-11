@@ -379,6 +379,12 @@ export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
           grantId
         }
       }
+      assignedUsersCollection(limit: 30) {
+        items {
+          firstName
+          lastName
+        }
+      }
       versionsCollection(limit: 1, order: sys_firstPublishedAt_DESC) {
         items {
           sys {

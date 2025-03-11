@@ -237,8 +237,12 @@ export const usePostManuscript = () => {
   const setManuscriptItem = useSetManuscriptItem();
   return async (payload: ManuscriptPostRequest) => {
     const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
-    const notificationList = getOverrides()['COMPLIANCE_NOTIFICATION_LIST'] as string;
-    const manuscript = await createManuscript({...payload, sendNotifications, notificationList }, authorization);
+    const notificationList = getOverrides()
+      .COMPLIANCE_NOTIFICATION_LIST as string;
+    const manuscript = await createManuscript(
+      { ...payload, sendNotifications, notificationList },
+      authorization,
+    );
     setManuscriptItem(manuscript);
     return manuscript;
   };
@@ -249,8 +253,13 @@ export const useResubmitManuscript = () => {
   const setManuscriptItem = useSetManuscriptItem();
   return async (id: string, payload: ManuscriptPostRequest) => {
     const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
-    const notificationList = getOverrides()['COMPLIANCE_NOTIFICATION_LIST'] as string;
-    const manuscript = await resubmitManuscript(id, {...payload, sendNotifications, notificationList}, authorization);
+    const notificationList = getOverrides()
+      .COMPLIANCE_NOTIFICATION_LIST as string;
+    const manuscript = await resubmitManuscript(
+      id,
+      { ...payload, sendNotifications, notificationList },
+      authorization,
+    );
     setManuscriptItem(manuscript);
     return manuscript;
   };
@@ -263,8 +272,13 @@ export const usePutManuscript = () => {
 
   return async (id: string, payload: ManuscriptPutRequest) => {
     const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
-    const notificationList = getOverrides()['COMPLIANCE_NOTIFICATION_LIST'] as string;
-    const manuscript = await updateManuscript(id, {...payload, sendNotifications, notificationList}, authorization);
+    const notificationList = getOverrides()
+      .COMPLIANCE_NOTIFICATION_LIST as string;
+    const manuscript = await updateManuscript(
+      id,
+      { ...payload, sendNotifications, notificationList },
+      authorization,
+    );
     setManuscriptItem(manuscript);
     invalidateManuscriptIndex();
     return manuscript;

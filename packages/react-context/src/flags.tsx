@@ -28,14 +28,16 @@ const parseCookie = (cookies: string) =>
       const flagName = key!.split('_').slice(1).join('_');
       const getFlag = (str: string) => {
         try {
-          return ['boolean', 'string'].includes(typeof str) 
+          return ['boolean', 'string'].includes(typeof str)
             ? { [flagName]: str }
             : undefined;
         } catch (e) {
           return undefined;
         }
       };
-      return key!.trim().startsWith('ASAP') ? {...acc, ...getFlag(val!)} : acc;
+      return key!.trim().startsWith('ASAP')
+        ? { ...acc, ...getFlag(val!) }
+        : acc;
     }, undefined);
 
 export const FlagsContext = createContext<Flags>({

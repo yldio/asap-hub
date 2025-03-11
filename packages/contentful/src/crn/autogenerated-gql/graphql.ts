@@ -18580,6 +18580,9 @@ export type FetchManuscriptNotificationDetailsQuery = {
           >
         >;
       }>;
+      assignedUsersCollection?: Maybe<{
+        items: Array<Maybe<Pick<Users, 'firstName' | 'lastName'>>>;
+      }>;
       versionsCollection?: Maybe<{
         items: Array<
           Maybe<
@@ -35308,6 +35311,39 @@ export const FetchManuscriptNotificationDetailsDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'grantId' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'assignedUsersCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '30' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
                             },
                           ],
                         },

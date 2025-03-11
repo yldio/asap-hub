@@ -121,6 +121,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
           hostname: ${{ steps.setup.outputs.crn-hostname }}
           openai-api-key: ${{ secrets.CRN_OPENAI_API_KEY }}
+          postmark-server-token: ${{ secrets.POSTMARK_SERVER_TOKEN }}
           sentry-dsn-api: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
           sentry-dsn-public-api: ${{ steps.setup.outputs.crn-sentry-dsn-public-api }}
           sentry-dsn-handlers: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}

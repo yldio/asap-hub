@@ -1178,6 +1178,18 @@ const serverlessConfig: AWS = {
             IgnorePublicAcls: false,
             RestrictPublicBuckets: false,
           },
+          CorsConfiguration: {
+            // allows PUT requests from the app frontend
+            CorsRules: [
+              {
+                AllowedOrigins: ['https://${self:custom.appHostname}'],
+                AllowedMethods: ['PUT'],
+                AllowedHeaders: ['*'],
+                ExposedHeaders: ['ETag'],
+                MaxAge: 3000,
+              },
+            ],
+          },
         },
       },
       FrontendBucket: {

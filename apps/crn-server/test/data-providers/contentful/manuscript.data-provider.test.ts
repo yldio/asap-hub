@@ -68,12 +68,6 @@ describe('Manuscripts Contentful Data Provider', () => {
     jest.useRealTimers();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-    jest.clearAllTimers();
-    jest.resetAllMocks();
-    jest.restoreAllMocks();
-  });
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
   const environmentMock = getContentfulEnvironmentMock();
   const contentfulRestClientMock: () => Promise<Environment> = () =>
@@ -232,6 +226,12 @@ describe('Manuscripts Contentful Data Provider', () => {
       },
     };
   };
+
+  beforeEach(() => {
+    mockedPostmark.mockResolvedValue({
+      ErrorCode: 0,
+    });
+  });
 
   afterEach(() => {
     jest.clearAllMocks();

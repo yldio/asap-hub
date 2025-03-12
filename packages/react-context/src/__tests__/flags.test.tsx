@@ -69,24 +69,13 @@ describe('useFlags', () => {
     current.setCurrentOverrides();
     expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 
+    document.cookie = 'NOTASAP_PERSISTENT_EXAMPLE=true';
+    current.setCurrentOverrides();
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+
     document.cookie = 'ASAP_PERSISTENT_EXAMPLE=true';
     current.setCurrentOverrides();
     expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
-
-    document.cookie = originalCookie;
-  });
-
-  it('ignores cookies without the ASAP_ prefix', () => {
-    disable('PERSISTENT_EXAMPLE');
-    const {
-      result: { current },
-    } = renderHook(useFlags);
-
-    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
-
-    document.cookie = 'NOT_ASAP_PERSISTENT_EXAMPLE=true';
-    current.setCurrentOverrides();
-    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 
     document.cookie = originalCookie;
   });

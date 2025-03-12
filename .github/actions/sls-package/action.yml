@@ -64,7 +64,7 @@ inputs:
     required: true
   postmark-server-token:
     description: 'Postmark Server Token'
-    required: true
+    required: false
   sentry-dsn-api:
     description: 'Sentry DSN for the API'
     required: true

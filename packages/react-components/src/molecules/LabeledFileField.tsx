@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
 import { ComponentProps, useRef, useState } from 'react';
+import Lottie from 'react-lottie';
 import { Button, Label, Paragraph, Tag } from '../atoms';
 import { lead } from '../colors';
 import { validationMessageStyles } from '../form';
 import { plusIcon } from '../icons';
 import { perRem } from '../pixels';
-import Lottie from 'react-lottie';
 import loading from '../lotties/loading.json';
 
 const containerStyles = css({

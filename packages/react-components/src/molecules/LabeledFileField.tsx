@@ -127,6 +127,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
                 ))}
               <div css={buttonContainerStyles}>
                 <Button
+                  submit={false}
                   primary
                   small
                   enabled={!!enabled && canUploadFile}

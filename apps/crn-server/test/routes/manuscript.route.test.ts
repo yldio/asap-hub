@@ -262,7 +262,7 @@ describe('/manuscripts/ route', () => {
       expect(manuscriptControllerMock.createFile).toHaveBeenCalledWith({
         fileType: 'Manuscript File',
         filename: 'file.pdf',
-        content:  'https://example.com/manuscript.pdf',
+        content: 'https://example.com/manuscript.pdf',
         contentType: 'application/pdf',
       });
     });

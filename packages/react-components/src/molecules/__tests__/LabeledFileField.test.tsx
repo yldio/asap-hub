@@ -6,6 +6,7 @@ import { LabeledFileField } from '../..';
 const handleFileUploadMock: jest.MockedFunction<
   ComponentProps<typeof LabeledFileField>['handleFileUpload']
 > = jest.fn();
+jest.mock('react-lottie', () => () => <div data-testid="lottie-mock" />);
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -155,6 +156,7 @@ it('calls handleFileUpload when a file is selected', async () => {
 });
 
 it('calls the onRemove function when the remove button is clicked and allows for resubmitting a new file', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
   const onRemoveMock = jest.fn();
   render(
     <LabeledFileField

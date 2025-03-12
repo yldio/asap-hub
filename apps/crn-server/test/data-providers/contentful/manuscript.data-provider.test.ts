@@ -426,6 +426,55 @@ describe('Manuscripts Contentful Data Provider', () => {
       },
     );
 
+    test('sends email notification when notification flag is off but there is a notification list', async () => {
+      jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
+      const manuscriptId = 'manuscript-id-1';
+
+      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+        NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+      >;
+      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
+        {
+          __typename: 'Users',
+          email: 'fiona.first@email.com',
+        },
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          status: {
+            'en-US': `Waiting for Report`,
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+      environmentMock.getEntry.mockResolvedValue(entry);
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        {
+          status: 'Review Compliance Report',
+          sendNotifications: false,
+          notificationList: 'fiona.first@email.com',
+        },
+        'user-id-1',
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({ TemplateAlias: 'review-compliance-report' }),
+      );
+    });
+
     test('can update the manuscript version content, title and teams', async () => {
       const manuscriptId = 'manuscript-id-1';
       const versionId = 'version-id-1';

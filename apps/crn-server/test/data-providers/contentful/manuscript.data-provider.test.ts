@@ -20,6 +20,7 @@ import {
   getLifecycleCode,
   ManuscriptContentfulDataProvider,
 } from '../../../src/data-providers/contentful/manuscript.data-provider';
+import logger from '../../../src/utils/logger';
 import { getContentfulGraphqlDiscussion } from '../../fixtures/discussions.fixtures';
 import {
   getContentfulGraphqlManuscript,
@@ -265,7 +266,10 @@ describe('Manuscripts Contentful Data Provider', () => {
 
       await manuscriptDataProvider.update(
         manuscriptId,
-        getManuscriptUpdateStatusDataObject(),
+        {
+          ...getManuscriptUpdateStatusDataObject(),
+          status: 'Review Compliance Report',
+        },
         'user-id-1',
       );
 
@@ -274,7 +278,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         {
           op: 'replace',
           path: '/fields/status',
-          value: { 'en-US': 'Manuscript Resubmitted' },
+          value: { 'en-US': 'Review Compliance Report' },
         },
         {
           op: 'add',
@@ -1661,9 +1665,22 @@ describe('Manuscripts Contentful Data Provider', () => {
   });
 
   describe('sendEmailNotification', () => {
+    const assignedUsers = {
+      items: [
+        {
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+        {
+          firstName: 'Jane',
+          lastName: 'Doe',
+        },
+      ],
+    };
     const manuscript = getContentfulGraphqlManuscript() as NonNullable<
       NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
     >;
+    manuscript.assignedUsersCollection = assignedUsers;
     manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
       {
         __typename: 'Users',
@@ -1687,7 +1704,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         },
       ];
 
-    test('Should not send email notification if not enabled with no notification list', async () => {
+    test('Should not send email notification if flag not enabled and no notification list', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
       });
@@ -1716,6 +1733,38 @@ describe('Manuscripts Contentful Data Provider', () => {
 
       expect(mockedPostmark).toHaveBeenCalledWith(
         expect.objectContaining({ To: 'second.external@email.com' }),
+      );
+    });
+
+    test('Should log when email fails to send', async () => {
+      const loggerErrorSpy = jest.spyOn(logger, 'error');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+      mockedPostmark
+        .mockResolvedValueOnce({
+          ErrorCode: 405,
+          Message: 'Not allowed to send',
+        })
+        .mockResolvedValueOnce({
+          ErrorCode: 406,
+          Message: 'Inactive recipient',
+        });
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        false,
+        'second.external@email.com,openscience@parkinsonsroadmap.org',
+      );
+
+      expect(loggerErrorSpy).toHaveBeenNthCalledWith(
+        1,
+        `Error while sending compliance email notification: Not allowed to send`,
+      );
+      expect(loggerErrorSpy).toHaveBeenNthCalledWith(
+        2,
+        `Error while sending compliance email notification: Inactive recipient`,
       );
     });
 

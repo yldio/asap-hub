@@ -27,7 +27,7 @@ const parseCookie = (cookies: string) =>
       const [key, val] = cookie.split('=');
       const flagName = key!.split('_').slice(1).join('_');
       const getFlag = (str: string) => {
-        if (flagName !== 'COMPLIANCE_NOTIFICATION_LIST') {
+        if (!flagName.includes('_LIST')) {
           try {
             const parsed = JSON.parse(str);
             return typeof parsed === 'boolean'

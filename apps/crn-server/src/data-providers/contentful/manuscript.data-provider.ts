@@ -570,50 +570,50 @@ export class ManuscriptContentfulDataProvider
 
     const templateDetails = manuscriptNotificationMapping[action];
     if (templateDetails.grantee && granteeRecipients.length >= 1) {
-      try {
-        await this.postmarkClient.sendEmailWithTemplate({
-          From: 'hub@asap.science',
-          To: granteeRecipients.join(','),
-          MessageStream: 'outbound',
-          TemplateAlias: templateDetails.grantee,
-          TemplateModel: notificationData('grantee'),
-          Attachments: [
-            {
-              Name: 'asaplogo.jpg',
-              ContentType: 'image/jpeg',
-              ContentID: 'cid:asaplogo',
-              Content: manuscriptNotificationAttachmentContent,
-            },
-          ],
-        });
-      } catch (err) {
-        logger.error(err, 'Error while sending compliance email notification');
-      }
+      const response = await this.postmarkClient.sendEmailWithTemplate({
+        From: 'hub@asap.science',
+        To: granteeRecipients.join(','),
+        MessageStream: 'outbound',
+        TemplateAlias: templateDetails.grantee,
+        TemplateModel: notificationData('grantee'),
+        Attachments: [
+          {
+            Name: 'asaplogo.jpg',
+            ContentType: 'image/jpeg',
+            ContentID: 'cid:asaplogo',
+            Content: manuscriptNotificationAttachmentContent,
+          },
+        ],
+      });
+      if (response.ErrorCode !== 0)
+        logger.error(
+          `Error while sending compliance email notification: ${response.Message}`,
+        );
     }
 
     if (
       templateDetails.open_science_team &&
       openScienceRecipients.length >= 1
     ) {
-      try {
-        await this.postmarkClient.sendEmailWithTemplate({
-          From: 'hub@asap.science',
-          To: openScienceRecipients.join(','),
-          MessageStream: 'outbound',
-          TemplateAlias: templateDetails.open_science_team,
-          TemplateModel: notificationData('open_science_team'),
-          Attachments: [
-            {
-              Name: 'asaplogo.jpg',
-              ContentType: 'image/jpeg',
-              ContentID: 'cid:asaplogo',
-              Content: manuscriptNotificationAttachmentContent,
-            },
-          ],
-        });
-      } catch (err) {
-        logger.error(err, 'Error while sending compliance email notification');
-      }
+      const response = await this.postmarkClient.sendEmailWithTemplate({
+        From: 'hub@asap.science',
+        To: openScienceRecipients.join(','),
+        MessageStream: 'outbound',
+        TemplateAlias: templateDetails.open_science_team,
+        TemplateModel: notificationData('open_science_team'),
+        Attachments: [
+          {
+            Name: 'asaplogo.jpg',
+            ContentType: 'image/jpeg',
+            ContentID: 'cid:asaplogo',
+            Content: manuscriptNotificationAttachmentContent,
+          },
+        ],
+      });
+      if (response.ErrorCode !== 0)
+        logger.error(
+          `Error while sending compliance email notification: ${response.Message}`,
+        );
     }
   }
 }

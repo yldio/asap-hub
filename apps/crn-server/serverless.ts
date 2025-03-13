@@ -1190,6 +1190,15 @@ const serverlessConfig: AWS = {
               },
             ],
           },
+          LifecycleConfiguration: {
+            Rules: [
+              {
+                Id: 'AutoDeleteAfter24Hours',
+                Status: 'Enabled',
+                ExpirationInDays: 1,
+              },
+            ],
+          },
         },
       },
       BucketPolicyFiles: {

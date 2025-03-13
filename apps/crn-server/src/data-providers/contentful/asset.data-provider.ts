@@ -32,7 +32,6 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
     filename,
     publish = true,
   }: AssetCreateData): Promise<AssetCreateDataObject> {
-    logger.info('Creating asset');
     const assetFilename = filename ?? `${id}.${mime.extension(contentType)}`;
 
     const environment = await this.getRestClient();
@@ -70,8 +69,6 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
     fileType?: string;
     publish?: boolean;
   }): Promise<AssetCreateDataObject> {
-    logger.info('Creating asset from URL');
-
     const environment = await this.getRestClient();
 
     try {

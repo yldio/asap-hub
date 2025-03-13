@@ -44,6 +44,9 @@ describe('/files route', () => {
       const response = await supertest(app).post(endpoint).send(validBody);
 
       expect(response.status).toBe(403);
+      expect(loggerMock.warn).toHaveBeenCalledWith(
+        'No transaction id on request to /files/upload-url',
+      );
     });
 
     test('returns 400 if filename or contentType is missing', async () => {
@@ -80,6 +83,24 @@ describe('/files route', () => {
         'test.pdf',
         'application/pdf',
       );
+    });
+
+    test('throws 401. Unauthorized when no loggedInUser is present', async () => {
+      const noAuthApp = appFactory({
+        filesController,
+        logger: loggerMock,
+        // omit authHandler so loggedInUser stays undefined
+      });
+
+      const response = await supertest(noAuthApp)
+        .post('/files/upload-url')
+        .send({
+          filename: 'test.pdf',
+          contentType: 'application/pdf',
+        });
+
+      expect(response.status).toBe(401);
+      expect(response.body.message).toBe('Unauthorized');
     });
 
     test('returns 500 when the controller throws', async () => {

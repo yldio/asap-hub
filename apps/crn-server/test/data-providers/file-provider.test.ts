@@ -15,6 +15,38 @@ describe('FileProvider', () => {
     jest.clearAllMocks();
   });
 
+  test('parses payload.body directly if it is already an object', async () => {
+    const url = 'https://s3-url.com/upload';
+    const payload = {
+      statusCode: 200,
+      body: { uploadUrl: url }, // <--- object, not string
+    };
+
+    sendMock.mockResolvedValueOnce({
+      Payload: Buffer.from(JSON.stringify(payload)),
+    });
+
+    const result = await provider.getPresignedUrl(
+      'file.pdf',
+      'application/pdf',
+    );
+
+    expect(result).toBe(url);
+  });
+
+  test('falls back to payloadText in error if not ASCII', async () => {
+    // Contains a non-ASCII character (e.g., é, λ, etc.)
+    const nonAsciiPayload = 'λambda';
+
+    sendMock.mockResolvedValueOnce({
+      Payload: Buffer.from(nonAsciiPayload),
+    });
+
+    await expect(
+      provider.getPresignedUrl('file.pdf', 'application/pdf'),
+    ).rejects.toThrow(/Invalid JSON response from Lambda: λambda/);
+  });
+
   test('returns uploadUrl when Lambda returns success', async () => {
     const url = 'https://s3-url.com/upload';
     const payload = {

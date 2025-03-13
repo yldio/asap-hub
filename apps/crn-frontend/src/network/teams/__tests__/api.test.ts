@@ -1064,6 +1064,37 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
     expect(result).toBeUndefined();
   });
 
+  it('throws and calls handleError on unexpected error from backend after S3 upload', async () => {
+    const handleError = jest.fn();
+
+    nock('http://api')
+      .post('/files/upload-url')
+      .reply(200, { uploadUrl: mockPresignedUrl });
+
+    nock('https://s3-upload-url.com')
+      .put('/test-file.pdf')
+      .query(true)
+      .reply(200);
+
+    nock('http://api')
+      .post('/manuscripts/file-upload-from-url')
+      .reply(500, { error: 'Server Error' });
+
+    const result = await uploadManuscriptFileViaPresignedUrl(
+      file,
+      'Manuscript File',
+      authorization,
+      handleError,
+    );
+
+    expect(handleError).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Failed to upload manuscript file via presigned URL',
+      ),
+    );
+    expect(result).toBeUndefined();
+  });
+
   it('handles general error', async () => {
     const handleError = jest.fn();
 
@@ -1080,6 +1111,34 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
       'request to http://api/files/upload-url failed, reason: Boom',
     );
     expect(result).toBeUndefined();
+  });
+
+  it('calls handleError with fallback message if non-Error is thrown', async () => {
+    const handleError = jest.fn();
+
+    nock('http://api')
+      .post('/files/upload-url')
+      .reply(200, { uploadUrl: mockPresignedUrl });
+
+    const originalFetch = global.fetch;
+    global.fetch = jest.fn(() => {
+      // eslint-disable-next-line no-throw-literal
+      throw 'NonErrorString';
+    });
+
+    const result = await uploadManuscriptFileViaPresignedUrl(
+      file,
+      'Manuscript File',
+      authorization,
+      handleError,
+    );
+
+    expect(handleError).toHaveBeenCalledWith(
+      'Unexpected error during file upload',
+    );
+    expect(result).toBeUndefined();
+
+    global.fetch = originalFetch; // Restore the original fetch after the test
   });
 });
 

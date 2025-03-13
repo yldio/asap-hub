@@ -23,9 +23,6 @@ export default class FileProvider {
     filename: string,
     contentType: string,
   ): Promise<string> {
-    logger.info(`Function name: asap-hub-${this.stage}-getPresignedUrl`);
-    logger.info(`Filename: ${filename}`);
-    logger.info(`Content Type: ${contentType}`);
     const lambdaParams = {
       FunctionName: `asap-hub-${this.stage}-getPresignedUrl`,
       InvocationType: InvocationType.RequestResponse,
@@ -34,21 +31,16 @@ export default class FileProvider {
 
     const command = new InvokeCommand(lambdaParams);
 
-    logger.info(`Invoking Lambda function: ${lambdaParams.FunctionName}`);
     const response = await this.lambda.send(command);
-
-    logger.info(`Raw Lambda Response: ${JSON.stringify(response)}`);
 
     if (!response.Payload) {
       throw new Error('Lambda returned an empty response');
     }
 
     const payloadText = response.Payload.toString().trim();
-    logger.info(`Raw Payload from Lambda: ${payloadText}`);
 
     try {
       const payload = JSON.parse(payloadText);
-      logger.info(`Parsed Payload: ${JSON.stringify(payload)}`);
 
       if (payload.statusCode !== 200) {
         throw new Error(`Lambda returned an error: ${JSON.stringify(payload)}`);

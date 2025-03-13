@@ -9,24 +9,13 @@ export const fileRouteFactory = (fileController: FileController): Router => {
   fileRoutes.post('/files/upload-url', async (req: Request, res: Response) => {
     const { body, loggedInUser } = req;
 
-    if (!loggedInUser) {
-      logger.warn({ message: 'Unauthorized attempt to get pre-signed URL' });
-      throw Boom.forbidden();
-    }
 
     const { filename, contentType } = body;
     if (!filename || !contentType) {
-      logger.warn({ message: 'Missing required fields', body });
       throw Boom.badRequest('Filename and Content-Type are required.');
     }
 
     try {
-      logger.info({
-        message: 'Requesting pre-signed URL',
-        user: loggedInUser.id,
-        filename,
-      });
-
       const uploadUrl = await fileController.getPresignedUrl(
         filename,
         contentType,
@@ -34,12 +23,10 @@ export const fileRouteFactory = (fileController: FileController): Router => {
 
       logger.info({
         message: 'Successfully generated pre-signed URL',
-        user: loggedInUser.id,
+        user: loggedInUser?.id,
         filename,
         uploadUrl,
       });
-
-      logger.debug(`Upload URL before sending response: ${uploadUrl}`);
 
       res.json({ uploadUrl });
     } catch (error) {

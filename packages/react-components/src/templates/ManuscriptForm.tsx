@@ -1043,7 +1043,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         <>
                           The key resource table must be submitted as a single
                           CSV file and should outline the resources used and
-                          generated in this study. View guidance{' '}
+                          generated in this study. The file size must not exceed
+                          100 MB. View guidance{' '}
                           {<Link href={KRT_GUIDANCE_FILE}>here</Link>}.
                         </>
                       }
@@ -1103,7 +1104,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   <LabeledFileField
                     title="Upload any additional files"
                     subtitle="(optional)"
-                    description="Additional files must be submitted in PDF and/or CSV formats."
+                    description={
+                      <>
+                        Additional files must be submitted in PDF and/or CSV
+                        formats. The file size must not exceed 100 MB.
+                      </>
+                    }
                     placeholder="Upload Additional Files"
                     onRemove={(id?: string) => {
                       setValue(

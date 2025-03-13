@@ -44,11 +44,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const replyToDiscussion = useReplyToDiscussion();
   const endDiscussion = useEndDiscussion();
   const createComplianceDiscussion = useCreateComplianceDiscussion();
-  const {
-    fetchPresignedUrl,
-    loading,
-    error: presignedUrlError,
-  } = usePresignedUrl();
 
   const getDiscussion = useDiscussionById;
   const toast = useContext(ToastContext);
@@ -56,7 +51,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const { setFormType } = useManuscriptToast();
   const user = useCurrentUserCRN();
   const isTeamMember = !!user?.teams.find(({ id }) => team.id === id);
-  const [uploadUrl, setUploadUrl] = useState<string | null>(null);
 
   return (
     <>
@@ -136,20 +130,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           useVersionById={useVersionById}
           useManuscriptById={useManuscriptById}
         />
-        <button
-          disabled={loading}
-          onClick={async () => {
-            const uploadUrlResponse = await fetchPresignedUrl(
-              'dummy.pdf',
-              'application/pdf',
-            );
-            setUploadUrl(uploadUrlResponse);
-          }}
-        >
-          GET PRESIGNED URL
-        </button>
-        {uploadUrl && <div>{uploadUrl}</div>}
-        {presignedUrlError && <div>{presignedUrlError}</div>}
       </Route>
       <Route exact path={path + route.tools.template}>
         <ToolModal

@@ -54,6 +54,20 @@ describe('/files route', () => {
       expect(response.status).toBe(400);
     });
 
+    test('logs warning and returns 403 if user is not authenticated', async () => {
+      userMockFactory.mockReturnValue(undefined);
+
+      const response = await supertest(app).post('/files/upload-url').send({
+        filename: 'test.pdf',
+        contentType: 'application/pdf',
+      });
+
+      expect(loggerMock.warn).toHaveBeenCalledWith(
+        'No transaction id on request to /files/upload-url',
+      );
+      expect(response.status).toBe(403);
+    });
+
     test('returns 200 and the presigned URL on success', async () => {
       const mockUrl = 'https://presigned-url.com';
       filesController.getPresignedUrl.mockResolvedValueOnce(mockUrl);

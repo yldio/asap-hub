@@ -745,7 +745,6 @@ describe('useUploadManuscriptFileViaPresignedUrl', () => {
 });
 
 describe('usePresignedUrl', () => {
-  const mockAuthorization = 'Bearer xyz';
   const mockUploadUrl = 'https://presigned-url.com/file.pdf';
 
   beforeEach(() => {

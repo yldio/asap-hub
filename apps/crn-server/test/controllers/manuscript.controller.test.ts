@@ -588,4 +588,68 @@ describe('Manuscript controller', () => {
       );
     });
   });
+
+  describe('Create file method (presigned and buffer)', () => {
+    beforeEach(jest.clearAllMocks);
+
+    const fileType = 'Manuscript File' as ManuscriptFileType;
+    const filename = 'file.pdf';
+    const contentType = 'application/pdf';
+
+    test('Should create file from S3 URL if content is a string', async () => {
+      const content = 'https://s3-bucket.amazonaws.com/file.pdf?signature=abc';
+
+      assetDataProviderMock.createFromUrl.mockResolvedValueOnce(
+        getManuscriptFileResponse(),
+      );
+
+      const result = await manuscriptController.createFile({
+        filename,
+        fileType,
+        content,
+        contentType,
+      });
+
+      expect(result).toEqual(getManuscriptFileResponse());
+      expect(assetDataProviderMock.createFromUrl).toHaveBeenCalledWith({
+        id: '',
+        url: content,
+        filename,
+        fileType,
+      });
+    });
+
+    test('Should create file from buffer if content is a Buffer', async () => {
+      const content = Buffer.from('file-content');
+
+      assetDataProviderMock.create.mockResolvedValueOnce({
+        id: 'file-123',
+        filename,
+        url: 'https://assets.com/file-123.pdf',
+      });
+
+      const result = await manuscriptController.createFile({
+        filename,
+        fileType,
+        content,
+        contentType,
+      });
+
+      expect(result).toEqual({
+        id: 'file-123',
+        filename,
+        url: 'https://assets.com/file-123.pdf',
+      });
+
+      expect(assetDataProviderMock.create).toHaveBeenCalledWith({
+        id: expect.any(String),
+        title: fileType,
+        description: fileType,
+        content,
+        filename,
+        contentType,
+        publish: false,
+      });
+    });
+  });
 });

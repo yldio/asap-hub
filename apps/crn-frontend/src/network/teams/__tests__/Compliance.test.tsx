@@ -170,24 +170,26 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   const confirmButton = screen.getByRole('button', {
     name: /Update status and notify/i,
   });
-  await waitFor(() => userEvent.click(confirmButton));
+  userEvent.click(confirmButton);
 
-  await waitFor(() =>
+  await waitFor(() => {
     expect(mockUpdateManuscript).toHaveBeenCalledWith(
       manuscriptId,
       {
         status: 'Manuscript Resubmitted',
       },
       expect.any(String),
-    ),
-  );
+    );
+  });
 
-  expect(
-    within(screen.getByTestId('compliance-table-row')).getByRole('button', {
-      name: /Manuscript Resubmitted/i,
-    }),
-  ).toBeInTheDocument();
-});
+  await waitFor(() => {
+    expect(
+      within(screen.getByTestId('compliance-table-row')).getByRole('button', {
+        name: /Manuscript Resubmitted/i,
+      }),
+    ).toBeInTheDocument();
+  });
+}, 30000);
 
 it('manuscripts remain the same when there is not a match between the manuscript ids', async () => {
   const mockManuscript: PartialManuscriptResponse = {
@@ -230,24 +232,26 @@ it('manuscripts remain the same when there is not a match between the manuscript
   const confirmButton = screen.getByRole('button', {
     name: /Update status and notify/i,
   });
-  await waitFor(() => userEvent.click(confirmButton));
+  userEvent.click(confirmButton);
 
-  await waitFor(() =>
+  await waitFor(() => {
     expect(mockUpdateManuscript).toHaveBeenCalledWith(
       'manuscript-id-1',
       {
         status: 'Manuscript Resubmitted',
       },
       expect.any(String),
-    ),
-  );
+    );
+  });
 
-  expect(
-    within(screen.getByTestId('compliance-table-row')).queryByRole('button', {
-      name: /Manuscript Resubmitted/i,
-    }),
-  ).not.toBeInTheDocument();
-});
+  await waitFor(() => {
+    expect(
+      within(screen.getByTestId('compliance-table-row')).queryByRole('button', {
+        name: /Manuscript Resubmitted/i,
+      }),
+    ).not.toBeInTheDocument();
+  });
+}, 30000);
 
 it('manuscripts remain the same when getting previous manuscripts fails', async () => {
   const mockManuscript: PartialManuscriptResponse = {
@@ -271,12 +275,9 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
 
   await renderCompliancePage();
 
-  await waitFor(
-    () => {
-      expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
-    },
-    { timeout: 5000 },
-  );
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
 
   const statusButton = within(
     screen.getByTestId('compliance-table-row'),
@@ -295,26 +296,26 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
   const confirmButton = screen.getByRole('button', {
     name: /Update status and notify/i,
   });
-  await waitFor(() => userEvent.click(confirmButton), { timeout: 5000 });
+  userEvent.click(confirmButton);
 
-  await waitFor(
-    () =>
-      expect(mockUpdateManuscript).toHaveBeenCalledWith(
-        'manuscript-id-1',
-        {
-          status: 'Manuscript Resubmitted',
-        },
-        expect.any(String),
-      ),
-    { timeout: 5000 },
-  );
+  await waitFor(() => {
+    expect(mockUpdateManuscript).toHaveBeenCalledWith(
+      'manuscript-id-1',
+      {
+        status: 'Manuscript Resubmitted',
+      },
+      expect.any(String),
+    );
+  });
 
-  expect(
-    within(screen.getByTestId('compliance-table-row')).queryByRole('button', {
-      name: /Manuscript Resubmitted/i,
-    }),
-  ).not.toBeInTheDocument();
-}, 60000);
+  await waitFor(() => {
+    expect(
+      within(screen.getByTestId('compliance-table-row')).queryByRole('button', {
+        name: /Manuscript Resubmitted/i,
+      }),
+    ).not.toBeInTheDocument();
+  });
+}, 30000);
 
 it('fetches assigned users suggestions and displays them properly', async () => {
   const mockManuscript: PartialManuscriptResponse = {

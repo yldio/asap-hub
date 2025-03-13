@@ -23,13 +23,17 @@ import {
   useReplyToDiscussion,
   useVersionById,
   versionSelector,
+  useUploadManuscriptFileViaPresignedUrl,
 } from '../state';
+
+import * as uploadApi from '../api';
 
 const mockSetDiscussion = jest.fn();
 
 jest.mock('../api', () => ({
   endDiscussion: jest.fn(),
   updateDiscussion: jest.fn(),
+  uploadManuscriptFileViaPresignedUrl: jest.fn(),
 }));
 
 const teamId = 'team-id-0';
@@ -652,5 +656,90 @@ describe('useReplyToDiscussion', () => {
     waitFor(() => {
       expect(stateResult.current?.manuscripts).toEqual(mockTeam.manuscripts);
     });
+  });
+});
+
+describe('useUploadManuscriptFileViaPresignedUrl', () => {
+  const mockUpload = jest.fn();
+  const mockHandleError = jest.fn();
+  const file = new File(['test content'], 'file.pdf', {
+    type: 'application/pdf',
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
+      if (state === authorizationState) {
+        return mockAuthorization;
+      }
+      return undefined;
+    });
+  });
+
+  it.only('calls uploadManuscriptFileViaPresignedUrl with correct parameters', async () => {
+    const mockFn = uploadApi.uploadManuscriptFileViaPresignedUrl as jest.Mock;
+    mockFn.mockResolvedValueOnce({ success: true });
+
+    const { result } = renderHook(
+      () => useUploadManuscriptFileViaPresignedUrl(),
+      {
+        wrapper: RecoilRoot,
+      },
+    );
+
+    await act(async () => {
+      const resultValue = await result.current(
+        file,
+        'Manuscript File',
+        mockHandleError,
+      );
+      expect(resultValue).toEqual({ success: true });
+    });
+
+    await waitFor(() => {
+      expect(
+        uploadApi.uploadManuscriptFileViaPresignedUrl,
+      ).toHaveBeenCalledWith(
+        file,
+        'Manuscript File',
+        mockAuthorization,
+        mockHandleError,
+      );
+    });
+  });
+
+  it.only('handles upload errors and calls error handler', async () => {
+    const errorMessage = 'Upload failed!';
+
+    const mockFn = uploadApi.uploadManuscriptFileViaPresignedUrl as jest.Mock;
+    mockFn.mockImplementationOnce(
+      async (
+        _file: File,
+        _type: string,
+        _auth: string,
+        handleError: (msg: string) => void,
+      ) => {
+        handleError(errorMessage);
+        throw new Error(errorMessage);
+      },
+    );
+
+    const { result } = renderHook(
+      () => useUploadManuscriptFileViaPresignedUrl(),
+      {
+        wrapper: RecoilRoot,
+      },
+    );
+
+    await act(async () => {
+      try {
+        await result.current(file, 'Manuscript File', mockHandleError);
+      } catch (e) {
+        // expected
+      }
+    });
+
+    expect(mockFn).toHaveBeenCalled();
+    expect(mockHandleError).toHaveBeenCalledWith(errorMessage);
   });
 });

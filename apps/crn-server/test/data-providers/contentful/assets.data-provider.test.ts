@@ -157,4 +157,106 @@ describe('Assets data provider', () => {
       });
     });
   });
+
+  describe('Create from URL', () => {
+    const createAssetMock = environmentMock.createAsset;
+    const processMock = jest.fn();
+    const publishMock = jest.fn();
+
+    beforeEach(() => {
+      createAssetMock.mockResolvedValue({
+        sys: { id: 'asset-url-id' },
+        fields: {
+          file: {
+            'en-US': {
+              fileName: 'from-url.pdf',
+              url: 'https://cdn.contentful.com/assets/from-url.pdf',
+            },
+          },
+        },
+        processForAllLocales: processMock,
+      } as unknown as Asset);
+
+      processMock.mockResolvedValue({
+        publish: publishMock,
+      } as unknown as Asset);
+    });
+
+    test('uploads, processes and publishes an asset from URL', async () => {
+      const asset = await assetsDataProvider.createFromUrl({
+        url: 'https://example.com/from-url.pdf',
+        filename: 'from-url.pdf',
+        fileType: 'application/pdf',
+      });
+
+      expect(createAssetMock).toHaveBeenCalledWith({
+        fields: {
+          title: { 'en-US': 'from-url.pdf' },
+          description: { 'en-US': 'application/pdf' },
+          file: {
+            'en-US': {
+              contentType: 'application/pdf',
+              fileName: 'from-url.pdf',
+              upload: 'https://example.com/from-url.pdf',
+            },
+          },
+        },
+      });
+
+      expect(processMock).toHaveBeenCalled();
+      expect(publishMock).toHaveBeenCalled();
+      expect(asset).toEqual({
+        id: 'asset-url-id',
+        filename: 'from-url.pdf',
+        url: 'https://cdn.contentful.com/assets/from-url.pdf',
+      });
+    });
+
+    test('does not publish asset if publish is false', async () => {
+      const asset = await assetsDataProvider.createFromUrl({
+        url: 'https://example.com/no-publish.pdf',
+        filename: 'no-publish.pdf',
+        fileType: 'application/pdf',
+        publish: false,
+      });
+
+      expect(processMock).toHaveBeenCalled();
+      expect(publishMock).not.toHaveBeenCalled();
+      expect(asset.filename).toBe('from-url.pdf'); // matches mock above
+    });
+
+    test('defaults to filename and empty url if file locale missing', async () => {
+      createAssetMock.mockResolvedValueOnce({
+        sys: { id: 'no-locale-id' },
+        fields: {
+          file: {}, // no 'en-US'
+        },
+        processForAllLocales: processMock,
+      } as unknown as Asset);
+
+      const asset = await assetsDataProvider.createFromUrl({
+        url: 'https://example.com/fallback.pdf',
+        filename: 'fallback.pdf',
+        fileType: 'application/pdf',
+      });
+
+      expect(asset).toEqual({
+        id: 'no-locale-id',
+        filename: 'fallback.pdf',
+        url: '',
+      });
+    });
+
+    test('throws generic error if asset creation fails', async () => {
+      createAssetMock.mockRejectedValueOnce(new Error('Boom 💥'));
+
+      await expect(
+        assetsDataProvider.createFromUrl({
+          url: 'https://example.com/error.pdf',
+          filename: 'error.pdf',
+          fileType: 'application/pdf',
+        }),
+      ).rejects.toThrow('Failed to create asset from URL');
+    });
+  });
 });

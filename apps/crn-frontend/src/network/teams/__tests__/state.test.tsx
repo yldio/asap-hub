@@ -34,6 +34,7 @@ jest.mock('../api', () => ({
   endDiscussion: jest.fn(),
   updateDiscussion: jest.fn(),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
+  getPresignedUrl: jest.fn(),
 }));
 
 const teamId = 'team-id-0';
@@ -740,5 +741,65 @@ describe('useUploadManuscriptFileViaPresignedUrl', () => {
 
     expect(mockFn).toHaveBeenCalled();
     expect(mockHandleError).toHaveBeenCalledWith(errorMessage);
+  });
+});
+
+describe('usePresignedUrl', () => {
+  const mockAuthorization = 'Bearer xyz';
+  const mockUploadUrl = 'https://presigned-url.com/file.pdf';
+
+  beforeEach(() => {
+    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
+      if (state === authorizationState) return mockAuthorization;
+      return undefined;
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('fetches the presigned URL successfully and updates loading state', async () => {
+    const mockGetPresignedUrl = uploadApi.getPresignedUrl as jest.Mock;
+    mockGetPresignedUrl.mockResolvedValueOnce({ uploadUrl: mockUploadUrl });
+
+    const { result } = renderHook(() => stateModule.usePresignedUrl(), {
+      wrapper: RecoilRoot,
+    });
+
+    let url: string | undefined;
+    await act(async () => {
+      url = await result.current.fetchPresignedUrl(
+        'file.pdf',
+        'application/pdf',
+      );
+    });
+
+    expect(mockGetPresignedUrl).toHaveBeenCalledWith(
+      'file.pdf',
+      'application/pdf',
+      mockAuthorization,
+    );
+    expect(url).toBe(mockUploadUrl);
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBeNull();
+  });
+
+  it('sets error state on failure and throws error', async () => {
+    const mockGetPresignedUrl = uploadApi.getPresignedUrl as jest.Mock;
+    mockGetPresignedUrl.mockRejectedValueOnce(new Error('Oops'));
+
+    const { result } = renderHook(() => stateModule.usePresignedUrl(), {
+      wrapper: RecoilRoot,
+    });
+
+    await act(async () => {
+      await expect(
+        result.current.fetchPresignedUrl('file.pdf', 'application/pdf'),
+      ).rejects.toThrow('Oops');
+    });
+
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBe('Failed to generate pre-signed URL');
   });
 });

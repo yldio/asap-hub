@@ -660,7 +660,6 @@ describe('useReplyToDiscussion', () => {
 });
 
 describe('useUploadManuscriptFileViaPresignedUrl', () => {
-  const mockUpload = jest.fn();
   const mockHandleError = jest.fn();
   const file = new File(['test content'], 'file.pdf', {
     type: 'application/pdf',
@@ -676,7 +675,7 @@ describe('useUploadManuscriptFileViaPresignedUrl', () => {
     });
   });
 
-  it.only('calls uploadManuscriptFileViaPresignedUrl with correct parameters', async () => {
+  it('calls uploadManuscriptFileViaPresignedUrl with correct parameters', async () => {
     const mockFn = uploadApi.uploadManuscriptFileViaPresignedUrl as jest.Mock;
     mockFn.mockResolvedValueOnce({ success: true });
 
@@ -708,7 +707,7 @@ describe('useUploadManuscriptFileViaPresignedUrl', () => {
     });
   });
 
-  it.only('handles upload errors and calls error handler', async () => {
+  it('handles upload errors and calls error handler', async () => {
     const errorMessage = 'Upload failed!';
 
     const mockFn = uploadApi.uploadManuscriptFileViaPresignedUrl as jest.Mock;

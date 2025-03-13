@@ -1,5 +1,8 @@
 import { Environment, Asset } from '@asap-hub/contentful';
-import { AssetDataProvider } from '../../../src/data-providers/types';
+import {
+  AssetCreateDataObject,
+  AssetDataProvider,
+} from '../../../src/data-providers/types';
 import { AssetContentfulDataProvider } from '../../../src/data-providers/contentful/asset.data-provider';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
@@ -184,10 +187,11 @@ describe('Assets data provider', () => {
 
     test('uploads, processes and publishes an asset from URL', async () => {
       const asset = await assetsDataProvider.createFromUrl({
+        id: '',
         url: 'https://example.com/from-url.pdf',
         filename: 'from-url.pdf',
         fileType: 'application/pdf',
-      });
+      } as AssetCreateDataObject & { fileType?: string; publish?: boolean });
 
       expect(createAssetMock).toHaveBeenCalledWith({
         fields: {
@@ -214,10 +218,14 @@ describe('Assets data provider', () => {
 
     test('does not publish asset if publish is false', async () => {
       const asset = await assetsDataProvider.createFromUrl({
+        id: '',
         url: 'https://example.com/no-publish.pdf',
         filename: 'no-publish.pdf',
         fileType: 'application/pdf',
         publish: false,
+      } as unknown as AssetCreateDataObject & {
+        fileType?: string;
+        publish?: boolean;
       });
 
       expect(processMock).toHaveBeenCalled();
@@ -235,10 +243,11 @@ describe('Assets data provider', () => {
       } as unknown as Asset);
 
       const asset = await assetsDataProvider.createFromUrl({
+        id: '',
         url: 'https://example.com/fallback.pdf',
         filename: 'fallback.pdf',
         fileType: 'application/pdf',
-      });
+      } as AssetCreateDataObject & { fileType?: string; publish?: boolean });
 
       expect(asset).toEqual({
         id: 'no-locale-id',
@@ -255,7 +264,7 @@ describe('Assets data provider', () => {
           url: 'https://example.com/error.pdf',
           filename: 'error.pdf',
           fileType: 'application/pdf',
-        }),
+        } as AssetCreateDataObject & { fileType?: string; publish?: boolean }),
       ).rejects.toThrow('Failed to create asset from URL');
     });
   });

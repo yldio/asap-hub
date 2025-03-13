@@ -9,7 +9,7 @@ import FilesController from '../../src/controllers/files.controller';
 
 const filesController = {
   getPresignedUrl: jest.fn(),
-} as unknown as FilesController;
+} as unknown as jest.Mocked<FilesController>;
 
 describe('/files route', () => {
   const userMockFactory = jest.fn();

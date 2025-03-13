@@ -21,7 +21,6 @@ import {
   useIsComplianceReviewer,
   useManuscriptById,
   usePatchTeamById,
-  usePresignedUrl,
   usePutManuscript,
   useReplyToDiscussion,
   useVersionById,

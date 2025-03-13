@@ -457,6 +457,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     watch,
     setValue,
     setError,
+    clearErrors,
     reset,
     resetField,
     trigger,
@@ -994,6 +995,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         });
                       } else {
                         setIsUploadingManuscriptFile(true);
+                        clearErrors('versions.0.manuscriptFile');
+
                         const uploadedFile = await handleFileUpload(
                           file,
                           'Manuscript File',
@@ -1060,6 +1063,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           });
                         } else {
                           setIsUploadingKeyResourceTable(true);
+                          clearErrors('versions.0.keyResourceTable');
+
                           const uploadedFile = await handleFileUpload(
                             file,
                             'Key Resource Table',
@@ -1135,6 +1140,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           });
                         } else {
                           setIsUploadingAdditionalFiles(true);
+                          clearErrors('versions.0.additionalFiles');
+
                           const uploadedFile = await handleFileUpload(
                             file,
                             'Additional Files',

@@ -1302,6 +1302,119 @@ describe('manuscript file', () => {
 
     expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
   });
+
+  it('clears error when a valid manuscript file is uploaded after an error', async () => {
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+        />
+      </StaticRouter>,
+    );
+
+    const tooLargeFile = new File(
+      ['1'.repeat(101 * 1024 * 1024)],
+      'too-big.pdf',
+      {
+        type: 'application/pdf',
+      },
+    );
+
+    const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+    await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
+
+    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
+
+    // Uploads a valid file
+    const validFile = new File(['valid content'], 'valid.pdf', {
+      type: 'application/pdf',
+    });
+
+    await waitFor(() => userEvent.upload(uploadInput, validFile));
+
+    // Error message should disappear
+    expect(
+      screen.queryByText('File is larger than 100MB.'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('clears error when a valid key resource table is uploaded after an error', async () => {
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+        />
+      </StaticRouter>,
+    );
+
+    const tooLargeFile = new File(
+      ['1'.repeat(101 * 1024 * 1024)],
+      'too-big.csv',
+      {
+        type: 'text/csv',
+      },
+    );
+
+    const uploadInput = screen.getByLabelText(/Upload Key Resource Table/i);
+    await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
+
+    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
+
+    // Uploads a valid file
+    const validFile = new File(['valid content'], 'valid.csv', {
+      type: 'text/csv',
+    });
+    await waitFor(() => userEvent.upload(uploadInput, validFile));
+
+    // Error message should disappear
+    expect(
+      screen.queryByText('File is larger than 100MB.'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('clears error when a valid additional file is uploaded after an error', async () => {
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+        />
+      </StaticRouter>,
+    );
+
+    const tooLargeFile = new File(
+      ['1'.repeat(101 * 1024 * 1024)],
+      'too-big.pdf',
+      {
+        type: 'application/pdf',
+      },
+    );
+
+    const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
+    await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
+
+    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
+
+    // Upload a valid file
+    const validFile = new File(['valid content'], 'valid.pdf', {
+      type: 'application/pdf',
+    });
+    await waitFor(() => userEvent.upload(uploadInput, validFile));
+
+    expect(
+      screen.queryByText('File is larger than 100MB.'),
+    ).not.toBeInTheDocument();
+  });
 });
 
 describe('key resource table', () => {

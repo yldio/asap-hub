@@ -9,7 +9,6 @@ export const fileRouteFactory = (fileController: FileController): Router => {
   fileRoutes.post('/files/upload-url', async (req: Request, res: Response) => {
     const { body, loggedInUser } = req;
 
-
     const { filename, contentType } = body;
     if (!filename || !contentType) {
       throw Boom.badRequest('Filename and Content-Type are required.');

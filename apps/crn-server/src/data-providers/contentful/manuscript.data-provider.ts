@@ -17,7 +17,6 @@ import {
   getLinkEntities,
   getLinkEntity,
   GraphQLClient,
-  Link,
   ManuscriptsFilter,
   Maybe,
   patchAndPublish,
@@ -42,7 +41,6 @@ import {
   ManuscriptUpdateDataObject,
   ManuscriptVersion,
   QuickCheckDetails,
-  QuickCheckDetailsObject,
   TemplateName,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
@@ -186,35 +184,6 @@ export class ManuscriptContentfulDataProvider
     });
   }
 
-  private async createQuickChecks(
-    version: Pick<
-      ManuscriptCreateDataObject['versions'][number],
-      QuickCheckDetails
-    >,
-    userId: string,
-  ) {
-    const environment = await this.getRestClient();
-
-    const quickCheckDetails = {
-      asapAffiliationIncludedDetails: version.asapAffiliationIncludedDetails,
-      acknowledgedGrantNumberDetails: version.acknowledgedGrantNumberDetails,
-      availabilityStatementDetails: version.availabilityStatementDetails,
-      codeDepositedDetails: version.codeDepositedDetails,
-      datasetsDepositedDetails: version.datasetsDepositedDetails,
-      labMaterialsRegisteredDetails: version.labMaterialsRegisteredDetails,
-      manuscriptLicenseDetails: version.manuscriptLicenseDetails,
-      protocolsDepositedDetails: version.protocolsDepositedDetails,
-    };
-
-    const quickCheckDiscussions = await createQuickCheckDiscussions(
-      environment,
-      quickCheckDetails,
-      userId,
-    );
-
-    return quickCheckDiscussions;
-  }
-
   private async createManuscriptVersion(
     version: ManuscriptCreateDataObject['versions'][number],
     userId: string,
@@ -223,7 +192,6 @@ export class ManuscriptContentfulDataProvider
     const environment = await this.getRestClient();
 
     await this.createManuscriptAssets(version);
-    const quickCheckDiscussions = await this.createQuickChecks(version, userId);
 
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
@@ -249,7 +217,7 @@ export class ManuscriptContentfulDataProvider
             : null,
           createdBy: getLinkEntity(userId),
           updatedBy: getLinkEntity(userId),
-          ...quickCheckDiscussions,
+          ...getQuickCheckDetails(version),
         }),
       },
     );
@@ -370,10 +338,6 @@ export class ManuscriptContentfulDataProvider
       const version = manuscriptData.versions[0];
 
       await this.createManuscriptAssets(version);
-      const quickCheckDiscussions = await this.createQuickChecks(
-        version,
-        userId,
-      );
 
       const versions = manuscriptEntry.fields.versions['en-US'];
       const lastVersion = versions[versions.length - 1];
@@ -404,7 +368,7 @@ export class ManuscriptContentfulDataProvider
             )
           : null,
         updatedBy: getLinkEntity(userId),
-        ...quickCheckDiscussions,
+        ...getQuickCheckDetails(version),
       });
     }
 
@@ -645,6 +609,24 @@ const parseGraphqlManuscriptUser = (user: ManuscriptUser | undefined) => ({
   })),
 });
 
+const getQuickCheckDetails = (
+  version: Pick<
+    ManuscriptCreateDataObject['versions'][number],
+    QuickCheckDetails
+  >,
+) => ({
+  asapAffiliationIncludedDetails:
+    version.asapAffiliationIncludedDetails || null,
+  acknowledgedGrantNumberDetails:
+    version.acknowledgedGrantNumberDetails || null,
+  availabilityStatementDetails: version.availabilityStatementDetails || null,
+  codeDepositedDetails: version.codeDepositedDetails || null,
+  datasetsDepositedDetails: version.datasetsDepositedDetails || null,
+  labMaterialsRegisteredDetails: version.labMaterialsRegisteredDetails || null,
+  manuscriptLicenseDetails: version.manuscriptLicenseDetails || null,
+  protocolsDepositedDetails: version.protocolsDepositedDetails || null,
+});
+
 export const parseGraphqlManuscriptVersion = (
   versions: NonNullable<
     NonNullable<ManuscriptItem['versionsCollection']>['items']
@@ -787,48 +769,6 @@ const parseComplianceReport = (
       complianceReport.createdBy || undefined,
     ),
   };
-const createQuickCheckDiscussions = async (
-  environment: Environment,
-  quickCheckDetails: QuickCheckDetailsObject,
-  userId: string,
-) => {
-  const generatedDiscussions = {} as Record<
-    QuickCheckDetails,
-    Link<'Entry'> | null
-  >;
-  await Promise.all(
-    Object.entries(quickCheckDetails).map(
-      async ([quickCheckDetail, fieldValue]) => {
-        if (fieldValue) {
-          const user = getLinkEntity(userId);
-          const messageEntry = await environment.createEntry('messages', {
-            fields: addLocaleToFields({
-              text: fieldValue,
-              createdBy: user,
-            }),
-          });
-
-          await messageEntry.publish();
-
-          const messageId = messageEntry.sys.id;
-          const discussionEntry = await environment.createEntry('discussions', {
-            fields: addLocaleToFields({
-              message: getLinkEntity(messageId),
-            }),
-          });
-
-          await discussionEntry.publish();
-
-          generatedDiscussions[quickCheckDetail as QuickCheckDetails] =
-            getLinkEntity(discussionEntry.sys.id);
-        } else {
-          generatedDiscussions[quickCheckDetail as QuickCheckDetails] = null;
-        }
-      },
-    ),
-  );
-  return generatedDiscussions;
-};
 
 const parseQuickCheckDetails = (
   field: Maybe<string> | undefined,

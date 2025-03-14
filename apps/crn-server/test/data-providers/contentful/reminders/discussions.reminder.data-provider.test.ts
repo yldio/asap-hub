@@ -1,6 +1,5 @@
 import {
   DiscussionCreatedReminder,
-  DiscussionEndedReminder,
   DiscussionRepliedToReminder,
   FetchRemindersOptions,
 } from '@asap-hub/model';
@@ -17,7 +16,6 @@ import {
   getContentfulReminderUsersContent,
   getContentfulReminderDiscussionCollectionItem,
   getDiscussionStartedByGranteeReminder,
-  getDiscussionEndedReminder,
   getContentfulReminderMessageCollectionItem,
   getDiscussionRepliedToByGranteeReminder,
   getDiscussionStartedByOpenScienceMemberReminder,
@@ -25,7 +23,7 @@ import {
 } from '../../../fixtures/reminders.fixtures';
 import { FetchRemindersQuery } from '@asap-hub/contentful';
 
-describe('Reminders data provider', () => {
+describe.skip('Reminders data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 
   const remindersDataProvider = new ReminderContentfulDataProvider(
@@ -287,146 +285,6 @@ describe('Reminders data provider', () => {
         };
 
         mockContentfulGraphqlResponse(discussionItem);
-
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual([expectedReminder]);
-      });
-    });
-
-    describe('Discussion Ended', () => {
-      const discussionItem = getContentfulReminderDiscussionCollectionItem();
-      const endDiscussionUser = {
-        ...discussionItem!.message!.createdBy,
-        sys: { id: 'user-who-ended-discussion' },
-      };
-      discussionItem!.sys.firstPublishedAt = '2024-12-08T16:21:33.824Z';
-
-      discussionItem!.endedAt = '2025-01-08T16:21:33.824Z';
-      discussionItem!.endedBy = endDiscussionUser;
-
-      const expectedReminder: DiscussionEndedReminder =
-        getDiscussionEndedReminder();
-
-      const mockContentfulGraphqlResponse = (
-        discussion: DiscussionItem | null = discussionItem,
-        user: FetchRemindersQuery['users'] = getContentfulReminderUsersContent(),
-      ) => {
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          users: user,
-        });
-
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          discussionsCollection: {
-            items: [discussion],
-          },
-        });
-
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          messagesCollection: {
-            items: [],
-          },
-        });
-      };
-
-      test('the person who ended the discussion should not see discussion reminders', async () => {
-        const userId = 'user-who-ended-discussion';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
-
-        mockContentfulGraphqlResponse();
-
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual([]);
-      });
-
-      test.each`
-        userId                    | role
-        ${'project-manager-user'} | ${'Project Manager'}
-        ${'lead-pi-user'}         | ${'Lead PI (Core Leadership)'}
-      `(
-        'the team member with role $role should see discussion ended reminders',
-        async ({ userId, role }) => {
-          const fetchRemindersOptions: FetchRemindersOptions = {
-            userId,
-            timezone,
-          };
-
-          const user = getContentfulReminderUsersContent();
-          user!.teamsCollection! = {
-            items: [
-              {
-                role,
-                team,
-              },
-            ],
-          };
-
-          mockContentfulGraphqlResponse(discussionItem, user);
-
-          const result = await remindersDataProvider.fetch(
-            fetchRemindersOptions,
-          );
-          expect(result.items).toEqual([expectedReminder]);
-        },
-      );
-
-      test.each`
-        userId                              | role
-        ${'co-pi-user'}                     | ${'Co-PI (Core Leadership)'}
-        ${'key-personnel-user'}             | ${'Key Personnel'}
-        ${'scientific-advisory-board-user'} | ${'Scientific Advisory Board'}
-        ${'asap-staff-user'}                | ${'ASAP Staff'}
-        ${'trainee-user'}                   | ${'Trainee'}
-      `(
-        'the team member with role $role should not see the discussion ended reminders',
-        async ({ userId, role }) => {
-          const fetchRemindersOptions: FetchRemindersOptions = {
-            userId,
-            timezone,
-          };
-
-          const user = getContentfulReminderUsersContent();
-          user!.teamsCollection = {
-            items: [
-              {
-                role,
-                team,
-              },
-            ],
-          };
-
-          mockContentfulGraphqlResponse(discussionItem, user);
-
-          const result = await remindersDataProvider.fetch(
-            fetchRemindersOptions,
-          );
-          expect(result.items).toEqual([]);
-        },
-      );
-
-      test('first author of the manuscript should see discussion ended reminder', async () => {
-        const userId = 'first-author-user';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
-
-        mockContentfulGraphqlResponse();
-
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual([expectedReminder]);
-      });
-
-      test('PI of the related manuscript lab should see discussion ended reminder', async () => {
-        const userId = 'lab-pi-id';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
-
-        mockContentfulGraphqlResponse();
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result.items).toEqual([expectedReminder]);

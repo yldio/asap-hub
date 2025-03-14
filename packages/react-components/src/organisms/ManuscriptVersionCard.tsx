@@ -229,7 +229,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   const [expanded, setExpanded] = useState(false);
 
   const quickCheckDetails = quickCheckQuestions.filter(
-    ({ field }) => version[`${field}Details`]?.id,
+    ({ field }) => version[`${field}Details`],
   );
 
   const getUpdatedByData = () => {
@@ -405,27 +405,12 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                   </span>
                 )}
               </div>
-              {quickCheckDetails.map(({ field, question }) => {
-                const discussion = version[`${field}Details`];
-                return (
-                  discussion !== undefined && (
-                    <div css={quickCheckStyles} key={field}>
-                      <Subtitle>{question}</Subtitle>
-                      <Suspense fallback={<Loading />}>
-                        <Discussion
-                          modalTitle="Reply to quick check"
-                          canReply={canUpdateDiscussion}
-                          id={discussion.id}
-                          getDiscussion={getDiscussion}
-                          onSave={onSave}
-                          key={discussion.id}
-                          setManuscript={setManuscrit}
-                        />
-                      </Suspense>
-                    </div>
-                  )
-                );
-              })}
+              {quickCheckDetails.map(({ field, question }) => (
+                <div css={quickCheckStyles} key={field}>
+                  <Subtitle>{question}</Subtitle>
+                  <span>{version[`${field}Details`]}</span>
+                </div>
+              ))}
               {hasAdditionalInfo(version) && (
                 <div>
                   <span

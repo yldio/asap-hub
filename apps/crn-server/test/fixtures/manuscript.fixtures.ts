@@ -407,16 +407,12 @@ export const getManuscriptUpdateAssignedUsersDataObject = (
 };
 
 const getQuickCheckDetailsText = (version: Partial<ManuscriptVersion>) => ({
-  acknowledgedGrantNumberDetails:
-    version.acknowledgedGrantNumberDetails?.message.text,
-  asapAffiliationIncludedDetails:
-    version.asapAffiliationIncludedDetails?.message.text,
-  manuscriptLicenseDetails: version.manuscriptLicenseDetails?.message.text,
-  datasetsDepositedDetails: version.datasetsDepositedDetails?.message.text,
-  codeDepositedDetails: version.codeDepositedDetails?.message.text,
-  protocolsDepositedDetails: version.protocolsDepositedDetails?.message.text,
-  labMaterialsRegisteredDetails:
-    version.labMaterialsRegisteredDetails?.message.text,
-  availabilityStatementDetails:
-    version.availabilityStatementDetails?.message.text,
+  acknowledgedGrantNumberDetails: version.acknowledgedGrantNumberDetails,
+  asapAffiliationIncludedDetails: version.asapAffiliationIncludedDetails,
+  manuscriptLicenseDetails: version.manuscriptLicenseDetails,
+  datasetsDepositedDetails: version.datasetsDepositedDetails,
+  codeDepositedDetails: version.codeDepositedDetails,
+  protocolsDepositedDetails: version.protocolsDepositedDetails,
+  labMaterialsRegisteredDetails: version.labMaterialsRegisteredDetails,
+  availabilityStatementDetails: version.availabilityStatementDetails,
 });

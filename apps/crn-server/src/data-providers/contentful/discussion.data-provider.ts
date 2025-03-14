@@ -78,10 +78,6 @@ export class DiscussionContentfulDataProvider
     const environment = await this.getRestClient();
     const discussion = await environment.getEntry(id);
 
-    if (discussion.fields.endedAt) {
-      throw new Error('Cannot update a discussion that has ended.');
-    }
-
     if (update.reply) {
       const publishedReplyId = await createAndPublishMessage(
         environment,
@@ -104,7 +100,6 @@ export class DiscussionContentfulDataProvider
       const endedBy = getLinkEntity(update.endedBy);
 
       const published = await patchAndPublish(discussion, {
-        endedAt: new Date().toISOString(),
         endedBy,
       });
 
@@ -170,5 +165,4 @@ export const parseGraphQLDiscussion = (
   id: discussion.sys.id,
   message: parseGraphQLMessage(discussion.message),
   replies: discussion.repliesCollection?.items.map(parseGraphQLMessage),
-  endedAt: discussion.endedAt,
 });

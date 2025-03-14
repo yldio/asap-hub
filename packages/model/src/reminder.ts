@@ -223,18 +223,6 @@ export interface ComplianceReportDiscussionRepliedToReminder extends Reminder {
   };
 }
 
-export interface DiscussionEndedReminder extends Reminder {
-  entity: 'Discussion';
-  type: 'Discussion Ended';
-  data: {
-    title: ManuscriptDataObject['title'];
-    manuscriptTeams: string;
-    userTeams: string;
-    endedBy: string;
-    endedAt: string;
-  };
-}
-
 export type DiscussionRepliedToReminder =
   | QuickCheckDiscussionRepliedToReminder
   | ComplianceReportDiscussionRepliedToReminder;
@@ -328,8 +316,7 @@ export type ManuscriptReminder =
 
 export type DiscussionReminder =
   | DiscussionCreatedReminder
-  | DiscussionRepliedToReminder
-  | DiscussionEndedReminder;
+  | DiscussionRepliedToReminder;
 
 export type ReminderDataObject =
   | ResearchOutputPublishedReminder
@@ -345,8 +332,8 @@ export type ReminderDataObject =
   | SharePresentationReminder
   | PublishMaterialReminder
   | UploadPresentationReminder
-  | ManuscriptReminder
-  | DiscussionReminder;
+  | ManuscriptReminder;
+// | DiscussionReminder;
 
 export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 

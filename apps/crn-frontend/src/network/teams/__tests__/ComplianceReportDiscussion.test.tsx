@@ -146,8 +146,7 @@ describe('compliance report discussion', () => {
     quickCheckResponse,
     [reply],
   );
-  manuscript.versions[0]!.acknowledgedGrantNumberDetails =
-    acknowledgedGrantNumberDiscussion;
+  manuscript.versions[0]!.acknowledgedGrantNumberDetails = quickCheckResponse;
   beforeEach(() => {
     mockGetDiscussion.mockImplementation(
       async () => acknowledgedGrantNumberDiscussion,
@@ -156,7 +155,7 @@ describe('compliance report discussion', () => {
     (useVersionById as jest.Mock).mockImplementation(() => [
       {
         ...mockManuscript.versions[0],
-        acknowledgedGrantNumberDetails: acknowledgedGrantNumberDiscussion,
+        acknowledgedGrantNumberDetails: quickCheckResponse,
         acknowledgedGrantNumber: 'No',
       },
       mockSetVersion,

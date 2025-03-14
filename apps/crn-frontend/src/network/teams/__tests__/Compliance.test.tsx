@@ -307,9 +307,9 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
     expect(mockUpdateManuscript).toHaveBeenCalledWith(
       'manuscript-id-1',
       {
-          notificationList: '',
+        notificationList: '',
         status: 'Manuscript Resubmitted',
-          sendNotifications: false,
+        sendNotifications: false,
       },
       expect.any(String),
     );

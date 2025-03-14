@@ -58,6 +58,10 @@ jest.mock('postmark', () => ({
     sendEmailWithTemplate: mockedPostmark,
   })),
 }));
+jest.mock('../../../src/config', () => ({
+  ...jest.requireActual('../../../src/config'),
+  environment: 'dev',
+}));
 
 describe('Manuscripts Contentful Data Provider', () => {
   beforeAll(() => {
@@ -1782,6 +1786,23 @@ describe('Manuscripts Contentful Data Provider', () => {
 
       expect(mockedPostmark).toHaveBeenCalledWith(
         expect.objectContaining({ To: 'second.external@email.com' }),
+      );
+    });
+
+    test('can send open science team emails to specified emails in dev environment', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        false,
+        'dsnyder@parkinsonsroadmap.org',
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({ To: 'dsnyder@parkinsonsroadmap.org' }),
       );
     });
 

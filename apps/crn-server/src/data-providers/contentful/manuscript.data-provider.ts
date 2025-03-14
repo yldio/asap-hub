@@ -47,7 +47,11 @@ import {
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
 import * as postmark from 'postmark';
-import { origin, postmarkServerToken } from '../../config';
+import {
+  environment as environmentName,
+  origin,
+  postmarkServerToken,
+} from '../../config';
 import { cleanArray } from '../../utils/clean-array';
 import logger from '../../utils/logger';
 import { getCommaAndString } from '../../utils/text';
@@ -497,8 +501,7 @@ export class ManuscriptContentfulDataProvider
     };
     const assignedOSMembers = manuscripts.assignedUsersCollection?.items
       .map((user) => `${user?.firstName} ${user?.lastName}`)
-      .filter(Boolean)
-      .join(',');
+      .filter(Boolean);
 
     const notificationData = (
       recipientType: 'open_science_team' | 'grantee',
@@ -511,7 +514,7 @@ export class ManuscriptContentfulDataProvider
             : getCommaAndString(contributingTeamNames),
         workspace: `${origin}/teams/${submittingTeam?.sys.id}/workspace`,
       },
-      assignedOSMembers: assignedOSMembers || '',
+      assignedOSMembers: getCommaAndString(assignedOSMembers || []),
     });
 
     const contributingAuthors = [
@@ -557,7 +560,13 @@ export class ManuscriptContentfulDataProvider
     let granteeRecipients = [
       ...new Set([...contributingAuthors, ...teamLeaders.flat(), ...labPIs]),
     ];
-    let openScienceRecipients = ['openscience@parkinsonsroadmap.org'];
+
+    let openScienceRecipients = [
+      'openscience@parkinsonsroadmap.org',
+      ...(environmentName === 'dev'
+        ? ['dsnyder@parkinsonsroadmap.org', 'dlewis@parkinsonsroadmap.org']
+        : []),
+    ];
 
     if (!flagEnabled) {
       granteeRecipients = granteeRecipients.filter(

@@ -194,23 +194,6 @@ describe('when there are replies', () => {
     });
   });
 
-  it("doesn't show end discussion button when discussion has ended", async () => {
-    const replies = createDiscussionReplies(6);
-    const discussion = createDiscussionResponse(message, replies);
-    getDiscussion.mockReturnValue({
-      ...discussion,
-      endedAt: '2025-01-01T10:00:00.000Z',
-    });
-
-    const { queryByTestId } = render(
-      <Discussion {...propsWithReplies} canEndDiscussion />,
-    );
-
-    await waitFor(() => {
-      expect(queryByTestId('end-discussion-button')).not.toBeInTheDocument();
-    });
-  });
-
   it('shows end discussion modal and calls onEndDiscussion method', async () => {
     jest.spyOn(console, 'error').mockImplementation();
     const replies = createDiscussionReplies(6);

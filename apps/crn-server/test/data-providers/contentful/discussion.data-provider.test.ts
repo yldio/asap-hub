@@ -1,9 +1,4 @@
-import {
-  Entry,
-  Environment,
-  FETCH_DISCUSSION_BY_ID,
-  pollContentfulGql,
-} from '@asap-hub/contentful';
+import { Entry, Environment } from '@asap-hub/contentful';
 import { DiscussionType } from '@asap-hub/model';
 
 import { when } from 'jest-when';
@@ -411,106 +406,6 @@ describe('Discussions Contentful Data Provider', () => {
 
       expect(discussionMockUpdated.publish).toHaveBeenCalled();
     });
-
-    test('Should fail to update a discussion that already ended', async () => {
-      const discussionMock = getEntry({
-        endedAt: '2025-01-01T10:00:00.000Z',
-      });
-      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
-      const discussionId = 'discussion-id-1';
-      const userId = 'user-id-1';
-
-      await expect(
-        discussionDataProviderMock.update(discussionId, { endedBy: userId }),
-      ).rejects.toThrow('Cannot update a discussion that has ended.');
-    });
-
-    test('Should update a discussion with endedBy and endedAt', async () => {
-      const discussionId = 'discussion-id-1';
-      const userId = 'user-id-1';
-
-      const discussionMock = getEntry(
-        {
-          // initial fields
-        },
-        {
-          // initial sys
-          id: discussionId,
-          publishedVersion: 1,
-        },
-      );
-      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
-      const discussionMockUpdated = getEntry(
-        {
-          // updated fields
-          endedBy: {
-            'en-US': {
-              sys: {
-                id: userId,
-                linkType: 'Entry',
-                type: 'Link',
-              },
-            },
-          },
-          endedAt: {
-            'en-US': new Date().toISOString(),
-          },
-        },
-        {
-          // updated sys
-          id: discussionId,
-          publishedVersion: 2,
-        },
-      );
-
-      discussionMock.patch = jest
-        .fn()
-        .mockResolvedValueOnce(discussionMockUpdated);
-      discussionMockUpdated.publish = jest
-        .fn()
-        .mockReturnValue(discussionMockUpdated);
-
-      await discussionDataProviderMock.update(discussionId, {
-        endedBy: userId,
-      });
-
-      expect(environmentMock.getEntry).toHaveBeenCalledWith(discussionId);
-      expect(discussionMock.patch).toHaveBeenCalledWith([
-        {
-          op: 'add',
-          path: '/fields/endedAt',
-          value: {
-            'en-US': expect.any(String),
-          },
-        },
-        {
-          op: 'add',
-          path: '/fields/endedBy',
-          value: {
-            'en-US': {
-              sys: {
-                id: userId,
-                linkType: 'Entry',
-                type: 'Link',
-              },
-            },
-          },
-        },
-      ]);
-
-      expect(discussionMockUpdated.publish).toHaveBeenCalled();
-
-      expect(pollContentfulGql).toHaveBeenCalledWith(
-        discussionMockUpdated.sys.publishedVersion || Infinity,
-        expect.any(Function),
-        'discussions',
-      );
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        FETCH_DISCUSSION_BY_ID,
-        { id: discussionId },
-      );
-    });
   });
 
   describe('parseGraphqlDiscussion', () => {
@@ -527,28 +422,6 @@ describe('Discussions Contentful Data Provider', () => {
       expect(parsedDiscussion.message.createdBy.firstName).toBe(
         graphqlDiscussion?.message?.createdBy?.firstName,
       );
-
-      expect(parsedDiscussion.endedBy).not.toBeDefined();
-    });
-
-    test('Should parse graphql discussion when discussion has ended', async () => {
-      const graphqlDiscussion = getContentfulGraphqlDiscussion();
-      graphqlDiscussion!.message!.createdBy!.teamsCollection = null;
-
-      const parsedDiscussion = parseGraphQLDiscussion({
-        ...graphqlDiscussion!,
-        endedAt: '2025-01-01T10:00:00.000Z',
-      });
-
-      expect(parsedDiscussion.id).toBe(graphqlDiscussion?.sys.id);
-      expect(parsedDiscussion.message.text).toBe(
-        graphqlDiscussion?.message?.text,
-      );
-      expect(parsedDiscussion.message.createdBy.firstName).toBe(
-        graphqlDiscussion?.message?.createdBy?.firstName,
-      );
-
-      expect(parsedDiscussion.endedAt).toBe('2025-01-01T10:00:00.000Z');
     });
   });
 });

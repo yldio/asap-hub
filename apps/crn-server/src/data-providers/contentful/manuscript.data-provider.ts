@@ -51,7 +51,6 @@ import { cleanArray } from '../../utils/clean-array';
 import { getCommaAndString } from '../../utils/text';
 
 import { ManuscriptDataProvider } from '../types';
-import { Discussion, parseGraphQLDiscussion } from './discussion.data-provider';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
 type ManuscriptListItem = NonNullable<
@@ -787,7 +786,6 @@ const parseComplianceReport = (
     createdBy: parseGraphqlManuscriptUser(
       complianceReport.createdBy || undefined,
     ),
-    discussionId: complianceReport.discussion?.sys.id,
   };
 const createQuickCheckDiscussions = async (
   environment: Environment,
@@ -834,8 +832,8 @@ const createQuickCheckDiscussions = async (
 
 const parseQuickCheckDetails = (
   field: Maybe<string> | undefined,
-  details: Maybe<Discussion> | undefined,
-) => (field === 'No' && details ? parseGraphQLDiscussion(details) : undefined);
+  details: Maybe<string> | undefined,
+) => (field === 'No' ? details : undefined);
 
 export const getLifecycleCode = (lifecycle: string) => {
   switch (lifecycle) {

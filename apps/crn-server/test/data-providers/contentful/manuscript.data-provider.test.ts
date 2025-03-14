@@ -58,9 +58,13 @@ jest.mock('postmark', () => ({
     sendEmailWithTemplate: mockedPostmark,
   })),
 }));
+
+const mockEnvironmentGetter = jest.fn();
 jest.mock('../../../src/config', () => ({
   ...jest.requireActual('../../../src/config'),
-  environment: 'dev',
+  get environment() {
+    return mockEnvironmentGetter();
+  },
 }));
 
 describe('Manuscripts Contentful Data Provider', () => {
@@ -1790,6 +1794,7 @@ describe('Manuscripts Contentful Data Provider', () => {
     });
 
     test('can send open science team emails to specified emails in dev environment', async () => {
+      mockEnvironmentGetter.mockReturnValue('dev');
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
       });

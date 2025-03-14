@@ -4,4 +4,5 @@ export const getDataProviderMock = () => ({
   fetchByCollectionTitle: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
+  createFromUrl: jest.fn(),
 });

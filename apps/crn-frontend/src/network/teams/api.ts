@@ -486,3 +486,116 @@ export const createComplianceDiscussion = async (
   }
   return response;
 };
+
+// Requests presigned URL from the backend, uploads the file to S3, and then sends the URL to the backend to create the asset
+export const uploadManuscriptFileViaPresignedUrl = async (
+  file: File,
+  fileType: ManuscriptFileType,
+  authorization: string,
+  handleError: (errorMessage: string) => void,
+): Promise<ManuscriptFileResponse | undefined> => {
+  try {
+    // Request presigned S3 URL
+    const { uploadUrl } = await getPresignedUrl(
+      file.name,
+      file.type,
+      authorization,
+    );
+
+    // Upload file to S3
+    const s3UploadResp = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': file.type,
+      },
+      body: file,
+    });
+
+    if (!s3UploadResp.ok) {
+      throw new Error(`S3 upload failed: ${s3UploadResp.statusText}`);
+    }
+
+    // Send the URL to the backend to create the asset
+    const fileUrl = uploadUrl.split('?')[0];
+
+    const resp = await fetch(
+      `${API_BASE_URL}/manuscripts/file-upload-from-url`,
+      {
+        method: 'POST',
+        headers: {
+          authorization,
+          'Content-Type': 'application/json',
+          ...createSentryHeaders(),
+        },
+        body: JSON.stringify({
+          fileType,
+          url: fileUrl,
+          filename: file.name,
+          contentType: file.type,
+        }),
+      },
+    );
+
+    if (!resp.ok) {
+      if (resp.status === 400 && handleError) {
+        handleError((await resp.json()).message);
+        return undefined;
+      }
+      throw new Error(
+        `Failed to upload ${fileType.toLowerCase()} via presigned URL. Received status ${
+          resp.status
+        }: ${resp.statusText}`,
+      );
+    }
+
+    return await resp.json();
+  } catch (error) {
+    handleError(
+      error instanceof Error
+        ? error.message
+        : 'Unexpected error during file upload',
+    );
+    return undefined;
+  }
+};
+
+export const getPresignedUrl = async (
+  filename: string,
+  contentType: string,
+  authorization: string,
+): Promise<{ uploadUrl: string }> => {
+  const resp = await fetch(`${API_BASE_URL}/files/upload-url`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'Content-Type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify({ filename, contentType }),
+  });
+
+  let response;
+  try {
+    response = await resp.json();
+  } catch (error) {
+    throw new BackendError(
+      `Failed to parse JSON response when generating presigned URL. Status: ${resp.status}`,
+      {
+        error: 'ParseError',
+        message: 'Failed to parse JSON response',
+        statusCode: resp.status,
+      },
+      resp.status,
+    );
+  }
+
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to generate presigned URL. Expected status 200. Received status ${resp.status}: ${resp.statusText}`,
+      response,
+      resp.status,
+    );
+  }
+
+  return response;
+};

@@ -23,13 +23,18 @@ import {
   useReplyToDiscussion,
   useVersionById,
   versionSelector,
+  useUploadManuscriptFileViaPresignedUrl,
 } from '../state';
+
+import * as uploadApi from '../api';
 
 const mockSetDiscussion = jest.fn();
 
 jest.mock('../api', () => ({
   endDiscussion: jest.fn(),
   updateDiscussion: jest.fn(),
+  uploadManuscriptFileViaPresignedUrl: jest.fn(),
+  getPresignedUrl: jest.fn(),
 }));
 
 const teamId = 'team-id-0';
@@ -652,5 +657,148 @@ describe('useReplyToDiscussion', () => {
     waitFor(() => {
       expect(stateResult.current?.manuscripts).toEqual(mockTeam.manuscripts);
     });
+  });
+});
+
+describe('useUploadManuscriptFileViaPresignedUrl', () => {
+  const mockHandleError = jest.fn();
+  const file = new File(['test content'], 'file.pdf', {
+    type: 'application/pdf',
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
+      if (state === authorizationState) {
+        return mockAuthorization;
+      }
+      return undefined;
+    });
+  });
+
+  it('calls uploadManuscriptFileViaPresignedUrl with correct parameters', async () => {
+    const mockFn = uploadApi.uploadManuscriptFileViaPresignedUrl as jest.Mock;
+    mockFn.mockResolvedValueOnce({ success: true });
+
+    const { result } = renderHook(
+      () => useUploadManuscriptFileViaPresignedUrl(),
+      {
+        wrapper: RecoilRoot,
+      },
+    );
+
+    await act(async () => {
+      const resultValue = await result.current(
+        file,
+        'Manuscript File',
+        mockHandleError,
+      );
+      expect(resultValue).toEqual({ success: true });
+    });
+
+    await waitFor(() => {
+      expect(
+        uploadApi.uploadManuscriptFileViaPresignedUrl,
+      ).toHaveBeenCalledWith(
+        file,
+        'Manuscript File',
+        mockAuthorization,
+        mockHandleError,
+      );
+    });
+  });
+
+  it('handles upload errors and calls error handler', async () => {
+    const errorMessage = 'Upload failed!';
+
+    const mockFn = uploadApi.uploadManuscriptFileViaPresignedUrl as jest.Mock;
+    mockFn.mockImplementationOnce(
+      async (
+        _file: File,
+        _type: string,
+        _auth: string,
+        handleError: (msg: string) => void,
+      ) => {
+        handleError(errorMessage);
+        throw new Error(errorMessage);
+      },
+    );
+
+    const { result } = renderHook(
+      () => useUploadManuscriptFileViaPresignedUrl(),
+      {
+        wrapper: RecoilRoot,
+      },
+    );
+
+    await act(async () => {
+      try {
+        await result.current(file, 'Manuscript File', mockHandleError);
+      } catch (e) {
+        // expected
+      }
+    });
+
+    expect(mockFn).toHaveBeenCalled();
+    expect(mockHandleError).toHaveBeenCalledWith(errorMessage);
+  });
+});
+
+describe('usePresignedUrl', () => {
+  const mockUploadUrl = 'https://presigned-url.com/file.pdf';
+
+  beforeEach(() => {
+    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
+      if (state === authorizationState) return mockAuthorization;
+      return undefined;
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('fetches the presigned URL successfully and updates loading state', async () => {
+    const mockGetPresignedUrl = uploadApi.getPresignedUrl as jest.Mock;
+    mockGetPresignedUrl.mockResolvedValueOnce({ uploadUrl: mockUploadUrl });
+
+    const { result } = renderHook(() => stateModule.usePresignedUrl(), {
+      wrapper: RecoilRoot,
+    });
+
+    let url: string | undefined;
+    await act(async () => {
+      url = await result.current.fetchPresignedUrl(
+        'file.pdf',
+        'application/pdf',
+      );
+    });
+
+    expect(mockGetPresignedUrl).toHaveBeenCalledWith(
+      'file.pdf',
+      'application/pdf',
+      mockAuthorization,
+    );
+    expect(url).toBe(mockUploadUrl);
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBeNull();
+  });
+
+  it('sets error state on failure and throws error', async () => {
+    const mockGetPresignedUrl = uploadApi.getPresignedUrl as jest.Mock;
+    mockGetPresignedUrl.mockRejectedValueOnce(new Error('Oops'));
+
+    const { result } = renderHook(() => stateModule.usePresignedUrl(), {
+      wrapper: RecoilRoot,
+    });
+
+    await act(async () => {
+      await expect(
+        result.current.fetchPresignedUrl('file.pdf', 'application/pdf'),
+      ).rejects.toThrow('Oops');
+    });
+
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBe('Failed to generate pre-signed URL');
   });
 });

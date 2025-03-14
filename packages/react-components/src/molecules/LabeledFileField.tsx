@@ -1,10 +1,12 @@
 import { css } from '@emotion/react';
-import { ComponentProps, useRef } from 'react';
+import { ComponentProps, useRef, useState } from 'react';
+import Lottie from 'react-lottie';
 import { Button, Label, Paragraph, Tag } from '../atoms';
 import { lead } from '../colors';
 import { validationMessageStyles } from '../form';
 import { plusIcon } from '../icons';
 import { perRem } from '../pixels';
+import loading from '../lotties/loading.json';
 
 const containerStyles = css({
   paddingBottom: `${18 / perRem}em`,
@@ -81,13 +83,15 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   tagEnabled = true,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (file) {
+      setIsSubmitting(true);
       await handleFileUpload(file);
+      setIsSubmitting(false);
     }
   };
   const handleRemove = (id?: string) => {
@@ -127,6 +131,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
                 ))}
               <div css={buttonContainerStyles}>
                 <Button
+                  submit={false}
                   primary
                   small
                   enabled={!!enabled && canUploadFile}
@@ -135,7 +140,24 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
                   preventDefault={false}
                   onClick={() => canUploadFile && fileInputRef.current?.click()}
                 >
-                  <div css={iconStyles}>{plusIcon}</div> Add File
+                  {isSubmitting ? (
+                    <Lottie
+                      options={{
+                        loop: true,
+                        autoplay: true,
+                        animationData: loading,
+                        rendererSettings: {
+                          preserveAspectRatio: 'xMidYMid slice',
+                        },
+                      }}
+                      height={24}
+                      width={24}
+                      style={{ marginRight: '8px' }}
+                    />
+                  ) : (
+                    <div css={iconStyles}>{plusIcon}</div>
+                  )}
+                  Add File
                 </Button>
               </div>
             </div>

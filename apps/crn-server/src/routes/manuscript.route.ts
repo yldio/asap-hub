@@ -11,10 +11,18 @@ import multer from 'multer';
 
 import ManuscriptController from '../controllers/manuscript.controller';
 import {
+  validateFileUploadFromUrl,
   validateManuscriptParameters,
   validateManuscriptPostRequestParameters,
   validateManuscriptPutRequestParameters,
 } from '../validation/manuscript.validation';
+
+type FileUploadFromUrlRequest = {
+  fileType: ManuscriptFileType;
+  url: string;
+  filename: string;
+  contentType: string;
+};
 
 const upload = multer();
 
@@ -35,6 +43,25 @@ export const manuscriptRouteFactory = (
       const result = await manuscriptController.fetchById(manuscriptId);
 
       res.json(result);
+    },
+  );
+
+  manuscriptRoutes.post<unknown, ManuscriptFileResponse>(
+    '/manuscripts/file-upload-from-url',
+    async (
+      req: { body: FileUploadFromUrlRequest },
+      res: Response<ManuscriptFileResponse>,
+    ) => {
+      const body = validateFileUploadFromUrl(req.body);
+
+      const manuscriptFile = await manuscriptController.createFile({
+        fileType: body.fileType,
+        filename: body.filename,
+        contentType: body.contentType,
+        content: body.url, // S3 direct upload
+      });
+
+      return res.status(201).json(manuscriptFile);
     },
   );
 

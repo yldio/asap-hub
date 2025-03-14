@@ -241,7 +241,7 @@ describe('/manuscripts/ route', () => {
 
   describe('POST /manuscripts/file-upload-from-url', () => {
     const manuscriptFileResponse = getManuscriptFileResponse();
-    test('should ...', async () => {
+    test('should call createFile with the correct parameters when the file information is correctly provided', async () => {
       userMockFactory.mockReturnValueOnce({
         ...createUserResponse(),
       });

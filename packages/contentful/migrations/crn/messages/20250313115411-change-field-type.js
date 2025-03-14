@@ -14,6 +14,7 @@ module.exports.up = (migration) => {
   messages.displayField('text_new');
   messages.deleteField('text');
   messages.changeFieldId('text_new', 'text');
+  messages.moveField('text').toTheTop();
 };
 
 module.exports.down = (migration) => {

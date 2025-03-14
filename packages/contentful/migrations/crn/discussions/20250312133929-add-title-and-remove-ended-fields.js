@@ -23,6 +23,8 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
   discussions.changeFieldControl('title', 'builtin', 'singleLine', {});
+  discussions.displayField('title');
+  discussions.moveField('title').toTheTop();
 };
 
 module.exports.down = (migration) => {

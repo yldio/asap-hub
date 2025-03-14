@@ -40,6 +40,7 @@ const {
   LOG_LEVEL,
   NODE_ENV,
   OPENAI_API_KEY,
+  POSTMARK_SERVER_TOKEN,
   REGION,
   SENTRY_DSN,
   SES_REGION,
@@ -96,6 +97,7 @@ export const logEnabled = NODE_ENV === 'production' || LOG_ENABLED === 'true';
 export const logLevel = LOG_LEVEL || 'info';
 export const openaiApiKey = OPENAI_API_KEY || 'test-key';
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
+export const postmarkServerToken = POSTMARK_SERVER_TOKEN || 'test-token';
 export const region = REGION || 'us-east-1';
 export const sentryDsn = SENTRY_DSN;
 export const sentryTraceSampleRate = 0.2;

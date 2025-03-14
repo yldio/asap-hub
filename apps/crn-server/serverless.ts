@@ -18,6 +18,7 @@ import assert from 'assert';
   'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
   'HOSTNAME',
   'OPENAI_API_KEY',
+  'POSTMARK_SERVER_TOKEN',
   'SES_REGION',
   'SLACK_WEBHOOK',
   'SLS_STAGE',
@@ -76,6 +77,7 @@ const slackWebhook = process.env.SLACK_WEBHOOK!;
 const logLevel = process.env.LOG_LEVEL!;
 const s3SyncEnabled = process.env.S3_SYNC_ENABLED !== 'false';
 const openaiApiKey = process.env.OPENAI_API_KEY!;
+const postmarkServerToken = process.env.POSTMARK_SERVER_TOKEN!;
 
 const algoliaIndex = process.env.ALGOLIA_INDEX
   ? process.env.ALGOLIA_INDEX
@@ -343,6 +345,7 @@ const serverlessConfig: AWS = {
         AUTH0_AUDIENCE: auth0Audience,
         AUTH0_CLIENT_ID: auth0ClientId,
         OPENAI_API_KEY: openaiApiKey,
+        POSTMARK_SERVER_TOKEN: postmarkServerToken,
       },
     },
     auth0FetchByCode: {

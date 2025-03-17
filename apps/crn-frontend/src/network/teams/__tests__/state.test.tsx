@@ -444,12 +444,12 @@ const mockTeam = {
 const mockDiscussion = {
   id: discussionId,
   title: 'Updated Discussion',
-  status: 'Waiting for OS Team Reply',
+  status: 'Addendum Required',
 };
 
 const mockUpdatedManuscript = {
   id: manuscriptId,
-  status: 'Waiting for OS Team Reply',
+  status: 'Addendum Required',
 };
 
 const mockAuthorization = 'mock-token';
@@ -547,7 +547,7 @@ describe('useReplyToDiscussion', () => {
       expect(stateResult.current?.manuscripts).toEqual([
         {
           id: manuscriptId,
-          status: 'Waiting for OS Team Reply',
+          status: 'Addendum Required',
         },
         {
           id: manuscriptId2,

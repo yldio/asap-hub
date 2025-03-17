@@ -920,8 +920,6 @@ const getStatusUpdateAction = (
   status: ManuscriptStatus | undefined,
 ): ManuscriptUpdateAction | null => {
   switch (status) {
-    case "Waiting for Grantee's Reply":
-      return 'status_changed_waiting_for_grantee_reply';
     case 'Review Compliance Report':
       return 'status_changed_review_compliance_report';
     case 'Submit Final Publication':

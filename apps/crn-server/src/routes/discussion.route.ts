@@ -51,15 +51,8 @@ export const discussionRouteFactory = (
       const discussion = await discussionController.update(discussionId, reply);
 
       let manuscript;
-      if (!req.loggedInUser.openScienceTeamMember && manuscriptId) {
-        manuscript = await manuscriptController.update(
-          manuscriptId,
-          {
-            status: 'Waiting for OS Team Reply',
-          },
-          req.loggedInUser.id,
-        );
-      }
+      if (manuscriptId)
+        manuscript = await manuscriptController.fetchById(manuscriptId);
 
       res.json({ discussion, manuscript });
     },

@@ -20,16 +20,14 @@ describe('ConfirmStatusChangeModal', () => {
   };
 
   it.each`
-    newStatus                        | title                                                           | content                                             | submissionButtonText
-    ${'Waiting for Report'}          | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
-    ${'Review Compliance Report'}    | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
-    ${'Waiting for OS Team Reply'}   | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
-    ${"Waiting for Grantee's Reply"} | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
-    ${'Manuscript Resubmitted'}      | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
-    ${'Submit Final Publication'}    | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
-    ${'Addendum Required'}           | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
-    ${'Compliant'}                   | ${'Set status to compliant? This action is irreversible.'}      | ${'After you update the status to compliant,'}      | ${'Set to Compliant and Notify'}
-    ${'Closed (other)'}              | ${'Set status to closed (other)? This action is irreversible.'} | ${'After you update the status to closed (other),'} | ${'Set to Closed (other) and Notify'}
+    newStatus                     | title                                                           | content                                             | submissionButtonText
+    ${'Waiting for Report'}       | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
+    ${'Review Compliance Report'} | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
+    ${'Manuscript Resubmitted'}   | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
+    ${'Submit Final Publication'} | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
+    ${'Addendum Required'}        | ${'Update status and notify?'}                                  | ${'By updating the compliance status,'}             | ${'Update Status and Notify'}
+    ${'Compliant'}                | ${'Set status to compliant? This action is irreversible.'}      | ${'After you update the status to compliant,'}      | ${'Set to Compliant and Notify'}
+    ${'Closed (other)'}           | ${'Set status to closed (other)? This action is irreversible.'} | ${'After you update the status to closed (other),'} | ${'Set to Closed (other) and Notify'}
   `(
     'when newStatus is $newStatus, it should render the title as $title, content contains $content and submit button as $submissionButtonText',
     ({ newStatus, title, content, submissionButtonText }) => {
@@ -70,16 +68,14 @@ describe('ConfirmStatusChangeModal', () => {
   });
 
   it.each`
-    newStatus                        | submissionButtonText
-    ${'Waiting for Report'}          | ${'Update Status and Notify'}
-    ${'Review Compliance Report'}    | ${'Update Status and Notify'}
-    ${'Waiting for OS Team Reply'}   | ${'Update Status and Notify'}
-    ${"Waiting for Grantee's Reply"} | ${'Update Status and Notify'}
-    ${'Manuscript Resubmitted'}      | ${'Update Status and Notify'}
-    ${'Submit Final Publication'}    | ${'Update Status and Notify'}
-    ${'Addendum Required'}           | ${'Update Status and Notify'}
-    ${'Compliant'}                   | ${'Set to Compliant and Notify'}
-    ${'Closed (other)'}              | ${'Set to Closed (other) and Notify'}
+    newStatus                     | submissionButtonText
+    ${'Waiting for Report'}       | ${'Update Status and Notify'}
+    ${'Review Compliance Report'} | ${'Update Status and Notify'}
+    ${'Manuscript Resubmitted'}   | ${'Update Status and Notify'}
+    ${'Submit Final Publication'} | ${'Update Status and Notify'}
+    ${'Addendum Required'}        | ${'Update Status and Notify'}
+    ${'Compliant'}                | ${'Set to Compliant and Notify'}
+    ${'Closed (other)'}           | ${'Set to Closed (other) and Notify'}
   `(
     'calls onConfirm when newStatus is $newStatus and user clicks on submit button',
     async ({ newStatus, submissionButtonText }) => {

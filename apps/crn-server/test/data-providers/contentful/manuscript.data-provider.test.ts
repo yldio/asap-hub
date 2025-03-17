@@ -261,7 +261,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         },
         fields: {
           status: {
-            'en-US': `Waiting for Grantee's Reply`,
+            'en-US': 'Addendum Required',
           },
         },
         patch,
@@ -290,7 +290,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         {
           op: 'add',
           path: '/fields/previousStatus',
-          value: { 'en-US': "Waiting for Grantee's Reply" },
+          value: { 'en-US': 'Addendum Required' },
         },
         {
           op: 'add',
@@ -375,7 +375,6 @@ describe('Manuscripts Contentful Data Provider', () => {
 
     test.each`
       status                           | templateAlias
-      ${"Waiting for Grantee's Reply"} | ${'waiting-for-grantee-reply'}
       ${'Review Compliance Report'}    | ${'review-compliance-report'}
       ${'Submit Final Publication'}    | ${'submit-final-publication'}
       ${'Addendum Required'}           | ${'addendum-required'}

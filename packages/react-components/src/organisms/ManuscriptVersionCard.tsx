@@ -55,7 +55,7 @@ type ManuscriptVersionCardProps = {
     (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
   ];
   onEndDiscussion: (id: string) => Promise<void>;
-  setManuscrit: React.Dispatch<
+  setManuscript: React.Dispatch<
     React.SetStateAction<ManuscriptDataObject | undefined>
   >;
 } & Pick<ComponentProps<typeof DiscussionModal>, 'onSave'> &
@@ -214,7 +214,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   onEndDiscussion,
   isComplianceReviewer = false,
   isManuscriptContributor = false,
-  setManuscrit,
+  setManuscript,
 }) => {
   const [versionData, setVersion] = useVersionById({
     teamId,
@@ -288,7 +288,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
               isComplianceReviewer={isComplianceReviewer}
               canUpdateDiscussion={canUpdateDiscussion}
               isActiveReport={isActiveVersion}
-              setManuscript={setManuscrit}
+              setManuscript={setManuscript}
             />
           </Suspense>
         )}

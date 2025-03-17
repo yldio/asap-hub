@@ -165,68 +165,6 @@ describe('/discussions/ route', () => {
 
       expect(response.status).toBe(400);
     });
-
-    test('Should update manuscript status when manuscriptId is provided and user is not an open science team member', async () => {
-      const manuscriptId = 'manuscript-id-1';
-      const discussionId = 'discussion-id-1';
-      const userId = 'user-id-0';
-
-      // Mock user who is not an open science team member
-      userMockFactory.mockReturnValueOnce({
-        ...createUserResponse(),
-        openScienceTeamMember: false,
-        id: userId,
-      });
-
-      manuscriptControllerMock.update.mockResolvedValueOnce({
-        id: manuscriptId,
-        status: 'Waiting for OS Team Reply',
-        title: 'Sample Title',
-        teamId: 'team-id-1',
-        versions: [],
-        count: 0,
-        assignedUsers: [],
-      });
-
-      await supertest(app).patch(`/discussions/${discussionId}`).send({
-        text: 'A reply',
-        manuscriptId,
-      });
-
-      expect(manuscriptControllerMock.update).toHaveBeenCalledWith(
-        manuscriptId,
-        { status: 'Waiting for OS Team Reply' },
-        userId,
-      );
-    });
-
-    test('Should not update manuscript status when manuscriptId is provided and user is an open science team member', async () => {
-      const manuscriptId = 'manuscript-id-2';
-      const discussionId = 'discussion-id-2';
-
-      // Mock user who is an open science team member
-      userMockFactory.mockReturnValueOnce({
-        ...createUserResponse(),
-        openScienceTeamMember: true,
-      });
-
-      await supertest(app).patch(`/discussions/${discussionId}`).send({
-        text: 'Another reply',
-        manuscriptId,
-      });
-
-      expect(manuscriptControllerMock.update).not.toHaveBeenCalled();
-    });
-
-    test('Should not call manuscriptController.update if manuscriptId is not provided', async () => {
-      const discussionId = 'discussion-id-3';
-
-      await supertest(app).patch(`/discussions/${discussionId}`).send({
-        text: 'Reply without manuscript',
-      });
-
-      expect(manuscriptControllerMock.update).not.toHaveBeenCalled();
-    });
   });
 
   describe('POST /discussions', () => {

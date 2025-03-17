@@ -971,44 +971,82 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
   const authorization = 'Bearer token';
 
   const mockPresignedUrl =
-    'https://s3-upload-url.com/test-file.pdf?signature=abc';
+    'https://bucket-name.s3.amazonaws.com/test-file.pdf?signature=abc';
   const mockResponse = {
     id: 'file-123',
     filename: 'test-file.pdf',
-    url: 'https://s3-upload-url.com/test-file.pdf',
+    url: 'https://bucket-name.s3.amazonaws.com/test-file.pdf',
   };
 
   afterEach(() => {
     nock.cleanAll();
   });
 
-  it('uploads the file to S3 and creates the asset', async () => {
+  it('calls S3 and file-upload-from-url endpoint with correct payloads when uploading via presigned URL', async () => {
     const handleError = jest.fn();
 
-    // Mock presigned URL
-    nock('http://api')
-      .post('/files/upload-url')
+    // Capture request bodies
+    const presignedUrlRequestBody: Record<string, unknown>[] = [];
+    const uploadFromUrlRequestBody: Record<string, unknown>[] = [];
+
+    let s3UploadRequestBodyRaw: unknown;
+
+    // 1. Mock presigned URL generation
+    const presignedUrlScope = nock('http://api')
+      .post('/files/upload-url', (body) => {
+        presignedUrlRequestBody.push(body);
+        return true;
+      })
       .reply(200, { uploadUrl: mockPresignedUrl });
 
-    // Mock S3 upload
-    nock('https://s3-upload-url.com')
+    // 2. Mock S3 file upload
+    const s3UploadScope = nock('https://bucket-name.s3.amazonaws.com')
       .put('/test-file.pdf')
       .query(true)
-      .reply(200);
+      .reply(200, (_, requestBody) => {
+        s3UploadRequestBodyRaw = requestBody;
+        return {};
+      });
 
-    // Mock backend call
-    nock('http://api')
-      .post('/manuscripts/file-upload-from-url')
+    // 3. Mock backend file registration
+    const backendScope = nock('http://api')
+      .post('/manuscripts/file-upload-from-url', (body) => {
+        uploadFromUrlRequestBody.push(body);
+        return true;
+      })
       .reply(200, mockResponse);
 
-    const result = await uploadManuscriptFileViaPresignedUrl(
+    // 4. Trigger the actual function
+    await uploadManuscriptFileViaPresignedUrl(
       file,
       'Manuscript File',
       authorization,
       handleError,
     );
 
-    expect(result).toEqual(mockResponse);
+    // 5. Assert presigned URL request payload
+    expect(presignedUrlRequestBody[0]).toEqual({
+      filename: 'test-file.pdf',
+      contentType: 'application/pdf',
+    });
+
+    // 6. Assert file-upload-from-url payload
+    expect(uploadFromUrlRequestBody[0]).toEqual({
+      filename: 'test-file.pdf',
+      fileType: 'Manuscript File',
+      contentType: 'application/pdf',
+      url: mockResponse.url,
+    });
+
+    // 7. Assert actual file content sent to S3
+    expect(s3UploadRequestBodyRaw).toBe('[object File]');
+
+    // 8. Assert all mocks were called
+    expect(presignedUrlScope.isDone()).toBe(true);
+    expect(s3UploadScope.isDone()).toBe(true);
+    expect(backendScope.isDone()).toBe(true);
+
+    // 9. Assert no error handler was triggered
     expect(handleError).not.toHaveBeenCalled();
   });
 
@@ -1019,7 +1057,7 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
       .post('/files/upload-url')
       .reply(200, { uploadUrl: mockPresignedUrl });
 
-    nock('https://s3-upload-url.com')
+    nock('https://bucket-name.s3.amazonaws.com')
       .put('/test-file.pdf')
       .query(true)
       .reply(200);
@@ -1046,7 +1084,7 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
       .post('/files/upload-url')
       .reply(200, { uploadUrl: mockPresignedUrl });
 
-    nock('https://s3-upload-url.com')
+    nock('https://bucket-name.s3.amazonaws.com')
       .put('/test-file.pdf')
       .query(true)
       .reply(500, 'S3 Error');
@@ -1071,7 +1109,7 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
       .post('/files/upload-url')
       .reply(200, { uploadUrl: mockPresignedUrl });
 
-    nock('https://s3-upload-url.com')
+    nock('https://bucket-name.s3.amazonaws.com')
       .put('/test-file.pdf')
       .query(true)
       .reply(200);
@@ -1150,7 +1188,8 @@ describe('getPresignedUrl', () => {
   };
 
   it('successfully returns uploadUrl', async () => {
-    const uploadUrl = 'https://s3-upload-url.com/test-file.pdf?signature=abc';
+    const uploadUrl =
+      'https://bucket-name.s3.amazonaws.com/test-file.pdf?signature=abc';
     nock('http://api').post('/files/upload-url').reply(200, { uploadUrl });
 
     const response = await getPresignedUrl(

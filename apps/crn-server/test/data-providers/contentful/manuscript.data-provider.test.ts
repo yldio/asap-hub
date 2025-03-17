@@ -276,7 +276,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscriptId,
         {
           ...getManuscriptUpdateStatusDataObject(),
-          status: 'Review Compliance Report',
+          status: 'Waiting for Report',
         },
         'user-id-1',
       );
@@ -286,7 +286,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         {
           op: 'replace',
           path: '/fields/status',
-          value: { 'en-US': 'Review Compliance Report' },
+          value: { 'en-US': 'Waiting for Report' },
         },
         {
           op: 'add',
@@ -1764,6 +1764,21 @@ describe('Manuscripts Contentful Data Provider', () => {
     test('Should not send email notification if flag not enabled and no notification list', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
+      });
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        false,
+        '',
+      );
+
+      expect(mockedPostmark).not.toHaveBeenCalled();
+    });
+
+    test('Should not send email notification if manuscript not returned', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: null,
       });
 
       await manuscriptDataProvider.sendEmailNotification(

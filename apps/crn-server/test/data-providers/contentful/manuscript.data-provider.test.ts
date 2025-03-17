@@ -434,6 +434,44 @@ describe('Manuscripts Contentful Data Provider', () => {
       },
     );
 
+    test('can update the manuscript status', async () => {
+      jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
+      const manuscriptId = 'manuscript-id-1';
+
+      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+        NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+      >;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          status: {
+            'en-US': `Waiting for Report`,
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+      environmentMock.getEntry.mockResolvedValue(entry);
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        {
+          status: 'Waiting for Report',
+          sendNotifications: true,
+        },
+        'user-id-1',
+      );
+
+      expect(mockedPostmark).not.toHaveBeenCalled();
+    });
     test('sends email notification when notification flag is off but there is a notification list', async () => {
       jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
       const manuscriptId = 'manuscript-id-1';
@@ -1784,7 +1822,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       await manuscriptDataProvider.sendEmailNotification(
         'manuscript_submitted',
         manuscript.sys.id,
-        false,
+        true,
         '',
       );
 

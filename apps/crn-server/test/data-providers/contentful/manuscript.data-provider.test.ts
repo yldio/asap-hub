@@ -276,7 +276,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscriptId,
         {
           ...getManuscriptUpdateStatusDataObject(),
-          status: 'Waiting for Report',
+          status: 'Review Compliance Report',
         },
         'user-id-1',
       );
@@ -286,7 +286,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         {
           op: 'replace',
           path: '/fields/status',
-          value: { 'en-US': 'Waiting for Report' },
+          value: { 'en-US': 'Review Compliance Report' },
         },
         {
           op: 'add',

@@ -1263,7 +1263,11 @@ describe('manuscript file', () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+      ),
+    ).toBeInTheDocument();
   });
 
   it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
@@ -1328,7 +1332,11 @@ describe('manuscript file', () => {
     const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
     await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
 
-    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+      ),
+    ).toBeInTheDocument();
 
     // Uploads a valid file
     const validFile = new File(['valid content'], 'valid.pdf', {
@@ -1339,7 +1347,9 @@ describe('manuscript file', () => {
 
     // Error message should disappear
     expect(
-      screen.queryByText('File is larger than 100MB.'),
+      screen.queryByText(
+        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+      ),
     ).not.toBeInTheDocument();
   });
 
@@ -1366,7 +1376,11 @@ describe('manuscript file', () => {
     const uploadInput = screen.getByLabelText(/Upload Key Resource Table/i);
     await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
 
-    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+      ),
+    ).toBeInTheDocument();
 
     // Uploads a valid file
     const validFile = new File(['valid content'], 'valid.csv', {
@@ -1376,7 +1390,9 @@ describe('manuscript file', () => {
 
     // Error message should disappear
     expect(
-      screen.queryByText('File is larger than 100MB.'),
+      screen.queryByText(
+        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+      ),
     ).not.toBeInTheDocument();
   });
 
@@ -1403,7 +1419,11 @@ describe('manuscript file', () => {
     const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
     await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
 
-    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+      ),
+    ).toBeInTheDocument();
 
     // Upload a valid file
     const validFile = new File(['valid content'], 'valid.pdf', {
@@ -1412,7 +1432,9 @@ describe('manuscript file', () => {
     await waitFor(() => userEvent.upload(uploadInput, validFile));
 
     expect(
-      screen.queryByText('File is larger than 100MB.'),
+      screen.queryByText(
+        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+      ),
     ).not.toBeInTheDocument();
   });
 });
@@ -1489,7 +1511,11 @@ describe('key resource table', () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+      ),
+    ).toBeInTheDocument();
   });
 
   it('should upload and remove file when user clicks on upload key resource table and remove button', async () => {
@@ -1678,7 +1704,11 @@ describe('additional files', () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText('File is larger than 100MB.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+      ),
+    ).toBeInTheDocument();
   });
 
   it('should remove one of the additional files without removing the others', async () => {

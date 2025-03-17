@@ -991,7 +991,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       if (file.size > MAX_FILE_SIZE) {
                         setError('versions.0.manuscriptFile', {
                           type: 'custom',
-                          message: 'File is larger than 100MB.',
+                          message:
+                            'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
                         });
                       } else {
                         setIsUploadingManuscriptFile(true);
@@ -1059,7 +1060,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         if (file.size > MAX_FILE_SIZE) {
                           setError('versions.0.keyResourceTable', {
                             type: 'custom',
-                            message: 'File is larger than 100MB.',
+                            message:
+                              'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
                           });
                         } else {
                           setIsUploadingKeyResourceTable(true);
@@ -1136,7 +1138,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         if (file.size > MAX_FILE_SIZE) {
                           setError('versions.0.additionalFiles', {
                             type: 'custom',
-                            message: 'File is larger than 100MB.',
+                            message:
+                              'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
                           });
                         } else {
                           setIsUploadingAdditionalFiles(true);

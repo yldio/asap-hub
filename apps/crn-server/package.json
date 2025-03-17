@@ -39,6 +39,7 @@
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/validation": "workspace:*",
     "@aws-sdk/client-eventbridge": "^3.306.0",
+    "@aws-sdk/client-lambda": "^3.758.0",
     "@aws-sdk/client-ses": "^3.306.0",
     "@aws-sdk/client-sqs": "3.478.0",
     "@babel/core": "7.23.7",

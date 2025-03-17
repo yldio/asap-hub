@@ -121,6 +121,9 @@ import { ExternalAuthorDataProvider } from './data-providers/types/external-auth
 import { TeamDataProvider } from './data-providers/types/teams.data-provider.types';
 import { AnalyticsContentfulDataProvider } from './data-providers/contentful/analytics.data-provider';
 import { GenerativeContentDataProvider } from './data-providers/contentful/generative-content.data-provider';
+import { fileRouteFactory } from './routes/files.route';
+import FilesController from './controllers/files.controller';
+import FileProvider from './data-providers/file-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -339,6 +342,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const workingGroupsController =
     libs.workingGroupController ||
     new WorkingGroupController(workingGroupDataProvider);
+  const filesController =
+    libs.filesController || new FilesController(new FileProvider());
 
   // Handlers
   const authHandler =
@@ -386,6 +391,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userRoutes = userRouteFactory(userController, interestGroupController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupsController);
 
+  const fileUploadRoutes = fileRouteFactory(filesController);
   /**
    * --- end of dependency inection
    */
@@ -437,6 +443,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(discussionRoutes);
   app.use(guideRoutes);
   app.use(eventRoutes);
+  app.use(fileUploadRoutes);
   app.use(interestGroupRoutes);
   app.use(labRoutes);
   app.use(manuscriptRoutes);
@@ -477,6 +484,7 @@ export type Libs = {
   guideController?: GuideController;
   eventController?: EventController;
   interestGroupController?: InterestGroupController;
+  filesController?: FilesController;
   labController?: LabController;
   manuscriptController?: ManuscriptController;
   newsController?: NewsController;

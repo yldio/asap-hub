@@ -26,7 +26,8 @@ import {
   usePutManuscript,
   useResubmitManuscript,
   useTeamById,
-  useUploadManuscriptFile,
+  // useUploadManuscriptFile,
+  useUploadManuscriptFileViaPresignedUrl,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
@@ -52,7 +53,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   const createManuscript = usePostManuscript();
   const updateManuscript = usePutManuscript();
   const handleResubmitManuscript = useResubmitManuscript();
-  const handleFileUpload = useUploadManuscriptFile();
+  const handleFileUpload = useUploadManuscriptFileViaPresignedUrl();
   const getTeamSuggestions = useTeamSuggestions();
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();

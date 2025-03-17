@@ -39,6 +39,7 @@ import {
   getLabs,
   getManuscript,
   getManuscripts,
+  getPresignedUrl,
   getTeam,
   getTeams,
   patchTeam,
@@ -47,9 +48,12 @@ import {
   updateManuscript,
   updateTeamResearchOutput,
   uploadManuscriptFile,
+  uploadManuscriptFileViaPresignedUrl,
 } from '../api';
 
-jest.mock('../../../config');
+jest.mock('../../../config', () => ({
+  API_BASE_URL: 'http://api',
+}));
 
 afterEach(() => {
   nock.cleanAll();
@@ -956,5 +960,264 @@ describe('Discussion', () => {
         `"Failed to end discussion with id 42. Expected status 200. Received status 500."`,
       );
     });
+  });
+});
+
+describe('uploadManuscriptFileViaPresignedUrl', () => {
+  const file = new File(['file content'], 'test-file.pdf', {
+    type: 'application/pdf',
+  });
+
+  const authorization = 'Bearer token';
+
+  const mockPresignedUrl =
+    'https://bucket-name.s3.amazonaws.com/test-file.pdf?signature=abc';
+  const mockResponse = {
+    id: 'file-123',
+    filename: 'test-file.pdf',
+    url: 'https://bucket-name.s3.amazonaws.com/test-file.pdf',
+  };
+
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  it('calls S3 and file-upload-from-url endpoint with correct payloads when uploading via presigned URL', async () => {
+    const handleError = jest.fn();
+
+    // Capture request bodies
+    const presignedUrlRequestBody: Record<string, unknown>[] = [];
+    const uploadFromUrlRequestBody: Record<string, unknown>[] = [];
+
+    let s3UploadRequestBodyRaw: unknown;
+
+    // 1. Mock presigned URL generation
+    const presignedUrlScope = nock('http://api')
+      .post('/files/upload-url', (body) => {
+        presignedUrlRequestBody.push(body);
+        return true;
+      })
+      .reply(200, { uploadUrl: mockPresignedUrl });
+
+    // 2. Mock S3 file upload
+    const s3UploadScope = nock('https://bucket-name.s3.amazonaws.com')
+      .put('/test-file.pdf')
+      .query(true)
+      .reply(200, (_, requestBody) => {
+        s3UploadRequestBodyRaw = requestBody;
+        return {};
+      });
+
+    // 3. Mock backend file registration
+    const backendScope = nock('http://api')
+      .post('/manuscripts/file-upload-from-url', (body) => {
+        uploadFromUrlRequestBody.push(body);
+        return true;
+      })
+      .reply(200, mockResponse);
+
+    // 4. Trigger the actual function
+    await uploadManuscriptFileViaPresignedUrl(
+      file,
+      'Manuscript File',
+      authorization,
+      handleError,
+    );
+
+    // 5. Assert presigned URL request payload
+    expect(presignedUrlRequestBody[0]).toEqual({
+      filename: 'test-file.pdf',
+      contentType: 'application/pdf',
+    });
+
+    // 6. Assert file-upload-from-url payload
+    expect(uploadFromUrlRequestBody[0]).toEqual({
+      filename: 'test-file.pdf',
+      fileType: 'Manuscript File',
+      contentType: 'application/pdf',
+      url: mockResponse.url,
+    });
+
+    // 7. Assert actual file content sent to S3
+    expect(s3UploadRequestBodyRaw).toBe('[object File]');
+
+    // 8. Assert all mocks were called
+    expect(presignedUrlScope.isDone()).toBe(true);
+    expect(s3UploadScope.isDone()).toBe(true);
+    expect(backendScope.isDone()).toBe(true);
+
+    // 9. Assert no error handler was triggered
+    expect(handleError).not.toHaveBeenCalled();
+  });
+
+  it('handles 400 validation errors from asset creation', async () => {
+    const handleError = jest.fn();
+
+    nock('http://api')
+      .post('/files/upload-url')
+      .reply(200, { uploadUrl: mockPresignedUrl });
+
+    nock('https://bucket-name.s3.amazonaws.com')
+      .put('/test-file.pdf')
+      .query(true)
+      .reply(200);
+
+    nock('http://api')
+      .post('/manuscripts/file-upload-from-url')
+      .reply(400, { message: 'Validation failed' });
+
+    const result = await uploadManuscriptFileViaPresignedUrl(
+      file,
+      'Manuscript File',
+      authorization,
+      handleError,
+    );
+
+    expect(handleError).toHaveBeenCalledWith('Validation failed');
+    expect(result).toBeUndefined();
+  });
+
+  it('handles unexpected S3 upload failure', async () => {
+    const handleError = jest.fn();
+
+    nock('http://api')
+      .post('/files/upload-url')
+      .reply(200, { uploadUrl: mockPresignedUrl });
+
+    nock('https://bucket-name.s3.amazonaws.com')
+      .put('/test-file.pdf')
+      .query(true)
+      .reply(500, 'S3 Error');
+
+    const result = await uploadManuscriptFileViaPresignedUrl(
+      file,
+      'Manuscript File',
+      authorization,
+      handleError,
+    );
+
+    expect(handleError).toHaveBeenCalledWith(
+      expect.stringContaining('S3 upload failed'),
+    );
+    expect(result).toBeUndefined();
+  });
+
+  it('throws and calls handleError on unexpected error from backend after S3 upload', async () => {
+    const handleError = jest.fn();
+
+    nock('http://api')
+      .post('/files/upload-url')
+      .reply(200, { uploadUrl: mockPresignedUrl });
+
+    nock('https://bucket-name.s3.amazonaws.com')
+      .put('/test-file.pdf')
+      .query(true)
+      .reply(200);
+
+    nock('http://api')
+      .post('/manuscripts/file-upload-from-url')
+      .reply(500, { error: 'Server Error' });
+
+    const result = await uploadManuscriptFileViaPresignedUrl(
+      file,
+      'Manuscript File',
+      authorization,
+      handleError,
+    );
+
+    expect(handleError).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Failed to upload manuscript file via presigned URL',
+      ),
+    );
+    expect(result).toBeUndefined();
+  });
+
+  it('handles general error', async () => {
+    const handleError = jest.fn();
+
+    nock('http://api').post('/files/upload-url').replyWithError('Boom');
+
+    const result = await uploadManuscriptFileViaPresignedUrl(
+      file,
+      'Manuscript File',
+      authorization,
+      handleError,
+    );
+
+    expect(handleError).toHaveBeenCalledWith(
+      'request to http://api/files/upload-url failed, reason: Boom',
+    );
+    expect(result).toBeUndefined();
+  });
+
+  it('calls handleError with fallback message if non-Error is thrown', async () => {
+    const handleError = jest.fn();
+
+    nock('http://api')
+      .post('/files/upload-url')
+      .reply(200, { uploadUrl: mockPresignedUrl });
+
+    const originalFetch = global.fetch;
+    global.fetch = jest.fn(() => {
+      // eslint-disable-next-line no-throw-literal
+      throw 'NonErrorString';
+    });
+
+    const result = await uploadManuscriptFileViaPresignedUrl(
+      file,
+      'Manuscript File',
+      authorization,
+      handleError,
+    );
+
+    expect(handleError).toHaveBeenCalledWith(
+      'Unexpected error during file upload',
+    );
+    expect(result).toBeUndefined();
+
+    global.fetch = originalFetch; // Restore the original fetch after the test
+  });
+});
+
+describe('getPresignedUrl', () => {
+  const authorization = 'Bearer token';
+  const payload = {
+    filename: 'test-file.pdf',
+    contentType: 'application/pdf',
+  };
+
+  it('successfully returns uploadUrl', async () => {
+    const uploadUrl =
+      'https://bucket-name.s3.amazonaws.com/test-file.pdf?signature=abc';
+    nock('http://api').post('/files/upload-url').reply(200, { uploadUrl });
+
+    const response = await getPresignedUrl(
+      payload.filename,
+      payload.contentType,
+      authorization,
+    );
+
+    expect(response).toEqual({ uploadUrl });
+  });
+
+  it('throws on invalid JSON response', async () => {
+    nock('http://api').post('/files/upload-url').reply(200, 'not-json');
+
+    await expect(
+      getPresignedUrl(payload.filename, payload.contentType, authorization),
+    ).rejects.toThrow('Failed to parse JSON response');
+  });
+
+  it('throws on non-200 status', async () => {
+    nock('http://api')
+      .post('/files/upload-url')
+      .reply(500, { error: 'something broke' });
+
+    await expect(
+      getPresignedUrl(payload.filename, payload.contentType, authorization),
+    ).rejects.toThrow(
+      'Failed to generate presigned URL. Expected status 200. Received status 500',
+    );
   });
 });

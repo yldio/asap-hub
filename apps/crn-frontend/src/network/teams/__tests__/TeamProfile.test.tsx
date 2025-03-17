@@ -288,6 +288,7 @@ it('navigates to the workspace tab', async () => {
 });
 
 it('displays manuscript success toast message and user can dismiss toast', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
   enable('DISPLAY_MANUSCRIPTS');
 
   await renderPage(

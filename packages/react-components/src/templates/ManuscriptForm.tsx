@@ -42,7 +42,7 @@ import { defaultPageLayoutPaddingStyle } from '../layout';
 import { ManuscriptFormModals } from '../organisms';
 import { mobileScreen, rem } from '../pixels';
 
-const MAX_FILE_SIZE = 25_000_000;
+const MAX_FILE_SIZE = 100_000_000;
 const KRT_GUIDANCE_FILE =
   'https://docs.google.com/document/d/1FCnqC3VpvLFPLcshLSkmGPtRIFfh70MR7KkrXi7IMX4/edit?usp=sharing';
 const mainStyles = css({
@@ -457,6 +457,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     watch,
     setValue,
     setError,
+    clearErrors,
     reset,
     resetField,
     trigger,
@@ -981,7 +982,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   <LabeledFileField
                     title="Upload the main manuscript file"
                     subtitle="(required)"
-                    description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures."
+                    description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures. The file size must not exceed 100 MB."
                     placeholder="Upload Manuscript File"
                     onRemove={() => {
                       resetField('versions.0.manuscriptFile');
@@ -990,10 +991,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       if (file.size > MAX_FILE_SIZE) {
                         setError('versions.0.manuscriptFile', {
                           type: 'custom',
-                          message: 'File is larger than 25MB.',
+                          message:
+                            'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
                         });
                       } else {
                         setIsUploadingManuscriptFile(true);
+                        clearErrors('versions.0.manuscriptFile');
+
                         const uploadedFile = await handleFileUpload(
                           file,
                           'Manuscript File',
@@ -1043,7 +1047,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         <>
                           The key resource table must be submitted as a single
                           CSV file and should outline the resources used and
-                          generated in this study. View guidance{' '}
+                          generated in this study. The file size must not exceed
+                          100 MB. View guidance{' '}
                           {<Link href={KRT_GUIDANCE_FILE}>here</Link>}.
                         </>
                       }
@@ -1055,10 +1060,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         if (file.size > MAX_FILE_SIZE) {
                           setError('versions.0.keyResourceTable', {
                             type: 'custom',
-                            message: 'File is larger than 25MB.',
+                            message:
+                              'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
                           });
                         } else {
                           setIsUploadingKeyResourceTable(true);
+                          clearErrors('versions.0.keyResourceTable');
+
                           const uploadedFile = await handleFileUpload(
                             file,
                             'Key Resource Table',
@@ -1103,7 +1111,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   <LabeledFileField
                     title="Upload any additional files"
                     subtitle="(optional)"
-                    description="Additional files must be submitted in PDF and/or CSV formats."
+                    description={
+                      <>
+                        Additional files must be submitted in PDF and/or CSV
+                        formats. The file size must not exceed 100 MB.
+                      </>
+                    }
                     placeholder="Upload Additional Files"
                     onRemove={(id?: string) => {
                       setValue(
@@ -1125,10 +1138,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         if (file.size > MAX_FILE_SIZE) {
                           setError('versions.0.additionalFiles', {
                             type: 'custom',
-                            message: 'File is larger than 25MB.',
+                            message:
+                              'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
                           });
                         } else {
                           setIsUploadingAdditionalFiles(true);
+                          clearErrors('versions.0.additionalFiles');
+
                           const uploadedFile = await handleFileUpload(
                             file,
                             'Additional Files',

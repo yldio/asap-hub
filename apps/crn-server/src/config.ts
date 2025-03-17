@@ -33,6 +33,7 @@ const {
   EVENT_BRIDGE_SECRET,
   EVENT_BUS,
   EVENT_SOURCE,
+  FILES_BUCKET,
   GOOGLE_API_CREDENTIALS_SECRET_ID,
   GOOGLE_API_TOKEN,
   GOOGLE_CALENDER_EVENT_QUEUE_URL,
@@ -87,6 +88,9 @@ export const eventBridgeSecret = EVENT_BRIDGE_SECRET || '';
 export const eventBus = EVENT_BUS || 'asap-events-dev';
 
 export const eventSource = EVENT_SOURCE || '';
+
+export const filesBucket = FILES_BUCKET || 'asap-hub-dev-files';
+
 export const googleApiCredentialsSecretId =
   GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';
 export const googleApiToken = GOOGLE_API_TOKEN || 'asap-google-api-token';

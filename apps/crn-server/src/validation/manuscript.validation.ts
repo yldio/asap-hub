@@ -1,6 +1,7 @@
 import {
   manuscriptPostRequestSchema,
   manuscriptPutRequestSchema,
+  ManuscriptFileType,
 } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
@@ -42,3 +43,30 @@ export const validateManuscriptPutRequestParameters = validateInput(
     coerce: true,
   },
 );
+
+type FileUploadFromUrlRequest = {
+  fileType: ManuscriptFileType;
+  url: string;
+  filename: string;
+  contentType: string;
+};
+
+const fileUploadFromUrlSchema: JSONSchemaType<FileUploadFromUrlRequest> = {
+  type: 'object',
+  properties: {
+    fileType: {
+      type: 'string',
+      enum: ['Manuscript File', 'Key Resource Table', 'Additional Files'],
+    },
+    url: { type: 'string' },
+    filename: { type: 'string' },
+    contentType: {
+      type: 'string',
+      enum: ['application/pdf', 'text/csv'],
+    },
+  },
+  required: ['fileType', 'url', 'filename', 'contentType'],
+  additionalProperties: false,
+};
+
+export const validateFileUploadFromUrl = validateInput(fileUploadFromUrlSchema);

@@ -141,9 +141,6 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   const [expanded, setExpanded] = useState(false);
   const [startDiscussion, setStartDiscussion] = useState(false);
   const startedDiscussionIdRef = useRef<string>('');
-  const discussion = getDiscussion(
-    discussionId || startedDiscussionIdRef.current,
-  );
 
   useEffect(
     () => () => {
@@ -246,11 +243,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
             {(discussionId || startedDiscussionIdRef.current) && (
               <>
                 <Divider />
-                <Subtitle>
-                  {discussion?.endedAt
-                    ? 'Discussion Ended'
-                    : 'Discussion Started'}
-                </Subtitle>
+                <Subtitle>'Discussion Started'</Subtitle>
                 <Suspense fallback={<Loading />}>
                   <Discussion
                     canReply={canUpdateDiscussion}

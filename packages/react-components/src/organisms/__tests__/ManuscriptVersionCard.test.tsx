@@ -47,28 +47,9 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
 it('displays quick checks when present', async () => {
   const asapAffiliationIncludedDetails =
     "Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations.";
-  const commenter = {
-    id: 'commenter-id',
-    firstName: 'Connor',
-    lastName: 'Commenter',
-    displayName: 'Connor Commenter',
-    teams: [
-      {
-        id: 'team-commenter',
-        name: 'Team Commenter',
-      },
-    ],
-  };
-
-  const asapAffiliationIncludedDiscussion = createDiscussionResponse(
-    asapAffiliationIncludedDetails,
-  );
-  asapAffiliationIncludedDiscussion.message.createdBy = commenter;
-  asapAffiliationIncludedDiscussion.message.createdDate =
-    '2024-06-21T11:06:58.899Z';
 
   const getDiscussion = jest.fn();
-  getDiscussion.mockReturnValueOnce(asapAffiliationIncludedDiscussion);
+  getDiscussion.mockReturnValueOnce(undefined);
 
   const author = {
     id: 'author-id',
@@ -99,14 +80,13 @@ it('displays quick checks when present', async () => {
       },
     ],
   };
-  const { getByText, queryByText, getByLabelText, rerender, getAllByText } =
-    render(
-      <ManuscriptVersionCard
-        {...props}
-        getDiscussion={getDiscussion}
-        useVersionById={useVersionById}
-      />,
-    );
+  const { getByText, queryByText, getByLabelText, rerender } = render(
+    <ManuscriptVersionCard
+      {...props}
+      getDiscussion={getDiscussion}
+      useVersionById={useVersionById}
+    />,
+  );
   userEvent.click(getByLabelText('Expand Version'));
 
   await waitFor(() => {
@@ -119,7 +99,7 @@ it('displays quick checks when present', async () => {
 
   const updatedVersion = {
     ...baseVersion,
-    asapAffiliationIncludedDetails: asapAffiliationIncludedDiscussion,
+    asapAffiliationIncludedDetails,
     createdBy: author,
     updatedBy: editor,
     createdDate: '2024-06-20T11:06:58.899Z',
@@ -147,29 +127,6 @@ it('displays quick checks when present', async () => {
         /Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations./i,
       ),
     ).toBeVisible();
-
-    expect(getAllByText('Arthur Author').length).toEqual(1);
-    expect(getAllByText('Edith Editor').length).toEqual(1);
-    expect(getAllByText('Connor Commenter').length).toEqual(1);
-    expect(getAllByText('Team Author').length).toEqual(1);
-    expect(getAllByText('Team Editor').length).toEqual(1);
-    expect(getAllByText('Team Commenter').length).toEqual(1);
-    expect(getAllByText('21st June 2024').length).toEqual(2);
-    expect(getAllByText('20th June 2024').length).toEqual(1);
-
-    expect(getAllByText('Arthur Author')[0]!.closest('a')!.href!).toContain(
-      '/network/users/author-id',
-    );
-    expect(getAllByText('Team Author')[0]!.closest('a')!.href!).toContain(
-      '/network/teams/team-author',
-    );
-
-    expect(getAllByText('Connor Commenter')[0]!.closest('a')!.href!).toContain(
-      '/network/users/commenter-id',
-    );
-    expect(getAllByText('Team Commenter')[0]!.closest('a')!.href!).toContain(
-      '/network/teams/team-commenter',
-    );
   });
 });
 it('displays createdBy as fallback for updatedBy when updatedBy is well defined', () => {
@@ -587,7 +544,7 @@ it('does not display edit button by default', async () => {
 
   const updatedVersion = {
     ...baseVersion,
-    asapAffiliationIncludedDetails: asapAffiliationIncludedDiscussion,
+    asapAffiliationIncludedDetails: 'test discussion',
   };
 
   const { getByText, queryByRole, getByLabelText } = render(
@@ -634,7 +591,7 @@ it('does not display reply button if isActiveVersion is false', async () => {
 
   const updatedVersion = {
     ...baseVersion,
-    asapAffiliationIncludedDetails: asapAffiliationIncludedDiscussion,
+    asapAffiliationIncludedDetails: 'test discussion',
   };
 
   const { getByText, queryByRole, getByLabelText } = render(

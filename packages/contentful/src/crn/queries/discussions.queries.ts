@@ -8,7 +8,6 @@ export const discussionContentQueryFragment = gql`
       id
       publishedVersion
     }
-    endedAt
     message {
       sys {
         publishedAt

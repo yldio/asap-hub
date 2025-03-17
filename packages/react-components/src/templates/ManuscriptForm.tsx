@@ -346,21 +346,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     string | undefined
   >();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const getDefaultQuickCheckValue = (quickCheckId: string | undefined) => {
+  const getDefaultQuickCheckValue = (quickCheckDetails: string | undefined) => {
     const isEditing = !!title;
 
     if (isEditing) {
-      return quickCheckId ? 'No' : 'Yes';
+      return quickCheckDetails ? 'No' : 'Yes';
     }
 
-    return undefined;
-  };
-
-  const getDefaultQuickCheckDetails = (quickCheckId: string | undefined) => {
-    if (quickCheckId && getDiscussion) {
-      const discussion = getDiscussion(quickCheckId);
-      return discussion?.message.text;
-    }
     return undefined;
   };
 
@@ -384,51 +376,39 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           additionalFiles: additionalFiles || undefined,
 
           acknowledgedGrantNumber: getDefaultQuickCheckValue(
-            acknowledgedGrantNumberDetails?.id,
+            acknowledgedGrantNumberDetails,
           ),
           asapAffiliationIncluded: getDefaultQuickCheckValue(
-            asapAffiliationIncludedDetails?.id,
+            asapAffiliationIncludedDetails,
           ),
           manuscriptLicense: getDefaultQuickCheckValue(
-            manuscriptLicenseDetails?.id,
+            manuscriptLicenseDetails,
           ),
           datasetsDeposited: getDefaultQuickCheckValue(
-            datasetsDepositedDetails?.id,
+            datasetsDepositedDetails,
           ),
-          codeDeposited: getDefaultQuickCheckValue(codeDepositedDetails?.id),
+          codeDeposited: getDefaultQuickCheckValue(codeDepositedDetails),
           protocolsDeposited: getDefaultQuickCheckValue(
-            protocolsDepositedDetails?.id,
+            protocolsDepositedDetails,
           ),
           labMaterialsRegistered: getDefaultQuickCheckValue(
-            labMaterialsRegisteredDetails?.id,
+            labMaterialsRegisteredDetails,
           ),
           availabilityStatement: getDefaultQuickCheckValue(
-            availabilityStatementDetails?.id,
+            availabilityStatementDetails,
           ),
-          acknowledgedGrantNumberDetails: getDefaultQuickCheckDetails(
-            acknowledgedGrantNumberDetails?.id,
-          ),
-          asapAffiliationIncludedDetails: getDefaultQuickCheckDetails(
-            asapAffiliationIncludedDetails?.id,
-          ),
-          manuscriptLicenseDetails: getDefaultQuickCheckDetails(
-            manuscriptLicenseDetails?.id,
-          ),
-          datasetsDepositedDetails: getDefaultQuickCheckDetails(
-            datasetsDepositedDetails?.id,
-          ),
-          codeDepositedDetails: getDefaultQuickCheckDetails(
-            codeDepositedDetails?.id,
-          ),
-          protocolsDepositedDetails: getDefaultQuickCheckDetails(
-            protocolsDepositedDetails?.id,
-          ),
-          labMaterialsRegisteredDetails: getDefaultQuickCheckDetails(
-            labMaterialsRegisteredDetails?.id,
-          ),
-          availabilityStatementDetails: getDefaultQuickCheckDetails(
-            availabilityStatementDetails?.id,
-          ),
+          acknowledgedGrantNumberDetails:
+            acknowledgedGrantNumberDetails ?? undefined,
+          asapAffiliationIncludedDetails:
+            asapAffiliationIncludedDetails ?? undefined,
+          manuscriptLicenseDetails: manuscriptLicenseDetails ?? undefined,
+          datasetsDepositedDetails: datasetsDepositedDetails ?? undefined,
+          codeDepositedDetails: codeDepositedDetails ?? undefined,
+          protocolsDepositedDetails: protocolsDepositedDetails ?? undefined,
+          labMaterialsRegisteredDetails:
+            labMaterialsRegisteredDetails ?? undefined,
+          availabilityStatementDetails:
+            availabilityStatementDetails ?? undefined,
           teams: selectedTeams || [],
           labs: selectedLabs || [],
           description: description || '',

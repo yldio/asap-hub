@@ -21,7 +21,6 @@ import {
   ManuscriptContentfulDataProvider,
 } from '../../../src/data-providers/contentful/manuscript.data-provider';
 import logger from '../../../src/utils/logger';
-import { getContentfulGraphqlDiscussion } from '../../fixtures/discussions.fixtures';
 import {
   getContentfulGraphqlManuscript,
   getContentfulGraphqlManuscriptsCollection,
@@ -1040,10 +1039,9 @@ describe('Manuscripts Contentful Data Provider', () => {
         fieldDetails: QuickCheckDetails;
       }) => {
         const manuscript = getContentfulGraphqlManuscript();
-        const discussion = getContentfulGraphqlDiscussion();
 
         manuscript.versionsCollection!.items[0]![field] = 'No';
-        manuscript.versionsCollection!.items[0]![fieldDetails] = discussion;
+        manuscript.versionsCollection!.items[0]![fieldDetails] = 'text';
 
         contentfulGraphqlClientMock.request.mockResolvedValue({
           manuscripts: manuscript,
@@ -1051,9 +1049,7 @@ describe('Manuscripts Contentful Data Provider', () => {
 
         const result = await manuscriptDataProvider.fetchById('1');
 
-        expect(result!.versions[0]![fieldDetails]?.message.text).toEqual(
-          discussion?.message?.text,
-        );
+        expect(result!.versions[0]![fieldDetails]).toEqual('text');
       },
     );
 
@@ -1077,10 +1073,9 @@ describe('Manuscripts Contentful Data Provider', () => {
         fieldDetails: QuickCheckDetails;
       }) => {
         const manuscript = getContentfulGraphqlManuscript();
-        const discussion = getContentfulGraphqlDiscussion();
 
         manuscript.versionsCollection!.items[0]![field] = 'Yes';
-        manuscript.versionsCollection!.items[0]![fieldDetails] = discussion;
+        manuscript.versionsCollection!.items[0]![fieldDetails] = 'text';
 
         contentfulGraphqlClientMock.request.mockResolvedValue({
           manuscripts: manuscript,
@@ -1492,8 +1487,6 @@ describe('Manuscripts Contentful Data Provider', () => {
         }: {
           quickCheckDetail: QuickCheckDetails;
         }) => {
-          const messageId = 'message-id-1';
-          const discussionId = 'discussion-id-1';
           const manuscriptCreateDataObject = getManuscriptCreateDataObject();
           manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
           manuscriptCreateDataObject.versions[0]![quickCheckDetail] =
@@ -1506,18 +1499,6 @@ describe('Manuscripts Contentful Data Provider', () => {
 
           const publish = jest.fn();
 
-          when(environmentMock.createEntry)
-            .calledWith('messages', expect.anything())
-            .mockResolvedValue({
-              sys: { id: messageId },
-              publish,
-            } as unknown as Entry);
-          when(environmentMock.createEntry)
-            .calledWith('discussions', expect.anything())
-            .mockResolvedValue({
-              sys: { id: discussionId },
-              publish,
-            } as unknown as Entry);
           when(environmentMock.createEntry)
             .calledWith('manuscriptVersions', expect.anything())
             .mockResolvedValue({
@@ -1545,46 +1526,7 @@ describe('Manuscripts Contentful Data Provider', () => {
             userId: 'user-id-0',
           });
 
-          expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
-            1,
-            'messages',
-            {
-              fields: {
-                text: {
-                  'en-US': 'Explanation',
-                },
-                createdBy: {
-                  'en-US': {
-                    sys: {
-                      id: 'user-id-0',
-                      linkType: 'Entry',
-                      type: 'Link',
-                    },
-                  },
-                },
-              },
-            },
-          );
-          expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
-            2,
-            'discussions',
-            {
-              fields: {
-                message: {
-                  'en-US': {
-                    sys: {
-                      id: messageId,
-                      linkType: 'Entry',
-                      type: 'Link',
-                    },
-                  },
-                },
-              },
-            },
-          );
-
-          expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
-            3,
+          expect(environmentMock.createEntry).toHaveBeenCalledWith(
             'manuscriptVersions',
             {
               fields: {
@@ -1593,13 +1535,7 @@ describe('Manuscripts Contentful Data Provider', () => {
                   manuscriptLifecycle,
                 ),
                 [quickCheckDetail]: {
-                  'en-US': {
-                    sys: {
-                      id: discussionId,
-                      linkType: 'Entry',
-                      type: 'Link',
-                    },
-                  },
+                  'en-US': 'Explanation',
                 },
               },
             },

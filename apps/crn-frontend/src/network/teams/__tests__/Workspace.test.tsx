@@ -5,19 +5,11 @@ import {
   render,
   waitFor,
   getByText as getChildByText,
-  act,
-  fireEvent,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ManuscriptVersion, TeamResponse } from '@asap-hub/model';
 import {
-  ManuscriptVersion,
-  TeamManuscript,
-  TeamResponse,
-} from '@asap-hub/model';
-import {
-  createDiscussionResponse,
   createTeamManuscriptResponse,
-  createMessage,
   createTeamResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
@@ -30,16 +22,9 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { enable } from '@asap-hub/flags';
 
-import {
-  patchTeam,
-  updateManuscript,
-  getDiscussion,
-  updateDiscussion,
-  createComplianceDiscussion,
-} from '../api';
+import { patchTeam, updateManuscript } from '../api';
 
 import Workspace from '../Workspace';
-import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { useManuscriptById, useVersionById } from '../state';
 import { useManuscriptToast } from '../useManuscriptToast';
 
@@ -63,12 +48,6 @@ jest.mock('../useManuscriptToast', () => ({
 }));
 
 const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
-const mockGetDiscussion = getDiscussion as jest.MockedFunction<
-  typeof getDiscussion
->;
-const mockUpdateDiscussion = updateDiscussion as jest.MockedFunction<
-  typeof updateDiscussion
->;
 
 const id = '42';
 
@@ -422,263 +401,5 @@ describe('the edit tool dialog', () => {
       },
       expect.any(String),
     );
-  });
-});
-
-describe('manuscript quick check discussion', () => {
-  const manuscript = createTeamManuscriptResponse();
-  manuscript.versions[0]!.acknowledgedGrantNumber = 'No';
-  const reply = createMessage('when can this be completed?');
-  const quickCheckResponse = 'We have not been able to complete this yet';
-  const acknowledgedGrantNumberDiscussion = createDiscussionResponse(
-    quickCheckResponse,
-    [reply],
-  );
-  manuscript.versions[0]!.acknowledgedGrantNumberDetails =
-    acknowledgedGrantNumberDiscussion;
-
-  manuscript.versions[0]!.firstAuthors = [
-    {
-      id: 'test-user-1',
-      firstName: 'Test',
-      lastName: 'User',
-      email: 'test@gmail.com',
-      displayName: 'Test User',
-    },
-  ];
-  it('fetches quick check discussion details', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
-    mockGetDiscussion.mockImplementation(
-      async () => acknowledgedGrantNumberDiscussion,
-    );
-
-    (useVersionById as jest.Mock).mockImplementation(() => [
-      {
-        ...mockVersionData,
-        acknowledgedGrantNumberDetails: acknowledgedGrantNumberDiscussion,
-        acknowledgedGrantNumber: 'No',
-      },
-      mockSetVersion,
-    ]);
-
-    const { getByText, findByTestId, getByLabelText, getByTestId } =
-      renderWithWrapper(
-        <Workspace
-          team={{
-            ...createTeamResponse(),
-            id,
-            manuscripts: [manuscript],
-            tools: [],
-          }}
-        />,
-      );
-
-    await act(async () => {
-      userEvent.click(await findByTestId('collapsible-button'));
-      userEvent.click(getByLabelText('Expand Version'));
-    });
-
-    userEvent.click(getByTestId('discussion-collapsible-button'));
-
-    await waitFor(() => {
-      expect(getByText(quickCheckResponse)).toBeVisible();
-      expect(getByText(reply.text)).toBeVisible();
-      expect(mockGetDiscussion).toHaveBeenLastCalledWith(
-        acknowledgedGrantNumberDiscussion.id,
-        expect.anything(),
-      );
-    });
-  });
-
-  it('replies to a quick check discussion', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
-
-    mockGetDiscussion.mockImplementation(
-      async () => acknowledgedGrantNumberDiscussion,
-    );
-
-    (useVersionById as jest.Mock).mockImplementation(() => [
-      {
-        ...mockVersionData,
-        acknowledgedGrantNumberDetails: acknowledgedGrantNumberDiscussion,
-        acknowledgedGrantNumber: 'No',
-      },
-      mockSetVersion,
-    ]);
-
-    (useManuscriptById as jest.Mock).mockImplementation(() => [
-      manuscript,
-      jest.fn(),
-    ]);
-
-    mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
-    mockUpdateDiscussion.mockResolvedValue({
-      discussion: acknowledgedGrantNumberDiscussion,
-    });
-    const { findByTestId, getByRole, getByTestId, getByLabelText } =
-      renderWithWrapper(
-        <ManuscriptToastProvider>
-          <Workspace
-            team={{
-              ...createTeamResponse(),
-              id,
-              manuscripts: [manuscript],
-              tools: [],
-            }}
-          />
-        </ManuscriptToastProvider>,
-        user,
-      );
-
-    await act(async () => {
-      userEvent.click(await findByTestId('collapsible-button'));
-      userEvent.click(getByLabelText('Expand Version'));
-    });
-
-    userEvent.click(getByTestId('discussion-collapsible-button'));
-
-    const replyButton = getByRole('button', { name: /Reply/i });
-
-    act(() => {
-      userEvent.click(replyButton);
-    });
-    const replyEditor = getByTestId('editor');
-    userEvent.click(replyEditor);
-    userEvent.tab();
-    fireEvent.input(replyEditor, { data: 'new reply' });
-    userEvent.tab();
-
-    const sendButton = getByRole('button', { name: /Send/i });
-
-    await waitFor(() => {
-      expect(sendButton).toBeEnabled();
-    });
-    await act(async () => {
-      userEvent.click(sendButton);
-    });
-
-    expect(mockUpdateDiscussion).toHaveBeenLastCalledWith(
-      acknowledgedGrantNumberDiscussion.id,
-      { text: 'new reply' },
-      expect.anything(),
-      undefined,
-    );
-  });
-
-  it('creates a new discussion to compliance report', async () => {
-    jest.spyOn(console, 'error').mockImplementation();
-    enable('DISPLAY_MANUSCRIPTS');
-    (createComplianceDiscussion as jest.Mock).mockResolvedValue({
-      id: 'discussion-id',
-    });
-
-    const mockManuscript = {
-      id: `manuscript_1`,
-      title: `Manuscript 1`,
-      teamId: 'team-1',
-      status: 'Waiting for Report',
-      count: 1,
-      versions: [
-        {
-          ...manuscript.versions[0],
-          complianceReport: {
-            id: 'compliance-report-id',
-            url: 'http://example.com/file.pdf',
-            description: 'A description',
-            count: 1,
-            createdDate: '2024-12-10T20:36:54Z',
-            createdBy: {
-              displayName: 'John Doe',
-              email: 'john@doe.com',
-              firstName: 'John',
-              lastName: 'Doe',
-              avatarUrl: 'http://example.com/avatar.jpg',
-              teams: [
-                {
-                  id: 'team-1',
-                  name: 'Team 1',
-                },
-              ],
-              id: 'user-1',
-            },
-          },
-        } as ManuscriptVersion,
-      ],
-    };
-
-    (useManuscriptById as jest.Mock).mockImplementation(() => [
-      mockManuscript,
-      jest.fn(),
-    ]);
-
-    mockGetDiscussion.mockImplementation(
-      async () => acknowledgedGrantNumberDiscussion,
-    );
-
-    (useVersionById as jest.Mock).mockImplementation(() => [
-      {
-        ...mockManuscript.versions[0],
-        acknowledgedGrantNumberDetails: acknowledgedGrantNumberDiscussion,
-        acknowledgedGrantNumber: 'No',
-      },
-      mockSetVersion,
-    ]);
-
-    mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
-    mockUpdateDiscussion.mockResolvedValue({
-      discussion: acknowledgedGrantNumberDiscussion,
-    });
-    const { findByTestId, getByText, getByLabelText, getByTestId, findByText } =
-      renderWithWrapper(
-        <ManuscriptToastProvider>
-          <Workspace
-            team={{
-              ...createTeamResponse(),
-              manuscripts: [mockManuscript as TeamManuscript],
-              tools: [],
-            }}
-          />
-        </ManuscriptToastProvider>,
-        user,
-      );
-
-    await act(async () => {
-      userEvent.click(await findByTestId('collapsible-button'));
-      await waitFor(() => {
-        expect(getByLabelText('Expand Version')).toBeInTheDocument();
-      });
-      userEvent.click(getByLabelText('Expand Version'));
-      await waitFor(() => {
-        expect(getByLabelText('Expand Report')).toBeInTheDocument();
-      });
-      userEvent.click(getByLabelText('Expand Report'));
-    });
-
-    await waitFor(() => {
-      expect(getByText(/Start Discussion/i)).toBeInTheDocument();
-    });
-
-    await act(async () => {
-      userEvent.click(await findByText(/Start Discussion/i));
-    });
-
-    const replyEditor = getByTestId('editor');
-    await act(async () => {
-      userEvent.click(replyEditor);
-      userEvent.tab();
-      fireEvent.input(replyEditor, { data: 'New discussion message' });
-      userEvent.tab();
-    });
-
-    expect(await findByText(/Send/i)).toBeInTheDocument();
-
-    userEvent.click(await findByText(/Send/i));
-    await waitFor(() => {
-      expect(createComplianceDiscussion).toHaveBeenCalledWith(
-        'compliance-report-id',
-        'New discussion message',
-        'Bearer access_token',
-      );
-    });
   });
 });

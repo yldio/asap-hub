@@ -702,7 +702,7 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
     additionalProperties: false,
   };
 
-export const questionChecksOptions = ['Yes', 'No'] as const;
+export const questionChecksOptions = ['Yes', 'No', 'Not applicable'] as const;
 
 export type QuestionChecksOption = (typeof questionChecksOptions)[number];
 

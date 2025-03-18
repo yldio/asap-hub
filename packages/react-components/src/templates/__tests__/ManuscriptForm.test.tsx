@@ -307,6 +307,109 @@ test.each`
   ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
   ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
 `(
+  'should send $fieldDetails value if $field is Not applicable',
+  async ({
+    field,
+    fieldDetails,
+  }: {
+    field: QuickCheck;
+    fieldDetails: QuickCheckDetails;
+  }) => {
+    const onCreate = jest.fn();
+    const getDiscussion = jest.fn(() => ({
+      id: 'discussion-1',
+      message: createMessage('Explanation'),
+    }));
+    const props = {
+      ...defaultProps,
+      [field]: 'Not applicable',
+      [fieldDetails]: 'Explanation',
+      getDiscussion,
+    };
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...props}
+          title="manuscript title"
+          type="Original Research"
+          publicationDoi="10.0777"
+          lifecycle="Publication"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
+          keyResourceTable={{
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
+          }}
+          onCreate={onCreate}
+        />
+      </StaticRouter>,
+    );
+
+    await submitForm();
+    const payload = {
+      title: 'manuscript title',
+      eligibilityReasons: [],
+      versions: [
+        {
+          type: 'Original Research',
+          lifecycle: 'Publication',
+          manuscriptFile: expect.anything(),
+          keyResourceTable: expect.anything(),
+          publicationDoi: '10.0777',
+          requestingApcCoverage: 'Already submitted',
+          submissionDate: '2024-10-01T00:00:00.000Z',
+          submitterName: 'John Doe',
+          acknowledgedGrantNumber: 'Yes',
+          asapAffiliationIncluded: 'Yes',
+          manuscriptLicense: 'Yes',
+          datasetsDeposited: 'Yes',
+          codeDeposited: 'Yes',
+          protocolsDeposited: 'Yes',
+          labMaterialsRegistered: 'Yes',
+          availabilityStatement: 'Yes',
+
+          acknowledgedGrantNumberDetails: '',
+          asapAffiliationIncludedDetails: '',
+          manuscriptLicenseDetails: '',
+          datasetsDepositedDetails: '',
+          codeDepositedDetails: '',
+          protocolsDepositedDetails: '',
+          labMaterialsRegisteredDetails: '',
+          availabilityStatementDetails: '',
+
+          teams: ['1'],
+          labs: [],
+
+          description: 'Some description',
+          firstAuthors: [],
+          additionalAuthors: [],
+        },
+      ],
+      teamId,
+    };
+    payload.versions[0]![field] = 'Not applicable';
+    payload.versions[0]![fieldDetails] = 'Explanation';
+    await waitFor(() => {
+      expect(onCreate).toHaveBeenCalledWith(payload);
+    });
+  },
+);
+
+test.each`
+  field                        | fieldDetails
+  ${'acknowledgedGrantNumber'} | ${'acknowledgedGrantNumberDetails'}
+  ${'asapAffiliationIncluded'} | ${'asapAffiliationIncludedDetails'}
+  ${'availabilityStatement'}   | ${'availabilityStatementDetails'}
+  ${'manuscriptLicense'}       | ${'manuscriptLicenseDetails'}
+  ${'datasetsDeposited'}       | ${'datasetsDepositedDetails'}
+  ${'codeDeposited'}           | ${'codeDepositedDetails'}
+  ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
+  ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
+`(
   'should send $fieldDetails as empty string if $field is Yes',
   async ({
     field,

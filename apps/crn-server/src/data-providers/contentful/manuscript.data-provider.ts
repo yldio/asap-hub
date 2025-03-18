@@ -774,6 +774,14 @@ export const parseGraphqlManuscriptVersion = (
       submitterName: version?.submitterName,
       submissionDate: version?.submissionDate,
       otherDetails: version?.otherDetails,
+      acknowledgedGrantNumber: version?.acknowledgedGrantNumber,
+      asapAffiliationIncluded: version?.asapAffiliationIncluded,
+      manuscriptLicense: version?.manuscriptLicense,
+      datasetsDeposited: version?.datasetsDeposited,
+      codeDeposited: version?.codeDeposited,
+      protocolsDeposited: version?.protocolsDeposited,
+      labMaterialsRegistered: version?.labMaterialsRegistered,
+      availabilityStatement: version?.availabilityStatement,
       acknowledgedGrantNumberDetails: parseQuickCheckDetails(
         version?.acknowledgedGrantNumber,
         version?.acknowledgedGrantNumberDetails,
@@ -870,7 +878,7 @@ const parseComplianceReport = (
 const parseQuickCheckDetails = (
   field: Maybe<string> | undefined,
   details: Maybe<string> | undefined,
-) => (field === 'No' ? details : undefined);
+) => (field === 'No' || field === 'Not applicable' ? details : undefined);
 
 export const getLifecycleCode = (lifecycle: string) => {
   switch (lifecycle) {

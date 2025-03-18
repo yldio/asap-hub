@@ -82,6 +82,7 @@
     "openai": "^4.49.0",
     "p-throttle": "4.1.1",
     "parse-data-url": "3.0.0",
+    "postmark": "^4.0.5",
     "pump": "3.0.2",
     "react-router-dom": "5.3.4",
     "serverless-http": "2.7.0",

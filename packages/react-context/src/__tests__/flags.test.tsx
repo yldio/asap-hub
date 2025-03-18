@@ -69,9 +69,34 @@ describe('useFlags', () => {
     current.setCurrentOverrides();
     expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 
+    document.cookie = 'NOTASAP_PERSISTENT_EXAMPLE=true';
+    current.setCurrentOverrides();
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+
     document.cookie = 'ASAP_PERSISTENT_EXAMPLE=true';
     current.setCurrentOverrides();
     expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+
+    document.cookie = originalCookie;
+  });
+
+  it('accepts non boolean values for cookies with _LIST suffix', () => {
+    disable('PERSISTENT_EXAMPLE');
+    disable('COMPLIANCE_NOTIFICATION_LIST');
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+    expect(current.isEnabled('COMPLIANCE_NOTIFICATION_LIST')).toBe(false);
+
+    document.cookie = 'ASAP_PERSISTENT_EXAMPLE=value';
+    current.setCurrentOverrides();
+    expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+
+    document.cookie = 'ASAP_COMPLIANCE_NOTIFICATION_LIST=value';
+    current.setCurrentOverrides();
+    expect(current.isEnabled('COMPLIANCE_NOTIFICATION_LIST')).toBe(true);
 
     document.cookie = originalCookie;
   });

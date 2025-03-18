@@ -20,6 +20,7 @@ import {
   getLifecycleCode,
   ManuscriptContentfulDataProvider,
 } from '../../../src/data-providers/contentful/manuscript.data-provider';
+import logger from '../../../src/utils/logger';
 import { getContentfulGraphqlDiscussion } from '../../fixtures/discussions.fixtures';
 import {
   getContentfulGraphqlManuscript,
@@ -51,6 +52,20 @@ jest.mock('@asap-hub/contentful', () => ({
       return Promise.resolve();
     }),
 }));
+const mockedPostmark = jest.fn();
+jest.mock('postmark', () => ({
+  ServerClient: jest.fn().mockImplementation(() => ({
+    sendEmailWithTemplate: mockedPostmark,
+  })),
+}));
+
+const mockEnvironmentGetter = jest.fn();
+jest.mock('../../../src/config', () => ({
+  ...jest.requireActual('../../../src/config'),
+  get environment() {
+    return mockEnvironmentGetter();
+  },
+}));
 
 describe('Manuscripts Contentful Data Provider', () => {
   beforeAll(() => {
@@ -61,12 +76,6 @@ describe('Manuscripts Contentful Data Provider', () => {
     jest.useRealTimers();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-    jest.clearAllTimers();
-    jest.resetAllMocks();
-    jest.restoreAllMocks();
-  });
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
   const environmentMock = getContentfulEnvironmentMock();
   const contentfulRestClientMock: () => Promise<Environment> = () =>
@@ -226,6 +235,12 @@ describe('Manuscripts Contentful Data Provider', () => {
     };
   };
 
+  beforeEach(() => {
+    mockedPostmark.mockResolvedValue({
+      ErrorCode: 0,
+    });
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
     jest.clearAllTimers();
@@ -259,7 +274,10 @@ describe('Manuscripts Contentful Data Provider', () => {
 
       await manuscriptDataProvider.update(
         manuscriptId,
-        getManuscriptUpdateStatusDataObject(),
+        {
+          ...getManuscriptUpdateStatusDataObject(),
+          status: 'Review Compliance Report',
+        },
         'user-id-1',
       );
 
@@ -268,7 +286,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         {
           op: 'replace',
           path: '/fields/status',
-          value: { 'en-US': 'Manuscript Resubmitted' },
+          value: { 'en-US': 'Review Compliance Report' },
         },
         {
           op: 'add',
@@ -357,21 +375,29 @@ describe('Manuscripts Contentful Data Provider', () => {
     });
 
     test.each`
-      status                           | emailSubject
-      ${"Waiting for Grantee's Reply"} | ${'Waiting for Grantee Reply'}
-      ${'Review Compliance Report'}    | ${'Review Compliance Report'}
-      ${'Submit Final Publication'}    | ${'Submit Final Publication'}
-      ${'Addendum Required'}           | ${'Addendum Required'}
-      ${'Compliant'}                   | ${'Compliant'}
-      ${'Closed (other)'}              | ${'Closed (Other)'}
+      status                           | templateAlias
+      ${"Waiting for Grantee's Reply"} | ${'waiting-for-grantee-reply'}
+      ${'Review Compliance Report'}    | ${'review-compliance-report'}
+      ${'Submit Final Publication'}    | ${'submit-final-publication'}
+      ${'Addendum Required'}           | ${'addendum-required'}
+      ${'Compliant'}                   | ${'compliant'}
+      ${'Closed (other)'}              | ${'closed'}
     `(
-      'sends email notification when status is changed to $status',
-      async ({ status, emailSubject }) => {
+      'sends email notification when status is changed to $status and flag is on',
+      async ({ status, templateAlias }) => {
         jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
-        const consoleMock = jest.spyOn(console, 'log');
         const manuscriptId = 'manuscript-id-1';
 
-        const manuscript = getContentfulGraphqlManuscript();
+        const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+          NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+        >;
+        manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items =
+          [
+            {
+              __typename: 'Users',
+              email: 'fiona.first@email.com',
+            },
+          ];
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscripts: manuscript,
@@ -397,15 +423,103 @@ describe('Manuscripts Contentful Data Provider', () => {
           manuscriptId,
           {
             status: status,
+            sendNotifications: true,
           },
           'user-id-1',
         );
 
-        expect(consoleMock).toHaveBeenCalledWith(
-          expect.stringContaining(emailSubject),
+        expect(mockedPostmark).toHaveBeenCalledWith(
+          expect.objectContaining({ TemplateAlias: templateAlias }),
         );
       },
     );
+
+    test('can update the manuscript status', async () => {
+      jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
+      const manuscriptId = 'manuscript-id-1';
+
+      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+        NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+      >;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          status: {
+            'en-US': `Waiting for Report`,
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+      environmentMock.getEntry.mockResolvedValue(entry);
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        {
+          status: 'Waiting for Report',
+          sendNotifications: true,
+        },
+        'user-id-1',
+      );
+
+      expect(mockedPostmark).not.toHaveBeenCalled();
+    });
+    test('sends email notification when notification flag is off but there is a notification list', async () => {
+      jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
+      const manuscriptId = 'manuscript-id-1';
+
+      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+        NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+      >;
+      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
+        {
+          __typename: 'Users',
+          email: 'fiona.first@email.com',
+        },
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          status: {
+            'en-US': `Waiting for Report`,
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+      environmentMock.getEntry.mockResolvedValue(entry);
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        {
+          status: 'Review Compliance Report',
+          sendNotifications: false,
+          notificationList: 'fiona.first@email.com',
+        },
+        'user-id-1',
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({ TemplateAlias: 'review-compliance-report' }),
+      );
+    });
 
     test('can update the manuscript version content, title and teams', async () => {
       const manuscriptId = 'manuscript-id-1';
@@ -1646,49 +1760,143 @@ describe('Manuscripts Contentful Data Provider', () => {
   });
 
   describe('sendEmailNotification', () => {
-    test('Should not log to console when there is no manuscript', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValue({
-        manuscripts: null,
-      });
-      const manuscriptId = 'manuscript-id-1';
-      const consoleMock = jest.spyOn(console, 'log');
+    const assignedUsers = {
+      items: [
+        {
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+        {
+          firstName: 'Jane',
+          lastName: 'Doe',
+        },
+      ],
+    };
+    const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+      NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+    >;
+    manuscript.assignedUsersCollection = assignedUsers;
+    manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
+      {
+        __typename: 'Users',
+        email: 'fiona.first@email.com',
+      },
+    ];
 
-      await manuscriptDataProvider.sendEmailNotification(
-        'manuscript_submitted',
-        manuscriptId,
-      );
-
-      expect(consoleMock).not.toHaveBeenCalled();
-    });
-
-    test('returns contributing authors as recipients', async () => {
-      const consoleMock = jest.spyOn(console, 'log');
-      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
-        NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
-      >;
-      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
+    manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection!.items =
+      [
         {
           __typename: 'Users',
-          email: 'fiona.first@email.com',
+          email: 'connor.corresponding@email.com',
         },
       ];
 
-      manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection!.items =
-        [
-          {
-            __typename: 'Users',
-            email: 'connor.corresponding@email.com',
-          },
-        ];
+    manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection!.items =
+      [
+        {
+          __typename: 'ExternalAuthors',
+          email: 'second.external@email.com',
+        },
+      ];
 
-      manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection!.items =
-        [
-          {
-            __typename: 'ExternalAuthors',
-            email: 'second.external@email.com',
-          },
-        ];
+    test('Should not send email notification if flag not enabled and no notification list', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
 
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        false,
+        '',
+      );
+
+      expect(mockedPostmark).not.toHaveBeenCalled();
+    });
+
+    test('Should not send email notification if manuscript not returned', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: null,
+      });
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        true,
+        '',
+      );
+
+      expect(mockedPostmark).not.toHaveBeenCalled();
+    });
+
+    test('filters recipients emails when flag is off and notification list is provided', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        false,
+        'second.external@email.com',
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({ To: 'second.external@email.com' }),
+      );
+    });
+
+    test('can send open science team emails to specified emails in dev environment', async () => {
+      mockEnvironmentGetter.mockReturnValue('dev');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        false,
+        'dsnyder@parkinsonsroadmap.org',
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({ To: 'dsnyder@parkinsonsroadmap.org' }),
+      );
+    });
+
+    test('Should log when email fails to send', async () => {
+      const loggerErrorSpy = jest.spyOn(logger, 'error');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+      mockedPostmark
+        .mockResolvedValueOnce({
+          ErrorCode: 405,
+          Message: 'Not allowed to send',
+        })
+        .mockResolvedValueOnce({
+          ErrorCode: 406,
+          Message: 'Inactive recipient',
+        });
+
+      await manuscriptDataProvider.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        false,
+        'second.external@email.com,openscience@parkinsonsroadmap.org',
+      );
+
+      expect(loggerErrorSpy).toHaveBeenNthCalledWith(
+        1,
+        `Error while sending compliance email notification: Not allowed to send`,
+      );
+      expect(loggerErrorSpy).toHaveBeenNthCalledWith(
+        2,
+        `Error while sending compliance email notification: Inactive recipient`,
+      );
+    });
+
+    test('sends email notification with contributing authors as recipients', async () => {
       const recipients =
         'fiona.first@email.com,second.external@email.com,connor.corresponding@email.com';
 
@@ -1699,12 +1907,16 @@ describe('Manuscripts Contentful Data Provider', () => {
       await manuscriptDataProvider.sendEmailNotification(
         'manuscript_submitted',
         manuscript.sys.id,
+        true,
+        '',
       );
-      expect(consoleMock).toHaveBeenCalledWith('TO: ', recipients);
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({ To: recipients }),
+      );
     });
 
-    test('returns active Project Managers and Lead PIs of contributing teams as recipients', async () => {
-      const consoleMock = jest.spyOn(console, 'log');
+    test('sends email notification with active Project Managers and Lead PIs of contributing teams as recipients', async () => {
       const manuscript = getContentfulGraphqlManuscript() as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
@@ -1819,12 +2031,15 @@ describe('Manuscripts Contentful Data Provider', () => {
       await manuscriptDataProvider.sendEmailNotification(
         'manuscript_submitted',
         manuscript.sys.id,
+        true,
+        '',
       );
-      expect(consoleMock).toHaveBeenCalledWith('TO: ', recipients);
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({ To: recipients }),
+      );
     });
 
-    test('returns active PIs of contributing labs as recipients', async () => {
-      const consoleMock = jest.spyOn(console, 'log');
+    test('sends email notification with active PIs of contributing labs as recipients', async () => {
       const manuscript = getContentfulGraphqlManuscript() as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
@@ -1859,8 +2074,12 @@ describe('Manuscripts Contentful Data Provider', () => {
       await manuscriptDataProvider.sendEmailNotification(
         'manuscript_submitted',
         manuscript.sys.id,
+        true,
+        '',
       );
-      expect(consoleMock).toHaveBeenCalledWith('TO: ', recipients);
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({ To: recipients }),
+      );
     });
   });
 });

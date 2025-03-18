@@ -113,6 +113,7 @@ const renderCompliancePage = async () => {
 beforeEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
+  jest.resetModules();
   mockUseAlgolia.mockReturnValue({
     client: useAlgolia as unknown as AlgoliaSearchClient<'crn'>,
   });
@@ -176,7 +177,9 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
     expect(mockUpdateManuscript).toHaveBeenCalledWith(
       manuscriptId,
       {
+        notificationList: '',
         status: 'Manuscript Resubmitted',
+        sendNotifications: false,
       },
       expect.any(String),
     );
@@ -238,7 +241,9 @@ it('manuscripts remain the same when there is not a match between the manuscript
     expect(mockUpdateManuscript).toHaveBeenCalledWith(
       'manuscript-id-1',
       {
+        notificationList: '',
         status: 'Manuscript Resubmitted',
+        sendNotifications: false,
       },
       expect.any(String),
     );
@@ -302,7 +307,9 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
     expect(mockUpdateManuscript).toHaveBeenCalledWith(
       'manuscript-id-1',
       {
+        notificationList: '',
         status: 'Manuscript Resubmitted',
+        sendNotifications: false,
       },
       expect.any(String),
     );

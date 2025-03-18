@@ -62,6 +62,9 @@ inputs:
   openai-api-key:
     description: 'OpenAI API Key'
     required: true
+  postmark-server-token:
+    description: 'Postmark Server Token'
+    required: false
   sentry-dsn-api:
     description: 'Sentry DSN for the API'
     required: true
@@ -129,6 +132,7 @@ runs:
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max-old-space-size=8192'
         OPENAI_API_KEY: ${{ inputs.openai-api-key }}
+        POSTMARK_SERVER_TOKEN: ${{ inputs.postmark-server-token }}
         SENTRY_DSN_API: ${{ inputs.sentry-dsn-api }}
         SENTRY_DSN_PUBLIC_API: ${{ inputs.sentry-dsn-public-api }}
         SENTRY_DSN_HANDLERS: ${{ inputs.sentry-dsn-handlers }}

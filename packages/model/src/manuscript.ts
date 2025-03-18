@@ -874,7 +874,6 @@ export type TemplateAlias =
   | 'waiting-for-report-os-team'
   | 'manuscript-re-submitted-grantees'
   | 'manuscript-resubmitted-os-team'
-
   | 'review-compliance-report'
   | 'submit-final-publication'
   | 'addendum-required'

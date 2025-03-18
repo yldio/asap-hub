@@ -374,12 +374,12 @@ describe('Manuscripts Contentful Data Provider', () => {
     });
 
     test.each`
-      status                           | templateAlias
-      ${'Review Compliance Report'}    | ${'review-compliance-report'}
-      ${'Submit Final Publication'}    | ${'submit-final-publication'}
-      ${'Addendum Required'}           | ${'addendum-required'}
-      ${'Compliant'}                   | ${'compliant'}
-      ${'Closed (other)'}              | ${'closed'}
+      status                        | templateAlias
+      ${'Review Compliance Report'} | ${'review-compliance-report'}
+      ${'Submit Final Publication'} | ${'submit-final-publication'}
+      ${'Addendum Required'}        | ${'addendum-required'}
+      ${'Compliant'}                | ${'compliant'}
+      ${'Closed (other)'}           | ${'closed'}
     `(
       'sends email notification when status is changed to $status and flag is on',
       async ({ status, templateAlias }) => {

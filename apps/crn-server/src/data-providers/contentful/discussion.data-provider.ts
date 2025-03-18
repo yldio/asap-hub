@@ -7,7 +7,6 @@ import {
   getLinkEntity,
   GraphQLClient,
   patchAndPublish,
-  pollContentfulGql,
 } from '@asap-hub/contentful';
 import {
   DiscussionDataObject,
@@ -78,10 +77,6 @@ export class DiscussionContentfulDataProvider
     const environment = await this.getRestClient();
     const discussion = await environment.getEntry(id);
 
-    if (discussion.fields.endedAt) {
-      throw new Error('Cannot update a discussion that has ended.');
-    }
-
     if (update.reply) {
       const publishedReplyId = await createAndPublishMessage(
         environment,
@@ -97,28 +92,6 @@ export class DiscussionContentfulDataProvider
       await patchAndPublish(discussion, {
         replies: [...previousReplies, newReply],
       });
-      return;
-    }
-
-    if (update.endedBy) {
-      const endedBy = getLinkEntity(update.endedBy);
-
-      const published = await patchAndPublish(discussion, {
-        endedAt: new Date().toISOString(),
-        endedBy,
-      });
-
-      const fetchDiscussionById = () =>
-        this.contentfulClient.request<
-          FetchDiscussionByIdQuery,
-          FetchDiscussionByIdQueryVariables
-        >(FETCH_DISCUSSION_BY_ID, { id });
-
-      await pollContentfulGql<FetchDiscussionByIdQuery>(
-        published.sys.publishedVersion || Infinity,
-        fetchDiscussionById,
-        'discussions',
-      );
     }
   }
 }
@@ -170,5 +143,4 @@ export const parseGraphQLDiscussion = (
   id: discussion.sys.id,
   message: parseGraphQLMessage(discussion.message),
   replies: discussion.repliesCollection?.items.map(parseGraphQLMessage),
-  endedAt: discussion.endedAt,
 });

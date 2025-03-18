@@ -70,9 +70,7 @@ const Discussion: FC<DiscussionProps> = ({
   const { message, replies } = discussion;
   const hasReplies = replies && replies.length > 0;
   const displayReplyButton =
-    canReply &&
-    !discussion.endedAt &&
-    (!hasReplies || (hasReplies && expandReplies));
+    canReply && (!hasReplies || (hasReplies && expandReplies));
 
   return (
     <>
@@ -147,7 +145,7 @@ const Discussion: FC<DiscussionProps> = ({
           </div>
         )}
 
-        {canEndDiscussion && !discussion.endedAt && (
+        {canEndDiscussion && (
           <div css={!displayReplyButton && { paddingLeft: rem(36) }}>
             <Button
               noMargin

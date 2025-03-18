@@ -612,7 +612,6 @@ export type ComplianceReports = Entry &
     contentfulMetadata: ContentfulMetadata;
     createdBy?: Maybe<Users>;
     description?: Maybe<Scalars['String']>;
-    discussion?: Maybe<Discussions>;
     linkedFrom?: Maybe<ComplianceReportsLinkingCollections>;
     manuscriptVersion?: Maybe<ManuscriptVersions>;
     sys: Sys;
@@ -629,13 +628,6 @@ export type ComplianceReportsCreatedByArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
 export type ComplianceReportsDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
-export type ComplianceReportsDiscussionArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
@@ -675,8 +667,6 @@ export type ComplianceReportsFilter = {
   description_not?: InputMaybe<Scalars['String']>;
   description_not_contains?: InputMaybe<Scalars['String']>;
   description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  discussion?: InputMaybe<CfDiscussionsNestedFilter>;
-  discussion_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptVersion?: InputMaybe<CfManuscriptVersionsNestedFilter>;
   manuscriptVersion_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
@@ -1222,25 +1212,12 @@ export type Discussions = Entry &
   _Node & {
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
-    endedAt?: Maybe<Scalars['DateTime']>;
-    endedBy?: Maybe<Users>;
     linkedFrom?: Maybe<DiscussionsLinkingCollections>;
     message?: Maybe<Messages>;
     repliesCollection?: Maybe<DiscussionsRepliesCollection>;
     sys: Sys;
+    title?: Maybe<Scalars['String']>;
   };
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
-export type DiscussionsEndedAtArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
-export type DiscussionsEndedByArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<UsersFilter>;
-};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
 export type DiscussionsLinkedFromArgs = {
@@ -1264,6 +1241,11 @@ export type DiscussionsRepliesCollectionArgs = {
   where?: InputMaybe<MessagesFilter>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
+export type DiscussionsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
 export type DiscussionsCollection = {
   items: Array<Maybe<Discussions>>;
   limit: Scalars['Int'];
@@ -1275,40 +1257,23 @@ export type DiscussionsFilter = {
   AND?: InputMaybe<Array<InputMaybe<DiscussionsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<DiscussionsFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  endedAt?: InputMaybe<Scalars['DateTime']>;
-  endedAt_exists?: InputMaybe<Scalars['Boolean']>;
-  endedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  endedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  endedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  endedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  endedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  endedAt_not?: InputMaybe<Scalars['DateTime']>;
-  endedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  endedBy?: InputMaybe<CfUsersNestedFilter>;
-  endedBy_exists?: InputMaybe<Scalars['Boolean']>;
   message?: InputMaybe<CfMessagesNestedFilter>;
   message_exists?: InputMaybe<Scalars['Boolean']>;
   replies?: InputMaybe<CfMessagesNestedFilter>;
   repliesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type DiscussionsLinkingCollections = {
-  complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
   entryCollection?: Maybe<EntryCollection>;
-  manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
-};
-
-export type DiscussionsLinkingCollectionsComplianceReportsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<
-    Array<
-      InputMaybe<DiscussionsLinkingCollectionsComplianceReportsCollectionOrder>
-    >
-  >;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
+  manuscriptsCollection?: Maybe<ManuscriptsCollection>;
 };
 
 export type DiscussionsLinkingCollectionsEntryCollectionArgs = {
@@ -1318,64 +1283,25 @@ export type DiscussionsLinkingCollectionsEntryCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
 };
 
-export type DiscussionsLinkingCollectionsManuscriptVersionsCollectionArgs = {
+export type DiscussionsLinkingCollectionsManuscriptsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
-    Array<
-      InputMaybe<DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder>
-    >
+    Array<InputMaybe<DiscussionsLinkingCollectionsManuscriptsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
 
-export enum DiscussionsLinkingCollectionsComplianceReportsCollectionOrder {
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  UrlAsc = 'url_ASC',
-  UrlDesc = 'url_DESC',
-}
-
-export enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {
-  AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
-  AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
-  AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
-  AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
-  AvailabilityStatementAsc = 'availabilityStatement_ASC',
-  AvailabilityStatementDesc = 'availabilityStatement_DESC',
-  CodeDepositedAsc = 'codeDeposited_ASC',
-  CodeDepositedDesc = 'codeDeposited_DESC',
+export enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
-  DatasetsDepositedAsc = 'datasetsDeposited_ASC',
-  DatasetsDepositedDesc = 'datasetsDeposited_DESC',
-  LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
-  LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
-  LifecycleAsc = 'lifecycle_ASC',
-  LifecycleDesc = 'lifecycle_DESC',
-  ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
-  ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
-  OtherDetailsAsc = 'otherDetails_ASC',
-  OtherDetailsDesc = 'otherDetails_DESC',
-  PreprintDoiAsc = 'preprintDoi_ASC',
-  PreprintDoiDesc = 'preprintDoi_DESC',
-  ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
-  ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
-  PublicationDoiAsc = 'publicationDoi_ASC',
-  PublicationDoiDesc = 'publicationDoi_DESC',
-  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
-  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
-  SubmissionDateAsc = 'submissionDate_ASC',
-  SubmissionDateDesc = 'submissionDate_DESC',
-  SubmitterNameAsc = 'submitterName_ASC',
-  SubmitterNameDesc = 'submitterName_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -1384,13 +1310,11 @@ export enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
 }
 
 export enum DiscussionsOrder {
-  EndedAtAsc = 'endedAt_ASC',
-  EndedAtDesc = 'endedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -1399,6 +1323,8 @@ export enum DiscussionsOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
 }
 
 export type DiscussionsRepliesCollection = {
@@ -1417,8 +1343,6 @@ export enum DiscussionsRepliesCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TextAsc = 'text_ASC',
-  TextDesc = 'text_DESC',
 }
 
 export type Entry = {
@@ -2425,28 +2349,44 @@ export enum ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder {
 }
 
 export enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -3922,28 +3862,44 @@ export enum LabsLinkingCollectionsLabMembershipCollectionOrder {
 }
 
 export enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -4104,36 +4060,36 @@ export type ManuscriptVersions = Entry &
   _Node & {
     _id: Scalars['ID'];
     acknowledgedGrantNumber?: Maybe<Scalars['String']>;
-    acknowledgedGrantNumberDetails?: Maybe<Discussions>;
+    acknowledgedGrantNumberDetails?: Maybe<Scalars['String']>;
     additionalAuthorsCollection?: Maybe<ManuscriptVersionsAdditionalAuthorsCollection>;
     additionalFilesCollection?: Maybe<AssetCollection>;
     asapAffiliationIncluded?: Maybe<Scalars['String']>;
-    asapAffiliationIncludedDetails?: Maybe<Discussions>;
+    asapAffiliationIncludedDetails?: Maybe<Scalars['String']>;
     availabilityStatement?: Maybe<Scalars['String']>;
-    availabilityStatementDetails?: Maybe<Discussions>;
+    availabilityStatementDetails?: Maybe<Scalars['String']>;
     codeDeposited?: Maybe<Scalars['String']>;
-    codeDepositedDetails?: Maybe<Discussions>;
+    codeDepositedDetails?: Maybe<Scalars['String']>;
     contentfulMetadata: ContentfulMetadata;
     correspondingAuthorCollection?: Maybe<ManuscriptVersionsCorrespondingAuthorCollection>;
     count?: Maybe<Scalars['Int']>;
     createdBy?: Maybe<Users>;
     datasetsDeposited?: Maybe<Scalars['String']>;
-    datasetsDepositedDetails?: Maybe<Discussions>;
+    datasetsDepositedDetails?: Maybe<Scalars['String']>;
     description?: Maybe<Scalars['String']>;
     firstAuthorsCollection?: Maybe<ManuscriptVersionsFirstAuthorsCollection>;
     keyResourceTable?: Maybe<Asset>;
     labMaterialsRegistered?: Maybe<Scalars['String']>;
-    labMaterialsRegisteredDetails?: Maybe<Discussions>;
+    labMaterialsRegisteredDetails?: Maybe<Scalars['String']>;
     labsCollection?: Maybe<ManuscriptVersionsLabsCollection>;
     lifecycle?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ManuscriptVersionsLinkingCollections>;
     manuscriptFile?: Maybe<Asset>;
     manuscriptLicense?: Maybe<Scalars['String']>;
-    manuscriptLicenseDetails?: Maybe<Discussions>;
+    manuscriptLicenseDetails?: Maybe<Scalars['String']>;
     otherDetails?: Maybe<Scalars['String']>;
     preprintDoi?: Maybe<Scalars['String']>;
     protocolsDeposited?: Maybe<Scalars['String']>;
-    protocolsDepositedDetails?: Maybe<Discussions>;
+    protocolsDepositedDetails?: Maybe<Scalars['String']>;
     publicationDoi?: Maybe<Scalars['String']>;
     requestingApcCoverage?: Maybe<Scalars['String']>;
     submissionDate?: Maybe<Scalars['DateTime']>;
@@ -4152,8 +4108,6 @@ export type ManuscriptVersionsAcknowledgedGrantNumberArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsAcknowledgedGrantNumberDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4181,8 +4135,6 @@ export type ManuscriptVersionsAsapAffiliationIncludedArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsAsapAffiliationIncludedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4193,8 +4145,6 @@ export type ManuscriptVersionsAvailabilityStatementArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsAvailabilityStatementDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4205,8 +4155,6 @@ export type ManuscriptVersionsCodeDepositedArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsCodeDepositedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4238,8 +4186,6 @@ export type ManuscriptVersionsDatasetsDepositedArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsDatasetsDepositedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4270,8 +4216,6 @@ export type ManuscriptVersionsLabMaterialsRegisteredArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsLabMaterialsRegisteredDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4308,8 +4252,6 @@ export type ManuscriptVersionsManuscriptLicenseArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsManuscriptLicenseDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4330,8 +4272,6 @@ export type ManuscriptVersionsProtocolsDepositedArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsProtocolsDepositedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4453,8 +4393,17 @@ export type ManuscriptVersionsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptVersionsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptVersionsFilter>>>;
   acknowledgedGrantNumber?: InputMaybe<Scalars['String']>;
-  acknowledgedGrantNumberDetails?: InputMaybe<CfDiscussionsNestedFilter>;
+  acknowledgedGrantNumberDetails?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_contains?: InputMaybe<Scalars['String']>;
   acknowledgedGrantNumberDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  acknowledgedGrantNumberDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  acknowledgedGrantNumberDetails_not?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_not_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   acknowledgedGrantNumber_contains?: InputMaybe<Scalars['String']>;
   acknowledgedGrantNumber_exists?: InputMaybe<Scalars['Boolean']>;
   acknowledgedGrantNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4467,8 +4416,17 @@ export type ManuscriptVersionsFilter = {
   additionalAuthorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   additionalFilesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   asapAffiliationIncluded?: InputMaybe<Scalars['String']>;
-  asapAffiliationIncludedDetails?: InputMaybe<CfDiscussionsNestedFilter>;
+  asapAffiliationIncludedDetails?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_contains?: InputMaybe<Scalars['String']>;
   asapAffiliationIncludedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  asapAffiliationIncludedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  asapAffiliationIncludedDetails_not?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   asapAffiliationIncluded_contains?: InputMaybe<Scalars['String']>;
   asapAffiliationIncluded_exists?: InputMaybe<Scalars['Boolean']>;
   asapAffiliationIncluded_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4478,8 +4436,17 @@ export type ManuscriptVersionsFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   availabilityStatement?: InputMaybe<Scalars['String']>;
-  availabilityStatementDetails?: InputMaybe<CfDiscussionsNestedFilter>;
+  availabilityStatementDetails?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_contains?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  availabilityStatementDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  availabilityStatementDetails_not?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_not_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   availabilityStatement_contains?: InputMaybe<Scalars['String']>;
   availabilityStatement_exists?: InputMaybe<Scalars['Boolean']>;
   availabilityStatement_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4489,8 +4456,15 @@ export type ManuscriptVersionsFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   codeDeposited?: InputMaybe<Scalars['String']>;
-  codeDepositedDetails?: InputMaybe<CfDiscussionsNestedFilter>;
+  codeDepositedDetails?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_contains?: InputMaybe<Scalars['String']>;
   codeDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  codeDepositedDetails_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  codeDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   codeDeposited_contains?: InputMaybe<Scalars['String']>;
   codeDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   codeDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4512,8 +4486,17 @@ export type ManuscriptVersionsFilter = {
   createdBy?: InputMaybe<CfUsersNestedFilter>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
   datasetsDeposited?: InputMaybe<Scalars['String']>;
-  datasetsDepositedDetails?: InputMaybe<CfDiscussionsNestedFilter>;
+  datasetsDepositedDetails?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
   datasetsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  datasetsDepositedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  datasetsDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   datasetsDeposited_contains?: InputMaybe<Scalars['String']>;
   datasetsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   datasetsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4531,8 +4514,17 @@ export type ManuscriptVersionsFilter = {
   firstAuthorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   keyResourceTable_exists?: InputMaybe<Scalars['Boolean']>;
   labMaterialsRegistered?: InputMaybe<Scalars['String']>;
-  labMaterialsRegisteredDetails?: InputMaybe<CfDiscussionsNestedFilter>;
+  labMaterialsRegisteredDetails?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_contains?: InputMaybe<Scalars['String']>;
   labMaterialsRegisteredDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  labMaterialsRegisteredDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  labMaterialsRegisteredDetails_not?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_not_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   labMaterialsRegistered_contains?: InputMaybe<Scalars['String']>;
   labMaterialsRegistered_exists?: InputMaybe<Scalars['Boolean']>;
   labMaterialsRegistered_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4552,8 +4544,17 @@ export type ManuscriptVersionsFilter = {
   lifecycle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   manuscriptFile_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptLicense?: InputMaybe<Scalars['String']>;
-  manuscriptLicenseDetails?: InputMaybe<CfDiscussionsNestedFilter>;
+  manuscriptLicenseDetails?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_contains?: InputMaybe<Scalars['String']>;
   manuscriptLicenseDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  manuscriptLicenseDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  manuscriptLicenseDetails_not?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_not_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   manuscriptLicense_contains?: InputMaybe<Scalars['String']>;
   manuscriptLicense_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptLicense_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4575,8 +4576,17 @@ export type ManuscriptVersionsFilter = {
   preprintDoi_not_contains?: InputMaybe<Scalars['String']>;
   preprintDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   protocolsDeposited?: InputMaybe<Scalars['String']>;
-  protocolsDepositedDetails?: InputMaybe<CfDiscussionsNestedFilter>;
+  protocolsDepositedDetails?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
   protocolsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  protocolsDepositedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  protocolsDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   protocolsDeposited_contains?: InputMaybe<Scalars['String']>;
   protocolsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   protocolsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4752,28 +4762,44 @@ export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
 }
 
 export enum ManuscriptVersionsOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -4831,6 +4857,7 @@ export type Manuscripts = Entry &
     assignedUsersCollection?: Maybe<ManuscriptsAssignedUsersCollection>;
     contentfulMetadata: ContentfulMetadata;
     count?: Maybe<Scalars['Int']>;
+    discussionsCollection?: Maybe<ManuscriptsDiscussionsCollection>;
     eligibilityReasons?: Maybe<Array<Maybe<Scalars['String']>>>;
     linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
     previousStatus?: Maybe<Scalars['String']>;
@@ -4858,6 +4885,16 @@ export type ManuscriptsAssignedUsersCollectionArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsCountArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsDiscussionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ManuscriptsDiscussionsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
@@ -5006,6 +5043,26 @@ export type ManuscriptsCollection = {
   total: Scalars['Int'];
 };
 
+export type ManuscriptsDiscussionsCollection = {
+  items: Array<Maybe<Discussions>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum ManuscriptsDiscussionsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
 export type ManuscriptsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
@@ -5021,6 +5078,8 @@ export type ManuscriptsFilter = {
   count_lte?: InputMaybe<Scalars['Int']>;
   count_not?: InputMaybe<Scalars['Int']>;
   count_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  discussions?: InputMaybe<CfDiscussionsNestedFilter>;
+  discussionsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   eligibilityReasons_contains_all?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
@@ -5138,28 +5197,44 @@ export type ManuscriptsVersionsCollection = {
 };
 
 export enum ManuscriptsVersionsCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -5321,8 +5396,6 @@ export type MessagesLinkingCollectionsEntryCollectionArgs = {
 };
 
 export enum MessagesLinkingCollectionsDiscussionsCollectionOrder {
-  EndedAtAsc = 'endedAt_ASC',
-  EndedAtDesc = 'endedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5331,6 +5404,8 @@ export enum MessagesLinkingCollectionsDiscussionsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
 }
 
 export enum MessagesOrder {
@@ -5342,8 +5417,6 @@ export enum MessagesOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TextAsc = 'text_ASC',
-  TextDesc = 'text_DESC',
 }
 
 /** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
@@ -9089,28 +9162,44 @@ export enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
 }
 
 export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -10509,7 +10598,6 @@ export enum UsersLabsCollectionOrder {
 export type UsersLinkingCollections = {
   complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
   discoverCollection?: Maybe<DiscoverCollection>;
-  discussionsCollection?: Maybe<DiscussionsCollection>;
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
   interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
@@ -10538,16 +10626,6 @@ export type UsersLinkingCollectionsDiscoverCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<UsersLinkingCollectionsDiscoverCollectionOrder>>
-  >;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-};
-
-export type UsersLinkingCollectionsDiscussionsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<
-    Array<InputMaybe<UsersLinkingCollectionsDiscussionsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -10686,19 +10764,6 @@ export enum UsersLinkingCollectionsDiscoverCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-export enum UsersLinkingCollectionsDiscussionsCollectionOrder {
-  EndedAtAsc = 'endedAt_ASC',
-  EndedAtDesc = 'endedAt_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-}
-
 export enum UsersLinkingCollectionsEventSpeakersCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
@@ -10739,28 +10804,44 @@ export enum UsersLinkingCollectionsLabsCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -10813,8 +10894,6 @@ export enum UsersLinkingCollectionsMessagesCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TextAsc = 'text_ASC',
-  TextDesc = 'text_DESC',
 }
 
 export enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
@@ -11836,19 +11915,16 @@ export type CfDiscussionsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfDiscussionsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfDiscussionsNestedFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  endedAt?: InputMaybe<Scalars['DateTime']>;
-  endedAt_exists?: InputMaybe<Scalars['Boolean']>;
-  endedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  endedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  endedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  endedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  endedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  endedAt_not?: InputMaybe<Scalars['DateTime']>;
-  endedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  endedBy_exists?: InputMaybe<Scalars['Boolean']>;
   message_exists?: InputMaybe<Scalars['Boolean']>;
   repliesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CfEventSpeakersNestedFilter = {
@@ -12169,7 +12245,17 @@ export type CfManuscriptVersionsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfManuscriptVersionsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfManuscriptVersionsNestedFilter>>>;
   acknowledgedGrantNumber?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_contains?: InputMaybe<Scalars['String']>;
   acknowledgedGrantNumberDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  acknowledgedGrantNumberDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  acknowledgedGrantNumberDetails_not?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_not_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   acknowledgedGrantNumber_contains?: InputMaybe<Scalars['String']>;
   acknowledgedGrantNumber_exists?: InputMaybe<Scalars['Boolean']>;
   acknowledgedGrantNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -12181,7 +12267,17 @@ export type CfManuscriptVersionsNestedFilter = {
   additionalAuthorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   additionalFilesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   asapAffiliationIncluded?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_contains?: InputMaybe<Scalars['String']>;
   asapAffiliationIncludedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  asapAffiliationIncludedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  asapAffiliationIncludedDetails_not?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   asapAffiliationIncluded_contains?: InputMaybe<Scalars['String']>;
   asapAffiliationIncluded_exists?: InputMaybe<Scalars['Boolean']>;
   asapAffiliationIncluded_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -12191,7 +12287,17 @@ export type CfManuscriptVersionsNestedFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   availabilityStatement?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_contains?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  availabilityStatementDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  availabilityStatementDetails_not?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_not_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   availabilityStatement_contains?: InputMaybe<Scalars['String']>;
   availabilityStatement_exists?: InputMaybe<Scalars['Boolean']>;
   availabilityStatement_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -12201,7 +12307,15 @@ export type CfManuscriptVersionsNestedFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   codeDeposited?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_contains?: InputMaybe<Scalars['String']>;
   codeDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  codeDepositedDetails_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  codeDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   codeDeposited_contains?: InputMaybe<Scalars['String']>;
   codeDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   codeDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -12221,7 +12335,17 @@ export type CfManuscriptVersionsNestedFilter = {
   count_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
   datasetsDeposited?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
   datasetsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  datasetsDepositedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  datasetsDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   datasetsDeposited_contains?: InputMaybe<Scalars['String']>;
   datasetsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   datasetsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -12238,7 +12362,17 @@ export type CfManuscriptVersionsNestedFilter = {
   firstAuthorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   keyResourceTable_exists?: InputMaybe<Scalars['Boolean']>;
   labMaterialsRegistered?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_contains?: InputMaybe<Scalars['String']>;
   labMaterialsRegisteredDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  labMaterialsRegisteredDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  labMaterialsRegisteredDetails_not?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_not_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   labMaterialsRegistered_contains?: InputMaybe<Scalars['String']>;
   labMaterialsRegistered_exists?: InputMaybe<Scalars['Boolean']>;
   labMaterialsRegistered_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -12257,7 +12391,17 @@ export type CfManuscriptVersionsNestedFilter = {
   lifecycle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   manuscriptFile_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptLicense?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_contains?: InputMaybe<Scalars['String']>;
   manuscriptLicenseDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  manuscriptLicenseDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  manuscriptLicenseDetails_not?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_not_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   manuscriptLicense_contains?: InputMaybe<Scalars['String']>;
   manuscriptLicense_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptLicense_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -12279,7 +12423,17 @@ export type CfManuscriptVersionsNestedFilter = {
   preprintDoi_not_contains?: InputMaybe<Scalars['String']>;
   preprintDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   protocolsDeposited?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
   protocolsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  protocolsDepositedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  protocolsDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   protocolsDeposited_contains?: InputMaybe<Scalars['String']>;
   protocolsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   protocolsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -14464,7 +14618,7 @@ export type FetchDiscoverQuery = {
   }>;
 };
 
-export type DiscussionsContentFragment = Pick<Discussions, 'endedAt'> & {
+export type DiscussionsContentFragment = {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
   message?: Maybe<
     Pick<Messages, 'text'> & {
@@ -14524,61 +14678,59 @@ export type FetchDiscussionByIdQueryVariables = Exact<{
 }>;
 
 export type FetchDiscussionByIdQuery = {
-  discussions?: Maybe<
-    Pick<Discussions, 'endedAt'> & {
-      sys: Pick<Sys, 'id' | 'publishedVersion'>;
-      message?: Maybe<
-        Pick<Messages, 'text'> & {
-          sys: Pick<Sys, 'publishedAt'>;
-          createdBy?: Maybe<
-            Pick<
-              Users,
-              'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-            > & {
-              sys: Pick<Sys, 'id'>;
-              avatar?: Maybe<Pick<Asset, 'url'>>;
-              teamsCollection?: Maybe<{
-                items: Array<
-                  Maybe<{
-                    team?: Maybe<
-                      Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
-                    >;
-                  }>
-                >;
-              }>;
-            }
-          >;
-        }
-      >;
-      repliesCollection?: Maybe<{
-        items: Array<
-          Maybe<
-            Pick<Messages, 'text'> & {
-              sys: Pick<Sys, 'publishedAt'>;
-              createdBy?: Maybe<
-                Pick<
-                  Users,
-                  'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-                > & {
-                  sys: Pick<Sys, 'id'>;
-                  avatar?: Maybe<Pick<Asset, 'url'>>;
-                  teamsCollection?: Maybe<{
-                    items: Array<
-                      Maybe<{
-                        team?: Maybe<
-                          Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
-                        >;
-                      }>
-                    >;
-                  }>;
-                }
+  discussions?: Maybe<{
+    sys: Pick<Sys, 'id' | 'publishedVersion'>;
+    message?: Maybe<
+      Pick<Messages, 'text'> & {
+        sys: Pick<Sys, 'publishedAt'>;
+        createdBy?: Maybe<
+          Pick<
+            Users,
+            'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+          > & {
+            sys: Pick<Sys, 'id'>;
+            avatar?: Maybe<Pick<Asset, 'url'>>;
+            teamsCollection?: Maybe<{
+              items: Array<
+                Maybe<{
+                  team?: Maybe<
+                    Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                  >;
+                }>
               >;
-            }
-          >
+            }>;
+          }
         >;
-      }>;
-    }
-  >;
+      }
+    >;
+    repliesCollection?: Maybe<{
+      items: Array<
+        Maybe<
+          Pick<Messages, 'text'> & {
+            sys: Pick<Sys, 'publishedAt'>;
+            createdBy?: Maybe<
+              Pick<
+                Users,
+                'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+              > & {
+                sys: Pick<Sys, 'id'>;
+                avatar?: Maybe<Pick<Asset, 'url'>>;
+                teamsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<{
+                      team?: Maybe<
+                        Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                      >;
+                    }>
+                  >;
+                }>;
+              }
+            >;
+          }
+        >
+      >;
+    }>;
+  }>;
 };
 
 export type EventsContentFragment = Pick<
@@ -18121,13 +18273,21 @@ export type ManuscriptsContentFragment = Pick<
           | 'submissionDate'
           | 'otherDetails'
           | 'acknowledgedGrantNumber'
+          | 'acknowledgedGrantNumberDetails'
           | 'asapAffiliationIncluded'
+          | 'asapAffiliationIncludedDetails'
           | 'manuscriptLicense'
+          | 'manuscriptLicenseDetails'
           | 'datasetsDeposited'
+          | 'datasetsDepositedDetails'
           | 'codeDeposited'
+          | 'codeDepositedDetails'
           | 'protocolsDeposited'
+          | 'protocolsDepositedDetails'
           | 'labMaterialsRegistered'
+          | 'labMaterialsRegisteredDetails'
           | 'availabilityStatement'
+          | 'availabilityStatementDetails'
         > & {
           sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
           manuscriptFile?: Maybe<
@@ -18141,14 +18301,6 @@ export type ManuscriptsContentFragment = Pick<
               Maybe<Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }>
             >;
           }>;
-          acknowledgedGrantNumberDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-          asapAffiliationIncludedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-          manuscriptLicenseDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-          datasetsDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-          codeDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-          protocolsDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-          labMaterialsRegisteredDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-          availabilityStatementDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
           teamsCollection?: Maybe<{
             items: Array<
               Maybe<
@@ -18284,7 +18436,6 @@ export type ManuscriptsContentFragment = Pick<
                         }>;
                       }
                     >;
-                    discussion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                   }
                 >
               >;
@@ -18335,13 +18486,21 @@ export type FetchManuscriptByIdQuery = {
               | 'submissionDate'
               | 'otherDetails'
               | 'acknowledgedGrantNumber'
+              | 'acknowledgedGrantNumberDetails'
               | 'asapAffiliationIncluded'
+              | 'asapAffiliationIncludedDetails'
               | 'manuscriptLicense'
+              | 'manuscriptLicenseDetails'
               | 'datasetsDeposited'
+              | 'datasetsDepositedDetails'
               | 'codeDeposited'
+              | 'codeDepositedDetails'
               | 'protocolsDeposited'
+              | 'protocolsDepositedDetails'
               | 'labMaterialsRegistered'
+              | 'labMaterialsRegisteredDetails'
               | 'availabilityStatement'
+              | 'availabilityStatementDetails'
             > & {
               sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
               manuscriptFile?: Maybe<
@@ -18357,14 +18516,6 @@ export type FetchManuscriptByIdQuery = {
                   >
                 >;
               }>;
-              acknowledgedGrantNumberDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-              asapAffiliationIncludedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-              manuscriptLicenseDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-              datasetsDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-              codeDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-              protocolsDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-              labMaterialsRegisteredDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-              availabilityStatementDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
               teamsCollection?: Maybe<{
                 items: Array<
                   Maybe<
@@ -18500,7 +18651,6 @@ export type FetchManuscriptByIdQuery = {
                             }>;
                           }
                         >;
-                        discussion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                       }
                     >
                   >;
@@ -19508,11 +19658,14 @@ export type FetchDiscussionRemindersQueryVariables = Exact<{
 export type FetchDiscussionRemindersQuery = {
   discussionsCollection?: Maybe<{
     items: Array<
-      Maybe<
-        Pick<Discussions, 'endedAt'> & {
-          sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
-          endedBy?: Maybe<
-            Pick<Users, 'firstName' | 'lastName'> & {
+      Maybe<{
+        sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+        message?: Maybe<{
+          createdBy?: Maybe<
+            Pick<
+              Users,
+              'firstName' | 'lastName' | 'role' | 'openScienceTeamMember'
+            > & {
               sys: Pick<Sys, 'id'>;
               teamsCollection?: Maybe<{
                 items: Array<
@@ -19527,88 +19680,8 @@ export type FetchDiscussionRemindersQuery = {
               }>;
             }
           >;
-          message?: Maybe<{
-            createdBy?: Maybe<
-              Pick<
-                Users,
-                'firstName' | 'lastName' | 'role' | 'openScienceTeamMember'
-              > & {
-                sys: Pick<Sys, 'id'>;
-                teamsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<{
-                      team?: Maybe<
-                        Pick<Teams, 'displayName' | 'inactiveSince'> & {
-                          sys: Pick<Sys, 'id'>;
-                        }
-                      >;
-                    }>
-                  >;
-                }>;
-              }
-            >;
-          }>;
-          linkedFrom?: Maybe<{
-            complianceReportsCollection?: Maybe<{
-              items: Array<
-                Maybe<{
-                  manuscriptVersion?: Maybe<{
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<
-                          Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
-                        >
-                      >;
-                    }>;
-                    firstAuthorsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<
-                          | { __typename: 'ExternalAuthors' }
-                          | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
-                        >
-                      >;
-                    }>;
-                    additionalAuthorsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<
-                          | { __typename: 'ExternalAuthors' }
-                          | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
-                        >
-                      >;
-                    }>;
-                    correspondingAuthorCollection?: Maybe<{
-                      items: Array<
-                        Maybe<
-                          | { __typename: 'ExternalAuthors' }
-                          | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
-                        >
-                      >;
-                    }>;
-                    labsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<{ labPi?: Maybe<{ sys: Pick<Sys, 'id'> }> }>
-                      >;
-                    }>;
-                    linkedFrom?: Maybe<{
-                      manuscriptsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<
-                            Pick<Manuscripts, 'title'> & {
-                              assignedUsersCollection?: Maybe<{
-                                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
-                              }>;
-                            }
-                          >
-                        >;
-                      }>;
-                    }>;
-                  }>;
-                }>
-              >;
-            }>;
-          }>;
-        }
-      >
+        }>;
+      }>
     >;
   }>;
 };
@@ -19643,145 +19716,7 @@ export type FetchMessageRemindersQuery = {
         >;
         linkedFrom?: Maybe<{
           discussionsCollection?: Maybe<{
-            items: Array<
-              Maybe<{
-                message?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                linkedFrom?: Maybe<{
-                  complianceReportsCollection?: Maybe<{
-                    items: Array<
-                      Maybe<{
-                        manuscriptVersion?: Maybe<{
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >
-                            >;
-                          }>;
-                          firstAuthorsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                | { __typename: 'ExternalAuthors' }
-                                | ({ __typename: 'Users' } & {
-                                    sys: Pick<Sys, 'id'>;
-                                  })
-                              >
-                            >;
-                          }>;
-                          additionalAuthorsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                | { __typename: 'ExternalAuthors' }
-                                | ({ __typename: 'Users' } & {
-                                    sys: Pick<Sys, 'id'>;
-                                  })
-                              >
-                            >;
-                          }>;
-                          correspondingAuthorCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                | { __typename: 'ExternalAuthors' }
-                                | ({ __typename: 'Users' } & {
-                                    sys: Pick<Sys, 'id'>;
-                                  })
-                              >
-                            >;
-                          }>;
-                          labsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<{ labPi?: Maybe<{ sys: Pick<Sys, 'id'> }> }>
-                            >;
-                          }>;
-                          linkedFrom?: Maybe<{
-                            manuscriptsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Manuscripts, 'title'> & {
-                                    assignedUsersCollection?: Maybe<{
-                                      items: Array<
-                                        Maybe<{ sys: Pick<Sys, 'id'> }>
-                                      >;
-                                    }>;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }>;
-                        }>;
-                      }>
-                    >;
-                  }>;
-                  manuscriptVersionsCollection?: Maybe<{
-                    items: Array<
-                      Maybe<{
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<
-                              Pick<Teams, 'displayName'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >
-                          >;
-                        }>;
-                        firstAuthorsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<
-                              | { __typename: 'ExternalAuthors' }
-                              | ({ __typename: 'Users' } & {
-                                  sys: Pick<Sys, 'id'>;
-                                })
-                            >
-                          >;
-                        }>;
-                        additionalAuthorsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<
-                              | { __typename: 'ExternalAuthors' }
-                              | ({ __typename: 'Users' } & {
-                                  sys: Pick<Sys, 'id'>;
-                                })
-                            >
-                          >;
-                        }>;
-                        correspondingAuthorCollection?: Maybe<{
-                          items: Array<
-                            Maybe<
-                              | { __typename: 'ExternalAuthors' }
-                              | ({ __typename: 'Users' } & {
-                                  sys: Pick<Sys, 'id'>;
-                                })
-                            >
-                          >;
-                        }>;
-                        labsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{ labPi?: Maybe<{ sys: Pick<Sys, 'id'> }> }>
-                          >;
-                        }>;
-                        linkedFrom?: Maybe<{
-                          manuscriptsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<Manuscripts, 'title'> & {
-                                  assignedUsersCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<{ sys: Pick<Sys, 'id'> }>
-                                    >;
-                                  }>;
-                                }
-                              >
-                            >;
-                          }>;
-                        }>;
-                      }>
-                    >;
-                  }>;
-                }>;
-              }>
-            >;
+            items: Array<Maybe<{ message?: Maybe<{ sys: Pick<Sys, 'id'> }> }>>;
           }>;
         }>;
       }>
@@ -20688,13 +20623,21 @@ export type FetchTeamByIdQuery = {
                         | 'submissionDate'
                         | 'otherDetails'
                         | 'acknowledgedGrantNumber'
+                        | 'acknowledgedGrantNumberDetails'
                         | 'asapAffiliationIncluded'
+                        | 'asapAffiliationIncludedDetails'
                         | 'manuscriptLicense'
+                        | 'manuscriptLicenseDetails'
                         | 'datasetsDeposited'
+                        | 'datasetsDepositedDetails'
                         | 'codeDeposited'
+                        | 'codeDepositedDetails'
                         | 'protocolsDeposited'
+                        | 'protocolsDepositedDetails'
                         | 'labMaterialsRegistered'
+                        | 'labMaterialsRegisteredDetails'
                         | 'availabilityStatement'
+                        | 'availabilityStatementDetails'
                       > & {
                         sys: Pick<
                           Sys,
@@ -20718,28 +20661,6 @@ export type FetchTeamByIdQuery = {
                               }
                             >
                           >;
-                        }>;
-                        acknowledgedGrantNumberDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                        }>;
-                        asapAffiliationIncludedDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                        }>;
-                        manuscriptLicenseDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                        }>;
-                        datasetsDepositedDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                        }>;
-                        codeDepositedDetails?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                        protocolsDepositedDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                        }>;
-                        labMaterialsRegisteredDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
-                        }>;
-                        availabilityStatementDetails?: Maybe<{
-                          sys: Pick<Sys, 'id'>;
                         }>;
                         teamsCollection?: Maybe<{
                           items: Array<
@@ -20898,7 +20819,6 @@ export type FetchTeamByIdQuery = {
                                       }>;
                                     }
                                   >;
-                                  discussion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                                 }
                               >
                             >;
@@ -23024,7 +22944,6 @@ export const DiscussionsContentFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'endedAt' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'message' },
@@ -25130,24 +25049,6 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'Name',
                           value: 'acknowledgedGrantNumberDetails',
                         },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
                       },
                       {
                         kind: 'Field',
@@ -25162,24 +25063,6 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'Name',
                           value: 'asapAffiliationIncludedDetails',
                         },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
                       },
                       {
                         kind: 'Field',
@@ -25190,24 +25073,6 @@ export const ManuscriptsContentFragmentDoc = {
                         name: {
                           kind: 'Name',
                           value: 'manuscriptLicenseDetails',
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
                         },
                       },
                       {
@@ -25220,24 +25085,6 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'Name',
                           value: 'datasetsDepositedDetails',
                         },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
                       },
                       {
                         kind: 'Field',
@@ -25246,24 +25093,6 @@ export const ManuscriptsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'codeDepositedDetails' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
                       },
                       {
                         kind: 'Field',
@@ -25274,24 +25103,6 @@ export const ManuscriptsContentFragmentDoc = {
                         name: {
                           kind: 'Name',
                           value: 'protocolsDepositedDetails',
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
                         },
                       },
                       {
@@ -25304,24 +25115,6 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'Name',
                           value: 'labMaterialsRegisteredDetails',
                         },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
                       },
                       {
                         kind: 'Field',
@@ -25332,24 +25125,6 @@ export const ManuscriptsContentFragmentDoc = {
                         name: {
                           kind: 'Name',
                           value: 'availabilityStatementDetails',
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
                         },
                       },
                       {
@@ -26349,37 +26124,6 @@ export const ManuscriptsContentFragmentDoc = {
                                                             },
                                                           },
                                                         ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'discussion',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'sys',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'id',
                                                       },
                                                     },
                                                   ],
@@ -38068,127 +37812,6 @@ export const FetchDiscussionRemindersDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'endedAt' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'endedBy' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'teamsCollection' },
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '10' },
-                                },
-                                {
-                                  kind: 'Argument',
-                                  name: { kind: 'Name', value: 'where' },
-                                  value: {
-                                    kind: 'ObjectValue',
-                                    fields: [
-                                      {
-                                        kind: 'ObjectField',
-                                        name: {
-                                          kind: 'Name',
-                                          value: 'inactiveSinceDate_exists',
-                                        },
-                                        value: {
-                                          kind: 'BooleanValue',
-                                          value: false,
-                                        },
-                                      },
-                                    ],
-                                  },
-                                },
-                              ],
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'items' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'team' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'sys',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'id',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'displayName',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'inactiveSince',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
                         name: { kind: 'Name', value: 'message' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -38320,569 +37943,6 @@ export const FetchDiscussionRemindersDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value: 'inactiveSince',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'linkedFrom' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'complianceReportsCollection',
-                              },
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '1' },
-                                },
-                              ],
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'items' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'manuscriptVersion',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'teamsCollection',
-                                                },
-                                                arguments: [
-                                                  {
-                                                    kind: 'Argument',
-                                                    name: {
-                                                      kind: 'Name',
-                                                      value: 'limit',
-                                                    },
-                                                    value: {
-                                                      kind: 'IntValue',
-                                                      value: '10',
-                                                    },
-                                                  },
-                                                ],
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'items',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'sys',
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value: 'id',
-                                                                  },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'displayName',
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value:
-                                                    'firstAuthorsCollection',
-                                                },
-                                                arguments: [
-                                                  {
-                                                    kind: 'Argument',
-                                                    name: {
-                                                      kind: 'Name',
-                                                      value: 'limit',
-                                                    },
-                                                    value: {
-                                                      kind: 'IntValue',
-                                                      value: '10',
-                                                    },
-                                                  },
-                                                ],
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'items',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                '__typename',
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'InlineFragment',
-                                                            typeCondition: {
-                                                              kind: 'NamedType',
-                                                              name: {
-                                                                kind: 'Name',
-                                                                value: 'Users',
-                                                              },
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'sys',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'id',
-                                                                            },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value:
-                                                    'additionalAuthorsCollection',
-                                                },
-                                                arguments: [
-                                                  {
-                                                    kind: 'Argument',
-                                                    name: {
-                                                      kind: 'Name',
-                                                      value: 'limit',
-                                                    },
-                                                    value: {
-                                                      kind: 'IntValue',
-                                                      value: '10',
-                                                    },
-                                                  },
-                                                ],
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'items',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                '__typename',
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'InlineFragment',
-                                                            typeCondition: {
-                                                              kind: 'NamedType',
-                                                              name: {
-                                                                kind: 'Name',
-                                                                value: 'Users',
-                                                              },
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'sys',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'id',
-                                                                            },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value:
-                                                    'correspondingAuthorCollection',
-                                                },
-                                                arguments: [
-                                                  {
-                                                    kind: 'Argument',
-                                                    name: {
-                                                      kind: 'Name',
-                                                      value: 'limit',
-                                                    },
-                                                    value: {
-                                                      kind: 'IntValue',
-                                                      value: '10',
-                                                    },
-                                                  },
-                                                ],
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'items',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                '__typename',
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'InlineFragment',
-                                                            typeCondition: {
-                                                              kind: 'NamedType',
-                                                              name: {
-                                                                kind: 'Name',
-                                                                value: 'Users',
-                                                              },
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'sys',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'id',
-                                                                            },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'labsCollection',
-                                                },
-                                                arguments: [
-                                                  {
-                                                    kind: 'Argument',
-                                                    name: {
-                                                      kind: 'Name',
-                                                      value: 'limit',
-                                                    },
-                                                    value: {
-                                                      kind: 'IntValue',
-                                                      value: '10',
-                                                    },
-                                                  },
-                                                ],
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'items',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'labPi',
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'sys',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'id',
-                                                                            },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'linkedFrom',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value:
-                                                          'manuscriptsCollection',
-                                                      },
-                                                      arguments: [
-                                                        {
-                                                          kind: 'Argument',
-                                                          name: {
-                                                            kind: 'Name',
-                                                            value: 'limit',
-                                                          },
-                                                          value: {
-                                                            kind: 'IntValue',
-                                                            value: '1',
-                                                          },
-                                                        },
-                                                      ],
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value: 'items',
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'title',
-                                                                  },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'assignedUsersCollection',
-                                                                  },
-                                                                  arguments: [
-                                                                    {
-                                                                      kind: 'Argument',
-                                                                      name: {
-                                                                        kind: 'Name',
-                                                                        value:
-                                                                          'limit',
-                                                                      },
-                                                                      value: {
-                                                                        kind: 'IntValue',
-                                                                        value:
-                                                                          '30',
-                                                                      },
-                                                                    },
-                                                                  ],
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'items',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'sys',
-                                                                                      },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'id',
-                                                                                                },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                        ],
                                                       },
                                                     },
                                                   ],
@@ -39155,1256 +38215,6 @@ export const FetchMessageRemindersDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value: 'id',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'linkedFrom',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value:
-                                                    'complianceReportsCollection',
-                                                },
-                                                arguments: [
-                                                  {
-                                                    kind: 'Argument',
-                                                    name: {
-                                                      kind: 'Name',
-                                                      value: 'limit',
-                                                    },
-                                                    value: {
-                                                      kind: 'IntValue',
-                                                      value: '1',
-                                                    },
-                                                  },
-                                                ],
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'items',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'manuscriptVersion',
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'teamsCollection',
-                                                                  },
-                                                                  arguments: [
-                                                                    {
-                                                                      kind: 'Argument',
-                                                                      name: {
-                                                                        kind: 'Name',
-                                                                        value:
-                                                                          'limit',
-                                                                      },
-                                                                      value: {
-                                                                        kind: 'IntValue',
-                                                                        value:
-                                                                          '10',
-                                                                      },
-                                                                    },
-                                                                  ],
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'items',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'sys',
-                                                                                      },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'id',
-                                                                                                },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'displayName',
-                                                                                      },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'firstAuthorsCollection',
-                                                                  },
-                                                                  arguments: [
-                                                                    {
-                                                                      kind: 'Argument',
-                                                                      name: {
-                                                                        kind: 'Name',
-                                                                        value:
-                                                                          'limit',
-                                                                      },
-                                                                      value: {
-                                                                        kind: 'IntValue',
-                                                                        value:
-                                                                          '10',
-                                                                      },
-                                                                    },
-                                                                  ],
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'items',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          '__typename',
-                                                                                      },
-                                                                                    },
-                                                                                    {
-                                                                                      kind: 'InlineFragment',
-                                                                                      typeCondition:
-                                                                                        {
-                                                                                          kind: 'NamedType',
-                                                                                          name: {
-                                                                                            kind: 'Name',
-                                                                                            value:
-                                                                                              'Users',
-                                                                                          },
-                                                                                        },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'sys',
-                                                                                                },
-                                                                                                selectionSet:
-                                                                                                  {
-                                                                                                    kind: 'SelectionSet',
-                                                                                                    selections:
-                                                                                                      [
-                                                                                                        {
-                                                                                                          kind: 'Field',
-                                                                                                          name: {
-                                                                                                            kind: 'Name',
-                                                                                                            value:
-                                                                                                              'id',
-                                                                                                          },
-                                                                                                        },
-                                                                                                      ],
-                                                                                                  },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'additionalAuthorsCollection',
-                                                                  },
-                                                                  arguments: [
-                                                                    {
-                                                                      kind: 'Argument',
-                                                                      name: {
-                                                                        kind: 'Name',
-                                                                        value:
-                                                                          'limit',
-                                                                      },
-                                                                      value: {
-                                                                        kind: 'IntValue',
-                                                                        value:
-                                                                          '10',
-                                                                      },
-                                                                    },
-                                                                  ],
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'items',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          '__typename',
-                                                                                      },
-                                                                                    },
-                                                                                    {
-                                                                                      kind: 'InlineFragment',
-                                                                                      typeCondition:
-                                                                                        {
-                                                                                          kind: 'NamedType',
-                                                                                          name: {
-                                                                                            kind: 'Name',
-                                                                                            value:
-                                                                                              'Users',
-                                                                                          },
-                                                                                        },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'sys',
-                                                                                                },
-                                                                                                selectionSet:
-                                                                                                  {
-                                                                                                    kind: 'SelectionSet',
-                                                                                                    selections:
-                                                                                                      [
-                                                                                                        {
-                                                                                                          kind: 'Field',
-                                                                                                          name: {
-                                                                                                            kind: 'Name',
-                                                                                                            value:
-                                                                                                              'id',
-                                                                                                          },
-                                                                                                        },
-                                                                                                      ],
-                                                                                                  },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'correspondingAuthorCollection',
-                                                                  },
-                                                                  arguments: [
-                                                                    {
-                                                                      kind: 'Argument',
-                                                                      name: {
-                                                                        kind: 'Name',
-                                                                        value:
-                                                                          'limit',
-                                                                      },
-                                                                      value: {
-                                                                        kind: 'IntValue',
-                                                                        value:
-                                                                          '10',
-                                                                      },
-                                                                    },
-                                                                  ],
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'items',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          '__typename',
-                                                                                      },
-                                                                                    },
-                                                                                    {
-                                                                                      kind: 'InlineFragment',
-                                                                                      typeCondition:
-                                                                                        {
-                                                                                          kind: 'NamedType',
-                                                                                          name: {
-                                                                                            kind: 'Name',
-                                                                                            value:
-                                                                                              'Users',
-                                                                                          },
-                                                                                        },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'sys',
-                                                                                                },
-                                                                                                selectionSet:
-                                                                                                  {
-                                                                                                    kind: 'SelectionSet',
-                                                                                                    selections:
-                                                                                                      [
-                                                                                                        {
-                                                                                                          kind: 'Field',
-                                                                                                          name: {
-                                                                                                            kind: 'Name',
-                                                                                                            value:
-                                                                                                              'id',
-                                                                                                          },
-                                                                                                        },
-                                                                                                      ],
-                                                                                                  },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'labsCollection',
-                                                                  },
-                                                                  arguments: [
-                                                                    {
-                                                                      kind: 'Argument',
-                                                                      name: {
-                                                                        kind: 'Name',
-                                                                        value:
-                                                                          'limit',
-                                                                      },
-                                                                      value: {
-                                                                        kind: 'IntValue',
-                                                                        value:
-                                                                          '10',
-                                                                      },
-                                                                    },
-                                                                  ],
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'items',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'labPi',
-                                                                                      },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'sys',
-                                                                                                },
-                                                                                                selectionSet:
-                                                                                                  {
-                                                                                                    kind: 'SelectionSet',
-                                                                                                    selections:
-                                                                                                      [
-                                                                                                        {
-                                                                                                          kind: 'Field',
-                                                                                                          name: {
-                                                                                                            kind: 'Name',
-                                                                                                            value:
-                                                                                                              'id',
-                                                                                                          },
-                                                                                                        },
-                                                                                                      ],
-                                                                                                  },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'linkedFrom',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'manuscriptsCollection',
-                                                                            },
-                                                                            arguments:
-                                                                              [
-                                                                                {
-                                                                                  kind: 'Argument',
-                                                                                  name: {
-                                                                                    kind: 'Name',
-                                                                                    value:
-                                                                                      'limit',
-                                                                                  },
-                                                                                  value:
-                                                                                    {
-                                                                                      kind: 'IntValue',
-                                                                                      value:
-                                                                                        '1',
-                                                                                    },
-                                                                                },
-                                                                              ],
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'items',
-                                                                                      },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'title',
-                                                                                                },
-                                                                                              },
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'assignedUsersCollection',
-                                                                                                },
-                                                                                                arguments:
-                                                                                                  [
-                                                                                                    {
-                                                                                                      kind: 'Argument',
-                                                                                                      name: {
-                                                                                                        kind: 'Name',
-                                                                                                        value:
-                                                                                                          'limit',
-                                                                                                      },
-                                                                                                      value:
-                                                                                                        {
-                                                                                                          kind: 'IntValue',
-                                                                                                          value:
-                                                                                                            '30',
-                                                                                                        },
-                                                                                                    },
-                                                                                                  ],
-                                                                                                selectionSet:
-                                                                                                  {
-                                                                                                    kind: 'SelectionSet',
-                                                                                                    selections:
-                                                                                                      [
-                                                                                                        {
-                                                                                                          kind: 'Field',
-                                                                                                          name: {
-                                                                                                            kind: 'Name',
-                                                                                                            value:
-                                                                                                              'items',
-                                                                                                          },
-                                                                                                          selectionSet:
-                                                                                                            {
-                                                                                                              kind: 'SelectionSet',
-                                                                                                              selections:
-                                                                                                                [
-                                                                                                                  {
-                                                                                                                    kind: 'Field',
-                                                                                                                    name: {
-                                                                                                                      kind: 'Name',
-                                                                                                                      value:
-                                                                                                                        'sys',
-                                                                                                                    },
-                                                                                                                    selectionSet:
-                                                                                                                      {
-                                                                                                                        kind: 'SelectionSet',
-                                                                                                                        selections:
-                                                                                                                          [
-                                                                                                                            {
-                                                                                                                              kind: 'Field',
-                                                                                                                              name: {
-                                                                                                                                kind: 'Name',
-                                                                                                                                value:
-                                                                                                                                  'id',
-                                                                                                                              },
-                                                                                                                            },
-                                                                                                                          ],
-                                                                                                                      },
-                                                                                                                  },
-                                                                                                                ],
-                                                                                                            },
-                                                                                                        },
-                                                                                                      ],
-                                                                                                  },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                        ],
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value:
-                                                    'manuscriptVersionsCollection',
-                                                },
-                                                arguments: [
-                                                  {
-                                                    kind: 'Argument',
-                                                    name: {
-                                                      kind: 'Name',
-                                                      value: 'limit',
-                                                    },
-                                                    value: {
-                                                      kind: 'IntValue',
-                                                      value: '1',
-                                                    },
-                                                  },
-                                                ],
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'items',
-                                                      },
-                                                      selectionSet: {
-                                                        kind: 'SelectionSet',
-                                                        selections: [
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'teamsCollection',
-                                                            },
-                                                            arguments: [
-                                                              {
-                                                                kind: 'Argument',
-                                                                name: {
-                                                                  kind: 'Name',
-                                                                  value:
-                                                                    'limit',
-                                                                },
-                                                                value: {
-                                                                  kind: 'IntValue',
-                                                                  value: '10',
-                                                                },
-                                                              },
-                                                            ],
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'items',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'sys',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'id',
-                                                                                      },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'displayName',
-                                                                            },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'firstAuthorsCollection',
-                                                            },
-                                                            arguments: [
-                                                              {
-                                                                kind: 'Argument',
-                                                                name: {
-                                                                  kind: 'Name',
-                                                                  value:
-                                                                    'limit',
-                                                                },
-                                                                value: {
-                                                                  kind: 'IntValue',
-                                                                  value: '10',
-                                                                },
-                                                              },
-                                                            ],
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'items',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                '__typename',
-                                                                            },
-                                                                          },
-                                                                          {
-                                                                            kind: 'InlineFragment',
-                                                                            typeCondition:
-                                                                              {
-                                                                                kind: 'NamedType',
-                                                                                name: {
-                                                                                  kind: 'Name',
-                                                                                  value:
-                                                                                    'Users',
-                                                                                },
-                                                                              },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'sys',
-                                                                                      },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'id',
-                                                                                                },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'additionalAuthorsCollection',
-                                                            },
-                                                            arguments: [
-                                                              {
-                                                                kind: 'Argument',
-                                                                name: {
-                                                                  kind: 'Name',
-                                                                  value:
-                                                                    'limit',
-                                                                },
-                                                                value: {
-                                                                  kind: 'IntValue',
-                                                                  value: '10',
-                                                                },
-                                                              },
-                                                            ],
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'items',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                '__typename',
-                                                                            },
-                                                                          },
-                                                                          {
-                                                                            kind: 'InlineFragment',
-                                                                            typeCondition:
-                                                                              {
-                                                                                kind: 'NamedType',
-                                                                                name: {
-                                                                                  kind: 'Name',
-                                                                                  value:
-                                                                                    'Users',
-                                                                                },
-                                                                              },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'sys',
-                                                                                      },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'id',
-                                                                                                },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'correspondingAuthorCollection',
-                                                            },
-                                                            arguments: [
-                                                              {
-                                                                kind: 'Argument',
-                                                                name: {
-                                                                  kind: 'Name',
-                                                                  value:
-                                                                    'limit',
-                                                                },
-                                                                value: {
-                                                                  kind: 'IntValue',
-                                                                  value: '10',
-                                                                },
-                                                              },
-                                                            ],
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'items',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                '__typename',
-                                                                            },
-                                                                          },
-                                                                          {
-                                                                            kind: 'InlineFragment',
-                                                                            typeCondition:
-                                                                              {
-                                                                                kind: 'NamedType',
-                                                                                name: {
-                                                                                  kind: 'Name',
-                                                                                  value:
-                                                                                    'Users',
-                                                                                },
-                                                                              },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'sys',
-                                                                                      },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'id',
-                                                                                                },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'labsCollection',
-                                                            },
-                                                            arguments: [
-                                                              {
-                                                                kind: 'Argument',
-                                                                name: {
-                                                                  kind: 'Name',
-                                                                  value:
-                                                                    'limit',
-                                                                },
-                                                                value: {
-                                                                  kind: 'IntValue',
-                                                                  value: '10',
-                                                                },
-                                                              },
-                                                            ],
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'items',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'labPi',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'sys',
-                                                                                      },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'id',
-                                                                                                },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'linkedFrom',
-                                                            },
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'manuscriptsCollection',
-                                                                  },
-                                                                  arguments: [
-                                                                    {
-                                                                      kind: 'Argument',
-                                                                      name: {
-                                                                        kind: 'Name',
-                                                                        value:
-                                                                          'limit',
-                                                                      },
-                                                                      value: {
-                                                                        kind: 'IntValue',
-                                                                        value:
-                                                                          '1',
-                                                                      },
-                                                                    },
-                                                                  ],
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'items',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'title',
-                                                                                      },
-                                                                                    },
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'assignedUsersCollection',
-                                                                                      },
-                                                                                      arguments:
-                                                                                        [
-                                                                                          {
-                                                                                            kind: 'Argument',
-                                                                                            name: {
-                                                                                              kind: 'Name',
-                                                                                              value:
-                                                                                                'limit',
-                                                                                            },
-                                                                                            value:
-                                                                                              {
-                                                                                                kind: 'IntValue',
-                                                                                                value:
-                                                                                                  '30',
-                                                                                              },
-                                                                                          },
-                                                                                        ],
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'items',
-                                                                                                },
-                                                                                                selectionSet:
-                                                                                                  {
-                                                                                                    kind: 'SelectionSet',
-                                                                                                    selections:
-                                                                                                      [
-                                                                                                        {
-                                                                                                          kind: 'Field',
-                                                                                                          name: {
-                                                                                                            kind: 'Name',
-                                                                                                            value:
-                                                                                                              'sys',
-                                                                                                          },
-                                                                                                          selectionSet:
-                                                                                                            {
-                                                                                                              kind: 'SelectionSet',
-                                                                                                              selections:
-                                                                                                                [
-                                                                                                                  {
-                                                                                                                    kind: 'Field',
-                                                                                                                    name: {
-                                                                                                                      kind: 'Name',
-                                                                                                                      value:
-                                                                                                                        'id',
-                                                                                                                    },
-                                                                                                                  },
-                                                                                                                ],
-                                                                                                            },
-                                                                                                        },
-                                                                                                      ],
-                                                                                                  },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                        ],
                                                       },
                                                     },
                                                   ],

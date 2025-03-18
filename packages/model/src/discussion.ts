@@ -20,11 +20,6 @@ export type DiscussionDataObject = {
   id: string;
   message: Message;
   replies?: Message[];
-  endedAt?: string;
-  endedBy?: Pick<
-    UserResponse,
-    'id' | 'firstName' | 'lastName' | 'displayName' | 'avatarUrl'
-  >;
 };
 
 export type DiscussionType = 'compliance-report' | '';

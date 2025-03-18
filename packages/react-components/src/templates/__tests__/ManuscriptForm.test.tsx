@@ -220,7 +220,7 @@ test.each`
     const props = {
       ...defaultProps,
       [field]: 'No',
-      [fieldDetails]: { id: 'discussion-1' },
+      [fieldDetails]: 'Explanation',
       getDiscussion,
     };
     render(

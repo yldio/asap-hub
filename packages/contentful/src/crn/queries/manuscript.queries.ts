@@ -64,53 +64,21 @@ export const manuscriptContentQueryFragment = gql`
         submissionDate
         otherDetails
         acknowledgedGrantNumber
-        acknowledgedGrantNumberDetails {
-          sys {
-            id
-          }
-        }
+        acknowledgedGrantNumberDetails
         asapAffiliationIncluded
-        asapAffiliationIncludedDetails {
-          sys {
-            id
-          }
-        }
+        asapAffiliationIncludedDetails
         manuscriptLicense
-        manuscriptLicenseDetails {
-          sys {
-            id
-          }
-        }
+        manuscriptLicenseDetails
         datasetsDeposited
-        datasetsDepositedDetails {
-          sys {
-            id
-          }
-        }
+        datasetsDepositedDetails
         codeDeposited
-        codeDepositedDetails {
-          sys {
-            id
-          }
-        }
+        codeDepositedDetails
         protocolsDeposited
-        protocolsDepositedDetails {
-          sys {
-            id
-          }
-        }
+        protocolsDepositedDetails
         labMaterialsRegistered
-        labMaterialsRegisteredDetails {
-          sys {
-            id
-          }
-        }
+        labMaterialsRegisteredDetails
         availabilityStatement
-        availabilityStatementDetails {
-          sys {
-            id
-          }
-        }
+        availabilityStatementDetails
         teamsCollection(limit: 10) {
           items {
             sys {
@@ -278,11 +246,6 @@ export const manuscriptContentQueryFragment = gql`
                       displayName
                     }
                   }
-                }
-              }
-              discussion {
-                sys {
-                  id
                 }
               }
             }

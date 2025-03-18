@@ -380,7 +380,6 @@ type ComplianceReports implements Entry & _Node {
   contentfulMetadata: ContentfulMetadata!
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   description(locale: String): String
-  discussion(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
   linkedFrom(allowedLocales: [String]): ComplianceReportsLinkingCollections
   manuscriptVersion(locale: String, preview: Boolean, where: ManuscriptVersionsFilter): ManuscriptVersions
   sys: Sys!
@@ -407,8 +406,6 @@ input ComplianceReportsFilter {
   description_not: String
   description_not_contains: String
   description_not_in: [String]
-  discussion: cfDiscussionsNestedFilter
-  discussion_exists: Boolean
   manuscriptVersion: cfManuscriptVersionsNestedFilter
   manuscriptVersion_exists: Boolean
   sys: SysFilter
@@ -867,12 +864,11 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
 type Discussions implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
-  endedAt(locale: String): DateTime
-  endedBy(locale: String, preview: Boolean, where: UsersFilter): Users
   linkedFrom(allowedLocales: [String]): DiscussionsLinkingCollections
   message(locale: String, preview: Boolean, where: MessagesFilter): Messages
   repliesCollection(limit: Int = 100, locale: String, order: [DiscussionsRepliesCollectionOrder], preview: Boolean, skip: Int = 0, where: MessagesFilter): DiscussionsRepliesCollection
   sys: Sys!
+  title(locale: String): String
 }
 
 type DiscussionsCollection {
@@ -886,76 +882,34 @@ input DiscussionsFilter {
   AND: [DiscussionsFilter]
   OR: [DiscussionsFilter]
   contentfulMetadata: ContentfulMetadataFilter
-  endedAt: DateTime
-  endedAt_exists: Boolean
-  endedAt_gt: DateTime
-  endedAt_gte: DateTime
-  endedAt_in: [DateTime]
-  endedAt_lt: DateTime
-  endedAt_lte: DateTime
-  endedAt_not: DateTime
-  endedAt_not_in: [DateTime]
-  endedBy: cfUsersNestedFilter
-  endedBy_exists: Boolean
   message: cfMessagesNestedFilter
   message_exists: Boolean
   replies: cfMessagesNestedFilter
   repliesCollection_exists: Boolean
   sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
 }
 
 type DiscussionsLinkingCollections {
-  complianceReportsCollection(limit: Int = 100, locale: String, order: [DiscussionsLinkingCollectionsComplianceReportsCollectionOrder], preview: Boolean, skip: Int = 0): ComplianceReportsCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
+  manuscriptsCollection(limit: Int = 100, locale: String, order: [DiscussionsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
 }
 
-enum DiscussionsLinkingCollectionsComplianceReportsCollectionOrder {
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  url_ASC
-  url_DESC
-}
-
-enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {
-  acknowledgedGrantNumber_ASC
-  acknowledgedGrantNumber_DESC
-  asapAffiliationIncluded_ASC
-  asapAffiliationIncluded_DESC
-  availabilityStatement_ASC
-  availabilityStatement_DESC
-  codeDeposited_ASC
-  codeDeposited_DESC
+enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
   count_ASC
   count_DESC
-  datasetsDeposited_ASC
-  datasetsDeposited_DESC
-  labMaterialsRegistered_ASC
-  labMaterialsRegistered_DESC
-  lifecycle_ASC
-  lifecycle_DESC
-  manuscriptLicense_ASC
-  manuscriptLicense_DESC
-  otherDetails_ASC
-  otherDetails_DESC
-  preprintDoi_ASC
-  preprintDoi_DESC
-  protocolsDeposited_ASC
-  protocolsDeposited_DESC
-  publicationDoi_ASC
-  publicationDoi_DESC
-  requestingApcCoverage_ASC
-  requestingApcCoverage_DESC
-  submissionDate_ASC
-  submissionDate_DESC
-  submitterName_ASC
-  submitterName_DESC
+  previousStatus_ASC
+  previousStatus_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
+  status_ASC
+  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -964,13 +918,11 @@ enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  type_ASC
-  type_DESC
+  title_ASC
+  title_DESC
 }
 
 enum DiscussionsOrder {
-  endedAt_ASC
-  endedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -979,6 +931,8 @@ enum DiscussionsOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 type DiscussionsRepliesCollection {
@@ -997,8 +951,6 @@ enum DiscussionsRepliesCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  text_ASC
-  text_DESC
 }
 
 interface Entry {
@@ -1699,28 +1651,44 @@ enum ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder {
 }
 
 enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  acknowledgedGrantNumberDetails_ASC
+  acknowledgedGrantNumberDetails_DESC
   acknowledgedGrantNumber_ASC
   acknowledgedGrantNumber_DESC
+  asapAffiliationIncludedDetails_ASC
+  asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
   availabilityStatement_ASC
   availabilityStatement_DESC
+  codeDepositedDetails_ASC
+  codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
   count_ASC
   count_DESC
+  datasetsDepositedDetails_ASC
+  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
+  labMaterialsRegisteredDetails_ASC
+  labMaterialsRegisteredDetails_DESC
   labMaterialsRegistered_ASC
   labMaterialsRegistered_DESC
   lifecycle_ASC
   lifecycle_DESC
+  manuscriptLicenseDetails_ASC
+  manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
   preprintDoi_DESC
+  protocolsDepositedDetails_ASC
+  protocolsDepositedDetails_DESC
   protocolsDeposited_ASC
   protocolsDeposited_DESC
   publicationDoi_ASC
@@ -2783,28 +2751,44 @@ enum LabsLinkingCollectionsLabMembershipCollectionOrder {
 }
 
 enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  acknowledgedGrantNumberDetails_ASC
+  acknowledgedGrantNumberDetails_DESC
   acknowledgedGrantNumber_ASC
   acknowledgedGrantNumber_DESC
+  asapAffiliationIncludedDetails_ASC
+  asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
   availabilityStatement_ASC
   availabilityStatement_DESC
+  codeDepositedDetails_ASC
+  codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
   count_ASC
   count_DESC
+  datasetsDepositedDetails_ASC
+  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
+  labMaterialsRegisteredDetails_ASC
+  labMaterialsRegisteredDetails_DESC
   labMaterialsRegistered_ASC
   labMaterialsRegistered_DESC
   lifecycle_ASC
   lifecycle_DESC
+  manuscriptLicenseDetails_ASC
+  manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
   preprintDoi_DESC
+  protocolsDepositedDetails_ASC
+  protocolsDepositedDetails_DESC
   protocolsDeposited_ASC
   protocolsDeposited_DESC
   publicationDoi_ASC
@@ -2964,36 +2948,36 @@ enum LabsOrder {
 type ManuscriptVersions implements Entry & _Node {
   _id: ID!
   acknowledgedGrantNumber(locale: String): String
-  acknowledgedGrantNumberDetails(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
+  acknowledgedGrantNumberDetails(locale: String): String
   additionalAuthorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ManuscriptVersionsAdditionalAuthorsFilter): ManuscriptVersionsAdditionalAuthorsCollection
   additionalFilesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): AssetCollection
   asapAffiliationIncluded(locale: String): String
-  asapAffiliationIncludedDetails(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
+  asapAffiliationIncludedDetails(locale: String): String
   availabilityStatement(locale: String): String
-  availabilityStatementDetails(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
+  availabilityStatementDetails(locale: String): String
   codeDeposited(locale: String): String
-  codeDepositedDetails(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
+  codeDepositedDetails(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   correspondingAuthorCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ManuscriptVersionsCorrespondingAuthorFilter): ManuscriptVersionsCorrespondingAuthorCollection
   count(locale: String): Int
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   datasetsDeposited(locale: String): String
-  datasetsDepositedDetails(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
+  datasetsDepositedDetails(locale: String): String
   description(locale: String): String
   firstAuthorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ManuscriptVersionsFirstAuthorsFilter): ManuscriptVersionsFirstAuthorsCollection
   keyResourceTable(locale: String, preview: Boolean): Asset
   labMaterialsRegistered(locale: String): String
-  labMaterialsRegisteredDetails(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
+  labMaterialsRegisteredDetails(locale: String): String
   labsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsLabsCollectionOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): ManuscriptVersionsLabsCollection
   lifecycle(locale: String): String
   linkedFrom(allowedLocales: [String]): ManuscriptVersionsLinkingCollections
   manuscriptFile(locale: String, preview: Boolean): Asset
   manuscriptLicense(locale: String): String
-  manuscriptLicenseDetails(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
+  manuscriptLicenseDetails(locale: String): String
   otherDetails(locale: String): String
   preprintDoi(locale: String): String
   protocolsDeposited(locale: String): String
-  protocolsDepositedDetails(locale: String, preview: Boolean, where: DiscussionsFilter): Discussions
+  protocolsDepositedDetails(locale: String): String
   publicationDoi(locale: String): String
   requestingApcCoverage(locale: String): String
   submissionDate(locale: String): DateTime
@@ -3075,8 +3059,13 @@ input ManuscriptVersionsFilter {
   AND: [ManuscriptVersionsFilter]
   OR: [ManuscriptVersionsFilter]
   acknowledgedGrantNumber: String
-  acknowledgedGrantNumberDetails: cfDiscussionsNestedFilter
+  acknowledgedGrantNumberDetails: String
+  acknowledgedGrantNumberDetails_contains: String
   acknowledgedGrantNumberDetails_exists: Boolean
+  acknowledgedGrantNumberDetails_in: [String]
+  acknowledgedGrantNumberDetails_not: String
+  acknowledgedGrantNumberDetails_not_contains: String
+  acknowledgedGrantNumberDetails_not_in: [String]
   acknowledgedGrantNumber_contains: String
   acknowledgedGrantNumber_exists: Boolean
   acknowledgedGrantNumber_in: [String]
@@ -3087,8 +3076,13 @@ input ManuscriptVersionsFilter {
   additionalAuthorsCollection_exists: Boolean
   additionalFilesCollection_exists: Boolean
   asapAffiliationIncluded: String
-  asapAffiliationIncludedDetails: cfDiscussionsNestedFilter
+  asapAffiliationIncludedDetails: String
+  asapAffiliationIncludedDetails_contains: String
   asapAffiliationIncludedDetails_exists: Boolean
+  asapAffiliationIncludedDetails_in: [String]
+  asapAffiliationIncludedDetails_not: String
+  asapAffiliationIncludedDetails_not_contains: String
+  asapAffiliationIncludedDetails_not_in: [String]
   asapAffiliationIncluded_contains: String
   asapAffiliationIncluded_exists: Boolean
   asapAffiliationIncluded_in: [String]
@@ -3096,8 +3090,13 @@ input ManuscriptVersionsFilter {
   asapAffiliationIncluded_not_contains: String
   asapAffiliationIncluded_not_in: [String]
   availabilityStatement: String
-  availabilityStatementDetails: cfDiscussionsNestedFilter
+  availabilityStatementDetails: String
+  availabilityStatementDetails_contains: String
   availabilityStatementDetails_exists: Boolean
+  availabilityStatementDetails_in: [String]
+  availabilityStatementDetails_not: String
+  availabilityStatementDetails_not_contains: String
+  availabilityStatementDetails_not_in: [String]
   availabilityStatement_contains: String
   availabilityStatement_exists: Boolean
   availabilityStatement_in: [String]
@@ -3105,8 +3104,13 @@ input ManuscriptVersionsFilter {
   availabilityStatement_not_contains: String
   availabilityStatement_not_in: [String]
   codeDeposited: String
-  codeDepositedDetails: cfDiscussionsNestedFilter
+  codeDepositedDetails: String
+  codeDepositedDetails_contains: String
   codeDepositedDetails_exists: Boolean
+  codeDepositedDetails_in: [String]
+  codeDepositedDetails_not: String
+  codeDepositedDetails_not_contains: String
+  codeDepositedDetails_not_in: [String]
   codeDeposited_contains: String
   codeDeposited_exists: Boolean
   codeDeposited_in: [String]
@@ -3128,8 +3132,13 @@ input ManuscriptVersionsFilter {
   createdBy: cfUsersNestedFilter
   createdBy_exists: Boolean
   datasetsDeposited: String
-  datasetsDepositedDetails: cfDiscussionsNestedFilter
+  datasetsDepositedDetails: String
+  datasetsDepositedDetails_contains: String
   datasetsDepositedDetails_exists: Boolean
+  datasetsDepositedDetails_in: [String]
+  datasetsDepositedDetails_not: String
+  datasetsDepositedDetails_not_contains: String
+  datasetsDepositedDetails_not_in: [String]
   datasetsDeposited_contains: String
   datasetsDeposited_exists: Boolean
   datasetsDeposited_in: [String]
@@ -3147,8 +3156,13 @@ input ManuscriptVersionsFilter {
   firstAuthorsCollection_exists: Boolean
   keyResourceTable_exists: Boolean
   labMaterialsRegistered: String
-  labMaterialsRegisteredDetails: cfDiscussionsNestedFilter
+  labMaterialsRegisteredDetails: String
+  labMaterialsRegisteredDetails_contains: String
   labMaterialsRegisteredDetails_exists: Boolean
+  labMaterialsRegisteredDetails_in: [String]
+  labMaterialsRegisteredDetails_not: String
+  labMaterialsRegisteredDetails_not_contains: String
+  labMaterialsRegisteredDetails_not_in: [String]
   labMaterialsRegistered_contains: String
   labMaterialsRegistered_exists: Boolean
   labMaterialsRegistered_in: [String]
@@ -3166,8 +3180,13 @@ input ManuscriptVersionsFilter {
   lifecycle_not_in: [String]
   manuscriptFile_exists: Boolean
   manuscriptLicense: String
-  manuscriptLicenseDetails: cfDiscussionsNestedFilter
+  manuscriptLicenseDetails: String
+  manuscriptLicenseDetails_contains: String
   manuscriptLicenseDetails_exists: Boolean
+  manuscriptLicenseDetails_in: [String]
+  manuscriptLicenseDetails_not: String
+  manuscriptLicenseDetails_not_contains: String
+  manuscriptLicenseDetails_not_in: [String]
   manuscriptLicense_contains: String
   manuscriptLicense_exists: Boolean
   manuscriptLicense_in: [String]
@@ -3189,8 +3208,13 @@ input ManuscriptVersionsFilter {
   preprintDoi_not_contains: String
   preprintDoi_not_in: [String]
   protocolsDeposited: String
-  protocolsDepositedDetails: cfDiscussionsNestedFilter
+  protocolsDepositedDetails: String
+  protocolsDepositedDetails_contains: String
   protocolsDepositedDetails_exists: Boolean
+  protocolsDepositedDetails_in: [String]
+  protocolsDepositedDetails_not: String
+  protocolsDepositedDetails_not_contains: String
+  protocolsDepositedDetails_not_in: [String]
   protocolsDeposited_contains: String
   protocolsDeposited_exists: Boolean
   protocolsDeposited_in: [String]
@@ -3332,28 +3356,44 @@ enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
 }
 
 enum ManuscriptVersionsOrder {
+  acknowledgedGrantNumberDetails_ASC
+  acknowledgedGrantNumberDetails_DESC
   acknowledgedGrantNumber_ASC
   acknowledgedGrantNumber_DESC
+  asapAffiliationIncludedDetails_ASC
+  asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
   availabilityStatement_ASC
   availabilityStatement_DESC
+  codeDepositedDetails_ASC
+  codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
   count_ASC
   count_DESC
+  datasetsDepositedDetails_ASC
+  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
+  labMaterialsRegisteredDetails_ASC
+  labMaterialsRegisteredDetails_DESC
   labMaterialsRegistered_ASC
   labMaterialsRegistered_DESC
   lifecycle_ASC
   lifecycle_DESC
+  manuscriptLicenseDetails_ASC
+  manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
   preprintDoi_DESC
+  protocolsDepositedDetails_ASC
+  protocolsDepositedDetails_DESC
   protocolsDeposited_ASC
   protocolsDeposited_DESC
   publicationDoi_ASC
@@ -3410,6 +3450,7 @@ type Manuscripts implements Entry & _Node {
   assignedUsersCollection(limit: Int = 100, locale: String, order: [ManuscriptsAssignedUsersCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): ManuscriptsAssignedUsersCollection
   contentfulMetadata: ContentfulMetadata!
   count(locale: String): Int
+  discussionsCollection(limit: Int = 100, locale: String, order: [ManuscriptsDiscussionsCollectionOrder], preview: Boolean, skip: Int = 0, where: DiscussionsFilter): ManuscriptsDiscussionsCollection
   eligibilityReasons(locale: String): [String]
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
   previousStatus(locale: String): String
@@ -3511,6 +3552,26 @@ type ManuscriptsCollection {
   total: Int!
 }
 
+type ManuscriptsDiscussionsCollection {
+  items: [Discussions]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ManuscriptsDiscussionsCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 input ManuscriptsFilter {
   AND: [ManuscriptsFilter]
   OR: [ManuscriptsFilter]
@@ -3526,6 +3587,8 @@ input ManuscriptsFilter {
   count_lte: Int
   count_not: Int
   count_not_in: [Int]
+  discussions: cfDiscussionsNestedFilter
+  discussionsCollection_exists: Boolean
   eligibilityReasons_contains_all: [String]
   eligibilityReasons_contains_none: [String]
   eligibilityReasons_contains_some: [String]
@@ -3630,28 +3693,44 @@ type ManuscriptsVersionsCollection {
 }
 
 enum ManuscriptsVersionsCollectionOrder {
+  acknowledgedGrantNumberDetails_ASC
+  acknowledgedGrantNumberDetails_DESC
   acknowledgedGrantNumber_ASC
   acknowledgedGrantNumber_DESC
+  asapAffiliationIncludedDetails_ASC
+  asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
   availabilityStatement_ASC
   availabilityStatement_DESC
+  codeDepositedDetails_ASC
+  codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
   count_ASC
   count_DESC
+  datasetsDepositedDetails_ASC
+  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
+  labMaterialsRegisteredDetails_ASC
+  labMaterialsRegisteredDetails_DESC
   labMaterialsRegistered_ASC
   labMaterialsRegistered_DESC
   lifecycle_ASC
   lifecycle_DESC
+  manuscriptLicenseDetails_ASC
+  manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
   preprintDoi_DESC
+  protocolsDepositedDetails_ASC
+  protocolsDepositedDetails_DESC
   protocolsDeposited_ASC
   protocolsDeposited_DESC
   publicationDoi_ASC
@@ -3760,8 +3839,6 @@ type MessagesLinkingCollections {
 }
 
 enum MessagesLinkingCollectionsDiscussionsCollectionOrder {
-  endedAt_ASC
-  endedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3770,6 +3847,8 @@ enum MessagesLinkingCollectionsDiscussionsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum MessagesOrder {
@@ -3781,8 +3860,6 @@ enum MessagesOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  text_ASC
-  text_DESC
 }
 
 """Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)"""
@@ -6008,28 +6085,44 @@ enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
 }
 
 enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  acknowledgedGrantNumberDetails_ASC
+  acknowledgedGrantNumberDetails_DESC
   acknowledgedGrantNumber_ASC
   acknowledgedGrantNumber_DESC
+  asapAffiliationIncludedDetails_ASC
+  asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
   availabilityStatement_ASC
   availabilityStatement_DESC
+  codeDepositedDetails_ASC
+  codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
   count_ASC
   count_DESC
+  datasetsDepositedDetails_ASC
+  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
+  labMaterialsRegisteredDetails_ASC
+  labMaterialsRegisteredDetails_DESC
   labMaterialsRegistered_ASC
   labMaterialsRegistered_DESC
   lifecycle_ASC
   lifecycle_DESC
+  manuscriptLicenseDetails_ASC
+  manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
   preprintDoi_DESC
+  protocolsDepositedDetails_ASC
+  protocolsDepositedDetails_DESC
   protocolsDeposited_ASC
   protocolsDeposited_DESC
   publicationDoi_ASC
@@ -7021,7 +7114,6 @@ enum UsersLabsCollectionOrder {
 type UsersLinkingCollections {
   complianceReportsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsComplianceReportsCollectionOrder], preview: Boolean, skip: Int = 0): ComplianceReportsCollection
   discoverCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsDiscoverCollectionOrder], preview: Boolean, skip: Int = 0): DiscoverCollection
-  discussionsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsDiscussionsCollectionOrder], preview: Boolean, skip: Int = 0): DiscussionsCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsInterestGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
@@ -7049,19 +7141,6 @@ enum UsersLinkingCollectionsComplianceReportsCollectionOrder {
 }
 
 enum UsersLinkingCollectionsDiscoverCollectionOrder {
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-}
-
-enum UsersLinkingCollectionsDiscussionsCollectionOrder {
-  endedAt_ASC
-  endedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -7112,28 +7191,44 @@ enum UsersLinkingCollectionsLabsCollectionOrder {
 }
 
 enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
+  acknowledgedGrantNumberDetails_ASC
+  acknowledgedGrantNumberDetails_DESC
   acknowledgedGrantNumber_ASC
   acknowledgedGrantNumber_DESC
+  asapAffiliationIncludedDetails_ASC
+  asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
   availabilityStatement_ASC
   availabilityStatement_DESC
+  codeDepositedDetails_ASC
+  codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
   count_ASC
   count_DESC
+  datasetsDepositedDetails_ASC
+  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
+  labMaterialsRegisteredDetails_ASC
+  labMaterialsRegisteredDetails_DESC
   labMaterialsRegistered_ASC
   labMaterialsRegistered_DESC
   lifecycle_ASC
   lifecycle_DESC
+  manuscriptLicenseDetails_ASC
+  manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
   preprintDoi_DESC
+  protocolsDepositedDetails_ASC
+  protocolsDepositedDetails_DESC
   protocolsDeposited_ASC
   protocolsDeposited_DESC
   publicationDoi_ASC
@@ -7186,8 +7281,6 @@ enum UsersLinkingCollectionsMessagesCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  text_ASC
-  text_DESC
 }
 
 enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
@@ -7994,19 +8087,16 @@ input cfDiscussionsNestedFilter {
   AND: [cfDiscussionsNestedFilter]
   OR: [cfDiscussionsNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
-  endedAt: DateTime
-  endedAt_exists: Boolean
-  endedAt_gt: DateTime
-  endedAt_gte: DateTime
-  endedAt_in: [DateTime]
-  endedAt_lt: DateTime
-  endedAt_lte: DateTime
-  endedAt_not: DateTime
-  endedAt_not_in: [DateTime]
-  endedBy_exists: Boolean
   message_exists: Boolean
   repliesCollection_exists: Boolean
   sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
 }
 
 input cfEventSpeakersNestedFilter {
@@ -8319,7 +8409,13 @@ input cfManuscriptVersionsNestedFilter {
   AND: [cfManuscriptVersionsNestedFilter]
   OR: [cfManuscriptVersionsNestedFilter]
   acknowledgedGrantNumber: String
+  acknowledgedGrantNumberDetails: String
+  acknowledgedGrantNumberDetails_contains: String
   acknowledgedGrantNumberDetails_exists: Boolean
+  acknowledgedGrantNumberDetails_in: [String]
+  acknowledgedGrantNumberDetails_not: String
+  acknowledgedGrantNumberDetails_not_contains: String
+  acknowledgedGrantNumberDetails_not_in: [String]
   acknowledgedGrantNumber_contains: String
   acknowledgedGrantNumber_exists: Boolean
   acknowledgedGrantNumber_in: [String]
@@ -8329,7 +8425,13 @@ input cfManuscriptVersionsNestedFilter {
   additionalAuthorsCollection_exists: Boolean
   additionalFilesCollection_exists: Boolean
   asapAffiliationIncluded: String
+  asapAffiliationIncludedDetails: String
+  asapAffiliationIncludedDetails_contains: String
   asapAffiliationIncludedDetails_exists: Boolean
+  asapAffiliationIncludedDetails_in: [String]
+  asapAffiliationIncludedDetails_not: String
+  asapAffiliationIncludedDetails_not_contains: String
+  asapAffiliationIncludedDetails_not_in: [String]
   asapAffiliationIncluded_contains: String
   asapAffiliationIncluded_exists: Boolean
   asapAffiliationIncluded_in: [String]
@@ -8337,7 +8439,13 @@ input cfManuscriptVersionsNestedFilter {
   asapAffiliationIncluded_not_contains: String
   asapAffiliationIncluded_not_in: [String]
   availabilityStatement: String
+  availabilityStatementDetails: String
+  availabilityStatementDetails_contains: String
   availabilityStatementDetails_exists: Boolean
+  availabilityStatementDetails_in: [String]
+  availabilityStatementDetails_not: String
+  availabilityStatementDetails_not_contains: String
+  availabilityStatementDetails_not_in: [String]
   availabilityStatement_contains: String
   availabilityStatement_exists: Boolean
   availabilityStatement_in: [String]
@@ -8345,7 +8453,13 @@ input cfManuscriptVersionsNestedFilter {
   availabilityStatement_not_contains: String
   availabilityStatement_not_in: [String]
   codeDeposited: String
+  codeDepositedDetails: String
+  codeDepositedDetails_contains: String
   codeDepositedDetails_exists: Boolean
+  codeDepositedDetails_in: [String]
+  codeDepositedDetails_not: String
+  codeDepositedDetails_not_contains: String
+  codeDepositedDetails_not_in: [String]
   codeDeposited_contains: String
   codeDeposited_exists: Boolean
   codeDeposited_in: [String]
@@ -8365,7 +8479,13 @@ input cfManuscriptVersionsNestedFilter {
   count_not_in: [Int]
   createdBy_exists: Boolean
   datasetsDeposited: String
+  datasetsDepositedDetails: String
+  datasetsDepositedDetails_contains: String
   datasetsDepositedDetails_exists: Boolean
+  datasetsDepositedDetails_in: [String]
+  datasetsDepositedDetails_not: String
+  datasetsDepositedDetails_not_contains: String
+  datasetsDepositedDetails_not_in: [String]
   datasetsDeposited_contains: String
   datasetsDeposited_exists: Boolean
   datasetsDeposited_in: [String]
@@ -8382,7 +8502,13 @@ input cfManuscriptVersionsNestedFilter {
   firstAuthorsCollection_exists: Boolean
   keyResourceTable_exists: Boolean
   labMaterialsRegistered: String
+  labMaterialsRegisteredDetails: String
+  labMaterialsRegisteredDetails_contains: String
   labMaterialsRegisteredDetails_exists: Boolean
+  labMaterialsRegisteredDetails_in: [String]
+  labMaterialsRegisteredDetails_not: String
+  labMaterialsRegisteredDetails_not_contains: String
+  labMaterialsRegisteredDetails_not_in: [String]
   labMaterialsRegistered_contains: String
   labMaterialsRegistered_exists: Boolean
   labMaterialsRegistered_in: [String]
@@ -8399,7 +8525,13 @@ input cfManuscriptVersionsNestedFilter {
   lifecycle_not_in: [String]
   manuscriptFile_exists: Boolean
   manuscriptLicense: String
+  manuscriptLicenseDetails: String
+  manuscriptLicenseDetails_contains: String
   manuscriptLicenseDetails_exists: Boolean
+  manuscriptLicenseDetails_in: [String]
+  manuscriptLicenseDetails_not: String
+  manuscriptLicenseDetails_not_contains: String
+  manuscriptLicenseDetails_not_in: [String]
   manuscriptLicense_contains: String
   manuscriptLicense_exists: Boolean
   manuscriptLicense_in: [String]
@@ -8421,7 +8553,13 @@ input cfManuscriptVersionsNestedFilter {
   preprintDoi_not_contains: String
   preprintDoi_not_in: [String]
   protocolsDeposited: String
+  protocolsDepositedDetails: String
+  protocolsDepositedDetails_contains: String
   protocolsDepositedDetails_exists: Boolean
+  protocolsDepositedDetails_in: [String]
+  protocolsDepositedDetails_not: String
+  protocolsDepositedDetails_not_contains: String
+  protocolsDepositedDetails_not_in: [String]
   protocolsDeposited_contains: String
   protocolsDeposited_exists: Boolean
   protocolsDeposited_in: [String]

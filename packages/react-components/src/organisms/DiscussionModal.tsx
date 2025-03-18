@@ -1,4 +1,4 @@
-import { DiscussionRequest, ManuscriptDataObject } from '@asap-hub/model';
+import { DiscussionRequest } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -59,15 +59,7 @@ type DiscussionModalProps = {
   ruleMessage: string;
   onDismiss: () => void;
   discussionId: string;
-  manuscriptId?: string;
-  onSave: (
-    id: string,
-    data: DiscussionRequest,
-    manuscriptId?: string,
-  ) => Promise<ManuscriptDataObject | undefined>;
-  setManuscript: React.Dispatch<
-    React.SetStateAction<ManuscriptDataObject | undefined>
-  >;
+  onSave: (id: string, data: DiscussionRequest) => Promise<void>;
 };
 
 type DiscussionModalData = {
@@ -79,10 +71,8 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
   editorLabel,
   ruleMessage,
   discussionId,
-  manuscriptId,
   onDismiss,
   onSave,
-  setManuscript,
 }) => {
   const methods = useForm<DiscussionModalData>({
     mode: 'onChange',
@@ -98,10 +88,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
   } = methods;
 
   const onSubmit = async (data: DiscussionModalData) => {
-    const updatedManuscript = await onSave(discussionId, data, manuscriptId);
-    if (updatedManuscript) {
-      setManuscript(updatedManuscript);
-    }
+    await onSave(discussionId, data);
     onDismiss();
   };
 

@@ -412,7 +412,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                   onEndDiscussion={onEndDiscussion}
                   isComplianceReviewer={isComplianceReviewer}
                   isManuscriptContributor={hasUpdateAccess}
-                  setManuscript={setManuscript}
                 />
               ))}
             {activeTab === 'discussions' && (

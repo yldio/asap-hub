@@ -86,22 +86,15 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           onSave={async (
             id: string,
             patch: DiscussionRequest,
-            manuscriptId?: string,
-          ) => {
+          ): Promise<void> => {
             try {
-              const updatedManuscript = await replyToDiscussion(
-                id,
-                patch as DiscussionRequest,
-                manuscriptId,
-              );
+              await replyToDiscussion(id, patch as DiscussionRequest);
               setFormType({ type: 'quick-check', accent: 'successLarge' });
-              return updatedManuscript;
             } catch (error) {
               setFormType({
                 type: 'discussion-already-closed',
                 accent: 'error',
               });
-              return undefined;
             }
           }}
           onEndDiscussion={async (id: string) => {

@@ -493,14 +493,13 @@ describe('useReplyToDiscussion', () => {
     const patch = { text: 'Reply message' };
 
     await act(async () => {
-      await result.current(discussionId, patch, manuscriptId);
+      await result.current(discussionId, patch);
     });
 
     expect(updateDiscussion).toHaveBeenCalledWith(
       discussionId,
       patch,
       mockAuthorization,
-      manuscriptId,
     );
   });
 

@@ -1,8 +1,7 @@
-import { DiscussionResponse, ManuscriptResponse } from '@asap-hub/model';
+import { DiscussionResponse } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import DiscussionController from '../controllers/discussion.controller';
-import ManuscriptController from '../controllers/manuscript.controller';
 import {
   validateDiscussionCreateRequest,
   validateDiscussionParameters,
@@ -11,7 +10,6 @@ import {
 
 export const discussionRouteFactory = (
   discussionController: DiscussionController,
-  manuscriptController: ManuscriptController,
 ): Router => {
   const discussionRoutes = Router();
 
@@ -32,29 +30,18 @@ export const discussionRouteFactory = (
 
   discussionRoutes.patch<{ discussionId: string }>(
     '/discussions/:discussionId',
-    async (
-      req,
-      res: Response<{
-        discussion: DiscussionResponse;
-        manuscript?: ManuscriptResponse;
-      }>,
-    ) => {
+    async (req, res: Response<DiscussionResponse>) => {
       const { body, params } = req;
 
       const { discussionId } = validateDiscussionParameters(params);
-      const { text, manuscriptId } = validateDiscussionRequest(body);
+      const { text } = validateDiscussionRequest(body);
 
       if (!req.loggedInUser) throw Boom.forbidden();
 
       const reply = { text, userId: req.loggedInUser.id };
 
       const discussion = await discussionController.update(discussionId, reply);
-
-      let manuscript;
-      if (manuscriptId)
-        manuscript = await manuscriptController.fetchById(manuscriptId);
-
-      res.json({ discussion, manuscript });
+      res.json(discussion);
     },
   );
 

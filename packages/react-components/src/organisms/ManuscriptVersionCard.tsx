@@ -1,5 +1,4 @@
 import {
-  ManuscriptDataObject,
   ManuscriptVersion,
   Message,
   quickCheckQuestions,
@@ -55,9 +54,6 @@ type ManuscriptVersionCardProps = {
     (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
   ];
   onEndDiscussion: (id: string) => Promise<void>;
-  setManuscript: React.Dispatch<
-    React.SetStateAction<ManuscriptDataObject | undefined>
-  >;
 } & Pick<ComponentProps<typeof DiscussionModal>, 'onSave'> &
   Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
@@ -214,7 +210,6 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   onEndDiscussion,
   isComplianceReviewer = false,
   isManuscriptContributor = false,
-  setManuscript,
 }) => {
   const [versionData, setVersion] = useVersionById({
     teamId,
@@ -288,7 +283,6 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
               isComplianceReviewer={isComplianceReviewer}
               canUpdateDiscussion={canUpdateDiscussion}
               isActiveReport={isActiveVersion}
-              setManuscript={setManuscript}
             />
           </Suspense>
         )}

@@ -368,20 +368,9 @@ export const useDiscussionById = (id: string) =>
 export const useReplyToDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);
   const setDiscussion = useSetDiscussion();
-  return async (
-    id: string,
-    patch: DiscussionRequest,
-    manuscriptId?: string,
-  ) => {
-    const response = await updateDiscussion(
-      id,
-      patch,
-      authorization,
-      manuscriptId,
-    );
-    setDiscussion(response.discussion);
-
-    return response.manuscript;
+  return async (id: string, patch: DiscussionRequest) => {
+    const discussion = await updateDiscussion(id, patch, authorization);
+    setDiscussion(discussion);
   };
 };
 

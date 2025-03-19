@@ -200,11 +200,9 @@ export const getReviewerStatusType = (
       [manuscriptStatus[1]]: 'default',
       [manuscriptStatus[2]]: 'warning',
       [manuscriptStatus[3]]: 'default',
-      [manuscriptStatus[4]]: 'warning',
-      [manuscriptStatus[5]]: 'default',
-      [manuscriptStatus[6]]: 'default',
-      [manuscriptStatus[7]]: 'final',
-      [manuscriptStatus[8]]: 'final',
+      [manuscriptStatus[4]]: 'default',
+      [manuscriptStatus[5]]: 'final',
+      [manuscriptStatus[6]]: 'final',
     }) as Record<string, StatusType>
   )[statusItem] || 'none';
 
@@ -414,7 +412,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                   onEndDiscussion={onEndDiscussion}
                   isComplianceReviewer={isComplianceReviewer}
                   isManuscriptContributor={hasUpdateAccess}
-                  setManuscrit={setManuscript}
                 />
               ))}
             {activeTab === 'discussions' && (

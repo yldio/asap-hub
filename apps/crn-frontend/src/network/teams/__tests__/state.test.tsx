@@ -444,12 +444,12 @@ const mockTeam = {
 const mockDiscussion = {
   id: discussionId,
   title: 'Updated Discussion',
-  status: 'Waiting for OS Team Reply',
+  status: 'Addendum Required',
 };
 
 const mockUpdatedManuscript = {
   id: manuscriptId,
-  status: 'Waiting for OS Team Reply',
+  status: 'Addendum Required',
 };
 
 const mockAuthorization = 'mock-token';
@@ -493,14 +493,13 @@ describe('useReplyToDiscussion', () => {
     const patch = { text: 'Reply message' };
 
     await act(async () => {
-      await result.current(discussionId, patch, manuscriptId);
+      await result.current(discussionId, patch);
     });
 
     expect(updateDiscussion).toHaveBeenCalledWith(
       discussionId,
       patch,
       mockAuthorization,
-      manuscriptId,
     );
   });
 
@@ -547,7 +546,7 @@ describe('useReplyToDiscussion', () => {
       expect(stateResult.current?.manuscripts).toEqual([
         {
           id: manuscriptId,
-          status: 'Waiting for OS Team Reply',
+          status: 'Addendum Required',
         },
         {
           id: manuscriptId2,

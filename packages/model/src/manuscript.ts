@@ -271,8 +271,6 @@ export const manuscriptFormFieldsMapping: Record<
 export const manuscriptStatus = [
   'Waiting for Report',
   'Review Compliance Report',
-  'Waiting for OS Team Reply',
-  "Waiting for Grantee's Reply",
   'Manuscript Resubmitted',
   'Submit Final Publication',
   'Addendum Required',
@@ -865,7 +863,6 @@ export type ListPartialManuscriptResponse =
 export type ManuscriptUpdateAction =
   | 'manuscript_submitted'
   | 'manuscript_resubmitted'
-  | 'status_changed_waiting_for_grantee_reply'
   | 'status_changed_review_compliance_report'
   | 'status_changed_submit_final_publication'
   | 'status_changed_addendum_required'
@@ -877,7 +874,6 @@ export type TemplateAlias =
   | 'waiting-for-report-os-team'
   | 'manuscript-re-submitted-grantees'
   | 'manuscript-resubmitted-os-team'
-  | 'waiting-for-grantee-reply'
   | 'review-compliance-report'
   | 'submit-final-publication'
   | 'addendum-required'
@@ -898,9 +894,7 @@ export const manuscriptNotificationMapping: ManuscriptNotifications = {
     grantee: 'manuscript-re-submitted-grantees',
     open_science_team: 'manuscript-resubmitted-os-team',
   },
-  status_changed_waiting_for_grantee_reply: {
-    grantee: 'waiting-for-grantee-reply',
-  },
+
   status_changed_review_compliance_report: {
     grantee: 'review-compliance-report',
   },

@@ -1299,78 +1299,95 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               title="Quick Checks"
               description="Before you submit your manuscript, please confirm that you have met the following requirements."
             >
-              {quickCheckQuestions.map(
-                ({ field, question }) =>
-                  manuscriptFormFieldsMapping[watchType][
-                    watchLifecycle
-                  ].includes(field) && (
-                    <div key={field}>
-                      <Controller
-                        name={`versions.0.${field}`}
-                        control={control}
-                        rules={{
-                          required: 'Please select an option.',
-                        }}
-                        render={({
-                          field: { value, onChange },
-                          fieldState: { error },
-                        }) => (
-                          <LabeledRadioButtonGroup<QuestionChecksOption | ''>
-                            testId={field}
-                            title={question}
-                            subtitle="(required)"
-                            description={getQuickCheckDescription(field)}
-                            options={[
-                              {
-                                value: 'Yes',
-                                label: 'Yes',
-                                disabled: isEditMode || isSubmitting,
-                              },
-                              {
-                                value: 'No',
-                                label: 'No',
-                                disabled: isEditMode || isSubmitting,
-                              },
-                              {
-                                value: 'Not applicable',
-                                label: 'Not applicable',
-                                disabled: isEditMode || isSubmitting,
-                              },
-                            ]}
-                            value={value as QuestionChecksOption}
-                            onChange={onChange}
-                            validationMessage={error?.message ?? ''}
-                          />
-                        )}
-                      />
-                      {['No', 'Not applicable'].includes(
-                        watch(`versions.0.${field}`) as string,
-                      ) && (
+              <div
+                css={css({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: rem(48),
+                  paddingTop: rem(8),
+                  paddingBottom: rem(8),
+                })}
+              >
+                {quickCheckQuestions.map(
+                  ({ field, question }) =>
+                    manuscriptFormFieldsMapping[watchType][
+                      watchLifecycle
+                    ].includes(field) && (
+                      <div key={field}>
                         <Controller
-                          name={`versions.0.${field}Details`}
+                          name={`versions.0.${field}`}
                           control={control}
                           rules={{
-                            required: 'Please enter the details.',
+                            required: 'Please select an option.',
                           }}
                           render={({
                             field: { value, onChange },
                             fieldState: { error },
                           }) => (
-                            <LabeledTextField
-                              title="Please provide details"
+                            <LabeledRadioButtonGroup<QuestionChecksOption | ''>
+                              testId={field}
+                              title={question}
                               subtitle="(required)"
-                              description="The reason you provide must be accepted by the Open Science team."
-                              value={value || ''}
-                              customValidationMessage={error?.message}
+                              description={getQuickCheckDescription(field)}
+                              options={[
+                                {
+                                  value: 'Yes',
+                                  label: 'Yes',
+                                  disabled: isEditMode || isSubmitting,
+                                },
+                                {
+                                  value: 'No',
+                                  label: 'No',
+                                  disabled: isEditMode || isSubmitting,
+                                },
+                                {
+                                  value: 'Not applicable',
+                                  label: 'Not applicable',
+                                  disabled: isEditMode || isSubmitting,
+                                },
+                              ]}
+                              value={value as QuestionChecksOption}
                               onChange={onChange}
-                              enabled={!isEditMode && !isSubmitting}
+                              validationMessage={error?.message ?? ''}
                             />
                           )}
                         />
-                      )}
-                    </div>
-                  ),
-              )}
+                        {['No', 'Not applicable'].includes(
+                          watch(`versions.0.${field}`) as string,
+                        ) && (
+                          <div
+                            css={css({
+                              marginTop: rem(12),
+                            })}
+                          >
+                            <Controller
+                              name={`versions.0.${field}Details`}
+                              control={control}
+                              rules={{
+                                required: 'Please enter the details.',
+                              }}
+                              render={({
+                                field: { value, onChange },
+                                fieldState: { error },
+                              }) => (
+                                <LabeledTextField
+                                  noPadding
+                                  title="Please provide details"
+                                  subtitle="(required)"
+                                  description="The reason you provide must be accepted by the Open Science team."
+                                  value={value || ''}
+                                  customValidationMessage={error?.message}
+                                  onChange={onChange}
+                                  enabled={!isEditMode && !isSubmitting}
+                                />
+                              )}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ),
+                )}
+              </div>
             </FormCard>
           )}
           <div css={buttonsOuterContainerStyles}>

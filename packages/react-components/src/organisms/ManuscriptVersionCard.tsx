@@ -115,11 +115,18 @@ const dividerStyles = css({
   margin: `${rem(21)} 0`,
 });
 
-const quickCheckStyles = css({
-  marginTop: rem(16),
-  gap: rem(12),
+const quickCheckContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
+  marginTop: rem(16),
+  marginBottom: rem(16),
+  gap: rem(32),
+});
+
+const quickCheckStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(12),
 });
 
 const additionalInformationListStyles = css({
@@ -399,12 +406,14 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                   </span>
                 )}
               </div>
-              {quickCheckDetails.map(({ field, question }) => (
-                <div css={quickCheckStyles} key={field}>
-                  <Subtitle>{question}</Subtitle>
-                  <span>{version[`${field}Details`]}</span>
-                </div>
-              ))}
+              <div css={quickCheckContainerStyles}>
+                {quickCheckDetails.map(({ field, question }) => (
+                  <div css={quickCheckStyles} key={field}>
+                    <Subtitle noMargin>{question}</Subtitle>
+                    <span>{version[`${field}Details`]}</span>
+                  </div>
+                ))}
+              </div>
               {hasAdditionalInfo(version) && (
                 <div>
                   <span

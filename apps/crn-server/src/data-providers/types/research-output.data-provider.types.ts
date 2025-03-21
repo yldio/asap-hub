@@ -28,6 +28,10 @@ export type CreateResearchOutputOptions = UpdateResearchOutputOptions;
 export type FetchResearchOutputOptions =
   FetchOptions<FetchResearchOutputFilter> & {
     includeDrafts?: boolean;
+    relatedResearchFilter?: {
+      sharingStatus?: ResearchOutputSharingStatus;
+      asapFunded?: 'Yes' | 'No' | 'Not Sure';
+    };
   };
 
 export type ResearchOutputDataProvider = DataProvider<
@@ -38,4 +42,9 @@ export type ResearchOutputDataProvider = DataProvider<
   CreateResearchOutputOptions,
   ResearchOutputUpdateDataObject,
   UpdateResearchOutputOptions
->;
+> & {
+  fetchById: (
+    id: string,
+    filterRelatedResearch?: FetchResearchOutputOptions,
+  ) => Promise<ResearchOutputDataObject | null>;
+};

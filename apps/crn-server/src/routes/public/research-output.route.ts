@@ -23,6 +23,7 @@ export const researchOutputRouteFactory = (
       const result = await researchOutputController.fetch({
         ...options,
         filter: { sharingStatus: 'Public', asapFunded: 'Yes' },
+        relatedResearchFilter: { sharingStatus: 'Public', asapFunded: 'Yes' },
       });
 
       res.json({
@@ -37,8 +38,12 @@ export const researchOutputRouteFactory = (
     async (req, res: Response<PublicResearchOutputResponse>) => {
       const { researchOutputId } = req.params;
 
-      const researchOutput =
-        await researchOutputController.fetchById(researchOutputId);
+      const researchOutput = await researchOutputController.fetchById(
+        researchOutputId,
+        {
+          relatedResearchFilter: { sharingStatus: 'Public', asapFunded: 'Yes' },
+        },
+      );
 
       if (
         researchOutput.sharingStatus !== 'Public' ||

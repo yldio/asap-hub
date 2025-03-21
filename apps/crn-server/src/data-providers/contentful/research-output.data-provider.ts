@@ -75,16 +75,34 @@ export class ResearchOutputContentfulDataProvider
   async fetch(
     options: FetchResearchOutputOptions,
   ): Promise<ListResearchOutputDataObject> {
-    const { take = 8, skip = 0, filter, search, includeDrafts } = options;
+    const {
+      take = 8,
+      skip = 0,
+      filter,
+      search,
+      includeDrafts,
+      relatedResearchFilter,
+    } = options;
 
     const searchTerms = (search || '').split(' ').filter(Boolean);
     const where: ResearchOutputsFilter = {};
+    const relatedResearchWhere: ResearchOutputsFilter = {};
 
     if (searchTerms.length) {
       where.OR = [
         ...searchTerms.map((term) => ({ title_contains: term })),
         ...searchTerms.map((term) => ({ keywords: { name: term } })),
       ];
+    }
+
+    if (relatedResearchFilter) {
+      if (relatedResearchFilter.sharingStatus) {
+        relatedResearchWhere.sharingStatus =
+          relatedResearchFilter.sharingStatus;
+      }
+      if (relatedResearchFilter.asapFunded) {
+        relatedResearchWhere.asapFunded = relatedResearchFilter.asapFunded;
+      }
     }
 
     if (filter) {
@@ -134,6 +152,7 @@ export class ResearchOutputContentfulDataProvider
         ResearchOutputsOrder.CreatedDateDesc,
       ],
       preview: includeDrafts,
+      relatedResearchWhere,
     });
 
     if (!researchOutputsCollection) {
@@ -148,15 +167,41 @@ export class ResearchOutputContentfulDataProvider
     };
   }
 
-  private async fetchOutputById(id: string) {
+  private async fetchOutputById(
+    id: string,
+    relatedResearchWhere: ResearchOutputsFilter = {},
+  ) {
     return this.contentfulClient.request<
       FetchResearchOutputByIdQuery,
       FetchResearchOutputByIdQueryVariables
-    >(FETCH_RESEARCH_OUTPUT_BY_ID, { id, preview: false });
+    >(FETCH_RESEARCH_OUTPUT_BY_ID, {
+      id,
+      preview: false,
+      relatedResearchWhere,
+    });
   }
 
-  async fetchById(id: string): Promise<ResearchOutputDataObject | null> {
-    const { researchOutputs } = await this.fetchOutputById(id);
+  async fetchById(
+    id: string,
+    options?: FetchResearchOutputOptions,
+  ): Promise<ResearchOutputDataObject | null> {
+    const relatedResearchWhere: ResearchOutputsFilter = {};
+
+    if (options?.relatedResearchFilter) {
+      const { relatedResearchFilter } = options;
+      if (relatedResearchFilter.sharingStatus) {
+        relatedResearchWhere.sharingStatus =
+          relatedResearchFilter.sharingStatus;
+      }
+      if (relatedResearchFilter.asapFunded) {
+        relatedResearchWhere.asapFunded = relatedResearchFilter.asapFunded;
+      }
+    }
+
+    const { researchOutputs } = await this.fetchOutputById(
+      id,
+      relatedResearchWhere,
+    );
 
     if (!researchOutputs) {
       const { researchOutputs: draftResearchOutput } =

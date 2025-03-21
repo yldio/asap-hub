@@ -19951,6 +19951,7 @@ export type FetchResearchOutputByIdQueryVariables = Exact<{
   preview?: InputMaybe<Scalars['Boolean']>;
   fetchPMs?: InputMaybe<Scalars['Boolean']>;
   singleOutput?: InputMaybe<Scalars['Boolean']>;
+  relatedResearchWhere?: InputMaybe<ResearchOutputsFilter>;
 }>;
 
 export type FetchResearchOutputByIdQuery = {
@@ -20207,6 +20208,7 @@ export type FetchResearchOutputsQueryVariables = Exact<{
   preview?: InputMaybe<Scalars['Boolean']>;
   fetchPMs?: InputMaybe<Scalars['Boolean']>;
   singleOutput?: InputMaybe<Scalars['Boolean']>;
+  relatedResearchWhere?: InputMaybe<ResearchOutputsFilter>;
 }>;
 
 export type FetchResearchOutputsQuery = {
@@ -27195,6 +27197,14 @@ export const ResearchOutputsContentFragmentDoc = {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
                 value: { kind: 'IntValue', value: '20' },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'relatedResearchWhere' },
+                },
               },
             ],
             selectionSet: {
@@ -38291,6 +38301,18 @@ export const FetchResearchOutputByIdDocument = {
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: true },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'relatedResearchWhere' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ResearchOutputsFilter' },
+          },
+          defaultValue: { kind: 'ObjectValue', fields: [] },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -38406,6 +38428,17 @@ export const FetchResearchOutputsDocument = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: false },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'relatedResearchWhere' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ResearchOutputsFilter' },
+          },
         },
       ],
       selectionSet: {

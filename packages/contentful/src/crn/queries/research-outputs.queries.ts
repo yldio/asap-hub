@@ -154,7 +154,7 @@ export const researchOutputContentQueryFragment = gql`
         name
       }
     }
-    relatedResearchCollection(limit: 20) {
+    relatedResearchCollection(limit: 20, where: $relatedResearchWhere) {
       items {
         sys {
           id
@@ -236,6 +236,7 @@ export const FETCH_RESEARCH_OUTPUT_BY_ID = gql`
     $preview: Boolean
     $fetchPMs: Boolean = true
     $singleOutput: Boolean = true
+    $relatedResearchWhere: ResearchOutputsFilter = {}
   ) {
     researchOutputs(id: $id, preview: $preview) {
       ...ResearchOutputsContent
@@ -253,6 +254,7 @@ export const FETCH_RESEARCH_OUTPUTS = gql`
     $preview: Boolean
     $fetchPMs: Boolean = false
     $singleOutput: Boolean = false
+    $relatedResearchWhere: ResearchOutputsFilter
   ) {
     researchOutputsCollection(
       limit: $limit

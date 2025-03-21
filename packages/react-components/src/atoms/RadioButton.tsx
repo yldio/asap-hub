@@ -9,8 +9,6 @@ const styles = css({
   width: `${24 / perRem}em`,
   height: `${24 / perRem}em`,
   marginRight: `${12 / perRem}em`,
-  marginTop: `${12 / perRem}em`,
-  marginBottom: `${12 / perRem}em`,
 
   appearance: 'none',
   outline: 'none',

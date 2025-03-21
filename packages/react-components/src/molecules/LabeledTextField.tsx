@@ -27,6 +27,7 @@ type LabeledTextFieldProps = {
   readonly description?: React.ReactNode;
   readonly hint?: React.ReactNode;
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  readonly noPadding?: boolean;
 } & Exclude<ComponentProps<typeof TextField>, 'id'>;
 
 const subtitleStyles = css({
@@ -38,9 +39,10 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   subtitle,
   description,
   hint,
+  noPadding = false,
   ...textFieldProps
 }) => (
-  <div css={containerStyles}>
+  <div css={[containerStyles, noPadding && { paddingBottom: 0 }]}>
     <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
       <Paragraph>
         <strong>{title}</strong>

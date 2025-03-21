@@ -19,6 +19,7 @@ import {
   ManuscriptVersion,
   QuestionChecksOption,
   QuickCheck,
+  QuickCheckDetails,
   quickCheckQuestions,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
@@ -321,6 +322,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   preprintDoi,
   publicationDoi,
   otherDetails,
+  acknowledgedGrantNumber,
+  asapAffiliationIncluded,
+  manuscriptLicense,
+  datasetsDeposited,
+  codeDeposited,
+  protocolsDeposited,
+  labMaterialsRegistered,
+  availabilityStatement,
   acknowledgedGrantNumberDetails,
   asapAffiliationIncludedDetails,
   manuscriptLicenseDetails,
@@ -346,11 +355,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     string | undefined
   >();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const getDefaultQuickCheckValue = (quickCheckDetails: string | undefined) => {
+  const getDefaultQuickCheckValue = (
+    quickCheck: string | undefined,
+    quickCheckDetails: string | undefined,
+  ) => {
     const isEditing = !!title;
 
     if (isEditing) {
-      return quickCheckDetails ? 'No' : 'Yes';
+      return quickCheckDetails ? quickCheck : 'Yes';
     }
 
     return undefined;
@@ -376,25 +388,35 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           additionalFiles: additionalFiles || undefined,
 
           acknowledgedGrantNumber: getDefaultQuickCheckValue(
+            acknowledgedGrantNumber,
             acknowledgedGrantNumberDetails,
           ),
           asapAffiliationIncluded: getDefaultQuickCheckValue(
+            asapAffiliationIncluded,
             asapAffiliationIncludedDetails,
           ),
           manuscriptLicense: getDefaultQuickCheckValue(
+            manuscriptLicense,
             manuscriptLicenseDetails,
           ),
           datasetsDeposited: getDefaultQuickCheckValue(
+            datasetsDeposited,
             datasetsDepositedDetails,
           ),
-          codeDeposited: getDefaultQuickCheckValue(codeDepositedDetails),
+          codeDeposited: getDefaultQuickCheckValue(
+            codeDeposited,
+            codeDepositedDetails,
+          ),
           protocolsDeposited: getDefaultQuickCheckValue(
+            protocolsDeposited,
             protocolsDepositedDetails,
           ),
           labMaterialsRegistered: getDefaultQuickCheckValue(
+            labMaterialsRegistered,
             labMaterialsRegisteredDetails,
           ),
           availabilityStatement: getDefaultQuickCheckValue(
+            availabilityStatement,
             availabilityStatementDetails,
           ),
           acknowledgedGrantNumberDetails:
@@ -497,6 +519,43 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getValues, reset, watchType, watchLifecycle, selectedTeams]);
 
+  const getSubmittingQuickChecks = (
+    versionData: ManuscriptFormData['versions'][number],
+  ) => {
+    const quickChecks = [
+      'acknowledgedGrantNumber',
+      'asapAffiliationIncluded',
+      'availabilityStatement',
+      'manuscriptLicense',
+      'datasetsDeposited',
+      'codeDeposited',
+      'protocolsDeposited',
+      'labMaterialsRegistered',
+    ] as const;
+
+    return quickChecks.reduce(
+      (
+        result: Record<QuickCheck | QuickCheckDetails, string>,
+        quickCheck: QuickCheck,
+      ) => {
+        const quickCheckValue = versionData?.[quickCheck] || undefined;
+        const quickCheckDetails = `${quickCheck}Details` as const;
+        const quickCheckDetailsValue = versionData?.[quickCheckDetails];
+        return {
+          ...result,
+          [quickCheck]: quickCheckValue,
+          [quickCheckDetails]:
+            quickCheckValue &&
+            quickCheckDetailsValue &&
+            ['No', 'Not applicable'].includes(quickCheckValue)
+              ? quickCheckDetailsValue
+              : '',
+        };
+      },
+      {} as Record<QuickCheck | QuickCheckDetails, string>,
+    );
+  };
+
   const onSubmit = async (data: ManuscriptFormData) => {
     setIsSubmitting(true);
 
@@ -528,50 +587,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             ? versionData.submissionDate.toISOString()
             : undefined,
 
-        acknowledgedGrantNumber:
-          versionData.acknowledgedGrantNumber || undefined,
-        asapAffiliationIncluded:
-          versionData.asapAffiliationIncluded || undefined,
-        availabilityStatement: versionData.availabilityStatement || undefined,
-        manuscriptLicense: versionData.manuscriptLicense || undefined,
-        datasetsDeposited: versionData.datasetsDeposited || undefined,
-        codeDeposited: versionData.codeDeposited || undefined,
-        protocolsDeposited: versionData.protocolsDeposited || undefined,
-        labMaterialsRegistered: versionData.labMaterialsRegistered || undefined,
-
-        acknowledgedGrantNumberDetails:
-          versionData?.acknowledgedGrantNumber === 'No'
-            ? versionData.acknowledgedGrantNumberDetails
-            : '',
-        asapAffiliationIncludedDetails:
-          versionData?.asapAffiliationIncluded === 'No'
-            ? versionData.asapAffiliationIncludedDetails
-            : '',
-        availabilityStatementDetails:
-          versionData?.availabilityStatement === 'No'
-            ? versionData.availabilityStatementDetails
-            : '',
-        manuscriptLicenseDetails:
-          versionData?.manuscriptLicense === 'No'
-            ? versionData.manuscriptLicenseDetails
-            : '',
-        datasetsDepositedDetails:
-          versionData?.datasetsDeposited === 'No'
-            ? versionData.datasetsDepositedDetails
-            : '',
-        codeDepositedDetails:
-          versionData?.codeDeposited === 'No'
-            ? versionData.codeDepositedDetails
-            : '',
-        protocolsDepositedDetails:
-          versionData?.protocolsDeposited === 'No'
-            ? versionData.protocolsDepositedDetails
-            : '',
-        labMaterialsRegisteredDetails:
-          versionData?.labMaterialsRegistered === 'No'
-            ? versionData.labMaterialsRegisteredDetails
-            : '',
-
+        ...getSubmittingQuickChecks(versionData),
         teams: versionData.teams.map((team) => team.value),
         labs: versionData.labs.map((lab) => lab.value),
         firstAuthors: getPostAuthors(
@@ -1283,71 +1299,95 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               title="Quick Checks"
               description="Before you submit your manuscript, please confirm that you have met the following requirements."
             >
-              {quickCheckQuestions.map(
-                ({ field, question }) =>
-                  manuscriptFormFieldsMapping[watchType][
-                    watchLifecycle
-                  ].includes(field) && (
-                    <div key={field}>
-                      <Controller
-                        name={`versions.0.${field}`}
-                        control={control}
-                        rules={{
-                          required: 'Please select an option.',
-                        }}
-                        render={({
-                          field: { value, onChange },
-                          fieldState: { error },
-                        }) => (
-                          <LabeledRadioButtonGroup<QuestionChecksOption | ''>
-                            testId={field}
-                            title={question}
-                            subtitle="(required)"
-                            description={getQuickCheckDescription(field)}
-                            options={[
-                              {
-                                value: 'Yes',
-                                label: 'Yes',
-                                disabled: isEditMode || isSubmitting,
-                              },
-                              {
-                                value: 'No',
-                                label: 'No',
-                                disabled: isEditMode || isSubmitting,
-                              },
-                            ]}
-                            value={value as QuestionChecksOption}
-                            onChange={onChange}
-                            validationMessage={error?.message ?? ''}
-                          />
-                        )}
-                      />
-                      {watch(`versions.0.${field}`) === 'No' && (
+              <div
+                css={css({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: rem(48),
+                  paddingTop: rem(8),
+                  paddingBottom: rem(8),
+                })}
+              >
+                {quickCheckQuestions.map(
+                  ({ field, question }) =>
+                    manuscriptFormFieldsMapping[watchType][
+                      watchLifecycle
+                    ].includes(field) && (
+                      <div key={field}>
                         <Controller
-                          name={`versions.0.${field}Details`}
+                          name={`versions.0.${field}`}
                           control={control}
                           rules={{
-                            required: 'Please enter the details.',
+                            required: 'Please select an option.',
                           }}
                           render={({
                             field: { value, onChange },
                             fieldState: { error },
                           }) => (
-                            <LabeledTextField
-                              title="Please provide details"
+                            <LabeledRadioButtonGroup<QuestionChecksOption | ''>
+                              testId={field}
+                              title={question}
                               subtitle="(required)"
-                              description="The reason you provide must be accepted by the Open Science team."
-                              value={value || ''}
-                              customValidationMessage={error?.message}
+                              description={getQuickCheckDescription(field)}
+                              options={[
+                                {
+                                  value: 'Yes',
+                                  label: 'Yes',
+                                  disabled: isEditMode || isSubmitting,
+                                },
+                                {
+                                  value: 'No',
+                                  label: 'No',
+                                  disabled: isEditMode || isSubmitting,
+                                },
+                                {
+                                  value: 'Not applicable',
+                                  label: 'Not applicable',
+                                  disabled: isEditMode || isSubmitting,
+                                },
+                              ]}
+                              value={value as QuestionChecksOption}
                               onChange={onChange}
-                              enabled={!isEditMode && !isSubmitting}
+                              validationMessage={error?.message ?? ''}
                             />
                           )}
                         />
-                      )}
-                    </div>
-                  ),
-              )}
+                        {['No', 'Not applicable'].includes(
+                          watch(`versions.0.${field}`) as string,
+                        ) && (
+                          <div
+                            css={css({
+                              marginTop: rem(12),
+                            })}
+                          >
+                            <Controller
+                              name={`versions.0.${field}Details`}
+                              control={control}
+                              rules={{
+                                required: 'Please enter the details.',
+                              }}
+                              render={({
+                                field: { value, onChange },
+                                fieldState: { error },
+                              }) => (
+                                <LabeledTextField
+                                  noPadding
+                                  title="Please provide details"
+                                  subtitle="(required)"
+                                  description="The reason you provide must be accepted by the Open Science team."
+                                  value={value || ''}
+                                  customValidationMessage={error?.message}
+                                  onChange={onChange}
+                                  enabled={!isEditMode && !isSubmitting}
+                                />
+                              )}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ),
+                )}
+              </div>
             </FormCard>
           )}
           <div css={buttonsOuterContainerStyles}>

@@ -22,6 +22,7 @@ export type LabeledRadioButtonGroupProps<V extends string> = {
 } & Pick<ComponentProps<typeof LabeledRadioButton>, 'tooltipText'>;
 
 const optionListStyles = css({
+  marginTop: `${16 / perRem}em`,
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr',
   [`@media (max-width: ${mobileScreen.max}px)`]: {
@@ -32,7 +33,8 @@ const optionListStyles = css({
 const containerStyles = css({
   border: 'none',
   margin: 0,
-  padding: `${18 / perRem}em 0`,
+  padding: 0,
+  paddingBlock: 0,
 });
 
 const subtitleStyles = css({

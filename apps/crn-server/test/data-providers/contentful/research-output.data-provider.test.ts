@@ -275,6 +275,35 @@ describe('Research Outputs Data Provider', () => {
             }),
           );
         });
+
+        test('Should pass the parameters to filter related research by asapFunded and sharing status', async () => {
+          await researchOutputDataProvider.fetch({
+            take: 13,
+            skip: 7,
+            filter: {
+              sharingStatus: 'Public',
+              asapFunded: 'Yes',
+            },
+            relatedResearchFilter: {
+              sharingStatus: 'Public',
+              asapFunded: 'Yes',
+            },
+          });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              where: {
+                sharingStatus: 'Public',
+                asapFunded: 'Yes',
+              },
+              relatedResearchWhere: {
+                sharingStatus: 'Public',
+                asapFunded: 'Yes',
+              },
+            }),
+          );
+        });
       });
 
       describe('with a search term', () => {
@@ -943,6 +972,32 @@ describe('Research Outputs Data Provider', () => {
 
       const result = await researchOutputDataProvider.fetchById('1');
       expect(result?.versions).toEqual(expectedVersionsResponse);
+    });
+
+    test('Should pass the parameters to filter related research by asapFunded and sharing status', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      await researchOutputDataProvider.fetchById('1', {
+        relatedResearchFilter: {
+          sharingStatus: 'Public',
+          asapFunded: 'Yes',
+        },
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          id: '1',
+          relatedResearchWhere: {
+            sharingStatus: 'Public',
+            asapFunded: 'Yes',
+          },
+        }),
+      );
     });
   });
   describe('create', () => {

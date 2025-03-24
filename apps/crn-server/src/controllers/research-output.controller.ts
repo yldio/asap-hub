@@ -38,9 +38,14 @@ export default class ResearchOutputController {
     private generativeContentDataProvider: GenerativeContentDataProvider = generativeContentDataProviderNoop,
   ) {}
 
-  async fetchById(researchOutputId: string): Promise<ResearchOutputResponse> {
-    const researchOutput =
-      await this.researchOutputDataProvider.fetchById(researchOutputId);
+  async fetchById(
+    researchOutputId: string,
+    options?: ResearchOutputFetchOptions,
+  ): Promise<ResearchOutputResponse> {
+    const researchOutput = await this.researchOutputDataProvider.fetchById(
+      researchOutputId,
+      options,
+    );
     if (!researchOutput) {
       throw new NotFoundError(
         undefined,
@@ -542,6 +547,7 @@ export type ResearchOutputFetchOptions = {
   skip?: number;
   search?: string;
   filter?: ResearchOutputFilter;
+  relatedResearchFilter?: ResearchOutputFilter;
   includeDrafts?: boolean;
 };
 

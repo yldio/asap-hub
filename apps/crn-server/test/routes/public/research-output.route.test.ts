@@ -96,6 +96,10 @@ describe('/research-outputs/ route', () => {
           sharingStatus: 'Public',
           asapFunded: 'Yes',
         },
+        relatedResearchFilter: {
+          sharingStatus: 'Public',
+          asapFunded: 'Yes',
+        },
       };
 
       expect(researchOutputControllerMock.fetch).toHaveBeenCalledWith(
@@ -157,6 +161,10 @@ describe('/research-outputs/ route', () => {
           take: 15,
           skip: 5,
           filter: {
+            sharingStatus: 'Public',
+            asapFunded: 'Yes',
+          },
+          relatedResearchFilter: {
             sharingStatus: 'Public',
             asapFunded: 'Yes',
           },

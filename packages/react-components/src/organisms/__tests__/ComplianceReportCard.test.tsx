@@ -1,12 +1,10 @@
 import { manuscriptAuthor } from '@asap-hub/fixtures';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { act } from 'react-dom/test-utils';
+import { ComponentProps } from 'react';
 import ComplianceReportCard from '../ComplianceReportCard';
 
-const getDiscussion = jest.fn();
-
-const props = {
+const props: ComponentProps<typeof ComplianceReportCard> = {
   id: 'compliance-report-id',
   url: 'http://example.com/',
   description: 'compliance report description',
@@ -19,17 +17,6 @@ const props = {
   },
   versionId: 'version-id',
   manuscriptId: 'manuscript-id',
-  isComplianceReviewer: false,
-  canUpdateDiscussion: false,
-  isActiveReport: true,
-  createComplianceDiscussion: jest
-    .fn()
-    .mockImplementation(() => 'discussion-id'),
-  getDiscussion,
-  setVersion: jest.fn(),
-  onSave: jest.fn(),
-  onEndDiscussion: jest.fn(),
-  setManuscript: jest.fn(),
 };
 
 it('displays compliance report description, url and creation details when expanded', () => {
@@ -57,55 +44,4 @@ it('displays compliance report description, url and creation details when expand
   expect(getByText('Test User').closest('a')!.href!).toContain(
     '/network/users/test-user-id',
   );
-});
-
-it('calls setVersion when component is unmouted and a discussion was created', async () => {
-  const { getByLabelText, findByText, unmount } = render(
-    <ComplianceReportCard {...props} canUpdateDiscussion />,
-  );
-
-  await act(async () => {
-    userEvent.click(getByLabelText('Expand Report'));
-    userEvent.click(await findByText(/Start Discussion/i));
-  });
-
-  const replyEditor = screen.getByTestId('editor');
-  await act(async () => {
-    userEvent.click(replyEditor);
-    userEvent.tab();
-    fireEvent.input(replyEditor, { data: 'New discussion message' });
-    userEvent.tab();
-  });
-
-  expect(await findByText(/Send/i)).toBeInTheDocument();
-  await act(async () => {
-    userEvent.click(await findByText(/Send/i));
-  });
-
-  await waitFor(() => {
-    expect(props.createComplianceDiscussion).toHaveBeenCalled();
-  });
-
-  unmount();
-
-  expect(props.setVersion).toHaveBeenCalled();
-});
-
-it('should show discusion started as a title', async () => {
-  jest.spyOn(console, 'error').mockImplementation();
-  const { getByLabelText, getByText } = render(
-    <ComplianceReportCard
-      {...props}
-      discussionId="mock-id"
-      getDiscussion={getDiscussion}
-    />,
-  );
-
-  await act(async () => {
-    userEvent.click(getByLabelText('Expand Report'));
-  });
-
-  await waitFor(() => {
-    expect(getByText(/Discussion Started/i)).toBeInTheDocument();
-  });
 });

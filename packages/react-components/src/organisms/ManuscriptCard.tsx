@@ -11,8 +11,9 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css, Theme } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { DiscussionsTab } from '.';
 import {
   Button,
   charcoal,
@@ -31,39 +32,27 @@ import { mobileScreen, perRem, rem, smallDesktopScreen } from '../pixels';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
 
-type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
-  Pick<
-    ComponentProps<typeof ManuscriptVersionCard>,
-    'onSave' | 'getDiscussion'
-  > & {
-    user: User | null;
-    teamId: string;
-    isComplianceReviewer: boolean;
-    isActiveTeam: boolean;
-    onUpdateManuscript: (
-      manuscriptId: string,
-      payload: ManuscriptPutRequest,
-    ) => Promise<ManuscriptResponse>;
-    createComplianceDiscussion: (
-      complianceReportId: string,
-      message: string,
-    ) => Promise<string>;
-    useVersionById: (args: {
-      teamId: string;
-      manuscriptId: string;
-      versionId: string;
-    }) => [
-      ManuscriptVersion | undefined,
-      (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
-    ];
-    onEndDiscussion: (id: string) => Promise<void>;
-    useManuscriptById: (
-      id: string,
-    ) => [
-      ManuscriptDataObject | undefined,
-      React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
-    ];
-  };
+type ManuscriptCardProps = Pick<TeamManuscript, 'id'> & {
+  user: User | null;
+  teamId: string;
+  isComplianceReviewer: boolean;
+  isActiveTeam: boolean;
+  onUpdateManuscript: (
+    manuscriptId: string,
+    payload: ManuscriptPutRequest,
+  ) => Promise<ManuscriptResponse>;
+  createDiscussion: (
+    manuscriptId: string,
+    title: string,
+    message: string,
+  ) => Promise<string>;
+  useManuscriptById: (
+    id: string,
+  ) => [
+    ManuscriptDataObject | undefined,
+    React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
+  ];
+};
 
 const manuscriptContainerStyles = css({
   marginTop: rem(12),
@@ -212,12 +201,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   isComplianceReviewer,
   isActiveTeam,
   onUpdateManuscript,
-  getDiscussion,
-  onSave,
   user,
-  createComplianceDiscussion,
-  useVersionById,
-  onEndDiscussion,
+  createDiscussion,
   useManuscriptById,
 }) => {
   const [activeTab, setActiveTab] = useState<
@@ -397,8 +382,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
             {activeTab === 'manuscripts-and-reports' &&
               versions.map((version, index) => (
                 <ManuscriptVersionCard
-                  onSave={onSave}
-                  getDiscussion={getDiscussion}
                   key={index}
                   version={version}
                   teamId={teamId}
@@ -407,16 +390,15 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                     isActiveManuscript &&
                     version.id === currentManuscriptVersion?.id
                   }
-                  createComplianceDiscussion={createComplianceDiscussion}
-                  useVersionById={useVersionById}
-                  onEndDiscussion={onEndDiscussion}
-                  isComplianceReviewer={isComplianceReviewer}
                   isManuscriptContributor={hasUpdateAccess}
                 />
               ))}
             {activeTab === 'discussions' && (
               <div css={css({ margin: `${rem(12)} ${rem(60)}` })}>
-                <h2>Discussions</h2>
+                <DiscussionsTab
+                  manuscriptId={id}
+                  createDiscussion={createDiscussion}
+                />
               </div>
             )}
           </div>

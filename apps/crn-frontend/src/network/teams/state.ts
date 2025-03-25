@@ -46,7 +46,7 @@ import {
   updateDiscussion,
   uploadManuscriptFile,
   resubmitManuscript,
-  createComplianceDiscussion,
+  createDiscussion,
   endDiscussion,
   getManuscripts,
   ManuscriptsOptions,
@@ -563,16 +563,18 @@ export const useVersionById = (params: {
   return [version, setVersionCallback];
 };
 
-export const useCreateComplianceDiscussion = () => {
+export const useCreateDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);
 
   return async (
-    complianceReportId: string,
-    message: string,
+    manuscriptId: string,
+    title: string,
+    text: string,
   ): Promise<string> => {
-    const discussion = await createComplianceDiscussion(
-      complianceReportId,
-      message,
+    const discussion = await createDiscussion(
+      manuscriptId,
+      title,
+      text,
       authorization,
     );
     return discussion.id;

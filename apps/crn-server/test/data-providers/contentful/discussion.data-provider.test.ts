@@ -1,5 +1,4 @@
 import { Entry, Environment } from '@asap-hub/contentful';
-import { DiscussionType } from '@asap-hub/model';
 
 import { when } from 'jest-when';
 import {
@@ -11,7 +10,7 @@ import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlDiscussion,
   getDiscussionDataObject,
-  getDiscussionRequestObject,
+  getDiscussionCreateRequestObject,
 } from '../../fixtures/discussions.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -42,12 +41,32 @@ describe('Discussions Contentful Data Provider', () => {
   });
 
   describe('Create', () => {
-    test('can create a discussion', async () => {
+    test('can create a discussion and links it to the manuscript with previous discussions', async () => {
       const discussionId = 'discussion-id-1';
       const messageId = 'message-id-1';
-      const DiscussionRequestObject = getDiscussionRequestObject();
+      const discussionRequestObject = getDiscussionCreateRequestObject();
 
       const publish = jest.fn();
+      const patch = jest.fn().mockResolvedValue({
+        publish,
+      });
+
+      const manuscriptMockEntry = {
+        sys: { id: discussionRequestObject.manuscriptId },
+        fields: {
+          discussion: [
+            {
+              sys: {
+                id: 'previous-discussion',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        },
+        publish,
+        patch,
+      } as unknown as Entry;
 
       when(environmentMock.createEntry)
         .calledWith('messages', expect.anything())
@@ -62,9 +81,13 @@ describe('Discussions Contentful Data Provider', () => {
           publish,
         } as unknown as Entry);
 
-      const result = await discussionDataProviderMock.create({
-        ...DiscussionRequestObject,
-      });
+      when(environmentMock.getEntry)
+        .calledWith(discussionRequestObject.manuscriptId)
+        .mockResolvedValue(manuscriptMockEntry);
+
+      const result = await discussionDataProviderMock.create(
+        discussionRequestObject,
+      );
 
       expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
         1,
@@ -74,158 +97,120 @@ describe('Discussions Contentful Data Provider', () => {
             createdBy: {
               'en-US': {
                 sys: {
-                  id: DiscussionRequestObject.userId,
+                  id: discussionRequestObject.userId,
                   linkType: 'Entry',
                   type: 'Link',
                 },
               },
             },
             text: {
-              'en-US': DiscussionRequestObject.text,
+              'en-US': discussionRequestObject.text,
             },
           },
         },
       );
-      expect(environmentMock.createEntry).toHaveBeenCalledWith('discussions', {
-        fields: {
-          message: {
-            'en-US': {
-              sys: {
-                id: messageId,
-                linkType: 'Entry',
-                type: 'Link',
+      expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+        2,
+        'discussions',
+        {
+          fields: {
+            title: {
+              'en-US': discussionRequestObject.title,
+            },
+            message: {
+              'en-US': {
+                sys: {
+                  id: messageId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
               },
             },
           },
         },
-      });
-      expect(publish).toHaveBeenCalled();
-      expect(result).toEqual(discussionId);
-    });
-
-    test('creates a discussion and links it to a compliance report when complianceReportId is provided', async () => {
-      const discussionId = 'discussion-id-1';
-      const messageId = 'message-id-1';
-      const complianceReportId = 'compliance-report-id-1';
-
-      const publish = jest.fn().mockImplementation(() => Promise.resolve());
-      const patch = jest
-        .fn()
-        .mockImplementation(() => Promise.resolve({ publish: jest.fn() }));
-
-      const DiscussionRequestObject = {
-        text: 'Test discussion message',
-        userId: 'user-id-1',
-        complianceReportId,
-        type: 'compliance-report' as DiscussionType,
-      };
-
-      // Mock `createEntry` for messages and discussions
-      when(environmentMock.createEntry)
-        .calledWith('messages', expect.anything())
-        .mockResolvedValue({
-          sys: { id: messageId },
-          publish,
-          patch,
-        } as unknown as Entry);
-
-      when(environmentMock.createEntry)
-        .calledWith('discussions', expect.anything())
-        .mockResolvedValue({
-          sys: { id: discussionId },
-          publish,
-          patch,
-        } as unknown as Entry);
-
-      // Mock `getEntry` for compliance reports
-      when(environmentMock.getEntry)
-        .calledWith(complianceReportId)
-        .mockResolvedValue({
-          sys: {
-            id: complianceReportId,
-            type: 'Entry',
-            locale: 'en-US',
-            version: 1,
-          },
-          fields: {
-            discussion: {
-              'en-US': {
+      );
+      expect(manuscriptMockEntry.patch).toHaveBeenCalledWith([
+        {
+          op: 'add',
+          path: '/fields/discussions',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'previous-discussion',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
                 sys: {
                   id: discussionId,
                   linkType: 'Entry',
                   type: 'Link',
                 },
               },
-            },
+            ],
           },
-          patch,
+        },
+      ]);
+      expect(publish).toHaveBeenCalledTimes(3);
+      expect(result).toEqual(discussionId);
+    });
+    test('can create a discussion and links it to the manuscript when there are no previous discussions', async () => {
+      const discussionId = 'discussion-id-1';
+      const messageId = 'message-id-1';
+      const discussionRequestObject = getDiscussionCreateRequestObject();
+
+      const publish = jest.fn();
+      const patch = jest.fn().mockResolvedValue({
+        publish,
+      });
+
+      const manuscriptMockEntry = {
+        sys: { id: discussionRequestObject.manuscriptId },
+        fields: {
+          discussion: [],
+        },
+        publish,
+        patch,
+      } as unknown as Entry;
+
+      when(environmentMock.createEntry)
+        .calledWith('messages', expect.anything())
+        .mockResolvedValue({
+          sys: { id: messageId },
+          publish,
+        } as unknown as Entry);
+      when(environmentMock.createEntry)
+        .calledWith('discussions', expect.anything())
+        .mockResolvedValue({
+          sys: { id: discussionId },
           publish,
         } as unknown as Entry);
 
-      const result = await discussionDataProviderMock.create(
-        DiscussionRequestObject,
-      );
+      when(environmentMock.getEntry)
+        .calledWith(discussionRequestObject.manuscriptId)
+        .mockResolvedValue(manuscriptMockEntry);
 
-      // Assert `createEntry` calls for `messages` and `discussions`
-      expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
-        1,
-        'messages',
+      await discussionDataProviderMock.create(discussionRequestObject);
+
+      expect(manuscriptMockEntry.patch).toHaveBeenCalledWith([
         {
-          fields: {
-            createdBy: {
-              'en-US': {
+          op: 'add',
+          path: '/fields/discussions',
+          value: {
+            'en-US': [
+              {
                 sys: {
-                  id: DiscussionRequestObject.userId,
+                  id: discussionId,
                   linkType: 'Entry',
                   type: 'Link',
                 },
               },
-            },
-            text: {
-              'en-US': DiscussionRequestObject.text,
-            },
-          },
-        },
-      );
-
-      expect(environmentMock.createEntry).toHaveBeenCalledWith('discussions', {
-        fields: {
-          message: {
-            'en-US': {
-              sys: {
-                id: messageId,
-                linkType: 'Entry',
-                type: 'Link',
-              },
-            },
-          },
-        },
-      });
-
-      // Assert `getEntry` was called for compliance report
-      expect(environmentMock.getEntry).toHaveBeenCalledWith(complianceReportId);
-
-      // Assert `patch` and `publish` calls
-      expect(patch).toHaveBeenCalledWith([
-        {
-          op: 'replace',
-          path: '/fields/discussion',
-          value: {
-            'en-US': {
-              sys: {
-                id: discussionId,
-                linkType: 'Entry',
-                type: 'Link',
-              },
-            },
+            ],
           },
         },
       ]);
-
-      expect(publish).toHaveBeenCalledTimes(2); // Once for message, once for discussion
-
-      // Assert the result is the discussion ID
-      expect(result).toEqual(discussionId);
     });
   });
 

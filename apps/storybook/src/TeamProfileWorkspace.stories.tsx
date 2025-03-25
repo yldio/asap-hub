@@ -1,7 +1,6 @@
 import { TeamProfileWorkspace } from '@asap-hub/react-components';
 import {
   createManuscriptResponse,
-  createDiscussionResponse,
   createTeamResponse,
 } from '@asap-hub/fixtures';
 
@@ -24,13 +23,8 @@ export const Normal = () => (
     isTeamMember={true}
     isComplianceReviewer={false}
     onUpdateManuscript={() => Promise.resolve(createManuscriptResponse())}
-    getDiscussion={() => createDiscussionResponse()}
-    onSave={() => Promise.resolve()}
-    createComplianceDiscussion={() =>
-      Promise.resolve('compliance-discussion-id')
-    }
+    createDiscussion={() => Promise.resolve('compliance-discussion-id')}
     useVersionById={() => [undefined, () => {}]}
-    onEndDiscussion={() => Promise.resolve()}
     useManuscriptById={() => [undefined, () => {}]}
   />
 );

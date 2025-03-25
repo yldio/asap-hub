@@ -38,8 +38,18 @@ export default class DiscussionController {
     return this.fetchById(id);
   }
 
-  async create(message: MessageCreateDataObject): Promise<DiscussionResponse> {
-    const id = await this.discussionDataProvider.create(message);
+  async create(
+    userId: string,
+    manuscriptId: string,
+    title: string,
+    text: string,
+  ): Promise<DiscussionResponse> {
+    const id = await this.discussionDataProvider.create({
+      userId,
+      manuscriptId,
+      title,
+      text,
+    });
 
     return this.fetchById(id);
   }

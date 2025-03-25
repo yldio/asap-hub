@@ -14,6 +14,7 @@ import {
   MessageCreateDataObject,
   ListResponse,
   Message,
+  DiscussionCreateDataObject,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
 import { DiscussionDataProvider } from '../types';
@@ -46,9 +47,9 @@ export class DiscussionContentfulDataProvider
     return parseGraphQLDiscussion(discussions);
   }
 
-  async create(input: MessageCreateDataObject): Promise<string> {
+  async create(input: DiscussionCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
-    const { text, userId, complianceReportId, type } = input;
+    const { userId, manuscriptId, title, text } = input;
 
     const messageId = await createAndPublishMessage(environment, {
       text,
@@ -57,19 +58,22 @@ export class DiscussionContentfulDataProvider
 
     const discussionEntry = await environment.createEntry('discussions', {
       fields: addLocaleToFields({
+        title,
         message: getLinkEntity(messageId),
       }),
     });
 
     await discussionEntry.publish();
 
-    if (complianceReportId && type === 'compliance-report') {
-      const complianceReport = await environment.getEntry(complianceReportId);
+    const manuscript = await environment.getEntry(manuscriptId);
 
-      await patchAndPublish(complianceReport, {
-        discussion: getLinkEntity(discussionEntry.sys.id),
-      });
-    }
+    await patchAndPublish(manuscript, {
+      discussions: [
+        ...(manuscript.fields.discussion || []),
+        getLinkEntity(discussionEntry.sys.id),
+      ],
+    });
+
     return discussionEntry.sys.id;
   }
 

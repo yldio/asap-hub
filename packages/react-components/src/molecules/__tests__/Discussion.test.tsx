@@ -6,12 +6,10 @@ import {
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { act } from 'react-dom/test-utils';
 import Discussion from '../Discussion';
 
 const props: ComponentProps<typeof Discussion> = {
   id: 'discussion-id',
-  modalTitle: 'Reply to quick check',
   canReply: true,
   getDiscussion: jest.fn().mockReturnValue(createDiscussionResponse()),
   onSave: jest.fn(),
@@ -77,10 +75,10 @@ it('removes reply modal when user clicks cancel button', () => {
 
   userEvent.click(getByRole('button', { name: /Reply Icon/i }));
 
-  expect(getByText(/Reply to quick check/i)).toBeVisible();
+  expect(getByText(/Reply/i, { selector: 'h3' })).toBeVisible();
   userEvent.click(getByRole('button', { name: /Cancel/i }));
 
-  expect(queryByText(/Reply to quick check/i)).not.toBeInTheDocument();
+  expect(queryByText(/Reply/i, { selector: 'h3' })).not.toBeInTheDocument();
 });
 
 describe('when there are replies', () => {
@@ -163,100 +161,6 @@ describe('when there are replies', () => {
 
     await waitFor(() => {
       expect(getByText(/test reply 1/i)).toBeVisible();
-    });
-  });
-
-  it('shows end discussion button when canEndDiscussion is true and discussion not ended', async () => {
-    const replies = createDiscussionReplies(6);
-    const discussion = createDiscussionResponse(message, replies);
-    getDiscussion.mockReturnValue(discussion);
-
-    const { queryByTestId } = render(
-      <Discussion {...propsWithReplies} canEndDiscussion />,
-    );
-    await waitFor(() => {
-      expect(queryByTestId('end-discussion-button')).toBeInTheDocument();
-    });
-  });
-
-  it("doesn't show end discussion button when canEndDiscussion is false", async () => {
-    const replies = createDiscussionReplies(6);
-    const discussion = createDiscussionResponse(message, replies);
-    getDiscussion.mockReturnValue(discussion);
-
-    const { queryByTestId } = render(
-      <Discussion {...propsWithReplies} canEndDiscussion={false} />,
-    );
-
-    await waitFor(() => {
-      expect(queryByTestId('end-discussion-button')).not.toBeInTheDocument();
-    });
-  });
-
-  it('shows end discussion modal and calls onEndDiscussion method', async () => {
-    jest.spyOn(console, 'error').mockImplementation();
-    const replies = createDiscussionReplies(6);
-    const discussion = createDiscussionResponse(message, replies);
-    getDiscussion.mockReturnValue(discussion);
-    const onEndDiscussion = jest.fn();
-    const { getByTestId, queryByText } = render(
-      <Discussion
-        {...propsWithReplies}
-        canEndDiscussion
-        onEndDiscussion={onEndDiscussion}
-      />,
-    );
-    act(() => {
-      userEvent.click(getByTestId('end-discussion-button'));
-    });
-
-    await waitFor(() => {
-      expect(queryByText(/End discussion and notify\?/i)).toBeInTheDocument();
-    });
-
-    act(() => {
-      userEvent.click(getByTestId('submit-end-discussion'));
-    });
-
-    await waitFor(() => {
-      expect(onEndDiscussion).toHaveBeenCalled();
-      expect(
-        queryByText(/End discussion and notify\?/i),
-      ).not.toBeInTheDocument();
-    });
-
-    // re-opens end discussion modal to test cancel button
-    act(() => {
-      userEvent.click(getByTestId('end-discussion-button'));
-    });
-
-    await waitFor(() => {
-      expect(queryByText(/End discussion and notify\?/i)).toBeInTheDocument();
-    });
-
-    act(() => {
-      userEvent.click(getByTestId('cancel-end-discussion-button'));
-    });
-  });
-
-  it("doesn't show end discussion modal when onEndDiscussion is not defined", async () => {
-    jest.spyOn(console, 'error').mockImplementation();
-    const replies = createDiscussionReplies(6);
-    const discussion = createDiscussionResponse(message, replies);
-    getDiscussion.mockReturnValue(discussion);
-
-    const { getByTestId, queryByText } = render(
-      <Discussion {...propsWithReplies} canEndDiscussion />,
-    );
-
-    act(() => {
-      userEvent.click(getByTestId('end-discussion-button'));
-    });
-
-    await waitFor(() => {
-      expect(
-        queryByText(/End discussion and notify\?/i),
-      ).not.toBeInTheDocument();
     });
   });
 });

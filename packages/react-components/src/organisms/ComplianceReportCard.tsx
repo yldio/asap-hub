@@ -1,12 +1,6 @@
-import {
-  ComplianceReportResponse,
-  DiscussionRequest,
-  DiscussionDataObject,
-  ManuscriptVersion,
-  ComplianceReportDataObject,
-} from '@asap-hub/model';
+import { ComplianceReportResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { memo, Suspense, useEffect, useRef, useState } from 'react';
+import { memo, useState } from 'react';
 import {
   Button,
   minusRectIcon,
@@ -19,33 +13,14 @@ import {
   ExpandableText,
   Caption,
   formatDate,
-  Loading,
-  replyIcon,
-  Divider,
-  DiscussionModal,
   TextEditor,
 } from '..';
 import { paddingStyles } from '../card';
-import { Discussion } from '../molecules';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
 import { getTeams, getUserHref } from './ManuscriptVersionCard';
 
-type ComplianceReportCardProps = ComplianceReportResponse & {
-  createComplianceDiscussion: (
-    complianceReportId: string,
-    message: string,
-  ) => Promise<string>;
-  getDiscussion: (id: string) => DiscussionDataObject | undefined;
-  onSave: (id: string, data: DiscussionRequest) => Promise<void>;
-  setVersion: (
-    callback: (prev: ManuscriptVersion) => ManuscriptVersion,
-  ) => void;
-  onEndDiscussion: (id: string) => Promise<void>;
-  isComplianceReviewer: boolean;
-  canUpdateDiscussion: boolean;
-  isActiveReport: boolean;
-};
+type ComplianceReportCardProps = ComplianceReportResponse;
 
 const toastStyles = css({
   padding: `${15 / perRem}em ${24 / perRem}em`,
@@ -102,52 +77,14 @@ const buttonsWrapperStyles = css({
   gap: rem(8),
 });
 
-const startDiscussionButtonStyles = css({
-  width: 'fit-content',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  maxWidth: 'fit-content',
-  height: rem(40),
-});
-
 const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
-  id,
   url,
   description,
   count,
   createdBy,
   createdDate,
-  discussionId,
-  manuscriptId,
-  versionId,
-  isComplianceReviewer,
-  canUpdateDiscussion,
-  isActiveReport,
-  createComplianceDiscussion,
-  getDiscussion,
-  onSave,
-  setVersion,
-  onEndDiscussion,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [startDiscussion, setStartDiscussion] = useState(false);
-  const startedDiscussionIdRef = useRef<string>('');
-
-  useEffect(
-    () => () => {
-      if (startedDiscussionIdRef.current) {
-        setVersion((prev) => ({
-          ...prev,
-          complianceReport: {
-            ...(prev.complianceReport as ComplianceReportDataObject),
-            discussionId: startedDiscussionIdRef.current,
-          },
-        }));
-      }
-    },
-    [setVersion],
-  );
 
   return (
     <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>
@@ -185,71 +122,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                   </span>
                 </Link>
               </div>
-
-              {!discussionId &&
-                !startedDiscussionIdRef.current &&
-                canUpdateDiscussion && (
-                  <>
-                    <Button
-                      noMargin
-                      small
-                      onClick={() => setStartDiscussion(true)}
-                      overrideStyles={startDiscussionButtonStyles}
-                    >
-                      <span
-                        css={{
-                          display: 'flex',
-                          gap: rem(8),
-                          margin: `0 ${rem(8)} 0 0`,
-                        }}
-                      >
-                        {replyIcon} Start Discussion
-                      </span>
-                    </Button>
-                    {startDiscussion && id && (
-                      <DiscussionModal
-                        discussionId={id}
-                        title="Start Discussion"
-                        editorLabel="Please initiate a discussion about the manuscript below."
-                        ruleMessage="Message cannot exceed 256 characters."
-                        onDismiss={() => setStartDiscussion(false)}
-                        onSave={async (
-                          complianceReportId: string,
-                          data: DiscussionRequest,
-                        ) => {
-                          if (!manuscriptId || !versionId) return;
-                          const createdDiscussionId =
-                            await createComplianceDiscussion(
-                              complianceReportId,
-                              data.text,
-                            );
-                          startedDiscussionIdRef.current = createdDiscussionId;
-                        }}
-                      />
-                    )}
-                  </>
-                )}
             </div>
-            {(discussionId || startedDiscussionIdRef.current) && (
-              <>
-                <Divider />
-                <Subtitle>'Discussion Started'</Subtitle>
-                <Suspense fallback={<Loading />}>
-                  <Discussion
-                    canReply={canUpdateDiscussion}
-                    canEndDiscussion={isActiveReport && isComplianceReviewer}
-                    onEndDiscussion={onEndDiscussion}
-                    modalTitle="Reply to compliance report discussion"
-                    id={
-                      (discussionId ?? startedDiscussionIdRef.current) as string
-                    }
-                    getDiscussion={getDiscussion}
-                    onSave={onSave}
-                    key={discussionId}
-                  />
-                </Suspense>
-              </>
-            )}
             <Caption accent="lead" noMargin>
               <div css={userContainerStyles}>
                 Date added:
@@ -272,21 +145,6 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
 
 export default memo(ComplianceReportCard, (prevProps, props) => {
   if (!prevProps) return true;
-  const {
-    createComplianceDiscussion: _createComplianceDiscussion,
-    getDiscussion: _getDiscussion,
-    onSave: _onSave,
-    setVersion: _setVersion,
-    ...restPrevProps
-  } = prevProps;
 
-  const {
-    createComplianceDiscussion: _createComplianceDiscussionNew,
-    getDiscussion: _getDiscussionNew,
-    onSave: _onSaveNew,
-    setVersion: _setVersionNew,
-    ...restProps
-  } = props;
-
-  return JSON.stringify(restPrevProps) === JSON.stringify(restProps);
+  return JSON.stringify(prevProps) === JSON.stringify(props);
 });

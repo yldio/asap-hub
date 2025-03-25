@@ -55,7 +55,7 @@ const theme = {
 };
 
 const containerStyles = css({
-  margin: '20px auto 20px auto',
+  margin: '0px auto',
   borderRadius: '2px',
   width: '100%',
   color: '#000',

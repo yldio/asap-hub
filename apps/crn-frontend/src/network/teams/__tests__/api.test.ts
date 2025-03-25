@@ -16,6 +16,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   CompletedStatusOption,
   ComplianceReportPostRequest,
+  DiscussionCreateRequest,
   DiscussionDataObject,
   DiscussionResponse,
   ManuscriptFileResponse,
@@ -30,7 +31,7 @@ import nock from 'nock';
 import { API_BASE_URL } from '../../../config';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import {
-  createComplianceDiscussion,
+  createDiscussion,
   createComplianceReport,
   createManuscript,
   createResearchOutput,
@@ -866,59 +867,50 @@ describe('Discussion', () => {
   });
 
   describe('createDiscussion', () => {
-    const message = 'test discussion message';
+    const manuscriptId = '42';
+    const title = 'test discussion title';
+    const text = 'test discussion message';
+
+    const payload: DiscussionCreateRequest = {
+      text,
+      manuscriptId,
+      title,
+    };
+
     it('makes an authorized POST request to create compliance discussion', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
         .post('/discussions')
         .reply(200, {});
 
-      await createComplianceDiscussion('42', message, 'Bearer x');
+      await createDiscussion(manuscriptId, title, text, 'Bearer x');
       expect(nock.isDone()).toBe(true);
     });
 
     it('passes the post object in the body', async () => {
-      nock(API_BASE_URL)
-        .post('/discussions', {
-          message,
-          type: 'compliance-report',
-          id: '42',
-        })
-        .reply(200, {});
+      nock(API_BASE_URL).post('/discussions', payload).reply(200, {});
 
-      await createComplianceDiscussion('42', message, '');
+      await createDiscussion(manuscriptId, title, text, 'Bearer x');
       expect(nock.isDone()).toBe(true);
     });
 
     it('returns a successfully created discussion', async () => {
       const created: Partial<DiscussionDataObject> = {
         id: 'discussion-1',
-        message: createMessage(message),
+        message: createMessage(text),
         replies: [],
       };
-      nock(API_BASE_URL)
-        .post('/discussions', {
-          message,
-          type: 'compliance-report',
-          id: '42',
-        })
-        .reply(200, created);
+      nock(API_BASE_URL).post('/discussions', payload).reply(200, created);
 
-      expect(await createComplianceDiscussion('42', message, '')).toEqual(
-        created,
-      );
+      expect(
+        await createDiscussion(manuscriptId, title, text, 'Bearer x'),
+      ).toEqual(created);
     });
 
     it('shows errors for an error status', async () => {
-      nock(API_BASE_URL)
-        .post('/discussions', {
-          message,
-          type: 'compliance-report',
-          id: '42',
-        })
-        .reply(500, {});
+      nock(API_BASE_URL).post('/discussions', payload).reply(500, {});
 
       await expect(
-        createComplianceDiscussion('42', message, ''),
+        createDiscussion(manuscriptId, title, text, 'Bearer x'),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Failed to create discussion. Expected status 201. Received status 500."`,
       );

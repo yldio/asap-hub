@@ -192,62 +192,50 @@ describe('/discussions/ route', () => {
       discussionControllerMock.create.mockResolvedValueOnce(discussionResponse);
 
       const response = await supertest(app).post(`/discussions`).send({
-        id: 'some-id',
-        message: 'A good message',
+        manuscriptId: 'manuscript-id',
+        title: 'A good title',
+        text: 'A good message',
       });
 
       expect(response.body).toEqual(discussionResponse);
     });
 
-    test('Should call the controller with the right parameters when type not set to compliance-report', async () => {
-      const id = 'compliance-report-id-0';
-      const message = 'test reply';
-
-      const discussion = {
-        text: message,
-        userId: 'user-id-0',
-        type: undefined,
-      };
-
-      await supertest(app).post(`/discussions`).send({
-        message,
-        id,
-      });
-
-      expect(discussionControllerMock.create).toBeCalledWith(discussion);
-    });
-
-    test('Should call the controller with the right parameters when type is set to compliance-report', async () => {
-      const id = 'compliance-report-id-0';
-      const message = 'test reply';
-      const type = 'compliance-report';
-
-      await supertest(app).post(`/discussions`).send({
-        message,
-        id,
-        type,
-      });
-
-      const discussion = {
-        text: message,
-        userId: 'user-id-0',
-        type,
-        complianceReportId: 'compliance-report-id-0',
-      };
-
-      expect(discussionControllerMock.create).toBeCalledWith(discussion);
-    });
-
-    test('Should not accept discussion message over 256 characters', async () => {
-      const id = 'compliance-report-id-0';
-      const message = 'A'.repeat(257);
+    test('Should not accept discussion title over 100 characters', async () => {
+      const title = 'A'.repeat(101);
 
       const response = await supertest(app).post(`/discussions`).send({
-        message,
-        id,
+        manuscriptId: 'manuscript-id',
+        title,
+        text: 'A good message',
       });
 
       expect(response.status).toBe(400);
+      expect(response.body).toStrictEqual({
+        data: [
+          {
+            instancePath: '/title',
+            keyword: 'maxLength',
+            message: 'must NOT have more than 100 characters',
+            params: { limit: 100 },
+            schemaPath: '#/properties/title/maxLength',
+          },
+        ],
+        error: 'Bad Request',
+        message: 'Validation error',
+        statusCode: 400,
+      });
+    });
+
+    test('Should accept discussion text over 256 characters', async () => {
+      const text = 'A'.repeat(257);
+
+      const response = await supertest(app).post(`/discussions`).send({
+        manuscriptId: 'manuscript-id',
+        title: 'A good title',
+        text,
+      });
+
+      expect(response.status).toBe(200);
     });
   });
 

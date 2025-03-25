@@ -35,12 +35,8 @@ const baseVersion = createManuscriptResponse().versions[0] as ManuscriptVersion;
 const props: ComponentProps<typeof ManuscriptVersionCard> = {
   version: baseVersion,
   teamId: 'team-id-0',
-  onSave: jest.fn(),
-  getDiscussion: jest.fn(),
   manuscriptId: 'manuscript-1',
-  createComplianceDiscussion: jest.fn(),
   useVersionById: jest.fn(),
-  onEndDiscussion: jest.fn(),
 };
 
 it('displays quick checks when present', async () => {
@@ -80,11 +76,7 @@ it('displays quick checks when present', async () => {
     ],
   };
   const { getByText, queryByText, getByLabelText, rerender } = render(
-    <ManuscriptVersionCard
-      {...props}
-      getDiscussion={getDiscussion}
-      useVersionById={useVersionById}
-    />,
+    <ManuscriptVersionCard {...props} useVersionById={useVersionById} />,
   );
   userEvent.click(getByLabelText('Expand Version'));
 
@@ -110,7 +102,6 @@ it('displays quick checks when present', async () => {
     <ManuscriptVersionCard
       {...props}
       version={updatedVersion}
-      getDiscussion={getDiscussion}
       useVersionById={useVersionById}
     />,
   );
@@ -223,15 +214,10 @@ it('displays Additional Information section when present', () => {
     queryByRole('heading', { name: /Additional Information/i }),
   ).not.toBeInTheDocument();
 
-  const getDiscussion = jest
-    .fn()
-    .mockReturnValueOnce(createDiscussionResponse());
-
   rerender(
     <ManuscriptVersionCard
       {...props}
       version={{ ...baseVersion, otherDetails: 'Necessary info' }}
-      getDiscussion={getDiscussion}
       useVersionById={useVersionById}
     />,
   );
@@ -550,7 +536,6 @@ it('does not display edit button by default', async () => {
     <ManuscriptVersionCard
       {...props}
       version={updatedVersion}
-      getDiscussion={getDiscussion}
       isActiveVersion={false}
       useVersionById={useVersionById}
     />,
@@ -597,7 +582,6 @@ it('does not display reply button if isActiveVersion is false', async () => {
     <ManuscriptVersionCard
       {...props}
       version={updatedVersion}
-      getDiscussion={getDiscussion}
       isActiveVersion={false}
       useVersionById={useVersionById}
     />,

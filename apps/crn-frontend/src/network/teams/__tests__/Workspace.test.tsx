@@ -34,7 +34,7 @@ jest.mock('../api', () => ({
   updateManuscript: jest.fn().mockResolvedValue({}),
   getDiscussion: jest.fn(),
   updateDiscussion: jest.fn(),
-  createComplianceDiscussion: jest.fn(),
+  createDiscussion: jest.fn(),
 }));
 
 jest.mock('../state', () => ({

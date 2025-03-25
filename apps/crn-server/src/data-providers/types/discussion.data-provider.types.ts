@@ -2,14 +2,14 @@ import {
   DiscussionDataObject,
   DataProvider,
   DiscussionUpdateDataObject,
-  MessageCreateDataObject,
+  DiscussionCreateDataObject,
 } from '@asap-hub/model';
 
 export type DiscussionDataProvider = DataProvider<
   DiscussionDataObject,
   DiscussionDataObject,
   null,
-  MessageCreateDataObject,
+  DiscussionCreateDataObject,
   null,
   DiscussionUpdateDataObject
 >;

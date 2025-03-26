@@ -2,6 +2,7 @@ import { FetchComplianceReportByIdQuery } from '@asap-hub/contentful';
 import {
   ComplianceReportCreateDataObject,
   ComplianceReportDataObject,
+  ManuscriptStatus
 } from '@asap-hub/model';
 
 export const getComplianceReportGraphqlResponse =
@@ -60,7 +61,9 @@ export const getComplianceReportDataObject =
   });
 
 export const getComplianceReportCreateDataObject =
-  (): ComplianceReportCreateDataObject => {
+  (): ComplianceReportCreateDataObject & {
+    status: ManuscriptStatus;
+  } => {
     const {
       count: _,
       createdDate: __,
@@ -71,6 +74,7 @@ export const getComplianceReportCreateDataObject =
 
     return {
       ...complianceReport,
+      status: 'Review Compliance Report',
       manuscriptVersionId: 'manuscript-version-1',
       userId: createdBy.id,
     };

@@ -376,7 +376,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                     noMargin
                     onClick={openDiscussionTab}
                     enabled
-                    overrideStyles={css({ marginTop: rem(32) })}
+                    overrideStyles={css({ marginTop: rem(16) })}
                   >
                     Open Discussion Tab
                   </Button>

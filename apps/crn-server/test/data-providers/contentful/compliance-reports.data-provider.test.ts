@@ -56,6 +56,12 @@ describe('Compliance Reports Contentful Data Provider', () => {
             description: {
               'en-US': 'Test report',
             },
+            manuscriptId: {
+              'en-US': 'manuscript-1',
+            },
+            status: {
+              'en-US': 'Review Compliance Report',
+            },
             manuscriptVersion: {
               'en-US': {
                 sys: {

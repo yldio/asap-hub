@@ -18,13 +18,13 @@ beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation();
 });
 
-const defaultProps: ComponentProps<typeof ComplianceReportForm> = {
+const defaultProps = {
   onSave: jest.fn(() => Promise.resolve()),
   onSuccess: jest.fn(),
   setManuscript: jest.fn(),
   manuscriptTitle: 'manuscript title',
   manuscriptVersionId: 'manuscript-version-1',
-};
+} as unknown as ComponentProps<typeof ComplianceReportForm>;
 
 it('renders the form', async () => {
   render(
@@ -38,7 +38,10 @@ it('renders the form', async () => {
 
 it('data is sent on form submission and calls setManuscript', async () => {
   const onSave = jest.fn().mockResolvedValue({
-    id: 'compliance-report-id',
+    complianceReport: {
+      id: 'compliance-report-id',
+    },
+    status: 'Review Compliance Report',
   });
 
   const initialManuscript = {
@@ -58,12 +61,19 @@ it('data is sent on form submission and calls setManuscript', async () => {
         description="manuscript description"
         setManuscript={setManuscript}
         onSave={onSave}
+        manuscriptId="manuscript-id"
       />
     </StaticRouter>,
   );
 
+  userEvent.click(screen.getByLabelText(/Status/i));
+  await act(async () => {
+    await userEvent.click(screen.getByText(/Review Compliance Report/i));
+  });
+
   const shareButton = screen.getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
+
   userEvent.click(shareButton);
 
   const confirmButton = screen.getByRole('button', {
@@ -76,10 +86,11 @@ it('data is sent on form submission and calls setManuscript', async () => {
       url: 'http://example.com',
       description: 'manuscript description',
       manuscriptVersionId: defaultProps.manuscriptVersionId,
+      status: 'Review Compliance Report',
+      manuscriptId: 'manuscript-id',
     });
     expect(setManuscript).toHaveBeenCalled();
 
-    // Simulate the state update inside the function
     const manuscriptUpdater = setManuscript.mock.calls[0][0];
     const updatedManuscript = manuscriptUpdater(initialManuscript);
 
@@ -92,6 +103,7 @@ it('data is sent on form submission and calls setManuscript', async () => {
 it('data is sent on form submission without calling setManuscript', async () => {
   const onSave = jest.fn().mockResolvedValue(undefined);
   const setManuscript = jest.fn();
+
   render(
     <StaticRouter>
       <ComplianceReportForm
@@ -100,12 +112,19 @@ it('data is sent on form submission without calling setManuscript', async () => 
         description="manuscript description"
         setManuscript={setManuscript}
         onSave={onSave}
+        manuscriptId="manuscript-id"
       />
     </StaticRouter>,
   );
 
+  userEvent.click(screen.getByLabelText(/Status/i));
+  await act(async () => {
+    await userEvent.click(screen.getByText(/Review Compliance Report/i));
+  });
+
   const shareButton = screen.getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
+
   userEvent.click(shareButton);
 
   const confirmButton = screen.getByRole('button', {
@@ -118,6 +137,8 @@ it('data is sent on form submission without calling setManuscript', async () => 
       url: 'http://example.com',
       description: 'manuscript description',
       manuscriptVersionId: defaultProps.manuscriptVersionId,
+      manuscriptId: 'manuscript-id',
+      status: 'Review Compliance Report',
     });
     expect(setManuscript).not.toHaveBeenCalled();
   });
@@ -253,4 +274,66 @@ it('should focus the Lexical editor when pressing Tab on the URL input', async (
     expect(keyDownEvent.preventDefault).toHaveBeenCalled();
     expect(editor).toHaveFocus();
   });
+});
+
+it('should show compliant modal when compliant status is selected', async () => {
+  render(
+    <StaticRouter>
+      <ComplianceReportForm
+        {...defaultProps}
+        url="http://example.com"
+        description="manuscript description"
+        setManuscript={jest.fn()}
+        onSave={jest.fn()}
+        manuscriptId="manuscript-id"
+      />
+    </StaticRouter>,
+  );
+
+  userEvent.click(screen.getByLabelText(/Status/i));
+  await act(async () => {
+    await userEvent.click(screen.getByText(/Compliant/i));
+  });
+
+  const shareButton = screen.getByRole('button', { name: /Share/i });
+  await waitFor(() => expect(shareButton).toBeEnabled());
+
+  userEvent.click(shareButton);
+
+  const compliantModal = screen.getByText(
+    /Share compliance report and set status to <compliant\/closed \(other\)>\?/i,
+  );
+
+  expect(compliantModal).toBeInTheDocument();
+});
+
+it('should show "closed (other)" modal when compliant status is selected', async () => {
+  render(
+    <StaticRouter>
+      <ComplianceReportForm
+        {...defaultProps}
+        url="http://example.com"
+        description="manuscript description"
+        setManuscript={jest.fn()}
+        onSave={jest.fn()}
+        manuscriptId="manuscript-id"
+      />
+    </StaticRouter>,
+  );
+
+  userEvent.click(screen.getByLabelText(/Status/i));
+  await act(async () => {
+    await userEvent.click(screen.getByText(/Closed \(other\)/i));
+  });
+
+  const shareButton = screen.getByRole('button', { name: /Share/i });
+  await waitFor(() => expect(shareButton).toBeEnabled());
+
+  userEvent.click(shareButton);
+
+  const compliantModal = screen.getByText(
+    /Share compliance report and set status to <compliant\/closed \(other\)>\?/i,
+  );
+
+  expect(compliantModal).toBeInTheDocument();
 });

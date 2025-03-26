@@ -771,6 +771,7 @@ describe('Compliance Report', () => {
       url: 'https://compliancereport.com',
       description: 'Compliance report description',
       manuscriptVersionId: 'manuscript-version-1',
+      status: 'Review Compliance Report',
     };
 
     it('makes an authorized POST request to create a compliance report', async () => {

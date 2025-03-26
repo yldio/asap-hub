@@ -24,7 +24,6 @@ export const Normal = () => (
     isComplianceReviewer={false}
     onUpdateManuscript={() => Promise.resolve(createManuscriptResponse())}
     createDiscussion={() => Promise.resolve('compliance-discussion-id')}
-    useVersionById={() => [undefined, () => {}]}
     useManuscriptById={() => [undefined, () => {}]}
   />
 );

@@ -48,7 +48,6 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   onUpdateManuscript: jest.fn(),
   isTeamMember: true,
   createDiscussion: jest.fn(),
-  useVersionById: jest.fn().mockImplementation(() => [undefined, jest.fn()]),
   useManuscriptById: useManuscriptByIdMock,
 };
 

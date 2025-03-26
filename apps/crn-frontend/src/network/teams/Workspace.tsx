@@ -15,7 +15,6 @@ import {
   useManuscriptById,
   usePatchTeamById,
   usePutManuscript,
-  useVersionById,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
@@ -88,7 +87,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
             });
             return discussionId;
           }}
-          useVersionById={useVersionById}
           useManuscriptById={useManuscriptById}
         />
       </Route>

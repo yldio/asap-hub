@@ -1,10 +1,5 @@
 import { isEnabled } from '@asap-hub/flags';
-import {
-  ManuscriptDataObject,
-  ManuscriptVersion,
-  TeamResponse,
-  TeamTool,
-} from '@asap-hub/model';
+import { ManuscriptDataObject, TeamResponse, TeamTool } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -125,14 +120,6 @@ type TeamProfileWorkspaceProps = Readonly<
       title: string,
       message: string,
     ) => Promise<string>;
-    readonly useVersionById: (args: {
-      teamId: string;
-      manuscriptId: string;
-      versionId: string;
-    }) => [
-      ManuscriptVersion | undefined,
-      (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
-    ];
     readonly useManuscriptById: (
       id: string,
     ) => [
@@ -155,7 +142,6 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   isComplianceReviewer = false,
   isTeamMember,
   createDiscussion,
-  useVersionById,
   useManuscriptById,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
@@ -240,7 +226,6 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           onUpdateManuscript={onUpdateManuscript}
                           isActiveTeam={!inactiveSince}
                           createDiscussion={createDiscussion}
-                          useVersionById={useVersionById}
                           useManuscriptById={useManuscriptById}
                         />
                       </div>
@@ -274,7 +259,6 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           isActiveTeam={!inactiveSince}
                           onUpdateManuscript={onUpdateManuscript}
                           createDiscussion={createDiscussion}
-                          useVersionById={useVersionById}
                           useManuscriptById={useManuscriptById}
                         />
                       </div>

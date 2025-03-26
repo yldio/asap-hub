@@ -7,6 +7,7 @@ import { appFactory } from '../../src/app';
 import { getComplianceReportCreateDataObject } from '../fixtures/compliance-reports.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
 import { complianceReportControllerMock } from '../mocks/compliance-report.controller.mock';
+import { manuscriptControllerMock } from '../mocks/manuscript.controller.mock';
 
 describe('/compliance-reports/ route', () => {
   const userMockFactory = jest.fn<UserResponse, []>();
@@ -17,6 +18,7 @@ describe('/compliance-reports/ route', () => {
 
   const app = appFactory({
     complianceReportController: complianceReportControllerMock,
+    manuscriptController: manuscriptControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });
@@ -91,18 +93,91 @@ describe('/compliance-reports/ route', () => {
         mockComplianceReport,
       );
 
+      manuscriptControllerMock.fetchById.mockResolvedValueOnce({
+        id: 'manuscript-1',
+        title: 'Manuscript 1',
+        teamId: 'team-1',
+        versions: [],
+        count: 1,
+        assignedUsers: [],
+        status: 'Manuscript Resubmitted',
+      });
+
+      manuscriptControllerMock.update.mockResolvedValueOnce({
+        id: 'manuscript-1',
+        title: 'Manuscript 1',
+        teamId: 'team-1',
+        versions: [],
+        count: 1,
+        assignedUsers: [],
+        status: 'Review Compliance Report',
+      });
+
       const response = await supertest(app)
         .post('/compliance-reports')
-        .send(createComplianceReportRequest)
+        .send({
+          ...createComplianceReportRequest,
+          status: 'Review Compliance Report',
+          sendNotifications: false,
+          notificationList: '',
+        })
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(201);
       expect(complianceReportControllerMock.create).toHaveBeenCalledWith({
-        ...createComplianceReportRequest,
+        url: createComplianceReportRequest.url,
+        description: createComplianceReportRequest.description,
+        manuscriptVersionId: createComplianceReportRequest.manuscriptVersionId,
         userId: user.id,
       });
+      expect(manuscriptControllerMock.update).toHaveBeenCalledWith(
+        'manuscript-1',
+        {
+          status: createComplianceReportRequest.status,
+          sendNotifications: false,
+          notificationList: '',
+        },
+        user.id,
+      );
 
       expect(response.body).toEqual(mockComplianceReport);
+      expect(response.body).toEqual({
+        complianceReport: complianceReportId,
+        status: 'Review Compliance Report',
+      });
+    });
+
+    test('Should not update manuscript status when status is unchanged', async () => {
+      const user = {
+        ...createUserResponse(),
+        role: 'Staff',
+      } as UserResponse;
+
+      userMockFactory.mockReturnValueOnce(user);
+
+      complianceReportControllerMock.create.mockResolvedValueOnce(
+        'compliance-report-id',
+      );
+
+      manuscriptControllerMock.fetchById.mockResolvedValueOnce({
+        id: 'manuscript-1',
+        title: 'Manuscript 1',
+        teamId: 'team-1',
+        versions: [],
+        count: 1,
+        assignedUsers: [],
+        status: 'Review Compliance Report',
+      });
+
+      const { userId, ...requestBody } = getComplianceReportCreateDataObject();
+
+      const response = await supertest(app)
+        .post('/compliance-reports')
+        .send(requestBody)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(201);
+      expect(manuscriptControllerMock.update).not.toHaveBeenCalled();
     });
 
     describe('Validation', () => {

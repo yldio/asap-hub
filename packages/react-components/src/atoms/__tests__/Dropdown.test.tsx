@@ -1,8 +1,15 @@
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { ember, fern, lead, pine, silver } from '../../colors';
+import { Theme } from '@emotion/react';
+import { matchers } from '@emotion/jest';
+import { GroupTypeBase, OptionTypeBase, SingleValueProps } from 'react-select';
+
+import { ember, fern, lead, pine, silver, tin } from '../../colors';
 import Dropdown from '../Dropdown';
+import { reactSelectStyles } from '../../select';
+
+expect.extend(matchers);
 
 it('shows the selected value', () => {
   render(
@@ -398,4 +405,88 @@ it('cannot clear the value when required is true', async () => {
 
   userEvent.clear(input);
   expect(handleChange).toHaveBeenCalledTimes(1);
+});
+
+it('renders custom value using renderValue', () => {
+  const CustomValue = ({ value }: { value: string }) => (
+    <span data-testid="custom-render">{`Custom: ${value}`}</span>
+  );
+
+  render(
+    <Dropdown
+      options={[{ value: 'value1', label: 'Label-1' }]}
+      value="value1"
+      renderValue={(value) => <CustomValue value={value} />}
+    />,
+  );
+
+  // It renders the custom content instead of the label
+  expect(screen.getByTestId('custom-render')).toBeInTheDocument();
+  expect(screen.getByTestId('custom-render')).toHaveTextContent(
+    'Custom: value1',
+  );
+  expect(screen.queryByText('Label-1')).not.toBeInTheDocument(); // the label should not render
+});
+
+it('falls back to label if renderValue is not provided', () => {
+  render(
+    <Dropdown
+      options={[{ value: 'value1', label: 'Label-1' }]}
+      value="value1"
+    />,
+  );
+
+  expect(screen.getByText('Label-1')).toBeInTheDocument();
+});
+
+it('applies the correct styles for the custom rendered value', () => {
+  render(
+    <Dropdown
+      options={[{ value: 'value1', label: 'Label-1' }]}
+      value="value1"
+      renderValue={(value) => (
+        <span data-testid="custom-value">Chip: {value}</span>
+      )}
+    />,
+  );
+
+  const customValue = screen.getByTestId('custom-value');
+  expect(customValue.parentElement).toHaveStyleRule('position', 'absolute');
+  expect(customValue.parentElement).toHaveStyleRule('pointer-events', 'none');
+});
+
+const mockTheme = {} as Theme;
+
+const baseProvided = { color: '' };
+
+const createSingleValueProps = (
+  value: string,
+): SingleValueProps<OptionTypeBase, GroupTypeBase<OptionTypeBase>> =>
+  ({
+    getValue: () => [{ value, label: '' }],
+    hasValue: true,
+    isDisabled: false,
+    selectProps: {},
+    data: { value, label: '' },
+  }) as unknown as SingleValueProps<
+    OptionTypeBase,
+    GroupTypeBase<OptionTypeBase>
+  >;
+
+it('applies tin color for singleValue when selected value is empty string', () => {
+  const styles = reactSelectStyles(mockTheme, false);
+  const styleResult = styles?.singleValue!(
+    baseProvided,
+    createSingleValueProps(''),
+  );
+  expect(styleResult?.color).toBe(tin.rgb);
+});
+
+it('applies unset color for singleValue when selected value is not empty string', () => {
+  const styles = reactSelectStyles(mockTheme, false);
+  const styleResult = styles?.singleValue!(
+    baseProvided,
+    createSingleValueProps('LHR'),
+  );
+  expect(styleResult?.color).toBe('unset');
 });

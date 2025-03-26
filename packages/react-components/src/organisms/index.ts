@@ -17,7 +17,6 @@ export { default as DiscussionsTab } from './DiscussionsTab';
 export { default as EditModal } from './EditModal';
 export { default as EditUserModal } from './EditUserModal';
 export { default as EligibilityModal } from './EligibilityModal';
-export { default as EndDiscussionModal } from './EndDiscussionModal';
 export { default as EngagementTable } from './EngagementTable';
 export { default as EntityCard } from './EntityCard';
 export { default as EventAbout } from './EventAbout';

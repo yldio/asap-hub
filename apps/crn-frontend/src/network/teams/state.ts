@@ -47,7 +47,6 @@ import {
   uploadManuscriptFile,
   resubmitManuscript,
   createDiscussion,
-  endDiscussion,
   getManuscripts,
   ManuscriptsOptions,
   getPresignedUrl,
@@ -370,16 +369,6 @@ export const useReplyToDiscussion = () => {
   const setDiscussion = useSetDiscussion();
   return async (id: string, patch: DiscussionRequest) => {
     const discussion = await updateDiscussion(id, patch, authorization);
-    setDiscussion(discussion);
-  };
-};
-
-export const useEndDiscussion = () => {
-  const authorization = useRecoilValue(authorizationState);
-  const setDiscussion = useSetDiscussion();
-
-  return async (id: string) => {
-    const discussion = await endDiscussion(id, authorization);
     setDiscussion(discussion);
   };
 };

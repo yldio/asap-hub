@@ -116,6 +116,11 @@ const buttonStyles = css({
   display: 'flex',
   gap: rem(8),
   borderRadius: rem(8),
+  minHeight: 'fit-content',
+});
+
+const buttonTextStyles = css({
+  minHeight: 'fit-content',
 });
 
 const manuscriptDetailsContainerStyles = css({
@@ -367,7 +372,10 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                               enabled={canSubmitComplianceReport}
                             >
                               <span css={buttonStyles}>
-                                {complianceReportIcon} Share Compliance Report
+                                {complianceReportIcon}
+                                <span css={buttonTextStyles}>
+                                  Share Compliance Report
+                                </span>
                               </span>
                             </Button>
                           </span>
@@ -384,8 +392,10 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                               }
                             >
                               <span css={buttonStyles}>
-                                {resubmitManuscriptIcon} Submit Revised
-                                Manuscript
+                                {resubmitManuscriptIcon}{' '}
+                                <span css={buttonTextStyles}>
+                                  Submit Revised Manuscript
+                                </span>
                               </span>
                             </Button>
                           </span>

@@ -437,6 +437,51 @@ it('disables submit compliance report button when there is an existing complianc
   expect(complianceReportButton).toBeDisabled();
 });
 
+it('displays show more/show less when there are more than three manuscript versions', () => {
+  const manuscriptVersions = [
+    {
+      ...mockVersionWithReport,
+      id: 'version-1',
+    },
+    {
+      ...mockVersionWithReport,
+      id: 'version-2',
+    },
+    {
+      ...mockVersionWithReport,
+      id: 'version-3',
+    },
+    {
+      ...mockVersionWithReport,
+      id: 'version-4',
+    },
+  ];
+  const { getByRole, getByTestId } = render(
+    <ManuscriptCard
+      {...props}
+      useManuscriptById={useManuscriptById.mockImplementation(() => [
+        {
+          id: 'manuscript_0',
+          title: 'Mock Manuscript Title',
+          status: 'Waiting for Report',
+          versions: manuscriptVersions,
+        },
+        jest.fn(),
+      ])}
+    />,
+  );
+
+  userEvent.click(getByTestId('collapsible-button'));
+  const showMoreButton = getByRole('button', {
+    name: /Show more/i,
+  });
+
+  expect(showMoreButton).toBeVisible();
+
+  userEvent.click(showMoreButton);
+  expect(getByRole('button', { name: /Show less/i })).toBeVisible();
+});
+
 it.each`
   status                  | isActiveTeam
   ${'Compliant'}          | ${true}
@@ -502,5 +547,45 @@ describe('Tabs', () => {
     expect(getByRole('button', { name: 'Discussions' })).not.toHaveClass(
       'active',
     );
+  });
+
+  it('opens the discussions tab when user clicks on Open Discussion Tab', () => {
+    const manuscriptVersion = {
+      ...mockVersion,
+      asapAffiliationIncluded: 'No',
+      asapAffiliationIncludedDetails: 'Reason',
+    };
+    const { getByLabelText, getByRole, getByTestId } = render(
+      <ManuscriptCard
+        {...props}
+        useManuscriptById={useManuscriptById.mockImplementation(() => [
+          {
+            id: 'manuscript_0',
+            title: 'Mock Manuscript Title',
+            status: 'Waiting for Report',
+            versions: [manuscriptVersion],
+          },
+          jest.fn(),
+        ])}
+        useVersionById={useVersionById.mockImplementation(() => [
+          manuscriptVersion,
+          jest.fn(),
+        ])}
+      />,
+    );
+
+    userEvent.click(getByTestId('collapsible-button'));
+    userEvent.click(getByLabelText('Expand Version'));
+
+    expect(getByRole('button', { name: 'Discussions' })).not.toHaveClass(
+      'active',
+    );
+    const openDiscussionsButton = getByRole('button', {
+      name: /Open Discussion Tab/i,
+    });
+    expect(openDiscussionsButton).toBeVisible();
+
+    userEvent.click(openDiscussionsButton);
+    expect(getByRole('button', { name: 'Discussions' })).toHaveClass('active');
   });
 });

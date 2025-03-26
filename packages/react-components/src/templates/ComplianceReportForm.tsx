@@ -125,7 +125,7 @@ const getModalContent = (
       content:
         'Cancelling now will result in the loss of all entered data and will exit you from the sharing compliance report form.',
       confirmButtonText: 'Cancel Compliance Report Sharing',
-      confirmButtonStyle: 'warning',
+      confirmButtonStyle: 'warning' as const,
     },
   })[formAction !== '' ? formAction : 'cancel'];
 

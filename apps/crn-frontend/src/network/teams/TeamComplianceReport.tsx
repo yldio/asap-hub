@@ -53,6 +53,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
             manuscriptTitle={manuscript.title}
             manuscriptVersionId={manuscript.versions[0].id}
             setManuscript={setManuscript}
+            manuscriptId={manuscriptId}
           />
         </Frame>
       </FormProvider>

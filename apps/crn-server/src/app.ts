@@ -366,6 +366,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const calendarRoutes = calendarRouteFactory(calendarController);
   const complianceReportRoutes = complianceReportRouteFactory(
     complianceReportController,
+    manuscriptController,
   );
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const discoverRoutes = discoverRouteFactory(discoverController);

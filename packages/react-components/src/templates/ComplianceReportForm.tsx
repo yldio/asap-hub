@@ -9,12 +9,19 @@ import { css } from '@emotion/react';
 import React, { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { GlobeIcon, LabeledTextField } from '..';
+import {
+  GlobeIcon,
+  info100,
+  info500,
+  LabeledDropdown,
+  LabeledTextField,
+} from '..';
 import { Button, Card, Paragraph } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { LabeledTextEditor } from '../molecules';
 import { ConfirmModal } from '../organisms';
-import { mobileScreen, rem } from '../pixels';
+import { mobileScreen, perRem, rem } from '../pixels';
+import { Option } from '../select';
 
 const mainStyles = css({
   display: 'flex',
@@ -59,6 +66,7 @@ type ComplianceReportFormProps = {
   manuscriptVersionId: string;
   url?: string;
   description?: string | '';
+  manuscriptId: string;
   onSave: (
     output: ComplianceReportPostRequest,
   ) => Promise<ComplianceReportResponse | void>;
@@ -68,31 +76,58 @@ type ComplianceReportFormProps = {
   >;
 };
 
-type FormAction = 'cancel' | 'confirm' | '';
+type FormAction = 'cancel' | 'confirm' | 'confirmClosedStatus' | '';
+
+const manuscriptStatus = [
+  'Waiting for Report',
+  'Review Compliance Report',
+  'Manuscript Resubmitted',
+  'Submit Final Publication',
+  'Addendum Required',
+  'Compliant',
+  'Closed (other)',
+] as const;
+
+type ManuscriptStatus = (typeof manuscriptStatus)[number];
+
+const manuscriptStatusOptions: ReadonlyArray<Option<ManuscriptStatus>> =
+  manuscriptStatus.map((status) => ({
+    label: status,
+    value: status,
+  }));
 
 const getModalContent = (
-  formAction: FormAction,
+  formAction: FormAction | '',
 ): {
   title: string;
   content: string;
   confirmButtonText: string;
   confirmButtonStyle: 'primary' | 'warning';
 } =>
-  formAction && formAction === 'confirm'
-    ? {
-        title: 'Share compliance report?',
-        content:
-          'If you elect to share the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
-        confirmButtonText: 'Share Compliance Report',
-        confirmButtonStyle: 'primary',
-      }
-    : {
-        title: 'Cancel sharing of compliance report?',
-        content:
-          'Cancelling now will result in the loss of all entered data and will exit you from the sharing compliance report form.',
-        confirmButtonText: 'Cancel Compliance Report Sharing',
-        confirmButtonStyle: 'warning',
-      };
+  ({
+    confirm: {
+      title: 'Share compliance report?',
+      content:
+        'If you elect to share the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
+      confirmButtonText: 'Share Compliance Report',
+      confirmButtonStyle: 'primary' as const,
+    },
+    confirmClosedStatus: {
+      title:
+        'Share compliance report and set status to <compliant/closed (other)>?',
+      content:
+        'After you update the status to <compliant/closed (other)>, this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to the CMS admin. Additionally, by sharing the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
+      confirmButtonText: 'Confirm and Share',
+      confirmButtonStyle: 'primary' as const,
+    },
+    cancel: {
+      title: 'Cancel sharing of compliance report?',
+      content:
+        'Cancelling now will result in the loss of all entered data and will exit you from the sharing compliance report form.',
+      confirmButtonText: 'Cancel Compliance Report Sharing',
+      confirmButtonStyle: 'warning',
+    },
+  })[formAction !== '' ? formAction : 'cancel'];
 
 const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   onSave,
@@ -102,6 +137,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   manuscriptVersionId,
   url,
   description,
+  manuscriptId,
 }) => {
   const history = useHistory();
 
@@ -117,18 +153,27 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
     handleSubmit,
     control,
     formState: { isSubmitting, isValid },
+    watch,
   } = methods;
 
+  const selectedStatus = watch('status');
+
   const onSubmit = async (data: ComplianceReportFormData) => {
-    const complianceReport = await onSave({
+    const response = await onSave({
       ...data,
       manuscriptVersionId,
+      manuscriptId,
     });
+    if (!response) return;
+
+    const { status, complianceReport } = response;
+
     if (complianceReport) {
       setManuscript(
         (manuscript) =>
           manuscript && {
             ...manuscript,
+            status,
             versions: [
               {
                 // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
@@ -144,7 +189,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   };
 
   const [complianceReportFormAction, setComplianceReportFormAction] = useState<
-    'confirm' | 'cancel' | ''
+    'confirm' | 'cancel' | 'confirmClosedStatus' | ''
   >('');
 
   const { title, confirmButtonText, confirmButtonStyle, content } =
@@ -245,6 +290,43 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 />
               )}
             />
+
+            <Controller
+              name="status"
+              control={control}
+              rules={{
+                required: 'Please select an option.',
+              }}
+              render={({ field: { value, onChange } }) => (
+                <LabeledDropdown
+                  name="Status"
+                  title="Status"
+                  subtitle="(required)"
+                  options={manuscriptStatusOptions}
+                  required
+                  enabled={true}
+                  placeholder="Choose an option"
+                  value={value ?? ''}
+                  onChange={onChange}
+                  renderValue={(val) =>
+                    val && (
+                      <span
+                        css={css({
+                          backgroundColor: info100.rgba,
+                          color: info500.rgba,
+                          padding: '0em 1em',
+                          borderRadius: `${24 / perRem}em`,
+                          fontSize: '0.9em',
+                          marginLeft: '0.1em',
+                        })}
+                      >
+                        {val}
+                      </span>
+                    )
+                  }
+                />
+              )}
+            />
           </Card>
           <div css={buttonsOuterContainerStyles}>
             <div css={buttonsInnerContainerStyles}>
@@ -259,7 +341,15 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 primary
                 noMargin
                 enabled={!isSubmitting && isValid}
-                onClick={() => setComplianceReportFormAction('confirm')}
+                onClick={() =>
+                  setComplianceReportFormAction(
+                    selectedStatus &&
+                      (selectedStatus.includes('Compliant') ||
+                        selectedStatus.includes('Closed (other)'))
+                      ? 'confirmClosedStatus'
+                      : 'confirm',
+                  )
+                }
               >
                 Share
               </Button>

@@ -361,8 +361,8 @@ export const useSetDiscussion = () =>
     set(discussionState(discussion.id), discussion);
   });
 
-export const useDiscussionById = (id: string) =>
-  useRecoilValue(discussionState(id));
+// export const useDiscussionById = (id: string) =>
+//   useRecoilValue(discussionState(id));
 
 export const useReplyToDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);

@@ -159,6 +159,45 @@ it('displays submit revised manuscript button if user is an author', () => {
   ).toBeVisible();
 });
 
+it('displays submit revised manuscript button if user is team Lead PI', () => {
+  const piUser = {
+    ...user,
+    teams: [
+      {
+        ...user.teams[0],
+        role: 'Lead PI (Core Leadership)',
+      },
+    ] as UserTeam[],
+  };
+  const { getByRole, getByTestId } = render(
+    <ManuscriptCard
+      {...props}
+      useManuscriptById={useManuscriptByIdWithReport}
+      user={piUser}
+    />,
+  );
+  userEvent.click(getByTestId('collapsible-button'));
+
+  expect(
+    getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+  ).toBeVisible();
+});
+
+it('displays submit revised manuscript button if user is team project manager', () => {
+  const { getByRole, getByTestId } = render(
+    <ManuscriptCard
+      {...props}
+      useManuscriptById={useManuscriptByIdWithReport}
+      user={user}
+    />,
+  );
+  userEvent.click(getByTestId('collapsible-button'));
+
+  expect(
+    getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+  ).toBeVisible();
+});
+
 it('displays submit revised manuscript button if user is a PI on a manuscript lab', () => {
   const manuscriptVersions = [
     {

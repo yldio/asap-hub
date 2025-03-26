@@ -2,7 +2,9 @@ import { manuscriptAuthor } from '@asap-hub/fixtures';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
-import ComplianceReportCard from '../ComplianceReportCard';
+import ComplianceReportCard, {
+  ComplianceReportCardProps,
+} from '../ComplianceReportCard';
 
 const getDiscussion = jest.fn();
 
@@ -27,10 +29,10 @@ const props = {
     .mockImplementation(() => 'discussion-id'),
   getDiscussion,
   setVersion: jest.fn(),
-  onSave: jest.fn(),
+  onSave: jest.fn() as ComplianceReportCardProps['onSave'],
   onEndDiscussion: jest.fn(),
   setManuscript: jest.fn(),
-};
+} as ComplianceReportCardProps;
 
 it('displays compliance report description, url and creation details when expanded', () => {
   jest.spyOn(console, 'error').mockImplementation();

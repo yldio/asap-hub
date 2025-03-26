@@ -1,6 +1,10 @@
 import { css, useTheme } from '@emotion/react';
-import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
-import Select, { ControlProps, OptionTypeBase } from 'react-select';
+import { FC, useCallback, useEffect, useMemo, useRef, ReactNode } from 'react';
+import Select, {
+  ControlProps,
+  OptionTypeBase,
+  SingleValueProps,
+} from 'react-select';
 import { v4 as uuidV4 } from 'uuid';
 import { useValidation, validationMessageStyles } from '../form';
 import { dropdownChevronIcon, dropdownCrossIcon } from '../icons';
@@ -11,6 +15,32 @@ export const ENTER_KEYCODE = 13;
 const containerStyles = css({
   flexBasis: '100%',
 });
+
+const singleValueStyles = css({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: 'flex',
+  alignItems: 'center',
+  pointerEvents: 'none', // allows clicks to pass through to the input/dropdown
+});
+
+function CustomSingleValue<V extends string>({
+  data,
+  renderValue,
+  ...props
+}: SingleValueProps<OptionTypeBase> & {
+  renderValue?: (value: V) => React.ReactNode;
+}) {
+  return (
+    <div {...props.innerProps} css={singleValueStyles}>
+      {renderValue ? renderValue(data.value) : data.label}
+    </div>
+  );
+}
+
 const DropdownIndicator: FC = () => dropdownChevronIcon;
 const CrossIcon: FC = () => dropdownCrossIcon;
 const ClearIndicator = ({
@@ -32,6 +62,7 @@ export interface DropdownProps<V extends string> {
   readonly name?: string;
 
   readonly value: V;
+  readonly renderValue?: (value: V) => ReactNode;
   readonly onChange?: (newValue: V) => void;
   readonly noOptionsMessage?: (value: { inputValue: string }) => string | null;
 }
@@ -46,6 +77,7 @@ export default function Dropdown<V extends string>({
   name,
 
   value,
+  renderValue,
   onChange = noop,
   noOptionsMessage,
 }: DropdownProps<V>): ReturnType<FC> {
@@ -93,7 +125,13 @@ export default function Dropdown<V extends string>({
           onChange(option?.value);
         }}
         value={selectValue || null}
-        components={{ DropdownIndicator, ClearIndicator }}
+        components={{
+          DropdownIndicator,
+          ClearIndicator,
+          SingleValue: (props) => (
+            <CustomSingleValue {...props} renderValue={renderValue} />
+          ),
+        }}
         styles={reactSelectStyles(theme, !!validationMessage)}
         noOptionsMessage={noOptionsMessage}
         tabSelectsValue={false}

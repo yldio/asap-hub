@@ -1,8 +1,13 @@
 import { getComplianceReportDataObject } from '@asap-hub/fixtures';
-import { ComplianceReportCreateDataObject } from '@asap-hub/model';
+import {
+  ComplianceReportCreateDataObject,
+  ManuscriptStatus,
+} from '@asap-hub/model';
 
 export const getComplianceReportCreateDataObject =
-  (): ComplianceReportCreateDataObject => {
+  (): ComplianceReportCreateDataObject & {
+    status: ManuscriptStatus;
+  } => {
     const {
       count: _,
       createdDate: __,
@@ -12,6 +17,7 @@ export const getComplianceReportCreateDataObject =
 
     return {
       ...complianceReport,
+      status: 'Review Compliance Report',
       manuscriptVersionId: 'manuscript-version-1',
       userId: createdBy.id,
     };

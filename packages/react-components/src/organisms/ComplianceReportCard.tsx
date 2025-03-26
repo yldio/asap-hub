@@ -31,21 +31,22 @@ import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
 import { getTeams, getUserHref } from './ManuscriptVersionCard';
 
-type ComplianceReportCardProps = ComplianceReportResponse & {
-  createComplianceDiscussion: (
-    complianceReportId: string,
-    message: string,
-  ) => Promise<string>;
-  getDiscussion: (id: string) => DiscussionDataObject | undefined;
-  onSave: (id: string, data: DiscussionRequest) => Promise<void>;
-  setVersion: (
-    callback: (prev: ManuscriptVersion) => ManuscriptVersion,
-  ) => void;
-  onEndDiscussion: (id: string) => Promise<void>;
-  isComplianceReviewer: boolean;
-  canUpdateDiscussion: boolean;
-  isActiveReport: boolean;
-};
+export type ComplianceReportCardProps =
+  ComplianceReportResponse['complianceReport'] & {
+    createComplianceDiscussion: (
+      complianceReportId: string,
+      message: string,
+    ) => Promise<string>;
+    getDiscussion: (id: string) => DiscussionDataObject | undefined;
+    onSave: (id: string, data: DiscussionRequest) => Promise<void>;
+    setVersion: (
+      callback: (prev: ManuscriptVersion) => ManuscriptVersion,
+    ) => void;
+    onEndDiscussion: (id: string) => Promise<void>;
+    isComplianceReviewer: boolean;
+    canUpdateDiscussion: boolean;
+    isActiveReport: boolean;
+  };
 
 const toastStyles = css({
   padding: `${15 / perRem}em ${24 / perRem}em`,

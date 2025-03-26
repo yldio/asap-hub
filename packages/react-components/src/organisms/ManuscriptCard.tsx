@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css, Theme } from '@emotion/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DiscussionsTab } from '.';
 import {
@@ -25,12 +25,14 @@ import {
   plusRectIcon,
   resubmitManuscriptIcon,
   StatusButton,
-  StatusType,
   Subtitle,
 } from '..';
 import { mobileScreen, perRem, rem, smallDesktopScreen } from '../pixels';
+import { getReviewerStatusType } from '../utils';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
+
+const VERSION_LIMIT = 3;
 
 type ManuscriptCardProps = Pick<TeamManuscript, 'id'> & {
   user: User | null;
@@ -63,13 +65,14 @@ const manuscriptContainerStyles = css({
   borderWidth: 1,
   borderStyle: 'solid',
   display: 'block',
+  backgroundColor: colors.pearl.rgb,
 });
 
 const toastStyles = css({
   display: 'flex',
-  padding: `${15 / perRem}em ${24 / perRem}em`,
+  padding: rem(16),
   borderRadius: `${rem(8)} ${rem(8)} 0 0`,
-  backgroundColor: colors.pearl.rgb,
+  alignItems: 'center',
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -86,6 +89,7 @@ const iconStyles = css({
 const toastHeaderStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
+  alignItems: 'center',
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     alignItems: 'flex-start',
@@ -93,8 +97,13 @@ const toastHeaderStyles = css({
 });
 
 const buttonsContainerStyles = css({
+  borderBottom: `1px solid ${colors.steel.rgb}`,
+});
+
+const buttonsStyles = css({
   display: 'flex',
-  marginTop: rem(16),
+  padding: `${rem(24)} ${rem(16)}`,
+  borderRadius: rem(8),
   gap: rem(16),
   [`@media (max-width: ${smallDesktopScreen.max}px)`]: {
     flexDirection: 'column',
@@ -106,9 +115,25 @@ const buttonStyles = css({
   height: rem(24),
   display: 'flex',
   gap: rem(8),
+  borderRadius: rem(8),
 });
 
-export type VersionUserProps = {
+const manuscriptDetailsContainerStyles = css({
+  margin: `0 ${rem(16)} ${rem(16)}`,
+  border: `1px solid ${colors.steel.rgb}`,
+  borderRadius: `${rem(8)}`,
+  boxSizing: 'border-box',
+  borderWidth: 1,
+  borderStyle: 'solid',
+  backgroundColor: colors.paper.rgb,
+});
+
+const showMoreContainerStyles = css({
+  padding: `${rem(16)} 0`,
+  textAlign: 'center',
+});
+
+type VersionUserProps = {
   version:
     | Pick<
         ManuscriptVersion,
@@ -138,7 +163,7 @@ const tabButtonStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
     },
   });
 
-export const isManuscriptLead = ({ version, user }: VersionUserProps) =>
+const isManuscriptLead = ({ version, user }: VersionUserProps) =>
   user &&
   version &&
   user.teams.find((team) =>
@@ -150,7 +175,7 @@ export const isManuscriptLead = ({ version, user }: VersionUserProps) =>
     ),
   );
 
-export const isManuscriptAuthor = ({
+const isManuscriptAuthor = ({
   authors,
   user,
 }: {
@@ -178,22 +203,7 @@ const canUpdateManuscript = ({ version, user }: VersionUserProps) =>
   }) ||
   !!isManuscriptLabPi({ labs: version?.labs, user });
 
-export const closedManuscriptStatuses = ['Closed (other)', 'Compliant'];
-
-export const getReviewerStatusType = (
-  statusItem: (typeof manuscriptStatus)[number],
-): StatusType =>
-  (
-    ({
-      [manuscriptStatus[0]]: 'warning',
-      [manuscriptStatus[1]]: 'default',
-      [manuscriptStatus[2]]: 'warning',
-      [manuscriptStatus[3]]: 'default',
-      [manuscriptStatus[4]]: 'default',
-      [manuscriptStatus[5]]: 'final',
-      [manuscriptStatus[6]]: 'final',
-    }) as Record<string, StatusType>
-  )[statusItem] || 'none';
+const closedManuscriptStatuses = ['Closed (other)', 'Compliant'];
 
 const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   id,
@@ -214,9 +224,13 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     useState(false);
 
   const [expanded, setExpanded] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+
   const [newSelectedStatus, setNewSelectedStatus] =
     useState<ManuscriptStatus>();
   const history = useHistory();
+
+  const discussionTabRef = useRef<HTMLButtonElement>(null);
 
   const complianceReportRoute = network({})
     .teams({})
@@ -277,14 +291,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
         />
       )}
       <div css={manuscriptContainerStyles}>
-        <div
-          css={[
-            {
-              borderBottom: expanded ? `1px solid ${colors.steel.rgb}` : 'none',
-            },
-            toastStyles,
-          ]}
-        >
+        <div css={[toastStyles]}>
           <span css={[iconStyles]}>
             <Button
               data-testid="collapsible-button"
@@ -313,40 +320,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 }))}
               </StatusButton>
             </span>
-            {isActiveManuscript && (
-              <span css={buttonsContainerStyles}>
-                {isComplianceReviewer && (
-                  <span>
-                    <Button
-                      primary
-                      small
-                      noMargin
-                      onClick={handleShareComplianceReport}
-                      enabled={canSubmitComplianceReport}
-                    >
-                      <span css={buttonStyles}>
-                        {complianceReportIcon} Share Compliance Report
-                      </span>
-                    </Button>
-                  </span>
-                )}
-                {hasUpdateAccess && (
-                  <span>
-                    <Button
-                      primary
-                      small
-                      noMargin
-                      onClick={handleResubmitManuscript}
-                      enabled={!!currentManuscriptVersion?.complianceReport}
-                    >
-                      <span css={buttonStyles}>
-                        {resubmitManuscriptIcon} Submit Revised Manuscript
-                      </span>
-                    </Button>
-                  </span>
-                )}
-              </span>
-            )}
           </span>
         </div>
 
@@ -356,9 +329,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
               style={{
                 display: 'flex',
                 gap: rem(32),
-                marginLeft: rem(60),
-                marginBottom: rem(16),
-                marginTop: rem(12),
+                marginLeft: rem(55),
+                marginTop: rem(-4),
               }}
             >
               <button
@@ -374,33 +346,94 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 className={activeTab === 'discussions' ? 'active' : ''}
                 css={tabButtonStyles}
                 onClick={() => setActiveTab('discussions')}
+                ref={discussionTabRef}
               >
                 Discussions
               </button>
             </div>
-
-            {activeTab === 'manuscripts-and-reports' &&
-              versions.map((version, index) => (
-                <ManuscriptVersionCard
-                  key={index}
-                  version={version}
-                  teamId={teamId}
-                  manuscriptId={id}
-                  isActiveVersion={
-                    isActiveManuscript &&
-                    version.id === currentManuscriptVersion?.id
-                  }
-                  isManuscriptContributor={hasUpdateAccess}
-                />
-              ))}
-            {activeTab === 'discussions' && (
-              <div css={css({ margin: `${rem(12)} ${rem(60)}` })}>
-                <DiscussionsTab
-                  manuscriptId={id}
-                  createDiscussion={createDiscussion}
-                />
-              </div>
-            )}
+            <div css={manuscriptDetailsContainerStyles}>
+              {activeTab === 'manuscripts-and-reports' && (
+                <>
+                  {isActiveManuscript && (
+                    <div css={buttonsContainerStyles}>
+                      <span css={buttonsStyles}>
+                        {isComplianceReviewer && (
+                          <span>
+                            <Button
+                              primary
+                              small
+                              noMargin
+                              onClick={handleShareComplianceReport}
+                              enabled={canSubmitComplianceReport}
+                            >
+                              <span css={buttonStyles}>
+                                {complianceReportIcon} Share Compliance Report
+                              </span>
+                            </Button>
+                          </span>
+                        )}
+                        {hasUpdateAccess && (
+                          <span>
+                            <Button
+                              primary
+                              small
+                              noMargin
+                              onClick={handleResubmitManuscript}
+                              enabled={
+                                !!currentManuscriptVersion?.complianceReport
+                              }
+                            >
+                              <span css={buttonStyles}>
+                                {resubmitManuscriptIcon} Submit Revised
+                                Manuscript
+                              </span>
+                            </Button>
+                          </span>
+                        )}
+                      </span>
+                    </div>
+                  )}
+                  {versions
+                    .slice(0, showMore ? undefined : VERSION_LIMIT)
+                    .map((version, index) => (
+                      <ManuscriptVersionCard
+                        key={index}
+                        version={version}
+                        teamId={teamId}
+                        manuscriptId={id}
+                        isActiveVersion={
+                          isActiveManuscript &&
+                          version.id === currentManuscriptVersion?.id
+                        }
+                        isManuscriptContributor={hasUpdateAccess}
+                        openDiscussionTab={() => {
+                          if (discussionTabRef.current) {
+                            discussionTabRef.current.scrollIntoView({
+                              behavior: 'smooth',
+                            });
+                            setActiveTab('discussions');
+                          }
+                        }}
+                      />
+                    ))}
+                  {versions.length > VERSION_LIMIT && (
+                    <div css={showMoreContainerStyles}>
+                      <Button onClick={() => setShowMore(!showMore)} linkStyle>
+                        {showMore ? `Show less ↑` : `Show more ↓`}
+                      </Button>
+                    </div>
+                  )}
+                </>
+              )}
+              {activeTab === 'discussions' && (
+                <div css={css({ margin: `${rem(12)} ${rem(60)}` })}>
+                  <DiscussionsTab
+                    manuscriptId={id}
+                    createDiscussion={createDiscussion}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

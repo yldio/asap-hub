@@ -17,7 +17,7 @@ import {
 import { Card, Paragraph } from '../atoms';
 import { iconStyles, statusIcon } from '../molecules/StatusButton';
 import { rem } from '../pixels';
-import { getReviewerStatusType } from './ManuscriptCard';
+import { getReviewerStatusType } from '../utils';
 
 const cardStyles = css({
   marginTop: rem(32),

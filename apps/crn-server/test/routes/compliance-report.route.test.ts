@@ -102,7 +102,7 @@ describe('/compliance-reports/ route', () => {
         userId: user.id,
       });
 
-      expect(response.body).toEqual(complianceReportId);
+      expect(response.body).toEqual(mockComplianceReport);
     });
 
     describe('Validation', () => {

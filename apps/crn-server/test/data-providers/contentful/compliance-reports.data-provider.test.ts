@@ -3,7 +3,11 @@ import { Entry, Environment } from '@asap-hub/contentful';
 import { when } from 'jest-when';
 import { ComplianceReportContentfulDataProvider } from '../../../src/data-providers/contentful/compliance-report.data-provider';
 
-import { getComplianceReportCreateDataObject } from '../../fixtures/compliance-reports.fixtures';
+import {
+  getComplianceReportCreateDataObject,
+  getComplianceReportDataObject,
+  getComplianceReportGraphqlResponse,
+} from '../../fixtures/compliance-reports.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
@@ -50,7 +54,7 @@ describe('Compliance Reports Contentful Data Provider', () => {
               'en-US': 'http://example.com',
             },
             description: {
-              'en-US': 'compliance report description',
+              'en-US': 'Test report',
             },
             manuscriptVersion: {
               'en-US': {
@@ -64,7 +68,7 @@ describe('Compliance Reports Contentful Data Provider', () => {
             createdBy: {
               'en-US': {
                 sys: {
-                  id: 'user-id',
+                  id: 'user-1',
                   linkType: 'Entry',
                   type: 'Link',
                 },
@@ -98,64 +102,44 @@ describe('Compliance Reports Contentful Data Provider', () => {
     });
 
     test('should return compliance report when found', async () => {
-      const mockResponse = {
-        complianceReports: {
-          sys: { id: 'report-1', firstPublishedAt: '2024-01-01' },
-          url: 'http://example.com',
-          description: 'Test report',
-          manuscriptVersion: {
-            linkedFrom: {
-              manuscriptsCollection: {
-                items: [{ versionsCollection: { total: 3 } }],
-              },
-            },
-          },
-          createdBy: {
-            sys: { id: 'user-1' },
-            firstName: 'John',
-            lastName: 'Doe',
-            nickname: 'JD',
-            avatar: { url: 'avatar.jpg' },
-            alumniSinceDate: '2024-01-01',
-            teamsCollection: {
-              items: [
-                {
-                  team: {
-                    sys: { id: 'team-1' },
-                    displayName: 'Team A',
-                  },
-                },
-              ],
-            },
-          },
-        },
-      };
-
-      when(contentfulGraphqlClientMock.request).mockResolvedValue(mockResponse);
+      when(contentfulGraphqlClientMock.request).mockResolvedValue({
+        complianceReports: getComplianceReportGraphqlResponse(),
+      });
 
       const result = await complianceReportDataProvider.fetchById('report-1');
 
-      expect(result).toEqual({
-        id: 'report-1',
-        url: 'http://example.com',
-        description: 'Test report',
-        count: 3,
-        createdDate: '2024-01-01',
-        createdBy: {
-          id: 'user-1',
-          firstName: 'John',
-          lastName: 'Doe',
-          displayName: 'John (JD) Doe',
-          avatarUrl: 'avatar.jpg',
-          alumniSinceDate: '2024-01-01',
-          teams: [
-            {
-              id: 'team-1',
-              name: 'Team A',
-            },
-          ],
-        },
+      expect(result).toEqual(getComplianceReportDataObject());
+    });
+
+    test('should return team as an empty array when teamsCollection is null', async () => {
+      const complianceReport = getComplianceReportGraphqlResponse();
+      complianceReport!.createdBy!.teamsCollection = null;
+
+      when(contentfulGraphqlClientMock.request).mockResolvedValue({
+        complianceReports: complianceReport,
       });
+
+      const result = await complianceReportDataProvider.fetchById('report-1');
+
+      const expectedResult = getComplianceReportDataObject();
+      expectedResult.createdBy.teams = [];
+      expect(result).toEqual(expectedResult);
+    });
+
+    test('should return count as 1 when count is manuscriptCollection is null', async () => {
+      const complianceReport = getComplianceReportGraphqlResponse();
+      complianceReport!.manuscriptVersion!.linkedFrom!.manuscriptsCollection =
+        null;
+
+      when(contentfulGraphqlClientMock.request).mockResolvedValue({
+        complianceReports: complianceReport,
+      });
+
+      const result = await complianceReportDataProvider.fetchById('report-1');
+
+      const expectedResult = getComplianceReportDataObject();
+      expectedResult.count = 1;
+      expect(result).toEqual(expectedResult);
     });
   });
 });

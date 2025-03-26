@@ -96,7 +96,7 @@ const parseComplianceReport = (
   description: complianceReport.description || '',
   count:
     complianceReport.manuscriptVersion?.linkedFrom?.manuscriptsCollection
-      ?.items[0]?.versionsCollection?.total || 0,
+      ?.items[0]?.versionsCollection?.total || 1,
   createdDate: complianceReport.sys.firstPublishedAt,
   createdBy: parseUser(complianceReport.createdBy),
 });

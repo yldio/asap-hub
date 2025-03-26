@@ -1,5 +1,5 @@
 import { createUserResponse } from '@asap-hub/fixtures';
-import { UserResponse } from '@asap-hub/model';
+import { ComplianceReportResponse, UserResponse } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import supertest from 'supertest';
 
@@ -70,10 +70,25 @@ describe('/compliance-reports/ route', () => {
         role: 'Staff',
       } as UserResponse;
 
+      const mockComplianceReport: ComplianceReportResponse = {
+        id: complianceReportId,
+        url: 'https://example.com',
+        description: 'Test description',
+        createdBy: {
+          ...user,
+          teams: user.teams.map((team) => ({
+            id: team.id,
+            name: team.displayName || '',
+          })),
+        },
+        createdDate: '2024-01-01',
+        count: 1,
+      };
+
       userMockFactory.mockReturnValueOnce(user);
 
       complianceReportControllerMock.create.mockResolvedValueOnce(
-        complianceReportId,
+        mockComplianceReport,
       );
 
       const response = await supertest(app)

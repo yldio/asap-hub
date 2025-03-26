@@ -4,15 +4,20 @@ import { when } from 'jest-when';
 import { ComplianceReportContentfulDataProvider } from '../../../src/data-providers/contentful/compliance-report.data-provider';
 
 import { getComplianceReportCreateDataObject } from '../../fixtures/compliance-reports.fixtures';
+import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
 describe('Compliance Reports Contentful Data Provider', () => {
   const environmentMock = getContentfulEnvironmentMock();
   const contentfulRestClientMock: () => Promise<Environment> = () =>
     Promise.resolve(environmentMock);
+  const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 
   const complianceReportDataProvider =
-    new ComplianceReportContentfulDataProvider(contentfulRestClientMock);
+    new ComplianceReportContentfulDataProvider(
+      contentfulGraphqlClientMock,
+      contentfulRestClientMock,
+    );
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -82,10 +87,75 @@ describe('Compliance Reports Contentful Data Provider', () => {
   });
 
   describe('Fetch by ID', () => {
-    test('should throw an error', async () => {
-      await expect(complianceReportDataProvider.fetchById()).rejects.toThrow(
-        'Method not implemented.',
-      );
+    test('should return null when compliance report not found', async () => {
+      when(contentfulGraphqlClientMock.request).mockResolvedValue({
+        complianceReports: null,
+      });
+
+      const result =
+        await complianceReportDataProvider.fetchById('non-existent-id');
+      expect(result).toBeNull();
+    });
+
+    test('should return compliance report when found', async () => {
+      const mockResponse = {
+        complianceReports: {
+          sys: { id: 'report-1', firstPublishedAt: '2024-01-01' },
+          url: 'http://example.com',
+          description: 'Test report',
+          manuscriptVersion: {
+            linkedFrom: {
+              manuscriptsCollection: {
+                items: [{ versionsCollection: { total: 3 } }],
+              },
+            },
+          },
+          createdBy: {
+            sys: { id: 'user-1' },
+            firstName: 'John',
+            lastName: 'Doe',
+            nickname: 'JD',
+            avatar: { url: 'avatar.jpg' },
+            alumniSinceDate: '2024-01-01',
+            teamsCollection: {
+              items: [
+                {
+                  team: {
+                    sys: { id: 'team-1' },
+                    displayName: 'Team A',
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      when(contentfulGraphqlClientMock.request).mockResolvedValue(mockResponse);
+
+      const result = await complianceReportDataProvider.fetchById('report-1');
+
+      expect(result).toEqual({
+        id: 'report-1',
+        url: 'http://example.com',
+        description: 'Test report',
+        count: 3,
+        createdDate: '2024-01-01',
+        createdBy: {
+          id: 'user-1',
+          firstName: 'John',
+          lastName: 'Doe',
+          displayName: 'John (JD) Doe',
+          avatarUrl: 'avatar.jpg',
+          alumniSinceDate: '2024-01-01',
+          teams: [
+            {
+              id: 'team-1',
+              name: 'Team A',
+            },
+          ],
+        },
+      });
     });
   });
 });

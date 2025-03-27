@@ -18,6 +18,7 @@ const props: ComponentProps<typeof ComplianceReportCard> = {
 };
 
 it('displays compliance report description and url when expanded', () => {
+  jest.spyOn(console, 'error').mockImplementation();
   const { getByText, queryByText, getByRole, rerender } = render(
     <ComplianceReportCard {...props} />,
   );

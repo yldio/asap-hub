@@ -5,7 +5,7 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { ComponentProps, Suspense, useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   article,
@@ -23,12 +23,10 @@ import {
   Pill,
   PencilIcon,
   plusRectIcon,
-  DiscussionModal,
   Subtitle,
   colors,
 } from '..';
 import { paddingStyles } from '../card';
-import { Discussion } from '../molecules';
 import ManuscriptFileSection from '../molecules/ManuscriptFileSection';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -39,23 +37,8 @@ type ManuscriptVersionCardProps = {
   teamId: string;
   manuscriptId: string;
   isActiveVersion?: boolean;
-  isComplianceReviewer?: boolean;
   isManuscriptContributor?: boolean;
-  createComplianceDiscussion: (
-    complianceReportId: string,
-    message: string,
-  ) => Promise<string>;
-  useVersionById: (args: {
-    teamId: string;
-    manuscriptId: string;
-    versionId: string;
-  }) => [
-    ManuscriptVersion | undefined,
-    (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
-  ];
-  onEndDiscussion: (id: string) => Promise<void>;
-} & Pick<ComponentProps<typeof DiscussionModal>, 'onSave'> &
-  Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
+};
 
 const toastStyles = css({
   padding: `${15 / perRem}em ${24 / perRem}em`,
@@ -206,26 +189,12 @@ export const getTeams = (teams: Message['createdBy']['teams']) =>
   }));
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
-  version: versionProp,
+  version,
   teamId,
-  onSave,
-  getDiscussion,
   manuscriptId,
   isActiveVersion = false,
-  createComplianceDiscussion,
-  useVersionById,
-  onEndDiscussion,
-  isComplianceReviewer = false,
   isManuscriptContributor = false,
 }) => {
-  const [versionData, setVersion] = useVersionById({
-    teamId,
-    manuscriptId,
-    versionId: versionProp.id,
-  });
-
-  const version = versionData ?? versionProp;
-
   const history = useHistory();
 
   const [expanded, setExpanded] = useState(false);
@@ -268,9 +237,6 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
     }
   };
 
-  const canUpdateDiscussion =
-    isActiveVersion && (isManuscriptContributor || isComplianceReviewer);
-
   const canEditManuscript = isActiveVersion && isManuscriptContributor;
 
   return (
@@ -282,14 +248,6 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
               {...version.complianceReport}
               manuscriptId={manuscriptId}
               versionId={version.id}
-              createComplianceDiscussion={createComplianceDiscussion}
-              getDiscussion={getDiscussion}
-              onSave={onSave}
-              setVersion={setVersion}
-              onEndDiscussion={onEndDiscussion}
-              isComplianceReviewer={isComplianceReviewer}
-              canUpdateDiscussion={canUpdateDiscussion}
-              isActiveReport={isActiveVersion}
             />
           </Suspense>
         )}

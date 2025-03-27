@@ -45,9 +45,13 @@ export type DiscussionEndRequest = {
 };
 
 export type DiscussionCreateRequest = {
-  message: string;
-  id: string;
-  type: DiscussionType;
+  manuscriptId: string;
+  title: string;
+  text: string;
+};
+
+export type DiscussionCreateDataObject = DiscussionCreateRequest & {
+  userId: string;
 };
 
 export type DiscussionResponse = DiscussionDataObject;

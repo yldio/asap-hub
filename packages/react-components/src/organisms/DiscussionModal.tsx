@@ -1,15 +1,15 @@
-import { DiscussionRequest } from '@asap-hub/model';
+import { DiscussionCreateRequest } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Button, Headline3 } from '../atoms';
-import { paddingStyles } from '../card';
 import { crossIcon } from '../icons';
-import { LabeledTextEditor, Modal } from '../molecules';
-import { mobileScreen, perRem } from '../pixels';
+import { LabeledTextEditor, LabeledTextField, Modal } from '../molecules';
+import { mobileScreen, perRem, rem } from '../pixels';
 
-const headerStyles = css(paddingStyles, {
-  paddingBottom: 0,
+const headerStyles = css({
+  padding: `${rem(32)} ${rem(24)} 0px ${rem(24)}`,
+  marginBottom: rem(12),
   display: 'flex',
   flexDirection: 'row-reverse',
   justifyContent: 'space-between',
@@ -23,6 +23,7 @@ const controlsContainerStyles = css({
 const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
 
 const buttonContainerStyles = css({
+  marginTop: `${14 / perRem}em`,
   display: 'grid',
   columnGap: `${30 / perRem}em`,
   gridTemplateRows: 'max-content 12px max-content',
@@ -54,32 +55,30 @@ const dismissButtonStyles = css({
 });
 
 type DiscussionModalProps = {
-  title: string;
-  editorLabel: string;
-  ruleMessage: string;
+  type: 'start' | 'reply';
   onDismiss: () => void;
-  discussionId: string;
-  onSave: (id: string, data: DiscussionRequest) => Promise<void>;
+  onSave: (data: DiscussionCreateRequest) => Promise<void>;
 };
 
 type DiscussionModalData = {
+  title?: string;
   text: string;
 };
 
 const DiscussionModal: React.FC<DiscussionModalProps> = ({
-  title,
-  editorLabel,
-  ruleMessage,
-  discussionId,
+  type,
   onDismiss,
   onSave,
 }) => {
   const methods = useForm<DiscussionModalData>({
     mode: 'onChange',
     defaultValues: {
+      title: '',
       text: '',
     },
   });
+
+  const modalTitle = type === 'start' ? 'Start Discussion' : 'Reply';
 
   const {
     control,
@@ -88,7 +87,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
   } = methods;
 
   const onSubmit = async (data: DiscussionModalData) => {
-    await onSave(discussionId, data);
+    await onSave(data as DiscussionCreateRequest);
     onDismiss();
   };
 
@@ -97,31 +96,61 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
       <Modal padding={false}>
         <header css={headerStyles}>
           <div css={controlsContainerStyles}>
-            <Button small onClick={onDismiss}>
+            <Button noMargin small onClick={onDismiss}>
               {crossIcon}
             </Button>
           </div>
-          <Headline3>{title}</Headline3>
+          <Headline3 noMargin>{modalTitle}</Headline3>
         </header>
-        <div css={[paddingStyles, { paddingTop: 0 }]}>
+        <div
+          css={{
+            padding: `0px ${rem(24)} ${rem(32)} ${rem(24)}`,
+          }}
+        >
+          {type === 'start' && (
+            <Controller
+              name="title"
+              control={control}
+              rules={{
+                required: true,
+                maxLength: {
+                  value: 100,
+                  message: 'Title cannot exceed 100 characters.',
+                },
+              }}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <LabeledTextField
+                  overrideStyles={css({
+                    paddingBottom: `${20 / perRem}em`,
+                  })}
+                  title="Title"
+                  subtitle="(required)"
+                  onChange={onChange}
+                  customValidationMessage={error?.message}
+                  required
+                  value={value || ''}
+                  enabled={!isSubmitting}
+                />
+              )}
+            />
+          )}
+
           <Controller
             name="text"
             control={control}
             rules={{
               required: true,
-              maxLength: {
-                value: 256,
-                message: ruleMessage,
-              },
             }}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <LabeledTextEditor
-                title={editorLabel}
+                title="Please write your message below."
                 subtitle="(required)"
                 onChange={onChange}
                 customValidationMessage={error?.message}
                 required
-                maxLength={256}
                 value={value || ''}
                 enabled={!isSubmitting}
               />
@@ -130,12 +159,13 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
 
           <div css={buttonContainerStyles}>
             <div css={dismissButtonStyles}>
-              <Button enabled onClick={onDismiss}>
+              <Button noMargin enabled onClick={onDismiss}>
                 Cancel
               </Button>
             </div>
             <div css={confirmButtonStyles}>
               <Button
+                noMargin
                 primary
                 enabled={!isSubmitting && isValid}
                 submit

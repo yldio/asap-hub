@@ -5,6 +5,8 @@ import {
   render,
   waitFor,
   getByText as getChildByText,
+  fireEvent,
+  act,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ManuscriptVersion, TeamResponse } from '@asap-hub/model';
@@ -22,7 +24,7 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { enable } from '@asap-hub/flags';
 
-import { patchTeam, updateManuscript } from '../api';
+import { patchTeam, updateManuscript, createDiscussion } from '../api';
 
 import Workspace from '../Workspace';
 import { useManuscriptById, useVersionById } from '../state';
@@ -34,7 +36,7 @@ jest.mock('../api', () => ({
   updateManuscript: jest.fn().mockResolvedValue({}),
   getDiscussion: jest.fn(),
   updateDiscussion: jest.fn(),
-  createComplianceDiscussion: jest.fn(),
+  createDiscussion: jest.fn().mockResolvedValue({}),
 }));
 
 jest.mock('../state', () => ({
@@ -116,6 +118,7 @@ beforeEach(() => {
     createTeamManuscriptResponse(),
     jest.fn(),
   ]);
+  (createDiscussion as jest.Mock).mockResolvedValue({});
 });
 
 afterEach(jest.resetAllMocks);
@@ -149,6 +152,45 @@ describe('Manuscript', () => {
           sendNotifications: false,
         },
         expect.anything(),
+      );
+    });
+  });
+
+  it('should create discussion', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+
+    const screen = renderWithWrapper(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          tools: [],
+          manuscripts: [createTeamManuscriptResponse()],
+        }}
+      />,
+    );
+
+    userEvent.click(await screen.findByTestId('collapsible-button'));
+    userEvent.click(screen.getByText('Discussions'));
+    userEvent.click(screen.getByRole('button', { name: /Start Discussion/i }));
+    userEvent.type(screen.getByRole('textbox', { name: /Title/i }), 'Test');
+    const textInput = screen.getByTestId('editor');
+    await act(async () => {
+      userEvent.click(textInput);
+      userEvent.tab();
+      fireEvent.input(textInput, { data: 'test message' });
+      userEvent.tab();
+    });
+
+    const shareButton = screen.getByRole('button', { name: /Send/i });
+    await waitFor(() => expect(shareButton).toBeEnabled());
+    userEvent.click(shareButton);
+    await waitFor(() => {
+      expect(createDiscussion).toHaveBeenCalledWith(
+        'manuscript_0',
+        'Test',
+        'test message',
+        'Bearer access_token',
       );
     });
   });

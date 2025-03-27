@@ -13,6 +13,7 @@ export { default as CookiesModal } from './CookiesModal';
 export { default as DashboardRecommendedUsers } from './DashboardRecommendedUsers';
 export { default as DashboardUpcomingEvents } from './DashboardUpcomingEvents';
 export { default as DeliverablesCard } from './DeliverablesCard';
+export { default as DiscussionsTab } from './DiscussionsTab';
 export { default as EditModal } from './EditModal';
 export { default as EditUserModal } from './EditUserModal';
 export { default as EligibilityModal } from './EligibilityModal';

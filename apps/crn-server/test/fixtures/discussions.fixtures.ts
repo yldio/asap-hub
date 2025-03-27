@@ -3,7 +3,7 @@ import { manuscriptAuthor } from '@asap-hub/fixtures';
 import {
   DiscussionDataObject,
   Message,
-  MessageCreateDataObject,
+  DiscussionCreateDataObject,
 } from '@asap-hub/model';
 
 export const getMessage = (text?: string): Message => ({
@@ -18,10 +18,13 @@ export const getDiscussionDataObject = (): DiscussionDataObject => ({
   replies: [getMessage('test reply')],
 });
 
-export const getDiscussionRequestObject = (): MessageCreateDataObject => ({
-  text: 'test message',
-  userId: 'user-id-0',
-});
+export const getDiscussionCreateRequestObject =
+  (): DiscussionCreateDataObject => ({
+    text: 'test message',
+    userId: 'user-id-0',
+    manuscriptId: 'manuscript-id-1',
+    title: 'Test discussion title',
+  });
 
 export const getContentfulGraphqlCreatedBy = () => ({
   sys: {

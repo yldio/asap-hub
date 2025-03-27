@@ -454,9 +454,10 @@ export const getDiscussion = async (
   return resp.json();
 };
 
-export const createComplianceDiscussion = async (
-  complianceReportId: string,
-  message: string,
+export const createDiscussion = async (
+  manuscriptId: string,
+  title: string,
+  text: string,
   authorization: string,
 ): Promise<DiscussionResponse> => {
   const resp = await fetch(`${API_BASE_URL}/discussions`, {
@@ -467,9 +468,9 @@ export const createComplianceDiscussion = async (
       ...createSentryHeaders(),
     },
     body: JSON.stringify({
-      message,
-      id: complianceReportId,
-      type: 'compliance-report',
+      text,
+      manuscriptId,
+      title,
     }),
   });
   const response = await resp.json();

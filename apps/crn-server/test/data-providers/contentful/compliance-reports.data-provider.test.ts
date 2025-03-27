@@ -3,16 +3,25 @@ import { Entry, Environment } from '@asap-hub/contentful';
 import { when } from 'jest-when';
 import { ComplianceReportContentfulDataProvider } from '../../../src/data-providers/contentful/compliance-report.data-provider';
 
-import { getComplianceReportCreateDataObject } from '../../fixtures/compliance-reports.fixtures';
+import {
+  getComplianceReportCreateDataObject,
+  getComplianceReportDataObject,
+  getComplianceReportGraphqlResponse,
+} from '../../fixtures/compliance-reports.fixtures';
+import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
 describe('Compliance Reports Contentful Data Provider', () => {
   const environmentMock = getContentfulEnvironmentMock();
   const contentfulRestClientMock: () => Promise<Environment> = () =>
     Promise.resolve(environmentMock);
+  const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 
   const complianceReportDataProvider =
-    new ComplianceReportContentfulDataProvider(contentfulRestClientMock);
+    new ComplianceReportContentfulDataProvider(
+      contentfulGraphqlClientMock,
+      contentfulRestClientMock,
+    );
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -45,7 +54,7 @@ describe('Compliance Reports Contentful Data Provider', () => {
               'en-US': 'http://example.com',
             },
             description: {
-              'en-US': 'compliance report description',
+              'en-US': 'Test report',
             },
             manuscriptVersion: {
               'en-US': {
@@ -59,7 +68,7 @@ describe('Compliance Reports Contentful Data Provider', () => {
             createdBy: {
               'en-US': {
                 sys: {
-                  id: 'user-id',
+                  id: 'user-1',
                   linkType: 'Entry',
                   type: 'Link',
                 },
@@ -82,10 +91,55 @@ describe('Compliance Reports Contentful Data Provider', () => {
   });
 
   describe('Fetch by ID', () => {
-    test('should throw an error', async () => {
-      await expect(complianceReportDataProvider.fetchById()).rejects.toThrow(
-        'Method not implemented.',
-      );
+    test('should return null when compliance report not found', async () => {
+      when(contentfulGraphqlClientMock.request).mockResolvedValue({
+        complianceReports: null,
+      });
+
+      const result =
+        await complianceReportDataProvider.fetchById('non-existent-id');
+      expect(result).toBeNull();
+    });
+
+    test('should return compliance report when found', async () => {
+      when(contentfulGraphqlClientMock.request).mockResolvedValue({
+        complianceReports: getComplianceReportGraphqlResponse(),
+      });
+
+      const result = await complianceReportDataProvider.fetchById('report-1');
+
+      expect(result).toEqual(getComplianceReportDataObject());
+    });
+
+    test('should return team as an empty array when teamsCollection is null', async () => {
+      const complianceReport = getComplianceReportGraphqlResponse();
+      complianceReport!.createdBy!.teamsCollection = null;
+
+      when(contentfulGraphqlClientMock.request).mockResolvedValue({
+        complianceReports: complianceReport,
+      });
+
+      const result = await complianceReportDataProvider.fetchById('report-1');
+
+      const expectedResult = getComplianceReportDataObject();
+      expectedResult.createdBy.teams = [];
+      expect(result).toEqual(expectedResult);
+    });
+
+    test('should return count as 1 when count is manuscriptCollection is null', async () => {
+      const complianceReport = getComplianceReportGraphqlResponse();
+      complianceReport!.manuscriptVersion!.linkedFrom!.manuscriptsCollection =
+        null;
+
+      when(contentfulGraphqlClientMock.request).mockResolvedValue({
+        complianceReports: complianceReport,
+      });
+
+      const result = await complianceReportDataProvider.fetchById('report-1');
+
+      const expectedResult = getComplianceReportDataObject();
+      expectedResult.count = 1;
+      expect(result).toEqual(expectedResult);
     });
   });
 });

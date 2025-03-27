@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { DiscussionType } from '@asap-hub/model';
+import { DiscussionCreateDataObject } from '@asap-hub/model';
 import DiscussionController from '../../src/controllers/discussion.controller';
 import { DiscussionDataProvider } from '../../src/data-providers/types';
 import { getDiscussionDataObject } from '../fixtures/discussions.fixtures';
@@ -69,17 +69,22 @@ describe('Discussion Controller', () => {
   });
 
   describe('Create method', () => {
-    const message = {
+    const input: DiscussionCreateDataObject = {
       text: 'test message',
       userId: 'user-id-0',
-      type: 'compliance-report' as DiscussionType,
-      complianceReportId: 'compliance-report-id',
+      manuscriptId: 'manuscript-id-1',
+      title: 'Test discussion title',
     };
 
     test('Should return the created discussion', async () => {
       const mockResponse = getDiscussionDataObject();
       discussionDataProviderMock.fetchById.mockResolvedValue(mockResponse);
-      const result = await discussionController.create(message);
+      const result = await discussionController.create(
+        input.userId,
+        input.manuscriptId,
+        input.title,
+        input.text,
+      );
 
       expect(result).toEqual(mockResponse);
     });
@@ -89,9 +94,14 @@ describe('Discussion Controller', () => {
         getDiscussionDataObject(),
       );
 
-      await discussionController.create(message);
+      await discussionController.create(
+        input.userId,
+        input.manuscriptId,
+        input.title,
+        input.text,
+      );
 
-      expect(discussionDataProviderMock.create).toHaveBeenCalledWith(message);
+      expect(discussionDataProviderMock.create).toHaveBeenCalledWith(input);
     });
   });
   describe('End Discussion method', () => {

@@ -50,12 +50,8 @@ const props: ComponentProps<typeof ManuscriptCard> & {
   user: { ...baseUser, algoliaApiKey: 'algolia-mock-key' },
   isComplianceReviewer: false,
   onUpdateManuscript: jest.fn(),
-  onSave: jest.fn(),
-  getDiscussion: jest.fn(),
   isActiveTeam: true,
-  createComplianceDiscussion: jest.fn(),
-  useVersionById: jest.fn(),
-  onEndDiscussion: jest.fn(),
+  createDiscussion: jest.fn(),
 };
 
 const complianceReport = {
@@ -143,17 +139,13 @@ afterEach(() => {
 });
 
 it('displays manuscript version card when expanded', () => {
-  const useVersionById = jest.fn();
   const versionMock = {
     ...mockVersionData,
     type: 'Original Research',
     lifecycle: 'Preprint',
   };
-  useVersionById
-    .mockImplementation(() => [versionMock, jest.fn()])
-    .mockImplementationOnce(() => [mockVersionData, jest.fn()]);
 
-  const { getByText, queryByText, getByTestId, rerender } = render(
+  const { getByText, queryByText, getByTestId } = render(
     <ManuscriptCard
       {...props}
       useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -161,11 +153,10 @@ it('displays manuscript version card when expanded', () => {
           id: 'manuscript_0',
           title: 'Mock Manuscript Title',
           status: 'Waiting for Report',
-          versions: [version],
+          versions: [versionMock],
         },
         jest.fn(),
       ])}
-      useVersionById={useVersionById}
     />,
   );
 
@@ -174,20 +165,6 @@ it('displays manuscript version card when expanded', () => {
   expect(queryByText(/Preprint/i)).not.toBeInTheDocument();
 
   userEvent.click(getByTestId('collapsible-button'));
-
-  rerender(
-    <ManuscriptCard
-      {...props}
-      // versions={[
-      //   {
-      //     ...createManuscriptResponse().versions[0]!,
-      //     type: 'Original Research',
-      //     lifecycle: 'Preprint',
-      //   },
-      // ]}
-      useVersionById={useVersionById}
-    />,
-  );
 
   expect(getByText(/Original Research/i)).toBeVisible();
   expect(getByText(/Preprint/i)).toBeVisible();
@@ -293,7 +270,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
       <Route path="">
         <ManuscriptCard
           {...props}
-          useVersionById={useManuscriptById.mockImplementation(() => [
+          useManuscriptById={useManuscriptById.mockImplementation(() => [
             {
               id: 'manuscript_0',
               title: 'Mock Manuscript Title',
@@ -332,7 +309,7 @@ it('does not display confirmation modal when isComplianceReviewer is true but th
   const { getByRole, getByTestId, queryByText } = render(
     <ManuscriptCard
       {...props}
-      useVersionById={useManuscriptById.mockImplementation(() => [
+      useManuscriptById={useManuscriptById.mockImplementation(() => [
         {
           id: 'manuscript_0',
           title: 'Mock Manuscript Title',
@@ -508,7 +485,7 @@ it('disables submit compliance report button when there is an existing complianc
   const { getByRole } = render(
     <ManuscriptCard
       {...props}
-      useVersionById={useManuscriptById.mockImplementation(() => [
+      useManuscriptById={useManuscriptById.mockImplementation(() => [
         {
           id: 'manuscript_0',
           title: 'Mock Manuscript Title',
@@ -519,7 +496,6 @@ it('disables submit compliance report button when there is an existing complianc
       ])}
       isComplianceReviewer
       id="manuscript-1"
-      useManuscriptById={useManuscriptById}
     />,
   );
 

@@ -4,8 +4,7 @@ import { ComponentProps, FC, useState } from 'react';
 import { UserAvatarList } from '..';
 import { Button } from '../atoms';
 import { minusRectIcon, plusRectIcon, replyIcon } from '../icons';
-import endDiscussionIcon from '../icons/endDiscussionIcon';
-import { DiscussionModal, EndDiscussionModal } from '../organisms';
+import { DiscussionModal } from '../organisms';
 import { rem } from '../pixels';
 
 import UserComment from './UserComment';
@@ -16,10 +15,7 @@ type DiscussionProps = Pick<
 > & {
   id: string;
   canReply: boolean;
-  canEndDiscussion?: boolean;
-  modalTitle: string;
   getDiscussion: (id: string) => DiscussionDataObject | undefined;
-  onEndDiscussion?: (id: string) => Promise<void>;
 };
 
 const iconStyles = css({
@@ -45,18 +41,12 @@ const replyAvatarsStyles = css({
 const Discussion: FC<DiscussionProps> = ({
   id,
   canReply,
-  canEndDiscussion = false,
-  modalTitle,
   getDiscussion,
   onSave,
-  onEndDiscussion,
 }) => {
   const discussion = getDiscussion(id);
   const [replyToDiscussion, setReplyToDiscussion] = useState<boolean>(false);
   const [expandReplies, setExpandReplies] = useState<boolean>(false);
-
-  const [isEndDiscussionModalOpen, setIsEndDiscussionModalOpen] =
-    useState(false);
 
   if (!discussion) {
     return null;
@@ -70,11 +60,8 @@ const Discussion: FC<DiscussionProps> = ({
     <>
       {replyToDiscussion && (
         <DiscussionModal
-          title={modalTitle}
-          editorLabel="Please provide details"
-          ruleMessage="Reply cannot exceed 256 characters."
+          type="reply"
           onDismiss={() => setReplyToDiscussion(false)}
-          discussionId={id}
           onSave={onSave}
         />
       )}
@@ -134,36 +121,6 @@ const Discussion: FC<DiscussionProps> = ({
                 {replyIcon} Reply
               </span>
             </Button>
-          </div>
-        )}
-
-        {canEndDiscussion && (
-          <div css={!displayReplyButton && { paddingLeft: rem(36) }}>
-            <Button
-              noMargin
-              small
-              onClick={() => setIsEndDiscussionModalOpen(true)}
-              data-testid="end-discussion-button"
-            >
-              <span
-                css={{
-                  display: 'inline-flex',
-                  gap: rem(8),
-                  margin: `0 ${rem(8)} 0 0`,
-                }}
-              >
-                {endDiscussionIcon} End Discussion
-              </span>
-            </Button>
-            {isEndDiscussionModalOpen && onEndDiscussion && (
-              <EndDiscussionModal
-                handleSubmit={async () => {
-                  await onEndDiscussion(id);
-                  setIsEndDiscussionModalOpen(false);
-                }}
-                handleCancel={() => setIsEndDiscussionModalOpen(false)}
-              />
-            )}
           </div>
         )}
       </div>

@@ -5,25 +5,16 @@ import {
   TeamProfileWorkspace,
   ToolModal,
 } from '@asap-hub/react-components';
-import {
-  TeamTool,
-  TeamResponse,
-  ManuscriptPutRequest,
-  DiscussionRequest,
-} from '@asap-hub/model';
+import { TeamTool, TeamResponse, ManuscriptPutRequest } from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext, useCurrentUserCRN } from '@asap-hub/react-context';
 
 import {
-  useCreateComplianceDiscussion,
-  useDiscussionById,
-  useEndDiscussion,
+  useCreateDiscussion,
   useIsComplianceReviewer,
   useManuscriptById,
   usePatchTeamById,
   usePutManuscript,
-  useReplyToDiscussion,
-  useVersionById,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
@@ -40,11 +31,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);
   const updateManuscript = usePutManuscript();
-  const replyToDiscussion = useReplyToDiscussion();
-  const endDiscussion = useEndDiscussion();
-  const createComplianceDiscussion = useCreateComplianceDiscussion();
+  const createDiscussion = useCreateDiscussion();
 
-  const getDiscussion = useDiscussionById;
   const toast = useContext(ToastContext);
 
   const { setFormType } = useManuscriptToast();
@@ -83,34 +71,14 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                 }
           }
           isComplianceReviewer={isComplianceReviewer}
-          onSave={async (
-            id: string,
-            patch: DiscussionRequest,
-          ): Promise<void> => {
-            try {
-              await replyToDiscussion(id, patch as DiscussionRequest);
-              setFormType({ type: 'quick-check', accent: 'successLarge' });
-            } catch (error) {
-              setFormType({
-                type: 'discussion-already-closed',
-                accent: 'error',
-              });
-            }
-          }}
-          onEndDiscussion={async (id: string) => {
-            await endDiscussion(id);
-            setFormType({
-              type: 'compliance-report-discussion-end',
-              accent: 'successLarge',
-            });
-          }}
-          getDiscussion={getDiscussion}
-          createComplianceDiscussion={async (
-            complianceReportId: string,
+          createDiscussion={async (
+            manuscriptId: string,
+            title: string,
             message: string,
           ) => {
-            const discussionId = await createComplianceDiscussion(
-              complianceReportId,
+            const discussionId = await createDiscussion(
+              manuscriptId,
+              title,
               message,
             );
             setFormType({
@@ -119,7 +87,6 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
             });
             return discussionId;
           }}
-          useVersionById={useVersionById}
           useManuscriptById={useManuscriptById}
         />
       </Route>

@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { Label, Paragraph, TextField } from '../atoms';
 import { lead } from '../colors';
@@ -26,6 +26,7 @@ type LabeledTextFieldProps = {
   readonly subtitle?: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly hint?: React.ReactNode;
+  readonly overrideStyles?: SerializedStyles;
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   readonly noPadding?: boolean;
 } & Exclude<ComponentProps<typeof TextField>, 'id'>;
@@ -39,10 +40,13 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   subtitle,
   description,
   hint,
+  overrideStyles,
   noPadding = false,
   ...textFieldProps
 }) => (
-  <div css={[containerStyles, noPadding && { paddingBottom: 0 }]}>
+  <div
+    css={[containerStyles, overrideStyles, noPadding && { paddingBottom: 0 }]}
+  >
     <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
       <Paragraph>
         <strong>{title}</strong>

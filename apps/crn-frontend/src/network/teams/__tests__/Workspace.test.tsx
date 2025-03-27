@@ -156,7 +156,7 @@ describe('Manuscript', () => {
     });
   });
 
-  it('should create compliance report', async () => {
+  it('should create discussion, async () => {
     enable('DISPLAY_MANUSCRIPTS');
 
     const screen = renderWithWrapper(

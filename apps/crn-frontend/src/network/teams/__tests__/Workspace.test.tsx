@@ -156,7 +156,7 @@ describe('Manuscript', () => {
     });
   });
 
-  it('should create discussion, async () => {
+  it('should create discussion', async () => {
     enable('DISPLAY_MANUSCRIPTS');
 
     const screen = renderWithWrapper(

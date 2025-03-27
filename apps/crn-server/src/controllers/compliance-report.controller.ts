@@ -20,7 +20,7 @@ export default class ComplianceReportController {
     if (!complianceReport) {
       throw new NotFoundError(
         undefined,
-        `Compliance Report with id ${complianceReport} not found`,
+        `Compliance Report with id ${complianceReportId} not found`,
       );
     }
 

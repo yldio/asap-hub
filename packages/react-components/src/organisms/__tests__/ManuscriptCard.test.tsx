@@ -35,8 +35,6 @@ const mockVersionWithReport = {
 
 const useManuscriptById = jest.fn();
 const useManuscriptByIdWithReport = jest.fn();
-const useVersionById = jest.fn();
-const useVersionByIdWithReport = jest.fn();
 
 const baseUser = createUserResponse({}, 1);
 const props: ComponentProps<typeof ManuscriptCard> = {
@@ -63,11 +61,6 @@ const user = {
 };
 
 beforeEach(() => {
-  useVersionById.mockImplementation(() => [mockVersion, jest.fn()]);
-  useVersionByIdWithReport.mockImplementation(() => [
-    mockVersionWithReport,
-    jest.fn(),
-  ]);
   useManuscriptById.mockImplementation(() => {
     const manuscript = {
       id: 'manuscript_0',
@@ -248,11 +241,12 @@ it('redirects to compliance report form when user clicks on share compliance rep
 });
 
 it('redirects to resubmit manuscript form when user clicks on Submit Revised Manuscript button', () => {
-  const version = {
-    ...mockVersionWithReport,
-    firstAuthors: [user],
-  };
-  const manuscriptVersions = [version];
+  const manuscriptVersions = [
+    {
+      ...mockVersionWithReport,
+      firstAuthors: [user],
+    },
+  ];
 
   const history = createMemoryHistory();
   const { getByRole, getByTestId } = render(
@@ -604,10 +598,6 @@ describe('Tabs', () => {
             status: 'Waiting for Report',
             versions: [manuscriptVersion],
           },
-          jest.fn(),
-        ])}
-        useVersionById={useVersionById.mockImplementation(() => [
-          manuscriptVersion,
           jest.fn(),
         ])}
       />,

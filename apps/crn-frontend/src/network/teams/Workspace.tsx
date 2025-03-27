@@ -17,6 +17,7 @@ import {
   usePutManuscript,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
+import { useManuscriptToast } from './useManuscriptToast';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
@@ -34,6 +35,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
 
   const toast = useContext(ToastContext);
 
+  const { setFormType } = useManuscriptToast();
   const user = useCurrentUserCRN();
   const isTeamMember = !!user?.teams.find(({ id }) => team.id === id);
 

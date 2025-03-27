@@ -9,6 +9,7 @@ import {
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { Card, Pill } from '../atoms';
+import { borderRadius } from '../card';
 import { charcoal, steel } from '../colors';
 import { rem } from '../pixels';
 import ComplianceAssignUsersModal, {
@@ -19,6 +20,7 @@ import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 
 const container = css({
   overflowX: 'auto',
+  borderRadius: rem(borderRadius),
   table: {
     borderSpacing: 0,
     width: '100%',

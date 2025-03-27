@@ -20,7 +20,7 @@ import { Button, Link, Pill } from '../atoms';
 import { borderRadius } from '../card';
 import { formatDateToTimezone } from '../date';
 import { rem } from '../pixels';
-import { getReviewerStatusType } from './ManuscriptCard';
+import { getReviewerStatusType } from '../utils';
 
 const rowStyles = css({
   padding: `${rem(20)} ${rem(24)} 0`,

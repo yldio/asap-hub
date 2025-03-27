@@ -2,7 +2,6 @@ import {
   ApcCoverageOption,
   AuthorEmailField,
   AuthorSelectOption,
-  DiscussionDataObject,
   ManuscriptError,
   ManuscriptFileResponse,
   ManuscriptFileType,
@@ -292,7 +291,6 @@ type ManuscriptFormProps = Omit<
     getAuthorSuggestions: NonNullable<
       ComponentProps<typeof AuthorSelect>['loadOptions']
     >;
-    getDiscussion?: (id: string) => DiscussionDataObject | undefined;
     firstAuthors?: AuthorSelectOption[];
     correspondingAuthor?: AuthorSelectOption[];
     additionalAuthors?: AuthorSelectOption[];
@@ -343,7 +341,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   getLabSuggestions,
   selectedLabs,
   getAuthorSuggestions,
-  getDiscussion,
   description,
   firstAuthors,
   correspondingAuthor,

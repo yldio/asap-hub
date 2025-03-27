@@ -648,6 +648,7 @@ describe('Create Compliance Report', () => {
       history,
     );
 
+    userEvent.click(screen.getByTestId('collapsible-button'));
     expect(
       screen.getByRole('button', { name: /Share Compliance Report Icon/ }),
     ).toBeInTheDocument();
@@ -682,6 +683,8 @@ describe('Create Compliance Report', () => {
       },
       history,
     );
+
+    userEvent.click(screen.getByTestId('collapsible-button'));
 
     userEvent.click(
       screen.getByRole('button', { name: /Share Compliance Report Icon/ }),

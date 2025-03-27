@@ -32,14 +32,12 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   version: baseVersion,
   teamId: 'team-id-0',
   manuscriptId: 'manuscript-1',
+  openDiscussionTab: jest.fn(),
 };
 
 it('displays quick checks when present', async () => {
   const asapAffiliationIncludedDetails =
     "Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations.";
-
-  const getDiscussion = jest.fn();
-  getDiscussion.mockReturnValueOnce(undefined);
 
   const author = {
     id: 'author-id',

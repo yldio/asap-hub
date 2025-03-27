@@ -104,34 +104,4 @@ describe('Discussion Controller', () => {
       expect(discussionDataProviderMock.create).toHaveBeenCalledWith(input);
     });
   });
-  describe('End Discussion method', () => {
-    const endedBy = 'user-id-0';
-
-    test('Should return the ended discussion', async () => {
-      const mockResponse = getDiscussionDataObject();
-      discussionDataProviderMock.fetchById.mockResolvedValue(mockResponse);
-
-      const result = await discussionController.endDiscussion(
-        'discussion-id',
-        endedBy,
-      );
-
-      expect(result).toEqual(mockResponse);
-    });
-
-    test('Should call the data provider with the correct input data', async () => {
-      discussionDataProviderMock.fetchById.mockResolvedValue(
-        getDiscussionDataObject(),
-      );
-
-      await discussionController.endDiscussion('discussion-id', endedBy);
-
-      expect(discussionDataProviderMock.update).toHaveBeenCalledWith(
-        'discussion-id',
-        {
-          endedBy,
-        },
-      );
-    });
-  });
 });

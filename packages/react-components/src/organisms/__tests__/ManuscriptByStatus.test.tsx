@@ -147,7 +147,7 @@ describe('ManuscriptByStatus', () => {
   it('does not render status buttons with type "none"', () => {
     jest
       // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
-      .spyOn(require('../ManuscriptCard'), 'getReviewerStatusType')
+      .spyOn(require('../../utils/manuscripts'), 'getReviewerStatusType')
       .mockImplementation((status) =>
         status === 'Closed (other)' ? 'none' : 'default',
       );

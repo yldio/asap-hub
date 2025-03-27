@@ -70,7 +70,7 @@ describe('Compliance Report controller', () => {
 
       await expect(
         complianceReportController.fetchById('non-existent-id'),
-      ).rejects.toThrow('Compliance Report with id null not found');
+      ).rejects.toThrow('Compliance Report with id non-existent-id not found');
     });
 
     test('Should return compliance report when it exists', async () => {

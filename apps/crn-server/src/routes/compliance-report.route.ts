@@ -25,8 +25,7 @@ export const complianceReportRouteFactory = (
     if (!loggedInUser || !isCMSAdministrator(loggedInUser.role)) {
       throw Boom.forbidden();
     }
-    const manuscript =
-      manuscriptId && (await manuscriptController.fetchById(manuscriptId));
+    const manuscript = (await manuscriptController.fetchById(manuscriptId));
 
     const complianceReport = await complianceReportController.create({
       ...createRequest,

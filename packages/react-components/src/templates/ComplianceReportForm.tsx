@@ -78,7 +78,12 @@ type ComplianceReportFormProps = {
   >;
 };
 
-type FormAction = 'cancel' | 'confirm' | 'confirmClosedStatus' | 'confirmCompliantStatus' | '';
+type FormAction =
+  | 'cancel'
+  | 'confirm'
+  | 'confirmClosedStatus'
+  | 'confirmCompliantStatus'
+  | '';
 
 const manuscriptStatusOptions: ReadonlyArray<Option<ManuscriptStatus>> =
   manuscriptStatus.map((status) => ({
@@ -110,8 +115,7 @@ const getModalContent = (
       confirmButtonStyle: 'primary' as const,
     },
     confirmClosedStatus: {
-      title:
-        'Share compliance report and set status to closed (other)?',
+      title: 'Share compliance report and set status to closed (other)?',
       content:
         'After you update the status to closed (other), this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to the CMS admin. Additionally, by sharing the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
       confirmButtonText: 'Confirm and Share',
@@ -341,10 +345,11 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 onClick={() =>
                   setComplianceReportFormAction(
                     selectedStatus && selectedStatus.includes('Compliant')
-                      ? 'confirmCompliantStatus' :
-                    selectedStatus && selectedStatus.includes('Closed (other)')
-                      ? 'confirmClosedStatus'
-                      : 'confirm',
+                      ? 'confirmCompliantStatus'
+                      : selectedStatus &&
+                          selectedStatus.includes('Closed (other)')
+                        ? 'confirmClosedStatus'
+                        : 'confirm',
                   )
                 }
               >

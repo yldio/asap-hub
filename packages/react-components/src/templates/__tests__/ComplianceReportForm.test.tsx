@@ -301,7 +301,7 @@ it('should show compliant modal when compliant status is selected', async () => 
   userEvent.click(shareButton);
 
   const compliantModal = screen.getByText(
-    /Share compliance report and set status to <compliant\/closed \(other\)>\?/i,
+    /Share compliance report and set status to compliant\?/i,
   );
 
   expect(compliantModal).toBeInTheDocument();
@@ -332,7 +332,7 @@ it('should show "closed (other)" modal when compliant status is selected', async
   userEvent.click(shareButton);
 
   const compliantModal = screen.getByText(
-    /Share compliance report and set status to <compliant\/closed \(other\)>\?/i,
+    /Share compliance report and set status to closed \(other\)\?/i,
   );
 
   expect(compliantModal).toBeInTheDocument();

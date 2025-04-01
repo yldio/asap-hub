@@ -15,12 +15,12 @@ const complianceReportPostRequestValidationSchema: JSONSchemaType<ComplianceRepo
       manuscriptVersionId: { type: 'string' },
       discussionId: { type: 'string', nullable: true },
       versionId: { type: 'string', nullable: true },
-      manuscriptId: { type: 'string', nullable: true },
-      status: { enum: manuscriptStatus, type: 'string', nullable: false },
+      manuscriptId: { type: 'string' },
+      status: { enum: manuscriptStatus, type: 'string' },
       sendNotifications: { type: 'boolean', nullable: true },
       notificationList: { type: 'string', nullable: true },
     },
-    required: ['description', 'url', 'manuscriptVersionId', 'status'],
+    required: ['description', 'url', 'manuscriptVersionId', 'status', 'manuscriptId'],
     additionalProperties: false,
   };
 

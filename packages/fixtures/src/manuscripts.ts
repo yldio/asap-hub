@@ -78,7 +78,6 @@ export const getComplianceReportDataObject =
     count: 1,
     createdBy: manuscriptAuthor,
     createdDate: '2020-09-23T20:45:22.000Z',
-    manuscriptId: 'manuscript-1',
   });
 
 export const createPartialManuscriptResponse =

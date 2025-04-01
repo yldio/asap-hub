@@ -273,7 +273,7 @@ type ManuscriptFormProps = Omit<
       id: string,
       output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
-    manuscriptId?: string;
+    manuscriptId: string;
     onSuccess: () => void;
     handleFileUpload: (
       file: File,

@@ -3,6 +3,8 @@ import {
   ComplianceReportPostRequest,
   ComplianceReportResponse,
   ManuscriptDataObject,
+  ManuscriptStatus,
+  manuscriptStatus,
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -76,19 +78,7 @@ type ComplianceReportFormProps = {
   >;
 };
 
-type FormAction = 'cancel' | 'confirm' | 'confirmClosedStatus' | '';
-
-const manuscriptStatus = [
-  'Waiting for Report',
-  'Review Compliance Report',
-  'Manuscript Resubmitted',
-  'Submit Final Publication',
-  'Addendum Required',
-  'Compliant',
-  'Closed (other)',
-] as const;
-
-type ManuscriptStatus = (typeof manuscriptStatus)[number];
+type FormAction = 'cancel' | 'confirm' | 'confirmClosedStatus' | 'confirmCompliantStatus' | '';
 
 const manuscriptStatusOptions: ReadonlyArray<Option<ManuscriptStatus>> =
   manuscriptStatus.map((status) => ({
@@ -97,7 +87,7 @@ const manuscriptStatusOptions: ReadonlyArray<Option<ManuscriptStatus>> =
   }));
 
 const getModalContent = (
-  formAction: FormAction | '',
+  formAction: FormAction,
 ): {
   title: string;
   content: string;
@@ -112,11 +102,18 @@ const getModalContent = (
       confirmButtonText: 'Share Compliance Report',
       confirmButtonStyle: 'primary' as const,
     },
+    confirmCompliantStatus: {
+      title: 'Share compliance report and set status to compliant?',
+      content:
+        'After you update the status to compliant, this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to the CMS admin. Additionally, by sharing the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
+      confirmButtonText: 'Confirm and Share',
+      confirmButtonStyle: 'primary' as const,
+    },
     confirmClosedStatus: {
       title:
-        'Share compliance report and set status to <compliant/closed (other)>?',
+        'Share compliance report and set status to closed (other)?',
       content:
-        'After you update the status to <compliant/closed (other)>, this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to the CMS admin. Additionally, by sharing the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
+        'After you update the status to closed (other), this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to the CMS admin. Additionally, by sharing the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
       confirmButtonText: 'Confirm and Share',
       confirmButtonStyle: 'primary' as const,
     },
@@ -189,7 +186,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   };
 
   const [complianceReportFormAction, setComplianceReportFormAction] = useState<
-    'confirm' | 'cancel' | 'confirmClosedStatus' | ''
+    'confirm' | 'cancel' | 'confirmClosedStatus' | 'confirmCompliantStatus' | ''
   >('');
 
   const { title, confirmButtonText, confirmButtonStyle, content } =
@@ -343,9 +340,9 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 enabled={!isSubmitting && isValid}
                 onClick={() =>
                   setComplianceReportFormAction(
-                    selectedStatus &&
-                      (selectedStatus.includes('Compliant') ||
-                        selectedStatus.includes('Closed (other)'))
+                    selectedStatus && selectedStatus.includes('Compliant')
+                      ? 'confirmCompliantStatus' :
+                    selectedStatus && selectedStatus.includes('Closed (other)')
                       ? 'confirmClosedStatus'
                       : 'confirm',
                   )

@@ -338,7 +338,7 @@ describe('Reminder Controller', () => {
         });
       });
 
-      test.skip('Should return the correct description and subtext for the discussion started by open science member reminder', async () => {
+      test('Should return the correct description and subtext for the discussion started by open science member reminder', async () => {
         const reminderDataObject =
           getDiscussionStartedByOpenScienceMemberReminder();
 
@@ -350,12 +350,12 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
         expect(items[0]).toMatchObject({
           description:
-            '**Tom Hardy** on **Team Alessi** started a discussion on a compliance report:',
+            '**Tom Hardy** on **Team Alessi** started a discussion on:',
           subtext: 'Contextual AI models for single-cell protein biology',
         });
       });
 
-      test.skip('Should return the correct description for the discussion started by grantee reminder', async () => {
+      test('Should return the correct description for the discussion started by grantee reminder', async () => {
         const reminderDataObject = getDiscussionStartedByGranteeReminder();
 
         reminderDataProviderMock.fetch.mockResolvedValueOnce({
@@ -366,13 +366,13 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
         expect(items[0]).toMatchObject({
           description:
-            '**Tom Hardy** started a discussion on a compliance report for **Team Alessi**',
+            '**Tom Hardy** on **Team Reminder** started a discussion on:',
         });
       });
 
-      test.skip('Should return the correct description and subtext for the quick check discussion replied to by open science member reminder', async () => {
+      test('Should return the correct description and subtext for the discussion replied to by open science member reminder', async () => {
         const reminderDataObject =
-          getDiscussionRepliedToByOpenScienceMemberReminder('quick-check');
+          getDiscussionRepliedToByOpenScienceMemberReminder();
 
         reminderDataProviderMock.fetch.mockResolvedValueOnce({
           total: 1,
@@ -382,16 +382,13 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
         expect(items[0]).toMatchObject({
           description:
-            '**Tom Hardy** on **Team Alessi** replied to a quick check on the manuscript:',
+            '**Tom Hardy** on **Team Alessi** replied to a discussion on:',
           subtext: 'Contextual AI models for single-cell protein biology',
         });
       });
 
-      test.skip('Should return the correct description and subtext for the compliance report discussion replied to by open science member reminder', async () => {
-        const reminderDataObject =
-          getDiscussionRepliedToByOpenScienceMemberReminder(
-            'compliance-report',
-          );
+      test('Should return the correct description for the discussion replied to by grantee reminder', async () => {
+        const reminderDataObject = getDiscussionRepliedToByGranteeReminder();
 
         reminderDataProviderMock.fetch.mockResolvedValueOnce({
           total: 1,
@@ -401,40 +398,7 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
         expect(items[0]).toMatchObject({
           description:
-            '**Tom Hardy** on **Team Alessi** replied to a discussion on a compliance report:',
-          subtext: 'Contextual AI models for single-cell protein biology',
-        });
-      });
-
-      test.skip('Should return the correct description for the quick check discussion replied to by grantee reminder', async () => {
-        const reminderDataObject =
-          getDiscussionRepliedToByGranteeReminder('quick-check');
-
-        reminderDataProviderMock.fetch.mockResolvedValueOnce({
-          total: 1,
-          items: [reminderDataObject],
-        });
-
-        const { items } = await reminderController.fetch(options);
-        expect(items[0]).toMatchObject({
-          description:
-            '**Tom Hardy** replied to a quick check on a manuscript for **Team Alessi**',
-        });
-      });
-
-      test.skip('Should return the correct description for the compliance report discussion replied to by grantee reminder', async () => {
-        const reminderDataObject =
-          getDiscussionRepliedToByGranteeReminder('compliance-report');
-
-        reminderDataProviderMock.fetch.mockResolvedValueOnce({
-          total: 1,
-          items: [reminderDataObject],
-        });
-
-        const { items } = await reminderController.fetch(options);
-        expect(items[0]).toMatchObject({
-          description:
-            '**Tom Hardy** replied to a discussion on a compliance report for **Team Alessi**',
+            '**Tom Hardy** on **Team Reminder** replied to a discussion on:',
         });
       });
 

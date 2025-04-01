@@ -147,81 +147,54 @@ export default class ReminderController {
           };
         }
 
-        // if (
-        //   reminder.entity === 'Discussion' &&
-        //   reminder.type === 'Discussion Created by Grantee'
-        // ) {
-        //   return {
-        //     id: reminder.id,
-        //     entity: reminder.entity,
-        //     description: `**${reminder.data.createdBy}** started a discussion on a compliance report for **${reminder.data.manuscriptTeams}**`,
-        //     subtext: reminder.data.title,
-        //     date: reminder.data.publishedAt,
-        //   };
-        // }
+        if (
+          reminder.entity === 'Discussion' &&
+          reminder.type === 'Discussion Created by Grantee'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            description: `**${reminder.data.createdBy}** on **${reminder.data.manuscriptTeams}** started a discussion on:`,
+            subtext: reminder.data.title,
+            date: reminder.data.publishedAt,
+          };
+        }
 
-        // if (
-        //   reminder.entity === 'Discussion' &&
-        //   reminder.type === 'Discussion Created by Open Science Member'
-        // ) {
-        //   return {
-        //     id: reminder.id,
-        //     entity: reminder.entity,
-        //     description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** started a discussion on a compliance report:`,
-        //     subtext: reminder.data.title,
-        //     date: reminder.data.publishedAt,
-        //   };
-        // }
+        if (
+          reminder.entity === 'Discussion' &&
+          reminder.type === 'Discussion Created by Open Science Member'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** started a discussion on:`,
+            subtext: reminder.data.title,
+            date: reminder.data.publishedAt,
+          };
+        }
 
-        // if (
-        //   reminder.entity === 'Discussion' &&
-        //   reminder.type === 'Compliance Report Discussion Replied To by Grantee'
-        // ) {
-        //   return {
-        //     id: reminder.id,
-        //     entity: reminder.entity,
-        //     description: `**${reminder.data.createdBy}** replied to a discussion on a compliance report for **${reminder.data.manuscriptTeams}**`,
-        //     subtext: reminder.data.title,
-        //     date: reminder.data.publishedAt,
-        //   };
-        // }
+        if (
+          reminder.entity === 'Discussion' &&
+          reminder.type === 'Discussion Replied To by Grantee'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            description: `**${reminder.data.createdBy}** on **${reminder.data.manuscriptTeams}** replied to a discussion on:`,
+            subtext: reminder.data.title,
+            date: reminder.data.publishedAt,
+          };
+        }
 
-        // if (
-        //   reminder.entity === 'Discussion' &&
-        //   reminder.type ===
-        //     'Compliance Report Discussion Replied To by Open Science Member'
-        // ) {
-        //   return {
-        //     id: reminder.id,
-        //     entity: reminder.entity,
-        //     description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** replied to a discussion on a compliance report:`,
-        //     subtext: reminder.data.title,
-        //     date: reminder.data.publishedAt,
-        //   };
-        // }
-
-        // if (
-        //   reminder.entity === 'Discussion' &&
-        //   reminder.type === 'Quick Check Discussion Replied To by Grantee'
-        // ) {
-        //   return {
-        //     id: reminder.id,
-        //     entity: reminder.entity,
-        //     description: `**${reminder.data.createdBy}** replied to a quick check on a manuscript for **${reminder.data.manuscriptTeams}**`,
-        //     subtext: reminder.data.title,
-        //     date: reminder.data.publishedAt,
-        //   };
-        // }
-
-        // if (reminder.entity === 'Discussion') {
-        //   return {
-        //     id: reminder.id,
-        //     entity: reminder.entity,
-        //     description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** replied to a quick check on the manuscript:`,
-        //     subtext: reminder.data.title,
-        //     date: reminder.data.publishedAt,
-        //   };
-        // }
+        if (reminder.entity === 'Discussion') {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            description: `**${reminder.data.createdBy}** on **${reminder.data.userTeams}** replied to a discussion on:`,
+            subtext: reminder.data.title,
+            date: reminder.data.publishedAt,
+          };
+        }
 
         if (
           reminder.entity === 'Event' &&

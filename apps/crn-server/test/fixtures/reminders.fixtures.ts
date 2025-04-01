@@ -701,6 +701,15 @@ export const getContentfulReminderDiscussionCollectionItem = (): NonNullable<
   message: {
     createdBy: getDiscussionCreatedByUser('user-who-started-discussion'),
   },
+  linkedFrom: {
+    manuscriptsCollection: {
+      items: [
+        {
+          ...getContentfulReminderManuscriptCollectionItem(),
+        },
+      ],
+    },
+  },
 });
 
 const getReminderMessageCollectionItem = (): NonNullable<
@@ -720,21 +729,25 @@ const getReminderMessageCollectionItem = (): NonNullable<
               id: 'message-id',
             },
           },
+          linkedFrom: {
+            manuscriptsCollection: {
+              items: [
+                {
+                  ...getContentfulReminderManuscriptCollectionItem(),
+                },
+              ],
+            },
+          },
         },
       ],
     },
   },
 });
 
-export const getContentfulReminderMessageCollectionItem = (
-  type: 'quick-check' | 'compliance-report',
-): NonNullable<
+export const getContentfulReminderMessageCollectionItem = (): NonNullable<
   FetchMessageRemindersQuery['messagesCollection']
->['items'][number] => {
-  const messageItem = { ...getReminderMessageCollectionItem() } as MessageItem;
-  return messageItem;
-};
-
+>['items'][number] =>
+  ({ ...getReminderMessageCollectionItem() }) as MessageItem;
 export const getManuscriptCreatedReminder = (): ManuscriptCreatedReminder => ({
   id: 'manuscript-created-manuscript-id-1',
   entity: 'Manuscript',
@@ -786,7 +799,7 @@ export const getDiscussionStartedByGranteeReminder =
     data: {
       createdBy: 'Tom Hardy',
       publishedAt: '2025-01-07T16:21:33.824Z',
-      manuscriptTeams: 'Team Alessi',
+      manuscriptTeams: 'Team Reminder',
       userTeams: 'Team Alessi',
       title: 'Contextual AI models for single-cell protein biology',
     },
@@ -800,44 +813,36 @@ export const getDiscussionStartedByOpenScienceMemberReminder =
     data: {
       createdBy: 'Tom Hardy',
       publishedAt: '2025-01-07T16:21:33.824Z',
-      manuscriptTeams: 'Team Alessi',
+      manuscriptTeams: 'Team Reminder',
       userTeams: 'Team Alessi',
       title: 'Contextual AI models for single-cell protein biology',
     },
   });
 
-export const getDiscussionRepliedToByGranteeReminder = (
-  discussionType: 'quick-check' | 'compliance-report',
-): DiscussionRepliedToReminder => ({
-  id: 'discussion-replied-reply-id-1',
-  entity: 'Discussion',
-  type:
-    discussionType === 'quick-check'
-      ? 'Quick Check Discussion Replied To by Grantee'
-      : 'Compliance Report Discussion Replied To by Grantee',
-  data: {
-    createdBy: 'Tom Hardy',
-    publishedAt: '2025-01-07T16:21:33.824Z',
-    manuscriptTeams: 'Team Alessi',
-    userTeams: 'Team Alessi',
-    title: 'Contextual AI models for single-cell protein biology',
-  },
-});
+export const getDiscussionRepliedToByGranteeReminder =
+  (): DiscussionRepliedToReminder => ({
+    id: 'discussion-replied-reply-id-1',
+    entity: 'Discussion',
+    type: 'Discussion Replied To by Grantee',
+    data: {
+      createdBy: 'Tom Hardy',
+      publishedAt: '2025-01-07T16:21:33.824Z',
+      manuscriptTeams: 'Team Reminder',
+      userTeams: 'Team Alessi',
+      title: 'Contextual AI models for single-cell protein biology',
+    },
+  });
 
-export const getDiscussionRepliedToByOpenScienceMemberReminder = (
-  discussionType: 'quick-check' | 'compliance-report',
-): DiscussionRepliedToReminder => ({
-  id: 'discussion-replied-reply-id-1',
-  entity: 'Discussion',
-  type:
-    discussionType === 'quick-check'
-      ? 'Quick Check Discussion Replied To by Open Science Member'
-      : 'Compliance Report Discussion Replied To by Open Science Member',
-  data: {
-    createdBy: 'Tom Hardy',
-    publishedAt: '2025-01-07T16:21:33.824Z',
-    manuscriptTeams: 'Team Alessi',
-    userTeams: 'Team Alessi',
-    title: 'Contextual AI models for single-cell protein biology',
-  },
-});
+export const getDiscussionRepliedToByOpenScienceMemberReminder =
+  (): DiscussionRepliedToReminder => ({
+    id: 'discussion-replied-reply-id-1',
+    entity: 'Discussion',
+    type: 'Discussion Replied To by Open Science Member',
+    data: {
+      createdBy: 'Tom Hardy',
+      publishedAt: '2025-01-07T16:21:33.824Z',
+      manuscriptTeams: 'Team Reminder',
+      userTeams: 'Team Alessi',
+      title: 'Contextual AI models for single-cell protein biology',
+    },
+  });

@@ -1,7 +1,14 @@
 import {
+  DiscussionsFilter,
   EventsFilter,
+  FETCH_DISCUSSION_REMINDERS,
+  FETCH_MESSAGE_REMINDERS,
   FETCH_REMINDERS,
   FETCH_TEAM_PROJECT_MANAGER,
+  FetchDiscussionRemindersQuery,
+  FetchDiscussionRemindersQueryVariables,
+  FetchMessageRemindersQuery,
+  FetchMessageRemindersQueryVariables,
   FetchRemindersQuery,
   FetchRemindersQueryVariables,
   FetchTeamProjectManagerQuery,
@@ -10,20 +17,13 @@ import {
   ResearchOutputsFilter,
   ResearchOutputVersionsFilter,
   ManuscriptsFilter,
-  // FETCH_DISCUSSION_REMINDERS,
-  FetchDiscussionRemindersQuery,
-  // FetchDiscussionRemindersQueryVariables,
-  // DiscussionsFilter,
-  // MessagesFilter,
   Maybe,
-  FetchMessageRemindersQuery,
-  // FETCH_MESSAGE_REMINDERS,
-  // FetchMessageRemindersQueryVariables,
+  MessagesFilter,
 } from '@asap-hub/contentful';
 import {
-  // DiscussionCreatedReminder,
-  // DiscussionReminder,
-  // DiscussionRepliedToReminder,
+  DiscussionCreatedReminder,
+  DiscussionReminder,
+  DiscussionRepliedToReminder,
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   EventNotesReminder,
@@ -89,9 +89,23 @@ export type MessageItem = NonNullable<
   NonNullable<MessageCollection>['items'][number]
 >;
 
+type DiscussionManuscriptVersion = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<DiscussionItem['linkedFrom']>['manuscriptsCollection']
+    >['items'][number]
+  >['versionsCollection']
+>['items'][number];
+
+type ManuscriptVersionTeamsCollection = NonNullable<
+  NonNullable<DiscussionManuscriptVersion>['teamsCollection']
+>;
+
 type ManuscriptVersion = NonNullable<
   NonNullable<ManuscriptItem['versionsCollection']>['items'][0]
->;
+> & {
+  teamsCollection?: ManuscriptVersionTeamsCollection;
+};
 
 export class ReminderContentfulDataProvider implements ReminderDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
@@ -107,8 +121,8 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
     const manuscriptFilter = getManuscriptFilter(timezone);
     const researchOutputVersionsFilter =
       getResearchOutputVersionsFilter(timezone);
-    // const discussionFilter = getDiscussionFilter(timezone);
-    // const messageFilter = getMessageFilter(timezone);
+    const discussionFilter = getDiscussionFilter(timezone);
+    const messageFilter = getMessageFilter(timezone);
 
     const {
       eventsCollection,
@@ -127,19 +141,19 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       manuscriptFilter,
     });
 
-    // const { discussionsCollection } = await this.contentfulClient.request<
-    //   FetchDiscussionRemindersQuery,
-    //   FetchDiscussionRemindersQueryVariables
-    // >(FETCH_DISCUSSION_REMINDERS, {
-    //   discussionFilter,
-    // });
+    const { discussionsCollection } = await this.contentfulClient.request<
+      FetchDiscussionRemindersQuery,
+      FetchDiscussionRemindersQueryVariables
+    >(FETCH_DISCUSSION_REMINDERS, {
+      discussionFilter,
+    });
 
-    // const { messagesCollection } = await this.contentfulClient.request<
-    //   FetchMessageRemindersQuery,
-    //   FetchMessageRemindersQueryVariables
-    // >(FETCH_MESSAGE_REMINDERS, {
-    //   messageFilter,
-    // });
+    const { messagesCollection } = await this.contentfulClient.request<
+      FetchMessageRemindersQuery,
+      FetchMessageRemindersQueryVariables
+    >(FETCH_MESSAGE_REMINDERS, {
+      messageFilter,
+    });
 
     const fetchTeamProjectManager = async (
       teamId: string,
@@ -160,8 +174,8 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       researchOutputVersionsCollection?.items,
     );
     const manuscriptsCollectionItems = cleanArray(manuscriptsCollection?.items);
-    // const discussionsCollectionItems = cleanArray(discussionsCollection?.items);
-    // const messagesCollectionItems = cleanArray(messagesCollection?.items);
+    const discussionsCollectionItems = cleanArray(discussionsCollection?.items);
+    const messagesCollectionItems = cleanArray(messagesCollection?.items);
 
     const publishedResearchOutputVersionReminders =
       getPublishedResearchOutputVersionRemindersFromQuery(
@@ -240,18 +254,18 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       timezone,
     );
 
-    // const discussionReminders = getDiscussionRemindersFromQuery(
-    //   discussionsCollectionItems,
-    //   user,
-    //   userId,
-    //   timezone,
-    // );
+    const discussionReminders = getDiscussionRemindersFromQuery(
+      discussionsCollectionItems,
+      user,
+      userId,
+      timezone,
+    );
 
-    // const repliesReminders = getReplyRemindersFromQuery(
-    //   messagesCollectionItems,
-    //   user,
-    //   userId,
-    // );
+    const repliesReminders = getReplyRemindersFromQuery(
+      messagesCollectionItems,
+      user,
+      userId,
+    );
 
     const reminders = [
       ...publishedResearchOutputReminders.filter(
@@ -268,8 +282,8 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       ...uploadPresentationReminders,
       ...eventMaterialsReminders,
       ...manuscriptReminders,
-      // ...discussionReminders,
-      // ...repliesReminders,
+      ...discussionReminders,
+      ...repliesReminders,
     ];
 
     const sortedReminders = reminders.sort((reminderA, reminderB) => {
@@ -305,15 +319,12 @@ export const getSortDate = (reminder: ReminderDataObject): DateTime => {
       'Manuscript Status Updated': 'updatedAt',
       'Manuscript Resubmitted': 'resubmittedAt',
     },
-    // Discussion: {
-    //   'Discussion Created by Grantee': 'publishedAt',
-    //   'Discussion Created by Open Science Member': 'publishedAt',
-    //   'Compliance Report Discussion Replied To by Grantee': 'publishedAt',
-    //   'Compliance Report Discussion Replied To by Open Science Member':
-    //     'publishedAt',
-    //   'Quick Check Discussion Replied To by Grantee': 'publishedAt',
-    //   'Quick Check Discussion Replied To by Open Science Member': 'publishedAt',
-    // },
+    Discussion: {
+      'Discussion Created by Grantee': 'publishedAt',
+      'Discussion Created by Open Science Member': 'publishedAt',
+      'Discussion Replied To by Grantee': 'publishedAt',
+      'Discussion Replied To by Open Science Member': 'publishedAt',
+    },
     Event: {
       'Happening Today': 'startDate',
       'Happening Now': 'endDate',
@@ -344,17 +355,17 @@ export const getManuscriptFilter = (zone: string): ManuscriptsFilter => {
   };
 };
 
-// export const getDiscussionFilter = (zone: string): DiscussionsFilter => {
-//   const { last7DaysISO } = getReferenceDates(zone);
-//   return {
-//     OR: [{ sys: { firstPublishedAt_gte: last7DaysISO } }],
-//   };
-// };
+export const getDiscussionFilter = (zone: string): DiscussionsFilter => {
+  const { last7DaysISO } = getReferenceDates(zone);
+  return {
+    OR: [{ sys: { firstPublishedAt_gte: last7DaysISO } }],
+  };
+};
 
-// export const getMessageFilter = (zone: string): MessagesFilter => {
-//   const { last7DaysISO } = getReferenceDates(zone);
-//   return { sys: { firstPublishedAt_gte: last7DaysISO } };
-// };
+export const getMessageFilter = (zone: string): MessagesFilter => {
+  const { last7DaysISO } = getReferenceDates(zone);
+  return { sys: { firstPublishedAt_gte: last7DaysISO } };
+};
 
 export const getResearchOutputFilter = (
   zone: string,
@@ -1082,29 +1093,28 @@ type ValidManuscriptItem = ManuscriptItem & {
   };
 };
 
-// type ValidDiscussionItem = DiscussionItem & {
-//   endedBy: { firstName: string; lastName: string };
-//   message: {
-//     createdBy: {
-//       firstName: string;
-//       lastName: string;
-//       role: string;
-//       openScienceTeamMember: boolean;
-//       sys: { id: string };
-//     };
-//   };
-// };
+type ValidDiscussionItem = DiscussionItem & {
+  message: {
+    createdBy: {
+      firstName: string;
+      lastName: string;
+      role: string;
+      openScienceTeamMember: boolean;
+      sys: { id: string };
+    };
+  };
+};
 
-// type ValidMessageItem = MessageItem & {
-//   createdBy: {
-//     firstName: string;
-//     lastName: string;
-//     role: string;
-//     openScienceTeamMember: boolean;
-//     sys: { id: string };
-//   };
-//   linkedFrom: { discussionsCollection: { items: ValidDiscussionItem[] } };
-// };
+type ValidMessageItem = MessageItem & {
+  createdBy: {
+    firstName: string;
+    lastName: string;
+    role: string;
+    openScienceTeamMember: boolean;
+    sys: { id: string };
+  };
+  linkedFrom: { discussionsCollection: { items: ValidDiscussionItem[] } };
+};
 
 const isValidManuscriptItem = (
   manuscript: ManuscriptItem,
@@ -1116,17 +1126,17 @@ const isValidManuscriptItem = (
   manuscript.versionsCollection.items.length > 0 &&
   !!manuscript.versionsCollection.items[0]?.createdBy;
 
-// const isValidDiscussionItem = (
-//   discussion: DiscussionItem,
-// ): discussion is ValidDiscussionItem =>
-//   !!discussion.message && !!discussion.message.createdBy;
+const isValidDiscussionItem = (
+  discussion: DiscussionItem,
+): discussion is ValidDiscussionItem =>
+  !!discussion.message && !!discussion.message.createdBy;
 
-// const isValidMessageItem = (
-//   message: MessageItem,
-// ): message is ValidMessageItem =>
-//   !!message.createdBy &&
-//   !!message.linkedFrom?.discussionsCollection?.items &&
-//   message.linkedFrom.discussionsCollection.items.length > 0;
+const isValidMessageItem = (
+  message: MessageItem,
+): message is ValidMessageItem =>
+  !!message.createdBy &&
+  !!message.linkedFrom?.discussionsCollection?.items &&
+  message.linkedFrom.discussionsCollection.items.length > 0;
 
 const getManuscriptRemindersFromQuery = (
   manuscriptsCollectionItems: ManuscriptItem[],
@@ -1227,196 +1237,116 @@ const getManuscriptRemindersFromQuery = (
   );
 };
 
-// const getDiscussionRemindersFromQuery = (
-//   discussionItems: DiscussionItem[],
-//   user: User,
-//   userId: string,
-//   timezone: string,
-// ): DiscussionReminder[] => {
-//   if (!user || !discussionItems.length) return [];
+const getDiscussionRemindersFromQuery = (
+  discussionItems: DiscussionItem[],
+  user: User,
+  userId: string,
+  timezone: string,
+): DiscussionReminder[] => {
+  if (!user || !discussionItems.length) return [];
 
-//   const userProjectManagerOrLeadPITeamIds =
-//     getUserProjectManagerOrLeadPITeamIds(user);
+  const userProjectManagerOrLeadPITeamIds =
+    getUserProjectManagerOrLeadPITeamIds(user);
 
-//   return discussionItems.reduce<DiscussionReminder[]>(
-//     (reminders, discussion) => {
-//       if (!isValidDiscussionItem(discussion)) return reminders;
+  return discussionItems.reduce<DiscussionReminder[]>(
+    (reminders, discussion) => {
+      if (!isValidDiscussionItem(discussion)) return reminders;
 
-//       const manuscriptVersion = discussion.linkedFrom
-//         ?.complianceReportsCollection?.items[0]
-//         ?.manuscriptVersion as ManuscriptVersion;
-//       const isManuscriptContributor =
-//         isManuscriptProjectManagerOrLeadPI(
-//           manuscriptVersion.teamsCollection,
-//           userProjectManagerOrLeadPITeamIds,
-//         ) ||
-//         isManuscriptAuthor(manuscriptVersion, userId) ||
-//         isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
-//       const isAssignedUser =
-//         manuscriptVersion.linkedFrom?.manuscriptsCollection?.items[0]?.assignedUsersCollection?.items.some(
-//           (assignedUser) => assignedUser?.sys.id === userId,
-//         );
+      const manuscript = discussion.linkedFrom?.manuscriptsCollection?.items[0];
+      const manuscriptVersion = manuscript?.versionsCollection
+        ?.items[0] as ManuscriptVersion;
+      const isManuscriptContributor =
+        isManuscriptProjectManagerOrLeadPI(
+          manuscriptVersion.teamsCollection,
+          userProjectManagerOrLeadPITeamIds,
+        ) ||
+        isManuscriptAuthor(manuscriptVersion, userId) ||
+        isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
+      const isAssignedUser = manuscript?.assignedUsersCollection?.items.some(
+        (assignedUser) => assignedUser?.sys.id === userId,
+      );
 
-//       if (
-//         inLast7Days(discussion.sys.firstPublishedAt, timezone) &&
-//         isReminderForDifferentUser(discussion.message.createdBy.sys.id, userId)
-//       ) {
-//         if (
-//           isStaffAndMemberOfOpenScienceTeam(discussion.message?.createdBy) &&
-//           isManuscriptContributor
-//         ) {
-//           reminders.push(
-//             createDiscussionCreatedReminder(discussion, 'Open Science Member'),
-//           );
-//         } else if (
-//           !isStaffAndMemberOfOpenScienceTeam(discussion.message?.createdBy) &&
-//           (isManuscriptContributor || isAssignedUser)
-//         ) {
-//           reminders.push(
-//             createDiscussionCreatedReminder(discussion, 'Grantee'),
-//           );
-//         }
-//       }
+      if (
+        inLast7Days(discussion.sys.firstPublishedAt, timezone) &&
+        isReminderForDifferentUser(discussion.message.createdBy.sys.id, userId)
+      ) {
+        if (
+          isStaffAndMemberOfOpenScienceTeam(discussion.message?.createdBy) &&
+          isManuscriptContributor
+        ) {
+          reminders.push(
+            createDiscussionCreatedReminder(discussion, 'Open Science Member'),
+          );
+        } else if (
+          !isStaffAndMemberOfOpenScienceTeam(discussion.message?.createdBy) &&
+          (isManuscriptContributor || isAssignedUser)
+        ) {
+          reminders.push(
+            createDiscussionCreatedReminder(discussion, 'Grantee'),
+          );
+        }
+      }
 
-//       return reminders;
-//     },
-//     [],
-//   );
-// };
+      return reminders;
+    },
+    [],
+  );
+};
 
-// const getReplyRemindersFromQuery = (
-//   messageItems: MessageItem[],
-//   user: User,
-//   userId: string,
-// ): DiscussionReminder[] => {
-//   if (!user || !messageItems.length) return [];
+const getReplyRemindersFromQuery = (
+  messageItems: MessageItem[],
+  user: User,
+  userId: string,
+): DiscussionReminder[] => {
+  if (!user || !messageItems.length) return [];
 
-//   const userProjectManagerOrLeadPITeamIds =
-//     getUserProjectManagerOrLeadPITeamIds(user);
+  const userProjectManagerOrLeadPITeamIds =
+    getUserProjectManagerOrLeadPITeamIds(user);
 
-//   return messageItems.reduce<DiscussionReminder[]>((reminders, message) => {
-//     if (!isValidMessageItem(message)) return reminders;
+  return messageItems.reduce<DiscussionReminder[]>((reminders, message) => {
+    if (!isValidMessageItem(message)) return reminders;
 
-//     const replyType = getReplyType(message);
+    const discussion = message.linkedFrom?.discussionsCollection?.items[0];
+    const isReply = discussion?.message?.sys.id !== message.sys.id;
 
-//     if (
-//       replyType === 'compliance-report-discussion-reply' &&
-//       isReminderForDifferentUser(message.createdBy.sys.id, userId)
-//     ) {
-//       const manuscriptVersion = message.linkedFrom?.discussionsCollection
-//         ?.items[0]?.linkedFrom?.complianceReportsCollection?.items[0]
-//         ?.manuscriptVersion as ManuscriptVersion;
-//       const isAssignedUser =
-//         manuscriptVersion.linkedFrom?.manuscriptsCollection?.items[0]?.assignedUsersCollection?.items.some(
-//           (assignedUser) => assignedUser?.sys.id === userId,
-//         );
+    if (
+      isReply &&
+      isReminderForDifferentUser(message.createdBy.sys.id, userId)
+    ) {
+      const manuscript =
+        message.linkedFrom?.discussionsCollection?.items[0]?.linkedFrom
+          ?.manuscriptsCollection?.items[0];
+      const manuscriptVersion = manuscript?.versionsCollection
+        ?.items[0] as ManuscriptVersion;
+      const isAssignedUser = manuscript?.assignedUsersCollection?.items.some(
+        (assignedUser) => assignedUser?.sys.id === userId,
+      );
 
-//       const isManuscriptContributor =
-//         isManuscriptProjectManagerOrLeadPI(
-//           manuscriptVersion.teamsCollection,
-//           userProjectManagerOrLeadPITeamIds,
-//         ) ||
-//         isManuscriptAuthor(manuscriptVersion, userId) ||
-//         isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
+      const isManuscriptContributor =
+        isManuscriptProjectManagerOrLeadPI(
+          manuscriptVersion.teamsCollection,
+          userProjectManagerOrLeadPITeamIds,
+        ) ||
+        isManuscriptAuthor(manuscriptVersion, userId) ||
+        isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
 
-//       if (
-//         isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
-//         isManuscriptContributor
-//       ) {
-//         reminders.push(
-//           createDiscussionRepliedToReminder(
-//             message,
-//             'Open Science Member',
-//             'compliance-report-discussion-reply',
-//           ),
-//         );
-//       } else if (
-//         !isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
-//         (isManuscriptContributor || isAssignedUser)
-//       ) {
-//         reminders.push(
-//           createDiscussionRepliedToReminder(
-//             message,
-//             'Grantee',
-//             'compliance-report-discussion-reply',
-//           ),
-//         );
-//       }
-//     }
-
-//     if (
-//       replyType === 'quick-check-discussion-reply' &&
-//       isReminderForDifferentUser(message.createdBy.sys.id, userId)
-//     ) {
-//       const manuscriptVersion = message.linkedFrom?.discussionsCollection
-//         ?.items[0]?.linkedFrom?.manuscriptVersionsCollection
-//         ?.items[0] as ManuscriptVersion;
-//       const isManuscriptContributor =
-//         isManuscriptProjectManagerOrLeadPI(
-//           manuscriptVersion.teamsCollection,
-//           userProjectManagerOrLeadPITeamIds,
-//         ) ||
-//         isManuscriptAuthor(manuscriptVersion, userId) ||
-//         isManuscriptLabPI(manuscriptVersion.labsCollection, userId);
-//       const isAssignedUser =
-//         manuscriptVersion.linkedFrom?.manuscriptsCollection?.items[0]?.assignedUsersCollection?.items.some(
-//           (assignedUser) => assignedUser?.sys.id === userId,
-//         );
-
-//       if (
-//         isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
-//         isManuscriptContributor
-//       ) {
-//         reminders.push(
-//           createDiscussionRepliedToReminder(
-//             message,
-//             'Open Science Member',
-//             'quick-check-discussion-reply',
-//           ),
-//         );
-//       } else if (
-//         !isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
-//         (isManuscriptContributor || isAssignedUser)
-//       ) {
-//         reminders.push(
-//           createDiscussionRepliedToReminder(
-//             message,
-//             'Grantee',
-//             'quick-check-discussion-reply',
-//           ),
-//         );
-//       }
-//     }
-
-//     return reminders;
-//   }, []);
-// };
-
-// const getReplyType = (
-//   message: MessageItem,
-// ):
-//   | 'compliance-report-discussion-reply'
-//   | 'quick-check-discussion-reply'
-//   | null => {
-//   const messageId = message.sys.id;
-//   const discussion = message.linkedFrom?.discussionsCollection?.items[0];
-
-//   if (discussion?.message?.sys.id !== messageId) {
-//     if (
-//       discussion?.linkedFrom?.complianceReportsCollection?.items &&
-//       discussion.linkedFrom.complianceReportsCollection.items.length > 0
-//     ) {
-//       return 'compliance-report-discussion-reply';
-//     }
-//     if (
-//       discussion?.linkedFrom?.manuscriptVersionsCollection?.items &&
-//       discussion.linkedFrom.manuscriptVersionsCollection.items.length > 0
-//     ) {
-//       return 'quick-check-discussion-reply';
-//     }
-//   }
-//   return null;
-// };
+      if (
+        isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
+        isManuscriptContributor
+      ) {
+        reminders.push(
+          createDiscussionRepliedToReminder(message, 'Open Science Member'),
+        );
+      } else if (
+        !isStaffAndMemberOfOpenScienceTeam(message?.createdBy) &&
+        (isManuscriptContributor || isAssignedUser)
+      ) {
+        reminders.push(createDiscussionRepliedToReminder(message, 'Grantee'));
+      }
+    }
+    return reminders;
+  }, []);
+};
 
 const isReminderForDifferentUser = (
   actorId: string | undefined,
@@ -1484,101 +1414,72 @@ const createManuscriptResubmittedReminder = (
   };
 };
 
-// const createDiscussionCreatedReminder = (
-//   discussion: ValidDiscussionItem,
-//   actor: 'Grantee' | 'Open Science Member',
-// ): DiscussionCreatedReminder => {
-//   const manuscriptVersion =
-//     discussion.linkedFrom?.complianceReportsCollection?.items[0]
-//       ?.manuscriptVersion;
+const createDiscussionCreatedReminder = (
+  discussion: ValidDiscussionItem,
+  actor: 'Grantee' | 'Open Science Member',
+): DiscussionCreatedReminder => {
+  const manuscript = discussion.linkedFrom?.manuscriptsCollection?.items[0];
+  const manuscriptVersion = manuscript?.versionsCollection?.items[0];
+  const userTeams = discussion.message.createdBy?.teamsCollection?.items.map(
+    (member) => member?.team?.displayName,
+  );
+  const manuscriptTeams = getTeamNames(
+    manuscriptVersion?.teamsCollection?.items.map(
+      (teams) => teams?.displayName,
+    ),
+  );
 
-//   const manuscript =
-//     manuscriptVersion?.linkedFrom?.manuscriptsCollection?.items[0];
-//   const userTeams = discussion.message.createdBy?.teamsCollection?.items.map(
-//     (member) => member?.team?.displayName,
-//   );
-//   const manuscriptTeams = getTeamNames(
-//     manuscriptVersion?.teamsCollection?.items.map(
-//       (teams) => teams?.displayName,
-//     ),
-//   );
+  return {
+    id: `discussion-created-${discussion.sys.id}`,
+    entity: 'Discussion',
+    type:
+      actor === 'Grantee'
+        ? 'Discussion Created by Grantee'
+        : 'Discussion Created by Open Science Member',
+    data: {
+      title: manuscript?.title || '',
+      manuscriptTeams,
+      createdBy: `${discussion.message.createdBy.firstName} ${discussion.message.createdBy.lastName}`,
+      userTeams: getTeamNames(userTeams),
+      publishedAt: discussion.sys.firstPublishedAt,
+    },
+  };
+};
 
-//   return {
-//     id: `discussion-created-${discussion.sys.id}`,
-//     entity: 'Discussion',
-//     type:
-//       actor === 'Grantee'
-//         ? 'Discussion Created by Grantee'
-//         : 'Discussion Created by Open Science Member',
-//     data: {
-//       title: manuscript?.title || '',
-//       manuscriptTeams,
-//       createdBy: `${discussion.message.createdBy.firstName} ${discussion.message.createdBy.lastName}`,
-//       userTeams: getTeamNames(userTeams),
-//       publishedAt: discussion.sys.firstPublishedAt,
-//     },
-//   };
-// };
+const createDiscussionRepliedToReminder = (
+  message: ValidMessageItem,
+  actor: 'Grantee' | 'Open Science Member',
+): DiscussionRepliedToReminder => {
+  const discussion = message.linkedFrom.discussionsCollection.items[0];
 
-// const createDiscussionRepliedToReminder = (
-//   message: ValidMessageItem,
-//   actor: 'Grantee' | 'Open Science Member',
-//   replyType:
-//     | 'compliance-report-discussion-reply'
-//     | 'quick-check-discussion-reply',
-// ): DiscussionRepliedToReminder => {
-//   const discussion = message.linkedFrom.discussionsCollection.items[0];
+  const manuscript = discussion?.linkedFrom?.manuscriptsCollection?.items[0];
+  const manuscriptVersion = manuscript?.versionsCollection?.items[0];
 
-//   const manuscriptVersion =
-//     replyType === 'compliance-report-discussion-reply'
-//       ? discussion?.linkedFrom?.complianceReportsCollection?.items[0]
-//           ?.manuscriptVersion
-//       : discussion?.linkedFrom?.manuscriptVersionsCollection?.items[0];
+  const manuscriptTeams = getTeamNames(
+    manuscriptVersion?.teamsCollection?.items.map(
+      (teams) => teams?.displayName,
+    ),
+  );
+  const userTeams = message.createdBy?.teamsCollection?.items.map(
+    (member) => member?.team?.displayName,
+  );
 
-//   const manuscript =
-//     manuscriptVersion?.linkedFrom?.manuscriptsCollection?.items[0];
-//   const manuscriptTeams = getTeamNames(
-//     manuscriptVersion?.teamsCollection?.items.map(
-//       (teams) => teams?.displayName,
-//     ),
-//   );
-//   const userTeams = message.createdBy?.teamsCollection?.items.map(
-//     (member) => member?.team?.displayName,
-//   );
-
-//   if (replyType === 'compliance-report-discussion-reply') {
-//     return {
-//       id: `discussion-replied-${message.sys.id}`,
-//       entity: 'Discussion',
-//       type:
-//         actor === 'Grantee'
-//           ? 'Compliance Report Discussion Replied To by Grantee'
-//           : 'Compliance Report Discussion Replied To by Open Science Member',
-//       data: {
-//         title: manuscript?.title || '',
-//         manuscriptTeams,
-//         userTeams: getTeamNames(userTeams),
-//         createdBy: `${message.createdBy.firstName} ${message.createdBy.lastName}`,
-//         publishedAt: message.sys.firstPublishedAt,
-//       },
-//     };
-//   }
-//   return {
-//     id: `discussion-replied-${message.sys.id}`,
-//     entity: 'Discussion',
-//     type:
-//       actor === 'Grantee'
-//         ? 'Quick Check Discussion Replied To by Grantee'
-//         : 'Quick Check Discussion Replied To by Open Science Member',
-//     data: {
-//       title: manuscript?.title || '',
-//       manuscriptTeams,
-//       userTeams: getTeamNames(userTeams),
-//       createdBy: `${message.createdBy.firstName} ${message.createdBy.lastName}`,
-//       publishedAt: message.sys.firstPublishedAt,
-//     },
-//   };
-// };
+  return {
+    id: `discussion-replied-${message.sys.id}`,
+    entity: 'Discussion',
+    type:
+      actor === 'Grantee'
+        ? 'Discussion Replied To by Grantee'
+        : 'Discussion Replied To by Open Science Member',
+    data: {
+      title: manuscript?.title || '',
+      manuscriptTeams,
+      userTeams: getTeamNames(userTeams),
+      createdBy: `${message.createdBy.firstName} ${message.createdBy.lastName}`,
+      publishedAt: message.sys.firstPublishedAt,
+    },
+  };
+};
 
 const createManuscriptStatusUpdatedReminder = (
   manuscript: ValidManuscriptItem,

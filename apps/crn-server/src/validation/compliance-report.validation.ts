@@ -20,7 +20,13 @@ const complianceReportPostRequestValidationSchema: JSONSchemaType<ComplianceRepo
       sendNotifications: { type: 'boolean', nullable: true },
       notificationList: { type: 'string', nullable: true },
     },
-    required: ['description', 'url', 'manuscriptVersionId', 'status', 'manuscriptId'],
+    required: [
+      'description',
+      'url',
+      'manuscriptVersionId',
+      'status',
+      'manuscriptId',
+    ],
     additionalProperties: false,
   };
 

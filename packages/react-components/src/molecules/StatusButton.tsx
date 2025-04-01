@@ -13,7 +13,7 @@ import {
   chevronUpIcon,
   chevronDownIcon,
   successIconNew,
-  informationIcon,
+  infoCircleYellowIcon,
 } from '..';
 
 import { perRem, mobileScreen, formTargetWidth } from '../pixels';
@@ -232,9 +232,9 @@ export const iconStyles = (type: string, isComplianceReviewer: boolean) =>
 
 export const statusIcon = (type: StatusType, isComplianceReviewer: boolean) =>
   ({
-    warning: isComplianceReviewer ? informationIcon : '',
+    warning: isComplianceReviewer ? infoCircleYellowIcon : '',
     final: successIconNew,
-    default: isComplianceReviewer ? '' : informationIcon,
+    default: isComplianceReviewer ? '' : infoCircleYellowIcon,
     none: '',
   })[type];
 

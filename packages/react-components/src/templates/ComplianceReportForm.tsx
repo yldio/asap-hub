@@ -209,7 +209,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
             confirmText={confirmButtonText}
             confirmButtonStyle={confirmButtonStyle}
             onSave={
-              complianceReportFormAction === 'confirm'
+              complianceReportFormAction.includes('confirm')
                 ? () => handleSubmit(onSubmit)()
                 : () => history.goBack()
             }

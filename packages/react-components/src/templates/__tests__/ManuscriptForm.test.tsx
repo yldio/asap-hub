@@ -55,7 +55,6 @@ getTeamSuggestions.mockResolvedValue([
 ]);
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
-  manuscriptId: 'manuscript-id',
   onCreate: jest.fn(() => Promise.resolve()),
   onUpdate: jest.fn(() => Promise.resolve()),
   onResubmit: jest.fn(() => Promise.resolve()),

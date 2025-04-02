@@ -13,7 +13,9 @@ export default class ComplianceReportController {
 
   async fetchById(
     complianceReportId: string,
-  ): Promise<ComplianceReportResponse> {
+  ): Promise<
+    Omit<ComplianceReportResponse['complianceReport'], 'manuscriptId'>
+  > {
     const complianceReport =
       await this.complianceReportDataProvider.fetchById(complianceReportId);
 
@@ -29,7 +31,9 @@ export default class ComplianceReportController {
 
   async create(
     complianceReportCreateData: ComplianceReportCreateDataObject,
-  ): Promise<ComplianceReportResponse> {
+  ): Promise<
+    Omit<ComplianceReportResponse['complianceReport'], 'manuscriptId'>
+  > {
     const complianceReportId = await this.complianceReportDataProvider.create(
       complianceReportCreateData,
     );

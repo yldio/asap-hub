@@ -4,7 +4,10 @@ import { AuthHandler } from '@asap-hub/server-common';
 import supertest from 'supertest';
 
 import { appFactory } from '../../src/app';
-import { getComplianceReportCreateDataObject } from '../fixtures/compliance-reports.fixtures';
+import {
+  getComplianceReportCreateDataObject,
+  getComplianceReportDataObject,
+} from '../fixtures/compliance-reports.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
 import { complianceReportControllerMock } from '../mocks/compliance-report.controller.mock';
 import { manuscriptControllerMock } from '../mocks/manuscript.controller.mock';
@@ -72,7 +75,10 @@ describe('/compliance-reports/ route', () => {
         role: 'Staff',
       } as UserResponse;
 
-      const mockComplianceReport: ComplianceReportResponse = {
+      const mockComplianceReport: Omit<
+        ComplianceReportResponse['complianceReport'],
+        'manuscriptId'
+      > = {
         id: complianceReportId,
         url: 'https://example.com',
         description: 'Test description',
@@ -140,9 +146,8 @@ describe('/compliance-reports/ route', () => {
         user.id,
       );
 
-      expect(response.body).toEqual(mockComplianceReport);
       expect(response.body).toEqual({
-        complianceReport: complianceReportId,
+        complianceReport: mockComplianceReport,
         status: 'Review Compliance Report',
       });
     });
@@ -156,7 +161,7 @@ describe('/compliance-reports/ route', () => {
       userMockFactory.mockReturnValueOnce(user);
 
       complianceReportControllerMock.create.mockResolvedValueOnce(
-        'compliance-report-id',
+        getComplianceReportDataObject(),
       );
 
       manuscriptControllerMock.fetchById.mockResolvedValueOnce({

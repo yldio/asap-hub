@@ -12,7 +12,7 @@ import {
 import { isInternalUser } from '@asap-hub/validation';
 import { Stringifier } from 'csv-stringify/browser/esm';
 
-export const MAX_ALGOLIA_RESULTS = 10000;
+export const MAX_ALGOLIA_RESULTS = 1000;
 // Max Complexity 11000. Research Outputs are the most complex entity. 554 11000/554 = 19.8. 15 seems safe.
 export const MAX_CONTENTFUL_RESULTS = 15;
 

@@ -1129,14 +1129,29 @@ const isValidManuscriptItem = (
 const isValidDiscussionItem = (
   discussion: DiscussionItem,
 ): discussion is ValidDiscussionItem =>
-  !!discussion.message && !!discussion.message.createdBy;
+  !!discussion.message &&
+  !!discussion.message.createdBy &&
+  !!discussion.linkedFrom?.manuscriptsCollection?.items &&
+  discussion.linkedFrom.manuscriptsCollection.items.length > 0 &&
+  !!discussion.linkedFrom.manuscriptsCollection.items[0]?.versionsCollection
+    ?.items &&
+  discussion.linkedFrom.manuscriptsCollection.items[0].versionsCollection.items
+    .length > 0;
 
 const isValidMessageItem = (
   message: MessageItem,
 ): message is ValidMessageItem =>
   !!message.createdBy &&
   !!message.linkedFrom?.discussionsCollection?.items &&
-  message.linkedFrom.discussionsCollection.items.length > 0;
+  message.linkedFrom.discussionsCollection.items.length > 0 &&
+  !!message.linkedFrom.discussionsCollection.items[0]?.linkedFrom
+    ?.manuscriptsCollection?.items &&
+  message.linkedFrom.discussionsCollection.items[0].linkedFrom
+    .manuscriptsCollection.items.length > 0 &&
+  !!message.linkedFrom.discussionsCollection.items[0].linkedFrom
+    .manuscriptsCollection.items[0]?.versionsCollection?.items &&
+  message.linkedFrom.discussionsCollection.items[0].linkedFrom
+    .manuscriptsCollection.items[0].versionsCollection.items.length > 0;
 
 const getManuscriptRemindersFromQuery = (
   manuscriptsCollectionItems: ManuscriptItem[],

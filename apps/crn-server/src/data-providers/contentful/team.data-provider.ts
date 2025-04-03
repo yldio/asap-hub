@@ -346,24 +346,39 @@ export const parseContentfulGraphQlTeam = (
     };
   };
 
+  const sortManuscripts = (manuscripts: ManuscriptItem[]) => {
+    const STATUS_PRIORITY: Record<'Compliant' | 'Closed (other)', number> = {
+      Compliant: 1,
+      'Closed (other)': 2,
+    };
+
+    return [...manuscripts].sort((a, b) => {
+      const aPriority =
+        STATUS_PRIORITY[a.status as keyof typeof STATUS_PRIORITY] ?? 0;
+      const bPriority =
+        STATUS_PRIORITY[b.status as keyof typeof STATUS_PRIORITY] ?? 0;
+      return aPriority - bPriority;
+    });
+  };
+
   const parseManuscripts = () => {
     const manuscripts = cleanArray(
       item.linkedFrom?.manuscriptsCollection?.items,
     );
 
+    const teamManuscripts = manuscripts.filter(
+      (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id === teamId,
+    );
+
+    const collaborationManuscripts = manuscripts.filter(
+      (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id !== teamId,
+    );
+
     return {
-      manuscripts: manuscripts
-        .filter(
-          (manuscript) =>
-            manuscript.teamsCollection?.items[0]?.sys.id === teamId,
-        )
-        .map(mapManuscripts),
-      collaborationManuscripts: manuscripts
-        .filter(
-          (manuscript) =>
-            manuscript.teamsCollection?.items[0]?.sys.id !== teamId,
-        )
-        .map(mapManuscripts),
+      manuscripts: sortManuscripts(teamManuscripts).map(mapManuscripts),
+      collaborationManuscripts: sortManuscripts(collaborationManuscripts).map(
+        mapManuscripts,
+      ),
     };
   };
 

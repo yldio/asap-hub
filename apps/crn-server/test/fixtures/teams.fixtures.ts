@@ -242,10 +242,9 @@ export const getTeamDataObject = (): TeamDataObject => ({
   ],
   manuscripts: [
     {
-      id: 'manuscript-id-1',
-      count: 1,
-      title: 'Manuscript 1',
-      status: 'Compliant',
+      id: 'manuscript-id-2',
+      count: 2,
+      title: 'Manuscript 2',
       teamId: 'WH1',
       grantId: '000282',
       versions: [
@@ -283,9 +282,10 @@ export const getTeamDataObject = (): TeamDataObject => ({
       ],
     },
     {
-      id: 'manuscript-id-2',
-      count: 2,
-      title: 'Manuscript 2',
+      id: 'manuscript-id-1',
+      count: 1,
+      title: 'Manuscript 1',
+      status: 'Compliant',
       teamId: 'WH1',
       grantId: '000282',
       versions: [
@@ -327,6 +327,50 @@ export const getTeamDataObject = (): TeamDataObject => ({
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
   tools: [],
+});
+
+export const getUnsortedManuscripts = (teamId: string) => ({
+  // Keep this order for testing => should sort manuscripts so that Compliant and Closed (other) are last
+  manuscriptsCollection: {
+    items: [
+      {
+        sys: { id: '1' },
+        title: 'First Manuscript',
+        status: 'Waiting for Report',
+        teamsCollection: {
+          items: [{ sys: { id: teamId }, teamId, grantId: 'g1' }],
+        },
+        versionsCollection: { items: [] },
+      },
+      {
+        sys: { id: '2' },
+        title: 'Second Manuscript',
+        status: 'Compliant',
+        teamsCollection: {
+          items: [{ sys: { id: teamId }, teamId, grantId: 'g1' }],
+        },
+        versionsCollection: { items: [] },
+      },
+      {
+        sys: { id: '3' },
+        title: 'Third Manuscript',
+        status: 'Closed (other)',
+        teamsCollection: {
+          items: [{ sys: { id: teamId }, teamId, grantId: 'g1' }],
+        },
+        versionsCollection: { items: [] },
+      },
+      {
+        sys: { id: '4' },
+        title: 'Fourth Manuscript',
+        status: 'Submit Final Publication',
+        teamsCollection: {
+          items: [{ sys: { id: teamId }, teamId, grantId: 'g1' }],
+        },
+        versionsCollection: { items: [] },
+      },
+    ],
+  },
 });
 
 export const getTeamListItemDataObject = (): TeamListItemDataObject => ({

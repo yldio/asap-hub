@@ -14,7 +14,7 @@ import {
   useRecoilValue,
 } from 'recoil';
 import { authorizationState } from '../../../auth/state';
-import { updateDiscussion } from '../api';
+import { getManuscript, updateDiscussion } from '../api';
 import * as stateModule from '../state';
 import {
   patchedTeamState,
@@ -31,6 +31,7 @@ const mockSetDiscussion = jest.fn();
 
 jest.mock('../api', () => ({
   updateDiscussion: jest.fn(),
+  getManuscript: jest.fn(),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
   getPresignedUrl: jest.fn(),
 }));
@@ -423,6 +424,8 @@ describe('useReplyToDiscussion', () => {
       manuscript: mockUpdatedManuscript,
     });
 
+    (getManuscript as jest.Mock).mockResolvedValue(mockUpdatedManuscript);
+
     const initialState = ({ set }: MutableSnapshot) => {
       set(teamState(teamId), mockTeam as TeamDataObject);
     };
@@ -438,7 +441,7 @@ describe('useReplyToDiscussion', () => {
     const patch = { text: 'Reply message' };
 
     await act(async () => {
-      await result.current(discussionId, patch);
+      await result.current(manuscriptId, discussionId, patch);
     });
 
     expect(updateDiscussion).toHaveBeenCalledWith(
@@ -478,7 +481,7 @@ describe('useReplyToDiscussion', () => {
     const patch = { text: 'Reply message' };
 
     await act(async () => {
-      await result.current(discussionId, patch);
+      await result.current(manuscriptId, discussionId, patch);
     });
 
     const { result: stateResult } = renderHook(
@@ -521,7 +524,7 @@ describe('useReplyToDiscussion', () => {
     const patch = { text: 'Reply message' };
 
     await act(async () => {
-      await result.current(discussionId, patch);
+      await result.current(manuscriptId, discussionId, patch);
     });
 
     const { result: stateResult } = renderHook(
@@ -557,7 +560,7 @@ describe('useReplyToDiscussion', () => {
     const patch = { text: 'Reply message' };
 
     await act(async () => {
-      await result.current(discussionId, patch);
+      await result.current(manuscriptId, discussionId, patch);
     });
 
     const { result: stateResult } = renderHook(
@@ -588,7 +591,7 @@ describe('useReplyToDiscussion', () => {
 
     await expect(
       act(async () => {
-        await result.current(discussionId, patch);
+        await result.current(manuscriptId, discussionId, patch);
       }),
     ).rejects.toThrow();
 

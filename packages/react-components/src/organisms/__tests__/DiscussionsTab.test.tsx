@@ -6,13 +6,18 @@ import {
   waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
 import DiscussionsTab from '../DiscussionsTab';
 
 describe('DiscussionsTab', () => {
   const mockCreateDiscussion = jest.fn();
-  const defaultProps = {
+  const defaultProps: ComponentProps<typeof DiscussionsTab> = {
     manuscriptId: 'test-manuscript-id',
     createDiscussion: mockCreateDiscussion,
+    discussions: [],
+    onReplyToDiscussion: jest.fn(),
+    canParticipateInDiscussion: true,
+    isActiveManuscript: true,
   };
 
   beforeEach(() => {
@@ -63,5 +68,105 @@ describe('DiscussionsTab', () => {
         'Test Message',
       );
     });
+  });
+
+  it('shows "Show more" button when there are more than 5 discussions', () => {
+    const discussions = Array.from({ length: 6 }, (_, i) => ({
+      id: `discussion-${i}`,
+      title: `Discussion ${i}`,
+      text: `Text ${i}`,
+      createdBy: {
+        id: 'user-1',
+        displayName: 'User 1',
+        firstName: 'User',
+        lastName: 'One',
+        avatarUrl: '',
+        alumniSinceDate: undefined,
+        teams: [{ id: 'team-1', name: 'Team 1' }],
+      },
+      createdAt: new Date().toISOString(),
+      createdDate: new Date().toISOString(),
+      lastUpdatedAt: new Date().toISOString(),
+      replies: [],
+    }));
+
+    render(<DiscussionsTab {...defaultProps} discussions={discussions} />);
+    expect(screen.getByText('Show more')).toBeInTheDocument();
+  });
+
+  it('shows all discussions when clicking "Show more"', async () => {
+    const discussions = Array.from({ length: 6 }, (_, i) => ({
+      id: `discussion-${i}`,
+      title: `Discussion ${i}`,
+      text: `Text ${i}`,
+      createdBy: {
+        id: 'user-1',
+        displayName: 'User 1',
+        firstName: 'User',
+        lastName: 'One',
+        avatarUrl: '',
+        alumniSinceDate: undefined,
+        teams: [{ id: 'team-1', name: 'Team 1' }],
+      },
+      createdAt: new Date().toISOString(),
+      createdDate: new Date().toISOString(),
+      lastUpdatedAt: new Date().toISOString(),
+      replies: [],
+    }));
+
+    render(<DiscussionsTab {...defaultProps} discussions={discussions} />);
+    userEvent.click(screen.getByText('Show more'));
+
+    discussions.forEach((discussion) => {
+      expect(screen.getByText(discussion.title)).toBeInTheDocument();
+    });
+  });
+
+  it('does not show "Show more" button when there are exactly 5 discussions', () => {
+    const discussions = Array.from({ length: 5 }, (_, i) => ({
+      id: `discussion-${i}`,
+      title: `Discussion ${i}`,
+      text: `Text ${i}`,
+      createdBy: {
+        id: 'user-1',
+        displayName: 'User 1',
+        firstName: 'User',
+        lastName: 'One',
+        avatarUrl: '',
+        alumniSinceDate: undefined,
+        teams: [{ id: 'team-1', name: 'Team 1' }],
+      },
+      createdAt: new Date().toISOString(),
+      createdDate: new Date().toISOString(),
+      lastUpdatedAt: new Date().toISOString(),
+      replies: [],
+    }));
+
+    render(<DiscussionsTab {...defaultProps} discussions={discussions} />);
+    expect(screen.queryByText('Show more')).not.toBeInTheDocument();
+  });
+
+  it('shows message when user cannot participate in discussions', () => {
+    render(
+      <DiscussionsTab {...defaultProps} canParticipateInDiscussion={false} />,
+    );
+    expect(
+      screen.getByText('Only authorized users can participate in Discussions.'),
+    ).toBeInTheDocument();
+  });
+
+  it('shows message when manuscript is not active', () => {
+    render(<DiscussionsTab {...defaultProps} isActiveManuscript={false} />);
+    expect(
+      screen.getByText(
+        'Discussions for this manuscript have ended as it is either compliant or closed.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('renders empty state when there are no discussions', () => {
+    render(<DiscussionsTab {...defaultProps} discussions={[]} />);
+    expect(screen.getByText('Start Discussion')).toBeInTheDocument();
+    expect(screen.queryByText('Show more')).not.toBeInTheDocument();
   });
 });

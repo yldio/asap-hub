@@ -1,19 +1,21 @@
 import { UserResponse } from './user';
 
+type DiscussionUser = Pick<
+  UserResponse,
+  | 'id'
+  | 'firstName'
+  | 'lastName'
+  | 'displayName'
+  | 'avatarUrl'
+  | 'alumniSinceDate'
+> & {
+  teams: { id: string; name: string }[];
+};
+
 export type Message = {
   text: string;
   createdDate: string;
-  createdBy: Pick<
-    UserResponse,
-    | 'id'
-    | 'firstName'
-    | 'lastName'
-    | 'displayName'
-    | 'avatarUrl'
-    | 'alumniSinceDate'
-  > & {
-    teams: { id: string; name: string }[];
-  };
+  createdBy: DiscussionUser;
 };
 
 export type DiscussionDataObject = {
@@ -55,3 +57,13 @@ export type DiscussionCreateDataObject = DiscussionCreateRequest & {
 };
 
 export type DiscussionResponse = DiscussionDataObject;
+
+export type ManuscriptDiscussion = {
+  id: string;
+  title: string;
+  createdBy: DiscussionUser;
+  createdDate: string;
+  lastUpdatedAt: string;
+  text: string;
+  replies: Message[];
+};

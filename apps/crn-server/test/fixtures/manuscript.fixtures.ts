@@ -8,6 +8,7 @@ import {
   ManuscriptCreateControllerDataObject,
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
+  ManuscriptDiscussion,
   ManuscriptFileResponse,
   ManuscriptPostRequest,
   ManuscriptResponse,
@@ -22,6 +23,7 @@ export const getManuscriptDataObject = (
   title: 'Manuscript Title',
   teamId: 'team-1',
   count: 1,
+  discussions: [],
   assignedUsers: [
     {
       id: 'user-id-1',
@@ -253,6 +255,122 @@ export const getContentfulGraphqlManuscriptsCollection = (
       },
     },
   ],
+});
+
+export const getManuscriptDiscussions = (): ManuscriptDiscussion => ({
+  id: 'discussion-id-1',
+  title: 'Where does Lorem Ipsum come from?',
+  text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
+  lastUpdatedAt: '2025-04-01T15:00:00.000Z',
+  createdDate: '2025-03-31T10:00:00.000Z',
+  createdBy: {
+    alumniSinceDate: undefined,
+    avatarUrl: undefined,
+    displayName: 'John Doe',
+    firstName: 'John',
+    id: 'user-id-1',
+    lastName: 'Doe',
+    teams: [
+      {
+        id: 'team-id-1',
+        name: 'Team 1',
+      },
+    ],
+  },
+  replies: [
+    {
+      createdBy: {
+        alumniSinceDate: undefined,
+        avatarUrl: undefined,
+        displayName: 'Jane (Jenny) Doe',
+        firstName: 'Jane',
+        id: 'user-id-2',
+        lastName: 'Doe',
+        teams: [
+          {
+            id: 'team-asap',
+            name: 'ASAP',
+          },
+        ],
+      },
+      createdDate: '2025-04-01T15:00:00.000Z',
+      text: 'A new comment',
+    },
+  ],
+});
+
+export const getContentfulGraphqlManuscriptDiscussion = (): NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<FetchManuscriptByIdQuery>['manuscripts']
+    >['discussionsCollection']
+  >['items'][number]
+> => ({
+  sys: {
+    id: 'discussion-id-1',
+    publishedVersion: 3,
+  },
+  title: 'Where does Lorem Ipsum come from?',
+  message: {
+    sys: {
+      publishedAt: '2025-03-31T10:00:00.000Z',
+    },
+    text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
+    createdBy: {
+      sys: {
+        id: 'user-id-1',
+      },
+      firstName: 'John',
+      nickname: null,
+      lastName: 'Doe',
+      alumniSinceDate: null,
+      avatar: null,
+      teamsCollection: {
+        items: [
+          {
+            team: {
+              sys: {
+                id: 'team-id-1',
+              },
+              displayName: 'Team 1',
+            },
+          },
+        ],
+      },
+    },
+  },
+  repliesCollection: {
+    items: [
+      {
+        sys: {
+          publishedAt: '2025-04-01T15:00:00.000Z',
+        },
+        text: 'A new comment',
+        createdBy: {
+          sys: {
+            id: 'user-id-2',
+          },
+          firstName: 'Jane',
+          nickname: 'Jenny',
+          lastName: 'Doe',
+          alumniSinceDate: null,
+          avatar: null,
+          teamsCollection: {
+            items: [
+              {
+                team: {
+                  sys: {
+                    id: 'team-asap',
+                  },
+                  displayName: 'ASAP',
+                },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
 });
 
 export const getManuscriptsListResponse =

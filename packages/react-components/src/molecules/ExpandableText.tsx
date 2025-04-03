@@ -57,7 +57,25 @@ const expandedButtonIcon = css({
   },
 });
 
-const ExpandableText: React.FC = ({ children }) => {
+const chevronVariantButtonStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: rem(4),
+  height: rem(24),
+  textDecoration: 'none',
+  ':hover': {
+    textDecoration: 'none',
+  },
+});
+
+const arrowIconStyles = css({
+  alignSelf: 'start',
+});
+
+const ExpandableText: React.FC<{ variant?: 'chevron' | 'arrow' }> = ({
+  variant = 'chevron',
+  children,
+}) => {
   const [expanded, setExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const textElement = React.useRef<HTMLParagraphElement>(null);
@@ -80,12 +98,25 @@ const ExpandableText: React.FC = ({ children }) => {
       </div>
       {showToggle && (
         <div css={buttonContainerStyles}>
-          <Button linkStyle onClick={() => setExpanded(!expanded)}>
-            Show {expanded ? 'less' : 'more'}
-            <span css={[expandableButtonIcon, expanded && expandedButtonIcon]}>
-              {chevronCircleDownIcon}
-            </span>
-          </Button>
+          {variant === 'chevron' ? (
+            <Button linkStyle onClick={() => setExpanded(!expanded)}>
+              Show {expanded ? 'less' : 'more'}
+              <span
+                css={[expandableButtonIcon, expanded && expandedButtonIcon]}
+              >
+                {chevronCircleDownIcon}
+              </span>
+            </Button>
+          ) : (
+            <Button
+              linkStyle
+              onClick={() => setExpanded(!expanded)}
+              overrideStyles={chevronVariantButtonStyles}
+            >
+              Show {expanded ? 'less' : 'more'}{' '}
+              <span css={arrowIconStyles}>{expanded ? '↑' : '↓'}</span>
+            </Button>
+          )}
         </div>
       )}
     </div>

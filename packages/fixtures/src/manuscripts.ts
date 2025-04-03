@@ -29,6 +29,7 @@ export const createManuscriptResponse = (
   status: 'Waiting for Report',
   count: 1,
   assignedUsers: [],
+  discussions: [],
   versions: [
     {
       id: 'version-1',

@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { FC } from 'react';
 
 import { UserCommentHeader } from '.';
+import { colors } from '..';
 import { TextEditor } from '../atoms';
 import { rem } from '../pixels';
 
@@ -13,13 +14,18 @@ const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(8),
-  marginTop: rem(6),
 });
 
 const replyStyles = css({
   'div > p': { marginTop: 0 },
 });
 
+const textEditorStyles = css({
+  fontSize: rem(17),
+  fontWeight: 400,
+  lineHeight: rem(24),
+  color: colors.neutral900.rgb,
+});
 const getUserHref = (id: string) =>
   network({}).users({}).user({ userId: id }).$;
 const getTeams = (teams: Message['createdBy']['teams']) =>
@@ -46,6 +52,7 @@ const UserComment: FC<UserCommentProps> = ({
         value={text}
         enabled={false}
         isMarkdown
+        editorStyles={textEditorStyles}
       />
     </div>
   </div>

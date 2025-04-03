@@ -5937,6 +5937,7 @@ export type PagesTextResourcesInline = ResourceLink & {
 
 export type Query = {
   _node?: Maybe<_Node>;
+  _nodes: Array<Maybe<_Node>>;
   announcements?: Maybe<Announcements>;
   announcementsCollection?: Maybe<AnnouncementsCollection>;
   asset?: Maybe<Asset>;
@@ -6020,6 +6021,12 @@ export type Query = {
 
 export type Query_NodeArgs = {
   id: Scalars['ID'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type Query_NodesArgs = {
+  ids: Array<Scalars['ID']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
 };
@@ -14661,7 +14668,7 @@ export type FetchDiscoverQuery = {
   }>;
 };
 
-export type DiscussionsContentFragment = {
+export type DiscussionsContentFragment = Pick<Discussions, 'title'> & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
   message?: Maybe<
     Pick<Messages, 'text'> & {
@@ -14717,63 +14724,64 @@ export type DiscussionsContentFragment = {
 
 export type FetchDiscussionByIdQueryVariables = Exact<{
   id: Scalars['String'];
-  fetchReplies?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchDiscussionByIdQuery = {
-  discussions?: Maybe<{
-    sys: Pick<Sys, 'id' | 'publishedVersion'>;
-    message?: Maybe<
-      Pick<Messages, 'text'> & {
-        sys: Pick<Sys, 'publishedAt'>;
-        createdBy?: Maybe<
-          Pick<
-            Users,
-            'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-          > & {
-            sys: Pick<Sys, 'id'>;
-            avatar?: Maybe<Pick<Asset, 'url'>>;
-            teamsCollection?: Maybe<{
-              items: Array<
-                Maybe<{
-                  team?: Maybe<
-                    Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
-                  >;
-                }>
-              >;
-            }>;
-          }
-        >;
-      }
-    >;
-    repliesCollection?: Maybe<{
-      items: Array<
-        Maybe<
-          Pick<Messages, 'text'> & {
-            sys: Pick<Sys, 'publishedAt'>;
-            createdBy?: Maybe<
-              Pick<
-                Users,
-                'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
-              > & {
-                sys: Pick<Sys, 'id'>;
-                avatar?: Maybe<Pick<Asset, 'url'>>;
-                teamsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<{
-                      team?: Maybe<
-                        Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
-                      >;
-                    }>
-                  >;
-                }>;
-              }
-            >;
-          }
-        >
+  discussions?: Maybe<
+    Pick<Discussions, 'title'> & {
+      sys: Pick<Sys, 'id' | 'publishedVersion'>;
+      message?: Maybe<
+        Pick<Messages, 'text'> & {
+          sys: Pick<Sys, 'publishedAt'>;
+          createdBy?: Maybe<
+            Pick<
+              Users,
+              'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+            > & {
+              sys: Pick<Sys, 'id'>;
+              avatar?: Maybe<Pick<Asset, 'url'>>;
+              teamsCollection?: Maybe<{
+                items: Array<
+                  Maybe<{
+                    team?: Maybe<
+                      Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                    >;
+                  }>
+                >;
+              }>;
+            }
+          >;
+        }
       >;
-    }>;
-  }>;
+      repliesCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<Messages, 'text'> & {
+              sys: Pick<Sys, 'publishedAt'>;
+              createdBy?: Maybe<
+                Pick<
+                  Users,
+                  'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                > & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                  teamsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<{
+                        team?: Maybe<
+                          Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                        >;
+                      }>
+                    >;
+                  }>;
+                }
+              >;
+            }
+          >
+        >;
+      }>;
+    }
+  >;
 };
 
 export type EventsContentFragment = Pick<
@@ -18290,6 +18298,74 @@ export type ManuscriptsContentFragment = Pick<
   'title' | 'status' | 'count'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
+  discussionsCollection?: Maybe<
+    Pick<ManuscriptsDiscussionsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<Discussions, 'title'> & {
+            sys: Pick<Sys, 'id' | 'publishedVersion'>;
+            message?: Maybe<
+              Pick<Messages, 'text'> & {
+                sys: Pick<Sys, 'publishedAt'>;
+                createdBy?: Maybe<
+                  Pick<
+                    Users,
+                    'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                    teamsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<{
+                          team?: Maybe<
+                            Pick<Teams, 'displayName'> & {
+                              sys: Pick<Sys, 'id'>;
+                            }
+                          >;
+                        }>
+                      >;
+                    }>;
+                  }
+                >;
+              }
+            >;
+            repliesCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<Messages, 'text'> & {
+                    sys: Pick<Sys, 'publishedAt'>;
+                    createdBy?: Maybe<
+                      Pick<
+                        Users,
+                        | 'firstName'
+                        | 'nickname'
+                        | 'lastName'
+                        | 'alumniSinceDate'
+                      > & {
+                        sys: Pick<Sys, 'id'>;
+                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                        teamsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<{
+                              team?: Maybe<
+                                Pick<Teams, 'displayName'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >;
+                            }>
+                          >;
+                        }>;
+                      }
+                    >;
+                  }
+                >
+              >;
+            }>;
+          }
+        >
+      >;
+    }
+  >;
   assignedUsersCollection?: Maybe<{
     items: Array<
       Maybe<
@@ -18503,6 +18579,77 @@ export type FetchManuscriptByIdQuery = {
         >;
       }>;
       sys: Pick<Sys, 'id' | 'publishedVersion'>;
+      discussionsCollection?: Maybe<
+        Pick<ManuscriptsDiscussionsCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<Discussions, 'title'> & {
+                sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                message?: Maybe<
+                  Pick<Messages, 'text'> & {
+                    sys: Pick<Sys, 'publishedAt'>;
+                    createdBy?: Maybe<
+                      Pick<
+                        Users,
+                        | 'firstName'
+                        | 'nickname'
+                        | 'lastName'
+                        | 'alumniSinceDate'
+                      > & {
+                        sys: Pick<Sys, 'id'>;
+                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                        teamsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<{
+                              team?: Maybe<
+                                Pick<Teams, 'displayName'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >;
+                            }>
+                          >;
+                        }>;
+                      }
+                    >;
+                  }
+                >;
+                repliesCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<Messages, 'text'> & {
+                        sys: Pick<Sys, 'publishedAt'>;
+                        createdBy?: Maybe<
+                          Pick<
+                            Users,
+                            | 'firstName'
+                            | 'nickname'
+                            | 'lastName'
+                            | 'alumniSinceDate'
+                          > & {
+                            sys: Pick<Sys, 'id'>;
+                            avatar?: Maybe<Pick<Asset, 'url'>>;
+                            teamsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<{
+                                  team?: Maybe<
+                                    Pick<Teams, 'displayName'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >;
+                                }>
+                              >;
+                            }>;
+                          }
+                        >;
+                      }
+                    >
+                  >;
+                }>;
+              }
+            >
+          >;
+        }
+      >;
       assignedUsersCollection?: Maybe<{
         items: Array<
           Maybe<
@@ -20642,6 +20789,77 @@ export type FetchTeamByIdQuery = {
                   >;
                 }>;
                 sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                discussionsCollection?: Maybe<
+                  Pick<ManuscriptsDiscussionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<Discussions, 'title'> & {
+                          sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                          message?: Maybe<
+                            Pick<Messages, 'text'> & {
+                              sys: Pick<Sys, 'publishedAt'>;
+                              createdBy?: Maybe<
+                                Pick<
+                                  Users,
+                                  | 'firstName'
+                                  | 'nickname'
+                                  | 'lastName'
+                                  | 'alumniSinceDate'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                  teamsCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<{
+                                        team?: Maybe<
+                                          Pick<Teams, 'displayName'> & {
+                                            sys: Pick<Sys, 'id'>;
+                                          }
+                                        >;
+                                      }>
+                                    >;
+                                  }>;
+                                }
+                              >;
+                            }
+                          >;
+                          repliesCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<Messages, 'text'> & {
+                                  sys: Pick<Sys, 'publishedAt'>;
+                                  createdBy?: Maybe<
+                                    Pick<
+                                      Users,
+                                      | 'firstName'
+                                      | 'nickname'
+                                      | 'lastName'
+                                      | 'alumniSinceDate'
+                                    > & {
+                                      sys: Pick<Sys, 'id'>;
+                                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                                      teamsCollection?: Maybe<{
+                                        items: Array<
+                                          Maybe<{
+                                            team?: Maybe<
+                                              Pick<Teams, 'displayName'> & {
+                                                sys: Pick<Sys, 'id'>;
+                                              }
+                                            >;
+                                          }>
+                                        >;
+                                      }>;
+                                    }
+                                  >;
+                                }
+                              >
+                            >;
+                          }>;
+                        }
+                      >
+                    >;
+                  }
+                >;
                 assignedUsersCollection?: Maybe<{
                   items: Array<
                     Maybe<
@@ -22962,335 +23180,6 @@ export const PartialUsersContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PartialUsersContentFragment, unknown>;
-export const DiscussionsContentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'DiscussionsContent' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Discussions' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'sys' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'publishedVersion' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'message' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'sys' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'publishedAt' },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'createdBy' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'firstName' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'nickname' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastName' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'alumniSinceDate' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'avatar' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'teamsCollection' },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '3' },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'team' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'sys' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'id',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'displayName',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'repliesCollection' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '10' },
-              },
-            ],
-            directives: [
-              {
-                kind: 'Directive',
-                name: { kind: 'Name', value: 'include' },
-                arguments: [
-                  {
-                    kind: 'Argument',
-                    name: { kind: 'Name', value: 'if' },
-                    value: {
-                      kind: 'Variable',
-                      name: { kind: 'Name', value: 'fetchReplies' },
-                    },
-                  },
-                ],
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'publishedAt' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'text' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'createdBy' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'nickname' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'alumniSinceDate' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'avatar' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'url' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'teamsCollection' },
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '2' },
-                                },
-                              ],
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'items' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'team' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'sys',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'id',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'displayName',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<DiscussionsContentFragment, unknown>;
 export const EventsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -24801,6 +24690,320 @@ export const InterestGroupsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<InterestGroupsContentFragment, unknown>;
+export const DiscussionsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'DiscussionsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Discussions' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'message' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publishedAt' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdBy' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'firstName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'nickname' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'alumniSinceDate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avatar' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teamsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '3' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'team' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'displayName',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'repliesCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'publishedAt' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'alumniSinceDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teamsCollection' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '2' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'team' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'displayName',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DiscussionsContentFragment, unknown>;
 export const ManuscriptsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -24831,6 +25034,36 @@ export const ManuscriptsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discussionsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'DiscussionsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'assignedUsersCollection' },
@@ -26195,6 +26428,7 @@ export const ManuscriptsContentFragmentDoc = {
         ],
       },
     },
+    ...DiscussionsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<ManuscriptsContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
@@ -33152,15 +33386,6 @@ export const FetchDiscussionByIdDocument = {
               name: { kind: 'Name', value: 'String' },
             },
           },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'fetchReplies' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: true },
         },
       ],
       selectionSet: {

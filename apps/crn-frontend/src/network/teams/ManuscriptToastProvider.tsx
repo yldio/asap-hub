@@ -7,8 +7,8 @@ type FormType =
   | 'server-validation-error'
   | 'default-error'
   | 'compliance-report'
-  | 'quick-check'
-  | 'compliance-report-discussion'
+  | 'reply-to-discussion'
+  | 'discussion-started'
   | '';
 
 type ManuscriptToastType = {
@@ -43,8 +43,8 @@ export const ManuscriptToastProvider = ({
       'There are some errors in the form. Please correct the fields below.',
     'default-error': 'An error has occurred. Please try again later.',
     'compliance-report': 'Compliance Report submitted successfully.',
-    'quick-check': 'Replied to quick check successfully.',
-    'compliance-report-discussion': 'Discussion started successfully.',
+    'reply-to-discussion': 'Replied to discussion successfully.',
+    'discussion-started': 'Discussion started successfully.',
   };
 
   return (

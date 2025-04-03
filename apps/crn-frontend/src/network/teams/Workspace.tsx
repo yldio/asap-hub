@@ -5,7 +5,12 @@ import {
   TeamProfileWorkspace,
   ToolModal,
 } from '@asap-hub/react-components';
-import { TeamTool, TeamResponse, ManuscriptPutRequest } from '@asap-hub/model';
+import {
+  TeamTool,
+  TeamResponse,
+  ManuscriptPutRequest,
+  DiscussionRequest,
+} from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext, useCurrentUserCRN } from '@asap-hub/react-context';
 
@@ -15,6 +20,7 @@ import {
   useManuscriptById,
   usePatchTeamById,
   usePutManuscript,
+  useReplyToDiscussion,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
@@ -32,12 +38,26 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const patchTeam = usePatchTeamById(team.id);
   const updateManuscript = usePutManuscript();
   const createDiscussion = useCreateDiscussion();
+  const replyToDiscussion = useReplyToDiscussion();
 
   const toast = useContext(ToastContext);
 
   const { setFormType } = useManuscriptToast();
   const user = useCurrentUserCRN();
   const isTeamMember = !!user?.teams.find(({ id }) => team.id === id);
+
+  const handleReplytoDiscussion = async (
+    manuscriptId: string,
+    discussionId: string,
+    patch: DiscussionRequest,
+  ): Promise<void> => {
+    await replyToDiscussion(
+      manuscriptId,
+      discussionId,
+      patch as DiscussionRequest,
+    );
+    setFormType({ type: 'reply-to-discussion', accent: 'successLarge' });
+  };
 
   return (
     <>
@@ -82,12 +102,13 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
               message,
             );
             setFormType({
-              type: 'compliance-report-discussion',
+              type: 'discussion-started',
               accent: 'successLarge',
             });
             return discussionId;
           }}
           useManuscriptById={useManuscriptById}
+          onReplyToDiscussion={handleReplytoDiscussion}
         />
       </Route>
       <Route exact path={path + route.tools.template}>

@@ -45,6 +45,7 @@ const mockGetManuscript = getManuscript as jest.MockedFunction<
 
 beforeEach(() => {
   jest.resetModules();
+  jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
 });
 
 const renderPage = async (

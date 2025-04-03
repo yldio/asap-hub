@@ -346,15 +346,17 @@ export const parseContentfulGraphQlTeam = (
     };
   };
 
-  const sortManuscripts = (manuscripts) => {
-    const STATUS_PRIORITY = {
+  const sortManuscripts = (manuscripts: ManuscriptItem[]) => {
+    const STATUS_PRIORITY: Record<'Compliant' | 'Closed (other)', number> = {
       Compliant: 1,
       'Closed (other)': 2,
     };
 
     return [...manuscripts].sort((a, b) => {
-      const aPriority = STATUS_PRIORITY[a.status] || 0;
-      const bPriority = STATUS_PRIORITY[b.status] || 0;
+      const aPriority =
+        STATUS_PRIORITY[a.status as keyof typeof STATUS_PRIORITY] ?? 0;
+      const bPriority =
+        STATUS_PRIORITY[b.status as keyof typeof STATUS_PRIORITY] ?? 0;
       return aPriority - bPriority;
     });
   };

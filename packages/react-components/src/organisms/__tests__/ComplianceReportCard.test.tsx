@@ -15,11 +15,9 @@ const props: ComponentProps<typeof ComplianceReportCard> = {
     displayName: 'Test User',
     id: 'test-user-id',
   },
-  versionId: 'version-id',
-  manuscriptId: 'manuscript-id',
 };
 
-it('displays compliance report description, url and creation details when expanded', () => {
+it('displays compliance report description and url when expanded', () => {
   jest.spyOn(console, 'error').mockImplementation();
   const { getByText, queryByText, getByRole, rerender } = render(
     <ComplianceReportCard {...props} />,
@@ -28,8 +26,6 @@ it('displays compliance report description, url and creation details when expand
   expect(queryByText(/compliance report description/i)).not.toBeInTheDocument();
   expect(queryByText(/View Report/i)).not.toBeInTheDocument();
   expect(queryByText(/example.com/i)).not.toBeInTheDocument();
-  expect(queryByText('10th December 2024')).not.toBeInTheDocument();
-  expect(queryByText('Test User')).not.toBeInTheDocument();
 
   userEvent.click(getByRole('button'));
 
@@ -39,9 +35,5 @@ it('displays compliance report description, url and creation details when expand
   expect(getByText(/View Report/i)).toBeVisible();
   expect(getByText(/View Report/i).closest('a')?.href).toBe(
     'http://example.com/',
-  );
-  expect(getByText('10th December 2024')).toBeVisible();
-  expect(getByText('Test User').closest('a')!.href!).toContain(
-    '/network/users/test-user-id',
   );
 });

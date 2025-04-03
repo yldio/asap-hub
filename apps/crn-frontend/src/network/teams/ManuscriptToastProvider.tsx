@@ -9,8 +9,6 @@ type FormType =
   | 'compliance-report'
   | 'quick-check'
   | 'compliance-report-discussion'
-  | 'compliance-report-discussion-end'
-  | 'discussion-already-closed'
   | '';
 
 type ManuscriptToastType = {
@@ -47,9 +45,6 @@ export const ManuscriptToastProvider = ({
     'compliance-report': 'Compliance Report submitted successfully.',
     'quick-check': 'Replied to quick check successfully.',
     'compliance-report-discussion': 'Discussion started successfully.',
-    'compliance-report-discussion-end': 'Discussion ended successfully.',
-    'discussion-already-closed':
-      'This discussion has ended. Please reach out to techsupport@asap.science for any support.',
   };
 
   return (

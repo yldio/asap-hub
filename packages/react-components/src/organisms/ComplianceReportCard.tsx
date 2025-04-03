@@ -18,12 +18,12 @@ import {
 import { paddingStyles } from '../card';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
-import { getTeams, getUserHref } from './ManuscriptVersionCard';
+import { getTeams, getUserHref } from '../utils';
 
 type ComplianceReportCardProps = ComplianceReportResponse;
 
 const toastStyles = css({
-  padding: `${15 / perRem}em ${24 / perRem}em`,
+  padding: `${24 / perRem}em ${15 / perRem}em `,
   borderRadius: `${rem(8)} ${rem(8)} 0 0`,
 });
 
@@ -45,7 +45,8 @@ const toastHeaderStyles = css({
 
 const toastContentStyles = css({
   paddingLeft: `${60 / perRem}em`,
-  paddingTop: rem(15),
+  paddingTop: 0,
+  marginTop: rem(-9),
 });
 
 const externalIconStyle = css({
@@ -58,23 +59,60 @@ const externalIconStyle = css({
 
 const buttonStyles = css({
   width: rem(151),
+  paddingTop: rem(12),
   '> a': {
     height: rem(40),
   },
 });
 
-const userContainerStyles = css({
+const addedByStyles = css({
   display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: rem(8),
-  paddingTop: rem(32),
+  flexDirection: 'column',
+  justifyContent: 'flex-end',
 });
 
 const buttonsWrapperStyles = css({
   display: 'flex',
   alignItems: 'center',
   gap: rem(8),
+});
+
+const addedByContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  gap: rem(16),
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+  },
+});
+
+const addedByTextStyles = css({
+  display: 'inline-flex',
+  flexWrap: 'wrap',
+  justifyContent: 'flex-end',
+  alignSelf: 'flex-end',
+  gap: rem(2),
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    justifyContent: 'flex-start',
+    alignSelf: 'flex-start',
+  },
+});
+
+const titleContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+  gap: rem(16),
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: rem(8),
+  },
 });
 
 const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
@@ -100,7 +138,27 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
             </Button>
           </span>
           <span css={[iconStyles]}>{crnReportIcon}</span>
-          <Subtitle noMargin>Compliance Report #{count}</Subtitle>
+          <div css={titleContainerStyles}>
+            <Subtitle noMargin>Compliance Report #{count}</Subtitle>
+            <div css={addedByContainerStyles}>
+              <Caption accent="lead" noMargin>
+                <div css={addedByStyles}>
+                  <span css={addedByTextStyles}>
+                    Date added:
+                    <span>{formatDate(new Date(createdDate))}</span>
+                  </span>
+                  <span css={addedByTextStyles}>
+                    Submitted by:
+                    <UserTeamInfo
+                      displayName={createdBy.displayName}
+                      userHref={getUserHref(createdBy.id)}
+                      teams={getTeams(createdBy.teams)}
+                    />
+                  </span>
+                </div>
+              </Caption>
+            </div>
+          </div>
         </span>
       </div>
       {expanded && (
@@ -123,19 +181,6 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                 </Link>
               </div>
             </div>
-            <Caption accent="lead" noMargin>
-              <div css={userContainerStyles}>
-                Date added:
-                <span>{formatDate(new Date(createdDate))}</span>
-                <span> · </span>
-                Submitted by:
-                <UserTeamInfo
-                  displayName={createdBy.displayName}
-                  userHref={getUserHref(createdBy.id)}
-                  teams={getTeams(createdBy.teams)}
-                />
-              </div>
-            </Caption>
           </div>
         </div>
       )}

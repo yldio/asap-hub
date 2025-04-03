@@ -1,11 +1,7 @@
-import {
-  ManuscriptVersion,
-  Message,
-  quickCheckQuestions,
-} from '@asap-hub/model';
+import { ManuscriptVersion, quickCheckQuestions } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   article,
@@ -18,7 +14,6 @@ import {
   formatDateAndWeekday,
   lead,
   Link,
-  Loading,
   minusRectIcon,
   Pill,
   PencilIcon,
@@ -30,6 +25,7 @@ import { paddingStyles } from '../card';
 import ManuscriptFileSection from '../molecules/ManuscriptFileSection';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
+import { getTeams, getUserHref } from '../utils';
 import ComplianceReportCard from './ComplianceReportCard';
 
 type ManuscriptVersionCardProps = {
@@ -38,11 +34,11 @@ type ManuscriptVersionCardProps = {
   manuscriptId: string;
   isActiveVersion?: boolean;
   isManuscriptContributor?: boolean;
+  openDiscussionTab: () => void;
 };
 
 const toastStyles = css({
-  padding: `${15 / perRem}em ${24 / perRem}em`,
-  borderRadius: `${rem(8)} ${rem(8)} 0 0`,
+  padding: `${24 / perRem}em ${15 / perRem}em `,
 });
 
 const iconStyles = css({
@@ -62,8 +58,8 @@ const toastHeaderStyles = css({
 });
 
 const toastContentStyles = css({
-  paddingLeft: `${60 / perRem}em`,
-  paddingTop: rem(15),
+  paddingLeft: `${56 / perRem}em`,
+  paddingTop: rem(9),
 });
 
 const titleContainerStyles = css({
@@ -107,6 +103,7 @@ const quickCheckContainerStyles = css({
 });
 
 const quickCheckStyles = css({
+  marginTop: rem(16),
   display: 'flex',
   flexDirection: 'column',
   gap: rem(12),
@@ -179,21 +176,13 @@ const hasAdditionalInfo = (version: ManuscriptVersion) =>
   version.requestingApcCoverage ||
   version.otherDetails;
 
-export const getUserHref = (id: string) =>
-  network({}).users({}).user({ userId: id }).$;
-
-export const getTeams = (teams: Message['createdBy']['teams']) =>
-  teams.map((team) => ({
-    href: network({}).teams({}).team({ teamId: team.id }).$,
-    name: team.name,
-  }));
-
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   version,
   teamId,
   manuscriptId,
   isActiveVersion = false,
   isManuscriptContributor = false,
+  openDiscussionTab,
 }) => {
   const history = useHistory();
 
@@ -241,15 +230,25 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
 
   return (
     <>
-      <div css={{ borderBottom: `1px solid ${colors.steel.rgb}` }}>
+      <div
+        css={{
+          borderBottom: `1px solid ${colors.steel.rgb}`,
+          backgroundColor: colors.paper.rgb,
+          ':first-of-type': {
+            borderRadius: `${rem(8)} ${rem(8)} 0 0`,
+          },
+          ':last-of-type': {
+            borderBottom: 'none',
+            borderRadius: `0 0 ${rem(8)} ${rem(8)}`,
+          },
+        }}
+      >
         {version.complianceReport && (
-          <Suspense fallback={<Loading />}>
-            <ComplianceReportCard
-              {...version.complianceReport}
-              manuscriptId={manuscriptId}
-              versionId={version.id}
-            />
-          </Suspense>
+          <ComplianceReportCard
+            {...version.complianceReport}
+            manuscriptId={manuscriptId}
+            versionId={version.id}
+          />
         )}
         <div css={toastStyles}>
           <span css={toastHeaderStyles}>
@@ -270,7 +269,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                 <Caption accent="lead" noMargin>
                   <div css={updatedByContainerStyles}>
                     <span css={updatedByTextStyles}>
-                      Last Updated:
+                      Last Update:
                       <span>{formatDate(new Date(version.publishedAt))}</span>
                     </span>
                     <span css={updatedByTextStyles}>
@@ -320,7 +319,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                   flexDirection: 'column',
                   gap: rem(12),
                   marginTop: rem(2),
-                  marginBottom: rem(16),
+                  marginBottom: rem(32),
                 }}
               >
                 <AssociationList
@@ -358,20 +357,31 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                       key={additionalFile.id}
                     />
                   ))}
-                {quickCheckDetails.length > 0 && (
+              </div>
+              {quickCheckDetails.length > 0 && (
+                <>
                   <span css={fileDividerStyles}>
                     <Divider />
                   </span>
-                )}
-              </div>
-              <div css={quickCheckContainerStyles}>
-                {quickCheckDetails.map(({ field, question }) => (
-                  <div css={quickCheckStyles} key={field}>
-                    <Subtitle noMargin>{question}</Subtitle>
-                    <span>{version[`${field}Details`]}</span>
+                  <div css={quickCheckContainerStyles}>
+                    {quickCheckDetails.map(({ field, question }) => (
+                      <div css={quickCheckStyles} key={field}>
+                        <Subtitle noMargin>{question}</Subtitle>
+                        <span>{version[`${field}Details`]}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                  <Button
+                    small
+                    noMargin
+                    onClick={openDiscussionTab}
+                    enabled
+                    overrideStyles={css({ marginTop: rem(16) })}
+                  >
+                    Open Discussion Tab
+                  </Button>
+                </>
+              )}
               {hasAdditionalInfo(version) && (
                 <div>
                   <span

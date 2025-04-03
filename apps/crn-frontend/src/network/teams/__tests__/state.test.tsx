@@ -14,12 +14,11 @@ import {
   useRecoilValue,
 } from 'recoil';
 import { authorizationState } from '../../../auth/state';
-import { endDiscussion, updateDiscussion } from '../api';
+import { updateDiscussion } from '../api';
 import * as stateModule from '../state';
 import {
   patchedTeamState,
   teamState,
-  useEndDiscussion,
   useReplyToDiscussion,
   useVersionById,
   versionSelector,
@@ -31,7 +30,6 @@ import * as uploadApi from '../api';
 const mockSetDiscussion = jest.fn();
 
 jest.mock('../api', () => ({
-  endDiscussion: jest.fn(),
   updateDiscussion: jest.fn(),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
   getPresignedUrl: jest.fn(),
@@ -370,59 +368,6 @@ describe('useVersionById hook', () => {
         },
       ],
     });
-  });
-});
-
-describe('useEndDiscussion', () => {
-  const mockAuthorization = 'mock-token';
-  const discussionId = 'discussion-id-0';
-  const mockDiscussion = {
-    id: discussionId,
-    title: 'Discussion Title',
-    status: 'closed',
-  };
-  beforeEach(() => {
-    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
-      if (state === authorizationState) {
-        return mockAuthorization;
-      }
-      return undefined;
-    });
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test('calls endDiscussion API with the correct parameters', async () => {
-    (endDiscussion as jest.Mock).mockResolvedValue(mockDiscussion);
-
-    const { result } = renderHook(() => useEndDiscussion(), {
-      wrapper: RecoilRoot,
-    });
-
-    await act(async () => {
-      await result.current(discussionId);
-    });
-
-    expect(endDiscussion).toHaveBeenCalledWith(discussionId, mockAuthorization);
-  });
-
-  test('does update discussion state on api error', async () => {
-    const mockError = new Error('API error');
-    (endDiscussion as jest.Mock).mockRejectedValue(mockError);
-
-    const { result } = renderHook(() => useEndDiscussion(), {
-      wrapper: RecoilRoot,
-    });
-
-    await expect(
-      act(async () => {
-        await result.current(discussionId);
-      }),
-    ).rejects.toThrow();
-
-    expect(mockSetDiscussion).not.toHaveBeenCalled();
   });
 });
 

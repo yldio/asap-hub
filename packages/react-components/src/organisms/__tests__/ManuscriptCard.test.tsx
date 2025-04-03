@@ -9,50 +9,7 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps } from 'react';
 import { Route, Router } from 'react-router-dom';
-import ManuscriptCard, {
-  isManuscriptAuthor,
-  isManuscriptLead,
-} from '../ManuscriptCard';
-
-const useManuscriptById = jest.fn().mockImplementation(() => {
-  const manuscript = {
-    id: 'manuscript_0',
-    title: 'Mock Manuscript Title',
-    status: 'Waiting for Report',
-    versions: [],
-  };
-
-  const setManuscript = jest.fn((newData) => {
-    Object.assign(manuscript, newData);
-  });
-
-  return [manuscript, setManuscript];
-});
-
-const version = createManuscriptResponse().versions[0] as ManuscriptVersion;
-
-const mockVersionData = {
-  ...version,
-  complianceReport: {
-    ...version.complianceReport,
-    discussionId: 'discussion-id',
-  },
-};
-
-const baseUser = createUserResponse({}, 1);
-const props: ComponentProps<typeof ManuscriptCard> & {
-  teamId: string;
-  useManuscriptById: jest.Mock;
-} = {
-  teamId: 'team-1',
-  useManuscriptById,
-  id: `manuscript_0`,
-  user: { ...baseUser, algoliaApiKey: 'algolia-mock-key' },
-  isComplianceReviewer: false,
-  onUpdateManuscript: jest.fn(),
-  isActiveTeam: true,
-  createDiscussion: jest.fn(),
-};
+import ManuscriptCard from '../ManuscriptCard';
 
 const complianceReport = {
   id: 'compliance-report-id',
@@ -61,6 +18,34 @@ const complianceReport = {
   count: 1,
   createdDate: '2024-09-23T20:45:22.000Z',
   createdBy: manuscriptAuthor,
+};
+
+const mockVersion = {
+  ...createManuscriptResponse().versions[0],
+  type: 'Original Research',
+  lifecycle: 'Preprint',
+} as ManuscriptVersion;
+
+const mockVersionWithReport = {
+  ...mockVersion,
+  complianceReport: {
+    ...complianceReport,
+  },
+};
+
+const useManuscriptById = jest.fn();
+const useManuscriptByIdWithReport = jest.fn();
+
+const baseUser = createUserResponse({}, 1);
+const props: ComponentProps<typeof ManuscriptCard> = {
+  teamId: 'team-1',
+  useManuscriptById,
+  id: `manuscript_0`,
+  user: { ...baseUser, algoliaApiKey: 'algolia-mock-key' },
+  isComplianceReviewer: false,
+  onUpdateManuscript: jest.fn(),
+  isActiveTeam: true,
+  createDiscussion: jest.fn(),
 };
 
 const user = {
@@ -75,89 +60,40 @@ const user = {
   algoliaApiKey: 'algolia-mock-key',
 };
 
-describe('isManuscriptAuthor', () => {
-  it('returns true when user is author', () => {
-    expect(
-      isManuscriptAuthor({
-        authors: [{ ...createUserResponse(), id: 'user-test' }],
-        user: {
-          ...user,
-          id: 'user-test',
-        },
-      }),
-    ).toBeTruthy();
-  });
-  it('returns false when user is not author', () => {
-    expect(
-      isManuscriptAuthor({
-        authors: [{ ...createUserResponse(), id: 'different-user' }],
-        user: {
-          ...user,
-        },
-      }),
-    ).not.toBeTruthy();
-  });
-});
+beforeEach(() => {
+  useManuscriptById.mockImplementation(() => {
+    const manuscript = {
+      id: 'manuscript_0',
+      title: 'Mock Manuscript Title',
+      status: 'Waiting for Report',
+      versions: [mockVersion],
+    };
 
-describe('isManuscriptLead', () => {
-  it('returns true when user is team lead', () => {
-    expect(
-      isManuscriptLead({
-        version: createManuscriptResponse().versions[0]!,
-        user: {
-          ...user,
-          teams: [
-            {
-              id: 'team-1',
-              role: 'Project Manager',
-            },
-          ],
-        },
-      }),
-    ).toBeTruthy();
-  });
-  it('returns false when user is not team lead', () => {
-    expect(
-      isManuscriptLead({
-        version: createManuscriptResponse().versions[0]!,
-        user: {
-          ...user,
-          teams: [
-            {
-              id: 'team-1',
-              role: 'Scientific Advisory Board',
-            },
-          ],
-        },
-      }),
-    ).not.toBeTruthy();
-  });
-});
+    const setManuscript = jest.fn((newData) => {
+      Object.assign(manuscript, newData);
+    });
 
-afterEach(() => {
-  cleanup();
+    return [manuscript, setManuscript];
+  });
+  useManuscriptByIdWithReport.mockImplementation(() => {
+    const manuscript = {
+      id: 'manuscript_0',
+      title: 'Mock Manuscript Title',
+      status: 'Waiting for Report',
+      versions: [mockVersionWithReport],
+    };
+
+    const setManuscript = jest.fn((newData) => {
+      Object.assign(manuscript, newData);
+    });
+
+    return [manuscript, setManuscript];
+  });
 });
 
 it('displays manuscript version card when expanded', () => {
-  const versionMock = {
-    ...mockVersionData,
-    type: 'Original Research',
-    lifecycle: 'Preprint',
-  };
-
   const { getByText, queryByText, getByTestId } = render(
-    <ManuscriptCard
-      {...props}
-      useManuscriptById={useManuscriptById.mockImplementation(() => [
-        {
-          id: 'manuscript_0',
-          title: 'Mock Manuscript Title',
-          status: 'Waiting for Report',
-          versions: [versionMock],
-        },
-        jest.fn(),
-      ])}
-    />,
+    <ManuscriptCard {...props} />,
   );
 
   expect(queryByText(/Original Research/i)).not.toBeInTheDocument();
@@ -171,9 +107,10 @@ it('displays manuscript version card when expanded', () => {
 });
 
 it('displays share compliance report button if user has permission', () => {
-  const { queryByRole, getByRole, rerender } = render(
+  const { queryByRole, getByRole, rerender, getByTestId } = render(
     <ManuscriptCard {...props} />,
   );
+  userEvent.click(getByTestId('collapsible-button'));
 
   expect(
     queryByRole('button', { name: /Share Compliance Report Icon/i }),
@@ -187,9 +124,14 @@ it('displays share compliance report button if user has permission', () => {
 });
 
 it('displays submit revised manuscript button if user is an author', () => {
-  const manuscriptVersions = createManuscriptResponse().versions;
-  manuscriptVersions[0]!.firstAuthors = [user];
-  const { getByRole } = render(
+  const manuscriptVersions = [
+    {
+      ...mockVersionWithReport,
+      firstAuthors: [user],
+    },
+  ];
+
+  const { getByRole, getByTestId } = render(
     <ManuscriptCard
       {...props}
       useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -203,6 +145,46 @@ it('displays submit revised manuscript button if user is an author', () => {
       ])}
     />,
   );
+  userEvent.click(getByTestId('collapsible-button'));
+
+  expect(
+    getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+  ).toBeVisible();
+});
+
+it('displays submit revised manuscript button if user is team Lead PI', () => {
+  const piUser = {
+    ...user,
+    teams: [
+      {
+        ...user.teams[0],
+        role: 'Lead PI (Core Leadership)',
+      },
+    ] as UserTeam[],
+  };
+  const { getByRole, getByTestId } = render(
+    <ManuscriptCard
+      {...props}
+      useManuscriptById={useManuscriptByIdWithReport}
+      user={piUser}
+    />,
+  );
+  userEvent.click(getByTestId('collapsible-button'));
+
+  expect(
+    getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+  ).toBeVisible();
+});
+
+it('displays submit revised manuscript button if user is team project manager', () => {
+  const { getByRole, getByTestId } = render(
+    <ManuscriptCard
+      {...props}
+      useManuscriptById={useManuscriptByIdWithReport}
+      user={user}
+    />,
+  );
+  userEvent.click(getByTestId('collapsible-button'));
 
   expect(
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
@@ -210,11 +192,13 @@ it('displays submit revised manuscript button if user is an author', () => {
 });
 
 it('displays submit revised manuscript button if user is a PI on a manuscript lab', () => {
-  const manuscriptVersions = createManuscriptResponse().versions;
-  manuscriptVersions[0]!.labs = [
-    { name: 'Lab 1', id: 'lab-1', labPi: user.id },
+  const manuscriptVersions = [
+    {
+      ...mockVersionWithReport,
+      labs: [{ name: 'Lab 1', id: 'lab-1', labPi: user.id }],
+    },
   ];
-  const { getByRole } = render(
+  const { getByRole, getByTestId } = render(
     <ManuscriptCard
       {...props}
       useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -229,14 +213,16 @@ it('displays submit revised manuscript button if user is a PI on a manuscript la
     />,
   );
 
+  userEvent.click(getByTestId('collapsible-button'));
+
   expect(
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
   ).toBeVisible();
 });
 
 it('redirects to compliance report form when user clicks on share compliance report button', () => {
-  const history = createMemoryHistory({});
-  const { getByRole } = render(
+  const history = createMemoryHistory();
+  const { getByRole, getByTestId } = render(
     <Router history={history}>
       <Route path="">
         <ManuscriptCard {...props} isComplianceReviewer />
@@ -244,6 +230,7 @@ it('redirects to compliance report form when user clicks on share compliance rep
     </Router>,
   );
 
+  userEvent.click(getByTestId('collapsible-button'));
   userEvent.click(
     getByRole('button', { name: /Share Compliance Report Icon/i }),
   );
@@ -254,18 +241,15 @@ it('redirects to compliance report form when user clicks on share compliance rep
 });
 
 it('redirects to resubmit manuscript form when user clicks on Submit Revised Manuscript button', () => {
-  const manuscriptVersions = createManuscriptResponse().versions;
-  manuscriptVersions[0]!.firstAuthors = [user];
-  manuscriptVersions[0]!.complianceReport = {
-    id: 'compliance-report-id',
-    url: 'https://example.com',
-    description: 'test compliance report',
-    count: 1,
-    createdDate: manuscriptVersions[0]!.createdDate,
-    createdBy: manuscriptVersions[0]!.createdBy,
-  };
-  const history = createMemoryHistory({});
-  const { getByRole } = render(
+  const manuscriptVersions = [
+    {
+      ...mockVersionWithReport,
+      firstAuthors: [user],
+    },
+  ];
+
+  const history = createMemoryHistory();
+  const { getByRole, getByTestId } = render(
     <Router history={history}>
       <Route path="">
         <ManuscriptCard
@@ -283,6 +267,8 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
       </Route>
     </Router>,
   );
+
+  userEvent.click(getByTestId('collapsible-button'));
 
   userEvent.click(getByRole('button', { name: /Resubmit Manuscript Icon/i }));
 
@@ -307,25 +293,13 @@ it('displays the confirmation modal when isComplianceReviewer is true and the us
 
 it('does not display confirmation modal when isComplianceReviewer is true but the user tries to select the same manuscript status it is currently', () => {
   const { getByRole, getByTestId, queryByText } = render(
-    <ManuscriptCard
-      {...props}
-      useManuscriptById={useManuscriptById.mockImplementation(() => [
-        {
-          id: 'manuscript_0',
-          title: 'Mock Manuscript Title',
-          status: 'Addendum Required',
-          versions: [],
-        },
-        jest.fn(),
-      ])}
-      isComplianceReviewer
-    />,
+    <ManuscriptCard {...props} isComplianceReviewer />,
   );
 
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeEnabled();
   userEvent.click(statusButton);
-  userEvent.click(getByRole('button', { name: 'Addendum Required' }));
+  userEvent.click(getByRole('button', { name: /Waiting for Report$/ }));
   expect(queryByText('Update status and notify?')).not.toBeInTheDocument();
 });
 
@@ -479,10 +453,43 @@ it.each`
 );
 
 it('disables submit compliance report button when there is an existing compliance report', async () => {
-  const manuscriptVersions = createManuscriptResponse().versions;
-  manuscriptVersions[0]!.complianceReport = complianceReport;
+  const { getByRole, getByTestId } = render(
+    <ManuscriptCard
+      {...props}
+      isComplianceReviewer
+      id="manuscript-1"
+      useManuscriptById={useManuscriptByIdWithReport}
+    />,
+  );
 
-  const { getByRole } = render(
+  userEvent.click(getByTestId('collapsible-button'));
+
+  const complianceReportButton = getByRole('button', {
+    name: /Share Compliance Report Icon/i,
+  });
+  expect(complianceReportButton).toBeDisabled();
+});
+
+it('displays show more/show less when there are more than three manuscript versions', () => {
+  const manuscriptVersions = [
+    {
+      ...mockVersionWithReport,
+      id: 'version-1',
+    },
+    {
+      ...mockVersionWithReport,
+      id: 'version-2',
+    },
+    {
+      ...mockVersionWithReport,
+      id: 'version-3',
+    },
+    {
+      ...mockVersionWithReport,
+      id: 'version-4',
+    },
+  ];
+  const { getByRole, getByTestId } = render(
     <ManuscriptCard
       {...props}
       useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -494,15 +501,18 @@ it('disables submit compliance report button when there is an existing complianc
         },
         jest.fn(),
       ])}
-      isComplianceReviewer
-      id="manuscript-1"
     />,
   );
 
-  const complianceReportButton = getByRole('button', {
-    name: /Share Compliance Report Icon/i,
+  userEvent.click(getByTestId('collapsible-button'));
+  const showMoreButton = getByRole('button', {
+    name: /Show more/i,
   });
-  expect(complianceReportButton).toBeDisabled();
+
+  expect(showMoreButton).toBeVisible();
+
+  userEvent.click(showMoreButton);
+  expect(getByRole('button', { name: /Show less/i })).toBeVisible();
 });
 
 it.each`
@@ -570,5 +580,41 @@ describe('Tabs', () => {
     expect(getByRole('button', { name: 'Discussions' })).not.toHaveClass(
       'active',
     );
+  });
+
+  it('opens the discussions tab when user clicks on Open Discussion Tab', () => {
+    const manuscriptVersion = {
+      ...mockVersion,
+      asapAffiliationIncluded: 'No',
+      asapAffiliationIncludedDetails: 'Reason',
+    };
+    const { getByLabelText, getByRole, getByTestId } = render(
+      <ManuscriptCard
+        {...props}
+        useManuscriptById={useManuscriptById.mockImplementation(() => [
+          {
+            id: 'manuscript_0',
+            title: 'Mock Manuscript Title',
+            status: 'Waiting for Report',
+            versions: [manuscriptVersion],
+          },
+          jest.fn(),
+        ])}
+      />,
+    );
+
+    userEvent.click(getByTestId('collapsible-button'));
+    userEvent.click(getByLabelText('Expand Version'));
+
+    expect(getByRole('button', { name: 'Discussions' })).not.toHaveClass(
+      'active',
+    );
+    const openDiscussionsButton = getByRole('button', {
+      name: /Open Discussion Tab/i,
+    });
+    expect(openDiscussionsButton).toBeVisible();
+
+    userEvent.click(openDiscussionsButton);
+    expect(getByRole('button', { name: 'Discussions' })).toHaveClass('active');
   });
 });

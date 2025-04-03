@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Frame } from '@asap-hub/frontend-utils';
 import {
   ComplianceReportForm,
@@ -31,6 +32,10 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
   const setRefreshTeamState = useSetRecoilState(refreshTeamState(teamId));
   const form = useForm();
   const createComplianceReport = usePostComplianceReport();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, []);
 
   if (manuscript && manuscript.versions[0]) {
     const onSuccess = () => {

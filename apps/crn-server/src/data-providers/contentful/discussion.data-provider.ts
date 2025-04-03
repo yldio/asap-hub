@@ -69,7 +69,7 @@ export class DiscussionContentfulDataProvider
 
     await patchAndPublish(manuscript, {
       discussions: [
-        ...(manuscript.fields.discussions['en-US'] || []),
+        ...(manuscript.fields?.discussions?.['en-US'] || []),
         getLinkEntity(discussionEntry.sys.id),
       ],
     });

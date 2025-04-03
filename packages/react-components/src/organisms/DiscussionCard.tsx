@@ -14,7 +14,7 @@ import { minusRectIcon, plusRectIcon, replyIcon } from '../icons';
 import UserComment from '../molecules/UserComment';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, rem } from '../pixels';
-import { getTeams, getUserHref } from './ManuscriptVersionCard';
+import { getTeams, getUserHref } from '../utils';
 
 const containerStyles = (isLast: boolean) =>
   css({

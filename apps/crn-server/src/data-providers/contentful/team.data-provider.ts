@@ -346,24 +346,37 @@ export const parseContentfulGraphQlTeam = (
     };
   };
 
+  const sortManuscripts = (manuscripts) => {
+    const STATUS_PRIORITY = {
+      Compliant: 1,
+      'Closed (other)': 2,
+    };
+
+    return [...manuscripts].sort((a, b) => {
+      const aPriority = STATUS_PRIORITY[a.status] || 0;
+      const bPriority = STATUS_PRIORITY[b.status] || 0;
+      return aPriority - bPriority;
+    });
+  };
+
   const parseManuscripts = () => {
     const manuscripts = cleanArray(
       item.linkedFrom?.manuscriptsCollection?.items,
     );
 
+    const teamManuscripts = manuscripts.filter(
+      (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id === teamId,
+    );
+
+    const collaborationManuscripts = manuscripts.filter(
+      (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id !== teamId,
+    );
+
     return {
-      manuscripts: manuscripts
-        .filter(
-          (manuscript) =>
-            manuscript.teamsCollection?.items[0]?.sys.id === teamId,
-        )
-        .map(mapManuscripts),
-      collaborationManuscripts: manuscripts
-        .filter(
-          (manuscript) =>
-            manuscript.teamsCollection?.items[0]?.sys.id !== teamId,
-        )
-        .map(mapManuscripts),
+      manuscripts: sortManuscripts(teamManuscripts).map(mapManuscripts),
+      collaborationManuscripts: sortManuscripts(collaborationManuscripts).map(
+        mapManuscripts,
+      ),
     };
   };
 

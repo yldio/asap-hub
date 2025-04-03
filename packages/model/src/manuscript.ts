@@ -3,6 +3,7 @@ import { ascending, descending, SortingDirection } from './analytics';
 import { AuthorAlgoliaResponse, AuthorResponse } from './authors';
 import { ListResponse } from './common';
 import { ComplianceReportDataObject } from './compliance-report';
+import { ManuscriptDiscussion } from './discussion';
 import { UserResponse } from './user';
 
 export const manuscriptTypes = [
@@ -306,6 +307,7 @@ export type ManuscriptDataObject = {
   versions: ManuscriptVersion[];
   count: number;
   assignedUsers: ManuscriptAssignedUser[];
+  discussions: ManuscriptDiscussion[];
 };
 
 export type ManuscriptResponse = ManuscriptDataObject;

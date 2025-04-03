@@ -24,7 +24,15 @@ const userContainerStyles = css({
   gap: rem(8),
 });
 
+const userInfoStyles = css({
+  display: 'inline-flex',
+  flexDirection: 'row',
+  fontSize: rem(14),
+  fontWeight: 400,
+});
+
 const dateStyles = css({
+  width: 'max-content',
   color: lead.rgb,
   fontSize: rem(14),
   fontWeight: 400,
@@ -61,15 +69,17 @@ const UserCommentHeader: FC<UserCommentHeaderProps> = ({
           imageUrl={avatarUrl}
         />
       </ImageLink>
-      <UserTeamInfo
-        displayName={displayName}
-        userHref={userHref}
-        teams={teams}
-        alumniSinceDate={alumniSinceDate}
-      />
+      <div css={userInfoStyles}>
+        <UserTeamInfo
+          displayName={displayName}
+          userHref={userHref}
+          teams={teams}
+          alumniSinceDate={alumniSinceDate}
+        />
+      </div>
+      <span> · </span>
+      <span css={dateStyles}>{formatDate(new Date(date))}</span>
     </div>
-    <span> · </span>
-    <span css={dateStyles}>{formatDate(new Date(date))}</span>
   </div>
 );
 export default UserCommentHeader;

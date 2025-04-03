@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css, Theme } from '@emotion/react';
-import { useRef, useState } from 'react';
+import { ComponentProps, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DiscussionsTab } from '.';
 import {
@@ -30,31 +30,33 @@ import {
 import { mobileScreen, perRem, rem, smallDesktopScreen } from '../pixels';
 import { getReviewerStatusType } from '../utils';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
+import DiscussionCard from './DiscussionCard';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
 
 const VERSION_LIMIT = 3;
 
-type ManuscriptCardProps = Pick<TeamManuscript, 'id'> & {
-  user: User | null;
-  teamId: string;
-  isComplianceReviewer: boolean;
-  isActiveTeam: boolean;
-  onUpdateManuscript: (
-    manuscriptId: string,
-    payload: ManuscriptPutRequest,
-  ) => Promise<ManuscriptResponse>;
-  createDiscussion: (
-    manuscriptId: string,
-    title: string,
-    message: string,
-  ) => Promise<string>;
-  useManuscriptById: (
-    id: string,
-  ) => [
-    ManuscriptDataObject | undefined,
-    React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
-  ];
-};
+type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
+  Pick<ComponentProps<typeof DiscussionCard>, 'onReplyToDiscussion'> & {
+    user: User | null;
+    teamId: string;
+    isComplianceReviewer: boolean;
+    isActiveTeam: boolean;
+    onUpdateManuscript: (
+      manuscriptId: string,
+      payload: ManuscriptPutRequest,
+    ) => Promise<ManuscriptResponse>;
+    createDiscussion: (
+      manuscriptId: string,
+      title: string,
+      message: string,
+    ) => Promise<string>;
+    useManuscriptById: (
+      id: string,
+    ) => [
+      ManuscriptDataObject | undefined,
+      React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
+    ];
+  };
 
 const manuscriptContainerStyles = css({
   marginTop: rem(12),
@@ -84,13 +86,13 @@ const iconStyles = css({
   width: `${24 / perRem}em`,
   height: `${24 / perRem}em`,
   paddingRight: `${12 / perRem}em`,
+  marginTop: rem(2),
 });
 
 const toastHeaderStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     alignItems: 'flex-start',
   },
@@ -219,6 +221,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   user,
   createDiscussion,
   useManuscriptById,
+  onReplyToDiscussion,
 }) => {
   const [activeTab, setActiveTab] = useState<
     'manuscripts-and-reports' | 'discussions'
@@ -436,12 +439,16 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 </>
               )}
               {activeTab === 'discussions' && (
-                <div css={css({ margin: `${rem(12)} ${rem(60)}` })}>
-                  <DiscussionsTab
-                    manuscriptId={id}
-                    createDiscussion={createDiscussion}
-                  />
-                </div>
+                <DiscussionsTab
+                  discussions={manuscript?.discussions || []}
+                  manuscriptId={id}
+                  createDiscussion={createDiscussion}
+                  onReplyToDiscussion={onReplyToDiscussion}
+                  canParticipateInDiscussion={
+                    hasUpdateAccess || isComplianceReviewer
+                  }
+                  isActiveManuscript={isActiveManuscript}
+                />
               )}
             </div>
           </div>

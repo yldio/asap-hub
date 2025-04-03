@@ -54,6 +54,7 @@ export const getContentfulGraphqlDiscussion =
     sys: {
       id: 'discussion-id-1',
     },
+    title: 'Test discussion title',
     message: {
       sys: {
         publishedAt: '2020-11-26T11:56:04.000Z',

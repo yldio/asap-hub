@@ -32,6 +32,8 @@ import {
   getManuscriptsListResponse,
   getManuscriptUpdateAssignedUsersDataObject,
   getManuscriptUpdateStatusDataObject,
+  getContentfulGraphqlManuscriptDiscussion,
+  getManuscriptDiscussions,
 } from '../../fixtures/manuscript.fixtures';
 import {
   getContentfulGraphql,
@@ -92,6 +94,9 @@ describe('Manuscripts Contentful Data Provider', () => {
       ManuscriptsCollection: () => ({
         ...getContentfulGraphqlManuscripts(),
         total: 2,
+      }),
+      ManuscriptsDiscussionsCollection: () => ({
+        items: [],
       }),
       Manuscripts: () => getContentfulGraphqlManuscript(),
       ManuscriptsAssignedUsersCollection: () =>
@@ -1204,6 +1209,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       manuscript.versionsCollection = null;
       manuscript.status = null;
       manuscript.assignedUsersCollection = null;
+      manuscript.discussionsCollection = null;
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
       });
@@ -1216,6 +1222,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         title: '',
         versions: [],
         assignedUsers: [],
+        discussions: [],
       });
     });
 
@@ -1262,6 +1269,105 @@ describe('Manuscripts Contentful Data Provider', () => {
       const result = await manuscriptDataProvider.fetchById('1');
 
       expect(result!.versions[0]!.keyResourceTable).toBeUndefined();
+    });
+
+    describe('Discussions', () => {
+      test('should return an empty array if no discussions are present', async () => {
+        const manuscript = getContentfulGraphqlManuscript();
+        manuscript.discussionsCollection = null;
+
+        contentfulGraphqlClientMock.request.mockResolvedValue({
+          manuscripts: manuscript,
+        });
+
+        const result = await manuscriptDataProvider.fetchById('1');
+        expect(result!.discussions).toEqual([]);
+      });
+
+      test('should return an empty array if no user has no teams', async () => {
+        const manuscript = getContentfulGraphqlManuscript();
+        manuscript.discussionsCollection = {
+          items: [
+            {
+              ...getContentfulGraphqlManuscriptDiscussion(),
+              message: {
+                ...getContentfulGraphqlManuscriptDiscussion().message!,
+                createdBy: {
+                  ...getContentfulGraphqlManuscriptDiscussion().message!
+                    .createdBy!,
+                  teamsCollection: null,
+                },
+              },
+            },
+          ],
+          total: 1,
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValue({
+          manuscripts: manuscript,
+        });
+
+        const result = await manuscriptDataProvider.fetchById('1');
+        expect(result!.discussions[0]?.createdBy.teams).toEqual([]);
+      });
+
+      test('should return the discussions if they are present', async () => {
+        const manuscript = getContentfulGraphqlManuscript();
+        manuscript.discussionsCollection = {
+          items: [getContentfulGraphqlManuscriptDiscussion()],
+          total: 1,
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValue({
+          manuscripts: manuscript,
+        });
+
+        const result = await manuscriptDataProvider.fetchById('1');
+        expect(result!.discussions).toEqual([getManuscriptDiscussions()]);
+      });
+
+      test('should sort the discussions by last updated at descending', async () => {
+        const manuscript = getContentfulGraphqlManuscript();
+
+        const discussion1 = getContentfulGraphqlManuscriptDiscussion();
+        discussion1.sys.id = 'discussion-id-1';
+        discussion1.message!.sys.publishedAt = '2025-04-01T10:00:00.000Z';
+        discussion1.repliesCollection!.items[0]!.sys.publishedAt =
+          '2025-04-01T15:00:00.000Z';
+
+        const discussion2 = getContentfulGraphqlManuscriptDiscussion();
+        discussion2.sys.id = 'discussion-id-2';
+        discussion2.message!.sys.publishedAt = '2025-04-04T12:00:00.000Z';
+        discussion2.repliesCollection!.items[0]!.sys.publishedAt =
+          '2025-04-04T15:00:00.000Z';
+
+        const discussion3 = getContentfulGraphqlManuscriptDiscussion();
+        discussion3.sys.id = 'discussion-id-3';
+        discussion3.message!.sys.publishedAt = '2025-04-03T15:00:00.000Z';
+        discussion3.repliesCollection = null;
+
+        manuscript.discussionsCollection = {
+          items: [discussion1, discussion2, discussion3],
+          total: 2,
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValue({
+          manuscripts: manuscript,
+        });
+
+        const result = await manuscriptDataProvider.fetchById('1');
+        expect(result!.discussions).toEqual([
+          expect.objectContaining({
+            id: 'discussion-id-2',
+          }),
+          expect.objectContaining({
+            id: 'discussion-id-3',
+          }),
+          expect.objectContaining({
+            id: 'discussion-id-1',
+          }),
+        ]);
+      });
     });
   });
 

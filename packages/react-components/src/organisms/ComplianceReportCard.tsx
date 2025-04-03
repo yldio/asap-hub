@@ -45,7 +45,8 @@ const toastHeaderStyles = css({
 
 const toastContentStyles = css({
   paddingLeft: `${60 / perRem}em`,
-  paddingTop: rem(15),
+  paddingTop: 0,
+  marginTop: rem(-9),
 });
 
 const externalIconStyle = css({
@@ -58,6 +59,7 @@ const externalIconStyle = css({
 
 const buttonStyles = css({
   width: rem(151),
+  paddingTop: rem(12),
   '> a': {
     height: rem(40),
   },

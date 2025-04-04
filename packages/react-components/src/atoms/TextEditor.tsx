@@ -21,7 +21,7 @@ import {
 } from '@lexical/markdown';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { EditorState } from 'lexical';
-import { ember, rose } from '../colors';
+import { ember, lead, rose, silver } from '../colors';
 import { styles, useValidation, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import ToolbarPlugin from './TextEditorToolbar';
@@ -285,6 +285,10 @@ const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
                           hasError && {
                             backgroundColor: rose.rgb,
                             borderColor: `${ember.rgb}!important`,
+                          },
+                          !enabled && {
+                            color: lead.rgb,
+                            backgroundColor: silver.rgb,
                           },
                         ]
                       : [markdownStyles]

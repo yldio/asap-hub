@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { FC } from 'react';
 
 import { UserCommentHeader } from '.';
-import { colors } from '..';
+import { colors, ExpandableText } from '..';
 import { TextEditor } from '../atoms';
 import { rem } from '../pixels';
 
@@ -47,13 +47,15 @@ const UserComment: FC<UserCommentProps> = ({
       date={createdDate}
     />
     <div css={replyStyles}>
-      <TextEditor
-        id={`discussion-${createdBy.id}-${createdDate}`}
-        value={text}
-        enabled={false}
-        isMarkdown
-        editorStyles={textEditorStyles}
-      />
+      <ExpandableText variant="arrow">
+        <TextEditor
+          id={`discussion-${createdBy.id}-${createdDate}`}
+          value={text}
+          enabled={false}
+          isMarkdown
+          editorStyles={textEditorStyles}
+        />
+      </ExpandableText>
     </div>
   </div>
 );

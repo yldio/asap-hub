@@ -26,7 +26,9 @@ const row = (hasShowMore: boolean) =>
       ? {
           ':nth-last-of-type(2)': {
             margin: `0 -${24 / perRem}em 0 -${(24 - borderRadius) / perRem}em`,
-            padding: `0 ${24 / perRem}em 0 ${(24 - borderRadius) / perRem}em`,
+            padding: `${12 / perRem}em ${24 / perRem}em ${12 / perRem}em ${
+              (24 - borderRadius) / perRem
+            }em`,
           },
         }
       : {}),

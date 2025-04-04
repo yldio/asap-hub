@@ -18,6 +18,7 @@ const complianceReport = {
   count: 1,
   createdDate: '2024-09-23T20:45:22.000Z',
   createdBy: manuscriptAuthor,
+  status: 'Review Compliance Report',
 };
 
 const mockVersion = {

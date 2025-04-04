@@ -115,6 +115,8 @@ const mockGetResearchOutput = getResearchOutput as jest.MockedFunction<
 
 afterEach(jest.clearAllMocks);
 beforeEach(() => {
+  jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
   (useManuscriptById as jest.Mock).mockImplementation(() => [
     createTeamManuscriptResponse(),
     jest.fn(),

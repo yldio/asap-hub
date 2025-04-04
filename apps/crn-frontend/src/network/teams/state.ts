@@ -289,8 +289,12 @@ export const usePutManuscript = () => {
 export const usePostComplianceReport = () => {
   const authorization = useRecoilValue(authorizationState);
   return async (payload: ComplianceReportPostRequest) => {
+    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
+    const notificationList = getOverrides()
+      .COMPLIANCE_NOTIFICATION_LIST as string;
+
     const complianceReport = await createComplianceReport(
-      payload,
+      { ...payload, sendNotifications, notificationList },
       authorization,
     );
     return complianceReport;

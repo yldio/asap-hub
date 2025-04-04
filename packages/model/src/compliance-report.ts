@@ -1,3 +1,4 @@
+import { ManuscriptStatus } from './manuscript';
 import { UserResponse } from './user';
 
 export type ComplianceReportDataObject = {
@@ -19,19 +20,35 @@ export type ComplianceReportDataObject = {
   };
   discussionId?: string;
   versionId?: string;
-  manuscriptId?: string;
 };
-export type ComplianceReportResponse = ComplianceReportDataObject;
+
+export type ComplianceReportResponse = {
+  complianceReport: ComplianceReportDataObject & {
+    manuscriptId: string;
+  };
+  status: ManuscriptStatus;
+};
 export type ComplianceReportFormData = Omit<
-  ComplianceReportDataObject,
+  ComplianceReportDataObject & {
+    manuscriptId: string;
+    status: ManuscriptStatus;
+  },
   'count' | 'createdDate' | 'createdBy' | 'id'
 >;
-export type ComplianceReportCreateDataObject = ComplianceReportFormData & {
+export type ComplianceReportCreateDataObject = Omit<
+  ComplianceReportFormData,
+  'status' | 'manuscriptId'
+> & {
   manuscriptVersionId: string;
   userId: string;
   discussionId?: string;
 };
 export type ComplianceReportPostRequest = Omit<
-  ComplianceReportCreateDataObject,
+  ComplianceReportCreateDataObject & {
+    status: ManuscriptStatus;
+    manuscriptId: string;
+    sendNotifications?: boolean;
+    notificationList?: string;
+  },
   'userId'
 >;

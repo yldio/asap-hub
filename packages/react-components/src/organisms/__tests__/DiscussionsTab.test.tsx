@@ -36,11 +36,14 @@ describe('DiscussionsTab', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
-  it('closes modal when clicking dismiss', async () => {
+  it('closes modal when clicking Cancel Discussion', async () => {
     render(<DiscussionsTab {...defaultProps} />);
 
     userEvent.click(screen.getByText('Start Discussion'));
-    userEvent.click(screen.getByTitle('Close'));
+    await act(async () => {
+      userEvent.click(screen.getByText('Cancel'));
+    });
+    userEvent.click(screen.getByText('Cancel Discussion'));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 

@@ -49,6 +49,13 @@ const buttonOverrideStyles = css({
   padding: `${rem(15)} ${rem(33)}}`,
 });
 
+const footerStyles = css({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  paddingTop: rem(15),
+  gap: rem(24),
+});
+
 type DiscussionModalProps = {
   type: 'start' | 'reply';
   onDismiss: () => void;
@@ -148,14 +155,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
             )}
           />
 
-          <div
-            css={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              paddingTop: rem(15),
-              gap: rem(24),
-            }}
-          >
+          <div css={footerStyles}>
             {isCancelling && (
               <div css={{ fontWeight: 'bold' }}>
                 Cancelling now will result in the loss of all entered data. Do

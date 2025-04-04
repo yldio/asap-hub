@@ -42,6 +42,7 @@ import {
   ManuscriptVersion,
   QuickCheckDetails,
   manuscriptNotificationAttachmentContent,
+  ManuscriptDiscussion,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
 import * as postmark from 'postmark';
@@ -608,6 +609,47 @@ const parseGraphQLManuscriptAssignedUsers = (
     avatarUrl: user?.avatar?.url || '',
   })) || [];
 
+const parseGraphQLManuscriptDiscussions = (
+  discussionItems:
+    | NonNullable<NonNullable<ManuscriptItem['discussionsCollection']>['items']>
+    | undefined,
+): ManuscriptDiscussion[] => {
+  if (!discussionItems) return [];
+
+  const discussionsData = discussionItems.map((discussion) => {
+    const replies =
+      discussion?.repliesCollection?.items.map((reply) => ({
+        text: reply?.text || '',
+        createdBy: parseGraphqlManuscriptUser(reply?.createdBy || undefined),
+        createdDate: reply?.sys.publishedAt,
+      })) || [];
+
+    const createdDate = discussion?.message?.sys.publishedAt;
+    const lastUpdatedAt =
+      replies
+        .map((item) => item.createdDate)
+        .filter((date): date is string => date !== undefined)
+        .sort()
+        .pop() || createdDate;
+
+    return {
+      id: discussion?.sys.id || '',
+      title: discussion?.title || '',
+      createdBy: parseGraphqlManuscriptUser(
+        discussion?.message?.createdBy || undefined,
+      ),
+      createdDate,
+      lastUpdatedAt,
+      text: discussion?.message?.text || '',
+      replies,
+    };
+  });
+
+  return discussionsData.sort(
+    (a, b) =>
+      new Date(b.lastUpdatedAt).getTime() - new Date(a.lastUpdatedAt).getTime(),
+  );
+};
 const parseGraphQLManuscript = (
   manuscript: ManuscriptItem,
 ): ManuscriptDataObject => {
@@ -622,6 +664,9 @@ const parseGraphQLManuscript = (
     title: manuscript.title || '',
     teamId: teamData?.sys.id || '',
     status: manuscriptMapStatus(manuscript.status) || undefined,
+    discussions: parseGraphQLManuscriptDiscussions(
+      manuscript.discussionsCollection?.items,
+    ),
     assignedUsers: parseGraphQLManuscriptAssignedUsers(
       manuscript.assignedUsersCollection,
     ),
@@ -689,7 +734,7 @@ const parseGraphqlAuthor = (
   });
 
 const parseGraphqlManuscriptUser = (user: ManuscriptUser | undefined) => ({
-  id: user?.sys.id,
+  id: user?.sys.id || '',
   firstName: user?.firstName || '',
   lastName: user?.lastName || '',
   displayName: parseUserDisplayName(
@@ -700,10 +745,11 @@ const parseGraphqlManuscriptUser = (user: ManuscriptUser | undefined) => ({
   ),
   avatarUrl: user?.avatar?.url || undefined,
   alumniSinceDate: user?.alumniSinceDate || undefined,
-  teams: user?.teamsCollection?.items.map((teamItem) => ({
-    id: teamItem?.team?.sys.id,
-    name: teamItem?.team?.displayName,
-  })),
+  teams:
+    user?.teamsCollection?.items.map((teamItem) => ({
+      id: teamItem?.team?.sys.id || '',
+      name: teamItem?.team?.displayName || '',
+    })) || [],
 });
 
 const getQuickCheckDetails = (

@@ -29,4 +29,25 @@ describe('ExpandableText', () => {
     userEvent.click(button);
     expect(button.textContent).toMatchInlineSnapshot(`"Show lessChevron Down"`);
   });
+
+  it('renders show more with arrow variant', () => {
+    const ref = { current: { scrollHeight: 125 } };
+
+    Object.defineProperty(ref, 'current', {
+      set(_current) {
+        this.mockedCurrent = _current;
+      },
+      get() {
+        return { scrollHeight: 125 };
+      },
+    });
+    jest.spyOn(React, 'useRef').mockReturnValue(ref);
+
+    render(<ExpandableText variant="arrow">{text}</ExpandableText>);
+    const button = screen.getByRole('button');
+    expect(button).toBeVisible();
+    expect(button.textContent).toMatchInlineSnapshot(`"Show more ↓"`);
+    userEvent.click(button);
+    expect(button.textContent).toMatchInlineSnapshot(`"Show less ↑"`);
+  });
 });

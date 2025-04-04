@@ -27,7 +27,7 @@ export const validateDiscussionParameters = validateInput(
 const DiscussionRequestValidationSchema: JSONSchemaType<DiscussionRequest> = {
   type: 'object',
   properties: {
-    text: { type: 'string', maxLength: 256 },
+    text: { type: 'string' },
   },
   required: ['text'],
   additionalProperties: false,

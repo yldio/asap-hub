@@ -96,3 +96,18 @@ it('displays error message when title is bigger than 100 characters', async () =
     screen.getAllByText(/Title cannot exceed 100 characters./i).length,
   ).toBeGreaterThanOrEqual(1);
 });
+
+it('displays cancellation confirmation on cancel', async () => {
+  render(<DiscussionModal {...defaultProps} />);
+
+  const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+  await act(async () => {
+    userEvent.click(cancelButton);
+  });
+
+  expect(
+    screen.getByText(
+      /Cancelling now will result in the loss of all entered data./,
+    ),
+  ).toBeVisible();
+});

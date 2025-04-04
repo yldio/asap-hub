@@ -82,6 +82,18 @@ describe('Reminders data provider', () => {
         },
         users,
       });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        discussionsCollection: {
+          items: [],
+        },
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        messagesCollection: {
+          items: [],
+        },
+      });
     };
 
     describe('Event Happening Now Reminder', () => {

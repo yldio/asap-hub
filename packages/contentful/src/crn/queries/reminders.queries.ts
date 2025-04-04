@@ -286,6 +286,72 @@ export const FETCH_TEAM_PROJECT_MANAGER = gql`
   }
 `;
 
+export const manuscriptsCollectionQueryFragment = gql`
+  fragment ManuscriptsCollectionContent on ManuscriptsCollection {
+    items {
+      title
+      assignedUsersCollection(limit: 30) {
+        items {
+          sys {
+            id
+          }
+        }
+      }
+      versionsCollection(limit: 1, order: sys_firstPublishedAt_DESC) {
+        items {
+          teamsCollection(limit: 10) {
+            items {
+              sys {
+                id
+              }
+              displayName
+            }
+          }
+          firstAuthorsCollection(limit: 10) {
+            items {
+              __typename
+              ... on Users {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+          additionalAuthorsCollection(limit: 10) {
+            items {
+              __typename
+              ... on Users {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+          correspondingAuthorCollection(limit: 10) {
+            items {
+              __typename
+              ... on Users {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+          labsCollection(limit: 10) {
+            items {
+              labPi {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const FETCH_DISCUSSION_REMINDERS = gql`
   query FetchDiscussionReminders($discussionFilter: DiscussionsFilter) {
     discussionsCollection(where: $discussionFilter) {
@@ -319,9 +385,15 @@ export const FETCH_DISCUSSION_REMINDERS = gql`
             }
           }
         }
+        linkedFrom {
+          manuscriptsCollection(limit: 1) {
+            ...ManuscriptsCollectionContent
+          }
+        }
       }
     }
   }
+  ${manuscriptsCollectionQueryFragment}
 `;
 
 export const FETCH_MESSAGE_REMINDERS = gql`
@@ -363,10 +435,16 @@ export const FETCH_MESSAGE_REMINDERS = gql`
                   id
                 }
               }
+              linkedFrom {
+                manuscriptsCollection(limit: 1) {
+                  ...ManuscriptsCollectionContent
+                }
+              }
             }
           }
         }
       }
     }
   }
+  ${manuscriptsCollectionQueryFragment}
 `;

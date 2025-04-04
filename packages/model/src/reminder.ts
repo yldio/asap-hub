@@ -38,11 +38,8 @@ type ManuscriptReminderType =
 type DiscussionReminderType =
   | 'Discussion Created by Grantee'
   | 'Discussion Created by Open Science Member'
-  | 'Quick Check Discussion Replied To by Grantee'
-  | 'Quick Check Discussion Replied To by Open Science Member'
-  | 'Compliance Report Discussion Replied To by Grantee'
-  | 'Compliance Report Discussion Replied To by Open Science Member'
-  | 'Discussion Ended';
+  | 'Discussion Replied To by Grantee'
+  | 'Discussion Replied To by Open Science Member';
 
 type ReminderType =
   | ResearchOutputReminderType
@@ -195,11 +192,11 @@ export interface DiscussionCreatedReminder extends Reminder {
   };
 }
 
-export interface QuickCheckDiscussionRepliedToReminder extends Reminder {
+export interface DiscussionRepliedToReminder extends Reminder {
   entity: 'Discussion';
   type:
-    | 'Quick Check Discussion Replied To by Open Science Member'
-    | 'Quick Check Discussion Replied To by Grantee';
+    | 'Discussion Replied To by Open Science Member'
+    | 'Discussion Replied To by Grantee';
   data: {
     title: ManuscriptDataObject['title'];
     manuscriptTeams: string;
@@ -208,24 +205,6 @@ export interface QuickCheckDiscussionRepliedToReminder extends Reminder {
     publishedAt: string;
   };
 }
-
-export interface ComplianceReportDiscussionRepliedToReminder extends Reminder {
-  entity: 'Discussion';
-  type:
-    | 'Compliance Report Discussion Replied To by Open Science Member'
-    | 'Compliance Report Discussion Replied To by Grantee';
-  data: {
-    title: ManuscriptDataObject['title'];
-    manuscriptTeams: string;
-    userTeams: string;
-    createdBy: string;
-    publishedAt: string;
-  };
-}
-
-export type DiscussionRepliedToReminder =
-  | QuickCheckDiscussionRepliedToReminder
-  | ComplianceReportDiscussionRepliedToReminder;
 
 export interface EventHappeningTodayReminder extends EventReminder {
   entity: 'Event';
@@ -332,8 +311,8 @@ export type ReminderDataObject =
   | SharePresentationReminder
   | PublishMaterialReminder
   | UploadPresentationReminder
-  | ManuscriptReminder;
-// | DiscussionReminder;
+  | ManuscriptReminder
+  | DiscussionReminder;
 
 export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 

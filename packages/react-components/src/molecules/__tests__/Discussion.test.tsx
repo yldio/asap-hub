@@ -3,7 +3,7 @@ import {
   createDiscussionResponse,
   createMessage,
 } from '@asap-hub/fixtures';
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import Discussion from '../Discussion';
@@ -68,7 +68,7 @@ it('displays reply modal when user clicks reply button', async () => {
   });
 });
 
-it('removes reply modal when user clicks cancel button', () => {
+it('removes reply modal when user clicks cancel button', async () => {
   const { getByText, getByRole, queryByText } = render(
     <Discussion {...props} />,
   );
@@ -76,7 +76,10 @@ it('removes reply modal when user clicks cancel button', () => {
   userEvent.click(getByRole('button', { name: /Reply Icon/i }));
 
   expect(getByText(/Reply/i, { selector: 'h3' })).toBeVisible();
-  userEvent.click(getByRole('button', { name: /Cancel/i }));
+  await act(async () => {
+    userEvent.click(getByText('Cancel'));
+  });
+  userEvent.click(getByRole('button', { name: /Cancel Reply/i }));
 
   expect(queryByText(/Reply/i, { selector: 'h3' })).not.toBeInTheDocument();
 });

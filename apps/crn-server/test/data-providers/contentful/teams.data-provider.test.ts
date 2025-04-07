@@ -13,6 +13,7 @@ import {
   getTeamListItemDataObject,
   getContentfulGraphqlTeamById,
   getContentfulGraphqlTeam,
+  getUnsortedManuscripts,
 } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -565,6 +566,28 @@ describe('Teams data provider', () => {
       const result = await teamByIdDataProviderMock.fetchById(teamId);
 
       expect(result).toMatchObject(expectedResult);
+    });
+
+    test('should sort manuscripts so that Compliant and Closed (other) are last', async () => {
+      const teamId = 'team-id';
+
+      const team = {
+        ...getContentfulGraphqlTeamById(teamId),
+        linkedFrom: getUnsortedManuscripts(teamId),
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        teams: team,
+      });
+
+      const result = await teamDataProvider.fetchById(teamId);
+
+      expect(result?.manuscripts.map((m) => m.status)).toEqual([
+        'Waiting for Report',
+        'Submit Final Publication',
+        'Compliant',
+        'Closed (other)',
+      ]);
     });
 
     test('Should return null when the team is not found', async () => {

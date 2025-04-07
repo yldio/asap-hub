@@ -104,6 +104,7 @@ export {
   PillList,
   ReminderItem,
   SearchField,
+  StatusBadge,
   StatusButton,
   TabbedCard,
   TabNav,

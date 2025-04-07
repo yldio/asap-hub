@@ -6,23 +6,23 @@ import {
   ManuscriptStatus,
   manuscriptStatus,
 } from '@asap-hub/model';
+
 import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import React, { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import {
-  GlobeIcon,
-  info100,
-  info500,
-  LabeledDropdown,
-  LabeledTextField,
-} from '..';
 import { Button, Card, Paragraph } from '../atoms';
+import { GlobeIcon } from '../icons';
 import { defaultPageLayoutPaddingStyle } from '../layout';
-import { LabeledTextEditor } from '../molecules';
+import {
+  LabeledDropdown,
+  LabeledTextEditor,
+  LabeledTextField,
+  StatusBadge,
+} from '../molecules';
 import { ConfirmModal } from '../organisms';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import { Option } from '../select';
 
 const mainStyles = css({
@@ -247,7 +247,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   enabled={!isSubmitting}
                   labelIndicator={<GlobeIcon />}
                   placeholder="https://example.com"
-                  onKeyDown={(e) => {
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                     if (e.key === 'Tab' && !e.shiftKey && editorRef.current) {
                       e.preventDefault(); // Stop default tab behavior
                       editorRef.current.focus();
@@ -309,21 +309,8 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   placeholder="Choose an option"
                   value={value ?? ''}
                   onChange={onChange}
-                  renderValue={(val) =>
-                    val && (
-                      <span
-                        css={css({
-                          backgroundColor: info100.rgba,
-                          color: info500.rgba,
-                          padding: '0em 1em',
-                          borderRadius: `${24 / perRem}em`,
-                          fontSize: '0.9em',
-                          marginLeft: '0.1em',
-                        })}
-                      >
-                        {val}
-                      </span>
-                    )
+                  renderValue={(val: ManuscriptStatus) =>
+                    val && <StatusBadge status={val} />
                   }
                 />
               )}

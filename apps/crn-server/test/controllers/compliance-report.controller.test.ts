@@ -19,6 +19,7 @@ describe('Compliance Report controller', () => {
       avatarUrl: 'avatar.jpg',
       teams: [{ id: 'team-1', name: 'Team 1' }],
     },
+    manuscriptId: 'manuscript-1',
   };
 
   const complianceReportDataProviderMock: jest.Mocked<ComplianceReportDataProvider> =

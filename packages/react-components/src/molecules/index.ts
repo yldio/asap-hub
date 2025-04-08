@@ -56,6 +56,7 @@ export { default as PillList } from './PillList';
 export { default as ReminderItem } from './ReminderItem';
 export { default as SearchField } from './SearchField';
 export { default as SocialIcons } from './SocialIcons';
+export { default as StatusBadge } from './StatusBadge';
 export { default as StatusButton } from './StatusButton';
 export { default as TabbedCard } from './TabbedCard';
 export { default as TabbedContent } from './TabbedContent';

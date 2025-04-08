@@ -1,10 +1,11 @@
 import { manuscriptAuthor } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
-import ComplianceReportCard from '../ComplianceReportCard';
+import ComplianceReportCard, {
+  ComplianceReportCardProps,
+} from '../ComplianceReportCard';
 
-const props: ComponentProps<typeof ComplianceReportCard> = {
+const props: ComplianceReportCardProps = {
   id: 'compliance-report-id',
   url: 'http://example.com/',
   description: 'compliance report description',
@@ -15,6 +16,7 @@ const props: ComponentProps<typeof ComplianceReportCard> = {
     displayName: 'Test User',
     id: 'test-user-id',
   },
+  manuscriptId: 'manuscript-1',
 };
 
 it('displays compliance report description and url when expanded', () => {

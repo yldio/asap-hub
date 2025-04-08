@@ -20,7 +20,8 @@ import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
 import { getTeams, getUserHref } from '../utils';
 
-type ComplianceReportCardProps = ComplianceReportResponse;
+export type ComplianceReportCardProps =
+  ComplianceReportResponse['complianceReport'];
 
 const toastStyles = css({
   padding: `${24 / perRem}em ${15 / perRem}em `,

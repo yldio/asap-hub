@@ -26,6 +26,9 @@ const manuscriptResponse = {
   id: 'manuscript-1',
   title: 'The Manuscript',
   versions: [{ id: 'manuscript-version-1' }],
+  status: 'Review Compliance Report',
+  sendNotifications: false,
+  notificationList: '',
 };
 const complianceReportResponse = { id: 'compliance-report-1' };
 
@@ -42,6 +45,7 @@ const mockGetManuscript = getManuscript as jest.MockedFunction<
 
 beforeEach(() => {
   jest.resetModules();
+  jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
 });
 
 const renderPage = async (
@@ -123,6 +127,11 @@ it('can publish a form when the data is valid and navigates to team workspace', 
     userEvent.tab();
   });
 
+  userEvent.click(screen.getByLabelText(/Status/i));
+  await act(async () => {
+    await userEvent.click(screen.getByText(/Review Compliance Report/i));
+  });
+
   const shareButton = getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
 
@@ -139,6 +148,10 @@ it('can publish a form when the data is valid and navigates to team workspace', 
         url,
         description,
         manuscriptVersionId: manuscriptResponse.versions[0]!.id,
+        manuscriptId: manuscriptResponse.id,
+        status: manuscriptResponse.status,
+        sendNotifications: manuscriptResponse.sendNotifications,
+        notificationList: manuscriptResponse.notificationList,
       },
       expect.anything(),
     );

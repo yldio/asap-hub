@@ -1,4 +1,4 @@
-import { ComplianceReportPostRequest } from '@asap-hub/model';
+import { ComplianceReportPostRequest, manuscriptStatus } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { urlExpression } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
@@ -15,9 +15,18 @@ const complianceReportPostRequestValidationSchema: JSONSchemaType<ComplianceRepo
       manuscriptVersionId: { type: 'string' },
       discussionId: { type: 'string', nullable: true },
       versionId: { type: 'string', nullable: true },
-      manuscriptId: { type: 'string', nullable: true },
+      manuscriptId: { type: 'string' },
+      status: { enum: manuscriptStatus, type: 'string' },
+      sendNotifications: { type: 'boolean', nullable: true },
+      notificationList: { type: 'string', nullable: true },
     },
-    required: ['description', 'url', 'manuscriptVersionId'],
+    required: [
+      'description',
+      'url',
+      'manuscriptVersionId',
+      'status',
+      'manuscriptId',
+    ],
     additionalProperties: false,
   };
 

@@ -51,12 +51,20 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
     discussionId: string,
     patch: DiscussionRequest,
   ): Promise<void> => {
-    await replyToDiscussion(
-      manuscriptId,
-      discussionId,
-      patch as DiscussionRequest,
-    );
-    setFormType({ type: 'reply-to-discussion', accent: 'successLarge' });
+    try {
+      await replyToDiscussion(
+        manuscriptId,
+        discussionId,
+        patch as DiscussionRequest,
+      );
+      setFormType({ type: 'reply-to-discussion', accent: 'successLarge' });
+    } catch (error) {
+      setFormType({
+        type: 'default-error',
+        accent: 'error',
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (

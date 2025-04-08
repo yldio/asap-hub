@@ -137,6 +137,7 @@ beforeEach(() => {
   (getManuscript as jest.Mock).mockResolvedValue(
     createTeamManuscriptResponse(),
   );
+  window.scrollTo = jest.fn();
 });
 
 afterEach(jest.resetAllMocks);
@@ -295,6 +296,91 @@ describe('Manuscript', () => {
         type: 'reply-to-discussion',
         accent: 'successLarge',
       });
+    });
+  });
+
+  it('should show an error when reply to discussion fails', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    enable('DISPLAY_MANUSCRIPTS');
+
+    (useManuscriptById as jest.Mock).mockImplementation(() => [
+      {
+        ...createTeamManuscriptResponse(),
+        discussions: [
+          {
+            id: 'discussion-id-1',
+            title: 'Where does Lorem Ipsum come from?',
+            text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
+            lastUpdatedAt: '2025-04-01T15:00:00.000Z',
+            createdDate: '2025-03-31T10:00:00.000Z',
+            createdBy: {
+              alumniSinceDate: undefined,
+              avatarUrl: undefined,
+              displayName: 'John Doe',
+              firstName: 'John',
+              id: 'user-id-1',
+              lastName: 'Doe',
+              teams: [
+                {
+                  id: 'team-id-1',
+                  name: 'Team 1',
+                },
+              ],
+            },
+            replies: [],
+          },
+        ],
+      },
+      jest.fn(),
+    ]);
+
+    (useReplyToDiscussion as jest.Mock).mockReturnValue(() =>
+      Promise.reject(new Error('Reply failed')),
+    );
+
+    const screen = renderWithWrapper(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          tools: [],
+          manuscripts: [createTeamManuscriptResponse()],
+        }}
+      />,
+    );
+
+    userEvent.click(await screen.findByTestId('collapsible-button'));
+    userEvent.click(screen.getByText('Discussions'));
+    userEvent.click(
+      await screen.findByTestId(
+        'discussion-collapsible-button-discussion-id-1',
+      ),
+    );
+
+    userEvent.click(
+      await screen.findByTestId('discussion-reply-button-discussion-id-1'),
+    );
+
+    userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
+
+    const textInput = screen.getByTestId('editor');
+    await act(async () => {
+      userEvent.click(textInput);
+      userEvent.tab();
+      fireEvent.input(textInput, { data: 'test message' });
+      userEvent.tab();
+    });
+
+    const shareButton = screen.getByRole('button', { name: /Send/i });
+    await waitFor(() => expect(shareButton).toBeEnabled());
+    userEvent.click(shareButton);
+    await waitFor(() => {
+      expect(mockSetFormType).toHaveBeenCalledWith({
+        type: 'default-error',
+        accent: 'error',
+      });
+
+      expect(window.scrollTo).toHaveBeenCalled();
     });
   });
 });

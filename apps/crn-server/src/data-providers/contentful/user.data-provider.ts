@@ -411,6 +411,7 @@ export const parseContentfulGraphQlPublicUsers = (
 
   return {
     id: userId,
+    avatarUrl: item.avatar?.url ?? undefined,
     biography: item.biography ?? undefined,
     city: item.city ?? undefined,
     country: item.country ?? undefined,

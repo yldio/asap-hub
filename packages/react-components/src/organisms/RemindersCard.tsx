@@ -7,6 +7,7 @@ import { lead, steel } from '../colors';
 import { perRem } from '../pixels';
 import { Button } from '../atoms';
 import ReminderItem from '../molecules/ReminderItem';
+import { borderRadius } from '../card';
 
 const container = css({
   display: 'grid',
@@ -14,13 +15,24 @@ const container = css({
   padding: `0 ${24 / perRem}em`,
 });
 
-const row = css({
-  borderBottom: `1px solid ${steel.rgb}`,
-  padding: `${12 / perRem}em 0`,
-  ':last-child': {
-    borderBottom: 'none',
-  },
-});
+const row = (hasShowMore: boolean) =>
+  css({
+    borderBottom: `1px solid ${steel.rgb}`,
+    padding: `${12 / perRem}em 0`,
+    ':last-child': {
+      borderBottom: 'none',
+    },
+    ...(hasShowMore
+      ? {
+          ':nth-last-of-type(2)': {
+            margin: `0 -${24 / perRem}em 0 -${(24 - borderRadius) / perRem}em`,
+            padding: `${12 / perRem}em ${24 / perRem}em ${12 / perRem}em ${
+              (24 - borderRadius) / perRem
+            }em`,
+          },
+        }
+      : {}),
+  });
 const expandLink = css({ justifyContent: 'center', display: 'flex' });
 
 type ReminderProps = {
@@ -36,17 +48,18 @@ const RemindersCard: React.FC<ReminderProps> = ({
   limit,
 }) => {
   const [expanded, setExpanded] = useState<boolean>(false);
+  const hasShowMore = !!(limit && reminders.length > limit);
   return (
     <Card stroke padding={false}>
       <div css={container}>
         {reminders.length ? (
           reminders.slice(0, expanded ? undefined : limit).map((reminder) => (
-            <div key={reminder.id} css={row}>
+            <div key={reminder.id} css={row(hasShowMore)}>
               <ReminderItem {...reminder} />
             </div>
           ))
         ) : (
-          <div css={row}>
+          <div css={row(hasShowMore)}>
             <ReminderItem
               description={
                 canPublish
@@ -56,8 +69,8 @@ const RemindersCard: React.FC<ReminderProps> = ({
             />
           </div>
         )}
-        {limit && reminders.length > limit && (
-          <div css={[row, expandLink]}>
+        {hasShowMore && (
+          <div css={[row(hasShowMore), expandLink]}>
             <Button onClick={() => setExpanded(!expanded)} linkStyle>
               {expanded ? `Show less ↑` : `Show more ↓`}
             </Button>

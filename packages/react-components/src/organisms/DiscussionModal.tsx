@@ -13,22 +13,23 @@ const headerStyles = css({
   display: 'flex',
 });
 
-const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
+const buttonMediaQuery = `@media (min-width: ${mobileScreen.max + 50}px)`;
 
 const buttonContainerStyles = css({
   display: 'grid',
-  columnGap: rem(24),
-  gridTemplateRows: 'max-content 12px max-content',
+  rowGap: rem(24),
+  gridTemplateRows: 'max-content max-content',
   [buttonMediaQuery]: {
     gridTemplateColumns: 'max-content max-content',
     justifyContent: 'flex-end',
+    columnGap: rem(24),
   },
 });
 
 const confirmButtonStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  gridRow: '1 / span 2',
+  gridRow: '1 / span 1',
   gridColumn: '1',
   [buttonMediaQuery]: {
     gridRow: '1',
@@ -38,7 +39,7 @@ const confirmButtonStyles = css({
 const dismissButtonStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  gridRow: '2 / span 2',
+  gridRow: '2 / span 1',
   gridColumn: '1',
   [buttonMediaQuery]: {
     gridRow: '1',
@@ -49,11 +50,24 @@ const buttonOverrideStyles = css({
   padding: `${rem(15)} ${rem(33)}}`,
 });
 
-const footerStyles = css({
-  display: 'flex',
-  justifyContent: 'flex-end',
-  paddingTop: rem(15),
-  gap: rem(24),
+const footerStyles = (isCancelling: boolean) =>
+  css({
+    display: 'flex',
+    flexDirection: 'column',
+    paddingTop: rem(15),
+    gap: `${isCancelling ? rem(24) : 0}`,
+    [buttonMediaQuery]: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+  });
+
+const cancelTextStyles = css({
+  fontWeight: 'bold',
+  [buttonMediaQuery]: {
+    maxHeight: rem(60),
+    maxWidth: rem(250),
+  },
 });
 
 type DiscussionModalProps = {
@@ -155,13 +169,15 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
             )}
           />
 
-          <div css={footerStyles}>
-            {isCancelling && (
-              <div css={{ fontWeight: 'bold' }}>
-                Cancelling now will result in the loss of all entered data. Do
-                you want to continue?
-              </div>
-            )}
+          <div css={footerStyles(isCancelling)}>
+            <div css={cancelTextStyles}>
+              {isCancelling && (
+                <span>
+                  Cancelling now will result in the loss of all entered data. Do
+                  you want to continue?
+                </span>
+              )}
+            </div>
             <div css={buttonContainerStyles}>
               <div css={dismissButtonStyles}>
                 <Button

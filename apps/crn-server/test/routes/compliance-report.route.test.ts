@@ -107,6 +107,7 @@ describe('/compliance-reports/ route', () => {
         count: 1,
         assignedUsers: [],
         status: 'Manuscript Resubmitted',
+        discussions: [],
       });
 
       manuscriptControllerMock.update.mockResolvedValueOnce({
@@ -117,6 +118,7 @@ describe('/compliance-reports/ route', () => {
         count: 1,
         assignedUsers: [],
         status: 'Review Compliance Report',
+        discussions: [],
       });
 
       const response = await supertest(app)
@@ -172,6 +174,7 @@ describe('/compliance-reports/ route', () => {
         count: 1,
         assignedUsers: [],
         status: 'Review Compliance Report',
+        discussions: [],
       });
 
       const { userId, ...requestBody } = getComplianceReportCreateDataObject();

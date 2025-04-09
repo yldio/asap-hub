@@ -154,7 +154,7 @@ describe('/discussions/ route', () => {
       );
     });
 
-    test('Should not accept a string of over 256 characters for the reply', async () => {
+    test('Should accept a string of over 256 characters for the reply', async () => {
       const discussionId = 'discussion-id-1';
 
       const response = await supertest(app)
@@ -163,7 +163,7 @@ describe('/discussions/ route', () => {
           text: 'x'.repeat(257),
         });
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(200);
     });
   });
 

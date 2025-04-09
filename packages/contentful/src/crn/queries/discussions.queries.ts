@@ -8,6 +8,7 @@ export const discussionContentQueryFragment = gql`
       id
       publishedVersion
     }
+    title
     message {
       sys {
         publishedAt
@@ -36,7 +37,7 @@ export const discussionContentQueryFragment = gql`
         }
       }
     }
-    repliesCollection(limit: 10) @include(if: $fetchReplies) {
+    repliesCollection(limit: 10) {
       items {
         sys {
           publishedAt
@@ -69,7 +70,7 @@ export const discussionContentQueryFragment = gql`
   }
 `;
 export const FETCH_DISCUSSION_BY_ID = gql`
-  query FetchDiscussionById($id: String!, $fetchReplies: Boolean = true) {
+  query FetchDiscussionById($id: String!) {
     discussions(id: $id) {
       ...DiscussionsContent
     }

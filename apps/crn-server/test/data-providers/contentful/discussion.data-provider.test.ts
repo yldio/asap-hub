@@ -54,15 +54,17 @@ describe('Discussions Contentful Data Provider', () => {
       const manuscriptMockEntry = {
         sys: { id: discussionRequestObject.manuscriptId },
         fields: {
-          discussion: [
-            {
-              sys: {
-                id: 'previous-discussion',
-                linkType: 'Entry',
-                type: 'Link',
+          discussions: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'previous-discussion',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
               },
-            },
-          ],
+            ],
+          },
         },
         publish,
         patch,
@@ -131,7 +133,7 @@ describe('Discussions Contentful Data Provider', () => {
       );
       expect(manuscriptMockEntry.patch).toHaveBeenCalledWith([
         {
-          op: 'add',
+          op: 'replace',
           path: '/fields/discussions',
           value: {
             'en-US': [
@@ -169,7 +171,9 @@ describe('Discussions Contentful Data Provider', () => {
       const manuscriptMockEntry = {
         sys: { id: discussionRequestObject.manuscriptId },
         fields: {
-          discussion: [],
+          discussions: {
+            'en-US': [],
+          },
         },
         publish,
         patch,
@@ -196,7 +200,7 @@ describe('Discussions Contentful Data Provider', () => {
 
       expect(manuscriptMockEntry.patch).toHaveBeenCalledWith([
         {
-          op: 'add',
+          op: 'replace',
           path: '/fields/discussions',
           value: {
             'en-US': [

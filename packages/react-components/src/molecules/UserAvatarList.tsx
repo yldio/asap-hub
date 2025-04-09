@@ -6,7 +6,8 @@ import { Anchor, Avatar, Button } from '../atoms';
 
 const MAX_USER_AVATARS = 5;
 const USER_AVATAR_BORDER_WIDTH = 1;
-
+const USER_SMALL_SIZE = 24;
+const USER_LARGE_SIZE = 36;
 const membersContainerStyles = (width: number, numColumns: number) =>
   css({
     gridArea: 'members',
@@ -45,6 +46,7 @@ type UserAvatarListProps = {
   fullListRoute?: string;
   onClick?: () => void;
   small?: boolean;
+  variant?: 'stacked' | 'spread';
 };
 
 const UserAvatarList: React.FC<UserAvatarListProps> = ({
@@ -52,10 +54,11 @@ const UserAvatarList: React.FC<UserAvatarListProps> = ({
   fullListRoute,
   onClick,
   small = false,
+  variant = 'stacked',
 }) => (
   <div
     css={membersContainerStyles(
-      small ? 24 : 36,
+      small ? USER_SMALL_SIZE : USER_LARGE_SIZE,
       members.length > MAX_USER_AVATARS ? MAX_USER_AVATARS + 1 : members.length,
     )}
   >
@@ -65,7 +68,10 @@ const UserAvatarList: React.FC<UserAvatarListProps> = ({
         .map(({ id: userId, avatarUrl, firstName, lastName }, i) => (
           <li
             key={`${userId}${i}`}
-            css={[listItemStyles, { left: `-${i * 3}px` }]}
+            css={[
+              listItemStyles,
+              variant === 'stacked' && { left: `-${i * 3}px` },
+            ]}
           >
             <Anchor href={network({}).users({}).user({ userId }).$}>
               <Avatar
@@ -87,7 +93,11 @@ const UserAvatarList: React.FC<UserAvatarListProps> = ({
             <Button
               onClick={onClick}
               linkStyle
-              overrideStyles={css({ display: 'flex', margin: rem(1) })}
+              overrideStyles={css({
+                display: 'flex',
+                margin: rem(1),
+                width: small ? USER_SMALL_SIZE : USER_LARGE_SIZE,
+              })}
             >
               <Avatar placeholder={`+${members.length - MAX_USER_AVATARS}`} />
             </Button>

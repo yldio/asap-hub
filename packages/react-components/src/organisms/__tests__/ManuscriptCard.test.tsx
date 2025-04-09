@@ -11,6 +11,37 @@ import { ComponentProps } from 'react';
 import { Route, Router } from 'react-router-dom';
 import ManuscriptCard from '../ManuscriptCard';
 
+const useManuscriptById = jest.fn().mockImplementation(() => {
+  const manuscript = {
+    id: 'manuscript_0',
+    title: 'Mock Manuscript Title',
+    status: 'Waiting for Report',
+    versions: [],
+  };
+
+  const setManuscript = jest.fn((newData) => {
+    Object.assign(manuscript, newData);
+  });
+
+  return [manuscript, setManuscript];
+});
+
+const baseUser = createUserResponse({}, 1);
+const props: ComponentProps<typeof ManuscriptCard> & {
+  teamId: string;
+  useManuscriptById: jest.Mock;
+} = {
+  teamId: 'team-1',
+  useManuscriptById,
+  id: `manuscript_0`,
+  user: { ...baseUser, algoliaApiKey: 'algolia-mock-key' },
+  isComplianceReviewer: false,
+  onUpdateManuscript: jest.fn(),
+  isActiveTeam: true,
+  createDiscussion: jest.fn(),
+  onReplyToDiscussion: jest.fn(),
+};
+
 const complianceReport = {
   id: 'compliance-report-id',
   url: 'https://example.com',
@@ -34,20 +65,7 @@ const mockVersionWithReport = {
   },
 };
 
-const useManuscriptById = jest.fn();
 const useManuscriptByIdWithReport = jest.fn();
-
-const baseUser = createUserResponse({}, 1);
-const props: ComponentProps<typeof ManuscriptCard> = {
-  teamId: 'team-1',
-  useManuscriptById,
-  id: `manuscript_0`,
-  user: { ...baseUser, algoliaApiKey: 'algolia-mock-key' },
-  isComplianceReviewer: false,
-  onUpdateManuscript: jest.fn(),
-  isActiveTeam: true,
-  createDiscussion: jest.fn(),
-};
 
 const user = {
   ...baseUser,

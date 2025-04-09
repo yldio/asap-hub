@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
+import { discussionContentQueryFragment } from './discussions.queries';
 
 export const manuscriptContentQueryFragment = gql`
   fragment ManuscriptsContent on Manuscripts {
@@ -11,6 +12,12 @@ export const manuscriptContentQueryFragment = gql`
     title
     status
     count
+    discussionsCollection(limit: 10) {
+      total
+      items {
+        ...DiscussionsContent
+      }
+    }
     assignedUsersCollection(limit: 30) {
       items {
         sys {
@@ -254,6 +261,7 @@ export const manuscriptContentQueryFragment = gql`
       }
     }
   }
+  ${discussionContentQueryFragment}
 `;
 
 export const FETCH_MANUSCRIPT_BY_ID = gql`

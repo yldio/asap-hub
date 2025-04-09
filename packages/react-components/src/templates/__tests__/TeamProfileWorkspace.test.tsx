@@ -25,6 +25,7 @@ const useManuscriptByIdMock = jest.fn().mockImplementation((id: string) => [
       count: 1,
       title: 'Nice manuscript',
       versions: [],
+      discussions: [],
       teamId: 'WH1',
       grantId: '000282',
     },
@@ -33,6 +34,7 @@ const useManuscriptByIdMock = jest.fn().mockImplementation((id: string) => [
       count: 2,
       title: 'A Good Manuscript',
       versions: [],
+      discussions: [],
       teamId: 'CS1',
       grantId: '000301',
     },
@@ -49,6 +51,7 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   isTeamMember: true,
   createDiscussion: jest.fn(),
   useManuscriptById: useManuscriptByIdMock,
+  onReplyToDiscussion: jest.fn(),
 };
 
 it('renders the team workspace page', () => {

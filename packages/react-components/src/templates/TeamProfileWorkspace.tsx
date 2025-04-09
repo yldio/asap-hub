@@ -20,6 +20,7 @@ import { formatDateAndTime } from '../date';
 import { plusIcon } from '../icons';
 import { createMailTo, mailToSupport } from '../mail';
 import { EligibilityModal, ToolCard } from '../organisms';
+import DiscussionCard from '../organisms/DiscussionCard';
 import ManuscriptCard from '../organisms/ManuscriptCard';
 import { mobileScreen, perRem, rem } from '../pixels';
 
@@ -110,7 +111,8 @@ type TeamProfileWorkspaceProps = Readonly<
   Pick<
     ComponentProps<typeof ManuscriptCard>,
     'onUpdateManuscript' | 'isComplianceReviewer'
-  > & {
+  > &
+  Pick<ComponentProps<typeof DiscussionCard>, 'onReplyToDiscussion'> & {
     readonly tools: ReadonlyArray<TeamTool>;
     readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
     readonly setEligibilityReasons: (newEligibilityReason: Set<string>) => void;
@@ -143,6 +145,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   isTeamMember,
   createDiscussion,
   useManuscriptById,
+  onReplyToDiscussion,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
@@ -227,6 +230,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           isActiveTeam={!inactiveSince}
                           createDiscussion={createDiscussion}
                           useManuscriptById={useManuscriptById}
+                          onReplyToDiscussion={onReplyToDiscussion}
                         />
                       </div>
                     ))}
@@ -260,6 +264,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           onUpdateManuscript={onUpdateManuscript}
                           createDiscussion={createDiscussion}
                           useManuscriptById={useManuscriptById}
+                          onReplyToDiscussion={onReplyToDiscussion}
                         />
                       </div>
                     ))}

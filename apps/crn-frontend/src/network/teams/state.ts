@@ -371,9 +371,14 @@ export const useSetDiscussion = () =>
 export const useReplyToDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);
   const setDiscussion = useSetDiscussion();
-  return async (id: string, patch: DiscussionRequest) => {
+
+  const setManuscriptItem = useSetManuscriptItem();
+
+  return async (manuscriptId: string, id: string, patch: DiscussionRequest) => {
     const discussion = await updateDiscussion(id, patch, authorization);
     setDiscussion(discussion);
+    const updatedManuscript = await getManuscript(manuscriptId, authorization);
+    if (updatedManuscript) setManuscriptItem(updatedManuscript);
   };
 };
 
@@ -558,6 +563,7 @@ export const useVersionById = (params: {
 
 export const useCreateDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);
+  const setManuscriptItem = useSetManuscriptItem();
 
   return async (
     manuscriptId: string,
@@ -570,6 +576,8 @@ export const useCreateDiscussion = () => {
       text,
       authorization,
     );
+    const updatedManuscript = await getManuscript(manuscriptId, authorization);
+    if (updatedManuscript) setManuscriptItem(updatedManuscript);
     return discussion.id;
   };
 };

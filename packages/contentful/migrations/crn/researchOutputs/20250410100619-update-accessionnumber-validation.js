@@ -1,27 +1,30 @@
 module.exports.description = 'Update accession field validation';
 
+const validationMessage = 'This must start with a letter';
+
 module.exports.up = (migration) => {
   const researchOutputs = migration.editContentType('researchOutputs');
   const researchOutputVersions = migration.editContentType(
     'researchOutputVersions',
   );
+  const newPattern = '^(\\w+\\d+(\\.(\\w?)\\d+)*)|(NP_\\d+)$';
 
   researchOutputs.editField('accession').validations([
     {
       regexp: {
-        pattern: '^(\\w+\\d+(\\.(\\w?)\\d+)*)|(NP_\\d+)$',
+        pattern: newPattern,
         flags: null,
       },
-      message: 'This must start with a letter',
+      message: validationMessage,
     },
   ]);
   researchOutputVersions.editField('accession').validations([
     {
       regexp: {
-        pattern: '^(\\w+\\d+(\\.(\\w?)\\d+)*)|(NP_\\d+)$',
+        pattern: newPattern,
         flags: null,
       },
-      message: 'This must start with a letter',
+      message: validationMessage,
     },
   ]);
 };
@@ -31,14 +34,15 @@ module.exports.down = (migration) => {
   const researchOutputVersions = migration.editContentType(
     'researchOutputVersions',
   );
+  const oldPattern = '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$';
 
   researchOutputs.editField('accession').validations([
     {
       regexp: {
-        pattern: '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
+        pattern: oldPattern,
         flags: null,
       },
-      message: 'This must start with a letter',
+      message: validationMessage,
     },
   ]);
 
@@ -48,7 +52,7 @@ module.exports.down = (migration) => {
         pattern: '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
         flags: null,
       },
-      message: 'This must start with a letter',
+      message: validationMessage,
     },
   ]);
 };

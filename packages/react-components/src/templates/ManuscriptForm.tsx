@@ -472,7 +472,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
   const watchType = watch('versions.0.type');
   const watchLifecycle = watch('versions.0.lifecycle');
-  console.log(getValues());
 
   useEffect(() => {
     if (!watchType) {
@@ -600,7 +599,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           versionData.additionalAuthors,
           additionalAuthorsEmails,
         ),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         manuscriptFile: manuscriptFile!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         keyResourceTable: keyResourceTable!,
       };
       try {

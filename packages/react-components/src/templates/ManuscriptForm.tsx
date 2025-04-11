@@ -472,6 +472,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
   const watchType = watch('versions.0.type');
   const watchLifecycle = watch('versions.0.lifecycle');
+  console.log(getValues());
 
   useEffect(() => {
     if (!watchType) {
@@ -599,6 +600,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           versionData.additionalAuthors,
           additionalAuthorsEmails,
         ),
+        manuscriptFile: manuscriptFile!,
+        keyResourceTable: keyResourceTable!,
       };
       try {
         if (!manuscriptId) {
@@ -1010,7 +1013,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         });
                       }
                     }}
-                    currentFiles={value && [value]}
+                    currentFiles={value ? [value] : []}
                     accept="application/pdf"
                     customValidationMessage={error?.message}
                     enabled={
@@ -1083,7 +1086,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           );
                         }
                       }}
-                      currentFiles={value && [value]}
+                      currentFiles={value ? [value] : []}
                       accept="text/csv"
                       customValidationMessage={error?.message}
                       enabled={

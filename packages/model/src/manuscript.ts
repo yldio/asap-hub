@@ -440,7 +440,6 @@ export type ManuscriptFormData = Pick<
     | 'submitterName'
     | 'otherDetails'
     | 'description'
-    | 'manuscriptFile'
     | 'acknowledgedGrantNumber'
     | 'asapAffiliationIncluded'
     | 'manuscriptLicense'
@@ -459,7 +458,8 @@ export type ManuscriptFormData = Pick<
     | 'availabilityStatementDetails'
   > & {
     submissionDate?: ManuscriptVersion['submissionDate'];
-    keyResourceTable: ManuscriptVersion['keyResourceTable'];
+    manuscriptFile: ManuscriptVersion['manuscriptFile'] | null;
+    keyResourceTable: ManuscriptVersion['keyResourceTable'] | null;
     additionalFiles?: ManuscriptVersion['additionalFiles'] | [];
 
     teams: MultiselectOption[];

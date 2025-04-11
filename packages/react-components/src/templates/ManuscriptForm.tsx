@@ -600,9 +600,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           additionalAuthorsEmails,
         ),
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        manuscriptFile: manuscriptFile!,
+        manuscriptFile: versionData.manuscriptFile!,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        keyResourceTable: keyResourceTable!,
+        keyResourceTable: versionData.keyResourceTable!,
       };
       try {
         if (!manuscriptId) {

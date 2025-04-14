@@ -7,7 +7,7 @@ module.exports.up = (migration) => {
   const outputs = migration.editContentType('outputs');
   const outputVersion = migration.editContentType('outputVersion');
 
-  const newPattern = '^(\\w+\\d+(\\.(\\w?)\\d+)*)|(NP_\\d+)$';
+  const newPattern = '^\\w+\\d+(\\.(\\w?)\\d+)*$';
 
   outputs.editField('accessionNumber').validations([
     {

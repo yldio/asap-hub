@@ -7,7 +7,7 @@ module.exports.up = (migration) => {
   const researchOutputVersions = migration.editContentType(
     'researchOutputVersions',
   );
-  const newPattern = '^(\\w+\\d+(\\.(\\w?)\\d+)*)|(NP_\\d+)$';
+  const newPattern = '^\\w+\\d+(\\.(\\w?)\\d+)*$';
 
   researchOutputs.editField('accession').validations([
     {

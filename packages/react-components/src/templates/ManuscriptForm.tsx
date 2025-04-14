@@ -786,12 +786,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       message: 'Your preprint DOI must start with 10.',
                     },
                     required:
-                      (watchLifecycle === 'Preprint' ||
-                        (resubmitManuscript &&
-                          [
-                            'Publication',
-                            'Publication with addendum or corrigendum',
-                          ].includes(watchLifecycle))) &&
+                      watchLifecycle === 'Preprint' &&
                       'Please enter a Preprint DOI',
                   }}
                   render={({
@@ -801,7 +796,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     <LabeledTextField
                       title="Preprint DOI"
                       subtitle={
-                        watchLifecycle === 'Preprint' || resubmitManuscript
+                        watchLifecycle === 'Preprint'
                           ? '(required)'
                           : '(optional)'
                       }

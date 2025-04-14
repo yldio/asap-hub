@@ -599,6 +599,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           versionData.additionalAuthors,
           additionalAuthorsEmails,
         ),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        manuscriptFile: versionData.manuscriptFile!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        keyResourceTable: versionData.keyResourceTable!,
       };
       try {
         if (!manuscriptId) {
@@ -978,7 +982,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures. The file size must not exceed 100 MB."
                     placeholder="Upload Manuscript File"
                     onRemove={() => {
-                      resetField('versions.0.manuscriptFile');
+                      resetField('versions.0.manuscriptFile', {
+                        defaultValue: null,
+                      });
                     }}
                     handleFileUpload={async (file) => {
                       if (file.size > MAX_FILE_SIZE) {
@@ -1010,7 +1016,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         });
                       }
                     }}
-                    currentFiles={value && [value]}
+                    currentFiles={value ? [value] : []}
                     accept="application/pdf"
                     customValidationMessage={error?.message}
                     enabled={
@@ -1047,7 +1053,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       }
                       placeholder="Upload Key Resource Table"
                       onRemove={() => {
-                        resetField('versions.0.keyResourceTable');
+                        resetField('versions.0.keyResourceTable', {
+                          defaultValue: null,
+                        });
                       }}
                       handleFileUpload={async (file) => {
                         if (file.size > MAX_FILE_SIZE) {
@@ -1083,7 +1091,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           );
                         }
                       }}
-                      currentFiles={value && [value]}
+                      currentFiles={value ? [value] : []}
                       accept="text/csv"
                       customValidationMessage={error?.message}
                       enabled={

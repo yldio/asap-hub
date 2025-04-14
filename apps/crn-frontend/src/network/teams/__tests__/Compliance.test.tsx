@@ -133,7 +133,7 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   const manuscriptId = 'manuscript-id-1';
   const mockManuscript: PartialManuscriptResponse = {
     ...createPartialManuscriptResponse(),
-    manuscriptId,
+    id: manuscriptId,
     status: 'Review Compliance Report',
   };
 
@@ -197,7 +197,7 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
 it('manuscripts remain the same when there is not a match between the manuscript ids', async () => {
   const mockManuscript: PartialManuscriptResponse = {
     ...createPartialManuscriptResponse(),
-    manuscriptId: 'manuscript-id-1',
+    id: 'manuscript-id-1',
     status: 'Review Compliance Report',
   };
 
@@ -261,7 +261,7 @@ it('manuscripts remain the same when there is not a match between the manuscript
 it('manuscripts remain the same when getting previous manuscripts fails', async () => {
   const mockManuscript: PartialManuscriptResponse = {
     ...createPartialManuscriptResponse(),
-    manuscriptId: 'manuscript-id-1',
+    id: 'manuscript-id-1',
     status: 'Review Compliance Report',
   };
 
@@ -435,8 +435,8 @@ describe('csv export', () => {
     const manuscriptId = 'manuscript-id-1';
     const mockManuscript: PartialManuscriptResponse = {
       ...createPartialManuscriptResponse(),
-      manuscriptId,
-      id: 'SC1-000129-002-org-G-2',
+      id: manuscriptId,
+      manuscriptId: 'SC1-000129-002-org-G-2',
       status: 'Review Compliance Report',
     };
 

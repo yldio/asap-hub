@@ -1,7 +1,7 @@
 import { PartialManuscriptResponse } from '@asap-hub/model';
 
 export const manuscriptToCSV = (manuscript: PartialManuscriptResponse) => ({
-  'Manuscript ID': manuscript.id,
+  'Manuscript ID': manuscript.manuscriptId,
   Title: manuscript.title,
   'Team Name': manuscript.team.displayName,
   'Last Updated': manuscript.lastUpdated,

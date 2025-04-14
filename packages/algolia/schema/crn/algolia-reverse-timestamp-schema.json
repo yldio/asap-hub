@@ -63,6 +63,7 @@
     "workingGroup.id",
     "workingGroups.id",
     "publishingEntity",
+    "manuscriptId",
     "teams",
     "assignedUsers"
   ]

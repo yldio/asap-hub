@@ -131,7 +131,7 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
 }) => {
   const {
     team,
-    id,
+    manuscriptId,
     lastUpdated,
     status,
     requestingApcCoverage,
@@ -143,10 +143,14 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
 
   return (
     <>
-      <tr key={id} css={[rowStyles]} data-testid="compliance-table-row">
+      <tr
+        key={manuscriptId}
+        css={[rowStyles]}
+        data-testid="compliance-table-row"
+      >
         <td className={'sticky'}>
           <Pill accent="blue" numberOfLines={1}>
-            <span css={pillIdStyles}>{id}</span>
+            <span css={pillIdStyles}>{manuscriptId}</span>
           </Pill>
         </td>
         <td>

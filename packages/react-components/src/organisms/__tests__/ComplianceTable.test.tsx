@@ -24,12 +24,12 @@ describe('ComplianceTable', () => {
   };
 
   const complianceData: PartialManuscriptResponse = {
-    id: 'DA1-000463-002-org-G-1',
+    id: 'manuscript-id-1',
     lastUpdated: '2023-01-01T08:00:00Z',
     status: 'Addendum Required',
     team: { id: 'team-id', displayName: 'Test Team' },
     requestingApcCoverage: 'Yes',
-    manuscriptId: 'manuscript-id-1',
+    manuscriptId: 'DA1-000463-002-org-G-1',
     title: 'Manuscript 1',
     teams: 'Test Team',
     assignedUsers: [assignedUser],

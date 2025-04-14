@@ -5,7 +5,7 @@ import { manuscriptToCSV } from '../export';
 describe('manuscriptToCSV', () => {
   it('exports a manuscript', () => {
     const manuscript: PartialManuscriptResponse = {
-      id: 'DA1-000463-005-org-G-1',
+      id: 'manuscript-id',
       lastUpdated: '2025-03-06T17:03:41.824Z',
       status: 'Waiting for Report',
       requestingApcCoverage: 'Yes',
@@ -29,7 +29,7 @@ describe('manuscriptToCSV', () => {
         displayName: 'Alessi',
       },
       teams: 'Alessi and Camel',
-      manuscriptId: 'manuscript-id',
+      manuscriptId: 'DA1-000463-005-org-G-1',
     };
     expect(manuscriptToCSV(manuscript)).toEqual({
       'Manuscript ID': 'DA1-000463-005-org-G-1',

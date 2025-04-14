@@ -1018,7 +1018,6 @@ describe('preprintDoi', () => {
       lifecycle: 'Publication with addendum or corrigendum',
       status: 'optional',
     },
-    ,
   ] as {
     lifecycle: ManuscriptLifecycle;
     status: string;

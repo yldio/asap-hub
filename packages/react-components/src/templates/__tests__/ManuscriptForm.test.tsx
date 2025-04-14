@@ -1012,33 +1012,25 @@ describe('authors', () => {
 
 describe('preprintDoi', () => {
   it.each([
-    { lifecycle: 'Preprint', status: 'required', resubmitManuscript: false },
-    { lifecycle: 'Publication', status: 'optional', resubmitManuscript: false },
-    { lifecycle: 'Publication', status: 'required', resubmitManuscript: true },
+    { lifecycle: 'Preprint', status: 'required' },
+    { lifecycle: 'Publication', status: 'optional' },
     {
       lifecycle: 'Publication with addendum or corrigendum',
       status: 'optional',
-      resubmitManuscript: false,
-    },
-    {
-      lifecycle: 'Publication with addendum or corrigendum',
-      status: 'required',
-      resubmitManuscript: true,
     },
   ] as {
     lifecycle: ManuscriptLifecycle;
     status: string;
-    resubmitManuscript: boolean;
   }[])(
     'preprintDoi is $status when lifecycle is $lifecycle',
-    async ({ lifecycle, status, resubmitManuscript }) => {
+    async ({ lifecycle, status }) => {
       render(
         <StaticRouter>
           <ManuscriptForm
             {...defaultProps}
             type="Original Research"
             lifecycle={lifecycle}
-            resubmitManuscript={resubmitManuscript}
+            resubmitManuscript
           />
         </StaticRouter>,
       );

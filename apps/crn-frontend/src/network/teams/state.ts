@@ -459,7 +459,7 @@ export const useManuscripts = (
         return {
           ...previousManuscripts,
           items: previousManuscripts.items.map((previousManuscriptItem) =>
-            previousManuscriptItem.manuscriptId === updatedManuscriptItem.id
+            previousManuscriptItem.id === updatedManuscriptItem.id
               ? {
                   ...previousManuscriptItem,
                   status: updatedManuscriptItem.status,

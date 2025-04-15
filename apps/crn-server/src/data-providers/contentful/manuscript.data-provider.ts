@@ -111,7 +111,16 @@ export class ManuscriptContentfulDataProvider
           const version = manuscript.versionsCollection?.items[0];
           const team = manuscript.teamsCollection?.items[0];
           return {
-            manuscriptId: manuscript.sys.id,
+            manuscriptId: getManuscriptVersionUID({
+              version: {
+                type: version?.type,
+                count: version?.count,
+                lifecycle: version?.lifecycle,
+              },
+              teamIdCode: team?.teamId || '',
+              grantId: team?.grantId || '',
+              manuscriptCount: manuscript.count || 0,
+            }),
             title: manuscript.title || '',
             teams: getCommaAndString(
               (manuscript.teamsCollection?.items || []).map(
@@ -122,16 +131,7 @@ export class ManuscriptContentfulDataProvider
               manuscript.assignedUsersCollection,
             ),
             status: manuscriptMapStatus(manuscript.status) || undefined,
-            id: getManuscriptVersionUID({
-              version: {
-                type: version?.type,
-                count: version?.count,
-                lifecycle: version?.lifecycle,
-              },
-              teamIdCode: team?.teamId || '',
-              grantId: team?.grantId || '',
-              manuscriptCount: manuscript.count || 0,
-            }),
+            id: manuscript.sys.id,
             requestingApcCoverage:
               version?.requestingApcCoverage as ApcCoverageOption,
             lastUpdated: version?.sys.publishedAt,

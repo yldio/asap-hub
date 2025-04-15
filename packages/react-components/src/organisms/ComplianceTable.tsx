@@ -106,7 +106,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
 
   const handleStatusChange = async () => {
     if (newSelectedStatus && manuscriptDetails) {
-      await onUpdateManuscript(manuscriptDetails.manuscriptId, {
+      await onUpdateManuscript(manuscriptDetails.id, {
         status: newSelectedStatus,
       });
       setManuscriptDetails(undefined);
@@ -117,7 +117,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
     assignedUsersData: AssignedUsersFormData,
   ) => {
     if (manuscriptDetails) {
-      await onUpdateManuscript(manuscriptDetails.manuscriptId, {
+      await onUpdateManuscript(manuscriptDetails.id, {
         assignedUsers: assignedUsersData.assignedUsers.map(
           (user) => user.value,
         ),
@@ -128,7 +128,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
 
   const PillId = () => (
     <Pill accent="blue" numberOfLines={1}>
-      <span css={pillIdStyles}>{manuscriptDetails?.id}</span>
+      <span css={pillIdStyles}>{manuscriptDetails?.manuscriptId}</span>
     </Pill>
   );
 

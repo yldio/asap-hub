@@ -378,8 +378,8 @@ export const getManuscriptsListResponse =
     total: 2,
     items: [
       {
-        id: 'ID01-grant-001-org-P-1',
-        manuscriptId: 'manuscript-id-1',
+        id: 'manuscript-id-1',
+        manuscriptId: 'ID01-grant-001-org-P-1',
         title: 'Manuscript 1',
         teams: 'Team A',
         assignedUsers: [
@@ -399,8 +399,8 @@ export const getManuscriptsListResponse =
         },
       },
       {
-        id: 'ID01-grant-002-org-P-1',
-        manuscriptId: 'manuscript-id-2',
+        id: 'manuscript-id-2',
+        manuscriptId: 'ID01-grant-002-org-P-1',
         title: 'Manuscript 2',
         teams: 'Team A',
         assignedUsers: [

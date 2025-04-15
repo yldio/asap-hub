@@ -9,12 +9,12 @@ import ComplianceTableRow from '../ComplianceTableRow';
 
 describe('ComplianceTableRow', () => {
   const data: PartialManuscriptResponse = {
-    id: 'DA1-000463-002-org-G-1',
+    id: 'manuscript-id-1',
     lastUpdated: '2023-03-15T08:00:00Z',
     status: 'Addendum Required',
     team: { id: 'team-id', displayName: 'Test Team' },
     requestingApcCoverage: 'Yes',
-    manuscriptId: 'manuscript-id-1',
+    manuscriptId: 'DA1-000463-002-org-G-1',
     assignedUsers: [],
     title: 'Manuscript 1',
     teams: 'Test Team',

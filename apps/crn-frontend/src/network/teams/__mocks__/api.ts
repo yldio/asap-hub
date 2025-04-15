@@ -81,9 +81,9 @@ export const getManuscripts = jest.fn(
     total: 1,
     items: [
       {
-        id: 'DA1-000463-002-org-G-1',
+        id: 'manuscript-id-1',
         lastUpdated: '2020-09-23T20:45:22.000Z',
-        manuscriptId: 'manuscript-id-1',
+        manuscriptId: 'DA1-000463-002-org-G-1',
         title: 'Manuscript 1',
         teams: 'Team 1',
         assignedUsers: [],

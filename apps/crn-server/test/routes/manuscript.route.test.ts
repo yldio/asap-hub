@@ -75,6 +75,7 @@ describe('/manuscripts/ route', () => {
 
       expect(manuscriptControllerMock.fetchById).toHaveBeenCalledWith(
         manuscriptId,
+        'user-id-0',
       );
     });
   });

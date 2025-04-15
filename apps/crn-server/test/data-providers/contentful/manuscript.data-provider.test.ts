@@ -321,7 +321,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       );
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
         FETCH_MANUSCRIPT_BY_ID,
-        { id: manuscriptId },
+        { id: manuscriptId, userId: 'user-id-1' },
       );
     });
 
@@ -1017,8 +1017,10 @@ describe('Manuscripts Contentful Data Provider', () => {
   describe('Fetch-by-id', () => {
     test('Should fetch the manuscript from Contentful GraphQl', async () => {
       const manuscriptId = 'manuscript-id-1';
-      const result =
-        await manuscriptDataProviderMockGraphql.fetchById(manuscriptId);
+      const result = await manuscriptDataProviderMockGraphql.fetchById(
+        manuscriptId,
+        'user-id-1',
+      );
 
       expect(result).toMatchObject(getManuscriptDataObject());
     });
@@ -1051,7 +1053,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           manuscripts: manuscript,
         });
 
-        const result = await manuscriptDataProvider.fetchById('1');
+        const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
 
         expect(result!.versions[0]![fieldDetails]).toEqual('text');
       },
@@ -1085,7 +1087,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           manuscripts: manuscript,
         });
 
-        const result = await manuscriptDataProvider.fetchById('1');
+        const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
 
         expect(result!.versions[0]![fieldDetails]).toBeUndefined();
       },
@@ -1157,7 +1159,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscripts: manuscript,
       });
 
-      const result = await manuscriptDataProvider.fetchById('1');
+      const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
       expect(result!.versions[0]!.firstAuthors).toEqual([
         {
           avatarUrl: undefined,
@@ -1214,7 +1216,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscripts: manuscript,
       });
 
-      const result = await manuscriptDataProvider.fetchById('1');
+      const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
       expect(result).toEqual({
         id: 'manuscript-id-1',
         count: 1,
@@ -1234,7 +1236,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscripts: manuscript,
       });
 
-      const result = await manuscriptDataProvider.fetchById('1');
+      const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
       expect(result!.versions).toEqual([]);
     });
 
@@ -1243,7 +1245,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscripts: null,
       });
 
-      const result = await manuscriptDataProvider.fetchById('1');
+      const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
       expect(result).toBeNull();
     });
 
@@ -1253,9 +1255,9 @@ describe('Manuscripts Contentful Data Provider', () => {
         new GraphQLError('some error message'),
       );
 
-      await expect(manuscriptDataProvider.fetchById(id)).rejects.toThrow(
-        'some error message',
-      );
+      await expect(
+        manuscriptDataProvider.fetchById(id, 'user-id-1'),
+      ).rejects.toThrow('some error message');
     });
 
     test('Should default key resource table to undefined if not present', async () => {
@@ -1266,7 +1268,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscripts: manuscript,
       });
 
-      const result = await manuscriptDataProvider.fetchById('1');
+      const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
 
       expect(result!.versions[0]!.keyResourceTable).toBeUndefined();
     });
@@ -1280,7 +1282,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           manuscripts: manuscript,
         });
 
-        const result = await manuscriptDataProvider.fetchById('1');
+        const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
         expect(result!.discussions).toEqual([]);
       });
 
@@ -1307,7 +1309,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           manuscripts: manuscript,
         });
 
-        const result = await manuscriptDataProvider.fetchById('1');
+        const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
         expect(result!.discussions[0]?.createdBy.teams).toEqual([]);
       });
 
@@ -1322,7 +1324,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           manuscripts: manuscript,
         });
 
-        const result = await manuscriptDataProvider.fetchById('1');
+        const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
         expect(result!.discussions).toEqual([getManuscriptDiscussions()]);
       });
 
@@ -1355,7 +1357,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           manuscripts: manuscript,
         });
 
-        const result = await manuscriptDataProvider.fetchById('1');
+        const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
         expect(result!.discussions).toEqual([
           expect.objectContaining({
             id: 'discussion-id-2',

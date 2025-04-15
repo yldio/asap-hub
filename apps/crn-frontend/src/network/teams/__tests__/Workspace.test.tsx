@@ -36,6 +36,7 @@ import {
   useManuscriptById,
   useVersionById,
   useReplyToDiscussion,
+  useMarkDiscussionAsRead,
 } from '../state';
 import { useManuscriptToast } from '../useManuscriptToast';
 
@@ -54,6 +55,7 @@ jest.mock('../state', () => ({
   useVersionById: jest.fn(),
   useManuscriptById: jest.fn(),
   useReplyToDiscussion: jest.fn(),
+  useMarkDiscussionAsRead: jest.fn(),
 }));
 
 jest.mock('../useManuscriptToast', () => ({
@@ -118,6 +120,7 @@ const mockVersionData = {
 };
 const mockReplyToDiscussion = jest.fn();
 const mockSetFormType = jest.fn();
+const mockMarkDiscussionAsRead = jest.fn();
 beforeEach(() => {
   (useVersionById as jest.Mock).mockImplementation(() => [
     mockVersionData,
@@ -132,6 +135,9 @@ beforeEach(() => {
   ]);
   (useReplyToDiscussion as jest.Mock).mockImplementation(
     () => mockReplyToDiscussion,
+  );
+  (useMarkDiscussionAsRead as jest.Mock).mockImplementation(
+    () => mockMarkDiscussionAsRead,
   );
   (createDiscussion as jest.Mock).mockResolvedValue({});
   (getManuscript as jest.Mock).mockResolvedValue(
@@ -223,6 +229,7 @@ describe('Manuscript', () => {
         discussions: [
           {
             id: 'discussion-id-1',
+            read: false,
             title: 'Where does Lorem Ipsum come from?',
             text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
             lastUpdatedAt: '2025-04-01T15:00:00.000Z',
@@ -261,11 +268,20 @@ describe('Manuscript', () => {
 
     userEvent.click(await screen.findByTestId('collapsible-button'));
     userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(
-      await screen.findByTestId(
-        'discussion-collapsible-button-discussion-id-1',
-      ),
-    );
+    await act(async () => {
+      userEvent.click(
+        await screen.findByTestId(
+          'discussion-collapsible-button-discussion-id-1',
+        ),
+      );
+    });
+
+    await waitFor(() => {
+      expect(mockMarkDiscussionAsRead).toHaveBeenCalledWith(
+        'manuscript_0',
+        'discussion-id-1',
+      );
+    });
 
     userEvent.click(
       await screen.findByTestId('discussion-reply-button-discussion-id-1'),
@@ -310,6 +326,7 @@ describe('Manuscript', () => {
           {
             id: 'discussion-id-1',
             title: 'Where does Lorem Ipsum come from?',
+            read: false,
             text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
             lastUpdatedAt: '2025-04-01T15:00:00.000Z',
             createdDate: '2025-03-31T10:00:00.000Z',

@@ -9,12 +9,14 @@ import userEvent from '@testing-library/user-event';
 import { ManuscriptDiscussion } from '@asap-hub/model';
 import DiscussionCard from '../DiscussionCard';
 
+const mockOnMarkDiscussionAsRead = jest.fn();
 const mockDiscussion: ManuscriptDiscussion = {
   id: 'discussion-1',
   title: 'Test Discussion',
   text: 'Test discussion content',
   createdDate: '2024-01-01T00:00:00Z',
   lastUpdatedAt: '2024-01-02T00:00:00Z',
+  read: false,
   createdBy: {
     id: 'user-1',
     firstName: 'John',
@@ -62,6 +64,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
       />,
     );
 
@@ -81,6 +84,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
       />,
     );
 
@@ -186,6 +190,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={discussionWithSeveralReplies}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
       />,
     );
 
@@ -223,6 +228,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
       />,
     );
 
@@ -244,6 +250,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
         displayReplyButton={true}
       />,
     );
@@ -264,6 +271,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
         displayReplyButton={false}
       />,
     );
@@ -284,6 +292,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
         displayReplyButton={true}
       />,
     );
@@ -308,6 +317,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
         displayReplyButton={true}
       />,
     );
@@ -352,6 +362,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={discussionWithoutReplies}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
         displayReplyButton={true}
       />,
     );
@@ -377,6 +388,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={discussionWithoutReplies}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
         displayReplyButton={false}
       />,
     );
@@ -397,6 +409,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
         isLast={true}
       />,
     );
@@ -413,6 +426,7 @@ describe('DiscussionCard', () => {
         manuscriptId="manuscript-1"
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
       />,
     );
 

@@ -22,6 +22,7 @@ import {
   fern,
   minusRectIcon,
   neutral900,
+  NotificationDotIcon,
   plusRectIcon,
   resubmitManuscriptIcon,
   StatusButton,
@@ -36,7 +37,10 @@ import ManuscriptVersionCard from './ManuscriptVersionCard';
 const VERSION_LIMIT = 3;
 
 type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
-  Pick<ComponentProps<typeof DiscussionCard>, 'onReplyToDiscussion'> & {
+  Pick<
+    ComponentProps<typeof DiscussionCard>,
+    'onReplyToDiscussion' | 'onMarkDiscussionAsRead'
+  > & {
     user: User | null;
     teamId: string;
     isComplianceReviewer: boolean;
@@ -123,6 +127,10 @@ const buttonStyles = css({
 
 const buttonTextStyles = css({
   minHeight: 'fit-content',
+});
+
+const notificationDotStyles = css({
+  marginLeft: rem(8),
 });
 
 const manuscriptDetailsContainerStyles = css({
@@ -222,6 +230,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   createDiscussion,
   useManuscriptById,
   onReplyToDiscussion,
+  onMarkDiscussionAsRead,
 }) => {
   const [activeTab, setActiveTab] = useState<
     'manuscripts-and-reports' | 'discussions'
@@ -288,6 +297,10 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       setManuscript(updatedManuscript);
     }
   };
+  const hasUnreadDiscussions =
+    (manuscript?.discussions || []).length > 0
+      ? manuscript?.discussions.some((discussion) => !discussion.read)
+      : false;
 
   return (
     <>
@@ -357,6 +370,11 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 ref={discussionTabRef}
               >
                 Discussions
+                {hasUnreadDiscussions && (
+                  <span css={notificationDotStyles}>
+                    <NotificationDotIcon />
+                  </span>
+                )}
               </button>
             </div>
             <div css={manuscriptDetailsContainerStyles}>
@@ -444,6 +462,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                   manuscriptId={id}
                   createDiscussion={createDiscussion}
                   onReplyToDiscussion={onReplyToDiscussion}
+                  onMarkDiscussionAsRead={onMarkDiscussionAsRead}
                   canParticipateInDiscussion={
                     hasUpdateAccess || isComplianceReviewer
                   }

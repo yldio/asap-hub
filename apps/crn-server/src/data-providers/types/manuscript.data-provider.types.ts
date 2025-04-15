@@ -9,11 +9,14 @@ import {
   PartialManuscriptResponse,
 } from '@asap-hub/model';
 
-export type ManuscriptDataProvider = DataProvider<
-  ManuscriptDataObject,
-  PartialManuscriptResponse,
-  FetchOptions<ManuscriptsFilter>,
-  ManuscriptCreateDataObject
+export type ManuscriptDataProvider = Omit<
+  DataProvider<
+    ManuscriptDataObject,
+    PartialManuscriptResponse,
+    FetchOptions<ManuscriptsFilter>,
+    ManuscriptCreateDataObject
+  >,
+  'fetchById'
 > & {
   update(
     id: string,
@@ -24,4 +27,5 @@ export type ManuscriptDataProvider = DataProvider<
     id: string,
     input: ManuscriptResubmitDataObject,
   ) => Promise<void>;
+  fetchById(id: string, userId: string): Promise<ManuscriptDataObject | null>;
 };

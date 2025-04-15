@@ -40,7 +40,10 @@ export const manuscriptRouteFactory = (
 
       const { manuscriptId } = validateManuscriptParameters(params);
 
-      const result = await manuscriptController.fetchById(manuscriptId);
+      const result = await manuscriptController.fetchById(
+        manuscriptId,
+        loggedInUser.id,
+      );
 
       res.json(result);
     },

@@ -61,10 +61,21 @@ describe('Discussion Controller', () => {
 
       expect(discussionDataProviderMock.update).toHaveBeenCalledWith(
         'discussion-id',
-        {
-          reply,
-        },
+        reply,
       );
+    });
+  });
+
+  describe('Mark as read method', () => {
+    test('Should return the updated discussion', async () => {
+      const mockResponse = getDiscussionDataObject();
+      discussionDataProviderMock.fetchById.mockResolvedValue(mockResponse);
+      const result = await discussionController.markAsRead(
+        'discussion-id',
+        'user-id-0',
+      );
+
+      expect(result).toEqual(mockResponse);
     });
   });
 

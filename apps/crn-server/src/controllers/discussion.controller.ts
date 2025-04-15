@@ -1,5 +1,8 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { DiscussionResponse, MessageCreateDataObject } from '@asap-hub/model';
+import {
+  DiscussionResponse,
+  DiscussionUpdateDataObject,
+} from '@asap-hub/model';
 
 import { DiscussionDataProvider } from '../data-providers/types';
 
@@ -22,9 +25,15 @@ export default class DiscussionController {
 
   async update(
     id: string,
-    reply: MessageCreateDataObject,
+    reply: DiscussionUpdateDataObject,
   ): Promise<DiscussionResponse> {
-    await this.discussionDataProvider.update(id, { reply });
+    await this.discussionDataProvider.update(id, reply);
+
+    return this.fetchById(id);
+  }
+
+  async markAsRead(id: string, userId: string): Promise<DiscussionResponse> {
+    await this.discussionDataProvider.update(id, { userId });
 
     return this.fetchById(id);
   }

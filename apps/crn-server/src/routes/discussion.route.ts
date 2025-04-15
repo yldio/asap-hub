@@ -66,5 +66,21 @@ export const discussionRouteFactory = (
     },
   );
 
+  discussionRoutes.patch<{ discussionId: string }>(
+    '/discussions/:discussionId/read',
+    async (req, res: Response<DiscussionResponse>) => {
+      const { params } = req;
+
+      const { discussionId } = validateDiscussionParameters(params);
+
+      if (!req.loggedInUser) throw Boom.forbidden();
+
+      const discussion = await discussionController.update(discussionId, {
+        userId: req.loggedInUser.id,
+      });
+      res.json(discussion);
+    },
+  );
+
   return discussionRoutes;
 };

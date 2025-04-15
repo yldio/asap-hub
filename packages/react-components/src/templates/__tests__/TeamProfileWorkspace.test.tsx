@@ -52,6 +52,7 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   createDiscussion: jest.fn(),
   useManuscriptById: useManuscriptByIdMock,
   onReplyToDiscussion: jest.fn(),
+  onMarkDiscussionAsRead: jest.fn(),
 };
 
 it('renders the team workspace page', () => {

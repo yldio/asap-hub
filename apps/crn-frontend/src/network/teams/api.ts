@@ -410,6 +410,29 @@ export const updateDiscussion = async (
   return response;
 };
 
+export const markDiscussionAsRead = async (
+  discussionId: string,
+  authorization: string,
+): Promise<DiscussionResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/discussions/${discussionId}/read`, {
+    method: 'PATCH',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to mark discussion with id ${discussionId} as read. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
+};
+
 export const getDiscussion = async (
   id: string,
   authorization: string,

@@ -26,7 +26,7 @@ const manuscriptResponse = {
   id: 'manuscript-1',
   title: 'The Manuscript',
   versions: [{ id: 'manuscript-version-1' }],
-  status: 'Review Compliance Report',
+  status: 'Addendum Required',
   sendNotifications: false,
   notificationList: '',
 };
@@ -129,7 +129,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
 
   userEvent.click(screen.getByLabelText(/Status/i));
   await act(async () => {
-    await userEvent.click(screen.getByText(/Review Compliance Report/i));
+    await userEvent.click(screen.getByText(/Addendum Required/i));
   });
 
   const shareButton = getByRole('button', { name: /Share/i });

@@ -304,21 +304,31 @@ it('displays the confirmation modal when isComplianceReviewer is true and the us
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeEnabled();
   userEvent.click(statusButton);
-  userEvent.click(
-    getByRole('button', { name: 'Warning Manuscript Resubmitted' }),
-  );
+  userEvent.click(getByRole('button', { name: 'Addendum Required' }));
   expect(getByText('Update status and notify?')).toBeInTheDocument();
 });
 
 it('does not display confirmation modal when isComplianceReviewer is true but the user tries to select the same manuscript status it is currently', () => {
   const { getByRole, getByTestId, queryByText } = render(
-    <ManuscriptCard {...props} isComplianceReviewer />,
+    <ManuscriptCard
+      {...props}
+      isComplianceReviewer
+      useManuscriptById={useManuscriptById.mockImplementation(() => [
+        {
+          id: 'manuscript_0',
+          title: 'Mock Manuscript Title',
+          status: 'Addendum Required',
+          versions: [],
+        },
+        jest.fn(),
+      ])}
+    />,
   );
 
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeEnabled();
   userEvent.click(statusButton);
-  userEvent.click(getByRole('button', { name: /Waiting for Report$/ }));
+  userEvent.click(getByRole('button', { name: /Addendum Required$/ }));
   expect(queryByText('Update status and notify?')).not.toBeInTheDocument();
 });
 
@@ -344,9 +354,7 @@ it('calls onUpdateManuscript when user confirms status change', async () => {
 
   const statusButton = getByTestId('status-button');
   userEvent.click(statusButton);
-  userEvent.click(
-    getByRole('button', { name: 'Warning Manuscript Resubmitted' }),
-  );
+  userEvent.click(getByRole('button', { name: 'Addendum Required' }));
 
   await act(async () => {
     userEvent.click(
@@ -358,7 +366,7 @@ it('calls onUpdateManuscript when user confirms status change', async () => {
 
   await waitFor(() => {
     expect(onUpdateManuscript).toHaveBeenCalledWith('manuscript-1', {
-      status: 'Manuscript Resubmitted',
+      status: 'Addendum Required',
     });
   });
 

@@ -2,6 +2,7 @@ import {
   ManuscriptStatus,
   manuscriptStatus,
   PartialManuscriptResponse,
+  statusButtonOptions,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -173,7 +174,7 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
             )}
             wrap
           >
-            {manuscriptStatus.map((statusItem) => ({
+            {statusButtonOptions.map((statusItem) => ({
               item: statusItem,
               type: getReviewerStatusType(statusItem),
               onClick: () => {

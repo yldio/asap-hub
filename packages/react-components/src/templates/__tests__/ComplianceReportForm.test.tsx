@@ -41,7 +41,7 @@ it('data is sent on form submission and calls setManuscript', async () => {
     complianceReport: {
       id: 'compliance-report-id',
     },
-    status: 'Review Compliance Report',
+    status: 'Addendum Required',
   });
 
   const initialManuscript = {
@@ -68,7 +68,7 @@ it('data is sent on form submission and calls setManuscript', async () => {
 
   userEvent.click(screen.getByLabelText(/Status/i));
   await act(async () => {
-    await userEvent.click(screen.getByText(/Review Compliance Report/i));
+    userEvent.click(screen.getByText(/Addendum Required/i));
   });
 
   const shareButton = screen.getByRole('button', { name: /Share/i });
@@ -86,7 +86,7 @@ it('data is sent on form submission and calls setManuscript', async () => {
       url: 'http://example.com',
       description: 'manuscript description',
       manuscriptVersionId: defaultProps.manuscriptVersionId,
-      status: 'Review Compliance Report',
+      status: 'Addendum Required',
       manuscriptId: 'manuscript-id',
     });
     expect(setManuscript).toHaveBeenCalled();
@@ -119,7 +119,7 @@ it('data is sent on form submission without calling setManuscript', async () => 
 
   userEvent.click(screen.getByLabelText(/Status/i));
   await act(async () => {
-    await userEvent.click(screen.getByText(/Review Compliance Report/i));
+    await userEvent.click(screen.getByText(/Addendum Required/i));
   });
 
   const shareButton = screen.getByRole('button', { name: /Share/i });
@@ -138,7 +138,7 @@ it('data is sent on form submission without calling setManuscript', async () => 
       description: 'manuscript description',
       manuscriptVersionId: defaultProps.manuscriptVersionId,
       manuscriptId: 'manuscript-id',
-      status: 'Review Compliance Report',
+      status: 'Addendum Required',
     });
     expect(setManuscript).not.toHaveBeenCalled();
   });

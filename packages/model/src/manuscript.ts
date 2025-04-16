@@ -279,6 +279,11 @@ export const manuscriptStatus = [
   'Closed (other)',
 ] as const;
 
+export const statusButtonOptions = manuscriptStatus.filter(
+  (status) =>
+    !['Waiting for Report', 'Manuscript Resubmitted'].includes(status),
+);
+
 export type ManuscriptStatus = (typeof manuscriptStatus)[number];
 
 export const isManuscriptStatus = (type: string): type is ManuscriptStatus =>

@@ -4,7 +4,7 @@ import {
   ComplianceReportResponse,
   ManuscriptDataObject,
   ManuscriptStatus,
-  manuscriptStatus,
+  statusButtonOptions,
 } from '@asap-hub/model';
 
 import { urlExpression } from '@asap-hub/validation';
@@ -86,7 +86,7 @@ type FormAction =
   | '';
 
 const manuscriptStatusOptions: ReadonlyArray<Option<ManuscriptStatus>> =
-  manuscriptStatus.map((status) => ({
+  statusButtonOptions.map((status) => ({
     label: status,
     value: status,
   }));

@@ -14784,6 +14784,21 @@ export type FetchDiscussionByIdQuery = {
   >;
 };
 
+export type FetchDiscussionTitleAndGranteeParticipantsQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchDiscussionTitleAndGranteeParticipantsQuery = {
+  discussions?: Maybe<
+    Pick<Discussions, 'title'> & {
+      message?: Maybe<{ createdBy?: Maybe<Pick<Users, 'email'>> }>;
+      repliesCollection?: Maybe<{
+        items: Array<Maybe<{ createdBy?: Maybe<Pick<Users, 'email'>> }>>;
+      }>;
+    }
+  >;
+};
+
 export type EventsContentFragment = Pick<
   Events,
   | 'lastUpdated'
@@ -34016,6 +34031,185 @@ export const FetchDiscussionByIdDocument = {
 } as unknown as DocumentNode<
   FetchDiscussionByIdQuery,
   FetchDiscussionByIdQueryVariables
+>;
+export const FetchDiscussionTitleAndGranteeParticipantsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: {
+        kind: 'Name',
+        value: 'FetchDiscussionTitleAndGranteeParticipants',
+      },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discussions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'message' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'createdBy' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: {
+                                    kind: 'Name',
+                                    value: 'alumniSinceDate',
+                                  },
+                                  value: { kind: 'NullValue' },
+                                },
+                                {
+                                  kind: 'ObjectField',
+                                  name: {
+                                    kind: 'Name',
+                                    value: 'openScienceTeamMember_not',
+                                  },
+                                  value: { kind: 'BooleanValue', value: true },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'email' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'repliesCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'createdBy' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: {
+                                    kind: 'Name',
+                                    value: 'alumniSinceDate',
+                                  },
+                                  value: { kind: 'NullValue' },
+                                },
+                                {
+                                  kind: 'ObjectField',
+                                  name: {
+                                    kind: 'Name',
+                                    value: 'openScienceTeamMember_not',
+                                  },
+                                  value: { kind: 'BooleanValue', value: true },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'createdBy' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'email' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchDiscussionTitleAndGranteeParticipantsQuery,
+  FetchDiscussionTitleAndGranteeParticipantsQueryVariables
 >;
 export const FetchEventByIdDocument = {
   kind: 'Document',

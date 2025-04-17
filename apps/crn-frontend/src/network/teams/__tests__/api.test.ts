@@ -830,6 +830,7 @@ describe('Discussion', () => {
   describe('updateDiscussion', () => {
     const patch = {
       text: 'test reply',
+      manuscriptId: 'manuscript-id-1',
     };
     it('makes an authorized PATCH request for the discussion id', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
@@ -883,14 +884,14 @@ describe('Discussion', () => {
         .post('/discussions')
         .reply(200, {});
 
-      await createDiscussion(manuscriptId, title, text, 'Bearer x');
+      await createDiscussion({ manuscriptId, title, text }, 'Bearer x');
       expect(nock.isDone()).toBe(true);
     });
 
     it('passes the post object in the body', async () => {
       nock(API_BASE_URL).post('/discussions', payload).reply(200, {});
 
-      await createDiscussion(manuscriptId, title, text, 'Bearer x');
+      await createDiscussion({ manuscriptId, title, text }, 'Bearer x');
       expect(nock.isDone()).toBe(true);
     });
 
@@ -903,7 +904,7 @@ describe('Discussion', () => {
       nock(API_BASE_URL).post('/discussions', payload).reply(200, created);
 
       expect(
-        await createDiscussion(manuscriptId, title, text, 'Bearer x'),
+        await createDiscussion({ manuscriptId, title, text }, 'Bearer x'),
       ).toEqual(created);
     });
 
@@ -911,7 +912,7 @@ describe('Discussion', () => {
       nock(API_BASE_URL).post('/discussions', payload).reply(500, {});
 
       await expect(
-        createDiscussion(manuscriptId, title, text, 'Bearer x'),
+        createDiscussion({ manuscriptId, title, text }, 'Bearer x'),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Failed to create discussion. Expected status 201. Received status 500."`,
       );

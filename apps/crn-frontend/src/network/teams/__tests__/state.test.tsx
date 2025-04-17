@@ -438,7 +438,7 @@ describe('useReplyToDiscussion', () => {
       wrapper,
     });
 
-    const patch = { text: 'Reply message' };
+    const patch = { text: 'Reply message', manuscriptId };
 
     await act(async () => {
       await result.current(manuscriptId, discussionId, patch);
@@ -446,7 +446,11 @@ describe('useReplyToDiscussion', () => {
 
     expect(updateDiscussion).toHaveBeenCalledWith(
       discussionId,
-      patch,
+      {
+        ...patch,
+        sendNotifications: expect.any(Boolean),
+        notificationList: undefined,
+      },
       mockAuthorization,
     );
   });
@@ -478,7 +482,7 @@ describe('useReplyToDiscussion', () => {
       wrapper,
     });
 
-    const patch = { text: 'Reply message' };
+    const patch = { text: 'Reply message', manuscriptId };
 
     await act(async () => {
       await result.current(manuscriptId, discussionId, patch);
@@ -521,7 +525,7 @@ describe('useReplyToDiscussion', () => {
       wrapper,
     });
 
-    const patch = { text: 'Reply message' };
+    const patch = { text: 'Reply message', manuscriptId };
 
     await act(async () => {
       await result.current(manuscriptId, discussionId, patch);
@@ -557,7 +561,7 @@ describe('useReplyToDiscussion', () => {
       wrapper,
     });
 
-    const patch = { text: 'Reply message' };
+    const patch = { text: 'Reply message', manuscriptId };
 
     await act(async () => {
       await result.current(manuscriptId, discussionId, patch);
@@ -587,7 +591,7 @@ describe('useReplyToDiscussion', () => {
       wrapper,
     });
 
-    const patch = { text: 'Reply message' };
+    const patch = { text: 'Reply message', manuscriptId };
 
     await expect(
       act(async () => {

@@ -7,6 +7,7 @@ import {
   ManuscriptStatus,
   manuscriptStatus,
   ManuscriptVersion,
+  statusButtonOptions,
   TeamManuscript,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
@@ -319,7 +320,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                   status as (typeof manuscriptStatus)[number],
                 )}
               >
-                {manuscriptStatus.map((statusItem) => ({
+                {statusButtonOptions.map((statusItem) => ({
                   item: statusItem,
                   type: getReviewerStatusType(statusItem),
                   onClick: () => {

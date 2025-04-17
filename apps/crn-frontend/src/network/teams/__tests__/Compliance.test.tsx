@@ -145,7 +145,7 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   mockUpdateManuscript.mockResolvedValue({
     ...createManuscriptResponse(),
     id: manuscriptId,
-    status: 'Manuscript Resubmitted',
+    status: 'Addendum Required',
   });
 
   await renderCompliancePage();
@@ -164,7 +164,7 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   const newStatusButton = within(
     screen.getByTestId('compliance-table-row'),
   ).getByRole('button', {
-    name: /Manuscript Resubmitted/i,
+    name: /Addendum Required/i,
   });
   userEvent.click(newStatusButton);
 
@@ -178,7 +178,7 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
       manuscriptId,
       {
         notificationList: '',
-        status: 'Manuscript Resubmitted',
+        status: 'Addendum Required',
         sendNotifications: false,
       },
       expect.any(String),
@@ -188,7 +188,7 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   await waitFor(() => {
     expect(
       within(screen.getByTestId('compliance-table-row')).getByRole('button', {
-        name: /Manuscript Resubmitted/i,
+        name: /Addendum Required/i,
       }),
     ).toBeInTheDocument();
   });
@@ -209,7 +209,7 @@ it('manuscripts remain the same when there is not a match between the manuscript
   mockUpdateManuscript.mockResolvedValue({
     ...createManuscriptResponse(),
     id: 'manuscript-id-2',
-    status: 'Manuscript Resubmitted',
+    status: 'Addendum Required',
   });
 
   await renderCompliancePage();
@@ -228,7 +228,7 @@ it('manuscripts remain the same when there is not a match between the manuscript
   const newStatusButton = within(
     screen.getByTestId('compliance-table-row'),
   ).getByRole('button', {
-    name: /Manuscript Resubmitted/i,
+    name: /Addendum Required/i,
   });
   userEvent.click(newStatusButton);
 
@@ -242,7 +242,7 @@ it('manuscripts remain the same when there is not a match between the manuscript
       'manuscript-id-1',
       {
         notificationList: '',
-        status: 'Manuscript Resubmitted',
+        status: 'Addendum Required',
         sendNotifications: false,
       },
       expect.any(String),
@@ -252,7 +252,7 @@ it('manuscripts remain the same when there is not a match between the manuscript
   await waitFor(() => {
     expect(
       within(screen.getByTestId('compliance-table-row')).queryByRole('button', {
-        name: /Manuscript Resubmitted/i,
+        name: /Addendum Required/i,
       }),
     ).not.toBeInTheDocument();
   });
@@ -275,7 +275,7 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
   mockUpdateManuscript.mockResolvedValue({
     ...createManuscriptResponse(),
     id: 'manuscript-id-2',
-    status: 'Manuscript Resubmitted',
+    status: 'Addendum Required',
   });
 
   await renderCompliancePage();
@@ -294,7 +294,7 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
   const newStatusButton = within(
     screen.getByTestId('compliance-table-row'),
   ).getByRole('button', {
-    name: /Manuscript Resubmitted/i,
+    name: /Addendum Required/i,
   });
   userEvent.click(newStatusButton);
 
@@ -308,7 +308,7 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
       'manuscript-id-1',
       {
         notificationList: '',
-        status: 'Manuscript Resubmitted',
+        status: 'Addendum Required',
         sendNotifications: false,
       },
       expect.any(String),
@@ -318,7 +318,7 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
   await waitFor(() => {
     expect(
       within(screen.getByTestId('compliance-table-row')).queryByRole('button', {
-        name: /Manuscript Resubmitted/i,
+        name: /Addendum Required/i,
       }),
     ).not.toBeInTheDocument();
   });

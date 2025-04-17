@@ -158,7 +158,7 @@ describe('Manuscript', () => {
     );
 
     userEvent.click(await screen.findByTestId('status-button'));
-    userEvent.click(screen.getByText('Manuscript Resubmitted'));
+    userEvent.click(screen.getByText('Addendum Required'));
     userEvent.click(
       screen.getByRole('button', { name: 'Update Status and Notify' }),
     );
@@ -167,7 +167,7 @@ describe('Manuscript', () => {
         'manuscript_0',
         {
           notificationList: '',
-          status: 'Manuscript Resubmitted',
+          status: 'Addendum Required',
           sendNotifications: false,
         },
         expect.anything(),

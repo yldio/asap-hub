@@ -4,9 +4,7 @@ import { StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
 const statusItems = [
-  'Waiting for Report',
   'Review Compliance Report',
-  'Manuscript Resubmitted',
   'Submit Final Publication',
   'Addendum Required',
   'Compliant',

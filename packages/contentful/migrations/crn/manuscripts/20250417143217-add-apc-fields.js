@@ -35,7 +35,7 @@ module.exports.up = (migration) => {
     .localized(false)
     .required(false)
     .validations([])
-    .disabled(true)
+    .disabled(false)
     .omitted(false);
 
   manuscripts.changeFieldControl('apcRequested', 'builtin', 'boolean', {});

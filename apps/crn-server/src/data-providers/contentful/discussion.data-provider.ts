@@ -61,6 +61,10 @@ export class DiscussionContentfulDataProvider
       fields: addLocaleToFields({
         title,
         message: getLinkEntity(messageId),
+        // The person who is creating the discussion
+        // should not see the thread as unread
+        // so we need to add the user to the readBy list
+        readBy: [getLinkEntity(userId)],
       }),
     });
 

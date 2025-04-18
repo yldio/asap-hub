@@ -128,6 +128,17 @@ describe('Discussions Contentful Data Provider', () => {
                 },
               },
             },
+            readBy: {
+              'en-US': [
+                {
+                  sys: {
+                    id: discussionRequestObject.userId,
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
           },
         },
       );

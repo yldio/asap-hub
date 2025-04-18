@@ -142,15 +142,18 @@ describe('/discussions/ route', () => {
       const discussionId = 'discussion-id-1';
       const text = 'test reply';
 
-      const reply = { text, userId: 'user-id-0' };
+      const reply = { text, userId: 'user-id-0', isOpenScienceMember: false };
 
       await supertest(app).patch(`/discussions/${discussionId}`).send({
         text,
       });
 
-      expect(discussionControllerMock.update).toBeCalledWith(
+      expect(discussionControllerMock.update).toHaveBeenCalledWith(
         discussionId,
         reply,
+        undefined,
+        false,
+        '',
       );
     });
 

@@ -27,9 +27,14 @@ export default class ManuscriptController {
     private assetDataProvider: AssetDataProvider,
   ) {}
 
-  async fetchById(manuscriptId: string): Promise<ManuscriptResponse> {
-    const manuscript =
-      await this.manuscriptDataProvider.fetchById(manuscriptId);
+  async fetchById(
+    manuscriptId: string,
+    userId: string,
+  ): Promise<ManuscriptResponse> {
+    const manuscript = await this.manuscriptDataProvider.fetchById(
+      manuscriptId,
+      userId,
+    );
 
     if (!manuscript) {
       throw new NotFoundError(
@@ -93,7 +98,7 @@ export default class ManuscriptController {
         versions: [versionData],
       });
 
-      return this.fetchById(manuscriptId);
+      return this.fetchById(manuscriptId, manuscriptCreateData.userId);
     }
 
     const manuscriptId = await this.manuscriptDataProvider.create({
@@ -101,7 +106,7 @@ export default class ManuscriptController {
       versions: [],
     });
 
-    return this.fetchById(manuscriptId);
+    return this.fetchById(manuscriptId, manuscriptCreateData.userId);
   }
 
   async createVersion(
@@ -121,7 +126,7 @@ export default class ManuscriptController {
       });
     }
 
-    return this.fetchById(manuscriptId);
+    return this.fetchById(manuscriptId, manuscriptResubmitData.userId);
   }
 
   async createFile({
@@ -223,7 +228,10 @@ export default class ManuscriptController {
   ): Promise<ManuscriptResponse> {
     await this.validateTitleUniqueness(manuscriptData, id);
 
-    const currentManuscript = await this.manuscriptDataProvider.fetchById(id);
+    const currentManuscript = await this.manuscriptDataProvider.fetchById(
+      id,
+      userId,
+    );
 
     if (!currentManuscript) {
       throw new NotFoundError(undefined, `manuscript with id ${id} not found`);
@@ -234,7 +242,7 @@ export default class ManuscriptController {
       ('assignedUsers' in manuscriptData && manuscriptData.assignedUsers)
     ) {
       await this.manuscriptDataProvider.update(id, manuscriptData, userId);
-      return this.fetchById(id);
+      return this.fetchById(id, userId);
     }
 
     if ('versions' in manuscriptData && manuscriptData.versions?.[0]) {
@@ -276,7 +284,7 @@ export default class ManuscriptController {
       );
     }
 
-    return this.fetchById(id);
+    return this.fetchById(id, userId);
   }
 }
 

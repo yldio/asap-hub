@@ -259,6 +259,7 @@ export const getContentfulGraphqlManuscriptsCollection = (
 
 export const getManuscriptDiscussions = (): ManuscriptDiscussion => ({
   id: 'discussion-id-1',
+  read: false,
   title: 'Where does Lorem Ipsum come from?',
   text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
   lastUpdatedAt: '2025-04-01T15:00:00.000Z',

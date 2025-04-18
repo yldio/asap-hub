@@ -16,7 +16,7 @@ import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, rem } from '../pixels';
 import { getTeams, getUserHref } from '../utils';
 
-const containerStyles = (isLast: boolean) =>
+const containerStyles = (isLast: boolean, unread: boolean) =>
   css({
     display: 'flex',
     flexDirection: 'row',
@@ -24,6 +24,8 @@ const containerStyles = (isLast: boolean) =>
     backgroundColor: colors.paper.rgb,
     gap: rem(20),
     padding: `${rem(24)} ${rem(15)}`,
+
+    borderLeft: `8px solid ${unread ? colors.info500.rgb : 'transparent'}`,
 
     borderTop: `1px solid ${colors.steel.rgb}`,
     borderBottom: isLast ? `1px solid ${colors.steel.rgb}` : 0,
@@ -69,15 +71,16 @@ const userInfoStyles = css({
   fontWeight: 400,
 });
 
-const lastUpdateStyles = css({
-  display: 'inline-flex',
-  gap: rem(8),
-  alignItems: 'center',
-  marginTop: rem(16),
-  fontSize: rem(14),
-  color: colors.neutral900.rgb,
-  fontWeight: 400,
-});
+const lastUpdateStyles = (unread: boolean) =>
+  css({
+    display: 'inline-flex',
+    gap: rem(8),
+    alignItems: 'center',
+    marginTop: rem(16),
+    fontSize: rem(14),
+    fontWeight: unread ? 700 : 400,
+    color: colors.neutral900.rgb,
+  });
 
 const expandedViewContainerStyles = css({
   display: 'flex',
@@ -144,6 +147,10 @@ interface DiscussionCardProps {
     discussionId: string,
     patch: DiscussionRequest,
   ) => Promise<void>;
+  onMarkDiscussionAsRead: (
+    manuscriptId: string,
+    discussionId: string,
+  ) => Promise<void>;
   isLast?: boolean;
   displayReplyButton?: boolean;
 }
@@ -152,17 +159,25 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({
   manuscriptId,
   discussion,
   onReplyToDiscussion,
+  onMarkDiscussionAsRead,
   isLast = false,
   displayReplyButton = false,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
+  const handleExpand = async (newExpandedValue: boolean) => {
+    setExpanded(newExpandedValue);
+    if (newExpandedValue && !discussion.read) {
+      await onMarkDiscussionAsRead(manuscriptId, discussion.id);
+    }
+  };
+
   return (
-    <div css={containerStyles(isLast)}>
+    <div css={containerStyles(isLast, !discussion.read)}>
       <Button
         data-testid={`discussion-collapsible-button-${discussion.id}`}
         linkStyle
-        onClick={() => setExpanded(!expanded)}
+        onClick={() => handleExpand(!expanded)}
       >
         {expanded ? minusRectIcon : plusRectIcon}
       </Button>
@@ -205,7 +220,7 @@ const CollapsedView = ({
           teams={getTeams(discussion.createdBy.teams)}
         />
       </span>
-      <div css={lastUpdateStyles}>
+      <div css={lastUpdateStyles(!discussion.read)}>
         {hasReplies ? (
           <div css={replyAvatarsStyles}>
             <UserAvatarList
@@ -232,7 +247,7 @@ const ExpandedView = ({
   discussion,
   onReplyToDiscussion,
   displayReplyButton,
-}: DiscussionCardProps) => {
+}: Omit<DiscussionCardProps, 'onMarkDiscussionAsRead'>) => {
   const userHref = getUserHref(discussion.createdBy.id);
   const [displayReplyModal, setDisplayReplyModal] = useState<boolean>(false);
   const { text, replies } = discussion;

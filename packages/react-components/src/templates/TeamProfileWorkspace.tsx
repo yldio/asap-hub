@@ -112,7 +112,10 @@ type TeamProfileWorkspaceProps = Readonly<
     ComponentProps<typeof ManuscriptCard>,
     'onUpdateManuscript' | 'isComplianceReviewer'
   > &
-  Pick<ComponentProps<typeof DiscussionCard>, 'onReplyToDiscussion'> & {
+  Pick<
+    ComponentProps<typeof DiscussionCard>,
+    'onReplyToDiscussion' | 'onMarkDiscussionAsRead'
+  > & {
     readonly tools: ReadonlyArray<TeamTool>;
     readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
     readonly setEligibilityReasons: (newEligibilityReason: Set<string>) => void;
@@ -146,6 +149,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   createDiscussion,
   useManuscriptById,
   onReplyToDiscussion,
+  onMarkDiscussionAsRead,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
@@ -231,6 +235,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           createDiscussion={createDiscussion}
                           useManuscriptById={useManuscriptById}
                           onReplyToDiscussion={onReplyToDiscussion}
+                          onMarkDiscussionAsRead={onMarkDiscussionAsRead}
                         />
                       </div>
                     ))}
@@ -265,6 +270,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           createDiscussion={createDiscussion}
                           useManuscriptById={useManuscriptById}
                           onReplyToDiscussion={onReplyToDiscussion}
+                          onMarkDiscussionAsRead={onMarkDiscussionAsRead}
                         />
                       </div>
                     ))}

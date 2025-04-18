@@ -3,7 +3,11 @@ import {
   createUserResponse,
   manuscriptAuthor,
 } from '@asap-hub/fixtures';
-import { ManuscriptVersion, UserTeam } from '@asap-hub/model';
+import {
+  ManuscriptDiscussion,
+  ManuscriptVersion,
+  UserTeam,
+} from '@asap-hub/model';
 import { act, cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
@@ -40,6 +44,7 @@ const props: ComponentProps<typeof ManuscriptCard> & {
   isActiveTeam: true,
   createDiscussion: jest.fn(),
   onReplyToDiscussion: jest.fn(),
+  onMarkDiscussionAsRead: jest.fn(),
 };
 
 const complianceReport = {
@@ -643,5 +648,106 @@ describe('Tabs', () => {
 
     userEvent.click(openDiscussionsButton);
     expect(getByRole('button', { name: 'Discussions' })).toHaveClass('active');
+  });
+});
+
+describe('Discussion Notification', () => {
+  const getBaseDiscussion = (
+    baseDiscussionProps: Partial<ManuscriptDiscussion>,
+  ) => ({
+    id: 'discussion-1',
+    title: 'Discussion 1',
+    read: false,
+    replies: [],
+    createdBy: {
+      id: 'user-1',
+      displayName: 'User 1',
+      firstName: 'User',
+      lastName: 'One',
+      avatarUrl: '',
+      alumniSinceDate: undefined,
+      teams: [{ id: 'team-1', name: 'Team 1' }],
+    },
+    createdDate: '2024-01-01T00:00:00Z',
+    lastUpdatedAt: '2024-01-01T00:00:00Z',
+    text: 'Test discussion',
+    ...baseDiscussionProps,
+  });
+
+  const manuscriptVersion = {
+    ...mockVersion,
+    asapAffiliationIncluded: 'No',
+    asapAffiliationIncludedDetails: 'Reason',
+  };
+
+  it('displays the notification dot when there is at least one unread discussion', () => {
+    const { getByLabelText, getByTitle, getByTestId } = render(
+      <ManuscriptCard
+        {...props}
+        useManuscriptById={useManuscriptById.mockImplementation(() => [
+          {
+            id: 'manuscript_0',
+            title: 'Mock Manuscript Title',
+            status: 'Waiting for Report',
+            versions: [manuscriptVersion],
+            discussions: [
+              getBaseDiscussion({ read: true }),
+              getBaseDiscussion({ read: true }),
+              getBaseDiscussion({ read: false }),
+            ],
+          },
+          jest.fn(),
+        ])}
+      />,
+    );
+
+    userEvent.click(getByTestId('collapsible-button'));
+    userEvent.click(getByLabelText('Expand Version'));
+
+    expect(getByTitle(/notification dot/i)).toBeInTheDocument();
+  });
+
+  it('does not display the notification dot when there are no unread discussions', () => {
+    const { queryByTitle } = render(
+      <ManuscriptCard
+        {...props}
+        useManuscriptById={useManuscriptById.mockImplementation(() => [
+          {
+            id: 'manuscript_0',
+            title: 'Mock Manuscript Title',
+            status: 'Waiting for Report',
+            versions: [],
+            discussions: [
+              getBaseDiscussion({ read: true }),
+              getBaseDiscussion({ read: true }),
+              getBaseDiscussion({ read: true }),
+            ],
+          },
+          jest.fn(),
+        ])}
+      />,
+    );
+
+    expect(queryByTitle(/notification dot/i)).not.toBeInTheDocument();
+  });
+
+  it('does not display the notification dot when there are no discussions', () => {
+    const { queryByTitle } = render(
+      <ManuscriptCard
+        {...props}
+        useManuscriptById={useManuscriptById.mockImplementation(() => [
+          {
+            id: 'manuscript_0',
+            title: 'Mock Manuscript Title',
+            status: 'Waiting for Report',
+            versions: [],
+            discussions: [],
+          },
+          jest.fn(),
+        ])}
+      />,
+    );
+
+    expect(queryByTitle(/notification dot/i)).not.toBeInTheDocument();
   });
 });

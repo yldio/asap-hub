@@ -866,6 +866,7 @@ type Discussions implements Entry & _Node {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): DiscussionsLinkingCollections
   message(locale: String, preview: Boolean, where: MessagesFilter): Messages
+  readByCollection(limit: Int = 100, locale: String, order: [DiscussionsReadByCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): DiscussionsReadByCollection
   repliesCollection(limit: Int = 100, locale: String, order: [DiscussionsRepliesCollectionOrder], preview: Boolean, skip: Int = 0, where: MessagesFilter): DiscussionsRepliesCollection
   sys: Sys!
   title(locale: String): String
@@ -884,6 +885,8 @@ input DiscussionsFilter {
   contentfulMetadata: ContentfulMetadataFilter
   message: cfMessagesNestedFilter
   message_exists: Boolean
+  readBy: cfUsersNestedFilter
+  readByCollection_exists: Boolean
   replies: cfMessagesNestedFilter
   repliesCollection_exists: Boolean
   sys: SysFilter
@@ -933,6 +936,88 @@ enum DiscussionsOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+}
+
+type DiscussionsReadByCollection {
+  items: [Users]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum DiscussionsReadByCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  city_ASC
+  city_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  country_ASC
+  country_DESC
+  createdDate_ASC
+  createdDate_DESC
+  degree_ASC
+  degree_DESC
+  dismissedGettingStarted_ASC
+  dismissedGettingStarted_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  institution_ASC
+  institution_DESC
+  lastName_ASC
+  lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
+  onboarded_ASC
+  onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  twitter_ASC
+  twitter_DESC
+  website1_ASC
+  website1_DESC
+  website2_ASC
+  website2_DESC
 }
 
 type DiscussionsRepliesCollection {
@@ -7115,6 +7200,7 @@ enum UsersLabsCollectionOrder {
 type UsersLinkingCollections {
   complianceReportsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsComplianceReportsCollectionOrder], preview: Boolean, skip: Int = 0): ComplianceReportsCollection
   discoverCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsDiscoverCollectionOrder], preview: Boolean, skip: Int = 0): DiscoverCollection
+  discussionsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsDiscussionsCollectionOrder], preview: Boolean, skip: Int = 0): DiscussionsCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsInterestGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
@@ -7150,6 +7236,19 @@ enum UsersLinkingCollectionsDiscoverCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsDiscussionsCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum UsersLinkingCollectionsEventSpeakersCollectionOrder {
@@ -8089,6 +8188,7 @@ input cfDiscussionsNestedFilter {
   OR: [cfDiscussionsNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
   message_exists: Boolean
+  readByCollection_exists: Boolean
   repliesCollection_exists: Boolean
   sys: SysFilter
   title: String

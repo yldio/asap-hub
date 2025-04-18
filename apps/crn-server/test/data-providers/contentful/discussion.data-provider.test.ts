@@ -128,6 +128,17 @@ describe('Discussions Contentful Data Provider', () => {
                 },
               },
             },
+            readBy: {
+              'en-US': [
+                {
+                  sys: {
+                    id: discussionRequestObject.userId,
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
           },
         },
       );
@@ -248,7 +259,7 @@ describe('Discussions Contentful Data Provider', () => {
   });
 
   describe('Update', () => {
-    test('Should update a discussion without existing replies', async () => {
+    test('Should update a discussion without existing replies and make readBy to be a list with only the user who is replying', async () => {
       const discussionId = 'discussion-id-1';
       const userId = 'user-id-1';
       const reply = {
@@ -267,7 +278,7 @@ describe('Discussions Contentful Data Provider', () => {
         .fn()
         .mockResolvedValueOnce(discussionMockUpdated);
 
-      await discussionDataProviderMock.update(discussionId, { reply });
+      await discussionDataProviderMock.update(discussionId, reply);
 
       expect(environmentMock.getEntry).toHaveBeenCalledWith(discussionId);
       expect(environmentMock.createEntry).toHaveBeenCalledWith('messages', {
@@ -300,12 +311,27 @@ describe('Discussions Contentful Data Provider', () => {
             ],
           },
         },
+        {
+          op: 'add',
+          path: '/fields/readBy',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'user-id-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
       ]);
 
       expect(discussionMockUpdated.publish).toHaveBeenCalled();
     });
 
-    test('Should update a discussion with existing replies', async () => {
+    test('Should update a discussion with existing replies and make readBy to be a list with only the user who is replying', async () => {
       const discussionId = 'discussion-id-1';
       const userId = 'user-id-1';
       const reply = {
@@ -344,7 +370,7 @@ describe('Discussions Contentful Data Provider', () => {
         .fn()
         .mockResolvedValueOnce(discussionMockUpdated);
 
-      await discussionDataProviderMock.update(discussionId, { reply });
+      await discussionDataProviderMock.update(discussionId, reply);
 
       expect(environmentMock.getEntry).toHaveBeenCalledWith(discussionId);
       expect(environmentMock.createEntry).toHaveBeenCalledWith('messages', {
@@ -391,8 +417,149 @@ describe('Discussions Contentful Data Provider', () => {
             ],
           },
         },
+        {
+          op: 'add',
+          path: '/fields/readBy',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'user-id-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
       ]);
 
+      expect(discussionMockUpdated.publish).toHaveBeenCalled();
+    });
+
+    test('Should update a discussion with existing readBy', async () => {
+      const discussionId = 'discussion-id-1';
+      const userId = 'user-id-1';
+
+      const discussionMock = getEntry({
+        readBy: {
+          'en-US': [
+            {
+              sys: {
+                id: 'john-doe',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+            {
+              sys: {
+                id: 'jane-smith',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        },
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
+      const discussionMockUpdated = getEntry({});
+      discussionMock.patch = jest
+        .fn()
+        .mockResolvedValueOnce(discussionMockUpdated);
+
+      await discussionDataProviderMock.update(discussionId, { userId });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(discussionId);
+      expect(discussionMock.patch).toHaveBeenCalledWith([
+        {
+          op: 'replace',
+          path: '/fields/readBy',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'john-doe',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'jane-smith',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'user-id-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+      ]);
+
+      expect(discussionMockUpdated.publish).toHaveBeenCalled();
+    });
+
+    test('Should not add a user to readBy if they are already in the list', async () => {
+      const discussionId = 'discussion-id-1';
+      const userId = 'user-id-1';
+
+      const discussionMock = getEntry({
+        readBy: {
+          'en-US': [
+            {
+              sys: {
+                id: userId,
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        },
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
+      const discussionMockUpdated = getEntry({});
+      discussionMock.patch = jest
+        .fn()
+        .mockResolvedValueOnce(discussionMockUpdated);
+
+      await discussionDataProviderMock.update(discussionId, { userId });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(discussionId);
+      expect(discussionMock.patch).not.toHaveBeenCalled();
+      expect(discussionMockUpdated.publish).not.toHaveBeenCalled();
+    });
+
+    test('Should add a user to readBy if the list is empty', async () => {
+      const discussionId = 'discussion-id-1';
+      const userId = 'user-id-1';
+
+      const discussionMock = getEntry({
+        readBy: undefined,
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
+      const discussionMockUpdated = getEntry({});
+      discussionMock.patch = jest
+        .fn()
+        .mockResolvedValueOnce(discussionMockUpdated);
+
+      await discussionDataProviderMock.update(discussionId, { userId });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(discussionId);
+      expect(discussionMock.patch).toHaveBeenCalledWith([
+        {
+          op: 'replace',
+          path: '/fields/readBy',
+          value: {
+            'en-US': [{ sys: { id: userId, linkType: 'Entry', type: 'Link' } }],
+          },
+        },
+      ]);
       expect(discussionMockUpdated.publish).toHaveBeenCalled();
     });
   });

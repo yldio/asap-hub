@@ -91,6 +91,7 @@ export { default as newsEventPlaceholderIcon } from './news-event-placeholder';
 export { default as newsIcon } from './news';
 export { default as newsPlaceholder } from './news-placeholder';
 export { default as nextPageIcon } from './next-page';
+export { default as NotificationDotIcon } from './notification-dot';
 export { default as NumericalSortingIcon } from './numerical-sorting';
 export { default as OrcidIcon } from './orcid';
 export { default as OrcidSocialIcon } from './orcid-social';

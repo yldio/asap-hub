@@ -6,6 +6,7 @@ import {
   FETCH_DISCUSSION_BY_ID,
   getLinkEntity,
   GraphQLClient,
+  Link,
   patchAndPublish,
 } from '@asap-hub/contentful';
 import {
@@ -60,6 +61,10 @@ export class DiscussionContentfulDataProvider
       fields: addLocaleToFields({
         title,
         message: getLinkEntity(messageId),
+        // The person who is creating the discussion
+        // should not see the thread as unread
+        // so we need to add the user to the readBy list
+        readBy: [getLinkEntity(userId)],
       }),
     });
 
@@ -81,11 +86,11 @@ export class DiscussionContentfulDataProvider
     const environment = await this.getRestClient();
     const discussion = await environment.getEntry(id);
 
-    if (update.reply) {
-      const publishedReplyId = await createAndPublishMessage(
-        environment,
-        update.reply,
-      );
+    if (update.text) {
+      const publishedReplyId = await createAndPublishMessage(environment, {
+        text: update.text,
+        userId: update.userId,
+      });
 
       const previousReplies = discussion.fields.replies
         ? discussion.fields.replies['en-US']
@@ -95,7 +100,25 @@ export class DiscussionContentfulDataProvider
 
       await patchAndPublish(discussion, {
         replies: [...previousReplies, newReply],
+        // The person who is replying to the discussion
+        // should not see the thread as unread
+        // so we need to add the user to the readBy list
+        readBy: [getLinkEntity(update.userId)],
       });
+    } else {
+      const previousReadBy = discussion.fields.readBy
+        ? discussion.fields.readBy['en-US']
+        : [];
+
+      const previousReadByIds = previousReadBy.map(
+        (readBy: Link<string>) => readBy.sys.id,
+      );
+      if (!previousReadByIds.includes(update.userId)) {
+        const newReadBy = getLinkEntity(update.userId);
+        await patchAndPublish(discussion, {
+          readBy: [...previousReadBy, newReadBy],
+        });
+      }
     }
   }
 }

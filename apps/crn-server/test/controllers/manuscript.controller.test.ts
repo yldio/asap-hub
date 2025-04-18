@@ -39,16 +39,19 @@ describe('Manuscript controller', () => {
     test('Should throw when working-group is not found', async () => {
       manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(null);
 
-      await expect(manuscriptController.fetchById('not-found')).rejects.toThrow(
-        NotFoundError,
-      );
+      await expect(
+        manuscriptController.fetchById('not-found', 'user-id-1'),
+      ).rejects.toThrow(NotFoundError);
     });
 
     test('Should return the manuscript when it finds it', async () => {
       manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
         getManuscriptDataObject(),
       );
-      const result = await manuscriptController.fetchById('manuscript-id');
+      const result = await manuscriptController.fetchById(
+        'manuscript-id',
+        'user-id-1',
+      );
 
       expect(result).toEqual(getManuscriptResponse());
     });

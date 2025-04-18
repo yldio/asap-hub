@@ -26,5 +26,6 @@ export const Normal = () => (
     createDiscussion={() => Promise.resolve('compliance-discussion-id')}
     useManuscriptById={() => [undefined, () => {}]}
     onReplyToDiscussion={() => Promise.resolve()}
+    onMarkDiscussionAsRead={() => Promise.resolve()}
   />
 );

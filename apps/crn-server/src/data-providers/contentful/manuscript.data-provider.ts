@@ -157,11 +157,14 @@ export class ManuscriptContentfulDataProvider
     );
   }
 
-  async fetchById(id: string): Promise<ManuscriptDataObject | null> {
+  async fetchById(
+    id: string,
+    userId: string,
+  ): Promise<ManuscriptDataObject | null> {
     const { manuscripts } = await this.contentfulClient.request<
       FetchManuscriptByIdQuery,
       FetchManuscriptByIdQueryVariables
-    >(FETCH_MANUSCRIPT_BY_ID, { id });
+    >(FETCH_MANUSCRIPT_BY_ID, { id, userId });
 
     if (!manuscripts) {
       return null;
@@ -412,7 +415,7 @@ export class ManuscriptContentfulDataProvider
       this.contentfulClient.request<
         FetchManuscriptByIdQuery,
         FetchManuscriptByIdQueryVariables
-      >(FETCH_MANUSCRIPT_BY_ID, { id });
+      >(FETCH_MANUSCRIPT_BY_ID, { id, userId });
 
     await pollContentfulGql<FetchManuscriptByIdQuery>(
       published.sys.publishedVersion || Infinity,
@@ -641,6 +644,7 @@ const parseGraphQLManuscriptDiscussions = (
       createdDate,
       lastUpdatedAt,
       text: discussion?.message?.text || '',
+      read: discussion?.readByCollection?.total === 1,
       replies,
     };
   });

@@ -12,12 +12,6 @@ export const manuscriptContentQueryFragment = gql`
     title
     status
     count
-    discussionsCollection(limit: 10) {
-      total
-      items {
-        ...DiscussionsContent
-      }
-    }
     assignedUsersCollection(limit: 30) {
       items {
         sys {
@@ -261,13 +255,21 @@ export const manuscriptContentQueryFragment = gql`
       }
     }
   }
-  ${discussionContentQueryFragment}
 `;
 
 export const FETCH_MANUSCRIPT_BY_ID = gql`
-  query FetchManuscriptById($id: String!) {
+  query FetchManuscriptById($id: String!, $userId: String) {
     manuscripts(id: $id) {
       ...ManuscriptsContent
+      discussionsCollection(limit: 10) {
+        total
+        items {
+          ...DiscussionsContent
+          readByCollection(limit: 1, where: { sys: { id: $userId } }) {
+            total
+          }
+        }
+      }
       teamsCollection(limit: 10) {
         items {
           sys {
@@ -280,6 +282,7 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
     }
   }
   ${manuscriptContentQueryFragment}
+  ${discussionContentQueryFragment}
 `;
 
 export const FETCH_MANUSCRIPTS = gql`

@@ -37,7 +37,7 @@ export const discussionContentQueryFragment = gql`
         }
       }
     }
-    repliesCollection(limit: 10) {
+    repliesCollection(limit: 20) {
       items {
         sys {
           publishedAt

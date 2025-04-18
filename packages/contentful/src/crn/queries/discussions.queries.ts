@@ -77,3 +77,31 @@ export const FETCH_DISCUSSION_BY_ID = gql`
   }
   ${discussionContentQueryFragment}
 `;
+
+export const FETCH_DISCUSSION_TITLE_AND_GRANTEE_PARTICIPANTS = gql`
+  query FetchDiscussionTitleAndGranteeParticipants($id: String!) {
+    discussions(id: $id) {
+      title
+      message(
+        where: {
+          createdBy: { alumniSinceDate: null, openScienceTeamMember_not: true }
+        }
+      ) {
+        createdBy {
+          email
+        }
+      }
+      repliesCollection(
+        where: {
+          createdBy: { alumniSinceDate: null, openScienceTeamMember_not: true }
+        }
+      ) {
+        items {
+          createdBy {
+            email
+          }
+        }
+      }
+    }
+  }
+`;

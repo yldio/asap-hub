@@ -9,14 +9,15 @@ import {
   patchAndPublish,
 } from '@asap-hub/contentful';
 import {
+  DiscussionCreateDataObject,
   DiscussionDataObject,
   DiscussionUpdateDataObject,
-  MessageCreateDataObject,
   ListResponse,
   Message,
-  DiscussionCreateDataObject,
+  MessageCreateDataObject,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
+import { EmailNotificationService } from '../email-notification-service';
 import { DiscussionDataProvider } from '../types';
 
 export type Discussion = NonNullable<FetchDiscussionByIdQuery['discussions']>;
@@ -25,10 +26,16 @@ type MessageItem = Discussion['message'];
 export class DiscussionContentfulDataProvider
   implements DiscussionDataProvider
 {
+  private emailNotificationService: EmailNotificationService;
+
   constructor(
     private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
-  ) {}
+  ) {
+    this.emailNotificationService = new EmailNotificationService(
+      this.contentfulClient,
+    );
+  }
 
   async fetch(): Promise<ListResponse<DiscussionDataObject>> {
     throw new Error('Method not implemented.');
@@ -49,7 +56,14 @@ export class DiscussionContentfulDataProvider
 
   async create(input: DiscussionCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
-    const { userId, manuscriptId, title, text } = input;
+    const {
+      userId,
+      manuscriptId,
+      title,
+      text,
+      sendNotifications,
+      notificationList,
+    } = input;
 
     const messageId = await createAndPublishMessage(environment, {
       text,
@@ -74,6 +88,13 @@ export class DiscussionContentfulDataProvider
       ],
     });
 
+    await this.emailNotificationService.sendEmailNotification(
+      'discussion_created',
+      manuscriptId,
+      sendNotifications || false,
+      notificationList || '',
+    );
+
     return discussionEntry.sys.id;
   }
 
@@ -81,10 +102,12 @@ export class DiscussionContentfulDataProvider
     const environment = await this.getRestClient();
     const discussion = await environment.getEntry(id);
 
-    if (update.reply) {
+    const { sendNotifications, notificationList, reply, manuscriptId } = update;
+
+    if (reply) {
       const publishedReplyId = await createAndPublishMessage(
         environment,
-        update.reply,
+        reply,
       );
 
       const previousReplies = discussion.fields.replies
@@ -96,6 +119,16 @@ export class DiscussionContentfulDataProvider
       await patchAndPublish(discussion, {
         replies: [...previousReplies, newReply],
       });
+
+      if (reply.isOpenScienceMember) {
+        await this.emailNotificationService.sendEmailNotification(
+          'os_member_replied_to_discussion',
+          manuscriptId,
+          sendNotifications,
+          notificationList,
+          id,
+        );
+      }
     }
   }
 }

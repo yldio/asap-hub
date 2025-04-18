@@ -42,12 +42,19 @@ describe('Discussion Controller', () => {
     const reply = {
       text: 'test reply',
       userId: 'user-id-0',
+      isOpenScienceMember: true,
     };
 
     test('Should return the updated discussion', async () => {
       const mockResponse = getDiscussionDataObject();
       discussionDataProviderMock.fetchById.mockResolvedValue(mockResponse);
-      const result = await discussionController.update('discussion-id', reply);
+      const result = await discussionController.update(
+        'discussion-id',
+        reply,
+        'manuscript-id-1',
+        true,
+        '',
+      );
 
       expect(result).toEqual(mockResponse);
     });
@@ -57,12 +64,21 @@ describe('Discussion Controller', () => {
         getDiscussionDataObject(),
       );
 
-      await discussionController.update('discussion-id', reply);
+      await discussionController.update(
+        'discussion-id',
+        reply,
+        'manuscript-id-1',
+        true,
+        '',
+      );
 
       expect(discussionDataProviderMock.update).toHaveBeenCalledWith(
         'discussion-id',
         {
           reply,
+          manuscriptId: 'manuscript-id-1',
+          sendNotifications: true,
+          notificationList: '',
         },
       );
     });
@@ -84,6 +100,8 @@ describe('Discussion Controller', () => {
         input.manuscriptId,
         input.title,
         input.text,
+        false,
+        '',
       );
 
       expect(result).toEqual(mockResponse);
@@ -99,9 +117,15 @@ describe('Discussion Controller', () => {
         input.manuscriptId,
         input.title,
         input.text,
+        false,
+        '',
       );
 
-      expect(discussionDataProviderMock.create).toHaveBeenCalledWith(input);
+      expect(discussionDataProviderMock.create).toHaveBeenCalledWith({
+        ...input,
+        sendNotifications: false,
+        notificationList: '',
+      });
     });
   });
 });

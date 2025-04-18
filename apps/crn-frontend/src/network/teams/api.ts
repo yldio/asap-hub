@@ -8,6 +8,7 @@ import {
   CompletedStatusOption,
   ComplianceReportPostRequest,
   ComplianceReportResponse,
+  DiscussionCreateRequest,
   DiscussionRequest,
   DiscussionResponse,
   ListLabsResponse,
@@ -432,9 +433,7 @@ export const getDiscussion = async (
 };
 
 export const createDiscussion = async (
-  manuscriptId: string,
-  title: string,
-  text: string,
+  input: DiscussionCreateRequest,
   authorization: string,
 ): Promise<DiscussionResponse> => {
   const resp = await fetch(`${API_BASE_URL}/discussions`, {
@@ -444,11 +443,7 @@ export const createDiscussion = async (
       'content-type': 'application/json',
       ...createSentryHeaders(),
     },
-    body: JSON.stringify({
-      text,
-      manuscriptId,
-      title,
-    }),
+    body: JSON.stringify(input),
   });
   const response = await resp.json();
   if (!resp.ok) {

@@ -24,22 +24,23 @@ export type DiscussionDataObject = {
   replies?: Message[];
 };
 
-export type DiscussionType = 'compliance-report' | '';
-
 export type MessageCreateDataObject = {
   text: string;
   userId: string;
-  complianceReportId?: string;
-  type?: DiscussionType;
 };
 
 export type DiscussionUpdateDataObject = {
-  reply?: MessageCreateDataObject;
-  endedBy?: string;
+  reply?: MessageCreateDataObject & { isOpenScienceMember: boolean };
+  manuscriptId: string;
+  sendNotifications: boolean;
+  notificationList: string;
 };
 
 export type DiscussionRequest = {
   text: string;
+  manuscriptId: string;
+  sendNotifications?: boolean;
+  notificationList?: string;
 };
 
 export type DiscussionEndRequest = {
@@ -50,6 +51,8 @@ export type DiscussionCreateRequest = {
   manuscriptId: string;
   title: string;
   text: string;
+  sendNotifications?: boolean;
+  notificationList?: string;
 };
 
 export type DiscussionCreateDataObject = DiscussionCreateRequest & {

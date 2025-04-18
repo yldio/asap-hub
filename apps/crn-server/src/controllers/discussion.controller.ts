@@ -22,9 +22,17 @@ export default class DiscussionController {
 
   async update(
     id: string,
-    reply: MessageCreateDataObject,
+    reply: MessageCreateDataObject & { isOpenScienceMember: boolean },
+    manuscriptId: string,
+    sendNotifications: boolean,
+    notificationList: string,
   ): Promise<DiscussionResponse> {
-    await this.discussionDataProvider.update(id, { reply });
+    await this.discussionDataProvider.update(id, {
+      reply,
+      sendNotifications,
+      notificationList,
+      manuscriptId,
+    });
 
     return this.fetchById(id);
   }
@@ -34,12 +42,16 @@ export default class DiscussionController {
     manuscriptId: string,
     title: string,
     text: string,
+    sendNotifications: boolean,
+    notificationList: string,
   ): Promise<DiscussionResponse> {
     const id = await this.discussionDataProvider.create({
       userId,
       manuscriptId,
       title,
       text,
+      sendNotifications,
+      notificationList,
     });
 
     return this.fetchById(id);

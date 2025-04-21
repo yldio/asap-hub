@@ -1,5 +1,5 @@
 import { createUserResponse } from '@asap-hub/fixtures';
-import { UserResponse } from '@asap-hub/model';
+import { Reply, UserResponse } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
@@ -150,15 +150,19 @@ describe('/discussions/ route', () => {
       const discussionId = 'discussion-id-1';
       const text = 'test reply';
 
-      const reply = { text, userId: 'user-id-0' };
+      const reply: Reply = { text, isOpenScienceMember: false };
 
       await supertest(app).patch(`/discussions/${discussionId}`).send({
         text,
       });
 
-      expect(discussionControllerMock.update).toBeCalledWith(
+      expect(discussionControllerMock.update).toHaveBeenCalledWith(
         discussionId,
+        'user-id-0',
         reply,
+        undefined,
+        false,
+        '',
       );
     });
 
@@ -226,9 +230,10 @@ describe('/discussions/ route', () => {
 
       await supertest(app).patch(`/discussions/${discussionId}/read`);
 
-      expect(discussionControllerMock.update).toBeCalledWith(discussionId, {
-        userId: 'user-id-0',
-      });
+      expect(discussionControllerMock.update).toHaveBeenCalledWith(
+        discussionId,
+        'user-id-0',
+      );
     });
 
     test('Should return 403 when loggedInUser is undefined', async () => {

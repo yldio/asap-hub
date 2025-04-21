@@ -9,6 +9,7 @@ export * from './dashboard';
 export * from './data-providers';
 export * from './discover';
 export * from './discussion';
+export * from './email-notification';
 export * from './error';
 export * from './event';
 export * from './event-common';

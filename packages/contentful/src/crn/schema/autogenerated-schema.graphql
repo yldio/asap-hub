@@ -905,6 +905,12 @@ type DiscussionsLinkingCollections {
 }
 
 enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
+  apcAmount_ASC
+  apcAmount_DESC
+  apcPaid_ASC
+  apcPaid_DESC
+  apcRequested_ASC
+  apcRequested_DESC
   count_ASC
   count_DESC
   previousStatus_ASC
@@ -3420,6 +3426,12 @@ enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
 }
 
 enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
+  apcAmount_ASC
+  apcAmount_DESC
+  apcPaid_ASC
+  apcPaid_DESC
+  apcRequested_ASC
+  apcRequested_DESC
   count_ASC
   count_DESC
   previousStatus_ASC
@@ -3532,6 +3544,9 @@ enum ManuscriptVersionsTeamsCollectionOrder {
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts)"""
 type Manuscripts implements Entry & _Node {
   _id: ID!
+  apcAmount(locale: String): Float
+  apcPaid(locale: String): Boolean
+  apcRequested(locale: String): Boolean
   assignedUsersCollection(limit: Int = 100, locale: String, order: [ManuscriptsAssignedUsersCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): ManuscriptsAssignedUsersCollection
   contentfulMetadata: ContentfulMetadata!
   count(locale: String): Int
@@ -3660,6 +3675,21 @@ enum ManuscriptsDiscussionsCollectionOrder {
 input ManuscriptsFilter {
   AND: [ManuscriptsFilter]
   OR: [ManuscriptsFilter]
+  apcAmount: Float
+  apcAmount_exists: Boolean
+  apcAmount_gt: Float
+  apcAmount_gte: Float
+  apcAmount_in: [Float]
+  apcAmount_lt: Float
+  apcAmount_lte: Float
+  apcAmount_not: Float
+  apcAmount_not_in: [Float]
+  apcPaid: Boolean
+  apcPaid_exists: Boolean
+  apcPaid_not: Boolean
+  apcRequested: Boolean
+  apcRequested_exists: Boolean
+  apcRequested_not: Boolean
   assignedUsers: cfUsersNestedFilter
   assignedUsersCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
@@ -3722,6 +3752,12 @@ type ManuscriptsLinkingCollections {
 }
 
 enum ManuscriptsOrder {
+  apcAmount_ASC
+  apcAmount_DESC
+  apcPaid_ASC
+  apcPaid_DESC
+  apcRequested_ASC
+  apcRequested_DESC
   count_ASC
   count_DESC
   previousStatus_ASC
@@ -6232,6 +6268,12 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
+  apcAmount_ASC
+  apcAmount_DESC
+  apcPaid_ASC
+  apcPaid_DESC
+  apcRequested_ASC
+  apcRequested_DESC
   count_ASC
   count_DESC
   previousStatus_ASC
@@ -7352,6 +7394,12 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 enum UsersLinkingCollectionsManuscriptsCollectionOrder {
+  apcAmount_ASC
+  apcAmount_DESC
+  apcPaid_ASC
+  apcPaid_DESC
+  apcRequested_ASC
+  apcRequested_DESC
   count_ASC
   count_DESC
   previousStatus_ASC

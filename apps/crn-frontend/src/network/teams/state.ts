@@ -51,6 +51,7 @@ import {
   ManuscriptsOptions,
   getPresignedUrl,
   uploadManuscriptFileViaPresignedUrl,
+  markDiscussionAsRead,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -365,9 +366,6 @@ export const useSetDiscussion = () =>
     set(discussionState(discussion.id), discussion);
   });
 
-// export const useDiscussionById = (id: string) =>
-//   useRecoilValue(discussionState(id));
-
 export const useReplyToDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);
   const setDiscussion = useSetDiscussion();
@@ -379,6 +377,35 @@ export const useReplyToDiscussion = () => {
     setDiscussion(discussion);
     const updatedManuscript = await getManuscript(manuscriptId, authorization);
     if (updatedManuscript) setManuscriptItem(updatedManuscript);
+  };
+};
+
+export const useMarkDiscussionAsRead = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const setDiscussion = useSetDiscussion();
+  const setManuscriptItem = useSetManuscriptItem();
+  const getManuscriptById = useRecoilCallback(
+    ({ snapshot }) =>
+      (manuscriptId: string) =>
+        snapshot.getLoadable(manuscriptState(manuscriptId)).getValue(),
+  );
+
+  return async (manuscriptId: string, discussionId: string) => {
+    const manuscript = getManuscriptById(manuscriptId);
+
+    if (manuscript) {
+      const discussions = manuscript.discussions.map((discussion) => {
+        if (discussion.id === discussionId) {
+          return { ...discussion, read: true };
+        }
+        return discussion;
+      });
+
+      setManuscriptItem({ ...manuscript, discussions });
+    }
+
+    const discussion = await markDiscussionAsRead(discussionId, authorization);
+    setDiscussion(discussion);
   };
 };
 

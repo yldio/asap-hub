@@ -10,7 +10,7 @@ import { getDiscussionDataObject } from '../fixtures/discussions.fixtures';
 import { manuscriptControllerMock } from '../mocks/manuscript.controller.mock';
 
 describe('/discussions/ route', () => {
-  const userMockFactory = jest.fn<UserResponse, []>();
+  const userMockFactory = jest.fn<UserResponse | undefined, []>();
   const authHandlerMock: AuthHandler = (req, _res, next) => {
     req.loggedInUser = userMockFactory();
     next();
@@ -70,6 +70,14 @@ describe('/discussions/ route', () => {
         ...createUserResponse(),
         onboarded: false,
       });
+
+      const response = await supertest(app).get(`/discussions/${discussionId}`);
+
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should return 403 when loggedInUser is undefined', async () => {
+      userMockFactory.mockReturnValueOnce(undefined);
 
       const response = await supertest(app).get(`/discussions/${discussionId}`);
 
@@ -165,6 +173,73 @@ describe('/discussions/ route', () => {
 
       expect(response.status).toBe(200);
     });
+
+    test('Should return 403 when loggedInUser is undefined', async () => {
+      userMockFactory.mockReturnValueOnce(undefined);
+
+      const response = await supertest(app)
+        .patch(`/discussions/${discussionId}`)
+        .send({
+          text: 'response',
+        });
+
+      expect(response.status).toEqual(403);
+    });
+  });
+
+  describe('PATCH /discussions/{discussion_id}/read', () => {
+    test('Should return a 404 error when the discussion does not exist', async () => {
+      discussionControllerMock.update.mockRejectedValueOnce(Boom.notFound());
+
+      const response = await supertest(app).patch(
+        `/discussions/${discussionId}/read`,
+      );
+
+      expect(response.status).toBe(404);
+    });
+
+    test('Should return 403 when user not allowed to update the discussion', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: false,
+      });
+
+      const response = await supertest(app).patch(
+        `/discussions/${discussionId}/read`,
+      );
+
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should return the results correctly', async () => {
+      discussionControllerMock.update.mockResolvedValueOnce(discussionResponse);
+
+      const response = await supertest(app).patch(
+        `/discussions/${discussionId}/read`,
+      );
+
+      expect(response.body).toEqual(discussionResponse);
+    });
+
+    test('Should call the controller with the right parameters', async () => {
+      const discussionId = 'discussion-id-1';
+
+      await supertest(app).patch(`/discussions/${discussionId}/read`);
+
+      expect(discussionControllerMock.update).toBeCalledWith(discussionId, {
+        userId: 'user-id-0',
+      });
+    });
+
+    test('Should return 403 when loggedInUser is undefined', async () => {
+      userMockFactory.mockReturnValueOnce(undefined);
+
+      const response = await supertest(app).patch(
+        `/discussions/${discussionId}/read`,
+      );
+
+      expect(response.status).toEqual(403);
+    });
   });
 
   describe('POST /discussions', () => {
@@ -236,6 +311,18 @@ describe('/discussions/ route', () => {
       });
 
       expect(response.status).toBe(200);
+    });
+
+    test('Should return 403 when loggedInUser is undefined', async () => {
+      userMockFactory.mockReturnValueOnce(undefined);
+
+      const response = await supertest(app).post(`/discussions`).send({
+        manuscriptId: 'manuscript-id',
+        title: 'A good title',
+        text: 'A good message',
+      });
+
+      expect(response.status).toEqual(403);
     });
   });
 });

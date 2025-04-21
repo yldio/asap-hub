@@ -42,6 +42,7 @@ import {
   getPresignedUrl,
   getTeam,
   getTeams,
+  markDiscussionAsRead,
   patchTeam,
   resubmitManuscript,
   updateDiscussion,
@@ -1174,6 +1175,33 @@ describe('getPresignedUrl', () => {
       getPresignedUrl(payload.filename, payload.contentType, authorization),
     ).rejects.toThrow(
       'Failed to generate presigned URL. Expected status 200. Received status 500',
+    );
+  });
+});
+
+describe('markDiscussionAsRead', () => {
+  it('makes an authorized PATCH request to mark a discussion as read', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .patch('/discussions/42/read')
+      .reply(200, {});
+
+    await markDiscussionAsRead('42', 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns a successfully marked discussion', async () => {
+    const discussion = createDiscussionResponse();
+    nock(API_BASE_URL).patch('/discussions/42/read').reply(200, discussion);
+    expect(await markDiscussionAsRead('42', '')).toEqual(discussion);
+  });
+
+  it('throws an error if the request fails', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .patch('/discussions/42/read')
+      .reply(500, { error: 'something broke' });
+
+    await expect(markDiscussionAsRead('42', 'Bearer x')).rejects.toThrow(
+      'Failed to mark discussion with id 42 as read. Expected status 200. Received status 500.',
     );
   });
 });

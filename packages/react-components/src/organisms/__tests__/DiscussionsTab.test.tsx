@@ -11,6 +11,7 @@ import DiscussionsTab from '../DiscussionsTab';
 
 describe('DiscussionsTab', () => {
   const mockCreateDiscussion = jest.fn();
+  const mockOnMarkDiscussionAsRead = jest.fn();
   const defaultProps: ComponentProps<typeof DiscussionsTab> = {
     manuscriptId: 'test-manuscript-id',
     createDiscussion: mockCreateDiscussion,
@@ -18,6 +19,7 @@ describe('DiscussionsTab', () => {
     onReplyToDiscussion: jest.fn(),
     canParticipateInDiscussion: true,
     isActiveManuscript: true,
+    onMarkDiscussionAsRead: mockOnMarkDiscussionAsRead,
   };
 
   beforeEach(() => {
@@ -91,6 +93,7 @@ describe('DiscussionsTab', () => {
       createdDate: new Date().toISOString(),
       lastUpdatedAt: new Date().toISOString(),
       replies: [],
+      read: false,
     }));
 
     render(<DiscussionsTab {...defaultProps} discussions={discussions} />);
@@ -115,6 +118,7 @@ describe('DiscussionsTab', () => {
       createdDate: new Date().toISOString(),
       lastUpdatedAt: new Date().toISOString(),
       replies: [],
+      read: false,
     }));
 
     render(<DiscussionsTab {...defaultProps} discussions={discussions} />);
@@ -143,6 +147,7 @@ describe('DiscussionsTab', () => {
       createdDate: new Date().toISOString(),
       lastUpdatedAt: new Date().toISOString(),
       replies: [],
+      read: false,
     }));
 
     render(<DiscussionsTab {...defaultProps} discussions={discussions} />);

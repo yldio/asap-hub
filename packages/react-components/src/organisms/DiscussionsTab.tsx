@@ -52,7 +52,7 @@ const arrowIconStyles = css({
 
 type DiscussionsTabProps = Pick<
   ComponentProps<typeof DiscussionCard>,
-  'onReplyToDiscussion'
+  'onReplyToDiscussion' | 'onMarkDiscussionAsRead'
 > & {
   manuscriptId: string;
   createDiscussion: (
@@ -72,6 +72,7 @@ const DiscussionsTab: React.FC<DiscussionsTabProps> = ({
   onReplyToDiscussion,
   canParticipateInDiscussion,
   isActiveManuscript,
+  onMarkDiscussionAsRead,
 }) => {
   const [displayDiscussionModal, setDisplayDiscussionModal] = useState(false);
   const [showAllDiscussions, setShowAllDiscussions] = useState(false);
@@ -132,6 +133,7 @@ const DiscussionsTab: React.FC<DiscussionsTabProps> = ({
           key={discussion.id}
           discussion={discussion}
           onReplyToDiscussion={onReplyToDiscussion}
+          onMarkDiscussionAsRead={onMarkDiscussionAsRead}
           isLast={index === displayedDiscussions.length - 1}
           displayReplyButton={canParticipateInDiscussion && isActiveManuscript}
         />

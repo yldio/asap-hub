@@ -18,6 +18,7 @@ import {
   useCreateDiscussion,
   useIsComplianceReviewer,
   useManuscriptById,
+  useMarkDiscussionAsRead,
   usePatchTeamById,
   usePutManuscript,
   useReplyToDiscussion,
@@ -39,12 +40,20 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const updateManuscript = usePutManuscript();
   const createDiscussion = useCreateDiscussion();
   const replyToDiscussion = useReplyToDiscussion();
+  const markDiscussionAsRead = useMarkDiscussionAsRead();
 
   const toast = useContext(ToastContext);
 
   const { setFormType } = useManuscriptToast();
   const user = useCurrentUserCRN();
   const isTeamMember = !!user?.teams.find(({ id }) => team.id === id);
+
+  const handleMarkDiscussionAsRead = async (
+    manuscriptId: string,
+    discussionId: string,
+  ): Promise<void> => {
+    await markDiscussionAsRead(manuscriptId, discussionId);
+  };
 
   const handleReplytoDiscussion = async (
     manuscriptId: string,
@@ -117,6 +126,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           }}
           useManuscriptById={useManuscriptById}
           onReplyToDiscussion={handleReplytoDiscussion}
+          onMarkDiscussionAsRead={handleMarkDiscussionAsRead}
         />
       </Route>
       <Route exact path={path + route.tools.template}>

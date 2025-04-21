@@ -34,8 +34,8 @@ export type MessageCreateDataObject = {
 };
 
 export type DiscussionUpdateDataObject = {
-  reply?: MessageCreateDataObject;
-  endedBy?: string;
+  text?: string;
+  userId: string;
 };
 
 export type DiscussionRequest = {
@@ -66,4 +66,5 @@ export type ManuscriptDiscussion = {
   lastUpdatedAt: string;
   text: string;
   replies: Message[];
+  read: boolean;
 };

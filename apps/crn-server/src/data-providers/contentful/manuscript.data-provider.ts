@@ -479,7 +479,7 @@ export class ManuscriptContentfulDataProvider
           recipientType === 'open_science_team'
             ? submittingTeam?.displayName || ''
             : getCommaAndString(contributingTeamNames),
-        workspace: `${origin}/teams/${submittingTeam?.sys.id}/workspace`,
+        workspace: `${origin}/network/teams/${submittingTeam?.sys.id}/workspace`,
       },
       assignedOSMembers: getCommaAndString(assignedOSMembers || []),
     });

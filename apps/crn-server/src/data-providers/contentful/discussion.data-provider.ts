@@ -10,14 +10,14 @@ import {
   patchAndPublish,
 } from '@asap-hub/contentful';
 import {
+  DiscussionCreateDataObject,
   DiscussionDataObject,
   DiscussionUpdateDataObject,
-  MessageCreateDataObject,
   ListResponse,
   Message,
-  DiscussionCreateDataObject,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
+import { EmailNotificationService } from '../email-notification-service';
 import { DiscussionDataProvider } from '../types';
 
 export type Discussion = NonNullable<FetchDiscussionByIdQuery['discussions']>;
@@ -26,10 +26,16 @@ type MessageItem = Discussion['message'];
 export class DiscussionContentfulDataProvider
   implements DiscussionDataProvider
 {
+  private emailNotificationService: EmailNotificationService;
+
   constructor(
     private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
-  ) {}
+  ) {
+    this.emailNotificationService = new EmailNotificationService(
+      this.contentfulClient,
+    );
+  }
 
   async fetch(): Promise<ListResponse<DiscussionDataObject>> {
     throw new Error('Method not implemented.');
@@ -50,7 +56,14 @@ export class DiscussionContentfulDataProvider
 
   async create(input: DiscussionCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
-    const { userId, manuscriptId, title, text } = input;
+    const {
+      userId,
+      manuscriptId,
+      title,
+      text,
+      sendNotifications,
+      notificationList,
+    } = input;
 
     const messageId = await createAndPublishMessage(environment, {
       text,
@@ -79,6 +92,14 @@ export class DiscussionContentfulDataProvider
       ],
     });
 
+    await this.emailNotificationService.sendEmailNotification(
+      'discussion_created',
+      manuscriptId,
+      sendNotifications || false,
+      notificationList || '',
+      discussionEntry.sys.id,
+    );
+
     return discussionEntry.sys.id;
   }
 
@@ -86,10 +107,13 @@ export class DiscussionContentfulDataProvider
     const environment = await this.getRestClient();
     const discussion = await environment.getEntry(id);
 
-    if (update.text) {
+    const { sendNotifications, notificationList, reply, manuscriptId, userId } =
+      update;
+
+    if (reply?.text) {
       const publishedReplyId = await createAndPublishMessage(environment, {
-        text: update.text,
-        userId: update.userId,
+        text: reply.text,
+        userId,
       });
 
       const previousReplies = discussion.fields.replies
@@ -105,6 +129,16 @@ export class DiscussionContentfulDataProvider
         // so we need to add the user to the readBy list
         readBy: [getLinkEntity(update.userId)],
       });
+
+      if (reply.isOpenScienceMember && manuscriptId) {
+        await this.emailNotificationService.sendEmailNotification(
+          'os_member_replied_to_discussion',
+          manuscriptId,
+          sendNotifications || false,
+          notificationList || '',
+          id,
+        );
+      }
     } else {
       const previousReadBy = discussion.fields.readBy
         ? discussion.fields.readBy['en-US']
@@ -125,7 +159,7 @@ export class DiscussionContentfulDataProvider
 
 const createAndPublishMessage = async (
   environment: Environment,
-  message: MessageCreateDataObject,
+  message: { text: string; userId: string },
 ) => {
   const { text, userId } = message;
   const user = getLinkEntity(userId);

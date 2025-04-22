@@ -373,7 +373,15 @@ export const useReplyToDiscussion = () => {
   const setManuscriptItem = useSetManuscriptItem();
 
   return async (manuscriptId: string, id: string, patch: DiscussionRequest) => {
-    const discussion = await updateDiscussion(id, patch, authorization);
+    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
+    const notificationList = getOverrides()
+      .COMPLIANCE_NOTIFICATION_LIST as string;
+
+    const discussion = await updateDiscussion(
+      id,
+      { ...patch, sendNotifications, notificationList },
+      authorization,
+    );
     setDiscussion(discussion);
     const updatedManuscript = await getManuscript(manuscriptId, authorization);
     if (updatedManuscript) setManuscriptItem(updatedManuscript);
@@ -597,10 +605,18 @@ export const useCreateDiscussion = () => {
     title: string,
     text: string,
   ): Promise<string> => {
+    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
+    const notificationList = getOverrides()
+      .COMPLIANCE_NOTIFICATION_LIST as string;
+
     const discussion = await createDiscussion(
-      manuscriptId,
-      title,
-      text,
+      {
+        manuscriptId,
+        title,
+        text,
+        sendNotifications,
+        notificationList,
+      },
       authorization,
     );
     const updatedManuscript = await getManuscript(manuscriptId, authorization);

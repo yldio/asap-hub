@@ -3,15 +3,12 @@ import {
   Environment,
   FetchManuscriptByIdQuery,
   FetchManuscriptByIdQueryVariables,
-  FetchManuscriptNotificationDetailsQuery,
-  FetchManuscriptNotificationDetailsQueryVariables,
   FetchManuscriptsByTeamIdQuery,
   FetchManuscriptsQuery,
   FetchManuscriptsQueryVariables,
   FETCH_MANUSCRIPTS,
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
-  FETCH_MANUSCRIPT_NOTIFICATION_DETAILS,
   getLinkAsset,
   getLinkAssets,
   getLinkEntities,
@@ -25,36 +22,27 @@ import {
 import {
   ApcCoverageOption,
   FetchOptions,
-  ManuscriptAssignedUser,
   ListPartialManuscriptResponse,
+  ManuscriptAssignedUser,
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
+  ManuscriptDiscussion,
   ManuscriptLifecycle,
   manuscriptLifecycles,
   manuscriptMapStatus,
-  manuscriptNotificationMapping,
   ManuscriptResubmitDataObject,
   ManuscriptStatus,
   ManuscriptType,
   manuscriptTypes,
-  ManuscriptUpdateAction,
+  EmailTriggerAction,
   ManuscriptUpdateDataObject,
   ManuscriptVersion,
   QuickCheckDetails,
-  manuscriptNotificationAttachmentContent,
-  ManuscriptDiscussion,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
-import * as postmark from 'postmark';
-import {
-  environment as environmentName,
-  origin,
-  postmarkServerToken,
-} from '../../config';
-import { cleanArray } from '../../utils/clean-array';
-import logger from '../../utils/logger';
-import { getCommaAndString } from '../../utils/text';
 
+import { getCommaAndString } from '../../utils/text';
+import { EmailNotificationService } from '../email-notification-service';
 import { ManuscriptDataProvider } from '../types';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
@@ -73,13 +61,15 @@ type ComplianceReport = NonNullable<
 export class ManuscriptContentfulDataProvider
   implements ManuscriptDataProvider
 {
-  private postmarkClient: postmark.ServerClient;
+  private emailNotificationService: EmailNotificationService;
 
   constructor(
     private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {
-    this.postmarkClient = new postmark.ServerClient(postmarkServerToken);
+    this.emailNotificationService = new EmailNotificationService(
+      this.contentfulClient,
+    );
   }
 
   async fetch(
@@ -277,7 +267,7 @@ export class ManuscriptContentfulDataProvider
 
     await manuscriptEntry.publish();
 
-    await this.sendEmailNotification(
+    await this.emailNotificationService.sendEmailNotification(
       'manuscript_submitted',
       manuscriptEntry.sys.id,
       sendNotifications,
@@ -322,7 +312,7 @@ export class ManuscriptContentfulDataProvider
       status: 'Manuscript Resubmitted',
     });
 
-    await this.sendEmailNotification(
+    await this.emailNotificationService.sendEmailNotification(
       'manuscript_resubmitted',
       id,
       sendNotifications,
@@ -364,7 +354,7 @@ export class ManuscriptContentfulDataProvider
           'notificationList' in manuscriptData
             ? (manuscriptData.notificationList as string)
             : '';
-        await this.sendEmailNotification(
+        await this.emailNotificationService.sendEmailNotification(
           statusUpdateAction,
           id,
           sendEmailNotification,
@@ -422,175 +412,6 @@ export class ManuscriptContentfulDataProvider
       fetchManuscriptById,
       'manuscripts',
     );
-  }
-
-  async sendEmailNotification(
-    action: ManuscriptUpdateAction,
-    manuscriptId: string,
-    flagEnabled: boolean,
-    emailList: string,
-  ): Promise<void> {
-    if (!flagEnabled && !emailList) return;
-
-    const { manuscripts } = await this.contentfulClient.request<
-      FetchManuscriptNotificationDetailsQuery,
-      FetchManuscriptNotificationDetailsQueryVariables
-    >(FETCH_MANUSCRIPT_NOTIFICATION_DETAILS, { id: manuscriptId });
-
-    const versionData = manuscripts?.versionsCollection?.items[0];
-
-    if (!manuscripts || !versionData) {
-      return;
-    }
-
-    const submittingTeam = manuscripts.teamsCollection?.items[0];
-    const activeContributingTeams = cleanArray(
-      versionData.teamsCollection?.items,
-    ).filter((team) => !team.inactiveSince);
-
-    const contributingTeamNames = activeContributingTeams
-      .map((team) => team?.displayName || '')
-      .filter(Boolean);
-
-    const manuscriptData = {
-      title: manuscripts.title || '',
-      type: versionData.type || '',
-      id: getManuscriptVersionUID({
-        version: {
-          type: versionData.type,
-          count: versionData.count,
-          lifecycle: versionData.lifecycle,
-        },
-        teamIdCode: submittingTeam?.teamId || '',
-        grantId: submittingTeam?.grantId || '',
-        manuscriptCount: manuscripts.count || 0,
-      }),
-    };
-    const assignedOSMembers = manuscripts.assignedUsersCollection?.items
-      .map((user) => `${user?.firstName} ${user?.lastName}`)
-      .filter(Boolean);
-
-    const notificationData = (
-      recipientType: 'open_science_team' | 'grantee',
-    ): TemplateModel => ({
-      manuscript: manuscriptData,
-      team: {
-        name:
-          recipientType === 'open_science_team'
-            ? submittingTeam?.displayName || ''
-            : getCommaAndString(contributingTeamNames),
-        workspace: `${origin}/network/teams/${submittingTeam?.sys.id}/workspace`,
-      },
-      assignedOSMembers: getCommaAndString(assignedOSMembers || []),
-    });
-
-    const contributingAuthors = [
-      ...(versionData.firstAuthorsCollection?.items.map(
-        (firstAuthor) => firstAuthor?.email,
-      ) || []),
-      ...(versionData.additionalAuthorsCollection?.items.map(
-        (additionalAuthor) => additionalAuthor?.email,
-      ) || []),
-      ...(versionData.correspondingAuthorCollection?.items.map(
-        (correspondingAuthor) => correspondingAuthor?.email,
-      ) || []),
-    ];
-
-    const teamLeaders = activeContributingTeams.map((team) => {
-      const activeMemberships = cleanArray(
-        team?.linkedFrom?.teamMembershipCollection?.items,
-      )
-        .filter(
-          (membership) =>
-            !membership?.inactiveSinceDate &&
-            membership?.linkedFrom?.usersCollection?.items[0] &&
-            !membership?.linkedFrom?.usersCollection?.items[0]?.alumniSinceDate,
-        )
-        .map((membership) => ({
-          email: membership?.linkedFrom?.usersCollection?.items[0]?.email,
-          role: membership?.role,
-        }));
-
-      return activeMemberships
-        ?.filter(
-          (member) =>
-            member.role === 'Project Manager' ||
-            member.role === 'Lead PI (Core Leadership)',
-        )
-        .map((member) => member.email);
-    });
-
-    const labPIs = cleanArray(versionData.labsCollection?.items)
-      .filter((lab) => lab.labPi && !lab.labPi?.alumniSinceDate)
-      .map((lab) => lab.labPi?.email);
-
-    let granteeRecipients = [
-      ...new Set([...contributingAuthors, ...teamLeaders.flat(), ...labPIs]),
-    ];
-
-    let openScienceRecipients = [
-      'openscience@parkinsonsroadmap.org',
-      ...(environmentName === 'dev'
-        ? ['dsnyder@parkinsonsroadmap.org', 'dlewis@parkinsonsroadmap.org']
-        : []),
-    ];
-
-    if (!flagEnabled) {
-      granteeRecipients = granteeRecipients.filter(
-        (email) => email && emailList.includes(email),
-      );
-      openScienceRecipients = openScienceRecipients.filter(
-        (email) => email && emailList.includes(email),
-      );
-    }
-
-    const templateDetails = manuscriptNotificationMapping[action];
-    if (templateDetails.grantee && granteeRecipients.length >= 1) {
-      const response = await this.postmarkClient.sendEmailWithTemplate({
-        From: 'hub@asap.science',
-        To: granteeRecipients.join(','),
-        MessageStream: 'outbound',
-        TemplateAlias: templateDetails.grantee,
-        TemplateModel: notificationData('grantee'),
-        Attachments: [
-          {
-            Name: 'asaplogo.jpg',
-            ContentType: 'image/jpeg',
-            ContentID: 'cid:asaplogo',
-            Content: manuscriptNotificationAttachmentContent,
-          },
-        ],
-      });
-      if (response.ErrorCode !== 0)
-        logger.error(
-          `Error while sending compliance email notification: ${response.Message}`,
-        );
-    }
-
-    if (
-      templateDetails.open_science_team &&
-      openScienceRecipients.length >= 1
-    ) {
-      const response = await this.postmarkClient.sendEmailWithTemplate({
-        From: 'hub@asap.science',
-        To: openScienceRecipients.join(','),
-        MessageStream: 'outbound',
-        TemplateAlias: templateDetails.open_science_team,
-        TemplateModel: notificationData('open_science_team'),
-        Attachments: [
-          {
-            Name: 'asaplogo.jpg',
-            ContentType: 'image/jpeg',
-            ContentID: 'cid:asaplogo',
-            Content: manuscriptNotificationAttachmentContent,
-          },
-        ],
-      });
-      if (response.ErrorCode !== 0)
-        logger.error(
-          `Error while sending compliance email notification: ${response.Message}`,
-        );
-    }
   }
 }
 
@@ -976,7 +797,7 @@ export const getManuscriptVersionUID = ({
 
 const getStatusUpdateAction = (
   status: ManuscriptStatus | undefined,
-): ManuscriptUpdateAction | null => {
+): EmailTriggerAction | null => {
   switch (status) {
     case 'Review Compliance Report':
       return 'status_changed_review_compliance_report';
@@ -991,17 +812,4 @@ const getStatusUpdateAction = (
     default:
       return null;
   }
-};
-
-type TemplateModel = {
-  manuscript: {
-    title: string;
-    type: string;
-    id: string;
-  };
-  team: {
-    name: string;
-    workspace: string;
-  };
-  assignedOSMembers: string;
 };

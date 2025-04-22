@@ -274,6 +274,7 @@ const ExpandedView = ({
           onSave={(data) =>
             onReplyToDiscussion(manuscriptId, discussion.id, {
               text: data.text,
+              manuscriptId,
             })
           }
         />

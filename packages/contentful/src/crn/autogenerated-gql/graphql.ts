@@ -1307,6 +1307,12 @@ export type DiscussionsLinkingCollectionsManuscriptsCollectionArgs = {
 };
 
 export enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
+  ApcAmountAsc = 'apcAmount_ASC',
+  ApcAmountDesc = 'apcAmount_DESC',
+  ApcPaidAsc = 'apcPaid_ASC',
+  ApcPaidDesc = 'apcPaid_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
@@ -4836,6 +4842,12 @@ export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder
 }
 
 export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
+  ApcAmountAsc = 'apcAmount_ASC',
+  ApcAmountDesc = 'apcAmount_DESC',
+  ApcPaidAsc = 'apcPaid_ASC',
+  ApcPaidDesc = 'apcPaid_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
@@ -4949,6 +4961,9 @@ export enum ManuscriptVersionsTeamsCollectionOrder {
 export type Manuscripts = Entry &
   _Node & {
     _id: Scalars['ID'];
+    apcAmount?: Maybe<Scalars['Float']>;
+    apcPaid?: Maybe<Scalars['Boolean']>;
+    apcRequested?: Maybe<Scalars['Boolean']>;
     assignedUsersCollection?: Maybe<ManuscriptsAssignedUsersCollection>;
     contentfulMetadata: ContentfulMetadata;
     count?: Maybe<Scalars['Int']>;
@@ -4964,6 +4979,21 @@ export type Manuscripts = Entry &
     title?: Maybe<Scalars['String']>;
     versionsCollection?: Maybe<ManuscriptsVersionsCollection>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsApcAmountArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsApcPaidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsApcRequestedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsAssignedUsersCollectionArgs = {
@@ -5161,6 +5191,21 @@ export enum ManuscriptsDiscussionsCollectionOrder {
 export type ManuscriptsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
+  apcAmount?: InputMaybe<Scalars['Float']>;
+  apcAmount_exists?: InputMaybe<Scalars['Boolean']>;
+  apcAmount_gt?: InputMaybe<Scalars['Float']>;
+  apcAmount_gte?: InputMaybe<Scalars['Float']>;
+  apcAmount_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  apcAmount_lt?: InputMaybe<Scalars['Float']>;
+  apcAmount_lte?: InputMaybe<Scalars['Float']>;
+  apcAmount_not?: InputMaybe<Scalars['Float']>;
+  apcAmount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  apcPaid?: InputMaybe<Scalars['Boolean']>;
+  apcPaid_exists?: InputMaybe<Scalars['Boolean']>;
+  apcPaid_not?: InputMaybe<Scalars['Boolean']>;
+  apcRequested?: InputMaybe<Scalars['Boolean']>;
+  apcRequested_exists?: InputMaybe<Scalars['Boolean']>;
+  apcRequested_not?: InputMaybe<Scalars['Boolean']>;
   assignedUsers?: InputMaybe<CfUsersNestedFilter>;
   assignedUsersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
@@ -5236,6 +5281,12 @@ export type ManuscriptsLinkingCollectionsEntryCollectionArgs = {
 };
 
 export enum ManuscriptsOrder {
+  ApcAmountAsc = 'apcAmount_ASC',
+  ApcAmountDesc = 'apcAmount_DESC',
+  ApcPaidAsc = 'apcPaid_ASC',
+  ApcPaidDesc = 'apcPaid_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
@@ -9325,6 +9376,12 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
+  ApcAmountAsc = 'apcAmount_ASC',
+  ApcAmountDesc = 'apcAmount_DESC',
+  ApcPaidAsc = 'apcPaid_ASC',
+  ApcPaidDesc = 'apcPaid_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
@@ -10991,6 +11048,12 @@ export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsManuscriptsCollectionOrder {
+  ApcAmountAsc = 'apcAmount_ASC',
+  ApcAmountDesc = 'apcAmount_DESC',
+  ApcPaidAsc = 'apcPaid_ASC',
+  ApcPaidDesc = 'apcPaid_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
@@ -14902,6 +14965,27 @@ export type FetchDiscussionByIdQuery = {
       }>;
     }
   >;
+};
+
+export type FetchDiscussionGranteeParticipantsQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchDiscussionGranteeParticipantsQuery = {
+  discussions?: Maybe<{
+    message?: Maybe<{ createdBy?: Maybe<Pick<Users, 'email'>> }>;
+    repliesCollection?: Maybe<{
+      items: Array<Maybe<{ createdBy?: Maybe<Pick<Users, 'email'>> }>>;
+    }>;
+  }>;
+};
+
+export type FetchDiscussionTitleQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchDiscussionTitleQuery = {
+  discussions?: Maybe<Pick<Discussions, 'title'>>;
 };
 
 export type EventsContentFragment = Pick<
@@ -33970,6 +34054,232 @@ export const FetchDiscussionByIdDocument = {
 } as unknown as DocumentNode<
   FetchDiscussionByIdQuery,
   FetchDiscussionByIdQueryVariables
+>;
+export const FetchDiscussionGranteeParticipantsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchDiscussionGranteeParticipants' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discussions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'message' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'createdBy' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: {
+                                    kind: 'Name',
+                                    value: 'alumniSinceDate',
+                                  },
+                                  value: { kind: 'NullValue' },
+                                },
+                                {
+                                  kind: 'ObjectField',
+                                  name: {
+                                    kind: 'Name',
+                                    value: 'openScienceTeamMember_not',
+                                  },
+                                  value: { kind: 'BooleanValue', value: true },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'email' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'repliesCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'createdBy' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: {
+                                    kind: 'Name',
+                                    value: 'alumniSinceDate',
+                                  },
+                                  value: { kind: 'NullValue' },
+                                },
+                                {
+                                  kind: 'ObjectField',
+                                  name: {
+                                    kind: 'Name',
+                                    value: 'openScienceTeamMember_not',
+                                  },
+                                  value: { kind: 'BooleanValue', value: true },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'createdBy' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'email' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchDiscussionGranteeParticipantsQuery,
+  FetchDiscussionGranteeParticipantsQueryVariables
+>;
+export const FetchDiscussionTitleDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchDiscussionTitle' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discussions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchDiscussionTitleQuery,
+  FetchDiscussionTitleQueryVariables
 >;
 export const FetchEventByIdDocument = {
   kind: 'Document',

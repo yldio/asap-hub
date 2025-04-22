@@ -34,13 +34,24 @@ export const discussionRouteFactory = (
       const { body, params } = req;
 
       const { discussionId } = validateDiscussionParameters(params);
-      const { text } = validateDiscussionRequest(body);
+      const { text, sendNotifications, notificationList, manuscriptId } =
+        validateDiscussionRequest(body);
 
       if (!req.loggedInUser) throw Boom.forbidden();
 
-      const reply = { text, userId: req.loggedInUser.id };
+      const reply = {
+        text,
+        isOpenScienceMember: Boolean(req.loggedInUser.openScienceTeamMember),
+      };
 
-      const discussion = await discussionController.update(discussionId, reply);
+      const discussion = await discussionController.update(
+        discussionId,
+        req.loggedInUser.id,
+        reply,
+        manuscriptId,
+        sendNotifications || false,
+        notificationList || '',
+      );
       res.json(discussion);
     },
   );
@@ -50,7 +61,7 @@ export const discussionRouteFactory = (
     async (req, res: Response<DiscussionResponse>) => {
       const { body } = req;
 
-      const { manuscriptId, text, title } =
+      const { manuscriptId, text, title, sendNotifications, notificationList } =
         validateDiscussionCreateRequest(body);
 
       if (!req.loggedInUser) throw Boom.forbidden();
@@ -60,6 +71,8 @@ export const discussionRouteFactory = (
         manuscriptId,
         title,
         text,
+        sendNotifications || false,
+        notificationList || '',
       );
 
       res.json(result);
@@ -75,9 +88,10 @@ export const discussionRouteFactory = (
 
       if (!req.loggedInUser) throw Boom.forbidden();
 
-      const discussion = await discussionController.update(discussionId, {
-        userId: req.loggedInUser.id,
-      });
+      const discussion = await discussionController.update(
+        discussionId,
+        req.loggedInUser.id,
+      );
       res.json(discussion);
     },
   );

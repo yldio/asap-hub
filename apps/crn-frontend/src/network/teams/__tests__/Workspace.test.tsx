@@ -212,9 +212,13 @@ describe('Manuscript', () => {
     userEvent.click(shareButton);
     await waitFor(() => {
       expect(createDiscussion).toHaveBeenCalledWith(
-        'manuscript_0',
-        'Test',
-        'test message',
+        {
+          manuscriptId: 'manuscript_0',
+          notificationList: undefined,
+          sendNotifications: true,
+          text: 'test message',
+          title: 'Test',
+        },
         'Bearer access_token',
       );
     });
@@ -304,7 +308,7 @@ describe('Manuscript', () => {
       expect(mockReplyToDiscussion).toHaveBeenCalledWith(
         'manuscript_0',
         'discussion-id-1',
-        { text: 'test message' },
+        { text: 'test message', manuscriptId: 'manuscript_0' },
       );
     });
     await waitFor(() => {

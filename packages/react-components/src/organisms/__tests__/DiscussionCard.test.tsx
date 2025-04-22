@@ -346,7 +346,7 @@ describe('DiscussionCard', () => {
       expect(mockOnReplyToDiscussion).toHaveBeenCalledWith(
         'manuscript-1',
         'discussion-1',
-        { text: 'test message' },
+        { text: 'test message', manuscriptId: 'manuscript-1' },
       );
     });
   });

@@ -1961,6 +1961,59 @@ it('user can add labs', async () => {
   });
 });
 
+describe('lab-team validation', () => {
+  const getTeamSuggestionsMock = jest.fn().mockResolvedValue([
+    { label: 'Team A', value: 'team-a' },
+    { label: 'Team B', value: 'team-b' },
+  ]);
+
+  const getLabSuggestionsMock = jest
+    .fn()
+    .mockResolvedValue([
+      { label: 'Lab One', value: 'lab-1', labPITeamIds: ['team-a'] },
+    ]);
+
+  it('displays error message when labPI team is not among selected teams and hide it when team is selected', async () => {
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          getTeamSuggestions={getTeamSuggestionsMock}
+          getLabSuggestions={getLabSuggestionsMock}
+        />
+      </StaticRouter>,
+    );
+
+    userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+    await waitFor(() => {
+      expect(screen.getByText('Lab One')).toBeVisible();
+    });
+    userEvent.click(screen.getByText('Lab One'));
+    userEvent.tab();
+
+    expect(
+      screen.getByText(
+        /The following lab\(s\) do not have the correspondent PI team listed as a contributor/i,
+      ),
+    ).toBeVisible();
+    expect(screen.getByText(/•.*Lab One/i)).toBeVisible();
+
+    userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+    await waitFor(() => {
+      expect(screen.getByText('Team A')).toBeVisible();
+    });
+    userEvent.click(screen.getByText('Team A'));
+    userEvent.tab();
+
+    expect(
+      screen.queryByText(
+        /The following lab\(s\) do not have the correspondent PI team listed as a contributor/i,
+      ),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/•.*Lab One/i)).not.toBeInTheDocument();
+  });
+});
+
 it('displays error message when no team is found', async () => {
   const getTeamSuggestionsMock = jest.fn().mockResolvedValue([]);
   render(

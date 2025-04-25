@@ -11,7 +11,7 @@ import {
   DiscussionCreateRequest,
   DiscussionRequest,
   DiscussionResponse,
-  ListLabsResponse,
+  ListLabDataProviderResponse,
   ListPartialManuscriptResponse,
   ListTeamResponse,
   ManuscriptFileResponse,
@@ -153,7 +153,7 @@ export const updateTeamResearchOutput = async (
 export const getLabs = async (
   options: GetListOptions,
   authorization: string,
-): Promise<ListLabsResponse> => {
+): Promise<ListLabDataProviderResponse> => {
   const resp = await fetch(createListApiUrl('labs', options).toString(), {
     method: 'GET',
     headers: {

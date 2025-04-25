@@ -9,6 +9,10 @@ export const useLabSuggestions = () => {
       { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
       authorization,
     ).then(({ items }) =>
-      items.map(({ id, name }) => ({ label: `${name} Lab`, value: id })),
+      items.map(({ id, name, labPITeamIds }) => ({
+        label: `${name} Lab`,
+        value: id,
+        labPITeamIds,
+      })),
     );
 };

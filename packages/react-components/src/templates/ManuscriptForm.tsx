@@ -539,7 +539,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     const bigSpace = '\u2004';
     if (labsWithoutTeamAdded.length > 0) {
       setError('versions.0.labs', {
-        message: `The following lab(s) do not have the correspondent PI team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${labsWithoutTeamAdded
+        message: `The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${labsWithoutTeamAdded
           .map((lab) => `${bigSpace}•${bigSpace}${lab}`)
           .join('\n')}`,
       });

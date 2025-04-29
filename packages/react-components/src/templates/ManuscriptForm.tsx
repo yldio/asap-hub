@@ -380,9 +380,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           submissionDate: submissionDate ? new Date(submissionDate) : undefined,
           publicationDoi: publicationDoi || '',
           otherDetails: otherDetails || '',
-          manuscriptFile: manuscriptFile || undefined,
-          keyResourceTable: keyResourceTable || undefined,
-          additionalFiles: additionalFiles || undefined,
+          manuscriptFile: resubmitManuscript ? undefined : manuscriptFile,
+          keyResourceTable: resubmitManuscript ? undefined : keyResourceTable,
+          additionalFiles: resubmitManuscript ? undefined : additionalFiles,
 
           acknowledgedGrantNumber: getDefaultQuickCheckValue(
             acknowledgedGrantNumber,

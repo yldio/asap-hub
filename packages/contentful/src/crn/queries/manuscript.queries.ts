@@ -98,6 +98,17 @@ export const manuscriptContentQueryFragment = gql`
               sys {
                 id
               }
+              teamsCollection(limit: 3) {
+                items {
+                  inactiveSinceDate
+                  team {
+                    sys {
+                      id
+                    }
+                    inactiveSince
+                  }
+                }
+              }
             }
             name
           }

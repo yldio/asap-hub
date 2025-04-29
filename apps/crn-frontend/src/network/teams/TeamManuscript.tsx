@@ -98,6 +98,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   const selectedLabs = (manuscriptLabs || []).map((lab) => ({
     value: lab.id,
     label: lab.name,
+    labPITeamIds: lab.labPITeamIds,
     isFixed: false,
   }));
 

@@ -698,6 +698,17 @@ export const parseGraphqlManuscriptVersion = (
         id: labItem?.sys.id,
         name: labItem?.name,
         labPi: labItem?.labPi?.sys.id,
+        labPITeamIds: labItem?.labPi?.teamsCollection?.items.reduce(
+          (teamIds: string[], team) => {
+            const isInactive =
+              !!team?.inactiveSinceDate || !!team?.team?.inactiveSince;
+            if (!isInactive && team?.team?.sys?.id) {
+              teamIds.push(team.team.sys.id);
+            }
+            return teamIds;
+          },
+          [],
+        ),
       })),
       complianceReport: parseComplianceReport(
         version?.linkedFrom?.complianceReportsCollection?.items[0],

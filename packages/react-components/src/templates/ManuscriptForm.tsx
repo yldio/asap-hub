@@ -523,6 +523,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const validateLabPiTeams = () => {
     const labs = watch('versions.0.labs');
     const teams = watch('versions.0.teams');
+
+    console.log('teams', teams);
+    console.log('labs', labs);
     const teamFormIds = teams.map((team) => team.value);
     const labsWithoutTeamAdded = labs
       .filter((lab) => {

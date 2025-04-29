@@ -1993,7 +1993,7 @@ describe('lab-team validation', () => {
 
     expect(
       screen.getByText(
-        /The following lab\(s\) do not have the correspondent PI team listed as a contributor/i,
+        /The following lab\(s\) do not have the correspondent PI's team listed as a contributor/i,
       ),
     ).toBeVisible();
     expect(screen.getByText(/•.*Lab One/i)).toBeVisible();

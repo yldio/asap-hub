@@ -211,22 +211,20 @@ it('renders a divider between fields in Additional Information section and files
         ...baseVersion,
         preprintDoi: '10.1101/gr.10.12.1841',
         publicationDoi: '10.1101/gr.10.12.1842',
-        requestingApcCoverage: 'Already submitted',
         otherDetails: 'Necessary info',
       }}
     />,
   );
 
   userEvent.click(getByLabelText('Expand Version'));
-  expect(queryAllByRole('separator').length).toEqual(6);
+  expect(queryAllByRole('separator').length).toEqual(5);
 });
 
 it.each`
-  field                      | title                        | newValue
-  ${'preprintDoi'}           | ${'Preprint DOI'}            | ${'10.1101/gr.10.12.1841'}
-  ${'publicationDoi'}        | ${'Publication DOI'}         | ${'10.1101/gr.10.12.1841'}
-  ${'requestingApcCoverage'} | ${'Requested APC Coverage?'} | ${'Yes'}
-  ${'otherDetails'}          | ${'Other details'}           | ${'new details'}
+  field               | title                | newValue
+  ${'preprintDoi'}    | ${'Preprint DOI'}    | ${'10.1101/gr.10.12.1841'}
+  ${'publicationDoi'} | ${'Publication DOI'} | ${'10.1101/gr.10.12.1841'}
+  ${'otherDetails'}   | ${'Other details'}   | ${'new details'}
 `(`displays field $field when present`, async ({ field, title, newValue }) => {
   const { getByLabelText, getByText, queryByText, rerender } = render(
     <ManuscriptVersionCard {...props} />,
@@ -327,52 +325,6 @@ it('renders key resource table file details and download link', () => {
     'href',
     'https://example.com/key_resource_table.csv',
   );
-});
-
-it("does not display Submitter's Name and Submission Date if submitterName and submissionDate are not defined", () => {
-  const { getByLabelText, getByText, queryByText } = render(
-    <ManuscriptVersionCard
-      {...props}
-      version={{
-        ...baseVersion,
-        requestingApcCoverage: 'No',
-        submissionDate: undefined,
-        submitterName: undefined,
-      }}
-    />,
-  );
-  userEvent.click(getByLabelText('Expand Version'));
-
-  expect(getByText(/Requested APC Coverage/i)).toBeInTheDocument();
-  expect(getByText(/No/i)).toBeInTheDocument();
-
-  expect(queryByText(/Submitter's Name/i)).not.toBeInTheDocument();
-
-  expect(queryByText(/Submission Date/i)).not.toBeInTheDocument();
-});
-
-it('displays apc coverage information', () => {
-  const { getByLabelText, getByText } = render(
-    <ManuscriptVersionCard
-      {...props}
-      version={{
-        ...baseVersion,
-        requestingApcCoverage: 'Already submitted',
-        submissionDate: new Date('2024-10-03'),
-        submitterName: 'Janet Doe',
-      }}
-    />,
-  );
-  userEvent.click(getByLabelText('Expand Version'));
-
-  expect(getByText(/Requested APC Coverage/i)).toBeInTheDocument();
-  expect(getByText(/Already submitted/i)).toBeInTheDocument();
-
-  expect(getByText(/Submitter's Name/i)).toBeInTheDocument();
-  expect(getByText(/Janet Doe/i)).toBeInTheDocument();
-
-  expect(getByText(/Submission Date/i)).toBeInTheDocument();
-  expect(getByText(/Thu, 3rd October 2024/i)).toBeInTheDocument();
 });
 
 it('renders additional files details and download link when provided', () => {

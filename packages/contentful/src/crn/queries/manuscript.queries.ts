@@ -12,6 +12,9 @@ export const manuscriptContentQueryFragment = gql`
     title
     status
     count
+    apcRequested
+    apcPaid
+    apcAmount
     assignedUsersCollection(limit: 30) {
       items {
         sys {
@@ -60,9 +63,6 @@ export const manuscriptContentQueryFragment = gql`
         }
         preprintDoi
         publicationDoi
-        requestingApcCoverage
-        submitterName
-        submissionDate
         otherDetails
         acknowledgedGrantNumber
         acknowledgedGrantNumberDetails
@@ -307,6 +307,9 @@ export const FETCH_MANUSCRIPTS = gql`
         title
         status
         count
+        apcRequested
+        apcPaid
+        apcAmount
         assignedUsersCollection(limit: 30) {
           items {
             sys {
@@ -335,7 +338,6 @@ export const FETCH_MANUSCRIPTS = gql`
               id
               publishedAt
             }
-            requestingApcCoverage
             type
             lifecycle
             count

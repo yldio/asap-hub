@@ -20,7 +20,6 @@ import {
   pollContentfulGql,
 } from '@asap-hub/contentful';
 import {
-  ApcCoverageOption,
   FetchOptions,
   ListPartialManuscriptResponse,
   ManuscriptAssignedUser,
@@ -122,8 +121,12 @@ export class ManuscriptContentfulDataProvider
             ),
             status: manuscriptMapStatus(manuscript.status) || undefined,
             id: manuscript.sys.id,
-            requestingApcCoverage:
-              version?.requestingApcCoverage as ApcCoverageOption,
+            // this is hard coded for now as undefined
+            // as this field should appear as blank in the UI
+            // but it will be replaced by apcPaid in the future
+            requestingApcCoverage: undefined,
+            apcPaid: Boolean(manuscript.apcPaid),
+            apcAmount: manuscript.apcAmount ?? undefined,
             lastUpdated: version?.sys.publishedAt,
             team: {
               id: team?.sys.id || '',
@@ -495,6 +498,12 @@ const parseGraphQLManuscript = (
     assignedUsers: parseGraphQLManuscriptAssignedUsers(
       manuscript.assignedUsersCollection,
     ),
+    // this is hard coded for now as undefined
+    // as this field should appear as blank in the UI
+    // but it will be replaced by apcPaid in the future
+    requestingApcCoverage: undefined,
+    apcPaid: Boolean(manuscript.apcPaid),
+    apcAmount: manuscript.apcAmount ?? undefined,
     versions: parseGraphqlManuscriptVersion(
       manuscript.versionsCollection?.items || [],
       grantId,
@@ -641,9 +650,6 @@ export const parseGraphqlManuscriptVersion = (
       ),
       preprintDoi: version?.preprintDoi,
       publicationDoi: version?.publicationDoi,
-      requestingApcCoverage: version?.requestingApcCoverage,
-      submitterName: version?.submitterName,
-      submissionDate: version?.submissionDate,
       otherDetails: version?.otherDetails,
       acknowledgedGrantNumber: version?.acknowledgedGrantNumber,
       asapAffiliationIncluded: version?.asapAffiliationIncluded,

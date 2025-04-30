@@ -161,9 +161,6 @@ describe('ComplianceTable', () => {
           selector: 'h3',
         }),
       ).toBeInTheDocument();
-      expect(
-        within(getByRole('dialog')).getByText(/N\/A/i),
-      ).toBeInTheDocument();
     });
 
     it('closes modal when clicking the close button', () => {

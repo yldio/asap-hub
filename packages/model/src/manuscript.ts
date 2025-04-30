@@ -77,9 +77,6 @@ export type ManuscriptVersion = {
   versionUID?: string;
   preprintDoi?: string;
   publicationDoi?: string;
-  requestingApcCoverage?: ApcCoverageOption;
-  submitterName?: string;
-  submissionDate?: Date;
   otherDetails?: string;
   manuscriptFile: ManuscriptFile;
   keyResourceTable?: ManuscriptFile;
@@ -182,7 +179,6 @@ export const manuscriptFormFieldsMapping: Record<
       'keyResourceTable',
     ],
     'Typeset proof': [
-      'requestingApcCoverage',
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
@@ -196,7 +192,6 @@ export const manuscriptFormFieldsMapping: Record<
     Publication: [
       'preprintDoi',
       'publicationDoi',
-      'requestingApcCoverage',
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
@@ -210,7 +205,6 @@ export const manuscriptFormFieldsMapping: Record<
     'Publication with addendum or corrigendum': [
       'preprintDoi',
       'publicationDoi',
-      'requestingApcCoverage',
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
@@ -241,21 +235,18 @@ export const manuscriptFormFieldsMapping: Record<
     ],
     Preprint: [],
     'Typeset proof': [
-      'requestingApcCoverage',
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
     ],
     Publication: [
       'publicationDoi',
-      'requestingApcCoverage',
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
     ],
     'Publication with addendum or corrigendum': [
       'publicationDoi',
-      'requestingApcCoverage',
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
@@ -313,6 +304,9 @@ export type ManuscriptDataObject = {
   count: number;
   assignedUsers: ManuscriptAssignedUser[];
   discussions: ManuscriptDiscussion[];
+  requestingApcCoverage?: 'Yes' | 'No';
+  apcPaid?: boolean;
+  apcAmount?: number;
 };
 
 export type ManuscriptResponse = ManuscriptDataObject;
@@ -341,9 +335,6 @@ export type ManuscriptPostCreateRequest = Pick<
     lifecycle: ManuscriptVersion['lifecycle'] | '';
     preprintDoi?: ManuscriptVersion['preprintDoi'];
     publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
-    requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
-    submitterName?: ManuscriptVersion['submitterName'];
-    submissionDate?: string;
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
     description: string;
     manuscriptFile: ManuscriptVersion['manuscriptFile'];
@@ -441,8 +432,6 @@ export type ManuscriptFormData = Pick<
     | 'lifecycle'
     | 'preprintDoi'
     | 'publicationDoi'
-    | 'requestingApcCoverage'
-    | 'submitterName'
     | 'otherDetails'
     | 'description'
     | 'acknowledgedGrantNumber'
@@ -462,7 +451,6 @@ export type ManuscriptFormData = Pick<
     | 'labMaterialsRegisteredDetails'
     | 'availabilityStatementDetails'
   > & {
-    submissionDate?: ManuscriptVersion['submissionDate'];
     manuscriptFile: ManuscriptVersion['manuscriptFile'] | null;
     keyResourceTable: ManuscriptVersion['keyResourceTable'] | null;
     additionalFiles?: ManuscriptVersion['additionalFiles'] | [];
@@ -519,17 +507,6 @@ export const manuscriptVersionSchema = {
     lifecycle: { enum: manuscriptLifecycles, type: 'string' },
     preprintDoi: { type: 'string', nullable: true },
     publicationDoi: { type: 'string', nullable: true },
-    requestingApcCoverage: {
-      enum: apcCoverageOptions,
-      type: 'string',
-      nullable: true,
-    },
-    submitterName: { type: 'string', nullable: true },
-    submissionDate: {
-      type: 'string',
-      format: 'date-time',
-      nullable: true,
-    },
 
     otherDetails: { type: 'string', nullable: true },
     description: { type: 'string' },
@@ -852,11 +829,11 @@ export const complianceInitialSortingDirection = {
   apcCoverage: ascending,
 };
 
-export type PartialManuscriptResponse = Pick<
-  ManuscriptVersion,
-  'id' | 'requestingApcCoverage'
-> &
-  Pick<ManuscriptResponse, 'status' | 'title'> & {
+export type PartialManuscriptResponse = Pick<ManuscriptVersion, 'id'> &
+  Pick<
+    ManuscriptResponse,
+    'status' | 'title' | 'requestingApcCoverage' | 'apcPaid' | 'apcAmount'
+  > & {
     lastUpdated: string;
     team: { id: string; displayName: string };
     assignedUsers: ManuscriptAssignedUser[];

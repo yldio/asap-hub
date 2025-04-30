@@ -18518,7 +18518,7 @@ export type FetchLabsQuery = {
 
 export type ManuscriptsContentFragment = Pick<
   Manuscripts,
-  'title' | 'status' | 'count'
+  'title' | 'status' | 'count' | 'apcRequested' | 'apcPaid' | 'apcAmount'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
   assignedUsersCollection?: Maybe<{
@@ -18542,9 +18542,6 @@ export type ManuscriptsContentFragment = Pick<
           | 'count'
           | 'preprintDoi'
           | 'publicationDoi'
-          | 'requestingApcCoverage'
-          | 'submitterName'
-          | 'submissionDate'
           | 'otherDetails'
           | 'acknowledgedGrantNumber'
           | 'acknowledgedGrantNumberDetails'
@@ -18743,7 +18740,10 @@ export type FetchManuscriptByIdQueryVariables = Exact<{
 
 export type FetchManuscriptByIdQuery = {
   manuscripts?: Maybe<
-    Pick<Manuscripts, 'title' | 'status' | 'count'> & {
+    Pick<
+      Manuscripts,
+      'title' | 'status' | 'count' | 'apcRequested' | 'apcPaid' | 'apcAmount'
+    > & {
       discussionsCollection?: Maybe<
         Pick<ManuscriptsDiscussionsCollection, 'total'> & {
           items: Array<
@@ -18845,9 +18845,6 @@ export type FetchManuscriptByIdQuery = {
               | 'count'
               | 'preprintDoi'
               | 'publicationDoi'
-              | 'requestingApcCoverage'
-              | 'submitterName'
-              | 'submissionDate'
               | 'otherDetails'
               | 'acknowledgedGrantNumber'
               | 'acknowledgedGrantNumberDetails'
@@ -19054,7 +19051,15 @@ export type FetchManuscriptsQuery = {
     Pick<ManuscriptsCollection, 'total'> & {
       items: Array<
         Maybe<
-          Pick<Manuscripts, 'title' | 'status' | 'count'> & {
+          Pick<
+            Manuscripts,
+            | 'title'
+            | 'status'
+            | 'count'
+            | 'apcRequested'
+            | 'apcPaid'
+            | 'apcAmount'
+          > & {
             sys: Pick<Sys, 'id'>;
             assignedUsersCollection?: Maybe<{
               items: Array<
@@ -19078,10 +19083,9 @@ export type FetchManuscriptsQuery = {
             versionsCollection?: Maybe<{
               items: Array<
                 Maybe<
-                  Pick<
-                    ManuscriptVersions,
-                    'requestingApcCoverage' | 'type' | 'lifecycle' | 'count'
-                  > & { sys: Pick<Sys, 'id' | 'publishedAt'> }
+                  Pick<ManuscriptVersions, 'type' | 'lifecycle' | 'count'> & {
+                    sys: Pick<Sys, 'id' | 'publishedAt'>;
+                  }
                 >
               >;
             }>;
@@ -21151,7 +21155,15 @@ export type FetchTeamByIdQuery = {
         manuscriptsCollection?: Maybe<{
           items: Array<
             Maybe<
-              Pick<Manuscripts, 'title' | 'status' | 'count'> & {
+              Pick<
+                Manuscripts,
+                | 'title'
+                | 'status'
+                | 'count'
+                | 'apcRequested'
+                | 'apcPaid'
+                | 'apcAmount'
+              > & {
                 teamsCollection?: Maybe<{
                   items: Array<
                     Maybe<
@@ -21183,9 +21195,6 @@ export type FetchTeamByIdQuery = {
                         | 'count'
                         | 'preprintDoi'
                         | 'publicationDoi'
-                        | 'requestingApcCoverage'
-                        | 'submitterName'
-                        | 'submissionDate'
                         | 'otherDetails'
                         | 'acknowledgedGrantNumber'
                         | 'acknowledgedGrantNumberDetails'
@@ -25354,6 +25363,9 @@ export const ManuscriptsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'apcRequested' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'apcPaid' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'apcAmount' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'assignedUsersCollection' },
@@ -25587,18 +25599,6 @@ export const ManuscriptsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'publicationDoi' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'requestingApcCoverage' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'submitterName' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'submissionDate' },
                       },
                       {
                         kind: 'Field',
@@ -36471,6 +36471,18 @@ export const FetchManuscriptsDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'count' } },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'apcRequested' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'apcPaid' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'apcAmount' },
+                      },
+                      {
+                        kind: 'Field',
                         name: {
                           kind: 'Name',
                           value: 'assignedUsersCollection',
@@ -36629,13 +36641,6 @@ export const FetchManuscriptsDocument = {
                                           },
                                         },
                                       ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'requestingApcCoverage',
                                     },
                                   },
                                   {

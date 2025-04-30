@@ -169,7 +169,6 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         ],
       },
-      submissionDate: { 'en-US': undefined },
       correspondingAuthor: { 'en-US': [] },
       count: { 'en-US': 1 },
       additionalAuthors: { 'en-US': [] },
@@ -1211,6 +1210,9 @@ describe('Manuscripts Contentful Data Provider', () => {
       manuscript.status = null;
       manuscript.assignedUsersCollection = null;
       manuscript.discussionsCollection = null;
+      manuscript.apcRequested = false;
+      manuscript.apcPaid = false;
+      manuscript.apcAmount = undefined;
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
       });
@@ -1224,6 +1226,9 @@ describe('Manuscripts Contentful Data Provider', () => {
         versions: [],
         assignedUsers: [],
         discussions: [],
+        requestingApcCoverage: undefined,
+        apcPaid: false,
+        apcAmount: undefined,
       });
     });
 

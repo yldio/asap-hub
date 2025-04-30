@@ -1,9 +1,9 @@
 import {
-  LabDataObject,
+  LabDataProviderDataObject,
+  LabDataProviderResponse,
   LabEvent,
-  LabResponse,
-  ListLabDataObject,
-  ListLabsResponse,
+  ListLabDataProviderResponse,
+  ListLabDataProviderDataObject,
   WebhookDetail,
 } from '@asap-hub/model';
 import {
@@ -87,19 +87,20 @@ export const getLabUnpublishedEvent: LabEventGenerator = (id: string) =>
 export const getLabPublishedEvent: LabEventGenerator = (id: string) =>
   getLabEvent(id, 'LabsPublished') as EventBridgeEvent<LabEvent, LabPayload>;
 
-export const getLabDataObject = (): LabDataObject => ({
+export const getLabDataObject = (): LabDataProviderDataObject => ({
   name: 'Simpson',
   id: '12345',
+  labPITeamIds: [],
 });
 
-export const getListLabDataObject = (): ListLabDataObject => ({
+export const getListLabDataObject = (): ListLabDataProviderDataObject => ({
   total: 1,
   items: [getLabDataObject()],
 });
 
-export const getLabResponse = (): LabResponse => getLabDataObject();
+export const getLabResponse = (): LabDataProviderResponse => getLabDataObject();
 
-export const getListLabsResponse = (): ListLabsResponse => ({
+export const getListLabsResponse = (): ListLabDataProviderResponse => ({
   total: 1,
   items: [getLabResponse()],
 });

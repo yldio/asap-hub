@@ -62,7 +62,20 @@ export class LabContentfulDataProvider implements LabDataProvider {
   }
 }
 
-export const parseContentfulGraphQlLabs = (item: LabItem): LabDataObject => ({
+export const parseContentfulGraphQlLabs = (
+  item: LabItem,
+): LabDataObject & { labPITeamIds: string[] } => ({
   id: item.sys.id ?? '',
   name: item.name ?? '',
+  labPITeamIds: (item.labPi?.teamsCollection?.items || []).reduce(
+    (teamIds: string[], team) => {
+      const isInactive =
+        !!team?.inactiveSinceDate || !!team?.team?.inactiveSince;
+      if (!isInactive && team?.team?.sys?.id) {
+        teamIds.push(team.team.sys.id);
+      }
+      return teamIds;
+    },
+    [],
+  ),
 });

@@ -10,6 +10,19 @@ export const FETCH_LABS = gql`
           id
         }
         name
+        labPi {
+          teamsCollection(limit: 3) {
+            items {
+              inactiveSinceDate
+              team {
+                sys {
+                  id
+                }
+                inactiveSince
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -85,6 +85,10 @@ const apcCoverageLifecycles = [
   'Publication with addendum or corrigendum',
 ];
 
+type LabOption = MultiSelectOptionsType & {
+  labPITeamIds: string[];
+};
+
 type OptionalVersionFields = Array<
   keyof Omit<
     ManuscriptVersion,
@@ -515,6 +519,34 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     // TODO: when edit remove reset?
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getValues, reset, watchType, watchLifecycle, selectedTeams]);
+
+  const validateLabPiTeams = () => {
+    const labs = watch('versions.0.labs');
+    const teams = watch('versions.0.teams');
+
+    const teamFormIds = teams.map((team) => team.value);
+    const labsWithoutTeamAdded = labs
+      .filter((lab) => {
+        const { labPITeamIds } = lab as LabOption;
+        return (
+          labPITeamIds?.length > 0 &&
+          labPITeamIds.every(
+            (labPITeamId) => !teamFormIds.includes(labPITeamId),
+          )
+        );
+      })
+      .map((lab) => lab.label);
+    const bigSpace = '\u2004';
+    if (labsWithoutTeamAdded.length > 0) {
+      setError('versions.0.labs', {
+        message: `The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${labsWithoutTeamAdded
+          .map((lab) => `${bigSpace}•${bigSpace}${lab}`)
+          .join('\n')}`,
+      });
+    } else {
+      clearErrors('versions.0.labs');
+    }
+  };
 
   const getSubmittingQuickChecks = (
     versionData: ManuscriptFormData['versions'][number],
@@ -1235,7 +1267,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   placeholder="Start typing..."
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   loadOptions={getTeamSuggestions!}
-                  onChange={onChange}
+                  onChange={(selectedOptions) => {
+                    onChange(selectedOptions);
+                    validateLabPiTeams();
+                  }}
                   values={value}
                   noOptionsMessage={({ inputValue }) =>
                     `Sorry, no teams match ${inputValue}`
@@ -1257,7 +1292,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             <Controller
               name="versions.0.labs"
               control={control}
-              render={({ field: { value, onChange } }) => (
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
                 <LabeledMultiSelect
                   title="Labs"
                   description="Add ASAP labs that contributed to this manuscript. Only labs whose PI is part of the CRN will appear. PIs for each listed lab will receive an update on this manuscript. In addition, they will be able to edit the manuscript metadata and can submit a new version of the manuscript."
@@ -1266,11 +1304,15 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   placeholder="Start typing..."
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   loadOptions={getLabSuggestions!}
-                  onChange={onChange}
+                  onChange={(selectedOptions) => {
+                    onChange(selectedOptions);
+                    validateLabPiTeams();
+                  }}
                   values={value}
                   noOptionsMessage={({ inputValue }) =>
                     `Sorry, no labs match ${inputValue}`
                   }
+                  customValidationMessage={error?.message}
                 />
               )}
             />

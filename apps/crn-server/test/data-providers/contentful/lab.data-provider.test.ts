@@ -19,6 +19,9 @@ describe('Labs data provider', () => {
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
       Labs: () => getContentfulGraphqlLabs(),
+      TeamMembership: () => ({
+        team: null,
+      }),
     });
 
   const labDataProviderMockGraphql = new LabContentfulDataProvider(
@@ -54,6 +57,46 @@ describe('Labs data provider', () => {
           },
         },
       );
+    });
+
+    test('Should filter labPi inactive teams', async () => {
+      const graphqlResponse = getContentfulLabsGraphqlResponse();
+      graphqlResponse.labsCollection!.items[0]!.labPi = {
+        teamsCollection: {
+          items: [
+            {
+              inactiveSinceDate: null,
+              team: {
+                sys: { id: 'inactive-team' },
+                inactiveSince: '2021-01-01',
+              },
+            },
+            {
+              inactiveSinceDate: '2021-01-01',
+              team: {
+                sys: { id: 'inactive-team-membership' },
+                inactiveSince: null,
+              },
+            },
+            {
+              inactiveSinceDate: null,
+              team: {
+                sys: { id: 'active-team' },
+                inactiveSince: null,
+              },
+            },
+          ],
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        graphqlResponse,
+      );
+
+      const result = await labDataProvider.fetch({});
+      const expected = getListLabsResponse();
+      expected.items[0]!.labPITeamIds = ['active-team'];
+      expect(result).toMatchObject(expected);
     });
 
     test('Should return an empty array when the client returns null', async () => {

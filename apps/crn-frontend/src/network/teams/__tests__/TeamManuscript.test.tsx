@@ -522,6 +522,17 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
   });
   userEvent.type(preprintDoiTextbox, preprintDoi);
 
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const manuscriptFileInput = screen.getByLabelText(/Upload Manuscript File/i);
+  const keyResourceTableInput = screen.getByLabelText(
+    /Upload Key Resource Table/i,
+  );
+
+  userEvent.upload(manuscriptFileInput, testFile);
+  userEvent.upload(keyResourceTableInput, testFile);
+
   await act(async () => {
     userEvent.click(await screen.findByRole('button', { name: /Submit/ }));
   });
@@ -540,4 +551,55 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
       `/network/teams/${teamId}/workspace`,
     );
   });
+});
+
+it('files are not prefilled on manuscript resubmit', async () => {
+  const mockResubmitManuscript = resubmitManuscript as jest.MockedFunction<
+    typeof resubmitManuscript
+  >;
+  const mockGetManuscript = getManuscript as jest.MockedFunction<
+    typeof getManuscript
+  >;
+
+  const manuscript = createManuscriptResponse();
+  manuscript.versions[0]!.lifecycle = 'Preprint';
+  manuscript.versions[0]!.firstAuthors = [
+    {
+      label: 'Author 1',
+      value: 'author-1',
+      id: 'author-1',
+      displayName: 'Author 1',
+      email: 'author@email.com',
+    } as AuthorResponse,
+  ];
+
+  mockGetManuscript.mockResolvedValue(manuscript);
+  mockResubmitManuscript.mockResolvedValue(manuscript);
+
+  const resubmitPath = `/network/teams/${teamId}/workspace/resubmit-manuscript/:manuscriptId`;
+  const resubmitHistory = createMemoryHistory({
+    initialEntries: [
+      `/network/teams/${teamId}/workspace/resubmit-manuscript/${manuscript.id}`,
+    ],
+  });
+
+  await renderPage({}, true, resubmitPath, resubmitHistory);
+
+  const preprintDoi = '10.4444/test';
+
+  const preprintDoiTextbox = screen.getByRole('textbox', {
+    name: /Preprint DOI/i,
+  });
+  userEvent.type(preprintDoiTextbox, preprintDoi);
+
+  await act(async () => {
+    userEvent.click(await screen.findByRole('button', { name: /Submit/ }));
+  });
+
+  expect(
+    screen.getByText(/Please select a manuscript file./i),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText(/Please select a key resource table./i),
+  ).toBeInTheDocument();
 });

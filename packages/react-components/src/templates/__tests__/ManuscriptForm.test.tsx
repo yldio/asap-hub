@@ -2074,6 +2074,11 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     <StaticRouter>
       <ManuscriptForm
         {...defaultProps}
+        handleFileUpload={jest.fn(async (file) => ({
+          id: 'some-id',
+          filename: file.name,
+          url: `https://example.com/${file.name}`,
+        }))}
         title="manuscript title"
         type="Original Research"
         lifecycle="Draft Manuscript (prior to Publication)"
@@ -2092,6 +2097,22 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
         manuscriptId="manuscript-id"
       />
     </StaticRouter>,
+  );
+
+  const testManuscriptFile = new File(['file content'], 'manuscript.pdf', {
+    type: 'application/pdf',
+  });
+  const testKeyResourceFile = new File(['file content'], 'keyresource.csv', {
+    type: 'text/csv',
+  });
+
+  userEvent.upload(
+    await screen.findByLabelText(/Upload Manuscript File/i),
+    testManuscriptFile,
+  );
+  userEvent.upload(
+    await screen.findByLabelText(/Upload Key Resource Table/i),
+    testKeyResourceFile,
   );
 
   await submitForm();
@@ -2118,18 +2139,18 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
           description: 'Some description',
           firstAuthors: [],
           keyResourceTable: {
-            filename: 'test.csv',
-            id: '124',
-            url: 'http://example.com/test.csv',
+            filename: 'keyresource.csv',
+            id: 'some-id',
+            url: 'https://example.com/keyresource.csv',
           },
           labMaterialsRegistered: 'Yes',
           labMaterialsRegisteredDetails: '',
           labs: [],
           lifecycle: 'Draft Manuscript (prior to Publication)',
           manuscriptFile: {
-            filename: 'test.pdf',
-            id: '123',
-            url: 'http://example.com/test.pdf',
+            filename: 'manuscript.pdf',
+            id: 'some-id',
+            url: 'https://example.com/manuscript.pdf',
           },
           manuscriptLicense: undefined,
           manuscriptLicenseDetails: '',

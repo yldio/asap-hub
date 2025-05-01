@@ -1,5 +1,4 @@
 import {
-  ApcCoverageOption,
   AuthorEmailField,
   AuthorSelectOption,
   ManuscriptError,
@@ -28,7 +27,6 @@ import { Controller, useForm } from 'react-hook-form';
 import {
   AuthorSelect,
   FormCard,
-  LabeledDateField,
   LabeledDropdown,
   LabeledFileField,
   LabeledMultiSelect,
@@ -79,12 +77,6 @@ const buttonsInnerContainerStyles = css({
   },
 });
 
-const apcCoverageLifecycles = [
-  'Typeset proof',
-  'Publication',
-  'Publication with addendum or corrigendum',
-];
-
 type LabOption = MultiSelectOptionsType & {
   labPITeamIds: string[];
 };
@@ -116,7 +108,6 @@ type DefaultFieldValueMapping = Record<
 const optionalVersionFields: OptionalVersionFields = [
   'preprintDoi',
   'publicationDoi',
-  'requestingApcCoverage',
   'otherDetails',
 
   'acknowledgedGrantNumber',
@@ -209,31 +200,11 @@ const getFieldsToReset = (
       ].includes(field),
   );
 
-const getDefaultRequestingApcCoverageValue = (
-  lifecycle: ManuscriptLifecycle,
-  requestingApcCoverage: ManuscriptVersion['requestingApcCoverage'] | '',
-) =>
-  apcCoverageLifecycles.includes(lifecycle) && !requestingApcCoverage
-    ? 'Already submitted'
-    : '';
-
-const setDefaultFieldValues = (
-  fieldsList: OptionalVersionFields,
-  lifecycle: ManuscriptLifecycle,
-  requestingApcCoverage: ManuscriptVersion['requestingApcCoverage'] | '',
-) => {
+const setDefaultFieldValues = (fieldsList: OptionalVersionFields) => {
   const fieldDefaultValueMap = fieldsList.reduce(
     (map, field) => ({ ...map, [field]: '' }),
     {} as DefaultFieldValueMapping,
   );
-
-  // By default, in the ui the requestingApcCoverage radio button indicates as set to Already submitted but is not captured in formdata, this does that
-  const defaultRequestingApcCoverageValue =
-    getDefaultRequestingApcCoverageValue(lifecycle, requestingApcCoverage);
-
-  if (defaultRequestingApcCoverageValue)
-    fieldDefaultValueMap.requestingApcCoverage =
-      defaultRequestingApcCoverageValue;
 
   return fieldDefaultValueMap;
 };
@@ -318,9 +289,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   keyResourceTable,
   additionalFiles,
   eligibilityReasons,
-  requestingApcCoverage,
-  submitterName,
-  submissionDate,
   preprintDoi,
   publicationDoi,
   otherDetails,
@@ -379,9 +347,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           type: type || '',
           lifecycle: lifecycle || '',
           preprintDoi: preprintDoi || '',
-          requestingApcCoverage: requestingApcCoverage || '',
-          submitterName: submitterName || undefined,
-          submissionDate: submissionDate ? new Date(submissionDate) : undefined,
           publicationDoi: publicationDoi || '',
           otherDetails: otherDetails || '',
           manuscriptFile: resubmitManuscript ? undefined : manuscriptFile,
@@ -490,11 +455,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         watchType,
         watchLifecycle,
       );
-      const fieldDefaultValueMap = setDefaultFieldValues(
-        fieldsToReset,
-        watchLifecycle,
-        getValues('versions.0.requestingApcCoverage'),
-      );
+      const fieldDefaultValueMap = setDefaultFieldValues(fieldsToReset);
 
       reset(
         {
@@ -508,8 +469,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               manuscriptFile: watch('versions.0.manuscriptFile'),
               keyResourceTable: watch('versions.0.keyResourceTable'),
               additionalFiles: watch('versions.0.additionalFiles'),
-              submissionDate: watch('versions.0.submissionDate'),
-              submitterName: watch('versions.0.submitterName'),
             },
           ],
         },
@@ -603,18 +562,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         publicationDoi: versionData?.publicationDoi || undefined,
         preprintDoi: versionData?.preprintDoi || undefined,
         otherDetails: versionData?.otherDetails || undefined,
-        requestingApcCoverage: versionData?.requestingApcCoverage || undefined,
         description: versionData.description || '',
-        submitterName:
-          versionData?.requestingApcCoverage === 'Already submitted' &&
-          versionData?.submitterName
-            ? versionData.submitterName
-            : undefined,
-        submissionDate:
-          versionData?.requestingApcCoverage === 'Already submitted' &&
-          versionData.submissionDate
-            ? versionData.submissionDate.toISOString()
-            : undefined,
 
         ...getSubmittingQuickChecks(versionData),
         teams: versionData.teams.map((team) => team.value),
@@ -876,94 +824,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 />
               )}
 
-            {watchType &&
-              watchLifecycle &&
-              manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
-                'requestingApcCoverage',
-              ) && (
-                <Controller
-                  name="versions.0.requestingApcCoverage"
-                  control={control}
-                  rules={{
-                    required: 'Please select an option',
-                  }}
-                  render={({ field: { value, onChange } }) => (
-                    <LabeledRadioButtonGroup<ApcCoverageOption | ''>
-                      title="Will you be requesting APC coverage"
-                      subtitle="(required)"
-                      options={[
-                        {
-                          value: 'Yes',
-                          label: 'Yes',
-                          disabled: isEditMode || isSubmitting,
-                        },
-                        {
-                          value: 'No',
-                          label: 'No',
-                          disabled: isEditMode || isSubmitting,
-                        },
-                        {
-                          value: 'Already submitted',
-                          label: 'Already submitted',
-                          disabled: isEditMode || isSubmitting,
-                        },
-                      ]}
-                      value={value || 'Already submitted'}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-              )}
-
-            {watch('versions.0.requestingApcCoverage') ===
-            'Already submitted' ? (
-              <>
-                <Controller
-                  name="versions.0.submitterName"
-                  control={control}
-                  rules={{
-                    required: "Please enter the submitter's name.",
-                    maxLength: {
-                      value: 256,
-                      message: 'The name cannot exceed 256 characters.',
-                    },
-                  }}
-                  render={({
-                    field: { value, onChange },
-                    fieldState: { error },
-                  }) => (
-                    <LabeledTextField
-                      title="Submitter’s Name"
-                      subtitle="(required)"
-                      customValidationMessage={error?.message}
-                      value={value || ''}
-                      onChange={onChange}
-                      enabled={!isEditMode && !isSubmitting}
-                    />
-                  )}
-                />
-                <Controller
-                  name="versions.0.submissionDate"
-                  control={control}
-                  rules={{
-                    required: 'Please enter the submission date.',
-                  }}
-                  render={({
-                    field: { value, onChange },
-                    fieldState: { error },
-                  }) => (
-                    <LabeledDateField
-                      customValidationMessage={error?.message}
-                      title="Submission Date"
-                      subtitle="(required)"
-                      onChange={onChange}
-                      value={value}
-                      enabled={!isEditMode && !isSubmitting}
-                    />
-                  )}
-                />
-              </>
-            ) : null}
             {watchType &&
               watchLifecycle &&
               manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(

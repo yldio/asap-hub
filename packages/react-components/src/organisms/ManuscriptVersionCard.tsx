@@ -11,7 +11,6 @@ import {
   Divider,
   ExpandableText,
   formatDate,
-  formatDateAndWeekday,
   lead,
   Link,
   minusRectIcon,
@@ -171,10 +170,7 @@ const updatedByTextStyles = css({
 });
 
 const hasAdditionalInfo = (version: ManuscriptVersion) =>
-  version.preprintDoi ||
-  version.publicationDoi ||
-  version.requestingApcCoverage ||
-  version.otherDetails;
+  version.preprintDoi || version.publicationDoi || version.otherDetails;
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   version,
@@ -436,42 +432,11 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                         </li>
                       </>
                     )}
-                    {version.requestingApcCoverage && (
+                    {version.otherDetails && (
                       <>
                         {(version.preprintDoi || version.publicationDoi) && (
                           <Divider />
                         )}
-                        <li css={additionalInformationEntryStyles}>
-                          <strong>Requested APC Coverage?</strong>
-                          <span css={additionalInformationValueStyles}>
-                            {version.requestingApcCoverage}
-                          </span>
-                        </li>
-                        {version?.submitterName ? (
-                          <li css={additionalInformationEntryStyles}>
-                            <strong>Submitter's Name</strong>
-                            <span css={additionalInformationValueStyles}>
-                              {version.submitterName}
-                            </span>
-                          </li>
-                        ) : null}
-                        {version?.submissionDate ? (
-                          <li css={additionalInformationEntryStyles}>
-                            <strong>Submission Date</strong>
-                            <span css={additionalInformationValueStyles}>
-                              {formatDateAndWeekday(
-                                new Date(version.submissionDate),
-                              )}
-                            </span>
-                          </li>
-                        ) : null}
-                      </>
-                    )}
-                    {version.otherDetails && (
-                      <>
-                        {(version.preprintDoi ||
-                          version.publicationDoi ||
-                          version.requestingApcCoverage) && <Divider />}
                         <li css={additionalInformationEntryStyles}>
                           <strong>Other details</strong>
                           <span css={additionalInformationValueStyles}>

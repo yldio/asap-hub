@@ -184,7 +184,7 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
           </StatusButton>
         </td>
         <td>
-          <p css={apcCoverageStyles}>{requestingApcCoverage ?? 'N/A'}</p>
+          <p css={apcCoverageStyles}>{requestingApcCoverage ?? ''}</p>
         </td>
         <td>
           <div css={assignedUsersContainerStyles}>

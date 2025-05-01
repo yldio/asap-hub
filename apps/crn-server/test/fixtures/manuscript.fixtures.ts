@@ -32,6 +32,9 @@ export const getManuscriptDataObject = (
       avatarUrl: 'https://example.com/avatar.png',
     },
   ],
+  requestingApcCoverage: undefined,
+  apcPaid: false,
+  apcAmount: undefined,
   versions: [
     {
       id: 'version-1',
@@ -103,6 +106,9 @@ export const getContentfulGraphqlManuscript = (
   title: 'Manuscript Title',
   count: 1,
   status: 'Compliant',
+  apcRequested: false,
+  apcPaid: false,
+  apcAmount: null,
   teamsCollection: {
     items: [{ sys: { id: 'team-1' } }],
   },
@@ -128,7 +134,6 @@ export const getContentfulGraphqlManuscriptVersions = (
       lifecycle: 'Preprint',
       description: 'A good description',
       count: 1,
-      requestingApcCoverage: 'Yes',
       manuscriptFile: {
         sys: { id: 'file-id' },
         fileName: 'manuscript.pdf',
@@ -246,7 +251,6 @@ export const getContentfulGraphqlManuscriptsCollection = (
               id: '',
               publishedAt: '2020-09-23T20:45:22.000Z',
             },
-            requestingApcCoverage: 'Yes',
             type: '',
             lifecycle: '',
             count: 1,
@@ -383,6 +387,9 @@ export const getManuscriptsListResponse =
         manuscriptId: 'ID01-grant-001-org-P-1',
         title: 'Manuscript 1',
         teams: 'Team A',
+        requestingApcCoverage: undefined,
+        apcPaid: false,
+        apcAmount: undefined,
         assignedUsers: [
           {
             id: 'user-id-1',
@@ -391,7 +398,6 @@ export const getManuscriptsListResponse =
             avatarUrl: 'https://example.com/avatar.png',
           },
         ],
-        requestingApcCoverage: 'Yes',
         lastUpdated: '2020-09-23T20:45:22.000Z',
         status: 'Compliant',
         team: {
@@ -404,6 +410,9 @@ export const getManuscriptsListResponse =
         manuscriptId: 'ID01-grant-002-org-P-1',
         title: 'Manuscript 2',
         teams: 'Team A',
+        requestingApcCoverage: undefined,
+        apcPaid: false,
+        apcAmount: undefined,
         assignedUsers: [
           {
             id: 'user-id-1',
@@ -412,7 +421,6 @@ export const getManuscriptsListResponse =
             avatarUrl: 'https://example.com/avatar.png',
           },
         ],
-        requestingApcCoverage: 'Yes',
         lastUpdated: '2020-09-23T20:45:22.000Z',
         status: 'Compliant',
         team: {
@@ -449,7 +457,6 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
         firstAuthors: [{ userId: 'author-1' }],
         correspondingAuthor: undefined,
         additionalAuthors: [],
-        submissionDate: undefined,
         ...getQuickCheckDetailsText(version),
       },
     ],
@@ -499,7 +506,6 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
         firstAuthors: ['author-1'],
         correspondingAuthor: [],
         additionalAuthors: [],
-        submissionDate: undefined,
         ...getQuickCheckDetailsText(version),
       },
     ],

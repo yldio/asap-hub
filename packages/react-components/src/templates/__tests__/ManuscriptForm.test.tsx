@@ -92,8 +92,6 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   ],
   correspondingAuthor: [],
   additionalAuthors: [],
-  submitterName: 'John Doe',
-  submissionDate: new Date('2024-10-01'),
   onError: jest.fn(),
   clearFormToast: jest.fn(),
 };
@@ -256,9 +254,6 @@ test.each`
           manuscriptFile: expect.anything(),
           keyResourceTable: expect.anything(),
           publicationDoi: '10.0777',
-          requestingApcCoverage: 'Already submitted',
-          submissionDate: '2024-10-01T00:00:00.000Z',
-          submitterName: 'John Doe',
           acknowledgedGrantNumber: 'Yes',
           asapAffiliationIncluded: 'Yes',
           manuscriptLicense: 'Yes',
@@ -359,9 +354,6 @@ test.each`
           manuscriptFile: expect.anything(),
           keyResourceTable: expect.anything(),
           publicationDoi: '10.0777',
-          requestingApcCoverage: 'Already submitted',
-          submissionDate: '2024-10-01T00:00:00.000Z',
-          submitterName: 'John Doe',
           acknowledgedGrantNumber: 'Yes',
           asapAffiliationIncluded: 'Yes',
           manuscriptLicense: 'Yes',
@@ -757,49 +749,6 @@ it('displays error message when other details is bigger than 256 characters', as
   ).toBeGreaterThanOrEqual(1);
 });
 
-it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
-  const onCreate = jest.fn();
-  render(
-    <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        type="Original Research"
-        lifecycle="Typeset proof"
-        manuscriptFile={{
-          id: '123',
-          filename: 'test.pdf',
-          url: 'http://example.com/test.pdf',
-        }}
-        keyResourceTable={{
-          id: '124',
-          filename: 'test.csv',
-          url: 'http://example.com/test.csv',
-        }}
-        onCreate={onCreate}
-      />
-    </StaticRouter>,
-  );
-
-  await submitForm();
-  await waitFor(() => {
-    expect(onCreate).toHaveBeenCalledWith({
-      title: 'manuscript title',
-      eligibilityReasons: [],
-      teamId,
-      versions: [
-        expect.objectContaining({
-          type: 'Original Research',
-          lifecycle: 'Typeset proof',
-          manuscriptFile: expect.anything(),
-          keyResourceTable: expect.anything(),
-          requestingApcCoverage: 'Already submitted',
-        }),
-      ],
-    });
-  });
-});
-
 describe('authors', () => {
   it.each`
     section                   | submittedValue
@@ -1052,9 +1001,6 @@ describe('renders the necessary fields', () => {
   const fieldInputMapping = {
     preprintDoi: 'Preprint DOI',
     publicationDoi: 'Publication DOI',
-    requestingApcCoverage: 'Will you be requesting APC coverage',
-    submitterName: "Please enter the submitter's name.",
-    submissionDate: 'Please enter the submission date.',
     manuscriptFile: 'Upload the main manuscript file',
     keyResourceTable: 'Upload a key resource table',
     additionalFiles: 'Upload any additional files',
@@ -2110,9 +2056,6 @@ it('calls onUpdate when form is updated', async () => {
           protocolsDeposited: 'Yes',
           protocolsDepositedDetails: '',
           publicationDoi: undefined,
-          requestingApcCoverage: undefined,
-          submissionDate: undefined,
-          submitterName: undefined,
           teams: ['1'],
           type: 'Original Research',
         },
@@ -2212,9 +2155,6 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
           protocolsDeposited: 'Yes',
           protocolsDepositedDetails: '',
           publicationDoi: undefined,
-          requestingApcCoverage: undefined,
-          submissionDate: undefined,
-          submitterName: undefined,
           teams: ['1'],
           type: 'Original Research',
         },

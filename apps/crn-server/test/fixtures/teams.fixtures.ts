@@ -171,6 +171,9 @@ export const getContentfulGraphqlManuscripts = (
       count: 1,
       title: 'Manuscript 1',
       status: 'Compliant',
+      apcRequested: false,
+      apcPaid: false,
+      apcAmount: null,
       teamsCollection: {
         items: [
           {
@@ -186,6 +189,9 @@ export const getContentfulGraphqlManuscripts = (
       sys: { id: 'manuscript-id-2' },
       count: 2,
       title: 'Manuscript 2',
+      apcRequested: false,
+      apcPaid: false,
+      apcAmount: null,
       teamsCollection: {
         items: [
           {

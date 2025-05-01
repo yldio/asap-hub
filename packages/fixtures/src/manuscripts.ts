@@ -30,6 +30,9 @@ export const createManuscriptResponse = (
   count: 1,
   assignedUsers: [],
   discussions: [],
+  requestingApcCoverage: 'No',
+  apcPaid: false,
+  apcAmount: undefined,
   versions: [
     {
       id: 'version-1',
@@ -88,6 +91,9 @@ export const createPartialManuscriptResponse =
     title: 'Manuscript 1',
     teams: 'Team 1',
     lastUpdated: '2020-09-23T20:45:22.000Z',
+    requestingApcCoverage: 'No',
+    apcPaid: false,
+    apcAmount: undefined,
     team: {
       id: 'team-id-1',
       displayName: 'Team 1',

@@ -108,6 +108,9 @@ describe('/compliance-reports/ route', () => {
         assignedUsers: [],
         status: 'Manuscript Resubmitted',
         discussions: [],
+        requestingApcCoverage: 'No',
+        apcPaid: false,
+        apcAmount: undefined,
       });
 
       manuscriptControllerMock.update.mockResolvedValueOnce({
@@ -119,6 +122,9 @@ describe('/compliance-reports/ route', () => {
         assignedUsers: [],
         status: 'Review Compliance Report',
         discussions: [],
+        requestingApcCoverage: 'No',
+        apcPaid: false,
+        apcAmount: undefined,
       });
 
       const response = await supertest(app)
@@ -175,6 +181,9 @@ describe('/compliance-reports/ route', () => {
         assignedUsers: [],
         status: 'Review Compliance Report',
         discussions: [],
+        requestingApcCoverage: 'No',
+        apcPaid: false,
+        apcAmount: undefined,
       });
 
       const { userId, ...requestBody } = getComplianceReportCreateDataObject();

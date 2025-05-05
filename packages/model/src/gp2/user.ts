@@ -201,6 +201,8 @@ export type PublicUserResponse = Pick<
   | 'biography'
   | 'city'
   | 'country'
+  | 'region'
+  | 'stateOrProvince'
   | 'degrees'
   | 'displayName'
   | 'firstName'

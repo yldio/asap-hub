@@ -136,6 +136,8 @@ export const getPublicUserResponse = (): gp2Model.PublicUserResponse => {
     middleName,
     outputs,
     positions,
+    region,
+    stateOrProvince,
   } = getUserResponse();
   return {
     avatarUrl,
@@ -152,6 +154,8 @@ export const getPublicUserResponse = (): gp2Model.PublicUserResponse => {
     middleName,
     outputs,
     publishDate: '2020-09-23T20:45:22.000Z',
+    region,
+    stateOrProvince,
     systemPublishedVersion: 23,
     title: positions[0]?.role,
     workingGroups: [

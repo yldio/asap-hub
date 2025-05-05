@@ -43,6 +43,8 @@ const mapUserToPublicUser = (
   biography: user.biography,
   city: user.city,
   country: user.country,
+  region: user.region,
+  stateOrProvince: user.stateOrProvince,
   degrees: user.degrees,
   displayName: user.displayName,
   firstName: user.firstName,

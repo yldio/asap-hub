@@ -56,6 +56,7 @@ const containerStyle = css({
 const shortTextStyles = css({
   flex: 1,
   color: lead.rgb,
+  wordBreak: 'break-word',
 });
 
 const footerStyles = css({

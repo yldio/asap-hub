@@ -2,7 +2,7 @@ name: Import Manuscripts
 on:
   workflow_dispatch:
     inputs:
-      environment-name:
+      environment:
         required: true
         description: The environment name
         type: choice
@@ -16,7 +16,7 @@ on:
 jobs:
   import-manuscript-data:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment-name }}
+    environment: ${{ inputs.environment }}
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
       credentials:
@@ -29,10 +29,10 @@ jobs:
         id: setup
         uses: ./.github/actions/setup-environment
         with:
-          environment-name: ${{ inputs.environment-name }}
+          environment-name: ${{ inputs.environment }}
       - name: Run Manuscript Import
         run: |
-          yarn workspace @asap-hub/crn-server import:manuscripts ./../../manuscripts.csv"
+          yarn workspace @asap-hub/crn-server import:manuscripts ./../../harper_manuscripts.csv"
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}

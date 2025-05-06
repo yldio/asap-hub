@@ -56,7 +56,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Run Manuscript Import
         run: |
-          yarn workspace @asap-hub/crn-server import:manuscripts ./../../harper_manuscripts.csv
+          yarn workspace @asap-hub/crn-server import:manuscripts ./../../harper_manuscripts.csv"
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}

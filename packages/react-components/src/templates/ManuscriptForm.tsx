@@ -676,7 +676,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 },
               }}
               render={({
-                field: { value, onChange },
+                field: { value, onChange, onBlur },
                 fieldState: { error },
               }) => (
                 <LabeledTextField
@@ -689,6 +689,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     onChange(titleText);
                   }}
                   enabled={!isSubmitting}
+                  onBlur={onBlur}
                 />
               )}
             />
@@ -700,7 +701,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 required: 'Please select a type.',
               }}
               render={({
-                field: { value, onChange },
+                field: { value, onChange, onBlur },
                 fieldState: { error },
               }) => (
                 <LabeledDropdown<ManuscriptType | ''>
@@ -712,6 +713,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     label: option,
                   }))}
                   onChange={onChange}
+                  onBlur={onBlur}
                   customValidationMessage={error?.message}
                   value={value}
                   enabled={!isEditMode && !isSubmitting}
@@ -1086,7 +1088,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 required: 'Please enter the description.',
               }}
               render={({
-                field: { value, onChange },
+                field: { value, onChange, onBlur },
                 fieldState: { error },
               }) => (
                 <LabeledTextArea
@@ -1105,6 +1107,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   customValidationMessage={error?.message}
                   value={value || ''}
                   onChange={onChange}
+                  onBlur={onBlur}
                   enabled={!isSubmitting}
                 />
               )}

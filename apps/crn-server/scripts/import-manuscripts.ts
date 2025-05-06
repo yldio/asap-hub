@@ -392,48 +392,48 @@ const app = async () => {
   console.log('Contentful Space Id', contentfulSpaceId);
 
   const parseManuscriptsFromCSV = parse(
-    (input: string[]) => {
-      const row = input.map((s: string) => s.trim());
+    (input) => {
+      const row = input.map((s) => s.trim());
 
-      const manuscriptTitle: string = row[0] || '';
-      const originalVersionId: string = row[1] || '';
+      const manuscriptTitle = row[0] || '';
+      const originalVersionId = row[1] || '';
       // 2 - guiUrl,
       // 3 - urlManuscript,
       // 4 - team1,
       // 5 - team2,
       // 6 - team3,
       // 7 - crnRound,
-      const manuscriptNumber: number = Number(row[8]); //nPaper
-      const manuscriptType: string = mapManuscriptType(row[9] || ''); //type
-      const manuscriptLifecycle: string = mapManuscriptLifecycle(row[10] || ''); // lifecycle
-      const manuscriptVersion: number = Number(row[11]);
-      const versionDoiPreprint: string | undefined = row[12];
-      const versionDoiPublication: string | undefined = row[13];
+      const manuscriptNumber = Number(row[8]); //nPaper
+      const manuscriptType = mapManuscriptType(row[9] || ''); //type
+      const manuscriptLifecycle = mapManuscriptLifecycle(row[10] || ''); // lifecycle
+      const manuscriptVersion = Number(row[11]);
+      const versionDoiPreprint = row[12];
+      const versionDoiPublication = row[13];
       // 14 - dateAddedToComplianceTracker,
       // 15 - dateSubmitedToDataseer,
       // 16 - datePreprint,
       // 17 - datePublication,
-      const manuscriptStatus: string | undefined = mapManuscriptStatus(row[18] || '');
+      const manuscriptStatus = mapManuscriptStatus(row[18] || '');
       // 19 - staffResponsible,
-      const manuscriptFirstAuthor: string = row[20] || '';
+      const manuscriptFirstAuthor = row[20] || '';
       // 21 - lab,
-      const sharedData: string | undefined = mapQuickCheck(row[22] || '');
-      const sharedCode: string | undefined = mapQuickCheck(row[23] || '');
-      const sharedProtocols: string | undefined = mapQuickCheck(row[24] || '');
-      const sharedMaterials: string | undefined = mapQuickCheck(row[25] || '');
-      const krt: string | null = getDownloadableLinkFromGoogleDriveUrl(row[26] || '');
+      const sharedData = mapQuickCheck(row[22] || '');
+      const sharedCode = mapQuickCheck(row[23] || '');
+      const sharedProtocols = mapQuickCheck(row[24] || '');
+      const sharedMaterials = mapQuickCheck(row[25] || '');
+      const krt = getDownloadableLinkFromGoogleDriveUrl(row[26] || '');
       // const krt = getDownloadableLinkFromGoogleDriveUrl(getTestKRTUrl(row[27] || ''));
-      const dsMostRecent: string | undefined = row[27]; //ds_most_recent_url
-      const apcAmount: number = Number(row[28] || 0);
-      const apcStatus: boolean = mapApcPaid(row[29] || '');
-      const teamId1: string = row[30] || '';
-      const teamId2: string | undefined = row[31];
-      const teamId3: string | undefined = row[32];
-      const labId: string | undefined = row[33];
-      const staffResponsibleId: string | undefined = row[34];
+      const dsMostRecent = row[27]; //ds_most_recent_url
+      const apcAmount = Number(row[28] || 0);
+      const apcStatus = mapApcPaid(row[29] || '');
+      const teamId1 = row[30] || '';
+      const teamId2 = row[31];
+      const teamId3 = row[32];
+      const labId = row[33];
+      const staffResponsibleId = row[34];
       // 35 - email
-      const authorId: string = row[36] || '';
-      const pdfLink: string | null = getDownloadableLinkFromGoogleDriveUrl(row[37] || '');
+      const authorId = row[36] || '';
+      const pdfLink = getDownloadableLinkFromGoogleDriveUrl(row[37] || '');
       console.log(pdfLink);
       //const pdfLink = getDownloadableLinkFromGoogleDriveUrl(TEST_PDF);
       return {

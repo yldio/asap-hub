@@ -91,13 +91,16 @@ const AuthorSelect: React.FC<AuthorSelectProps> = ({
   externalLabel = 'Non CRN',
   isMulti,
   creatable = true,
+  customValidationMessage,
   ...props
 }) => (
   <LabeledMultiSelect<AuthorOption, boolean>
     {...props}
+    {...(customValidationMessage
+      ? { customValidationMessage }
+      : { getValidationMessage: () => 'Please select at least one author.' })}
     isMulti={isMulti}
     creatable={creatable}
-    getValidationMessage={() => 'Please select at least one author.'}
     components={{
       SingleValue: (singleValueLabelProps) => (
         <components.SingleValue {...singleValueLabelProps}>

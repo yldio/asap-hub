@@ -1,102 +1,88 @@
-// import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
-import { parse } from '@asap-hub/server-common';
-// import csvParse from 'csv-parse';
-// import { RateLimiter } from 'limiter';
 import {
-  // contentfulAccessToken,
+  addLocaleToFields,
+  Environment,
+  getGraphQLClient as getContentfulGraphQLClient,
+  getLinkEntity,
+  patchAndPublish,
+} from '@asap-hub/contentful';
+import {
+  ManuscriptCreateDataObject,
+  ManuscriptLifecycle,
+  ManuscriptResubmitDataObject,
+  ManuscriptType,
+} from '@asap-hub/model';
+import { parse } from '@asap-hub/server-common';
+import { RateLimiter } from 'limiter';
+import {
+  contentfulAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
 } from '../src/config';
 import { AssetContentfulDataProvider } from '../src/data-providers/contentful/asset.data-provider';
+import { ManuscriptContentfulDataProvider } from '../src/data-providers/contentful/manuscript.data-provider';
 import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependencies';
+
+type ManuscriptVersionImport = {
+  originalVersionId: string;
+  manuscriptType: ManuscriptType;
+  manuscriptLifecycle: ManuscriptLifecycle;
+  manuscriptVersion: number;
+  versionDoiPreprint?: string;
+  versionDoiPublication?: string;
+  manuscriptStatus: string;
+  manuscriptFirstAuthor: string;
+  sharedData?: string;
+  sharedCode?: string;
+  sharedProtocols?: string;
+  sharedMaterials?: string;
+  krt?: string; //url to key resource table
+  dsMostRecent?: string;
+  teamId1: string;
+  teamId2?: string;
+  teamId3?: string;
+  labId?: string;
+  authorId: string;
+  pdfLink: string;
+};
+
+type ManuscriptImport = {
+  manuscriptTitle: string;
+  manuscriptNumber: number;
+  apcAmount: number;
+  apcStatus: boolean;
+  staffResponsibleId: string;
+  versions: ManuscriptVersionImport[];
+};
 
 console.log('Importing manuscripts...');
 
-// const contentfulGraphQLClient = getContentfulGraphQLClient({
-//   space: contentfulSpaceId,
-//   accessToken: contentfulAccessToken,
-//   environment: contentfulEnvId,
-// });
+const rateLimiter = new RateLimiter({
+  tokensPerInterval: 5,
+  interval: 5000,
+});
+
+const contentfulGraphQLClient = getContentfulGraphQLClient({
+  space: contentfulSpaceId,
+  accessToken: contentfulAccessToken,
+  environment: contentfulEnvId,
+});
+
+const manuscriptDataProvider = new ManuscriptContentfulDataProvider(
+  contentfulGraphQLClient,
+  getContentfulRestClientFactory,
+);
 
 const assetContentfulDataProvider = new AssetContentfulDataProvider(
   getContentfulRestClientFactory,
 );
 
-export const writeAssetsExample = async () => {
-  // all drive links need to be transformed into something like the following
-  // From: https://drive.google.com/file/d/1z9vGIsiVgET5fLIBtKg5M1-LNUhku3_f/view?usp=drive_link
-  // To: https://drive.google.com/uc?export=download&id=1z9vGIsiVgET5fLIBtKg5M1-LNUhku3_f
-  // Find the file id and replace in the following URL
-  // https://drive.google.com/uc?export=download&id=<file_id>
-
-  // pdf example
-  // https://drive.google.com/file/d/1z9vGIsiVgET5fLIBtKg5M1-LNUhku3_f/view?usp=drive_link
-  // fileType: 'application/pdf',
-
-  // spreedsheet example
-  // https://docs.google.com/spreadsheets/d/1IKSNR4Uzlw05hrq9ociWvNe7c9btX06cyIAWzw_aaFY/edit?usp=sharing
-  // fileType: 'application/vnd.ms-excel',
-
-  // csv example
-  // https://drive.google.com/file/d/1fNd48XBNnPH-szuxW1INhPQm5253j9cl/view?usp=drive_link
-  // fileType: 'text/csv',
-
-  const testMappingUrlPdf = getDownloadableLinkFromGoogleDriveUrl(
-    'https://drive.google.com/file/d/1z9vGIsiVgET5fLIBtKg5M1-LNUhku3_f/view?usp=drive_link',
-  );
-
-  const testMappingUrlCsv = getDownloadableLinkFromGoogleDriveUrl(
-    'https://drive.google.com/file/d/1fNd48XBNnPH-szuxW1INhPQm5253j9cl/view?usp=drive_link',
-  );
-
-  const testMappingUrlSpreadsheet = getDownloadableLinkFromGoogleDriveUrl(
-    'https://docs.google.com/spreadsheets/d/1IKSNR4Uzlw05hrq9ociWvNe7c9btX06cyIAWzw_aaFY/edit?usp=sharing',
-  );
-
-  // console.log('URL =>', testMappingUrlPdf);
-  // console.log('URL =>', testMappingUrlCsv);
-  // console.log('URL =>', testMappingUrlSpreadsheet);
-
-  const assetPdf = await assetContentfulDataProvider.createFromUrl({
-    id: '',
-    fileType: 'application/pdf',
-    url: testMappingUrlPdf!,
-    filename: 'Test Public PDF on drive',
-    publish: true,
-  });
-  console.log(assetPdf.id);
-
-  const assetCsv = await assetContentfulDataProvider.createFromUrl({
-    id: '',
-    fileType: 'text/csv',
-    url: testMappingUrlCsv!,
-    filename: 'Test Public KRT on drive - CSV',
-    publish: true,
-  });
-  console.log(assetCsv.id);
-
-  const assetExcel = await assetContentfulDataProvider.createFromUrl({
-    id: '',
-    fileType: 'application/vnd.ms-excel',
-    url: testMappingUrlSpreadsheet!,
-    filename: 'Test Public KRT on drive - Spreadsheet',
-    publish: true,
-  });
-  console.log(assetExcel.id);
-};
-
-// NOTE: not sure what to do with type 'oth' confirm with PO if we need to add a new type
-export const mapManuscriptType = (type: string) => {
+const mapManuscriptType = (type: string) => {
   return type === 'org'
     ? 'Original Research'
     : 'Review / Op-Ed / Letter / Hot Topic';
 };
 
-// NOTE: there are references to other lifecycle Ids (A and S)
-// I assume A is for addendum?
-// See https://docs.google.com/spreadsheets/d/1lMIjqE_dlhN2eCuaq2skK3-kQ3C23vI5-aF6xnr0Pw4/edit?gid=0#gid=0
-// there's a reference to S but we don't have it in the CMS at the moment
-export const mapManuscriptLifecycle = (lifecycle: string) => {
+const mapManuscriptLifecycle = (lifecycle: string) => {
   switch (lifecycle) {
     case 'G':
       return 'Draft Manuscript (prior to Publication)';
@@ -114,8 +100,7 @@ export const mapManuscriptLifecycle = (lifecycle: string) => {
   }
 };
 
-// NOTE: there are manuscripts without status and status is a required field in the CMS
-export const mapManuscriptStatus = (status: string) => {
+const mapManuscriptStatus = (status: string) => {
   switch (status) {
     case 'Waiting for Report':
       return 'Waiting for Report';
@@ -123,12 +108,6 @@ export const mapManuscriptStatus = (status: string) => {
       return 'Review Compliance Report';
     case 'Manuscript Re-Submitted':
       return 'Manuscript Resubmitted';
-    case '':
-      return 'Submit Final Publication';
-    case '':
-      return 'Addendum Required';
-    case '':
-      return 'Compliant';
     case 'Closed (Other)':
       return 'Closed (other)';
     default:
@@ -136,11 +115,35 @@ export const mapManuscriptStatus = (status: string) => {
   }
 };
 
-export const mapApcPaid = (apcPaid: string) => {
+const mapApcPaid = (apcPaid: string) => {
   return apcPaid === 'Paid';
 };
 
-export const getDownloadableLinkFromGoogleDriveUrl = (url: string) => {
+const mapQuickCheck = (quickCheck: string) => {
+  switch (quickCheck) {
+    case 'yes':
+      return 'Yes';
+    case 'no':
+      return 'No';
+    case 'NA':
+      return 'Not applicable';
+    default:
+      return undefined;
+  }
+};
+
+const mapQuickCheckDetails = (quickCheck: string | undefined) => {
+  switch (quickCheck) {
+    case 'No':
+      return 'Output has not yet been shared in compliance with the ASAP Open Science Policy';
+    case 'Not applicable':
+      return 'The present study did not produce this output type';
+    default:
+      return undefined;
+  }
+};
+
+const getDownloadableLinkFromGoogleDriveUrl = (url: string) => {
   // example: https://drive.google.com/file/d/<FILE_ID>/view?usp=drive_link
   if (url.startsWith('https://drive.google.com')) {
     return url.replace(
@@ -161,6 +164,220 @@ export const getDownloadableLinkFromGoogleDriveUrl = (url: string) => {
   return null;
 };
 
+const createAsset = async (
+  originalVersionId: string,
+  url: string,
+  type: 'manuscript_file' | 'krt',
+) => {
+  await rateLimiter.removeTokens(5);
+  if (type === 'manuscript_file') {
+    console.log(url);
+    return await assetContentfulDataProvider.createFromUrl({
+      id: '',
+      fileType: 'application/pdf',
+      url,
+      filename: `${originalVersionId} - Manuscript File`,
+      publish: true,
+    });
+  }
+  if (url.startsWith('https://docs.google.com/spreadsheets/')) {
+    console.log(url);
+    return await assetContentfulDataProvider.createFromUrl({
+      id: '',
+      url,
+      filename: `${originalVersionId} - KRT.xlsx`,
+      publish: true,
+    });
+  } else {
+    console.log(url);
+    return await assetContentfulDataProvider.createFromUrl({
+      id: '',
+      fileType: 'text/csv',
+      url,
+      filename: `${originalVersionId} - KRT`,
+      publish: true,
+    });
+  }
+};
+
+const getFirstAuthorId = async (
+  environment: Environment,
+  authorId: string,
+  authorName: string,
+) => {
+  if (!authorId.includes('@')) {
+    return authorId;
+  } else {
+    const existingExternalAuthors = await environment.getEntries({
+      content_type: 'externalAuthors',
+      'fields.name[in]': authorName,
+      'fields.email[in]': authorId,
+    });
+    if (existingExternalAuthors.items.length !== 1) {
+      const newExternalAuthor = await environment.createEntry(
+        'externalAuthors',
+        {
+          fields: {
+            ...addLocaleToFields({
+              name: authorName,
+            }),
+          },
+        },
+      );
+
+      await newExternalAuthor.publish();
+      return newExternalAuthor.sys.id;
+    }
+    return existingExternalAuthors.items[0]?.sys.id;
+  }
+};
+
+const updateManuscriptVersion = async (
+  environment: Environment,
+  manuscriptId: string,
+  version: ManuscriptVersionImport,
+) => {
+  await rateLimiter.removeTokens(5);
+
+  const manuscriptEntry = await environment.getEntry(manuscriptId);
+  const manuscriptVersionId =
+    manuscriptEntry.fields.versions['en-US'].at(-1).sys.id;
+
+  const manuscriptVersionEntry =
+    await environment.getEntry(manuscriptVersionId);
+
+  await patchAndPublish(manuscriptVersionEntry, {
+    originalVersionId: version.originalVersionId,
+    createdBy: null,
+    updatedBy: null,
+  });
+
+  if (version.dsMostRecent) {
+    await rateLimiter.removeTokens(5);
+    const complianceReport = await environment.createEntry(
+      'complianceReports',
+      {
+        fields: {
+          ...addLocaleToFields({
+            url: version.dsMostRecent,
+            description:
+              'See compliance report previously emailed from openscience@parkinsonsroadmap.org',
+            manuscriptVersion: getLinkEntity(manuscriptVersionId),
+          }),
+        },
+      },
+    );
+
+    await complianceReport.publish();
+  }
+};
+
+const parseManuscriptVersion = async (
+  environment: Environment,
+  versionImport: ManuscriptVersionImport,
+): Promise<ManuscriptCreateDataObject['versions'][number]> => {
+  await rateLimiter.removeTokens(5);
+  const firstAuthorId = await getFirstAuthorId(
+    environment,
+    versionImport.authorId,
+    versionImport.manuscriptFirstAuthor,
+  );
+
+  return {
+    type: versionImport.manuscriptType,
+    lifecycle: versionImport.manuscriptLifecycle,
+    preprintDoi: versionImport.versionDoiPreprint || undefined,
+    publicationDoi: versionImport.versionDoiPublication || undefined,
+    description: 'imported manuscript version',
+    manuscriptFile: await createAsset(
+      versionImport.originalVersionId,
+      versionImport.pdfLink,
+      'manuscript_file',
+    ),
+    datasetsDeposited: versionImport.sharedData,
+    datasetsDepositedDetails: mapQuickCheckDetails(versionImport.sharedData),
+    codeDeposited: versionImport.sharedCode,
+    codeDepositedDetails: mapQuickCheckDetails(versionImport.sharedCode),
+    protocolsDeposited: versionImport.sharedProtocols,
+    protocolsDepositedDetails: mapQuickCheckDetails(
+      versionImport.sharedProtocols,
+    ),
+    labMaterialsRegistered: versionImport.sharedMaterials,
+    labMaterialsRegisteredDetails: mapQuickCheckDetails(
+      versionImport.sharedMaterials,
+    ),
+    teams: [
+      versionImport.teamId1,
+      ...(versionImport.teamId2 ? [versionImport.teamId2] : []),
+      ...(versionImport.teamId3 ? [versionImport.teamId3] : []),
+    ],
+    labs: [...(versionImport.labId ? [versionImport.labId] : [])],
+    firstAuthors: [...(firstAuthorId ? [firstAuthorId] : [])],
+    correspondingAuthor: [],
+    additionalAuthors: [],
+    keyResourceTable: versionImport.krt
+      ? await createAsset(
+          versionImport.originalVersionId,
+          versionImport.krt,
+          'krt',
+        )
+      : undefined,
+  };
+};
+
+const createManuscript = async (
+  teamId: string,
+  manuscript: ManuscriptImport,
+) => {
+  const [firstVersion, ...otherVersions] = manuscript.versions.sort(
+    (a, b) => a.manuscriptVersion - b.manuscriptVersion,
+  );
+  const currentStatus =
+    manuscript.versions.length === 1
+      ? firstVersion!.manuscriptStatus
+      : otherVersions.at(-1)!.manuscriptStatus;
+  console.log(currentStatus);
+  const environment = await getContentfulRestClientFactory();
+
+  const manuscriptCreateObject: ManuscriptCreateDataObject = {
+    title: manuscript.manuscriptTitle,
+    teamId,
+    userId: '3az05EiV3vJcY0BYlaRdGU',
+    eligibilityReasons: [],
+    versions: [await parseManuscriptVersion(environment, firstVersion!)],
+  };
+
+  await rateLimiter.removeTokens(5);
+
+  const manuscriptId = await manuscriptDataProvider.create(
+    manuscriptCreateObject,
+  );
+
+  const manuscriptEntry = await environment.getEntry(manuscriptId);
+
+  await patchAndPublish(manuscriptEntry, {
+    apcPaid: manuscript.apcStatus,
+    apcAmount: manuscript.apcAmount,
+    assignedUsers: [getLinkEntity(manuscript.staffResponsibleId)],
+    status: currentStatus,
+  });
+
+  await updateManuscriptVersion(environment, manuscriptId, firstVersion!);
+
+  for (const version of otherVersions) {
+    await rateLimiter.removeTokens(5);
+    const parsedVersion: ManuscriptResubmitDataObject = {
+      title: manuscript.manuscriptTitle,
+      teamId,
+      userId: '3az05EiV3vJcY0BYlaRdGU',
+      versions: [await parseManuscriptVersion(environment, version!)],
+    };
+
+    await manuscriptDataProvider.createVersion(manuscriptId, parsedVersion);
+    await updateManuscriptVersion(environment, manuscriptId, version);
+  }
+};
+
 const app = async () => {
   let parseResult = {};
   const args = process.argv.slice(2);
@@ -169,6 +386,7 @@ const app = async () => {
     throw new Error('Please provide a path to the CSV file');
   }
   const filePath = args[0];
+
   console.log(filePath);
   console.log('Contentful Environment', contentfulEnvId);
   console.log('Contentful Space Id', contentfulSpaceId);
@@ -177,16 +395,16 @@ const app = async () => {
     (input) => {
       const row = input.map((s) => s.trim());
 
-      const manuscriptTitle = row[0] || ''; // title
-      const manuscriptId = row[1] || ''; // originalManuscriptId
+      const manuscriptTitle = row[0] || '';
+      const originalVersionId = row[1] || '';
       // 2 - guiUrl,
       // 3 - urlManuscript,
       // 4 - team1,
       // 5 - team2,
       // 6 - team3,
       // 7 - crnRound,
-      const manuscriptNumber = Number(row[8]); // nPaper
-      const manuscriptType = mapManuscriptType(row[9] || ''); // type
+      const manuscriptNumber = Number(row[8]); //nPaper
+      const manuscriptType = mapManuscriptType(row[9] || ''); //type
       const manuscriptLifecycle = mapManuscriptLifecycle(row[10] || ''); // lifecycle
       const manuscriptVersion = Number(row[11]);
       const versionDoiPreprint = row[12];
@@ -195,45 +413,46 @@ const app = async () => {
       // 15 - dateSubmitedToDataseer,
       // 16 - datePreprint,
       // 17 - datePublication,
-      const manuscriptStatus = row[18];
+      const manuscriptStatus = mapManuscriptStatus(row[18] || '');
       // 19 - staffResponsible,
-      const manuscriptFirstAuthor = row[20];
+      const manuscriptFirstAuthor = row[20] || '';
       // 21 - lab,
-      const sharedData = row[22];
-      const sharedCode = row[23];
-      const sharedProtocols = row[24];
-      const sharedMaterials = row[25];
-      // 26 - dsMostRecentUrl,
-      const krt = getDownloadableLinkFromGoogleDriveUrl(row[27] || ''); //ignore zenodo links
-      const dsMostRecent = row[28];
-      const apcAmount = Number(row[29] || 0);
-      const apcStatus = mapApcPaid(row[30] || '');
-      const teamId1 = row[31] || '';
-      const teamId2 = row[32];
-      const teamId3 = row[33];
-      const labId = row[34];
-      const staffResponsibleId = row[35];
-      // 36 - email,
-      const authorId = row[37];
-      const pdfLink = getDownloadableLinkFromGoogleDriveUrl(row[38] || ''); // for test replace with own public file
-
+      const sharedData = mapQuickCheck(row[22] || '');
+      const sharedCode = mapQuickCheck(row[23] || '');
+      const sharedProtocols = mapQuickCheck(row[24] || '');
+      const sharedMaterials = mapQuickCheck(row[25] || '');
+      const krt = getDownloadableLinkFromGoogleDriveUrl(row[26] || '');
+      // const krt = getDownloadableLinkFromGoogleDriveUrl(getTestKRTUrl(row[27] || ''));
+      const dsMostRecent = row[27]; //ds_most_recent_url
+      const apcAmount = Number(row[28] || 0);
+      const apcStatus = mapApcPaid(row[29] || '');
+      const teamId1 = row[30] || '';
+      const teamId2 = row[31];
+      const teamId3 = row[32];
+      const labId = row[33];
+      const staffResponsibleId = row[34];
+      // 35 - email
+      const authorId = row[36] || '';
+      const pdfLink = getDownloadableLinkFromGoogleDriveUrl(row[37] || '');
+      console.log(pdfLink);
+      //const pdfLink = getDownloadableLinkFromGoogleDriveUrl(TEST_PDF);
       return {
         manuscriptTitle,
-        originalManuscriptId: manuscriptId, // version original manuscript id
-        manuscriptNumber, // to order manuscripts - manuscript number will not match but can be used to order
-        manuscriptType, // version.type
-        manuscriptLifecycle, // version.lifecycle
-        manuscriptVersion, // to order manuscripts
-        versionDoiPreprint, // version.preprintDoi
-        versionDoiPublication, // version.publicationDoi
+        originalVersionId,
+        manuscriptNumber,
+        manuscriptType,
+        manuscriptLifecycle,
+        manuscriptVersion,
+        versionDoiPreprint,
+        versionDoiPublication,
         manuscriptStatus,
         manuscriptFirstAuthor, // only used for external authors (ignore email provided on authorId column)
         sharedData, // version.datasetsDeposited - Yes; No; Not applicable
         sharedCode, // version.codeDeposited - Yes; No; Not applicable
         sharedProtocols, // version.protocolsDeposited - Yes; No; Not applicable
         sharedMaterials, // version.labMaterialsRegistered - Yes; No; Not applicable
-        krt, // version.keyResourceTable
-        dsMostRecent, // complianceReport
+        krt,
+        dsMostRecent,
         apcAmount,
         apcStatus,
         teamId1,
@@ -247,7 +466,7 @@ const app = async () => {
     },
     async ({
       manuscriptTitle,
-      originalManuscriptId,
+      originalVersionId,
       manuscriptNumber,
       manuscriptType,
       manuscriptLifecycle,
@@ -274,60 +493,46 @@ const app = async () => {
     }) => {
       if ((parseResult as any)[teamId1]) {
         if ((parseResult as any)[teamId1][manuscriptNumber]) {
-          // I have an issue here where [(parseResult as any)[teamId1]][manuscriptNumber] is undefined that I was trying to figure out.
-          // That's why it's commented out
-          // console.log(
-          //   'teamId1',
-          //   teamId1,
-          //   'manuscriptNumber',
-          //   manuscriptNumber,
-          //   'parseResult',
-          //   parseResult,
-          // );
-          console.log(
-            '[(parseResult as any)[teamId1]][manuscriptNumber]',
-            [(parseResult as any)[teamId1]][manuscriptNumber],
-          );
-          // parseResult = {
-          //   ...parseResult,
-          //   [teamId1]: {
-          //     ...[(parseResult as any)[teamId1]],
-          //     [manuscriptNumber]: {
-          //       ...[(parseResult as any)[teamId1]][manuscriptNumber],
-          //       versions: [(parseResult as any)[teamId1]][
-          //         manuscriptNumber
-          //       ].versions.concat([
-          //         {
-          //           originalManuscriptId,
-          //           manuscriptType,
-          //           manuscriptLifecycle,
-          //           manuscriptVersion,
-          //           versionDoiPreprint,
-          //           versionDoiPublication,
-          //           manuscriptStatus,
-          //           manuscriptFirstAuthor,
-          //           sharedData,
-          //           sharedCode,
-          //           sharedProtocols,
-          //           sharedMaterials,
-          //           krt,
-          //           dsMostRecent,
-          //           teamId1,
-          //           teamId2,
-          //           teamId3,
-          //           labId,
-          //           authorId,
-          //           pdfLink,
-          //         },
-          //       ]),
-          //     },
-          //   },
-          // };
+          parseResult = {
+            ...parseResult,
+            [teamId1]: {
+              ...(parseResult as any)[teamId1],
+              [manuscriptNumber]: {
+                ...(parseResult as any)[teamId1][manuscriptNumber],
+                versions: (parseResult as any)[teamId1][
+                  manuscriptNumber
+                ].versions.concat([
+                  {
+                    originalVersionId,
+                    manuscriptType,
+                    manuscriptLifecycle,
+                    manuscriptVersion,
+                    versionDoiPreprint,
+                    versionDoiPublication,
+                    manuscriptStatus,
+                    manuscriptFirstAuthor,
+                    sharedData,
+                    sharedCode,
+                    sharedProtocols,
+                    sharedMaterials,
+                    krt,
+                    dsMostRecent,
+                    teamId1,
+                    teamId2,
+                    teamId3,
+                    labId,
+                    authorId,
+                    pdfLink,
+                  },
+                ]),
+              },
+            },
+          };
         } else {
           parseResult = {
             ...parseResult,
             [teamId1]: {
-              ...[(parseResult as any)[teamId1]],
+              ...(parseResult as any)[teamId1],
               [manuscriptNumber]: {
                 manuscriptTitle,
                 manuscriptNumber,
@@ -336,7 +541,7 @@ const app = async () => {
                 staffResponsibleId,
                 versions: [
                   {
-                    originalManuscriptId,
+                    originalVersionId,
                     manuscriptType,
                     manuscriptLifecycle,
                     manuscriptVersion,
@@ -372,7 +577,7 @@ const app = async () => {
             staffResponsibleId,
             versions: [
               {
-                originalManuscriptId,
+                originalVersionId,
                 manuscriptType,
                 manuscriptLifecycle,
                 manuscriptVersion,
@@ -400,10 +605,13 @@ const app = async () => {
     },
   );
 
-  // const manuscriptVersions = await parseManuscriptsFromCSV(filePath);
   await parseManuscriptsFromCSV(filePath);
-  // console.log('manuscriptVersions =>', manuscriptVersions);
-  console.log('parseResult =>', parseResult);
+
+  for (const [teamId, teamManuscripts] of Object.entries(parseResult)) {
+    for (const [_, manuscript] of Object.entries(teamManuscripts as any)) {
+      await createManuscript(teamId, manuscript as ManuscriptImport);
+    }
+  }
 };
 
 app().catch(console.error);

@@ -13,7 +13,12 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
-  manuscriptVersions.changeFieldControl('originalVersionId', 'app', '2finDNk15g5UtOq4DaLNxv', {});
+  manuscriptVersions.changeFieldControl(
+    'originalVersionId',
+    'app',
+    '2finDNk15g5UtOq4DaLNxv',
+    {},
+  );
 };
 
 module.exports.down = (migration) => {

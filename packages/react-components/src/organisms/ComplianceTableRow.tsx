@@ -156,7 +156,11 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
         </td>
         <td>
           <p css={teamLinkStyles}>
-            <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+            <Link
+              href={
+                network({}).teams({}).team({ teamId: team.id }).workspace({}).$
+              }
+            >
               {team.displayName}
             </Link>
           </p>

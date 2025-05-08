@@ -129,7 +129,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     currentPage: 0,
     pageSize,
     requestedAPCCoverage: 'all',
-    completedStatus: 'show',
+    completedStatus: 'hide',
     selectedStatuses: [],
   });
 

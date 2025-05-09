@@ -85,7 +85,7 @@ describe('EligibilityModal', () => {
       userEvent.click(screen.getByText('Yes'));
       userEvent.click(
         screen.getByText(
-          'The manuscript contains projects that are listed as part of the team’s ASAP-funded proposal.',
+          'The manuscript reports findings from your team’s ASAP-funded proposal.',
         ),
       );
       expect(continueButton).toBeEnabled();
@@ -97,7 +97,7 @@ describe('EligibilityModal', () => {
       const { container } = renderModal(<EligibilityModal {...defaultProps} />);
 
       expect(container).not.toHaveTextContent(
-        /Manuscript is not part of ASAP Compliance Review/i,
+        /Manuscript cannot be submitted for ASAP Compliance Review/i,
       );
       expect(container).not.toHaveTextContent(
         /Since this manuscript does not contain ASAP-funded work, it will not undergo a compliance review/i,
@@ -114,7 +114,7 @@ describe('EligibilityModal', () => {
       userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
       expect(container).toHaveTextContent(
-        /Manuscript is not part of ASAP Compliance Review/i,
+        /Manuscript cannot be submitted for ASAP Compliance Review/i,
       );
       expect(container).toHaveTextContent(
         /Since this manuscript does not contain ASAP-funded work, it will not undergo a compliance review/i,
@@ -165,7 +165,7 @@ describe('EligibilityModal', () => {
       userEvent.click(screen.getByText('Yes'));
       userEvent.click(
         screen.getByText(
-          'The manuscript contains projects that are listed as part of the team’s ASAP-funded proposal.',
+          'The manuscript reports findings from your team’s ASAP-funded proposal.',
         ),
       );
 
@@ -186,13 +186,13 @@ describe('EligibilityModal', () => {
       userEvent.click(screen.getByText('Yes'));
       userEvent.click(
         screen.getByText(
-          'The manuscript contains projects that are listed as part of the team’s ASAP-funded proposal.',
+          'The manuscript reports findings from your team’s ASAP-funded proposal.',
         ),
       );
 
       userEvent.click(
         screen.getByText(
-          'The manuscript resulted from a pivot that was made as part of the team’s ASAP-funded proposal.',
+          'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
         ),
       );
 
@@ -215,19 +215,19 @@ describe('EligibilityModal', () => {
       userEvent.click(screen.getByText('Yes'));
       userEvent.click(
         screen.getByText(
-          'The manuscript contains projects that are listed as part of the team’s ASAP-funded proposal.',
+          'The manuscript reports findings from your team’s ASAP-funded proposal.',
         ),
       );
 
       userEvent.click(
         screen.getByText(
-          'The manuscript resulted from a pivot that was made as part of the team’s ASAP-funded proposal.',
+          'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
         ),
       );
 
       userEvent.click(
         screen.getByText(
-          'The manuscript contains projects that are listed as part of the team’s ASAP-funded proposal.',
+          'The manuscript reports findings from your team’s ASAP-funded proposal.',
         ),
       );
 

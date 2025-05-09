@@ -1,8 +1,7 @@
 import { css } from '@emotion/react';
 import { useHistory } from 'react-router-dom';
 import Lottie from 'react-lottie';
-import { Button, crossIcon, Headline3, Link, Modal, Paragraph } from '..';
-import { mailToSupport } from '../mail';
+import { Button, crossIcon, Headline3, Modal, Paragraph } from '..';
 import { mobileScreen, rem } from '../pixels';
 import loading from '../lotties/loading.json';
 
@@ -92,10 +91,10 @@ const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
 
           <Paragraph>
             Only the title, description, and contributor fields are editable
-            upon submission. If you need to edit a field that is not editable,
-            please <Link href={mailToSupport()}>contact tech support</Link>.
-            Once a compliance report has been shared, teams can submit updated
-            versions of the manuscript for review.
+            after you click submit. If you need to edit another field, please
+            email tech support. After the ASAP Open Science team sends you a
+            compliance report, you can submit an updated version of your
+            manuscript for compliance review.
           </Paragraph>
           <div css={buttonContainerStyles}>
             <div css={backStyles}>

@@ -58,6 +58,13 @@ const dismissButtonStyles = css({
     gridRow: '1',
   },
 });
+
+const formStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: `${32 / perRem}em`,
+});
+
 export const asapFunded = ['Yes', 'No'] as const;
 
 export type ASAPFunded = (typeof asapFunded)[number];
@@ -108,7 +115,7 @@ const EligibilityModal: React.FC<EligibilityModalProps> = ({
     setValue('asapFundingReason', fundingReasonSet);
   };
   const title = isNotASAPFundedSelected
-    ? 'Manuscript is not part of ASAP Compliance Review'
+    ? 'Manuscript cannot be submitted for ASAP Compliance Review'
     : 'Do you need to submit a manuscript?';
 
   const handleDismiss = () => {
@@ -161,7 +168,7 @@ const EligibilityModal: React.FC<EligibilityModalProps> = ({
             an affiliation.
           </Paragraph>
         )}
-        <form>
+        <form css={formStyles}>
           {!isNotASAPFundedSelected && (
             <Controller
               name="asapFunded"

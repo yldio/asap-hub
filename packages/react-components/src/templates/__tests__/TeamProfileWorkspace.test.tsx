@@ -464,7 +464,7 @@ describe('compliance section', () => {
 
     userEvent.click(
       screen.getByText(
-        'The manuscript resulted from a pivot that was made as part of the team’s ASAP-funded proposal.',
+        'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
       ),
     );
     userEvent.click(screen.getByText(/Continue/i));

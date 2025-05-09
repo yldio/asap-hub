@@ -108,16 +108,18 @@ const getModalContent = (
       confirmButtonStyle: 'primary' as const,
     },
     confirmCompliantStatus: {
-      title: 'Share compliance report and set status to compliant?',
+      title:
+        'Share compliance report and set status to compliant? This action is irreversible.',
       content:
-        'After you update the status to compliant, this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to the CMS admin. Additionally, by sharing the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
+        'After you update the status to compliant, this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to Tech Support. Additionally, setting the status to compliant will end all discussions, meaning no further replies will be possible. Also the correspondent members will receive a reminder on the CRN Hub and/or an email with the latest updates.',
       confirmButtonText: 'Confirm and Share',
       confirmButtonStyle: 'primary' as const,
     },
     confirmClosedStatus: {
-      title: 'Share compliance report and set status to closed (other)?',
+      title:
+        'Share compliance report and set status to closed (other)? This action is irreversible.',
       content:
-        'After you update the status to closed (other), this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to the CMS admin. Additionally, by sharing the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
+        'After you update the status to closed (other), this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to Tech Support. Additionally, setting the status to closed (other) will end all discussions, meaning no further replies will be possible. Also the correspondent members will receive a reminder on the CRN Hub and/or an email with the latest updates.',
       confirmButtonText: 'Confirm and Share',
       confirmButtonStyle: 'primary' as const,
     },

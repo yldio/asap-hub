@@ -429,7 +429,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     reset,
     resetField,
     trigger,
+    formState
   } = methods;
+
+  const { isValid } = formState;
 
   const commonManuscriptAuthorProps = {
     control,
@@ -1305,6 +1308,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 primary
                 noMargin
                 enabled={
+                  isValid &&
                   !isSubmitting &&
                   !isUploadingManuscriptFile &&
                   !isUploadingKeyResourceTable &&

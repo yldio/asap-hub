@@ -13,6 +13,11 @@ export type AuthorAlgoliaResponse =
       UserResponse,
       'email' | 'id' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName'
     > & {
+      teams: {
+        id: string;
+        displayName?: string;
+        role: string;
+      }[];
       __meta: {
         type: 'user';
       };

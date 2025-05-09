@@ -115,7 +115,7 @@ describe('ManuscriptForm team validation', () => {
     // Error message for the team input
     expect(
       screen.getByText(
-        /The following lab\(s\) do not have the correspondent PI\'s team listed as contributors\. At least one of the teams the PI belongs to must be added./,
+        /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
       ),
     ).toBeVisible();
 
@@ -137,7 +137,7 @@ describe('ManuscriptForm team validation', () => {
 
     expect(
       screen.queryByText(
-        /The following lab\(s\) do not have the correspondent PI\'s team listed as contributors\. At least one of the teams the PI belongs to must be added./,
+        /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
       ),
     ).not.toBeInTheDocument();
     expect(

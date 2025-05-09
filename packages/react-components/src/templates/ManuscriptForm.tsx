@@ -517,13 +517,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const validateFirstAuthors = () => {
-    const firstAuthors = watch('versions.0.firstAuthors');
-    const teams = watch('versions.0.teams');
-    const teamFormIds = teams.map((team) => team.value);
+    const firstAuthorsValues = watch('versions.0.firstAuthors');
+    const teamsValues = watch('versions.0.teams');
+    const teamFormIds = teamsValues.map((team) => team.value);
 
     firstAuthorsWithoutTeamAdded.clear();
 
-    firstAuthors
+    firstAuthorsValues
       .filter((algoliaAuthor) => {
         if (
           'author' in algoliaAuthor &&
@@ -558,7 +558,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const validateCorrespondingAuthor = () => {
-    const correspondingAuthor = watch(
+    const correspondingAuthorValue = watch(
       'versions.0.correspondingAuthor',
     ) as unknown as AuthorSelectOption;
     const teams = watch('versions.0.teams');
@@ -567,16 +567,16 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     correspondingAuthorWithoutTeamAdded.clear();
 
     if (
-      correspondingAuthor &&
-      'author' in correspondingAuthor &&
-      correspondingAuthor.author &&
-      'teams' in correspondingAuthor.author &&
-      correspondingAuthor.author.teams.every(
+      correspondingAuthorValue &&
+      'author' in correspondingAuthorValue &&
+      correspondingAuthorValue.author &&
+      'teams' in correspondingAuthorValue.author &&
+      correspondingAuthorValue.author.teams.every(
         (team) => !teamFormIds.includes(team.id),
       )
     ) {
-      correspondingAuthorWithoutTeamAdded.add(correspondingAuthor.label);
-      usersWithoutTeamAdded.add(correspondingAuthor.label);
+      correspondingAuthorWithoutTeamAdded.add(correspondingAuthorValue.label);
+      usersWithoutTeamAdded.add(correspondingAuthorValue.label);
     }
 
     if (correspondingAuthorWithoutTeamAdded.size > 0) {
@@ -593,12 +593,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const validateAdditionalAuthors = () => {
-    const additionalAuthors = watch('versions.0.additionalAuthors');
+    const additionalAuthorsValues = watch('versions.0.additionalAuthors');
     const teams = watch('versions.0.teams');
     const teamFormIds = teams.map((team) => team.value);
 
     additionalAuthorsWithoutTeamAdded.clear();
-    additionalAuthors
+    additionalAuthorsValues
       .filter((algoliaAuthor) => {
         if (
           'author' in algoliaAuthor &&

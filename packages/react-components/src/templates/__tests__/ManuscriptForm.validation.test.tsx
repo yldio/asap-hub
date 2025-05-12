@@ -205,6 +205,76 @@ describe('ManuscriptForm team validation', () => {
     },
   );
 
+  it.each`
+    authorType                | label
+    ${'first author'}         | ${/First Author/}
+    ${'corresponding author'} | ${/Corresponding Author/}
+    ${'additional author'}    | ${/Additional Author/}
+  `(
+    'do not display error message when $authorType does not have a team',
+
+    async ({ label }) => {
+      const getAuthorSuggestionsWithoutTeamMock = jest.fn().mockResolvedValue([
+        {
+          label: 'Author A',
+          value: 'author-a',
+          id: 'author-a',
+          displayName: 'Author A',
+          author: {
+            firstName: 'Author',
+            lastName: 'A',
+            teams: [],
+            __meta: {
+              type: 'user',
+            },
+          },
+        },
+        {
+          label: 'Author B',
+          value: 'author-b',
+          id: 'author-b',
+          displayName: 'Author B',
+          author: {
+            firstName: 'Author',
+            lastName: 'B',
+            teams: [],
+            __meta: {
+              type: 'user',
+            },
+          },
+        },
+      ]);
+
+      render(
+        <StaticRouter>
+          <ManuscriptForm
+            {...defaultProps}
+            getTeamSuggestions={getTeamSuggestionsMock}
+            getLabSuggestions={getLabSuggestionsMock}
+            getAuthorSuggestions={getAuthorSuggestionsWithoutTeamMock}
+          />
+        </StaticRouter>,
+      );
+
+      userEvent.click(screen.getByLabelText(label));
+      await waitFor(() =>
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+      );
+
+      userEvent.click(screen.getByText('Author A'));
+      userEvent.tab();
+
+      expect(
+        screen.queryByText(
+          /The following contributor\(s\) do not have a team listed above/i,
+        ),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/do not have a team listed as a contributor/i),
+      ).not.toBeInTheDocument();
+    },
+  );
+
   it('when there are missing teams for both lab and author, the error is displayed and hidden accordingly', async () => {
     const { container } = render(
       <StaticRouter>
@@ -271,5 +341,70 @@ describe('ManuscriptForm team validation', () => {
     expect(container).not.toHaveTextContent(firstAuthorErrorMessage);
 
     expect(container).not.toHaveTextContent(labErrorMessage);
+  });
+
+  it('when two authors without team selected and a lab without team selected are added, when one of the authors is removed, the authors error still flags the remainingauthor', async () => {
+    const getLabSuggestionsMock = jest
+      .fn()
+      .mockResolvedValue([
+        { label: 'Lab One', value: 'lab-1', labPITeamIds: ['team-lab'] },
+      ]);
+
+    const { container } = render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          getTeamSuggestions={getTeamSuggestionsMock}
+          getLabSuggestions={getLabSuggestionsMock}
+          getAuthorSuggestions={getAuthorSuggestionsMock}
+        />
+      </StaticRouter>,
+    );
+
+    userEvent.click(screen.getByLabelText(/First Author/i));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.click(screen.getByText('Author A'));
+    userEvent.tab();
+
+    userEvent.click(screen.getByLabelText(/First Author/i));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    userEvent.click(screen.getByText('Author B'));
+    userEvent.tab();
+
+    userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+    await waitFor(() => {
+      expect(screen.getByText('Lab One')).toBeVisible();
+    });
+    userEvent.click(screen.getByText('Lab One'));
+    userEvent.tab();
+
+    expect(container).toHaveTextContent(
+      "The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added. • Author A • Author B The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added. • Lab One",
+    );
+
+    expect(container).toHaveTextContent(
+      'The following first author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Author A • Author B',
+    );
+
+    expect(container).toHaveTextContent(
+      "The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Lab One",
+    );
+
+    userEvent.click(screen.getByLabelText('Remove Author A'));
+    userEvent.tab();
+
+    expect(container).toHaveTextContent(
+      'The following first author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Author B',
+    );
+
+    expect(container).not.toHaveTextContent(
+      'Please select at least one author.',
+    );
   });
 });

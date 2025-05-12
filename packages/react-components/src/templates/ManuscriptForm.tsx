@@ -571,6 +571,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       'author' in correspondingAuthorValue &&
       correspondingAuthorValue.author &&
       'teams' in correspondingAuthorValue.author &&
+      correspondingAuthorValue.author.teams.length > 0 &&
       correspondingAuthorValue.author.teams.every(
         (team) => !teamFormIds.includes(team.id),
       )

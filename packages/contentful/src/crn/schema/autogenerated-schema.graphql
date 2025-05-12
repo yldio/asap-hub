@@ -1774,6 +1774,8 @@ enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
+  originalVersionId_ASC
+  originalVersionId_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
@@ -1784,12 +1786,6 @@ enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   protocolsDeposited_DESC
   publicationDoi_ASC
   publicationDoi_DESC
-  requestingApcCoverage_ASC
-  requestingApcCoverage_DESC
-  submissionDate_ASC
-  submissionDate_DESC
-  submitterName_ASC
-  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2301,6 +2297,7 @@ enum IconOrder {
 }
 
 enum ImageFormat {
+  """AVIF image format."""
   AVIF
   """JPG image format."""
   JPG
@@ -2874,6 +2871,8 @@ enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
+  originalVersionId_ASC
+  originalVersionId_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
@@ -2884,12 +2883,6 @@ enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   protocolsDeposited_DESC
   publicationDoi_ASC
   publicationDoi_DESC
-  requestingApcCoverage_ASC
-  requestingApcCoverage_DESC
-  submissionDate_ASC
-  submissionDate_DESC
-  submitterName_ASC
-  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3065,14 +3058,13 @@ type ManuscriptVersions implements Entry & _Node {
   manuscriptFile(locale: String, preview: Boolean): Asset
   manuscriptLicense(locale: String): String
   manuscriptLicenseDetails(locale: String): String
+  originalVersionId(locale: String): String
   otherDetails(locale: String): String
   preprintDoi(locale: String): String
   protocolsDeposited(locale: String): String
   protocolsDepositedDetails(locale: String): String
   publicationDoi(locale: String): String
-  requestingApcCoverage(locale: String): String
-  submissionDate(locale: String): DateTime
-  submitterName(locale: String): String
+  shortDescription(locale: String): String
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptVersionsTeamsCollection
   type(locale: String): String
@@ -3284,6 +3276,13 @@ input ManuscriptVersionsFilter {
   manuscriptLicense_not: String
   manuscriptLicense_not_contains: String
   manuscriptLicense_not_in: [String]
+  originalVersionId: String
+  originalVersionId_contains: String
+  originalVersionId_exists: Boolean
+  originalVersionId_in: [String]
+  originalVersionId_not: String
+  originalVersionId_not_contains: String
+  originalVersionId_not_in: [String]
   otherDetails: String
   otherDetails_contains: String
   otherDetails_exists: Boolean
@@ -3319,29 +3318,13 @@ input ManuscriptVersionsFilter {
   publicationDoi_not: String
   publicationDoi_not_contains: String
   publicationDoi_not_in: [String]
-  requestingApcCoverage: String
-  requestingApcCoverage_contains: String
-  requestingApcCoverage_exists: Boolean
-  requestingApcCoverage_in: [String]
-  requestingApcCoverage_not: String
-  requestingApcCoverage_not_contains: String
-  requestingApcCoverage_not_in: [String]
-  submissionDate: DateTime
-  submissionDate_exists: Boolean
-  submissionDate_gt: DateTime
-  submissionDate_gte: DateTime
-  submissionDate_in: [DateTime]
-  submissionDate_lt: DateTime
-  submissionDate_lte: DateTime
-  submissionDate_not: DateTime
-  submissionDate_not_in: [DateTime]
-  submitterName: String
-  submitterName_contains: String
-  submitterName_exists: Boolean
-  submitterName_in: [String]
-  submitterName_not: String
-  submitterName_not_contains: String
-  submitterName_not_in: [String]
+  shortDescription: String
+  shortDescription_contains: String
+  shortDescription_exists: Boolean
+  shortDescription_in: [String]
+  shortDescription_not: String
+  shortDescription_not_contains: String
+  shortDescription_not_in: [String]
   sys: SysFilter
   teams: cfTeamsNestedFilter
   teamsCollection_exists: Boolean
@@ -3485,6 +3468,8 @@ enum ManuscriptVersionsOrder {
   manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
+  originalVersionId_ASC
+  originalVersionId_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
@@ -3495,12 +3480,6 @@ enum ManuscriptVersionsOrder {
   protocolsDeposited_DESC
   publicationDoi_ASC
   publicationDoi_DESC
-  requestingApcCoverage_ASC
-  requestingApcCoverage_DESC
-  submissionDate_ASC
-  submissionDate_DESC
-  submitterName_ASC
-  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3846,6 +3825,8 @@ enum ManuscriptsVersionsCollectionOrder {
   manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
+  originalVersionId_ASC
+  originalVersionId_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
@@ -3856,12 +3837,6 @@ enum ManuscriptsVersionsCollectionOrder {
   protocolsDeposited_DESC
   publicationDoi_ASC
   publicationDoi_DESC
-  requestingApcCoverage_ASC
-  requestingApcCoverage_DESC
-  submissionDate_ASC
-  submissionDate_DESC
-  submitterName_ASC
-  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -6239,6 +6214,8 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
+  originalVersionId_ASC
+  originalVersionId_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
@@ -6249,12 +6226,6 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   protocolsDeposited_DESC
   publicationDoi_ASC
   publicationDoi_DESC
-  requestingApcCoverage_ASC
-  requestingApcCoverage_DESC
-  submissionDate_ASC
-  submissionDate_DESC
-  submitterName_ASC
-  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -7365,6 +7336,8 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   manuscriptLicenseDetails_DESC
   manuscriptLicense_ASC
   manuscriptLicense_DESC
+  originalVersionId_ASC
+  originalVersionId_DESC
   otherDetails_ASC
   otherDetails_DESC
   preprintDoi_ASC
@@ -7375,12 +7348,6 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   protocolsDeposited_DESC
   publicationDoi_ASC
   publicationDoi_DESC
-  requestingApcCoverage_ASC
-  requestingApcCoverage_DESC
-  submissionDate_ASC
-  submissionDate_DESC
-  submitterName_ASC
-  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -8687,6 +8654,13 @@ input cfManuscriptVersionsNestedFilter {
   manuscriptLicense_not: String
   manuscriptLicense_not_contains: String
   manuscriptLicense_not_in: [String]
+  originalVersionId: String
+  originalVersionId_contains: String
+  originalVersionId_exists: Boolean
+  originalVersionId_in: [String]
+  originalVersionId_not: String
+  originalVersionId_not_contains: String
+  originalVersionId_not_in: [String]
   otherDetails: String
   otherDetails_contains: String
   otherDetails_exists: Boolean
@@ -8722,29 +8696,13 @@ input cfManuscriptVersionsNestedFilter {
   publicationDoi_not: String
   publicationDoi_not_contains: String
   publicationDoi_not_in: [String]
-  requestingApcCoverage: String
-  requestingApcCoverage_contains: String
-  requestingApcCoverage_exists: Boolean
-  requestingApcCoverage_in: [String]
-  requestingApcCoverage_not: String
-  requestingApcCoverage_not_contains: String
-  requestingApcCoverage_not_in: [String]
-  submissionDate: DateTime
-  submissionDate_exists: Boolean
-  submissionDate_gt: DateTime
-  submissionDate_gte: DateTime
-  submissionDate_in: [DateTime]
-  submissionDate_lt: DateTime
-  submissionDate_lte: DateTime
-  submissionDate_not: DateTime
-  submissionDate_not_in: [DateTime]
-  submitterName: String
-  submitterName_contains: String
-  submitterName_exists: Boolean
-  submitterName_in: [String]
-  submitterName_not: String
-  submitterName_not_contains: String
-  submitterName_not_in: [String]
+  shortDescription: String
+  shortDescription_contains: String
+  shortDescription_exists: Boolean
+  shortDescription_in: [String]
+  shortDescription_not: String
+  shortDescription_not_contains: String
+  shortDescription_not_in: [String]
   sys: SysFilter
   teamsCollection_exists: Boolean
   type: String

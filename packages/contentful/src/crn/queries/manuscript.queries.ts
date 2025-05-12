@@ -27,7 +27,7 @@ export const manuscriptContentQueryFragment = gql`
         }
       }
     }
-    versionsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
+    versionsCollection(limit: 10, order: sys_firstPublishedAt_DESC) {
       items {
         sys {
           id
@@ -178,6 +178,15 @@ export const manuscriptContentQueryFragment = gql`
               lastName
               nickname
               email
+              teamsCollection(limit: 3) {
+                items {
+                  team {
+                    sys {
+                      id
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -202,6 +211,15 @@ export const manuscriptContentQueryFragment = gql`
               lastName
               nickname
               email
+              teamsCollection(limit: 3) {
+                items {
+                  team {
+                    sys {
+                      id
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -226,6 +244,15 @@ export const manuscriptContentQueryFragment = gql`
               lastName
               nickname
               email
+              teamsCollection(limit: 3) {
+                items {
+                  team {
+                    sys {
+                      id
+                    }
+                  }
+                }
+              }
             }
           }
         }

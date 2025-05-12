@@ -557,6 +557,10 @@ const parseGraphqlAuthor = (
           author.nickname || '',
         ),
         avatarUrl: author.avatar?.url || undefined,
+        teams:
+          author.teamsCollection?.items.map((teamItem) => ({
+            id: teamItem?.team?.sys.id || '',
+          })) || [],
       };
     }
 

@@ -344,7 +344,7 @@ describe('ManuscriptForm team validation', () => {
   });
 
   it('when two authors without team selected and a lab without team selected are added, when one of the authors is removed, the authors error still flags the remainingauthor', async () => {
-    const getLabSuggestionsMock = jest
+    const getLabWithUniqueTeamSuggestionsMock = jest
       .fn()
       .mockResolvedValue([
         { label: 'Lab One', value: 'lab-1', labPITeamIds: ['team-lab'] },
@@ -355,7 +355,7 @@ describe('ManuscriptForm team validation', () => {
         <ManuscriptForm
           {...defaultProps}
           getTeamSuggestions={getTeamSuggestionsMock}
-          getLabSuggestions={getLabSuggestionsMock}
+          getLabSuggestions={getLabWithUniqueTeamSuggestionsMock}
           getAuthorSuggestions={getAuthorSuggestionsMock}
         />
       </StaticRouter>,

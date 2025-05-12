@@ -80,6 +80,7 @@ const ManuscriptAuthors = ({
           fieldState: { error },
         }) => (
           <AuthorSelect
+            useDefaultErrorMessage={false}
             isMulti={isMultiSelect}
             customValidationMessage={error?.message}
             // This extra Boolean(error?.message) is necessary

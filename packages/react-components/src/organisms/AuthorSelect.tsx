@@ -85,20 +85,21 @@ export type AuthorOption = {
 
 type AuthorSelectProps = LabeledMultiSelectProps<AuthorOption, boolean> & {
   externalLabel?: string;
+  useDefaultErrorMessage?: boolean;
 };
 
 const AuthorSelect: React.FC<AuthorSelectProps> = ({
   externalLabel = 'Non CRN',
   isMulti,
   creatable = true,
-  customValidationMessage,
+  useDefaultErrorMessage = true,
   ...props
 }) => (
   <LabeledMultiSelect<AuthorOption, boolean>
     {...props}
-    {...(customValidationMessage
-      ? { customValidationMessage }
-      : { getValidationMessage: () => 'Please select at least one author.' })}
+    {...(useDefaultErrorMessage
+      ? { getValidationMessage: () => 'Please select at least one author.' }
+      : {})}
     isMulti={isMulti}
     creatable={creatable}
     components={{

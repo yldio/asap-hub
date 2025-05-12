@@ -518,7 +518,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
   const validateFirstAuthors = () => {
     const firstAuthorsValues = watch('versions.0.firstAuthors');
-    console.log('firstAuthorsValues', firstAuthorsValues);
     const teamsValues = watch('versions.0.teams');
     const teamFormIds = teamsValues.map((team) => team.value);
 

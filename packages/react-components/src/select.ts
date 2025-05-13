@@ -187,7 +187,7 @@ export const reactMultiSelectStyles = <
 
     borderStyle: 'solid',
     borderWidth: `${borderWidth}px`,
-    borderColor: steel.rgb,
+    borderColor: isInvalid ? tin.rgba : steel.rgb,
     borderRadius: `${18 / perRem}em`,
     backgroundColor: paper.rgb,
   }),

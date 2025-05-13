@@ -187,7 +187,6 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log('timeout running');
       if (myRef.current) {
         window.scrollTo({
           top: myRef.current.offsetTop,

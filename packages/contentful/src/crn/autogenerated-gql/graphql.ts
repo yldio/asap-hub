@@ -2482,6 +2482,8 @@ export enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
@@ -2492,12 +2494,6 @@ export enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
   PublicationDoiDesc = 'publicationDoi_DESC',
-  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
-  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
-  SubmissionDateAsc = 'submissionDate_ASC',
-  SubmissionDateDesc = 'submissionDate_DESC',
-  SubmitterNameAsc = 'submitterName_ASC',
-  SubmitterNameDesc = 'submitterName_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3194,6 +3190,7 @@ export enum IconOrder {
 }
 
 export enum ImageFormat {
+  /** AVIF image format. */
   Avif = 'AVIF',
   /** JPG image format. */
   Jpg = 'JPG',
@@ -3995,6 +3992,8 @@ export enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
@@ -4005,12 +4004,6 @@ export enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
   PublicationDoiDesc = 'publicationDoi_DESC',
-  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
-  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
-  SubmissionDateAsc = 'submissionDate_ASC',
-  SubmissionDateDesc = 'submissionDate_DESC',
-  SubmitterNameAsc = 'submitterName_ASC',
-  SubmitterNameDesc = 'submitterName_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4187,14 +4180,13 @@ export type ManuscriptVersions = Entry &
     manuscriptFile?: Maybe<Asset>;
     manuscriptLicense?: Maybe<Scalars['String']>;
     manuscriptLicenseDetails?: Maybe<Scalars['String']>;
+    originalVersionId?: Maybe<Scalars['String']>;
     otherDetails?: Maybe<Scalars['String']>;
     preprintDoi?: Maybe<Scalars['String']>;
     protocolsDeposited?: Maybe<Scalars['String']>;
     protocolsDepositedDetails?: Maybe<Scalars['String']>;
     publicationDoi?: Maybe<Scalars['String']>;
-    requestingApcCoverage?: Maybe<Scalars['String']>;
-    submissionDate?: Maybe<Scalars['DateTime']>;
-    submitterName?: Maybe<Scalars['String']>;
+    shortDescription?: Maybe<Scalars['String']>;
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptVersionsTeamsCollection>;
     type?: Maybe<Scalars['String']>;
@@ -4356,6 +4348,11 @@ export type ManuscriptVersionsManuscriptLicenseDetailsArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsOriginalVersionIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsOtherDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -4381,17 +4378,7 @@ export type ManuscriptVersionsPublicationDoiArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
-export type ManuscriptVersionsRequestingApcCoverageArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
-export type ManuscriptVersionsSubmissionDateArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
-export type ManuscriptVersionsSubmitterNameArgs = {
+export type ManuscriptVersionsShortDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -4662,6 +4649,13 @@ export type ManuscriptVersionsFilter = {
   manuscriptLicense_not?: InputMaybe<Scalars['String']>;
   manuscriptLicense_not_contains?: InputMaybe<Scalars['String']>;
   manuscriptLicense_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  originalVersionId?: InputMaybe<Scalars['String']>;
+  originalVersionId_contains?: InputMaybe<Scalars['String']>;
+  originalVersionId_exists?: InputMaybe<Scalars['Boolean']>;
+  originalVersionId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  originalVersionId_not?: InputMaybe<Scalars['String']>;
+  originalVersionId_not_contains?: InputMaybe<Scalars['String']>;
+  originalVersionId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   otherDetails?: InputMaybe<Scalars['String']>;
   otherDetails_contains?: InputMaybe<Scalars['String']>;
   otherDetails_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4701,31 +4695,13 @@ export type ManuscriptVersionsFilter = {
   publicationDoi_not?: InputMaybe<Scalars['String']>;
   publicationDoi_not_contains?: InputMaybe<Scalars['String']>;
   publicationDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  requestingApcCoverage?: InputMaybe<Scalars['String']>;
-  requestingApcCoverage_contains?: InputMaybe<Scalars['String']>;
-  requestingApcCoverage_exists?: InputMaybe<Scalars['Boolean']>;
-  requestingApcCoverage_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  requestingApcCoverage_not?: InputMaybe<Scalars['String']>;
-  requestingApcCoverage_not_contains?: InputMaybe<Scalars['String']>;
-  requestingApcCoverage_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  submissionDate?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_exists?: InputMaybe<Scalars['Boolean']>;
-  submissionDate_gt?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_gte?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  submissionDate_lt?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_lte?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_not?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  submitterName?: InputMaybe<Scalars['String']>;
-  submitterName_contains?: InputMaybe<Scalars['String']>;
-  submitterName_exists?: InputMaybe<Scalars['Boolean']>;
-  submitterName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  submitterName_not?: InputMaybe<Scalars['String']>;
-  submitterName_not_contains?: InputMaybe<Scalars['String']>;
-  submitterName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   teams?: InputMaybe<CfTeamsNestedFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4901,6 +4877,8 @@ export enum ManuscriptVersionsOrder {
   ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
@@ -4911,12 +4889,6 @@ export enum ManuscriptVersionsOrder {
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
   PublicationDoiDesc = 'publicationDoi_DESC',
-  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
-  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
-  SubmissionDateAsc = 'submissionDate_ASC',
-  SubmissionDateDesc = 'submissionDate_DESC',
-  SubmitterNameAsc = 'submitterName_ASC',
-  SubmitterNameDesc = 'submitterName_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5375,6 +5347,8 @@ export enum ManuscriptsVersionsCollectionOrder {
   ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
@@ -5385,12 +5359,6 @@ export enum ManuscriptsVersionsCollectionOrder {
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
   PublicationDoiDesc = 'publicationDoi_DESC',
-  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
-  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
-  SubmissionDateAsc = 'submissionDate_ASC',
-  SubmissionDateDesc = 'submissionDate_DESC',
-  SubmitterNameAsc = 'submitterName_ASC',
-  SubmitterNameDesc = 'submitterName_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -9347,6 +9315,8 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
@@ -9357,12 +9327,6 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
   PublicationDoiDesc = 'publicationDoi_DESC',
-  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
-  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
-  SubmissionDateAsc = 'submissionDate_ASC',
-  SubmissionDateDesc = 'submissionDate_DESC',
-  SubmitterNameAsc = 'submitterName_ASC',
-  SubmitterNameDesc = 'submitterName_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -11019,6 +10983,8 @@ export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
@@ -11029,12 +10995,6 @@ export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
   PublicationDoiDesc = 'publicationDoi_DESC',
-  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
-  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
-  SubmissionDateAsc = 'submissionDate_ASC',
-  SubmissionDateDesc = 'submissionDate_DESC',
-  SubmitterNameAsc = 'submitterName_ASC',
-  SubmitterNameDesc = 'submitterName_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -12598,6 +12558,13 @@ export type CfManuscriptVersionsNestedFilter = {
   manuscriptLicense_not?: InputMaybe<Scalars['String']>;
   manuscriptLicense_not_contains?: InputMaybe<Scalars['String']>;
   manuscriptLicense_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  originalVersionId?: InputMaybe<Scalars['String']>;
+  originalVersionId_contains?: InputMaybe<Scalars['String']>;
+  originalVersionId_exists?: InputMaybe<Scalars['Boolean']>;
+  originalVersionId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  originalVersionId_not?: InputMaybe<Scalars['String']>;
+  originalVersionId_not_contains?: InputMaybe<Scalars['String']>;
+  originalVersionId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   otherDetails?: InputMaybe<Scalars['String']>;
   otherDetails_contains?: InputMaybe<Scalars['String']>;
   otherDetails_exists?: InputMaybe<Scalars['Boolean']>;
@@ -12637,31 +12604,13 @@ export type CfManuscriptVersionsNestedFilter = {
   publicationDoi_not?: InputMaybe<Scalars['String']>;
   publicationDoi_not_contains?: InputMaybe<Scalars['String']>;
   publicationDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  requestingApcCoverage?: InputMaybe<Scalars['String']>;
-  requestingApcCoverage_contains?: InputMaybe<Scalars['String']>;
-  requestingApcCoverage_exists?: InputMaybe<Scalars['Boolean']>;
-  requestingApcCoverage_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  requestingApcCoverage_not?: InputMaybe<Scalars['String']>;
-  requestingApcCoverage_not_contains?: InputMaybe<Scalars['String']>;
-  requestingApcCoverage_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  submissionDate?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_exists?: InputMaybe<Scalars['Boolean']>;
-  submissionDate_gt?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_gte?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  submissionDate_lt?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_lte?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_not?: InputMaybe<Scalars['DateTime']>;
-  submissionDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  submitterName?: InputMaybe<Scalars['String']>;
-  submitterName_contains?: InputMaybe<Scalars['String']>;
-  submitterName_exists?: InputMaybe<Scalars['Boolean']>;
-  submitterName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  submitterName_not?: InputMaybe<Scalars['String']>;
-  submitterName_not_contains?: InputMaybe<Scalars['String']>;
-  submitterName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   type?: InputMaybe<Scalars['String']>;
@@ -18655,6 +18604,11 @@ export type ManuscriptsContentFragment = Pick<
                   > & {
                       sys: Pick<Sys, 'id'>;
                       avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{ team?: Maybe<{ sys: Pick<Sys, 'id'> }> }>
+                        >;
+                      }>;
                     })
               >
             >;
@@ -18672,6 +18626,11 @@ export type ManuscriptsContentFragment = Pick<
                   > & {
                       sys: Pick<Sys, 'id'>;
                       avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{ team?: Maybe<{ sys: Pick<Sys, 'id'> }> }>
+                        >;
+                      }>;
                     })
               >
             >;
@@ -18689,6 +18648,11 @@ export type ManuscriptsContentFragment = Pick<
                   > & {
                       sys: Pick<Sys, 'id'>;
                       avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{ team?: Maybe<{ sys: Pick<Sys, 'id'> }> }>
+                        >;
+                      }>;
                     })
               >
             >;
@@ -18960,6 +18924,11 @@ export type FetchManuscriptByIdQuery = {
                       > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{ team?: Maybe<{ sys: Pick<Sys, 'id'> }> }>
+                            >;
+                          }>;
                         })
                   >
                 >;
@@ -18977,6 +18946,11 @@ export type FetchManuscriptByIdQuery = {
                       > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{ team?: Maybe<{ sys: Pick<Sys, 'id'> }> }>
+                            >;
+                          }>;
                         })
                   >
                 >;
@@ -18994,6 +18968,11 @@ export type FetchManuscriptByIdQuery = {
                       > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{ team?: Maybe<{ sys: Pick<Sys, 'id'> }> }>
+                            >;
+                          }>;
                         })
                   >
                 >;
@@ -21335,6 +21314,15 @@ export type FetchTeamByIdQuery = {
                                 > & {
                                     sys: Pick<Sys, 'id'>;
                                     avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<{
+                                            sys: Pick<Sys, 'id'>;
+                                          }>;
+                                        }>
+                                      >;
+                                    }>;
                                   })
                             >
                           >;
@@ -21355,6 +21343,15 @@ export type FetchTeamByIdQuery = {
                                 > & {
                                     sys: Pick<Sys, 'id'>;
                                     avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<{
+                                            sys: Pick<Sys, 'id'>;
+                                          }>;
+                                        }>
+                                      >;
+                                    }>;
                                   })
                             >
                           >;
@@ -21375,6 +21372,15 @@ export type FetchTeamByIdQuery = {
                                 > & {
                                     sys: Pick<Sys, 'id'>;
                                     avatar?: Maybe<Pick<Asset, 'url'>>;
+                                    teamsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<{
+                                          team?: Maybe<{
+                                            sys: Pick<Sys, 'id'>;
+                                          }>;
+                                        }>
+                                      >;
+                                    }>;
                                   })
                             >
                           >;
@@ -26257,6 +26263,74 @@ export const ManuscriptsContentFragmentDoc = {
                                             value: 'email',
                                           },
                                         },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'teamsCollection',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'limit',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '3',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'items',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'team',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'sys',
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value: 'id',
+                                                                  },
+                                                                },
+                                                              ],
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
                                       ],
                                     },
                                   },
@@ -26406,6 +26480,74 @@ export const ManuscriptsContentFragmentDoc = {
                                             value: 'email',
                                           },
                                         },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'teamsCollection',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'limit',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '3',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'items',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'team',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'sys',
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value: 'id',
+                                                                  },
+                                                                },
+                                                              ],
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
                                       ],
                                     },
                                   },
@@ -26553,6 +26695,74 @@ export const ManuscriptsContentFragmentDoc = {
                                           name: {
                                             kind: 'Name',
                                             value: 'email',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'teamsCollection',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'limit',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '3',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'items',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'team',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'sys',
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value: 'id',
+                                                                  },
+                                                                },
+                                                              ],
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
                                           },
                                         },
                                       ],

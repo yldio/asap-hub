@@ -1142,6 +1142,16 @@ describe('Manuscripts Contentful Data Provider', () => {
             lastName: 'Additional',
             nickname: null,
             email: 'adele.additional@email.com',
+            teamsCollection: {
+              items: [
+                {
+                  team: { sys: { id: 'team-adele-1' } },
+                },
+                {
+                  team: { sys: { id: 'team-adele-2' } },
+                },
+              ],
+            },
           },
           {
             __typename: 'ExternalAuthors',
@@ -1166,6 +1176,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           firstName: 'Fiona',
           id: 'user-id-1',
           lastName: 'First',
+          teams: [],
         },
         {
           displayName: 'First External',
@@ -1182,6 +1193,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           firstName: 'Connor',
           id: 'corresponding-id-1',
           lastName: 'Corresponding',
+          teams: [],
         },
       ]);
 
@@ -1193,6 +1205,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           firstName: 'Adele',
           id: 'additional-id-1',
           lastName: 'Additional',
+          teams: [{ id: 'team-adele-1' }, { id: 'team-adele-2' }],
         },
         {
           displayName: 'Second External',

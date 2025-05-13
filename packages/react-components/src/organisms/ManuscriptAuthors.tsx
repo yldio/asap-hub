@@ -25,6 +25,7 @@ type ManuscriptAuthorsProps = {
   isMultiSelect?: ComponentProps<typeof AuthorSelect>['isMulti'];
   isRequired?: boolean;
   trigger: UseFormTrigger<ManuscriptFormData>;
+  validate?: () => void;
 };
 
 export type ManuscriptAuthorOption = {
@@ -41,6 +42,7 @@ const ManuscriptAuthors = ({
   getValues,
   isSubmitting,
   trigger,
+  validate,
   isMultiSelect = false,
   isRequired = false,
 }: ManuscriptAuthorsProps) => {
@@ -78,6 +80,7 @@ const ManuscriptAuthors = ({
           fieldState: { error },
         }) => (
           <AuthorSelect
+            useDefaultErrorMessage={false}
             isMulti={isMultiSelect}
             customValidationMessage={error?.message}
             // This extra Boolean(error?.message) is necessary
@@ -164,6 +167,10 @@ const ManuscriptAuthors = ({
                 (
                   onChange as (newValues: ManuscriptAuthorOption | null) => void
                 )(newAuthors as ManuscriptAuthorOption | null);
+              }
+
+              if (validate) {
+                validate();
               }
             }}
             values={authors || []}

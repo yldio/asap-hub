@@ -73,7 +73,7 @@ const ConfirmStatusChangeModal: React.FC<ConfirmStatusChangeModalProps> = ({
     : 'Update status and notify?';
 
   const content = isClosedOrCompliant
-    ? `After you update the status to ${newStatus.toLowerCase()}, this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to the CMS admin. Additionally, setting the status to ${newStatus.toLowerCase()} will make the correspondent members receive a reminder on the CRN Hub and/or an email with the latest updates.`
+    ? `After you update the status to ${newStatus.toLowerCase()}, this change will be permanent and cannot be altered. If you need to make changes in the future, please reach out to Tech Support. Additionally, setting the status to ${newStatus.toLowerCase()} will end all discussions, meaning no further replies will be possible. Also the correspondent members will receive a reminder on the CRN Hub and/or an email with the latest updates.`
     : 'By updating the compliance status, the correspondent members on teams and labs will receive a reminder on the CRN Hub and/or an email with the latest updates.';
 
   const confirmButtonText = isClosedOrCompliant

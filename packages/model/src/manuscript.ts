@@ -779,22 +779,22 @@ export const asapFundingReasons = [
   {
     field: 'projects',
     reason:
-      'The manuscript contains projects that are listed as part of the team’s ASAP-funded proposal.',
+      'The manuscript reports findings from your team’s ASAP-funded proposal.',
   },
   {
     field: 'method-or-resource',
     reason:
-      'The manuscript describes a method or resource that enables the team’s ASAP-funded proposal.',
+      'The manuscript reports a method or resource that enables your team’s ASAP-funded proposal.',
   },
   {
     field: 'pivot',
     reason:
-      'The manuscript resulted from a pivot that was made as part of the team’s ASAP-funded proposal.',
+      'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
   },
   {
     field: 'leadership',
     reason:
-      'The manuscript is a thought leadership piece (review, communication, letter) pertaining to knowledge gaps in the field that the ASAP-funded proposal was addressing.',
+      'The manuscript is a thought leadership piece (review, communication, letter) on the topic that the ASAP-funded proposal aims to address.',
   },
 ];
 

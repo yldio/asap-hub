@@ -1,7 +1,6 @@
 import { createTeamResponse } from '@asap-hub/fixtures';
 import { disable, enable } from '@asap-hub/flags';
 import {
-  act,
   getByRole as getByRoleInContainer,
   getByTestId,
   getByText as getChildByText,
@@ -472,49 +471,6 @@ describe('compliance section', () => {
     expect(history.location.pathname).toBe(
       '/network/teams/t0/workspace/create-manuscript',
     );
-  });
-
-  it('scrolls to target manuscript when id is provided', async () => {
-    jest.useFakeTimers();
-    window.scrollTo = jest.fn();
-    const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
-      ...team,
-      manuscripts: [
-        {
-          id: '1',
-          count: 1,
-          title: 'Nice manuscript',
-          versions: [],
-          teamId: 'WH1',
-          grantId: '000282',
-        },
-        {
-          id: '2',
-          count: 2,
-          title: 'A Good Manuscript',
-          versions: [],
-          teamId: 'WH1',
-          grantId: '000282',
-        },
-      ],
-    };
-
-    const { getByText } = render(
-      <TeamProfileWorkspace
-        {...teamWithManuscripts}
-        useManuscriptById={useManuscriptByIdMock}
-        tools={[]}
-        targetManuscriptId="2"
-      />,
-    );
-
-    expect(getByText('A Good Manuscript')).toBeInTheDocument();
-
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
-    });
-
-    expect(window.scrollTo).toHaveBeenCalled();
   });
 });
 

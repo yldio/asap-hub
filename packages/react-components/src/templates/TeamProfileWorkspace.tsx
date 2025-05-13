@@ -3,7 +3,7 @@ import { ManuscriptDataObject, TeamResponse, TeamTool } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { ComponentProps, useEffect, useRef, useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -155,7 +155,6 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
-  const myRef = useRef<HTMLDivElement>(null);
   const user = useCurrentUserCRN();
 
   const {
@@ -184,20 +183,6 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   const handleGoToManuscriptForm = () => {
     history.push(manuscriptRoute);
   };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (myRef.current) {
-        window.scrollTo({
-          top: myRef.current.offsetTop,
-          behavior: 'smooth',
-        });
-        window.history.replaceState({}, '', window.location.pathname);
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <div css={containerStyles}>
@@ -241,12 +226,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                   </Paragraph>
                   <div>
                     {manuscripts.map((manuscript) => (
-                      <div
-                        key={manuscript.id}
-                        ref={
-                          manuscript.id === targetManuscriptId ? myRef : null
-                        }
-                      >
+                      <div key={manuscript.id}>
                         <ManuscriptCard
                           id={manuscript.id}
                           user={user}

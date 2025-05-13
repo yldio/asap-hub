@@ -12,7 +12,7 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css, Theme } from '@emotion/react';
-import { ComponentProps, useRef, useState } from 'react';
+import { ComponentProps, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DiscussionsTab } from '.';
 import {
@@ -242,6 +242,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   const { title, status, versions } = manuscript ?? { versions: [] };
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
+  const targetManuscriptRef = useRef<HTMLDivElement>(null);
 
   const [expanded, setExpanded] = useState(targetManuscriptId === id);
   const [showMore, setShowMore] = useState(false);
@@ -305,6 +306,20 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       ? manuscript?.discussions.some((discussion) => !discussion.read)
       : false;
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (targetManuscriptId && targetManuscriptRef.current) {
+        window.scrollTo({
+          top: targetManuscriptRef.current.offsetTop,
+          behavior: 'smooth',
+        });
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [targetManuscriptId]);
+
   return (
     <>
       {displayConfirmStatusChangeModal && newSelectedStatus && (
@@ -314,7 +329,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           newStatus={newSelectedStatus}
         />
       )}
-      <div css={manuscriptContainerStyles}>
+      <div css={manuscriptContainerStyles} ref={targetManuscriptRef}>
         <div css={[toastStyles]}>
           <span css={[iconStyles]}>
             <Button

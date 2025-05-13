@@ -35,7 +35,7 @@ export type AccentVariant =
   | 'gray'
   | 'blue';
 
-export const accents: Record<AccentVariant, CSSObject> = {
+export const accents = (isLink: boolean): Record<AccentVariant, CSSObject> => ({
   default: {
     backgroundColor: 'transparent',
     borderColor: colors.steel.rgb,
@@ -80,14 +80,23 @@ export const accents: Record<AccentVariant, CSSObject> = {
     color: colors.info500.rgb,
     backgroundColor: colors.info100.rgb,
     border: 'transparent',
+    ...(isLink
+      ? {
+          ':hover': {
+            color: colors.info900.rgb,
+            backgroundColor: 'rgba(207, 237, 251, 1)',
+          },
+        }
+      : {}),
   },
-};
+});
 
 type PillProps = {
   readonly children?: React.ReactNode;
   readonly small?: boolean;
   readonly accent?: AccentVariant;
   readonly numberOfLines?: number;
+  readonly isLink?: boolean;
 };
 
 const Pill: React.FC<PillProps> = ({
@@ -95,12 +104,13 @@ const Pill: React.FC<PillProps> = ({
   small = true,
   accent = 'default',
   numberOfLines = 1,
+  isLink = false,
 }) => (
   <span
     css={({ components }) => [
       styles,
       components?.Pill?.styles,
-      accents[accent],
+      accents(isLink)[accent],
       ...(accent === 'gray' || accent === 'blue' ? [modernStyles] : []),
     ]}
   >

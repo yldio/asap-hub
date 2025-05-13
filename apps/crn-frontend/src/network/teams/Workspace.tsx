@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { useRouteMatch, Route } from 'react-router-dom';
+import { useRouteMatch, Route, useLocation } from 'react-router-dom';
 import {
   NotFoundPage,
   TeamProfileWorkspace,
@@ -75,6 +75,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+  const { hash: targetManuscript } = useLocation();
 
   return (
     <>
@@ -127,6 +128,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           useManuscriptById={useManuscriptById}
           onReplyToDiscussion={handleReplytoDiscussion}
           onMarkDiscussionAsRead={handleMarkDiscussionAsRead}
+          targetManuscriptId={targetManuscript.slice(1)}
         />
       </Route>
       <Route exact path={path + route.tools.template}>

@@ -61,6 +61,7 @@ type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
       ManuscriptDataObject | undefined,
       React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
     ];
+    readonly targetManuscriptId?: string;
   };
 
 const manuscriptContainerStyles = css({
@@ -232,6 +233,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   useManuscriptById,
   onReplyToDiscussion,
   onMarkDiscussionAsRead,
+  targetManuscriptId,
 }) => {
   const [activeTab, setActiveTab] = useState<
     'manuscripts-and-reports' | 'discussions'
@@ -241,7 +243,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
 
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(targetManuscriptId === id);
   const [showMore, setShowMore] = useState(false);
 
   const [newSelectedStatus, setNewSelectedStatus] =

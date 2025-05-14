@@ -37,7 +37,7 @@ import {
 } from '..';
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
-import { ManuscriptFormModals } from '../organisms';
+import { ManuscriptFormModals, ShortDescriptionCard } from '../organisms';
 import { mobileScreen, rem } from '../pixels';
 
 const BIG_SPACE = '\u2004';
@@ -220,6 +220,7 @@ type ManuscriptFormProps = Omit<
   | 'keyResourceTable'
   | 'additionalFiles'
   | 'description'
+  | 'shortDescription'
   | 'count'
   | 'createdBy'
   | 'updatedBy'
@@ -236,8 +237,12 @@ type ManuscriptFormProps = Omit<
     keyResourceTable?: ManuscriptFileResponse;
     additionalFiles?: ManuscriptFileResponse[];
     description?: string | '';
+    shortDescription?: string | '';
     eligibilityReasons: Set<string>;
     resubmitManuscript?: boolean;
+    getShortDescriptionFromDescription: (
+      descriptionMD: string,
+    ) => Promise<string>;
     onCreate: (
       output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
@@ -316,11 +321,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   selectedLabs,
   getAuthorSuggestions,
   description,
+  shortDescription,
   firstAuthors,
   correspondingAuthor,
   additionalAuthors,
   resubmitManuscript = false,
   clearFormToast,
+  getShortDescriptionFromDescription,
 }) => {
   const [titleServerError, setTitleServerError] = useState<
     string | undefined
@@ -408,6 +415,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           teams: selectedTeams || [],
           labs: selectedLabs || [],
           description: description || '',
+          shortDescription: shortDescription || '',
           firstAuthors: firstAuthors || [],
           firstAuthorsEmails: [],
           correspondingAuthor: correspondingAuthor || [],
@@ -1278,6 +1286,28 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   value={value || ''}
                   onChange={onChange}
                   enabled={!isSubmitting}
+                />
+              )}
+            />
+
+            <Controller
+              name="versions.0.shortDescription"
+              control={control}
+              rules={{
+                required: 'Please enter the short description.',
+              }}
+              render={({ field: { value, onChange } }) => (
+                <ShortDescriptionCard
+                  buttonEnabled={!!watch('versions.0.description')}
+                  enabled={!isSubmitting}
+                  onChange={onChange}
+                  value={value}
+                  tip="Use AI to generate a short description or write your own based on the description field above."
+                  getShortDescription={() =>
+                    getShortDescriptionFromDescription(
+                      watch('versions.0.description'),
+                    )
+                  }
                 />
               )}
             />

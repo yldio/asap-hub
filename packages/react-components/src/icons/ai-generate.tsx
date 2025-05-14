@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-const info = (
+const aiGenerate = (
   <svg
     width="24"
     height="24"
@@ -18,4 +18,4 @@ const info = (
   </svg>
 );
 
-export default info;
+export default aiGenerate;

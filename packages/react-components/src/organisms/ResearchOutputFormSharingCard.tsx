@@ -21,7 +21,7 @@ import {
 } from '../molecules';
 import { noop } from '../utils';
 import { Markdown } from '../atoms/index';
-import OutputShortDescriptionCard from './OutputShortDescriptionCard';
+import ShortDescriptionCard from './ShortDescriptionCard';
 
 type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
@@ -219,7 +219,7 @@ const ResearchOutputFormSharingCard: React.FC<
           ></Markdown>
         }
       />
-      <OutputShortDescriptionCard
+      <ShortDescriptionCard
         onChange={onChangeShortDescription}
         buttonEnabled={descriptionMD.length > 0}
         enabled={!isSaving}

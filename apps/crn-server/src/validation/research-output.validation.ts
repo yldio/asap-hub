@@ -1,7 +1,6 @@
 import {
   FetchOptions,
   researchOutputDocumentTypes,
-  ResearchOutputGenerateContentRequest,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
@@ -375,25 +374,3 @@ export const validateResearchOutputPutRequestParameters = validateInput<
   skipNull: true,
   coerce: true,
 });
-
-const outputGenerateContentRequestValidationSchema: JSONSchemaType<ResearchOutputGenerateContentRequest> =
-  {
-    type: 'object',
-    properties: {
-      descriptionMD: {
-        type: 'string',
-        nullable: true,
-      },
-    },
-    required: [],
-    additionalProperties: false,
-  };
-
-export const validateResearchOutputGenerateContentRequestParameters =
-  validateInput<ResearchOutputGenerateContentRequest, true>(
-    outputGenerateContentRequestValidationSchema,
-    {
-      skipNull: true,
-      coerce: true,
-    },
-  );

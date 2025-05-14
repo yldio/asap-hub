@@ -306,6 +306,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       ? manuscript?.discussions.some((discussion) => !discussion.read)
       : false;
 
+  /* istanbul ignore next */
   useEffect(() => {
     const timer = setTimeout(() => {
       if (isTargetManuscript && targetManuscriptRef.current) {

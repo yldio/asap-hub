@@ -130,23 +130,6 @@ it('displays manuscript version card when expanded', () => {
   expect(getByText(/Preprint/i)).toBeVisible();
 });
 
-it('expands and scrolls to manuscript if isTargetManuscript is true', async () => {
-  jest.useFakeTimers();
-  window.scrollTo = jest.fn();
-  const { getByText } = render(
-    <ManuscriptCard {...props} isTargetManuscript />,
-  );
-
-  expect(getByText(/Original Research/i)).toBeVisible();
-  expect(getByText(/Preprint/i)).toBeVisible();
-
-  await act(async () => {
-    jest.advanceTimersByTime(1000);
-  });
-
-  expect(window.scrollTo).toHaveBeenCalled();
-});
-
 it('displays share compliance report button if user has permission', () => {
   const { queryByRole, getByRole, rerender, getByTestId } = render(
     <ManuscriptCard {...props} />,

@@ -131,6 +131,7 @@ type TeamProfileWorkspaceProps = Readonly<
       ManuscriptDataObject | undefined,
       React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
     ];
+    readonly targetManuscriptId?: string;
   };
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
@@ -150,6 +151,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   useManuscriptById,
   onReplyToDiscussion,
   onMarkDiscussionAsRead,
+  targetManuscriptId,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
@@ -236,6 +238,9 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           useManuscriptById={useManuscriptById}
                           onReplyToDiscussion={onReplyToDiscussion}
                           onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                          {...(manuscript.id === targetManuscriptId
+                            ? { isTargetManuscript: true }
+                            : {})}
                         />
                       </div>
                     ))}

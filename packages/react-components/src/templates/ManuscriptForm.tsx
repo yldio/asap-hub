@@ -22,7 +22,7 @@ import {
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import React, { ComponentProps, useEffect, useState } from 'react';
+import React, { ComponentProps, useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   AuthorSelect,
@@ -434,50 +434,42 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     setValue,
     setError,
     clearErrors,
-    reset,
     resetField,
     trigger,
+    formState,
   } = methods;
+
+  const { isValid } = formState;
 
   const watchType = watch('versions.0.type');
   const watchLifecycle = watch('versions.0.lifecycle');
 
-  useEffect(() => {
-    if (!watchType) {
-      setValue('versions.0.lifecycle', '');
-    }
-  }, [setValue, watchType]);
+  type AllowedVersionFields = `versions.0.${OptionalVersionFields[number]}`;
 
-  useEffect(() => {
-    if (watchType && watchLifecycle) {
+  const updateOptionalFields = useCallback(
+    (manuscriptType: string, lifecycleField: string) => {
+      if (!manuscriptType || !lifecycleField) return;
+
       const fieldsToReset = getFieldsToReset(
         optionalVersionFields,
-        watchType,
-        watchLifecycle,
+        manuscriptType as ManuscriptType,
+        lifecycleField as ManuscriptLifecycle,
       );
       const fieldDefaultValueMap = setDefaultFieldValues(fieldsToReset);
 
-      reset(
-        {
-          ...getValues(),
-          versions: [
-            {
-              ...getValues().versions[0],
-              ...fieldDefaultValueMap,
-              teams: selectedTeams,
-              labs: selectedLabs,
-              manuscriptFile: watch('versions.0.manuscriptFile'),
-              keyResourceTable: watch('versions.0.keyResourceTable'),
-              additionalFiles: watch('versions.0.additionalFiles'),
-            },
-          ],
-        },
-        { keepDefaultValues: true },
-      );
-    }
-    // TODO: when edit remove reset?
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getValues, reset, watchType, watchLifecycle, selectedTeams]);
+      // Instead of full form reset, selectively update fields
+      Object.entries(fieldDefaultValueMap).forEach(([field, value]) => {
+        setValue(`versions.0.${field}` as AllowedVersionFields, value, {
+          shouldValidate: false,
+        });
+      });
+
+      // Keep important values that shouldn't be reset
+      setValue('versions.0.teams', selectedTeams, { shouldValidate: false });
+      setValue('versions.0.labs', selectedLabs, { shouldValidate: false });
+    },
+    [setValue, selectedTeams, selectedLabs],
+  );
 
   const validateLabPiTeams = () => {
     const labs = watch('versions.0.labs');
@@ -848,7 +840,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 },
               }}
               render={({
-                field: { value, onChange },
+                field: { value, onChange, onBlur },
                 fieldState: { error },
               }) => (
                 <LabeledTextField
@@ -859,7 +851,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   onChange={(titleText) => {
                     setTitleServerError(undefined);
                     onChange(titleText);
+                    onBlur();
                   }}
+                  onBlur={onBlur}
                   enabled={!isSubmitting}
                 />
               )}
@@ -872,7 +866,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 required: 'Please select a type.',
               }}
               render={({
-                field: { value, onChange },
+                field: { value, onChange, onBlur },
                 fieldState: { error },
               }) => (
                 <LabeledDropdown<ManuscriptType | ''>
@@ -883,7 +877,15 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     value: option,
                     label: option,
                   }))}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    onChange(e);
+                    // Clear lifecycle when type changes to prevent mismatched states
+                    if (e !== watchType) {
+                      setValue('versions.0.lifecycle', '');
+                    }
+                    onBlur();
+                  }}
+                  onBlur={onBlur}
                   customValidationMessage={error?.message}
                   value={value}
                   enabled={!isEditMode && !isSubmitting}
@@ -903,7 +905,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   required: 'Please select an option.',
                 }}
                 render={({
-                  field: { value, onChange },
+                  field: { value, onChange, onBlur },
                   fieldState: { error },
                 }) => (
                   <LabeledDropdown<ManuscriptLifecycle | ''>
@@ -911,7 +913,18 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     subtitle="(required)"
                     description="Select the option that matches your manuscript the best."
                     options={lifecycleSuggestions}
-                    onChange={onChange}
+                    onChange={(lifecycleEvent) => {
+                      onChange(lifecycleEvent);
+                      // Update optional fields based on new selections
+                      if (watchType && lifecycleEvent) {
+                        updateOptionalFields(
+                          watchType as ManuscriptType,
+                          lifecycleEvent as ManuscriptLifecycle,
+                        );
+                      }
+                      onBlur();
+                    }}
+                    onBlur={onBlur}
                     customValidationMessage={error?.message}
                     value={value}
                     enabled={!isEditMode && !isSubmitting}
@@ -942,7 +955,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       'Please enter a Preprint DOI',
                   }}
                   render={({
-                    field: { value, onChange },
+                    field: { value, onChange, onBlur },
                     fieldState: { error },
                   }) => (
                     <LabeledTextField
@@ -953,7 +966,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           : '(optional)'
                       }
                       description="Your preprint DOI must start with 10."
-                      onChange={onChange}
+                      onChange={async (e) => {
+                        onChange(e);
+                        if (watchLifecycle === 'Preprint') {
+                          await trigger('versions.0.preprintDoi');
+                          onBlur();
+                        }
+                      }}
+                      onBlur={onBlur}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
                       enabled={!isEditMode && !isSubmitting}
@@ -979,14 +999,19 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     required: 'Please enter a Publication DOI',
                   }}
                   render={({
-                    field: { value, onChange },
+                    field: { value, onChange, onBlur },
                     fieldState: { error },
                   }) => (
                     <LabeledTextField
                       title="Publication DOI"
                       subtitle={'(required)'}
                       description="Your publication DOI must start with 10."
-                      onChange={onChange}
+                      onChange={async (e) => {
+                        onChange(e);
+                        await trigger('versions.0.publicationDoi');
+                        onBlur();
+                      }}
+                      onBlur={onBlur}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
                       enabled={!isEditMode && !isSubmitting}
@@ -1012,13 +1037,18 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     },
                   }}
                   render={({
-                    field: { value, onChange },
+                    field: { value, onChange, onBlur },
                     fieldState: { error },
                   }) => (
                     <LabeledTextField
                       title="Please provide details"
                       subtitle={'(required)'}
-                      onChange={onChange}
+                      onChange={async (e) => {
+                        onChange(e);
+                        await trigger('versions.0.otherDetails');
+                        onBlur();
+                      }}
+                      onBlur={onBlur}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
                       enabled={!isEditMode && !isSubmitting}
@@ -1258,7 +1288,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 required: 'Please enter the description.',
               }}
               render={({
-                field: { value, onChange },
+                field: { value, onChange, onBlur },
                 fieldState: { error },
               }) => (
                 <LabeledTextArea
@@ -1277,6 +1307,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   customValidationMessage={error?.message}
                   value={value || ''}
                   onChange={onChange}
+                  onBlur={onBlur}
                   enabled={!isSubmitting}
                 />
               )}
@@ -1481,6 +1512,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 primary
                 noMargin
                 enabled={
+                  isValid &&
                   !isSubmitting &&
                   !isUploadingManuscriptFile &&
                   !isUploadingKeyResourceTable &&

@@ -64,6 +64,7 @@ export interface DropdownProps<V extends string> {
   readonly value: V;
   readonly renderValue?: (value: V) => ReactNode;
   readonly onChange?: (newValue: V) => void;
+  readonly onBlur?: () => void;
   readonly noOptionsMessage?: (value: { inputValue: string }) => string | null;
 }
 export default function Dropdown<V extends string>({
@@ -79,6 +80,7 @@ export default function Dropdown<V extends string>({
   value,
   renderValue,
   onChange = noop,
+  onBlur = noop,
   noOptionsMessage,
 }: DropdownProps<V>): ReturnType<FC> {
   const { validationMessage, validationTargetProps, validate } =
@@ -136,7 +138,10 @@ export default function Dropdown<V extends string>({
         noOptionsMessage={noOptionsMessage}
         tabSelectsValue={false}
         autoComplete={uuidV4()}
-        onBlur={checkValidation}
+        onBlur={() => {
+          checkValidation();
+          onBlur();
+        }}
         aria-label={name}
       />
       <input
@@ -148,6 +153,7 @@ export default function Dropdown<V extends string>({
         disabled={!enabled}
         hidden={true}
         onChange={noop}
+        onBlur={noop}
       />
 
       <div css={validationMessageStyles}>{validationMessage}</div>

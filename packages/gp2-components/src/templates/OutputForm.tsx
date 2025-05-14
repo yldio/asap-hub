@@ -22,7 +22,7 @@ import {
   ResearchOutputRelatedEventsCard,
   ajvErrors,
   OutputVersions,
-  OutputShortDescriptionCard,
+  ShortDescriptionCard,
   MultiSelectOptionsType,
   OptionsType,
 } from '@asap-hub/react-components';
@@ -513,7 +513,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                         ></Markdown>
                       }
                     />
-                    <OutputShortDescriptionCard
+                    <ShortDescriptionCard
                       onChange={setShortDescription}
                       buttonEnabled={newDescription.length > 0}
                       enabled={!isSaving}

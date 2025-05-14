@@ -58,6 +58,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onCreate: jest.fn(() => Promise.resolve()),
   onUpdate: jest.fn(() => Promise.resolve()),
   onResubmit: jest.fn(() => Promise.resolve()),
+  getShortDescriptionFromDescription: jest.fn(() => Promise.resolve('')),
   getAuthorSuggestions: jest.fn(),
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,
@@ -82,6 +83,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   labMaterialsRegistered: 'Yes',
   availabilityStatement: 'Yes',
   description: 'Some description',
+  shortDescription: 'A good short description',
   firstAuthors: [
     {
       label: 'Author 1',
@@ -181,6 +183,7 @@ it('data is sent on form submission', async () => {
           labs: [],
 
           description: 'Some description',
+          shortDescription: 'A good short description',
           firstAuthors: [],
           additionalAuthors: [],
         },
@@ -276,6 +279,7 @@ test.each`
           labs: [],
 
           description: 'Some description',
+          shortDescription: 'A good short description',
           firstAuthors: [],
           additionalAuthors: [],
         },
@@ -376,6 +380,7 @@ test.each`
           labs: [],
 
           description: 'Some description',
+          shortDescription: 'A good short description',
           firstAuthors: [],
           additionalAuthors: [],
         },
@@ -1027,7 +1032,7 @@ describe('renders the necessary fields', () => {
     availabilityStatementDetails: 'Please provide details',
 
     description: 'Please provide a description',
-
+    shortDescription: 'Add a short description',
     teams: 'Add other teams that contributed to this manuscript.',
     labs: 'Add ASAP labs that contributed to this manuscript.',
   };
@@ -1981,6 +1986,7 @@ it('calls onUpdate when form is updated', async () => {
           datasetsDeposited: 'Yes',
           datasetsDepositedDetails: '',
           description: 'Some description',
+          shortDescription: 'A good short description',
           firstAuthors: [],
           keyResourceTable: {
             filename: 'test.csv',
@@ -2080,6 +2086,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
           datasetsDeposited: 'Yes',
           datasetsDepositedDetails: '',
           description: 'Some description',
+          shortDescription: 'A good short description',
           firstAuthors: [],
           keyResourceTable: {
             filename: 'keyresource.csv',
@@ -2107,5 +2114,35 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
         },
       ],
     });
+  });
+});
+
+it('can generate short description when description is present', async () => {
+  const getShortDescriptionFromDescription = jest
+    .fn()
+    .mockResolvedValue('A tiny description');
+
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        description="A very very long description"
+        shortDescription={undefined}
+        getShortDescriptionFromDescription={getShortDescriptionFromDescription}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+      />
+    </StaticRouter>,
+  );
+
+  userEvent.click(screen.getByRole('button', { name: 'Generate' }));
+
+  await waitFor(() => {
+    expect(getShortDescriptionFromDescription).toHaveBeenCalledWith(
+      'A very very long description',
+    );
   });
 });

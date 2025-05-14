@@ -205,6 +205,7 @@ describe('/manuscripts/ route', () => {
         createManuscriptRequest.versions.push({
           lifecycle: 'Preprint',
           type: 'Original Research',
+          shortDescription: 'A good short description',
           manuscriptFile: {
             url: 'http://example.com/file.pdf',
             filename: 'file.pdf',

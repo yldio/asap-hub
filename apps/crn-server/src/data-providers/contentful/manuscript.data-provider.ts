@@ -622,6 +622,7 @@ export const parseGraphqlManuscriptVersion = (
       type: version?.type,
       lifecycle: version?.lifecycle,
       description: version?.description,
+      shortDescription: version?.shortDescription,
       count: version?.count || 0,
       versionUID: getManuscriptVersionUID({
         version: {

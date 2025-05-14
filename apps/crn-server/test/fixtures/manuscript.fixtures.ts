@@ -41,6 +41,7 @@ export const getManuscriptDataObject = (
       lifecycle: 'Preprint',
       type: 'Original Research',
       description: 'A good description',
+      shortDescription: 'A good short description',
       count: 1,
       createdBy: manuscriptAuthor,
       updatedBy: manuscriptAuthor,
@@ -133,6 +134,7 @@ export const getContentfulGraphqlManuscriptVersions = (
       type: 'Original Research',
       lifecycle: 'Preprint',
       description: 'A good description',
+      shortDescription: 'A good short description',
       count: 1,
       manuscriptFile: {
         sys: { id: 'file-id' },

@@ -39,6 +39,7 @@ export const createManuscriptResponse = (
       lifecycle: 'Draft Manuscript (prior to Publication)',
       type: 'Original Research',
       description: 'A good description',
+      shortDescription: 'A good short description',
       count: 1,
       createdBy: manuscriptAuthor,
       updatedBy: manuscriptAuthor,

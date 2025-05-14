@@ -73,6 +73,7 @@ export type ManuscriptVersion = {
   type: ManuscriptType;
   lifecycle: ManuscriptLifecycle;
   description: string;
+  shortDescription: string;
   count: number;
   versionUID?: string;
   preprintDoi?: string;
@@ -337,6 +338,7 @@ export type ManuscriptPostCreateRequest = Pick<
     publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
     description: string;
+    shortDescription: string;
     manuscriptFile: ManuscriptVersion['manuscriptFile'];
     keyResourceTable?: ManuscriptVersion['keyResourceTable'];
     additionalFiles?: ManuscriptVersion['additionalFiles'];
@@ -434,6 +436,7 @@ export type ManuscriptFormData = Pick<
     | 'publicationDoi'
     | 'otherDetails'
     | 'description'
+    | 'shortDescription'
     | 'acknowledgedGrantNumber'
     | 'asapAffiliationIncluded'
     | 'manuscriptLicense'
@@ -510,6 +513,7 @@ export const manuscriptVersionSchema = {
 
     otherDetails: { type: 'string', nullable: true },
     description: { type: 'string' },
+    shortDescription: { type: 'string' },
     manuscriptFile: {
       type: 'object',
       properties: {

@@ -239,7 +239,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                           onReplyToDiscussion={onReplyToDiscussion}
                           onMarkDiscussionAsRead={onMarkDiscussionAsRead}
                           {...(manuscript.id === targetManuscriptId
-                            ? { targetManuscriptId: manuscript.id }
+                            ? { isTargetManuscript: true }
                             : {})}
                         />
                       </div>

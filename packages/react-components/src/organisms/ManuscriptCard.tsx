@@ -61,7 +61,7 @@ type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
       ManuscriptDataObject | undefined,
       React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
     ];
-    readonly targetManuscriptId?: string;
+    readonly isTargetManuscript?: boolean;
   };
 
 const manuscriptContainerStyles = css({
@@ -233,7 +233,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   useManuscriptById,
   onReplyToDiscussion,
   onMarkDiscussionAsRead,
-  targetManuscriptId,
+  isTargetManuscript = false,
 }) => {
   const [activeTab, setActiveTab] = useState<
     'manuscripts-and-reports' | 'discussions'
@@ -244,7 +244,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     useState(false);
   const targetManuscriptRef = useRef<HTMLDivElement>(null);
 
-  const [expanded, setExpanded] = useState(targetManuscriptId === id);
+  const [expanded, setExpanded] = useState(isTargetManuscript);
   const [showMore, setShowMore] = useState(false);
 
   const [newSelectedStatus, setNewSelectedStatus] =
@@ -308,7 +308,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (targetManuscriptId && targetManuscriptRef.current) {
+      if (isTargetManuscript && targetManuscriptRef.current) {
         window.scrollTo({
           top: targetManuscriptRef.current.offsetTop,
           behavior: 'smooth',
@@ -318,7 +318,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [targetManuscriptId]);
+  }, [isTargetManuscript]);
 
   return (
     <>

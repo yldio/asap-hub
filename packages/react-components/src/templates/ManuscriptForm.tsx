@@ -1308,9 +1308,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 <ShortDescriptionCard
                   buttonEnabled={!!watch('versions.0.description')}
                   enabled={!isSubmitting}
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     onChange(e);
-                    trigger('versions.0.shortDescription');
+                    await trigger('versions.0.shortDescription');
                   }}
                   value={value}
                   customValidationMessage={error?.message}

@@ -37,6 +37,7 @@ let history!: History;
 
 jest.setTimeout(30_000);
 beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
   history = createMemoryHistory();
 });
 
@@ -97,11 +98,19 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
 };
 
 const submitForm = async () => {
-  await act(async () => {
-    userEvent.click(await screen.findByRole('button', { name: /Submit/ }));
+  await waitFor(() => {
+    const submitButton = screen.getByRole('button', { name: /Submit/ });
+    expect(submitButton).toBeEnabled();
   });
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
 
-  userEvent.click(screen.getByRole('button', { name: /Submit Manuscript/ }));
+  await waitFor(() => {
+    const confirmButton = screen.getByRole('button', {
+      name: /Submit Manuscript/i,
+    });
+    expect(confirmButton).toBeEnabled();
+  });
+  userEvent.click(screen.getByRole('button', { name: /Submit Manuscript/i }));
 };
 
 it('renders the form', async () => {
@@ -115,7 +124,6 @@ it('renders the form', async () => {
   ).toBeVisible();
   expect(screen.getByRole('button', { name: /Submit/ })).toBeVisible();
 });
-
 it('data is sent on form submission', async () => {
   const onCreate = jest.fn();
   render(
@@ -161,7 +169,7 @@ it('data is sent on form submission', async () => {
           },
           acknowledgedGrantNumber: 'Yes',
           asapAffiliationIncluded: 'Yes',
-          manuscriptLicense: undefined,
+          manuscriptLicense: 'Yes',
           datasetsDeposited: 'Yes',
           codeDeposited: 'Yes',
           protocolsDeposited: 'Yes',
@@ -2095,7 +2103,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
             id: 'some-id',
             url: 'https://example.com/manuscript.pdf',
           },
-          manuscriptLicense: undefined,
+          manuscriptLicense: 'Yes',
           manuscriptLicenseDetails: '',
           otherDetails: undefined,
           preprintDoi: undefined,

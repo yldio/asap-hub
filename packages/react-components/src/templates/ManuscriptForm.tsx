@@ -1078,10 +1078,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     subtitle="(required)"
                     description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures. The file size must not exceed 100 MB."
                     placeholder="Upload Manuscript File"
-                    onRemove={() => {
+                    onRemove={async () => {
                       resetField('versions.0.manuscriptFile', {
                         defaultValue: null,
                       });
+                      await trigger('versions.0.manuscriptFile');
                     }}
                     handleFileUpload={async (file) => {
                       if (file.size > MAX_FILE_SIZE) {
@@ -1149,10 +1150,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         </>
                       }
                       placeholder="Upload Key Resource Table"
-                      onRemove={() => {
+                      onRemove={async () => {
                         resetField('versions.0.keyResourceTable', {
                           defaultValue: null,
                         });
+                        await trigger('versions.0.keyResourceTable');
                       }}
                       handleFileUpload={async (file) => {
                         if (file.size > MAX_FILE_SIZE) {

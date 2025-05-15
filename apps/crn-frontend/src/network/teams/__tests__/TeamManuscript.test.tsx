@@ -202,12 +202,6 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
 
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
-
-  await waitFor(() => {
-    expect(submitButton).toBeEnabled();
-  });
-
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 
   within(quickChecks)
@@ -216,10 +210,17 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       userEvent.click(button);
     });
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole('button', { name: /Submit/ }),
-    );
+  await waitFor(() => {
+    const submitButton = screen.getByRole('button', { name: /Submit/ });
+    expect(submitButton).toBeEnabled();
+  });
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+
+  await waitFor(() => {
+    const confirmButton = screen.getByRole('button', {
+      name: /Submit Manuscript/i,
+    });
+    expect(confirmButton).toBeEnabled();
   });
 
   await userEvent.click(
@@ -355,12 +356,6 @@ it('shows server validation error toast and a message when submitting with dupli
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
 
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
-
-  await waitFor(() => {
-    expect(submitButton).toBeEnabled();
-  });
-
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 
   within(quickChecks)
@@ -369,10 +364,17 @@ it('shows server validation error toast and a message when submitting with dupli
       userEvent.click(button);
     });
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole('button', { name: /Submit/ }),
-    );
+  await waitFor(() => {
+    const submitButton = screen.getByRole('button', { name: /Submit/ });
+    expect(submitButton).toBeEnabled();
+  });
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+
+  await waitFor(() => {
+    const confirmButton = screen.getByRole('button', {
+      name: /Submit Manuscript/i,
+    });
+    expect(confirmButton).toBeEnabled();
   });
 
   await userEvent.click(
@@ -456,12 +458,6 @@ it('shows default error toast when submitting with any other error', async () =>
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
 
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
-
-  await waitFor(() => {
-    expect(submitButton).toBeEnabled();
-  });
-
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 
   within(quickChecks)
@@ -470,10 +466,17 @@ it('shows default error toast when submitting with any other error', async () =>
       userEvent.click(button);
     });
 
-  await act(async () => {
-    await userEvent.click(
-      await screen.findByRole('button', { name: /Submit/ }),
-    );
+  await waitFor(() => {
+    const submitButton = screen.getByRole('button', { name: /Submit/ });
+    expect(submitButton).toBeEnabled();
+  });
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+
+  await waitFor(() => {
+    const confirmButton = screen.getByRole('button', {
+      name: /Submit Manuscript/i,
+    });
+    expect(confirmButton).toBeEnabled();
   });
 
   await userEvent.click(
@@ -538,11 +541,19 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
 
-  await act(async () => {
-    userEvent.click(await screen.findByRole('button', { name: /Submit/ }));
+  await waitFor(() => {
+    const submitButton = screen.getByRole('button', { name: /Submit/ });
+    expect(submitButton).toBeEnabled();
   });
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
 
-  userEvent.click(screen.getByRole('button', { name: /Submit Manuscript/ }));
+  await waitFor(() => {
+    const confirmButton = screen.getByRole('button', {
+      name: /Submit Manuscript/i,
+    });
+    expect(confirmButton).toBeEnabled();
+  });
+  userEvent.click(screen.getByRole('button', { name: /Submit Manuscript/i }));
 
   await waitFor(() => {
     expect(mockResubmitManuscript).toHaveBeenCalledWith(
@@ -597,16 +608,8 @@ it('files are not prefilled on manuscript resubmit', async () => {
   });
   userEvent.type(preprintDoiTextbox, preprintDoi);
 
-  await act(async () => {
-    userEvent.click(await screen.findByRole('button', { name: /Submit/ }));
-  });
-
-  expect(
-    screen.getByText(/Please select a manuscript file./i),
-  ).toBeInTheDocument();
-  expect(
-    screen.getByText(/Please select a key resource table./i),
-  ).toBeInTheDocument();
+  expect(screen.queryByText(/manuscript_1.pdf/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/manuscript_1.csv/i)).not.toBeInTheDocument();
 });
 
 it('generates the short description based on the current description', async () => {

@@ -34,6 +34,7 @@ import {
 import AnalyticsController from './controllers/analytics.controller';
 import CalendarController from './controllers/calendar.controller';
 import ComplianceReportController from './controllers/compliance-report.controller';
+import ContentGeneratorController from './controllers/content-generator.controller';
 import DashboardController from './controllers/dashboard.controller';
 import DiscoverController from './controllers/discover.controller';
 import DiscussionController from './controllers/discussion.controller';
@@ -97,6 +98,7 @@ import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { analyticsRouteFactory } from './routes/analytics.route';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { complianceReportRouteFactory } from './routes/compliance-report.route';
+import { contentGeneratorRouteFactory } from './routes/content-generator.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
 import { discussionRouteFactory } from './routes/discussion.route';
@@ -291,6 +293,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const complianceReportController =
     libs.complianceReportController ||
     new ComplianceReportController(complianceReportDataProvider);
+  const contentGeneratorController =
+    libs.contentGeneratorController ||
+    new ContentGeneratorController(generativeContentDataProvider);
   const dashboardController =
     libs.dashboardController || new DashboardController(dashboardDataProvider);
   const newsController =
@@ -317,7 +322,6 @@ export const appFactory = (libs: Libs = {}): Express => {
       researchOutputDataProvider,
       researchTagDataProvider,
       externalAuthorDataProvider,
-      generativeContentDataProvider,
     );
   const researchTagController =
     libs.researchTagController ||
@@ -367,6 +371,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const complianceReportRoutes = complianceReportRouteFactory(
     complianceReportController,
     manuscriptController,
+  );
+  const contentGeneratorRoutes = contentGeneratorRouteFactory(
+    contentGeneratorController,
   );
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const discoverRoutes = discoverRouteFactory(discoverController);
@@ -439,6 +446,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(analyticsRoutes);
   app.use(calendarRoutes);
   app.use(complianceReportRoutes);
+  app.use(contentGeneratorRoutes);
   app.use(dashboardRoutes);
   app.use(discoverRoutes);
   app.use(discussionRoutes);
@@ -479,6 +487,7 @@ export type Libs = {
   analyticsController?: AnalyticsController;
   calendarController?: CalendarController;
   complianceReportController?: ComplianceReportController;
+  contentGeneratorController?: ContentGeneratorController;
   dashboardController?: DashboardController;
   discoverController?: DiscoverController;
   discussionController?: DiscussionController;

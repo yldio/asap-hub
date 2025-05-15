@@ -1,18 +1,12 @@
-import {
-  gp2,
-  OutputGenerateContentResponse,
-  ResearchOutputGenerateContentRequest,
-} from '@asap-hub/model';
+import { ContentGeneratorResponse } from '@asap-hub/model';
 import { BackendError, createSentryHeaders } from '../api-util';
 
-export const generateOutputContent = async (
-  output:
-    | ResearchOutputGenerateContentRequest
-    | gp2.OutputGenerateContentRequest,
+export const generateContent = async (
+  description: string,
   url: string,
   authorization: string,
   app: 'CRN' | 'GP2',
-): Promise<OutputGenerateContentResponse> => {
+): Promise<ContentGeneratorResponse> => {
   const resp = await fetch(url, {
     method: 'POST',
     headers: {
@@ -20,7 +14,7 @@ export const generateOutputContent = async (
       'content-type': 'application/json',
       ...createSentryHeaders(),
     },
-    body: JSON.stringify(output),
+    body: JSON.stringify({ description }),
   });
 
   const response = await resp.json();

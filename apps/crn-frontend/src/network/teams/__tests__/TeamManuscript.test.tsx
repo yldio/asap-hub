@@ -22,8 +22,11 @@ import { RecoilRoot } from 'recoil';
 import { createManuscript, getManuscript, resubmitManuscript } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
+import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
 import { refreshTeamState } from '../state';
 import TeamManuscript from '../TeamManuscript';
+
+jest.mock('../../../shared-api/content-generator');
 
 jest.mock(
   'react-lottie',
@@ -74,6 +77,11 @@ jest.mock('../useManuscriptToast', () => {
     })),
   };
 });
+
+const mockGetGeneratedShortDescription =
+  getGeneratedShortDescription as jest.MockedFunction<
+    typeof getGeneratedShortDescription
+  >;
 
 beforeEach(() => {
   jest.resetModules();
@@ -175,6 +183,11 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   });
   userEvent.type(descriptionTextbox, 'Some description');
 
+  const shortDescriptionTextbox = screen.getByRole('textbox', {
+    name: /Short Description/i,
+  });
+  userEvent.type(shortDescriptionTextbox, 'Some short description');
+
   userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 
   await waitFor(() =>
@@ -258,6 +271,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
             teams: ['42'],
             labs: [],
             description: 'Some description',
+            shortDescription: 'Some short description',
             firstAuthors: [
               {
                 externalAuthorEmail: 'jane@doe.com',
@@ -321,6 +335,11 @@ it('shows server validation error toast and a message when submitting with dupli
     name: /Manuscript Description/i,
   });
   userEvent.type(descriptionTextbox, 'Some description');
+
+  const shortDescriptionTextbox = screen.getByRole('textbox', {
+    name: /Short Description/i,
+  });
+  userEvent.type(shortDescriptionTextbox, 'Some short description');
 
   userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 
@@ -417,6 +436,11 @@ it('shows default error toast when submitting with any other error', async () =>
     name: /Manuscript Description/i,
   });
   userEvent.type(descriptionTextbox, 'Some description');
+
+  const shortDescriptionTextbox = screen.getByRole('textbox', {
+    name: /Short Description/i,
+  });
+  userEvent.type(shortDescriptionTextbox, 'Some short description');
 
   userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 
@@ -583,4 +607,20 @@ it('files are not prefilled on manuscript resubmit', async () => {
   expect(
     screen.getByText(/Please select a key resource table./i),
   ).toBeInTheDocument();
+});
+
+it('generates the short description based on the current description', async () => {
+  mockGetGeneratedShortDescription.mockResolvedValueOnce({
+    shortDescription: 'test generated short description 1',
+  });
+
+  await renderPage();
+
+  userEvent.click(screen.getByRole('button', { name: 'Generate' }));
+
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', { name: /short description/i }),
+    ).toHaveValue('test generated short description 1');
+  });
 });

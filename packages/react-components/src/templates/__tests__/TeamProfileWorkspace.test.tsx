@@ -304,6 +304,7 @@ describe('compliance section', () => {
               type: 'Original Research',
               lifecycle: 'Draft Manuscript (prior to Publication)',
               description: 'A description',
+              shortDescription: 'A good short description',
               count: 1,
               manuscriptFile: {
                 url: 'http://example.com/file.pdf',
@@ -345,6 +346,7 @@ describe('compliance section', () => {
               type: 'Review / Op-Ed / Letter / Hot Topic',
               lifecycle: 'Preprint',
               description: 'Another description',
+              shortDescription: 'Another good short description',
               count: 1,
               manuscriptFile: {
                 url: 'http://example.com/file.pdf',

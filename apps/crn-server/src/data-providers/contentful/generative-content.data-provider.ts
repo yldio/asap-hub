@@ -33,9 +33,3 @@ export class GenerativeContentDataProvider {
     return summary || '';
   }
 }
-
-export const generativeContentDataProviderNoop = {
-  async summariseContent() {
-    return '';
-  },
-} as unknown as GenerativeContentDataProvider;

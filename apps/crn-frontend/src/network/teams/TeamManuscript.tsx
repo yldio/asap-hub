@@ -16,6 +16,7 @@ import { useSetRecoilState } from 'recoil';
 import {
   useAuthorSuggestions,
   useLabSuggestions,
+  useGeneratedContent,
   useTeamSuggestions,
 } from '../../shared-state';
 import {
@@ -55,6 +56,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   const getTeamSuggestions = useTeamSuggestions();
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
+  const getShortDescriptionFromDescription = useGeneratedContent();
 
   const pushFromHere = usePushFromHere();
 
@@ -116,6 +118,9 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
       <Frame title="Create Manuscript">
         <ManuscriptHeader resubmitManuscript={resubmitManuscript} />
         <ManuscriptForm
+          getShortDescriptionFromDescription={
+            getShortDescriptionFromDescription
+          }
           manuscriptId={manuscriptId}
           onSuccess={onSuccess}
           onCreate={createManuscript}

@@ -37,6 +37,7 @@ export const manuscriptContentQueryFragment = gql`
         type
         lifecycle
         description
+        shortDescription
         count
         manuscriptFile {
           sys {

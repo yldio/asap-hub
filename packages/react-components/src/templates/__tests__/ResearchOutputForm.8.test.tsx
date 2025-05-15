@@ -230,4 +230,47 @@ describe('on submit 2', () => {
       organisms: ['Rat'],
     });
   });
+
+  describe('Short Description Validation', () => {
+    it('shows error message when short description exceeds 250 characters', async () => {
+      await setupForm({});
+      const input = screen.getByLabelText(/short description/i);
+      const longText = 'a'.repeat(251);
+      fireEvent.change(input, { target: { value: longText } });
+      fireEvent.focusOut(input);
+      expect(
+        screen.getByText(
+          'The short description exceeds the character limit. Please limit it to 250 characters.',
+        ),
+      ).toBeVisible();
+    });
+
+    it('shows error message when short description is empty after trimming', async () => {
+      await setupForm({});
+      const input = screen.getByLabelText(/short description/i);
+      fireEvent.change(input, { target: { value: '   ' } });
+      fireEvent.focusOut(input);
+      expect(
+        screen.getByText('Please enter a short description'),
+      ).toBeVisible();
+    });
+
+    it('does not show error message when short description is valid', async () => {
+      await setupForm({});
+
+      const input = screen.getByLabelText(/short description/i);
+      fireEvent.change(input, {
+        target: { value: 'Valid short description' },
+      });
+      fireEvent.focusOut(input);
+      expect(
+        screen.queryByText('Please enter a short description'),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(
+          'The short description exceeds the character limit. Please limit it to 250 characters.',
+        ),
+      ).not.toBeInTheDocument();
+    });
+  });
 });

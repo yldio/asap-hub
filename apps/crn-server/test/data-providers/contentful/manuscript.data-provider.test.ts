@@ -156,6 +156,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         'en-US': null,
       },
       description: { 'en-US': 'nice description' },
+      shortDescription: { 'en-US': 'A good short description' },
       labs: { 'en-US': [] },
       firstAuthors: {
         'en-US': [
@@ -576,6 +577,7 @@ describe('Manuscripts Contentful Data Provider', () => {
               teams: ['team-1', 'team-2'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
+              shortDescription: 'A good short description',
               firstAuthors: ['author-1'],
               correspondingAuthor: ['author-2'],
               additionalAuthors: ['external-1'],
@@ -834,6 +836,7 @@ describe('Manuscripts Contentful Data Provider', () => {
             {
               lifecycle: 'Preprint',
               type: 'Original Research',
+              shortDescription: 'A good short description',
               teams: ['team-1', 'team-2'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
@@ -917,6 +920,7 @@ describe('Manuscripts Contentful Data Provider', () => {
               teams: ['team-1'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
+              shortDescription: 'A good short description',
               firstAuthors: ['author-1'],
               correspondingAuthor: ['author-2'],
               additionalAuthors: ['external-1'],

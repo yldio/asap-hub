@@ -20,7 +20,6 @@ import ResearchOutputController from './controllers/research-output.controller';
 import UserController from './controllers/user.controller';
 import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-author.data-provider';
-import { GenerativeContentDataProvider } from './data-providers/contentful/generative-content.data-provider';
 import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
 import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
@@ -89,8 +88,6 @@ export const publicAppFactory = (
       getContentfulRestClientFactory,
     );
 
-  const generativeContentDataProvider = new GenerativeContentDataProvider();
-
   const userDataProvider =
     dependencies.userDataProvider ||
     new UserContentfulDataProvider(
@@ -108,7 +105,6 @@ export const publicAppFactory = (
       researchOutputDataProvider,
       researchTagDataProvider,
       externalAuthorDataProvider,
-      generativeContentDataProvider,
     );
 
   const userController =

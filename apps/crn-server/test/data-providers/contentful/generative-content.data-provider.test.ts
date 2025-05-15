@@ -1,7 +1,4 @@
-import {
-  GenerativeContentDataProvider,
-  generativeContentDataProviderNoop,
-} from '../../../src/data-providers/contentful/generative-content.data-provider';
+import { GenerativeContentDataProvider } from '../../../src/data-providers/contentful/generative-content.data-provider';
 
 const mockedCompletionsCreate = jest.fn();
 jest.mock('openai', () => ({
@@ -59,14 +56,5 @@ describe('GenerativeContentDataProvider', () => {
       expect(result).toEqual(longMessage);
       expect(result.length).toBeGreaterThan(250);
     });
-  });
-});
-
-describe('generativeContentDataProviderNoop', () => {
-  it('should always return an empty string', async () => {
-    const result =
-      await generativeContentDataProviderNoop.summariseContent('some content');
-
-    expect(result).toEqual('');
   });
 });

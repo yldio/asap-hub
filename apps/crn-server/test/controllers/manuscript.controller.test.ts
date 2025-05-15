@@ -503,6 +503,7 @@ describe('Manuscript controller', () => {
               teams: ['team-1'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
+              shortDescription: 'A good short description',
               firstAuthors: [{ userId: 'author-1' }],
               correspondingAuthor: { userId: 'author-2' },
               additionalAuthors: [
@@ -533,6 +534,7 @@ describe('Manuscript controller', () => {
                 url: 'https://example.com/manuscript.pdf',
               },
               description: 'edited description',
+              shortDescription: 'A good short description',
               firstAuthors: ['author-1'],
               correspondingAuthor: ['author-2'],
               additionalAuthors: ['external-1'],
@@ -567,6 +569,7 @@ describe('Manuscript controller', () => {
               teams: ['team-1'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
+              shortDescription: 'A good short description',
               firstAuthors: [{ userId: 'author-1' }],
               correspondingAuthor: undefined,
               additionalAuthors: [],

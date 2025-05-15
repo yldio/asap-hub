@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import OutputShortDescriptionCard from '../OutputShortDescriptionCard';
+import ShortDescriptionCard from '../ShortDescriptionCard';
 
-describe('OutputShortDescriptionCard', () => {
+describe('ShortDescriptionCard', () => {
   const getShortDescription = jest
     .fn()
     .mockResolvedValue('generated short description');
@@ -9,7 +9,7 @@ describe('OutputShortDescriptionCard', () => {
 
   it('renders short description and a generate button', () => {
     render(
-      <OutputShortDescriptionCard
+      <ShortDescriptionCard
         getShortDescription={getShortDescription}
         value="current short description"
       />,
@@ -23,7 +23,7 @@ describe('OutputShortDescriptionCard', () => {
 
   it('disables the button when buttonEnabled property is set to false', () => {
     render(
-      <OutputShortDescriptionCard
+      <ShortDescriptionCard
         getShortDescription={getShortDescription}
         value="current short description"
         buttonEnabled={false}
@@ -35,7 +35,8 @@ describe('OutputShortDescriptionCard', () => {
 
   it('calls getShortDescription and saves the retrieved value when generate button is clicked', async () => {
     render(
-      <OutputShortDescriptionCard
+      <ShortDescriptionCard
+        enabled
         getShortDescription={getShortDescription}
         value="current short description"
         onChange={onChange}
@@ -53,7 +54,8 @@ describe('OutputShortDescriptionCard', () => {
 
   it('button should say Regenerate after generting the first time', async () => {
     render(
-      <OutputShortDescriptionCard
+      <ShortDescriptionCard
+        enabled
         getShortDescription={getShortDescription}
         value="current short description"
       />,

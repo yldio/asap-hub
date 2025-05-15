@@ -59,6 +59,7 @@ const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
 ]);
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
+  getShortDescriptionFromDescription: jest.fn(),
   onCreate: jest.fn(() => Promise.resolve()),
   onUpdate: jest.fn(() => Promise.resolve()),
   onResubmit: jest.fn(() => Promise.resolve()),

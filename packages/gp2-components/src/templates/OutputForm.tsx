@@ -271,6 +271,10 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
   const [titleValidationMessage, setTitleValidationMessage] =
     useState<string>();
+  const [
+    shortDescriptionValidationMessage,
+    setShortDescriptionValidationMessage,
+  ] = useState<string>();
 
   const [newCohorts, setCohorts] = useState<
     gp2Model.ContributingCohortDataObject[]
@@ -366,6 +370,16 @@ const OutputForm: React.FC<OutputFormProps> = ({
 
     setIsGP2SupportedAlwaysTrue(newisGP2SupportedAlwaysTrue);
   }, [newType, documentType]);
+
+  const validateShortDescription = (shortDescriptionNewValue: string) => {
+    setShortDescriptionValidationMessage(
+      shortDescriptionNewValue.length >= 250
+        ? 'The short description exceeds the character limit. Please limit it to 250 characters.'
+        : shortDescriptionNewValue.trim().length === 0
+          ? 'Please enter a short description'
+          : undefined,
+    );
+  };
 
   useEffect(() => {
     setUrlValidationMessage(
@@ -514,12 +528,18 @@ const OutputForm: React.FC<OutputFormProps> = ({
                       }
                     />
                     <ShortDescriptionCard
-                      onChange={setShortDescription}
+                      onChange={(shortDescriptionNewValue) => {
+                        setShortDescription(shortDescriptionNewValue);
+                        validateShortDescription(shortDescriptionNewValue);
+                      }}
                       buttonEnabled={newDescription.length > 0}
                       enabled={!isSaving}
                       value={newShortDescription}
                       getShortDescription={() =>
                         getShortDescriptionFromDescription(newDescription)
+                      }
+                      customValidationMessage={
+                        shortDescriptionValidationMessage
                       }
                     />
                     {!DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(

@@ -1295,21 +1295,36 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               control={control}
               rules={{
                 required: 'Please enter the short description.',
+                maxLength: {
+                  value: 250,
+                  message:
+                    'The short description exceeds the character limit. Please limit it to 250 characters.',
+                },
               }}
-              render={({ field: { value, onChange } }) => (
-                <ShortDescriptionCard
-                  buttonEnabled={!!watch('versions.0.description')}
-                  enabled={!isSubmitting}
-                  onChange={onChange}
-                  value={value}
-                  tip="Use AI to generate a short description or write your own based on the description field above."
-                  getShortDescription={() =>
-                    getShortDescriptionFromDescription(
-                      watch('versions.0.description'),
-                    )
-                  }
-                />
-              )}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => {
+                console.log('short description error', error);
+                return (
+                  <ShortDescriptionCard
+                    buttonEnabled={!!watch('versions.0.description')}
+                    enabled={!isSubmitting}
+                    onChange={(e) => {
+                      onChange(e);
+                      trigger('versions.0.shortDescription');
+                    }}
+                    value={value}
+                    customValidationMessage={error?.message}
+                    tip="Use AI to generate a short description or write your own based on the description field above."
+                    getShortDescription={() =>
+                      getShortDescriptionFromDescription(
+                        watch('versions.0.description'),
+                      )
+                    }
+                  />
+                );
+              }}
             />
           </FormCard>
 

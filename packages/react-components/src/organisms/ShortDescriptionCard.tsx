@@ -7,7 +7,7 @@ import { rem } from '../pixels';
 
 type ShortDescriptionCardProps = Omit<
   ComponentProps<typeof LabeledTextArea>,
-  'title' | 'subtitle' | 'getValidationMessage'
+  'title' | 'subtitle'
 > & {
   getShortDescription: () => Promise<string>;
   buttonEnabled?: boolean;
@@ -27,6 +27,8 @@ const ShortDescriptionCard: React.FC<ShortDescriptionCardProps> = ({
   buttonEnabled = true,
   onChange,
   getShortDescription,
+  getValidationMessage,
+  customValidationMessage,
   ...props
 }) => {
   const [generatingStatus, setGeneratingStatus] = useState<
@@ -57,7 +59,8 @@ const ShortDescriptionCard: React.FC<ShortDescriptionCardProps> = ({
       subtitle="(required)"
       tip="Add a short description based on what you wrote on the
     description field above."
-      getValidationMessage={() => 'Please enter a short description'}
+      customValidationMessage={customValidationMessage}
+      getValidationMessage={getValidationMessage}
       onChange={onChange}
       required
       {...props}
@@ -66,7 +69,6 @@ const ShortDescriptionCard: React.FC<ShortDescriptionCardProps> = ({
         generatingStatus !== 'isGenerating' &&
         generatingStatus !== 'isRegenerating'
       }
-      maxLength={250}
       extras={
         <Button
           primary

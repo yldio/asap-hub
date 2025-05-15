@@ -513,7 +513,7 @@ export const manuscriptVersionSchema = {
 
     otherDetails: { type: 'string', nullable: true },
     description: { type: 'string' },
-    shortDescription: { type: 'string' },
+    shortDescription: { type: 'string', nullable: true, maxLength: 250 },
     manuscriptFile: {
       type: 'object',
       properties: {

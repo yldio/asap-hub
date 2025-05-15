@@ -46,9 +46,8 @@ const ManuscriptAuthorsComponent = (
 };
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation()
-}
-);
+  jest.spyOn(console, 'error').mockImplementation();
+});
 
 it.each([true, false])(
   'displays pre populated external author email input field and email value when isMultiSelect is %s',
@@ -109,8 +108,6 @@ it.each([true, false])(
     expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
   },
 );
-
-
 
 it.each([true, false])(
   'displays external author email input field for an existing external author when isMultiSelect is %s',

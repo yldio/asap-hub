@@ -6,7 +6,6 @@ import { createManuscriptResponse } from '@asap-hub/fixtures';
 import { AuthorResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import {
-  act,
   render,
   screen,
   waitFor,

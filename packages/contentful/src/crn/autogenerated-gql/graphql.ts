@@ -4186,7 +4186,6 @@ export type ManuscriptVersions = Entry &
     protocolsDeposited?: Maybe<Scalars['String']>;
     protocolsDepositedDetails?: Maybe<Scalars['String']>;
     publicationDoi?: Maybe<Scalars['String']>;
-    shortDescription?: Maybe<Scalars['String']>;
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptVersionsTeamsCollection>;
     type?: Maybe<Scalars['String']>;
@@ -4374,11 +4373,6 @@ export type ManuscriptVersionsProtocolsDepositedDetailsArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsPublicationDoiArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
-export type ManuscriptVersionsShortDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -4695,13 +4689,6 @@ export type ManuscriptVersionsFilter = {
   publicationDoi_not?: InputMaybe<Scalars['String']>;
   publicationDoi_not_contains?: InputMaybe<Scalars['String']>;
   publicationDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  shortDescription?: InputMaybe<Scalars['String']>;
-  shortDescription_contains?: InputMaybe<Scalars['String']>;
-  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
-  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  shortDescription_not?: InputMaybe<Scalars['String']>;
-  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
-  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   teams?: InputMaybe<CfTeamsNestedFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
@@ -12602,13 +12589,6 @@ export type CfManuscriptVersionsNestedFilter = {
   publicationDoi_not?: InputMaybe<Scalars['String']>;
   publicationDoi_not_contains?: InputMaybe<Scalars['String']>;
   publicationDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  shortDescription?: InputMaybe<Scalars['String']>;
-  shortDescription_contains?: InputMaybe<Scalars['String']>;
-  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
-  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  shortDescription_not?: InputMaybe<Scalars['String']>;
-  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
-  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   type?: InputMaybe<Scalars['String']>;

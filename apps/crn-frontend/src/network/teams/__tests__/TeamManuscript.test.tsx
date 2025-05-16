@@ -35,7 +35,7 @@ jest.mock(
     },
 );
 
-jest.setTimeout(30_000);
+jest.setTimeout(100_000);
 
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 
@@ -84,7 +84,7 @@ const mockGetGeneratedShortDescription =
 
 beforeEach(() => {
   jest.resetModules();
-
+  mockSetFormType.mockReset();
   jest.spyOn(console, 'error').mockImplementation();
 
   history = createMemoryHistory({
@@ -290,7 +290,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       `/network/teams/${teamId}/workspace`,
     );
   });
-}, 180_000);
+});
 
 it('shows server validation error toast and a message when submitting with duplicate title', async () => {
   const duplicateTitleError = {
@@ -392,7 +392,7 @@ it('shows server validation error toast and a message when submitting with dupli
       /This title is already in use. Please choose a different one./i,
     ).length,
   ).toBeGreaterThan(0);
-}, 180_000);
+});
 
 it('shows default error toast when submitting with any other error', async () => {
   const genericError = {
@@ -488,7 +488,7 @@ it('shows default error toast when submitting with any other error', async () =>
       accent: 'error',
     });
   });
-}, 180_000);
+});
 
 it('can resubmit a manuscript and navigates to team workspace', async () => {
   const mockResubmitManuscript = resubmitManuscript as jest.MockedFunction<

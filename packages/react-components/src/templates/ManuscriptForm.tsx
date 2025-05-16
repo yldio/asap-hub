@@ -1375,7 +1375,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             <FormCard
               key="quick-checks"
               title="Quick Checks"
-              description="Before you submit your manuscript, please confirm that you have met the following requirements."
+              description="Before you submit your manuscript, please confirm that you have met the following requirements. For a more detailed explanation, please refer to the "
+              link="https://docs.google.com/document/d/1rkAsm9UrElP8OhXCdxQXKxNGWz4HsOAIXrYtfxAn7kI"
+              linkLabel="Open Science Compliance Checklist for Author"
             >
               <div
                 css={css({

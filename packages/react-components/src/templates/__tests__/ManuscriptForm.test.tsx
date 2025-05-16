@@ -527,7 +527,15 @@ it('displays an error message when user selects no in a quick check and does not
 
   within(screen.getByTestId('acknowledgedGrantNumber')).getByText('No').click();
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+  await waitFor(() => {
+    expect(
+      screen.getByLabelText(/Please provide details/i),
+    ).toBeInTheDocument();
+  });
+  const input = screen.getByLabelText(/Please provide details/i);
+
+  input.focus();
+  input.blur();
 
   await waitFor(() => {
     expect(
@@ -600,25 +608,22 @@ it('displays error message when manuscript title is missing', async () => {
   );
 
   const input = screen.getByRole('textbox', { name: /Title of Manuscript/i });
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
+  userEvent.type(input, '');
 
-  userEvent.click(submitButton);
-
+  input.blur();
   await waitFor(() => {
-    expect(submitButton).toBeEnabled();
+    expect(
+      screen.getAllByText(/Please enter a title/i).length,
+    ).toBeGreaterThanOrEqual(1);
   });
-  expect(
-    screen.getAllByText(/Please enter a title/i).length,
-  ).toBeGreaterThanOrEqual(1);
 
   userEvent.type(input, 'title');
 
-  userEvent.click(submitButton);
+  input.blur();
 
   await waitFor(() => {
-    expect(submitButton).toBeEnabled();
+    expect(screen.queryByText(/Please enter a title/i)).toBeNull();
   });
-  expect(screen.queryByText(/Please enter a title/i)).toBeNull();
 });
 
 it('displays error message when manuscript title is not unique', async () => {
@@ -749,17 +754,13 @@ it('displays error message when other details is bigger than 256 characters', as
     "Advancements in Parkinson's Disease Research: Investigating the Role of Genetic Mutations and DNA Sequencing Technologies in Unraveling the Molecular Mechanisms, Identifying Biomarkers, and Developing Targeted Therapies for Improved Diagnosis and Treatment of Parkinson Disease",
   );
 
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
-
-  userEvent.click(submitButton);
+  input.blur();
 
   await waitFor(() => {
-    expect(submitButton).toBeEnabled();
+    expect(
+      screen.getAllByText(/Details cannot exceed 256 characters./i).length,
+    ).toBeGreaterThanOrEqual(1);
   });
-
-  expect(
-    screen.getAllByText(/Details cannot exceed 256 characters./i).length,
-  ).toBeGreaterThanOrEqual(1);
 });
 
 describe('authors', () => {
@@ -2010,7 +2011,7 @@ it('calls onUpdate when form is updated', async () => {
             id: '123',
             url: 'http://example.com/test.pdf',
           },
-          manuscriptLicense: undefined,
+          manuscriptLicense: 'Yes',
           manuscriptLicenseDetails: '',
           otherDetails: undefined,
           preprintDoi: undefined,

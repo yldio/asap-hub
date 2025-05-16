@@ -1520,7 +1520,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                                 required: 'Please enter the details.',
                               }}
                               render={({
-                                field: { value, onChange },
+                                field: { value, onChange, onBlur },
                                 fieldState: { error },
                               }) => (
                                 <LabeledTextField
@@ -1530,8 +1530,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                                   description="The reason you provide must be accepted by the Open Science team."
                                   value={value || ''}
                                   customValidationMessage={error?.message}
-                                  onChange={onChange}
+                                  onChange={async (e) => {
+                                    onChange(e);
+                                    await trigger(`versions.0.${field}Details`);
+                                  }}
                                   enabled={!isEditMode && !isSubmitting}
+                                  onBlur={onBlur}
                                 />
                               )}
                             />

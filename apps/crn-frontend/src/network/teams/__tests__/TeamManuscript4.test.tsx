@@ -6,13 +6,17 @@ import { network } from '@asap-hub/routing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
+import { createManuscript } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
@@ -122,12 +126,93 @@ const renderPage = async (
   return { container };
 };
 
-it('renders manuscript form page', async () => {
-  const { container } = await renderPage();
+it('shows default error toast when submitting with any other error', async () => {
+  const genericError = {
+    statusCode: 500,
+    response: {
+      message: 'Internal Server Error',
+    },
+  };
 
-  expect(container).toHaveTextContent(
-    'Start a new manuscript to receive an itemized compliance report outlining action items for compliance with the ASAP Open Science Policy',
+  (createManuscript as jest.Mock).mockRejectedValueOnce(genericError);
+  const title = 'The Manuscript';
+
+  await renderPage();
+
+  userEvent.type(
+    screen.getByRole('textbox', { name: /title of manuscript/i }),
+    title,
   );
-  expect(container).toHaveTextContent('What are you sharing');
-  expect(container).toHaveTextContent('Title of Manuscript');
+  const typeTextbox = screen.getByRole('textbox', {
+    name: /Type of Manuscript/i,
+  });
+  userEvent.type(typeTextbox, 'Original');
+  userEvent.type(typeTextbox, specialChars.enter);
+  typeTextbox.blur();
+
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+  userEvent.type(lifecycleTextbox, 'Typeset proof');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const manuscriptFileInput = screen.getByLabelText(/Upload Manuscript File/i);
+  const keyResourceTableInput = screen.getByLabelText(
+    /Upload Key Resource Table/i,
+  );
+
+  const descriptionTextbox = screen.getByRole('textbox', {
+    name: /Manuscript Description/i,
+  });
+  userEvent.type(descriptionTextbox, 'Some description');
+
+  userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+
+  userEvent.click(screen.getByText(/Non CRN/i));
+
+  expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
+  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+
+  userEvent.upload(manuscriptFileInput, testFile);
+  userEvent.upload(keyResourceTableInput, testFile);
+
+  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
+
+  within(quickChecks)
+    .getAllByText('Yes')
+    .forEach((button) => {
+      userEvent.click(button);
+    });
+
+  await waitFor(() => {
+    const submitButton = screen.getByRole('button', { name: /Submit/ });
+    expect(submitButton).toBeEnabled();
+  });
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+
+  await waitFor(() => {
+    const confirmButton = screen.getByRole('button', {
+      name: /Submit Manuscript/i,
+    });
+    expect(confirmButton).toBeEnabled();
+  });
+
+  await userEvent.click(
+    screen.getByRole('button', { name: /Submit Manuscript/ }),
+  );
+
+  await waitFor(() => {
+    expect(mockSetFormType).toHaveBeenCalledWith({
+      type: 'default-error',
+      accent: 'error',
+    });
+  });
 });

@@ -1,11 +1,15 @@
 import { css } from '@emotion/react';
-import { Card, Headline3, Paragraph } from '../atoms';
+import { Card, Headline3, Link, Paragraph } from '../atoms';
 import { paddingStyles } from '../card';
 import { perRem } from '../pixels';
+import { ExternalLinkIcon } from '../icons';
+import { colors } from '..';
 
 interface FormCardProps {
   title: string;
   description?: string;
+  link?: string;
+  linkLabel?: string;
 }
 
 const cardStyles = css({
@@ -25,6 +29,8 @@ const FormCard: React.FC<FormCardProps> = ({
   children,
   title,
   description,
+  link,
+  linkLabel,
 }) => (
   <Card padding={false} overrideStyles={cardStyles} title={title}>
     <div role="presentation" css={[paddingStyles]}>
@@ -32,7 +38,29 @@ const FormCard: React.FC<FormCardProps> = ({
     </div>
     {!!description && (
       <div css={[paddingStyles, descriptionStyles]}>
-        <Paragraph accent="lead">{description}</Paragraph>
+        <Paragraph accent="lead">
+          {description}
+          {link && (
+            <Link href={link}>
+              <span
+                css={css({
+                  wordBreak: 'break-word',
+                  position: 'relative',
+                })}
+              >
+                {linkLabel || link}
+                <ExternalLinkIcon
+                  size={17}
+                  color={colors.pine}
+                  style={{
+                    position: 'absolute',
+                    bottom: '1px',
+                  }}
+                />
+              </span>
+            </Link>
+          )}
+        </Paragraph>
       </div>
     )}
     <div css={[paddingStyles]}>{children}</div>

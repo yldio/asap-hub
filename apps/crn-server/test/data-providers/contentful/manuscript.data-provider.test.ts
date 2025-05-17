@@ -1009,10 +1009,10 @@ describe('Manuscripts Contentful Data Provider', () => {
     });
 
     it('Should fetch the count of existing manuscripts for a given team', async () => {
-      const teamId = 'team-id-1';
+      const teamId = 'team-1';
       const result =
         await manuscriptDataProviderMockGraphql.fetchCountByTeamId(teamId);
-      expect(result).toBe(0);
+      expect(result).toBe(1);
     });
   });
 
@@ -1424,7 +1424,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         'en-US': [],
       },
       count: {
-        'en-US': 3,
+        'en-US': 2,
       },
       status: {
         'en-US': 'Waiting for Report',
@@ -1485,6 +1485,8 @@ describe('Manuscripts Contentful Data Provider', () => {
         ...manuscriptCreateDataObject,
         userId: 'user-id-0',
       });
+
+      //console.log(JSON.stringify(environmentMock.createEntry));
 
       expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
         1,

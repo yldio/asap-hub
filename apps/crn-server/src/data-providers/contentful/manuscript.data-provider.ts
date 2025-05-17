@@ -6,9 +6,12 @@ import {
   FetchManuscriptsByTeamIdQuery,
   FetchManuscriptsQuery,
   FetchManuscriptsQueryVariables,
+  FetchManuscriptVersionCountByIdQuery,
+  FetchManuscriptVersionCountByIdQueryVariables,
   FETCH_MANUSCRIPTS,
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
+  FETCH_MANUSCRIPT_VERSION_COUNT_BY_ID,
   getLinkAsset,
   getLinkAssets,
   getLinkEntities,
@@ -146,7 +149,7 @@ export class ManuscriptContentfulDataProvider
     return (
       teams?.linkedFrom?.manuscriptsCollection?.items.filter(
         (item) => item?.teamsCollection?.items[0]?.sys.id === id,
-      ).length || 0
+      )[0]?.count || 0
     );
   }
 
@@ -300,10 +303,18 @@ export class ManuscriptContentfulDataProvider
     const manuscriptEntry = await environment.getEntry(id);
     const previousVersions = manuscriptEntry.fields.versions['en-US'];
 
+    const { manuscripts } = await this.contentfulClient.request<
+      FetchManuscriptVersionCountByIdQuery,
+      FetchManuscriptVersionCountByIdQueryVariables
+    >(FETCH_MANUSCRIPT_VERSION_COUNT_BY_ID, { id });
+
+    const currentVersionCount =
+      manuscripts?.versionsCollection?.items[0]?.count || 0;
+
     const manuscriptVersionId = await this.createManuscriptVersion(
       version,
       userId,
-      previousVersions.length + 1,
+      currentVersionCount + 1,
     );
 
     const newVersion = getLinkEntity(manuscriptVersionId);

@@ -1484,6 +1484,8 @@ describe('Manuscripts Contentful Data Provider', () => {
         userId: 'user-id-0',
       });
 
+      //console.log(JSON.stringify(environmentMock.createEntry));
+
       expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
         1,
         'manuscriptVersions',

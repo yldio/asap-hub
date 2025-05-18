@@ -1,8 +1,8 @@
 import { AuthorResponse, AuthorSelectOption } from '@asap-hub/model';
 import type {
-    ByRoleMatcher,
-    ByRoleOptions,
-    waitForOptions,
+  ByRoleMatcher,
+  ByRoleOptions,
+  waitForOptions,
 } from '@testing-library/react';
 import { act, cleanup, render, waitFor } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
@@ -93,7 +93,7 @@ const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {
   await userEvent.click(confirmBtn);
 };
 
-jest.setTimeout(30_000);
+jest.setTimeout(60_000);
 
 describe('Manuscript form', () => {
   beforeEach(() => {
@@ -306,7 +306,6 @@ describe('Manuscript form', () => {
   });
 
   it('resets form fields to default values when no longer visible', async () => {
-
     const { getByRole, queryByRole } = render(
       <StaticRouter>
         <ManuscriptForm

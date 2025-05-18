@@ -10,7 +10,18 @@ import {
   QuickCheckDetails,
   quickCheckQuestions,
 } from '@asap-hub/model';
+import type {
+  ByRoleOptions,
+  waitForOptions,
+  ByRoleMatcher,
+} from '@testing-library/react';
 import ManuscriptForm from '../ManuscriptForm';
+
+type FindByRole = (
+  role: ByRoleMatcher,
+  options?: ByRoleOptions | undefined,
+  waitForElementOptions?: waitForOptions | undefined,
+) => Promise<HTMLElement>;
 
 jest.mock(
   'react-lottie',
@@ -81,13 +92,18 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   clearFormToast: jest.fn(),
 };
 
-const submitForm = async ({ findByRole }) => {
+const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {
   const submitBtn = await findByRole('button', { name: /Submit/ });
+
+  expect(submitBtn).toBeEnabled();
+
   await userEvent.click(submitBtn);
 
   const confirmBtn = await findByRole('button', {
     name: /Submit Manuscript/i,
   });
+  expect(confirmBtn).toBeEnabled();
+
   await userEvent.click(confirmBtn);
 };
 jest.setTimeout(30000);

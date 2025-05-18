@@ -16,7 +16,18 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
+import type {
+  ByRoleOptions,
+  waitForOptions,
+  ByRoleMatcher,
+} from '@testing-library/react';
 import ManuscriptForm from '../ManuscriptForm';
+
+type FindByRole = (
+  role: ByRoleMatcher,
+  options?: ByRoleOptions | undefined,
+  waitForElementOptions?: waitForOptions | undefined,
+) => Promise<HTMLElement>;
 
 jest.mock(
   'react-lottie',
@@ -90,7 +101,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   clearFormToast: jest.fn(),
 };
 
-const submitForm = async ({ findByRole }) => {
+const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {
   const submitBtn = await findByRole('button', { name: /Submit/ });
   await userEvent.click(submitBtn);
 

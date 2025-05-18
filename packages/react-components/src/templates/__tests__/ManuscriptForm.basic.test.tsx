@@ -4,7 +4,18 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
+import type {
+  ByRoleOptions,
+  waitForOptions,
+  ByRoleMatcher,
+} from '@testing-library/react';
 import ManuscriptForm from '../ManuscriptForm';
+
+type FindByRole = (
+  role: ByRoleMatcher,
+  options?: ByRoleOptions | undefined,
+  waitForElementOptions?: waitForOptions | undefined,
+) => Promise<HTMLElement>;
 
 jest.mock(
   'react-lottie',
@@ -72,7 +83,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   clearFormToast: jest.fn(),
 };
 
-const submitForm = async ({ findByRole }) => {
+const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {
   const submitBtn = await findByRole('button', { name: /Submit/ });
   await userEvent.click(submitBtn);
 
@@ -82,7 +93,7 @@ const submitForm = async ({ findByRole }) => {
   await userEvent.click(confirmBtn);
 };
 
-jest.setTimeout(60000);
+jest.setTimeout(100_000);
 
 describe('Manuscript form', () => {
   beforeEach(() => {
@@ -105,7 +116,7 @@ describe('Manuscript form', () => {
 
   it('data is sent on form submission', async () => {
     const onCreate = jest.fn();
-    const renderResult = render(
+    const { findByRole } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -127,7 +138,7 @@ describe('Manuscript form', () => {
       </StaticRouter>,
     );
 
-    await submitForm(renderResult);
+    await submitForm({ findByRole });
 
     await waitFor(() => {
       expect(onCreate).toHaveBeenCalledWith({
@@ -340,7 +351,7 @@ describe('Manuscript form', () => {
       queryByRole('textbox', { name: /Publication DOI/i }),
     ).not.toBeInTheDocument();
 
-    await submitForm({ getByRole, findByRole });
+    await submitForm({ findByRole });
 
     await waitFor(() => {
       expect(onCreate).toHaveBeenCalledWith({

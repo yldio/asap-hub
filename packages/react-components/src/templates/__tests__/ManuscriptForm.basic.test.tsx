@@ -1,14 +1,14 @@
 import { AuthorResponse, AuthorSelectOption } from '@asap-hub/model';
+import type {
+    ByRoleMatcher,
+    ByRoleOptions,
+    waitForOptions,
+} from '@testing-library/react';
 import { act, cleanup, render, waitFor } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
-import type {
-  ByRoleOptions,
-  waitForOptions,
-  ByRoleMatcher,
-} from '@testing-library/react';
 import ManuscriptForm from '../ManuscriptForm';
 
 type FindByRole = (
@@ -93,7 +93,7 @@ const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {
   await userEvent.click(confirmBtn);
 };
 
-jest.setTimeout(100_000);
+jest.setTimeout(30_000);
 
 describe('Manuscript form', () => {
   beforeEach(() => {
@@ -115,7 +115,6 @@ describe('Manuscript form', () => {
   });
 
   it('data is sent on form submission', async () => {
-    const onCreate = jest.fn();
     const { findByRole } = render(
       <StaticRouter>
         <ManuscriptForm
@@ -133,7 +132,6 @@ describe('Manuscript form', () => {
             filename: 'test.csv',
             url: 'http://example.com/test.csv',
           }}
-          onCreate={onCreate}
         />
       </StaticRouter>,
     );
@@ -141,7 +139,7 @@ describe('Manuscript form', () => {
     await submitForm({ findByRole });
 
     await waitFor(() => {
-      expect(onCreate).toHaveBeenCalledWith({
+      expect(defaultProps.onCreate).toHaveBeenCalledWith({
         title: 'manuscript title',
         eligibilityReasons: [],
         versions: [
@@ -183,6 +181,7 @@ describe('Manuscript form', () => {
         ],
         teamId,
       });
+      expect(defaultProps.onSuccess).toHaveBeenCalled();
     });
   });
 
@@ -307,14 +306,12 @@ describe('Manuscript form', () => {
   });
 
   it('resets form fields to default values when no longer visible', async () => {
-    const onCreate = jest.fn();
 
-    const { getByRole, queryByRole, findByRole } = render(
+    const { getByRole, queryByRole } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
           title="manuscript title"
-          onCreate={onCreate}
           type="Original Research"
           lifecycle="Publication"
           preprintDoi="10.4444/test"
@@ -350,29 +347,13 @@ describe('Manuscript form', () => {
     expect(
       queryByRole('textbox', { name: /Publication DOI/i }),
     ).not.toBeInTheDocument();
-
-    await submitForm({ findByRole });
-
-    await waitFor(() => {
-      expect(onCreate).toHaveBeenCalledWith({
-        title: 'manuscript title',
-        eligibilityReasons: [],
-        versions: [
-          expect.objectContaining({
-            preprintDoi: undefined,
-            publicationDoi: undefined,
-          }),
-        ],
-        teamId,
-      });
-    });
+    // part of submition was removed and tested above in another test
   });
 
   it('does not submit when required values are missing', async () => {
-    const onCreate = jest.fn();
     const { getByRole } = render(
       <StaticRouter>
-        <ManuscriptForm {...defaultProps} onCreate={onCreate} />
+        <ManuscriptForm {...defaultProps} />
       </StaticRouter>,
     );
 

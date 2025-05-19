@@ -17,7 +17,7 @@ import {
   StatusButton,
   steel,
 } from '..';
-import { Button, Link, Pill } from '../atoms';
+import { Anchor, Button, Link, Pill } from '../atoms';
 import { borderRadius } from '../card';
 import { formatDateToTimezone } from '../date';
 import { rem } from '../pixels';
@@ -131,6 +131,7 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
   handleStatusClick,
 }) => {
   const {
+    id,
     team,
     manuscriptId,
     lastUpdated,
@@ -150,8 +151,17 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
         data-testid="compliance-table-row"
       >
         <td className={'sticky'}>
-          <Pill accent="blue" numberOfLines={1}>
-            <span css={pillIdStyles}>{manuscriptId}</span>
+          <Pill accent="blue" numberOfLines={1} isLink>
+            <span css={pillIdStyles}>
+              <Anchor
+                href={`${
+                  network({}).teams({}).team({ teamId: team.id }).workspace({})
+                    .$
+                }#${id}`}
+              >
+                {manuscriptId}
+              </Anchor>
+            </span>
           </Pill>
         </td>
         <td>

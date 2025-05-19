@@ -473,6 +473,77 @@ describe('compliance section', () => {
       '/network/teams/t0/workspace/create-manuscript',
     );
   });
+
+  it('expands target manuscript if id provided', () => {
+    const user = {
+      displayName: 'John Doe',
+      firstName: 'John',
+      lastName: 'Doe',
+      id: 'john-doe',
+      teams: [{ id: 'alessi', name: 'Alessi' }],
+      avatarUrl: '',
+      alumniSinceDate: undefined,
+    };
+    const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
+      ...team,
+      manuscripts: [
+        {
+          id: '1',
+          count: 1,
+          title: 'Nice manuscript',
+          teamId: 'WH1',
+          grantId: '000282',
+          versions: [
+            {
+              id: 'version-1',
+              type: 'Original Research',
+              lifecycle: 'Draft Manuscript (prior to Publication)',
+              description: 'A description',
+              count: 1,
+              manuscriptFile: {
+                url: 'http://example.com/file.pdf',
+                filename: 'file.pdf',
+                id: 'file-id',
+              },
+              createdBy: user,
+              updatedBy: user,
+              createdDate: '2020-12-10T20:36:54Z',
+              publishedAt: '2020-12-10T20:36:54Z',
+              teams: [
+                {
+                  id: 'team-1',
+                  displayName: 'Team 1',
+                  inactiveSince: undefined,
+                },
+              ],
+              labs: [{ name: 'Lab 1', id: 'lab-1' }],
+              firstAuthors: [],
+              correspondingAuthor: [],
+              additionalAuthors: [],
+            },
+          ],
+        },
+      ],
+    };
+    const { container } = render(
+      <TeamProfileWorkspace
+        {...teamWithManuscripts}
+        useManuscriptById={jest
+          .fn()
+          .mockImplementation(() => [
+            teamWithManuscripts.manuscripts[0]!,
+            jest.fn(),
+          ])}
+        tools={[]}
+        targetManuscriptId={'1'}
+      />,
+    );
+
+    expect(container).toHaveTextContent('Original Research');
+    expect(container).toHaveTextContent(
+      'Draft Manuscript (prior to Publication)',
+    );
+  });
 });
 
 it('renders contact project manager when point of contact provided', () => {

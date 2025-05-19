@@ -7,7 +7,9 @@ import {
   render,
   screen,
   waitForElementToBeRemoved,
+  waitFor,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
@@ -147,9 +149,18 @@ it('generates the short description based on the current description', async () 
 
   await renderPage();
 
-  userEvent.click(screen.getByRole('button', { name: 'Generate' }));
+  const descriptionTextbox = screen.getByRole('textbox', {
+    name: /Manuscript Description/i,
+  });
+  userEvent.type(descriptionTextbox, 'Some description');
+
+  await userEvent.click(screen.getByRole('button', { name: 'Generate' }));
 
   await waitFor(() => {
+    expect(mockGetGeneratedShortDescription).toHaveBeenCalledWith(
+      'Some description',
+      expect.anything(),
+    );
     expect(
       screen.getByRole('textbox', { name: /short description/i }),
     ).toHaveValue('test generated short description 1');

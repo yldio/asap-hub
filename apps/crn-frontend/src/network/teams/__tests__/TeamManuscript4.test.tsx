@@ -170,6 +170,11 @@ it('shows default error toast when submitting with any other error', async () =>
   });
   userEvent.type(descriptionTextbox, 'Some description');
 
+  const shortDescriptionTextbox = screen.getByRole('textbox', {
+    name: /Short Description/i,
+  });
+  userEvent.type(shortDescriptionTextbox, 'Some short description');
+
   userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 
   await waitFor(() =>

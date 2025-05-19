@@ -45,6 +45,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onCreate: jest.fn(() => Promise.resolve()),
   onUpdate: jest.fn(() => Promise.resolve()),
   onResubmit: jest.fn(() => Promise.resolve()),
+  getShortDescriptionFromDescription: jest.fn(() => Promise.resolve('')),
   getAuthorSuggestions: jest.fn(),
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,
@@ -69,6 +70,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   labMaterialsRegistered: 'Yes',
   availabilityStatement: 'Yes',
   description: 'Some description',
+  shortDescription: 'A good short description',
   firstAuthors: [
     {
       label: 'Author 1',
@@ -175,6 +177,7 @@ describe('Manuscript form', () => {
             teams: ['1'],
             labs: [],
             description: 'Some description',
+            shortDescription: 'A good short description',
             firstAuthors: [],
             additionalAuthors: [],
           }),

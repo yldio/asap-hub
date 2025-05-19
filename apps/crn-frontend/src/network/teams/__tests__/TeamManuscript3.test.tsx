@@ -170,6 +170,11 @@ it('shows server validation error toast and a message when submitting with dupli
   });
   userEvent.type(descriptionTextbox, 'Some description');
 
+  const shortDescriptionTextbox = screen.getByRole('textbox', {
+    name: /Short Description/i,
+  });
+  userEvent.type(shortDescriptionTextbox, 'Some short description');
+
   userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 
   await waitFor(() =>

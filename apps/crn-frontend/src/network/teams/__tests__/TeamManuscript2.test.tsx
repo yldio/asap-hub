@@ -162,6 +162,11 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   });
   userEvent.type(descriptionTextbox, 'Some description');
 
+  const shortDescriptionTextbox = screen.getByRole('textbox', {
+    name: /Short Description/i,
+  });
+  userEvent.type(shortDescriptionTextbox, 'Some short description');
+
   userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 
   await waitFor(() =>
@@ -172,6 +177,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
 
   expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
   userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), specialChars.enter);
 
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
@@ -246,6 +252,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
             teams: ['42'],
             labs: [],
             description: 'Some description',
+            shortDescription: 'Some short description',
             firstAuthors: [
               {
                 externalAuthorEmail: 'jane@doe.com',

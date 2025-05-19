@@ -305,6 +305,28 @@ describe('Manuscript form', () => {
     expect(getByText(/Sorry, no types match/i)).toBeVisible();
   });
 
+  it('triggers validation when typing into Preprint DOI field', async () => {
+    const { getByRole } = render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Preprint"
+        />
+      </StaticRouter>,
+    );
+
+    const preprintInput = getByRole('textbox', {
+      name: /Preprint DOI/i,
+    });
+
+    await userEvent.type(preprintInput, '10.1234/test');
+    preprintInput.blur();
+
+    expect(preprintInput).toHaveValue('10.1234/test');
+  });
+
   it('resets form fields to default values when no longer visible', async () => {
     const { getByRole, queryByRole } = render(
       <StaticRouter>

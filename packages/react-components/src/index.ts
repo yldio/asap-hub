@@ -161,7 +161,7 @@ export {
   NewsSection,
   NoEvents,
   OnboardingFooter,
-  OutputShortDescriptionCard,
+  ShortDescriptionCard,
   OutputVersions,
   PageCard,
   PagesSection,

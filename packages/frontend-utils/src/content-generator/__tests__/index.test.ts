@@ -1,9 +1,9 @@
-import { generateOutputContent } from '..';
+import { generateContent } from '..';
 
 const apiUrl = 'http://api.example.com';
 const descriptionMD = 'markdown description';
 
-describe('generateOutputContent', () => {
+describe('generateContent', () => {
   it('returns a successfully fetched short description', async () => {
     const response = { shortDescription: 'short description' };
     jest.spyOn(global, 'fetch').mockImplementationOnce(() =>
@@ -14,8 +14,8 @@ describe('generateOutputContent', () => {
       } as Response),
     );
 
-    const result = await generateOutputContent(
-      { descriptionMD },
+    const result = await generateContent(
+      descriptionMD,
       apiUrl,
       'Bearer x',
       'CRN',
@@ -37,7 +37,7 @@ describe('generateOutputContent', () => {
     );
 
     await expect(
-      generateOutputContent({ descriptionMD }, apiUrl, 'Bearer x', app),
+      generateContent(descriptionMD, apiUrl, 'Bearer x', app),
     ).rejects.toThrow(new RegExp(error, 'i'));
   });
 });

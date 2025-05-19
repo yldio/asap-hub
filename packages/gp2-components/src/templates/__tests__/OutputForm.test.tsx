@@ -372,6 +372,7 @@ describe('OutputForm', () => {
       ).toHaveValue('An interesting article');
     });
   });
+
   describe('Edit output', () => {
     it('renders with projects', () => {
       const output = {
@@ -1031,6 +1032,48 @@ describe('OutputForm', () => {
       const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
       expect(screen.getByText('Please enter a title.')).toBeVisible();
+    });
+
+    describe('Short Description Validation', () => {
+      it('shows error message when short description exceeds 250 characters', () => {
+        renderWithRouter(<OutputForm {...defaultProps} />);
+        const input = screen.getByLabelText(/short description/i);
+        const longText = 'a'.repeat(251);
+        fireEvent.change(input, { target: { value: longText } });
+        fireEvent.focusOut(input);
+        expect(
+          screen.getByText(
+            'The short description exceeds the character limit. Please limit it to 250 characters.',
+          ),
+        ).toBeVisible();
+      });
+
+      it('shows error message when short description is empty after trimming', () => {
+        renderWithRouter(<OutputForm {...defaultProps} />);
+        const input = screen.getByLabelText(/short description/i);
+        fireEvent.change(input, { target: { value: '   ' } });
+        fireEvent.focusOut(input);
+        expect(
+          screen.getByText('Please enter a short description'),
+        ).toBeVisible();
+      });
+
+      it('does not show error message when short description is valid', () => {
+        renderWithRouter(<OutputForm {...defaultProps} />);
+        const input = screen.getByLabelText(/short description/i);
+        fireEvent.change(input, {
+          target: { value: 'Valid short description' },
+        });
+        fireEvent.focusOut(input);
+        expect(
+          screen.queryByText('Please enter a short description'),
+        ).not.toBeInTheDocument();
+        expect(
+          screen.queryByText(
+            'The short description exceeds the character limit. Please limit it to 250 characters.',
+          ),
+        ).not.toBeInTheDocument();
+      });
     });
 
     it('shows the custom error message for a date in the future', async () => {

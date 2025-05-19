@@ -2,7 +2,7 @@ import { AlgoliaClient } from '@asap-hub/algolia';
 import {
   BackendError,
   createSentryHeaders,
-  generateOutputContent,
+  generateContent,
   GetListOptions,
 } from '@asap-hub/frontend-utils';
 import { gp2, OutputGenerateContentResponse } from '@asap-hub/model';
@@ -154,5 +154,10 @@ export const getGeneratedOutputContent = async (
   authorization: string,
 ): Promise<OutputGenerateContentResponse> => {
   const apiUrl = `${API_BASE_URL}/outputs/generate-content`;
-  return generateOutputContent(output, apiUrl, authorization, 'GP2');
+  return generateContent(
+    output.description || '',
+    apiUrl,
+    authorization,
+    'GP2',
+  );
 };

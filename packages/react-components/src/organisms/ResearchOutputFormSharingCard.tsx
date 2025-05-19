@@ -21,7 +21,7 @@ import {
 } from '../molecules';
 import { noop } from '../utils';
 import { Markdown } from '../atoms/index';
-import OutputShortDescriptionCard from './OutputShortDescriptionCard';
+import ShortDescriptionCard from './ShortDescriptionCard';
 
 type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
@@ -104,10 +104,24 @@ const ResearchOutputFormSharingCard: React.FC<
   const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
   const [titleValidationMessage, setTitleValidationMessage] =
     useState<string>();
+  const [
+    shortDescriptionValidationMessage,
+    setShortDescriptionValidationMessage,
+  ] = useState<string>();
 
   const subtypeSuggestions = researchTags.filter(
     (tag) => tag.category === 'Subtype',
   );
+
+  const validateShortDescription = (shortDescriptionNewValue: string) => {
+    setShortDescriptionValidationMessage(
+      shortDescriptionNewValue.length >= 250
+        ? 'The short description exceeds the character limit. Please limit it to 250 characters.'
+        : shortDescriptionNewValue.trim().length === 0
+          ? 'Please enter a short description'
+          : undefined,
+    );
+  };
 
   useEffect(() => {
     setUrlValidationMessage(
@@ -219,14 +233,18 @@ const ResearchOutputFormSharingCard: React.FC<
           ></Markdown>
         }
       />
-      <OutputShortDescriptionCard
-        onChange={onChangeShortDescription}
+      <ShortDescriptionCard
+        onChange={(shortDescriptionNewValue) => {
+          onChangeShortDescription(shortDescriptionNewValue);
+          validateShortDescription(shortDescriptionNewValue);
+        }}
         buttonEnabled={descriptionMD.length > 0}
         enabled={!isSaving}
         value={shortDescription}
         getShortDescription={() =>
           getShortDescriptionFromDescription(descriptionMD)
         }
+        customValidationMessage={shortDescriptionValidationMessage}
       />
       <LabeledRadioButtonGroup
         title="Has this output been funded by ASAP"

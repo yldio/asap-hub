@@ -1,6 +1,7 @@
 {
   "customRanking": [
     "desc(endDateTimestamp)",
+    "desc(lastUpdated)",
     "asc(addedDate)",
     "asc(createdDate)"
   ],

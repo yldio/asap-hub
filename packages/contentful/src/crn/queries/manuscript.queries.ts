@@ -487,7 +487,7 @@ export const FETCH_MANUSCRIPTS_BY_TEAM_ID = gql`
       linkedFrom {
         manuscriptsCollection(limit: 500, order: count_DESC) {
           items {
-            teamsCollection {
+            teamsCollection(limit: 1) {
               items {
                 sys {
                   id

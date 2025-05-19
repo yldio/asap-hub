@@ -354,7 +354,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
   const isEditMode = !!manuscriptId && !resubmitManuscript;
   const methods = useForm<ManuscriptFormData>({
-    mode: 'onBlur',
+    mode: 'all',
     defaultValues: {
       title: title || '',
       versions: [
@@ -859,7 +859,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   onChange={(titleText) => {
                     setTitleServerError(undefined);
                     onChange(titleText);
-                    onBlur();
                   }}
                   onBlur={onBlur}
                   enabled={!isSubmitting}
@@ -885,11 +884,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     value: option,
                     label: option,
                   }))}
-                  onChange={async (e) => {
+                  onChange={(e) => {
                     onChange(e);
                     // Clear lifecycle when type changes to prevent mismatched states
                     setValue('versions.0.lifecycle', '');
-                    await trigger('versions.0.type');
                   }}
                   onBlur={onBlur}
                   customValidationMessage={error?.message}
@@ -928,7 +926,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           lifecycleEvent as ManuscriptLifecycle,
                         );
                       }
-                      onBlur();
                     }}
                     onBlur={onBlur}
                     customValidationMessage={error?.message}
@@ -972,13 +969,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           : '(optional)'
                       }
                       description="Your preprint DOI must start with 10."
-                      onChange={async (e) => {
-                        onChange(e);
-                        if (watchLifecycle === 'Preprint') {
-                          await trigger('versions.0.preprintDoi');
-                          onBlur();
-                        }
-                      }}
+                      onChange={onChange}
                       onBlur={onBlur}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
@@ -1012,11 +1003,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       title="Publication DOI"
                       subtitle={'(required)'}
                       description="Your publication DOI must start with 10."
-                      onChange={async (e) => {
-                        onChange(e);
-                        await trigger('versions.0.publicationDoi');
-                        onBlur();
-                      }}
+                      onChange={onChange}
                       onBlur={onBlur}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
@@ -1049,11 +1036,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     <LabeledTextField
                       title="Please provide details"
                       subtitle={'(required)'}
-                      onChange={async (e) => {
-                        onChange(e);
-                        await trigger('versions.0.otherDetails');
-                        onBlur();
-                      }}
+                      onChange={onChange}
                       onBlur={onBlur}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
@@ -1528,10 +1511,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                                   description="The reason you provide must be accepted by the Open Science team."
                                   value={value || ''}
                                   customValidationMessage={error?.message}
-                                  onChange={async (e) => {
-                                    onChange(e);
-                                    await trigger(`versions.0.${field}Details`);
-                                  }}
+                                  onChange={onChange}
                                   enabled={!isEditMode && !isSubmitting}
                                   onBlur={onBlur}
                                 />

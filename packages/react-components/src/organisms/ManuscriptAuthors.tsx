@@ -173,6 +173,7 @@ const ManuscriptAuthors = ({
                 validate();
               }
             }}
+            onBlur={validate}
             values={authors || []}
             noOptionsMessage={({ inputValue }) =>
               `Sorry, no authors match ${inputValue}`

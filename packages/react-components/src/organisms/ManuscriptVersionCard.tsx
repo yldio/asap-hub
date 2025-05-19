@@ -242,6 +242,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
         {version.complianceReport && (
           <ComplianceReportCard
             {...version.complianceReport}
+            count={version.count}
             manuscriptId={manuscriptId}
             versionId={version.id}
           />

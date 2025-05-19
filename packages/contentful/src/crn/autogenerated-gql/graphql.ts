@@ -19190,13 +19190,27 @@ export type FetchManuscriptsByTeamIdQuery = {
     linkedFrom?: Maybe<{
       manuscriptsCollection?: Maybe<{
         items: Array<
-          Maybe<{
-            teamsCollection?: Maybe<{
-              items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
-            }>;
-          }>
+          Maybe<
+            Pick<Manuscripts, 'count'> & {
+              teamsCollection?: Maybe<{
+                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+              }>;
+            }
+          >
         >;
       }>;
+    }>;
+  }>;
+};
+
+export type FetchManuscriptVersionCountByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchManuscriptVersionCountByIdQuery = {
+  manuscripts?: Maybe<{
+    versionsCollection?: Maybe<{
+      items: Array<Maybe<Pick<ManuscriptVersions, 'count'>>>;
     }>;
   }>;
 };
@@ -37638,6 +37652,11 @@ export const FetchManuscriptsByTeamIdDocument = {
                             name: { kind: 'Name', value: 'limit' },
                             value: { kind: 'IntValue', value: '500' },
                           },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order' },
+                            value: { kind: 'EnumValue', value: 'count_DESC' },
+                          },
                         ],
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -37654,6 +37673,13 @@ export const FetchManuscriptsByTeamIdDocument = {
                                       kind: 'Name',
                                       value: 'teamsCollection',
                                     },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'limit' },
+                                        value: { kind: 'IntValue', value: '1' },
+                                      },
+                                    ],
                                     selectionSet: {
                                       kind: 'SelectionSet',
                                       selections: [
@@ -37691,6 +37717,10 @@ export const FetchManuscriptsByTeamIdDocument = {
                                       ],
                                     },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'count' },
+                                  },
                                 ],
                               },
                             },
@@ -37710,6 +37740,90 @@ export const FetchManuscriptsByTeamIdDocument = {
 } as unknown as DocumentNode<
   FetchManuscriptsByTeamIdQuery,
   FetchManuscriptsByTeamIdQueryVariables
+>;
+export const FetchManuscriptVersionCountByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchManuscriptVersionCountById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'manuscripts' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'versionsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '1' },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'order' },
+                      value: { kind: 'EnumValue', value: 'count_DESC' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'count' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchManuscriptVersionCountByIdQuery,
+  FetchManuscriptVersionCountByIdQueryVariables
 >;
 export const FetchNewsByIdDocument = {
   kind: 'Document',

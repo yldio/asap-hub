@@ -485,16 +485,29 @@ export const FETCH_MANUSCRIPTS_BY_TEAM_ID = gql`
   query FetchManuscriptsByTeamId($id: String!) {
     teams(id: $id) {
       linkedFrom {
-        manuscriptsCollection(limit: 500) {
+        manuscriptsCollection(limit: 500, order: count_DESC) {
           items {
-            teamsCollection {
+            teamsCollection(limit: 1) {
               items {
                 sys {
                   id
                 }
               }
             }
+            count
           }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_MANUSCRIPT_VERSION_COUNT_BY_ID = gql`
+  query FetchManuscriptVersionCountById($id: String!) {
+    manuscripts(id: $id) {
+      versionsCollection(limit: 1, order: count_DESC) {
+        items {
+          count
         }
       }
     }

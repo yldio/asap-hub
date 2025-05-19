@@ -76,7 +76,7 @@ const ManuscriptAuthors = ({
             : {}
         }
         render={({
-          field: { value: authors, onChange, onBlur },
+          field: { value: authors, onChange },
           fieldState: { error },
         }) => (
           <AuthorSelect
@@ -172,11 +172,6 @@ const ManuscriptAuthors = ({
               if (validate) {
                 validate();
               }
-            }}
-            onBlur={() => {
-              onBlur();
-              // eslint-disable-next-line @typescript-eslint/no-floating-promises
-              trigger(`versions.0.${fieldName}`);
             }}
             values={authors || []}
             noOptionsMessage={({ inputValue }) =>

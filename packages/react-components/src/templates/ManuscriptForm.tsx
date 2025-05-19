@@ -885,13 +885,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     value: option,
                     label: option,
                   }))}
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     onChange(e);
                     // Clear lifecycle when type changes to prevent mismatched states
-                    if (e !== watchType) {
-                      setValue('versions.0.lifecycle', '');
-                    }
-                    onBlur();
+                    setValue('versions.0.lifecycle', '');
+                    await trigger('versions.0.type');
                   }}
                   onBlur={onBlur}
                   customValidationMessage={error?.message}

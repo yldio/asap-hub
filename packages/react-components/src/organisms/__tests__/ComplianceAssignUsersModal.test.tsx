@@ -128,7 +128,7 @@ describe('ComplianceAssignUsersModal', () => {
       />,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /Assign/ }));
+    userEvent.click(screen.getByRole('button', { name: /Update/ }));
 
     await waitFor(() => {
       expect(mockOnConfirm).toHaveBeenCalledWith({
@@ -199,7 +199,7 @@ describe('ComplianceAssignUsersModal', () => {
       />,
     );
 
-    expect(screen.getByRole('button', { name: /Assign/ })).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Update/ })).toBeEnabled();
 
     userEvent.click(screen.getByRole('textbox', { name: /Assign User/i }));
     await waitFor(() => {
@@ -211,6 +211,6 @@ describe('ComplianceAssignUsersModal', () => {
     userEvent.click(screen.getByLabelText(/Remove Jane Smith/i));
     expect(screen.queryAllByLabelText(/Remove/i)).toHaveLength(0);
 
-    expect(screen.getByRole('button', { name: /Assign/ })).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Update/ })).toBeEnabled();
   });
 });

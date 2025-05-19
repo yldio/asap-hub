@@ -134,9 +134,10 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
   };
 
   const watchedAssignedUsers = watch('assignedUsers');
+  const isEditing = assignedUsers.length > 0;
 
   const hasRemovedAllPreviousUsers =
-    watchedAssignedUsers.length === 0 && assignedUsers.length > 0;
+    watchedAssignedUsers.length === 0 && isEditing;
 
   const hasAddedUsers = watchedAssignedUsers.length > 0;
 
@@ -202,7 +203,7 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
                 enabled={isButtonEnabled}
                 onClick={handleSubmit(handleConfirm)}
               >
-                Assign
+                {isEditing ? 'Update' : 'Assign'}
               </Button>
             </div>
           </div>

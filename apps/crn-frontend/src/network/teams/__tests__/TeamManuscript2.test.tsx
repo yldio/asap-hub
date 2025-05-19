@@ -19,8 +19,11 @@ import { RecoilRoot } from 'recoil';
 import { createManuscript } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
+import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
 import { refreshTeamState } from '../state';
 import TeamManuscript from '../TeamManuscript';
+
+jest.mock('../../../shared-api/content-generator');
 
 jest.mock(
   'react-lottie',
@@ -71,6 +74,11 @@ jest.mock('../useManuscriptToast', () => {
     })),
   };
 });
+
+const mockGetGeneratedShortDescription =
+  getGeneratedShortDescription as jest.MockedFunction<
+    typeof getGeneratedShortDescription
+  >;
 
 beforeEach(() => {
   jest.resetModules();
@@ -127,6 +135,10 @@ const renderPage = async (
 };
 
 it('can publish a form when the data is valid and navigates to team workspace', async () => {
+  mockGetGeneratedShortDescription.mockResolvedValueOnce({
+    shortDescription: 'Some short description',
+  });
+
   const title = 'The Manuscript';
 
   await renderPage();
@@ -257,9 +269,15 @@ it('can publish a form when the data is valid and navigates to team workspace', 
               {
                 externalAuthorEmail: 'jane@doe.com',
                 externalAuthorName: 'Jane Doe',
+                externalAuthorId: undefined,
               },
             ],
             additionalAuthors: [],
+            additionalFiles: undefined,
+            correspondingAuthor: undefined,
+            otherDetails: undefined,
+            preprintDoi: undefined,
+            publicationDoi: undefined,
           },
         ],
         notificationList: '',

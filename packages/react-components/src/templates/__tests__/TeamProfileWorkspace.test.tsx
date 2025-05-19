@@ -501,6 +501,7 @@ describe('compliance section', () => {
               type: 'Original Research',
               lifecycle: 'Draft Manuscript (prior to Publication)',
               description: 'A description',
+              shortDescription: 'A short description',
               count: 1,
               manuscriptFile: {
                 url: 'http://example.com/file.pdf',

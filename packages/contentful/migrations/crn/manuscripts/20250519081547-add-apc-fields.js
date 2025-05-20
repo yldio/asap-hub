@@ -48,10 +48,10 @@ module.exports.up = (migration) => {
   manuscript.deleteField('apcAmount');
   manuscript.deleteField('apcPaid');
 
-  manuscript.moveField('declinedReason').afterField('apcRequested');
-  manuscript.moveField('apcAmountPaid').afterField('apcRequested');
-  manuscript.moveField('apcCoverageRequestStatus').afterField('apcRequested');
   manuscript.moveField('apcAmountRequested').afterField('apcRequested');
+  manuscript.moveField('apcCoverageRequestStatus').afterField('apcAmountRequested');
+  manuscript.moveField('apcAmountPaid').afterField('apcCoverageRequestStatus');
+  manuscript.moveField('declinedReason').afterField('apcAmountPaid');
 };
 
 module.exports.down = (migration) => {

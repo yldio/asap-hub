@@ -3524,7 +3524,6 @@ enum ManuscriptVersionsTeamsCollectionOrder {
 type Manuscripts implements Entry & _Node {
   _id: ID!
   apcAmountPaid(locale: String): Float
-  apcPaid(locale: String): Boolean
   apcRequested(locale: String): Boolean
   assignedUsersCollection(limit: Int = 100, locale: String, order: [ManuscriptsAssignedUsersCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): ManuscriptsAssignedUsersCollection
   contentfulMetadata: ContentfulMetadata!
@@ -3663,7 +3662,6 @@ input ManuscriptsFilter {
   apcAmount_lte: Float
   apcAmount_not: Float
   apcAmount_not_in: [Float]
-  apcPaid: Boolean
   apcPaid_exists: Boolean
   apcPaid_not: Boolean
   apcRequested: Boolean

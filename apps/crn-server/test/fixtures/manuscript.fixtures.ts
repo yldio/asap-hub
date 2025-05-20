@@ -33,7 +33,6 @@ export const getManuscriptDataObject = (
     },
   ],
   requestingApcCoverage: undefined,
-  apcPaid: false,
   apcAmountPaid: undefined,
   versions: [
     {
@@ -108,7 +107,6 @@ export const getContentfulGraphqlManuscript = (
   count: 1,
   status: 'Compliant',
   apcRequested: false,
-  apcPaid: false,
   apcAmountPaid: null,
   teamsCollection: {
     items: [{ sys: { id: 'team-1' } }],
@@ -390,7 +388,6 @@ export const getManuscriptsListResponse =
         title: 'Manuscript 1',
         teams: 'Team A',
         requestingApcCoverage: undefined,
-        apcPaid: false,
         apcAmountPaid: undefined,
         assignedUsers: [
           {
@@ -413,7 +410,6 @@ export const getManuscriptsListResponse =
         title: 'Manuscript 2',
         teams: 'Team A',
         requestingApcCoverage: undefined,
-        apcPaid: false,
         apcAmountPaid: undefined,
         assignedUsers: [
           {

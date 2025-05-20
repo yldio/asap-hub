@@ -46,6 +46,12 @@ module.exports.up = (migration) => {
 
   // Note: No data migration is required. The field apcAmount was unused.
   manuscript.deleteField('apcAmount');
+  manuscript.deleteField('apcPaid');
+
+  manuscript.moveField('declinedReason').afterField('apcRequested');
+  manuscript.moveField('apcAmountPaid').afterField('apcRequested');
+  manuscript.moveField('apcCoverageRequestStatus').afterField('apcRequested');
+  manuscript.moveField('apcAmountRequested').afterField('apcRequested');
 };
 
 module.exports.down = (migration) => {
@@ -65,4 +71,20 @@ module.exports.down = (migration) => {
     .validations([])
     .disabled(false)
     .omitted(false);
+
+  manuscript
+    .createField('apcPaid')
+    .name('APC Paid?')
+    .type('Boolean')
+    .localized(false)
+    .required(false)
+    .validations([])
+    .defaultValue({
+      'en-US': false,
+    })
+    .disabled(false)
+    .omitted(false);
+
+  manuscript.moveField('apcPaid').afterField('apcRequested');
+  manuscript.moveField('apcAmount').afterField('apcPaid');
 };

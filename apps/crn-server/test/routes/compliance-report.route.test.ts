@@ -109,7 +109,6 @@ describe('/compliance-reports/ route', () => {
         status: 'Manuscript Resubmitted',
         discussions: [],
         requestingApcCoverage: 'No',
-        apcPaid: false,
         apcAmountPaid: undefined,
       });
 
@@ -123,7 +122,6 @@ describe('/compliance-reports/ route', () => {
         status: 'Review Compliance Report',
         discussions: [],
         requestingApcCoverage: 'No',
-        apcPaid: false,
         apcAmountPaid: undefined,
       });
 
@@ -182,7 +180,6 @@ describe('/compliance-reports/ route', () => {
         status: 'Review Compliance Report',
         discussions: [],
         requestingApcCoverage: 'No',
-        apcPaid: false,
         apcAmountPaid: undefined,
       });
 

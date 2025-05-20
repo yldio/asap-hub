@@ -1228,7 +1228,6 @@ describe('Manuscripts Contentful Data Provider', () => {
       manuscript.assignedUsersCollection = null;
       manuscript.discussionsCollection = null;
       manuscript.apcRequested = false;
-      manuscript.apcPaid = false;
       manuscript.apcAmountPaid = undefined;
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
@@ -1244,7 +1243,6 @@ describe('Manuscripts Contentful Data Provider', () => {
         assignedUsers: [],
         discussions: [],
         requestingApcCoverage: undefined,
-        apcPaid: false,
         apcAmountPaid: undefined,
       });
     });

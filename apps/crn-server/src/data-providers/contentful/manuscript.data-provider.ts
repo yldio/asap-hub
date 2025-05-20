@@ -128,7 +128,6 @@ export class ManuscriptContentfulDataProvider
             // as this field should appear as blank in the UI
             // but it will be replaced by apcPaid in the future
             requestingApcCoverage: undefined,
-            apcPaid: Boolean(manuscript.apcPaid),
             apcAmountPaid: manuscript.apcAmountPaid ?? undefined,
             lastUpdated: version?.sys.publishedAt,
             team: {
@@ -513,7 +512,6 @@ const parseGraphQLManuscript = (
     // as this field should appear as blank in the UI
     // but it will be replaced by apcPaid in the future
     requestingApcCoverage: undefined,
-    apcPaid: Boolean(manuscript.apcPaid),
     apcAmountPaid: manuscript.apcAmountPaid ?? undefined,
     versions: parseGraphqlManuscriptVersion(
       manuscript.versionsCollection?.items || [],

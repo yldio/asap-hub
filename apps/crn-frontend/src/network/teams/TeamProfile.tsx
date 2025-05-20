@@ -25,7 +25,6 @@ import { ManuscriptToastProvider } from './ManuscriptToastProvider';
 import { useIsComplianceReviewer, useManuscripts, useTeamById } from './state';
 import TeamManuscript from './TeamManuscript';
 import { EligibilityReasonProvider } from './EligibilityReasonProvider';
-import TeamComplianceReport from './TeamComplianceReport';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -39,13 +38,17 @@ const loadTeamOutput = () =>
   import(/* webpackChunkName: "network-team-team-output" */ './TeamOutput');
 const loadEventsList = () =>
   import(/* webpackChunkName: "network-events" */ '../EventsEmbedList');
+const loadComplianceReport = () =>
+  import(
+    /* webpackChunkName: "network-team-compliance-report" */ './TeamComplianceReport'
+  );
 
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Workspace = lazy(loadWorkspace);
 const Compliance = lazy(loadCompliance);
 const TeamOutput = lazy(loadTeamOutput);
-
+const TeamComplianceReport = lazy(loadComplianceReport);
 type TeamProfileProps = {
   currentTime: Date;
 };

@@ -6,16 +6,13 @@ import type { OpaqueColor } from '../colors';
 type ExternalLinkIconProps = {
   size?: number;
   color?: OpaqueColor;
-  style?: React.CSSProperties;
 };
 
 const ExternalLinkIcon: React.FC<ExternalLinkIconProps> = ({
   size = 24,
   color = charcoal,
-  style,
 }) => (
   <svg
-    style={style}
     width={size}
     height={size}
     viewBox="0 0 24 24"

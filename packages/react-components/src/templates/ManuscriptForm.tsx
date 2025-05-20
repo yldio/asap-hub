@@ -1443,17 +1443,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       css={css({
                         wordBreak: 'break-word',
                         position: 'relative',
+                        '& svg': {
+                          position: 'absolute',
+                          bottom: '1px',
+                        },
                       })}
                     >
                       Open Science Compliance Checklist for Author
-                      <ExternalLinkIcon
-                        size={17}
-                        color={colors.pine}
-                        style={{
-                          position: 'absolute',
-                          bottom: '1px',
-                        }}
-                      />
+                      <ExternalLinkIcon size={17} color={colors.pine} />
                     </span>
                   </Link>
                 </p>

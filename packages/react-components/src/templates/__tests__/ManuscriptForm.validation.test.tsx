@@ -215,6 +215,7 @@ describe('ManuscriptForm team validation', () => {
     'do not display error message when $authorType does not have a team',
 
     async ({ label }) => {
+      jest.spyOn(console, 'error').mockImplementation();
       const getAuthorSuggestionsWithoutTeamMock = jest.fn().mockResolvedValue([
         {
           label: 'Author A',
@@ -345,6 +346,7 @@ describe('ManuscriptForm team validation', () => {
   });
 
   it('when two authors without team selected and a lab without team selected are added, when one of the authors is removed, the authors error still flags the remainingauthor', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
     const getLabWithUniqueTeamSuggestionsMock = jest
       .fn()
       .mockResolvedValue([

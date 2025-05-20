@@ -148,6 +148,7 @@ export type MultiSelectProps<
   readonly enabled?: boolean;
   readonly placeholder?: string;
   readonly onFocus?: () => void;
+  readonly onBlur?: () => void;
   readonly onChange?: M extends true
     ? MultiSelectOnChange<T>
     : SingleSelectOnChange<T>;
@@ -193,6 +194,7 @@ const MultiSelect = <
   maxMenuHeight,
   noOptionsMessage,
   onFocus = noop,
+  onBlur = noop,
   onChange = noop,
   sortable = true,
   creatable = false,
@@ -287,7 +289,10 @@ const MultiSelect = <
 
       checkValidation();
     },
-    onBlur: checkValidation,
+    onBlur: () => {
+      onBlur();
+      checkValidation();
+    },
     onChange: (
       options: M extends true ? OptionsType<T> : T | null,
       actionMeta: ActionMeta<T>,
@@ -313,6 +318,8 @@ const MultiSelect = <
           actionMeta,
         );
       }
+      onBlur();
+      checkValidation();
     },
     ...(creatable && {
       createOptionPosition: 'first',

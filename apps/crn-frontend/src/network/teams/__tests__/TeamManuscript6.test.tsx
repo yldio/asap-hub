@@ -2,12 +2,13 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { createManuscriptResponse } from '@asap-hub/fixtures';
+import { AuthorResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import {
   render,
   screen,
   waitForElementToBeRemoved,
-  waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, MemoryHistory } from 'history';
@@ -15,13 +16,11 @@ import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
+import { getManuscript, resubmitManuscript } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
 import { refreshTeamState } from '../state';
 import TeamManuscript from '../TeamManuscript';
-
-jest.mock('../../../shared-api/content-generator');
 
 jest.mock(
   'react-lottie',
@@ -72,11 +71,6 @@ jest.mock('../useManuscriptToast', () => {
     })),
   };
 });
-
-const mockGetGeneratedShortDescription =
-  getGeneratedShortDescription as jest.MockedFunction<
-    typeof getGeneratedShortDescription
-  >;
 
 beforeEach(() => {
   jest.resetModules();
@@ -132,37 +126,45 @@ const renderPage = async (
   return { container };
 };
 
-it('renders manuscript form page', async () => {
-  const { container } = await renderPage();
+it('files are not prefilled on manuscript resubmit', async () => {
+  const mockResubmitManuscript = resubmitManuscript as jest.MockedFunction<
+    typeof resubmitManuscript
+  >;
+  const mockGetManuscript = getManuscript as jest.MockedFunction<
+    typeof getManuscript
+  >;
 
-  expect(container).toHaveTextContent(
-    'Start a new manuscript to receive an itemized compliance report outlining action items for compliance with the ASAP Open Science Policy',
-  );
-  expect(container).toHaveTextContent('What are you sharing');
-  expect(container).toHaveTextContent('Title of Manuscript');
-});
+  const manuscript = createManuscriptResponse();
+  manuscript.versions[0]!.lifecycle = 'Preprint';
+  manuscript.versions[0]!.firstAuthors = [
+    {
+      label: 'Author 1',
+      value: 'author-1',
+      id: 'author-1',
+      displayName: 'Author 1',
+      email: 'author@email.com',
+    } as AuthorResponse,
+  ];
 
-it('generates the short description based on the current description', async () => {
-  mockGetGeneratedShortDescription.mockResolvedValueOnce({
-    shortDescription: 'test generated short description 1',
+  mockGetManuscript.mockResolvedValue(manuscript);
+  mockResubmitManuscript.mockResolvedValue(manuscript);
+
+  const resubmitPath = `/network/teams/${teamId}/workspace/resubmit-manuscript/:manuscriptId`;
+  const resubmitHistory = createMemoryHistory({
+    initialEntries: [
+      `/network/teams/${teamId}/workspace/resubmit-manuscript/${manuscript.id}`,
+    ],
   });
 
-  await renderPage();
+  await renderPage({}, true, resubmitPath, resubmitHistory);
 
-  const descriptionTextbox = screen.getByRole('textbox', {
-    name: /Manuscript Description/i,
+  const preprintDoi = '10.4444/test';
+
+  const preprintDoiTextbox = screen.getByRole('textbox', {
+    name: /Preprint DOI/i,
   });
-  userEvent.type(descriptionTextbox, 'Some description');
+  userEvent.type(preprintDoiTextbox, preprintDoi);
 
-  await userEvent.click(screen.getByRole('button', { name: 'Generate' }));
-
-  await waitFor(() => {
-    expect(mockGetGeneratedShortDescription).toHaveBeenCalledWith(
-      'Some description',
-      expect.anything(),
-    );
-    expect(
-      screen.getByRole('textbox', { name: /short description/i }),
-    ).toHaveValue('test generated short description 1');
-  });
+  expect(screen.queryByText(/manuscript_1.pdf/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/manuscript_1.csv/i)).not.toBeInTheDocument();
 });

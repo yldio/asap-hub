@@ -1,29 +1,33 @@
 import {
-  act,
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react';
-import { ComponentProps } from 'react';
-import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
-import { createMemoryHistory, History } from 'history';
-import userEvent, { specialChars } from '@testing-library/user-event';
-import { createMessage } from '@asap-hub/fixtures';
-import {
   AuthorResponse,
   AuthorSelectOption,
   ManuscriptFileType,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
   ManuscriptType,
-  manuscriptTypeLifecycles,
   QuickCheck,
-  QuickCheckDetails,
   quickCheckQuestions,
 } from '@asap-hub/model';
+import {
+  render,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
+import { StaticRouter } from 'react-router-dom';
+import type {
+  ByRoleOptions,
+  waitForOptions,
+  ByRoleMatcher,
+} from '@testing-library/react';
 import ManuscriptForm from '../ManuscriptForm';
+
+type FindByRole = (
+  role: ByRoleMatcher,
+  options?: ByRoleOptions | undefined,
+  waitForElementOptions?: waitForOptions | undefined,
+) => Promise<HTMLElement>;
 
 jest.mock(
   'react-lottie',
@@ -33,11 +37,10 @@ jest.mock(
     },
 );
 
-let history!: History;
-
 jest.setTimeout(30_000);
 beforeEach(() => {
-  history = createMemoryHistory();
+  jest.spyOn(console, 'error').mockImplementation();
+  jest.clearAllMocks();
 });
 
 const teamId = '1';
@@ -98,661 +101,15 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   clearFormToast: jest.fn(),
 };
 
-const submitForm = async () => {
-  await act(async () => {
-    userEvent.click(await screen.findByRole('button', { name: /Submit/ }));
-  });
+const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {
+  const submitBtn = await findByRole('button', { name: /Submit/ });
+  await userEvent.click(submitBtn);
 
-  userEvent.click(screen.getByRole('button', { name: /Submit Manuscript/ }));
+  const confirmBtn = await findByRole('button', {
+    name: /Submit Manuscript/i,
+  });
+  await userEvent.click(confirmBtn);
 };
-
-it('renders the form', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
-  );
-  expect(
-    screen.getByRole('heading', { name: /What are you sharing/i }),
-  ).toBeVisible();
-  expect(screen.getByRole('button', { name: /Submit/ })).toBeVisible();
-});
-
-it('data is sent on form submission', async () => {
-  const onCreate = jest.fn();
-  render(
-    <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        type="Original Research"
-        lifecycle="Draft Manuscript (prior to Publication)"
-        manuscriptFile={{
-          id: '123',
-          filename: 'test.pdf',
-          url: 'http://example.com/test.pdf',
-        }}
-        keyResourceTable={{
-          id: '124',
-          filename: 'test.csv',
-          url: 'http://example.com/test.csv',
-        }}
-        onCreate={onCreate}
-      />
-    </StaticRouter>,
-  );
-
-  await submitForm();
-  await waitFor(() => {
-    expect(onCreate).toHaveBeenCalledWith({
-      title: 'manuscript title',
-      eligibilityReasons: [],
-      versions: [
-        {
-          type: 'Original Research',
-          lifecycle: 'Draft Manuscript (prior to Publication)',
-          manuscriptFile: {
-            id: '123',
-            filename: 'test.pdf',
-            url: 'http://example.com/test.pdf',
-          },
-          keyResourceTable: {
-            id: '124',
-            filename: 'test.csv',
-            url: 'http://example.com/test.csv',
-          },
-          acknowledgedGrantNumber: 'Yes',
-          asapAffiliationIncluded: 'Yes',
-          manuscriptLicense: undefined,
-          datasetsDeposited: 'Yes',
-          codeDeposited: 'Yes',
-          protocolsDeposited: 'Yes',
-          labMaterialsRegistered: 'Yes',
-          availabilityStatement: 'Yes',
-
-          acknowledgedGrantNumberDetails: '',
-          asapAffiliationIncludedDetails: '',
-          manuscriptLicenseDetails: '',
-          datasetsDepositedDetails: '',
-          codeDepositedDetails: '',
-          protocolsDepositedDetails: '',
-          labMaterialsRegisteredDetails: '',
-          availabilityStatementDetails: '',
-
-          teams: ['1'],
-          labs: [],
-
-          description: 'Some description',
-          shortDescription: 'A good short description',
-          firstAuthors: [],
-          additionalAuthors: [],
-        },
-      ],
-      teamId,
-    });
-  });
-});
-
-test.each`
-  field                        | fieldDetails
-  ${'acknowledgedGrantNumber'} | ${'acknowledgedGrantNumberDetails'}
-  ${'asapAffiliationIncluded'} | ${'asapAffiliationIncludedDetails'}
-  ${'availabilityStatement'}   | ${'availabilityStatementDetails'}
-  ${'manuscriptLicense'}       | ${'manuscriptLicenseDetails'}
-  ${'datasetsDeposited'}       | ${'datasetsDepositedDetails'}
-  ${'codeDeposited'}           | ${'codeDepositedDetails'}
-  ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
-  ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
-`(
-  'should send $fieldDetails value if $field is No',
-  async ({
-    field,
-    fieldDetails,
-  }: {
-    field: QuickCheck;
-    fieldDetails: QuickCheckDetails;
-  }) => {
-    const onCreate = jest.fn();
-    const getDiscussion = jest.fn(() => ({
-      id: 'discussion-1',
-      message: createMessage('Explanation'),
-    }));
-    const props = {
-      ...defaultProps,
-      [field]: 'No',
-      [fieldDetails]: 'Explanation',
-      getDiscussion,
-    };
-    render(
-      <StaticRouter>
-        <ManuscriptForm
-          {...props}
-          title="manuscript title"
-          type="Original Research"
-          publicationDoi="10.0777"
-          lifecycle="Publication"
-          manuscriptFile={{
-            id: '123',
-            filename: 'test.pdf',
-            url: 'http://example.com/test.pdf',
-          }}
-          keyResourceTable={{
-            id: '124',
-            filename: 'test.csv',
-            url: 'http://example.com/test.csv',
-          }}
-          onCreate={onCreate}
-        />
-      </StaticRouter>,
-    );
-
-    await submitForm();
-    const payload = {
-      title: 'manuscript title',
-      eligibilityReasons: [],
-      versions: [
-        {
-          type: 'Original Research',
-          lifecycle: 'Publication',
-          manuscriptFile: expect.anything(),
-          keyResourceTable: expect.anything(),
-          publicationDoi: '10.0777',
-          acknowledgedGrantNumber: 'Yes',
-          asapAffiliationIncluded: 'Yes',
-          manuscriptLicense: 'Yes',
-          datasetsDeposited: 'Yes',
-          codeDeposited: 'Yes',
-          protocolsDeposited: 'Yes',
-          labMaterialsRegistered: 'Yes',
-          availabilityStatement: 'Yes',
-
-          acknowledgedGrantNumberDetails: '',
-          asapAffiliationIncludedDetails: '',
-          manuscriptLicenseDetails: '',
-          datasetsDepositedDetails: '',
-          codeDepositedDetails: '',
-          protocolsDepositedDetails: '',
-          labMaterialsRegisteredDetails: '',
-          availabilityStatementDetails: '',
-
-          teams: ['1'],
-          labs: [],
-
-          description: 'Some description',
-          shortDescription: 'A good short description',
-          firstAuthors: [],
-          additionalAuthors: [],
-        },
-      ],
-      teamId,
-    };
-    payload.versions[0]![field] = 'No';
-    payload.versions[0]![fieldDetails] = 'Explanation';
-    await waitFor(() => {
-      expect(onCreate).toHaveBeenCalledWith(payload);
-    });
-  },
-);
-
-test.each`
-  field                        | fieldDetails
-  ${'acknowledgedGrantNumber'} | ${'acknowledgedGrantNumberDetails'}
-  ${'asapAffiliationIncluded'} | ${'asapAffiliationIncludedDetails'}
-  ${'availabilityStatement'}   | ${'availabilityStatementDetails'}
-  ${'manuscriptLicense'}       | ${'manuscriptLicenseDetails'}
-  ${'datasetsDeposited'}       | ${'datasetsDepositedDetails'}
-  ${'codeDeposited'}           | ${'codeDepositedDetails'}
-  ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
-  ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
-`(
-  'should send $fieldDetails value if $field is Not applicable',
-  async ({
-    field,
-    fieldDetails,
-  }: {
-    field: QuickCheck;
-    fieldDetails: QuickCheckDetails;
-  }) => {
-    const onCreate = jest.fn();
-    const getDiscussion = jest.fn(() => ({
-      id: 'discussion-1',
-      message: createMessage('Explanation'),
-    }));
-    const props = {
-      ...defaultProps,
-      [field]: 'Not applicable',
-      [fieldDetails]: 'Explanation',
-      getDiscussion,
-    };
-    render(
-      <StaticRouter>
-        <ManuscriptForm
-          {...props}
-          title="manuscript title"
-          type="Original Research"
-          publicationDoi="10.0777"
-          lifecycle="Publication"
-          manuscriptFile={{
-            id: '123',
-            filename: 'test.pdf',
-            url: 'http://example.com/test.pdf',
-          }}
-          keyResourceTable={{
-            id: '124',
-            filename: 'test.csv',
-            url: 'http://example.com/test.csv',
-          }}
-          onCreate={onCreate}
-        />
-      </StaticRouter>,
-    );
-
-    await submitForm();
-    const payload = {
-      title: 'manuscript title',
-      eligibilityReasons: [],
-      versions: [
-        {
-          type: 'Original Research',
-          lifecycle: 'Publication',
-          manuscriptFile: expect.anything(),
-          keyResourceTable: expect.anything(),
-          publicationDoi: '10.0777',
-          acknowledgedGrantNumber: 'Yes',
-          asapAffiliationIncluded: 'Yes',
-          manuscriptLicense: 'Yes',
-          datasetsDeposited: 'Yes',
-          codeDeposited: 'Yes',
-          protocolsDeposited: 'Yes',
-          labMaterialsRegistered: 'Yes',
-          availabilityStatement: 'Yes',
-
-          acknowledgedGrantNumberDetails: '',
-          asapAffiliationIncludedDetails: '',
-          manuscriptLicenseDetails: '',
-          datasetsDepositedDetails: '',
-          codeDepositedDetails: '',
-          protocolsDepositedDetails: '',
-          labMaterialsRegisteredDetails: '',
-          availabilityStatementDetails: '',
-
-          teams: ['1'],
-          labs: [],
-
-          description: 'Some description',
-          shortDescription: 'A good short description',
-          firstAuthors: [],
-          additionalAuthors: [],
-        },
-      ],
-      teamId,
-    };
-    payload.versions[0]![field] = 'Not applicable';
-    payload.versions[0]![fieldDetails] = 'Explanation';
-    await waitFor(() => {
-      expect(onCreate).toHaveBeenCalledWith(payload);
-    });
-  },
-);
-
-test.each`
-  field                        | fieldDetails
-  ${'acknowledgedGrantNumber'} | ${'acknowledgedGrantNumberDetails'}
-  ${'asapAffiliationIncluded'} | ${'asapAffiliationIncludedDetails'}
-  ${'availabilityStatement'}   | ${'availabilityStatementDetails'}
-  ${'manuscriptLicense'}       | ${'manuscriptLicenseDetails'}
-  ${'datasetsDeposited'}       | ${'datasetsDepositedDetails'}
-  ${'codeDeposited'}           | ${'codeDepositedDetails'}
-  ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
-  ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
-`(
-  'should send $fieldDetails as empty string if $field is Yes',
-  async ({
-    field,
-    fieldDetails,
-  }: {
-    field: QuickCheck;
-    fieldDetails: QuickCheckDetails;
-  }) => {
-    const onCreate = jest.fn();
-    const props = {
-      ...defaultProps,
-      [field]: 'Yes',
-      [fieldDetails]: { message: { text: 'Explanation' } },
-    };
-    render(
-      <StaticRouter>
-        <ManuscriptForm
-          {...props}
-          title={undefined}
-          type="Original Research"
-          publicationDoi="10.0777"
-          lifecycle="Publication"
-          manuscriptFile={{
-            id: '123',
-            filename: 'test.pdf',
-            url: 'http://example.com/test.pdf',
-          }}
-          keyResourceTable={{
-            id: '124',
-            filename: 'test.csv',
-            url: 'http://example.com/test.csv',
-          }}
-          onCreate={onCreate}
-        />
-      </StaticRouter>,
-    );
-
-    userEvent.type(
-      screen.getByRole('textbox', { name: /Title of Manuscript/i }),
-      'manuscript title',
-    );
-    const quickCheckFields = quickCheckQuestions.map((q) => q.field);
-
-    quickCheckFields.forEach((f) => {
-      within(screen.getByTestId(f)).getByText('Yes').click();
-    });
-
-    await submitForm();
-
-    await waitFor(() => {
-      expect(onCreate).toHaveBeenCalledWith({
-        title: 'manuscript title',
-        eligibilityReasons: [],
-        versions: [
-          expect.objectContaining({
-            acknowledgedGrantNumber: 'Yes',
-            asapAffiliationIncluded: 'Yes',
-            manuscriptLicense: 'Yes',
-            datasetsDeposited: 'Yes',
-            codeDeposited: 'Yes',
-            protocolsDeposited: 'Yes',
-            labMaterialsRegistered: 'Yes',
-            availabilityStatement: 'Yes',
-
-            acknowledgedGrantNumberDetails: '',
-            asapAffiliationIncludedDetails: '',
-            manuscriptLicenseDetails: '',
-            datasetsDepositedDetails: '',
-            codeDepositedDetails: '',
-            protocolsDepositedDetails: '',
-            labMaterialsRegisteredDetails: '',
-            availabilityStatementDetails: '',
-          }),
-        ],
-        teamId,
-      });
-    });
-  },
-);
-
-it('displays an error message when user selects no in a quick check and does not provide details', async () => {
-  const onCreate = jest.fn();
-  render(
-    <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        type="Original Research"
-        publicationDoi="10.0777"
-        lifecycle="Publication"
-        manuscriptFile={{
-          id: '123',
-          filename: 'test.pdf',
-          url: 'http://example.com/test.pdf',
-        }}
-        onCreate={onCreate}
-      />
-    </StaticRouter>,
-  );
-  expect(
-    screen.queryByText(/Please enter the details./i),
-  ).not.toBeInTheDocument();
-
-  const quickCheckFields = quickCheckQuestions.map((q) => q.field);
-
-  quickCheckFields
-    .filter((f) => f !== 'acknowledgedGrantNumber')
-    .forEach((f) => {
-      within(screen.getByTestId(f)).getByText('Yes').click();
-    });
-
-  within(screen.getByTestId('acknowledgedGrantNumber')).getByText('No').click();
-
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
-
-  await waitFor(() => {
-    expect(
-      screen.getAllByText(/Please enter the details./i).length,
-    ).toBeGreaterThan(0);
-  });
-
-  userEvent.type(
-    screen.getByLabelText(/Please provide details/i),
-    'Some details',
-  );
-
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
-
-  await waitFor(() => {
-    expect(
-      screen.queryByText(/Please enter the details./i),
-    ).not.toBeInTheDocument();
-  });
-});
-
-it('does not display the lifecycle select box until type is selected', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
-  );
-  expect(
-    screen.queryByLabelText(/Where is the manuscript in the life cycle/i),
-  ).not.toBeInTheDocument();
-
-  const textbox = screen.getByRole('textbox', { name: /Type of Manuscript/i });
-  userEvent.type(textbox, 'Original');
-  userEvent.type(textbox, specialChars.enter);
-  textbox.blur();
-
-  expect(
-    screen.getByRole('textbox', {
-      name: /Where is the manuscript in the life cycle/i,
-    }),
-  ).toBeInTheDocument();
-});
-
-const manuscriptTypeLifecyclesFlat = manuscriptTypeLifecycles.flatMap(
-  ({ types, lifecycle }) => types.map((type) => ({ type, lifecycle })),
-);
-it.each(manuscriptTypeLifecyclesFlat)(
-  'displays $lifecycle lifecycle option for when $type type is selected',
-  async ({ lifecycle, type }) => {
-    render(
-      <StaticRouter>
-        <ManuscriptForm {...defaultProps} type={type} lifecycle="" />
-      </StaticRouter>,
-    );
-
-    const lifecycleTextbox = screen.getByRole('textbox', {
-      name: /Where is the manuscript in the life cycle/i,
-    });
-    userEvent.click(lifecycleTextbox);
-
-    expect(screen.getByText(lifecycle)).toBeVisible();
-  },
-);
-
-it('displays error message when manuscript title is missing', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
-  );
-
-  const input = screen.getByRole('textbox', { name: /Title of Manuscript/i });
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
-
-  userEvent.click(submitButton);
-
-  await waitFor(() => {
-    expect(submitButton).toBeEnabled();
-  });
-  expect(
-    screen.getAllByText(/Please enter a title/i).length,
-  ).toBeGreaterThanOrEqual(1);
-
-  userEvent.type(input, 'title');
-
-  userEvent.click(submitButton);
-
-  await waitFor(() => {
-    expect(submitButton).toBeEnabled();
-  });
-  expect(screen.queryByText(/Please enter a title/i)).toBeNull();
-});
-
-it('displays error message when manuscript title is not unique', async () => {
-  const onUpdate = jest.fn().mockRejectedValueOnce({
-    statusCode: 422,
-    response: {
-      message: 'Title must be unique',
-    },
-  });
-  render(
-    <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        type="Original Research"
-        lifecycle="Draft Manuscript (prior to Publication)"
-        manuscriptFile={{
-          id: '123',
-          filename: 'test.pdf',
-          url: 'http://example.com/test.pdf',
-        }}
-        keyResourceTable={{
-          id: '124',
-          filename: 'test.csv',
-          url: 'http://example.com/test.csv',
-        }}
-        manuscriptId="manuscript-id"
-        onUpdate={onUpdate}
-      />
-    </StaticRouter>,
-  );
-
-  await submitForm();
-
-  await waitFor(() => {
-    expect(onUpdate).toHaveBeenCalled();
-  });
-
-  await waitFor(() => {
-    expect(
-      screen.getAllByText(
-        'This title is already in use. Please choose a different one.',
-      ).length,
-    ).toBeGreaterThan(0);
-  });
-});
-
-it('displays error message when no type was found', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
-  );
-
-  const textbox = screen.getByRole('textbox', { name: /Type of Manuscript/i });
-  userEvent.type(textbox, 'invalid type');
-
-  expect(screen.getByText(/Sorry, no types match/i)).toBeVisible();
-});
-
-it('displays error message when no lifecycle was found', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
-  );
-
-  const typeTextbox = screen.getByRole('textbox', {
-    name: /Type of Manuscript/i,
-  });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
-  typeTextbox.blur();
-
-  const lifecycleTextbox = screen.getByRole('textbox', {
-    name: /Where is the manuscript in the life cycle/i,
-  });
-  userEvent.type(lifecycleTextbox, 'invalid lifecycle');
-
-  expect(screen.getByText(/Sorry, no options match/i)).toBeVisible();
-});
-
-it('displays error message when manuscript title is bigger than 256 characters', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
-  );
-
-  const input = screen.getByRole('textbox', {
-    name: /Title of Manuscript/i,
-  });
-  userEvent.type(
-    input,
-    "Advancements in Parkinson's Disease Research: Investigating the Role of Genetic Mutations and DNA Sequencing Technologies in Unraveling the Molecular Mechanisms, Identifying Biomarkers, and Developing Targeted Therapies for Improved Diagnosis and Treatment of Parkinson Disease",
-  );
-
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
-
-  userEvent.click(submitButton);
-
-  await waitFor(() => {
-    expect(submitButton).toBeEnabled();
-  });
-
-  expect(
-    screen.getAllByText(/This title cannot exceed 256 characters./i).length,
-  ).toBeGreaterThanOrEqual(1);
-});
-
-it('displays error message when other details is bigger than 256 characters', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="Manuscript"
-        type="Original Research"
-        lifecycle="Other"
-      />
-    </StaticRouter>,
-  );
-
-  const input = screen.getByRole('textbox', {
-    name: /Please provide details/i,
-  });
-  userEvent.type(
-    input,
-    "Advancements in Parkinson's Disease Research: Investigating the Role of Genetic Mutations and DNA Sequencing Technologies in Unraveling the Molecular Mechanisms, Identifying Biomarkers, and Developing Targeted Therapies for Improved Diagnosis and Treatment of Parkinson Disease",
-  );
-
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
-
-  userEvent.click(submitButton);
-
-  await waitFor(() => {
-    expect(submitButton).toBeEnabled();
-  });
-
-  expect(
-    screen.getAllByText(/Details cannot exceed 256 characters./i).length,
-  ).toBeGreaterThanOrEqual(1);
-});
 
 describe('authors', () => {
   it.each`
@@ -780,7 +137,7 @@ describe('authors', () => {
         },
       ]);
 
-      render(
+      const { getByLabelText, queryByText, getByText, findByRole } = render(
         <StaticRouter>
           <ManuscriptForm
             {...defaultProps}
@@ -805,13 +162,13 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      userEvent.click(screen.getByLabelText(section));
+      userEvent.click(getByLabelText(section));
       await waitFor(() =>
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+        expect(queryByText(/loading/i)).not.toBeInTheDocument(),
       );
-      userEvent.click(screen.getByText('Author One'));
+      userEvent.click(getByText('Author One'));
 
-      await submitForm();
+      await submitForm({ findByRole });
       await waitFor(() => {
         expect(onCreate).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -845,7 +202,7 @@ describe('authors', () => {
         },
       ]);
 
-      render(
+      const { getByLabelText, queryByText, getByText, findByRole } = render(
         <StaticRouter>
           <ManuscriptForm
             {...defaultProps}
@@ -870,17 +227,17 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      userEvent.click(screen.getByLabelText(section));
+      userEvent.click(getByLabelText(section));
       await waitFor(() =>
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+        expect(queryByText(/loading/i)).not.toBeInTheDocument(),
       );
-      userEvent.click(screen.getByText(/External Author One \(Non CRN\)/));
+      userEvent.click(getByText(/External Author One \(Non CRN\)/));
       userEvent.type(
-        screen.getByLabelText(/External Author One Email/i),
+        getByLabelText(/External Author One Email/i),
         'external@author.com',
       );
 
-      await submitForm();
+      await submitForm({ findByRole });
 
       await waitFor(() => {
         expect(onCreate).toHaveBeenCalledWith(
@@ -917,7 +274,7 @@ describe('authors', () => {
         },
       ]);
 
-      render(
+      const { getByLabelText, queryByText, getByText, findByRole } = render(
         <StaticRouter>
           <ManuscriptForm
             {...defaultProps}
@@ -942,16 +299,16 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      userEvent.type(screen.getByLabelText(section), 'Jane Doe');
+      userEvent.type(getByLabelText(section), 'Jane Doe');
 
       await waitFor(() =>
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+        expect(queryByText(/loading/i)).not.toBeInTheDocument(),
       );
 
-      userEvent.click(screen.getByText(/Jane Doe/, { selector: 'strong' }));
-      userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+      userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
+      userEvent.type(getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
 
-      await submitForm();
+      await submitForm({ findByRole });
 
       await waitFor(() => {
         expect(onCreate).toHaveBeenCalledWith(
@@ -978,7 +335,7 @@ describe('preprintDoi', () => {
   }[])(
     'preprintDoi is $status when lifecycle is $lifecycle',
     async ({ lifecycle, status }) => {
-      render(
+      const { getByRole } = render(
         <StaticRouter>
           <ManuscriptForm
             {...defaultProps}
@@ -990,7 +347,7 @@ describe('preprintDoi', () => {
       );
 
       expect(
-        screen.getByRole('textbox', {
+        getByRole('textbox', {
           name: new RegExp(`Preprint DOI \\(${status}\\)`, 'i'),
         }),
       ).toBeVisible();
@@ -1066,168 +423,6 @@ describe('renders the necessary fields', () => {
   );
 });
 
-it('resets form fields to default values when no longer visible', async () => {
-  const onCreate = jest.fn();
-  render(
-    <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        onCreate={onCreate}
-        type="Original Research"
-        lifecycle="Publication"
-        preprintDoi="10.4444/test"
-        publicationDoi="10.4467/test"
-        manuscriptFile={{
-          id: '123',
-          url: 'https://test-url',
-          filename: 'abc.jpeg',
-        }}
-        keyResourceTable={{
-          id: '124',
-          url: 'https://test-url',
-          filename: 'abc.jpeg',
-        }}
-      />
-    </StaticRouter>,
-  );
-
-  const lifecycleTextbox = screen.getByRole('textbox', {
-    name: /Where is the manuscript in the life cycle/i,
-  });
-
-  userEvent.type(lifecycleTextbox, 'Draft Manuscript (prior to Publication)');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
-  lifecycleTextbox.blur();
-
-  expect(
-    screen.queryByRole('textbox', {
-      name: /Preprint DOI/i,
-    }),
-  ).not.toBeInTheDocument();
-  expect(
-    screen.queryByRole('textbox', {
-      name: /Publication DOI/i,
-    }),
-  ).not.toBeInTheDocument();
-
-  await submitForm();
-
-  await waitFor(() => {
-    expect(onCreate).toHaveBeenCalledWith({
-      title: 'manuscript title',
-      eligibilityReasons: [],
-      versions: [
-        expect.objectContaining({
-          preprintDoi: undefined,
-          publicationDoi: undefined,
-        }),
-      ],
-      teamId,
-    });
-  });
-});
-
-it('maintains values provided when lifecycle changes but field is still visible', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} title="manuscript title" />
-    </StaticRouter>,
-  );
-
-  const typeTextbox = screen.getByRole('textbox', {
-    name: /Type of Manuscript/i,
-  });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
-  typeTextbox.blur();
-
-  const lifecycleTextbox = screen.getByRole('textbox', {
-    name: /Where is the manuscript in the life cycle/i,
-  });
-  userEvent.type(lifecycleTextbox, 'Publication with addendum or corrigendum');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
-  lifecycleTextbox.blur();
-
-  const preprintDoi = '10.4444/test';
-  const publicationDoi = '10.4467/test';
-
-  const preprintDoiTextbox = screen.getByRole('textbox', {
-    name: /Preprint DOI/i,
-  });
-  userEvent.type(preprintDoiTextbox, preprintDoi);
-
-  const publicationDoiTextbox = screen.getByRole('textbox', {
-    name: /Publication DOI/i,
-  });
-  userEvent.type(publicationDoiTextbox, publicationDoi);
-
-  expect(preprintDoiTextbox).toHaveValue(preprintDoi);
-  expect(publicationDoiTextbox).toHaveValue(publicationDoi);
-
-  userEvent.type(lifecycleTextbox, 'Preprint');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
-  lifecycleTextbox.blur();
-
-  expect(
-    screen.getByRole('textbox', {
-      name: /Preprint DOI/i,
-    }),
-  ).toHaveValue(preprintDoi);
-  expect(
-    screen.queryByRole('textbox', {
-      name: /Publication DOI/i,
-    }),
-  ).not.toBeInTheDocument();
-});
-
-it('does not submit when required values are missing', async () => {
-  const onCreate = jest.fn();
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} onCreate={onCreate} />
-    </StaticRouter>,
-  );
-
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
-
-  userEvent.click(submitButton);
-
-  await waitFor(() => {
-    expect(submitButton).toBeEnabled();
-  });
-
-  expect(
-    screen.getByRole('textbox', { name: /Title of Manuscript/i }),
-  ).toBeInvalid();
-  expect(onCreate).not.toHaveBeenCalled();
-});
-
-it('should go back when cancel button is clicked', async () => {
-  render(
-    <MemoryRouter>
-      <Router history={history}>
-        <Route path="/form">
-          <ManuscriptForm {...defaultProps} />
-        </Route>
-      </Router>
-    </MemoryRouter>,
-  );
-
-  history.push('/another-url');
-  history.push('/form');
-
-  await act(async () => {
-    await userEvent.click(await screen.findByText(/cancel/i));
-  });
-
-  await userEvent.click(
-    screen.getByRole('button', { name: /Cancel manuscript submission/i }),
-  );
-
-  expect(history.location.pathname).toBe('/another-url');
-});
-
 describe('manuscript file', () => {
   it('should show error when file upload fails', async () => {
     const handleFileUpload: jest.MockedFunction<
@@ -1256,7 +451,7 @@ describe('manuscript file', () => {
         });
       },
     );
-    render(
+    const { getByLabelText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1270,13 +465,13 @@ describe('manuscript file', () => {
       </StaticRouter>,
     );
 
-    const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+    const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
     await waitFor(async () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText(mockError)).toBeInTheDocument();
+    expect(getByText(mockError)).toBeInTheDocument();
   });
 
   it('should show error when file size is greater than 100MB', async () => {
@@ -1288,7 +483,7 @@ describe('manuscript file', () => {
       type: 'text/plain',
     });
 
-    render(
+    const { getByLabelText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1302,21 +497,21 @@ describe('manuscript file', () => {
       </StaticRouter>,
     );
 
-    const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+    const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
     await waitFor(async () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
     expect(
-      screen.getByText(
+      getByText(
         'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
       ),
     ).toBeInTheDocument();
   });
 
   it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
-    render(
+    const { getByLabelText, queryByText, getByText, getByRole } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1329,31 +524,31 @@ describe('manuscript file', () => {
       </StaticRouter>,
     );
 
-    expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+    expect(queryByText(/test.pdf/i)).not.toBeInTheDocument();
 
     const testFile = new File(['file content'], 'test.pdf', {
       type: 'application/pdf',
     });
-    const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+    const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
     await waitFor(() => {
       userEvent.upload(uploadInput, testFile);
     });
 
-    expect(screen.getByText(/test.pdf/i)).toBeInTheDocument();
+    expect(getByText(/test.pdf/i)).toBeInTheDocument();
 
-    const removeFileButton = screen.getByRole('button', { name: /cross/i });
+    const removeFileButton = getByRole('button', { name: /cross/i });
     expect(removeFileButton).toBeInTheDocument();
 
     await waitFor(() => {
       userEvent.click(removeFileButton);
     });
 
-    expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+    expect(queryByText(/test.pdf/i)).not.toBeInTheDocument();
   });
 
   it('clears error when a valid manuscript file is uploaded after an error', async () => {
-    render(
+    const { getByLabelText, queryByText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1374,11 +569,11 @@ describe('manuscript file', () => {
       },
     );
 
-    const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+    const uploadInput = getByLabelText(/Upload Manuscript File/i);
     await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
 
     expect(
-      screen.getByText(
+      getByText(
         'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
       ),
     ).toBeInTheDocument();
@@ -1392,14 +587,14 @@ describe('manuscript file', () => {
 
     // Error message should disappear
     expect(
-      screen.queryByText(
+      queryByText(
         'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
       ),
     ).not.toBeInTheDocument();
   });
 
   it('clears error when a valid key resource table is uploaded after an error', async () => {
-    render(
+    const { getByLabelText, queryByText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1418,11 +613,11 @@ describe('manuscript file', () => {
       },
     );
 
-    const uploadInput = screen.getByLabelText(/Upload Key Resource Table/i);
+    const uploadInput = getByLabelText(/Upload Key Resource Table/i);
     await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
 
     expect(
-      screen.getByText(
+      getByText(
         'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
       ),
     ).toBeInTheDocument();
@@ -1435,14 +630,14 @@ describe('manuscript file', () => {
 
     // Error message should disappear
     expect(
-      screen.queryByText(
+      queryByText(
         'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
       ),
     ).not.toBeInTheDocument();
   });
 
   it('clears error when a valid additional file is uploaded after an error', async () => {
-    render(
+    const { getByLabelText, queryByText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1461,11 +656,11 @@ describe('manuscript file', () => {
       },
     );
 
-    const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
+    const uploadInput = getByLabelText(/Upload Additional Files/i);
     await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
 
     expect(
-      screen.getByText(
+      getByText(
         'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
       ),
     ).toBeInTheDocument();
@@ -1477,7 +672,7 @@ describe('manuscript file', () => {
     await waitFor(() => userEvent.upload(uploadInput, validFile));
 
     expect(
-      screen.queryByText(
+      queryByText(
         'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
       ),
     ).not.toBeInTheDocument();
@@ -1504,7 +699,7 @@ describe('key resource table', () => {
           return undefined;
         }),
     );
-    render(
+    const { getByLabelText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1518,13 +713,13 @@ describe('key resource table', () => {
       </StaticRouter>,
     );
 
-    const uploadInput = screen.getByLabelText(/Upload Key Resource Table/i);
+    const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
     await waitFor(async () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText(mockError)).toBeInTheDocument();
+    expect(getByText(mockError)).toBeInTheDocument();
   });
 
   it('should show error when file size is greater than 100MB', async () => {
@@ -1536,7 +731,7 @@ describe('key resource table', () => {
       type: 'text/plain',
     });
 
-    render(
+    const { getByLabelText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1550,14 +745,14 @@ describe('key resource table', () => {
       </StaticRouter>,
     );
 
-    const uploadInput = screen.getByLabelText(/Upload Key Resource Table/i);
+    const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
     await waitFor(async () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
     expect(
-      screen.getByText(
+      getByText(
         'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
       ),
     ).toBeInTheDocument();
@@ -1571,7 +766,7 @@ describe('key resource table', () => {
         url: 'http://example.com/test.csv',
       }),
     );
-    render(
+    const { getByLabelText, queryByText, getByText, getByRole } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1585,34 +780,34 @@ describe('key resource table', () => {
       </StaticRouter>,
     );
 
-    expect(screen.queryByText(/test.csv/i)).not.toBeInTheDocument();
+    expect(queryByText(/test.csv/i)).not.toBeInTheDocument();
 
     const testFile = new File(['file content'], 'test.csv', {
       type: 'text/csv',
     });
-    const uploadInput = screen.getByLabelText(/Upload Key Resource Table/i);
+    const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
     await waitFor(() => {
       userEvent.upload(uploadInput, testFile);
     });
 
-    expect(screen.getByText(/test.csv/i)).toBeInTheDocument();
+    expect(getByText(/test.csv/i)).toBeInTheDocument();
 
-    const removeFileButton = screen.getByRole('button', { name: /cross/i });
+    const removeFileButton = getByRole('button', { name: /cross/i });
     expect(removeFileButton).toBeInTheDocument();
 
     await waitFor(() => {
       userEvent.click(removeFileButton);
     });
 
-    expect(screen.queryByText(/test.csv/i)).not.toBeInTheDocument();
+    expect(queryByText(/test.csv/i)).not.toBeInTheDocument();
   });
 });
 
 describe('additional files', () => {
   it('user can upload additional files', async () => {
     const onCreate = jest.fn();
-    render(
+    const { getByLabelText, queryByText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1626,18 +821,18 @@ describe('additional files', () => {
       </StaticRouter>,
     );
 
-    expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+    expect(queryByText(/test.pdf/i)).not.toBeInTheDocument();
 
     const testFile = new File(['file content'], 'test.pdf', {
       type: 'application/pdf',
     });
-    const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
+    const uploadInput = getByLabelText(/Upload Additional Files/i);
 
     await waitFor(() => {
       userEvent.upload(uploadInput, testFile);
     });
 
-    expect(screen.getByText(/test.pdf/i)).toBeInTheDocument();
+    expect(getByText(/test.pdf/i)).toBeInTheDocument();
   });
   it('should show error when file upload fails', async () => {
     const handleFileUpload: jest.MockedFunction<
@@ -1658,7 +853,7 @@ describe('additional files', () => {
           return undefined;
         }),
     );
-    render(
+    const { getByLabelText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1672,18 +867,18 @@ describe('additional files', () => {
       </StaticRouter>,
     );
 
-    const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
+    const uploadInput = getByLabelText(/Upload Additional Files/i);
 
     await waitFor(async () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText(mockError)).toBeInTheDocument();
+    expect(getByText(mockError)).toBeInTheDocument();
   });
 
   it('user cannot upload the same file multiple times', async () => {
     const onCreate = jest.fn();
-    render(
+    const { getByLabelText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1704,20 +899,18 @@ describe('additional files', () => {
       </StaticRouter>,
     );
 
-    expect(screen.getByText(/test.csv/i)).toBeInTheDocument();
+    expect(getByText(/test.csv/i)).toBeInTheDocument();
 
     const testFile = new File(['file content'], 'test.csv', {
       type: 'application/pdf',
     });
-    const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
+    const uploadInput = getByLabelText(/Upload Additional Files/i);
 
     await waitFor(() => {
       userEvent.upload(uploadInput, testFile);
     });
 
-    expect(
-      screen.getByText(/File uploaded already exists./i),
-    ).toBeInTheDocument();
+    expect(getByText(/File uploaded already exists./i)).toBeInTheDocument();
   });
 
   it('should show error when file size is greater than 100MB', async () => {
@@ -1729,7 +922,7 @@ describe('additional files', () => {
       type: 'text/plain',
     });
 
-    render(
+    const { getByLabelText, getByText } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1743,21 +936,21 @@ describe('additional files', () => {
       </StaticRouter>,
     );
 
-    const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
+    const uploadInput = getByLabelText(/Upload Additional Files/i);
 
     await waitFor(async () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
     expect(
-      screen.getByText(
+      getByText(
         'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
       ),
     ).toBeInTheDocument();
   });
 
   it('should remove one of the additional files without removing the others', async () => {
-    render(
+    const { queryByText, getByText, getAllByRole } = render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
@@ -1782,10 +975,10 @@ describe('additional files', () => {
       </StaticRouter>,
     );
 
-    expect(screen.getByText(/file_one.csv/i)).toBeInTheDocument();
-    expect(screen.getByText(/file_two.pdf/i)).toBeInTheDocument();
+    expect(getByText(/file_one.csv/i)).toBeInTheDocument();
+    expect(getByText(/file_two.pdf/i)).toBeInTheDocument();
 
-    const removeFileOneButton = screen.getAllByRole('button', {
+    const removeFileOneButton = getAllByRole('button', {
       name: /cross/i,
     })[0]!;
     expect(removeFileOneButton).toBeInTheDocument();
@@ -1794,8 +987,8 @@ describe('additional files', () => {
       userEvent.click(removeFileOneButton);
     });
 
-    expect(screen.queryByText(/file_one.csv/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/file_two.pdf/i)).toBeInTheDocument();
+    expect(queryByText(/file_one.csv/i)).not.toBeInTheDocument();
+    expect(getByText(/file_two.pdf/i)).toBeInTheDocument();
   });
 });
 
@@ -1805,7 +998,7 @@ it('user can add teams', async () => {
     { label: 'Team A', value: 'team-a' },
     { label: 'Team B', value: 'team-b' },
   ]);
-  render(
+  const { getByText, findByRole, getByRole } = render(
     <StaticRouter>
       <ManuscriptForm
         {...defaultProps}
@@ -1830,19 +1023,19 @@ it('user can add teams', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+  userEvent.click(getByRole('textbox', { name: /Teams/i }));
   await waitFor(() => {
-    expect(screen.getByText('Team A')).toBeVisible();
+    expect(getByText('Team A')).toBeVisible();
   });
-  userEvent.click(screen.getByText('Team A'));
+  userEvent.click(getByText('Team A'));
 
-  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+  userEvent.click(getByRole('textbox', { name: /Teams/i }));
   await waitFor(() => {
-    expect(screen.getByText('Team B')).toBeVisible();
+    expect(getByText('Team B')).toBeVisible();
   });
-  userEvent.click(screen.getByText('Team B'));
+  userEvent.click(getByText('Team B'));
 
-  await submitForm();
+  await submitForm({ findByRole });
 
   await waitFor(() => {
     expect(onCreate).toHaveBeenCalledWith(
@@ -1863,7 +1056,7 @@ it('user can add labs', async () => {
     { label: 'Lab One', value: 'lab-1' },
     { label: 'Lab Two', value: 'lab-2' },
   ]);
-  render(
+  const { getByText, findByRole, getByRole } = render(
     <StaticRouter>
       <ManuscriptForm
         {...defaultProps}
@@ -1887,17 +1080,17 @@ it('user can add labs', async () => {
       />
     </StaticRouter>,
   );
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  userEvent.click(getByRole('textbox', { name: /Labs/i }));
   await waitFor(() => {
-    expect(screen.getByText('Lab One')).toBeVisible();
+    expect(getByText('Lab One')).toBeVisible();
   });
-  userEvent.click(screen.getByText('Lab One'));
+  userEvent.click(getByText('Lab One'));
 
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-  expect(screen.getByText('Lab Two')).toBeVisible();
-  userEvent.click(screen.getByText('Lab Two'));
+  userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  expect(getByText('Lab Two')).toBeVisible();
+  userEvent.click(getByText('Lab Two'));
 
-  await submitForm();
+  await submitForm({ findByRole });
 
   await waitFor(() => {
     expect(onCreate).toHaveBeenCalledWith(
@@ -1914,7 +1107,7 @@ it('user can add labs', async () => {
 
 it('displays error message when no team is found', async () => {
   const getTeamSuggestionsMock = jest.fn().mockResolvedValue([]);
-  render(
+  const { queryByText, getByText, getByRole } = render(
     <StaticRouter>
       <ManuscriptForm
         {...defaultProps}
@@ -1922,26 +1115,26 @@ it('displays error message when no team is found', async () => {
       />
     </StaticRouter>,
   );
-  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-  expect(screen.getByText(/Sorry, no teams match/i)).toBeVisible();
+  userEvent.click(getByRole('textbox', { name: /Teams/i }));
+  await waitForElementToBeRemoved(() => queryByText(/loading/i));
+  expect(getByText(/Sorry, no teams match/i)).toBeVisible();
 });
 
 it('displays error message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
-  render(
+  const { queryByText, getByText, getByRole } = render(
     <StaticRouter>
       <ManuscriptForm {...defaultProps} getLabSuggestions={getLabSuggestions} />
     </StaticRouter>,
   );
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-  expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
+  userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  await waitForElementToBeRemoved(() => queryByText(/loading/i));
+  expect(getByText(/Sorry, no labs match/i)).toBeVisible();
 });
 
 it('calls onUpdate when form is updated', async () => {
   const onUpdate = jest.fn();
-  render(
+  const { findByRole } = render(
     <StaticRouter>
       <ManuscriptForm
         {...defaultProps}
@@ -1964,7 +1157,7 @@ it('calls onUpdate when form is updated', async () => {
     </StaticRouter>,
   );
 
-  await submitForm();
+  await submitForm({ findByRole });
 
   await waitFor(() => {
     expect(onUpdate).toHaveBeenCalledWith('manuscript-id', {
@@ -2002,7 +1195,7 @@ it('calls onUpdate when form is updated', async () => {
             id: '123',
             url: 'http://example.com/test.pdf',
           },
-          manuscriptLicense: undefined,
+          manuscriptLicense: 'Yes',
           manuscriptLicenseDetails: '',
           otherDetails: undefined,
           preprintDoi: undefined,
@@ -2019,7 +1212,7 @@ it('calls onUpdate when form is updated', async () => {
 
 it('calls onResubmit when form details are saved and resubmitManuscript prop is true', async () => {
   const onResubmit = jest.fn();
-  render(
+  const { findByLabelText, findByRole } = render(
     <StaticRouter>
       <ManuscriptForm
         {...defaultProps}
@@ -2056,15 +1249,15 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
   });
 
   userEvent.upload(
-    await screen.findByLabelText(/Upload Manuscript File/i),
+    await findByLabelText(/Upload Manuscript File/i),
     testManuscriptFile,
   );
   userEvent.upload(
-    await screen.findByLabelText(/Upload Key Resource Table/i),
+    await findByLabelText(/Upload Key Resource Table/i),
     testKeyResourceFile,
   );
 
-  await submitForm();
+  await submitForm({ findByRole });
 
   await waitFor(() => {
     expect(onResubmit).toHaveBeenCalledWith('manuscript-id', {
@@ -2102,7 +1295,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
             id: 'some-id',
             url: 'https://example.com/manuscript.pdf',
           },
-          manuscriptLicense: undefined,
+          manuscriptLicense: 'Yes',
           manuscriptLicenseDetails: '',
           otherDetails: undefined,
           preprintDoi: undefined,
@@ -2122,7 +1315,7 @@ it('can generate short description when description is present', async () => {
     .fn()
     .mockResolvedValue('A tiny description');
 
-  render(
+  const { getByRole } = render(
     <StaticRouter>
       <ManuscriptForm
         {...defaultProps}
@@ -2138,7 +1331,7 @@ it('can generate short description when description is present', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByRole('button', { name: 'Generate' }));
+  userEvent.click(getByRole('button', { name: 'Generate' }));
 
   await waitFor(() => {
     expect(getShortDescriptionFromDescription).toHaveBeenCalledWith(

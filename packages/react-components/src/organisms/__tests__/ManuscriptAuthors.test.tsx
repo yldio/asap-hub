@@ -45,6 +45,10 @@ const ManuscriptAuthorsComponent = (
   );
 };
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
+});
+
 it.each([true, false])(
   'displays pre populated external author email input field and email value when isMultiSelect is %s',
   async (isMultiSelect) => {

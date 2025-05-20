@@ -14,7 +14,7 @@ export const manuscriptContentQueryFragment = gql`
     count
     apcRequested
     apcPaid
-    apcAmount
+    apcAmountPaid
     assignedUsersCollection(limit: 30) {
       items {
         sys {
@@ -337,7 +337,7 @@ export const FETCH_MANUSCRIPTS = gql`
         count
         apcRequested
         apcPaid
-        apcAmount
+        apcAmountPaid
         assignedUsersCollection(limit: 30) {
           items {
             sys {

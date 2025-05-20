@@ -3523,7 +3523,7 @@ enum ManuscriptVersionsTeamsCollectionOrder {
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts)"""
 type Manuscripts implements Entry & _Node {
   _id: ID!
-  apcAmount(locale: String): Float
+  apcAmountPaid(locale: String): Float
   apcPaid(locale: String): Boolean
   apcRequested(locale: String): Boolean
   assignedUsersCollection(limit: Int = 100, locale: String, order: [ManuscriptsAssignedUsersCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): ManuscriptsAssignedUsersCollection
@@ -3654,7 +3654,7 @@ enum ManuscriptsDiscussionsCollectionOrder {
 input ManuscriptsFilter {
   AND: [ManuscriptsFilter]
   OR: [ManuscriptsFilter]
-  apcAmount: Float
+  apcAmountPaid: Float
   apcAmount_exists: Boolean
   apcAmount_gt: Float
   apcAmount_gte: Float

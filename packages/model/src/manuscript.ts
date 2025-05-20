@@ -307,7 +307,7 @@ export type ManuscriptDataObject = {
   discussions: ManuscriptDiscussion[];
   requestingApcCoverage?: 'Yes' | 'No';
   apcPaid?: boolean;
-  apcAmount?: number;
+  apcAmountPaid?: number;
 };
 
 export type ManuscriptResponse = ManuscriptDataObject;
@@ -836,7 +836,7 @@ export const complianceInitialSortingDirection = {
 export type PartialManuscriptResponse = Pick<ManuscriptVersion, 'id'> &
   Pick<
     ManuscriptResponse,
-    'status' | 'title' | 'requestingApcCoverage' | 'apcPaid' | 'apcAmount'
+    'status' | 'title' | 'requestingApcCoverage' | 'apcPaid' | 'apcAmountPaid'
   > & {
     lastUpdated: string;
     team: { id: string; displayName: string };

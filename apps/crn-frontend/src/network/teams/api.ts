@@ -295,11 +295,16 @@ export const getManuscripts = async (
     .filter(Boolean)
     .join(' AND ');
 
-  const result = await algoliaClient.search(['manuscript'], searchQuery, {
-    filters,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
+  const result = await algoliaClient.search(
+    ['manuscript'],
+    searchQuery,
+    {
+      filters,
+      page: currentPage ?? undefined,
+      hitsPerPage: pageSize ?? undefined,
+    },
+    true,
+  );
 
   return {
     items: result.hits,

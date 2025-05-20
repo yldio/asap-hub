@@ -489,6 +489,7 @@ describe('Manuscript', () => {
             expect.objectContaining({
               filters: expectedFilter,
             }),
+            true,
           );
         },
       );
@@ -508,6 +509,7 @@ describe('Manuscript', () => {
         ['manuscript'],
         'test query',
         expect.any(Object),
+        true,
       );
     });
 
@@ -528,6 +530,7 @@ describe('Manuscript', () => {
           hitsPerPage: 25,
           page: 2,
         }),
+        true,
       );
     });
 
@@ -548,6 +551,7 @@ describe('Manuscript', () => {
           expect.objectContaining({
             filters: '(status:"Waiting for Report")',
           }),
+          true,
         );
       });
 
@@ -568,6 +572,7 @@ describe('Manuscript', () => {
             filters:
               '(status:"Waiting for Report" OR status:"Review Compliance Report")',
           }),
+          true,
         );
       });
 
@@ -588,6 +593,7 @@ describe('Manuscript', () => {
             filters:
               'requestingApcCoverage:Yes AND (status:"Waiting for Report" OR status:"Compliant")',
           }),
+          true,
         );
       });
 
@@ -608,6 +614,7 @@ describe('Manuscript', () => {
             filters:
               '(NOT status:Compliant AND NOT status:"Closed (other)") AND (status:"Waiting for Report" OR status:"Review Compliance Report")',
           }),
+          true,
         );
       });
 
@@ -628,6 +635,7 @@ describe('Manuscript', () => {
             filters:
               'requestingApcCoverage:Yes AND (NOT status:Compliant AND NOT status:"Closed (other)") AND (status:"Waiting for Report" OR status:"Review Compliance Report")',
           }),
+          true,
         );
       });
     });

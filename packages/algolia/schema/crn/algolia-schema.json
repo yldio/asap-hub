@@ -93,6 +93,7 @@
   ],
   "customRanking": [
     "asc(endDateTimestamp)",
+    "asc(lastUpdated)",
     "desc(addedDate)",
     "desc(createdDate)",
     "asc(team.displayName)"

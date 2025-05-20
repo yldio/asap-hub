@@ -49,7 +49,9 @@ module.exports.up = (migration) => {
   manuscript.deleteField('apcPaid');
 
   manuscript.moveField('apcAmountRequested').afterField('apcRequested');
-  manuscript.moveField('apcCoverageRequestStatus').afterField('apcAmountRequested');
+  manuscript
+    .moveField('apcCoverageRequestStatus')
+    .afterField('apcAmountRequested');
   manuscript.moveField('apcAmountPaid').afterField('apcCoverageRequestStatus');
   manuscript.moveField('declinedReason').afterField('apcAmountPaid');
 };

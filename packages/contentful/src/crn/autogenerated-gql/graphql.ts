@@ -4933,8 +4933,7 @@ export enum ManuscriptVersionsTeamsCollectionOrder {
 export type Manuscripts = Entry &
   _Node & {
     _id: Scalars['ID'];
-    apcAmount?: Maybe<Scalars['Float']>;
-    apcPaid?: Maybe<Scalars['Boolean']>;
+    apcAmountPaid?: Maybe<Scalars['Float']>;
     apcRequested?: Maybe<Scalars['Boolean']>;
     assignedUsersCollection?: Maybe<ManuscriptsAssignedUsersCollection>;
     contentfulMetadata: ContentfulMetadata;
@@ -5163,7 +5162,7 @@ export enum ManuscriptsDiscussionsCollectionOrder {
 export type ManuscriptsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
-  apcAmount?: InputMaybe<Scalars['Float']>;
+  apcAmountPaid?: InputMaybe<Scalars['Float']>;
   apcAmount_exists?: InputMaybe<Scalars['Boolean']>;
   apcAmount_gt?: InputMaybe<Scalars['Float']>;
   apcAmount_gte?: InputMaybe<Scalars['Float']>;
@@ -5172,7 +5171,6 @@ export type ManuscriptsFilter = {
   apcAmount_lte?: InputMaybe<Scalars['Float']>;
   apcAmount_not?: InputMaybe<Scalars['Float']>;
   apcAmount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
-  apcPaid?: InputMaybe<Scalars['Boolean']>;
   apcPaid_exists?: InputMaybe<Scalars['Boolean']>;
   apcPaid_not?: InputMaybe<Scalars['Boolean']>;
   apcRequested?: InputMaybe<Scalars['Boolean']>;
@@ -18467,7 +18465,7 @@ export type FetchLabsQuery = {
 
 export type ManuscriptsContentFragment = Pick<
   Manuscripts,
-  'title' | 'status' | 'count' | 'apcRequested' | 'apcPaid' | 'apcAmount'
+  'title' | 'status' | 'count' | 'apcRequested' | 'apcAmountPaid'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
   assignedUsersCollection?: Maybe<{
@@ -18707,7 +18705,7 @@ export type FetchManuscriptByIdQuery = {
   manuscripts?: Maybe<
     Pick<
       Manuscripts,
-      'title' | 'status' | 'count' | 'apcRequested' | 'apcPaid' | 'apcAmount'
+      'title' | 'status' | 'count' | 'apcRequested' | 'apcAmountPaid'
     > & {
       discussionsCollection?: Maybe<
         Pick<ManuscriptsDiscussionsCollection, 'total'> & {
@@ -19034,12 +19032,7 @@ export type FetchManuscriptsQuery = {
         Maybe<
           Pick<
             Manuscripts,
-            | 'title'
-            | 'status'
-            | 'count'
-            | 'apcRequested'
-            | 'apcPaid'
-            | 'apcAmount'
+            'title' | 'status' | 'count' | 'apcRequested' | 'apcAmountPaid'
           > & {
             sys: Pick<Sys, 'id'>;
             assignedUsersCollection?: Maybe<{
@@ -21152,12 +21145,7 @@ export type FetchTeamByIdQuery = {
             Maybe<
               Pick<
                 Manuscripts,
-                | 'title'
-                | 'status'
-                | 'count'
-                | 'apcRequested'
-                | 'apcPaid'
-                | 'apcAmount'
+                'title' | 'status' | 'count' | 'apcRequested' | 'apcAmountPaid'
               > & {
                 teamsCollection?: Maybe<{
                   items: Array<
@@ -25387,8 +25375,7 @@ export const ManuscriptsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'count' } },
           { kind: 'Field', name: { kind: 'Name', value: 'apcRequested' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'apcPaid' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'apcAmount' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'apcAmountPaid' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'assignedUsersCollection' },
@@ -36706,11 +36693,7 @@ export const FetchManuscriptsDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'apcPaid' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'apcAmount' },
+                        name: { kind: 'Name', value: 'apcAmountPaid' },
                       },
                       {
                         kind: 'Field',

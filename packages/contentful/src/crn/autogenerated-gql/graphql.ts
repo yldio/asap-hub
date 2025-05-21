@@ -1307,14 +1307,18 @@ export type DiscussionsLinkingCollectionsManuscriptsCollectionArgs = {
 };
 
 export enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
-  ApcAmountAsc = 'apcAmount_ASC',
-  ApcAmountDesc = 'apcAmount_DESC',
-  ApcPaidAsc = 'apcPaid_ASC',
-  ApcPaidDesc = 'apcPaid_DESC',
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
   ApcRequestedAsc = 'apcRequested_ASC',
   ApcRequestedDesc = 'apcRequested_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
@@ -4186,6 +4190,7 @@ export type ManuscriptVersions = Entry &
     protocolsDeposited?: Maybe<Scalars['String']>;
     protocolsDepositedDetails?: Maybe<Scalars['String']>;
     publicationDoi?: Maybe<Scalars['String']>;
+    shortDescription?: Maybe<Scalars['String']>;
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptVersionsTeamsCollection>;
     type?: Maybe<Scalars['String']>;
@@ -4373,6 +4378,11 @@ export type ManuscriptVersionsProtocolsDepositedDetailsArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsPublicationDoiArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsShortDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -4689,6 +4699,13 @@ export type ManuscriptVersionsFilter = {
   publicationDoi_not?: InputMaybe<Scalars['String']>;
   publicationDoi_not_contains?: InputMaybe<Scalars['String']>;
   publicationDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   teams?: InputMaybe<CfTeamsNestedFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4805,14 +4822,18 @@ export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder
 }
 
 export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
-  ApcAmountAsc = 'apcAmount_ASC',
-  ApcAmountDesc = 'apcAmount_DESC',
-  ApcPaidAsc = 'apcPaid_ASC',
-  ApcPaidDesc = 'apcPaid_DESC',
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
   ApcRequestedAsc = 'apcRequested_ASC',
   ApcRequestedDesc = 'apcRequested_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
@@ -4921,10 +4942,13 @@ export type Manuscripts = Entry &
   _Node & {
     _id: Scalars['ID'];
     apcAmountPaid?: Maybe<Scalars['Float']>;
+    apcAmountRequested?: Maybe<Scalars['Float']>;
+    apcCoverageRequestStatus?: Maybe<Scalars['String']>;
     apcRequested?: Maybe<Scalars['Boolean']>;
     assignedUsersCollection?: Maybe<ManuscriptsAssignedUsersCollection>;
     contentfulMetadata: ContentfulMetadata;
     count?: Maybe<Scalars['Int']>;
+    declinedReason?: Maybe<Scalars['String']>;
     discussionsCollection?: Maybe<ManuscriptsDiscussionsCollection>;
     eligibilityReasons?: Maybe<Array<Maybe<Scalars['String']>>>;
     linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
@@ -4939,12 +4963,17 @@ export type Manuscripts = Entry &
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
-export type ManuscriptsApcAmountArgs = {
+export type ManuscriptsApcAmountPaidArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
-export type ManuscriptsApcPaidArgs = {
+export type ManuscriptsApcAmountRequestedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsApcCoverageRequestStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -4967,6 +4996,11 @@ export type ManuscriptsAssignedUsersCollectionArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsCountArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsDeclinedReasonArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -5150,16 +5184,34 @@ export type ManuscriptsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   apcAmountPaid?: InputMaybe<Scalars['Float']>;
-  apcAmount_exists?: InputMaybe<Scalars['Boolean']>;
-  apcAmount_gt?: InputMaybe<Scalars['Float']>;
-  apcAmount_gte?: InputMaybe<Scalars['Float']>;
-  apcAmount_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
-  apcAmount_lt?: InputMaybe<Scalars['Float']>;
-  apcAmount_lte?: InputMaybe<Scalars['Float']>;
-  apcAmount_not?: InputMaybe<Scalars['Float']>;
-  apcAmount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
-  apcPaid_exists?: InputMaybe<Scalars['Boolean']>;
-  apcPaid_not?: InputMaybe<Scalars['Boolean']>;
+  apcAmountPaid_exists?: InputMaybe<Scalars['Boolean']>;
+  apcAmountPaid_gt?: InputMaybe<Scalars['Float']>;
+  apcAmountPaid_gte?: InputMaybe<Scalars['Float']>;
+  apcAmountPaid_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  apcAmountPaid_lt?: InputMaybe<Scalars['Float']>;
+  apcAmountPaid_lte?: InputMaybe<Scalars['Float']>;
+  apcAmountPaid_not?: InputMaybe<Scalars['Float']>;
+  apcAmountPaid_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  apcAmountRequested?: InputMaybe<Scalars['Float']>;
+  apcAmountRequested_exists?: InputMaybe<Scalars['Boolean']>;
+  apcAmountRequested_gt?: InputMaybe<Scalars['Float']>;
+  apcAmountRequested_gte?: InputMaybe<Scalars['Float']>;
+  apcAmountRequested_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  apcAmountRequested_lt?: InputMaybe<Scalars['Float']>;
+  apcAmountRequested_lte?: InputMaybe<Scalars['Float']>;
+  apcAmountRequested_not?: InputMaybe<Scalars['Float']>;
+  apcAmountRequested_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  apcCoverageRequestStatus?: InputMaybe<Scalars['String']>;
+  apcCoverageRequestStatus_contains?: InputMaybe<Scalars['String']>;
+  apcCoverageRequestStatus_exists?: InputMaybe<Scalars['Boolean']>;
+  apcCoverageRequestStatus_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  apcCoverageRequestStatus_not?: InputMaybe<Scalars['String']>;
+  apcCoverageRequestStatus_not_contains?: InputMaybe<Scalars['String']>;
+  apcCoverageRequestStatus_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   apcRequested?: InputMaybe<Scalars['Boolean']>;
   apcRequested_exists?: InputMaybe<Scalars['Boolean']>;
   apcRequested_not?: InputMaybe<Scalars['Boolean']>;
@@ -5175,6 +5227,13 @@ export type ManuscriptsFilter = {
   count_lte?: InputMaybe<Scalars['Int']>;
   count_not?: InputMaybe<Scalars['Int']>;
   count_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  declinedReason?: InputMaybe<Scalars['String']>;
+  declinedReason_contains?: InputMaybe<Scalars['String']>;
+  declinedReason_exists?: InputMaybe<Scalars['Boolean']>;
+  declinedReason_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  declinedReason_not?: InputMaybe<Scalars['String']>;
+  declinedReason_not_contains?: InputMaybe<Scalars['String']>;
+  declinedReason_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   discussions?: InputMaybe<CfDiscussionsNestedFilter>;
   discussionsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   eligibilityReasons_contains_all?: InputMaybe<
@@ -5238,14 +5297,18 @@ export type ManuscriptsLinkingCollectionsEntryCollectionArgs = {
 };
 
 export enum ManuscriptsOrder {
-  ApcAmountAsc = 'apcAmount_ASC',
-  ApcAmountDesc = 'apcAmount_DESC',
-  ApcPaidAsc = 'apcPaid_ASC',
-  ApcPaidDesc = 'apcPaid_DESC',
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
   ApcRequestedAsc = 'apcRequested_ASC',
   ApcRequestedDesc = 'apcRequested_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
@@ -9325,14 +9388,18 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
-  ApcAmountAsc = 'apcAmount_ASC',
-  ApcAmountDesc = 'apcAmount_DESC',
-  ApcPaidAsc = 'apcPaid_ASC',
-  ApcPaidDesc = 'apcPaid_DESC',
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
   ApcRequestedAsc = 'apcRequested_ASC',
   ApcRequestedDesc = 'apcRequested_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
@@ -10993,14 +11060,18 @@ export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsManuscriptsCollectionOrder {
-  ApcAmountAsc = 'apcAmount_ASC',
-  ApcAmountDesc = 'apcAmount_DESC',
-  ApcPaidAsc = 'apcPaid_ASC',
-  ApcPaidDesc = 'apcPaid_DESC',
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
   ApcRequestedAsc = 'apcRequested_ASC',
   ApcRequestedDesc = 'apcRequested_DESC',
   CountAsc = 'count_ASC',
   CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
@@ -12589,6 +12660,13 @@ export type CfManuscriptVersionsNestedFilter = {
   publicationDoi_not?: InputMaybe<Scalars['String']>;
   publicationDoi_not_contains?: InputMaybe<Scalars['String']>;
   publicationDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   type?: InputMaybe<Scalars['String']>;

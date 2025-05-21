@@ -49,7 +49,7 @@ type ManuscriptImport = {
   manuscriptTitle: string;
   manuscriptNumber: number;
   apcAmount: number;
-  apcStatus: boolean;
+  apcPaid: boolean;
   staffResponsibleId: string;
   versions: ManuscriptVersionImport[];
 };
@@ -110,6 +110,12 @@ const mapManuscriptStatus = (status: string) => {
       return 'Manuscript Resubmitted';
     case 'Closed (Other)':
       return 'Closed (other)';
+    case 'Compliant':
+      return 'Compliant';
+    case 'Addendum Required':
+      return 'Addendum Required';
+    case 'Submit Final Publication':
+      return 'Submit Final Publication';
     default:
       return undefined;
   }
@@ -211,7 +217,6 @@ const getFirstAuthorId = async (
     const existingExternalAuthors = await environment.getEntries({
       content_type: 'externalAuthors',
       'fields.name[in]': authorName,
-      'fields.email[in]': authorId,
     });
     if (existingExternalAuthors.items.length !== 1) {
       const newExternalAuthor = await environment.createEntry(
@@ -232,10 +237,26 @@ const getFirstAuthorId = async (
   }
 };
 
+const getCreatedByUser = async (environment: Environment, authorId: string) => {
+  if (!authorId.includes('@')) {
+    return authorId;
+  } else {
+    const user = await environment.getEntries({
+      content_type: 'users',
+      'fields.email[in]':
+        authorId === 'saadia.rahman@ucl.ac.uk'
+          ? 'saadiarahman.26@gmail.com'
+          : authorId.toLowerCase(),
+    });
+    return user.items[0]?.sys.id;
+  }
+};
+
 const updateManuscriptVersion = async (
   environment: Environment,
   manuscriptId: string,
   version: ManuscriptVersionImport,
+  staffResponsibleId: string,
 ) => {
   await rateLimiter.removeTokens(5);
 
@@ -246,10 +267,13 @@ const updateManuscriptVersion = async (
   const manuscriptVersionEntry =
     await environment.getEntry(manuscriptVersionId);
 
+  const createdById = await getCreatedByUser(environment, version.authorId);
+
   await patchAndPublish(manuscriptVersionEntry, {
     originalVersionId: version.originalVersionId,
-    createdBy: null,
-    updatedBy: null,
+    count: version.manuscriptVersion,
+    createdBy: createdById ? getLinkEntity(createdById) : null,
+    updatedBy: createdById ? getLinkEntity(createdById) : null,
   });
 
   if (version.dsMostRecent) {
@@ -263,6 +287,7 @@ const updateManuscriptVersion = async (
             description:
               'See compliance report previously emailed from openscience@parkinsonsroadmap.org',
             manuscriptVersion: getLinkEntity(manuscriptVersionId),
+            createdBy: getLinkEntity(staffResponsibleId),
           }),
         },
       },
@@ -289,6 +314,7 @@ const parseManuscriptVersion = async (
     preprintDoi: versionImport.versionDoiPreprint || undefined,
     publicationDoi: versionImport.versionDoiPublication || undefined,
     description: 'imported manuscript version',
+    shortDescription: 'imported manuscript version',
     manuscriptFile: await createAsset(
       versionImport.originalVersionId,
       versionImport.pdfLink,
@@ -336,7 +362,7 @@ const createManuscript = async (
     manuscript.versions.length === 1
       ? firstVersion!.manuscriptStatus
       : otherVersions.at(-1)!.manuscriptStatus;
-  console.log(currentStatus);
+
   const environment = await getContentfulRestClientFactory();
 
   const manuscriptCreateObject: ManuscriptCreateDataObject = {
@@ -353,16 +379,12 @@ const createManuscript = async (
     manuscriptCreateObject,
   );
 
-  const manuscriptEntry = await environment.getEntry(manuscriptId);
-
-  await patchAndPublish(manuscriptEntry, {
-    apcPaid: manuscript.apcStatus,
-    apcAmount: manuscript.apcAmount,
-    assignedUsers: [getLinkEntity(manuscript.staffResponsibleId)],
-    status: currentStatus,
-  });
-
-  await updateManuscriptVersion(environment, manuscriptId, firstVersion!);
+  await updateManuscriptVersion(
+    environment,
+    manuscriptId,
+    firstVersion!,
+    manuscript.staffResponsibleId,
+  );
 
   for (const version of otherVersions) {
     await rateLimiter.removeTokens(5);
@@ -374,8 +396,25 @@ const createManuscript = async (
     };
 
     await manuscriptDataProvider.createVersion(manuscriptId, parsedVersion);
-    await updateManuscriptVersion(environment, manuscriptId, version);
+    await updateManuscriptVersion(
+      environment,
+      manuscriptId,
+      version,
+      manuscript.staffResponsibleId,
+    );
   }
+
+  await rateLimiter.removeTokens(5);
+  const manuscriptEntry = await environment.getEntry(manuscriptId);
+
+  await patchAndPublish(manuscriptEntry, {
+    apcCoverageRequestStatus: manuscript.apcPaid ? 'paid' : null,
+    apcRequested: manuscript.apcPaid ? manuscript.apcPaid : null,
+    apcAmountPaid: manuscript.apcAmount,
+    assignedUsers: [getLinkEntity(manuscript.staffResponsibleId)],
+    status: currentStatus,
+    count: manuscript.manuscriptNumber,
+  });
 };
 
 const app = async () => {
@@ -425,7 +464,8 @@ const app = async () => {
       // const krt = getDownloadableLinkFromGoogleDriveUrl(getTestKRTUrl(row[27] || ''));
       const dsMostRecent = row[27]; //ds_most_recent_url
       const apcAmount = Number(row[28] || 0);
-      const apcStatus = mapApcPaid(row[29] || '');
+      const apcPaid = mapApcPaid(row[29] || ''); // true or false
+      //const apcRequested = apcPaidStatus;
       const teamId1 = row[30] || '';
       const teamId2 = row[31];
       const teamId3 = row[32];
@@ -454,7 +494,7 @@ const app = async () => {
         krt,
         dsMostRecent,
         apcAmount,
-        apcStatus,
+        apcPaid,
         teamId1,
         teamId2,
         teamId3,
@@ -482,7 +522,7 @@ const app = async () => {
       krt,
       dsMostRecent,
       apcAmount,
-      apcStatus,
+      apcPaid,
       teamId1,
       teamId2,
       teamId3,
@@ -537,7 +577,7 @@ const app = async () => {
                 manuscriptTitle,
                 manuscriptNumber,
                 apcAmount,
-                apcStatus,
+                apcPaid,
                 staffResponsibleId,
                 versions: [
                   {
@@ -573,7 +613,7 @@ const app = async () => {
             manuscriptTitle,
             manuscriptNumber,
             apcAmount,
-            apcStatus,
+            apcPaid,
             staffResponsibleId,
             versions: [
               {

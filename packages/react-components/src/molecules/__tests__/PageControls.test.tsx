@@ -284,3 +284,24 @@ it('links page numbers to the respective pages', () => {
   expect(getByText('4').closest('a')).toHaveAttribute('href', '#3');
   expect(getByText('5').closest('a')).toHaveAttribute('href', '#4');
 });
+
+it('inserts a filler for a single missing page and applies the wide-screen-only class', () => {
+  // numberOfPages = 6, currentPageIndex = 2 produces desiredPages [0,1,2,3,5]
+  // so optimizeGaps will insert index=4 (page “5”) as a filler with wideScreenOnly = true
+  const { getByText } = render(
+    <PageControls
+      numberOfPages={6}
+      currentPageIndex={2}
+      renderPageHref={renderPageHref}
+    />,
+  );
+
+  // the filler should render as page “5”
+  const fillerSpan = getByText('5');
+  const fillerLi = fillerSpan.closest('li');
+  const fillerLink = fillerSpan.closest('a');
+
+  expect(fillerLi).toHaveClass('wide-screen-only');
+  // and its href should point to index 4
+  expect(fillerLink).toHaveAttribute('href', '#4');
+});

@@ -26,6 +26,8 @@ import React, { ComponentProps, useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   AuthorSelect,
+  colors,
+  ExternalLinkIcon,
   FormCard,
   LabeledDropdown,
   LabeledFileField,
@@ -1431,7 +1433,28 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             <FormCard
               key="quick-checks"
               title="Quick Checks"
-              description="Before you submit your manuscript, please confirm that you have met the following requirements."
+              description={
+                <p>
+                  Before you submit your manuscript, please confirm that you
+                  have met the following requirements. For a more detailed
+                  explanation, please refer to the&nbsp;
+                  <Link href="https://docs.google.com/document/d/1rkAsm9UrElP8OhXCdxQXKxNGWz4HsOAIXrYtfxAn7kI">
+                    <span
+                      css={css({
+                        wordBreak: 'break-word',
+                        position: 'relative',
+                        '& svg': {
+                          position: 'absolute',
+                          bottom: '1px',
+                        },
+                      })}
+                    >
+                      Open Science Compliance Checklist for Authors
+                      <ExternalLinkIcon size={17} color={colors.pine} />
+                    </span>
+                  </Link>
+                </p>
+              }
             >
               <div
                 css={css({

@@ -5,7 +5,7 @@ import { perRem } from '../pixels';
 
 interface FormCardProps {
   title: string;
-  description?: string;
+  description?: string | React.ReactNode;
 }
 
 const cardStyles = css({

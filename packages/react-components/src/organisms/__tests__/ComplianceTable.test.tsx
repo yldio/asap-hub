@@ -183,7 +183,7 @@ describe('ComplianceTable', () => {
         <ComplianceTable {...defaultProps} />,
       );
       userEvent.click(getByLabelText(/Edit Assigned Users/i));
-      userEvent.click(getByRole('button', { name: 'Assign' }));
+      userEvent.click(getByRole('button', { name: 'Update' }));
       await waitFor(() => {
         expect(mockOnUpdateManuscript).toHaveBeenCalledWith('manuscript-id-1', {
           assignedUsers: [assignedUser.id],

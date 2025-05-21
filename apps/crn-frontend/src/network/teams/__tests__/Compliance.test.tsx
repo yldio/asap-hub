@@ -416,7 +416,7 @@ it('displays success message when assigning users', async () => {
 
   userEvent.click(screen.getByLabelText(/Edit Assigned Users/i));
 
-  userEvent.click(screen.getByRole('button', { name: 'Assign' }));
+  userEvent.click(screen.getByRole('button', { name: 'Update' }));
 
   await waitFor(() => {
     expect(

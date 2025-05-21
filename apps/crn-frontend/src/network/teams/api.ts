@@ -20,7 +20,6 @@ import {
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptStatus,
-  RequestedAPCCoverageOption,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   TeamPatchRequest,
@@ -245,7 +244,7 @@ export const resubmitManuscript = async (
 };
 
 export type ManuscriptsOptions = Omit<GetListOptions, 'filters'> & {
-  requestedAPCCoverage: RequestedAPCCoverageOption;
+  // requestedAPCCoverage: RequestedAPCCoverageOption;
   completedStatus: CompletedStatusOption;
   selectedStatuses: ManuscriptStatus[];
 };
@@ -256,25 +255,26 @@ export const getManuscripts = async (
     searchQuery,
     currentPage,
     pageSize,
-    requestedAPCCoverage,
+    // requestedAPCCoverage,
     completedStatus,
     selectedStatuses,
   }: ManuscriptsOptions,
 ): Promise<ListPartialManuscriptResponse> => {
-  const getApcCoverageFilter = (apcCoverage: RequestedAPCCoverageOption) => {
-    switch (apcCoverage) {
-      case 'submitted':
-        return `requestingApcCoverage:"Already Submitted"`;
-      case 'yes':
-        return 'requestingApcCoverage:Yes';
-      case 'no':
-        return 'requestingApcCoverage:No';
-      default:
-        return '';
-    }
-  };
+  // TODO: uncomment this once the apcCoverageRequestStatus is properly implemented
+  // const getApcCoverageFilter = (apcCoverage: RequestedAPCCoverageOption) => {
+  //   switch (apcCoverage) {
+  //     case 'submitted':
+  //       return `requestingApcCoverage:"Already Submitted"`;
+  //     case 'yes':
+  //       return 'requestingApcCoverage:Yes';
+  //     case 'no':
+  //       return 'requestingApcCoverage:No';
+  //     default:
+  //       return '';
+  //   }
+  // };
 
-  const apcCoverageFilter = getApcCoverageFilter(requestedAPCCoverage);
+  // const apcCoverageFilter = getApcCoverageFilter(requestedAPCCoverage);
   const completedStatusFilter =
     completedStatus === 'hide'
       ? `(NOT status:Compliant AND NOT status:"Closed (other)")`
@@ -288,7 +288,7 @@ export const getManuscripts = async (
     : '';
 
   const filters = [
-    apcCoverageFilter,
+    // apcCoverageFilter,
     completedStatusFilter,
     selectedStatusesFilter,
   ]

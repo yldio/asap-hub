@@ -8,7 +8,6 @@ describe('manuscriptToCSV', () => {
       id: 'manuscript-id',
       lastUpdated: '2025-03-06T17:03:41.824Z',
       status: 'Waiting for Report',
-      requestingApcCoverage: 'Yes',
       title: 'Contextual AI models for single-cell protein biology Revised',
       assignedUsers: [
         {
@@ -37,7 +36,7 @@ describe('manuscriptToCSV', () => {
       'Team Name': 'Alessi',
       'Last Updated': '2025-03-06T17:03:41.824Z',
       Status: 'Waiting for Report',
-      'Requested APC Coverage': 'Yes',
+      'Requested APC Coverage': '',
       'Assigned Users': 'Jane Smith, John Doe',
       'All Teams': 'Alessi and Camel',
     });

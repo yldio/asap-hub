@@ -1216,8 +1216,6 @@ describe('Manuscripts Contentful Data Provider', () => {
         versions: [],
         assignedUsers: [],
         discussions: [],
-        requestingApcCoverage: undefined,
-        apcAmountPaid: undefined,
       });
     });
 

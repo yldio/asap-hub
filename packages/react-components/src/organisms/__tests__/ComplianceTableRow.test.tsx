@@ -1,3 +1,4 @@
+import { disable, enable } from '@asap-hub/flags';
 import {
   manuscriptStatus,
   ManuscriptStatus,
@@ -5,7 +6,9 @@ import {
 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import ComplianceTableRow from '../ComplianceTableRow';
+import ComplianceTableRow, {
+  apcCoverableStatuses,
+} from '../ComplianceTableRow';
 
 describe('ComplianceTableRow', () => {
   const data: PartialManuscriptResponse = {
@@ -13,7 +16,6 @@ describe('ComplianceTableRow', () => {
     lastUpdated: '2023-03-15T08:00:00Z',
     status: 'Addendum Required',
     team: { id: 'team-id', displayName: 'Test Team' },
-    requestingApcCoverage: 'Yes',
     manuscriptId: 'DA1-000463-002-org-G-1',
     assignedUsers: [],
     title: 'Manuscript 1',
@@ -62,7 +64,6 @@ describe('ComplianceTableRow', () => {
     expect(
       screen.getByRole('button', { name: /Addendum Required/i }),
     ).toBeInTheDocument();
-    expect(screen.getByText('Yes')).toBeInTheDocument();
   });
 
   it('user can not change status when not a compliance reviewer', () => {
@@ -221,6 +222,90 @@ describe('ComplianceTableRow', () => {
             hasAssignedUsers: true,
             shouldShow: false,
           });
+        },
+      );
+    });
+  });
+
+  describe('APC Coverage', () => {
+    describe('when DISPLAY_NEW_APC_COVERAGE flag is disabled', () => {
+      beforeEach(() => {
+        disable('DISPLAY_NEW_APC_COVERAGE');
+      });
+
+      it('renders APC Coverage as an empty string', () => {
+        renderComponent();
+        expect(screen.getByTestId('apc-coverage')).toHaveTextContent('');
+      });
+    });
+
+    describe('when DISPLAY_NEW_APC_COVERAGE flag is enabled', () => {
+      beforeEach(() => {
+        enable('DISPLAY_NEW_APC_COVERAGE');
+      });
+
+      afterAll(() => {
+        disable('DISPLAY_NEW_APC_COVERAGE');
+      });
+
+      const nonAPCCoverableStatuses = manuscriptStatus.filter(
+        (status) => !apcCoverableStatuses.includes(status),
+      );
+
+      it.each(nonAPCCoverableStatuses)(
+        'renders APC Coverage as "—" when manuscript status is %s',
+        (status) => {
+          renderComponent({ data: { ...data, status } });
+          expect(screen.getByTestId('apc-coverage')).toHaveTextContent('—');
+        },
+      );
+
+      it.each`
+        status                        | apcRequested | buttonName
+        ${'Compliant'}                | ${false}     | ${'Add APC Coverage Details'}
+        ${'Submit Final Publication'} | ${false}     | ${'Add APC Coverage Details'}
+        ${'Compliant'}                | ${true}      | ${'Edit APC Coverage Details'}
+        ${'Submit Final Publication'} | ${true}      | ${'Edit APC Coverage Details'}
+      `(
+        'does not render apc coverage button when manuscript status is $status and apcRequested is $apcRequested but user is not a compliance reviewer',
+        ({ status, apcRequested, buttonName }) => {
+          renderComponent({
+            data: { ...data, status, apcRequested },
+            isComplianceReviewer: false,
+          });
+          expect(
+            screen.queryByRole('button', {
+              name: buttonName,
+            }),
+          ).not.toBeInTheDocument();
+        },
+      );
+
+      it.each(apcCoverableStatuses)(
+        'renders add apc coverage button when manuscript status is %s, user is compliance reviewer and request is not already made',
+        (status) => {
+          renderComponent({
+            data: { ...data, status, apcRequested: false },
+            isComplianceReviewer: true,
+          });
+          expect(
+            screen.getByRole('button', { name: 'Add APC Coverage Details' }),
+          ).toBeInTheDocument();
+        },
+      );
+
+      it.each(apcCoverableStatuses)(
+        'renders edit apc coverage button when manuscript status is %s, user is compliance reviewer and request is already made',
+        (status) => {
+          renderComponent({
+            data: { ...data, status, apcRequested: true },
+            isComplianceReviewer: true,
+          });
+          expect(
+            screen.getByRole('button', {
+              name: 'Edit APC Coverage Details',
+            }),
+          ).toBeInTheDocument();
         },
       );
     });

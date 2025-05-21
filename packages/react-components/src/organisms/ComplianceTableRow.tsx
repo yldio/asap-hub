@@ -1,3 +1,4 @@
+import { isEnabled } from '@asap-hub/flags';
 import {
   ManuscriptStatus,
   manuscriptStatus,
@@ -14,6 +15,7 @@ import {
   lead,
   neutral200,
   PencilIcon,
+  plusIcon,
   StatusButton,
   steel,
 } from '..';
@@ -123,6 +125,77 @@ type ComplianceTableRowProps = {
 };
 
 const completeStatuses = ['Closed (other)', 'Compliant'];
+export const apcCoverableStatuses = ['Compliant', 'Submit Final Publication'];
+
+type APCCoverageProps = {
+  apcRequested?: boolean;
+  isComplianceReviewer: boolean;
+  status: ManuscriptStatus;
+};
+
+const APCCoverage: React.FC<APCCoverageProps> = ({
+  apcRequested,
+  isComplianceReviewer,
+  status,
+}) => {
+  const isNewApcCoverageDisabled = !isEnabled('DISPLAY_NEW_APC_COVERAGE');
+
+  if (isNewApcCoverageDisabled) {
+    return (
+      <p data-testid="apc-coverage" css={apcCoverageStyles}>
+        {''}
+      </p>
+    );
+  }
+
+  const isAPCCoverable = apcCoverableStatuses.includes(status ?? '');
+
+  if (!isAPCCoverable) {
+    return (
+      <p
+        data-testid="apc-coverage"
+        css={css([apcCoverageStyles, { justifyContent: 'flex-start' }])}
+      >
+        —
+      </p>
+    );
+  }
+
+  return (
+    <div
+      data-testid="apc-coverage"
+      css={css({ display: 'flex', alignItems: 'center' })}
+    >
+      {/* TODO: fix this once the apc coverage label is properly implemented */}
+      <p css={apcCoverageStyles}>{''}</p>
+      {isComplianceReviewer ? (
+        apcRequested ? (
+          <Button
+            aria-label="Edit APC Coverage Details"
+            noMargin
+            overrideStyles={css([
+              assignUsersButtonStyles,
+              editUsersButtonStyles,
+            ])}
+          >
+            <PencilIcon />
+          </Button>
+        ) : (
+          <Button
+            aria-label="Add APC Coverage Details"
+            noMargin
+            overrideStyles={css([
+              assignUsersButtonStyles,
+              editUsersButtonStyles,
+            ])}
+          >
+            {plusIcon}
+          </Button>
+        )
+      ) : null}
+    </div>
+  );
+};
 
 const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
   isComplianceReviewer,
@@ -130,17 +203,9 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
   handleAssignUsersClick,
   handleStatusClick,
 }) => {
-  const {
-    id,
-    team,
-    manuscriptId,
-    lastUpdated,
-    status,
-    requestingApcCoverage,
-    assignedUsers,
-  } = data;
+  const { id, team, manuscriptId, lastUpdated, status, assignedUsers } = data;
 
-  const canEdit =
+  const canEditAssignedUsers =
     !completeStatuses.includes(status ?? '') && isComplianceReviewer;
 
   return (
@@ -182,7 +247,7 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
         <td css={statusButtonContainerStyles}>
           <StatusButton
             buttonChildren={() => <span>{status}</span>}
-            canEdit={canEdit}
+            canEdit={canEditAssignedUsers}
             selectedStatusType={getReviewerStatusType(
               status as (typeof manuscriptStatus)[number],
             )}
@@ -198,14 +263,18 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
           </StatusButton>
         </td>
         <td>
-          <p css={apcCoverageStyles}>{requestingApcCoverage ?? ''}</p>
+          <APCCoverage
+            apcRequested={data.apcRequested}
+            isComplianceReviewer={isComplianceReviewer}
+            status={status as ManuscriptStatus}
+          />
         </td>
         <td>
           <div css={assignedUsersContainerStyles}>
             {assignedUsers?.length ? (
               <div css={assignedUsersInnerContainerStyles}>
                 <AssignedUsersAvatarList members={assignedUsers} />
-                {canEdit ? (
+                {canEditAssignedUsers ? (
                   <Button
                     aria-label="Edit Assigned Users"
                     noMargin
@@ -222,7 +291,7 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
             ) : (
               <div css={assignedUsersInnerContainerStyles}>
                 <span css={noUsersStyles}>No users assigned</span>
-                {canEdit ? (
+                {canEditAssignedUsers ? (
                   <Button
                     aria-label="Assign Users"
                     noMargin

@@ -296,6 +296,8 @@ export type ManuscriptAssignedUser = Pick<
   'id' | 'firstName' | 'lastName' | 'avatarUrl'
 >;
 
+export type ApcCoverageRequestStatus = 'notPaid' | 'paid' | 'declined';
+
 export type ManuscriptDataObject = {
   id: string;
   title: string;
@@ -305,8 +307,11 @@ export type ManuscriptDataObject = {
   count: number;
   assignedUsers: ManuscriptAssignedUser[];
   discussions: ManuscriptDiscussion[];
-  requestingApcCoverage?: 'Yes' | 'No';
+  apcRequested?: boolean;
+  apcAmountRequested?: number;
+  apcCoverageRequestStatus?: ApcCoverageRequestStatus;
   apcAmountPaid?: number;
+  declinedReason?: string;
 };
 
 export type ManuscriptResponse = ManuscriptDataObject;
@@ -829,7 +834,13 @@ export const complianceInitialSortingDirection = {
 export type PartialManuscriptResponse = Pick<ManuscriptVersion, 'id'> &
   Pick<
     ManuscriptResponse,
-    'status' | 'title' | 'requestingApcCoverage' | 'apcAmountPaid'
+    | 'status'
+    | 'title'
+    | 'apcRequested'
+    | 'apcAmountRequested'
+    | 'apcCoverageRequestStatus'
+    | 'apcAmountPaid'
+    | 'declinedReason'
   > & {
     lastUpdated: string;
     team: { id: string; displayName: string };

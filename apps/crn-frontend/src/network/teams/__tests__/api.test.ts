@@ -1,3 +1,5 @@
+/* eslint-disable jest/no-commented-out-tests */
+
 import {
   AlgoliaSearchClient,
   ClientSearchResponse,
@@ -14,7 +16,6 @@ import {
 } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
-  CompletedStatusOption,
   ComplianceReportPostRequest,
   DiscussionCreateRequest,
   DiscussionDataObject,
@@ -22,7 +23,6 @@ import {
   ManuscriptFileResponse,
   ManuscriptPostRequest,
   ManuscriptPutRequest,
-  RequestedAPCCoverageOption,
   ResearchOutputPostRequest,
   TeamResponse,
 } from '@asap-hub/model';
@@ -406,7 +406,7 @@ describe('Manuscript', () => {
         searchQuery: '',
         pageSize: null,
         currentPage: null,
-        requestedAPCCoverage: 'all',
+        // requestedAPCCoverage: 'all',
         completedStatus: 'show',
         selectedStatuses: [],
       });
@@ -424,83 +424,83 @@ describe('Manuscript', () => {
       );
     });
 
-    describe('filter combinations', () => {
-      it.each([
-        {
-          requestedAPCCoverage: 'all',
-          completedStatus: 'show',
-          expectedFilter: '',
-        },
-        {
-          requestedAPCCoverage: 'submitted',
-          completedStatus: 'show',
-          expectedFilter: 'requestingApcCoverage:"Already Submitted"',
-        },
-        {
-          requestedAPCCoverage: 'yes',
-          completedStatus: 'show',
-          expectedFilter: 'requestingApcCoverage:Yes',
-        },
-        {
-          requestedAPCCoverage: 'no',
-          completedStatus: 'show',
-          expectedFilter: 'requestingApcCoverage:No',
-        },
-        {
-          requestedAPCCoverage: 'all',
-          completedStatus: 'hide',
-          expectedFilter:
-            '(NOT status:Compliant AND NOT status:"Closed (other)")',
-        },
-        {
-          requestedAPCCoverage: 'submitted',
-          completedStatus: 'hide',
-          expectedFilter:
-            'requestingApcCoverage:"Already Submitted" AND (NOT status:Compliant AND NOT status:"Closed (other)")',
-        },
-        {
-          requestedAPCCoverage: 'yes',
-          completedStatus: 'hide',
-          expectedFilter:
-            'requestingApcCoverage:Yes AND (NOT status:Compliant AND NOT status:"Closed (other)")',
-        },
-        {
-          requestedAPCCoverage: 'no',
-          completedStatus: 'hide',
-          expectedFilter:
-            'requestingApcCoverage:No AND (NOT status:Compliant AND NOT status:"Closed (other)")',
-        },
-      ])(
-        'should generate correct filter for requestedAPCCoverage=$requestedAPCCoverage and completedStatus=$completedStatus',
-        async ({ requestedAPCCoverage, completedStatus, expectedFilter }) => {
-          await getManuscripts(algoliaSearchClient, {
-            searchQuery: '',
-            pageSize: null,
-            currentPage: null,
-            requestedAPCCoverage:
-              requestedAPCCoverage as RequestedAPCCoverageOption,
-            completedStatus: completedStatus as CompletedStatusOption,
-            selectedStatuses: [],
-          });
+    // describe('filter combinations', () => {
+    //   it.each([
+    //     {
+    //       requestedAPCCoverage: 'all',
+    //       completedStatus: 'show',
+    //       expectedFilter: '',
+    //     },
+    //     {
+    //       requestedAPCCoverage: 'submitted',
+    //       completedStatus: 'show',
+    //       expectedFilter: 'requestingApcCoverage:"Already Submitted"',
+    //     },
+    //     {
+    //       requestedAPCCoverage: 'yes',
+    //       completedStatus: 'show',
+    //       expectedFilter: 'requestingApcCoverage:Yes',
+    //     },
+    //     {
+    //       requestedAPCCoverage: 'no',
+    //       completedStatus: 'show',
+    //       expectedFilter: 'requestingApcCoverage:No',
+    //     },
+    //     {
+    //       requestedAPCCoverage: 'all',
+    //       completedStatus: 'hide',
+    //       expectedFilter:
+    //         '(NOT status:Compliant AND NOT status:"Closed (other)")',
+    //     },
+    //     {
+    //       requestedAPCCoverage: 'submitted',
+    //       completedStatus: 'hide',
+    //       expectedFilter:
+    //         'requestingApcCoverage:"Already Submitted" AND (NOT status:Compliant AND NOT status:"Closed (other)")',
+    //     },
+    //     {
+    //       requestedAPCCoverage: 'yes',
+    //       completedStatus: 'hide',
+    //       expectedFilter:
+    //         'requestingApcCoverage:Yes AND (NOT status:Compliant AND NOT status:"Closed (other)")',
+    //     },
+    //     {
+    //       requestedAPCCoverage: 'no',
+    //       completedStatus: 'hide',
+    //       expectedFilter:
+    //         'requestingApcCoverage:No AND (NOT status:Compliant AND NOT status:"Closed (other)")',
+    //     },
+    //   ])(
+    //     'should generate correct filter for requestedAPCCoverage=$requestedAPCCoverage and completedStatus=$completedStatus',
+    //     async ({ requestedAPCCoverage, completedStatus, expectedFilter }) => {
+    //       await getManuscripts(algoliaSearchClient, {
+    //         searchQuery: '',
+    //         pageSize: null,
+    //         currentPage: null,
+    //         requestedAPCCoverage:
+    //           requestedAPCCoverage as RequestedAPCCoverageOption,
+    //         completedStatus: completedStatus as CompletedStatusOption,
+    //         selectedStatuses: [],
+    //       });
 
-          expect(search).toHaveBeenCalledWith(
-            ['manuscript'],
-            '',
-            expect.objectContaining({
-              filters: expectedFilter,
-            }),
-            true,
-          );
-        },
-      );
-    });
+    //       expect(search).toHaveBeenCalledWith(
+    //         ['manuscript'],
+    //         '',
+    //         expect.objectContaining({
+    //           filters: expectedFilter,
+    //         }),
+    //         true,
+    //       );
+    //     },
+    //   );
+    // });
 
     it('should pass through search query', async () => {
       await getManuscripts(algoliaSearchClient, {
         searchQuery: 'test query',
         pageSize: null,
         currentPage: null,
-        requestedAPCCoverage: 'all',
+        // requestedAPCCoverage: 'all',
         completedStatus: 'show',
         selectedStatuses: [],
       });
@@ -518,7 +518,7 @@ describe('Manuscript', () => {
         searchQuery: '',
         pageSize: 25,
         currentPage: 2,
-        requestedAPCCoverage: 'all',
+        // requestedAPCCoverage: 'all',
         completedStatus: 'show',
         selectedStatuses: [],
       });
@@ -540,7 +540,7 @@ describe('Manuscript', () => {
           searchQuery: '',
           pageSize: null,
           currentPage: null,
-          requestedAPCCoverage: 'all',
+          // requestedAPCCoverage: 'all',
           completedStatus: 'show',
           selectedStatuses: ['Waiting for Report'],
         });
@@ -560,7 +560,7 @@ describe('Manuscript', () => {
           searchQuery: '',
           pageSize: null,
           currentPage: null,
-          requestedAPCCoverage: 'all',
+          // requestedAPCCoverage: 'all',
           completedStatus: 'show',
           selectedStatuses: ['Waiting for Report', 'Review Compliance Report'],
         });
@@ -576,33 +576,32 @@ describe('Manuscript', () => {
         );
       });
 
-      it('should combine status filters with APC coverage filter', async () => {
-        await getManuscripts(algoliaSearchClient, {
-          searchQuery: '',
-          pageSize: null,
-          currentPage: null,
-          requestedAPCCoverage: 'yes',
-          completedStatus: 'show',
-          selectedStatuses: ['Waiting for Report', 'Compliant'],
-        });
+      // it('should combine status filters with APC coverage filter', async () => {
+      //   await getManuscripts(algoliaSearchClient, {
+      //     searchQuery: '',
+      //     pageSize: null,
+      //     currentPage: null,
+      //     requestedAPCCoverage: 'yes',
+      //     completedStatus: 'show',
+      //     selectedStatuses: ['Waiting for Report', 'Compliant'],
+      //   });
 
-        expect(search).toHaveBeenCalledWith(
-          ['manuscript'],
-          '',
-          expect.objectContaining({
-            filters:
-              'requestingApcCoverage:Yes AND (status:"Waiting for Report" OR status:"Compliant")',
-          }),
-          true,
-        );
-      });
+      //   expect(search).toHaveBeenCalledWith(
+      //     ['manuscript'],
+      //     '',
+      //     expect.objectContaining({
+      //       filters:
+      //         'requestingApcCoverage:Yes AND (status:"Waiting for Report" OR status:"Compliant")',
+      //     }),
+      //     true,
+      //   );
+      // });
 
       it('should combine status filters with completed status filter', async () => {
         await getManuscripts(algoliaSearchClient, {
           searchQuery: '',
           pageSize: null,
           currentPage: null,
-          requestedAPCCoverage: 'all',
           completedStatus: 'hide',
           selectedStatuses: ['Waiting for Report', 'Review Compliance Report'],
         });
@@ -618,26 +617,26 @@ describe('Manuscript', () => {
         );
       });
 
-      it('should combine status filters with both APC coverage and completed status filters', async () => {
-        await getManuscripts(algoliaSearchClient, {
-          searchQuery: '',
-          pageSize: null,
-          currentPage: null,
-          requestedAPCCoverage: 'yes',
-          completedStatus: 'hide',
-          selectedStatuses: ['Waiting for Report', 'Review Compliance Report'],
-        });
+      // it('should combine status filters with both APC coverage and completed status filters', async () => {
+      //   await getManuscripts(algoliaSearchClient, {
+      //     searchQuery: '',
+      //     pageSize: null,
+      //     currentPage: null,
+      //     requestedAPCCoverage: 'yes',
+      //     completedStatus: 'hide',
+      //     selectedStatuses: ['Waiting for Report', 'Review Compliance Report'],
+      //   });
 
-        expect(search).toHaveBeenCalledWith(
-          ['manuscript'],
-          '',
-          expect.objectContaining({
-            filters:
-              'requestingApcCoverage:Yes AND (NOT status:Compliant AND NOT status:"Closed (other)") AND (status:"Waiting for Report" OR status:"Review Compliance Report")',
-          }),
-          true,
-        );
-      });
+      //   expect(search).toHaveBeenCalledWith(
+      //     ['manuscript'],
+      //     '',
+      //     expect.objectContaining({
+      //       filters:
+      //         'requestingApcCoverage:Yes AND (NOT status:Compliant AND NOT status:"Closed (other)") AND (status:"Waiting for Report" OR status:"Review Compliance Report")',
+      //     }),
+      //     true,
+      //   );
+      // });
     });
   });
 

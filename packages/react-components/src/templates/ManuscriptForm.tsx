@@ -1449,7 +1449,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         },
                       })}
                     >
-                      Open Science Compliance Checklist for Author
+                      Open Science Compliance Checklist for Authors
                       <ExternalLinkIcon size={17} color={colors.pine} />
                     </span>
                   </Link>

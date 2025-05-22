@@ -225,7 +225,9 @@ export class EmailNotificationService {
         ...new Set([...contributingAuthors, ...teamLeaders.flat(), ...labPIs]),
       ].filter(Boolean) as string[];
 
-      let openScienceRecipients = ['openscience@parkinsonsroadmap.org'];
+      let openScienceRecipients = isProduction
+        ? ['openscience@parkinsonsroadmap.org']
+        : [];
 
       if (!isProduction) {
         granteeRecipients = granteeRecipients.filter(

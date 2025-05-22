@@ -276,6 +276,48 @@ describe('Email Notification Service', () => {
       );
     });
 
+    test('sends email notification with correct Open Science team recipients based on environment', async () => {
+      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+        NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
+      >;
+
+      mockEnvironmentGetter.mockReturnValueOnce('production');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        '',
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          To: expect.stringContaining('openscience@parkinsonsroadmap.org'),
+        }),
+      );
+
+      jest.clearAllMocks();
+
+      mockEnvironmentGetter.mockReturnValueOnce('development');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'manuscript_submitted',
+        manuscript.sys.id,
+        '',
+      );
+
+      expect(mockedPostmark).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          To: expect.stringContaining('openscience@parkinsonsroadmap.org'),
+        }),
+      );
+    });
+
     test('sends email notification with active PIs of contributing labs as recipients', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('production');
       const manuscript = getContentfulGraphqlManuscript() as NonNullable<

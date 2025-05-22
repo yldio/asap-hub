@@ -2,7 +2,6 @@ import {
   createTeamManuscriptResponse,
   createTeamResponse,
 } from '@asap-hub/fixtures';
-import { enable } from '@asap-hub/flags';
 import { network } from '@asap-hub/routing';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -67,8 +66,6 @@ beforeEach(() => {
 });
 
 it('should mark discussion as read and remove discussion notification dot', async () => {
-  enable('DISPLAY_MANUSCRIPTS');
-
   (markDiscussionAsRead as jest.Mock).mockResolvedValue({});
   (getManuscript as jest.Mock).mockResolvedValue({
     ...createTeamManuscriptResponse(),
@@ -134,8 +131,6 @@ it('should mark discussion as read and remove discussion notification dot', asyn
 });
 
 it('if there are still unread discussions, the notification dot should be shown', async () => {
-  enable('DISPLAY_MANUSCRIPTS');
-
   (markDiscussionAsRead as jest.Mock).mockResolvedValue({});
   (getManuscript as jest.Mock).mockResolvedValue({
     ...createTeamManuscriptResponse(),

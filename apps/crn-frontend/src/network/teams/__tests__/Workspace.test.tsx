@@ -22,7 +22,6 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { enable } from '@asap-hub/flags';
 
 import {
   patchTeam,
@@ -150,8 +149,6 @@ afterEach(jest.resetAllMocks);
 
 describe('Manuscript', () => {
   it('status can be changed', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
-
     const screen = renderWithWrapper(
       <Workspace
         team={{
@@ -174,7 +171,6 @@ describe('Manuscript', () => {
         {
           notificationList: '',
           status: 'Addendum Required',
-          sendNotifications: false,
         },
         expect.anything(),
       );
@@ -182,8 +178,6 @@ describe('Manuscript', () => {
   });
 
   it('should create discussion', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
-
     const screen = renderWithWrapper(
       <Workspace
         team={{
@@ -215,7 +209,6 @@ describe('Manuscript', () => {
         {
           manuscriptId: 'manuscript_0',
           notificationList: undefined,
-          sendNotifications: true,
           text: 'test message',
           title: 'Test',
         },
@@ -225,8 +218,6 @@ describe('Manuscript', () => {
   });
 
   it('should reply to discussion', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
-
     (useManuscriptById as jest.Mock).mockImplementation(() => [
       {
         ...createTeamManuscriptResponse(),
@@ -321,7 +312,6 @@ describe('Manuscript', () => {
 
   it('should show an error when reply to discussion fails', async () => {
     jest.spyOn(console, 'error').mockImplementation();
-    enable('DISPLAY_MANUSCRIPTS');
 
     (useManuscriptById as jest.Mock).mockImplementation(() => [
       {

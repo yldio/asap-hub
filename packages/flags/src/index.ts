@@ -1,15 +1,9 @@
-export type Flag =
-  | 'PERSISTENT_EXAMPLE'
-  | 'DISPLAY_MANUSCRIPTS'
-  | 'SEND_COMPLIANCE_NOTIFICATIONS'
-  | 'COMPLIANCE_NOTIFICATION_LIST';
+export type Flag = 'PERSISTENT_EXAMPLE' | 'COMPLIANCE_NOTIFICATION_LIST';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
-  DISPLAY_MANUSCRIPTS: false,
-  SEND_COMPLIANCE_NOTIFICATIONS: false,
   COMPLIANCE_NOTIFICATION_LIST: '',
 };
 

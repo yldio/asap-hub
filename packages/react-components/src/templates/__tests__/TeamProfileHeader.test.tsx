@@ -1,5 +1,4 @@
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
-import { enable } from '@asap-hub/flags';
 import { TeamRole } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { fireEvent } from '@testing-library/dom';
@@ -156,7 +155,6 @@ it('renders workspace tabs when tools provided', () => {
 });
 
 it('renders compliance tabs when is ASAP team and is staff', () => {
-  enable('DISPLAY_MANUSCRIPTS');
   render(
     <TeamProfileHeader
       {...boilerplateProps}

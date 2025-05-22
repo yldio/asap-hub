@@ -1,4 +1,4 @@
-import { getOverrides, isEnabled } from '@asap-hub/flags';
+import { getOverrides } from '@asap-hub/flags';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamResponse,
@@ -238,11 +238,10 @@ export const usePostManuscript = () => {
   const authorization = useRecoilValue(authorizationState);
   const setManuscriptItem = useSetManuscriptItem();
   return async (payload: ManuscriptPostRequest) => {
-    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
     const manuscript = await createManuscript(
-      { ...payload, sendNotifications, notificationList },
+      { ...payload, notificationList },
       authorization,
     );
     setManuscriptItem(manuscript);
@@ -254,12 +253,11 @@ export const useResubmitManuscript = () => {
   const authorization = useRecoilValue(authorizationState);
   const setManuscriptItem = useSetManuscriptItem();
   return async (id: string, payload: ManuscriptPostRequest) => {
-    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
     const manuscript = await resubmitManuscript(
       id,
-      { ...payload, sendNotifications, notificationList },
+      { ...payload, notificationList },
       authorization,
     );
     setManuscriptItem(manuscript);
@@ -273,12 +271,11 @@ export const usePutManuscript = () => {
   const invalidateManuscriptIndex = useInvalidateManuscriptIndex();
 
   return async (id: string, payload: ManuscriptPutRequest) => {
-    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
     const manuscript = await updateManuscript(
       id,
-      { ...payload, sendNotifications, notificationList },
+      { ...payload, notificationList },
       authorization,
     );
     setManuscriptItem(manuscript);
@@ -290,12 +287,11 @@ export const usePutManuscript = () => {
 export const usePostComplianceReport = () => {
   const authorization = useRecoilValue(authorizationState);
   return async (payload: ComplianceReportPostRequest) => {
-    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
 
     const complianceReport = await createComplianceReport(
-      { ...payload, sendNotifications, notificationList },
+      { ...payload, notificationList },
       authorization,
     );
     return complianceReport;
@@ -373,13 +369,12 @@ export const useReplyToDiscussion = () => {
   const setManuscriptItem = useSetManuscriptItem();
 
   return async (manuscriptId: string, id: string, patch: DiscussionRequest) => {
-    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
 
     const discussion = await updateDiscussion(
       id,
-      { ...patch, sendNotifications, notificationList },
+      { ...patch, notificationList },
       authorization,
     );
     setDiscussion(discussion);
@@ -605,7 +600,6 @@ export const useCreateDiscussion = () => {
     title: string,
     text: string,
   ): Promise<string> => {
-    const sendNotifications = isEnabled('SEND_COMPLIANCE_NOTIFICATIONS');
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
 
@@ -614,7 +608,6 @@ export const useCreateDiscussion = () => {
         manuscriptId,
         title,
         text,
-        sendNotifications,
         notificationList,
       },
       authorization,

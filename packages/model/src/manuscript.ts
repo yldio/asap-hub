@@ -366,7 +366,6 @@ export type ManuscriptPostCreateRequest = Pick<
     correspondingAuthor?: ManuscriptPostAuthor;
     additionalAuthors?: ManuscriptPostAuthor[];
   }[];
-  sendNotifications?: boolean;
   notificationList?: string;
 };
 export type ManuscriptPostResubmitRequest = Omit<
@@ -382,7 +381,6 @@ export type ManuscriptUpdateAssignedUsers = {
   assignedUsers: string[];
 };
 export type ManuscriptUpdateStatus = Pick<ManuscriptDataObject, 'status'> & {
-  sendNotifications?: boolean;
   notificationList?: string;
 };
 export type ManuscriptUpdateContent = Partial<ManuscriptPostRequest>;
@@ -471,7 +469,6 @@ export type ManuscriptFormData = Pick<
 export type ManuscriptCreateControllerDataObject =
   ManuscriptPostCreateRequest & {
     userId: string;
-    sendNotifications?: boolean;
     notificationList?: string;
   };
 
@@ -493,7 +490,6 @@ export type ManuscriptCreateDataObject = Omit<
     correspondingAuthor: string[];
     additionalAuthors: string[];
   })[];
-  sendNotifications?: boolean;
   notificationList?: string;
 };
 
@@ -658,7 +654,6 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
         minItems: 1,
         items: manuscriptVersionSchema,
       },
-      sendNotifications: { type: 'boolean', nullable: true },
       notificationList: { type: 'string', nullable: true },
     },
     required: ['title', 'teamId', 'versions'],
@@ -683,7 +678,6 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
         items: manuscriptVersionSchema,
         nullable: true,
       },
-      sendNotifications: { type: 'boolean', nullable: true },
       notificationList: { type: 'string', nullable: true },
     },
     additionalProperties: false,

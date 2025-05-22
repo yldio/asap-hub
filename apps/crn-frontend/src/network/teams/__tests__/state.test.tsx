@@ -448,7 +448,6 @@ describe('useReplyToDiscussion', () => {
       discussionId,
       {
         ...patch,
-        sendNotifications: expect.any(Boolean),
         notificationList: undefined,
       },
       mockAuthorization,

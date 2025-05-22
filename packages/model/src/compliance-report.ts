@@ -47,7 +47,6 @@ export type ComplianceReportPostRequest = Omit<
   ComplianceReportCreateDataObject & {
     status: ManuscriptStatus;
     manuscriptId: string;
-    sendNotifications?: boolean;
     notificationList?: string;
   },
   'userId'

@@ -5,7 +5,6 @@ import {
   createUserListItemResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { disable, enable } from '@asap-hub/flags';
 import { activeUserMembershipStatus } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -147,9 +146,7 @@ it('renders reminders', async () => {
   expect(screen.getByTitle('Event')).toBeInTheDocument();
 });
 
-it('renders manuscripts reminders if DISPLAY_MANUSCRIPTS is enabled', async () => {
-  enable('DISPLAY_MANUSCRIPTS');
-
+it('renders manuscripts reminders', async () => {
   const reminderResponse = createListReminderResponse(1);
 
   mockGetReminders.mockResolvedValue({
@@ -166,28 +163,7 @@ it('renders manuscripts reminders if DISPLAY_MANUSCRIPTS is enabled', async () =
   expect(await screen.findByText(/Manuscript Reminder/i)).toBeVisible();
 });
 
-it('does not render manuscripts reminders if DISPLAY_MANUSCRIPTS is disabled', async () => {
-  disable('DISPLAY_MANUSCRIPTS');
-
-  const reminderResponse = createListReminderResponse(1);
-
-  mockGetReminders.mockResolvedValue({
-    ...reminderResponse,
-    items: reminderResponse.items.map((reminder) => ({
-      ...reminder,
-      description: 'Manuscript Reminder',
-      entity: 'Manuscript',
-    })),
-  });
-
-  await renderDashboard({});
-  expect(mockGetReminders).toHaveBeenCalled();
-  expect(screen.queryByText(/Manuscript Reminder/i)).toBeNull();
-});
-
-it('renders discussion reminders if DISPLAY_MANUSCRIPTS is enabled', async () => {
-  enable('DISPLAY_MANUSCRIPTS');
-
+it('renders discussion reminders', async () => {
   const reminderResponse = createListReminderResponse(1);
 
   mockGetReminders.mockResolvedValue({
@@ -202,25 +178,6 @@ it('renders discussion reminders if DISPLAY_MANUSCRIPTS is enabled', async () =>
   await renderDashboard({});
   expect(mockGetReminders).toHaveBeenCalled();
   expect(await screen.findByText(/Discussion Reminder/i)).toBeVisible();
-});
-
-it('does not render discussion reminders if DISPLAY_MANUSCRIPTS is disabled', async () => {
-  disable('DISPLAY_MANUSCRIPTS');
-
-  const reminderResponse = createListReminderResponse(1);
-
-  mockGetReminders.mockResolvedValue({
-    ...reminderResponse,
-    items: reminderResponse.items.map((reminder) => ({
-      ...reminder,
-      description: 'Discussion Reminder',
-      entity: 'Discussion',
-    })),
-  });
-
-  await renderDashboard({});
-  expect(mockGetReminders).toHaveBeenCalled();
-  expect(screen.queryByText(/Discussion Reminder/i)).toBeNull();
 });
 
 describe('dismissing the getting started option', () => {

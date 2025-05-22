@@ -56,14 +56,7 @@ export class DiscussionContentfulDataProvider
 
   async create(input: DiscussionCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
-    const {
-      userId,
-      manuscriptId,
-      title,
-      text,
-      sendNotifications,
-      notificationList,
-    } = input;
+    const { userId, manuscriptId, title, text, notificationList } = input;
 
     const messageId = await createAndPublishMessage(environment, {
       text,
@@ -95,7 +88,6 @@ export class DiscussionContentfulDataProvider
     await this.emailNotificationService.sendEmailNotification(
       'discussion_created',
       manuscriptId,
-      sendNotifications || false,
       notificationList || '',
       discussionEntry.sys.id,
     );
@@ -107,8 +99,7 @@ export class DiscussionContentfulDataProvider
     const environment = await this.getRestClient();
     const discussion = await environment.getEntry(id);
 
-    const { sendNotifications, notificationList, reply, manuscriptId, userId } =
-      update;
+    const { notificationList, reply, manuscriptId, userId } = update;
 
     if (reply?.text) {
       const publishedReplyId = await createAndPublishMessage(environment, {
@@ -134,7 +125,6 @@ export class DiscussionContentfulDataProvider
         await this.emailNotificationService.sendEmailNotification(
           'os_member_replied_to_discussion',
           manuscriptId,
-          sendNotifications || false,
           notificationList || '',
           id,
         );

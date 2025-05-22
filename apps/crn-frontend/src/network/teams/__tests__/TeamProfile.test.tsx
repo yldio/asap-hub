@@ -10,7 +10,6 @@ import {
   createTeamResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { enable } from '@asap-hub/flags';
 import { ResearchOutputTeamResponse, TeamResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import {
@@ -291,7 +290,6 @@ it('navigates to the workspace tab', async () => {
 
 it('displays manuscript success toast message and user can dismiss toast', async () => {
   jest.spyOn(console, 'error').mockImplementation();
-  enable('DISPLAY_MANUSCRIPTS');
 
   await renderPage(
     {
@@ -615,7 +613,6 @@ describe('Duplicate Output', () => {
 
 describe('Create Compliance Report', () => {
   it('allows a user who is an ASAP staff and an Open Science Team Member to view Share Compliance Report button', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
 
@@ -651,7 +648,6 @@ describe('Create Compliance Report', () => {
   });
 
   it('allows a user who is an ASAP staff and an Open Science Team Member to create a compliance report', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
     const teamManuscript = createTeamManuscriptResponse();
@@ -868,7 +864,6 @@ describe('The draft output tab', () => {
 
 describe('The compliance tab', () => {
   it('does not show compliance tab if not on Team ASAP', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
     await renderPage({
       ...createTeamResponse(),
       displayName: 'Test',
@@ -880,7 +875,6 @@ describe('The compliance tab', () => {
   });
 
   it('does not show compliance tab if on Team ASAP but not Staff', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
     await renderPage(
       {
         ...createTeamResponse(),
@@ -896,7 +890,6 @@ describe('The compliance tab', () => {
   });
 
   it('shows compliance tab on Team ASAP page if user is Staff', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
     await renderPage(
       {
         ...createTeamResponse(),
@@ -914,7 +907,6 @@ describe('The compliance tab', () => {
   });
 
   it('renders compliance dashboard on Team ASAP page', async () => {
-    enable('DISPLAY_MANUSCRIPTS');
     const manuscriptTeamName =
       algoliaManuscriptsResponse.items[0]!.team.displayName;
     await renderPage(

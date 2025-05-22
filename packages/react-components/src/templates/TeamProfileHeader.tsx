@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
@@ -256,7 +255,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         {(tools || isStaff) && (
           <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
         )}
-        {isAsapTeam && isStaff && isEnabled('DISPLAY_MANUSCRIPTS') && (
+        {isAsapTeam && isStaff && (
           <TabLink href={route.compliance({}).$}>
             Compliance ({manuscriptsCount})
           </TabLink>

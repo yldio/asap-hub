@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { ManuscriptDataObject, TeamResponse, TeamTool } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
@@ -145,7 +144,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   tools,
   onDeleteTool,
   setEligibilityReasons,
-  isComplianceReviewer = false,
+  isComplianceReviewer,
   isTeamMember,
   createDiscussion,
   useManuscriptById,
@@ -186,110 +185,108 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
 
   return (
     <div css={containerStyles}>
-      {isEnabled('DISPLAY_MANUSCRIPTS') && (
-        <>
-          {displayEligibilityModal && (
-            <EligibilityModal
-              onDismiss={() => setDisplayEligibilityModal(false)}
-              onGoToManuscriptForm={handleGoToManuscriptForm}
-              setEligibilityReasons={setEligibilityReasons}
-            />
-          )}
-          <Card overrideStyles={complianceCardContainerStyles}>
-            <div css={complianceContainerStyles}>
-              <div css={complianceHeaderStyles}>
-                <Display styleAsHeading={3}>Compliance Review</Display>
-                {!inactiveSince && isTeamMember && (
-                  <div css={css(manuscriptButtonStyles)}>
-                    <Button
-                      onClick={handleShareManuscript}
-                      primary
-                      noMargin
-                      small
-                    >
-                      {plusIcon} Submit Manuscript
-                    </Button>
-                  </div>
-                )}
-              </div>
+      <>
+        {displayEligibilityModal && (
+          <EligibilityModal
+            onDismiss={() => setDisplayEligibilityModal(false)}
+            onGoToManuscriptForm={handleGoToManuscriptForm}
+            setEligibilityReasons={setEligibilityReasons}
+          />
+        )}
+        <Card overrideStyles={complianceCardContainerStyles}>
+          <div css={complianceContainerStyles}>
+            <div css={complianceHeaderStyles}>
+              <Display styleAsHeading={3}>Compliance Review</Display>
+              {!inactiveSince && isTeamMember && (
+                <div css={css(manuscriptButtonStyles)}>
+                  <Button
+                    onClick={handleShareManuscript}
+                    primary
+                    noMargin
+                    small
+                  >
+                    {plusIcon} Submit Manuscript
+                  </Button>
+                </div>
+              )}
+            </div>
+            <Paragraph noMargin accent="lead">
+              This directory contains all manuscripts with their compliance
+              reports.
+            </Paragraph>
+          </div>
+          <div data-testid="team-manuscripts" css={manuscriptsGroupStyles}>
+            <Subtitle noMargin>Team Submission</Subtitle>
+            {manuscripts.length ? (
+              <>
+                <Paragraph noMargin accent="lead">
+                  {manuscriptSubmissions}
+                </Paragraph>
+                <div>
+                  {manuscripts.map((manuscript) => (
+                    <div key={manuscript.id}>
+                      <ManuscriptCard
+                        id={manuscript.id}
+                        user={user}
+                        teamId={id}
+                        isComplianceReviewer={isComplianceReviewer}
+                        onUpdateManuscript={onUpdateManuscript}
+                        isActiveTeam={!inactiveSince}
+                        createDiscussion={createDiscussion}
+                        useManuscriptById={useManuscriptById}
+                        onReplyToDiscussion={onReplyToDiscussion}
+                        onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                        {...(manuscript.id === targetManuscriptId
+                          ? { isTargetManuscript: true }
+                          : {})}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
               <Paragraph noMargin accent="lead">
-                This directory contains all manuscripts with their compliance
-                reports.
+                {noManuscriptSubmissions}
               </Paragraph>
-            </div>
-            <div data-testid="team-manuscripts" css={manuscriptsGroupStyles}>
-              <Subtitle noMargin>Team Submission</Subtitle>
-              {manuscripts.length ? (
-                <>
-                  <Paragraph noMargin accent="lead">
-                    {manuscriptSubmissions}
-                  </Paragraph>
-                  <div>
-                    {manuscripts.map((manuscript) => (
-                      <div key={manuscript.id}>
-                        <ManuscriptCard
-                          id={manuscript.id}
-                          user={user}
-                          teamId={id}
-                          isComplianceReviewer={isComplianceReviewer}
-                          onUpdateManuscript={onUpdateManuscript}
-                          isActiveTeam={!inactiveSince}
-                          createDiscussion={createDiscussion}
-                          useManuscriptById={useManuscriptById}
-                          onReplyToDiscussion={onReplyToDiscussion}
-                          onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                          {...(manuscript.id === targetManuscriptId
-                            ? { isTargetManuscript: true }
-                            : {})}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
+            )}
+          </div>
+          <div
+            data-testid="collaboration-manuscripts"
+            css={manuscriptsGroupStyles}
+          >
+            <Subtitle noMargin>Collaborator Submission</Subtitle>
+            {collaborationManuscripts?.length ? (
+              <>
                 <Paragraph noMargin accent="lead">
-                  {noManuscriptSubmissions}
+                  {manuscriptCollaborations}
                 </Paragraph>
-              )}
-            </div>
-            <div
-              data-testid="collaboration-manuscripts"
-              css={manuscriptsGroupStyles}
-            >
-              <Subtitle noMargin>Collaborator Submission</Subtitle>
-              {collaborationManuscripts?.length ? (
-                <>
-                  <Paragraph noMargin accent="lead">
-                    {manuscriptCollaborations}
-                  </Paragraph>
-                  <div>
-                    {collaborationManuscripts?.map((manuscript) => (
-                      <div key={manuscript.id}>
-                        <ManuscriptCard
-                          {...manuscript}
-                          user={user}
-                          teamId={id}
-                          isComplianceReviewer={isComplianceReviewer}
-                          isActiveTeam={!inactiveSince}
-                          onUpdateManuscript={onUpdateManuscript}
-                          createDiscussion={createDiscussion}
-                          useManuscriptById={useManuscriptById}
-                          onReplyToDiscussion={onReplyToDiscussion}
-                          onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <Paragraph noMargin accent="lead">
-                  {noManuscriptCollaborations}
-                </Paragraph>
-              )}
-            </div>
-          </Card>
-        </>
-      )}
+                <div>
+                  {collaborationManuscripts?.map((manuscript) => (
+                    <div key={manuscript.id}>
+                      <ManuscriptCard
+                        {...manuscript}
+                        user={user}
+                        teamId={id}
+                        isComplianceReviewer={isComplianceReviewer}
+                        isActiveTeam={!inactiveSince}
+                        onUpdateManuscript={onUpdateManuscript}
+                        createDiscussion={createDiscussion}
+                        useManuscriptById={useManuscriptById}
+                        onReplyToDiscussion={onReplyToDiscussion}
+                        onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <Paragraph noMargin accent="lead">
+                {noManuscriptCollaborations}
+              </Paragraph>
+            )}
+          </div>
+        </Card>
+      </>
 
       {isTeamMember && (
         <Card>

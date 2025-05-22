@@ -52,7 +52,6 @@ describe('Discussion Controller', () => {
         'user-id-0',
         reply,
         'manuscript-id-1',
-        true,
         '',
       );
 
@@ -69,7 +68,6 @@ describe('Discussion Controller', () => {
         'user-id-0',
         reply,
         'manuscript-id-1',
-        true,
         '',
       );
 
@@ -79,7 +77,6 @@ describe('Discussion Controller', () => {
           userId: 'user-id-0',
           reply,
           manuscriptId: 'manuscript-id-1',
-          sendNotifications: true,
           notificationList: '',
         },
       );
@@ -115,7 +112,6 @@ describe('Discussion Controller', () => {
         input.manuscriptId,
         input.title,
         input.text,
-        false,
         '',
       );
 
@@ -132,13 +128,11 @@ describe('Discussion Controller', () => {
         input.manuscriptId,
         input.title,
         input.text,
-        false,
         '',
       );
 
       expect(discussionDataProviderMock.create).toHaveBeenCalledWith({
         ...input,
-        sendNotifications: false,
         notificationList: '',
       });
     });

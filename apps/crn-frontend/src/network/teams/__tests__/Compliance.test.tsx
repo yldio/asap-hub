@@ -179,7 +179,6 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
       {
         notificationList: '',
         status: 'Addendum Required',
-        sendNotifications: false,
       },
       expect.any(String),
     );
@@ -243,7 +242,6 @@ it('manuscripts remain the same when there is not a match between the manuscript
       {
         notificationList: '',
         status: 'Addendum Required',
-        sendNotifications: false,
       },
       expect.any(String),
     );
@@ -309,7 +307,6 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
       {
         notificationList: '',
         status: 'Addendum Required',
-        sendNotifications: false,
       },
       expect.any(String),
     );

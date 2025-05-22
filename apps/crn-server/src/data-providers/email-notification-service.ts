@@ -78,11 +78,10 @@ export class EmailNotificationService {
   async sendEmailNotification(
     action: EmailTriggerAction,
     manuscriptId: string,
-    flagEnabled: boolean,
     emailList: string,
     discussionId?: string,
   ): Promise<void> {
-    if (!flagEnabled && !emailList) return;
+    const isProduction = environmentName === 'production';
 
     const { manuscripts } = await this.contentfulClient.request<
       FetchManuscriptNotificationDetailsQuery,
@@ -166,7 +165,7 @@ export class EmailNotificationService {
       );
 
       let allowedRecipients = recipients;
-      if (!flagEnabled) {
+      if (!isProduction) {
         allowedRecipients = recipients.filter(
           (email) => email && emailList.includes(email),
         );
@@ -226,14 +225,9 @@ export class EmailNotificationService {
         ...new Set([...contributingAuthors, ...teamLeaders.flat(), ...labPIs]),
       ].filter(Boolean) as string[];
 
-      let openScienceRecipients = [
-        'openscience@parkinsonsroadmap.org',
-        ...(environmentName === 'dev'
-          ? ['dsnyder@parkinsonsroadmap.org', 'dlewis@parkinsonsroadmap.org']
-          : []),
-      ];
+      let openScienceRecipients = ['openscience@parkinsonsroadmap.org'];
 
-      if (!flagEnabled) {
+      if (!isProduction) {
         granteeRecipients = granteeRecipients.filter(
           (email) => email && emailList.includes(email),
         );

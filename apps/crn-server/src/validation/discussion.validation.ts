@@ -29,7 +29,6 @@ const DiscussionRequestValidationSchema: JSONSchemaType<DiscussionRequest> = {
   properties: {
     manuscriptId: { type: 'string' },
     text: { type: 'string' },
-    sendNotifications: { type: 'boolean', nullable: true },
     notificationList: { type: 'string', nullable: true },
   },
   required: ['text'],
@@ -51,7 +50,6 @@ const discussionCreateRequestValidationSchema: JSONSchemaType<DiscussionCreateRe
       manuscriptId: { type: 'string', maxLength: 256 },
       title: { type: 'string', maxLength: 100 },
       text: { type: 'string' },
-      sendNotifications: { type: 'boolean', nullable: true },
       notificationList: { type: 'string', nullable: true },
     },
     required: ['manuscriptId', 'title', 'text'],

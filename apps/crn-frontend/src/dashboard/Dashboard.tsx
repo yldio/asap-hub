@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { Frame } from '@asap-hub/frontend-utils';
 import { ConfirmModal, DashboardPage } from '@asap-hub/react-components';
 import {
@@ -30,12 +29,7 @@ const Dashboard: FC<Record<string, never>> = () => {
 
   const { firstName, id, teams } = currentUser;
   const dashboard = useDashboardState();
-  const { items } = useReminderState();
-  const reminders = isEnabled('DISPLAY_MANUSCRIPTS')
-    ? items
-    : items.filter(
-        (item) => !['Manuscript', 'Discussion'].includes(item.entity),
-      );
+  const { items: reminders } = useReminderState();
 
   const roles = useCurrentUserTeamRolesCRN();
   usePrefetchTeams({

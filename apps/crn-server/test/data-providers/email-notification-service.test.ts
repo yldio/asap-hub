@@ -78,7 +78,8 @@ describe('Email Notification Service', () => {
       },
     ];
 
-  test('Should not send email notification if flag not enabled and no notification list', async () => {
+  test('Should not send email notification if environment is not production and no notification list', async () => {
+    mockEnvironmentGetter.mockReturnValueOnce('development');
     contentfulGraphqlClientMock.request.mockResolvedValue({
       manuscripts: manuscript,
     });
@@ -86,7 +87,6 @@ describe('Email Notification Service', () => {
     await emailNotificationService.sendEmailNotification(
       'manuscript_submitted',
       manuscript.sys.id,
-      false,
       '',
     );
 
@@ -94,6 +94,7 @@ describe('Email Notification Service', () => {
   });
 
   test('Should not send email notification if manuscript not returned', async () => {
+    mockEnvironmentGetter.mockReturnValueOnce('production');
     contentfulGraphqlClientMock.request.mockResolvedValue({
       manuscripts: null,
     });
@@ -101,7 +102,6 @@ describe('Email Notification Service', () => {
     await emailNotificationService.sendEmailNotification(
       'manuscript_submitted',
       manuscript.sys.id,
-      true,
       '',
     );
 
@@ -116,7 +116,8 @@ describe('Email Notification Service', () => {
       });
     });
 
-    test('filters recipients emails when flag is off and notification list is provided', async () => {
+    test('filters recipients emails when environment is not production and notification list is provided', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('development');
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
       });
@@ -124,7 +125,6 @@ describe('Email Notification Service', () => {
       await emailNotificationService.sendEmailNotification(
         'manuscript_submitted',
         manuscript.sys.id,
-        false,
         'second.external@email.com',
       );
 
@@ -133,25 +133,8 @@ describe('Email Notification Service', () => {
       );
     });
 
-    test('can send open science team emails to specified emails in dev environment', async () => {
-      mockEnvironmentGetter.mockReturnValue('dev');
-      contentfulGraphqlClientMock.request.mockResolvedValue({
-        manuscripts: manuscript,
-      });
-
-      await emailNotificationService.sendEmailNotification(
-        'manuscript_submitted',
-        manuscript.sys.id,
-        false,
-        'dsnyder@parkinsonsroadmap.org',
-      );
-
-      expect(mockedPostmark).toHaveBeenCalledWith(
-        expect.objectContaining({ To: 'dsnyder@parkinsonsroadmap.org' }),
-      );
-    });
-
     test('sends email notification with contributing authors as recipients', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
       const recipients =
         'fiona.first@email.com,second.external@email.com,connor.corresponding@email.com';
 
@@ -162,7 +145,6 @@ describe('Email Notification Service', () => {
       await emailNotificationService.sendEmailNotification(
         'manuscript_submitted',
         manuscript.sys.id,
-        true,
         '',
       );
 
@@ -172,6 +154,7 @@ describe('Email Notification Service', () => {
     });
 
     test('sends email notification with active Project Managers and Lead PIs of contributing teams as recipients', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
       const manuscript = getContentfulGraphqlManuscript() as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
@@ -286,7 +269,6 @@ describe('Email Notification Service', () => {
       await emailNotificationService.sendEmailNotification(
         'manuscript_submitted',
         manuscript.sys.id,
-        true,
         '',
       );
       expect(mockedPostmark).toHaveBeenCalledWith(
@@ -295,6 +277,7 @@ describe('Email Notification Service', () => {
     });
 
     test('sends email notification with active PIs of contributing labs as recipients', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
       const manuscript = getContentfulGraphqlManuscript() as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
@@ -329,7 +312,6 @@ describe('Email Notification Service', () => {
       await emailNotificationService.sendEmailNotification(
         'manuscript_submitted',
         manuscript.sys.id,
-        true,
         '',
       );
       expect(mockedPostmark).toHaveBeenCalledWith(
@@ -339,6 +321,8 @@ describe('Email Notification Service', () => {
 
     describe('Trigger action os_member_replied_to_discussion', () => {
       test('does not send email if discussion is not returned', async () => {
+        mockEnvironmentGetter.mockReturnValueOnce('production');
+
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscripts: manuscript,
         });
@@ -350,7 +334,6 @@ describe('Email Notification Service', () => {
         await emailNotificationService.sendEmailNotification(
           'os_member_replied_to_discussion',
           manuscript.sys.id,
-          true,
           '',
           'discussion-id',
         );
@@ -358,7 +341,9 @@ describe('Email Notification Service', () => {
         expect(mockedPostmark).not.toHaveBeenCalled();
       });
 
-      test('does not send email if discussion recipients are absent from notification list and flag is disabled', async () => {
+      test('does not send email if discussion recipients are absent from notification list and environment is not production', async () => {
+        mockEnvironmentGetter.mockReturnValueOnce('development');
+
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscripts: manuscript,
         });
@@ -387,7 +372,6 @@ describe('Email Notification Service', () => {
         await emailNotificationService.sendEmailNotification(
           'os_member_replied_to_discussion',
           manuscript.sys.id,
-          false,
           '',
           'discussion-id',
         );
@@ -395,7 +379,9 @@ describe('Email Notification Service', () => {
         expect(mockedPostmark).not.toHaveBeenCalled();
       });
 
-      test('sends email when discussion recipients are in the notification list and flag is disabled', async () => {
+      test('sends email when discussion recipients are in the notification list and environment is not production', async () => {
+        mockEnvironmentGetter.mockReturnValueOnce('development');
+
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscripts: manuscript,
         });
@@ -428,7 +414,6 @@ describe('Email Notification Service', () => {
         await emailNotificationService.sendEmailNotification(
           'os_member_replied_to_discussion',
           manuscript.sys.id,
-          false,
           'jim@doe.asap.com',
           'discussion-id',
         );
@@ -438,7 +423,9 @@ describe('Email Notification Service', () => {
         );
       });
 
-      test('removes duplicate emails from recipients when discussion recipients are in the notification list and flag is disabled', async () => {
+      test('removes duplicate emails from recipients when discussion recipients are in the notification list and environment is not production', async () => {
+        mockEnvironmentGetter.mockReturnValueOnce('development');
+
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscripts: manuscript,
         });
@@ -476,7 +463,6 @@ describe('Email Notification Service', () => {
         await emailNotificationService.sendEmailNotification(
           'os_member_replied_to_discussion',
           manuscript.sys.id,
-          false,
           'jim@doe.asap.com,jane@doe.asap.com',
           'discussion-id',
         );
@@ -488,7 +474,9 @@ describe('Email Notification Service', () => {
         );
       });
 
-      test('sends emails to all discussion recipients when flag is enabled', async () => {
+      test('sends emails to all discussion recipients when environment is production', async () => {
+        mockEnvironmentGetter.mockReturnValueOnce('production');
+
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscripts: manuscript,
         });
@@ -526,7 +514,6 @@ describe('Email Notification Service', () => {
         await emailNotificationService.sendEmailNotification(
           'os_member_replied_to_discussion',
           manuscript.sys.id,
-          true,
           '',
           'discussion-id',
         );
@@ -541,6 +528,7 @@ describe('Email Notification Service', () => {
   });
 
   test('Should log when email fails to send', async () => {
+    mockEnvironmentGetter.mockReturnValueOnce('production');
     const loggerErrorSpy = jest.spyOn(logger, 'error');
     contentfulGraphqlClientMock.request.mockResolvedValue({
       manuscripts: manuscript,
@@ -558,7 +546,6 @@ describe('Email Notification Service', () => {
     await emailNotificationService.sendEmailNotification(
       'manuscript_submitted',
       manuscript.sys.id,
-      false,
       'second.external@email.com,openscience@parkinsonsroadmap.org',
     );
 
@@ -573,6 +560,7 @@ describe('Email Notification Service', () => {
   });
 
   test('Should log when email fails to send and action is os_member_replied_to_discussion', async () => {
+    mockEnvironmentGetter.mockReturnValueOnce('production');
     const loggerErrorSpy = jest.spyOn(logger, 'error');
     contentfulGraphqlClientMock.request.mockResolvedValueOnce({
       manuscripts: manuscript,
@@ -606,7 +594,6 @@ describe('Email Notification Service', () => {
     await emailNotificationService.sendEmailNotification(
       'os_member_replied_to_discussion',
       manuscript.sys.id,
-      false,
       'jane@doe.asap.com',
       'discussion-id',
     );

@@ -130,7 +130,6 @@ describe('/compliance-reports/ route', () => {
         .send({
           ...createComplianceReportRequest,
           status: 'Review Compliance Report',
-          sendNotifications: false,
           notificationList: '',
         })
         .set('Accept', 'application/json');
@@ -146,7 +145,6 @@ describe('/compliance-reports/ route', () => {
         'manuscript-1',
         {
           status: createComplianceReportRequest.status,
-          sendNotifications: false,
           notificationList: '',
         },
         user.id,

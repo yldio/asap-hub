@@ -30,14 +30,12 @@ export type DiscussionUpdateDataObject = {
   userId: string;
   reply?: Reply;
   manuscriptId?: string;
-  sendNotifications?: boolean;
   notificationList?: string;
 };
 
 export type DiscussionRequest = {
   text: string;
   manuscriptId: string;
-  sendNotifications?: boolean;
   notificationList?: string;
 };
 
@@ -49,7 +47,6 @@ export type DiscussionCreateRequest = {
   manuscriptId: string;
   title: string;
   text: string;
-  sendNotifications?: boolean;
   notificationList?: string;
 };
 

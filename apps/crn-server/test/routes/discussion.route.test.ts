@@ -161,7 +161,6 @@ describe('/discussions/ route', () => {
         'user-id-0',
         reply,
         undefined,
-        false,
         '',
       );
     });

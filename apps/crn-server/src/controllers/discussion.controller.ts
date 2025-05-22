@@ -25,13 +25,11 @@ export default class DiscussionController {
     userId: string,
     reply?: Reply,
     manuscriptId?: string,
-    sendNotifications?: boolean,
     notificationList?: string,
   ): Promise<DiscussionResponse> {
     await this.discussionDataProvider.update(id, {
       userId,
       reply,
-      sendNotifications,
       notificationList,
       manuscriptId,
     });
@@ -50,7 +48,6 @@ export default class DiscussionController {
     manuscriptId: string,
     title: string,
     text: string,
-    sendNotifications: boolean,
     notificationList: string,
   ): Promise<DiscussionResponse> {
     const id = await this.discussionDataProvider.create({
@@ -58,7 +55,6 @@ export default class DiscussionController {
       manuscriptId,
       title,
       text,
-      sendNotifications,
       notificationList,
     });
 

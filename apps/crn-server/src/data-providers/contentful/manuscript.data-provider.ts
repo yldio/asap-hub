@@ -242,7 +242,6 @@ export class ManuscriptContentfulDataProvider
     const {
       teamId,
       userId,
-      sendNotifications = false,
       notificationList = '',
       versions: [version],
       ...plainFields
@@ -275,7 +274,6 @@ export class ManuscriptContentfulDataProvider
     await this.emailNotificationService.sendEmailNotification(
       'manuscript_submitted',
       manuscriptEntry.sys.id,
-      sendNotifications,
       notificationList,
     );
 
@@ -288,7 +286,6 @@ export class ManuscriptContentfulDataProvider
   ): Promise<void> {
     const {
       userId,
-      sendNotifications = false,
       notificationList = '',
       versions: [version],
       title,
@@ -328,7 +325,6 @@ export class ManuscriptContentfulDataProvider
     await this.emailNotificationService.sendEmailNotification(
       'manuscript_resubmitted',
       id,
-      sendNotifications,
       notificationList,
     );
   }
@@ -359,10 +355,6 @@ export class ManuscriptContentfulDataProvider
       });
       const statusUpdateAction = getStatusUpdateAction(manuscriptData.status);
       if (statusUpdateAction) {
-        const sendEmailNotification =
-          'sendNotifications' in manuscriptData
-            ? (manuscriptData.sendNotifications as boolean)
-            : false;
         const notificationList =
           'notificationList' in manuscriptData
             ? (manuscriptData.notificationList as string)
@@ -370,7 +362,6 @@ export class ManuscriptContentfulDataProvider
         await this.emailNotificationService.sendEmailNotification(
           statusUpdateAction,
           id,
-          sendEmailNotification,
           notificationList,
         );
       }

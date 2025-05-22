@@ -1,5 +1,4 @@
 import { createTeamResponse } from '@asap-hub/fixtures';
-import { disable, enable } from '@asap-hub/flags';
 import {
   getByRole as getByRoleInContainer,
   getByTestId,
@@ -82,13 +81,7 @@ it('does not display Collaboration Tools section if user is not a team member', 
 jest.setTimeout(30000);
 
 describe('compliance section', () => {
-  beforeAll(() => {
-    enable('DISPLAY_MANUSCRIPTS');
-  });
-
-  afterAll(() => {
-    disable('DISPLAY_MANUSCRIPTS');
-  });
+  beforeAll(() => {});
 
   it('renders compliance section when feature flag is enabled', () => {
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
@@ -112,7 +105,7 @@ describe('compliance section', () => {
         },
       ],
     };
-    enable('DISPLAY_MANUSCRIPTS');
+
     const { getByRole, queryByRole, rerender } = render(
       <TeamProfileWorkspace
         {...teamWithManuscripts}
@@ -124,7 +117,6 @@ describe('compliance section', () => {
       getByRole('heading', { name: 'Compliance Review' }),
     ).toBeInTheDocument();
 
-    disable('DISPLAY_MANUSCRIPTS');
     rerender(
       <TeamProfileWorkspace
         {...teamWithManuscripts}

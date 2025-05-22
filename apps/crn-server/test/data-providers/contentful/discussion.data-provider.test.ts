@@ -274,7 +274,6 @@ describe('Discussions Contentful Data Provider', () => {
 
       await discussionDataProviderMock.create({
         ...discussionRequestObject,
-        sendNotifications: true,
         notificationList: '',
       });
 
@@ -288,7 +287,6 @@ describe('Discussions Contentful Data Provider', () => {
       ).toHaveBeenCalledWith(
         'discussion_created',
         discussionRequestObject.manuscriptId,
-        true,
         '',
         discussionId,
       );
@@ -349,7 +347,6 @@ describe('Discussions Contentful Data Provider', () => {
         userId,
         reply,
         manuscriptId: 'manuscript-id-1',
-        sendNotifications: false,
         notificationList: '',
       });
 
@@ -448,7 +445,6 @@ describe('Discussions Contentful Data Provider', () => {
         userId,
         reply,
         manuscriptId: 'manuscript-id-1',
-        sendNotifications: false,
         notificationList: '',
       });
 
@@ -672,7 +668,6 @@ describe('Discussions Contentful Data Provider', () => {
         userId,
         reply,
         manuscriptId: 'manuscript-id-1',
-        sendNotifications: true,
         notificationList: '',
       });
 
@@ -686,7 +681,6 @@ describe('Discussions Contentful Data Provider', () => {
       ).toHaveBeenCalledWith(
         'os_member_replied_to_discussion',
         'manuscript-id-1',
-        true,
         '',
         discussionId,
       );
@@ -721,7 +715,6 @@ describe('Discussions Contentful Data Provider', () => {
         userId,
         reply,
         manuscriptId: 'manuscript-id-1',
-        sendNotifications: true,
         notificationList: '',
       });
 

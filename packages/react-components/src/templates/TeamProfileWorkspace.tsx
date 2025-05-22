@@ -144,7 +144,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   tools,
   onDeleteTool,
   setEligibilityReasons,
-  isComplianceReviewer = false,
+  isComplianceReviewer,
   isTeamMember,
   createDiscussion,
   useManuscriptById,

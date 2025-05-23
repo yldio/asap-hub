@@ -13,7 +13,10 @@ export const manuscriptContentQueryFragment = gql`
     status
     count
     apcRequested
+    apcAmountRequested
+    apcCoverageRequestStatus
     apcAmountPaid
+    declinedReason
     assignedUsersCollection(limit: 30) {
       items {
         sys {
@@ -335,7 +338,10 @@ export const FETCH_MANUSCRIPTS = gql`
         status
         count
         apcRequested
+        apcAmountRequested
+        apcCoverageRequestStatus
         apcAmountPaid
+        declinedReason
         assignedUsersCollection(limit: 30) {
           items {
             sys {

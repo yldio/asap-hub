@@ -5,7 +5,7 @@ import ComplianceControls from '../ComplianceControls';
 describe('ComplianceControls', () => {
   const props: ComponentProps<typeof ComplianceControls> = {
     completedStatus: 'hide' as const,
-    requestedAPCCoverage: 'submitted' as const,
+    // requestedAPCCoverage: 'submitted' as const,
     manuscriptCount: 1,
     generateLink: () => '',
   };
@@ -31,14 +31,15 @@ describe('ComplianceControls', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders requested APC coverage dropdown with correct selectedoption', () => {
-    render(<ComplianceControls {...props} />);
+  /* eslint-disable-next-line jest/no-commented-out-tests */
+  // it('renders requested APC coverage dropdown with correct selectedoption', () => {
+  //   render(<ComplianceControls {...props} />);
 
-    expect(screen.getByText('Requested APC Coverage:')).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'Submitted Chevron Down' }),
-    ).toBeInTheDocument();
-  });
+  //   expect(screen.getByText('Requested APC Coverage:')).toBeInTheDocument();
+  //   expect(
+  //     screen.getByRole('button', { name: 'Submitted Chevron Down' }),
+  //   ).toBeInTheDocument();
+  // });
 
   it('renders export csv button', () => {
     const mockExport = jest.fn(() => Promise.resolve());

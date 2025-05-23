@@ -1,9 +1,7 @@
 import {
   CompletedStatusOption,
   DEFAULT_COMPLETED_STATUS,
-  DEFAULT_REQUESTED_APC_COVERAGE,
   ManuscriptStatus,
-  RequestedAPCCoverageOption,
 } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -17,7 +15,8 @@ const generateLinkFactory =
     statuses: string[],
     searchQuery: string,
   ) =>
-  (completedStatus: string, requestedAPCCoverage: string) => {
+  // (completedStatus: string, requestedAPCCoverage: string) => {
+  (completedStatus: string) => {
     const params = new URLSearchParams();
     params.set('completedStatus', completedStatus);
     params.set('currentPage', currentPage.toString());
@@ -26,9 +25,9 @@ const generateLinkFactory =
       params.set('searchQuery', searchQuery);
     }
 
-    if (requestedAPCCoverage) {
-      params.set('requestedAPCCoverage', requestedAPCCoverage);
-    }
+    // if (requestedAPCCoverage) {
+    //   params.set('requestedAPCCoverage', requestedAPCCoverage);
+    // }
 
     const filteredStatuses =
       completedStatus === 'hide'
@@ -53,10 +52,10 @@ export const useComplianceSearch = () => {
   const completedStatus =
     (currentUrlParams.get('completedStatus') as CompletedStatusOption) ??
     DEFAULT_COMPLETED_STATUS;
-  const requestedAPCCoverage =
-    (currentUrlParams.get(
-      'requestedAPCCoverage',
-    ) as RequestedAPCCoverageOption) ?? DEFAULT_REQUESTED_APC_COVERAGE;
+  // const requestedAPCCoverage =
+  //   (currentUrlParams.get(
+  //     'requestedAPCCoverage',
+  //   ) as RequestedAPCCoverageOption) ?? DEFAULT_REQUESTED_APC_COVERAGE;
 
   const selectedStatuses = currentUrlParams.getAll(
     'status',
@@ -98,7 +97,7 @@ export const useComplianceSearch = () => {
   return {
     completedStatus,
     debouncedSearchQuery,
-    requestedAPCCoverage,
+    // requestedAPCCoverage,
     searchQuery,
     selectedStatuses,
     setSearchQuery,

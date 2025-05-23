@@ -1,7 +1,4 @@
-import {
-  DEFAULT_COMPLETED_STATUS,
-  DEFAULT_REQUESTED_APC_COVERAGE,
-} from '@asap-hub/model';
+import { DEFAULT_COMPLETED_STATUS } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
 import { act } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
@@ -17,7 +14,6 @@ describe('useComplianceSearch', () => {
     expect(result.current).toMatchObject({
       completedStatus: DEFAULT_COMPLETED_STATUS,
       debouncedSearchQuery: '',
-      requestedAPCCoverage: DEFAULT_REQUESTED_APC_COVERAGE,
       searchQuery: '',
       selectedStatuses: [],
     });
@@ -45,16 +41,17 @@ describe('useComplianceSearch', () => {
     expect(result.current.completedStatus).toBe('hide');
   });
 
-  it('reads requestedAPCCoverage from URL', () => {
-    const { result } = renderHook(() => useComplianceSearch(), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: ['/?requestedAPCCoverage=submitted'],
-      },
-    });
+  /* eslint-disable-next-line jest/no-commented-out-tests */
+  // it('reads requestedAPCCoverage from URL', () => {
+  //   const { result } = renderHook(() => useComplianceSearch(), {
+  //     wrapper: MemoryRouter,
+  //     initialProps: {
+  //       initialEntries: ['/?requestedAPCCoverage=submitted'],
+  //     },
+  //   });
 
-    expect(result.current.requestedAPCCoverage).toBe('submitted');
-  });
+  //   expect(result.current.requestedAPCCoverage).toBe('submitted');
+  // });
 
   it('reads selected statuses from URL', () => {
     const { result } = renderHook(() => useComplianceSearch(), {
@@ -167,11 +164,9 @@ describe('generateLinkFactory', () => {
       1,
       [],
       '',
-    )('show', 'submitted');
+    )('show');
 
-    expect(url).toBe(
-      '/base-path?completedStatus=show&currentPage=1&requestedAPCCoverage=submitted',
-    );
+    expect(url).toBe('/base-path?completedStatus=show&currentPage=1');
   });
 
   it('includes all statuses when completedStatus is show', () => {
@@ -184,10 +179,10 @@ describe('generateLinkFactory', () => {
       1,
       ['Compliant', 'Waiting for Report'],
       '',
-    )('show', 'submitted');
+    )('show');
 
     expect(url).toBe(
-      `/base-path?completedStatus=show&currentPage=1&requestedAPCCoverage=submitted&status=Compliant&status=Waiting+for+Report`,
+      `/base-path?completedStatus=show&currentPage=1&status=Compliant&status=Waiting+for+Report`,
     );
   });
 
@@ -201,10 +196,10 @@ describe('generateLinkFactory', () => {
       1,
       ['Compliant', 'Waiting for Report', 'Closed (other)'],
       '',
-    )('hide', 'submitted');
+    )('hide');
 
     expect(url).toBe(
-      '/base-path?completedStatus=hide&currentPage=1&requestedAPCCoverage=submitted&status=Waiting+for+Report',
+      '/base-path?completedStatus=hide&currentPage=1&status=Waiting+for+Report',
     );
   });
 
@@ -218,10 +213,10 @@ describe('generateLinkFactory', () => {
       2,
       ['Compliant', 'Waiting for Report', 'Manuscript Resubmitted'],
       'Alessi',
-    )('hide', 'submitted');
+    )('hide');
 
     expect(url).toBe(
-      '/base-path?completedStatus=hide&currentPage=2&searchQuery=Alessi&requestedAPCCoverage=submitted&status=Waiting+for+Report&status=Manuscript+Resubmitted',
+      '/base-path?completedStatus=hide&currentPage=2&searchQuery=Alessi&status=Waiting+for+Report&status=Manuscript+Resubmitted',
     );
   });
 });

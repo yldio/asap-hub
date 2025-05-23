@@ -905,14 +905,18 @@ type DiscussionsLinkingCollections {
 }
 
 enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
-  apcAmount_ASC
-  apcAmount_DESC
-  apcPaid_ASC
-  apcPaid_DESC
+  apcAmountPaid_ASC
+  apcAmountPaid_DESC
+  apcAmountRequested_ASC
+  apcAmountRequested_DESC
+  apcCoverageRequestStatus_ASC
+  apcCoverageRequestStatus_DESC
   apcRequested_ASC
   apcRequested_DESC
   count_ASC
   count_DESC
+  declinedReason_ASC
+  declinedReason_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -3409,14 +3413,18 @@ enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
 }
 
 enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
-  apcAmount_ASC
-  apcAmount_DESC
-  apcPaid_ASC
-  apcPaid_DESC
+  apcAmountPaid_ASC
+  apcAmountPaid_DESC
+  apcAmountRequested_ASC
+  apcAmountRequested_DESC
+  apcCoverageRequestStatus_ASC
+  apcCoverageRequestStatus_DESC
   apcRequested_ASC
   apcRequested_DESC
   count_ASC
   count_DESC
+  declinedReason_ASC
+  declinedReason_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -3524,10 +3532,13 @@ enum ManuscriptVersionsTeamsCollectionOrder {
 type Manuscripts implements Entry & _Node {
   _id: ID!
   apcAmountPaid(locale: String): Float
+  apcAmountRequested(locale: String): Float
+  apcCoverageRequestStatus(locale: String): String
   apcRequested(locale: String): Boolean
   assignedUsersCollection(limit: Int = 100, locale: String, order: [ManuscriptsAssignedUsersCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): ManuscriptsAssignedUsersCollection
   contentfulMetadata: ContentfulMetadata!
   count(locale: String): Int
+  declinedReason(locale: String): String
   discussionsCollection(limit: Int = 100, locale: String, order: [ManuscriptsDiscussionsCollectionOrder], preview: Boolean, skip: Int = 0, where: DiscussionsFilter): ManuscriptsDiscussionsCollection
   eligibilityReasons(locale: String): [String]
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
@@ -3654,16 +3665,30 @@ input ManuscriptsFilter {
   AND: [ManuscriptsFilter]
   OR: [ManuscriptsFilter]
   apcAmountPaid: Float
-  apcAmount_exists: Boolean
-  apcAmount_gt: Float
-  apcAmount_gte: Float
-  apcAmount_in: [Float]
-  apcAmount_lt: Float
-  apcAmount_lte: Float
-  apcAmount_not: Float
-  apcAmount_not_in: [Float]
-  apcPaid_exists: Boolean
-  apcPaid_not: Boolean
+  apcAmountPaid_exists: Boolean
+  apcAmountPaid_gt: Float
+  apcAmountPaid_gte: Float
+  apcAmountPaid_in: [Float]
+  apcAmountPaid_lt: Float
+  apcAmountPaid_lte: Float
+  apcAmountPaid_not: Float
+  apcAmountPaid_not_in: [Float]
+  apcAmountRequested: Float
+  apcAmountRequested_exists: Boolean
+  apcAmountRequested_gt: Float
+  apcAmountRequested_gte: Float
+  apcAmountRequested_in: [Float]
+  apcAmountRequested_lt: Float
+  apcAmountRequested_lte: Float
+  apcAmountRequested_not: Float
+  apcAmountRequested_not_in: [Float]
+  apcCoverageRequestStatus: String
+  apcCoverageRequestStatus_contains: String
+  apcCoverageRequestStatus_exists: Boolean
+  apcCoverageRequestStatus_in: [String]
+  apcCoverageRequestStatus_not: String
+  apcCoverageRequestStatus_not_contains: String
+  apcCoverageRequestStatus_not_in: [String]
   apcRequested: Boolean
   apcRequested_exists: Boolean
   apcRequested_not: Boolean
@@ -3679,6 +3704,13 @@ input ManuscriptsFilter {
   count_lte: Int
   count_not: Int
   count_not_in: [Int]
+  declinedReason: String
+  declinedReason_contains: String
+  declinedReason_exists: Boolean
+  declinedReason_in: [String]
+  declinedReason_not: String
+  declinedReason_not_contains: String
+  declinedReason_not_in: [String]
   discussions: cfDiscussionsNestedFilter
   discussionsCollection_exists: Boolean
   eligibilityReasons_contains_all: [String]
@@ -3729,14 +3761,18 @@ type ManuscriptsLinkingCollections {
 }
 
 enum ManuscriptsOrder {
-  apcAmount_ASC
-  apcAmount_DESC
-  apcPaid_ASC
-  apcPaid_DESC
+  apcAmountPaid_ASC
+  apcAmountPaid_DESC
+  apcAmountRequested_ASC
+  apcAmountRequested_DESC
+  apcCoverageRequestStatus_ASC
+  apcCoverageRequestStatus_DESC
   apcRequested_ASC
   apcRequested_DESC
   count_ASC
   count_DESC
+  declinedReason_ASC
+  declinedReason_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -6237,14 +6273,18 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
-  apcAmount_ASC
-  apcAmount_DESC
-  apcPaid_ASC
-  apcPaid_DESC
+  apcAmountPaid_ASC
+  apcAmountPaid_DESC
+  apcAmountRequested_ASC
+  apcAmountRequested_DESC
+  apcCoverageRequestStatus_ASC
+  apcCoverageRequestStatus_DESC
   apcRequested_ASC
   apcRequested_DESC
   count_ASC
   count_DESC
+  declinedReason_ASC
+  declinedReason_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -7359,14 +7399,18 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 enum UsersLinkingCollectionsManuscriptsCollectionOrder {
-  apcAmount_ASC
-  apcAmount_DESC
-  apcPaid_ASC
-  apcPaid_DESC
+  apcAmountPaid_ASC
+  apcAmountPaid_DESC
+  apcAmountRequested_ASC
+  apcAmountRequested_DESC
+  apcCoverageRequestStatus_ASC
+  apcCoverageRequestStatus_DESC
   apcRequested_ASC
   apcRequested_DESC
   count_ASC
   count_DESC
+  declinedReason_ASC
+  declinedReason_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC

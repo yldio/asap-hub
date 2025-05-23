@@ -169,18 +169,7 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
       {/* TODO: fix this once the apc coverage label is properly implemented */}
       <p css={apcCoverageStyles}>{''}</p>
       {isComplianceReviewer ? (
-        apcRequested ? (
-          <Button
-            aria-label="Edit APC Coverage Details"
-            noMargin
-            overrideStyles={css([
-              assignUsersButtonStyles,
-              editUsersButtonStyles,
-            ])}
-          >
-            <PencilIcon />
-          </Button>
-        ) : (
+        apcRequested === undefined ? (
           <Button
             aria-label="Add APC Coverage Details"
             noMargin
@@ -190,6 +179,17 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
             ])}
           >
             {plusIcon}
+          </Button>
+        ) : (
+          <Button
+            aria-label="Edit APC Coverage Details"
+            noMargin
+            overrideStyles={css([
+              assignUsersButtonStyles,
+              editUsersButtonStyles,
+            ])}
+          >
+            <PencilIcon />
           </Button>
         )
       ) : null}

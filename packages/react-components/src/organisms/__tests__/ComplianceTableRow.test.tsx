@@ -282,10 +282,10 @@ describe('ComplianceTableRow', () => {
       );
 
       it.each(apcCoverableStatuses)(
-        'renders add apc coverage button when manuscript status is %s, user is compliance reviewer and request is not already made',
+        'renders add apc coverage button when manuscript status is %s, user is compliance reviewer and apc requested is not defined',
         (status) => {
           renderComponent({
-            data: { ...data, status, apcRequested: false },
+            data: { ...data, status, apcRequested: undefined },
             isComplianceReviewer: true,
           });
           expect(
@@ -294,11 +294,17 @@ describe('ComplianceTableRow', () => {
         },
       );
 
-      it.each(apcCoverableStatuses)(
-        'renders edit apc coverage button when manuscript status is %s, user is compliance reviewer and request is already made',
-        (status) => {
+      it.each`
+        status                        | apcRequested
+        ${'Compliant'}                | ${false}
+        ${'Submit Final Publication'} | ${false}
+        ${'Compliant'}                | ${true}
+        ${'Submit Final Publication'} | ${true}
+      `(
+        'renders edit apc coverage button when manuscript status is $status, user is compliance reviewer and apc requested is $apcRequested',
+        ({ status, apcRequested }) => {
           renderComponent({
-            data: { ...data, status, apcRequested: true },
+            data: { ...data, status, apcRequested },
             isComplianceReviewer: true,
           });
           expect(

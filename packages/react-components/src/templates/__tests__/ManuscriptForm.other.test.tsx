@@ -12,8 +12,9 @@ import {
   render,
   waitFor,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import type {
@@ -341,7 +342,6 @@ describe('preprintDoi', () => {
             {...defaultProps}
             type="Original Research"
             lifecycle={lifecycle}
-            resubmitManuscript
           />
         </StaticRouter>,
       );
@@ -1212,7 +1212,7 @@ it('calls onUpdate when form is updated', async () => {
 
 it('calls onResubmit when form details are saved and resubmitManuscript prop is true', async () => {
   const onResubmit = jest.fn();
-  const { findByLabelText, findByRole } = render(
+  const { findByLabelText, findByRole, getByRole } = render(
     <StaticRouter>
       <ManuscriptForm
         {...defaultProps}
@@ -1241,6 +1241,14 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     </StaticRouter>,
   );
 
+  const lifecycleTextbox = getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+
+  userEvent.type(lifecycleTextbox, 'Draft Manuscript (prior to Publication)');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
   const testManuscriptFile = new File(['file content'], 'manuscript.pdf', {
     type: 'application/pdf',
   });
@@ -1256,6 +1264,14 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     await findByLabelText(/Upload Key Resource Table/i),
     testKeyResourceFile,
   );
+
+  const quickChecks = getByRole('region', { name: /quick checks/i });
+
+  within(quickChecks)
+    .getAllByRole('radio', { name: 'Yes' })
+    .forEach((button) => {
+      userEvent.click(button);
+    });
 
   await submitForm({ findByRole });
 
@@ -1295,7 +1311,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
             id: 'some-id',
             url: 'https://example.com/manuscript.pdf',
           },
-          manuscriptLicense: 'Yes',
+          manuscriptLicense: undefined,
           manuscriptLicenseDetails: '',
           otherDetails: undefined,
           preprintDoi: undefined,

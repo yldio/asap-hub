@@ -347,7 +347,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   ) => {
     const isEditing = !!title;
 
-    if (isEditing) {
+    if (isEditing && !resubmitManuscript) {
       return quickCheckDetails ? quickCheck : 'Yes';
     }
 
@@ -362,7 +362,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       versions: [
         {
           type: type || '',
-          lifecycle: lifecycle || '',
+          lifecycle: resubmitManuscript ? undefined : lifecycle || '',
           preprintDoi: preprintDoi || '',
           publicationDoi: publicationDoi || '',
           otherDetails: otherDetails || '',
@@ -402,18 +402,30 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             availabilityStatement,
             availabilityStatementDetails,
           ),
-          acknowledgedGrantNumberDetails:
-            acknowledgedGrantNumberDetails ?? undefined,
-          asapAffiliationIncludedDetails:
-            asapAffiliationIncludedDetails ?? undefined,
-          manuscriptLicenseDetails: manuscriptLicenseDetails ?? undefined,
-          datasetsDepositedDetails: datasetsDepositedDetails ?? undefined,
-          codeDepositedDetails: codeDepositedDetails ?? undefined,
-          protocolsDepositedDetails: protocolsDepositedDetails ?? undefined,
-          labMaterialsRegisteredDetails:
-            labMaterialsRegisteredDetails ?? undefined,
-          availabilityStatementDetails:
-            availabilityStatementDetails ?? undefined,
+          acknowledgedGrantNumberDetails: resubmitManuscript
+            ? undefined
+            : acknowledgedGrantNumberDetails ?? undefined,
+          asapAffiliationIncludedDetails: resubmitManuscript
+            ? undefined
+            : asapAffiliationIncludedDetails ?? undefined,
+          manuscriptLicenseDetails: resubmitManuscript
+            ? undefined
+            : manuscriptLicenseDetails ?? undefined,
+          datasetsDepositedDetails: resubmitManuscript
+            ? undefined
+            : datasetsDepositedDetails ?? undefined,
+          codeDepositedDetails: resubmitManuscript
+            ? undefined
+            : codeDepositedDetails ?? undefined,
+          protocolsDepositedDetails: resubmitManuscript
+            ? undefined
+            : protocolsDepositedDetails ?? undefined,
+          labMaterialsRegisteredDetails: resubmitManuscript
+            ? undefined
+            : labMaterialsRegisteredDetails ?? undefined,
+          availabilityStatementDetails: resubmitManuscript
+            ? undefined
+            : availabilityStatementDetails ?? undefined,
           teams: selectedTeams || [],
           labs: selectedLabs || [],
           description: description || '',

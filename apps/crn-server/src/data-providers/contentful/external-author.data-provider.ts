@@ -85,8 +85,8 @@ export class ExternalAuthorContentfulDataProvider
       'en-US': input.email,
     };
 
-    await existingExternalAuthor.update();
-    await existingExternalAuthor.publish();
+    const updatedExternalAuthor = await existingExternalAuthor.update();
+    await updatedExternalAuthor.publish();
   }
 
   async create(input: ExternalAuthorCreateDataObject): Promise<string> {

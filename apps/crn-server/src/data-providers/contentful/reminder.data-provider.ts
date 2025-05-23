@@ -1167,36 +1167,42 @@ const getManuscriptRemindersFromQuery = (
   return manuscriptsCollectionItems.reduce<ManuscriptReminder[]>(
     (reminders, manuscript) => {
       if (!isValidManuscriptItem(manuscript)) return reminders;
+      const manuscriptItem = {
+        ...manuscript,
+        versionsCollection: {
+          items: cleanArray(manuscript.versionsCollection.items),
+        },
+      } as ValidManuscriptItem;
 
-      const manuscriptVersions = manuscript.versionsCollection.items;
+      const manuscriptVersions = manuscriptItem.versionsCollection.items;
       const isManuscriptResubmitted = manuscriptVersions.length > 1;
       const manuscriptFirstVersion = manuscriptVersions[0] as ManuscriptVersion;
       const manuscriptLastVersion = manuscriptVersions[
         manuscriptVersions.length - 1
       ] as ManuscriptVersion;
-      const isAssignedUser = manuscript.assignedUsersCollection.items.some(
+      const isAssignedUser = manuscriptItem.assignedUsersCollection.items.some(
         (assignedUser) => assignedUser?.sys.id === userId,
       );
 
       if (isStaffAndMemberOfOpenScienceTeam(user)) {
         if (
           isManuscriptResubmitted &&
-          inLast7Days(manuscript.sys.publishedAt, timezone) &&
+          inLast7Days(manuscriptItem.sys.publishedAt, timezone) &&
           isReminderForDifferentUser(
             manuscriptLastVersion.createdBy?.sys.id,
             userId,
           ) &&
           isAssignedUser
         ) {
-          reminders.push(createManuscriptResubmittedReminder(manuscript));
+          reminders.push(createManuscriptResubmittedReminder(manuscriptItem));
         } else if (
-          inLast7Days(manuscript.sys.firstPublishedAt, timezone) &&
+          inLast7Days(manuscriptItem.sys.firstPublishedAt, timezone) &&
           isReminderForDifferentUser(
             manuscriptFirstVersion.createdBy?.sys.id,
             userId,
           )
         ) {
-          reminders.push(createManuscriptCreatedReminder(manuscript));
+          reminders.push(createManuscriptCreatedReminder(manuscriptItem));
         }
 
         return reminders;
@@ -1216,7 +1222,7 @@ const getManuscriptRemindersFromQuery = (
           userId,
         )
       ) {
-        reminders.push(createManuscriptResubmittedReminder(manuscript));
+        reminders.push(createManuscriptResubmittedReminder(manuscriptItem));
       } else if (
         inLast7Days(manuscript.sys.firstPublishedAt, timezone) &&
         isReminderForDifferentUser(
@@ -1225,25 +1231,25 @@ const getManuscriptRemindersFromQuery = (
         ) &&
         (isManuscriptAuthor(manuscriptFirstVersion, userId) ||
           isManuscriptProjectManagerOrLeadPI(
-            manuscript.teamsCollection,
+            manuscriptItem.teamsCollection,
             userProjectManagerOrLeadPITeamIds,
           ) ||
           isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId))
       ) {
-        reminders.push(createManuscriptCreatedReminder(manuscript));
+        reminders.push(createManuscriptCreatedReminder(manuscriptItem));
       }
 
       if (
-        inLast7Days(manuscript.statusUpdatedAt, timezone) &&
-        isManuscriptStatusUpdatedByAnotherUser(manuscript, userId) &&
+        inLast7Days(manuscriptItem.statusUpdatedAt, timezone) &&
+        isManuscriptStatusUpdatedByAnotherUser(manuscriptItem, userId) &&
         (isManuscriptAuthor(manuscriptFirstVersion, userId) ||
           isManuscriptProjectManagerOrLeadPI(
-            manuscript.teamsCollection,
+            manuscriptItem.teamsCollection,
             userProjectManagerOrLeadPITeamIds,
           ) ||
           isManuscriptLabPI(manuscriptFirstVersion.labsCollection, userId))
       ) {
-        reminders.push(createManuscriptStatusUpdatedReminder(manuscript));
+        reminders.push(createManuscriptStatusUpdatedReminder(manuscriptItem));
       }
 
       return reminders;

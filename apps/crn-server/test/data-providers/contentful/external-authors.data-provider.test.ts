@@ -217,6 +217,10 @@ describe('External Authors Contentful Data Provider', () => {
         { id: 'external-author-1' },
       );
       environmentMock.getEntry.mockResolvedValue(externalAuthorMock);
+      const externalAuthorMockUpdated = getEntry({});
+      externalAuthorMock.update = jest
+        .fn()
+        .mockResolvedValueOnce(externalAuthorMockUpdated);
 
       await externalAuthorsDataProvider.update('external-author-1', {
         email: 'external@gmail.com',

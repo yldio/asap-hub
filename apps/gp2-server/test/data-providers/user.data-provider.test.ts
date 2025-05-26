@@ -2067,7 +2067,6 @@ describe('User data provider', () => {
     test.each(gp2Model.userContributingCohortRole)(
       'Should update the contributing cohort role - %s',
       async (role) => {
-        const studyUrl = 'http://example.com/study';
         const userCreateDataObject = getUserCreateDataObject();
         const id = '42';
         const userMock = getEntry({});
@@ -2084,7 +2083,7 @@ describe('User data provider', () => {
         userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
         await userDataProvider.create({
           ...userCreateDataObject,
-          contributingCohorts: [{ contributingCohortId: id, role, studyUrl }],
+          contributingCohorts: [{ contributingCohortId: id, role }],
         });
         expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
           1,
@@ -2101,7 +2100,6 @@ describe('User data provider', () => {
                 },
               },
               role: { 'en-US': role },
-              studyLink: { 'en-US': studyUrl },
             },
           },
         );
@@ -2333,7 +2331,6 @@ describe('User data provider', () => {
           .mockReset()
           .mockResolvedValueOnce(cohortUserEntry);
         const id = '42';
-        const studyUrl = 'http://example.com/study';
         const waitProcessingPublish = jest
           .fn()
           .mockImplementation(() => Promise.resolve());
@@ -2357,7 +2354,7 @@ describe('User data provider', () => {
           getEntryCollection([getEntry({ delete: deleteSpy })]),
         );
         await userDataProvider.update(userId, {
-          contributingCohorts: [{ contributingCohortId: id, role, studyUrl }],
+          contributingCohorts: [{ contributingCohortId: id, role }],
         });
 
         expect(environmentMock.createEntry).toBeCalledTimes(1);
@@ -2375,7 +2372,6 @@ describe('User data provider', () => {
                 },
               },
               role: { 'en-US': role },
-              studyLink: { 'en-US': studyUrl },
             },
           },
         );

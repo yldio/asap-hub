@@ -1,13 +1,10 @@
 import { gp2 } from '@asap-hub/model';
 import {
   Button,
-  GlobeIcon,
   LabeledDropdown,
-  LabeledTextField,
   pixels,
   Subtitle,
 } from '@asap-hub/react-components';
-import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { addIcon, binIcon } from '../icons';
@@ -47,7 +44,6 @@ const addButtonStyles = css({
     width: '100%',
   },
 });
-const optional = '(optional)';
 const required = '(required)';
 const getValues = <T extends string>(selected: T[]) =>
   selected.map((item) => ({ label: item, value: item }));
@@ -71,7 +67,6 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
   const emptyCohort = {
     role: undefined,
     contributingCohortId: undefined,
-    studyUrl: undefined,
   };
   const [newCohorts, setCohorts] = useState<
     Partial<gp2.UserContributingCohort>[]
@@ -82,8 +77,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
       (newChort, index) =>
         newChort.contributingCohortId !==
           contributingCohorts[index]?.contributingCohortId ||
-        newChort.role !== contributingCohorts[index]?.role ||
-        newChort.studyUrl !== contributingCohorts[index]?.studyUrl,
+        newChort.role !== contributingCohorts[index]?.role,
     );
   const onChangeValue =
     (index: number, property: keyof gp2.UserContributingCohort) =>
@@ -127,62 +121,47 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
         <>
           <div css={[containerStyles]}>
             <div css={{ paddingBottom: '0' }}>
-              {newCohorts.map(
-                ({ contributingCohortId, role, studyUrl }, index) => (
-                  <div css={[rowStyles]} key={`cohort-${index}`}>
-                    <div css={headerStyles}>
-                      <Subtitle styleAsHeading={4}>
-                        #{index + 1} Cohort Study
-                      </Subtitle>
-                      <div css={buttonStyles}>
-                        <Button onClick={onRemove(index)} small>
-                          <span css={css({ display: 'inline-flex' })}>
-                            {binIcon}
-                          </span>
-                        </Button>
-                      </div>
+              {newCohorts.map(({ contributingCohortId, role }, index) => (
+                <div css={[rowStyles]} key={`cohort-${index}`}>
+                  <div css={headerStyles}>
+                    <Subtitle styleAsHeading={4}>
+                      #{index + 1} Cohort Study
+                    </Subtitle>
+                    <div css={buttonStyles}>
+                      <Button onClick={onRemove(index)} small>
+                        <span css={css({ display: 'inline-flex' })}>
+                          {binIcon}
+                        </span>
+                      </Button>
                     </div>
-                    <LabeledDropdown
-                      title="Name"
-                      subtitle={required}
-                      getValidationMessage={() => 'Please add the cohort name'}
-                      enabled={!isSaving}
-                      value={contributingCohortId || ''}
-                      onChange={onChangeValue(index, 'contributingCohortId')}
-                      required
-                      options={cohortOptions.map(({ id, name }) => ({
-                        label: name,
-                        value: id,
-                      }))}
-                      placeholder={'Type a cohort study name...'}
-                    />
-                    <LabeledDropdown
-                      title="Role"
-                      subtitle={required}
-                      options={getValues([...gp2.userContributingCohortRole])}
-                      enabled={!isSaving}
-                      getValidationMessage={() => 'Please add the role'}
-                      value={role || ''}
-                      onChange={onChangeValue(index, 'role')}
-                      required
-                      placeholder={'Select a role...'}
-                    />
-                    <LabeledTextField
-                      title="Link"
-                      subtitle={optional}
-                      enabled={!isSaving}
-                      value={studyUrl || ''}
-                      onChange={onChangeValue(index, 'studyUrl')}
-                      pattern={urlExpression}
-                      getValidationMessage={() =>
-                        'Please enter a valid URL, starting with http://'
-                      }
-                      labelIndicator={<GlobeIcon />}
-                      placeholder="https://www.example.com"
-                    />
                   </div>
-                ),
-              )}
+                  <LabeledDropdown
+                    title="Name"
+                    subtitle={required}
+                    getValidationMessage={() => 'Please add the cohort name'}
+                    enabled={!isSaving}
+                    value={contributingCohortId || ''}
+                    onChange={onChangeValue(index, 'contributingCohortId')}
+                    required
+                    options={cohortOptions.map(({ id, name }) => ({
+                      label: name,
+                      value: id,
+                    }))}
+                    placeholder={'Type a cohort study name...'}
+                  />
+                  <LabeledDropdown
+                    title="Role"
+                    subtitle={required}
+                    options={getValues([...gp2.userContributingCohortRole])}
+                    enabled={!isSaving}
+                    getValidationMessage={() => 'Please add the role'}
+                    value={role || ''}
+                    onChange={onChangeValue(index, 'role')}
+                    required
+                    placeholder={'Select a role...'}
+                  />
+                </div>
+              ))}
             </div>
             {newCohorts.length < 10 ? (
               <div css={addButtonStyles}>

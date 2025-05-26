@@ -672,14 +672,13 @@ const addNextCohorts = async (
 ) => {
   if (nextCohorts && nextCohorts.length > 0) {
     const nextContributingCohorts = await Promise.all(
-      nextCohorts.map(async ({ contributingCohortId, role, studyUrl }) => {
+      nextCohorts.map(async ({ contributingCohortId, role }) => {
         const entry = await environment.createEntry(
           'contributingCohortsMembership',
           {
             fields: addLocaleToFields({
               contributingCohort: getLinkEntity(contributingCohortId, false),
               role,
-              studyLink: studyUrl,
             }),
           },
         );

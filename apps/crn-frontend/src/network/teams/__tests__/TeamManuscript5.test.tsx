@@ -6,12 +6,14 @@ import { createManuscriptResponse } from '@asap-hub/fixtures';
 import { AuthorResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import {
+  cleanup,
   render,
   screen,
   waitFor,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
@@ -86,6 +88,8 @@ beforeEach(() => {
   });
 });
 
+afterEach(cleanup);
+
 const renderPage = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
   resubmit: boolean = false,
@@ -159,6 +163,14 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
 
   await renderPage({}, true, resubmitPath, resubmitHistory);
 
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+
+  userEvent.type(lifecycleTextbox, 'Preprint');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
   const preprintDoi = '10.4444/test';
 
   const preprintDoiTextbox = screen.getByRole('textbox', {
@@ -176,6 +188,14 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
 
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
+
+  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
+
+  within(quickChecks)
+    .getAllByRole('radio', { name: 'Yes' })
+    .forEach((button) => {
+      userEvent.click(button);
+    });
 
   await waitFor(() => {
     const submitButton = screen.getByRole('button', { name: /Submit/ });
@@ -203,4 +223,55 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
       `/network/teams/${teamId}/workspace`,
     );
   });
+});
+
+it('files are not prefilled on manuscript resubmit', async () => {
+  const mockResubmitManuscript = resubmitManuscript as jest.MockedFunction<
+    typeof resubmitManuscript
+  >;
+  const mockGetManuscript = getManuscript as jest.MockedFunction<
+    typeof getManuscript
+  >;
+
+  const manuscript = createManuscriptResponse();
+  manuscript.versions[0]!.lifecycle = 'Preprint';
+  manuscript.versions[0]!.firstAuthors = [
+    {
+      label: 'Author 1',
+      value: 'author-1',
+      id: 'author-1',
+      displayName: 'Author 1',
+      email: 'author@email.com',
+    } as AuthorResponse,
+  ];
+
+  mockGetManuscript.mockResolvedValue(manuscript);
+  mockResubmitManuscript.mockResolvedValue(manuscript);
+
+  const resubmitPath = `/network/teams/${teamId}/workspace/resubmit-manuscript/:manuscriptId`;
+  const resubmitHistory = createMemoryHistory({
+    initialEntries: [
+      `/network/teams/${teamId}/workspace/resubmit-manuscript/${manuscript.id}`,
+    ],
+  });
+
+  await renderPage({}, true, resubmitPath, resubmitHistory);
+
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+
+  userEvent.type(lifecycleTextbox, 'Preprint');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
+  const preprintDoi = '10.4444/test';
+
+  const preprintDoiTextbox = screen.getByRole('textbox', {
+    name: /Preprint DOI/i,
+  });
+  userEvent.type(preprintDoiTextbox, preprintDoi);
+
+  expect(screen.queryByText(/manuscript_1.pdf/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/manuscript_1.csv/i)).not.toBeInTheDocument();
 });

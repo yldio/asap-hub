@@ -131,6 +131,7 @@ it('shows server validation error toast and a message when submitting with dupli
     statusCode: 422,
     response: {
       message: 'Title must be unique',
+      data: { team: 'ASAP', manuscriptId: 'SC1-000129-005-org-G-1' },
     },
   };
 
@@ -223,7 +224,7 @@ it('shows server validation error toast and a message when submitting with dupli
 
   expect(
     screen.getAllByText(
-      /This title is already in use. Please choose a different one./i,
+      /A manuscript with this title has already been submitted for Team ASAP \(SC1-000129-005-org-G-1\)./i,
     ).length,
   ).toBeGreaterThan(0);
 });

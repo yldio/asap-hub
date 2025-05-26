@@ -342,6 +342,8 @@ describe('Manuscript controller', () => {
       const manuscriptResponse = getManuscriptsListResponse().items[0]!;
       manuscriptResponse.title = 'Unique Title';
       manuscriptResponse.id = 'another-manuscript-id';
+      manuscriptResponse.manuscriptId = 'SC1-000129-005-org-G-1';
+      manuscriptResponse.team!.displayName = 'ASAP';
       manuscriptDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
         items: [manuscriptResponse],
@@ -352,7 +354,14 @@ describe('Manuscript controller', () => {
 
       await expect(
         manuscriptController.createVersion(manuscriptId, payload),
-      ).rejects.toThrow(Boom.badData('Title must be unique'));
+      ).rejects.toThrow(
+        Boom.badData('Title must be unique', {
+          data: {
+            team: 'ASAP',
+            manuscriptId: 'SC1-000129-005-org-G-1',
+          },
+        }),
+      );
     });
 
     test('Should throw when fails to create the manuscript version', async () => {

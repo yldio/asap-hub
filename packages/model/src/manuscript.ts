@@ -876,6 +876,10 @@ export type ManuscriptError = {
   statusCode: number;
   response?: {
     message: string;
+    data: {
+      team: string;
+      manuscriptId: string;
+    };
   };
 };
 

@@ -813,8 +813,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           (error as ManuscriptError).response?.message ===
             'Title must be unique'
         ) {
+          const { team, manuscriptId: id } = (error as ManuscriptError).response
+            ?.data as {
+            team: string;
+            manuscriptId: string;
+          };
           setTitleServerError(
-            'This title is already in use. Please choose a different one.',
+            `A manuscript with this title has already been submitted for Team ${team} (${id}). Please use the edit or resubmission button to update this manuscript.`,
           );
         }
         onError(error as ManuscriptError | Error);

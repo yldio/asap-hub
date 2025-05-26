@@ -32,7 +32,6 @@ export const getManuscriptDataObject = (
       avatarUrl: 'https://example.com/avatar.png',
     },
   ],
-  requestingApcCoverage: undefined,
   apcAmountPaid: undefined,
   versions: [
     {
@@ -387,7 +386,6 @@ export const getManuscriptsListResponse =
         manuscriptId: 'ID01-grant-001-org-P-1',
         title: 'Manuscript 1',
         teams: 'Team A',
-        requestingApcCoverage: undefined,
         apcAmountPaid: undefined,
         assignedUsers: [
           {
@@ -409,7 +407,6 @@ export const getManuscriptsListResponse =
         manuscriptId: 'ID01-grant-002-org-P-1',
         title: 'Manuscript 2',
         teams: 'Team A',
-        requestingApcCoverage: undefined,
         apcAmountPaid: undefined,
         assignedUsers: [
           {

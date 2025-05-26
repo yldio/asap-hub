@@ -40,6 +40,7 @@ import {
   ManuscriptUpdateDataObject,
   ManuscriptVersion,
   QuickCheckDetails,
+  ApcCoverageRequestStatus,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
 
@@ -124,11 +125,12 @@ export class ManuscriptContentfulDataProvider
             ),
             status: manuscriptMapStatus(manuscript.status) || undefined,
             id: manuscript.sys.id,
-            // this is hard coded for now as undefined
-            // as this field should appear as blank in the UI
-            // but it will be replaced by apcPaid in the future
-            requestingApcCoverage: undefined,
-            apcAmountPaid: manuscript.apcAmountPaid ?? undefined,
+            apcRequested: manuscript.apcRequested || undefined,
+            apcAmountRequested: manuscript.apcAmountRequested || undefined,
+            apcCoverageRequestStatus:
+              manuscript.apcCoverageRequestStatus as ApcCoverageRequestStatus,
+            apcAmountPaid: manuscript.apcAmountPaid || undefined,
+            declinedReason: manuscript.declinedReason || undefined,
             lastUpdated: version?.sys.publishedAt,
             team: {
               id: team?.sys.id || '',
@@ -499,11 +501,12 @@ const parseGraphQLManuscript = (
     assignedUsers: parseGraphQLManuscriptAssignedUsers(
       manuscript.assignedUsersCollection,
     ),
-    // this is hard coded for now as undefined
-    // as this field should appear as blank in the UI
-    // but it will be replaced by apcPaid in the future
-    requestingApcCoverage: undefined,
-    apcAmountPaid: manuscript.apcAmountPaid ?? undefined,
+    apcRequested: manuscript.apcRequested || undefined,
+    apcAmountRequested: manuscript.apcAmountRequested || undefined,
+    apcCoverageRequestStatus:
+      manuscript.apcCoverageRequestStatus as ApcCoverageRequestStatus,
+    apcAmountPaid: manuscript.apcAmountPaid || undefined,
+    declinedReason: manuscript.declinedReason || undefined,
     versions: parseGraphqlManuscriptVersion(
       manuscript.versionsCollection?.items || [],
       grantId,

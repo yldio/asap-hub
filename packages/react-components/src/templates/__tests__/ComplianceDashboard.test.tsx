@@ -12,7 +12,6 @@ describe('ComplianceDashboard', () => {
       {
         id: 'DA1-000463-002-org-G-1',
         lastUpdated: '2023-01-01T08:00:00Z',
-        requestingApcCoverage: 'Yes',
         status: 'Compliant',
         team: { id: 'team-1', displayName: 'Test Team' },
         assignedUsers: [],

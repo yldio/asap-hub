@@ -147,7 +147,8 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
           onConfirm={handleAssignUsersConfirm}
           PillId={PillId}
           teams={manuscriptDetails.teams ?? ''}
-          apcCoverage={manuscriptDetails.requestingApcCoverage ?? ''}
+          // TODO: fix this once the apcCoverageRequestStatus is properly implemented
+          apcCoverage={''}
           manuscriptTitle={manuscriptDetails.title}
           getAssignedUsersSuggestions={getAssignedUsersSuggestions}
           assignedUsers={manuscriptDetails.assignedUsers.map((user) => ({

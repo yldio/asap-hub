@@ -331,9 +331,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   clearFormToast,
   getShortDescriptionFromDescription,
 }) => {
-  const [titleServerError, setTitleServerError] = useState<
-    string | undefined
-  >();
   const usersWithoutTeamAdded = new Set();
   const firstAuthorsWithoutTeamAdded = new Set();
   const correspondingAuthorWithoutTeamAdded = new Set();
@@ -461,8 +458,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     formState,
   } = methods;
 
-  const { isValid } = formState;
-
+  const { isValid, errors } = formState;
   const watchType = watch('versions.0.type');
   const watchLifecycle = watch('versions.0.lifecycle');
 
@@ -818,9 +814,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             team: string;
             manuscriptId: string;
           };
-          setTitleServerError(
-            `A manuscript with this title has already been submitted for Team ${team} (${id}). Please use the edit or resubmission button to update this manuscript.`,
-          );
+          setError('title', {
+            message: `A manuscript with this title has already been submitted for Team ${team} (${id}). Please use the edit or resubmission button to update this manuscript.`,
+          });
         }
         onError(error as ManuscriptError | Error);
       } finally {
@@ -873,12 +869,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 <LabeledTextField
                   title="Title of Manuscript"
                   subtitle="(required)"
-                  customValidationMessage={titleServerError || error?.message}
+                  customValidationMessage={error?.message}
                   value={value}
-                  onChange={(titleText) => {
-                    setTitleServerError(undefined);
-                    onChange(titleText);
-                  }}
+                  onChange={onChange}
                   onBlur={onBlur}
                   enabled={!isSubmitting}
                 />
@@ -1579,6 +1572,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 noMargin
                 enabled={
                   isValid &&
+                  Object.keys(errors).length === 0 &&
                   !isSubmitting &&
                   !isUploadingManuscriptFile &&
                   !isUploadingKeyResourceTable &&

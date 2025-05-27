@@ -43,16 +43,13 @@ describe('ContributingCohortsModal', () => {
     );
   });
 
-  it('renders name, role and study link', () => {
+  it('renders name and role', () => {
     renderContributingCohorts();
     expect(
       screen.getByRole('textbox', { name: /Name \(required\)/i }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', { name: /Role \(required\)/i }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: /link \(optional\)/i }),
     ).toBeVisible();
   });
 
@@ -232,38 +229,6 @@ describe('ContributingCohortsModal', () => {
     },
   );
 
-  it('allows the link to be edited', async () => {
-    const promise = Promise.resolve();
-    const contributingCohortId = '11';
-    const role = 'Investigator';
-    const onSave = jest.fn(() => promise);
-    renderContributingCohorts({
-      cohortOptions: [
-        { id: '7', name: 'S3' },
-        { id: '11', name: 'DIGPD' },
-      ],
-      contributingCohorts: [
-        {
-          contributingCohortId,
-          name: 'DIGPD',
-          role,
-        },
-      ],
-      onSave,
-    });
-    const studyUrl = 'http://example.com';
-    const input = screen.getByRole('textbox', { name: /Link/i });
-    userEvent.type(input, studyUrl);
-    expect(input).toHaveValue(studyUrl);
-    userEvent.click(getSaveButton());
-    expect(onSave).toHaveBeenCalledWith({
-      contributingCohorts: [{ contributingCohortId, role, studyUrl }],
-    });
-    await act(async () => {
-      await promise;
-    });
-  });
-
   it('shows the validation messages for required fields', () => {
     const onSave = jest.fn();
     renderContributingCohorts({
@@ -278,35 +243,5 @@ describe('ContributingCohortsModal', () => {
     expect(onSave).not.toHaveBeenCalled();
     expect(screen.getByText('Please add the cohort name')).toBeVisible();
     expect(screen.getByText('Please add the role')).toBeVisible();
-  });
-
-  it('does not allow an invalid url', () => {
-    const contributingCohortId = '11';
-    const role = 'Investigator';
-    const onSave = jest.fn();
-    renderContributingCohorts({
-      cohortOptions: [
-        { id: '7', name: 'S3' },
-        { id: '11', name: 'DIGPD' },
-      ],
-      contributingCohorts: [
-        {
-          contributingCohortId,
-          name: 'DIGPD',
-          role,
-        },
-      ],
-      onSave,
-    });
-    const studyUrl = 'http://invalid-url';
-    const input = screen.getByRole('textbox', { name: /Link/i });
-    userEvent.type(input, studyUrl);
-
-    expect(input).toHaveValue(studyUrl);
-    userEvent.click(getSaveButton());
-    expect(onSave).not.toHaveBeenCalled();
-    expect(
-      screen.getByText(/Please enter a valid URL, starting with http/),
-    ).toBeVisible();
   });
 });

@@ -76,6 +76,11 @@ jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
   getTeam: jest.fn(),
   createResearchOutput: jest.fn(),
+  uploadManuscriptFileViaPresignedUrl: jest.fn().mockResolvedValue({
+    filename: 'manuscript.pdf',
+    url: 'https://example.com/manuscript.pdf',
+    id: 'file-id',
+  }),
   uploadManuscriptFile: jest.fn().mockResolvedValue({
     filename: 'manuscript.pdf',
     url: 'https://example.com/manuscript.pdf',

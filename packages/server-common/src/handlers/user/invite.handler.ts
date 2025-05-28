@@ -20,11 +20,34 @@ interface DataProvider {
   ): Promise<void>;
 }
 
-/* istanbul ignore next */
-const sleepFn = (delay: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, delay);
-  });
+/**
+ * Try to insert a new invite code only if `connections` is still empty.
+ * Returns `true` if the update succeeded and we should send the email.
+ * Returns `false` if a version-mismatch occurred (someone else already wrote).
+ */
+async function tryCreateInvite(
+  dataProvider: DataProvider,
+  userId: string,
+  code: string,
+  suppressConflict: boolean = false,
+  logger: Logger,
+): Promise<boolean> {
+  try {
+    // This update will fail with a VersionMismatch (409) if someone has already updated
+    await dataProvider.update(
+      userId,
+      { connections: [{ code }] },
+      { suppressConflict },
+    );
+    return true;
+  } catch (err) {
+    logger.error(error, 'Error while saving user data');
+    throw new Error(
+      `Unable to save the code for the user with ID ${event.detail.resourceId}`,
+    );
+  }
+}
+
 export const inviteHandlerFactory =
   <Provider extends DataProvider>(
     sendEmail: SendEmail,
@@ -33,17 +56,12 @@ export const inviteHandlerFactory =
     logger: Logger,
     suppressConflict = false,
     template: SendEmailTemplate = 'Crn-Welcome',
-    /* istanbul ignore next */
-    sleep = sleepFn,
   ): EventBridgeHandler<'UsersPublished', UserPayload> =>
   async (event) => {
-    // temp fix to delay the lamdba
-    await sleep(30_000);
-    const user = await dataProvider.fetchById(event.detail.resourceId);
+    const userId = event.detail.resourceId;
+    const user = await dataProvider.fetchById(userId);
     if (!user) {
-      throw new Error(
-        `Unable to find a user with ID ${event.detail.resourceId}`,
-      );
+      throw new Error(`Unable to find a user with ID ${userId}`);
     }
 
     if (user.connections?.length) {
@@ -54,31 +72,11 @@ export const inviteHandlerFactory =
     }
 
     logger.debug(
-      `Attempting to invite user with ID ${event.detail.resourceId}, e-mail address ${user.email}`,
+      `Attempting to invite user with ID ${userId}, e-mail address ${user.email}`,
     );
 
     const code = uuidV4();
-
-    try {
-      if (suppressConflict) {
-        await dataProvider.update(
-          user.id,
-          {
-            connections: [{ code }],
-          },
-          { suppressConflict },
-        );
-      } else {
-        await dataProvider.update(user.id, {
-          connections: [{ code }],
-        });
-      }
-    } catch (error) {
-      logger.error(error, 'Error while saving user data');
-      throw new Error(
-        `Unable to save the code for the user with ID ${event.detail.resourceId}`,
-      );
-    }
+    await tryCreateInvite(dataProvider, userId, code, suppressConflict, logger);
 
     const link = new url.URL(path.join(`/welcome/${code}`), origin);
 
@@ -94,7 +92,7 @@ export const inviteHandlerFactory =
     } catch (error) {
       logger.error(error, 'Error while sending email');
       throw new Error(
-        `Unable to send the email for the user with ID ${event.detail.resourceId}`,
+        `Unable to send the email for the user with ID ${userId}`,
       );
     }
 

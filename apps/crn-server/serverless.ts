@@ -515,6 +515,13 @@ const serverlessConfig: AWS = {
             },
           },
         },
+        {
+          sqs: {
+            arn: { 'Fn::GetAtt': ['InviteQueue', 'Arn'] },
+            batchSize: 1,
+            maximumConcurrency: 1,
+          },
+        },
       ],
       environment: {
         SES_REGION: sesRegion,
@@ -1856,6 +1863,33 @@ const serverlessConfig: AWS = {
             },
           ],
           BillingMode: 'PAY_PER_REQUEST',
+        },
+      },
+      InviteQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'InviteQueue.fifo',
+          FifoQueue: true,
+          ContentBasedDeduplication: true,
+        },
+      },
+      InviteQueueEventBridgeRule: {
+        Type: 'AWS::Events::Rule',
+        Properties: {
+          EventBusName: `asap-events-${stage}`,
+          EventPattern: {
+            source: [eventBusSourceContentful],
+            'detail-type': ['UsersPublished'] satisfies WebhookDetailType[],
+          },
+          Targets: [
+            {
+              Arn: { 'Fn::GetAtt': ['InviteQueue', 'Arn'] },
+              Id: 'InviteQueueTarget',
+              SqsParameters: {
+                MessageGroupId: 'UserInviteGroup',
+              },
+            },
+          ],
         },
       },
     },

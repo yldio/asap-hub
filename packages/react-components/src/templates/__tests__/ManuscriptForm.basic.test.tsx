@@ -216,7 +216,10 @@ describe('Manuscript form', () => {
   it('displays error message when manuscript title is not unique', async () => {
     const onUpdate = jest.fn().mockRejectedValueOnce({
       statusCode: 422,
-      response: { message: 'Title must be unique' },
+      response: {
+        message: 'Title must be unique',
+        data: { team: 'ASAP', manuscriptId: 'SC1-000129-005-org-G-1' },
+      },
     });
 
     const renderResult = render(
@@ -248,11 +251,11 @@ describe('Manuscript form', () => {
       expect(onUpdate).toHaveBeenCalled();
     });
 
-    const { getAllByText } = renderResult;
+    const { container } = renderResult;
     await waitFor(() => {
-      expect(
-        getAllByText(/This title is already in use/i).length,
-      ).toBeGreaterThan(0);
+      expect(container).toHaveTextContent(
+        'A manuscript with this title has already been submitted for Team ASAP (SC1-000129-005-org-G-1). Please use the edit or resubmission button to update this manuscript.',
+      );
     });
   });
 

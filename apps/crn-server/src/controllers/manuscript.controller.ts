@@ -80,7 +80,10 @@ export default class ManuscriptController {
       return null;
     }
 
-    throw Boom.badData('Title must be unique');
+    throw Boom.badData('Title must be unique', {
+      team: result.items[0]?.team?.displayName || '',
+      manuscriptId: result.items[0]?.manuscriptId || '',
+    });
   }
 
   async create(

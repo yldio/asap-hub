@@ -30,7 +30,7 @@ async function tryCreateInvite(
   userId: string,
   code: string,
   logger: Logger,
-  suppressConflict: boolean = false,
+  suppressConflict: boolean,
 ): Promise<boolean> {
   try {
     // This update will fail with a VersionMismatch (409) if someone has already updated

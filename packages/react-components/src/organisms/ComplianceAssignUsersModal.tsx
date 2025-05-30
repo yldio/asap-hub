@@ -103,7 +103,6 @@ type ComplianceAssignUsersModalProps = Pick<
   onConfirm: (data: AssignedUsersFormData) => Promise<void>;
   PillId: React.FC;
   teams: string;
-  apcCoverage: string;
   manuscriptTitle: string;
   assignedUsers: OptionsType<AuthorOption>;
 };
@@ -113,7 +112,6 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
   onConfirm,
   PillId,
   teams,
-  apcCoverage,
   manuscriptTitle,
   getAssignedUsersSuggestions,
   assignedUsers,
@@ -163,7 +161,6 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
               <PillId />
             </InformationRow>
             <InformationRow title="Team(s)" value={teams} />
-            <InformationRow title="APC Coverage" value={apcCoverage} />
 
             <AuthorSelect
               maxMenuHeight={170}

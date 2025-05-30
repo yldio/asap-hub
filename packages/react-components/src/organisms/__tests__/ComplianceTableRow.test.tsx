@@ -27,6 +27,7 @@ describe('ComplianceTableRow', () => {
     isComplianceReviewer: true,
     getAssignedUsersSuggestions: jest.fn(),
     handleAssignUsersClick: jest.fn(),
+    handleUpdateAPCDetailsClick: jest.fn(),
     handleStatusClick: jest.fn(),
   };
 
@@ -312,6 +313,31 @@ describe('ComplianceTableRow', () => {
               name: 'Edit APC Coverage Details',
             }),
           ).toBeInTheDocument();
+        },
+      );
+
+      it.each`
+        apcRequested | apcCoverageRequestStatus | apcCoverageLabel
+        ${undefined} | ${undefined}             | ${'Information needed'}
+        ${false}     | ${undefined}             | ${'Not requested'}
+        ${true}      | ${'notPaid'}             | ${'Requested'}
+        ${true}      | ${'declined'}            | ${'Declined'}
+        ${true}      | ${'paid'}                | ${'Paid'}
+      `(
+        'renders APC Coverage as $apcCoverageLabel when apc requested is $apcRequested and the request status is $apcCoverageRequestStatus',
+        ({ apcRequested, apcCoverageRequestStatus, apcCoverageLabel }) => {
+          renderComponent({
+            data: {
+              ...data,
+              apcRequested,
+              apcCoverageRequestStatus,
+              status: 'Compliant',
+            },
+            isComplianceReviewer: true,
+          });
+          expect(screen.getByTestId('apc-coverage')).toHaveTextContent(
+            apcCoverageLabel,
+          );
         },
       );
     });

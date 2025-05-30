@@ -33,6 +33,7 @@ import {
   getManuscriptUpdateStatusDataObject,
   getContentfulGraphqlManuscriptDiscussion,
   getManuscriptDiscussions,
+  getManuscriptUpdateAPCCoverageDataObject,
 } from '../../fixtures/manuscript.fixtures';
 import {
   getContentfulGraphql,
@@ -382,6 +383,84 @@ describe('Manuscripts Contentful Data Provider', () => {
                 },
               },
             ],
+          },
+        },
+      ]);
+    });
+
+    test('can update apc coverage details', async () => {
+      jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
+      const manuscriptId = 'manuscript-id-1';
+
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          apcRequested: {
+            'en-US': undefined,
+          },
+          apcAmountRequested: {
+            'en-US': undefined,
+          },
+          apcCoverageRequestStatus: {
+            'en-US': undefined,
+          },
+          apcAmountPaid: {
+            'en-US': undefined,
+          },
+          declinedReason: {
+            'en-US': undefined,
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+      environmentMock.getEntry.mockResolvedValue(entry);
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        getManuscriptUpdateAPCCoverageDataObject(),
+        'user-id-1',
+      );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(manuscriptId);
+      expect(patch).toHaveBeenCalledWith([
+        {
+          op: 'replace',
+          path: '/fields/apcRequested',
+          value: {
+            'en-US': true,
+          },
+        },
+        {
+          op: 'replace',
+          path: '/fields/apcAmountRequested',
+          value: {
+            'en-US': 1000,
+          },
+        },
+        {
+          op: 'replace',
+          path: '/fields/apcCoverageRequestStatus',
+          value: {
+            'en-US': 'paid',
+          },
+        },
+        {
+          op: 'replace',
+          path: '/fields/apcAmountPaid',
+          value: {
+            'en-US': 1000,
+          },
+        },
+        {
+          op: 'replace',
+          path: '/fields/declinedReason',
+          value: {
+            'en-US': undefined,
           },
         },
       ]);

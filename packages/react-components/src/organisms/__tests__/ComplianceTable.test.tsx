@@ -1,5 +1,7 @@
+import { disable, enable } from '@asap-hub/flags';
 import {
   complianceInitialSortingDirection,
+  ManuscriptStatus,
   PartialManuscriptResponse,
 } from '@asap-hub/model';
 import { render, waitFor, within } from '@testing-library/react';
@@ -190,6 +192,88 @@ describe('ComplianceTable', () => {
 
       expect(
         queryByText(/Assign User/i, {
+          selector: 'h3',
+        }),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('update apc coverage details modal', () => {
+    beforeEach(() => {
+      enable('DISPLAY_NEW_APC_COVERAGE');
+    });
+
+    afterAll(() => {
+      disable('DISPLAY_NEW_APC_COVERAGE');
+    });
+    const data = [
+      {
+        ...complianceData,
+        status: 'Compliant' as ManuscriptStatus,
+        apcRequested: false,
+      },
+    ];
+    it('opens when clicking the Edit APC Coverage Details button', () => {
+      const { getByRole, queryByRole } = render(
+        <ComplianceTable {...defaultProps} data={data} />,
+      );
+
+      expect(queryByRole('dialog')).not.toBeInTheDocument();
+
+      userEvent.click(
+        getByRole('button', { name: 'Edit APC Coverage Details' }),
+      );
+
+      expect(
+        within(getByRole('dialog')).getByText(/APC Coverage/i, {
+          selector: 'h3',
+        }),
+      ).toBeInTheDocument();
+    });
+
+    it('closes modal when clicking the close button', async () => {
+      const { findByRole, getByRole, queryByText } = render(
+        <ComplianceTable {...defaultProps} data={data} />,
+      );
+      userEvent.click(
+        getByRole('button', { name: 'Edit APC Coverage Details' }),
+      );
+
+      expect(
+        await findByRole('heading', { name: 'APC Coverage' }),
+      ).toBeInTheDocument();
+
+      userEvent.click(within(getByRole('dialog')).getByTitle(/close/i));
+
+      expect(
+        queryByText(/APC Coverage/i, {
+          selector: 'h3',
+        }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('calls onUpdateManuscript when updating apc coverage details and closes modal', async () => {
+      const { findByRole, getByRole, queryByText } = render(
+        <ComplianceTable {...defaultProps} data={data} />,
+      );
+
+      userEvent.click(
+        getByRole('button', { name: 'Edit APC Coverage Details' }),
+      );
+
+      expect(
+        await findByRole('heading', { name: 'APC Coverage' }),
+      ).toBeInTheDocument();
+
+      userEvent.click(getByRole('button', { name: 'Update' }));
+      await waitFor(() => {
+        expect(mockOnUpdateManuscript).toHaveBeenCalledWith('manuscript-id-1', {
+          apcRequested: false,
+        });
+      });
+
+      expect(
+        queryByText(/APC Coverage/i, {
           selector: 'h3',
         }),
       ).not.toBeInTheDocument();

@@ -60,7 +60,7 @@ export const ListView = () => components.listViewIcon;
 export const Location = () => components.locationIcon;
 export const Logout = () => components.logoutIcon;
 export const Menu = () => components.menuIcon;
-export const Money = () => components.moneyIcon;
+export const Money = () => components.MoneyIcon;
 export const Network = () => components.networkIcon;
 export const News = () => components.newsIcon;
 export const NewsEventPlaceholder = () => components.newsEventPlaceholderIcon;

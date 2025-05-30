@@ -123,6 +123,7 @@ export const researchOutputToCSV = (
   labCatalogNumber: output.labCatalogNumber,
   description: output.descriptionMD || htmlToCsvText(output.description),
   shortDescription: output.shortDescription,
+  changelog: output.changelog,
   usageNotes: output.usageNotesMD || htmlToCsvText(output.usageNotes),
   contactEmails: output.contactEmails
     .map((item) => item)

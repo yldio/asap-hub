@@ -77,6 +77,7 @@ describe('on submit', () => {
     description: '',
     descriptionMD: 'example description',
     shortDescription: 'short description',
+    changelog: '',
     type: 'Preprint',
     labs: [],
     authors: [],

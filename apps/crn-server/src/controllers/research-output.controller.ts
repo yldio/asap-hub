@@ -205,6 +205,7 @@ export default class ResearchOutputController {
       asapFunded: normalisedResearchOutputUpdateData.asapFunded,
       descriptionMD: normalisedResearchOutputUpdateData.descriptionMD,
       shortDescription: normalisedResearchOutputUpdateData.shortDescription,
+      changelog: normalisedResearchOutputUpdateData.changelog,
       description: normalisedResearchOutputUpdateData.description,
       documentType: normalisedResearchOutputUpdateData.documentType,
       doi: normalisedResearchOutputUpdateData.doi,

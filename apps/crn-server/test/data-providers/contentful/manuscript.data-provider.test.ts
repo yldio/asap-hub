@@ -544,6 +544,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscriptId,
         {
           title: 'New Title',
+          url: 'https://example.com/manuscript',
           versions: [
             {
               lifecycle: 'Preprint',
@@ -580,6 +581,11 @@ describe('Manuscripts Contentful Data Provider', () => {
           op: 'add',
           path: '/fields/title',
           value: { 'en-US': 'New Title' },
+        },
+        {
+          op: 'add',
+          path: '/fields/url',
+          value: { 'en-US': 'https://example.com/manuscript' },
         },
         {
           op: 'add',
@@ -887,6 +893,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscriptId,
         {
           title: 'New Title',
+          url: 'https://example.com/manuscript',
           versions: [
             {
               lifecycle: 'Preprint',
@@ -911,6 +918,11 @@ describe('Manuscripts Contentful Data Provider', () => {
           op: 'add',
           path: '/fields/title',
           value: { 'en-US': 'New Title' },
+        },
+        {
+          op: 'add',
+          path: '/fields/url',
+          value: { 'en-US': 'https://example.com/manuscript' },
         },
         {
           op: 'add',
@@ -1196,6 +1208,7 @@ describe('Manuscripts Contentful Data Provider', () => {
     test('should default null values to empty strings and arrays', async () => {
       const manuscript = getContentfulGraphqlManuscript();
       manuscript.title = null;
+      manuscript.url = null;
       manuscript.teamsCollection = null;
       manuscript.versionsCollection = null;
       manuscript.status = null;
@@ -1213,6 +1226,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         count: 1,
         teamId: '',
         title: '',
+        url: '',
         versions: [],
         assignedUsers: [],
         discussions: [],

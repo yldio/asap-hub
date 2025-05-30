@@ -217,6 +217,7 @@ const mapManuscripts = (
     id: manuscript.sys.id,
     count,
     title: manuscript.title || '',
+    url: manuscript.url || '',
     teamId,
     grantId,
     status: manuscriptMapStatus(manuscript.status) || undefined,

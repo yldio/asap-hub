@@ -248,6 +248,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [shortDescription, setShortDescription] = useState<
     ResearchOutputPostRequest['shortDescription']
   >(researchOutputData?.shortDescription || '');
+
+  const [changelog, setChangelog] = useState<
+    ResearchOutputPostRequest['changelog']
+  >(researchOutputData?.changelog || '');
   const [
     dismissedDescriptionChangePrompt,
     setDismissedDescriptionChangePrompt,
@@ -363,6 +367,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     description: researchOutputData?.description || '',
     descriptionMD,
     shortDescription,
+    changelog,
     title,
     type,
     authors,
@@ -495,6 +500,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               )}
               <div css={contentStyles}>
                 <ResearchOutputFormSharingCard
+                  displayChangelog={versionAction === 'create'}
                   documentType={documentType}
                   isCreatingOutputRoute={!!isCreatingOutput}
                   researchOutputData={researchOutputData}
@@ -505,6 +511,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangeDescription={setDescription}
                   shortDescription={shortDescription}
                   onChangeShortDescription={setShortDescription}
+                  changelog={changelog}
+                  onChangeChangelog={setChangelog}
                   getShortDescriptionFromDescription={
                     getShortDescriptionFromDescription
                   }

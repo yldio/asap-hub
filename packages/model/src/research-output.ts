@@ -195,6 +195,7 @@ export type ResearchOutputCoreObject = {
   asapFunded?: boolean;
   description?: string;
   shortDescription?: string;
+  changelog?: string;
   descriptionMD?: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
@@ -392,6 +393,7 @@ export type ResearchOutputPostRequest = {
   description?: string;
   descriptionMD: string;
   shortDescription: string;
+  changelog?: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   environments: string[];

@@ -115,6 +115,7 @@ export class ManuscriptContentfulDataProvider
               manuscriptCount: manuscript.count || 0,
             }),
             title: manuscript.title || '',
+            url: manuscript.url || '',
             teams: getCommaAndString(
               (manuscript.teamsCollection?.items || []).map(
                 (teamItem) => teamItem?.displayName || '',
@@ -381,6 +382,7 @@ export class ManuscriptContentfulDataProvider
       const lastVersionEntry = await environment.getEntry(lastVersionId);
       published = await patchAndPublish(manuscriptEntry, {
         title: manuscriptData.title,
+        url: manuscriptData.url,
         teams: getLinkEntities(version.teams),
       });
 
@@ -493,6 +495,7 @@ const parseGraphQLManuscript = (
     id: manuscript.sys.id,
     count,
     title: manuscript.title || '',
+    url: manuscript.url || '',
     teamId: teamData?.sys.id || '',
     status: manuscriptMapStatus(manuscript.status) || undefined,
     discussions: parseGraphQLManuscriptDiscussions(

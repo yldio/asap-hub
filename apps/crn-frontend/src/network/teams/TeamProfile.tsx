@@ -23,7 +23,6 @@ import ProfileSwitch from '../ProfileSwitch';
 
 import { ManuscriptToastProvider } from './ManuscriptToastProvider';
 import { useIsComplianceReviewer, useManuscripts, useTeamById } from './state';
-import TeamManuscript from './TeamManuscript';
 import { EligibilityReasonProvider } from './EligibilityReasonProvider';
 
 const loadAbout = () =>
@@ -42,6 +41,8 @@ const loadComplianceReport = () =>
   import(
     /* webpackChunkName: "network-team-compliance-report" */ './TeamComplianceReport'
   );
+const loadTeamManuscript = () =>
+  import(/* webpackChunkName: "network-team-manuscript" */ './TeamManuscript');
 
 const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
@@ -49,6 +50,7 @@ const Workspace = lazy(loadWorkspace);
 const Compliance = lazy(loadCompliance);
 const TeamOutput = lazy(loadTeamOutput);
 const TeamComplianceReport = lazy(loadComplianceReport);
+const TeamManuscript = lazy(loadTeamManuscript);
 type TeamProfileProps = {
   currentTime: Date;
 };

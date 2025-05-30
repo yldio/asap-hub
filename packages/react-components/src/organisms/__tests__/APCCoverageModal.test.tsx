@@ -121,4 +121,41 @@ describe('APCCoverageModal', () => {
       });
     });
   });
+
+  it('clears existing incorrect data when apc coverage request status is changed', async () => {
+    const mockOnConfirm = jest.fn();
+    const { getByRole, findByRole } = render(
+      <APCCoverageModal
+        onDismiss={onDismiss}
+        onConfirm={mockOnConfirm}
+        apcRequested={true}
+        apcAmountRequested={3000}
+        apcCoverageRequestStatus={'paid'}
+        apcAmountPaid={3000}
+      />,
+    );
+
+    expect(
+      await findByRole('heading', { name: 'APC Coverage' }),
+    ).toBeInTheDocument();
+
+    userEvent.click(getByRole('radio', { name: 'Not Paid' }));
+
+    const updateButton = getByRole('button', { name: /Update/ });
+
+    await waitFor(() => {
+      expect(updateButton).toBeEnabled();
+    });
+
+    userEvent.click(updateButton);
+
+    await waitFor(() => {
+      expect(mockOnConfirm).toHaveBeenCalledWith({
+        apcAmountPaid: undefined,
+        apcCoverageRequestStatus: 'notPaid',
+        apcAmountRequested: '3000',
+        apcRequested: 'Requested',
+      });
+    });
+  });
 });

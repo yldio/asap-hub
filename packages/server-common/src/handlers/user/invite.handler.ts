@@ -29,8 +29,8 @@ async function tryCreateInvite(
   dataProvider: DataProvider,
   userId: string,
   code: string,
-  suppressConflict: boolean = false,
   logger: Logger,
+  suppressConflict: boolean = false,
 ): Promise<boolean> {
   try {
     // This update will fail with a VersionMismatch (409) if someone has already updated
@@ -41,10 +41,8 @@ async function tryCreateInvite(
     );
     return true;
   } catch (err) {
-    logger.error(error, 'Error while saving user data');
-    throw new Error(
-      `Unable to save the code for the user with ID ${event.detail.resourceId}`,
-    );
+    logger.error(err, 'Error while saving user data');
+    throw new Error(`Unable to save the code for the user with ID ${userId}`);
   }
 }
 
@@ -76,7 +74,7 @@ export const inviteHandlerFactory =
     );
 
     const code = uuidV4();
-    await tryCreateInvite(dataProvider, userId, code, suppressConflict, logger);
+    await tryCreateInvite(dataProvider, userId, code, logger, suppressConflict);
 
     const link = new url.URL(path.join(`/welcome/${code}`), origin);
 

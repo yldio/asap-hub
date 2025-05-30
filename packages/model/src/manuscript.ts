@@ -897,18 +897,17 @@ export const completedStatusOptions = {
 export type CompletedStatusOption = keyof typeof completedStatusOptions;
 export const DEFAULT_COMPLETED_STATUS: CompletedStatusOption = 'hide';
 
-export const requestedAPCCoverageFilterOptions = {
+export const requestedAPCCoverageOptions = {
   all: 'Show all',
   yes: 'Yes',
   no: 'No',
   submitted: 'Submitted',
 };
 
-export type RequestedAPCCoverageFilterOption =
-  keyof typeof requestedAPCCoverageFilterOptions;
+export type RequestedAPCCoverageOption =
+  keyof typeof requestedAPCCoverageOptions;
 
-export const DEFAULT_REQUESTED_APC_COVERAGE: RequestedAPCCoverageFilterOption =
-  'all';
+export const DEFAULT_REQUESTED_APC_COVERAGE: RequestedAPCCoverageOption = 'all';
 
 export type ManuscriptError = {
   statusCode: number;

@@ -85,7 +85,7 @@ export { default as locationIcon } from './location';
 export { default as logoutIcon } from './logout';
 export { default as menuIcon } from './menu';
 export { default as minusRectIcon } from './minus-rect';
-export { default as moneyIcon } from './money';
+export { default as MoneyIcon } from './money';
 export { default as networkIcon } from './network';
 export { default as newsEventPlaceholderIcon } from './news-event-placeholder';
 export { default as newsIcon } from './news';

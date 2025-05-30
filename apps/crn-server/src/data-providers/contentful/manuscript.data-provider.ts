@@ -126,11 +126,7 @@ export class ManuscriptContentfulDataProvider
             ),
             status: manuscriptMapStatus(manuscript.status) || undefined,
             id: manuscript.sys.id,
-            apcRequested:
-              manuscript.apcRequested !== undefined &&
-              typeof manuscript.apcRequested === 'boolean'
-                ? manuscript.apcRequested
-                : undefined,
+            apcRequested: manuscript.apcRequested ?? undefined,
             apcAmountRequested: manuscript.apcAmountRequested || undefined,
             apcCoverageRequestStatus:
               manuscript.apcCoverageRequestStatus as ApcCoverageRequestStatus,

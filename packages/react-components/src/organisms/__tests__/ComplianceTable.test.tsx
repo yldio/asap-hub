@@ -253,8 +253,21 @@ describe('ComplianceTable', () => {
     });
 
     it('calls onUpdateManuscript when updating apc coverage details and closes modal', async () => {
+      const apcDetails = {
+        apcRequested: true,
+        apcAmountRequested: 200,
+        apcCoverageRequestStatus: 'paid',
+        apcAmountPaid: 200,
+      };
+      const manuscriptsResponse = [
+        {
+          ...complianceData,
+          status: 'Compliant' as ManuscriptStatus,
+          ...apcDetails,
+        } as PartialManuscriptResponse,
+      ];
       const { findByRole, getByRole, queryByText } = render(
-        <ComplianceTable {...defaultProps} data={data} />,
+        <ComplianceTable {...defaultProps} data={manuscriptsResponse} />,
       );
 
       userEvent.click(
@@ -268,7 +281,7 @@ describe('ComplianceTable', () => {
       userEvent.click(getByRole('button', { name: 'Update' }));
       await waitFor(() => {
         expect(mockOnUpdateManuscript).toHaveBeenCalledWith('manuscript-id-1', {
-          apcRequested: false,
+          ...apcDetails,
         });
       });
 

@@ -3,12 +3,13 @@ import {
   PartialManuscriptResponse,
   ApcCoverageRequestStatus,
 } from '@asap-hub/model';
+import { amountExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { Controller, useForm } from 'react-hook-form';
 import { LabeledRadioButtonGroup, LabeledTextField } from '..';
 import { Button, Headline3 } from '../atoms';
 import { paddingStyles } from '../card';
-import { crossIcon, moneyIcon } from '../icons';
+import { crossIcon, MoneyIcon } from '../icons';
 import { Modal } from '../molecules';
 import { mobileScreen, perRem, rem } from '../pixels';
 
@@ -57,12 +58,6 @@ const dismissButtonStyles = css({
   },
 });
 
-// const informationRowStyles = css({
-//   display: 'flex',
-//   flexDirection: 'column',
-//   gap: rem(8),
-// });
-
 const contentContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -77,22 +72,6 @@ const modalStyles = css({
   maxWidth: `minmax(60%, ${rem(1000)})`,
   width: '100%',
 });
-
-// const InformationRow: React.FC<{
-//   title: string;
-//   value?: string;
-//   children?: React.ReactNode;
-// }> = ({ title, value, children }) => (
-//   <div css={informationRowStyles}>
-//     <Subtitle noMargin>{title}</Subtitle>
-//     {value && (
-//       <Paragraph noMargin accent="lead">
-//         {value}
-//       </Paragraph>
-//     )}
-//     {children}
-//   </div>
-// );
 
 export type APCCoverageFormData = {
   apcRequested?: APCRequestedOption;
@@ -160,7 +139,7 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
     control,
     formState: { isSubmitting, isValid },
   } = useForm<APCCoverageFormData>({
-    mode: 'onBlur',
+    mode: 'all',
     defaultValues: {
       apcRequested:
         apcRequested !== undefined
@@ -240,6 +219,10 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                   name="apcAmountRequested"
                   control={control}
                   rules={{
+                    pattern: {
+                      value: new RegExp(amountExpression),
+                      message: 'Please enter a valid amount.',
+                    },
                     required: 'Please enter an amount.',
                   }}
                   disabled={watchAPCRequested !== 'Requested'}
@@ -251,8 +234,13 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                       title="Coverage amount requested"
                       subtitle="(required)"
                       customValidationMessage={error?.message}
-                      labelIndicator={moneyIcon}
+                      labelIndicator={
+                        <MoneyIcon
+                          {...(error?.message ? { color: 'white' } : {})}
+                        />
+                      }
                       type={'number'}
+                      step={'any'}
                       value={value || ''}
                       onChange={onChange}
                       onBlur={onBlur}
@@ -301,6 +289,10 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                     name="apcAmountPaid"
                     control={control}
                     rules={{
+                      pattern: {
+                        value: new RegExp(amountExpression),
+                        message: 'Please enter a valid amount.',
+                      },
                       required: 'Please enter an amount.',
                     }}
                     render={({
@@ -311,7 +303,11 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                         title="Coverage amount paid"
                         subtitle="(required)"
                         customValidationMessage={error?.message}
-                        labelIndicator={moneyIcon}
+                        labelIndicator={
+                          <MoneyIcon
+                            {...(error?.message ? { color: 'white' } : {})}
+                          />
+                        }
                         type={'number'}
                         value={value || ''}
                         onChange={onChange}

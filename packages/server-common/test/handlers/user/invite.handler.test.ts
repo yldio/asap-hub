@@ -69,9 +69,15 @@ describe('Invite Handler', () => {
     await expect(inviteHandler(event)).rejects.toThrow(
       `Unable to send the email for the user with ID ${getUserDataObject().id}`,
     );
-    expect(dataProvider.update).toHaveBeenCalledWith(userWithoutConnection.id, {
-      connections: [{ code: expect.any(String) }],
-    });
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      userWithoutConnection.id,
+      {
+        connections: [{ code: expect.any(String) }],
+      },
+      {
+        suppressConflict: false,
+      },
+    );
   });
 
   test('Should not send the invitation email for a user that already has the invitation code', async () => {
@@ -127,9 +133,15 @@ describe('Invite Handler', () => {
     expect(dataProvider.fetchById).toHaveBeenCalledWith(
       userWithoutConnection.id,
     );
-    expect(dataProvider.update).toHaveBeenCalledWith(userWithoutConnection.id, {
-      connections: [{ code: expect.any(String) }],
-    });
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      userWithoutConnection.id,
+      {
+        connections: [{ code: expect.any(String) }],
+      },
+      {
+        suppressConflict: false,
+      },
+    );
     const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
     const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
     expect(sendEmailMock).toHaveBeenCalledWith({

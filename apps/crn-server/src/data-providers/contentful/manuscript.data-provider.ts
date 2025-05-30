@@ -125,7 +125,7 @@ export class ManuscriptContentfulDataProvider
             ),
             status: manuscriptMapStatus(manuscript.status) || undefined,
             id: manuscript.sys.id,
-            apcRequested: manuscript.apcRequested || undefined,
+            apcRequested: manuscript.apcRequested ?? undefined,
             apcAmountRequested: manuscript.apcAmountRequested || undefined,
             apcCoverageRequestStatus:
               manuscript.apcCoverageRequestStatus as ApcCoverageRequestStatus,
@@ -367,6 +367,16 @@ export class ManuscriptContentfulDataProvider
           notificationList,
         );
       }
+    }
+
+    if ('apcRequested' in manuscriptData) {
+      published = await patchAndPublish(manuscriptEntry, {
+        apcRequested: manuscriptData.apcRequested,
+        apcAmountRequested: manuscriptData.apcAmountRequested,
+        apcCoverageRequestStatus: manuscriptData.apcCoverageRequestStatus,
+        apcAmountPaid: manuscriptData.apcAmountPaid,
+        declinedReason: manuscriptData.declinedReason,
+      });
     }
 
     if ('versions' in manuscriptData && manuscriptData.versions?.[0]) {

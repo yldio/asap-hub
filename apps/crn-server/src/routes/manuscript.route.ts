@@ -156,10 +156,12 @@ export const manuscriptRouteFactory = (
     async (req, res: Response<ManuscriptResponse>) => {
       const { params, loggedInUser, body } = req;
       const payload = validateManuscriptPutRequestParameters(body);
+      const isStatusUpdate = 'status' in payload && payload.status;
+      const isAPCDetailsUpdate =
+        'apcRequested' in payload && payload.apcRequested !== undefined;
       if (
         !loggedInUser ||
-        ('status' in payload &&
-          payload.status &&
+        ((isStatusUpdate || isAPCDetailsUpdate) &&
           !(
             loggedInUser.role === 'Staff' && loggedInUser.openScienceTeamMember
           ))

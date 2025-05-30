@@ -1871,7 +1871,7 @@ const serverlessConfig: AWS = {
           QueueName: 'InviteQueue.fifo',
           FifoQueue: true,
           ContentBasedDeduplication: true,
-          VisibilityTimeoutSeconds: 120,
+          VisibilityTimeout: 120,
         },
       },
       InviteQueueEventBridgeRule: {

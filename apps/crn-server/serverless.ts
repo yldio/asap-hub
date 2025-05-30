@@ -502,6 +502,7 @@ const serverlessConfig: AWS = {
     inviteUserContentful: {
       timeout: 120,
       handler: './src/handlers/user/invite-handler.handler',
+      reservedConcurrency: 1, // This ensures only 1 execution at a time globally
       events: [
         {
           eventBridge: {
@@ -513,6 +514,12 @@ const serverlessConfig: AWS = {
             retryPolicy: {
               maximumRetryAttempts: 2,
             },
+          },
+        },
+        {
+          sqs: {
+            arn: { 'Fn::GetAtt': ['InviteQueue', 'Arn'] },
+            batchSize: 1,
           },
         },
       ],
@@ -1856,6 +1863,34 @@ const serverlessConfig: AWS = {
             },
           ],
           BillingMode: 'PAY_PER_REQUEST',
+        },
+      },
+      InviteQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'InviteQueue.fifo',
+          FifoQueue: true,
+          ContentBasedDeduplication: true,
+          VisibilityTimeout: 120,
+        },
+      },
+      InviteQueueEventBridgeRule: {
+        Type: 'AWS::Events::Rule',
+        Properties: {
+          EventBusName: `asap-events-${stage}`,
+          EventPattern: {
+            source: [eventBusSourceContentful],
+            'detail-type': ['UsersPublished'] satisfies WebhookDetailType[],
+          },
+          Targets: [
+            {
+              Arn: { 'Fn::GetAtt': ['InviteQueue', 'Arn'] },
+              Id: 'InviteQueueTarget',
+              SqsParameters: {
+                MessageGroupId: 'UserInviteGroup',
+              },
+            },
+          ],
         },
       },
     },

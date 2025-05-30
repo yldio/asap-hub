@@ -1335,6 +1335,8 @@ export enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export enum DiscussionsOrder {
@@ -4850,6 +4852,8 @@ export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export enum ManuscriptVersionsOrder {
@@ -4959,6 +4963,7 @@ export type Manuscripts = Entry &
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptsTeamsCollection>;
     title?: Maybe<Scalars['String']>;
+    url?: Maybe<Scalars['String']>;
     versionsCollection?: Maybe<ManuscriptsVersionsCollection>;
   };
 
@@ -5058,6 +5063,11 @@ export type ManuscriptsTeamsCollectionArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsUrlArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -5281,6 +5291,13 @@ export type ManuscriptsFilter = {
   title_not?: InputMaybe<Scalars['String']>;
   title_not_contains?: InputMaybe<Scalars['String']>;
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  url?: InputMaybe<Scalars['String']>;
+  url_contains?: InputMaybe<Scalars['String']>;
+  url_exists?: InputMaybe<Scalars['Boolean']>;
+  url_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  url_not?: InputMaybe<Scalars['String']>;
+  url_not_contains?: InputMaybe<Scalars['String']>;
+  url_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   versions?: InputMaybe<CfManuscriptVersionsNestedFilter>;
   versionsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
@@ -5325,6 +5342,8 @@ export enum ManuscriptsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export type ManuscriptsTeamsCollection = {
@@ -7027,6 +7046,7 @@ export type ResearchOutputs = Entry &
     adminNotes?: Maybe<Scalars['String']>;
     asapFunded?: Maybe<Scalars['String']>;
     authorsCollection?: Maybe<ResearchOutputsAuthorsCollection>;
+    changelog?: Maybe<Scalars['String']>;
     contentfulMetadata: ContentfulMetadata;
     createdBy?: Maybe<Users>;
     createdDate?: Maybe<Scalars['DateTime']>;
@@ -7092,6 +7112,11 @@ export type ResearchOutputsAuthorsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ResearchOutputsAuthorsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsChangelogArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
@@ -7461,6 +7486,13 @@ export type ResearchOutputsFilter = {
   asapFunded_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   authors?: InputMaybe<CfauthorsMultiTypeNestedFilter>;
   authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  changelog?: InputMaybe<Scalars['String']>;
+  changelog_contains?: InputMaybe<Scalars['String']>;
+  changelog_exists?: InputMaybe<Scalars['Boolean']>;
+  changelog_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  changelog_not?: InputMaybe<Scalars['String']>;
+  changelog_not_contains?: InputMaybe<Scalars['String']>;
+  changelog_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   createdBy?: InputMaybe<CfUsersNestedFilter>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9416,6 +9448,8 @@ export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -11088,6 +11122,8 @@ export enum UsersLinkingCollectionsManuscriptsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export enum UsersLinkingCollectionsMessagesCollectionOrder {
@@ -12894,6 +12930,13 @@ export type CfResearchOutputsNestedFilter = {
   asapFunded_not_contains?: InputMaybe<Scalars['String']>;
   asapFunded_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  changelog?: InputMaybe<Scalars['String']>;
+  changelog_contains?: InputMaybe<Scalars['String']>;
+  changelog_exists?: InputMaybe<Scalars['Boolean']>;
+  changelog_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  changelog_not?: InputMaybe<Scalars['String']>;
+  changelog_not_contains?: InputMaybe<Scalars['String']>;
+  changelog_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
   createdDate?: InputMaybe<Scalars['DateTime']>;
@@ -18524,6 +18567,7 @@ export type FetchLabsQuery = {
 export type ManuscriptsContentFragment = Pick<
   Manuscripts,
   | 'title'
+  | 'url'
   | 'status'
   | 'count'
   | 'apcRequested'
@@ -18771,6 +18815,7 @@ export type FetchManuscriptByIdQuery = {
     Pick<
       Manuscripts,
       | 'title'
+      | 'url'
       | 'status'
       | 'count'
       | 'apcRequested'
@@ -19105,6 +19150,7 @@ export type FetchManuscriptsQuery = {
           Pick<
             Manuscripts,
             | 'title'
+            | 'url'
             | 'status'
             | 'count'
             | 'apcRequested'
@@ -19155,7 +19201,7 @@ export type FetchManuscriptNotificationDetailsQueryVariables = Exact<{
 
 export type FetchManuscriptNotificationDetailsQuery = {
   manuscripts?: Maybe<
-    Pick<Manuscripts, 'title' | 'count'> & {
+    Pick<Manuscripts, 'title' | 'url' | 'count'> & {
       sys: Pick<Sys, 'id'>;
       teamsCollection?: Maybe<{
         items: Array<
@@ -20363,6 +20409,7 @@ export type ResearchOutputsContentFragment = Pick<
   | 'title'
   | 'descriptionMd'
   | 'shortDescription'
+  | 'changelog'
   | 'link'
   | 'addedDate'
   | 'createdDate'
@@ -20595,6 +20642,7 @@ export type FetchResearchOutputByIdQuery = {
       | 'title'
       | 'descriptionMd'
       | 'shortDescription'
+      | 'changelog'
       | 'link'
       | 'addedDate'
       | 'createdDate'
@@ -20855,6 +20903,7 @@ export type FetchResearchOutputsQuery = {
             | 'title'
             | 'descriptionMd'
             | 'shortDescription'
+            | 'changelog'
             | 'link'
             | 'addedDate'
             | 'createdDate'
@@ -21225,6 +21274,7 @@ export type FetchTeamByIdQuery = {
               Pick<
                 Manuscripts,
                 | 'title'
+                | 'url'
                 | 'status'
                 | 'count'
                 | 'apcRequested'
@@ -25458,6 +25508,7 @@ export const ManuscriptsContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'count' } },
           { kind: 'Field', name: { kind: 'Name', value: 'apcRequested' } },
@@ -27918,6 +27969,7 @@ export const ResearchOutputsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'descriptionMd' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shortDescription' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'changelog' } },
           { kind: 'Field', name: { kind: 'Name', value: 'link' } },
           { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdDate' } },
@@ -36777,6 +36829,7 @@ export const FetchManuscriptsDocument = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'status' },
@@ -37049,6 +37102,7 @@ export const FetchManuscriptNotificationDetailsDocument = {
                   },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'count' } },
                 {
                   kind: 'Field',

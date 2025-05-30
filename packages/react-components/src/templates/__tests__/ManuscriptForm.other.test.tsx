@@ -146,6 +146,7 @@ describe('authors', () => {
             onCreate={onCreate}
             type="Original Research"
             lifecycle="Publication"
+            url="http://example.com"
             preprintDoi="10.4444/test"
             publicationDoi="10.4467/test"
             manuscriptFile={{
@@ -211,6 +212,7 @@ describe('authors', () => {
             onCreate={onCreate}
             type="Original Research"
             lifecycle="Publication"
+            url="http://example.com"
             preprintDoi="10.4444/test"
             publicationDoi="10.4467/test"
             manuscriptFile={{
@@ -283,6 +285,7 @@ describe('authors', () => {
             onCreate={onCreate}
             type="Original Research"
             lifecycle="Publication"
+            url="http://example.com"
             preprintDoi="10.4444/test"
             publicationDoi="10.4467/test"
             manuscriptFile={{
@@ -390,6 +393,8 @@ describe('renders the necessary fields', () => {
 
     description: 'Please provide a description',
     shortDescription: 'Add a short description',
+    changelog:
+      'Briefly explain what’s new or changed in this version in comparison to the prior version of the manuscript.',
     teams: 'Add other teams that contributed to this manuscript.',
     labs: 'Add ASAP labs that contributed to this manuscript.',
   };
@@ -1006,6 +1011,7 @@ it('user can add teams', async () => {
         onCreate={onCreate}
         type="Original Research"
         lifecycle="Publication"
+        url="http://example.com"
         preprintDoi="10.4444/test"
         publicationDoi="10.4467/test"
         manuscriptFile={{
@@ -1064,6 +1070,7 @@ it('user can add labs', async () => {
         onCreate={onCreate}
         type="Original Research"
         lifecycle="Publication"
+        url="http://example.com"
         preprintDoi="10.4444/test"
         publicationDoi="10.4467/test"
         manuscriptFile={{
@@ -1163,6 +1170,7 @@ it('calls onUpdate when form is updated', async () => {
     expect(onUpdate).toHaveBeenCalledWith('manuscript-id', {
       teamId: '1',
       title: 'manuscript title',
+      url: '',
       versions: [
         {
           acknowledgedGrantNumber: 'Yes',
@@ -1279,6 +1287,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     expect(onResubmit).toHaveBeenCalledWith('manuscript-id', {
       teamId: '1',
       title: 'manuscript title',
+      url: '',
       versions: [
         {
           acknowledgedGrantNumber: 'Yes',

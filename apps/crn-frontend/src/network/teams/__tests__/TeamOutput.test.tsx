@@ -262,6 +262,7 @@ it('can publish a form when the data is valid', async () => {
       description: '',
       descriptionMD,
       shortDescription,
+      changelog: '',
       type,
       labs: ['l0'],
       authors: [
@@ -325,6 +326,7 @@ it('can save draft when form data is valid', async () => {
       title,
       descriptionMD,
       shortDescription,
+      changelog: '',
       description: '',
       type,
       labs: ['l0'],

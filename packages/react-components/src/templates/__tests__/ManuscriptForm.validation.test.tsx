@@ -411,3 +411,64 @@ describe('ManuscriptForm team validation', () => {
     );
   });
 });
+
+describe('ManuscriptForm URL Requirement', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it.each`
+    lifecycle                                     | label
+    ${'Preprint'}                                 | ${'URL (required)'}
+    ${'Publication'}                              | ${'URL (required)'}
+    ${'Publication with addendum or corrigendum'} | ${'URL (required)'}
+    ${'Draft Manuscript (prior to Publication)'}  | ${'URL (optional)'}
+    ${'Other'}                                    | ${'URL (optional)'}
+    ${'Typeset proof'}                            | ${'URL (optional)'}
+  `(
+    'should set URL as $label for $lifecycle lifecycle',
+    async ({ lifecycle, label }) => {
+      render(<ManuscriptForm {...defaultProps} lifecycle={lifecycle} />);
+
+      expect(screen.getByRole('textbox', { name: label })).toBeInTheDocument();
+    },
+  );
+
+  it.each`
+    lifecycle                                     | label
+    ${'Preprint'}                                 | ${'URL (required)'}
+    ${'Publication'}                              | ${'URL (required)'}
+    ${'Publication with addendum or corrigendum'} | ${'URL (required)'}
+    ${'Draft Manuscript (prior to Publication)'}  | ${'URL (optional)'}
+    ${'Other'}                                    | ${'URL (optional)'}
+    ${'Typeset proof'}                            | ${'URL (optional)'}
+  `(
+    'should set URL as $label when selecting $lifecycle lifecycle',
+    async ({ lifecycle, label }) => {
+      render(
+        <ManuscriptForm
+          {...defaultProps}
+          type="Original Research"
+          lifecycle={undefined}
+        />,
+      );
+      expect(
+        screen.getByRole('textbox', { name: 'URL (optional)' }),
+      ).toBeInTheDocument();
+
+      userEvent.click(
+        screen.getByRole('textbox', {
+          name: /Where is the manuscript in the life cycle/i,
+        }),
+      );
+      userEvent.click(screen.getByText(lifecycle));
+      userEvent.tab();
+
+      expect(screen.getByRole('textbox', { name: label })).toBeInTheDocument();
+    },
+  );
+});

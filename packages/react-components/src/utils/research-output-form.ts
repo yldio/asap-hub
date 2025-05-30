@@ -128,6 +128,7 @@ export type ResearchOutputPayload = {
   description: ResearchOutputPostRequest['description'];
   descriptionMD: ResearchOutputPostRequest['descriptionMD'];
   shortDescription: ResearchOutputPostRequest['shortDescription'];
+  changelog: ResearchOutputPostRequest['changelog'];
   title: ResearchOutputPostRequest['title'];
   type: ResearchOutputPostRequest['type'] | '';
   authors: NonNullable<
@@ -167,6 +168,7 @@ export const getPayload = ({
   description,
   descriptionMD,
   shortDescription,
+  changelog,
   title,
   type,
   authors,
@@ -193,6 +195,7 @@ export const getPayload = ({
   description,
   descriptionMD,
   shortDescription,
+  changelog,
   title,
   type: type as ResearchOutputPostRequest['type'],
   authors: getPostAuthors(authors),
@@ -227,6 +230,7 @@ export function transformResearchOutputResponseToRequest({
   description,
   descriptionMD,
   shortDescription,
+  changelog,
   title,
   type,
   usageNotes,
@@ -250,6 +254,7 @@ export function transformResearchOutputResponseToRequest({
     documentType,
     link,
     description,
+    changelog,
     title,
     type,
     usageNotes,

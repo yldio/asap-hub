@@ -16,6 +16,7 @@ import {
   LabeledDateField,
   LabeledDropdown,
   LabeledRadioButtonGroup,
+  LabeledTextArea,
   LabeledTextEditor,
   LabeledTextField,
 } from '../molecules';
@@ -29,9 +30,11 @@ type ResearchOutputFormSharingCardProps = Pick<
   | 'title'
   | 'descriptionMD'
   | 'shortDescription'
+  | 'changelog'
   | 'sharingStatus'
   | 'subtype'
 > & {
+  displayChangelog?: boolean;
   researchOutputData?: ResearchOutputResponse;
   documentType?: ResearchOutputResponse['documentType'];
   isCreatingOutputRoute?: boolean;
@@ -40,6 +43,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   onChangeTitle?: (newValue: string) => void;
   onChangeDescription?: (newValue: string) => void;
   onChangeShortDescription?: (newValue: string) => void;
+  onChangeChangelog?: (newValue: string) => void;
   onChangeType?: (newValue: ResearchOutputType | '') => void;
   onChangeSubtype?: (newValue: string | '') => void;
   onChangeAsapFunded?: (newValue: DecisionOption) => void;
@@ -69,6 +73,7 @@ export const getPublishDateValidationMessage = (e: ValidityState): string => {
 const ResearchOutputFormSharingCard: React.FC<
   ResearchOutputFormSharingCardProps
 > = ({
+  displayChangelog = false,
   researchOutputData,
   documentType,
   isCreatingOutputRoute,
@@ -77,6 +82,7 @@ const ResearchOutputFormSharingCard: React.FC<
   title,
   descriptionMD,
   shortDescription,
+  changelog,
   type,
   typeOptions,
   subtype,
@@ -92,6 +98,7 @@ const ResearchOutputFormSharingCard: React.FC<
   clearServerValidationError = noop,
   onChangeDescription = noop,
   onChangeShortDescription = noop,
+  onChangeChangelog = noop,
   onChangeLink = noop,
   onChangeTitle = noop,
   onChangeType = noop,
@@ -108,17 +115,23 @@ const ResearchOutputFormSharingCard: React.FC<
     shortDescriptionValidationMessage,
     setShortDescriptionValidationMessage,
   ] = useState<string>();
+  const [changelogValidationMessage, setChangelogValidationMessage] =
+    useState<string>();
 
   const subtypeSuggestions = researchTags.filter(
     (tag) => tag.category === 'Subtype',
   );
 
-  const validateShortDescription = (shortDescriptionNewValue: string) => {
-    setShortDescriptionValidationMessage(
-      shortDescriptionNewValue.length >= 250
-        ? 'The short description exceeds the character limit. Please limit it to 250 characters.'
-        : shortDescriptionNewValue.trim().length === 0
-          ? 'Please enter a short description'
+  const validateFieldWith250CharLimit = (
+    newValue: string,
+    field: string,
+    setValidationMessage: (message: string | undefined) => void,
+  ) => {
+    setValidationMessage(
+      newValue.length >= 250
+        ? `The ${field} exceeds the character limit. Please limit it to 250 characters.`
+        : newValue.trim().length === 0
+          ? `Please enter a ${field}`
           : undefined,
     );
   };
@@ -236,7 +249,11 @@ const ResearchOutputFormSharingCard: React.FC<
       <ShortDescriptionCard
         onChange={(shortDescriptionNewValue) => {
           onChangeShortDescription(shortDescriptionNewValue);
-          validateShortDescription(shortDescriptionNewValue);
+          validateFieldWith250CharLimit(
+            shortDescriptionNewValue,
+            'short description',
+            setShortDescriptionValidationMessage,
+          );
         }}
         buttonEnabled={descriptionMD.length > 0}
         enabled={!isSaving}
@@ -246,6 +263,24 @@ const ResearchOutputFormSharingCard: React.FC<
         }
         customValidationMessage={shortDescriptionValidationMessage}
       />
+      {displayChangelog && (
+        <LabeledTextArea
+          title="Changelog"
+          subtitle="(required)"
+          tip="Briefly explain what’s new or changed in this version in comparison to the prior version of the manuscript."
+          customValidationMessage={changelogValidationMessage}
+          value={changelog ?? ''}
+          onChange={(changelogNewValue) => {
+            onChangeChangelog(changelogNewValue);
+            validateFieldWith250CharLimit(
+              changelogNewValue,
+              'changelog',
+              setChangelogValidationMessage,
+            );
+          }}
+          enabled={!isSaving}
+        />
+      )}
       <LabeledRadioButtonGroup
         title="Has this output been funded by ASAP"
         subtitle="(required)"

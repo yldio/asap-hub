@@ -291,5 +291,29 @@ describe('ComplianceTable', () => {
         }),
       ).not.toBeInTheDocument();
     });
+
+    it('calls onUpdateManuscript with correct values when updating apc coverage details', async () => {
+      const { findByRole, getByRole } = render(
+        <ComplianceTable {...defaultProps} data={data} />,
+      );
+
+      userEvent.click(
+        getByRole('button', { name: 'Edit APC Coverage Details' }),
+      );
+
+      expect(
+        await findByRole('heading', { name: 'APC Coverage' }),
+      ).toBeInTheDocument();
+
+      userEvent.click(getByRole('button', { name: 'Update' }));
+      await waitFor(() => {
+        expect(mockOnUpdateManuscript).toHaveBeenCalledWith('manuscript-id-1', {
+          apcRequested: false,
+          apcAmountRequested: undefined,
+          apcCoverageRequestStatus: undefined,
+          apcAmountPaid: undefined,
+        });
+      });
+    });
   });
 });

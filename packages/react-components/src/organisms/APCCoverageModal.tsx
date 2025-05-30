@@ -105,23 +105,22 @@ const clearData = (
       declinedReason: undefined,
     };
   }
-  if (apcCoverageRequestStatus === 'notPaid') {
-    return {
-      apcAmountPaid: undefined,
-      declinedReason: undefined,
-    };
+  switch (apcCoverageRequestStatus) {
+    case 'declined':
+      return {
+        apcAmountPaid: undefined,
+      };
+    case 'paid':
+      return {
+        declinedReason: undefined,
+      };
+    case 'notPaid':
+    default:
+      return {
+        apcAmountPaid: undefined,
+        declinedReason: undefined,
+      };
   }
-  if (apcCoverageRequestStatus === 'declined') {
-    return {
-      apcAmountPaid: undefined,
-    };
-  }
-  if (apcCoverageRequestStatus === 'paid') {
-    return {
-      declinedReason: undefined,
-    };
-  }
-  return {};
 };
 
 const APCCoverageModal: React.FC<APCCoverageModalProps> = ({

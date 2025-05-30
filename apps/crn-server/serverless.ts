@@ -502,6 +502,7 @@ const serverlessConfig: AWS = {
     inviteUserContentful: {
       timeout: 120,
       handler: './src/handlers/user/invite-handler.handler',
+      reservedConcurrency: 1, // This ensures only 1 execution at a time globally
       events: [
         {
           eventBridge: {
@@ -519,7 +520,6 @@ const serverlessConfig: AWS = {
           sqs: {
             arn: { 'Fn::GetAtt': ['InviteQueue', 'Arn'] },
             batchSize: 1,
-            maximumConcurrency: 1,
           },
         },
       ],

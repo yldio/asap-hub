@@ -10,326 +10,172 @@ import { getUserDataObject } from '../../fixtures/users.fixtures';
 import { loggerMock as logger } from '../../mocks/logger.mock';
 
 describe('Invite Handler', () => {
-  const sendEmailMock: jest.MockedFunction<SendEmail> = jest.fn();
   const origin = 'https://asap-hub.org';
+  const sendEmailMock: jest.MockedFunction<SendEmail> = jest.fn();
   const dataProvider = {
     fetchById: jest.fn(),
     update: jest.fn(),
   };
-  const inviteHandler = inviteHandlerFactory(
-    sendEmailMock,
-    dataProvider,
-    origin,
-    logger,
-    undefined,
-    undefined,
-    jest.fn(),
-  );
+
+  const inviteHandler = (suppressConflict?: boolean, templateName?: string) =>
+    inviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+      suppressConflict,
+      templateName,
+      jest.fn(),
+    );
+
+  // Helper to stub a user with given connections
+  const stubUser = (
+    connections: Array<{ code: string }> = [],
+  ): UserDataObject => ({
+    ...getUserDataObject(),
+    connections,
+  });
+
+  // Helper to assert that update() was called correctly
+  const expectUpdate = (
+    user: UserDataObject,
+    conflictFlag: boolean = false,
+  ) => {
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      user.id,
+      { connections: [{ code: expect.any(String) }] },
+      { suppressConflict: conflictFlag },
+    );
+  };
+
+  // Helper to assert that sendEmail() was called with the right link
+  const expectEmail = (user: UserDataObject) => {
+    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
+    const link = new url.URL(path.join(`/welcome/${code}`), origin).toString();
+    expect(sendEmailMock).toHaveBeenCalledWith({
+      to: [user.email],
+      template: crnWelcomeTemplate,
+      values: { firstName: user.firstName, link },
+    });
+  };
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  test('Should throw when the user is not found', async () => {
+  test('throws when the user is not found', async () => {
     dataProvider.fetchById.mockResolvedValueOnce(null);
-
+    const handler = inviteHandler();
     const event = getEventBridgeEventMock(getUserDataObject().id);
 
-    await expect(inviteHandler(event)).rejects.toThrow(
+    await expect(handler(event)).rejects.toThrow(
       `Unable to find a user with ID ${getUserDataObject().id}`,
     );
   });
 
-  test('Should throw when it fails to save the user code', async () => {
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+  test('throws when it fails to save the user code', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
     dataProvider.update.mockRejectedValueOnce(new Error('some error'));
+    const handler = inviteHandler();
+    const event = getEventBridgeEventMock(user.id);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
-
-    await expect(inviteHandler(event)).rejects.toThrow(
-      `Unable to save the code for the user with ID ${getUserDataObject().id}`,
+    await expect(handler(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${user.id}`,
     );
   });
 
-  test('Should throw when it fails to send the email but still save the new invitation code', async () => {
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+  test('throws when email send fails but still saves code', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
     dataProvider.update.mockResolvedValueOnce(null);
     sendEmailMock.mockRejectedValueOnce(new Error('some error'));
+    const handler = inviteHandler();
+    const event = getEventBridgeEventMock(user.id);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
-
-    await expect(inviteHandler(event)).rejects.toThrow(
-      `Unable to send the email for the user with ID ${getUserDataObject().id}`,
+    await expect(handler(event)).rejects.toThrow(
+      `Unable to send the email for the user with ID ${user.id}`,
     );
-    expect(dataProvider.update).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-      {
-        connections: [{ code: expect.any(String) }],
-      },
-      {
-        suppressConflict: false,
-      },
-    );
+    expectUpdate(user, false);
   });
 
-  test('Should not send the invitation email for a user that already has the invitation code', async () => {
+  test('skips emailing when user already has an invite code', async () => {
     const code = 'c6fdb21b-32f3-4549-ac17-d0c83dc5335b';
-    const userWithConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [{ code }],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithConnection);
+    const user = stubUser([{ code }]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    const handler = inviteHandler();
+    const event = getEventBridgeEventMock(user.id);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
+    await handler(event);
 
-    await inviteHandler(event);
-
-    expect(dataProvider.fetchById).toHaveBeenCalledWith(userWithConnection.id);
+    expect(dataProvider.fetchById).toHaveBeenCalledWith(user.id);
     expect(sendEmailMock).not.toBeCalled();
   });
 
-  test('Should not send the invitation email for a user that already has an authentication code', async () => {
-    const connectionCode = 'auth0|some-other-id';
-    const userWithOtherConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [
-        {
-          code: connectionCode,
-        },
-      ],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithOtherConnection);
+  test('skips everything when user already has an auth0 connection', async () => {
+    const user = stubUser([{ code: 'auth0|some-other-id' }]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    const handler = inviteHandler();
+    const event = getEventBridgeEventMock(user.id);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
+    await handler(event);
 
-    await inviteHandler(event);
-
-    expect(dataProvider.fetchById).toHaveBeenCalledWith(
-      userWithOtherConnection.id,
-    );
     expect(dataProvider.update).not.toHaveBeenCalled();
     expect(sendEmailMock).not.toHaveBeenCalled();
   });
 
-  test('Should find the user without an invitation code, create the invitation code and send the invitation email', async () => {
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+  test('creates code & sends email for a fresh user (default conflict=false)', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    dataProvider.update.mockResolvedValueOnce(null);
+    const handler = inviteHandler();
+    const event = getEventBridgeEventMock(user.id);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
+    await handler(event);
 
-    await inviteHandler(event);
-
-    expect(dataProvider.fetchById).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-    );
-    expect(dataProvider.update).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-      {
-        connections: [{ code: expect.any(String) }],
-      },
-      {
-        suppressConflict: false,
-      },
-    );
-    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
-    const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
-    expect(sendEmailMock).toHaveBeenCalledWith({
-      to: [userWithoutConnection.email],
-      template: crnWelcomeTemplate,
-      values: {
-        firstName: userWithoutConnection.firstName,
-        link: expectedLink.toString(),
-      },
-    });
-  });
-  test('Should pass in the suppress conflict flag if set', async () => {
-    const inviteHandlerNoConflict = inviteHandlerFactory(
-      sendEmailMock,
-      dataProvider,
-      origin,
-      logger,
-      true,
-      'Crn-Welcome',
-      jest.fn(),
-    );
-
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
-
-    const event = getEventBridgeEventMock(getUserDataObject().id);
-
-    await inviteHandlerNoConflict(event);
-
-    expect(dataProvider.fetchById).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-    );
-    expect(dataProvider.update).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-      {
-        connections: [{ code: expect.any(String) }],
-      },
-      { suppressConflict: true },
-    );
-    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
-    const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
-    expect(sendEmailMock).toHaveBeenCalledWith({
-      to: [userWithoutConnection.email],
-      template: crnWelcomeTemplate,
-      values: {
-        firstName: userWithoutConnection.firstName,
-        link: expectedLink.toString(),
-      },
-    });
+    expectUpdate(user, false);
+    expectEmail(user);
   });
 
-  test('Should pass in the suppress conflict flag if not set', async () => {
-    const inviteHandlerNoConflict = inviteHandlerFactory(
-      sendEmailMock,
-      dataProvider,
-      origin,
-      logger,
-      undefined,
-      'Crn-Welcome',
-      jest.fn(),
-    );
+  test('passes suppressConflict=true when configured', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    dataProvider.update.mockResolvedValueOnce(null);
+    const handler = inviteHandler(true, 'Crn-Welcome');
+    const event = getEventBridgeEventMock(user.id);
 
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+    await handler(event);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
-
-    await inviteHandlerNoConflict(event);
-
-    expect(dataProvider.fetchById).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-    );
-    expect(dataProvider.update).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-      {
-        connections: [{ code: expect.any(String) }],
-      },
-      { suppressConflict: false },
-    );
-    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
-    const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
-    expect(sendEmailMock).toHaveBeenCalledWith({
-      to: [userWithoutConnection.email],
-      template: crnWelcomeTemplate,
-      values: {
-        firstName: userWithoutConnection.firstName,
-        link: expectedLink.toString(),
-      },
-    });
+    expectUpdate(user, true);
+    expectEmail(user);
   });
 
-  test('Should pass suppressConflict as false explicitly when factory is created with false', async () => {
-    // Create handler with explicit false value
-    const inviteHandlerExplicitFalse = inviteHandlerFactory(
-      sendEmailMock,
-      dataProvider,
-      origin,
-      logger,
-      false, // explicitly false
-      'Crn-Welcome',
-    );
+  test('explicit false still results in suppressConflict=false', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    dataProvider.update.mockResolvedValueOnce(null);
+    const handler = inviteHandler(false, 'Crn-Welcome');
+    const event = getEventBridgeEventMock(user.id);
 
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+    await handler(event);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
-
-    await inviteHandlerExplicitFalse(event);
-
-    expect(dataProvider.update).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-      {
-        connections: [{ code: expect.any(String) }],
-      },
-      { suppressConflict: false },
-    );
+    expectUpdate(user, false);
+    expectEmail(user);
   });
 
-  test('Should handle version mismatch error when suppressConflict is false', async () => {
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+  test('version mismatch error honors suppressConflict flag', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    const versionErr = new Error('Version mismatch');
+    versionErr.name = 'VersionMismatch';
+    dataProvider.update.mockRejectedValueOnce(versionErr);
+    const handler = inviteHandler(true, 'Crn-Welcome');
+    const event = getEventBridgeEventMock(user.id);
 
-    // Mock a version mismatch error (409 conflict)
-    const versionMismatchError = new Error('Version mismatch');
-    versionMismatchError.name = 'VersionMismatch';
-    dataProvider.update.mockRejectedValueOnce(versionMismatchError);
-
-    const event = getEventBridgeEventMock(getUserDataObject().id);
-
-    await expect(inviteHandler(event)).rejects.toThrow(
-      `Unable to save the code for the user with ID ${getUserDataObject().id}`,
+    await expect(handler(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${user.id}`,
     );
-
-    expect(dataProvider.update).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-      {
-        connections: [{ code: expect.any(String) }],
-      },
-      { suppressConflict: false },
-    );
-  });
-
-  test('Should handle version mismatch error when suppressConflict is true', async () => {
-    const inviteHandlerSuppressConflict = inviteHandlerFactory(
-      sendEmailMock,
-      dataProvider,
-      origin,
-      logger,
-      true, // suppressConflict = true
-      'Crn-Welcome',
-    );
-
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
-
-    // Mock a version mismatch error (409 conflict)
-    const versionMismatchError = new Error('Version mismatch');
-    versionMismatchError.name = 'VersionMismatch';
-    dataProvider.update.mockRejectedValueOnce(versionMismatchError);
-
-    const event = getEventBridgeEventMock(getUserDataObject().id);
-
-    await expect(inviteHandlerSuppressConflict(event)).rejects.toThrow(
-      `Unable to save the code for the user with ID ${getUserDataObject().id}`,
-    );
-
-    expect(dataProvider.update).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-      {
-        connections: [{ code: expect.any(String) }],
-      },
-      { suppressConflict: true },
-    );
+    expectUpdate(user, true);
   });
 });
 

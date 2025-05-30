@@ -11,3 +11,6 @@ export const telephoneNumberExpression =
 export const telephoneCountryExpression = '^\\+*[1-9]{0,3}$';
 
 export const orcidExpression = '^\\d{4}-\\d{4}-\\d{4}-\\d{3}(\\d|X)$';
+
+export const amountExpression =
+  '^(?:[1-9]\\d*(?:\\.\\d{0,2})?|0\\.(?:0[1-9]|[1-9]\\d?))$';

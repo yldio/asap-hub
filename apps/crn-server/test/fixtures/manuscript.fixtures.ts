@@ -526,6 +526,18 @@ export const getManuscriptUpdateAssignedUsersDataObject = (
   };
 };
 
+export const getManuscriptUpdateAPCCoverageDataObject = (
+  overrides?: Partial<ManuscriptUpdateDataObject>,
+): ManuscriptUpdateDataObject => {
+  return {
+    apcRequested: true,
+    apcAmountRequested: 1000,
+    apcCoverageRequestStatus: 'paid',
+    apcAmountPaid: 1000,
+    ...overrides,
+  };
+};
+
 const getQuickCheckDetailsText = (version: Partial<ManuscriptVersion>) => ({
   acknowledgedGrantNumberDetails: version.acknowledgedGrantNumberDetails,
   asapAffiliationIncludedDetails: version.asapAffiliationIncludedDetails,

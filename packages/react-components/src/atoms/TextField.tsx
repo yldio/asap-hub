@@ -22,7 +22,8 @@ type FieldType =
   | 'tel'
   | 'url'
   | 'password'
-  | 'date';
+  | 'date'
+  | 'number';
 
 const disabledStyles = css({
   color: lead.rgb,

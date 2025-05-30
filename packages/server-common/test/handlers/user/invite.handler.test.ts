@@ -195,6 +195,142 @@ describe('Invite Handler', () => {
       },
     });
   });
+
+  test('Should pass in the suppress conflict flag if not set', async () => {
+    const inviteHandlerNoConflict = inviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+      undefined,
+      'Crn-Welcome',
+      jest.fn(),
+    );
+
+    const userWithoutConnection: UserDataObject = {
+      ...getUserDataObject(),
+      connections: [],
+    };
+    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+
+    const event = getEventBridgeEventMock(getUserDataObject().id);
+
+    await inviteHandlerNoConflict(event);
+
+    expect(dataProvider.fetchById).toHaveBeenCalledWith(
+      userWithoutConnection.id,
+    );
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      userWithoutConnection.id,
+      {
+        connections: [{ code: expect.any(String) }],
+      },
+      { suppressConflict: false },
+    );
+    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
+    const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
+    expect(sendEmailMock).toHaveBeenCalledWith({
+      to: [userWithoutConnection.email],
+      template: crnWelcomeTemplate,
+      values: {
+        firstName: userWithoutConnection.firstName,
+        link: expectedLink.toString(),
+      },
+    });
+  });
+
+  test('Should pass suppressConflict as false explicitly when factory is created with false', async () => {
+    // Create handler with explicit false value
+    const inviteHandlerExplicitFalse = inviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+      false, // explicitly false
+      'Crn-Welcome',
+    );
+
+    const userWithoutConnection: UserDataObject = {
+      ...getUserDataObject(),
+      connections: [],
+    };
+    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+
+    const event = getEventBridgeEventMock(getUserDataObject().id);
+
+    await inviteHandlerExplicitFalse(event);
+
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      userWithoutConnection.id,
+      {
+        connections: [{ code: expect.any(String) }],
+      },
+      { suppressConflict: false },
+    );
+  });
+
+  test('Should handle version mismatch error when suppressConflict is false', async () => {
+    const userWithoutConnection: UserDataObject = {
+      ...getUserDataObject(),
+      connections: [],
+    };
+    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+
+    // Mock a version mismatch error (409 conflict)
+    const versionMismatchError = new Error('Version mismatch');
+    versionMismatchError.name = 'VersionMismatch';
+    dataProvider.update.mockRejectedValueOnce(versionMismatchError);
+
+    const event = getEventBridgeEventMock(getUserDataObject().id);
+
+    await expect(inviteHandler(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${getUserDataObject().id}`,
+    );
+
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      userWithoutConnection.id,
+      {
+        connections: [{ code: expect.any(String) }],
+      },
+      { suppressConflict: false },
+    );
+  });
+
+  test('Should handle version mismatch error when suppressConflict is true', async () => {
+    const inviteHandlerSuppressConflict = inviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+      true, // suppressConflict = true
+      'Crn-Welcome',
+    );
+
+    const userWithoutConnection: UserDataObject = {
+      ...getUserDataObject(),
+      connections: [],
+    };
+    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+
+    // Mock a version mismatch error (409 conflict)
+    const versionMismatchError = new Error('Version mismatch');
+    versionMismatchError.name = 'VersionMismatch';
+    dataProvider.update.mockRejectedValueOnce(versionMismatchError);
+
+    const event = getEventBridgeEventMock(getUserDataObject().id);
+
+    await expect(inviteHandlerSuppressConflict(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${getUserDataObject().id}`,
+    );
+
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      userWithoutConnection.id,
+      {
+        connections: [{ code: expect.any(String) }],
+      },
+      { suppressConflict: true },
+    );
+  });
 });
 
 const getEventBridgeEventMock = (

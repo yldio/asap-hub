@@ -163,7 +163,7 @@ describe('Invite Handler', () => {
     expectEmail(user);
   });
 
-  test('version mismatch error honors suppressConflict flag', async () => {
+  test('version mismatch error when suppressConflict flag is true', async () => {
     const user = stubUser([]);
     dataProvider.fetchById.mockResolvedValueOnce(user);
     const versionErr = new Error('Version mismatch');
@@ -176,6 +176,36 @@ describe('Invite Handler', () => {
       `Unable to save the code for the user with ID ${user.id}`,
     );
     expectUpdate(user, true);
+  });
+
+  test('version mismatch error when suppressConflict flag is false', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    const versionErr = new Error('Version mismatch');
+    versionErr.name = 'VersionMismatch';
+    dataProvider.update.mockRejectedValueOnce(versionErr);
+    const handler = inviteHandler(false, 'Crn-Welcome');
+    const event = getEventBridgeEventMock(user.id);
+
+    await expect(handler(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${user.id}`,
+    );
+    expectUpdate(user, false);
+  });
+
+  test('version mismatch error when suppressConflict flag is undefined', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    const versionErr = new Error('Version mismatch');
+    versionErr.name = 'VersionMismatch';
+    dataProvider.update.mockRejectedValueOnce(versionErr);
+    const handler = inviteHandler(undefined, 'Crn-Welcome');
+    const event = getEventBridgeEventMock(user.id);
+
+    await expect(handler(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${user.id}`,
+    );
+    expectUpdate(user, false);
   });
 });
 

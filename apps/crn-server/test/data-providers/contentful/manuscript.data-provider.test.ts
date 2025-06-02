@@ -1293,7 +1293,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       manuscript.status = null;
       manuscript.assignedUsersCollection = null;
       manuscript.discussionsCollection = null;
-      manuscript.apcRequested = false;
+      manuscript.apcRequested = undefined;
       manuscript.apcAmountPaid = undefined;
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,

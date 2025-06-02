@@ -499,6 +499,7 @@ export const useManuscripts = (
                   apcCoverageRequestStatus:
                     updatedManuscriptItem.apcCoverageRequestStatus,
                   apcRequested: updatedManuscriptItem.apcRequested,
+                  declinedReason: updatedManuscriptItem.declinedReason,
                 }
               : previousManuscriptItem,
           ),

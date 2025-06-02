@@ -291,6 +291,7 @@ export class ManuscriptContentfulDataProvider
       userId,
       notificationList = '',
       versions: [version],
+      url,
       title,
     } = input;
 
@@ -321,6 +322,7 @@ export class ManuscriptContentfulDataProvider
     await patchAndPublish(manuscriptEntry, {
       versions: [...previousVersions, newVersion],
       title,
+      url,
       teams: getLinkEntities(version.teams),
       status: 'Manuscript Resubmitted',
     });

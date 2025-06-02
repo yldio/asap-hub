@@ -147,8 +147,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           )}
           <ResearchOutputForm
             displayChangelog={Boolean(
-              versionAction === 'create' ||
-                (versions.length > 0 && researchOutputData?.changelog),
+              versionAction === 'create' || versions.length > 0,
             )}
             versionAction={versionAction}
             tagSuggestions={researchSuggestions}

@@ -153,7 +153,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           )}
           <ResearchOutputForm
             displayChangelog={Boolean(
-              versionAction === 'create' || versions.length > 0,
+              versionAction === 'create' ||
+                (researchOutputData?.versions || []).length > 0,
             )}
             versionAction={versionAction}
             tagSuggestions={researchSuggestions}

@@ -214,7 +214,7 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
       description: { type: 'string', nullable: true },
       descriptionMD: { type: 'string' },
       shortDescription: { type: 'string', nullable: true, maxLength: 250 },
-      changelog: { type: 'string', nullable: true },
+      changelog: { type: 'string', nullable: true, maxLength: 250 },
       methods: {
         type: 'array',
         items: { type: 'string' },

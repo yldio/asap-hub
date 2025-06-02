@@ -1727,6 +1727,7 @@ describe('Manuscripts Contentful Data Provider', () => {
 
       await manuscriptDataProviderMockGraphql.createVersion(manuscriptId, {
         ...manuscriptCreateDataObject,
+        url: 'https://example.com/manuscript',
         userId: 'user-id-0',
       });
 
@@ -1773,6 +1774,11 @@ describe('Manuscripts Contentful Data Provider', () => {
           op: 'add',
           path: '/fields/title',
           value: { 'en-US': 'Manuscript Title' },
+        },
+        {
+          op: 'add',
+          path: '/fields/url',
+          value: { 'en-US': 'https://example.com/manuscript' },
         },
         {
           op: 'add',

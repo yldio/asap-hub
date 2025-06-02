@@ -174,7 +174,6 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
           onConfirm={handleAssignUsersConfirm}
           PillId={PillId}
           teams={manuscriptDetails.teams ?? ''}
-          // TODO: removing since not in designs but confirm
           manuscriptTitle={manuscriptDetails.title}
           getAssignedUsersSuggestions={getAssignedUsersSuggestions}
           assignedUsers={manuscriptDetails.assignedUsers.map((user) => ({

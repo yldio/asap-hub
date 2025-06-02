@@ -66,6 +66,12 @@ const contentContainerStyles = css({
   marginBottom: rem(14),
 });
 
+const labeledTextFieldContainerStyles = css({
+  'label > p': {
+    marginTop: 0,
+  },
+});
+
 const modalContentStyles = css([paddingStyles, css({ paddingTop: 0 })]);
 
 const modalStyles = css({
@@ -229,22 +235,25 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                     field: { value, onChange, onBlur },
                     fieldState: { error },
                   }) => (
-                    <LabeledTextField
-                      title="Coverage amount requested"
-                      subtitle="(required)"
-                      customValidationMessage={error?.message}
-                      labelIndicator={
-                        <MoneyIcon
-                          {...(error?.message ? { color: 'white' } : {})}
-                        />
-                      }
-                      type={'number'}
-                      step={'any'}
-                      value={value || ''}
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      enabled={!isSubmitting}
-                    />
+                    <div css={labeledTextFieldContainerStyles}>
+                      <LabeledTextField
+                        title="Coverage amount requested"
+                        subtitle="(required)"
+                        customValidationMessage={error?.message}
+                        labelIndicator={
+                          <MoneyIcon
+                            {...(error?.message ? { color: 'white' } : {})}
+                          />
+                        }
+                        type={'number'}
+                        step={'any'}
+                        value={value || ''}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        enabled={!isSubmitting}
+                        noPadding
+                      />
+                    </div>
                   )}
                 />
                 <Controller
@@ -298,21 +307,24 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                       field: { value, onChange, onBlur },
                       fieldState: { error },
                     }) => (
-                      <LabeledTextField
-                        title="Coverage amount paid"
-                        subtitle="(required)"
-                        customValidationMessage={error?.message}
-                        labelIndicator={
-                          <MoneyIcon
-                            {...(error?.message ? { color: 'white' } : {})}
-                          />
-                        }
-                        type={'number'}
-                        value={value || ''}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        enabled={!isSubmitting}
-                      />
+                      <div css={labeledTextFieldContainerStyles}>
+                        <LabeledTextField
+                          title="Coverage amount paid"
+                          subtitle="(required)"
+                          customValidationMessage={error?.message}
+                          labelIndicator={
+                            <MoneyIcon
+                              {...(error?.message ? { color: 'white' } : {})}
+                            />
+                          }
+                          type={'number'}
+                          value={value || ''}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          enabled={!isSubmitting}
+                          noPadding
+                        />
+                      </div>
                     )}
                   />
                 )}
@@ -335,6 +347,7 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                         onChange={onChange}
                         onBlur={onBlur}
                         enabled={!isSubmitting}
+                        noPadding
                       />
                     )}
                   />

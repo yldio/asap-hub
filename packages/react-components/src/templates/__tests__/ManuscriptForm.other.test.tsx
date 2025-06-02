@@ -393,8 +393,6 @@ describe('renders the necessary fields', () => {
 
     description: 'Please provide a description',
     shortDescription: 'Add a short description',
-    changelog:
-      'Briefly explain what’s new or changed in this version in comparison to the prior version of the manuscript.',
     teams: 'Add other teams that contributed to this manuscript.',
     labs: 'Add ASAP labs that contributed to this manuscript.',
   };

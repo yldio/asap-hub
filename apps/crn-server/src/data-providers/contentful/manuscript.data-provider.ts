@@ -516,7 +516,7 @@ const parseGraphQLManuscript = (
     assignedUsers: parseGraphQLManuscriptAssignedUsers(
       manuscript.assignedUsersCollection,
     ),
-    apcRequested: manuscript.apcRequested || undefined,
+    apcRequested: manuscript.apcRequested ?? undefined,
     apcAmountRequested: manuscript.apcAmountRequested || undefined,
     apcCoverageRequestStatus:
       manuscript.apcCoverageRequestStatus as ApcCoverageRequestStatus,

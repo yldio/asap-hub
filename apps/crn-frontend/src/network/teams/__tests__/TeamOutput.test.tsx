@@ -610,6 +610,56 @@ it('display a toast warning when creating a new version', async () => {
   ).toBeInTheDocument();
 });
 
+it('renders an empty changelog input field when creating a new version of a research output', async () => {
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'article',
+    researchOutputData: baseResearchOutput,
+    versionAction: 'create',
+  });
+
+  expect(screen.getByRole('textbox', { name: /changelog/i })).toHaveValue('');
+});
+
+it('shows changelog input with existing data when editing a versioned research output', async () => {
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'article',
+    researchOutputData: {
+      ...baseResearchOutput,
+      changelog: 'example changelog',
+      versions: [
+        {
+          documentType: 'Article',
+          title: 'test title',
+          id: '1',
+        },
+      ],
+    },
+    versionAction: 'edit',
+  });
+
+  expect(screen.getByRole('textbox', { name: /changelog/i })).toHaveValue(
+    'example changelog',
+  );
+});
+
+it('hides changelog input when editing a research output with no version history', async () => {
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'article',
+    researchOutputData: {
+      ...baseResearchOutput,
+      versions: [],
+    },
+    versionAction: 'edit',
+  });
+
+  expect(
+    screen.queryByRole('textbox', { name: /changelog/i }),
+  ).not.toBeInTheDocument();
+});
+
 async function renderPage({
   user = {
     ...baseUser,

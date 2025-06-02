@@ -16,6 +16,7 @@ export default {
 };
 
 const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
+  displayChangelog: false,
   permissions: {
     canEditResearchOutput: true,
     canPublishResearchOutput: true,

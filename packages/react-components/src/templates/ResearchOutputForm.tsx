@@ -57,6 +57,7 @@ type ResearchOutputFormProps = Pick<
     | 'getTeamSuggestions'
     | 'authorsRequired'
   > & {
+    displayChangelog: boolean;
     versionAction?: 'create' | 'edit';
     onSave: (
       output: ResearchOutputPostRequest,
@@ -152,6 +153,7 @@ const formControlsThreeButtonsStyles = css({
 });
 
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
+  displayChangelog,
   documentType,
   researchOutputData,
   onSave,
@@ -251,7 +253,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const [changelog, setChangelog] = useState<
     ResearchOutputPostRequest['changelog']
-  >(researchOutputData?.changelog || '');
+  >(versionAction === 'create' ? '' : researchOutputData?.changelog || '');
   const [
     dismissedDescriptionChangePrompt,
     setDismissedDescriptionChangePrompt,
@@ -500,7 +502,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               )}
               <div css={contentStyles}>
                 <ResearchOutputFormSharingCard
-                  displayChangelog={versionAction === 'create'}
+                  displayChangelog={displayChangelog}
                   documentType={documentType}
                   isCreatingOutputRoute={!!isCreatingOutput}
                   researchOutputData={researchOutputData}

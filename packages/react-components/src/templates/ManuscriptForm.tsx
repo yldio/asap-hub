@@ -343,10 +343,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const correspondingAuthorWithoutTeamAdded = new Set();
   const additionalAuthorsWithoutTeamAdded = new Set();
   const labsWithoutTeamAdded = new Set();
-  const [isURLRequired, setIsURLRequired] = useState(
-    manuscriptLifecycleRequiredURL.includes(lifecycle as ManuscriptLifecycle) ||
-      false,
-  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const getDefaultQuickCheckValue = (
@@ -854,6 +850,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const handleSubmitConfirmation = () => setModal('submit');
   const handleCancelConfirmation = () => setModal('cancel');
 
+  const isURLRequired =
+    watchLifecycle &&
+    manuscriptLifecycleRequiredURL.includes(
+      watchLifecycle as ManuscriptLifecycle,
+    );
+
   return (
     <form onSubmit={handleSubmit(handleSubmitConfirmation)}>
       <ManuscriptFormModals
@@ -975,16 +977,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     options={lifecycleSuggestions}
                     onChange={async (lifecycleEvent) => {
                       onChange(lifecycleEvent);
-
-                      if (
-                        manuscriptLifecycleRequiredURL.includes(
-                          lifecycleEvent as ManuscriptLifecycle,
-                        )
-                      ) {
-                        setIsURLRequired(true);
-                      } else {
-                        setIsURLRequired(false);
-                      }
 
                       // Update optional fields based on new selections
                       if (watchType && lifecycleEvent) {

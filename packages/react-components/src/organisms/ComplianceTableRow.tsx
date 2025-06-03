@@ -120,6 +120,7 @@ const apcCoverageContainerStyles = css({
   alignItems: 'center',
   gap: rem(16),
   justifyContent: 'space-between',
+  maxWidth: rem(120),
 });
 
 type ComplianceTableRowProps = {

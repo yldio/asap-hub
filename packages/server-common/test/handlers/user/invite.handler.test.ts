@@ -1,13 +1,16 @@
 import { UserDataObject } from '@asap-hub/model';
+import { SQSEvent } from 'aws-lambda';
 import path from 'path';
 import url from 'url';
 import {
   inviteHandlerFactory,
+  sqsInviteHandlerFactory,
   UserInviteEventBridgeEvent,
 } from '../../../src/handlers/user';
-import { crnWelcomeTemplate, SendEmail } from '../../../src/utils';
+import { crnWelcomeTemplate, SendEmail, SendEmailTemplate } from '../../../src/utils';
 import { getUserDataObject } from '../../fixtures/users.fixtures';
 import { loggerMock as logger } from '../../mocks/logger.mock';
+
 
 describe('Invite Handler', () => {
   const origin = 'https://asap-hub.org';
@@ -206,6 +209,195 @@ describe('Invite Handler', () => {
       `Unable to save the code for the user with ID ${user.id}`,
     );
     expectUpdate(user, false);
+  });
+});
+
+function createEvent(userId: string): UserInviteEventBridgeEvent {
+  return {
+    id: 'test-id',
+    version: '1',
+    account: 'test-account',
+    time: '3234234234',
+    region: 'eu-west-1',
+    resources: [],
+    source: 'asap.user',
+    'detail-type': 'UsersPublished',
+    detail: {
+      type: 'UsersPublished',
+      resourceId: userId,
+      payload: {
+        $type: 'EnrichedContentEvent',
+        type: 'Published',
+        id: userId,
+        created: '2021-02-15T13:11:25Z',
+        lastModified: '2021-02-15T13:11:25Z',
+        version: 1,
+        data: {},
+      },
+    },
+  };
+}
+
+describe('sqsInviteHandlerFactory', () => {
+  const origin = 'https://asap-hub.org';
+  const sendEmailMock: jest.MockedFunction<SendEmail> = jest.fn();
+  const dataProvider = {
+    fetchById: jest.fn<Promise<UserDataObject | null>, [string]>(),
+    update: jest.fn<Promise<void>, [string, any, any]>(),
+  };
+
+  const template: SendEmailTemplate = 'Crn-Welcome';
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  test('invokes inviteHandler for each record', async () => {
+    // Prepare two event records
+    const user1 = {
+      id: 'u1',
+      email: 'u1@example.com',
+      firstName: 'User1',
+      connections: [],
+    } as UserDataObject;
+    const user2 = {
+      id: 'u2',
+      email: 'u2@example.com',
+      firstName: 'User2',
+      connections: [],
+    } as UserDataObject;
+
+    dataProvider.fetchById
+      .mockResolvedValueOnce(user1)
+      .mockResolvedValueOnce(user2);
+    dataProvider.update.mockResolvedValue();
+    sendEmailMock.mockResolvedValue();
+
+    const sqsHandler = sqsInviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+      false,
+      template,
+    );
+
+    const event1 = createEvent('u1');
+    const event2 = createEvent('u2');
+    const sqsEvent: SQSEvent = {
+      Records: [
+        {
+          messageId: '1',
+          receiptHandle: 'rh1',
+          body: JSON.stringify(event1),
+          attributes: {},
+          messageAttributes: {},
+          md5OfBody: '',
+          eventSource: '',
+          eventSourceARN: '',
+          awsRegion: '',
+        },
+        {
+          messageId: '2',
+          receiptHandle: 'rh2',
+          body: JSON.stringify(event2),
+          attributes: {},
+          messageAttributes: {},
+          md5OfBody: '',
+          eventSource: '',
+          eventSourceARN: '',
+          awsRegion: '',
+        },
+      ],
+    };
+
+    await expect(sqsHandler(sqsEvent)).resolves.toBeUndefined();
+
+    // Expect fetchById called for both users
+    expect(dataProvider.fetchById).toHaveBeenCalledTimes(2);
+    expect(dataProvider.fetchById).toHaveBeenNthCalledWith(1, 'u1');
+    expect(dataProvider.fetchById).toHaveBeenNthCalledWith(2, 'u2');
+
+    // Expect update called for both
+    expect(dataProvider.update).toHaveBeenCalledTimes(2);
+
+    // Expect sendEmail called for both
+    expect(sendEmailMock).toHaveBeenCalledTimes(2);
+  });
+
+  test('propagates error if inviteHandler throws for any record', async () => {
+    // First record succeeds, second fails
+    const user1 = {
+      id: 'u1',
+      email: 'u1@example.com',
+      firstName: 'User1',
+      connections: [],
+    } as UserDataObject;
+    const user2 = {
+      id: 'u2',
+      email: 'u2@example.com',
+      firstName: 'User2',
+      connections: [],
+    } as UserDataObject;
+
+    dataProvider.fetchById
+      .mockResolvedValueOnce(user1)
+      .mockResolvedValueOnce(user2);
+    dataProvider.update
+      .mockResolvedValueOnce()
+      .mockResolvedValueOnce();
+    sendEmailMock
+      .mockResolvedValueOnce()
+      .mockRejectedValueOnce(new Error('send email error'));
+
+    const sqsHandler = sqsInviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+      false,
+      template,
+    );
+
+    const event1 = createEvent('u1');
+    const event2 = createEvent('u2');
+    const sqsEvent: SQSEvent = {
+      Records: [
+        {
+          messageId: '1',
+          receiptHandle: 'rh1',
+          body: JSON.stringify(event1),
+          attributes: {},
+          messageAttributes: {},
+          md5OfBody: '',
+          eventSource: '',
+          eventSourceARN: '',
+          awsRegion: '',
+        },
+        {
+          messageId: '2',
+          receiptHandle: 'rh2',
+          body: JSON.stringify(event2),
+          attributes: {},
+          messageAttributes: {},
+          md5OfBody: '',
+          eventSource: '',
+          eventSourceARN: '',
+          awsRegion: '',
+        },
+      ],
+    };
+
+    await expect(sqsHandler(sqsEvent)).rejects.toThrow(
+      'Unable to send the email for the user with ID u2',
+    );
+
+    // Ensure first user was processed
+    expect(dataProvider.fetchById).toHaveBeenNthCalledWith(1, 'u1');
+    expect(sendEmailMock).toHaveBeenNthCalledWith(1, expect.any(Object));
+    // Ensure second user attempt throws
+    expect(dataProvider.fetchById).toHaveBeenNthCalledWith(2, 'u2');
+    expect(sendEmailMock).toHaveBeenNthCalledWith(2, expect.any(Object));
   });
 });
 

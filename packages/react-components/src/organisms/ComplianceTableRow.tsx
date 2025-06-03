@@ -115,6 +115,13 @@ const teamLinkStyles = css({
   gap: rem(3),
 });
 
+const apcCoverageContainerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(16),
+  justifyContent: 'space-between',
+});
+
 type ComplianceTableRowProps = {
   isComplianceReviewer: boolean;
   data: PartialManuscriptResponse;
@@ -198,10 +205,7 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
     apcCoverageRequestStatus,
   );
   return (
-    <div
-      data-testid="apc-coverage"
-      css={css({ display: 'flex', alignItems: 'center', gap: rem(16) })}
-    >
+    <div data-testid="apc-coverage" css={apcCoverageContainerStyles}>
       <p css={apcCoverageStyles(apcCoverageLabel === 'Information needed')}>
         {apcCoverageLabel}
       </p>

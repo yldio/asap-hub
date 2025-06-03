@@ -201,6 +201,7 @@ export const getPublicUserResponse = (): PublicUserResponse => ({
   id: 'user-id-1',
   biography: 'some bio',
   createdDate: '2020-09-23T20:45:22.000Z',
+  alumni: 'No',
   tags: [
     'expertise 1',
     'expertise 2',
@@ -378,6 +379,7 @@ export const getUserDataObject = (): UserDataObject => ({
 
 export const getPublicUserDataObject = (): PublicUserDataObject => ({
   ...getUserDataObject(),
+  alumni: 'No',
   researchOutputs: ['research-output-id'],
   teams: [
     {

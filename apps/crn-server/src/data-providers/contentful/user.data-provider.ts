@@ -417,6 +417,7 @@ export const parseContentfulGraphQlPublicUsers = (
     country: item.country ?? undefined,
     createdDate: item.createdDate || item.sys.firstPublishedAt,
     lastModifiedDate: item.lastUpdated,
+    alumni: isAlumni ? 'Yes' : 'No',
     degree,
     firstName: item.firstName ?? '',
     lastName: item.lastName ?? '',

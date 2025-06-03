@@ -134,6 +134,7 @@ export type PublicUserDataObject = Pick<
   | 'researchTheme'
   | 'social'
 > & {
+  alumni: string;
   teams: PublicUserTeam[];
   tags: string[];
   workingGroups: Pick<WorkingGroupMembership, 'name' | 'role'>[];

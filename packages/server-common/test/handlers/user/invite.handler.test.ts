@@ -7,10 +7,13 @@ import {
   sqsInviteHandlerFactory,
   UserInviteEventBridgeEvent,
 } from '../../../src/handlers/user';
-import { crnWelcomeTemplate, SendEmail, SendEmailTemplate } from '../../../src/utils';
+import {
+  crnWelcomeTemplate,
+  SendEmail,
+  SendEmailTemplate,
+} from '../../../src/utils';
 import { getUserDataObject } from '../../fixtures/users.fixtures';
 import { loggerMock as logger } from '../../mocks/logger.mock';
-
 
 describe('Invite Handler', () => {
   const origin = 'https://asap-hub.org';
@@ -210,6 +213,38 @@ describe('Invite Handler', () => {
     );
     expectUpdate(user, false);
   });
+
+  test('uses default suppressConflict=false and template="Crn-Welcome"', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    dataProvider.update.mockResolvedValueOnce(null);
+    // Note: we do NOT pass suppressConflict or templateName here
+    const handlerDefault = inviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+    );
+    const event = getEventBridgeEventMock(user.id);
+
+    await handlerDefault(event);
+
+    // Default suppressConflict should be false
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      user.id,
+      { connections: [{ code: expect.any(String) }] },
+      { suppressConflict: false },
+    );
+
+    // Default template should be 'Crn-Welcome'
+    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
+    const link = new url.URL(path.join(`/welcome/${code}`), origin).toString();
+    expect(sendEmailMock).toHaveBeenCalledWith({
+      to: [user.email],
+      template: 'Crn-Welcome',
+      values: { firstName: user.firstName, link },
+    });
+  });
 });
 
 function createEvent(userId: string): UserInviteEventBridgeEvent {
@@ -343,9 +378,7 @@ describe('sqsInviteHandlerFactory', () => {
     dataProvider.fetchById
       .mockResolvedValueOnce(user1)
       .mockResolvedValueOnce(user2);
-    dataProvider.update
-      .mockResolvedValueOnce()
-      .mockResolvedValueOnce();
+    dataProvider.update.mockResolvedValueOnce().mockResolvedValueOnce();
     sendEmailMock
       .mockResolvedValueOnce()
       .mockRejectedValueOnce(new Error('send email error'));
@@ -398,6 +431,61 @@ describe('sqsInviteHandlerFactory', () => {
     // Ensure second user attempt throws
     expect(dataProvider.fetchById).toHaveBeenNthCalledWith(2, 'u2');
     expect(sendEmailMock).toHaveBeenNthCalledWith(2, expect.any(Object));
+  });
+
+  test('sqsInviteHandlerFactory uses default params when omit suppressConflict & template', async () => {
+    const userA = {
+      id: 'ua',
+      email: 'a@example.com',
+      firstName: 'A',
+      connections: [],
+    } as unknown as UserDataObject;
+    dataProvider.fetchById.mockResolvedValueOnce(userA);
+    dataProvider.update.mockResolvedValueOnce(undefined);
+    sendEmailMock.mockResolvedValueOnce(undefined);
+
+    // Do NOT pass suppressConflict or templateName here
+    const sqsHandlerDefault = sqsInviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+    );
+
+    const ebEvent: UserInviteEventBridgeEvent = createEvent(userA.id);
+    const sqsEvent: SQSEvent = {
+      Records: [
+        {
+          messageId: 'm1',
+          receiptHandle: 'rh1',
+          body: JSON.stringify(ebEvent),
+          attributes: {},
+          messageAttributes: {},
+          md5OfBody: '',
+          eventSource: '',
+          eventSourceARN: '',
+          awsRegion: '',
+        },
+      ],
+    };
+
+    await sqsHandlerDefault(sqsEvent);
+
+    // Default suppressConflict=false means update called with { suppressConflict: false }
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      userA.id,
+      { connections: [{ code: expect.any(String) }] },
+      { suppressConflict: false },
+    );
+
+    // Default template should be 'Crn-Welcome'
+    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
+    const link = new url.URL(path.join(`/welcome/${code}`), origin).toString();
+    expect(sendEmailMock).toHaveBeenCalledWith({
+      to: [userA.email],
+      template: 'Crn-Welcome',
+      values: { firstName: userA.firstName, link },
+    });
   });
 });
 

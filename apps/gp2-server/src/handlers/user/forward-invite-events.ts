@@ -5,8 +5,6 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { UserPayload } from '../event-bus';
 
-const sqsClient = new SQSClient({ region });
-
 const rawHandler: EventBridgeHandler<
   'UsersPublished',
   UserPayload,
@@ -15,6 +13,8 @@ const rawHandler: EventBridgeHandler<
   if (!inviteUserQueueUrl) {
     throw new Error('inviteUserQueueUrl is not set');
   }
+
+  const sqsClient = new SQSClient({ region });
 
   const command = new SendMessageCommand({
     QueueUrl: inviteUserQueueUrl,

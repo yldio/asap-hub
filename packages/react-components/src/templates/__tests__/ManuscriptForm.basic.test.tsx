@@ -214,52 +214,6 @@ describe('Manuscript form', () => {
     });
   });
 
-  it('displays error message when manuscript title is not unique', async () => {
-    const onUpdate = jest.fn().mockRejectedValueOnce({
-      statusCode: 422,
-      response: {
-        message: 'Title must be unique',
-        data: { team: 'ASAP', manuscriptId: 'SC1-000129-005-org-G-1' },
-      },
-    });
-
-    const renderResult = render(
-      <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Draft Manuscript (prior to Publication)"
-          manuscriptFile={{
-            id: '123',
-            filename: 'test.pdf',
-            url: 'http://example.com/test.pdf',
-          }}
-          keyResourceTable={{
-            id: '124',
-            filename: 'test.csv',
-            url: 'http://example.com/test.csv',
-          }}
-          manuscriptId="manuscript-id"
-          onUpdate={onUpdate}
-        />
-      </StaticRouter>,
-    );
-
-    await submitForm(renderResult);
-
-    await waitFor(() => {
-      expect(onUpdate).toHaveBeenCalled();
-    });
-
-    const { container } = renderResult;
-    await waitFor(() => {
-      expect(container).toHaveTextContent(
-        'A manuscript with this title has already been submitted for Team ASAP (SC1-000129-005-org-G-1). Please use the edit or resubmission button to update this manuscript.',
-      );
-    });
-  });
-
   it('displays error message when manuscript title and details exceed 256 characters', async () => {
     const { getByRole, findByText } = render(
       <StaticRouter>

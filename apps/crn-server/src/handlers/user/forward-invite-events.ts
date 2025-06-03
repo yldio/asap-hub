@@ -1,27 +1,32 @@
-import { SQS } from 'aws-sdk';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 import { EventBridgeHandler } from 'aws-lambda';
-import { UserPayload } from '../event-bus';
+import { inviteUserQueueUrl, region } from '../../config';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { inviteUserQueueUrl } from '../../config';
+import { UserPayload } from '../event-bus';
 
-const sqs = new SQS();
+const sqsClientCRN = new SQSClient({ region });
 
-export const handler: EventBridgeHandler<
+const rawHandlerCRN: EventBridgeHandler<
   'UsersPublished',
-  UserPayload
+  UserPayload,
+  void
 > = async (event) => {
+  if (!inviteUserQueueUrl) {
+    throw new Error('inviteUserQueueUrl is not set');
+  }
+
+  const command = new SendMessageCommand({
+    QueueUrl: inviteUserQueueUrl,
+    MessageBody: JSON.stringify(event),
+  });
+
   try {
-    await sqs
-      .sendMessage({
-        QueueUrl: inviteUserQueueUrl,
-        MessageBody: JSON.stringify(event),
-      })
-      .promise();
+    await sqsClientCRN.send(command);
   } catch (error) {
     logger.error(error, 'Failed to forward event to SQS');
     throw error;
   }
 };
 
-export default sentryWrapper(handler);
+export const handler = sentryWrapper(rawHandlerCRN);

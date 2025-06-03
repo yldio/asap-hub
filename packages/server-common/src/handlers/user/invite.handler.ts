@@ -101,21 +101,23 @@ export const sqsInviteHandlerFactory =
     template: SendEmailTemplate = 'Crn-Welcome',
   ) =>
   async (event: SQSEvent) => {
-    for (const record of event.Records) {
-      const ebEvent = JSON.parse(record.body) as EventBridgeEvent<
-        'UsersPublished',
-        UserPayload
-      >;
-      const handler = inviteHandlerFactory(
-        sendEmail,
-        dataProvider,
-        origin,
-        logger,
-        suppressConflict,
-        template,
-      );
-      await handler(ebEvent);
-    }
+    await Promise.all(
+      event.Records.map(async (record) => {
+        const ebEvent = JSON.parse(record.body) as EventBridgeEvent<
+          'UsersPublished',
+          UserPayload
+        >;
+        const handler = inviteHandlerFactory(
+          sendEmail,
+          dataProvider,
+          origin,
+          logger,
+          suppressConflict,
+          template,
+        );
+        await handler(ebEvent);
+      }),
+    );
   };
 
 export type UserInviteEventBridgeEvent = EventBridgeEvent<

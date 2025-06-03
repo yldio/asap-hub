@@ -222,6 +222,18 @@ const serverlessConfig: AWS = {
               'sqs:GetQueueAttributes',
             ],
             Resource: {
+              'Fn::GetAtt': ['InviteUserQueue', 'Arn'],
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: [
+              'sqs:SendMessage',
+              'sqs:ReceiveMessage',
+              'sqs:DeleteMessage',
+              'sqs:GetQueueAttributes',
+            ],
+            Resource: {
               'Fn::GetAtt': ['GoogleCalendarEventQueue', 'Arn'],
             },
           },
@@ -367,9 +379,8 @@ const serverlessConfig: AWS = {
         REGION: '${env:AWS_REGION}',
       },
     },
-    inviteUser: {
-      timeout: 120,
-      handler: './src/handlers/user/invite-handler.handler',
+    inviteEventForwarder: {
+      handler: 'src/handlers/user/forward-invite-events.handler',
       events: [
         {
           eventBridge: {
@@ -383,6 +394,23 @@ const serverlessConfig: AWS = {
             retryPolicy: {
               maximumRetryAttempts: 2,
             },
+          },
+        },
+      ],
+      environment: {
+        QUEUE_URL: { Ref: 'InviteUserQueue' },
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    inviteUser: {
+      timeout: 120,
+      reservedConcurrency: 1,
+      handler: 'src/handlers/user/invite-handler.sqsHandler',
+      events: [
+        {
+          sqs: {
+            arn: { 'Fn::GetAtt': ['InviteUserQueue', 'Arn'] },
+            batchSize: 1,
           },
         },
       ],
@@ -1572,6 +1600,27 @@ const serverlessConfig: AWS = {
             },
           ],
           BillingMode: 'PAY_PER_REQUEST',
+        },
+      },
+      InviteUserQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: '${self:service}-${self:provider.stage}-invite-user-queue',
+          VisibilityTimeout: 120, // Should match lambda timeout
+          RedrivePolicy: {
+            maxReceiveCount: 5,
+            deadLetterTargetArn: {
+              'Fn::GetAtt': ['InviteUserQueueDLQ', 'Arn'],
+            },
+          },
+        },
+      },
+      InviteUserQueueDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-invite-user-queue-dlq',
+          MessageRetentionPeriod: 1209600, // 14 days
         },
       },
     },

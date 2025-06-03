@@ -1,7 +1,7 @@
-/* istanbul ignore file */
 import {
   gp2WelcomeTemplate,
   inviteHandlerFactory,
+  sqsInviteHandlerFactory,
 } from '@asap-hub/server-common';
 import { SES } from '@aws-sdk/client-ses';
 import { origin, sesRegion } from '../../config';
@@ -20,8 +20,17 @@ const ses = new SES({
 const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
 const userDataProvider = getUserDataProvider(contentfulGraphQLClient);
 
-export const handler = sentryWrapper(
-  inviteHandlerFactory<UserDataProvider>(
+const eventHandler = inviteHandlerFactory<UserDataProvider>(
+  sendEmailFactory(ses),
+  userDataProvider,
+  origin,
+  logger,
+  false,
+  gp2WelcomeTemplate,
+);
+
+export const sqsHandler = sentryWrapper(
+  sqsInviteHandlerFactory<UserDataProvider>(
     sendEmailFactory(ses),
     userDataProvider,
     origin,
@@ -30,3 +39,5 @@ export const handler = sentryWrapper(
     gp2WelcomeTemplate,
   ),
 );
+
+export const handler = sentryWrapper(eventHandler);

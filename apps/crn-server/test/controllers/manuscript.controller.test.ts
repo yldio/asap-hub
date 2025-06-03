@@ -1,5 +1,9 @@
 import { NotFoundError, GenericError } from '@asap-hub/errors';
-import { ManuscriptFileType, ManuscriptPostAuthor } from '@asap-hub/model';
+import {
+  ManuscriptFileType,
+  ManuscriptPostAuthor,
+  PartialManuscriptResponse,
+} from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { when } from 'jest-when';
 import ManuscriptController from '../../src/controllers/manuscript.controller';
@@ -17,6 +21,7 @@ import {
   getManuscriptCreateControllerDataObject,
   getManuscriptUpdateStatusDataObject,
   getManuscriptsListResponse,
+  getManuscriptUpdateAPCCoverageDataObject,
 } from '../fixtures/manuscript.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 import { manuscriptDataProviderMock as manuscriptDataProviderContentfulMock } from '../mocks/manuscript.data-provider.mock';
@@ -599,6 +604,34 @@ describe('Manuscript controller', () => {
             }),
           ],
         },
+        'user-id',
+      );
+    });
+
+    test('Should update the manuscript apc coverage request status and return it', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      const apcRequestDetails = {
+        apcRequested: true,
+        apcAmountRequested: 1000,
+        apcCoverageRequestStatus: 'notPaid',
+        apcAmountPaid: undefined,
+      } as PartialManuscriptResponse;
+
+      manuscriptDataProviderMock.fetchById.mockResolvedValue(
+        getManuscriptResponse(),
+      );
+      manuscriptDataProviderMock.update.mockResolvedValueOnce();
+
+      const result = await manuscriptController.update(
+        manuscriptId,
+        apcRequestDetails,
+        'user-id',
+      );
+
+      expect(result).toEqual(getManuscriptResponse());
+      expect(manuscriptDataProviderMock.update).toHaveBeenCalledWith(
+        manuscriptId,
+        getManuscriptUpdateAPCCoverageDataObject(apcRequestDetails),
         'user-id',
       );
     });

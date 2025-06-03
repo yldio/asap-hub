@@ -124,6 +124,7 @@ describe('/users/ route', () => {
       },
     ];
     userResponse.researchOutputs = ['research-output-id'];
+    userResponse.alumniSinceDate = undefined;
 
     test('Should return 200 when the user exists', async () => {
       const userId = 'user-id-1';

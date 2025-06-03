@@ -278,6 +278,7 @@ const ResearchOutputFormSharingCard: React.FC<
               setChangelogValidationMessage,
             );
           }}
+          required
           enabled={!isSaving}
         />
       )}

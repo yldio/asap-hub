@@ -144,6 +144,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
             )
           }
           title={manuscript?.title}
+          url={manuscript?.url}
           firstAuthors={convertAuthorsToSelectOptions(manuscriptFirstAuthors)}
           correspondingAuthor={convertAuthorsToSelectOptions(
             manuscriptCorrespondingAuthor,

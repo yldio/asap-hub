@@ -10,6 +10,7 @@ export const manuscriptContentQueryFragment = gql`
       publishedVersion
     }
     title
+    url
     status
     count
     apcRequested
@@ -335,6 +336,7 @@ export const FETCH_MANUSCRIPTS = gql`
           id
         }
         title
+        url
         status
         count
         apcRequested
@@ -387,6 +389,7 @@ export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
         id
       }
       title
+      url
       count
       teamsCollection(limit: 1) {
         items {

@@ -92,6 +92,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   additionalAuthors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
+  url: 'http://example.com',
 };
 
 const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {
@@ -167,6 +168,7 @@ describe('QuickCheck logic', () => {
       await submitForm({ findByRole });
       const payload = {
         title: 'manuscript title',
+        url: 'http://example.com',
         eligibilityReasons: [],
         versions: [
           {
@@ -268,6 +270,7 @@ describe('QuickCheck logic', () => {
       await submitForm({ findByRole });
       const payload = {
         title: 'manuscript title',
+        url: 'http://example.com',
         eligibilityReasons: [],
         versions: [
           {
@@ -376,6 +379,7 @@ describe('QuickCheck logic', () => {
       await waitFor(() => {
         expect(onCreate).toHaveBeenCalledWith({
           title: 'manuscript title',
+          url: 'http://example.com',
           eligibilityReasons: [],
           versions: [
             expect.objectContaining({
@@ -419,6 +423,7 @@ describe('QuickCheck logic', () => {
           title="manuscript title"
           type="Original Research"
           publicationDoi="10.0777"
+          url="http://example.com/111"
           lifecycle="Publication"
           manuscriptFile={{
             id: '123',

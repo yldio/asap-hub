@@ -7,6 +7,7 @@ import {
   ManuscriptFormData,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
+  manuscriptLifecycleRequiredURL,
   ManuscriptPostAuthor,
   ManuscriptPostRequest,
   ManuscriptPutRequest,
@@ -20,7 +21,7 @@ import {
   QuickCheckDetails,
   quickCheckQuestions,
 } from '@asap-hub/model';
-import { isInternalUser } from '@asap-hub/validation';
+import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -29,6 +30,7 @@ import {
   colors,
   ExternalLinkIcon,
   FormCard,
+  GlobeIcon,
   LabeledDropdown,
   LabeledFileField,
   LabeledMultiSelect,
@@ -213,6 +215,10 @@ const setDefaultFieldValues = (fieldsList: OptionalVersionFields) => {
   return fieldDefaultValueMap;
 };
 
+const FixMarginWrapper = ({ children }: { children: React.ReactNode }) => (
+  <div css={{ marginTop: rem(18), marginBottom: rem(18) }}>{children}</div>
+);
+
 type ManuscriptFormProps = Omit<
   ManuscriptVersion,
   | 'id'
@@ -232,7 +238,7 @@ type ManuscriptFormProps = Omit<
   | 'labs'
   | 'versionUID'
 > &
-  Partial<Pick<ManuscriptPostRequest, 'title'>> & {
+  Partial<Pick<ManuscriptPostRequest, 'title' | 'url'>> & {
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
     manuscriptFile?: ManuscriptFileResponse;
@@ -292,6 +298,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   handleFileUpload,
   teamId,
   title,
+  url,
   type,
   lifecycle,
   manuscriptFile,
@@ -356,6 +363,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     mode: 'all',
     defaultValues: {
       title: title || '',
+      url: url || '',
       versions: [
         {
           type: type || '',
@@ -782,6 +790,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         } else if (resubmitManuscript) {
           await onResubmit(manuscriptId, {
             title: data.title,
+            url: data.url,
             teamId,
             versions: [
               {
@@ -793,6 +802,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         } else {
           await onUpdate(manuscriptId, {
             title: data.title,
+            url: data.url,
             teamId,
             versions: [
               {
@@ -840,6 +850,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const handleSubmitConfirmation = () => setModal('submit');
   const handleCancelConfirmation = () => setModal('cancel');
 
+  const isURLRequired =
+    watchLifecycle &&
+    manuscriptLifecycleRequiredURL.includes(
+      watchLifecycle as ManuscriptLifecycle,
+    );
+
   return (
     <form onSubmit={handleSubmit(handleSubmitConfirmation)}>
       <ManuscriptFormModals
@@ -875,6 +891,36 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   onBlur={onBlur}
                   enabled={!isSubmitting}
                 />
+              )}
+            />
+
+            <Controller
+              name="url"
+              control={control}
+              rules={{
+                required: isURLRequired ? 'Please enter a URL.' : false,
+                pattern: {
+                  value: new RegExp(urlExpression),
+                  message: 'Please enter a valid URL, starting with http://',
+                },
+              }}
+              render={({
+                field: { value, onChange, onBlur },
+                fieldState: { error },
+              }) => (
+                <FixMarginWrapper>
+                  <LabeledTextField
+                    title="URL"
+                    subtitle={isURLRequired ? '(required)' : '(optional)'}
+                    value={value ?? ''}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    enabled={!isSubmitting}
+                    customValidationMessage={error?.message}
+                    labelIndicator={<GlobeIcon />}
+                    placeholder="https://example.com"
+                  />
+                </FixMarginWrapper>
               )}
             />
 
@@ -929,8 +975,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     subtitle="(required)"
                     description="Select the option that matches your manuscript the best."
                     options={lifecycleSuggestions}
-                    onChange={(lifecycleEvent) => {
+                    onChange={async (lifecycleEvent) => {
                       onChange(lifecycleEvent);
+
                       // Update optional fields based on new selections
                       if (watchType && lifecycleEvent) {
                         updateOptionalFields(

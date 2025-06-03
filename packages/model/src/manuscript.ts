@@ -22,6 +22,12 @@ export const manuscriptLifecycles = [
 ] as const;
 export type ManuscriptLifecycle = (typeof manuscriptLifecycles)[number];
 
+export const manuscriptLifecycleRequiredURL: ManuscriptLifecycle[] = [
+  'Preprint',
+  'Publication',
+  'Publication with addendum or corrigendum',
+];
+
 export const manuscriptTypeLifecycles: {
   lifecycle: ManuscriptLifecycle;
   types: ManuscriptType[];
@@ -301,6 +307,7 @@ export type ApcCoverageRequestStatus = 'notPaid' | 'paid' | 'declined';
 export type ManuscriptDataObject = {
   id: string;
   title: string;
+  url?: string;
   status?: ManuscriptStatus;
   teamId: string;
   versions: ManuscriptVersion[];
@@ -332,7 +339,7 @@ export type ManuscriptPostAuthor =
 
 export type ManuscriptPostCreateRequest = Pick<
   ManuscriptDataObject,
-  'title' | 'teamId'
+  'title' | 'teamId' | 'url'
 > & {
   eligibilityReasons: string[];
   versions: {
@@ -428,7 +435,7 @@ export type AuthorEmailField = {
 
 export type ManuscriptFormData = Pick<
   ManuscriptPostCreateRequest,
-  'title' | 'teamId' | 'eligibilityReasons'
+  'title' | 'teamId' | 'eligibilityReasons' | 'url'
 > & {
   versions: (Pick<
     ManuscriptPostRequest['versions'][number],
@@ -647,6 +654,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
     type: 'object',
     properties: {
       title: { type: 'string' },
+      url: { type: 'string', nullable: true },
       teamId: { type: 'string' },
       eligibilityReasons: {
         type: 'array',
@@ -670,6 +678,7 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
     type: 'object',
     properties: {
       title: { type: 'string', nullable: true },
+      url: { type: 'string', nullable: true },
       teamId: { type: 'string', nullable: true },
       assignedUsers: {
         type: 'array',

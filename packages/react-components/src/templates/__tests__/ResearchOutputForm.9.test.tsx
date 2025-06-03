@@ -17,6 +17,7 @@ import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
 const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
+  displayChangelog: false,
   onSave: jest.fn(() => Promise.resolve()),
   onSaveDraft: jest.fn(() => Promise.resolve()),
   published: false,
@@ -72,6 +73,7 @@ describe('on submit 3', () => {
     description: '',
     descriptionMD: 'example description',
     shortDescription: 'short description',
+    changelog: '',
     type: 'Preprint',
     labs: [],
     authors: [],

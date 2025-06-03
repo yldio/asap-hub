@@ -163,6 +163,11 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
 
   await renderPage({}, true, resubmitPath, resubmitHistory);
 
+  const urlTextbox = screen.getByRole('textbox', {
+    name: /URL/i,
+  });
+  userEvent.type(urlTextbox, 'https://example.com/manuscript');
+
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });

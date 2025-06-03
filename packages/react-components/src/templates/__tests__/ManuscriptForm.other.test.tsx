@@ -146,6 +146,7 @@ describe('authors', () => {
             onCreate={onCreate}
             type="Original Research"
             lifecycle="Publication"
+            url="http://example.com"
             preprintDoi="10.4444/test"
             publicationDoi="10.4467/test"
             manuscriptFile={{
@@ -211,6 +212,7 @@ describe('authors', () => {
             onCreate={onCreate}
             type="Original Research"
             lifecycle="Publication"
+            url="http://example.com"
             preprintDoi="10.4444/test"
             publicationDoi="10.4467/test"
             manuscriptFile={{
@@ -283,6 +285,7 @@ describe('authors', () => {
             onCreate={onCreate}
             type="Original Research"
             lifecycle="Publication"
+            url="http://example.com"
             preprintDoi="10.4444/test"
             publicationDoi="10.4467/test"
             manuscriptFile={{
@@ -1006,6 +1009,7 @@ it('user can add teams', async () => {
         onCreate={onCreate}
         type="Original Research"
         lifecycle="Publication"
+        url="http://example.com"
         preprintDoi="10.4444/test"
         publicationDoi="10.4467/test"
         manuscriptFile={{
@@ -1064,6 +1068,7 @@ it('user can add labs', async () => {
         onCreate={onCreate}
         type="Original Research"
         lifecycle="Publication"
+        url="http://example.com"
         preprintDoi="10.4444/test"
         publicationDoi="10.4467/test"
         manuscriptFile={{
@@ -1163,6 +1168,7 @@ it('calls onUpdate when form is updated', async () => {
     expect(onUpdate).toHaveBeenCalledWith('manuscript-id', {
       teamId: '1',
       title: 'manuscript title',
+      url: '',
       versions: [
         {
           acknowledgedGrantNumber: 'Yes',
@@ -1279,6 +1285,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     expect(onResubmit).toHaveBeenCalledWith('manuscript-id', {
       teamId: '1',
       title: 'manuscript title',
+      url: '',
       versions: [
         {
           acknowledgedGrantNumber: 'Yes',

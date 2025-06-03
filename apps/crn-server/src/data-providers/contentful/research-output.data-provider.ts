@@ -386,6 +386,7 @@ const parseGraphQLResearchOutput = (
       : undefined,
     descriptionMD: researchOutputs.descriptionMd || '',
     shortDescription: researchOutputs.shortDescription || '',
+    changelog: researchOutputs.changelog || undefined,
     usageNotesMD: researchOutputs.usageNotes || '',
     link: researchOutputs.link || undefined,
     asapFunded: convertDecisionToBoolean(researchOutputs.asapFunded || null),

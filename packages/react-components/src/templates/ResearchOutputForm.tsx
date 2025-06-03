@@ -57,6 +57,7 @@ type ResearchOutputFormProps = Pick<
     | 'getTeamSuggestions'
     | 'authorsRequired'
   > & {
+    displayChangelog: boolean;
     versionAction?: 'create' | 'edit';
     onSave: (
       output: ResearchOutputPostRequest,
@@ -152,6 +153,7 @@ const formControlsThreeButtonsStyles = css({
 });
 
 const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
+  displayChangelog,
   documentType,
   researchOutputData,
   onSave,
@@ -248,6 +250,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [shortDescription, setShortDescription] = useState<
     ResearchOutputPostRequest['shortDescription']
   >(researchOutputData?.shortDescription || '');
+
+  const [changelog, setChangelog] = useState<
+    ResearchOutputPostRequest['changelog']
+  >(versionAction === 'create' ? '' : researchOutputData?.changelog || '');
   const [
     dismissedDescriptionChangePrompt,
     setDismissedDescriptionChangePrompt,
@@ -363,6 +369,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     description: researchOutputData?.description || '',
     descriptionMD,
     shortDescription,
+    changelog,
     title,
     type,
     authors,
@@ -495,6 +502,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               )}
               <div css={contentStyles}>
                 <ResearchOutputFormSharingCard
+                  displayChangelog={displayChangelog}
                   documentType={documentType}
                   isCreatingOutputRoute={!!isCreatingOutput}
                   researchOutputData={researchOutputData}
@@ -505,6 +513,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangeDescription={setDescription}
                   shortDescription={shortDescription}
                   onChangeShortDescription={setShortDescription}
+                  changelog={changelog}
+                  onChangeChangelog={setChangelog}
                   getShortDescriptionFromDescription={
                     getShortDescriptionFromDescription
                   }

@@ -115,6 +115,7 @@ describe('getResearchOutputPayload', () => {
       ],
       subtype: 'Preclinical',
       published: true,
+      changelog: 'changelog',
     };
     expect(
       getPayload({

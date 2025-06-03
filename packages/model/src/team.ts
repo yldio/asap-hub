@@ -48,7 +48,7 @@ export interface TeamMember {
 
 export type TeamManuscript = Pick<
   ManuscriptResponse,
-  'id' | 'title' | 'versions' | 'status' | 'count' | 'teamId'
+  'id' | 'title' | 'url' | 'versions' | 'status' | 'count' | 'teamId'
 > & {
   grantId: string;
 };

@@ -933,6 +933,8 @@ enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+  url_ASC
+  url_DESC
 }
 
 enum DiscussionsOrder {
@@ -3441,6 +3443,8 @@ enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+  url_ASC
+  url_DESC
 }
 
 enum ManuscriptVersionsOrder {
@@ -3549,6 +3553,7 @@ type Manuscripts implements Entry & _Node {
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptsTeamsCollection
   title(locale: String): String
+  url(locale: String): String
   versionsCollection(limit: Int = 100, locale: String, order: [ManuscriptsVersionsCollectionOrder], preview: Boolean, skip: Int = 0, where: ManuscriptVersionsFilter): ManuscriptsVersionsCollection
 }
 
@@ -3752,6 +3757,13 @@ input ManuscriptsFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+  url: String
+  url_contains: String
+  url_exists: Boolean
+  url_in: [String]
+  url_not: String
+  url_not_contains: String
+  url_not_in: [String]
   versions: cfManuscriptVersionsNestedFilter
   versionsCollection_exists: Boolean
 }
@@ -3789,6 +3801,8 @@ enum ManuscriptsOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+  url_ASC
+  url_DESC
 }
 
 type ManuscriptsTeamsCollection {
@@ -4618,6 +4632,7 @@ type ResearchOutputs implements Entry & _Node {
   adminNotes(locale: String): String
   asapFunded(locale: String): String
   authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ResearchOutputsAuthorsFilter): ResearchOutputsAuthorsCollection
+  changelog(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   createdDate(locale: String): DateTime
@@ -4790,6 +4805,13 @@ input ResearchOutputsFilter {
   asapFunded_not_in: [String]
   authors: cfauthorsMultiTypeNestedFilter
   authorsCollection_exists: Boolean
+  changelog: String
+  changelog_contains: String
+  changelog_exists: Boolean
+  changelog_in: [String]
+  changelog_not: String
+  changelog_not_contains: String
+  changelog_not_in: [String]
   contentfulMetadata: ContentfulMetadataFilter
   createdBy: cfUsersNestedFilter
   createdBy_exists: Boolean
@@ -6301,6 +6323,8 @@ enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+  url_ASC
+  url_DESC
 }
 
 enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -7427,6 +7451,8 @@ enum UsersLinkingCollectionsManuscriptsCollectionOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+  url_ASC
+  url_DESC
 }
 
 enum UsersLinkingCollectionsMessagesCollectionOrder {
@@ -8972,6 +8998,13 @@ input cfResearchOutputsNestedFilter {
   asapFunded_not_contains: String
   asapFunded_not_in: [String]
   authorsCollection_exists: Boolean
+  changelog: String
+  changelog_contains: String
+  changelog_exists: Boolean
+  changelog_in: [String]
+  changelog_not: String
+  changelog_not_contains: String
+  changelog_not_in: [String]
   contentfulMetadata: ContentfulMetadataFilter
   createdBy_exists: Boolean
   createdDate: DateTime

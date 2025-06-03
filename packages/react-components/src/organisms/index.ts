@@ -96,6 +96,8 @@ export { default as TeamProfileOverview } from './TeamProfileOverview';
 export { default as Toast } from './Toast';
 export { default as ToastStack } from './ToastStack';
 export { default as ToolCard } from './ToolCard';
+export { default as Treemap } from './Treemap';
+export { default as TreemapNivo } from './Treemap-Nivo';
 export { default as TutorialAdditionalInformationCard } from './TutorialAdditionalInformationCard';
 export { default as TutorialCard } from './TutorialCard';
 export { default as TutorialHeaderCard } from './TutorialHeaderCard';

@@ -1682,8 +1682,6 @@ __metadata:
     "@lexical/rich-text": 0.18.0
     "@lexical/selection": 0.18.0
     "@lexical/utils": 0.18.0
-    "@nivo/core": ^0.99.0
-    "@nivo/treemap": ^0.99.0
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 12.1.5
@@ -14419,106 +14417,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nivo/colors@npm:0.99.0":
-  version: 0.99.0
-  resolution: "@nivo/colors@npm:0.99.0"
-  dependencies:
-    "@nivo/core": 0.99.0
-    "@nivo/theming": 0.99.0
-    "@types/d3-color": ^3.0.0
-    "@types/d3-scale": ^4.0.8
-    "@types/d3-scale-chromatic": ^3.0.0
-    d3-color: ^3.1.0
-    d3-scale: ^4.0.2
-    d3-scale-chromatic: ^3.0.0
-    lodash: ^4.17.21
-  peerDependencies:
-    react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 8067cd28b233915e581a427522d190936cf7f5fd51bc46c9cf8196a31656fcabddd5cd52df09bdbd21b116d5674764daa438d7324975f4df984597a6ba7c7be0
-  languageName: node
-  linkType: hard
-
-"@nivo/core@npm:0.99.0, @nivo/core@npm:^0.99.0":
-  version: 0.99.0
-  resolution: "@nivo/core@npm:0.99.0"
-  dependencies:
-    "@nivo/theming": 0.99.0
-    "@nivo/tooltip": 0.99.0
-    "@react-spring/web": 9.4.5 || ^9.7.2 || ^10.0
-    "@types/d3-shape": ^3.1.6
-    d3-color: ^3.1.0
-    d3-format: ^1.4.4
-    d3-interpolate: ^3.0.1
-    d3-scale: ^4.0.2
-    d3-scale-chromatic: ^3.0.0
-    d3-shape: ^3.2.0
-    d3-time-format: ^3.0.0
-    lodash: ^4.17.21
-    react-virtualized-auto-sizer: ^1.0.26
-    use-debounce: ^10.0.4
-  peerDependencies:
-    react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 063548551f886eb3d027ec4d209cf4354695769fbb81fde133e98cfd0e69da870c0b4a7b5bebe45921bfd1bbba795c42312f3cfed492e37c911a021af40d9294
-  languageName: node
-  linkType: hard
-
-"@nivo/text@npm:0.99.0":
-  version: 0.99.0
-  resolution: "@nivo/text@npm:0.99.0"
-  dependencies:
-    "@nivo/core": 0.99.0
-    "@nivo/theming": 0.99.0
-    "@react-spring/web": 9.4.5 || ^9.7.2 || ^10.0
-  peerDependencies:
-    react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 8e83581cf41f2c0d90b0b7f356697902ac2ddbbe568869ee51dac761aa454619857ca088b440c30209e65160042f97bee6d7565c67c51ee876bb6ebb81d66741
-  languageName: node
-  linkType: hard
-
-"@nivo/theming@npm:0.99.0":
-  version: 0.99.0
-  resolution: "@nivo/theming@npm:0.99.0"
-  dependencies:
-    lodash: ^4.17.21
-  peerDependencies:
-    react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: f82233a22e8b5427e7e58ab59adb0f1d543083b6bffe35650137214176205f3cef3d36f4f082aab8cb525a3713cbdf8f663c37e689994e19709eee1d1fecde32
-  languageName: node
-  linkType: hard
-
-"@nivo/tooltip@npm:0.99.0":
-  version: 0.99.0
-  resolution: "@nivo/tooltip@npm:0.99.0"
-  dependencies:
-    "@nivo/core": 0.99.0
-    "@nivo/theming": 0.99.0
-    "@react-spring/web": 9.4.5 || ^9.7.2 || ^10.0
-  peerDependencies:
-    react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: 942b982266a3def816d5d4ef3d8484ba713dfcf8ce7af7382f2c64e94e392301671db1b22de34709fa99003ec606d7af7573b6437b5e2f8bff5465e17d65960d
-  languageName: node
-  linkType: hard
-
-"@nivo/treemap@npm:^0.99.0":
-  version: 0.99.0
-  resolution: "@nivo/treemap@npm:0.99.0"
-  dependencies:
-    "@nivo/colors": 0.99.0
-    "@nivo/core": 0.99.0
-    "@nivo/text": 0.99.0
-    "@nivo/theming": 0.99.0
-    "@nivo/tooltip": 0.99.0
-    "@react-spring/core": 9.4.5 || ^9.7.2 || ^10.0
-    "@react-spring/web": 9.4.5 || ^9.7.2 || ^10.0
-    "@types/d3-hierarchy": ^3.1.7
-    d3-hierarchy: ^3.1.2
-    lodash: ^4.17.21
-  peerDependencies:
-    react: ^16.14 || ^17.0 || ^18.0 || ^19.0
-  checksum: b9ef85c9b388ed102e512edf175702fff7bc8b455966bd09caecc26dd12cbe2a816ebf4cbd142b4f378d7fcf42db9ef8df554d5d70021022bb4dc36acd2cff4d
-  languageName: node
-  linkType: hard
-
 "@nodelib/fs.scandir@npm:2.1.3":
   version: 2.1.3
   resolution: "@nodelib/fs.scandir@npm:2.1.3"
@@ -14963,72 +14861,6 @@ __metadata:
     "@types/react":
       optional: true
   checksum: bed9c7e8de243a5ec3b93bb6a5860950b0dba359b6680c84d57c7a655e123dec9b5891c5dfe81ab970652e7779fe2ad102a23177c7896dde95f7340817d47ae5
-  languageName: node
-  linkType: hard
-
-"@react-spring/animated@npm:~10.0.1":
-  version: 10.0.1
-  resolution: "@react-spring/animated@npm:10.0.1"
-  dependencies:
-    "@react-spring/shared": ~10.0.1
-    "@react-spring/types": ~10.0.1
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 0c7a19e94379377f12f95d5c9879af016ad64ebc99392930cc4e96b422bda935075007e22b40d2a32b11c76db931ca3c3bf89d49ed0549d3fb6ff8603afe2fc3
-  languageName: node
-  linkType: hard
-
-"@react-spring/core@npm:9.4.5 || ^9.7.2 || ^10.0, @react-spring/core@npm:~10.0.1":
-  version: 10.0.1
-  resolution: "@react-spring/core@npm:10.0.1"
-  dependencies:
-    "@react-spring/animated": ~10.0.1
-    "@react-spring/shared": ~10.0.1
-    "@react-spring/types": ~10.0.1
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 23576074d43d489760bb89e5fa8d862660c95fccc61fbaca1e91d602e9fdafbef62cb2b6037ef999a82f4e00d1523aa903023c7145c6bfe5d5160789d7514a9a
-  languageName: node
-  linkType: hard
-
-"@react-spring/rafz@npm:~10.0.1":
-  version: 10.0.1
-  resolution: "@react-spring/rafz@npm:10.0.1"
-  checksum: 5343c7afb7cd554e631c000858b75676d874951a5664c720ad99754e0252629552db0e5e12d23aa785e94ec1a604b5dcaa8ceb0cdde5c1b5193494478a066e2e
-  languageName: node
-  linkType: hard
-
-"@react-spring/shared@npm:~10.0.1":
-  version: 10.0.1
-  resolution: "@react-spring/shared@npm:10.0.1"
-  dependencies:
-    "@react-spring/rafz": ~10.0.1
-    "@react-spring/types": ~10.0.1
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 1c2e6f800a128ace9c9037f41d02e2caa918b1b9d05d8e72c07648f6424c62ea7c525304e57b8cb81fc173064b4fccd04c66d03c8f4a8f858467e9efb38e7572
-  languageName: node
-  linkType: hard
-
-"@react-spring/types@npm:~10.0.1":
-  version: 10.0.1
-  resolution: "@react-spring/types@npm:10.0.1"
-  checksum: 00b4075e78a68fbaa6c325d01b814ad60988b66cb312ae4eacf01192bdc48818999a779e0c615941c3eb1d086aab73eeb63852146fdc08788f292c2f64227a54
-  languageName: node
-  linkType: hard
-
-"@react-spring/web@npm:9.4.5 || ^9.7.2 || ^10.0":
-  version: 10.0.1
-  resolution: "@react-spring/web@npm:10.0.1"
-  dependencies:
-    "@react-spring/animated": ~10.0.1
-    "@react-spring/core": ~10.0.1
-    "@react-spring/shared": ~10.0.1
-    "@react-spring/types": ~10.0.1
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 0d45fffa6e3cc451fa13f8596ed3eec58fc1a8b6f5b774b3e2ad7a3a552795e7795790aaadd25008be72a68524f90cd8da74eff2555b8f0c3bd50d2be00b5111
   languageName: node
   linkType: hard
 
@@ -19091,7 +18923,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/d3-color@npm:*, @types/d3-color@npm:^3.0.0":
+"@types/d3-color@npm:*":
   version: 3.1.3
   resolution: "@types/d3-color@npm:3.1.3"
   checksum: 8a0e79a709929502ec4effcee2c786465b9aec51b653ba0b5d05dbfec3e84f418270dd603002d94021885061ff592f614979193bd7a02ad76317f5608560e357
@@ -19102,13 +18934,6 @@ __metadata:
   version: 3.0.2
   resolution: "@types/d3-ease@npm:3.0.2"
   checksum: 0885219966294bfc99548f37297e1c75e75da812a5f3ec941977ebb57dcab0a25acec5b2bbd82d09a49d387daafca08521ca269b7e4c27ddca7768189e987b54
-  languageName: node
-  linkType: hard
-
-"@types/d3-hierarchy@npm:^3.1.7":
-  version: 3.1.7
-  resolution: "@types/d3-hierarchy@npm:3.1.7"
-  checksum: 69746b3a65e0fe0ceb3ffcb1a8840a61e271eadb32eccb5034f0fce036d24801aef924ee45b99246580c9f7c81839ab0555f776a11773d82e860d522a2ff1c0e
   languageName: node
   linkType: hard
 
@@ -19128,14 +18953,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/d3-scale-chromatic@npm:^3.0.0":
-  version: 3.1.0
-  resolution: "@types/d3-scale-chromatic@npm:3.1.0"
-  checksum: cb7b86deac077c7c217a52a3f658cdfb812cff8708404fbfe54918c03ead545e1df87df377e9c4eab21c9d6c1aeee6471320e02a5b6b27e2e3f786a12a82ab02
-  languageName: node
-  linkType: hard
-
-"@types/d3-scale@npm:^4.0.2, @types/d3-scale@npm:^4.0.8":
+"@types/d3-scale@npm:^4.0.2":
   version: 4.0.9
   resolution: "@types/d3-scale@npm:4.0.9"
   dependencies:
@@ -19144,7 +18962,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/d3-shape@npm:^3.1.0, @types/d3-shape@npm:^3.1.6":
+"@types/d3-shape@npm:^3.1.0":
   version: 3.1.7
   resolution: "@types/d3-shape@npm:3.1.7"
   dependencies:
@@ -27012,15 +26830,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-array@npm:2":
-  version: 2.12.1
-  resolution: "d3-array@npm:2.12.1"
-  dependencies:
-    internmap: ^1.0.0
-  checksum: 97853b7b523aded17078f37c67742f45d81e88dda2107ae9994c31b9e36c5fa5556c4c4cf39650436f247813602dfe31bf7ad067ff80f127a16903827f10c6eb
-  languageName: node
-  linkType: hard
-
 "d3-array@npm:2 - 3, d3-array@npm:2.10.0 - 3, d3-array@npm:^3.1.6":
   version: 3.2.4
   resolution: "d3-array@npm:3.2.4"
@@ -27030,7 +26839,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-color@npm:1 - 3, d3-color@npm:^3.1.0":
+"d3-color@npm:1 - 3":
   version: 3.1.0
   resolution: "d3-color@npm:3.1.0"
   checksum: 4931fbfda5d7c4b5cfa283a13c91a954f86e3b69d75ce588d06cde6c3628cebfc3af2069ccf225e982e8987c612aa7948b3932163ce15eb3c11cd7c003f3ee3b
@@ -27051,21 +26860,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-format@npm:^1.4.4":
-  version: 1.4.5
-  resolution: "d3-format@npm:1.4.5"
-  checksum: 1b8b2c0bca182173bccd290a43e8b635a83fc8cfe52ec878c7bdabb997d47daac11f2b175cebbe73f807f782ad655f542bdfe18180ca5eb3498a3a82da1e06ab
-  languageName: node
-  linkType: hard
-
-"d3-hierarchy@npm:^3.1.2":
-  version: 3.1.2
-  resolution: "d3-hierarchy@npm:3.1.2"
-  checksum: 0fd946a8c5fd4686d43d3e11bbfc2037a145fda29d2261ccd0e36f70b66af6d7638e2c0c7112124d63fc3d3127197a00a6aecf676bd5bd392a94d7235a214263
-  languageName: node
-  linkType: hard
-
-"d3-interpolate@npm:1 - 3, d3-interpolate@npm:1.2.0 - 3, d3-interpolate@npm:^3.0.1":
+"d3-interpolate@npm:1.2.0 - 3, d3-interpolate@npm:^3.0.1":
   version: 3.0.1
   resolution: "d3-interpolate@npm:3.0.1"
   dependencies:
@@ -27078,16 +26873,6 @@ __metadata:
   version: 3.1.0
   resolution: "d3-path@npm:3.1.0"
   checksum: 2306f1bd9191e1eac895ec13e3064f732a85f243d6e627d242a313f9777756838a2215ea11562f0c7630c7c3b16a19ec1fe0948b1c82f3317fac55882f6ee5d8
-  languageName: node
-  linkType: hard
-
-"d3-scale-chromatic@npm:^3.0.0":
-  version: 3.1.0
-  resolution: "d3-scale-chromatic@npm:3.1.0"
-  dependencies:
-    d3-color: 1 - 3
-    d3-interpolate: 1 - 3
-  checksum: ab6324bd8e1f708e731e02ab44e09741efda2b174cea1d8ca21e4a87546295e99856bc44e2fd3890f228849c96bccfbcf922328f95be6a7df117453eb5cf22c9
   languageName: node
   linkType: hard
 
@@ -27104,7 +26889,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-shape@npm:^3.1.0, d3-shape@npm:^3.2.0":
+"d3-shape@npm:^3.1.0":
   version: 3.2.0
   resolution: "d3-shape@npm:3.2.0"
   dependencies:
@@ -27119,24 +26904,6 @@ __metadata:
   dependencies:
     d3-time: 1 - 3
   checksum: 7342bce28355378152bbd4db4e275405439cabba082d9cd01946d40581140481c8328456d91740b0fe513c51ec4a467f4471ffa390c7e0e30ea30e9ec98fcdf4
-  languageName: node
-  linkType: hard
-
-"d3-time-format@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "d3-time-format@npm:3.0.0"
-  dependencies:
-    d3-time: 1 - 2
-  checksum: c20c1667dbea653f81d923e741f84c23e4b966002ba0d6ed94cbc70692105566e55e89d18d175404534a879383fd1123300bd12885a3c924fe924032bb0060db
-  languageName: node
-  linkType: hard
-
-"d3-time@npm:1 - 2":
-  version: 2.1.1
-  resolution: "d3-time@npm:2.1.1"
-  dependencies:
-    d3-array: 2
-  checksum: d1c7b9658c20646e46c3dd19e11c38e02dec098e8baa7d2cd868af8eb01953668f5da499fa33dc63541cf74a26e788786f8828c4381dbbf475a76b95972979a6
   languageName: node
   linkType: hard
 
@@ -33945,13 +33712,6 @@ __metadata:
   version: 2.0.3
   resolution: "internmap@npm:2.0.3"
   checksum: 7ca41ec6aba8f0072fc32fa8a023450a9f44503e2d8e403583c55714b25efd6390c38a87161ec456bf42d7bc83aab62eb28f5aef34876b1ac4e60693d5e1d241
-  languageName: node
-  linkType: hard
-
-"internmap@npm:^1.0.0":
-  version: 1.0.1
-  resolution: "internmap@npm:1.0.1"
-  checksum: 9d00f8c0cf873a24a53a5a937120dab634c41f383105e066bb318a61864e6292d24eb9516e8e7dccfb4420ec42ca474a0f28ac9a6cc82536898fa09bbbe53813
   languageName: node
   linkType: hard
 
@@ -43585,16 +43345,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtualized-auto-sizer@npm:^1.0.26":
-  version: 1.0.26
-  resolution: "react-virtualized-auto-sizer@npm:1.0.26"
-  peerDependencies:
-    react: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0 || ^19.0.0
-    react-dom: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: bbfecf2bc8546b350a948a3e1a3be445bf04c46400f8e33771795aa8fafbc4e8f436d2ab461e8476b89ec4b7efe3c194bfaf31f5f6b3cf043276c4f7d3705b52
-  languageName: node
-  linkType: hard
-
 "react@npm:17.0.2":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
@@ -49344,15 +49094,6 @@ __metadata:
   peerDependencies:
     react: ">=16.8.0"
   checksum: 0f8b9e571f68a4694033ec00690bf73d781ac890140ae9ed4b330f71f7adb3f7d7df5cdaa32923c4d03fdc9de8a11be0f84301175ae4f66208af52ad03c55504
-  languageName: node
-  linkType: hard
-
-"use-debounce@npm:^10.0.4":
-  version: 10.0.4
-  resolution: "use-debounce@npm:10.0.4"
-  peerDependencies:
-    react: "*"
-  checksum: 59d7e014e9ac6ba57a5b1c411cf1c088b44987b898dd64a4dc73a02da66a5ecacbc3521e261d042e7d388445b69c820b43837a1533fe9def7f85adcaaec472d0
   languageName: node
   linkType: hard
 

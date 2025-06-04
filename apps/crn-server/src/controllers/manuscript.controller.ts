@@ -242,7 +242,9 @@ export default class ManuscriptController {
 
     if (
       ('status' in manuscriptData && manuscriptData.status) ||
-      ('assignedUsers' in manuscriptData && manuscriptData.assignedUsers)
+      ('assignedUsers' in manuscriptData && manuscriptData.assignedUsers) ||
+      ('apcRequested' in manuscriptData &&
+        manuscriptData.apcRequested !== undefined)
     ) {
       await this.manuscriptDataProvider.update(id, manuscriptData, userId);
       return this.fetchById(id, userId);

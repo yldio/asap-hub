@@ -1,5 +1,6 @@
 import { isEnabled } from '@asap-hub/flags';
 import {
+  ApcCoverageRequestStatus,
   ManuscriptStatus,
   manuscriptStatus,
   PartialManuscriptResponse,
@@ -49,13 +50,16 @@ const rowStyles = css({
   paddingBottom: 0,
 });
 
-const apcCoverageStyles = css({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  fontSize: rem(14),
-  color: lead.rgb,
-});
+const apcCoverageStyles = (italicize: boolean) =>
+  css({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: rem(14),
+    color: lead.rgb,
+    maxWidth: rem(72),
+    ...(italicize ? { fontStyle: 'italic' } : {}),
+  });
 
 const assignedUsersContainerStyles = css({
   display: 'flex',
@@ -111,6 +115,14 @@ const teamLinkStyles = css({
   gap: rem(3),
 });
 
+const apcCoverageContainerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(16),
+  justifyContent: 'space-between',
+  maxWidth: rem(120),
+});
+
 type ComplianceTableRowProps = {
   isComplianceReviewer: boolean;
   data: PartialManuscriptResponse;
@@ -122,27 +134,55 @@ type ComplianceTableRowProps = {
     manuscript: PartialManuscriptResponse,
   ) => void;
   handleAssignUsersClick: (manuscript: PartialManuscriptResponse) => void;
+  handleUpdateAPCDetailsClick: (manuscript: PartialManuscriptResponse) => void;
 };
 
 const completeStatuses = ['Closed (other)', 'Compliant'];
 export const apcCoverableStatuses = ['Compliant', 'Submit Final Publication'];
 
+const getAPCStatusLabel = (
+  apcRequested?: boolean,
+  apcCoverageRequestStatus?: ApcCoverageRequestStatus,
+): string => {
+  if (apcRequested !== undefined) {
+    if (apcRequested === true) {
+      switch (apcCoverageRequestStatus) {
+        case 'declined':
+          return 'Declined';
+        case 'paid':
+          return 'Paid';
+        case 'notPaid':
+        default:
+          return 'Requested';
+      }
+    } else {
+      return 'Not requested';
+    }
+  } else {
+    return 'Information needed';
+  }
+};
+
 type APCCoverageProps = {
   apcRequested?: boolean;
+  apcCoverageRequestStatus?: ApcCoverageRequestStatus;
   isComplianceReviewer: boolean;
   status: ManuscriptStatus;
+  handleUpdateAPCDetailsClick: () => void;
 };
 
 const APCCoverage: React.FC<APCCoverageProps> = ({
   apcRequested,
+  apcCoverageRequestStatus,
   isComplianceReviewer,
+  handleUpdateAPCDetailsClick,
   status,
 }) => {
   const isNewApcCoverageDisabled = !isEnabled('DISPLAY_NEW_APC_COVERAGE');
 
   if (isNewApcCoverageDisabled) {
     return (
-      <p data-testid="apc-coverage" css={apcCoverageStyles}>
+      <p data-testid="apc-coverage" css={apcCoverageStyles(false)}>
         {''}
       </p>
     );
@@ -154,20 +194,22 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
     return (
       <p
         data-testid="apc-coverage"
-        css={css([apcCoverageStyles, { justifyContent: 'flex-start' }])}
+        css={css([apcCoverageStyles(false), { justifyContent: 'flex-start' }])}
       >
         —
       </p>
     );
   }
 
+  const apcCoverageLabel = getAPCStatusLabel(
+    apcRequested,
+    apcCoverageRequestStatus,
+  );
   return (
-    <div
-      data-testid="apc-coverage"
-      css={css({ display: 'flex', alignItems: 'center' })}
-    >
-      {/* TODO: fix this once the apc coverage label is properly implemented */}
-      <p css={apcCoverageStyles}>{''}</p>
+    <div data-testid="apc-coverage" css={apcCoverageContainerStyles}>
+      <p css={apcCoverageStyles(apcCoverageLabel === 'Information needed')}>
+        {apcCoverageLabel}
+      </p>
       {isComplianceReviewer ? (
         apcRequested === undefined ? (
           <Button
@@ -177,6 +219,7 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
               assignUsersButtonStyles,
               editUsersButtonStyles,
             ])}
+            onClick={handleUpdateAPCDetailsClick}
           >
             {plusIcon}
           </Button>
@@ -188,6 +231,7 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
               assignUsersButtonStyles,
               editUsersButtonStyles,
             ])}
+            onClick={handleUpdateAPCDetailsClick}
           >
             <PencilIcon />
           </Button>
@@ -201,9 +245,19 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
   isComplianceReviewer,
   data,
   handleAssignUsersClick,
+  handleUpdateAPCDetailsClick,
   handleStatusClick,
 }) => {
-  const { id, team, manuscriptId, lastUpdated, status, assignedUsers } = data;
+  const {
+    id,
+    team,
+    manuscriptId,
+    lastUpdated,
+    status,
+    assignedUsers,
+    apcRequested,
+    apcCoverageRequestStatus,
+  } = data;
 
   const canEditAssignedUsers =
     !completeStatuses.includes(status ?? '') && isComplianceReviewer;
@@ -264,8 +318,12 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
         </td>
         <td>
           <APCCoverage
-            apcRequested={data.apcRequested}
+            apcRequested={apcRequested}
+            apcCoverageRequestStatus={apcCoverageRequestStatus}
             isComplianceReviewer={isComplianceReviewer}
+            handleUpdateAPCDetailsClick={() =>
+              handleUpdateAPCDetailsClick(data)
+            }
             status={status as ManuscriptStatus}
           />
         </td>

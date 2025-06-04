@@ -60,7 +60,6 @@ describe('ComplianceAssignUsersModal', () => {
         onConfirm={onConfirm}
         PillId={mockPillId}
         teams="Team A"
-        apcCoverage="Yes"
         manuscriptTitle="Test Manuscript"
         getAssignedUsersSuggestions={mockGetAssignedUsersSuggestions}
         assignedUsers={mockAssignedUsers}
@@ -72,7 +71,6 @@ describe('ComplianceAssignUsersModal', () => {
     ).toBeInTheDocument();
     expect(screen.getByTestId('pill-id')).toBeInTheDocument();
     expect(screen.getByText('Team A')).toBeInTheDocument();
-    expect(screen.getByText('Yes')).toBeInTheDocument();
     expect(screen.getByText('Test Manuscript')).toBeInTheDocument();
   });
 
@@ -83,7 +81,6 @@ describe('ComplianceAssignUsersModal', () => {
         onConfirm={onConfirm}
         PillId={mockPillId}
         teams="Team A"
-        apcCoverage="Yes"
         manuscriptTitle="Test Manuscript"
         getAssignedUsersSuggestions={mockGetAssignedUsersSuggestions}
         assignedUsers={mockAssignedUsers}
@@ -102,7 +99,6 @@ describe('ComplianceAssignUsersModal', () => {
         onConfirm={onConfirm}
         PillId={mockPillId}
         teams="Team A"
-        apcCoverage="Yes"
         manuscriptTitle="Test Manuscript"
         getAssignedUsersSuggestions={mockGetAssignedUsersSuggestions}
         assignedUsers={mockAssignedUsers}
@@ -121,7 +117,6 @@ describe('ComplianceAssignUsersModal', () => {
         onConfirm={mockOnConfirm}
         PillId={mockPillId}
         teams="Team A"
-        apcCoverage="Yes"
         manuscriptTitle="Test Manuscript"
         getAssignedUsersSuggestions={mockGetAssignedUsersSuggestions}
         assignedUsers={mockAssignedUsers}
@@ -144,7 +139,6 @@ describe('ComplianceAssignUsersModal', () => {
         onConfirm={onConfirm}
         PillId={mockPillId}
         teams="Team A"
-        apcCoverage="Yes"
         manuscriptTitle="Test Manuscript"
         getAssignedUsersSuggestions={mockGetAssignedUsersSuggestions}
         assignedUsers={mockAssignedUsers}
@@ -166,7 +160,6 @@ describe('ComplianceAssignUsersModal', () => {
         onConfirm={onConfirm}
         PillId={mockPillId}
         teams="Team A"
-        apcCoverage="Yes"
         manuscriptTitle="Test Manuscript"
         getAssignedUsersSuggestions={mockGetAssignedUsersSuggestions}
         assignedUsers={[]}
@@ -192,7 +185,6 @@ describe('ComplianceAssignUsersModal', () => {
         onConfirm={onConfirm}
         PillId={mockPillId}
         teams="Team A"
-        apcCoverage="Yes"
         manuscriptTitle="Test Manuscript"
         getAssignedUsersSuggestions={mockGetAssignedUsersSuggestions}
         assignedUsers={mockAssignedUsers}

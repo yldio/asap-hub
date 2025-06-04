@@ -22,7 +22,8 @@ type FieldType =
   | 'tel'
   | 'url'
   | 'password'
-  | 'date';
+  | 'date'
+  | 'number';
 
 const disabledStyles = css({
   color: lead.rgb,
@@ -140,7 +141,14 @@ type TextFieldProps = {
   readonly onChange?: (newValue: string) => void;
 } & Pick<
   InputHTMLAttributes<HTMLInputElement>,
-  'id' | 'placeholder' | 'required' | 'maxLength' | 'pattern' | 'max' | 'onBlur'
+  | 'id'
+  | 'placeholder'
+  | 'required'
+  | 'maxLength'
+  | 'pattern'
+  | 'max'
+  | 'onBlur'
+  | 'step'
 >;
 const TextField: React.FC<TextFieldProps> = ({
   type = 'text',

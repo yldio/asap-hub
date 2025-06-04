@@ -12,6 +12,7 @@ import { Card, Pill } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, steel } from '../colors';
 import { rem } from '../pixels';
+import APCCoverageModal, { APCCoverageFormData } from './APCCoverageModal';
 import ComplianceAssignUsersModal, {
   AssignedUsersFormData,
 } from './ComplianceAssignUsersModal';
@@ -83,6 +84,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
   const [displayAssignUsersModal, setDisplayAssignUsersModal] = useState(false);
+  const [displaySubmitAPCModal, setDisplaySubmitAPCModal] = useState(false);
   const [newSelectedStatus, setNewSelectedStatus] =
     useState<ManuscriptStatus>();
   const [manuscriptDetails, setManuscriptDetails] =
@@ -91,6 +93,13 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
   const handleAssignUsersClick = (manuscript: PartialManuscriptResponse) => {
     setManuscriptDetails(manuscript);
     setDisplayAssignUsersModal(true);
+  };
+
+  const handleUpdateAPCDetailsClick = (
+    manuscript: PartialManuscriptResponse,
+  ) => {
+    setManuscriptDetails(manuscript);
+    setDisplaySubmitAPCModal(true);
   };
 
   const handleStatusClick = (
@@ -122,7 +131,25 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
           (user) => user.value,
         ),
       });
-      setManuscriptDetails(undefined);
+      setDisplayAssignUsersModal(false);
+    }
+  };
+
+  const handleAPCDetailsUpdate = async (
+    apcCoverageData: APCCoverageFormData,
+  ) => {
+    if (manuscriptDetails) {
+      await onUpdateManuscript(manuscriptDetails.id, {
+        ...apcCoverageData,
+        apcRequested: apcCoverageData.apcRequested === 'Requested',
+        apcAmountRequested: apcCoverageData.apcAmountRequested
+          ? Number(apcCoverageData.apcAmountRequested)
+          : undefined,
+        apcAmountPaid: apcCoverageData.apcAmountPaid
+          ? Number(apcCoverageData.apcAmountPaid)
+          : undefined,
+      });
+      setDisplaySubmitAPCModal(false);
     }
   };
 
@@ -147,8 +174,6 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
           onConfirm={handleAssignUsersConfirm}
           PillId={PillId}
           teams={manuscriptDetails.teams ?? ''}
-          // TODO: fix this once the apcCoverageRequestStatus is properly implemented
-          apcCoverage={''}
           manuscriptTitle={manuscriptDetails.title}
           getAssignedUsersSuggestions={getAssignedUsersSuggestions}
           assignedUsers={manuscriptDetails.assignedUsers.map((user) => ({
@@ -162,6 +187,17 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
             label: `${user.firstName} ${user.lastName}`,
             value: user.id,
           }))}
+        />
+      )}
+      {displaySubmitAPCModal && manuscriptDetails && (
+        <APCCoverageModal
+          onDismiss={() => setDisplaySubmitAPCModal(false)}
+          onConfirm={handleAPCDetailsUpdate}
+          apcRequested={manuscriptDetails.apcRequested}
+          apcAmountRequested={manuscriptDetails.apcAmountRequested}
+          apcCoverageRequestStatus={manuscriptDetails.apcCoverageRequestStatus}
+          apcAmountPaid={manuscriptDetails.apcAmountPaid}
+          declinedReason={manuscriptDetails.declinedReason}
         />
       )}
       <div css={container}>
@@ -189,6 +225,7 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
                 isComplianceReviewer={isComplianceReviewer}
                 getAssignedUsersSuggestions={getAssignedUsersSuggestions}
                 handleAssignUsersClick={handleAssignUsersClick}
+                handleUpdateAPCDetailsClick={handleUpdateAPCDetailsClick}
                 handleStatusClick={handleStatusClick}
               />
             ))}

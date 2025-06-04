@@ -494,6 +494,12 @@ export const useManuscripts = (
                   ...previousManuscriptItem,
                   status: updatedManuscriptItem.status,
                   assignedUsers: updatedManuscriptItem.assignedUsers,
+                  apcAmountPaid: updatedManuscriptItem.apcAmountPaid,
+                  apcAmountRequested: updatedManuscriptItem.apcAmountRequested,
+                  apcCoverageRequestStatus:
+                    updatedManuscriptItem.apcCoverageRequestStatus,
+                  apcRequested: updatedManuscriptItem.apcRequested,
+                  declinedReason: updatedManuscriptItem.declinedReason,
                 }
               : previousManuscriptItem,
           ),

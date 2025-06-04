@@ -116,6 +116,70 @@ describe('Email Notification Service', () => {
       });
     });
 
+    test.each`
+      template                    | action
+      ${'manuscript_submitted'}   | ${'submitted'}
+      ${'manuscript_resubmitted'} | ${'resubmitted'}
+    `(
+      'Should send email notification to OS team when manuscript is $action',
+      async ({ template }) => {
+        mockEnvironmentGetter.mockReturnValueOnce('production');
+        contentfulGraphqlClientMock.request.mockResolvedValue({
+          manuscripts: manuscript,
+        });
+
+        await emailNotificationService.sendEmailNotification(
+          template,
+          manuscript.sys.id,
+          '',
+        );
+
+        expect(mockedPostmark).toHaveBeenCalledTimes(2);
+        expect(mockedPostmark).toHaveBeenCalledWith(
+          expect.objectContaining({
+            To: 'openscience@parkinsonsroadmap.org',
+          }),
+        );
+        expect(mockedPostmark).toHaveBeenCalledWith(
+          expect.objectContaining({
+            To: 'fiona.first@email.com,second.external@email.com,connor.corresponding@email.com',
+          }),
+        );
+      },
+    );
+
+    test.each`
+      template                                     | action
+      ${'discussion_created'}                      | ${'discussion created'}
+      ${'os_member_replied_to_discussion'}         | ${'os member replied to discussion'}
+      ${'status_changed_review_compliance_report'} | ${'manuscript status changed to review compliance report'}
+      ${'status_changed_submit_final_publication'} | ${'manuscript status changed to submit final publication'}
+      ${'status_changed_addendum_required'}        | ${'manuscript status changed to addendum required'}
+      ${'status_changed_compliant'}                | ${'manuscript status changed to compliant'}
+      ${'status_changed_closed_other'}             | ${'manuscript status changed to closed'}
+    `(
+      'Should not send email notification to OS team when $action',
+      async ({ template }) => {
+        mockEnvironmentGetter.mockReturnValueOnce('production');
+        contentfulGraphqlClientMock.request.mockResolvedValue({
+          manuscripts: manuscript,
+        });
+
+        await emailNotificationService.sendEmailNotification(
+          template,
+          manuscript.sys.id,
+          '',
+        );
+
+        expect(mockedPostmark).toHaveBeenCalledTimes(1);
+        expect(mockedPostmark).toHaveBeenCalledWith(
+          expect.not.objectContaining({
+            To: 'openscience@parkinsonsroadmap.org',
+          }),
+        );
+      },
+    );
+
     test('filters recipients emails when environment is not production and notification list is provided', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('development');
       contentfulGraphqlClientMock.request.mockResolvedValue({

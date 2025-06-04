@@ -52,7 +52,6 @@ export const emailNotificationMapping: EmailNotificationMapping = {
     grantee: 'closed',
   },
   discussion_created: {
-    open_science_team: 'waiting-for-grantee-reply',
     grantee: 'waiting-for-grantee-reply',
   },
   os_member_replied_to_discussion: {

@@ -363,7 +363,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     mode: 'all',
     defaultValues: {
       title: title || '',
-      url: url || '',
+      url: url || undefined,
       versions: [
         {
           type: type || '',

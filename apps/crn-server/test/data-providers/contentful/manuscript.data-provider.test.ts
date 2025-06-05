@@ -1305,7 +1305,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         count: 1,
         teamId: '',
         title: '',
-        url: '',
+        url: undefined,
         versions: [],
         assignedUsers: [],
         discussions: [],

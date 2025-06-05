@@ -115,7 +115,7 @@ export class ManuscriptContentfulDataProvider
               manuscriptCount: manuscript.count || 0,
             }),
             title: manuscript.title || '',
-            url: manuscript.url || '',
+            url: manuscript.url || undefined,
             teams: getCommaAndString(
               (manuscript.teamsCollection?.items || []).map(
                 (teamItem) => teamItem?.displayName || '',
@@ -507,7 +507,7 @@ const parseGraphQLManuscript = (
     id: manuscript.sys.id,
     count,
     title: manuscript.title || '',
-    url: manuscript.url || '',
+    url: manuscript.url || undefined,
     teamId: teamData?.sys.id || '',
     status: manuscriptMapStatus(manuscript.status) || undefined,
     discussions: parseGraphQLManuscriptDiscussions(

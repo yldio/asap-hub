@@ -1168,7 +1168,7 @@ it('calls onUpdate when form is updated', async () => {
     expect(onUpdate).toHaveBeenCalledWith('manuscript-id', {
       teamId: '1',
       title: 'manuscript title',
-      url: '',
+      url: undefined,
       versions: [
         {
           acknowledgedGrantNumber: 'Yes',
@@ -1285,7 +1285,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     expect(onResubmit).toHaveBeenCalledWith('manuscript-id', {
       teamId: '1',
       title: 'manuscript title',
-      url: '',
+      url: undefined,
       versions: [
         {
           acknowledgedGrantNumber: 'Yes',

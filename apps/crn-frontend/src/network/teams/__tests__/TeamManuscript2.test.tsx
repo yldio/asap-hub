@@ -229,7 +229,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       {
         title,
         teamId,
-        url: '',
+        url: undefined,
         eligibilityReasons: [],
         versions: [
           {

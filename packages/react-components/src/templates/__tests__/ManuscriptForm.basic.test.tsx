@@ -143,7 +143,7 @@ describe('Manuscript form', () => {
     await waitFor(() => {
       expect(defaultProps.onCreate).toHaveBeenCalledWith({
         title: 'manuscript title',
-        url: '',
+        url: undefined,
         eligibilityReasons: [],
         versions: [
           expect.objectContaining({

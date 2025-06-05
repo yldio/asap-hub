@@ -293,6 +293,7 @@ export const parsePublicUserToResponse = ({
   degree: user.degree,
   firstName: user.firstName,
   lastName: user.lastName,
+  alumni: user.alumni,
   id: user.id,
   institution: user.institution,
   interestGroups: user.interestGroups.map((ig) => ({

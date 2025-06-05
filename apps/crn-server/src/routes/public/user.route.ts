@@ -63,6 +63,7 @@ const mapUserToPublicUser = (user: UserResponse): PublicUserResponse => ({
   degree: user.degree,
   firstName: user.firstName,
   lastName: user.lastName,
+  alumni: user.alumniSinceDate ? 'Yes' : 'No',
   id: user.id,
   institution: user.institution,
   interestGroups: user.interestGroups.map((ig) => ({

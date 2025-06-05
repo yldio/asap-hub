@@ -1,5 +1,7 @@
-/* istanbul ignore file */
-import { inviteHandlerFactory } from '@asap-hub/server-common';
+import {
+  inviteHandlerFactory,
+  sqsInviteHandlerFactory,
+} from '@asap-hub/server-common';
 import { SES } from '@aws-sdk/client-ses';
 import { origin, sesRegion } from '../../config';
 import logger from '../../utils/logger';
@@ -15,8 +17,16 @@ const ses = new SES({
 
 const userDataProvider = getUserDataProvider();
 
-export const handler = sentryWrapper(
-  inviteHandlerFactory<UserDataProvider>(
+const eventHandler = inviteHandlerFactory<UserDataProvider>(
+  sendEmailFactory(ses),
+  userDataProvider,
+  origin,
+  logger,
+  true,
+);
+
+export const sqsHandler = sentryWrapper(
+  sqsInviteHandlerFactory<UserDataProvider>(
     sendEmailFactory(ses),
     userDataProvider,
     origin,
@@ -24,3 +34,5 @@ export const handler = sentryWrapper(
     true,
   ),
 );
+
+export const handler = sentryWrapper(eventHandler);

@@ -38,6 +38,7 @@ const {
   REGION,
   SENTRY_DSN,
   SES_REGION,
+  QUEUE_URL,
 } = process.env;
 
 export const activeCampaignAccount = ACTIVE_CAMPAIGN_ACCOUNT || '';
@@ -91,3 +92,4 @@ export const userInviteBcc = EMAIL_BCC || 'gp2.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'techsupport@gp2.org';
 export const userInviteSender =
   EMAIL_SENDER || `"GP2 Hub" <techsupport@gp2.org>`;
+export const inviteUserQueueUrl = QUEUE_URL || '';

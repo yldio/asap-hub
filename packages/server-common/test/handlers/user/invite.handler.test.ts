@@ -1,186 +1,490 @@
 import { UserDataObject } from '@asap-hub/model';
+import { SQSEvent } from 'aws-lambda';
 import path from 'path';
 import url from 'url';
 import {
   inviteHandlerFactory,
+  sqsInviteHandlerFactory,
   UserInviteEventBridgeEvent,
 } from '../../../src/handlers/user';
-import { crnWelcomeTemplate, SendEmail } from '../../../src/utils';
+import {
+  crnWelcomeTemplate,
+  SendEmail,
+  SendEmailTemplate,
+} from '../../../src/utils';
 import { getUserDataObject } from '../../fixtures/users.fixtures';
 import { loggerMock as logger } from '../../mocks/logger.mock';
 
 describe('Invite Handler', () => {
-  const sendEmailMock: jest.MockedFunction<SendEmail> = jest.fn();
   const origin = 'https://asap-hub.org';
+  const sendEmailMock: jest.MockedFunction<SendEmail> = jest.fn();
   const dataProvider = {
     fetchById: jest.fn(),
     update: jest.fn(),
   };
-  const inviteHandler = inviteHandlerFactory(
-    sendEmailMock,
-    dataProvider,
-    origin,
-    logger,
-    undefined,
-    undefined,
-    jest.fn(),
-  );
+
+  const inviteHandler = (suppressConflict?: boolean, templateName?: string) =>
+    inviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+      suppressConflict,
+      templateName,
+      jest.fn(),
+    );
+
+  // Helper to stub a user with given connections
+  const stubUser = (
+    connections: Array<{ code: string }> = [],
+  ): UserDataObject => ({
+    ...getUserDataObject(),
+    connections,
+  });
+
+  // Helper to assert that update() was called correctly
+  const expectUpdate = (
+    user: UserDataObject,
+    conflictFlag: boolean = false,
+  ) => {
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      user.id,
+      { connections: [{ code: expect.any(String) }] },
+      { suppressConflict: conflictFlag },
+    );
+  };
+
+  // Helper to assert that sendEmail() was called with the right link
+  const expectEmail = (user: UserDataObject) => {
+    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
+    const link = new url.URL(path.join(`/welcome/${code}`), origin).toString();
+    expect(sendEmailMock).toHaveBeenCalledWith({
+      to: [user.email],
+      template: crnWelcomeTemplate,
+      values: { firstName: user.firstName, link },
+    });
+  };
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  test('Should throw when the user is not found', async () => {
+  test('throws when the user is not found', async () => {
     dataProvider.fetchById.mockResolvedValueOnce(null);
-
+    const handler = inviteHandler();
     const event = getEventBridgeEventMock(getUserDataObject().id);
 
-    await expect(inviteHandler(event)).rejects.toThrow(
+    await expect(handler(event)).rejects.toThrow(
       `Unable to find a user with ID ${getUserDataObject().id}`,
     );
   });
 
-  test('Should throw when it fails to save the user code', async () => {
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+  test('throws when it fails to save the user code', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
     dataProvider.update.mockRejectedValueOnce(new Error('some error'));
+    const handler = inviteHandler();
+    const event = getEventBridgeEventMock(user.id);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
-
-    await expect(inviteHandler(event)).rejects.toThrow(
-      `Unable to save the code for the user with ID ${getUserDataObject().id}`,
+    await expect(handler(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${user.id}`,
     );
   });
 
-  test('Should throw when it fails to send the email but still save the new invitation code', async () => {
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+  test('throws when email send fails but still saves code', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
     dataProvider.update.mockResolvedValueOnce(null);
     sendEmailMock.mockRejectedValueOnce(new Error('some error'));
+    const handler = inviteHandler();
+    const event = getEventBridgeEventMock(user.id);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
-
-    await expect(inviteHandler(event)).rejects.toThrow(
-      `Unable to send the email for the user with ID ${getUserDataObject().id}`,
+    await expect(handler(event)).rejects.toThrow(
+      `Unable to send the email for the user with ID ${user.id}`,
     );
-    expect(dataProvider.update).toHaveBeenCalledWith(userWithoutConnection.id, {
-      connections: [{ code: expect.any(String) }],
-    });
+    expectUpdate(user, false);
   });
 
-  test('Should not send the invitation email for a user that already has the invitation code', async () => {
+  test('skips emailing when user already has an invite code', async () => {
     const code = 'c6fdb21b-32f3-4549-ac17-d0c83dc5335b';
-    const userWithConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [{ code }],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithConnection);
+    const user = stubUser([{ code }]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    const handler = inviteHandler();
+    const event = getEventBridgeEventMock(user.id);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
+    await handler(event);
 
-    await inviteHandler(event);
-
-    expect(dataProvider.fetchById).toHaveBeenCalledWith(userWithConnection.id);
+    expect(dataProvider.fetchById).toHaveBeenCalledWith(user.id);
     expect(sendEmailMock).not.toBeCalled();
   });
 
-  test('Should not send the invitation email for a user that already has an authentication code', async () => {
-    const connectionCode = 'auth0|some-other-id';
-    const userWithOtherConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [
-        {
-          code: connectionCode,
-        },
-      ],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithOtherConnection);
+  test('skips everything when user already has an auth0 connection', async () => {
+    const user = stubUser([{ code: 'auth0|some-other-id' }]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    const handler = inviteHandler();
+    const event = getEventBridgeEventMock(user.id);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
+    await handler(event);
 
-    await inviteHandler(event);
-
-    expect(dataProvider.fetchById).toHaveBeenCalledWith(
-      userWithOtherConnection.id,
-    );
     expect(dataProvider.update).not.toHaveBeenCalled();
     expect(sendEmailMock).not.toHaveBeenCalled();
   });
 
-  test('Should find the user without an invitation code, create the invitation code and send the invitation email', async () => {
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+  test('creates code & sends email for a fresh user (default conflict=false)', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    dataProvider.update.mockResolvedValueOnce(null);
+    const handler = inviteHandler();
+    const event = getEventBridgeEventMock(user.id);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
+    await handler(event);
 
-    await inviteHandler(event);
-
-    expect(dataProvider.fetchById).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-    );
-    expect(dataProvider.update).toHaveBeenCalledWith(userWithoutConnection.id, {
-      connections: [{ code: expect.any(String) }],
-    });
-    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
-    const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
-    expect(sendEmailMock).toHaveBeenCalledWith({
-      to: [userWithoutConnection.email],
-      template: crnWelcomeTemplate,
-      values: {
-        firstName: userWithoutConnection.firstName,
-        link: expectedLink.toString(),
-      },
-    });
+    expectUpdate(user, false);
+    expectEmail(user);
   });
-  test('Should pass in the suppress conflict flag if set', async () => {
-    const inviteHandlerNoConflict = inviteHandlerFactory(
+
+  test('passes suppressConflict=true when configured', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    dataProvider.update.mockResolvedValueOnce(null);
+    const handler = inviteHandler(true, 'Crn-Welcome');
+    const event = getEventBridgeEventMock(user.id);
+
+    await handler(event);
+
+    expectUpdate(user, true);
+    expectEmail(user);
+  });
+
+  test('explicit false still results in suppressConflict=false', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    dataProvider.update.mockResolvedValueOnce(null);
+    const handler = inviteHandler(false, 'Crn-Welcome');
+    const event = getEventBridgeEventMock(user.id);
+
+    await handler(event);
+
+    expectUpdate(user, false);
+    expectEmail(user);
+  });
+
+  test('version mismatch error when suppressConflict flag is true', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    const versionErr = new Error('Version mismatch');
+    versionErr.name = 'VersionMismatch';
+    dataProvider.update.mockRejectedValueOnce(versionErr);
+    const handler = inviteHandler(true, 'Crn-Welcome');
+    const event = getEventBridgeEventMock(user.id);
+
+    await expect(handler(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${user.id}`,
+    );
+    expectUpdate(user, true);
+  });
+
+  test('version mismatch error when suppressConflict flag is false', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    const versionErr = new Error('Version mismatch');
+    versionErr.name = 'VersionMismatch';
+    dataProvider.update.mockRejectedValueOnce(versionErr);
+    const handler = inviteHandler(false, 'Crn-Welcome');
+    const event = getEventBridgeEventMock(user.id);
+
+    await expect(handler(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${user.id}`,
+    );
+    expectUpdate(user, false);
+  });
+
+  test('version mismatch error when suppressConflict flag is undefined', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    const versionErr = new Error('Version mismatch');
+    versionErr.name = 'VersionMismatch';
+    dataProvider.update.mockRejectedValueOnce(versionErr);
+    const handler = inviteHandler(undefined, 'Crn-Welcome');
+    const event = getEventBridgeEventMock(user.id);
+
+    await expect(handler(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${user.id}`,
+    );
+    expectUpdate(user, false);
+  });
+
+  test('uses default suppressConflict=false and template="Crn-Welcome"', async () => {
+    const user = stubUser([]);
+    dataProvider.fetchById.mockResolvedValueOnce(user);
+    dataProvider.update.mockResolvedValueOnce(null);
+    // Note: we do NOT pass suppressConflict or templateName here
+    const handlerDefault = inviteHandlerFactory(
       sendEmailMock,
       dataProvider,
       origin,
       logger,
-      true,
-      'Crn-Welcome',
-      jest.fn(),
     );
+    const event = getEventBridgeEventMock(user.id);
 
-    const userWithoutConnection: UserDataObject = {
-      ...getUserDataObject(),
-      connections: [],
-    };
-    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+    await handlerDefault(event);
 
-    const event = getEventBridgeEventMock(getUserDataObject().id);
-
-    await inviteHandlerNoConflict(event);
-
-    expect(dataProvider.fetchById).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-    );
+    // Default suppressConflict should be false
     expect(dataProvider.update).toHaveBeenCalledWith(
-      userWithoutConnection.id,
-      {
-        connections: [{ code: expect.any(String) }],
-      },
-      { suppressConflict: true },
+      user.id,
+      { connections: [{ code: expect.any(String) }] },
+      { suppressConflict: false },
     );
+
+    // Default template should be 'Crn-Welcome'
     const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
-    const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
+    const link = new url.URL(path.join(`/welcome/${code}`), origin).toString();
     expect(sendEmailMock).toHaveBeenCalledWith({
-      to: [userWithoutConnection.email],
-      template: crnWelcomeTemplate,
-      values: {
-        firstName: userWithoutConnection.firstName,
-        link: expectedLink.toString(),
+      to: [user.email],
+      template: 'Crn-Welcome',
+      values: { firstName: user.firstName, link },
+    });
+  });
+});
+
+function createEvent(userId: string): UserInviteEventBridgeEvent {
+  return {
+    id: 'test-id',
+    version: '1',
+    account: 'test-account',
+    time: '3234234234',
+    region: 'eu-west-1',
+    resources: [],
+    source: 'asap.user',
+    'detail-type': 'UsersPublished',
+    detail: {
+      type: 'UsersPublished',
+      resourceId: userId,
+      payload: {
+        $type: 'EnrichedContentEvent',
+        type: 'Published',
+        id: userId,
+        created: '2021-02-15T13:11:25Z',
+        lastModified: '2021-02-15T13:11:25Z',
+        version: 1,
+        data: {},
       },
+    },
+  };
+}
+
+describe('sqsInviteHandlerFactory', () => {
+  const origin = 'https://asap-hub.org';
+  const sendEmailMock: jest.MockedFunction<SendEmail> = jest.fn();
+  const dataProvider = {
+    fetchById: jest.fn<Promise<UserDataObject | null>, [string]>(),
+    update: jest.fn<Promise<void>, [string, any, any]>(),
+  };
+
+  const template: SendEmailTemplate = 'Crn-Welcome';
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  test('invokes inviteHandler for each record', async () => {
+    // Prepare two event records
+    const user1 = {
+      id: 'u1',
+      email: 'u1@example.com',
+      firstName: 'User1',
+      connections: [],
+    } as UserDataObject;
+    const user2 = {
+      id: 'u2',
+      email: 'u2@example.com',
+      firstName: 'User2',
+      connections: [],
+    } as UserDataObject;
+
+    dataProvider.fetchById
+      .mockResolvedValueOnce(user1)
+      .mockResolvedValueOnce(user2);
+    dataProvider.update.mockResolvedValue();
+    sendEmailMock.mockResolvedValue();
+
+    const sqsHandler = sqsInviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+      false,
+      template,
+    );
+
+    const event1 = createEvent('u1');
+    const event2 = createEvent('u2');
+    const sqsEvent: SQSEvent = {
+      Records: [
+        {
+          messageId: '1',
+          receiptHandle: 'rh1',
+          body: JSON.stringify(event1),
+          attributes: {},
+          messageAttributes: {},
+          md5OfBody: '',
+          eventSource: '',
+          eventSourceARN: '',
+          awsRegion: '',
+        },
+        {
+          messageId: '2',
+          receiptHandle: 'rh2',
+          body: JSON.stringify(event2),
+          attributes: {},
+          messageAttributes: {},
+          md5OfBody: '',
+          eventSource: '',
+          eventSourceARN: '',
+          awsRegion: '',
+        },
+      ],
+    };
+
+    await expect(sqsHandler(sqsEvent)).resolves.toBeUndefined();
+
+    // Expect fetchById called for both users
+    expect(dataProvider.fetchById).toHaveBeenCalledTimes(2);
+    expect(dataProvider.fetchById).toHaveBeenNthCalledWith(1, 'u1');
+    expect(dataProvider.fetchById).toHaveBeenNthCalledWith(2, 'u2');
+
+    // Expect update called for both
+    expect(dataProvider.update).toHaveBeenCalledTimes(2);
+
+    // Expect sendEmail called for both
+    expect(sendEmailMock).toHaveBeenCalledTimes(2);
+  });
+
+  test('propagates error if inviteHandler throws for any record', async () => {
+    // First record succeeds, second fails
+    const user1 = {
+      id: 'u1',
+      email: 'u1@example.com',
+      firstName: 'User1',
+      connections: [],
+    } as UserDataObject;
+    const user2 = {
+      id: 'u2',
+      email: 'u2@example.com',
+      firstName: 'User2',
+      connections: [],
+    } as UserDataObject;
+
+    dataProvider.fetchById
+      .mockResolvedValueOnce(user1)
+      .mockResolvedValueOnce(user2);
+    dataProvider.update.mockResolvedValueOnce().mockResolvedValueOnce();
+    sendEmailMock
+      .mockResolvedValueOnce()
+      .mockRejectedValueOnce(new Error('send email error'));
+
+    const sqsHandler = sqsInviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+      false,
+      template,
+    );
+
+    const event1 = createEvent('u1');
+    const event2 = createEvent('u2');
+    const sqsEvent: SQSEvent = {
+      Records: [
+        {
+          messageId: '1',
+          receiptHandle: 'rh1',
+          body: JSON.stringify(event1),
+          attributes: {},
+          messageAttributes: {},
+          md5OfBody: '',
+          eventSource: '',
+          eventSourceARN: '',
+          awsRegion: '',
+        },
+        {
+          messageId: '2',
+          receiptHandle: 'rh2',
+          body: JSON.stringify(event2),
+          attributes: {},
+          messageAttributes: {},
+          md5OfBody: '',
+          eventSource: '',
+          eventSourceARN: '',
+          awsRegion: '',
+        },
+      ],
+    };
+
+    await expect(sqsHandler(sqsEvent)).rejects.toThrow(
+      'Unable to send the email for the user with ID u2',
+    );
+
+    // Ensure first user was processed
+    expect(dataProvider.fetchById).toHaveBeenNthCalledWith(1, 'u1');
+    expect(sendEmailMock).toHaveBeenNthCalledWith(1, expect.any(Object));
+    // Ensure second user attempt throws
+    expect(dataProvider.fetchById).toHaveBeenNthCalledWith(2, 'u2');
+    expect(sendEmailMock).toHaveBeenNthCalledWith(2, expect.any(Object));
+  });
+
+  test('sqsInviteHandlerFactory uses default params when omit suppressConflict & template', async () => {
+    const userA = {
+      id: 'ua',
+      email: 'a@example.com',
+      firstName: 'A',
+      connections: [],
+    } as unknown as UserDataObject;
+    dataProvider.fetchById.mockResolvedValueOnce(userA);
+    dataProvider.update.mockResolvedValueOnce(undefined);
+    sendEmailMock.mockResolvedValueOnce(undefined);
+
+    // Do NOT pass suppressConflict or templateName here
+    const sqsHandlerDefault = sqsInviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+    );
+
+    const ebEvent: UserInviteEventBridgeEvent = createEvent(userA.id);
+    const sqsEvent: SQSEvent = {
+      Records: [
+        {
+          messageId: 'm1',
+          receiptHandle: 'rh1',
+          body: JSON.stringify(ebEvent),
+          attributes: {},
+          messageAttributes: {},
+          md5OfBody: '',
+          eventSource: '',
+          eventSourceARN: '',
+          awsRegion: '',
+        },
+      ],
+    };
+
+    await sqsHandlerDefault(sqsEvent);
+
+    // Default suppressConflict=false means update called with { suppressConflict: false }
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      userA.id,
+      { connections: [{ code: expect.any(String) }] },
+      { suppressConflict: false },
+    );
+
+    // Default template should be 'Crn-Welcome'
+    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
+    const link = new url.URL(path.join(`/welcome/${code}`), origin).toString();
+    expect(sendEmailMock).toHaveBeenCalledWith({
+      to: [userA.email],
+      template: 'Crn-Welcome',
+      values: { firstName: userA.firstName, link },
     });
   });
 });

@@ -1,4 +1,4 @@
-import { handler as forwardInviteEventsHandler } from '../../../src/handlers/user/forward-invite-events';
+import { handler as forwardInviteEventsHandler } from '../../../src/handlers/user/forward-invite-handler';
 import logger from '../../../src/utils/logger';
 
 const mockSend = jest.fn();
@@ -67,7 +67,7 @@ describe('forward-invite-events handler', () => {
 
     // Now re-import handler
     const { handler } = await import(
-      '../../../src/handlers/user/forward-invite-events'
+      '../../../src/handlers/user/forward-invite-handler'
     );
 
     await expect(

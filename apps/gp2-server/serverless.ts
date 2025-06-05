@@ -380,7 +380,7 @@ const serverlessConfig: AWS = {
       },
     },
     inviteEventForwarder: {
-      handler: 'src/handlers/user/forward-invite-events.handler',
+      handler: 'src/handlers/user/forward-invite-handler.handler',
       events: [
         {
           eventBridge: {

@@ -1,6 +1,7 @@
 import { createClient } from 'contentful-management';
 import { parse } from '@asap-hub/server-common';
 import pThrottle from 'p-throttle';
+import fs from 'fs';
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID!;
 const contentfulEnvId = process.env.CONTENTFUL_ENV_ID!;
@@ -47,6 +48,10 @@ const app = async () => {
 
   if (!filePath) {
     throw new Error('Please provide a path to the CSV file using --path=');
+  }
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`ERROR: CSV file not found at ${filePath}`);
   }
 
   console.log(

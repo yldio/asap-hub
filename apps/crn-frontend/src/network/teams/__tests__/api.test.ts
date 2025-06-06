@@ -489,6 +489,26 @@ describe('Manuscript', () => {
           );
         },
       );
+
+      it('should send no filters when requestedAPCCoverage="incorrect-value"', async () => {
+        await getManuscripts(algoliaSearchClient, {
+          searchQuery: '',
+          pageSize: null,
+          currentPage: null,
+          requestedAPCCoverage: 'incorrect',
+          completedStatus: 'show',
+          selectedStatuses: [],
+        });
+
+        expect(search).toHaveBeenCalledWith(
+          ['manuscript'],
+          '',
+          expect.objectContaining({
+            filters: '',
+          }),
+          true,
+        );
+      });
     });
 
     it('should pass through search query', async () => {

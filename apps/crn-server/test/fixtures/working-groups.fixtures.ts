@@ -4,9 +4,12 @@ import {
   ContentfulWebhookPayload,
 } from '@asap-hub/contentful';
 import {
+  ListPublicWorkingGroupListResponse,
+  PublicWorkingGroupResponse,
   WebhookDetail,
   WorkingGroupDataObject,
   WorkingGroupEvent,
+  WorkingGroupLeader,
   WorkingGroupListDataObject,
   WorkingGroupResponse,
 } from '@asap-hub/model';
@@ -57,6 +60,7 @@ export const getWorkingGroupDataObject = (
     },
   ],
   tags: [],
+  researchOutputsIds: [],
   ...data,
 });
 
@@ -278,3 +282,60 @@ export const getContentfulWorkingGroupGraphqlResponse =
   (): ContentfulFetchWorkingGroupByIdQuery => ({
     workingGroups: getContentfulGraphqlWorkingGroup(),
   });
+
+export const getPublicWorkingGroupResponse =
+  (): PublicWorkingGroupResponse => ({
+    id: '123',
+    title: 'Working Group Title',
+    description: '<p>Working Group Description</p>',
+    shortDescription: 'Working Group Short Text',
+    deliverables: [
+      {
+        status: 'Pending',
+        description: 'Deliverable 1',
+      },
+    ],
+    tags: [],
+    members: [
+      {
+        id: 'user-id-1',
+        firstName: 'João',
+        lastName: 'Pinheiro',
+        displayName: 'João (John) Pinheiro',
+        avatarUrl: 'https://image/user-1',
+        role: 'Chair',
+      },
+      {
+        id: 'user-id-2',
+        firstName: 'Padmini',
+        lastName: 'Kommareddy',
+        displayName: 'Padmini Kommareddy',
+        avatarUrl: 'https://image/user-2',
+        role: 'Project Manager',
+      },
+    ],
+    researchOutputsIds: [
+      'research-output-id-1',
+      'research-output-id-2',
+      'research-output-id-3',
+    ],
+  });
+
+export const getListPublicWorkingGroupResponse =
+  (): ListPublicWorkingGroupListResponse => {
+    const { researchOutputsIds, deliverables, tags, members, ...workingGroup } =
+      getPublicWorkingGroupResponse();
+    return {
+      total: 1,
+      items: [
+        {
+          ...workingGroup,
+          members:
+            members.map((member) => ({
+              ...member,
+              role: member.role as WorkingGroupLeader['role'],
+            })) || [],
+        },
+      ],
+    };
+  };

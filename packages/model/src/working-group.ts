@@ -78,6 +78,7 @@ export type WorkingGroupDataObject = {
   deliverables: WorkingGroupDeliverable[];
   readonly lastModifiedDate: string;
   tags: string[];
+  researchOutputsIds?: string[];
 };
 
 export type WorkingGroupUpdateDataObject = Pick<
@@ -102,3 +103,36 @@ type WorkingGroupFilter = {
 };
 
 export type FetchWorkingGroupOptions = FetchOptions<WorkingGroupFilter>;
+
+export type PublicWorkingGroupListResponse = Pick<
+  WorkingGroupResponse,
+  'id' | 'title' | 'description'
+> & {
+  shortDescription: WorkingGroupResponse['shortText'];
+  members: (Pick<WorkingGroupResponseLeader, 'role'> & {
+    id: WorkingGroupLeader['user']['id'];
+    firstName: WorkingGroupLeader['user']['firstName'];
+    lastName: WorkingGroupLeader['user']['lastName'];
+    displayName: WorkingGroupLeader['user']['displayName'];
+    avatarUrl?: WorkingGroupLeader['user']['avatarUrl'];
+  })[];
+};
+
+export type ListPublicWorkingGroupListResponse =
+  ListResponse<PublicWorkingGroupListResponse>;
+
+export type PublicWorkingGroupResponse = Pick<
+  WorkingGroupResponse,
+  'id' | 'title' | 'description' | 'deliverables' | 'tags'
+> & {
+  shortDescription: WorkingGroupResponse['shortText'];
+  members: {
+    id: WorkingGroupMember['user']['id'];
+    firstName: WorkingGroupMember['user']['firstName'];
+    lastName: WorkingGroupMember['user']['lastName'];
+    displayName: WorkingGroupMember['user']['displayName'];
+    avatarUrl?: WorkingGroupMember['user']['avatarUrl'];
+    role?: WorkingGroupLeader['role'];
+  }[];
+  researchOutputsIds?: string[];
+};

@@ -1,5 +1,3 @@
-/* eslint-disable jest/no-commented-out-tests */
-
 import {
   AlgoliaSearchClient,
   ClientSearchResponse,

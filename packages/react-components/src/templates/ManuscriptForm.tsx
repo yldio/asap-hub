@@ -775,9 +775,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         keyResourceTable: versionData.keyResourceTable!,
       };
       try {
+        const urlValue = data.url || undefined;
         if (!manuscriptId) {
           await onCreate({
             ...data,
+            url: urlValue,
             teamId,
             eligibilityReasons: [...eligibilityReasons],
             versions: [
@@ -790,7 +792,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         } else if (resubmitManuscript) {
           await onResubmit(manuscriptId, {
             title: data.title,
-            url: data.url,
+            url: urlValue,
             teamId,
             versions: [
               {
@@ -802,7 +804,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         } else {
           await onUpdate(manuscriptId, {
             title: data.title,
-            url: data.url,
+            url: urlValue,
             teamId,
             versions: [
               {

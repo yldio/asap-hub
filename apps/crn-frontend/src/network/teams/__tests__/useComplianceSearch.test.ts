@@ -166,7 +166,9 @@ describe('generateLinkFactory', () => {
       '',
     )('show', 'all');
 
-    expect(url).toBe('/base-path?completedStatus=show&currentPage=1&requestedAPCCoverage=all');
+    expect(url).toBe(
+      '/base-path?completedStatus=show&currentPage=1&requestedAPCCoverage=all',
+    );
   });
 
   it('includes all statuses when completedStatus is show', () => {

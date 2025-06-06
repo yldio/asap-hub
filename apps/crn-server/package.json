@@ -11,7 +11,8 @@
     "start": "node-dev ./src/server.ts",
     "typecheck": "tsc",
     "test": "WORKSPACE_PATH=apps/crn-server yarn workspace asap-hub test:workspace",
-    "test:coverage": "WORKSPACE_PATH=apps/crn-server; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
+    "test:coverage": "WORKSPACE_PATH=apps/crn-server; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/",
+    "import:entries": "ts-node ./scripts/import-entries.ts"
   },
   "dependenciesMeta": {
     "serverless": {
@@ -87,6 +88,7 @@
     "react-router-dom": "5.3.4",
     "serverless-http": "2.7.0",
     "source-map-support": "0.5.21",
+    "ts-node": "10.9.2",
     "uuid": "8.3.2"
   },
   "devDependencies": {

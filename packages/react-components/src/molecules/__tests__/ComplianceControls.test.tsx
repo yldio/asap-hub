@@ -36,7 +36,7 @@ describe('ComplianceControls', () => {
 
     expect(screen.getByText('Requested APC Coverage:')).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Submitted Chevron Down' }),
+      screen.getByRole('button', { name: 'Show all Chevron Down' }),
     ).toBeInTheDocument();
   });
 

@@ -166,7 +166,7 @@ describe('generateLinkFactory', () => {
       '',
     )('show', 'all');
 
-    expect(url).toBe('/base-path?completedStatus=show&currentPage=1');
+    expect(url).toBe('/base-path?completedStatus=show&currentPage=1&requestedAPCCoverage=all');
   });
 
   it('includes all statuses when completedStatus is show', () => {
@@ -182,7 +182,7 @@ describe('generateLinkFactory', () => {
     )('show', 'all');
 
     expect(url).toBe(
-      `/base-path?completedStatus=show&currentPage=1&status=Compliant&status=Waiting+for+Report`,
+      `/base-path?completedStatus=show&currentPage=1&requestedAPCCoverage=all&status=Compliant&status=Waiting+for+Report`,
     );
   });
 
@@ -199,7 +199,7 @@ describe('generateLinkFactory', () => {
     )('hide', 'all');
 
     expect(url).toBe(
-      '/base-path?completedStatus=hide&currentPage=1&status=Waiting+for+Report',
+      '/base-path?completedStatus=hide&currentPage=1&requestedAPCCoverage=all&status=Waiting+for+Report',
     );
   });
 
@@ -216,7 +216,7 @@ describe('generateLinkFactory', () => {
     )('hide', 'all');
 
     expect(url).toBe(
-      '/base-path?completedStatus=hide&currentPage=2&searchQuery=Alessi&status=Waiting+for+Report&status=Manuscript+Resubmitted',
+      '/base-path?completedStatus=hide&currentPage=2&searchQuery=Alessi&requestedAPCCoverage=all&status=Waiting+for+Report&status=Manuscript+Resubmitted',
     );
   });
 });

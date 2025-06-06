@@ -180,7 +180,13 @@ const serverlessConfig: AWS = {
         statements: [
           {
             Effect: 'Allow',
-            Action: ['s3:PutObject', 's3:GetObject', 's3:DeleteObject'],
+            Action: [
+              's3:PutObject',
+              's3:GetObject',
+              's3:DeleteObject',
+              's3:AbortMultipartUpload',
+              's3:ListMultipartUploadParts',
+            ],
             Resource: {
               'Fn::Join': [
                 '',
@@ -188,6 +194,19 @@ const serverlessConfig: AWS = {
                   'arn:aws:s3:::',
                   '${self:service}-${self:provider.stage}-files',
                   '/*',
+                ],
+              ],
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['s3:ListBucket', 's3:ListBucketMultipartUploads'],
+            Resource: {
+              'Fn::Join': [
+                '',
+                [
+                  'arn:aws:s3:::',
+                  '${self:service}-${self:provider.stage}-files',
                 ],
               ],
             },

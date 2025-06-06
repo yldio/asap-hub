@@ -110,8 +110,8 @@ const ComplianceControls = ({
                   }
                 </>
               ),
-              href: generateLink(statusOption),
-              // href: generateLink(statusOption, requestedAPCCoverage),
+              // href: generateLink(statusOption),
+              href: generateLink(statusOption, requestedAPCCoverage),
             }))}
           </DropdownButton>
         </div>

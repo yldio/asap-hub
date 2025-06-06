@@ -406,7 +406,7 @@ describe('Manuscript', () => {
         searchQuery: '',
         pageSize: null,
         currentPage: null,
-        // requestedAPCCoverage: 'all',
+        requestedAPCCoverage: 'all',
         completedStatus: 'show',
         selectedStatuses: [],
       });
@@ -500,7 +500,7 @@ describe('Manuscript', () => {
         searchQuery: 'test query',
         pageSize: null,
         currentPage: null,
-        // requestedAPCCoverage: 'all',
+        requestedAPCCoverage: 'all',
         completedStatus: 'show',
         selectedStatuses: [],
       });
@@ -518,7 +518,7 @@ describe('Manuscript', () => {
         searchQuery: '',
         pageSize: 25,
         currentPage: 2,
-        // requestedAPCCoverage: 'all',
+        requestedAPCCoverage: 'all',
         completedStatus: 'show',
         selectedStatuses: [],
       });
@@ -540,7 +540,7 @@ describe('Manuscript', () => {
           searchQuery: '',
           pageSize: null,
           currentPage: null,
-          // requestedAPCCoverage: 'all',
+          requestedAPCCoverage: 'all',
           completedStatus: 'show',
           selectedStatuses: ['Waiting for Report'],
         });
@@ -560,7 +560,7 @@ describe('Manuscript', () => {
           searchQuery: '',
           pageSize: null,
           currentPage: null,
-          // requestedAPCCoverage: 'all',
+          requestedAPCCoverage: 'all',
           completedStatus: 'show',
           selectedStatuses: ['Waiting for Report', 'Review Compliance Report'],
         });
@@ -603,6 +603,7 @@ describe('Manuscript', () => {
           pageSize: null,
           currentPage: null,
           completedStatus: 'hide',
+          requestedAPCCoverage: 'all',
           selectedStatuses: ['Waiting for Report', 'Review Compliance Report'],
         });
 

@@ -164,7 +164,7 @@ describe('generateLinkFactory', () => {
       1,
       [],
       '',
-    )('show');
+    )('show', 'all');
 
     expect(url).toBe('/base-path?completedStatus=show&currentPage=1');
   });
@@ -179,7 +179,7 @@ describe('generateLinkFactory', () => {
       1,
       ['Compliant', 'Waiting for Report'],
       '',
-    )('show');
+    )('show', 'all');
 
     expect(url).toBe(
       `/base-path?completedStatus=show&currentPage=1&status=Compliant&status=Waiting+for+Report`,
@@ -196,7 +196,7 @@ describe('generateLinkFactory', () => {
       1,
       ['Compliant', 'Waiting for Report', 'Closed (other)'],
       '',
-    )('hide');
+    )('hide', 'all');
 
     expect(url).toBe(
       '/base-path?completedStatus=hide&currentPage=1&status=Waiting+for+Report',
@@ -213,7 +213,7 @@ describe('generateLinkFactory', () => {
       2,
       ['Compliant', 'Waiting for Report', 'Manuscript Resubmitted'],
       'Alessi',
-    )('hide');
+    )('hide', 'all');
 
     expect(url).toBe(
       '/base-path?completedStatus=hide&currentPage=2&searchQuery=Alessi&status=Waiting+for+Report&status=Manuscript+Resubmitted',

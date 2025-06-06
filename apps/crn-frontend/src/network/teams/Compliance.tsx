@@ -41,6 +41,7 @@ type ComplianceListProps = Pick<
   'completedStatus'
 > & {
   selectedStatuses: ManuscriptStatus[];
+  requestedAPCCoverage: RequestedAPCCoverageOption;
   isComplianceReviewer: boolean;
   searchQuery: string;
   pageSize: number;
@@ -70,8 +71,6 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
     completedStatus,
     selectedStatuses,
   });
-
-  console.log({ result });
 
   const { setFormType } = useManuscriptToast();
 
@@ -173,10 +172,6 @@ const Compliance: React.FC = () => {
     setStatus,
     generateLinkFactory,
   } = useComplianceSearch();
-  console.log({
-    requestedAPCCoverage,
-  });
-
   const { currentPage, pageSize } = usePaginationParams();
 
   const isComplianceReviewer = useIsComplianceReviewer();

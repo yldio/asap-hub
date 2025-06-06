@@ -261,9 +261,6 @@ export const getManuscripts = async (
     selectedStatuses,
   }: ManuscriptsOptions,
 ): Promise<ListPartialManuscriptResponse> => {
-  console.log({ apirequestedAPCCoverage: requestedAPCCoverage });
-
-  // TODO: uncomment this once the apcCoverageRequestStatus is properly implemented
   const getApcCoverageFilter = (
     apcCoverage: RequestedAPCCoverageOption,
   ): string => {

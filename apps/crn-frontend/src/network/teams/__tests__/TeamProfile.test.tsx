@@ -148,7 +148,7 @@ const renderPage = async (
           manuscriptsState({
             currentPage: 0,
             pageSize: 10,
-            // requestedAPCCoverage: 'all',
+            requestedAPCCoverage: 'all',
             completedStatus: 'show',
             searchQuery: '',
             selectedStatuses: [],

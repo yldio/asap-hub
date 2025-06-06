@@ -87,6 +87,7 @@ const service = 'asap-hub';
 export const plugins = [
   './serverless-plugins/serverless-esbuild',
   './serverless-plugins/serverless-iam-roles-per-function',
+  './serverless-plugins/serverless-s3-cleaner',
   ...(s3SyncEnabled ? ['./serverless-plugins/serverless-s3-sync'] : []),
 ];
 const offlinePlugins = [
@@ -335,6 +336,11 @@ const serverlessConfig: AWS = {
     },
     apiGateway5xxTopic:
       '${self:service}-${self:provider.stage}-topic-api-gateway-5xx',
+    'serverless-s3-cleaner': {
+      // set to `true` if you want to be prompted before deleting
+      prompt: false,
+      buckets: ['${self:service}-${self:provider.stage}-files'],
+    },
   },
   functions: {
     publicApiHandler: {

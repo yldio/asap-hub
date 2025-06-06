@@ -634,67 +634,6 @@ describe('Manuscript', () => {
         );
       });
     });
-
-    // describe('APC‐coverage‐only filters (no statuses)', () => {
-    //   type APCCase = {
-    //     requestedAPCCoverage: RequestedAPCCoverageOption;
-    //     apcFilter: string;
-    //   };
-
-    //   const apcCases: APCCase[] = [
-    //     {
-    //       requestedAPCCoverage: 'all',
-    //       apcFilter: '', // “all” → no APC filter
-    //     },
-    //     {
-    //       requestedAPCCoverage: 'apcNotRequested',
-    //       apcFilter: 'apcRequested:false',
-    //     },
-    //     {
-    //       requestedAPCCoverage: 'apcRequested',
-    //       apcFilter: 'apcRequested:true',
-    //     },
-    //     {
-    //       requestedAPCCoverage: 'paid',
-    //       apcFilter: 'apcRequested:true AND apcCoverageRequestStatus:"paid"',
-    //     },
-    //     {
-    //       requestedAPCCoverage: 'notPaid',
-    //       apcFilter: 'apcRequested:true AND apcCoverageRequestStatus:"notPaid"',
-    //     },
-    //     {
-    //       requestedAPCCoverage: 'declined',
-    //       apcFilter: 'apcRequested:true AND apcCoverageRequestStatus:"declined"',
-    //     },
-    //   ];
-
-    //   it.each(apcCases)(
-    //     'requestedAPCCoverage="%s" → expected filter `%s`',
-    //     async ({ requestedAPCCoverage, apcFilter }) => {
-    //       // 1) Call getManuscripts with no statuses and completedStatus='show'
-    //       await getManuscripts(algoliaSearchClient, {
-    //         searchQuery: '',
-    //         pageSize: null,
-    //         currentPage: null,
-    //         requestedAPCCoverage,
-    //         completedStatus: 'show',    // no “hide” filtering
-    //         selectedStatuses: [],       // empty array → no status clause
-    //       });
-
-    //       // 2) If apcFilter is the empty string, we expect filters: undefined
-    //       const expectedFilters = apcFilter === '' ? undefined : apcFilter;
-
-    //       expect(search).toHaveBeenCalledWith(
-    //         ['manuscript'],
-    //         '',
-    //         expect.objectContaining({
-    //           filters: expectedFilters,
-    //         }),
-    //         true,
-    //       );
-    //     },
-    //   );
-    // });
   });
 
   describe('uploadManuscriptFile', () => {

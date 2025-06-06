@@ -495,7 +495,8 @@ describe('Manuscript', () => {
           searchQuery: '',
           pageSize: null,
           currentPage: null,
-          requestedAPCCoverage: 'incorrect',
+          requestedAPCCoverage:
+            'incorrect' as unknown as RequestedAPCCoverageOption, // only for test
           completedStatus: 'show',
           selectedStatuses: [],
         });

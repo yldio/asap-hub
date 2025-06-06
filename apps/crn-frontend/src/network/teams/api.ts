@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/frontend-utils';
 import {
   CompletedStatusOption,
+  RequestedAPCCoverageOption,
   ComplianceReportPostRequest,
   ComplianceReportResponse,
   DiscussionCreateRequest,
@@ -244,7 +245,7 @@ export const resubmitManuscript = async (
 };
 
 export type ManuscriptsOptions = Omit<GetListOptions, 'filters'> & {
-  // requestedAPCCoverage: RequestedAPCCoverageOption;
+  requestedAPCCoverage: RequestedAPCCoverageOption;
   completedStatus: CompletedStatusOption;
   selectedStatuses: ManuscriptStatus[];
 };
@@ -255,26 +256,46 @@ export const getManuscripts = async (
     searchQuery,
     currentPage,
     pageSize,
-    // requestedAPCCoverage,
+    requestedAPCCoverage,
     completedStatus,
     selectedStatuses,
   }: ManuscriptsOptions,
 ): Promise<ListPartialManuscriptResponse> => {
-  // TODO: uncomment this once the apcCoverageRequestStatus is properly implemented
-  // const getApcCoverageFilter = (apcCoverage: RequestedAPCCoverageOption) => {
-  //   switch (apcCoverage) {
-  //     case 'submitted':
-  //       return `requestingApcCoverage:"Already Submitted"`;
-  //     case 'yes':
-  //       return 'requestingApcCoverage:Yes';
-  //     case 'no':
-  //       return 'requestingApcCoverage:No';
-  //     default:
-  //       return '';
-  //   }
-  // };
+  console.log({ apirequestedAPCCoverage: requestedAPCCoverage });
 
-  // const apcCoverageFilter = getApcCoverageFilter(requestedAPCCoverage);
+  // TODO: uncomment this once the apcCoverageRequestStatus is properly implemented
+  const getApcCoverageFilter = (
+    apcCoverage: RequestedAPCCoverageOption,
+  ): string => {
+    // Treat undefined or 'all' the same: no filter
+    if (!apcCoverage || apcCoverage === 'all') {
+      return '';
+    }
+
+    switch (apcCoverage) {
+      case 'apcNotRequested':
+        // apcRequested: false
+        return `apcRequested:false`;
+
+      case 'apcRequested':
+        // apcRequested: true (regardless of paid/notPaid/declined)
+        return `apcRequested:true`;
+
+      case 'paid':
+        return `apcRequested:true AND apcCoverageRequestStatus:"paid"`;
+
+      case 'notPaid':
+        return `apcRequested:true AND apcCoverageRequestStatus:"notPaid"`;
+
+      case 'declined':
+        return `apcRequested:true AND apcCoverageRequestStatus:"declined"`;
+
+      default:
+        return '';
+    }
+  };
+
+  const apcCoverageFilter = getApcCoverageFilter(requestedAPCCoverage);
   const completedStatusFilter =
     completedStatus === 'hide'
       ? `(NOT status:Compliant AND NOT status:"Closed (other)")`
@@ -288,7 +309,7 @@ export const getManuscripts = async (
     : '';
 
   const filters = [
-    // apcCoverageFilter,
+    apcCoverageFilter,
     completedStatusFilter,
     selectedStatusesFilter,
   ]

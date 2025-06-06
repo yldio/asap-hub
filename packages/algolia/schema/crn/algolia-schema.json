@@ -71,7 +71,9 @@
     "_tags",
     "publishingEntity",
     "complete",
-    "openScienceTeamMember"
+    "openScienceTeamMember",
+    "apcRequested",
+    "apcCoverageRequestStatus"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

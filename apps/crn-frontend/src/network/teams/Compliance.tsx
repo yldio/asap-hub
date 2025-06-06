@@ -12,6 +12,8 @@ import {
   ManuscriptStatus,
   PartialManuscriptResponse,
   SortCompliance,
+  RequestedAPCCoverageOption,
+  DEFAULT_REQUESTED_APC_COVERAGE,
 } from '@asap-hub/model';
 import {
   ComplianceControls,
@@ -52,7 +54,7 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   searchQuery,
   pageSize,
   currentPage,
-  // requestedAPCCoverage,
+  requestedAPCCoverage,
   completedStatus,
   selectedStatuses,
   isComplianceReviewer,
@@ -64,10 +66,12 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
     searchQuery,
     currentPage,
     pageSize,
-    // requestedAPCCoverage,
+    requestedAPCCoverage,
     completedStatus,
     selectedStatuses,
   });
+
+  console.log({ result });
 
   const { setFormType } = useManuscriptToast();
 
@@ -79,8 +83,8 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   const hasAppliedFilters =
     selectedStatuses.length > 0 ||
     searchQuery.trim() !== '' ||
-    completedStatus !== DEFAULT_COMPLETED_STATUS;
-  // requestedAPCCoverage !== DEFAULT_REQUESTED_APC_COVERAGE;
+    completedStatus !== DEFAULT_COMPLETED_STATUS ||
+    requestedAPCCoverage !== DEFAULT_REQUESTED_APC_COVERAGE;
 
   const updateManuscript = usePutManuscript();
 
@@ -108,7 +112,7 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
       (paginationParams) =>
         getManuscripts(client, {
           searchQuery,
-          // requestedAPCCoverage,
+          requestedAPCCoverage,
           completedStatus,
           selectedStatuses,
           ...paginationParams,
@@ -128,9 +132,9 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
         )}
         manuscriptCount={result.total}
         completedStatus={completedStatus as CompletedStatusOption}
-        // requestedAPCCoverage={
-        //   requestedAPCCoverage as RequestedAPCCoverageOption
-        // }
+        requestedAPCCoverage={
+          requestedAPCCoverage as RequestedAPCCoverageOption
+        }
       />
       <ComplianceDashboard
         hasAppliedFilters={hasAppliedFilters}
@@ -162,13 +166,16 @@ const Compliance: React.FC = () => {
   const {
     completedStatus,
     debouncedSearchQuery,
-    // requestedAPCCoverage,
+    requestedAPCCoverage,
     searchQuery,
     selectedStatuses,
     setSearchQuery,
     setStatus,
     generateLinkFactory,
   } = useComplianceSearch();
+  console.log({
+    requestedAPCCoverage,
+  });
 
   const { currentPage, pageSize } = usePaginationParams();
 
@@ -194,7 +201,7 @@ const Compliance: React.FC = () => {
           searchQuery={debouncedSearchQuery}
           pageSize={pageSize}
           currentPage={currentPage}
-          // requestedAPCCoverage={requestedAPCCoverage}
+          requestedAPCCoverage={requestedAPCCoverage}
           completedStatus={completedStatus}
           selectedStatuses={selectedStatuses}
         />

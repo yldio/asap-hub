@@ -1,10 +1,10 @@
 import type {
   CompletedStatusOption,
-  // RequestedAPCCoverageOption,
+  RequestedAPCCoverageOption,
 } from '@asap-hub/model';
 import {
+  requestedAPCCoverageOptions,
   completedStatusOptions,
-  // requestedAPCCoverageOptions,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { DropdownButton, ExportButton } from '.';
@@ -61,18 +61,18 @@ const dropdownLabelStyles = css({
 
 type ComplianceControlsProps = {
   completedStatus: CompletedStatusOption;
-  // requestedAPCCoverage: RequestedAPCCoverageOption;
+  requestedAPCCoverage: RequestedAPCCoverageOption;
   manuscriptCount: number;
   generateLink: (
     completedStatus: string,
-    // requestedAPCCoverage: string,
+    requestedAPCCoverage: string,
   ) => string;
   exportResults?: () => Promise<void>;
 };
 
 const ComplianceControls = ({
   completedStatus,
-  // requestedAPCCoverage,
+  requestedAPCCoverage,
   generateLink,
   manuscriptCount,
   exportResults,
@@ -115,7 +115,7 @@ const ComplianceControls = ({
             }))}
           </DropdownButton>
         </div>
-        {/* <div css={filterContainerStyles}>
+        <div css={filterContainerStyles}>
           <strong>Requested APC Coverage:</strong>
           <DropdownButton
             noMargin
@@ -143,7 +143,7 @@ const ComplianceControls = ({
               }),
             )}
           </DropdownButton>
-        </div> */}
+        </div>
         <div css={filterContainerStyles}>
           <ExportButton exportResults={exportResults} />
         </div>

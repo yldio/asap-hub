@@ -20,7 +20,9 @@
     "workingGroups.id",
     "publishingEntity",
     "complete",
-    "openScienceTeamMember"
+    "openScienceTeamMember",
+    "apcRequested",
+    "apcCoverageRequestStatus"
   ],
   "attributesToIndex": [
     "displayName",

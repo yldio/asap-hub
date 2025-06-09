@@ -94,6 +94,7 @@ const ComplianceControls = ({
           <strong>Completed Status:</strong>
           <DropdownButton
             noMargin
+            customMenuWidth={100}
             buttonChildren={() => (
               <>
                 <span css={dropdownLabelStyles}>
@@ -130,6 +131,7 @@ const ComplianceControls = ({
                   {dropdownChevronIcon}
                 </>
               )}
+              customMenuWidth={200}
             >
               {Object.keys(requestedAPCCoverageOptions).map(
                 (apcCoverageOption) => ({

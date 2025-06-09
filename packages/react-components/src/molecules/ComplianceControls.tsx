@@ -119,7 +119,7 @@ const ComplianceControls = ({
         </div>
         {isNewApcCoverageEnabled && (
           <div css={filterContainerStyles}>
-            <strong>Requested APC Coverage:</strong>
+            <strong>APC Coverage:</strong>
             <DropdownButton
               noMargin
               buttonChildren={() => (

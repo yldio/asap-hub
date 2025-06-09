@@ -31,10 +31,10 @@ describe('ComplianceControls', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders requested APC coverage dropdown with correct selectedoption', () => {
+  it('renders APC Coverage dropdown with correct selectedoption', () => {
     render(<ComplianceControls {...props} />);
 
-    expect(screen.getByText('Requested APC Coverage:')).toBeInTheDocument();
+    expect(screen.getByText('APC Coverage:')).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Show all Chevron Down' }),
     ).toBeInTheDocument();

@@ -70,6 +70,54 @@ runs:
     - name: Build type definitions
       shell: bash
       run: yarn build:typecheck
+    - name: Clean S3 Files Bucket
+      if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
+      shell: bash
+      run: |
+        # Function to clean S3 bucket
+        cleanup_s3_bucket() {
+          local bucket_name="asap-hub-${SLS_STAGE}-files"
+
+          echo "Checking if bucket $bucket_name exists..."
+          if aws s3api head-bucket --bucket "$bucket_name" 2>/dev/null; then
+            echo "Bucket $bucket_name exists. Cleaning up..."
+
+            # Remove all current objects
+            echo "Removing all objects..."
+            aws s3 rm "s3://$bucket_name" --recursive || echo "No objects to remove or already empty"
+
+            # Abort incomplete multipart uploads
+            echo "Aborting incomplete multipart uploads..."
+            aws s3api list-multipart-uploads --bucket "$bucket_name" --output json 2>/dev/null | \
+            jq -r '.Uploads[]? | "\(.Key)\t\(.UploadId)"' | \
+            while IFS=$'\t' read -r key upload_id; do
+              if [ ! -z "$key" ] && [ ! -z "$upload_id" ]; then
+                echo "Aborting multipart upload: $key ($upload_id)"
+                aws s3api abort-multipart-upload --bucket "$bucket_name" --key "$key" --upload-id "$upload_id" || true
+              fi
+            done
+
+            # Verify bucket is empty
+            echo "Verifying bucket is empty..."
+            local object_count=$(aws s3 ls "s3://$bucket_name" --recursive | wc -l)
+            if [ "$object_count" -eq 0 ]; then
+              echo "Bucket $bucket_name is now empty and ready for deletion"
+            else
+              echo "⚠️ Warning: Bucket still contains $object_count objects"
+              aws s3 ls "s3://$bucket_name" --recursive
+            fi
+          else
+            echo "Bucket $bucket_name does not exist, skipping cleanup"
+          fi
+        }
+
+        # Call the cleanup function
+        cleanup_s3_bucket
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        AWS_REGION: ${{ inputs.aws-region }}
+        SLS_STAGE: ${{ inputs.sls-stage }}
     - name: Remove CF Stack
       if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
       shell: bash

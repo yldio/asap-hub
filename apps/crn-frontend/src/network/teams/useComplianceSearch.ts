@@ -18,7 +18,6 @@ const generateLinkFactory =
     searchQuery: string,
   ) =>
   (completedStatus: string, requestedAPCCoverage: string) => {
-    // (completedStatus: string) => {
     const params = new URLSearchParams();
     params.set('completedStatus', completedStatus);
     params.set('currentPage', currentPage.toString());

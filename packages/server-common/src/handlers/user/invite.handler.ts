@@ -1,5 +1,5 @@
 import { gp2, UserDataObject, UserUpdateDataObject } from '@asap-hub/model';
-import { EventBridgeEvent } from 'aws-lambda';
+import { EventBridgeEvent, SQSEvent } from 'aws-lambda';
 import path from 'path';
 import url from 'url';
 import { v4 as uuidV4 } from 'uuid';
@@ -20,11 +20,26 @@ interface DataProvider {
   ): Promise<void>;
 }
 
-/* istanbul ignore next */
-const sleepFn = (delay: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, delay);
-  });
+async function tryCreateInvite(
+  dataProvider: DataProvider,
+  userId: string,
+  code: string,
+  logger: Logger,
+  suppressConflict: boolean,
+): Promise<boolean> {
+  try {
+    await dataProvider.update(
+      userId,
+      { connections: [{ code }] },
+      { suppressConflict },
+    );
+    return true;
+  } catch (err) {
+    logger.error(err, 'Error while saving user data');
+    throw new Error(`Unable to save the code for the user with ID ${userId}`);
+  }
+}
+
 export const inviteHandlerFactory =
   <Provider extends DataProvider>(
     sendEmail: SendEmail,
@@ -33,17 +48,12 @@ export const inviteHandlerFactory =
     logger: Logger,
     suppressConflict = false,
     template: SendEmailTemplate = 'Crn-Welcome',
-    /* istanbul ignore next */
-    sleep = sleepFn,
   ): EventBridgeHandler<'UsersPublished', UserPayload> =>
   async (event) => {
-    // temp fix to delay the lamdba
-    await sleep(30_000);
-    const user = await dataProvider.fetchById(event.detail.resourceId);
+    const userId = event.detail.resourceId;
+    const user = await dataProvider.fetchById(userId);
     if (!user) {
-      throw new Error(
-        `Unable to find a user with ID ${event.detail.resourceId}`,
-      );
+      throw new Error(`Unable to find a user with ID ${userId}`);
     }
 
     if (user.connections?.length) {
@@ -54,31 +64,11 @@ export const inviteHandlerFactory =
     }
 
     logger.debug(
-      `Attempting to invite user with ID ${event.detail.resourceId}, e-mail address ${user.email}`,
+      `Attempting to invite user with ID ${userId}, e-mail address ${user.email}`,
     );
 
     const code = uuidV4();
-
-    try {
-      if (suppressConflict) {
-        await dataProvider.update(
-          user.id,
-          {
-            connections: [{ code }],
-          },
-          { suppressConflict },
-        );
-      } else {
-        await dataProvider.update(user.id, {
-          connections: [{ code }],
-        });
-      }
-    } catch (error) {
-      logger.error(error, 'Error while saving user data');
-      throw new Error(
-        `Unable to save the code for the user with ID ${event.detail.resourceId}`,
-      );
-    }
+    await tryCreateInvite(dataProvider, userId, code, logger, suppressConflict);
 
     const link = new url.URL(path.join(`/welcome/${code}`), origin);
 
@@ -94,11 +84,40 @@ export const inviteHandlerFactory =
     } catch (error) {
       logger.error(error, 'Error while sending email');
       throw new Error(
-        `Unable to send the email for the user with ID ${event.detail.resourceId}`,
+        `Unable to send the email for the user with ID ${userId}`,
       );
     }
 
     logger.info(`Invited user with ID ${user.id}`);
+  };
+
+export const sqsInviteHandlerFactory =
+  <Provider extends DataProvider>(
+    sendEmail: SendEmail,
+    dataProvider: Provider,
+    origin: string,
+    logger: Logger,
+    suppressConflict = false,
+    template: SendEmailTemplate = 'Crn-Welcome',
+  ) =>
+  async (event: SQSEvent) => {
+    await Promise.all(
+      event.Records.map(async (record) => {
+        const ebEvent = JSON.parse(record.body) as EventBridgeEvent<
+          'UsersPublished',
+          UserPayload
+        >;
+        const handler = inviteHandlerFactory(
+          sendEmail,
+          dataProvider,
+          origin,
+          logger,
+          suppressConflict,
+          template,
+        );
+        await handler(ebEvent);
+      }),
+    );
   };
 
 export type UserInviteEventBridgeEvent = EventBridgeEvent<

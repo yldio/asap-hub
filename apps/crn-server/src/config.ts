@@ -45,6 +45,7 @@ const {
   REGION,
   SENTRY_DSN,
   SES_REGION,
+  QUEUE_URL,
 } = process.env;
 
 export const activeCampaignAccount = ACTIVE_CAMPAIGN_ACCOUNT || '';
@@ -110,3 +111,4 @@ export const sesRegion = SES_REGION || 'eu-west-1';
 export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
 export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;
+export const inviteUserQueueUrl = QUEUE_URL || '';

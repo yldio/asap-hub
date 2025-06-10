@@ -17,7 +17,7 @@ describe('/working-groups/ route', () => {
   afterEach(jest.clearAllMocks);
 
   describe('GET /working-groups', () => {
-    test('Should return 200 when no user exists', async () => {
+    test('Should return 200 when no working group exists', async () => {
       workingGroupControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,

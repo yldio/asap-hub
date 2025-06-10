@@ -1,10 +1,13 @@
 import {
   addLocaleToFields,
   Environment,
+  FetchPublicTeamsQuery,
+  FetchPublicTeamsQueryVariables,
   FetchTeamByIdQuery,
   FetchTeamByIdQueryVariables,
   FetchTeamsQuery,
   FetchTeamsQueryVariables,
+  FETCH_PUBLIC_TEAMS,
   FETCH_TEAMS,
   FETCH_TEAM_BY_ID,
   GraphQLClient,
@@ -12,10 +15,14 @@ import {
   TeamsOrder,
 } from '@asap-hub/contentful';
 import {
+  FetchPaginationOptions,
   LabResponse,
+  ListPublicTeamDataObject,
   ListTeamDataObject,
   manuscriptMapStatus,
+  PublicTeamListItemDataObject,
   TeamDataObject,
+  TeamLeader,
   TeamListItemDataObject,
   TeamMember,
   TeamRole,
@@ -48,6 +55,22 @@ export type MembershipTeamById = NonNullable<
 
 export type TeamItem = NonNullable<
   NonNullable<FetchTeamsQuery['teamsCollection']>['items'][number]
+>;
+
+type PublicTeamItem = NonNullable<
+  NonNullable<FetchPublicTeamsQuery['teamsCollection']>['items'][number]
+>;
+
+type PublicTeamMembership = NonNullable<
+  NonNullable<
+    NonNullable<PublicTeamItem['linkedFrom']>['teamMembershipCollection']
+  >['items'][number]
+>;
+
+type TeamInterestGroupItem = NonNullable<
+  NonNullable<
+    NonNullable<PublicTeamItem['linkedFrom']>['interestGroupsCollection']
+  >['items'][number]
 >;
 
 export type Membership = NonNullable<
@@ -126,11 +149,43 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
     };
   }
 
-  async fetchById(id: string): Promise<TeamDataObject | null> {
+  async fetchPublicTeams(
+    options: FetchPaginationOptions,
+  ): Promise<ListPublicTeamDataObject> {
+    const { take = 8, skip = 0 } = options;
+
+    const { teamsCollection } = await this.contentfulClient.request<
+      FetchPublicTeamsQuery,
+      FetchPublicTeamsQueryVariables
+    >(FETCH_PUBLIC_TEAMS, {
+      limit: take,
+      skip,
+      order: [TeamsOrder.DisplayNameAsc],
+    });
+
+    if (!teamsCollection?.items) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    return {
+      total: teamsCollection?.total,
+      items: teamsCollection?.items
+        .filter((x): x is PublicTeamItem => x !== null)
+        .map(parseContentfulGraphQlPublicTeamListItem),
+    };
+  }
+
+  async fetchById(
+    id: string,
+    internalAPI: boolean = true,
+  ): Promise<TeamDataObject | null> {
     const { teams } = await this.contentfulClient.request<
       FetchTeamByIdQuery,
       FetchTeamByIdQueryVariables
-    >(FETCH_TEAM_BY_ID, { id });
+    >(FETCH_TEAM_BY_ID, { id, internalAPI });
 
     if (!teams) {
       return null;
@@ -203,6 +258,78 @@ export const parseContentfulGraphQlTeamListItem = (
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     memberCount: numberOfMembers,
     labCount: labIds.size,
+  };
+};
+
+export const parseContentfulGraphQlPublicTeamListItem = (
+  item: PublicTeamItem,
+): PublicTeamListItemDataObject => {
+  const [activeMembers, inactiveMembers, teamLeaders]: [
+    Set<string>,
+    Set<string>,
+    Set<TeamLeader>,
+  ] = (item.linkedFrom?.teamMembershipCollection?.items || []).reduce(
+    (
+      [activeIdsSet, inactiveIdsSet, leadersSet],
+      membership: PublicTeamMembership | null,
+    ) => {
+      if (
+        !membership ||
+        !membership.linkedFrom?.usersCollection?.items[0]?.onboarded ||
+        !membership.role
+      ) {
+        return [activeIdsSet, inactiveIdsSet, leadersSet];
+      }
+
+      const member = membership.linkedFrom.usersCollection.items[0];
+      if (membership.inactiveSinceDate || member.alumniSinceDate) {
+        inactiveIdsSet.add(member.sys.id);
+      } else {
+        activeIdsSet.add(member.sys.id);
+        if (
+          membership.role === 'Project Manager' ||
+          membership.role === 'Lead PI (Core Leadership)'
+        ) {
+          leadersSet.add({
+            id: member.sys.id,
+            displayName: parseUserDisplayName(
+              member.firstName ?? '',
+              member.lastName ?? '',
+              undefined,
+              member.nickname ?? '',
+            ),
+            avatarUrl: member.avatar?.url,
+          } as TeamLeader);
+        }
+      }
+
+      return [activeIdsSet, inactiveIdsSet, leadersSet];
+    },
+    [
+      new Set() as Set<string>,
+      new Set() as Set<string>,
+      new Set() as Set<TeamLeader>,
+    ],
+  );
+
+  const activeInterestGroups = (
+    item.linkedFrom?.interestGroupsCollection?.items || []
+  )
+    .filter((ig): ig is TeamInterestGroupItem => ig !== null && !!ig.active)
+    .map((ig) => ig.name || '');
+
+  const isInactiveTeam = !!item.inactiveSince;
+  return {
+    id: item.sys.id ?? '',
+    name: item.displayName ?? '',
+    researchTheme: item.researchTheme?.name ?? undefined,
+    activeTeamMembers: isInactiveTeam ? [] : [...activeMembers],
+    noOfTeamMembers: isInactiveTeam ? 0 : activeMembers.size,
+    inactiveTeamMembers: isInactiveTeam
+      ? [...new Set([...activeMembers, ...inactiveMembers])]
+      : [...inactiveMembers],
+    teamLeaders: [...teamLeaders],
+    activeInterestGroups,
   };
 };
 
@@ -403,6 +530,7 @@ export const parseContentfulGraphQlTeam = (
         role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
     ),
     proposalURL: item.proposal ? item.proposal.sys.id : undefined,
+    researchTheme: item.researchTheme?.name ?? undefined,
   };
 };
 

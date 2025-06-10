@@ -1,11 +1,14 @@
 import { NotFoundError } from '@asap-hub/errors';
 import Teams from '../../src/controllers/team.controller';
-import { getTeamDataObject, getTeamResponse } from '../fixtures/teams.fixtures';
+import {
+  getPublicTeamListItemDataObject,
+  getTeamDataObject,
+  getTeamResponse,
+} from '../fixtures/teams.fixtures';
 
-import { getDataProviderMock } from '../mocks/data-provider.mock';
+import { teamDataProviderMock } from '../mocks/team.data-provider.mock';
 
 describe('Team Controller', () => {
-  const teamDataProviderMock = getDataProviderMock();
   const teamController = new Teams(teamDataProviderMock);
 
   afterEach(() => {
@@ -72,6 +75,29 @@ describe('Team Controller', () => {
     );
   });
 
+  describe('FetchPublicTeams method', () => {
+    test('Should return the teams', async () => {
+      const publicTeam = getPublicTeamListItemDataObject();
+      teamDataProviderMock.fetchPublicTeams.mockResolvedValue({
+        total: 1,
+        items: [publicTeam],
+      });
+      const result = await teamController.fetchPublicTeams({});
+
+      expect(result).toEqual({ items: [publicTeam], total: 1 });
+    });
+
+    test('Should return empty list when there are no teams', async () => {
+      teamDataProviderMock.fetchPublicTeams.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+      const result = await teamController.fetchPublicTeams({});
+
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+  });
+
   describe('Fetch-by-ID method', () => {
     test('Should throw when team is not found', async () => {
       teamDataProviderMock.fetchById.mockResolvedValueOnce(null);
@@ -99,6 +125,7 @@ describe('Team Controller', () => {
       teamDataProviderMock.fetchById.mockResolvedValueOnce(getTeamDataObject());
       const result = await teamController.fetchById('team-id', {
         showTools: false,
+        internalAPI: true,
       });
 
       expect(result.tools).toBeUndefined();

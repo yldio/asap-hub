@@ -17,12 +17,14 @@ import {
   contentfulSpaceId,
 } from './config';
 import ResearchOutputController from './controllers/research-output.controller';
+import TeamController from './controllers/team.controller';
 import UserController from './controllers/user.controller';
 import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-author.data-provider';
 import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
 import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
+import { TeamContentfulDataProvider } from './data-providers/contentful/team.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
 import {
   ResearchOutputDataProvider,
@@ -31,9 +33,11 @@ import {
   WorkingGroupDataProvider,
 } from './data-providers/types';
 import { ExternalAuthorDataProvider } from './data-providers/types/external-authors.data-provider.types';
+import { TeamDataProvider } from './data-providers/types/teams.data-provider.types';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { researchOutputRouteFactory } from './routes/public/research-output.route';
 import { workingGroupRouteFactory } from './routes/public/working-group.route';
+import { teamRouteFactory } from './routes/public/team.route';
 import { userRouteFactory } from './routes/public/user.route';
 import pinoLogger from './utils/logger';
 import WorkingGroupController from './controllers/working-group.controller';
@@ -106,6 +110,13 @@ export const publicAppFactory = (
       getContentfulRestClientFactory,
     );
 
+  const teamDataProvider =
+    dependencies.teamDataProvider ||
+    new TeamContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+
   const assetDataProvider = new AssetContentfulDataProvider(
     getContentfulRestClientFactory,
   );
@@ -130,6 +141,9 @@ export const publicAppFactory = (
     dependencies.workingGroupController ||
     new WorkingGroupController(workingGroupDataProvider);
 
+  const teamController =
+    dependencies.teamController || new TeamController(teamDataProvider);
+
   const basicRoutes = Router();
 
   // add healthcheck route
@@ -145,10 +159,13 @@ export const publicAppFactory = (
 
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupController);
 
+  const teamRoutes = teamRouteFactory(teamController);
+
   // add routes
   app.use('/public', [
     basicRoutes,
     researchOutputRoutes,
+    teamRoutes,
     userRoutes,
     workingGroupRoutes,
   ]);
@@ -179,6 +196,8 @@ type PublicAppDependencies = {
   researchOutputController?: ResearchOutputController;
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
+  teamController?: TeamController;
+  teamDataProvider?: TeamDataProvider;
   userDataProvider?: UserDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   userController?: UserController;

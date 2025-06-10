@@ -75,6 +75,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   labCount: number;
   inactiveSince?: string;
   supplementGrant?: TeamSupplementGrant;
+  researchTheme?: string;
 };
 
 export type TeamCreateDataObject = {
@@ -89,7 +90,7 @@ export type TeamCreateDataObject = {
   grantId: string;
 };
 
-export type TeamResponse = TeamDataObject;
+export type TeamResponse = Omit<TeamDataObject, 'researchTheme'>;
 
 export type FetchTeamsOptions = FetchOptions;
 
@@ -103,3 +104,40 @@ export type ListTeamDataObject = ListResponse<TeamListItemDataObject>;
 export type TeamListItemResponse = TeamListItemDataObject;
 
 export type ListTeamResponse = ListResponse<TeamListItemResponse>;
+
+export type TeamLeader = Pick<TeamMember, 'id' | 'avatarUrl' | 'displayName'>;
+export type PublicTeamMember = Pick<
+  TeamMember,
+  'id' | 'avatarUrl' | 'role' | 'firstName' | 'lastName' | 'displayName'
+> & {
+  status: string;
+};
+
+export type PublicTeamResponse = {
+  id: string;
+  name: string;
+  status: string;
+  tags: string[];
+  title: string;
+  projectSummary?: string;
+  researchTheme?: string;
+  members: PublicTeamMember[];
+};
+
+export type PublicTeamListItemDataObject = {
+  id: string;
+  name: string;
+  researchTheme?: string;
+  activeTeamMembers: string[];
+  activeInterestGroups: string[];
+  inactiveTeamMembers: string[];
+  noOfTeamMembers: number;
+  teamLeaders: TeamLeader[];
+};
+
+export type ListPublicTeamDataObject =
+  ListResponse<PublicTeamListItemDataObject>;
+
+export type PublicTeamListItemResponse = PublicTeamListItemDataObject;
+
+export type ListPublicTeamResponse = ListResponse<PublicTeamListItemResponse>;

@@ -4,7 +4,7 @@ import { gql } from 'graphql-tag';
 import { manuscriptContentQueryFragment } from './manuscript.queries';
 
 export const FETCH_TEAM_BY_ID = gql`
-  query FetchTeamById($id: String!) {
+  query FetchTeamById($id: String!, $internalAPI: Boolean = true) {
     teams(id: $id) {
       sys {
         id
@@ -20,6 +20,9 @@ export const FETCH_TEAM_BY_ID = gql`
         sys {
           id
         }
+      }
+      researchTheme {
+        name
       }
       toolsCollection {
         items {
@@ -48,7 +51,8 @@ export const FETCH_TEAM_BY_ID = gql`
         }
       }
       linkedFrom {
-        manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
+        manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC)
+          @include(if: $internalAPI) {
           items {
             ...ManuscriptsContent
             teamsCollection(limit: 1) {
@@ -152,3 +156,60 @@ export const FETCH_TEAMS = gql`
     }
   }
 `;
+
+export const FETCH_PUBLIC_TEAMS = gql`
+  query FetchPublicTeams(
+    $limit: Int
+    $skip: Int
+    $order: [TeamsOrder]
+    $where: TeamsFilter
+  ) {
+    teamsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
+      total
+      items {
+        sys {
+          id
+        }
+        displayName
+        projectTitle
+        projectSummary
+        inactiveSince
+        researchTheme {
+          name
+        }
+        linkedFrom {
+          teamMembershipCollection(limit: 100) {
+            items {
+              role
+              inactiveSinceDate
+              linkedFrom {
+                usersCollection(limit: 1) {
+                  items {
+                    sys {
+                      id
+                    }
+                    firstName
+                    nickname
+                    lastName
+                    alumniSinceDate
+                    avatar {
+                      url
+                    }
+                    onboarded
+                  }
+                }
+              }
+            }
+          }
+          interestGroupsCollection(limit: 100) {
+            items {
+              name
+              active
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+

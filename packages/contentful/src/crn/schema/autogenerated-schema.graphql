@@ -374,6 +374,133 @@ enum CalendarsOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/category)"""
+type Category implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): CategoryLinkingCollections
+  name(locale: String): String
+  sys: Sys!
+}
+
+type CategoryCollection {
+  items: [Category]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input CategoryFilter {
+  AND: [CategoryFilter]
+  OR: [CategoryFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+}
+
+type CategoryLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  manuscriptsCollection(limit: Int = 100, locale: String, order: [CategoryLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [CategoryLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+}
+
+enum CategoryLinkingCollectionsManuscriptsCollectionOrder {
+  apcAmountPaid_ASC
+  apcAmountPaid_DESC
+  apcAmountRequested_ASC
+  apcAmountRequested_DESC
+  apcCoverageRequestStatus_ASC
+  apcCoverageRequestStatus_DESC
+  apcRequested_ASC
+  apcRequested_DESC
+  count_ASC
+  count_DESC
+  declinedReason_ASC
+  declinedReason_DESC
+  previousStatus_ASC
+  previousStatus_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  url_ASC
+  url_DESC
+}
+
+enum CategoryLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  isInReview_ASC
+  isInReview_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+enum CategoryOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports)"""
 type ComplianceReports implements Entry & _Node {
   _id: ID!
@@ -2398,6 +2525,133 @@ input ImageTransformOptions {
   width: Dimension
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/impact)"""
+type Impact implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ImpactLinkingCollections
+  name(locale: String): String
+  sys: Sys!
+}
+
+type ImpactCollection {
+  items: [Impact]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ImpactFilter {
+  AND: [ImpactFilter]
+  OR: [ImpactFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+}
+
+type ImpactLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  manuscriptsCollection(limit: Int = 100, locale: String, order: [ImpactLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [ImpactLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+}
+
+enum ImpactLinkingCollectionsManuscriptsCollectionOrder {
+  apcAmountPaid_ASC
+  apcAmountPaid_DESC
+  apcAmountRequested_ASC
+  apcAmountRequested_DESC
+  apcCoverageRequestStatus_ASC
+  apcCoverageRequestStatus_DESC
+  apcRequested_ASC
+  apcRequested_DESC
+  count_ASC
+  count_DESC
+  declinedReason_ASC
+  declinedReason_DESC
+  previousStatus_ASC
+  previousStatus_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  url_ASC
+  url_DESC
+}
+
+enum ImpactLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  isInReview_ASC
+  isInReview_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+enum ImpactOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroupLeaders)"""
 type InterestGroupLeaders implements Entry & _Node {
   _id: ID!
@@ -3540,11 +3794,13 @@ type Manuscripts implements Entry & _Node {
   apcCoverageRequestStatus(locale: String): String
   apcRequested(locale: String): Boolean
   assignedUsersCollection(limit: Int = 100, locale: String, order: [ManuscriptsAssignedUsersCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): ManuscriptsAssignedUsersCollection
+  categoriesCollection(limit: Int = 100, locale: String, order: [ManuscriptsCategoriesCollectionOrder], preview: Boolean, skip: Int = 0, where: CategoryFilter): ManuscriptsCategoriesCollection
   contentfulMetadata: ContentfulMetadata!
   count(locale: String): Int
   declinedReason(locale: String): String
   discussionsCollection(limit: Int = 100, locale: String, order: [ManuscriptsDiscussionsCollectionOrder], preview: Boolean, skip: Int = 0, where: DiscussionsFilter): ManuscriptsDiscussionsCollection
   eligibilityReasons(locale: String): [String]
+  impact(locale: String, preview: Boolean, where: ImpactFilter): Impact
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
   previousStatus(locale: String): String
   status(locale: String): String
@@ -3639,6 +3895,26 @@ enum ManuscriptsAssignedUsersCollectionOrder {
   website2_DESC
 }
 
+type ManuscriptsCategoriesCollection {
+  items: [Category]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ManuscriptsCategoriesCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 type ManuscriptsCollection {
   items: [Manuscripts]!
   limit: Int!
@@ -3699,6 +3975,8 @@ input ManuscriptsFilter {
   apcRequested_not: Boolean
   assignedUsers: cfUsersNestedFilter
   assignedUsersCollection_exists: Boolean
+  categories: cfCategoryNestedFilter
+  categoriesCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   count: Int
   count_exists: Boolean
@@ -3722,6 +4000,8 @@ input ManuscriptsFilter {
   eligibilityReasons_contains_none: [String]
   eligibilityReasons_contains_some: [String]
   eligibilityReasons_exists: Boolean
+  impact: cfImpactNestedFilter
+  impact_exists: Boolean
   previousStatus: String
   previousStatus_contains: String
   previousStatus_exists: Boolean
@@ -4384,6 +4664,8 @@ type Query {
   assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, where: AssetFilter): AssetCollection
   calendars(id: String!, locale: String, preview: Boolean): Calendars
   calendarsCollection(limit: Int = 100, locale: String, order: [CalendarsOrder], preview: Boolean, skip: Int = 0, where: CalendarsFilter): CalendarsCollection
+  category(id: String!, locale: String, preview: Boolean): Category
+  categoryCollection(limit: Int = 100, locale: String, order: [CategoryOrder], preview: Boolean, skip: Int = 0, where: CategoryFilter): CategoryCollection
   complianceReports(id: String!, locale: String, preview: Boolean): ComplianceReports
   complianceReportsCollection(limit: Int = 100, locale: String, order: [ComplianceReportsOrder], preview: Boolean, skip: Int = 0, where: ComplianceReportsFilter): ComplianceReportsCollection
   dashboard(id: String!, locale: String, preview: Boolean): Dashboard
@@ -4409,6 +4691,8 @@ type Query {
   guidesCollection(limit: Int = 100, locale: String, order: [GuidesOrder], preview: Boolean, skip: Int = 0, where: GuidesFilter): GuidesCollection
   icon(id: String!, locale: String, preview: Boolean): Icon
   iconCollection(limit: Int = 100, locale: String, order: [IconOrder], preview: Boolean, skip: Int = 0, where: IconFilter): IconCollection
+  impact(id: String!, locale: String, preview: Boolean): Impact
+  impactCollection(limit: Int = 100, locale: String, order: [ImpactOrder], preview: Boolean, skip: Int = 0, where: ImpactFilter): ImpactCollection
   interestGroupLeaders(id: String!, locale: String, preview: Boolean): InterestGroupLeaders
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [InterestGroupLeadersOrder], preview: Boolean, skip: Int = 0, where: InterestGroupLeadersFilter): InterestGroupLeadersCollection
   interestGroups(id: String!, locale: String, preview: Boolean): InterestGroups
@@ -4632,6 +4916,7 @@ type ResearchOutputs implements Entry & _Node {
   adminNotes(locale: String): String
   asapFunded(locale: String): String
   authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ResearchOutputsAuthorsFilter): ResearchOutputsAuthorsCollection
+  categoriesCollection(limit: Int = 100, locale: String, order: [ResearchOutputsCategoriesCollectionOrder], preview: Boolean, skip: Int = 0, where: CategoryFilter): ResearchOutputsCategoriesCollection
   changelog(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
@@ -4641,6 +4926,7 @@ type ResearchOutputs implements Entry & _Node {
   documentType(locale: String): String
   doi(locale: String): String
   environmentsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsEnvironmentsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchOutputsEnvironmentsCollection
+  impact(locale: String, preview: Boolean, where: ImpactFilter): Impact
   isInReview(locale: String): Boolean
   keywordsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsKeywordsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchOutputsKeywordsCollection
   labCatalogNumber(locale: String): String
@@ -4700,6 +4986,26 @@ input ResearchOutputsAuthorsFilter {
 }
 
 union ResearchOutputsAuthorsItem = ExternalAuthors | Users
+
+type ResearchOutputsCategoriesCollection {
+  items: [Category]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ResearchOutputsCategoriesCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
 
 type ResearchOutputsCollection {
   items: [ResearchOutputs]!
@@ -4805,6 +5111,8 @@ input ResearchOutputsFilter {
   asapFunded_not_in: [String]
   authors: cfauthorsMultiTypeNestedFilter
   authorsCollection_exists: Boolean
+  categories: cfCategoryNestedFilter
+  categoriesCollection_exists: Boolean
   changelog: String
   changelog_contains: String
   changelog_exists: Boolean
@@ -4850,6 +5158,8 @@ input ResearchOutputsFilter {
   doi_not_in: [String]
   environments: cfResearchTagsNestedFilter
   environmentsCollection_exists: Boolean
+  impact: cfImpactNestedFilter
+  impact_exists: Boolean
   isInReview: Boolean
   isInReview_exists: Boolean
   isInReview_not: Boolean
@@ -8266,6 +8576,20 @@ input cfCalendarsNestedFilter {
   sys: SysFilter
 }
 
+input cfCategoryNestedFilter {
+  AND: [cfCategoryNestedFilter]
+  OR: [cfCategoryNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+}
+
 input cfDiscussionsNestedFilter {
   AND: [cfDiscussionsNestedFilter]
   OR: [cfDiscussionsNestedFilter]
@@ -8533,6 +8857,20 @@ input cfIconNestedFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+}
+
+input cfImpactNestedFilter {
+  AND: [cfImpactNestedFilter]
+  OR: [cfImpactNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
 }
 
 input cfInterestGroupLeadersNestedFilter {
@@ -8998,6 +9336,7 @@ input cfResearchOutputsNestedFilter {
   asapFunded_not_contains: String
   asapFunded_not_in: [String]
   authorsCollection_exists: Boolean
+  categoriesCollection_exists: Boolean
   changelog: String
   changelog_contains: String
   changelog_exists: Boolean
@@ -9041,6 +9380,7 @@ input cfResearchOutputsNestedFilter {
   doi_not_contains: String
   doi_not_in: [String]
   environmentsCollection_exists: Boolean
+  impact_exists: Boolean
   isInReview: Boolean
   isInReview_exists: Boolean
   isInReview_not: Boolean

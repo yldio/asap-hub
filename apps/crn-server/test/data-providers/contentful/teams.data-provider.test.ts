@@ -14,6 +14,8 @@ import {
   getContentfulGraphqlTeamById,
   getContentfulGraphqlTeam,
   getUnsortedManuscripts,
+  getContentfulGraphqlPublicTeam,
+  getPublicTeamListItemDataObject,
 } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -530,6 +532,198 @@ describe('Teams data provider', () => {
 
         expect(result).toEqual({
           items: [expect.objectContaining({ labCount: 4 })],
+          total: 1,
+        });
+      });
+    });
+  });
+
+  describe('FetchPublicTeams method', () => {
+    test('Should fetch the list of teams from Contentful GraphQl', async () => {
+      const contentfulGraphQLResponse = {
+        teamsCollection: {
+          total: 1,
+          items: [getContentfulGraphqlPublicTeam()],
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await teamDataProvider.fetchPublicTeams({});
+
+      expect(result).toEqual({
+        total: 1,
+        items: [getPublicTeamListItemDataObject()],
+      });
+    });
+
+    test('Should return an empty result when no teams exist', async () => {
+      const contentfulGraphQLResponse = getContentfulTeamsGraphqlResponse();
+      contentfulGraphQLResponse.teamsCollection!.total = 0;
+      contentfulGraphQLResponse.teamsCollection!.items = [];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await teamDataProvider.fetchPublicTeams({});
+
+      expect(result).toEqual({
+        items: [],
+        total: 0,
+      });
+    });
+
+    test('Should return an empty result when the query is returned as null', async () => {
+      const contentfulGraphQLResponse = getContentfulTeamsGraphqlResponse();
+      contentfulGraphQLResponse.teamsCollection = null;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await teamDataProvider.fetchPublicTeams({});
+
+      expect(result).toEqual({
+        items: [],
+        total: 0,
+      });
+    });
+
+    test('Should throw an error with a specific error message when the graphql client throws one', async () => {
+      contentfulGraphqlClientMock.request.mockRejectedValueOnce(
+        new GraphQLError('some error message'),
+      );
+
+      await expect(teamDataProvider.fetchPublicTeams({})).rejects.toThrow(
+        'some error message',
+      );
+    });
+
+    test('Should use default query params when request does not have any', async () => {
+      const contentfulGraphQLResponse = {
+        teamsCollection: {
+          total: 1,
+          items: [getContentfulGraphqlPublicTeam()],
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await teamDataProvider.fetchPublicTeams({});
+
+      expect(result).toEqual({
+        total: 1,
+        items: [getPublicTeamListItemDataObject()],
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          limit: 8,
+          order: ['displayName_ASC'],
+          skip: 0,
+        }),
+      );
+    });
+
+    describe('team members', () => {
+      test('should ignore falsy items in the team membership list', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 3,
+              items: [
+                null,
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [null],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          alumniSinceDate: null,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamsCollection: {
+            total: 1,
+            items: [team],
+          },
+        });
+
+        const result = await teamDataProvider.fetchPublicTeams({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ noOfTeamMembers: 1 })],
+          total: 1,
+        });
+      });
+
+      test('should filter out non onboarded users', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 1,
+              items: [
+                {
+                  role: 'Key Personnel',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          alumniSinceDate: null,
+                          onboarded: false,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamsCollection: {
+            total: 1,
+            items: [team],
+          },
+        });
+
+        const result = await teamDataProvider.fetchPublicTeams({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ noOfTeamMembers: 0 })],
           total: 1,
         });
       });

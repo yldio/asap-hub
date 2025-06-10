@@ -4,10 +4,14 @@ import {
   ContentfulWebhookUnpublishPayload,
   FetchTeamsQuery as ContentfulFetchTeamsQuery,
   FetchTeamByIdQuery,
+  FetchPublicTeamsQuery,
 } from '@asap-hub/contentful';
 import { manuscriptAuthor } from '@asap-hub/fixtures';
 import {
+  ListPublicTeamResponse,
   ListTeamResponse,
+  PublicTeamListItemDataObject,
+  PublicTeamResponse,
   TeamDataObject,
   TeamEvent,
   TeamListItemDataObject,
@@ -124,6 +128,87 @@ export const getContentfulGraphqlTeam = (): NonNullable<
               ],
             },
           },
+        },
+      ],
+    },
+  },
+});
+
+export const getContentfulGraphqlPublicTeam = (): NonNullable<
+  NonNullable<FetchPublicTeamsQuery['teamsCollection']>['items'][number]
+> => ({
+  sys: {
+    id: 'team-id-0',
+  },
+  displayName: 'Team A',
+  inactiveSince: null,
+  projectTitle:
+    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  projectSummary: undefined,
+  researchTheme: {
+    name: 'PD Functional Genomics',
+  },
+  linkedFrom: {
+    teamMembershipCollection: {
+      items: [
+        {
+          role: 'Key Personnel',
+          linkedFrom: {
+            usersCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'active-member-1',
+                  },
+                  firstName: 'John',
+                  lastName: 'Doe',
+                  onboarded: true,
+                  alumniSinceDate: null,
+                  nickname: null,
+                },
+              ],
+            },
+          },
+        },
+        {
+          ...getContentfulGraphqlTeamMemberships().items[0],
+          linkedFrom: {
+            usersCollection: {
+              items: [
+                {
+                  ...getContentfulGraphqlTeamMembers(),
+                  alumniSinceDate: null,
+                },
+              ],
+            },
+          },
+        },
+        {
+          role: 'Trainee',
+          inactiveSinceDate: '2020-09-23T20:45:22.000Z',
+          linkedFrom: {
+            usersCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'inactive-member-1',
+                  },
+                  firstName: 'Jane',
+                  lastName: 'Doe',
+                  onboarded: true,
+                  alumniSinceDate: null,
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+    interestGroupsCollection: {
+      items: [
+        {
+          name: 'Interest Group 1',
+          active: true,
         },
       ],
     },
@@ -335,6 +420,69 @@ export const getTeamDataObject = (): TeamDataObject => ({
   tools: [],
 });
 
+export const getPublicTeamListItemDataObject =
+  (): PublicTeamListItemDataObject => ({
+    id: 'team-id-0',
+    name: 'Team A',
+    researchTheme: 'PD Functional Genomics',
+    activeTeamMembers: ['active-member-1', 'user-id-1'],
+    inactiveTeamMembers: ['inactive-member-1'],
+    noOfTeamMembers: 2,
+    activeInterestGroups: ['Interest Group 1'],
+    teamLeaders: [
+      {
+        id: 'user-id-1',
+        displayName: 'Tom (Tim) Hardy',
+        avatarUrl: undefined,
+      },
+    ],
+  });
+
+export const getListPublicTeamResponse = (): ListPublicTeamResponse => ({
+  total: 1,
+  items: [getPublicTeamListItemDataObject()],
+});
+
+// export const getPublicTeamDataObject = (): PublicTeamDataObject => ({
+//   id: 'team-id-0',
+//   name: 'Team A',
+//   status: 'Active',
+//   title:
+//     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+//   projectSummary: undefined,
+//   researchTheme: 'PD Functional Genomics',
+//   tags: ['Animal resources 1'],
+//   members: [
+//     {
+//       id: 'user-id-1',
+//       status: 'Active',
+//       firstName: 'Tom',
+//       lastName: 'Hardy',
+//       displayName: 'Tom (Tim) Hardy',
+//       role: 'Lead PI (Core Leadership)',
+//       avatarUrl: undefined,
+//     },
+//     {
+//       id: 'active-member-1',
+//       status: 'Active',
+//       firstName: 'John',
+//       lastName: 'Doe',
+//       displayName: 'John Doe',
+//       role: 'Key Personnel',
+//       avatarUrl: undefined,
+//     },
+//     {
+//       id: 'inactive-member-1',
+//       status: 'Inactive',
+//       firstName: 'Jane',
+//       lastName: 'Doe',
+//       displayName: 'Jane Doe',
+//       role: 'Trainee',
+//       avatarUrl: undefined,
+//     },
+//   ],
+// });
+
 export const getUnsortedManuscripts = (teamId: string) => ({
   // Keep this order for testing => should sort manuscripts so that Compliant and Closed (other) are last
   manuscriptsCollection: {
@@ -390,6 +538,26 @@ export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
 });
 
 export const getTeamResponse = (): TeamResponse => getTeamDataObject();
+export const getPublicTeamResponse = (): PublicTeamResponse => ({
+  id: 'team-id-0',
+  name: 'Team A',
+  title:
+    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  status: 'Active',
+  tags: ['Animal resources 1'],
+  projectSummary: undefined,
+  members: [
+    {
+      id: 'user-id-1',
+      status: 'Inactive',
+      firstName: 'Tom',
+      lastName: 'Hardy',
+      displayName: 'Tom (Tim) Hardy',
+      role: 'Lead PI (Core Leadership)',
+      avatarUrl: undefined,
+    },
+  ],
+});
 export const getTeamListItemResponse = (): TeamListItemResponse =>
   getTeamListItemDataObject();
 

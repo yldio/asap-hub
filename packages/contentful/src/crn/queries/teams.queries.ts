@@ -212,4 +212,3 @@ export const FETCH_PUBLIC_TEAMS = gql`
     }
   }
 `;
-

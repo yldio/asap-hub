@@ -1,4 +1,3 @@
-import { disable, enable } from '@asap-hub/flags';
 import {
   complianceInitialSortingDirection,
   ManuscriptStatus,
@@ -199,13 +198,6 @@ describe('ComplianceTable', () => {
   });
 
   describe('update apc coverage details modal', () => {
-    beforeEach(() => {
-      enable('DISPLAY_NEW_APC_COVERAGE');
-    });
-
-    afterAll(() => {
-      disable('DISPLAY_NEW_APC_COVERAGE');
-    });
     const data = [
       {
         ...complianceData,

@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import {
   ApcCoverageRequestStatus,
   ManuscriptStatus,
@@ -178,16 +177,6 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
   handleUpdateAPCDetailsClick,
   status,
 }) => {
-  const isNewApcCoverageDisabled = !isEnabled('DISPLAY_NEW_APC_COVERAGE');
-
-  if (isNewApcCoverageDisabled) {
-    return (
-      <p data-testid="apc-coverage" css={apcCoverageStyles(false)}>
-        {''}
-      </p>
-    );
-  }
-
   const isAPCCoverable = apcCoverableStatuses.includes(status ?? '');
 
   if (!isAPCCoverable) {

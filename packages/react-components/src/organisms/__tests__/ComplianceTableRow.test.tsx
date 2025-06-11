@@ -1,4 +1,3 @@
-import { disable, enable } from '@asap-hub/flags';
 import {
   manuscriptStatus,
   ManuscriptStatus,
@@ -229,117 +228,96 @@ describe('ComplianceTableRow', () => {
   });
 
   describe('APC Coverage', () => {
-    describe('when DISPLAY_NEW_APC_COVERAGE flag is disabled', () => {
-      beforeEach(() => {
-        disable('DISPLAY_NEW_APC_COVERAGE');
-      });
+    const nonAPCCoverableStatuses = manuscriptStatus.filter(
+      (status) => !apcCoverableStatuses.includes(status),
+    );
 
-      it('renders APC Coverage as an empty string', () => {
-        renderComponent();
-        expect(screen.getByTestId('apc-coverage')).toHaveTextContent('');
-      });
-    });
+    it.each(nonAPCCoverableStatuses)(
+      'renders APC Coverage as "—" when manuscript status is %s',
+      (status) => {
+        renderComponent({ data: { ...data, status } });
+        expect(screen.getByTestId('apc-coverage')).toHaveTextContent('—');
+      },
+    );
 
-    describe('when DISPLAY_NEW_APC_COVERAGE flag is enabled', () => {
-      beforeEach(() => {
-        enable('DISPLAY_NEW_APC_COVERAGE');
-      });
+    it.each`
+      status                        | apcRequested | buttonName
+      ${'Compliant'}                | ${false}     | ${'Add APC Coverage Details'}
+      ${'Submit Final Publication'} | ${false}     | ${'Add APC Coverage Details'}
+      ${'Compliant'}                | ${true}      | ${'Edit APC Coverage Details'}
+      ${'Submit Final Publication'} | ${true}      | ${'Edit APC Coverage Details'}
+    `(
+      'does not render apc coverage button when manuscript status is $status and apcRequested is $apcRequested but user is not a compliance reviewer',
+      ({ status, apcRequested, buttonName }) => {
+        renderComponent({
+          data: { ...data, status, apcRequested },
+          isComplianceReviewer: false,
+        });
+        expect(
+          screen.queryByRole('button', {
+            name: buttonName,
+          }),
+        ).not.toBeInTheDocument();
+      },
+    );
 
-      afterAll(() => {
-        disable('DISPLAY_NEW_APC_COVERAGE');
-      });
+    it.each(apcCoverableStatuses)(
+      'renders add apc coverage button when manuscript status is %s, user is compliance reviewer and apc requested is not defined',
+      (status) => {
+        renderComponent({
+          data: { ...data, status, apcRequested: undefined },
+          isComplianceReviewer: true,
+        });
+        expect(
+          screen.getByRole('button', { name: 'Add APC Coverage Details' }),
+        ).toBeInTheDocument();
+      },
+    );
 
-      const nonAPCCoverableStatuses = manuscriptStatus.filter(
-        (status) => !apcCoverableStatuses.includes(status),
-      );
+    it.each`
+      status                        | apcRequested
+      ${'Compliant'}                | ${false}
+      ${'Submit Final Publication'} | ${false}
+      ${'Compliant'}                | ${true}
+      ${'Submit Final Publication'} | ${true}
+    `(
+      'renders edit apc coverage button when manuscript status is $status, user is compliance reviewer and apc requested is $apcRequested',
+      ({ status, apcRequested }) => {
+        renderComponent({
+          data: { ...data, status, apcRequested },
+          isComplianceReviewer: true,
+        });
+        expect(
+          screen.getByRole('button', {
+            name: 'Edit APC Coverage Details',
+          }),
+        ).toBeInTheDocument();
+      },
+    );
 
-      it.each(nonAPCCoverableStatuses)(
-        'renders APC Coverage as "—" when manuscript status is %s',
-        (status) => {
-          renderComponent({ data: { ...data, status } });
-          expect(screen.getByTestId('apc-coverage')).toHaveTextContent('—');
-        },
-      );
-
-      it.each`
-        status                        | apcRequested | buttonName
-        ${'Compliant'}                | ${false}     | ${'Add APC Coverage Details'}
-        ${'Submit Final Publication'} | ${false}     | ${'Add APC Coverage Details'}
-        ${'Compliant'}                | ${true}      | ${'Edit APC Coverage Details'}
-        ${'Submit Final Publication'} | ${true}      | ${'Edit APC Coverage Details'}
-      `(
-        'does not render apc coverage button when manuscript status is $status and apcRequested is $apcRequested but user is not a compliance reviewer',
-        ({ status, apcRequested, buttonName }) => {
-          renderComponent({
-            data: { ...data, status, apcRequested },
-            isComplianceReviewer: false,
-          });
-          expect(
-            screen.queryByRole('button', {
-              name: buttonName,
-            }),
-          ).not.toBeInTheDocument();
-        },
-      );
-
-      it.each(apcCoverableStatuses)(
-        'renders add apc coverage button when manuscript status is %s, user is compliance reviewer and apc requested is not defined',
-        (status) => {
-          renderComponent({
-            data: { ...data, status, apcRequested: undefined },
-            isComplianceReviewer: true,
-          });
-          expect(
-            screen.getByRole('button', { name: 'Add APC Coverage Details' }),
-          ).toBeInTheDocument();
-        },
-      );
-
-      it.each`
-        status                        | apcRequested
-        ${'Compliant'}                | ${false}
-        ${'Submit Final Publication'} | ${false}
-        ${'Compliant'}                | ${true}
-        ${'Submit Final Publication'} | ${true}
-      `(
-        'renders edit apc coverage button when manuscript status is $status, user is compliance reviewer and apc requested is $apcRequested',
-        ({ status, apcRequested }) => {
-          renderComponent({
-            data: { ...data, status, apcRequested },
-            isComplianceReviewer: true,
-          });
-          expect(
-            screen.getByRole('button', {
-              name: 'Edit APC Coverage Details',
-            }),
-          ).toBeInTheDocument();
-        },
-      );
-
-      it.each`
-        apcRequested | apcCoverageRequestStatus | apcCoverageLabel
-        ${undefined} | ${undefined}             | ${'Information needed'}
-        ${false}     | ${undefined}             | ${'Not requested'}
-        ${true}      | ${'notPaid'}             | ${'Requested'}
-        ${true}      | ${'declined'}            | ${'Declined'}
-        ${true}      | ${'paid'}                | ${'Paid'}
-      `(
-        'renders APC Coverage as $apcCoverageLabel when apc requested is $apcRequested and the request status is $apcCoverageRequestStatus',
-        ({ apcRequested, apcCoverageRequestStatus, apcCoverageLabel }) => {
-          renderComponent({
-            data: {
-              ...data,
-              apcRequested,
-              apcCoverageRequestStatus,
-              status: 'Compliant',
-            },
-            isComplianceReviewer: true,
-          });
-          expect(screen.getByTestId('apc-coverage')).toHaveTextContent(
-            apcCoverageLabel,
-          );
-        },
-      );
-    });
+    it.each`
+      apcRequested | apcCoverageRequestStatus | apcCoverageLabel
+      ${undefined} | ${undefined}             | ${'Information needed'}
+      ${false}     | ${undefined}             | ${'Not requested'}
+      ${true}      | ${'notPaid'}             | ${'Requested'}
+      ${true}      | ${'declined'}            | ${'Declined'}
+      ${true}      | ${'paid'}                | ${'Paid'}
+    `(
+      'renders APC Coverage as $apcCoverageLabel when apc requested is $apcRequested and the request status is $apcCoverageRequestStatus',
+      ({ apcRequested, apcCoverageRequestStatus, apcCoverageLabel }) => {
+        renderComponent({
+          data: {
+            ...data,
+            apcRequested,
+            apcCoverageRequestStatus,
+            status: 'Compliant',
+          },
+          isComplianceReviewer: true,
+        });
+        expect(screen.getByTestId('apc-coverage')).toHaveTextContent(
+          apcCoverageLabel,
+        );
+      },
+    );
   });
 });

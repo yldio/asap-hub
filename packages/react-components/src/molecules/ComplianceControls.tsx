@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import type {
   CompletedStatusOption,
   RequestedAPCCoverageOption,
@@ -78,8 +77,6 @@ const ComplianceControls = ({
   manuscriptCount,
   exportResults,
 }: ComplianceControlsProps) => {
-  const isNewApcCoverageEnabled = isEnabled('DISPLAY_NEW_APC_COVERAGE');
-
   const resultsFoundText =
     manuscriptCount === 1
       ? `${manuscriptCount} result found`
@@ -118,38 +115,36 @@ const ComplianceControls = ({
             }))}
           </DropdownButton>
         </div>
-        {isNewApcCoverageEnabled && (
-          <div css={filterContainerStyles}>
-            <strong>APC Coverage:</strong>
-            <DropdownButton
-              noMargin
-              buttonChildren={() => (
-                <>
-                  <span css={dropdownLabelStyles}>
-                    {requestedAPCCoverageOptions[requestedAPCCoverage]}
-                  </span>
-                  {dropdownChevronIcon}
-                </>
-              )}
-              customMenuWidth={200}
-            >
-              {Object.keys(requestedAPCCoverageOptions).map(
-                (apcCoverageOption) => ({
-                  item: (
-                    <>
-                      {
-                        requestedAPCCoverageOptions[
-                          apcCoverageOption as RequestedAPCCoverageOption
-                        ]
-                      }
-                    </>
-                  ),
-                  href: generateLink(completedStatus, apcCoverageOption),
-                }),
-              )}
-            </DropdownButton>
-          </div>
-        )}
+        <div css={filterContainerStyles}>
+          <strong>APC Coverage:</strong>
+          <DropdownButton
+            noMargin
+            buttonChildren={() => (
+              <>
+                <span css={dropdownLabelStyles}>
+                  {requestedAPCCoverageOptions[requestedAPCCoverage]}
+                </span>
+                {dropdownChevronIcon}
+              </>
+            )}
+            customMenuWidth={200}
+          >
+            {Object.keys(requestedAPCCoverageOptions).map(
+              (apcCoverageOption) => ({
+                item: (
+                  <>
+                    {
+                      requestedAPCCoverageOptions[
+                        apcCoverageOption as RequestedAPCCoverageOption
+                      ]
+                    }
+                  </>
+                ),
+                href: generateLink(completedStatus, apcCoverageOption),
+              }),
+            )}
+          </DropdownButton>
+        </div>
         <div css={filterContainerStyles}>
           <ExportButton exportResults={exportResults} />
         </div>

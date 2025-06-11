@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/model';
 import { validateFetchPaginationOptions } from '@asap-hub/server-common';
 import { Response, Router } from 'express';
+import { htmlToText } from 'html-to-text';
 import WorkingGroupController from '../../controllers/working-group.controller';
 
 export const workingGroupRouteFactory = (
@@ -57,7 +58,7 @@ const mapToPublicWorkingGroupList = (
   return {
     id,
     title,
-    description,
+    description: htmlToText(description),
     shortDescription: shortText,
     members: leaders.map((leader) => ({
       id: leader.user.id,
@@ -86,7 +87,7 @@ const mapToPublicWorkingGroup = (
   return {
     id,
     title,
-    description,
+    description: htmlToText(description),
     shortDescription: shortText,
     deliverables,
     tags,

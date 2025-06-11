@@ -287,7 +287,7 @@ export const getPublicWorkingGroupResponse =
   (): PublicWorkingGroupResponse => ({
     id: '123',
     title: 'Working Group Title',
-    description: '<p>Working Group Description</p>',
+    description: 'Working Group Description',
     shortDescription: 'Working Group Short Text',
     isWorkingGroupComplete: false,
     deliverables: [

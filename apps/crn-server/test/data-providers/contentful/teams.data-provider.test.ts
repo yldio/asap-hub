@@ -727,6 +727,57 @@ describe('Teams data provider', () => {
           total: 1,
         });
       });
+
+      test('should return all members as inactive if team is inactive', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeam(),
+          inactiveSince: '2020-09-23T20:45:22.000Z',
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 1,
+              items: [
+                {
+                  role: 'Key Personnel',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          sys: {
+                            id: 'user-id-1',
+                          },
+                          alumniSinceDate: null,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamsCollection: {
+            total: 1,
+            items: [team],
+          },
+        });
+
+        const result = await teamDataProvider.fetchPublicTeams({});
+
+        expect(result).toEqual({
+          items: [
+            expect.objectContaining({
+              noOfTeamMembers: 0,
+              inactiveTeamMembers: ['user-id-1'],
+            }),
+          ],
+          total: 1,
+        });
+      });
     });
   });
 

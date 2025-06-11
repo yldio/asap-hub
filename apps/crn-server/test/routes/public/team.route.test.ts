@@ -1,4 +1,4 @@
-import { FetchOptions } from '@asap-hub/model';
+import { FetchOptions, TeamMember } from '@asap-hub/model';
 
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
@@ -79,6 +79,18 @@ describe('/teams/ route', () => {
 
   describe('GET /teams/{team_id}', () => {
     const teamResponse = getTeamResponse();
+    const activeMember = {
+      id: 'user-id-2',
+      alumniSinceDate: undefined,
+      email: 'H@rdy.io',
+      firstName: 'John',
+      lastName: 'Doe',
+      displayName: 'John Doe',
+      role: 'Lead PI (Core Leadership)',
+      avatarUrl: undefined,
+    } as TeamMember;
+
+    teamResponse.members = [teamResponse.members[0]!, activeMember];
     const publicTeamResponse = getPublicTeamResponse();
     test('Should return a 404 error when the team or members are not found', async () => {
       teamControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
@@ -86,14 +98,6 @@ describe('/teams/ route', () => {
       const response = await supertest(publicApp).get('/public/teams/123');
 
       expect(response.status).toBe(404);
-    });
-
-    test('Should return the result correctly', async () => {
-      teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
-
-      const response = await supertest(publicApp).get('/public/teams/123');
-
-      expect(response.body).toEqual(publicTeamResponse);
     });
 
     test('Should call the controller with the right parameters', async () => {
@@ -107,6 +111,37 @@ describe('/teams/ route', () => {
         showTools: false,
         internalAPI: false,
       });
+    });
+
+    test('Should return the result correctly', async () => {
+      teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
+
+      const response = await supertest(publicApp).get('/public/teams/123');
+
+      expect(response.body).toEqual(publicTeamResponse);
+    });
+
+    test('Should return all members as inactive if team is inactive', async () => {
+      const inactiveTeam = {
+        ...teamResponse,
+        inactiveSince: '2020-09-23T20:45:22.000Z',
+      };
+      teamControllerMock.fetchById.mockResolvedValueOnce(inactiveTeam);
+
+      const response = await supertest(publicApp).get('/public/teams/123');
+
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          members: [
+            expect.objectContaining({
+              status: 'Inactive',
+            }),
+            expect.objectContaining({
+              status: 'Inactive',
+            }),
+          ],
+        }),
+      );
     });
   });
 });

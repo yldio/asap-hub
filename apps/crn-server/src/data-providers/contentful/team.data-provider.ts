@@ -319,17 +319,29 @@ export const parseContentfulGraphQlPublicTeamListItem = (
     .map((ig) => ig.name || '');
 
   const isInactiveTeam = !!item.inactiveSince;
+
+  const getMembershipData = () =>
+    isInactiveTeam
+      ? {
+          activeTeamMembers: [],
+          noOfTeamMembers: 0,
+          inactiveTeamMembers: [
+            ...new Set([...activeMembers, ...inactiveMembers]),
+          ],
+        }
+      : {
+          activeTeamMembers: [...activeMembers],
+          noOfTeamMembers: activeMembers.size,
+          inactiveTeamMembers: [...inactiveMembers],
+        };
+
   return {
     id: item.sys.id ?? '',
     name: item.displayName ?? '',
     researchTheme: item.researchTheme?.name ?? undefined,
-    activeTeamMembers: isInactiveTeam ? [] : [...activeMembers],
-    noOfTeamMembers: isInactiveTeam ? 0 : activeMembers.size,
-    inactiveTeamMembers: isInactiveTeam
-      ? [...new Set([...activeMembers, ...inactiveMembers])]
-      : [...inactiveMembers],
     teamLeaders: [...teamLeaders],
     activeInterestGroups,
+    ...getMembershipData(),
   };
 };
 

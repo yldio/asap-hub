@@ -62,7 +62,7 @@ const mapTeamToPublicTeam = (team: TeamDataObject): PublicTeamResponse => ({
     displayName: member.displayName,
     avatarUrl: member.avatarUrl,
     status:
-      member.alumniSinceDate || member.inactiveSinceDate
+      team.inactiveSince || member.alumniSinceDate || member.inactiveSinceDate
         ? 'Inactive'
         : 'Active',
   })),

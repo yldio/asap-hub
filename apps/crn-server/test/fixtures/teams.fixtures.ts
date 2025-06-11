@@ -556,6 +556,15 @@ export const getPublicTeamResponse = (): PublicTeamResponse => ({
       role: 'Lead PI (Core Leadership)',
       avatarUrl: undefined,
     },
+    {
+      id: 'user-id-2',
+      status: 'Active',
+      firstName: 'John',
+      lastName: 'Doe',
+      displayName: 'John Doe',
+      role: 'Lead PI (Core Leadership)',
+      avatarUrl: undefined,
+    },
   ],
 });
 export const getTeamListItemResponse = (): TeamListItemResponse =>

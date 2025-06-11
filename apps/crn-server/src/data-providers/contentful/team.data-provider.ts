@@ -320,20 +320,19 @@ export const parseContentfulGraphQlPublicTeamListItem = (
 
   const isInactiveTeam = !!item.inactiveSince;
 
-  const membershipData =
-    isInactiveTeam
-      ? {
-          activeTeamMembers: [],
-          noOfTeamMembers: 0,
-          inactiveTeamMembers: [
-            ...new Set([...activeMembers, ...inactiveMembers]),
-          ],
-        }
-      : {
-          activeTeamMembers: [...activeMembers],
-          noOfTeamMembers: activeMembers.size,
-          inactiveTeamMembers: [...inactiveMembers],
-        };
+  const membershipData = isInactiveTeam
+    ? {
+        activeTeamMembers: [],
+        noOfTeamMembers: 0,
+        inactiveTeamMembers: [
+          ...new Set([...activeMembers, ...inactiveMembers]),
+        ],
+      }
+    : {
+        activeTeamMembers: [...activeMembers],
+        noOfTeamMembers: activeMembers.size,
+        inactiveTeamMembers: [...inactiveMembers],
+      };
 
   return {
     id: item.sys.id ?? '',

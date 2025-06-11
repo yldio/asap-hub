@@ -90,6 +90,7 @@ const mapToPublicWorkingGroup = (
     shortDescription: shortText,
     deliverables,
     tags,
+    isWorkingGroupComplete: workingGroup.complete,
     members: [
       ...workingGroup.leaders.map((member) => ({
         id: member.user.id,

@@ -289,6 +289,7 @@ export const getPublicWorkingGroupResponse =
     title: 'Working Group Title',
     description: '<p>Working Group Description</p>',
     shortDescription: 'Working Group Short Text',
+    isWorkingGroupComplete: false,
     deliverables: [
       {
         status: 'Pending',
@@ -323,8 +324,14 @@ export const getPublicWorkingGroupResponse =
 
 export const getListPublicWorkingGroupResponse =
   (): ListPublicWorkingGroupListResponse => {
-    const { researchOutputsIds, deliverables, tags, members, ...workingGroup } =
-      getPublicWorkingGroupResponse();
+    const {
+      researchOutputsIds,
+      deliverables,
+      tags,
+      members,
+      isWorkingGroupComplete,
+      ...workingGroup
+    } = getPublicWorkingGroupResponse();
     return {
       total: 1,
       items: [

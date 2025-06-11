@@ -125,6 +125,7 @@ export type PublicWorkingGroupResponse = Pick<
   WorkingGroupResponse,
   'id' | 'title' | 'description' | 'deliverables' | 'tags'
 > & {
+  isWorkingGroupComplete: boolean;
   shortDescription: WorkingGroupResponse['shortText'];
   members: {
     id: WorkingGroupMember['user']['id'];

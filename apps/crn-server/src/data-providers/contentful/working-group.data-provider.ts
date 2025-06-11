@@ -31,6 +31,7 @@ import {
   parseContentfulGraphqlCalendarToResponse,
   mapDeliverables,
 } from '../transformers';
+import { cleanArray } from '../../utils/clean-array';
 import logger from '../../utils/logger';
 import { parseTeamsCollection } from './user.data-provider';
 
@@ -105,11 +106,14 @@ export class WorkingGroupContentfulDataProvider
     };
   }
 
-  async fetchById(id: string): Promise<WorkingGroupDataObject | null> {
+  async fetchById(
+    id: string,
+    publicAPI: boolean = false,
+  ): Promise<WorkingGroupDataObject | null> {
     const { workingGroups } = await this.contentfulClient.request<
       FetchWorkingGroupByIdQuery,
       FetchWorkingGroupByIdQueryVariables
-    >(FETCH_WORKING_GROUP_BY_ID, { id });
+    >(FETCH_WORKING_GROUP_BY_ID, { id, publicAPI });
 
     if (!workingGroups) {
       return null;
@@ -197,6 +201,7 @@ export const parseContentfulGraphQlWorkingGroup = (
     membersCollection,
     lastUpdated,
     tagsCollection,
+    linkedFrom,
   } = item;
 
   const deliverables = (deliverablesCollection?.items || [])
@@ -273,6 +278,10 @@ export const parseContentfulGraphQlWorkingGroup = (
       : [],
     tags:
       tagsCollection?.items.map((tag) => tag?.name || '').filter(Boolean) || [],
+    researchOutputsIds:
+      cleanArray(linkedFrom?.researchOutputsCollection?.items)
+        .map((researchOutput) => researchOutput?.sys.id)
+        .filter((id): id is string => id !== null) || [],
   };
 
   return externalLink ? { ...workingGroup, externalLink } : workingGroup;

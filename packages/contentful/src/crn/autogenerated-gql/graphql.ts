@@ -23049,11 +23049,17 @@ export type WorkingGroupsContentFragment = Pick<
       sys: Pick<Sys, 'id'>;
     }
   >;
+  linkedFrom?: Maybe<{
+    researchOutputsCollection?: Maybe<{
+      items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+    }>;
+  }>;
 };
 
 export type FetchWorkingGroupByIdQueryVariables = Exact<{
   id: Scalars['String'];
   singleWorkingGroup?: InputMaybe<Scalars['Boolean']>;
+  publicAPI?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchWorkingGroupByIdQuery = {
@@ -23232,6 +23238,11 @@ export type FetchWorkingGroupByIdQuery = {
           sys: Pick<Sys, 'id'>;
         }
       >;
+      linkedFrom?: Maybe<{
+        researchOutputsCollection?: Maybe<{
+          items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+        }>;
+      }>;
     }
   >;
 };
@@ -23244,6 +23255,7 @@ export type FetchWorkingGroupsQueryVariables = Exact<{
   >;
   where?: InputMaybe<WorkingGroupsFilter>;
   singleWorkingGroup?: InputMaybe<Scalars['Boolean']>;
+  publicAPI?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchWorkingGroupsQuery = {
@@ -23461,6 +23473,11 @@ export type FetchWorkingGroupsQuery = {
                 sys: Pick<Sys, 'id'>;
               }
             >;
+            linkedFrom?: Maybe<{
+              researchOutputsCollection?: Maybe<{
+                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+              }>;
+            }>;
           }
         >
       >;
@@ -31229,6 +31246,62 @@ export const WorkingGroupsContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'linkedFrom' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'researchOutputsCollection' },
+                  directives: [
+                    {
+                      kind: 'Directive',
+                      name: { kind: 'Name', value: 'include' },
+                      arguments: [
+                        {
+                          kind: 'Argument',
+                          name: { kind: 'Name', value: 'if' },
+                          value: {
+                            kind: 'Variable',
+                            name: { kind: 'Name', value: 'publicAPI' },
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -43442,6 +43515,15 @@ export const FetchWorkingGroupByIdDocument = {
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: true },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicAPI' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -43529,6 +43611,15 @@ export const FetchWorkingGroupsDocument = {
           variable: {
             kind: 'Variable',
             name: { kind: 'Name', value: 'singleWorkingGroup' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicAPI' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: false },

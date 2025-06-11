@@ -235,6 +235,10 @@ describe('Working Groups data provider', () => {
   });
 
   describe('Fetch-by-id method', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('Should fetch the workingGroup from Contentful GraphQl', async () => {
       const workingGroupId = 'workingGroup-id-0';
       const result =
@@ -276,7 +280,7 @@ describe('Working Groups data provider', () => {
       const result = await workingGroupDataProvider.fetchById(id);
 
       expect(result).toEqual(getWorkingGroupDataObject());
-      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
           id,
@@ -335,6 +339,48 @@ describe('Working Groups data provider', () => {
       const response = await workingGroupDataProvider.fetchById(id);
 
       expect(response!.title).toBe('');
+    });
+
+    test('Should return researchOutputsIds when they exist', async () => {
+      const id = 'some-id';
+      const contentfulGraphQLResponse =
+        getContentfulWorkingGroupGraphqlResponse();
+      contentfulGraphQLResponse.workingGroups!.linkedFrom = {
+        researchOutputsCollection: {
+          items: [
+            { sys: { id: 'research-output-1' } },
+            { sys: { id: 'research-output-2' } },
+          ],
+        },
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+      const publicAPI = true;
+      const response = await workingGroupDataProvider.fetchById(id, publicAPI);
+
+      expect(response!.researchOutputsIds).toEqual([
+        'research-output-1',
+        'research-output-2',
+      ]);
+    });
+
+    test('Should filter out null researchOutputsIds', async () => {
+      const id = 'some-id';
+      const contentfulGraphQLResponse =
+        getContentfulWorkingGroupGraphqlResponse();
+      contentfulGraphQLResponse.workingGroups!.linkedFrom = {
+        researchOutputsCollection: {
+          items: [null, { sys: { id: 'research-output-2' } }],
+        },
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+      const publicAPI = true;
+      const response = await workingGroupDataProvider.fetchById(id, publicAPI);
+
+      expect(response!.researchOutputsIds).toEqual(['research-output-2']);
     });
 
     describe('calendars', () => {

@@ -122,6 +122,15 @@ export const workingGroupsContentQueryFragment = gql`
       googleCalendarId
     }
     lastUpdated
+    linkedFrom {
+      researchOutputsCollection @include(if: $publicAPI) {
+        items {
+          sys {
+            id
+          }
+        }
+      }
+    }
   }
 `;
 
@@ -129,6 +138,7 @@ export const FETCH_WORKING_GROUP_BY_ID = gql`
   query FetchWorkingGroupById(
     $id: String!
     $singleWorkingGroup: Boolean = true
+    $publicAPI: Boolean = false
   ) {
     workingGroups(id: $id) {
       ...WorkingGroupsContent
@@ -144,6 +154,7 @@ export const FETCH_WORKING_GROUPS = gql`
     $order: [WorkingGroupsOrder]
     $where: WorkingGroupsFilter
     $singleWorkingGroup: Boolean = false
+    $publicAPI: Boolean = false
   ) {
     workingGroupsCollection(
       limit: $limit

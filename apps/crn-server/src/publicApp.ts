@@ -22,17 +22,21 @@ import { AssetContentfulDataProvider } from './data-providers/contentful/asset.d
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-author.data-provider';
 import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
 import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
+import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
 import {
   ResearchOutputDataProvider,
   ResearchTagDataProvider,
   UserDataProvider,
+  WorkingGroupDataProvider,
 } from './data-providers/types';
 import { ExternalAuthorDataProvider } from './data-providers/types/external-authors.data-provider.types';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { researchOutputRouteFactory } from './routes/public/research-output.route';
+import { workingGroupRouteFactory } from './routes/public/working-group.route';
 import { userRouteFactory } from './routes/public/user.route';
 import pinoLogger from './utils/logger';
+import WorkingGroupController from './controllers/working-group.controller';
 
 export const publicAppFactory = (
   dependencies: PublicAppDependencies = {},
@@ -95,6 +99,13 @@ export const publicAppFactory = (
       getContentfulRestClientFactory,
     );
 
+  const workingGroupDataProvider =
+    dependencies.workingGroupDataProvider ||
+    new WorkingGroupContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+
   const assetDataProvider = new AssetContentfulDataProvider(
     getContentfulRestClientFactory,
   );
@@ -115,6 +126,10 @@ export const publicAppFactory = (
       researchTagDataProvider,
     );
 
+  const workingGroupController =
+    dependencies.workingGroupController ||
+    new WorkingGroupController(workingGroupDataProvider);
+
   const basicRoutes = Router();
 
   // add healthcheck route
@@ -128,8 +143,15 @@ export const publicAppFactory = (
 
   const userRoutes = userRouteFactory(userController);
 
+  const workingGroupRoutes = workingGroupRouteFactory(workingGroupController);
+
   // add routes
-  app.use('/public', [basicRoutes, researchOutputRoutes, userRoutes]);
+  app.use('/public', [
+    basicRoutes,
+    researchOutputRoutes,
+    userRoutes,
+    workingGroupRoutes,
+  ]);
 
   // Catch all
   app.get('/public/*', async (_req, res) => {
@@ -158,7 +180,9 @@ type PublicAppDependencies = {
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
   userDataProvider?: UserDataProvider;
+  workingGroupDataProvider?: WorkingGroupDataProvider;
   userController?: UserController;
+  workingGroupController?: WorkingGroupController;
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;

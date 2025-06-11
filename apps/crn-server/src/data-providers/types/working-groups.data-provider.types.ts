@@ -12,4 +12,9 @@ export type WorkingGroupDataProvider = DataProvider<
   null,
   null,
   WorkingGroupUpdateDataObject
->;
+> & {
+  fetchById: (
+    id: string,
+    publicAPI: boolean,
+  ) => Promise<WorkingGroupDataObject | null>;
+};

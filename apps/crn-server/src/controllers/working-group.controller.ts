@@ -30,8 +30,14 @@ export default class WorkingGroupController {
     return { total, items: items.map(toWorkingGroupResponse) };
   }
 
-  async fetchById(groupId: string): Promise<WorkingGroupResponse> {
-    const workingGroup = await this.workingGroupDataProvider.fetchById(groupId);
+  async fetchById(
+    groupId: string,
+    publicAPI: boolean = false,
+  ): Promise<WorkingGroupResponse> {
+    const workingGroup = await this.workingGroupDataProvider.fetchById(
+      groupId,
+      publicAPI,
+    );
     if (!workingGroup) {
       throw new NotFoundError(
         undefined,

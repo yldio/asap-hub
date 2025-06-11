@@ -37,24 +37,31 @@ const menuWrapperStyles = css({
   maxWidth: `${formTargetWidth / perRem}em`,
 });
 
-const menuContainerStyles = css({
-  position: 'absolute',
-  display: 'none',
-  overflow: 'hidden',
-  zIndex: 1,
-  minWidth: `${300 / perRem}em`,
+const menuContainerStyles = (customMenuWidth?: number) =>
+  css({
+    position: 'absolute',
+    display: 'none',
+    overflow: 'hidden',
+    zIndex: 1,
+    minWidth: `${300 / perRem}em`,
 
-  width: '100%',
-  top: 0,
-  right: 0,
-  backgroundColor: paper.rgb,
-  border: `1px solid ${steel.rgb}`,
-  boxShadow: `0 2px 6px 0 ${colorWithTransparency(tin, 0.34).rgba}`,
+    width: '100%',
+    top: 0,
+    right: 0,
+    backgroundColor: paper.rgb,
+    border: `1px solid ${steel.rgb}`,
+    boxShadow: `0 2px 6px 0 ${colorWithTransparency(tin, 0.34).rgba}`,
 
-  flexDirection: 'column',
+    flexDirection: 'column',
 
-  padding: `${6 / perRem}em 0`,
-});
+    padding: `${6 / perRem}em 0`,
+    ...(customMenuWidth
+      ? {
+          minWidth: `${customMenuWidth / perRem}em`,
+          width: `${customMenuWidth / perRem}em`,
+        }
+      : {}),
+  });
 
 const showMenuStyles = css({
   display: 'flex',
@@ -144,6 +151,7 @@ type DropdownButtonProps = {
   buttonChildren: (menuShown: boolean) => ReactNode;
   noMargin?: boolean;
   dropdownHeight?: number;
+  customMenuWidth?: number;
   alignLeft?: boolean;
 } & Partial<Pick<ComponentProps<typeof Button>, 'primary'>>;
 
@@ -154,6 +162,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
   alignLeft = false,
   primary,
   dropdownHeight,
+  customMenuWidth,
 }) => {
   const reference = useRef<HTMLDivElement>(null);
   const handleClick = () => setMenuShown(!menuShown);
@@ -190,7 +199,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
       <div css={menuWrapperStyles}>
         <div
           css={[
-            menuContainerStyles,
+            menuContainerStyles(customMenuWidth),
             menuShown && showMenuStyles,
             trimmedListStyles,
             alignLeft && alignLeftStyles,

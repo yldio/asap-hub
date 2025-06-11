@@ -899,9 +899,11 @@ export const DEFAULT_COMPLETED_STATUS: CompletedStatusOption = 'hide';
 
 export const requestedAPCCoverageOptions = {
   all: 'Show all',
-  yes: 'Yes',
-  no: 'No',
-  submitted: 'Submitted',
+  apcNotRequested: 'Not Requested',
+  apcRequested: 'Requested',
+  paid: 'Requested: Paid',
+  notPaid: 'Requested: Not Paid',
+  declined: 'Requested: Declined',
 };
 
 export type RequestedAPCCoverageOption =

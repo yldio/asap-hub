@@ -1,10 +1,11 @@
+import { isEnabled } from '@asap-hub/flags';
 import type {
   CompletedStatusOption,
-  // RequestedAPCCoverageOption,
+  RequestedAPCCoverageOption,
 } from '@asap-hub/model';
 import {
+  requestedAPCCoverageOptions,
   completedStatusOptions,
-  // requestedAPCCoverageOptions,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { DropdownButton, ExportButton } from '.';
@@ -61,22 +62,24 @@ const dropdownLabelStyles = css({
 
 type ComplianceControlsProps = {
   completedStatus: CompletedStatusOption;
-  // requestedAPCCoverage: RequestedAPCCoverageOption;
+  requestedAPCCoverage: RequestedAPCCoverageOption;
   manuscriptCount: number;
   generateLink: (
     completedStatus: string,
-    // requestedAPCCoverage: string,
+    requestedAPCCoverage: string,
   ) => string;
   exportResults?: () => Promise<void>;
 };
 
 const ComplianceControls = ({
   completedStatus,
-  // requestedAPCCoverage,
+  requestedAPCCoverage,
   generateLink,
   manuscriptCount,
   exportResults,
 }: ComplianceControlsProps) => {
+  const isNewApcCoverageEnabled = isEnabled('DISPLAY_NEW_APC_COVERAGE');
+
   const resultsFoundText =
     manuscriptCount === 1
       ? `${manuscriptCount} result found`
@@ -91,6 +94,7 @@ const ComplianceControls = ({
           <strong>Completed Status:</strong>
           <DropdownButton
             noMargin
+            customMenuWidth={100}
             buttonChildren={() => (
               <>
                 <span css={dropdownLabelStyles}>
@@ -110,40 +114,42 @@ const ComplianceControls = ({
                   }
                 </>
               ),
-              href: generateLink(statusOption),
-              // href: generateLink(statusOption, requestedAPCCoverage),
+              href: generateLink(statusOption, requestedAPCCoverage),
             }))}
           </DropdownButton>
         </div>
-        {/* <div css={filterContainerStyles}>
-          <strong>Requested APC Coverage:</strong>
-          <DropdownButton
-            noMargin
-            buttonChildren={() => (
-              <>
-                <span css={dropdownLabelStyles}>
-                  {requestedAPCCoverageOptions[requestedAPCCoverage]}
-                </span>
-                {dropdownChevronIcon}
-              </>
-            )}
-          >
-            {Object.keys(requestedAPCCoverageOptions).map(
-              (apcCoverageOption) => ({
-                item: (
-                  <>
-                    {
-                      requestedAPCCoverageOptions[
-                        apcCoverageOption as RequestedAPCCoverageOption
-                      ]
-                    }
-                  </>
-                ),
-                href: generateLink(completedStatus, apcCoverageOption),
-              }),
-            )}
-          </DropdownButton>
-        </div> */}
+        {isNewApcCoverageEnabled && (
+          <div css={filterContainerStyles}>
+            <strong>APC Coverage:</strong>
+            <DropdownButton
+              noMargin
+              buttonChildren={() => (
+                <>
+                  <span css={dropdownLabelStyles}>
+                    {requestedAPCCoverageOptions[requestedAPCCoverage]}
+                  </span>
+                  {dropdownChevronIcon}
+                </>
+              )}
+              customMenuWidth={200}
+            >
+              {Object.keys(requestedAPCCoverageOptions).map(
+                (apcCoverageOption) => ({
+                  item: (
+                    <>
+                      {
+                        requestedAPCCoverageOptions[
+                          apcCoverageOption as RequestedAPCCoverageOption
+                        ]
+                      }
+                    </>
+                  ),
+                  href: generateLink(completedStatus, apcCoverageOption),
+                }),
+              )}
+            </DropdownButton>
+          </div>
+        )}
         <div css={filterContainerStyles}>
           <ExportButton exportResults={exportResults} />
         </div>

@@ -312,15 +312,15 @@ export const parseContentfulGraphQlPublicTeamListItem = (
     ],
   );
 
-  const activeInterestGroups = (
-    item.linkedFrom?.interestGroupsCollection?.items || []
+  const activeInterestGroups = cleanArray(
+    item.linkedFrom?.interestGroupsCollection?.items,
   )
-    .filter((ig): ig is TeamInterestGroupItem => ig !== null && !!ig.active)
+    .filter((ig): ig is TeamInterestGroupItem => !!ig.active)
     .map((ig) => ig.name || '');
 
   const isInactiveTeam = !!item.inactiveSince;
 
-  const getMembershipData = () =>
+  const membershipData =
     isInactiveTeam
       ? {
           activeTeamMembers: [],
@@ -341,7 +341,7 @@ export const parseContentfulGraphQlPublicTeamListItem = (
     researchTheme: item.researchTheme?.name ?? undefined,
     teamLeaders: [...teamLeaders],
     activeInterestGroups,
-    ...getMembershipData(),
+    ...membershipData,
   };
 };
 

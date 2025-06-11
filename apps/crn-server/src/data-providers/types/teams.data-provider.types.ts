@@ -1,6 +1,7 @@
 import {
   DataProvider,
   FetchOptions,
+  ListPublicTeamDataObject,
   TeamCreateDataObject,
   TeamDataObject,
   TeamListItemDataObject,
@@ -20,4 +21,12 @@ export type TeamDataProvider = DataProvider<
   TeamCreateDataObject,
   null,
   TeamUpdateDataObject
->;
+> & {
+  fetchPublicTeams: (
+    options: FetchTeamsOptions,
+  ) => Promise<ListPublicTeamDataObject>;
+  fetchById: (
+    id: string,
+    internalAPI: boolean,
+  ) => Promise<TeamDataObject | null>;
+};

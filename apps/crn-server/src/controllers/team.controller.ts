@@ -1,6 +1,8 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
+  FetchPaginationOptions,
   FetchTeamsOptions,
+  ListPublicTeamResponse,
   ListTeamResponse,
   TeamResponse,
   TeamTool,
@@ -8,6 +10,7 @@ import {
 import { TeamDataProvider } from '../data-providers/types/teams.data-provider.types';
 
 type FetchTeamOptions = {
+  internalAPI: boolean;
   showTools: boolean;
 };
 
@@ -50,11 +53,28 @@ export default class TeamController {
     };
   }
 
+  async fetchPublicTeams(
+    options: FetchPaginationOptions,
+  ): Promise<ListPublicTeamResponse> {
+    const { take = 8, skip = 0 } = options;
+
+    const { total, items } = await this.teamDataProvider.fetchPublicTeams({
+      take,
+      skip,
+    });
+
+    return {
+      total,
+      items,
+    };
+  }
+
   async fetchById(
     teamId: string,
     options?: FetchTeamOptions,
   ): Promise<TeamResponse> {
-    const team = await this.teamDataProvider.fetchById(teamId);
+    const internalAPI = options?.internalAPI ?? true;
+    const team = await this.teamDataProvider.fetchById(teamId, internalAPI);
 
     if (!team) {
       throw new NotFoundError(undefined, `team with id ${teamId} not found`);

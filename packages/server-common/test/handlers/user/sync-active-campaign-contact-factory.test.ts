@@ -147,7 +147,7 @@ describe('Sync ActiveCampaign Contact Factory', () => {
         activeCampaignCreatedAt: new Date(date),
         activeCampaignId,
       },
-      { polling: false },
+      { polling: false, suppressConflict: true },
     );
     expect(logger.info).toHaveBeenCalledWith('Contact user-id-1 created');
   });

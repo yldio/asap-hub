@@ -145,7 +145,7 @@ export const syncUserActiveCampaignData = async (
             activeCampaignCreatedAt: new Date(contactResponse.contact.cdate),
             activeCampaignId: contactResponse.contact.id,
           },
-          { polling: false },
+          { polling: false, suppressConflict: true },
         );
       }
 
@@ -204,7 +204,7 @@ export const syncUserActiveCampaignData = async (
         {
           activeCampaignId: contactId,
         },
-        { polling: false },
+        { polling: false, suppressConflict: true },
       );
     }
 

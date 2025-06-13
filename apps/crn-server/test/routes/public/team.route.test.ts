@@ -13,6 +13,7 @@ import { teamControllerMock } from '../../mocks/team.controller.mock';
 describe('/teams/ route', () => {
   const publicApp = publicAppFactory({
     teamController: teamControllerMock,
+    cacheMiddleware: (_req, _res, next) => next(),
   });
 
   afterEach(jest.clearAllMocks);

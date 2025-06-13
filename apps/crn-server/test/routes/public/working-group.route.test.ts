@@ -12,6 +12,7 @@ import { workingGroupControllerMock } from '../../mocks/working-group.controller
 describe('/working-groups/ route', () => {
   const publicApp = publicAppFactory({
     workingGroupController: workingGroupControllerMock,
+    cacheMiddleware: (_req, _res, next) => next(),
   });
 
   afterEach(jest.clearAllMocks);

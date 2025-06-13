@@ -1581,6 +1581,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                               control={control}
                               rules={{
                                 required: 'Please enter the details.',
+                                maxLength: {
+                                  value: 256,
+                                  message:
+                                    'Reason cannot exceed 256 characters.',
+                                },
                               }}
                               render={({
                                 field: { value, onChange, onBlur },

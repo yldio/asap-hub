@@ -468,4 +468,43 @@ describe('QuickCheck logic', () => {
       expect(queryByText(/Please enter the details./i)).not.toBeInTheDocument();
     });
   });
+
+  it('displays an error message when quick check detail is longer than 256 characters', async () => {
+    const onCreate = jest.fn();
+    const { findByText, getByLabelText, queryByText } = render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          publicationDoi="10.0777"
+          url="http://example.com/111"
+          lifecycle="Publication"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
+          onCreate={onCreate}
+          availabilityStatement="No"
+          availabilityStatementDetails="d"
+        />
+      </StaticRouter>,
+    );
+
+    await waitFor(() => {
+      expect(getByLabelText(/Please provide details/i)).toBeInTheDocument();
+    });
+    expect(
+      queryByText(/Reason cannot exceed 256 characters./i),
+    ).not.toBeInTheDocument();
+
+    const input = getByLabelText(/Please provide details/i);
+    userEvent.type(input, 'A'.repeat(257));
+    input.blur();
+
+    expect(
+      await findByText(/Reason cannot exceed 256 characters./i),
+    ).toBeVisible();
+  });
 });

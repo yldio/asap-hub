@@ -1,3 +1,4 @@
+import { isEnabled } from '@asap-hub/flags';
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
   researchOutputDocumentTypeToType,
@@ -6,6 +7,7 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
+  ManuscriptOutputSelection,
   NotFoundPage,
   OutputVersions,
   ResearchOutputForm,
@@ -22,21 +24,21 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useWorkingGroupById } from './state';
+import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
   handleError,
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
+  useGeneratedContent,
   useLabSuggestions,
   usePostResearchOutput,
   usePutResearchOutput,
   useRelatedEventsSuggestions,
   useRelatedResearchSuggestions,
-  useGeneratedContent,
   useResearchTags,
   useTeamSuggestions,
 } from '../../shared-state';
-import { useResearchOutputPermissions } from '../../shared-research/state';
+import { useWorkingGroupById } from './state';
 
 type WorkingGroupOutputProps = {
   workingGroupId: string;
@@ -52,6 +54,10 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   descriptionUnchangedWarning,
   versionAction,
 }) => {
+  const [manuscriptOutputSelection, setManuscriptOutputSelection] = useState<
+    'manually' | 'import' | ''
+  >('');
+
   const route = network({})
     .workingGroups({})
     .workingGroup({ workingGroupId }).createOutput;
@@ -122,8 +128,33 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   } else if (versionAction === 'edit') {
     versions = researchOutputData?.versions ?? [];
   }
+  const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS');
+  const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
+    isManuscriptOutputFlagEnabled && documentType === 'Article',
+  );
 
+  const handleManuscriptOutputSelection = (
+    selection: 'manually' | 'import' | '',
+  ) => {
+    setManuscriptOutputSelection(selection);
+  };
   if (workingGroup) {
+    if (showManuscriptOutputFlow) {
+      return (
+        <Frame title="Share Research Output">
+          <ResearchOutputHeader
+            documentType={documentType}
+            workingGroupAssociation
+          />
+          <ManuscriptOutputSelection
+            manuscriptOutputSelection={manuscriptOutputSelection}
+            onChangeManuscriptOutputSelection={handleManuscriptOutputSelection}
+            onSelectCreateManually={() => setShowManuscriptOutputFlow(false)}
+          />
+        </Frame>
+      );
+    }
+
     return (
       <Frame title="Share Working Group Research Output">
         {versionAction === 'create' && (

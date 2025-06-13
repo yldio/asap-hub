@@ -1,6 +1,6 @@
 import React, { ComponentProps, useRef } from 'react';
 import { v4 as uuidV4 } from 'uuid';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 
 import { Option } from '../select';
 import { noop } from '../utils';
@@ -19,6 +19,7 @@ export type LabeledRadioButtonGroupProps<V extends string> = {
 
   readonly value: V;
   readonly onChange?: (newValue: V) => void;
+  readonly overrideOptionListStyles?: SerializedStyles;
 } & Pick<ComponentProps<typeof LabeledRadioButton>, 'tooltipText'>;
 
 const optionListStyles = css({
@@ -27,6 +28,7 @@ const optionListStyles = css({
   gridTemplateColumns: '1fr 1fr 1fr',
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     gridTemplateColumns: '1fr',
+    rowGap: `${16 / perRem}em`,
   },
 });
 
@@ -55,6 +57,7 @@ export default function LabeledRadioButtonGroup<V extends string>({
   tooltipText,
   validationMessage,
   testId,
+  overrideOptionListStyles,
 }: LabeledRadioButtonGroupProps<V>): ReturnType<React.FC> {
   const groupName = useRef(uuidV4());
   return (
@@ -67,7 +70,7 @@ export default function LabeledRadioButtonGroup<V extends string>({
           <span css={[descriptionStyles]}>{description}</span>
         </legend>
       ) : null}
-      <div css={optionListStyles}>
+      <div css={[optionListStyles, overrideOptionListStyles]}>
         {options.map((option) => (
           <LabeledRadioButton
             key={option.value}

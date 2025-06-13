@@ -13,6 +13,7 @@ import { researchOutputControllerMock } from '../../mocks/research-output.contro
 describe('/research-outputs/ route', () => {
   const publicApp = publicAppFactory({
     researchOutputController: researchOutputControllerMock,
+    cacheMiddleware: (_req, _res, next) => next(),
   });
 
   afterEach(jest.clearAllMocks);

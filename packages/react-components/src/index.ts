@@ -204,6 +204,7 @@ export {
   Toast,
   ToastStack,
   ToolCard,
+  Treemap,
   UserCollaborationTable,
   UserInterestGroupCard,
   UserNavigation,

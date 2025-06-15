@@ -377,7 +377,10 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const discoverRoutes = discoverRouteFactory(discoverController);
-  const discussionRoutes = discussionRouteFactory(discussionController, manuscriptController);
+  const discussionRoutes = discussionRouteFactory(
+    discussionController,
+    manuscriptController,
+  );
   const guideRoutes = guideRouteFactory(guideController);
   const eventRoutes = eventRouteFactory(eventController);
   const interestGroupRoutes = interestGroupRouteFactory(

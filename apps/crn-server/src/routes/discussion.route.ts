@@ -42,9 +42,17 @@ export const discussionRouteFactory = (
       if (!req.loggedInUser) throw Boom.forbidden();
 
       if (manuscriptId) {
-        const manuscript = await manuscriptController.fetchById(manuscriptId, req.loggedInUser.id);
-        if (manuscript.status === 'Compliant' || manuscript.status === 'Closed (other)') {
-          throw Boom.forbidden('The manuscript status has been changed to compliant or closed, which disables new discussions and replies.');
+        const manuscript = await manuscriptController.fetchById(
+          manuscriptId,
+          req.loggedInUser.id,
+        );
+        if (
+          manuscript.status === 'Compliant' ||
+          manuscript.status === 'Closed (other)'
+        ) {
+          throw Boom.forbidden(
+            'The manuscript status has been changed to compliant or closed, which disables new discussions and replies.',
+          );
         }
       }
 
@@ -75,9 +83,17 @@ export const discussionRouteFactory = (
       if (!req.loggedInUser) throw Boom.forbidden();
 
       if (manuscriptId) {
-        const manuscript = await manuscriptController.fetchById(manuscriptId, req.loggedInUser.id);
-        if (manuscript.status === 'Compliant' || manuscript.status === 'Closed (other)') {
-          throw Boom.forbidden('The manuscript status has been changed to compliant or closed, which disables new discussions and replies.');
+        const manuscript = await manuscriptController.fetchById(
+          manuscriptId,
+          req.loggedInUser.id,
+        );
+        if (
+          manuscript.status === 'Compliant' ||
+          manuscript.status === 'Closed (other)'
+        ) {
+          throw Boom.forbidden(
+            'The manuscript status has been changed to compliant or closed, which disables new discussions and replies.',
+          );
         }
       }
 

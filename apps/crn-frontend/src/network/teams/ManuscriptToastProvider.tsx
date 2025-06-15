@@ -9,6 +9,7 @@ type FormType =
   | 'compliance-report'
   | 'reply-to-discussion'
   | 'discussion-started'
+  | 'manuscript-status-error'
   | '';
 
 type ManuscriptToastType = {
@@ -45,6 +46,8 @@ export const ManuscriptToastProvider = ({
     'compliance-report': 'Compliance Report submitted successfully.',
     'reply-to-discussion': 'Replied to discussion successfully.',
     'discussion-started': 'Discussion started successfully.',
+    'manuscript-status-error':
+      'The manuscript status has been changed to compliant or closed, which disables new discussions and replies. Please email the Open Science team at openscience@parkinsonsroadmap.org if you have additional questions related to this manuscript.',
   };
 
   return (

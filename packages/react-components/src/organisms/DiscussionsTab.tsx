@@ -59,7 +59,7 @@ type DiscussionsTabProps = Pick<
     manuscriptId: string,
     title: string,
     message: string,
-  ) => Promise<string>;
+  ) => Promise<string | undefined>;
   discussions: ManuscriptDiscussion[];
   canParticipateInDiscussion: boolean;
   isActiveManuscript: boolean;

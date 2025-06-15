@@ -1,5 +1,5 @@
 import { getOverrides } from '@asap-hub/flags';
-import { GetListOptions } from '@asap-hub/frontend-utils';
+import { GetListOptions, BackendError } from '@asap-hub/frontend-utils';
 import {
   ListTeamResponse,
   TeamPatchRequest,
@@ -365,21 +365,37 @@ export const useSetDiscussion = () =>
 export const useReplyToDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);
   const setDiscussion = useSetDiscussion();
-
   const setManuscriptItem = useSetManuscriptItem();
 
   return async (manuscriptId: string, id: string, patch: DiscussionRequest) => {
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
 
-    const discussion = await updateDiscussion(
-      id,
-      { ...patch, notificationList },
-      authorization,
-    );
-    setDiscussion(discussion);
-    const updatedManuscript = await getManuscript(manuscriptId, authorization);
-    if (updatedManuscript) setManuscriptItem(updatedManuscript);
+    try {
+      const discussion = await updateDiscussion(
+        id,
+        { ...patch, notificationList },
+        authorization,
+      );
+      setDiscussion(discussion);
+      const updatedManuscript = await getManuscript(
+        manuscriptId,
+        authorization,
+      );
+      if (updatedManuscript) setManuscriptItem(updatedManuscript);
+    } catch (error) {
+      if (
+        error instanceof BackendError &&
+        (error as BackendError).response?.statusCode === 403
+      ) {
+        const updatedManuscript = await getManuscript(
+          manuscriptId,
+          authorization,
+        );
+        if (updatedManuscript) setManuscriptItem(updatedManuscript);
+      }
+      throw error;
+    }
   };
 };
 
@@ -605,22 +621,39 @@ export const useCreateDiscussion = () => {
     manuscriptId: string,
     title: string,
     text: string,
-  ): Promise<string> => {
+  ): Promise<string | undefined> => {
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
 
-    const discussion = await createDiscussion(
-      {
+    try {
+      const discussion = await createDiscussion(
+        {
+          manuscriptId,
+          title,
+          text,
+          notificationList,
+        },
+        authorization,
+      );
+      const updatedManuscript = await getManuscript(
         manuscriptId,
-        title,
-        text,
-        notificationList,
-      },
-      authorization,
-    );
-    const updatedManuscript = await getManuscript(manuscriptId, authorization);
-    if (updatedManuscript) setManuscriptItem(updatedManuscript);
-    return discussion.id;
+        authorization,
+      );
+      if (updatedManuscript) setManuscriptItem(updatedManuscript);
+      return discussion.id;
+    } catch (error) {
+      if (
+        error instanceof BackendError &&
+        (error as BackendError).response?.statusCode === 403
+      ) {
+        const updatedManuscript = await getManuscript(
+          manuscriptId,
+          authorization,
+        );
+        if (updatedManuscript) setManuscriptItem(updatedManuscript);
+      }
+      throw error;
+    }
   };
 };
 

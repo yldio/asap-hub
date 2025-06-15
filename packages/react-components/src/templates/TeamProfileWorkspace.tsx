@@ -123,7 +123,7 @@ type TeamProfileWorkspaceProps = Readonly<
       manuscriptId: string,
       title: string,
       message: string,
-    ) => Promise<string>;
+    ) => Promise<string | undefined>;
     readonly useManuscriptById: (
       id: string,
     ) => [

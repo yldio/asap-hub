@@ -54,7 +54,7 @@ type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
       manuscriptId: string,
       title: string,
       message: string,
-    ) => Promise<string>;
+    ) => Promise<string | undefined>;
     useManuscriptById: (
       id: string,
     ) => [

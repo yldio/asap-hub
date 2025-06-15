@@ -7,9 +7,11 @@ import {
   validateDiscussionParameters,
   validateDiscussionRequest,
 } from '../validation/discussion.validation';
+import ManuscriptController from '../controllers/manuscript.controller';
 
 export const discussionRouteFactory = (
   discussionController: DiscussionController,
+  manuscriptController: ManuscriptController,
 ): Router => {
   const discussionRoutes = Router();
 
@@ -39,6 +41,21 @@ export const discussionRouteFactory = (
 
       if (!req.loggedInUser) throw Boom.forbidden();
 
+      if (manuscriptId) {
+        const manuscript = await manuscriptController.fetchById(
+          manuscriptId,
+          req.loggedInUser.id,
+        );
+        if (
+          manuscript.status === 'Compliant' ||
+          manuscript.status === 'Closed (other)'
+        ) {
+          throw Boom.forbidden(
+            'The manuscript status has been changed to compliant or closed, which disables new discussions and replies.',
+          );
+        }
+      }
+
       const reply = {
         text,
         isOpenScienceMember: Boolean(req.loggedInUser.openScienceTeamMember),
@@ -64,6 +81,21 @@ export const discussionRouteFactory = (
         validateDiscussionCreateRequest(body);
 
       if (!req.loggedInUser) throw Boom.forbidden();
+
+      if (manuscriptId) {
+        const manuscript = await manuscriptController.fetchById(
+          manuscriptId,
+          req.loggedInUser.id,
+        );
+        if (
+          manuscript.status === 'Compliant' ||
+          manuscript.status === 'Closed (other)'
+        ) {
+          throw Boom.forbidden(
+            'The manuscript status has been changed to compliant or closed, which disables new discussions and replies.',
+          );
+        }
+      }
 
       const result = await discussionController.create(
         req.loggedInUser.id,

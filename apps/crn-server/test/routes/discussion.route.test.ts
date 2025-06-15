@@ -1,5 +1,5 @@
 import { createUserResponse } from '@asap-hub/fixtures';
-import { Reply, UserResponse } from '@asap-hub/model';
+import { Reply, UserResponse, ManuscriptResponse } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
@@ -25,6 +25,10 @@ describe('/discussions/ route', () => {
 
   beforeEach(() => {
     userMockFactory.mockReturnValue({ ...createUserResponse(), role: 'Staff' });
+    manuscriptControllerMock.fetchById.mockResolvedValue({
+      id: 'manuscript-id',
+      status: 'Submit Final Publication',
+    } as ManuscriptResponse);
   });
 
   afterEach(() => {
@@ -101,6 +105,7 @@ describe('/discussions/ route', () => {
         .patch(`/discussions/${discussionId}`)
         .send({
           text: 'response',
+          manuscriptId: 'manuscript-id',
           additionalField: 'some-data',
         });
 
@@ -114,6 +119,7 @@ describe('/discussions/ route', () => {
         .patch(`/discussions/${discussionId}`)
         .send({
           text: 'response',
+          manuscriptId: 'manuscript-id',
         });
 
       expect(response.status).toBe(404);
@@ -129,9 +135,48 @@ describe('/discussions/ route', () => {
         .patch(`/discussions/${discussionId}`)
         .send({
           text: 'response',
+          manuscriptId: 'manuscript-id',
         });
 
       expect(response.status).toEqual(403);
+    });
+
+    test('Should return 403 when manuscript is compliant', async () => {
+      manuscriptControllerMock.fetchById.mockResolvedValueOnce({
+        id: 'manuscript-id',
+        status: 'Compliant',
+      } as ManuscriptResponse);
+
+      const response = await supertest(app)
+        .patch(`/discussions/${discussionId}`)
+        .send({
+          text: 'response',
+          manuscriptId: 'manuscript-id',
+        });
+
+      expect(response.status).toEqual(403);
+      expect(response.body.message).toEqual(
+        'The manuscript status has been changed to compliant or closed, which disables new discussions and replies.',
+      );
+    });
+
+    test('Should return 403 when manuscript is closed', async () => {
+      manuscriptControllerMock.fetchById.mockResolvedValueOnce({
+        id: 'manuscript-id',
+        status: 'Closed (other)',
+      } as ManuscriptResponse);
+
+      const response = await supertest(app)
+        .patch(`/discussions/${discussionId}`)
+        .send({
+          text: 'response',
+          manuscriptId: 'manuscript-id',
+        });
+
+      expect(response.status).toEqual(403);
+      expect(response.body.message).toEqual(
+        'The manuscript status has been changed to compliant or closed, which disables new discussions and replies.',
+      );
     });
 
     test('Should return the results correctly', async () => {
@@ -141,6 +186,7 @@ describe('/discussions/ route', () => {
         .patch(`/discussions/${discussionId}`)
         .send({
           text: 'A good reply',
+          manuscriptId: 'manuscript-id',
         });
 
       expect(response.body).toEqual(discussionResponse);
@@ -149,19 +195,23 @@ describe('/discussions/ route', () => {
     test('Should call the controller with the right parameters', async () => {
       const discussionId = 'discussion-id-1';
       const text = 'test reply';
+      const manuscriptId = 'manuscript-id';
+      const notificationList = 'user1,user2';
 
       const reply: Reply = { text, isOpenScienceMember: false };
 
       await supertest(app).patch(`/discussions/${discussionId}`).send({
         text,
+        manuscriptId,
+        notificationList,
       });
 
       expect(discussionControllerMock.update).toHaveBeenCalledWith(
         discussionId,
         'user-id-0',
         reply,
-        undefined,
-        '',
+        manuscriptId,
+        notificationList,
       );
     });
 
@@ -172,6 +222,7 @@ describe('/discussions/ route', () => {
         .patch(`/discussions/${discussionId}`)
         .send({
           text: 'x'.repeat(257),
+          manuscriptId: 'manuscript-id',
         });
 
       expect(response.status).toBe(200);
@@ -184,6 +235,7 @@ describe('/discussions/ route', () => {
         .patch(`/discussions/${discussionId}`)
         .send({
           text: 'response',
+          manuscriptId: 'manuscript-id',
         });
 
       expect(response.status).toEqual(403);
@@ -251,7 +303,6 @@ describe('/discussions/ route', () => {
       const response = await supertest(app).post(`/discussions`).send({
         message: 'something',
         id: 'some-id',
-        type: 'wrong-type', // should be undefined or 'compliance-report' only
       });
 
       expect(response.status).toBe(400);
@@ -259,12 +310,49 @@ describe('/discussions/ route', () => {
 
     test('Should return a 400 error when additional properties exist', async () => {
       const response = await supertest(app).post(`/discussions`).send({
-        id: 'some-id',
-        message: 'response',
+        manuscriptId: 'manuscript-id',
+        title: 'A good title',
+        text: 'A good message',
         additionalField: 'some-data',
       });
 
       expect(response.status).toBe(400);
+    });
+
+    test('Should return 403 when manuscript is compliant', async () => {
+      manuscriptControllerMock.fetchById.mockResolvedValueOnce({
+        id: 'manuscript-id',
+        status: 'Compliant',
+      } as ManuscriptResponse);
+
+      const response = await supertest(app).post(`/discussions`).send({
+        manuscriptId: 'manuscript-id',
+        title: 'A good title',
+        text: 'A good message',
+      });
+
+      expect(response.status).toEqual(403);
+      expect(response.body.message).toEqual(
+        'The manuscript status has been changed to compliant or closed, which disables new discussions and replies.',
+      );
+    });
+
+    test('Should return 403 when manuscript is closed', async () => {
+      manuscriptControllerMock.fetchById.mockResolvedValueOnce({
+        id: 'manuscript-id',
+        status: 'Closed (other)',
+      } as ManuscriptResponse);
+
+      const response = await supertest(app).post(`/discussions`).send({
+        manuscriptId: 'manuscript-id',
+        title: 'A good title',
+        text: 'A good message',
+      });
+
+      expect(response.status).toEqual(403);
+      expect(response.body.message).toEqual(
+        'The manuscript status has been changed to compliant or closed, which disables new discussions and replies.',
+      );
     });
 
     test('Should return the results correctly', async () => {
@@ -274,6 +362,7 @@ describe('/discussions/ route', () => {
         manuscriptId: 'manuscript-id',
         title: 'A good title',
         text: 'A good message',
+        notificationList: 'user1,user2',
       });
 
       expect(response.body).toEqual(discussionResponse);

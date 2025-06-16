@@ -82,6 +82,7 @@ const wrapStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
   flexFlow: 'row',
+  gap: rem(24),
 });
 
 export type ToastAccents =

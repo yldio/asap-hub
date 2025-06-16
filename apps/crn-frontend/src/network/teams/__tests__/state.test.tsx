@@ -4,6 +4,7 @@ import {
   TeamDataObject,
   TeamManuscript,
 } from '@asap-hub/model';
+import { BackendError } from '@asap-hub/frontend-utils';
 import { waitFor } from '@testing-library/dom';
 import { act, renderHook } from '@testing-library/react-hooks';
 import * as recoilModule from 'recoil';
@@ -14,7 +15,7 @@ import {
   useRecoilValue,
 } from 'recoil';
 import { authorizationState } from '../../../auth/state';
-import { getManuscript, updateDiscussion } from '../api';
+import { getManuscript, updateDiscussion, createDiscussion } from '../api';
 import * as stateModule from '../state';
 import {
   patchedTeamState,
@@ -34,6 +35,7 @@ jest.mock('../api', () => ({
   getManuscript: jest.fn(),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
   getPresignedUrl: jest.fn(),
+  createDiscussion: jest.fn(),
 }));
 
 const teamId = 'team-id-0';
@@ -454,6 +456,49 @@ describe('useReplyToDiscussion', () => {
     );
   });
 
+  test('handles 403 error and refetches manuscript', async () => {
+    const mockResponse = {
+      status: 403,
+      statusText: 'Forbidden',
+    };
+
+    const errorMessage = `Failed to update discussion with id ${discussionId}. Expected status 200. Received status ${`${mockResponse.status} ${mockResponse.statusText}`.trim()}.`;
+    const mock403Error = new BackendError(
+      errorMessage,
+      {
+        error: 'Forbidden',
+        message: errorMessage,
+        statusCode: 403,
+      },
+      403,
+    );
+
+    (updateDiscussion as jest.Mock).mockRejectedValueOnce(mock403Error);
+    (getManuscript as jest.Mock).mockResolvedValueOnce(mockUpdatedManuscript);
+
+    const initialState = ({ set }: MutableSnapshot) => {
+      set(teamState(teamId), mockTeam as TeamDataObject);
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(() => useReplyToDiscussion(), {
+      wrapper,
+    });
+
+    const patch = { text: 'Reply after 403', manuscriptId };
+
+    await act(async () => {
+      await expect(
+        result.current(manuscriptId, discussionId, patch),
+      ).rejects.toThrow(errorMessage);
+    });
+
+    expect(getManuscript).toHaveBeenCalledWith(manuscriptId, mockAuthorization);
+  });
+
   test('updates teamState with the updated manuscript status', async () => {
     (updateDiscussion as jest.Mock).mockResolvedValue({
       discussion: mockDiscussion,
@@ -750,5 +795,44 @@ describe('usePresignedUrl', () => {
 
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe('Failed to generate pre-signed URL');
+  });
+});
+
+describe('useCreateDiscussion', () => {
+  it('handles 403 error and refetches manuscript', async () => {
+    const mockResponse = {
+      status: 403,
+      statusText: 'Forbidden',
+    };
+
+    const errorMessage = `Failed to update discussion with id ${discussionId}. Expected status 200. Received status ${`${mockResponse.status} ${mockResponse.statusText}`.trim()}.`;
+    const mock403Error = new BackendError(
+      errorMessage,
+      {
+        error: 'Forbidden',
+        message: errorMessage,
+        statusCode: 403,
+      },
+      403,
+    );
+
+    (createDiscussion as jest.Mock).mockRejectedValueOnce(mock403Error);
+    (getManuscript as jest.Mock).mockResolvedValueOnce(mockUpdatedManuscript);
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(() => stateModule.useCreateDiscussion(), {
+      wrapper,
+    });
+
+    await act(async () => {
+      await expect(
+        result.current(manuscriptId, 'title', 'content'),
+      ).rejects.toThrow(errorMessage);
+    });
+
+    expect(getManuscript).toHaveBeenCalledWith(manuscriptId, mockAuthorization);
   });
 });

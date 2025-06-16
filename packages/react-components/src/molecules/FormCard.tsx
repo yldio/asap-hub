@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { Card, Headline3, Paragraph } from '../atoms';
 import { paddingStyles } from '../card';
 import { perRem } from '../pixels';
@@ -6,6 +6,7 @@ import { perRem } from '../pixels';
 interface FormCardProps {
   title: string;
   description?: string | React.ReactNode;
+  overrideStyles?: SerializedStyles;
 }
 
 const cardStyles = css({
@@ -25,9 +26,10 @@ const FormCard: React.FC<FormCardProps> = ({
   children,
   title,
   description,
+  overrideStyles,
 }) => (
   <Card padding={false} overrideStyles={cardStyles} title={title}>
-    <div role="presentation" css={[paddingStyles]}>
+    <div role="presentation" css={[paddingStyles, overrideStyles]}>
       <Headline3 noMargin>{title}</Headline3>
     </div>
     {!!description && (

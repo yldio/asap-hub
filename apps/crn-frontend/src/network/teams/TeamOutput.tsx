@@ -1,3 +1,4 @@
+import { isEnabled } from '@asap-hub/flags';
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
   researchOutputDocumentTypeToType,
@@ -6,6 +7,7 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
+  ManuscriptOutputSelection,
   NotFoundPage,
   OutputVersions,
   ResearchOutputForm,
@@ -26,13 +28,13 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useTeamById } from './state';
+import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
   handleError,
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
-  useLabSuggestions,
   useGeneratedContent,
+  useLabSuggestions,
   usePostResearchOutput,
   usePutResearchOutput,
   useRelatedEventsSuggestions,
@@ -40,7 +42,7 @@ import {
   useResearchTags,
   useTeamSuggestions,
 } from '../../shared-state';
-import { useResearchOutputPermissions } from '../../shared-research/state';
+import { useTeamById } from './state';
 
 const useParamOutputDocumentType = (
   teamId: string,
@@ -64,6 +66,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   descriptionUnchangedWarning,
   versionAction,
 }) => {
+  const [manuscriptOutputSelection, setManuscriptOutputSelection] = useState<
+    'manually' | 'import' | ''
+  >('');
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
   const documentType =
     researchOutputData?.documentType ||
@@ -129,7 +134,33 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     versions = researchOutputData?.versions ?? [];
   }
 
+  const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS');
+  const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
+    isManuscriptOutputFlagEnabled && documentType === 'Article',
+  );
+
+  const handleManuscriptOutputSelection = (
+    selection: 'manually' | 'import' | '',
+  ) => {
+    setManuscriptOutputSelection(selection);
+  };
+
   if (team) {
+    if (showManuscriptOutputFlow) {
+      return (
+        <Frame title="Share Research Output">
+          <ResearchOutputHeader
+            documentType={documentType}
+            workingGroupAssociation={false}
+          />
+          <ManuscriptOutputSelection
+            manuscriptOutputSelection={manuscriptOutputSelection}
+            onChangeManuscriptOutputSelection={handleManuscriptOutputSelection}
+            onSelectCreateManually={() => setShowManuscriptOutputFlow(false)}
+          />
+        </Frame>
+      );
+    }
     return (
       <Frame title="Share Research Output">
         {versionAction === 'create' && (

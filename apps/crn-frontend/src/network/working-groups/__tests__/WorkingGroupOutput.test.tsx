@@ -6,6 +6,7 @@ import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
+import { disable, enable } from '@asap-hub/flags';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
@@ -21,17 +22,17 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
+import { createMemoryHistory, History } from 'history';
 import { Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
-import { createMemoryHistory, History } from 'history';
 import { RecoilRoot } from 'recoil';
 import {
   createResearchOutput,
   updateTeamResearchOutput,
 } from '../../teams/api';
+import { getWorkingGroup } from '../api';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupOutput from '../WorkingGroupOutput';
-import { getWorkingGroup } from '../api';
 
 jest.setTimeout(95000);
 jest.mock('../api');
@@ -41,6 +42,7 @@ jest.mock('../../../shared-research/api');
 
 beforeEach(() => {
   window.scrollTo = jest.fn();
+  disable('MANUSCRIPT_OUTPUTS');
   // TODO: fix act error
   jest.spyOn(console, 'error').mockImplementation();
 });
@@ -570,3 +572,106 @@ it.each([
     );
   },
 );
+
+describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
+  it('displays manuscript output selection options for Article document type', async () => {
+    enable('MANUSCRIPT_OUTPUTS');
+
+    await renderPage({
+      outputDocumentType: 'article',
+    });
+
+    expect(
+      screen.getByText('How would you like to create your output?'),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('Create manually')).toBeInTheDocument();
+    expect(screen.getByLabelText('Import from manuscript')).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('heading', { name: 'What are you sharing?' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it.each(['bioinformatics', 'dataset', 'lab-material', 'protocol', 'report'])(
+    'skips manuscript output selection for %s document type',
+    async (documentType) => {
+      enable('MANUSCRIPT_OUTPUTS');
+
+      await renderPage({
+        outputDocumentType: documentType as OutputDocumentTypeParameter,
+      });
+
+      expect(
+        screen.queryByText('How would you like to create your output?'),
+      ).not.toBeInTheDocument();
+
+      expect(
+        screen.getByRole('heading', { name: 'What are you sharing?' }),
+      ).toBeInTheDocument();
+    },
+  );
+
+  it('displays create button and hides import button when manual creation is selected', async () => {
+    enable('MANUSCRIPT_OUTPUTS');
+
+    await renderPage({
+      outputDocumentType: 'article',
+    });
+
+    userEvent.click(screen.getByLabelText('Create manually'));
+
+    expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Import/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('displays import button and hides create button when manuscript import is selected', async () => {
+    enable('MANUSCRIPT_OUTPUTS');
+
+    await renderPage({
+      outputDocumentType: 'article',
+    });
+    userEvent.click(screen.getByLabelText('Import from manuscript'));
+
+    expect(screen.getByRole('button', { name: /Import/i })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Create/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('navigates to standard output form when manual creation is confirmed', async () => {
+    enable('MANUSCRIPT_OUTPUTS');
+
+    await renderPage({
+      outputDocumentType: 'article',
+    });
+
+    userEvent.click(screen.getByLabelText('Create manually'));
+
+    expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
+    userEvent.click(screen.getByRole('button', { name: /Create/i }));
+
+    expect(
+      screen.getByRole('heading', { name: 'What are you sharing?' }),
+    ).toBeInTheDocument();
+  });
+});
+
+it('bypasses manuscript output selection when MANUSCRIPT_OUTPUTS flag is disabled', async () => {
+  await renderPage({
+    outputDocumentType: 'article',
+  });
+
+  expect(
+    screen.queryByText('How would you like to create your output?'),
+  ).not.toBeInTheDocument();
+  expect(screen.queryByLabelText('Create manually')).not.toBeInTheDocument();
+  expect(
+    screen.queryByLabelText('Import from manuscript'),
+  ).not.toBeInTheDocument();
+
+  expect(
+    screen.getByRole('heading', { name: 'What are you sharing?' }),
+  ).toBeInTheDocument();
+});

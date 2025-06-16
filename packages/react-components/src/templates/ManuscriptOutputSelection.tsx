@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
-  defaultPageLayoutPaddingStyle,
+  contentSidePaddingWithNavigation,
   FormCard,
   LabeledMultiSelect,
   LabeledRadioButtonGroup,
@@ -10,13 +10,16 @@ import {
 import { mobileScreen, rem } from '../pixels';
 
 const mainStyles = css({
-  padding: defaultPageLayoutPaddingStyle,
+  display: 'flex',
+  justifyContent: 'center',
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} ${rem(60)}`,
 });
 
 const contentStyles = css({
   display: 'grid',
   gridTemplateColumns: '1fr',
   maxWidth: rem(800),
+  width: '100%',
   justifyContent: 'center',
   gridAutoFlow: 'row',
   rowGap: rem(32),

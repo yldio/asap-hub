@@ -176,6 +176,7 @@ export const getPublicResearchOutputResponse =
         researchOutput.type === 'Preprint'
           ? researchOutput.publishDate
           : undefined,
+      lastModifiedDate: researchOutput.lastUpdatedPartial,
     };
   };
 

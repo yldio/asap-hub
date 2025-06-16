@@ -117,5 +117,6 @@ const mapToPublicResearchOutput = (
         ? researchOutput.publishDate
         : undefined,
     ...(preprint.title ? { preprint } : {}),
+    lastModifiedDate: researchOutput.lastUpdatedPartial,
   };
 };

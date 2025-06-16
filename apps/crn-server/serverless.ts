@@ -1196,8 +1196,8 @@ const serverlessConfig: AWS = {
         Properties: {
           RouteSettings: {
             'GET /public/{proxy+}': {
-              ThrottlingBurstLimit: 120,
-              ThrottlingRateLimit: 100,
+              ThrottlingBurstLimit: 50,
+              ThrottlingRateLimit: 30,
             },
           },
         },

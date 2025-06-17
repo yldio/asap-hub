@@ -82,6 +82,7 @@ const wrapStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
   flexFlow: 'row',
+  gap: rem(50),
 });
 
 export type ToastAccents =
@@ -147,10 +148,15 @@ const Toast: React.FC<ToastProps> = ({
         {crossIcon}
       </button>
     )}
-    <div css={[wrapStyles, css({ gap: rem(16) })]}>
+    <div
+      css={[
+        wrapStyles,
+        css({ gap: rem(16), alignItems: 'flex-start', marginBlock: rem(12) }),
+      ]}
+    >
       <div css={[iconStyles]}>{accentIcons[accent]}</div>
       <div css={[wrapStyles, !onClose && { justifyContent: 'center' }]}>
-        <Paragraph>{children}</Paragraph>
+        <Paragraph noMargin>{children}</Paragraph>
         {onClose && <span css={crossPlaceholderStyles}> </span>}
       </div>
     </div>

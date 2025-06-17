@@ -17,6 +17,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
 import { mockAlert } from '@asap-hub/dom-test-utils';
+import { BackendError } from '@asap-hub/frontend-utils';
 
 import {
   Auth0Provider,
@@ -643,5 +644,179 @@ describe('the edit tool dialog', () => {
       },
       expect.any(String),
     );
+  });
+});
+
+describe('error handling for 403 BackendError', () => {
+  it('shows manuscript-status-error when reply to discussion fails with 403', async () => {
+    (useManuscriptById as jest.Mock).mockImplementation(() => [
+      {
+        ...createTeamManuscriptResponse(),
+        discussions: [
+          {
+            id: 'discussion-id-1',
+            title: 'Where does Lorem Ipsum come from?',
+            read: false,
+            text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
+            lastUpdatedAt: '2025-04-01T15:00:00.000Z',
+            createdDate: '2025-03-31T10:00:00.000Z',
+            createdBy: {
+              alumniSinceDate: undefined,
+              avatarUrl: undefined,
+              displayName: 'John Doe',
+              firstName: 'John',
+              id: 'user-id-1',
+              lastName: 'Doe',
+              teams: [
+                {
+                  id: 'team-id-1',
+                  name: 'Team 1',
+                },
+              ],
+            },
+            replies: [],
+          },
+        ],
+      },
+      jest.fn(),
+    ]);
+    (useReplyToDiscussion as jest.Mock).mockReturnValue(() =>
+      Promise.reject(
+        new BackendError(
+          'Forbidden',
+          { error: 'Forbidden', statusCode: 403, message: 'Forbidden' },
+          403,
+        ),
+      ),
+    );
+
+    const screen = renderWithWrapper(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          tools: [],
+          manuscripts: [createTeamManuscriptResponse()],
+        }}
+      />,
+    );
+
+    userEvent.click(await screen.findByTestId('collapsible-button'));
+    userEvent.click(screen.getByText('Discussions'));
+    userEvent.click(
+      await screen.findByTestId(
+        'discussion-collapsible-button-discussion-id-1',
+      ),
+    );
+    userEvent.click(
+      await screen.findByTestId('discussion-reply-button-discussion-id-1'),
+    );
+    userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
+    const textInput = screen.getByTestId('editor');
+    await act(async () => {
+      userEvent.click(textInput);
+      userEvent.tab();
+      fireEvent.input(textInput, { data: 'test message' });
+      userEvent.tab();
+    });
+    const shareButton = screen.getByRole('button', { name: /Send/i });
+    await waitFor(() => expect(shareButton).toBeEnabled());
+    userEvent.click(shareButton);
+    await waitFor(() => {
+      expect(mockSetFormType).toHaveBeenCalledWith({
+        type: 'manuscript-status-error',
+        accent: 'error',
+      });
+    });
+  });
+
+  it('shows manuscript-status-error when create discussion fails with 403', async () => {
+    (createDiscussion as jest.Mock).mockImplementation(() =>
+      Promise.reject(
+        new BackendError(
+          'Forbidden',
+          { error: 'Forbidden', statusCode: 403, message: 'Forbidden' },
+          403,
+        ),
+      ),
+    );
+    const screen = renderWithWrapper(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          tools: [],
+          manuscripts: [createTeamManuscriptResponse()],
+        }}
+      />,
+    );
+    userEvent.click(await screen.findByTestId('collapsible-button'));
+    userEvent.click(screen.getByText('Discussions'));
+    userEvent.click(screen.getByRole('button', { name: /Start Discussion/i }));
+    userEvent.type(screen.getByRole('textbox', { name: /Title/i }), 'Test');
+    const textInput = screen.getByTestId('editor');
+    await act(async () => {
+      userEvent.click(textInput);
+      userEvent.tab();
+      fireEvent.input(textInput, { data: 'test message' });
+      userEvent.tab();
+    });
+    const shareButton = screen.getByRole('button', { name: /Send/i });
+    await waitFor(() => expect(shareButton).toBeEnabled());
+    userEvent.click(shareButton);
+    await waitFor(() => {
+      expect(mockSetFormType).toHaveBeenCalledWith({
+        type: 'manuscript-status-error',
+        accent: 'error',
+      });
+    });
+  });
+
+  it('should show default error when create discussion fails with non-403 error', async () => {
+    (createDiscussion as jest.Mock).mockImplementation(() =>
+      Promise.reject(
+        new BackendError(
+          'Server Error',
+          { error: 'Server Error', statusCode: 500, message: 'Server Error' },
+          500,
+        ),
+      ),
+    );
+
+    const screen = renderWithWrapper(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          tools: [],
+          manuscripts: [createTeamManuscriptResponse()],
+        }}
+      />,
+    );
+
+    userEvent.click(await screen.findByTestId('collapsible-button'));
+    userEvent.click(screen.getByText('Discussions'));
+    userEvent.click(screen.getByRole('button', { name: /Start Discussion/i }));
+    userEvent.type(screen.getByRole('textbox', { name: /Title/i }), 'Test');
+
+    const textInput = screen.getByTestId('editor');
+    await act(async () => {
+      userEvent.click(textInput);
+      userEvent.tab();
+      fireEvent.input(textInput, { data: 'test message' });
+      userEvent.tab();
+    });
+
+    const shareButton = screen.getByRole('button', { name: /Send/i });
+    await waitFor(() => expect(shareButton).toBeEnabled());
+    userEvent.click(shareButton);
+
+    await waitFor(() => {
+      expect(mockSetFormType).toHaveBeenCalledWith({
+        type: 'default-error',
+        accent: 'error',
+      });
+      expect(window.scrollTo).toHaveBeenCalled();
+    });
   });
 });

@@ -13,6 +13,7 @@ import {
 } from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext, useCurrentUserCRN } from '@asap-hub/react-context';
+import { BackendError } from '@asap-hub/frontend-utils';
 
 import {
   useCreateDiscussion,
@@ -67,14 +68,42 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
         patch as DiscussionRequest,
       );
       setFormType({ type: 'reply-to-discussion', accent: 'successLarge' });
-    } catch (error) {
-      setFormType({
-        type: 'default-error',
-        accent: 'error',
-      });
+    } catch (error: unknown) {
+      if (
+        error instanceof BackendError &&
+        (error as BackendError).response?.statusCode === 403
+      ) {
+        setFormType({ type: 'manuscript-status-error', accent: 'error' });
+      } else {
+        setFormType({ type: 'default-error', accent: 'error' });
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
+  const handleCreateDiscussion = async (
+    manuscriptId: string,
+    title: string,
+    message: string,
+  ): Promise<string | undefined> => {
+    try {
+      const discussionId = await createDiscussion(manuscriptId, title, message);
+      setFormType({ type: 'discussion-started', accent: 'successLarge' });
+      return discussionId;
+    } catch (error: unknown) {
+      if (
+        error instanceof BackendError &&
+        (error as BackendError).response?.statusCode === 403
+      ) {
+        setFormType({ type: 'manuscript-status-error', accent: 'error' });
+      } else {
+        setFormType({ type: 'default-error', accent: 'error' });
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return undefined;
+    }
+  };
+
   const { hash: targetManuscript } = useLocation();
 
   return (
@@ -109,22 +138,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                 }
           }
           isComplianceReviewer={isComplianceReviewer}
-          createDiscussion={async (
-            manuscriptId: string,
-            title: string,
-            message: string,
-          ) => {
-            const discussionId = await createDiscussion(
-              manuscriptId,
-              title,
-              message,
-            );
-            setFormType({
-              type: 'discussion-started',
-              accent: 'successLarge',
-            });
-            return discussionId;
-          }}
+          createDiscussion={handleCreateDiscussion}
           useManuscriptById={useManuscriptById}
           onReplyToDiscussion={handleReplytoDiscussion}
           onMarkDiscussionAsRead={handleMarkDiscussionAsRead}

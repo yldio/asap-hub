@@ -376,6 +376,7 @@ export type PublicResearchOutputResponse = Pick<
     link?: string;
     addedDate?: string;
   };
+  lastModifiedDate?: string;
 };
 
 export type ListPublicOutputResponse =

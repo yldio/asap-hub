@@ -10,6 +10,7 @@ import * as Sentry from '@sentry/serverless';
 import cors from 'cors';
 import express, { Express, RequestHandler, Router } from 'express';
 import 'express-async-errors';
+import { middleware as cacheMiddleware } from 'apicache';
 import {
   contentfulAccessToken,
   contentfulEnvId,
@@ -162,13 +163,17 @@ export const publicAppFactory = (
   const teamRoutes = teamRouteFactory(teamController);
 
   // add routes
-  app.use('/public', [
-    basicRoutes,
-    researchOutputRoutes,
-    teamRoutes,
-    userRoutes,
-    workingGroupRoutes,
-  ]);
+  app.use(
+    '/public',
+    dependencies.cacheMiddleware || cacheMiddleware('1 hour'),
+    [
+      basicRoutes,
+      researchOutputRoutes,
+      teamRoutes,
+      userRoutes,
+      workingGroupRoutes,
+    ],
+  );
 
   // Catch all
   app.get('/public/*', async (_req, res) => {
@@ -205,4 +210,5 @@ type PublicAppDependencies = {
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;
+  cacheMiddleware?: RequestHandler;
 };

@@ -1309,6 +1309,8 @@ describe('Manuscripts Contentful Data Provider', () => {
         versions: [],
         assignedUsers: [],
         discussions: [],
+        categories: [],
+        impact: undefined,
       });
     });
 

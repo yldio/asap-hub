@@ -362,6 +362,7 @@ const generateFetchQueryFilter = (
     orcid,
     orcidLastSyncDate,
     hidden = true,
+    email,
   } = filter || {};
 
   const filterCode: gp2Contentful.UsersFilter = code
@@ -383,6 +384,7 @@ const generateFetchQueryFilter = (
   const searchFilter = search ? getSearchFilter(search) : {};
   const filterUserId =
     userIdFilter.length > 0 ? { sys: { id_in: userIdFilter } } : {};
+  const filterEmail = email ? { email } : {};
   return {
     ...filterUserId,
     ...filterCode,
@@ -392,6 +394,7 @@ const generateFetchQueryFilter = (
     ...filterOrcid,
     ...filterOrcidLastSyncDate,
     ...searchFilter,
+    ...filterEmail,
   };
 };
 

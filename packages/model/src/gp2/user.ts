@@ -247,6 +247,7 @@ export type FetchUsersFilter = FetchUsersSearchFilter & {
   userIds?: string[];
   orcid?: string;
   orcidLastSyncDate?: string;
+  email?: string;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

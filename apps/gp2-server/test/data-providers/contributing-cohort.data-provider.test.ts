@@ -43,7 +43,7 @@ describe('Contributing Cohorts data provider', () => {
 
   describe('Fetch method', () => {
     test('Should fetch the list of contributing cohorts from Contentful GraphQl', async () => {
-      const result = await contributingCohortsDataProviderMockGraphql.fetch();
+      const result = await contributingCohortsDataProviderMockGraphql.fetch({});
 
       expect(result).toMatchObject(getListContributingCohortDataObject());
     });
@@ -58,7 +58,7 @@ describe('Contributing Cohorts data provider', () => {
         contentfulGraphQLResponse,
       );
 
-      const result = await contributingCohortsDataProvider.fetch();
+      const result = await contributingCohortsDataProvider.fetch({});
 
       expect(result).toEqual({
         items: [],
@@ -71,7 +71,7 @@ describe('Contributing Cohorts data provider', () => {
         new GraphQLError('some error message'),
       );
 
-      await expect(contributingCohortsDataProvider.fetch()).rejects.toThrow(
+      await expect(contributingCohortsDataProvider.fetch({})).rejects.toThrow(
         'some error message',
       );
     });
@@ -85,7 +85,7 @@ describe('Contributing Cohorts data provider', () => {
         contentfulGraphQLResponse,
       );
 
-      const result = await contributingCohortsDataProvider.fetch();
+      const result = await contributingCohortsDataProvider.fetch({});
 
       expect(result).toEqual({
         items: [],
@@ -97,7 +97,7 @@ describe('Contributing Cohorts data provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         getContentfulContributingCohortsGraphqlResponse(),
       );
-      const result = await contributingCohortsDataProvider.fetch();
+      const result = await contributingCohortsDataProvider.fetch({});
 
       expect(result).toEqual(getListContributingCohortDataObject());
     });

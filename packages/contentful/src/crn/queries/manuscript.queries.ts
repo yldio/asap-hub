@@ -18,6 +18,20 @@ export const manuscriptContentQueryFragment = gql`
     apcCoverageRequestStatus
     apcAmountPaid
     declinedReason
+    impact {
+      sys {
+        id
+      }
+      name
+    }
+    categoriesCollection(limit: 2) {
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
     assignedUsersCollection(limit: 30) {
       items {
         sys {
@@ -344,6 +358,20 @@ export const FETCH_MANUSCRIPTS = gql`
         apcCoverageRequestStatus
         apcAmountPaid
         declinedReason
+        impact {
+          sys {
+            id
+          }
+          name
+        }
+        categoriesCollection(limit: 2) {
+          items {
+            sys {
+              id
+            }
+            name
+          }
+        }
         assignedUsersCollection(limit: 30) {
           items {
             sys {

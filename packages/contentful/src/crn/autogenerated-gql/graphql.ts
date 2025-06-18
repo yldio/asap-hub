@@ -19179,6 +19179,10 @@ export type ManuscriptsContentFragment = Pick<
   | 'declinedReason'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
+  impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
+  categoriesCollection?: Maybe<{
+    items: Array<Maybe<Pick<Category, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+  }>;
   assignedUsersCollection?: Maybe<{
     items: Array<
       Maybe<
@@ -19506,6 +19510,10 @@ export type FetchManuscriptByIdQuery = {
         >;
       }>;
       sys: Pick<Sys, 'id' | 'publishedVersion'>;
+      impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
+      categoriesCollection?: Maybe<{
+        items: Array<Maybe<Pick<Category, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+      }>;
       assignedUsersCollection?: Maybe<{
         items: Array<
           Maybe<
@@ -19762,6 +19770,12 @@ export type FetchManuscriptsQuery = {
             | 'declinedReason'
           > & {
             sys: Pick<Sys, 'id'>;
+            impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
+            categoriesCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<Category, 'name'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
             assignedUsersCollection?: Maybe<{
               items: Array<
                 Maybe<
@@ -21919,6 +21933,12 @@ export type FetchTeamByIdQuery = {
                   >;
                 }>;
                 sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
+                categoriesCollection?: Maybe<{
+                  items: Array<
+                    Maybe<Pick<Category, 'name'> & { sys: Pick<Sys, 'id'> }>
+                  >;
+                }>;
                 assignedUsersCollection?: Maybe<{
                   items: Array<
                     Maybe<
@@ -26238,6 +26258,65 @@ export const ManuscriptsContentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'apcAmountPaid' } },
           { kind: 'Field', name: { kind: 'Name', value: 'declinedReason' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'impact' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'categoriesCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '2' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'assignedUsersCollection' },
@@ -37842,6 +37921,74 @@ export const FetchManuscriptsDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'declinedReason' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'impact' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'categoriesCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '2' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'name' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',

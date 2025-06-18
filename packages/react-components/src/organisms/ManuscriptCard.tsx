@@ -209,6 +209,7 @@ const isManuscriptLabPi = ({
 }) => user && labs && labs.some((lab) => lab.labPi === user.id);
 
 const canUpdateManuscript = ({ version, user }: VersionUserProps) =>
+  user?.openScienceTeamMember ||
   !!isManuscriptLead({ version, user }) ||
   !!isManuscriptAuthor({
     authors: [

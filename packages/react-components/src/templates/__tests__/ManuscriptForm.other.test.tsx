@@ -8,6 +8,7 @@ import {
   QuickCheck,
   quickCheckQuestions,
 } from '@asap-hub/model';
+import { User } from '@asap-hub/auth';
 import {
   render,
   waitFor,
@@ -58,6 +59,21 @@ getTeamSuggestions.mockResolvedValue([
   { label: 'Two Team', value: '2' },
 ]);
 
+const user: User = {
+  id: 'testuser',
+  onboarded: true,
+  email: 'john.doe@example.com',
+  firstName: 'John',
+  lastName: 'Doe',
+  displayName: 'John Doe',
+  teams: [],
+  algoliaApiKey: 'asdasda',
+  workingGroups: [],
+  interestGroups: [],
+  role: 'Grantee',
+  openScienceTeamMember: false,
+};
+
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onCreate: jest.fn(() => Promise.resolve()),
   onUpdate: jest.fn(() => Promise.resolve()),
@@ -100,6 +116,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   additionalAuthors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
+  user,
 };
 
 const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {

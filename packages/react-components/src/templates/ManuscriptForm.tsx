@@ -22,7 +22,6 @@ import {
   quickCheckQuestions,
 } from '@asap-hub/model';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
-import { User } from '@asap-hub/auth';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -240,7 +239,7 @@ type ManuscriptFormProps = Omit<
   | 'versionUID'
 > &
   Partial<Pick<ManuscriptPostRequest, 'title' | 'url'>> & {
-    user: User | null;
+    isOpenScienceTeamMember?: boolean;
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
     manuscriptFile?: ManuscriptFileResponse;
@@ -299,7 +298,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onError,
   handleFileUpload,
   teamId,
-  user,
+  isOpenScienceTeamMember = false,
   title,
   url,
   type,
@@ -362,7 +361,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const isEditMode = !!manuscriptId && !resubmitManuscript;
-  const isOpenScienceTeamMember = user?.openScienceTeamMember;
 
   const methods = useForm<ManuscriptFormData>({
     mode: 'all',

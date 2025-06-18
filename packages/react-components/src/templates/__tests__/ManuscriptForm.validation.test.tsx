@@ -2,7 +2,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
-import { User } from '@asap-hub/auth';
 import ManuscriptForm from '../ManuscriptForm';
 
 jest.mock(
@@ -59,21 +58,6 @@ const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
   },
 ]);
 
-const user: User = {
-  id: 'testuser',
-  onboarded: true,
-  email: 'john.doe@example.com',
-  firstName: 'John',
-  lastName: 'Doe',
-  displayName: 'John Doe',
-  teams: [],
-  algoliaApiKey: 'asdasda',
-  workingGroups: [],
-  interestGroups: [],
-  role: 'Grantee',
-  openScienceTeamMember: false,
-};
-
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   getShortDescriptionFromDescription: jest.fn(),
   onCreate: jest.fn(() => Promise.resolve()),
@@ -108,7 +92,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   additionalAuthors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
-  user,
+  isOpenScienceTeamMember: false,
 };
 
 describe('ManuscriptForm team validation', () => {

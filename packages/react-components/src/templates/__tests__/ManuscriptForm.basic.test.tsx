@@ -6,7 +6,6 @@ import type {
 } from '@testing-library/react';
 import { act, cleanup, render, waitFor } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { User } from '@asap-hub/auth';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
@@ -41,21 +40,6 @@ getTeamSuggestions.mockResolvedValue([
   { label: 'One Team', value: '1' },
   { label: 'Two Team', value: '2' },
 ]);
-
-const user: User = {
-  id: 'testuser',
-  onboarded: true,
-  email: 'john.doe@example.com',
-  firstName: 'John',
-  lastName: 'Doe',
-  displayName: 'John Doe',
-  teams: [],
-  algoliaApiKey: 'asdasda',
-  workingGroups: [],
-  interestGroups: [],
-  role: 'Grantee',
-  openScienceTeamMember: false,
-};
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onCreate: jest.fn(() => Promise.resolve()),
@@ -99,7 +83,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   additionalAuthors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
-  user,
+  isOpenScienceTeamMember: false,
 };
 
 const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {

@@ -3,7 +3,6 @@ import {
   AuthorSelectOption,
   manuscriptTypeLifecycles,
 } from '@asap-hub/model';
-import { User } from '@asap-hub/auth';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -38,21 +37,6 @@ getTeamSuggestions.mockResolvedValue([
   { label: 'One Team', value: '1' },
   { label: 'Two Team', value: '2' },
 ]);
-
-const user: User = {
-  id: 'testuser',
-  onboarded: true,
-  email: 'john.doe@example.com',
-  firstName: 'John',
-  lastName: 'Doe',
-  displayName: 'John Doe',
-  teams: [],
-  algoliaApiKey: 'asdasda',
-  workingGroups: [],
-  interestGroups: [],
-  role: 'Grantee',
-  openScienceTeamMember: false,
-};
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onCreate: jest.fn(() => Promise.resolve()),
@@ -95,7 +79,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   additionalAuthors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
-  user,
+  isOpenScienceTeamMember: false,
 };
 
 it('does not display the lifecycle select box until type is selected', async () => {

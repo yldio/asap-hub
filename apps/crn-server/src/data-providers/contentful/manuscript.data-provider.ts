@@ -528,6 +528,27 @@ const parseGraphQLManuscript = (
       teamId,
       count,
     ),
+    impact:
+      manuscript.impact &&
+      typeof manuscript.impact.name === 'string' &&
+      manuscript.impact.name
+        ? {
+            id: manuscript.impact.sys.id,
+            name: manuscript.impact.name,
+          }
+        : undefined,
+    categories: (manuscript.categoriesCollection?.items || [])
+      .filter(
+        (category): category is { sys: { id: string }; name: string } =>
+          !!category &&
+          !!category.sys?.id &&
+          typeof category.name === 'string' &&
+          !!category.name,
+      )
+      .map((category) => ({
+        id: category.sys.id,
+        name: category.name,
+      })),
   };
 };
 

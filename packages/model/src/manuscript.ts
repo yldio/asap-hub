@@ -311,6 +311,16 @@ export const apcCoverageRequestStatuses = [
 export type ApcCoverageRequestStatus =
   (typeof apcCoverageRequestStatuses)[number];
 
+export type ManuscriptImpact = {
+  id: string;
+  name: string;
+};
+
+export type ManuscriptCategory = {
+  id: string;
+  name: string;
+};
+
 export type ManuscriptDataObject = {
   id: string;
   title: string;
@@ -326,6 +336,8 @@ export type ManuscriptDataObject = {
   apcCoverageRequestStatus?: ApcCoverageRequestStatus;
   apcAmountPaid?: number;
   declinedReason?: string;
+  impact?: ManuscriptImpact;
+  categories?: ManuscriptCategory[];
 };
 
 export type ManuscriptResponse = ManuscriptDataObject;

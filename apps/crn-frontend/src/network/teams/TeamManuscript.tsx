@@ -4,6 +4,7 @@ import {
   AuthorSelectOption,
   ManuscriptError,
 } from '@asap-hub/model';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   ManuscriptForm,
   ManuscriptHeader,
@@ -45,6 +46,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   const [manuscript] = useManuscriptById(manuscriptId);
 
   const team = useTeamById(teamId);
+  const user = useCurrentUserCRN();
 
   const { eligibilityReasons } = useEligibilityReason();
   const { setFormType } = useManuscriptToast();
@@ -128,6 +130,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           onUpdate={updateManuscript}
           onResubmit={handleResubmitManuscript}
           teamId={teamId}
+          user={user}
           handleFileUpload={handleFileUpload}
           eligibilityReasons={eligibilityReasons}
           getTeamSuggestions={getTeamSuggestions}

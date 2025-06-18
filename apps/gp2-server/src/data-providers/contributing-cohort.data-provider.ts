@@ -1,4 +1,4 @@
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
 
 import {
   addLocaleToFields,
@@ -24,11 +24,15 @@ export class ContributingCohortContentfulDataProvider
     private getRestClient: () => Promise<Environment>,
   ) {}
 
-  async fetch() {
+  async fetch(options: FetchOptions) {
+    const { take = 100, skip = 0 } = options;
+
     const { contributingCohortsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchContributingCohortsQuery,
       gp2Contentful.FetchContributingCohortsQueryVariables
     >(gp2Contentful.FETCH_CONTRIBUTING_COHORTS, {
+      limit: take,
+      skip,
       order: [gp2Contentful.ContributingCohortsOrder.NameAsc],
     });
 

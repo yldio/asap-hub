@@ -5,7 +5,7 @@ export default class ContributingCohortController {
   constructor(private cohortDataProvider: ContributingCohortDataProvider) {}
 
   async fetch(): Promise<gp2.ListContributingCohortResponse> {
-    const { total, items } = await this.cohortDataProvider.fetch(null);
+    const { total, items } = await this.cohortDataProvider.fetch({});
 
     return {
       total,

@@ -100,6 +100,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   additionalAuthors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
+  isOpenScienceTeamMember: false,
 };
 
 const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {

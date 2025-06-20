@@ -79,6 +79,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   additionalAuthors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
+  isOpenScienceTeamMember: false,
 };
 
 it('does not display the lifecycle select box until type is selected', async () => {

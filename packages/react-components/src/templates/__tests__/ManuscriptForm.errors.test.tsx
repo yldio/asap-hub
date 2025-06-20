@@ -101,6 +101,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   additionalAuthors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
+  isOpenScienceTeamMember: false,
 };
 
 beforeEach(() => {

@@ -239,6 +239,7 @@ type ManuscriptFormProps = Omit<
   | 'versionUID'
 > &
   Partial<Pick<ManuscriptPostRequest, 'title' | 'url'>> & {
+    isOpenScienceTeamMember?: boolean;
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
     manuscriptFile?: ManuscriptFileResponse;
@@ -297,6 +298,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onError,
   handleFileUpload,
   teamId,
+  isOpenScienceTeamMember = false,
   title,
   url,
   type,
@@ -359,6 +361,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const isEditMode = !!manuscriptId && !resubmitManuscript;
+
   const methods = useForm<ManuscriptFormData>({
     mode: 'all',
     defaultValues: {
@@ -952,7 +955,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   onBlur={onBlur}
                   customValidationMessage={error?.message}
                   value={value}
-                  enabled={!isEditMode && !isSubmitting}
+                  enabled={
+                    (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
+                  }
                   noOptionsMessage={(option) =>
                     `Sorry, no types match ${option.inputValue}`
                   }
@@ -991,7 +996,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     onBlur={onBlur}
                     customValidationMessage={error?.message}
                     value={value}
-                    enabled={!isEditMode && !isSubmitting}
+                    enabled={
+                      (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
+                    }
                     noOptionsMessage={(option) =>
                       `Sorry, no options match ${option.inputValue}`
                     }
@@ -1034,7 +1041,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       onBlur={onBlur}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
-                      enabled={!isEditMode && !isSubmitting}
+                      enabled={
+                        (!isEditMode || isOpenScienceTeamMember) &&
+                        !isSubmitting
+                      }
                       placeholder="e.g. 10.5555/YFRU1371"
                     />
                   )}
@@ -1068,7 +1078,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       onBlur={onBlur}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
-                      enabled={!isEditMode && !isSubmitting}
+                      enabled={
+                        (!isEditMode || isOpenScienceTeamMember) &&
+                        !isSubmitting
+                      }
                       placeholder="e.g. 10.5555/YFRU1371"
                     />
                   )}
@@ -1101,7 +1114,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       onBlur={onBlur}
                       customValidationMessage={error?.message}
                       value={value ?? ''}
-                      enabled={!isEditMode && !isSubmitting}
+                      enabled={
+                        (!isEditMode || isOpenScienceTeamMember) &&
+                        !isSubmitting
+                      }
                     />
                   )}
                 />
@@ -1160,9 +1176,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     accept="application/pdf"
                     customValidationMessage={error?.message}
                     enabled={
-                      !isEditMode && !isSubmitting && !isUploadingManuscriptFile
+                      (!isEditMode || isOpenScienceTeamMember) &&
+                      !isSubmitting &&
+                      !isUploadingManuscriptFile
                     }
-                    tagEnabled={!isEditMode}
+                    tagEnabled={!isEditMode || isOpenScienceTeamMember}
                   />
                 )}
               />
@@ -1236,11 +1254,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       accept="text/csv"
                       customValidationMessage={error?.message}
                       enabled={
-                        !isEditMode &&
+                        (!isEditMode || isOpenScienceTeamMember) &&
                         !isSubmitting &&
                         !isUploadingKeyResourceTable
                       }
-                      tagEnabled={!isEditMode}
+                      tagEnabled={!isEditMode || isOpenScienceTeamMember}
                     />
                   )}
                 />
@@ -1324,11 +1342,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     customValidationMessage={error?.message}
                     accept="application/pdf,text/csv"
                     enabled={
-                      !isEditMode &&
+                      (!isEditMode || isOpenScienceTeamMember) &&
                       !isSubmitting &&
                       !isUploadingAdditionalFiles
                     }
-                    tagEnabled={!isEditMode}
+                    tagEnabled={!isEditMode || isOpenScienceTeamMember}
                   />
                 )}
               />

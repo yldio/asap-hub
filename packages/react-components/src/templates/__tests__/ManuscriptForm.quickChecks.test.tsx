@@ -93,6 +93,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onError: jest.fn(),
   clearFormToast: jest.fn(),
   url: 'http://example.com',
+  isOpenScienceTeamMember: false,
 };
 
 const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {

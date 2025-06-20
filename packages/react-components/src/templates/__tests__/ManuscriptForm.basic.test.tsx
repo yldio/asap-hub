@@ -369,4 +369,110 @@ describe('Manuscript form', () => {
 
     expect(history.location.pathname).toBe('/another-url');
   });
+
+  it('should not enable OS fields on edit mode if user is not an OS team member', async () => {
+    const { getByRole, getByText } = render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          manuscriptId="test-id"
+          isOpenScienceTeamMember={false}
+          type="Original Research"
+          lifecycle="Preprint"
+          manuscriptFile={{
+            id: 'file-1',
+            filename: 'manuscript.pdf',
+            url: 'http://a.co',
+          }}
+          additionalFiles={[
+            { id: 'file-2', filename: 'additional.pdf', url: 'http://a.co' },
+          ]}
+        />
+      </StaticRouter>,
+    );
+
+    // type, lifecycle, manuscriptFile, and additionalFiles
+    expect(
+      getByRole('textbox', { name: /Type of Manuscript/i }),
+    ).toBeDisabled();
+    expect(
+      getByRole('textbox', {
+        name: /Where is the manuscript in the life cycle/i,
+      }),
+    ).toBeDisabled();
+
+    expect(
+      getByText(
+        'manuscript.pdf',
+      ).parentElement?.parentElement?.parentElement?.parentElement?.querySelector(
+        'button[disabled]',
+      ),
+    ).toBeInTheDocument();
+
+    expect(
+      getByText(
+        'additional.pdf',
+      ).parentElement?.parentElement?.parentElement?.parentElement?.querySelector(
+        'button[disabled]',
+      ),
+    ).toBeInTheDocument();
+
+    expect(
+      getByText('manuscript.pdf').closest('span')?.querySelector('button'),
+    ).toBeNull();
+    expect(
+      getByText('additional.pdf').closest('span')?.querySelector('button'),
+    ).toBeNull();
+
+    // preprintDoi
+    expect(getByRole('textbox', { name: /Preprint DOI/i })).toBeDisabled();
+  });
+
+  it('should disable publication DOI field if user on edit mode and is not an OS team member', () => {
+    const { getByRole } = render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          manuscriptId="test-id"
+          isOpenScienceTeamMember={false}
+          type="Original Research"
+          lifecycle="Publication"
+        />
+      </StaticRouter>,
+    );
+    expect(getByRole('textbox', { name: /Publication DOI/i })).toBeDisabled();
+  });
+
+  it('should disable otherDetails field if user on edit mode and is not an OS team member', () => {
+    const { getByRole } = render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          manuscriptId="test-id"
+          isOpenScienceTeamMember={false}
+          type="Original Research"
+          lifecycle="Other"
+        />
+      </StaticRouter>,
+    );
+    expect(
+      getByRole('textbox', { name: /Please provide details/i }),
+    ).toBeDisabled();
+  });
+
+  it('should default to false for isOpenScienceTeamMember if not provided', () => {
+    const { isOpenScienceTeamMember: _, ...rest } = defaultProps;
+
+    const { getByRole } = render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...rest}
+          manuscriptId="test-id"
+          type="Original Research"
+          lifecycle="Preprint"
+        />
+      </StaticRouter>,
+    );
+    expect(getByRole('textbox', { name: /Preprint DOI/i })).toBeDisabled();
+  });
 });

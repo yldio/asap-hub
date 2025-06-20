@@ -33,6 +33,7 @@ import {
 } from './config';
 import AnalyticsController from './controllers/analytics.controller';
 import CalendarController from './controllers/calendar.controller';
+import CategoryController from './controllers/category.controller';
 import ComplianceReportController from './controllers/compliance-report.controller';
 import ContentGeneratorController from './controllers/content-generator.controller';
 import DashboardController from './controllers/dashboard.controller';
@@ -40,6 +41,7 @@ import DiscoverController from './controllers/discover.controller';
 import DiscussionController from './controllers/discussion.controller';
 import EventController from './controllers/event.controller';
 import GuideController from './controllers/guide.controller';
+import ImpactController from './controllers/impact.controller';
 import InterestGroupController from './controllers/interest-group.controller';
 import LabController from './controllers/lab.controller';
 import ManuscriptController from './controllers/manuscript.controller';
@@ -54,12 +56,14 @@ import UserController from './controllers/user.controller';
 import WorkingGroupController from './controllers/working-group.controller';
 import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendar.data-provider';
+import { CategoryContentfulDataProvider } from './data-providers/contentful/category.data-provider';
 import { ComplianceReportContentfulDataProvider } from './data-providers/contentful/compliance-report.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
 import { DiscussionContentfulDataProvider } from './data-providers/contentful/discussion.data-provider';
 import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-author.data-provider';
+import { ImpactContentfulDataProvider } from './data-providers/contentful/impact.data-provider';
 import { InterestGroupContentfulDataProvider } from './data-providers/contentful/interest-group.data-provider';
 import { LabContentfulDataProvider } from './data-providers/contentful/lab.data-provider';
 import { ManuscriptContentfulDataProvider } from './data-providers/contentful/manuscript.data-provider';
@@ -76,11 +80,13 @@ import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/
 import { GuideContentfulDataProvider } from './data-providers/contentful/guide.data-provider';
 import {
   AssetDataProvider,
+  CategoryDataProvider,
   ComplianceReportDataProvider,
   DashboardDataProvider,
   DiscoverDataProvider,
   DiscussionDataProvider,
   GuideDataProvider,
+  ImpactDataProvider,
   InterestGroupDataProvider,
   LabDataProvider,
   ManuscriptDataProvider,
@@ -97,6 +103,7 @@ import { getContentfulRestClientFactory } from './dependencies/clients.dependenc
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { analyticsRouteFactory } from './routes/analytics.route';
 import { calendarRouteFactory } from './routes/calendar.route';
+import { categoryRouteFactory } from './routes/category.routes';
 import { complianceReportRouteFactory } from './routes/compliance-report.route';
 import { contentGeneratorRouteFactory } from './routes/content-generator.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
@@ -104,6 +111,7 @@ import { discoverRouteFactory } from './routes/discover.route';
 import { discussionRouteFactory } from './routes/discussion.route';
 import { eventRouteFactory } from './routes/event.route';
 import { guideRouteFactory } from './routes/guide.route';
+import { impactRouteFactory } from './routes/impact.route';
 import { interestGroupRouteFactory } from './routes/interest-group.route';
 import { labRouteFactory } from './routes/lab.route';
 import { manuscriptRouteFactory } from './routes/manuscript.route';
@@ -210,6 +218,14 @@ export const appFactory = (libs: Libs = {}): Express => {
       getContentfulRestClientFactory,
     );
 
+  const categoryDataProvider =
+    libs.categoryDataProvider ||
+    new CategoryContentfulDataProvider(contentfulGraphQLClient);
+
+  const impactDataProvider =
+    libs.impactDataProvider ||
+    new ImpactContentfulDataProvider(contentfulGraphQLClient);
+
   const calendarDataProvider =
     libs.calendarDataProvider ||
     new CalendarContentfulDataProvider(
@@ -290,6 +306,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.analyticsController || new AnalyticsController(analyticsDataProvider);
   const calendarController =
     libs.calendarController || new CalendarController(calendarDataProvider);
+  const categoryController =
+    libs.categoryController || new CategoryController(categoryDataProvider);
   const complianceReportController =
     libs.complianceReportController ||
     new ComplianceReportController(complianceReportDataProvider);
@@ -309,6 +327,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.eventController || new EventController(eventDataProvider);
   const guideController =
     libs.guideController || new GuideController(guideDataProvider);
+  const impactController =
+    libs.impactController || new ImpactController(impactDataProvider);
   const interestGroupController =
     libs.interestGroupController ||
     new InterestGroupController(interestGroupDataProvider, userDataProvider);
@@ -368,6 +388,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Routes
   const analyticsRoutes = analyticsRouteFactory(analyticsController);
   const calendarRoutes = calendarRouteFactory(calendarController);
+  const categoryRoutes = categoryRouteFactory(categoryController);
   const complianceReportRoutes = complianceReportRouteFactory(
     complianceReportController,
     manuscriptController,
@@ -383,6 +404,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const guideRoutes = guideRouteFactory(guideController);
   const eventRoutes = eventRouteFactory(eventController);
+  const impactRoutes = impactRouteFactory(impactController);
   const interestGroupRoutes = interestGroupRouteFactory(
     interestGroupController,
     eventController,
@@ -448,6 +470,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
   app.use(analyticsRoutes);
   app.use(calendarRoutes);
+  app.use(categoryRoutes);
   app.use(complianceReportRoutes);
   app.use(contentGeneratorRoutes);
   app.use(dashboardRoutes);
@@ -455,6 +478,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(discussionRoutes);
   app.use(guideRoutes);
   app.use(eventRoutes);
+  app.use(impactRoutes);
   app.use(fileUploadRoutes);
   app.use(interestGroupRoutes);
   app.use(labRoutes);
@@ -489,6 +513,7 @@ export type Libs = {
   analyticsDataProvider?: AnalyticsContentfulDataProvider;
   analyticsController?: AnalyticsController;
   calendarController?: CalendarController;
+  categoryController?: CategoryController;
   complianceReportController?: ComplianceReportController;
   contentGeneratorController?: ContentGeneratorController;
   dashboardController?: DashboardController;
@@ -496,6 +521,7 @@ export type Libs = {
   discussionController?: DiscussionController;
   guideController?: GuideController;
   eventController?: EventController;
+  impactController?: ImpactController;
   interestGroupController?: InterestGroupController;
   filesController?: FilesController;
   labController?: LabController;
@@ -510,12 +536,14 @@ export type Libs = {
   userController?: UserController;
   workingGroupController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
+  categoryDataProvider?: CategoryDataProvider;
   calendarDataProvider?: CalendarDataProvider;
   complianceReportDataProvider?: ComplianceReportDataProvider;
   dashboardDataProvider?: DashboardDataProvider;
   discoverDataProvider?: DiscoverDataProvider;
   discussionDataProvider?: DiscussionDataProvider;
   guideDataProvider?: GuideDataProvider;
+  impactDataProvider?: ImpactDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
   interestGroupDataProvider?: InterestGroupDataProvider;
   labDataProvider?: LabDataProvider;

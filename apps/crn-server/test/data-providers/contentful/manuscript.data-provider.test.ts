@@ -625,7 +625,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           title: 'New Title',
           url: 'https://example.com/manuscript',
           impact: 'impact-id',
-          categories: ['category-id-1', 'category-id-2'],
+          categories: ['category-id-1'],
           versions: [
             {
               lifecycle: 'Preprint',
@@ -683,6 +683,34 @@ describe('Manuscripts Contentful Data Provider', () => {
               {
                 sys: {
                   id: 'team-2',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/impact',
+          value: {
+            'en-US': {
+              sys: {
+                id: 'impact-id',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/categories',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'category-id-1',
                   linkType: 'Entry',
                   type: 'Link',
                 },
@@ -826,20 +854,6 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
           {
             op: 'add',
-            path: '/fields/impact',
-            value: {
-              'en-US': 'impact-id',
-            },
-          },
-          {
-            op: 'add',
-            path: '/fields/categories',
-            value: {
-              'en-US': ['category-id-1', 'category-id-2'],
-            },
-          },
-          {
-            op: 'add',
             path: '/fields/updatedBy',
             value: {
               'en-US': {
@@ -907,7 +921,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         {
           title: 'New Title',
           impact: 'impact-id',
-          categories: ['category-id-1', 'category-id-2'],
+          categories: ['category-id-1'],
           versions: [
             {
               lifecycle: 'Preprint',
@@ -991,7 +1005,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           title: 'New Title',
           url: 'https://example.com/manuscript',
           impact: 'impact-id',
-          categories: ['category-id-1', 'category-id-2'],
+          categories: ['category-id-1'],
           versions: [
             {
               lifecycle: 'Preprint',
@@ -1030,6 +1044,34 @@ describe('Manuscripts Contentful Data Provider', () => {
               {
                 sys: {
                   id: 'team-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/impact',
+          value: {
+            'en-US': {
+              sys: {
+                id: 'impact-id',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/categories',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'category-id-1',
                   linkType: 'Entry',
                   type: 'Link',
                 },
@@ -1518,6 +1560,26 @@ describe('Manuscripts Contentful Data Provider', () => {
           {
             sys: {
               id: manuscriptVersionId,
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        ],
+      },
+      impact: {
+        'en-US': {
+          sys: {
+            id: 'impact-id',
+            linkType: 'Entry',
+            type: 'Link',
+          },
+        },
+      },
+      categories: {
+        'en-US': [
+          {
+            sys: {
+              id: 'category-id-1',
               linkType: 'Entry',
               type: 'Link',
             },

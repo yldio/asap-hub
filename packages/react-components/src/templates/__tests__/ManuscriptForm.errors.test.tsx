@@ -59,6 +59,16 @@ const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
   },
 ]);
 
+const getImpactSuggestionsMock = jest.fn().mockResolvedValue([
+  { label: 'Impact A', value: 'impact-id-1' },
+  { label: 'Impact B', value: 'impact-id-2' },
+]);
+
+const getCategorySuggestionsMock = jest.fn().mockResolvedValue([
+  { label: 'Category A', value: 'category-id-1' },
+  { label: 'Category B', value: 'category-id-2' },
+]);
+
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   getShortDescriptionFromDescription: jest.fn(),
   onCreate: jest.fn(() => Promise.resolve()),
@@ -102,6 +112,10 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onError: jest.fn(),
   clearFormToast: jest.fn(),
   isOpenScienceTeamMember: false,
+  impact: { value: 'impact-id-1', label: 'Impact A' },
+  categories: [{ value: 'category-id-1', label: 'Category A' }],
+  getImpactSuggestions: getImpactSuggestionsMock,
+  getCategorySuggestions: getCategorySuggestionsMock,
 };
 
 beforeEach(() => {

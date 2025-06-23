@@ -19,6 +19,7 @@ import {
   useLabSuggestions,
   useGeneratedContent,
   useTeamSuggestions,
+  useImpactSuggestions,
 } from '../../shared-state';
 import {
   refreshTeamState,
@@ -31,6 +32,7 @@ import {
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
+import { useCategorySuggestions } from '../../shared-state/category';
 
 type TeamManuscriptProps = {
   teamId: string;
@@ -59,6 +61,8 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getShortDescriptionFromDescription = useGeneratedContent();
+  const getImpactSuggestions = useImpactSuggestions();
+  const getCategorySuggestions = useCategorySuggestions();
 
   const pushFromHere = usePushFromHere();
 
@@ -87,6 +91,18 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
     additionalAuthors: manuscriptAdditionalAuthors,
     ...manuscriptVersion
   } = manuscript?.versions[0] || {};
+
+  const { impact: manuscriptImpact, categories: manuscriptCategories } =
+    manuscript || {};
+  const selectedImpact = manuscriptImpact
+    ? { value: manuscriptImpact.id, label: manuscriptImpact.name }
+    : { value: '', label: '' };
+
+  const selectedCategories = (manuscriptCategories || [])?.map((category) => ({
+    value: category.id,
+    label: category.name,
+  }));
+
   const selectedTeams = manuscriptTeams?.map((selectedTeam, index) => ({
     value: selectedTeam.id,
     label: selectedTeam.displayName,
@@ -148,6 +164,8 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           }
           title={manuscript?.title}
           url={manuscript?.url}
+          impact={selectedImpact}
+          categories={selectedCategories}
           firstAuthors={convertAuthorsToSelectOptions(manuscriptFirstAuthors)}
           correspondingAuthor={convertAuthorsToSelectOptions(
             manuscriptCorrespondingAuthor,
@@ -159,6 +177,8 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           clearFormToast={() => {
             setFormType({ type: '', accent: 'successLarge' });
           }}
+          getImpactSuggestions={getImpactSuggestions}
+          getCategorySuggestions={getCategorySuggestions}
           {...manuscriptVersion}
         />
       </Frame>

@@ -287,6 +287,14 @@ type ManuscriptFormProps = Omit<
     additionalAuthors?: AuthorSelectOption[];
     onError: (error: ManuscriptError | Error) => void;
     clearFormToast: () => void;
+    getImpactSuggestions: NonNullable<
+      ComponentProps<typeof LabeledMultiSelect>['loadOptions']
+    >;
+    getCategorySuggestions: NonNullable<
+      ComponentProps<typeof LabeledMultiSelect>['loadOptions']
+    >;
+    impact: MultiSelectOptionsType;
+    categories: MultiSelectOptionsType[];
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
@@ -301,6 +309,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   isOpenScienceTeamMember = false,
   title,
   url,
+  impact,
+  categories,
   type,
   lifecycle,
   manuscriptFile,
@@ -339,6 +349,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   resubmitManuscript = false,
   clearFormToast,
   getShortDescriptionFromDescription,
+  getImpactSuggestions,
+  getCategorySuggestions,
 }) => {
   const usersWithoutTeamAdded = new Set();
   const firstAuthorsWithoutTeamAdded = new Set();
@@ -367,6 +379,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     defaultValues: {
       title: title || '',
       url: url || undefined,
+      impact: impact || undefined,
+      categories: categories || [],
       versions: [
         {
           type: type || '',
@@ -783,6 +797,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           await onCreate({
             ...data,
             url: urlValue,
+            impact: data.impact?.value,
+            categories:
+              data.categories?.map((category) => category.value) || [],
             teamId,
             eligibilityReasons: [...eligibilityReasons],
             versions: [
@@ -796,6 +813,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           await onResubmit(manuscriptId, {
             title: data.title,
             url: urlValue,
+            impact: data.impact?.value,
+            categories:
+              data.categories?.map((category) => category.value) || [],
             teamId,
             versions: [
               {
@@ -808,6 +828,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           await onUpdate(manuscriptId, {
             title: data.title,
             url: urlValue,
+            impact: data.impact?.value,
+            categories:
+              data.categories?.map((category) => category.value) || [],
             teamId,
             versions: [
               {
@@ -1122,6 +1145,77 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   )}
                 />
               )}
+
+            <Controller
+              name="impact"
+              control={control}
+              rules={{
+                required: 'Please add at least one impact.',
+              }}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <LabeledMultiSelect
+                  title="Impact"
+                  description="Select the option that best describes the impact of this manuscript on the PD field."
+                  subtitle="(required)"
+                  enabled={!isSubmitting}
+                  placeholder="Start typing..."
+                  loadOptions={getImpactSuggestions}
+                  isMulti={false}
+                  onChange={(selectedOptions) => {
+                    onChange(selectedOptions);
+                    validateTeams();
+                  }}
+                  customValidationMessage={error?.message}
+                  values={value}
+                  noOptionsMessage={({ inputValue }) =>
+                    `Sorry, no impacts match ${inputValue}`
+                  }
+                />
+              )}
+            />
+
+            <Controller
+              name="categories"
+              control={control}
+              rules={{
+                required: 'Please add at least one category.',
+                validate: (value) => {
+                  if (!value || value.length === 0) {
+                    return 'Please add at least one category.';
+                  }
+                  if (value.length > 2) {
+                    return 'You can select up to two categories only.';
+                  }
+                  return true;
+                },
+              }}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <LabeledMultiSelect
+                  title="Category"
+                  description="Select up to two options that best describe the scientific category of this manuscript."
+                  subtitle="(required)"
+                  enabled={!isSubmitting}
+                  placeholder="Start typing..."
+                  loadOptions={getCategorySuggestions}
+                  isMulti={true}
+                  onChange={(selectedOptions) => {
+                    onChange(selectedOptions);
+                    validateTeams();
+                  }}
+                  customValidationMessage={error?.message}
+                  values={value}
+                  noOptionsMessage={({ inputValue }) =>
+                    `Sorry, no categories match ${inputValue}`
+                  }
+                />
+              )}
+            />
 
             {watchType && (
               <Controller

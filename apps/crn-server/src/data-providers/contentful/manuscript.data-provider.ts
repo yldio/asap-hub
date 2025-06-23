@@ -268,6 +268,8 @@ export class ManuscriptContentfulDataProvider
         count: currentCount + 1,
         teams: getLinkEntities(version.teams),
         versions: getLinkEntities([manuscriptVersionId]),
+        impact: getLinkEntity(input.impact || ''),
+        categories: getLinkEntities(input.categories || []),
         status: 'Waiting for Report',
       }),
     });
@@ -396,6 +398,8 @@ export class ManuscriptContentfulDataProvider
         title: manuscriptData.title,
         url: manuscriptData.url,
         teams: getLinkEntities(version.teams),
+        impact: getLinkEntity(manuscriptData.impact || ''),
+        categories: getLinkEntities(manuscriptData.categories || []),
       });
 
       await patchAndPublish(lastVersionEntry, {

@@ -160,6 +160,8 @@ describe('Manuscript form', () => {
         title: 'manuscript title',
         url: undefined,
         eligibilityReasons: [],
+        impact: 'impact-id-1',
+        categories: ['category-id-1'],
         versions: [
           expect.objectContaining({
             type: 'Original Research',

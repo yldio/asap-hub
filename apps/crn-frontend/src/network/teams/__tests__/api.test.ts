@@ -286,6 +286,8 @@ describe('Manuscript', () => {
       title: 'The Manuscript',
       teamId: '42',
       eligibilityReasons: [],
+      impact: 'impact-id-1',
+      categories: ['category-id-1'],
       versions: [
         {
           lifecycle: 'Publication',
@@ -730,6 +732,8 @@ describe('Manuscript', () => {
     const payload: ManuscriptPostRequest = {
       title: 'The Manuscript',
       teamId: '42',
+      impact: 'impact-id-1',
+      categories: ['category-id-1'],
       versions: [
         {
           lifecycle: 'Publication',

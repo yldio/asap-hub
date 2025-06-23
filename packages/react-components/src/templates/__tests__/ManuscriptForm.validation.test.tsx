@@ -21,6 +21,16 @@ const getTeamSuggestionsMock = jest.fn().mockResolvedValue([
   { label: 'Team B', value: 'team-b' },
 ]);
 
+const getImpactSuggestionsMock = jest.fn().mockResolvedValue([
+  { name: 'Impact A', id: 'impact-id-1' },
+  { name: 'Impact B', id: 'impact-id-2' },
+]);
+
+const getCategorySuggestionsMock = jest.fn().mockResolvedValue([
+  { name: 'Category A', id: 'category-id-1' },
+  { name: 'Category B', id: 'category-id-2' },
+]);
+
 const getLabSuggestionsMock = jest
   .fn()
   .mockResolvedValue([
@@ -93,6 +103,10 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onError: jest.fn(),
   clearFormToast: jest.fn(),
   isOpenScienceTeamMember: false,
+  impact: { value: 'impact-id-1', label: 'Impact A' },
+  categories: [{ value: 'category-id-1', label: 'Category A' }],
+  getImpactSuggestions: getImpactSuggestionsMock,
+  getCategorySuggestions: getCategorySuggestionsMock,
 };
 
 describe('ManuscriptForm team validation', () => {

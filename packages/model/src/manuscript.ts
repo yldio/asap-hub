@@ -361,6 +361,8 @@ export type ManuscriptPostCreateRequest = Pick<
   'title' | 'teamId' | 'url'
 > & {
   eligibilityReasons: string[];
+  impact: string;
+  categories: string[];
   versions: {
     type: ManuscriptVersion['type'] | '';
     lifecycle: ManuscriptVersion['lifecycle'] | '';
@@ -468,6 +470,8 @@ export type ManuscriptFormData = Pick<
   ManuscriptPostCreateRequest,
   'title' | 'teamId' | 'eligibilityReasons' | 'url'
 > & {
+  impact: MultiselectOption;
+  categories: MultiselectOption[];
   versions: (Pick<
     ManuscriptPostRequest['versions'][number],
     | 'type'
@@ -699,6 +703,8 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
         items: manuscriptVersionSchema,
       },
       notificationList: { type: 'string', nullable: true },
+      impact: { type: 'string', nullable: true },
+      categories: { type: 'array', items: { type: 'string' }, nullable: true },
     },
     required: ['title', 'teamId', 'versions'],
     additionalProperties: false,
@@ -733,6 +739,8 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
         nullable: true,
       },
       notificationList: { type: 'string', nullable: true },
+      impact: { type: 'string', nullable: true },
+      categories: { type: 'array', items: { type: 'string' }, nullable: true },
     },
     additionalProperties: false,
   };

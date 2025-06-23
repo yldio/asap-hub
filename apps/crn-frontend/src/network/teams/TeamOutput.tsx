@@ -136,7 +136,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
 
   const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS');
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
-    isManuscriptOutputFlagEnabled && documentType === 'Article',
+    isManuscriptOutputFlagEnabled &&
+      documentType === 'Article' &&
+      (!researchOutputData?.id || versionAction === 'create'),
   );
 
   const handleManuscriptOutputSelection = (

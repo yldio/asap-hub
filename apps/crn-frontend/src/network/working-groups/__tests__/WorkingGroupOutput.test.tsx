@@ -574,9 +574,11 @@ it.each([
 );
 
 describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
-  it('displays manuscript output selection options for Article document type', async () => {
+  beforeEach(() => {
     enable('MANUSCRIPT_OUTPUTS');
+  });
 
+  it('displays manuscript output selection options for Article document type', async () => {
     await renderPage({
       outputDocumentType: 'article',
     });
@@ -595,8 +597,6 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
   it.each(['bioinformatics', 'dataset', 'lab-material', 'protocol', 'report'])(
     'skips manuscript output selection for %s document type',
     async (documentType) => {
-      enable('MANUSCRIPT_OUTPUTS');
-
       await renderPage({
         outputDocumentType: documentType as OutputDocumentTypeParameter,
       });
@@ -611,9 +611,43 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
     },
   );
 
-  it('displays create button and hides import button when manual creation is selected', async () => {
-    enable('MANUSCRIPT_OUTPUTS');
+  it('skips manuscript output selection when editing existing research output', async () => {
+    await renderPage({
+      workingGroupId: '42',
+      outputDocumentType: 'article',
+      researchOutputData: {
+        ...createResearchOutputResponse(),
+        id: '1',
+      },
+    });
 
+    expect(
+      screen.queryByText('How would you like to create your output?'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByRole('heading', { name: 'What are you sharing?' }),
+    ).toBeInTheDocument();
+  });
+
+  it('skips manuscript output selection when creating a new research output version', async () => {
+    await renderPage({
+      workingGroupId: '42',
+      outputDocumentType: 'article',
+      researchOutputData: { ...createResearchOutputResponse(), id: '1' },
+      versionAction: 'create',
+    });
+
+    expect(
+      screen.queryByText('How would you like to create your output?'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByRole('heading', { name: 'What are you sharing?' }),
+    ).toBeInTheDocument();
+  });
+
+  it('displays create button and hides import button when manual creation is selected', async () => {
     await renderPage({
       outputDocumentType: 'article',
     });
@@ -627,8 +661,6 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
   });
 
   it('displays import button and hides create button when manuscript import is selected', async () => {
-    enable('MANUSCRIPT_OUTPUTS');
-
     await renderPage({
       outputDocumentType: 'article',
     });
@@ -641,8 +673,6 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
   });
 
   it('navigates to standard output form when manual creation is confirmed', async () => {
-    enable('MANUSCRIPT_OUTPUTS');
-
     await renderPage({
       outputDocumentType: 'article',
     });
@@ -659,6 +689,8 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 });
 
 it('bypasses manuscript output selection when MANUSCRIPT_OUTPUTS flag is disabled', async () => {
+  disable('MANUSCRIPT_OUTPUTS');
+
   await renderPage({
     outputDocumentType: 'article',
   });

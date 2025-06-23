@@ -51,6 +51,18 @@ jest.mock(
     },
 );
 
+jest.mock('../../../shared-api/impact', () => ({
+  getImpacts: jest
+    .fn()
+    .mockResolvedValue({ items: [{ id: 'impact-id-1', name: 'My Impact' }] }),
+}));
+
+jest.mock('../../../shared-api/category', () => ({
+  getCategories: jest.fn().mockResolvedValue({
+    items: [{ id: 'category-id-1', name: 'My Category' }],
+  }),
+}));
+
 const manuscriptResponse = {
   id: 'manuscript-1',
   title: 'The Manuscript',
@@ -370,6 +382,18 @@ it('displays manuscript success toast message and user can dismiss toast', async
     name: /Manuscript Description/i,
   });
   userEvent.type(descriptionTextbox, 'Some description');
+
+  const impactInput = screen.getByRole('textbox', {
+    name: /Impact/i,
+  });
+  await userEvent.type(impactInput, 'My Imp');
+  await userEvent.click(screen.getByText(/^My Impact$/i));
+
+  const categoryInput = screen.getByRole('textbox', {
+    name: /Category/i,
+  });
+  await userEvent.type(categoryInput, 'My Cat');
+  await userEvent.click(screen.getByText(/^My Category$/i));
 
   userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 

@@ -1184,6 +1184,8 @@ it('calls onUpdate when form is updated', async () => {
       teamId: '1',
       title: 'manuscript title',
       url: undefined,
+      impact: 'impact-id-1',
+      categories: ['category-id-1'],
       versions: [
         {
           acknowledgedGrantNumber: 'Yes',
@@ -1301,6 +1303,8 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
       teamId: '1',
       title: 'manuscript title',
       url: undefined,
+      impact: 'impact-id-1',
+      categories: ['category-id-1'],
       versions: [
         {
           acknowledgedGrantNumber: 'Yes',

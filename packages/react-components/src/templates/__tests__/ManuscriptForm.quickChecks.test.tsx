@@ -185,6 +185,8 @@ describe('QuickCheck logic', () => {
         title: 'manuscript title',
         url: 'http://example.com',
         eligibilityReasons: [],
+        impact: 'impact-id-1',
+        categories: ['category-id-1'],
         versions: [
           {
             type: 'Original Research',
@@ -287,6 +289,8 @@ describe('QuickCheck logic', () => {
         title: 'manuscript title',
         url: 'http://example.com',
         eligibilityReasons: [],
+        impact: 'impact-id-1',
+        categories: ['category-id-1'],
         versions: [
           {
             type: 'Original Research',
@@ -396,6 +400,8 @@ describe('QuickCheck logic', () => {
           title: 'manuscript title',
           url: 'http://example.com',
           eligibilityReasons: [],
+          impact: 'impact-id-1',
+          categories: ['category-id-1'],
           versions: [
             expect.objectContaining({
               acknowledgedGrantNumber: 'Yes',

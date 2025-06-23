@@ -1145,77 +1145,94 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   )}
                 />
               )}
+            <div
+              css={css({
+                marginTop: rem(12),
+              })}
+            >
+              <Controller
+                name="impact"
+                control={control}
+                rules={{
+                  required: 'Please add at least one impact.',
+                }}
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <LabeledMultiSelect
+                    title="Impact"
+                    description="Select the option that best describes the impact of this manuscript on the PD field."
+                    subtitle="(required)"
+                    placeholder="Start typing..."
+                    loadOptions={getImpactSuggestions}
+                    isMulti={false}
+                    onChange={(selectedOptions) => {
+                      onChange(selectedOptions);
+                      validateTeams();
+                    }}
+                    customValidationMessage={error?.message}
+                    values={value}
+                    noOptionsMessage={({ inputValue }) =>
+                      `Sorry, no impacts match ${inputValue}`
+                    }
+                    enabled={
+                      (!isEditMode || isOpenScienceTeamMember) &&
+                      !isSubmitting
+                    }
+                  />
+                )}
+              />
+            </div>
 
-            <Controller
-              name="impact"
-              control={control}
-              rules={{
-                required: 'Please add at least one impact.',
-              }}
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <LabeledMultiSelect
-                  title="Impact"
-                  description="Select the option that best describes the impact of this manuscript on the PD field."
-                  subtitle="(required)"
-                  enabled={!isSubmitting}
-                  placeholder="Start typing..."
-                  loadOptions={getImpactSuggestions}
-                  isMulti={false}
-                  onChange={(selectedOptions) => {
-                    onChange(selectedOptions);
-                    validateTeams();
-                  }}
-                  customValidationMessage={error?.message}
-                  values={value}
-                  noOptionsMessage={({ inputValue }) =>
-                    `Sorry, no impacts match ${inputValue}`
-                  }
-                />
-              )}
-            />
-
-            <Controller
-              name="categories"
-              control={control}
-              rules={{
-                required: 'Please add at least one category.',
-                validate: (value) => {
-                  if (!value || value.length === 0) {
-                    return 'Please add at least one category.';
-                  }
-                  if (value.length > 2) {
-                    return 'You can select up to two categories only.';
-                  }
-                  return true;
-                },
-              }}
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <LabeledMultiSelect
-                  title="Category"
-                  description="Select up to two options that best describe the scientific category of this manuscript."
-                  subtitle="(required)"
-                  enabled={!isSubmitting}
-                  placeholder="Start typing..."
-                  loadOptions={getCategorySuggestions}
-                  isMulti={true}
-                  onChange={(selectedOptions) => {
-                    onChange(selectedOptions);
-                    validateTeams();
-                  }}
-                  customValidationMessage={error?.message}
-                  values={value}
-                  noOptionsMessage={({ inputValue }) =>
-                    `Sorry, no categories match ${inputValue}`
-                  }
-                />
-              )}
-            />
+            <div
+              css={css({
+                marginTop: rem(12),
+              })}
+            >
+              <Controller
+                name="categories"
+                control={control}
+                rules={{
+                  required: 'Please add at least one category.',
+                  validate: (value) => {
+                    if (!value || value.length === 0) {
+                      return 'Please add at least one category.';
+                    }
+                    if (value.length > 2) {
+                      return 'You can select up to two categories only.';
+                    }
+                    return true;
+                  },
+                }}
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <LabeledMultiSelect
+                    title="Category"
+                    description="Select up to two options that best describe the scientific category of this manuscript."
+                    subtitle="(required)"
+                    placeholder="Start typing..."
+                    loadOptions={getCategorySuggestions}
+                    isMulti={true}
+                    onChange={(selectedOptions) => {
+                      onChange(selectedOptions);
+                      validateTeams();
+                    }}
+                    customValidationMessage={error?.message}
+                    values={value}
+                    noOptionsMessage={({ inputValue }) =>
+                      `Sorry, no categories match ${inputValue}`
+                    }
+                    enabled={
+                      (!isEditMode || isOpenScienceTeamMember) &&
+                      !isSubmitting
+                    }
+                  />
+                )}
+              />
+            </div>
 
             {watchType && (
               <Controller

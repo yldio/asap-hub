@@ -50,6 +50,16 @@ getTeamSuggestions.mockResolvedValue([
   { label: 'Two Team', value: '2' },
 ]);
 
+const getImpactSuggestionsMock = jest.fn().mockResolvedValue([
+  { label: 'Impact A', value: 'impact-id-1' },
+  { label: 'Impact B', value: 'impact-id-2' },
+]);
+
+const getCategorySuggestionsMock = jest.fn().mockResolvedValue([
+  { label: 'Category A', value: 'category-id-1' },
+  { label: 'Category B', value: 'category-id-2' },
+]);
+
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onCreate: jest.fn(() => Promise.resolve()),
   onUpdate: jest.fn(() => Promise.resolve()),
@@ -94,6 +104,10 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   clearFormToast: jest.fn(),
   url: 'http://example.com',
   isOpenScienceTeamMember: false,
+  impact: { value: 'impact-id-1', label: 'Impact A' },
+  categories: [{ value: 'category-id-1', label: 'Category A' }],
+  getImpactSuggestions: getImpactSuggestionsMock,
+  getCategorySuggestions: getCategorySuggestionsMock,
 };
 
 const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {

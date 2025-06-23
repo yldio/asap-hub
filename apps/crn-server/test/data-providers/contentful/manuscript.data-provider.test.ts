@@ -624,6 +624,8 @@ describe('Manuscripts Contentful Data Provider', () => {
         {
           title: 'New Title',
           url: 'https://example.com/manuscript',
+          impact: 'impact-id',
+          categories: ['category-id-1', 'category-id-2'],
           versions: [
             {
               lifecycle: 'Preprint',
@@ -822,7 +824,20 @@ describe('Manuscripts Contentful Data Provider', () => {
               ],
             },
           },
-
+          {
+            op: 'add',
+            path: '/fields/impact',
+            value: {
+              'en-US': 'impact-id',
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/categories',
+            value: {
+              'en-US': ['category-id-1', 'category-id-2'],
+            },
+          },
           {
             op: 'add',
             path: '/fields/updatedBy',
@@ -891,6 +906,8 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscriptId,
         {
           title: 'New Title',
+          impact: 'impact-id',
+          categories: ['category-id-1', 'category-id-2'],
           versions: [
             {
               lifecycle: 'Preprint',
@@ -973,6 +990,8 @@ describe('Manuscripts Contentful Data Provider', () => {
         {
           title: 'New Title',
           url: 'https://example.com/manuscript',
+          impact: 'impact-id',
+          categories: ['category-id-1', 'category-id-2'],
           versions: [
             {
               lifecycle: 'Preprint',

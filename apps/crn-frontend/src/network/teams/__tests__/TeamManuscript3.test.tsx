@@ -59,6 +59,18 @@ jest.mock('../api', () => ({
     .mockResolvedValue([{ id: teamId, displayName: 'Team A' }]),
 }));
 
+jest.mock('../../../shared-api/impact', () => ({
+  getImpacts: jest
+    .fn()
+    .mockResolvedValue({ items: [{ id: 'impact-id-1', name: 'My Impact' }] }),
+}));
+
+jest.mock('../../../shared-api/category', () => ({
+  getCategories: jest.fn().mockResolvedValue({
+    items: [{ id: 'category-id-1', name: 'My Category' }],
+  }),
+}));
+
 const mockSetFormType = jest.fn();
 // mock useManuscriptToast hook
 jest.mock('../useManuscriptToast', () => {
@@ -175,6 +187,18 @@ it('shows server validation error toast and a message when submitting with dupli
     name: /Short Description/i,
   });
   userEvent.type(shortDescriptionTextbox, 'Some short description');
+
+  const impactInput = screen.getByRole('textbox', {
+    name: /Impact/i,
+  });
+  await userEvent.type(impactInput, 'My Imp');
+  await userEvent.click(screen.getByText(/^My Impact$/i));
+
+  const categoryInput = screen.getByRole('textbox', {
+    name: /Category/i,
+  });
+  await userEvent.type(categoryInput, 'My Cat');
+  await userEvent.click(screen.getByText(/^My Category$/i));
 
   userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 

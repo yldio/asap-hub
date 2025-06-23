@@ -43,6 +43,18 @@ let history = createMemoryHistory({
 
 jest.mock('../../users/api');
 
+jest.mock('../../../shared-api/impact', () => ({
+  getImpacts: jest
+    .fn()
+    .mockResolvedValue({ items: [{ id: 'impact-id-1', name: 'My Impact' }] }),
+}));
+
+jest.mock('../../../shared-api/category', () => ({
+  getCategories: jest.fn().mockResolvedValue({
+    items: [{ id: 'category-id-1', name: 'My Category' }],
+  }),
+}));
+
 jest.mock('../api', () => ({
   createManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
   getManuscript: jest.fn().mockResolvedValue(null),
@@ -188,6 +200,18 @@ it('shows default error toast when submitting with any other error', async () =>
 
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
+
+  const impactInput = screen.getByRole('textbox', {
+    name: /Impact/i,
+  });
+  await userEvent.type(impactInput, 'My Imp');
+  await userEvent.click(screen.getByText(/^My Impact$/i));
+
+  const categoryInput = screen.getByRole('textbox', {
+    name: /Category/i,
+  });
+  await userEvent.type(categoryInput, 'My Cat');
+  await userEvent.click(screen.getByText(/^My Category$/i));
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 

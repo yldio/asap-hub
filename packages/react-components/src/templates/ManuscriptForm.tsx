@@ -1177,8 +1177,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       `Sorry, no impacts match ${inputValue}`
                     }
                     enabled={
-                      (!isEditMode || isOpenScienceTeamMember) &&
-                      !isSubmitting
+                      (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
                     }
                   />
                 )}
@@ -1226,8 +1225,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       `Sorry, no categories match ${inputValue}`
                     }
                     enabled={
-                      (!isEditMode || isOpenScienceTeamMember) &&
-                      !isSubmitting
+                      (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
                     }
                   />
                 )}

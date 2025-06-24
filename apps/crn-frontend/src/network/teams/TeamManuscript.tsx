@@ -6,11 +6,8 @@ import {
   ManuscriptError,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import {
-  ManuscriptForm as ManuscriptFormSync,
-  ManuscriptHeader,
-  usePushFromHere,
-} from '@asap-hub/react-components';
+import { ManuscriptHeader, usePushFromHere } from '@asap-hub/react-components';
+import { ManuscriptForm as ManuscriptFormSync } from '@asap-hub/react-components/manuscript-form';
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -36,7 +33,7 @@ import { useManuscriptToast } from './useManuscriptToast';
 import { useCategorySuggestions } from '../../shared-state/category';
 
 const ManuscriptFormLazy = lazy(() =>
-  import('@asap-hub/react-components').then((module) => ({
+  import('@asap-hub/react-components/manuscript-form').then((module) => ({
     default: module.ManuscriptForm,
   })),
 );

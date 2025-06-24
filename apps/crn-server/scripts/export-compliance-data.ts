@@ -1,5 +1,4 @@
 import fs from 'fs';
-// import { open, readFile, FileHandle } from 'fs/promises';
 import { Asset, Entry, Link } from 'contentful-management';
 import { readFile } from 'fs/promises';
 import { parseUserDisplayName } from '@asap-hub/server-common';

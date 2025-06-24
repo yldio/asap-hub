@@ -8,6 +8,20 @@
   "module": "build/index.js",
   "main": "build-cjs/index.js",
   "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./build/index.js",
+      "require": "./build-cjs/index.js",
+      "types": "./build/index.d.ts"
+    },
+    "./manuscript-form": {
+      "import": "./build/manuscript-form.js",
+      "require": "./build-cjs/manuscript-form.js",
+      "types": "./build/manuscript-form.d.ts"
+    },
+    "./src": "./src/index.ts",
+    "./src/manuscript-form": "./src/manuscript-form.ts"
+  },
   "sideEffects": false,
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",

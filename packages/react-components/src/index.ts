@@ -254,7 +254,6 @@ export {
   LoadingLayout,
   LoadingContentBody,
   LoadingContentHeader,
-  ManuscriptForm,
   ManuscriptOutputSelection,
   NetworkInterestGroups,
   NetworkPage,

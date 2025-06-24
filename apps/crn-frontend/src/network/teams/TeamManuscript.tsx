@@ -1,3 +1,4 @@
+import React, { lazy, Suspense } from 'react';
 import { Frame } from '@asap-hub/frontend-utils';
 import {
   AuthorResponse,
@@ -6,7 +7,7 @@ import {
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
-  ManuscriptForm,
+  ManuscriptForm as ManuscriptFormSync,
   ManuscriptHeader,
   usePushFromHere,
 } from '@asap-hub/react-components';
@@ -34,10 +35,28 @@ import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
 import { useCategorySuggestions } from '../../shared-state/category';
 
+const ManuscriptFormLazy = lazy(() =>
+  import('@asap-hub/react-components').then((module) => ({
+    default: module.ManuscriptForm,
+  })),
+);
+
+const ManuscriptForm =
+  process.env.NODE_ENV === 'test' ? ManuscriptFormSync : ManuscriptFormLazy;
+
 type TeamManuscriptProps = {
   teamId: string;
   resubmitManuscript?: boolean;
 };
+
+const WithSuspense: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) =>
+  process.env.NODE_ENV === 'test' ? (
+    <>{children}</>
+  ) : (
+    <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+  );
 
 const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   teamId,
@@ -135,52 +154,54 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
     <FormProvider {...form}>
       <Frame title="Create Manuscript">
         <ManuscriptHeader resubmitManuscript={resubmitManuscript} />
-        <ManuscriptForm
-          getShortDescriptionFromDescription={
-            getShortDescriptionFromDescription
-          }
-          manuscriptId={manuscriptId}
-          onSuccess={onSuccess}
-          onCreate={createManuscript}
-          onError={onError}
-          onUpdate={updateManuscript}
-          onResubmit={handleResubmitManuscript}
-          teamId={teamId}
-          isOpenScienceTeamMember={user?.openScienceTeamMember}
-          handleFileUpload={handleFileUpload}
-          eligibilityReasons={eligibilityReasons}
-          getTeamSuggestions={getTeamSuggestions}
-          selectedTeams={selectedTeams}
-          getLabSuggestions={getLabSuggestions}
-          selectedLabs={selectedLabs}
-          getAuthorSuggestions={(input) =>
-            getAuthorSuggestions(input).then((authors) =>
-              authors.map((author) => ({
-                author,
-                label: author.displayName,
-                value: author.id,
-              })),
-            )
-          }
-          title={manuscript?.title}
-          url={manuscript?.url}
-          impact={selectedImpact}
-          categories={selectedCategories}
-          firstAuthors={convertAuthorsToSelectOptions(manuscriptFirstAuthors)}
-          correspondingAuthor={convertAuthorsToSelectOptions(
-            manuscriptCorrespondingAuthor,
-          )}
-          additionalAuthors={convertAuthorsToSelectOptions(
-            manuscriptAdditionalAuthors,
-          )}
-          resubmitManuscript={resubmitManuscript}
-          clearFormToast={() => {
-            setFormType({ type: '', accent: 'successLarge' });
-          }}
-          getImpactSuggestions={getImpactSuggestions}
-          getCategorySuggestions={getCategorySuggestions}
-          {...manuscriptVersion}
-        />
+        <WithSuspense>
+          <ManuscriptForm
+            getShortDescriptionFromDescription={
+              getShortDescriptionFromDescription
+            }
+            manuscriptId={manuscriptId}
+            onSuccess={onSuccess}
+            onCreate={createManuscript}
+            onError={onError}
+            onUpdate={updateManuscript}
+            onResubmit={handleResubmitManuscript}
+            teamId={teamId}
+            isOpenScienceTeamMember={user?.openScienceTeamMember}
+            handleFileUpload={handleFileUpload}
+            eligibilityReasons={eligibilityReasons}
+            getTeamSuggestions={getTeamSuggestions}
+            selectedTeams={selectedTeams}
+            getLabSuggestions={getLabSuggestions}
+            selectedLabs={selectedLabs}
+            getAuthorSuggestions={(input) =>
+              getAuthorSuggestions(input).then((authors) =>
+                authors.map((author) => ({
+                  author,
+                  label: author.displayName,
+                  value: author.id,
+                })),
+              )
+            }
+            title={manuscript?.title}
+            url={manuscript?.url}
+            impact={selectedImpact}
+            categories={selectedCategories}
+            firstAuthors={convertAuthorsToSelectOptions(manuscriptFirstAuthors)}
+            correspondingAuthor={convertAuthorsToSelectOptions(
+              manuscriptCorrespondingAuthor,
+            )}
+            additionalAuthors={convertAuthorsToSelectOptions(
+              manuscriptAdditionalAuthors,
+            )}
+            resubmitManuscript={resubmitManuscript}
+            clearFormToast={() => {
+              setFormType({ type: '', accent: 'successLarge' });
+            }}
+            getImpactSuggestions={getImpactSuggestions}
+            getCategorySuggestions={getCategorySuggestions}
+            {...manuscriptVersion}
+          />
+        </WithSuspense>
       </Frame>
     </FormProvider>
   );

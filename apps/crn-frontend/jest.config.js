@@ -29,6 +29,8 @@ module.exports = {
   ],
   moduleNameMapper: {
     ...moduleNameMapper,
+    '^@asap-hub/react-components/manuscript-form$':
+      '@asap-hub/react-components/src/manuscript-form',
     '^.+\\.module\\.(css|sass|scss)$': require.resolve('identity-obj-proxy'),
     '^csv-stringify/browser/esm': require.resolve('csv-stringify'),
   },

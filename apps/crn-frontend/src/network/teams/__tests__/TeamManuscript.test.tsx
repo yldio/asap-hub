@@ -79,7 +79,6 @@ const mockGetGeneratedShortDescription =
   >;
 
 beforeEach(() => {
-  jest.resetModules();
   mockSetFormType.mockReset();
   jest.spyOn(console, 'error').mockImplementation();
 

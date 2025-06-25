@@ -146,7 +146,7 @@ const renderPage = async (
   return { container };
 };
 
-it.only('can publish a form when the data is valid and navigates to team workspace', async () => {
+it('can publish a form when the data is valid and navigates to team workspace', async () => {
   mockGetGeneratedShortDescription.mockResolvedValueOnce({
     shortDescription: 'Some short description',
   });

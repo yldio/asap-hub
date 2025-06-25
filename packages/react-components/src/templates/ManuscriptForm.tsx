@@ -23,26 +23,67 @@ import {
 } from '@asap-hub/model';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import React, { ComponentProps, useCallback, useState } from 'react';
+import { ComponentProps, useCallback, useState, lazy } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import {
-  AuthorSelect,
-  colors,
-  ExternalLinkIcon,
-  FormCard,
-  GlobeIcon,
-  LabeledDropdown,
-  LabeledFileField,
-  LabeledMultiSelect,
-  LabeledRadioButtonGroup,
-  LabeledTextArea,
-  LabeledTextField,
-  ManuscriptAuthors,
-} from '..';
+import { colors } from '..';
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
-import { ManuscriptFormModals, ShortDescriptionCard } from '../organisms';
 import { mobileScreen, rem } from '../pixels';
+import { ExternalLinkIcon, GlobeIcon } from '../icons';
+import { LabeledDropdownType } from '../molecules/LabeledDropdown';
+import { LabeledRadioButtonGroupType } from '../molecules/LabeledRadioButtonGroup';
+
+const loadAuthorSelect = () =>
+  import(/* webpackChunkName: "author-select" */ '../organisms/AuthorSelect');
+const loadManuscriptAuthors = () =>
+  import(
+    /* webpackChunkName: "manuscript-authors" */ '../organisms/ManuscriptAuthors'
+  );
+const loadManuscriptFormModals = () =>
+  import(
+    /* webpackChunkName: "manuscript-form-modals" */ '../organisms/ManuscriptFormModals'
+  );
+const loadShortDescriptionCard = () =>
+  import(
+    /* webpackChunkName: "short-description-card" */ '../organisms/ShortDescriptionCard'
+  );
+const loadLabeledFileField = () =>
+  import(
+    /* webpackChunkName: "labeled-file-field" */ '../molecules/LabeledFileField'
+  );
+const loadLabeledMultiSelect = () =>
+  import(
+    /* webpackChunkName: "labeled-multi-select" */ '../molecules/LabeledMultiSelect'
+  );
+const loadLabeledTextField = () =>
+  import(
+    /* webpackChunkName: "labeled-text-field" */ '../molecules/LabeledTextField'
+  );
+const loadFormCard = () =>
+  import(/* webpackChunkName: "form-card" */ '../molecules/FormCard');
+const loadLabeledDropdown = () =>
+  import(
+    /* webpackChunkName: "labeled-dropdown" */ '../molecules/LabeledDropdown'
+  );
+const loadLabeledRadioButtonGroup = () =>
+  import(
+    /* webpackChunkName: "labeled-radio-button-group" */ '../molecules/LabeledRadioButtonGroup'
+  );
+
+const AuthorSelect = lazy(loadAuthorSelect);
+const ManuscriptAuthors = lazy(loadManuscriptAuthors);
+const ManuscriptFormModals = lazy(loadManuscriptFormModals);
+const ShortDescriptionCard = lazy(loadShortDescriptionCard);
+const LabeledFileField = lazy(loadLabeledFileField);
+const LabeledMultiSelect = lazy(loadLabeledMultiSelect);
+const LabeledTextField = lazy(loadLabeledTextField);
+const FormCard = lazy(loadFormCard);
+const LabeledDropdown = lazy(loadLabeledDropdown) as LabeledDropdownType;
+const LabeledRadioButtonGroup = lazy(
+  loadLabeledRadioButtonGroup,
+) as LabeledRadioButtonGroupType;
+
+const LabeledTextArea = lazy(() => import('../molecules/LabeledTextArea'));
 
 const BIG_SPACE = '\u2004';
 
@@ -1005,7 +1046,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     subtitle="(required)"
                     description="Select the option that matches your manuscript the best."
                     options={lifecycleSuggestions}
-                    onChange={async (lifecycleEvent) => {
+                    onChange={(lifecycleEvent) => {
                       onChange(lifecycleEvent);
 
                       // Update optional fields based on new selections
@@ -1022,7 +1063,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     enabled={
                       (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
                     }
-                    noOptionsMessage={(option) =>
+                    noOptionsMessage={(option: { inputValue: string }) =>
                       `Sorry, no options match ${option.inputValue}`
                     }
                     placeholder="Choose an option"
@@ -1167,15 +1208,17 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     placeholder="Start typing..."
                     loadOptions={getImpactSuggestions}
                     isMulti={false}
-                    onChange={(selectedOptions) => {
+                    onChange={(selectedOptions: MultiSelectOptionsType) => {
                       onChange(selectedOptions);
                       validateTeams();
                     }}
                     customValidationMessage={error?.message}
                     values={value}
-                    noOptionsMessage={({ inputValue }) =>
-                      `Sorry, no impacts match ${inputValue}`
-                    }
+                    noOptionsMessage={({
+                      inputValue,
+                    }: {
+                      inputValue: string;
+                    }) => `Sorry, no impacts match ${inputValue}`}
                     enabled={
                       (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
                     }
@@ -1215,15 +1258,17 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     placeholder="Start typing..."
                     loadOptions={getCategorySuggestions}
                     isMulti={true}
-                    onChange={(selectedOptions) => {
+                    onChange={(selectedOptions: MultiSelectOptionsType) => {
                       onChange(selectedOptions);
                       validateTeams();
                     }}
                     customValidationMessage={error?.message}
                     values={value}
-                    noOptionsMessage={({ inputValue }) =>
-                      `Sorry, no categories match ${inputValue}`
-                    }
+                    noOptionsMessage={({
+                      inputValue,
+                    }: {
+                      inputValue: string;
+                    }) => `Sorry, no categories match ${inputValue}`}
                     enabled={
                       (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
                     }
@@ -1251,7 +1296,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       });
                       await trigger('versions.0.manuscriptFile');
                     }}
-                    handleFileUpload={async (file) => {
+                    handleFileUpload={async (file: File) => {
                       if (file.size > MAX_FILE_SIZE) {
                         setError('versions.0.manuscriptFile', {
                           type: 'custom',
@@ -1325,7 +1370,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         });
                         await trigger('versions.0.keyResourceTable');
                       }}
-                      handleFileUpload={async (file) => {
+                      handleFileUpload={async (file: File) => {
                         if (file.size > MAX_FILE_SIZE) {
                           setError('versions.0.keyResourceTable', {
                             type: 'custom',
@@ -1396,7 +1441,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       );
                     }}
                     maxFiles={5}
-                    handleFileUpload={async (file) => {
+                    handleFileUpload={async (file: File) => {
                       const isExistingFile =
                         value &&
                         value.findIndex(
@@ -1546,13 +1591,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   placeholder="Start typing..."
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   loadOptions={getTeamSuggestions!}
-                  onChange={(selectedOptions) => {
+                  onChange={(selectedOptions: MultiSelectOptionsType) => {
                     onChange(selectedOptions);
                     validateTeams();
                   }}
                   customValidationMessage={error?.message}
                   values={value}
-                  noOptionsMessage={({ inputValue }) =>
+                  noOptionsMessage={({ inputValue }: { inputValue: string }) =>
                     `Sorry, no teams match ${inputValue}`
                   }
                 />
@@ -1584,12 +1629,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   placeholder="Start typing..."
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   loadOptions={getLabSuggestions!}
-                  onChange={(selectedOptions) => {
+                  onChange={(selectedOptions: MultiSelectOptionsType) => {
                     onChange(selectedOptions);
                     validateTeams();
                   }}
                   values={value}
-                  noOptionsMessage={({ inputValue }) =>
+                  noOptionsMessage={({ inputValue }: { inputValue: string }) =>
                     `Sorry, no labs match ${inputValue}`
                   }
                   customValidationMessage={error?.message}

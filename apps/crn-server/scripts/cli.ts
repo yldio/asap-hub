@@ -86,7 +86,7 @@ yargs(hideBin(process.argv))
     builder: (cli) =>
       cli
         .positional('contentfulBackupFileName', {
-          describe: 'choose a metric to export data',
+          describe: 'path to contentful backup file',
           type: 'string',
           demandOption: true,
         })

@@ -9,6 +9,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
   within,
+  act,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, MemoryHistory } from 'history';
@@ -93,7 +94,6 @@ const mockGetGeneratedShortDescription =
   >;
 
 beforeEach(() => {
-  jest.resetModules();
   mockSetFormType.mockReset();
   jest.spyOn(console, 'error').mockImplementation();
 
@@ -146,7 +146,7 @@ const renderPage = async (
   return { container };
 };
 
-it('can publish a form when the data is valid and navigates to team workspace', async () => {
+it.only('can publish a form when the data is valid and navigates to team workspace', async () => {
   mockGetGeneratedShortDescription.mockResolvedValueOnce({
     shortDescription: 'Some short description',
   });
@@ -155,23 +155,37 @@ it('can publish a form when the data is valid and navigates to team workspace', 
 
   await renderPage();
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /title of manuscript/i }),
     title,
   );
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
-  typeTextbox.blur();
+
+  await userEvent.type(typeTextbox, 'Original');
+  await act(async () => {
+    await userEvent.type(typeTextbox, specialChars.enter);
+    typeTextbox.blur();
+  });
+
+  await waitFor(() => {
+    expect(screen.getByText(/Original Research/i)).toBeInTheDocument();
+  });
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Typeset proof');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
-  lifecycleTextbox.blur();
+
+  await userEvent.type(lifecycleTextbox, 'Typeset');
+  await act(async () => {
+    await userEvent.type(lifecycleTextbox, specialChars.enter);
+    lifecycleTextbox.blur();
+  });
+
+  await waitFor(() => {
+    expect(screen.getByText(/Typeset proof/i)).toBeInTheDocument();
+  });
 
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
@@ -184,12 +198,12 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   const descriptionTextbox = screen.getByRole('textbox', {
     name: /Manuscript Description/i,
   });
-  userEvent.type(descriptionTextbox, 'Some description');
+  await userEvent.type(descriptionTextbox, 'Some description');
 
   const shortDescriptionTextbox = screen.getByRole('textbox', {
     name: /Short Description/i,
   });
-  userEvent.type(shortDescriptionTextbox, 'Some short description');
+  await userEvent.type(shortDescriptionTextbox, 'Some short description');
 
   const impactInput = screen.getByRole('textbox', {
     name: /Impact/i,

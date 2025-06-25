@@ -158,6 +158,8 @@ export type ResearchOutputPayload = {
   relatedEvents: NonNullable<
     ComponentProps<typeof ResearchOutputRelatedEventsCard>['relatedEvents']
   >;
+  impact?: string;
+  categories?: string[];
 };
 
 export const getPayload = ({
@@ -188,6 +190,8 @@ export const getPayload = ({
   keywords,
   published,
   relatedEvents,
+  impact,
+  categories,
 }: ResearchOutputPayload): ResearchOutputPostRequest => ({
   ...createIdentifierField(identifierType, identifier),
   documentType,
@@ -218,6 +222,8 @@ export const getPayload = ({
   keywords,
   published,
   relatedEvents: relatedEvents.map(({ value }) => value),
+  impact,
+  categories,
 });
 
 export function transformResearchOutputResponseToRequest({

@@ -30,6 +30,8 @@ import {
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
   useGeneratedContent,
+  useImpactSuggestions,
+  useCategorySuggestions,
   useLabSuggestions,
   usePostResearchOutput,
   usePutResearchOutput,
@@ -89,6 +91,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const updateResearchOutput = usePutResearchOutput();
   const updateAndPublishResearchOutput = usePutResearchOutput(true);
 
+  const getImpactSuggestions = useImpactSuggestions();
+  const getCategorySuggestions = useCategorySuggestions();
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
@@ -185,6 +189,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             versionAction={versionAction}
             tagSuggestions={researchSuggestions}
             documentType={documentType}
+            getImpactSuggestions={getImpactSuggestions}
+            getCategorySuggestions={getCategorySuggestions}
             getLabSuggestions={getLabSuggestions}
             getAuthorSuggestions={(input) =>
               getAuthorSuggestions(input).then((authors) =>

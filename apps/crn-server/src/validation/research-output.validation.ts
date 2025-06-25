@@ -113,6 +113,12 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       sharingStatus: { type: 'string' },
       usedInPublication: { type: 'boolean', nullable: true },
       publishDate: { type: 'string', format: 'date-time', nullable: true },
+      impact: { type: 'string', nullable: true },
+      categories: {
+        type: 'array',
+        items: { type: 'string' },
+        nullable: true,
+      },
       labs: {
         type: 'array',
         items: { type: 'string' },
@@ -245,6 +251,12 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
       sharingStatus: { type: 'string' },
       usedInPublication: { type: 'boolean', nullable: true },
       publishDate: { type: 'string', format: 'date-time', nullable: true },
+      impact: { type: 'string', nullable: true },
+      categories: {
+        type: 'array',
+        items: { type: 'string' },
+        nullable: true,
+      },
       labs: {
         type: 'array',
         items: { type: 'string' },

@@ -34,6 +34,7 @@ import {
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
   useGeneratedContent,
+  useImpactSuggestions,
   useLabSuggestions,
   usePostResearchOutput,
   usePutResearchOutput,
@@ -42,6 +43,7 @@ import {
   useResearchTags,
   useTeamSuggestions,
 } from '../../shared-state';
+import { useCategorySuggestions } from '../../shared-state/category';
 import { useTeamById } from './state';
 
 const useParamOutputDocumentType = (
@@ -96,6 +98,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const updateResearchOutput = usePutResearchOutput();
   const updateAndPublishResearchOutput = usePutResearchOutput(true);
 
+  const getImpactSuggestions = useImpactSuggestions();
+  const getCategorySuggestions = useCategorySuggestions();
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
@@ -193,6 +197,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             tagSuggestions={researchSuggestions}
             documentType={documentType}
             getLabSuggestions={getLabSuggestions}
+            getImpactSuggestions={getImpactSuggestions}
+            getCategorySuggestions={getCategorySuggestions}
             getShortDescriptionFromDescription={
               getShortDescriptionFromDescription
             }

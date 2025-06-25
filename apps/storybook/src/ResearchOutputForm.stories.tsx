@@ -40,6 +40,18 @@ const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
         ]);
       }, 1000);
     }),
+  getImpactSuggestions: () =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([{ label: 'impact 1', value: '1' }]);
+      }, 1000);
+    }),
+  getCategorySuggestions: () =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([{ label: 'category 1', value: '1' }]);
+      }, 1000);
+    }),
   selectedTeams: [],
   typeOptions: Array.from(researchOutputDocumentTypeToType.Article),
   getTeamSuggestions: () =>

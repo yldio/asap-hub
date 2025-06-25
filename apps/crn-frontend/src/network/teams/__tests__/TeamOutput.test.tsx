@@ -289,6 +289,8 @@ it('can publish a form when the data is valid', async () => {
       asapFunded: undefined,
       usedInPublication: undefined,
       published: true,
+      categories: [],
+      impact: undefined,
     },
     expect.anything(),
   );
@@ -354,6 +356,8 @@ it('can save draft when form data is valid', async () => {
       asapFunded: undefined,
       usedInPublication: undefined,
       published: false,
+      categories: [],
+      impact: undefined,
     },
     expect.anything(),
   );
@@ -523,8 +527,11 @@ it('will show server side validation error for link', async () => {
     new BackendError('example', validationResponse, 400),
   );
 
-  await renderPage({ teamId: '42', outputDocumentType: 'article' });
-  const { publish } = await mandatoryFields({}, true);
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'bioinformatics',
+  });
+  const { publish } = await mandatoryFields({ type: 'Code' }, true);
 
   await publish();
 
@@ -549,9 +556,11 @@ it('will show server side validation error for link', async () => {
 it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
-  await renderPage({ teamId: '42', outputDocumentType: 'article' });
-
-  const { publish } = await mandatoryFields({}, true);
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'bioinformatics',
+  });
+  const { publish } = await mandatoryFields({ type: 'Code' }, true);
 
   await publish();
 

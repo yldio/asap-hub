@@ -128,6 +128,8 @@ export default class ResearchOutputController {
       usageNotes: normalisedResearchOutputCreateData.usageNotes,
       usedInPublication: normalisedResearchOutputCreateData.usedInPublication,
       workingGroups: normalisedResearchOutputCreateData.workingGroups,
+      impact: normalisedResearchOutputCreateData.impact,
+      categories: normalisedResearchOutputCreateData.categories,
     };
 
     const createOptions = {
@@ -234,6 +236,8 @@ export default class ResearchOutputController {
       usageNotes: normalisedResearchOutputUpdateData.usageNotes,
       usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,
       workingGroups: normalisedResearchOutputUpdateData.workingGroups,
+      impact: normalisedResearchOutputUpdateData.impact,
+      categories: normalisedResearchOutputUpdateData.categories,
       versions:
         currentResearchOutput?.versions?.map(
           ({ id: versionId }) => versionId,

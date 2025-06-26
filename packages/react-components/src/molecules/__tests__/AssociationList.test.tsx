@@ -223,3 +223,30 @@ it('displays the associations', () => {
   expect(screen.getAllByRole('listitem').length).toEqual(2);
   expect(screen.getByText('+4')).toBeInTheDocument();
 });
+
+it('renders impact association', () => {
+  render(
+    <AssociationList
+      type="Impact"
+      associations={[{ displayName: 'Impact One', id: 'i1' }]}
+    />,
+  );
+  expect(screen.getByText('Impact One')).toBeInTheDocument();
+  expect(screen.getByTitle('Impact icon')).toBeInTheDocument();
+});
+
+it('renders category associations', () => {
+  render(
+    <AssociationList
+      inline
+      type="Category"
+      associations={[
+        { displayName: 'Cat One', id: 'c1' },
+        { displayName: 'Cat Two', id: 'c2' },
+      ]}
+    />,
+  );
+  expect(screen.getByText('Cat One')).toBeInTheDocument();
+  expect(screen.getByText('Cat Two')).toBeInTheDocument();
+  expect(screen.getByTitle('Category icon')).toBeInTheDocument();
+});

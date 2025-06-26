@@ -101,6 +101,8 @@ it('renders an output with document type and type', () => {
   const { getAllByRole, rerender } = render(
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}
+      impact={undefined}
+      categories={[]}
       teams={[]}
       authors={[]}
       documentType="Protocol"
@@ -115,6 +117,8 @@ it('renders an output with document type and type', () => {
   rerender(
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}
+      impact={undefined}
+      categories={[]}
       teams={[]}
       authors={[]}
       documentType="Protocol"

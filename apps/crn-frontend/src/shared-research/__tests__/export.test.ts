@@ -91,6 +91,8 @@ describe('researchOutputToCSV', () => {
       firstVersionRrid: '',
       firstVersionAccession: '',
       firstVersionLink: '',
+      categories: 'Category 1',
+      impact: 'Impact 1',
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {

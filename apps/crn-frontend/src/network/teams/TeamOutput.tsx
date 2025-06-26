@@ -33,6 +33,7 @@ import {
   handleError,
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
+  useCategorySuggestions,
   useGeneratedContent,
   useImpactSuggestions,
   useLabSuggestions,
@@ -43,7 +44,6 @@ import {
   useResearchTags,
   useTeamSuggestions,
 } from '../../shared-state';
-import { useCategorySuggestions } from '../../shared-state/category';
 import { useTeamById } from './state';
 
 const useParamOutputDocumentType = (

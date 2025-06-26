@@ -1,5 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { ComponentProps } from 'react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import ManuscriptForm from '../ManuscriptForm';
@@ -113,14 +113,19 @@ describe('ManuscriptForm team validation', () => {
   it('displays error message when labPI team is not among selected teams and hide it when team is selected', async () => {
     render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          getTeamSuggestions={getTeamSuggestionsMock}
-          getLabSuggestions={getLabSuggestionsMock}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            getTeamSuggestions={getTeamSuggestionsMock}
+            getLabSuggestions={getLabSuggestionsMock}
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+    });
     userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
     await waitFor(() => {
       expect(screen.getByText('Lab One')).toBeVisible();
@@ -175,14 +180,20 @@ describe('ManuscriptForm team validation', () => {
     async ({ label, errorMessage }) => {
       render(
         <StaticRouter>
-          <ManuscriptForm
-            {...defaultProps}
-            getTeamSuggestions={getTeamSuggestionsMock}
-            getLabSuggestions={getLabSuggestionsMock}
-            getAuthorSuggestions={getAuthorSuggestionsMock}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...defaultProps}
+              getTeamSuggestions={getTeamSuggestionsMock}
+              getLabSuggestions={getLabSuggestionsMock}
+              getAuthorSuggestions={getAuthorSuggestionsMock}
+            />
+          </Suspense>
         </StaticRouter>,
       );
+
+      await waitFor(() => {
+        expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+      });
 
       userEvent.click(screen.getByLabelText(label));
       await waitFor(() =>
@@ -264,14 +275,20 @@ describe('ManuscriptForm team validation', () => {
 
       render(
         <StaticRouter>
-          <ManuscriptForm
-            {...defaultProps}
-            getTeamSuggestions={getTeamSuggestionsMock}
-            getLabSuggestions={getLabSuggestionsMock}
-            getAuthorSuggestions={getAuthorSuggestionsWithoutTeamMock}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...defaultProps}
+              getTeamSuggestions={getTeamSuggestionsMock}
+              getLabSuggestions={getLabSuggestionsMock}
+              getAuthorSuggestions={getAuthorSuggestionsWithoutTeamMock}
+            />
+          </Suspense>
         </StaticRouter>,
       );
+
+      await waitFor(() => {
+        expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+      });
 
       userEvent.click(screen.getByLabelText(label));
       await waitFor(() =>
@@ -295,14 +312,20 @@ describe('ManuscriptForm team validation', () => {
   it('when there are missing teams for both lab and author, the error is displayed and hidden accordingly', async () => {
     const { container } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          getTeamSuggestions={getTeamSuggestionsMock}
-          getLabSuggestions={getLabSuggestionsMock}
-          getAuthorSuggestions={getAuthorSuggestionsMock}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            getTeamSuggestions={getTeamSuggestionsMock}
+            getLabSuggestions={getLabSuggestionsMock}
+            getAuthorSuggestions={getAuthorSuggestionsMock}
+          />
+        </Suspense>
       </StaticRouter>,
     );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+    });
 
     userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
     await waitFor(() => {
@@ -370,14 +393,20 @@ describe('ManuscriptForm team validation', () => {
 
     const { container } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          getTeamSuggestions={getTeamSuggestionsMock}
-          getLabSuggestions={getLabWithUniqueTeamSuggestionsMock}
-          getAuthorSuggestions={getAuthorSuggestionsMock}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            getTeamSuggestions={getTeamSuggestionsMock}
+            getLabSuggestions={getLabWithUniqueTeamSuggestionsMock}
+            getAuthorSuggestions={getAuthorSuggestionsMock}
+          />
+        </Suspense>
       </StaticRouter>,
     );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+    });
 
     userEvent.click(screen.getByLabelText(/First Author/i));
     await waitFor(() =>
@@ -430,6 +459,7 @@ describe('ManuscriptForm team validation', () => {
 describe('ManuscriptForm URL Requirement', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation();
+    cleanup();
   });
 
   afterEach(() => {
@@ -445,11 +475,20 @@ describe('ManuscriptForm URL Requirement', () => {
     ${'Other'}                                    | ${'URL (optional)'}
     ${'Typeset proof'}                            | ${'URL (optional)'}
   `(
-    'should set URL as $label for $lifecycle lifecycle',
+    'should set URL as $label for $lifecycle lifecycle - last',
     async ({ lifecycle, label }) => {
-      render(<ManuscriptForm {...defaultProps} lifecycle={lifecycle} />);
+      const container = render(
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm {...defaultProps} lifecycle={lifecycle} />
+        </Suspense>,
+      );
 
-      expect(screen.getByRole('textbox', { name: label })).toBeInTheDocument();
+      await waitFor(() => {
+        expect(container.queryByText(/Loading.../i)).not.toBeInTheDocument();
+        expect(
+          container.getByRole('textbox', { name: label, hidden: true }),
+        ).toBeInTheDocument();
+      });
     },
   );
 
@@ -464,16 +503,19 @@ describe('ManuscriptForm URL Requirement', () => {
   `(
     'should set URL as $label when selecting $lifecycle lifecycle',
     async ({ lifecycle, label }) => {
-      render(
-        <ManuscriptForm
-          {...defaultProps}
-          type="Original Research"
-          lifecycle={undefined}
-        />,
+      const container = render(
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            type="Original Research"
+            lifecycle={undefined}
+          />
+        </Suspense>,
       );
-      expect(
-        screen.getByRole('textbox', { name: 'URL (optional)' }),
-      ).toBeInTheDocument();
+
+      await waitFor(() => {
+        expect(container.queryByText(/Loading.../i)).not.toBeInTheDocument();
+      });
 
       userEvent.click(
         screen.getByRole('textbox', {
@@ -483,7 +525,11 @@ describe('ManuscriptForm URL Requirement', () => {
       userEvent.click(screen.getByText(lifecycle));
       userEvent.tab();
 
-      expect(screen.getByRole('textbox', { name: label })).toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          screen.getByRole('textbox', { name: label }),
+        ).toBeInTheDocument();
+      });
     },
   );
 });

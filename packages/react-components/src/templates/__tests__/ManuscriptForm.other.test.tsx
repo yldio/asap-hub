@@ -9,13 +9,14 @@ import {
   quickCheckQuestions,
 } from '@asap-hub/model';
 import {
+  cleanup,
   render,
   waitFor,
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { ComponentProps } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import type {
   ByRoleOptions,
@@ -42,6 +43,7 @@ jest.setTimeout(30_000);
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation();
   jest.clearAllMocks();
+  cleanup();
 });
 
 const teamId = '1';
@@ -155,34 +157,37 @@ describe('authors', () => {
 
       const { getByLabelText, queryByText, getByText, findByRole } = render(
         <StaticRouter>
-          <ManuscriptForm
-            {...defaultProps}
-            title="manuscript title"
-            onCreate={onCreate}
-            type="Original Research"
-            lifecycle="Publication"
-            url="http://example.com"
-            preprintDoi="10.4444/test"
-            publicationDoi="10.4467/test"
-            manuscriptFile={{
-              id: '123',
-              url: 'https://test-url',
-              filename: 'abc.jpeg',
-            }}
-            keyResourceTable={{
-              id: '124',
-              url: 'https://test-url',
-              filename: 'abc.jpeg',
-            }}
-            getAuthorSuggestions={getAuthorSuggestionsMock}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...defaultProps}
+              title="manuscript title"
+              onCreate={onCreate}
+              type="Original Research"
+              lifecycle="Publication"
+              url="http://example.com"
+              preprintDoi="10.4444/test"
+              publicationDoi="10.4467/test"
+              manuscriptFile={{
+                id: '123',
+                url: 'https://test-url',
+                filename: 'abc.jpeg',
+              }}
+              keyResourceTable={{
+                id: '124',
+                url: 'https://test-url',
+                filename: 'abc.jpeg',
+              }}
+              getAuthorSuggestions={getAuthorSuggestionsMock}
+            />
+          </Suspense>
         </StaticRouter>,
       );
 
-      userEvent.click(getByLabelText(section));
       await waitFor(() =>
         expect(queryByText(/loading/i)).not.toBeInTheDocument(),
       );
+
+      userEvent.click(getByLabelText(section));
       userEvent.click(getByText('Author One'));
 
       await submitForm({ findByRole });
@@ -221,27 +226,29 @@ describe('authors', () => {
 
       const { getByLabelText, queryByText, getByText, findByRole } = render(
         <StaticRouter>
-          <ManuscriptForm
-            {...defaultProps}
-            title="manuscript title"
-            onCreate={onCreate}
-            type="Original Research"
-            lifecycle="Publication"
-            url="http://example.com"
-            preprintDoi="10.4444/test"
-            publicationDoi="10.4467/test"
-            manuscriptFile={{
-              id: '123',
-              url: 'https://test-url',
-              filename: 'abc.jpeg',
-            }}
-            keyResourceTable={{
-              id: '124',
-              url: 'https://test-url',
-              filename: 'abc.jpeg',
-            }}
-            getAuthorSuggestions={getAuthorSuggestionsMock}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...defaultProps}
+              title="manuscript title"
+              onCreate={onCreate}
+              type="Original Research"
+              lifecycle="Publication"
+              url="http://example.com"
+              preprintDoi="10.4444/test"
+              publicationDoi="10.4467/test"
+              manuscriptFile={{
+                id: '123',
+                url: 'https://test-url',
+                filename: 'abc.jpeg',
+              }}
+              keyResourceTable={{
+                id: '124',
+                url: 'https://test-url',
+                filename: 'abc.jpeg',
+              }}
+              getAuthorSuggestions={getAuthorSuggestionsMock}
+            />
+          </Suspense>
         </StaticRouter>,
       );
 
@@ -294,27 +301,29 @@ describe('authors', () => {
 
       const { getByLabelText, queryByText, getByText, findByRole } = render(
         <StaticRouter>
-          <ManuscriptForm
-            {...defaultProps}
-            title="manuscript title"
-            onCreate={onCreate}
-            type="Original Research"
-            lifecycle="Publication"
-            url="http://example.com"
-            preprintDoi="10.4444/test"
-            publicationDoi="10.4467/test"
-            manuscriptFile={{
-              id: '123',
-              url: 'https://test-url',
-              filename: 'abc.jpeg',
-            }}
-            keyResourceTable={{
-              id: '124',
-              url: 'https://test-url',
-              filename: 'abc.jpeg',
-            }}
-            getAuthorSuggestions={getAuthorSuggestionsMock}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...defaultProps}
+              title="manuscript title"
+              onCreate={onCreate}
+              type="Original Research"
+              lifecycle="Publication"
+              url="http://example.com"
+              preprintDoi="10.4444/test"
+              publicationDoi="10.4467/test"
+              manuscriptFile={{
+                id: '123',
+                url: 'https://test-url',
+                filename: 'abc.jpeg',
+              }}
+              keyResourceTable={{
+                id: '124',
+                url: 'https://test-url',
+                filename: 'abc.jpeg',
+              }}
+              getAuthorSuggestions={getAuthorSuggestionsMock}
+            />
+          </Suspense>
         </StaticRouter>,
       );
 
@@ -356,11 +365,13 @@ describe('preprintDoi', () => {
     async ({ lifecycle, status }) => {
       const { getByRole } = render(
         <StaticRouter>
-          <ManuscriptForm
-            {...defaultProps}
-            type="Original Research"
-            lifecycle={lifecycle}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...defaultProps}
+              type="Original Research"
+              lifecycle={lifecycle}
+            />
+          </Suspense>
         </StaticRouter>,
       );
 
@@ -422,11 +433,13 @@ describe('renders the necessary fields', () => {
           const manuscriptLifecycle = lifecycle as ManuscriptLifecycle;
           const { getByText } = render(
             <StaticRouter>
-              <ManuscriptForm
-                {...defaultProps}
-                type={manuscriptType}
-                lifecycle={manuscriptLifecycle}
-              />
+              <Suspense fallback={<div>Loading...</div>}>
+                <ManuscriptForm
+                  {...defaultProps}
+                  type={manuscriptType}
+                  lifecycle={manuscriptLifecycle}
+                />
+              </Suspense>
             </StaticRouter>,
           );
 
@@ -471,15 +484,17 @@ describe('manuscript file', () => {
     );
     const { getByLabelText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-          handleFileUpload={handleFileUpload}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            handleFileUpload={handleFileUpload}
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -503,15 +518,17 @@ describe('manuscript file', () => {
 
     const { getByLabelText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-          handleFileUpload={handleFileUpload}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            handleFileUpload={handleFileUpload}
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -531,14 +548,16 @@ describe('manuscript file', () => {
   it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
     const { getByLabelText, queryByText, getByText, getByRole } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -568,14 +587,16 @@ describe('manuscript file', () => {
   it('clears error when a valid manuscript file is uploaded after an error', async () => {
     const { getByLabelText, queryByText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -614,12 +635,14 @@ describe('manuscript file', () => {
   it('clears error when a valid key resource table is uploaded after an error', async () => {
     const { getByLabelText, queryByText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -657,12 +680,14 @@ describe('manuscript file', () => {
   it('clears error when a valid additional file is uploaded after an error', async () => {
     const { getByLabelText, queryByText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -719,15 +744,17 @@ describe('key resource table', () => {
     );
     const { getByLabelText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-          handleFileUpload={handleFileUpload}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            handleFileUpload={handleFileUpload}
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -751,15 +778,17 @@ describe('key resource table', () => {
 
     const { getByLabelText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-          handleFileUpload={handleFileUpload}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            handleFileUpload={handleFileUpload}
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -786,15 +815,17 @@ describe('key resource table', () => {
     );
     const { getByLabelText, queryByText, getByText, getByRole } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-          handleFileUpload={handleFileUpload}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            handleFileUpload={handleFileUpload}
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -827,15 +858,17 @@ describe('additional files', () => {
     const onCreate = jest.fn();
     const { getByLabelText, queryByText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          onCreate={onCreate}
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            onCreate={onCreate}
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -873,15 +906,17 @@ describe('additional files', () => {
     );
     const { getByLabelText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-          handleFileUpload={handleFileUpload}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            handleFileUpload={handleFileUpload}
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -898,22 +933,24 @@ describe('additional files', () => {
     const onCreate = jest.fn();
     const { getByLabelText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          onCreate={onCreate}
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-          additionalFiles={[
-            {
-              id: '124',
-              filename: 'test.csv',
-              url: 'http://example.com/test.csv',
-            },
-          ]}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            onCreate={onCreate}
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            additionalFiles={[
+              {
+                id: '124',
+                filename: 'test.csv',
+                url: 'http://example.com/test.csv',
+              },
+            ]}
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -942,15 +979,17 @@ describe('additional files', () => {
 
     const { getByLabelText, getByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-          handleFileUpload={handleFileUpload}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            handleFileUpload={handleFileUpload}
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -970,26 +1009,28 @@ describe('additional files', () => {
   it('should remove one of the additional files without removing the others', async () => {
     const { queryByText, getByText, getAllByRole } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          lifecycle="Publication"
-          preprintDoi="10.4444/test"
-          publicationDoi="10.4467/test"
-          additionalFiles={[
-            {
-              id: '123',
-              filename: 'file_one.csv',
-              url: 'http://example.com/file_one.csv',
-            },
-            {
-              id: '124',
-              filename: 'file_two.pdf',
-              url: 'http://example.com/file_two.pdf',
-            },
-          ]}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            additionalFiles={[
+              {
+                id: '123',
+                filename: 'file_one.csv',
+                url: 'http://example.com/file_one.csv',
+              },
+              {
+                id: '124',
+                filename: 'file_two.pdf',
+                url: 'http://example.com/file_two.pdf',
+              },
+            ]}
+          />
+        </Suspense>
       </StaticRouter>,
     );
 
@@ -1018,27 +1059,29 @@ it('user can add teams', async () => {
   ]);
   const { getByText, findByRole, getByRole } = render(
     <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        onCreate={onCreate}
-        type="Original Research"
-        lifecycle="Publication"
-        url="http://example.com"
-        preprintDoi="10.4444/test"
-        publicationDoi="10.4467/test"
-        manuscriptFile={{
-          id: '123',
-          url: 'https://test-url',
-          filename: 'abc.jpeg',
-        }}
-        keyResourceTable={{
-          id: '124',
-          url: 'https://test-url',
-          filename: 'abc.jpeg',
-        }}
-        getTeamSuggestions={getTeamSuggestionsMock}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          onCreate={onCreate}
+          type="Original Research"
+          lifecycle="Publication"
+          url="http://example.com"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          manuscriptFile={{
+            id: '123',
+            url: 'https://test-url',
+            filename: 'abc.jpeg',
+          }}
+          keyResourceTable={{
+            id: '124',
+            url: 'https://test-url',
+            filename: 'abc.jpeg',
+          }}
+          getTeamSuggestions={getTeamSuggestionsMock}
+        />
+      </Suspense>
     </StaticRouter>,
   );
 
@@ -1077,27 +1120,29 @@ it('user can add labs', async () => {
   ]);
   const { getByText, findByRole, getByRole } = render(
     <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        onCreate={onCreate}
-        type="Original Research"
-        lifecycle="Publication"
-        url="http://example.com"
-        preprintDoi="10.4444/test"
-        publicationDoi="10.4467/test"
-        manuscriptFile={{
-          id: '123',
-          url: 'https://test-url',
-          filename: 'abc.jpeg',
-        }}
-        keyResourceTable={{
-          id: '124',
-          url: 'https://test-url',
-          filename: 'abc.jpeg',
-        }}
-        getLabSuggestions={getLabSuggestions}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          onCreate={onCreate}
+          type="Original Research"
+          lifecycle="Publication"
+          url="http://example.com"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          manuscriptFile={{
+            id: '123',
+            url: 'https://test-url',
+            filename: 'abc.jpeg',
+          }}
+          keyResourceTable={{
+            id: '124',
+            url: 'https://test-url',
+            filename: 'abc.jpeg',
+          }}
+          getLabSuggestions={getLabSuggestions}
+        />
+      </Suspense>
     </StaticRouter>,
   );
   userEvent.click(getByRole('textbox', { name: /Labs/i }));
@@ -1129,10 +1174,12 @@ it('displays error message when no team is found', async () => {
   const getTeamSuggestionsMock = jest.fn().mockResolvedValue([]);
   const { queryByText, getByText, getByRole } = render(
     <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        getTeamSuggestions={getTeamSuggestionsMock}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          getTeamSuggestions={getTeamSuggestionsMock}
+        />
+      </Suspense>
     </StaticRouter>,
   );
   userEvent.click(getByRole('textbox', { name: /Teams/i }));
@@ -1144,7 +1191,12 @@ it('displays error message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   const { queryByText, getByText, getByRole } = render(
     <StaticRouter>
-      <ManuscriptForm {...defaultProps} getLabSuggestions={getLabSuggestions} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          getLabSuggestions={getLabSuggestions}
+        />
+      </Suspense>
     </StaticRouter>,
   );
   userEvent.click(getByRole('textbox', { name: /Labs/i }));
@@ -1156,24 +1208,26 @@ it('calls onUpdate when form is updated', async () => {
   const onUpdate = jest.fn();
   const { findByRole } = render(
     <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        type="Original Research"
-        lifecycle="Draft Manuscript (prior to Publication)"
-        manuscriptFile={{
-          id: '123',
-          filename: 'test.pdf',
-          url: 'http://example.com/test.pdf',
-        }}
-        keyResourceTable={{
-          id: '124',
-          filename: 'test.csv',
-          url: 'http://example.com/test.csv',
-        }}
-        onUpdate={onUpdate}
-        manuscriptId="manuscript-id"
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Draft Manuscript (prior to Publication)"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
+          keyResourceTable={{
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
+          }}
+          onUpdate={onUpdate}
+          manuscriptId="manuscript-id"
+        />
+      </Suspense>
     </StaticRouter>,
   );
 
@@ -1237,30 +1291,32 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
   const onResubmit = jest.fn();
   const { findByLabelText, findByRole, getByRole } = render(
     <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        handleFileUpload={jest.fn(async (file) => ({
-          id: 'some-id',
-          filename: file.name,
-          url: `https://example.com/${file.name}`,
-        }))}
-        title="manuscript title"
-        type="Original Research"
-        lifecycle="Draft Manuscript (prior to Publication)"
-        manuscriptFile={{
-          id: '123',
-          filename: 'test.pdf',
-          url: 'http://example.com/test.pdf',
-        }}
-        keyResourceTable={{
-          id: '124',
-          filename: 'test.csv',
-          url: 'http://example.com/test.csv',
-        }}
-        onResubmit={onResubmit}
-        resubmitManuscript
-        manuscriptId="manuscript-id"
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          handleFileUpload={jest.fn(async (file) => ({
+            id: 'some-id',
+            filename: file.name,
+            url: `https://example.com/${file.name}`,
+          }))}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Draft Manuscript (prior to Publication)"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
+          keyResourceTable={{
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
+          }}
+          onResubmit={onResubmit}
+          resubmitManuscript
+          manuscriptId="manuscript-id"
+        />
+      </Suspense>
     </StaticRouter>,
   );
 
@@ -1359,17 +1415,21 @@ it('can generate short description when description is present', async () => {
 
   const { getByRole } = render(
     <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        description="A very very long description"
-        shortDescription={undefined}
-        getShortDescriptionFromDescription={getShortDescriptionFromDescription}
-        title="manuscript title"
-        type="Original Research"
-        lifecycle="Publication"
-        preprintDoi="10.4444/test"
-        publicationDoi="10.4467/test"
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          description="A very very long description"
+          shortDescription={undefined}
+          getShortDescriptionFromDescription={
+            getShortDescriptionFromDescription
+          }
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+        />
+      </Suspense>
     </StaticRouter>,
   );
 

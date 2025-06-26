@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { Frame } from '@asap-hub/frontend-utils';
 import {
   AuthorResponse,
@@ -7,7 +7,6 @@ import {
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { ManuscriptHeader, usePushFromHere } from '@asap-hub/react-components';
-import ManuscriptForm from '@asap-hub/react-components/manuscript-form';
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -31,6 +30,12 @@ import {
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
 import { useCategorySuggestions } from '../../shared-state/category';
+
+const loadManuscriptForm = () =>
+  import(
+    /* webpackChunkName: "manuscript-form" */ '@asap-hub/react-components/manuscript-form'
+  );
+const ManuscriptForm = lazy(loadManuscriptForm);
 
 type TeamManuscriptProps = {
   teamId: string;

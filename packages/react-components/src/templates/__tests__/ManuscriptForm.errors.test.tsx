@@ -1,7 +1,12 @@
 import { AuthorResponse, AuthorSelectOption } from '@asap-hub/model';
-import { render, waitFor, screen } from '@testing-library/react';
+import {
+  render,
+  waitFor,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import ManuscriptForm from '../ManuscriptForm';
 
@@ -133,27 +138,31 @@ it('displays error message when manuscript title is not unique', async () => {
 
   const { container, findByRole } = render(
     <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        url="https://example.com"
-        type="Original Research"
-        lifecycle="Draft Manuscript (prior to Publication)"
-        manuscriptFile={{
-          id: '123',
-          filename: 'test.pdf',
-          url: 'http://example.com/test.pdf',
-        }}
-        keyResourceTable={{
-          id: '124',
-          filename: 'test.csv',
-          url: 'http://example.com/test.csv',
-        }}
-        manuscriptId="manuscript-id"
-        onUpdate={onUpdate}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          url="https://example.com"
+          type="Original Research"
+          lifecycle="Draft Manuscript (prior to Publication)"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
+          keyResourceTable={{
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
+          }}
+          manuscriptId="manuscript-id"
+          onUpdate={onUpdate}
+        />
+      </Suspense>
     </StaticRouter>,
   );
+
+  await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../i));
 
   const submitBtn = await findByRole('button', { name: /Submit/ });
   userEvent.click(submitBtn);

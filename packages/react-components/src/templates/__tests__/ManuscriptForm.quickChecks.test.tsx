@@ -1,5 +1,5 @@
 import { render, waitFor, within } from '@testing-library/react';
-import { ComponentProps } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { createMessage } from '@asap-hub/fixtures';
@@ -157,28 +157,34 @@ describe('QuickCheck logic', () => {
         [fieldDetails]: 'Explanation',
         getDiscussion,
       };
-      const { findByRole } = render(
+      const { findByRole, queryByText } = render(
         <StaticRouter>
-          <ManuscriptForm
-            {...props}
-            title="manuscript title"
-            type="Original Research"
-            publicationDoi="10.0777"
-            lifecycle="Publication"
-            manuscriptFile={{
-              id: '123',
-              filename: 'test.pdf',
-              url: 'http://example.com/test.pdf',
-            }}
-            keyResourceTable={{
-              id: '124',
-              filename: 'test.csv',
-              url: 'http://example.com/test.csv',
-            }}
-            onCreate={onCreate}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...props}
+              title="manuscript title"
+              type="Original Research"
+              publicationDoi="10.0777"
+              lifecycle="Publication"
+              manuscriptFile={{
+                id: '123',
+                filename: 'test.pdf',
+                url: 'http://example.com/test.pdf',
+              }}
+              keyResourceTable={{
+                id: '124',
+                filename: 'test.csv',
+                url: 'http://example.com/test.csv',
+              }}
+              onCreate={onCreate}
+            />
+          </Suspense>
         </StaticRouter>,
       );
+
+      await waitFor(() => {
+        expect(queryByText(/Loading.../i)).not.toBeInTheDocument();
+      });
 
       await submitForm({ findByRole });
       const payload = {
@@ -263,24 +269,26 @@ describe('QuickCheck logic', () => {
       };
       const { findByRole } = render(
         <StaticRouter>
-          <ManuscriptForm
-            {...props}
-            title="manuscript title"
-            type="Original Research"
-            publicationDoi="10.0777"
-            lifecycle="Publication"
-            manuscriptFile={{
-              id: '123',
-              filename: 'test.pdf',
-              url: 'http://example.com/test.pdf',
-            }}
-            keyResourceTable={{
-              id: '124',
-              filename: 'test.csv',
-              url: 'http://example.com/test.csv',
-            }}
-            onCreate={onCreate}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...props}
+              title="manuscript title"
+              type="Original Research"
+              publicationDoi="10.0777"
+              lifecycle="Publication"
+              manuscriptFile={{
+                id: '123',
+                filename: 'test.pdf',
+                url: 'http://example.com/test.pdf',
+              }}
+              keyResourceTable={{
+                id: '124',
+                filename: 'test.csv',
+                url: 'http://example.com/test.csv',
+              }}
+              onCreate={onCreate}
+            />
+          </Suspense>
         </StaticRouter>,
       );
 
@@ -362,24 +370,26 @@ describe('QuickCheck logic', () => {
       };
       const { findByRole, getByRole, getByTestId } = render(
         <StaticRouter>
-          <ManuscriptForm
-            {...props}
-            title={undefined}
-            type="Original Research"
-            publicationDoi="10.0777"
-            lifecycle="Publication"
-            manuscriptFile={{
-              id: '123',
-              filename: 'test.pdf',
-              url: 'http://example.com/test.pdf',
-            }}
-            keyResourceTable={{
-              id: '124',
-              filename: 'test.csv',
-              url: 'http://example.com/test.csv',
-            }}
-            onCreate={onCreate}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...props}
+              title={undefined}
+              type="Original Research"
+              publicationDoi="10.0777"
+              lifecycle="Publication"
+              manuscriptFile={{
+                id: '123',
+                filename: 'test.pdf',
+                url: 'http://example.com/test.pdf',
+              }}
+              keyResourceTable={{
+                id: '124',
+                filename: 'test.csv',
+                url: 'http://example.com/test.csv',
+              }}
+              onCreate={onCreate}
+            />
+          </Suspense>
         </StaticRouter>,
       );
 
@@ -439,22 +449,27 @@ describe('QuickCheck logic', () => {
       getByRole,
     } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          publicationDoi="10.0777"
-          url="http://example.com/111"
-          lifecycle="Publication"
-          manuscriptFile={{
-            id: '123',
-            filename: 'test.pdf',
-            url: 'http://example.com/test.pdf',
-          }}
-          onCreate={onCreate}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            publicationDoi="10.0777"
+            url="http://example.com/111"
+            lifecycle="Publication"
+            manuscriptFile={{
+              id: '123',
+              filename: 'test.pdf',
+              url: 'http://example.com/test.pdf',
+            }}
+            onCreate={onCreate}
+          />
+        </Suspense>
       </StaticRouter>,
     );
+    await waitFor(() => {
+      expect(queryByText(/Loading.../i)).not.toBeInTheDocument();
+    });
     expect(queryByText(/Please enter the details./i)).not.toBeInTheDocument();
 
     const quickCheckFields = quickCheckQuestions.map((q) => q.field);
@@ -494,22 +509,24 @@ describe('QuickCheck logic', () => {
     const onCreate = jest.fn();
     const { findByText, getByLabelText, queryByText } = render(
       <StaticRouter>
-        <ManuscriptForm
-          {...defaultProps}
-          title="manuscript title"
-          type="Original Research"
-          publicationDoi="10.0777"
-          url="http://example.com/111"
-          lifecycle="Publication"
-          manuscriptFile={{
-            id: '123',
-            filename: 'test.pdf',
-            url: 'http://example.com/test.pdf',
-          }}
-          onCreate={onCreate}
-          availabilityStatement="No"
-          availabilityStatementDetails="d"
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            publicationDoi="10.0777"
+            url="http://example.com/111"
+            lifecycle="Publication"
+            manuscriptFile={{
+              id: '123',
+              filename: 'test.pdf',
+              url: 'http://example.com/test.pdf',
+            }}
+            onCreate={onCreate}
+            availabilityStatement="No"
+            availabilityStatementDetails="d"
+          />
+        </Suspense>
       </StaticRouter>,
     );
 

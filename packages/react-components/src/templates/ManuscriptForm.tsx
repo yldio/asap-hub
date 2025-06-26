@@ -334,7 +334,7 @@ type ManuscriptFormProps = Omit<
     getCategorySuggestions: NonNullable<
       ComponentProps<typeof LabeledMultiSelect>['loadOptions']
     >;
-    impact: MultiSelectOptionsType;
+    impact?: MultiSelectOptionsType;
     categories: MultiSelectOptionsType[];
   };
 
@@ -420,7 +420,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     defaultValues: {
       title: title || '',
       url: url || undefined,
-      impact: impact || undefined,
+      impact,
       categories: categories || [],
       versions: [
         {
@@ -1210,7 +1210,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     isMulti={false}
                     onChange={(selectedOptions: MultiSelectOptionsType) => {
                       onChange(selectedOptions);
-                      validateTeams();
                     }}
                     customValidationMessage={error?.message}
                     values={value}
@@ -1260,7 +1259,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     isMulti={true}
                     onChange={(selectedOptions: MultiSelectOptionsType) => {
                       onChange(selectedOptions);
-                      validateTeams();
                     }}
                     customValidationMessage={error?.message}
                     values={value}

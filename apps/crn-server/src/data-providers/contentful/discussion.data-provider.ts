@@ -85,11 +85,19 @@ export class DiscussionContentfulDataProvider
       ],
     });
 
+    const user = await environment.getEntry(userId);
+    const isOpenScienceMember = !!user.fields?.openScienceTeamMember?.['en-US'];
+
     await this.emailNotificationService.sendEmailNotification(
-      'discussion_created',
+      isOpenScienceMember
+        ? 'discussion_created_by_os_member'
+        : 'discussion_created_by_grantee',
       manuscriptId,
       notificationList || '',
-      discussionEntry.sys.id,
+      {
+        id: discussionEntry.sys.id,
+        userName: `${user.fields.firstName['en-US']} ${user.fields.lastName['en-US']}`,
+      },
     );
 
     return discussionEntry.sys.id;
@@ -121,12 +129,18 @@ export class DiscussionContentfulDataProvider
         readBy: [getLinkEntity(update.userId)],
       });
 
-      if (reply.isOpenScienceMember && manuscriptId) {
+      if (manuscriptId) {
+        const user = await environment.getEntry(userId);
         await this.emailNotificationService.sendEmailNotification(
-          'os_member_replied_to_discussion',
+          reply.isOpenScienceMember
+            ? 'os_member_replied_to_discussion'
+            : 'grantee_replied_to_discussion',
           manuscriptId,
           notificationList || '',
-          id,
+          {
+            id,
+            userName: `${user.fields.firstName['en-US']} ${user.fields.lastName['en-US']}`,
+          },
         );
       }
     } else {

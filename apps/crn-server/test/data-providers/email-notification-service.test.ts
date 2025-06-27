@@ -150,7 +150,7 @@ describe('Email Notification Service', () => {
 
     test.each`
       template                                     | action
-      ${'discussion_created'}                      | ${'discussion created'}
+      ${'discussion_created_by_os_member'}         | ${'discussion created by an os member'}
       ${'os_member_replied_to_discussion'}         | ${'os member replied to discussion'}
       ${'status_changed_review_compliance_report'} | ${'manuscript status changed to review compliance report'}
       ${'status_changed_submit_final_publication'} | ${'manuscript status changed to submit final publication'}
@@ -426,6 +426,10 @@ describe('Email Notification Service', () => {
     });
 
     describe('Trigger action os_member_replied_to_discussion', () => {
+      const discussionDetails = {
+        id: 'discussion-id',
+        userName: 'John Doe',
+      };
       test('does not send email if discussion is not returned', async () => {
         mockEnvironmentGetter.mockReturnValueOnce('production');
 
@@ -441,7 +445,7 @@ describe('Email Notification Service', () => {
           'os_member_replied_to_discussion',
           manuscript.sys.id,
           '',
-          'discussion-id',
+          discussionDetails,
         );
 
         expect(mockedPostmark).not.toHaveBeenCalled();
@@ -479,7 +483,7 @@ describe('Email Notification Service', () => {
           'os_member_replied_to_discussion',
           manuscript.sys.id,
           '',
-          'discussion-id',
+          discussionDetails,
         );
 
         expect(mockedPostmark).not.toHaveBeenCalled();
@@ -521,7 +525,7 @@ describe('Email Notification Service', () => {
           'os_member_replied_to_discussion',
           manuscript.sys.id,
           'jim@doe.asap.com',
-          'discussion-id',
+          discussionDetails,
         );
 
         expect(mockedPostmark).toHaveBeenCalledWith(
@@ -570,7 +574,7 @@ describe('Email Notification Service', () => {
           'os_member_replied_to_discussion',
           manuscript.sys.id,
           'jim@doe.asap.com,jane@doe.asap.com',
-          'discussion-id',
+          discussionDetails,
         );
 
         expect(mockedPostmark).toHaveBeenCalledWith(
@@ -621,7 +625,7 @@ describe('Email Notification Service', () => {
           'os_member_replied_to_discussion',
           manuscript.sys.id,
           '',
-          'discussion-id',
+          discussionDetails,
         );
 
         expect(mockedPostmark).toHaveBeenCalledWith(
@@ -701,7 +705,10 @@ describe('Email Notification Service', () => {
       'os_member_replied_to_discussion',
       manuscript.sys.id,
       'jane@doe.asap.com',
-      'discussion-id',
+      {
+        id: 'discussion-id',
+        userName: 'John Doe',
+      },
     );
 
     expect(loggerErrorSpy).toHaveBeenCalledWith(

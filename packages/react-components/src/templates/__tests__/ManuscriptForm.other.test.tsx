@@ -275,9 +275,10 @@ describe('authors', () => {
   );
 
   it.each`
-    section                   | submittedValue
-    ${/Corresponding Author/} | ${{ correspondingAuthor: { externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' } }}
-    ${/Additional Authors/}   | ${{ additionalAuthors: [{ externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' }] }}
+    section                     | submittedValue
+    ${/Corresponding Author/}   | ${{ correspondingAuthor: { externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' } }}
+    ${/Additional Authors/}     | ${{ additionalAuthors: [{ externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' }] }}
+    ${/First Author Full Name/} | ${{ firstAuthors: [{ externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' }] }}
   `(
     'submits a non existing external author in $section',
     async ({ section, submittedValue }) => {
@@ -334,7 +335,7 @@ describe('authors', () => {
       );
 
       userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
-      userEvent.type(getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+      await userEvent.type(getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
 
       await submitForm({ findByRole });
 

@@ -15525,11 +15525,12 @@ export type FetchDiscussionByIdQuery = {
   >;
 };
 
-export type FetchDiscussionGranteeParticipantsQueryVariables = Exact<{
+export type FetchDiscussionParticipantsQueryVariables = Exact<{
   id: Scalars['String'];
+  messagesFilter?: InputMaybe<MessagesFilter>;
 }>;
 
-export type FetchDiscussionGranteeParticipantsQuery = {
+export type FetchDiscussionParticipantsQuery = {
   discussions?: Maybe<{
     message?: Maybe<{ createdBy?: Maybe<Pick<Users, 'email'>> }>;
     repliesCollection?: Maybe<{
@@ -35451,13 +35452,13 @@ export const FetchDiscussionByIdDocument = {
   FetchDiscussionByIdQuery,
   FetchDiscussionByIdQueryVariables
 >;
-export const FetchDiscussionGranteeParticipantsDocument = {
+export const FetchDiscussionParticipantsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'FetchDiscussionGranteeParticipants' },
+      name: { kind: 'Name', value: 'FetchDiscussionParticipants' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -35468,6 +35469,17 @@ export const FetchDiscussionGranteeParticipantsDocument = {
               kind: 'NamedType',
               name: { kind: 'Name', value: 'String' },
             },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'messagesFilter' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'MessagesFilter' },
           },
         },
       ],
@@ -35498,34 +35510,8 @@ export const FetchDiscussionGranteeParticipantsDocument = {
                       kind: 'Argument',
                       name: { kind: 'Name', value: 'where' },
                       value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'createdBy' },
-                            value: {
-                              kind: 'ObjectValue',
-                              fields: [
-                                {
-                                  kind: 'ObjectField',
-                                  name: {
-                                    kind: 'Name',
-                                    value: 'alumniSinceDate',
-                                  },
-                                  value: { kind: 'NullValue' },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: {
-                                    kind: 'Name',
-                                    value: 'openScienceTeamMember_not',
-                                  },
-                                  value: { kind: 'BooleanValue', value: true },
-                                },
-                              ],
-                            },
-                          },
-                        ],
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'messagesFilter' },
                       },
                     },
                   ],
@@ -35556,34 +35542,8 @@ export const FetchDiscussionGranteeParticipantsDocument = {
                       kind: 'Argument',
                       name: { kind: 'Name', value: 'where' },
                       value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'createdBy' },
-                            value: {
-                              kind: 'ObjectValue',
-                              fields: [
-                                {
-                                  kind: 'ObjectField',
-                                  name: {
-                                    kind: 'Name',
-                                    value: 'alumniSinceDate',
-                                  },
-                                  value: { kind: 'NullValue' },
-                                },
-                                {
-                                  kind: 'ObjectField',
-                                  name: {
-                                    kind: 'Name',
-                                    value: 'openScienceTeamMember_not',
-                                  },
-                                  value: { kind: 'BooleanValue', value: true },
-                                },
-                              ],
-                            },
-                          },
-                        ],
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'messagesFilter' },
                       },
                     },
                   ],
@@ -35623,8 +35583,8 @@ export const FetchDiscussionGranteeParticipantsDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  FetchDiscussionGranteeParticipantsQuery,
-  FetchDiscussionGranteeParticipantsQueryVariables
+  FetchDiscussionParticipantsQuery,
+  FetchDiscussionParticipantsQueryVariables
 >;
 export const FetchDiscussionTitleDocument = {
   kind: 'Document',

@@ -78,23 +78,18 @@ export const FETCH_DISCUSSION_BY_ID = gql`
   ${discussionContentQueryFragment}
 `;
 
-export const FETCH_DISCUSSION_GRANTEE_PARTICIPANTS = gql`
-  query FetchDiscussionGranteeParticipants($id: String!) {
+export const FETCH_DISCUSSION_PARTICIPANTS = gql`
+  query FetchDiscussionParticipants(
+    $id: String!
+    $messagesFilter: MessagesFilter
+  ) {
     discussions(id: $id) {
-      message(
-        where: {
-          createdBy: { alumniSinceDate: null, openScienceTeamMember_not: true }
-        }
-      ) {
+      message(where: $messagesFilter) {
         createdBy {
           email
         }
       }
-      repliesCollection(
-        where: {
-          createdBy: { alumniSinceDate: null, openScienceTeamMember_not: true }
-        }
-      ) {
+      repliesCollection(where: $messagesFilter) {
         items {
           createdBy {
             email

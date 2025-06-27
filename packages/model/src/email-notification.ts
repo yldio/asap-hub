@@ -6,8 +6,10 @@ export type EmailTriggerAction =
   | 'status_changed_addendum_required'
   | 'status_changed_compliant'
   | 'status_changed_closed_other'
-  | 'discussion_created'
-  | 'os_member_replied_to_discussion';
+  | 'discussion_created_by_os_member'
+  | 'discussion_created_by_grantee'
+  | 'os_member_replied_to_discussion'
+  | 'grantee_replied_to_discussion';
 
 export type TemplateAlias =
   | 'waiting-for-report-grantees'
@@ -19,7 +21,8 @@ export type TemplateAlias =
   | 'addendum-required'
   | 'compliant'
   | 'closed'
-  | 'waiting-for-grantee-reply';
+  | 'waiting-for-grantee-reply'
+  | 'waiting-for-os-team-reply';
 
 type EmailNotificationMapping = Record<
   EmailTriggerAction,
@@ -51,10 +54,16 @@ export const emailNotificationMapping: EmailNotificationMapping = {
   status_changed_closed_other: {
     grantee: 'closed',
   },
-  discussion_created: {
+  discussion_created_by_os_member: {
     grantee: 'waiting-for-grantee-reply',
+  },
+  discussion_created_by_grantee: {
+    open_science_team: 'waiting-for-os-team-reply',
   },
   os_member_replied_to_discussion: {
     grantee: 'waiting-for-grantee-reply',
+  },
+  grantee_replied_to_discussion: {
+    open_science_team: 'waiting-for-os-team-reply',
   },
 };

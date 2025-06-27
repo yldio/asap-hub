@@ -97,10 +97,12 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
 
   const { impact: manuscriptImpact, categories: manuscriptCategories } =
     manuscript || {};
-  const selectedImpact = {
-    value: manuscriptImpact?.id || '',
-    label: manuscriptImpact?.name || '',
-  };
+  const selectedImpact = manuscriptImpact
+    ? {
+        value: manuscriptImpact.id,
+        label: manuscriptImpact.name,
+      }
+    : undefined;
 
   const selectedCategories = (manuscriptCategories || [])?.map((category) => ({
     value: category.id,

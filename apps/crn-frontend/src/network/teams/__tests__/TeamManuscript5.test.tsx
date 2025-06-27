@@ -163,6 +163,9 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
     } as AuthorResponse,
   ];
 
+  manuscript.impact = { id: 'impact-id-1', name: 'My Impact' };
+  manuscript.categories = [{ id: 'category-id-1', name: 'My Category' }];
+
   mockGetManuscript.mockResolvedValue(manuscript);
   mockResubmitManuscript.mockResolvedValue(manuscript);
 
@@ -208,18 +211,6 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
 
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
-
-  const impactInput = screen.getByRole('textbox', {
-    name: /Impact/i,
-  });
-  await userEvent.type(impactInput, 'My Imp');
-  await userEvent.click(screen.getByText(/^My Impact$/i));
-
-  const categoryInput = screen.getByRole('textbox', {
-    name: /Category/i,
-  });
-  await userEvent.type(categoryInput, 'My Cat');
-  await userEvent.click(screen.getByText(/^My Category$/i));
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 

@@ -32,9 +32,8 @@ import { mobileScreen, rem } from '../pixels';
 import { ExternalLinkIcon, GlobeIcon } from '../icons';
 import { LabeledDropdownType } from '../molecules/LabeledDropdown';
 import { LabeledRadioButtonGroupType } from '../molecules/LabeledRadioButtonGroup';
+import { AuthorSelectType } from '../organisms/AuthorSelect';
 
-const loadAuthorSelect = () =>
-  import(/* webpackChunkName: "author-select" */ '../organisms/AuthorSelect');
 const loadManuscriptAuthors = () =>
   import(
     /* webpackChunkName: "manuscript-authors" */ '../organisms/ManuscriptAuthors'
@@ -70,7 +69,6 @@ const loadLabeledRadioButtonGroup = () =>
     /* webpackChunkName: "labeled-radio-button-group" */ '../molecules/LabeledRadioButtonGroup'
   );
 
-const AuthorSelect = lazy(loadAuthorSelect);
 const ManuscriptAuthors = lazy(loadManuscriptAuthors);
 const ManuscriptFormModals = lazy(loadManuscriptFormModals);
 const ShortDescriptionCard = lazy(loadShortDescriptionCard);
@@ -321,7 +319,7 @@ type ManuscriptFormProps = Omit<
       typeof LabeledMultiSelect
     >['loadOptions'];
     getAuthorSuggestions: NonNullable<
-      ComponentProps<typeof AuthorSelect>['loadOptions']
+      ComponentProps<AuthorSelectType>['loadOptions']
     >;
     firstAuthors?: AuthorSelectOption[];
     correspondingAuthor?: AuthorSelectOption[];

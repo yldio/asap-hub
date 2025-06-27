@@ -1971,6 +1971,34 @@ describe('Manuscripts Contentful Data Provider', () => {
             'en-US': 'Manuscript Resubmitted',
           },
         },
+        {
+          op: 'add',
+          path: '/fields/impact',
+          value: {
+            'en-US': {
+              sys: {
+                id: 'impact-id',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/categories',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'category-id-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
       ]);
     });
   });

@@ -1,7 +1,12 @@
 import { AuthorResponse, AuthorSelectOption } from '@asap-hub/model';
-import { render, waitFor, screen } from '@testing-library/react';
+import {
+  render,
+  waitFor,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import ManuscriptForm from '../ManuscriptForm';
 
@@ -59,6 +64,16 @@ const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
   },
 ]);
 
+const getImpactSuggestionsMock = jest.fn().mockResolvedValue([
+  { label: 'Impact A', value: 'impact-id-1' },
+  { label: 'Impact B', value: 'impact-id-2' },
+]);
+
+const getCategorySuggestionsMock = jest.fn().mockResolvedValue([
+  { label: 'Category A', value: 'category-id-1' },
+  { label: 'Category B', value: 'category-id-2' },
+]);
+
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   getShortDescriptionFromDescription: jest.fn(),
   onCreate: jest.fn(() => Promise.resolve()),
@@ -102,6 +117,10 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onError: jest.fn(),
   clearFormToast: jest.fn(),
   isOpenScienceTeamMember: false,
+  impact: { value: 'impact-id-1', label: 'Impact A' },
+  categories: [{ value: 'category-id-1', label: 'Category A' }],
+  getImpactSuggestions: getImpactSuggestionsMock,
+  getCategorySuggestions: getCategorySuggestionsMock,
 };
 
 beforeEach(() => {
@@ -119,27 +138,31 @@ it('displays error message when manuscript title is not unique', async () => {
 
   const { container, findByRole } = render(
     <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        url="https://example.com"
-        type="Original Research"
-        lifecycle="Draft Manuscript (prior to Publication)"
-        manuscriptFile={{
-          id: '123',
-          filename: 'test.pdf',
-          url: 'http://example.com/test.pdf',
-        }}
-        keyResourceTable={{
-          id: '124',
-          filename: 'test.csv',
-          url: 'http://example.com/test.csv',
-        }}
-        manuscriptId="manuscript-id"
-        onUpdate={onUpdate}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          url="https://example.com"
+          type="Original Research"
+          lifecycle="Draft Manuscript (prior to Publication)"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
+          keyResourceTable={{
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
+          }}
+          manuscriptId="manuscript-id"
+          onUpdate={onUpdate}
+        />
+      </Suspense>
     </StaticRouter>,
   );
+
+  await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../i));
 
   const submitBtn = await findByRole('button', { name: /Submit/ });
   userEvent.click(submitBtn);

@@ -49,6 +49,8 @@ type SharedResearchCardProps = Pick<
   | 'workingGroups'
   | 'isInReview'
   | 'keywords'
+  | 'impact'
+  | 'categories'
 > & {
   showTags?: boolean;
 };
@@ -70,6 +72,8 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   isInReview,
   keywords,
   showTags = true,
+  impact,
+  categories,
 }) => (
   <Card accent={published ? 'default' : 'neutral200'}>
     <SharedResearchMetadata
@@ -120,6 +124,23 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
           associations={workingGroups.map(({ id, title: displayName }) => ({
             id,
             displayName,
+          }))}
+        />
+      )}
+      {impact && impact.name && (
+        <AssociationList
+          type="Impact"
+          inline
+          associations={[{ id: impact.id, displayName: impact.name }]}
+        />
+      )}
+      {categories && categories.length > 0 && (
+        <AssociationList
+          type="Category"
+          inline
+          associations={categories.map(({ id, name }) => ({
+            id,
+            displayName: name,
           }))}
         />
       )}

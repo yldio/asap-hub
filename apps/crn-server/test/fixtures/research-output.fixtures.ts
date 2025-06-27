@@ -85,6 +85,8 @@ export const getResearchOutputDataObject =
     asapFunded: true,
     usedInPublication: false,
     contactEmails: [],
+    impact: { id: 'impact-id-1', name: 'Impact 1' },
+    categories: [{ id: 'category-id-1', name: 'Category 1' }],
     labs: [
       { id: '99c78dd7-627e-4fbd-aaec-d1977895189e', name: 'Test' },
       { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },
@@ -221,6 +223,8 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     relatedEvents: relatedEvents.map(({ id }) => id),
     workingGroups: workingGroups ? workingGroups.map(({ id }) => id) : [],
     published: true,
+    impact: 'impact-id-1',
+    categories: ['category-id-1'],
   };
 };
 
@@ -255,6 +259,8 @@ export const getResearchOutputCreateDataObject =
       published: _published,
       versions: _versions,
       publishingEntity: _publishingEntity,
+      impact: _impact,
+      categories: _categories,
       ...researchOutputPostRequest
     } = getResearchOutputResponse();
 
@@ -274,6 +280,8 @@ export const getResearchOutputCreateDataObject =
       link: 'http://a.link',
       type: 'Software',
       workingGroups: [],
+      categories: ['category-id-1'],
+      impact: 'impact-id-1',
     };
   };
 

@@ -26,7 +26,7 @@ const timestampStyles = css({
 const associationStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  rowGap: `${6 / perRem}em`,
+  rowGap: `${12 / perRem}em`,
 });
 
 const headerStyle = css({
@@ -57,6 +57,8 @@ type SharedResearchOutputHeaderCardProps = Pick<
   | 'workingGroups'
   | 'published'
   | 'isInReview'
+  | 'impact'
+  | 'categories'
 >;
 
 const SharedResearchOutputHeaderCard: React.FC<
@@ -75,6 +77,8 @@ const SharedResearchOutputHeaderCard: React.FC<
   link,
   published,
   isInReview,
+  impact,
+  categories,
 }) => (
   <Card>
     <SharedResearchMetadata
@@ -123,6 +127,23 @@ const SharedResearchOutputHeaderCard: React.FC<
             : []
         }
       />
+      {impact && impact.name && (
+        <AssociationList
+          type="Impact"
+          inline
+          associations={[{ id: impact.id, displayName: impact.name }]}
+        />
+      )}
+      {categories && categories.length > 0 && (
+        <AssociationList
+          type="Category"
+          inline
+          associations={categories.map(({ id, name }) => ({
+            id,
+            displayName: name,
+          }))}
+        />
+      )}
     </div>
     <div css={[timestampStyles, captionStyles]}>
       <span>Date added: {formatDate(new Date(addedDate || created))} · </span>

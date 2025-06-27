@@ -19,6 +19,8 @@ const researchOutputResponse: Omit<
   shortDescription: 'shortDescription',
   documentType: 'Grant Document',
   type: '3D Printing',
+  impact: { id: 'impact-id-1', name: 'Impact 1' },
+  categories: [{ id: 'category-id-1', name: 'Category 1' }],
   authors: [
     {
       id: 'e12729e0-bfdd-471f-a554-7b58eae83a8d',

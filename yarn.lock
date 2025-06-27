@@ -974,6 +974,7 @@ __metadata:
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
     vite: 5.2.14
+    vite-bundle-visualizer: ^1.2.1
     webpack: 5.94.0
     xlsx: ^0.18.5
   languageName: unknown
@@ -24144,6 +24145,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cac@npm:^6.7.14":
+  version: 6.7.14
+  resolution: "cac@npm:6.7.14"
+  checksum: 45a2496a9443abbe7f52a49b22fbe51b1905eff46e03fd5e6c98e3f85077be3f8949685a1849b1a9cd2bc3e5567dfebcf64f01ce01847baf918f1b37c839791a
+  languageName: node
+  linkType: hard
+
 "cacheable-lookup@npm:^5.0.3":
   version: 5.0.3
   resolution: "cacheable-lookup@npm:5.0.3"
@@ -33278,6 +33286,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"import-from-esm@npm:^1.3.3":
+  version: 1.3.4
+  resolution: "import-from-esm@npm:1.3.4"
+  dependencies:
+    debug: ^4.3.4
+    import-meta-resolve: ^4.0.0
+  checksum: a0a2f44199fc8b1cfc37d05bdb71262353aa188f2d0dada715c04453a72fdd851c4d8a3cf4a2e06a0f8e5e672b3f229097eaac679328d95405763370ef5eb296
+  languageName: node
+  linkType: hard
+
 "import-from@npm:4.0.0":
   version: 4.0.0
   resolution: "import-from@npm:4.0.0"
@@ -33294,6 +33312,13 @@ __metadata:
   bin:
     import-local-fixture: fixtures/cli.js
   checksum: c74d9f9484c878cda1de3434613c7ff72d5dadcf20e5482542232d7c2575b713ff88701d6675fcf09a3684cb23fb407c8b333b9cbc59438712723d058d8e976c
+  languageName: node
+  linkType: hard
+
+"import-meta-resolve@npm:^4.0.0":
+  version: 4.1.0
+  resolution: "import-meta-resolve@npm:4.1.0"
+  checksum: 6497af27bf3ee384ad4efd4e0ec3facf9a114863f35a7b35f248659f32faa5e1ae07baa74d603069f35734ae3718a78b3f66926f98dc9a62e261e7df37854a62
   languageName: node
   linkType: hard
 
@@ -40581,6 +40606,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"picomatch@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "picomatch@npm:4.0.2"
+  checksum: a7a5188c954f82c6585720e9143297ccd0e35ad8072231608086ca950bee672d51b0ef676254af0788205e59bd4e4deb4e7708769226bed725bf13370a7d1464
+  languageName: node
+  linkType: hard
+
 "pify@npm:5.0.0":
   version: 5.0.0
   resolution: "pify@npm:5.0.0"
@@ -44372,6 +44404,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rollup-plugin-visualizer@npm:^5.11.0":
+  version: 5.14.0
+  resolution: "rollup-plugin-visualizer@npm:5.14.0"
+  dependencies:
+    open: ^8.4.0
+    picomatch: ^4.0.2
+    source-map: ^0.7.4
+    yargs: ^17.5.1
+  peerDependencies:
+    rolldown: 1.x
+    rollup: 2.x || 3.x || 4.x
+  peerDependenciesMeta:
+    rolldown:
+      optional: true
+    rollup:
+      optional: true
+  bin:
+    rollup-plugin-visualizer: dist/bin/cli.js
+  checksum: 8ef5b05c91bd74bc1bb536609dd0ef2f1995066ec623393d192d638c209620fd2318c902d185ae648873d0a2788131cbaec11595c91322f0c2661ef6a1cc7e42
+  languageName: node
+  linkType: hard
+
 "rollup@npm:^2.43.1":
   version: 2.79.1
   resolution: "rollup@npm:2.79.1"
@@ -45771,6 +45825,13 @@ __metadata:
   version: 0.7.3
   resolution: "source-map@npm:0.7.3"
   checksum: cd24efb3b8fa69b64bf28e3c1b1a500de77e84260c5b7f2b873f88284df17974157cc88d386ee9b6d081f08fdd8242f3fc05c953685a6ad81aad94c7393dedea
+  languageName: node
+  linkType: hard
+
+"source-map@npm:^0.7.4":
+  version: 0.7.4
+  resolution: "source-map@npm:0.7.4"
+  checksum: 01cc5a74b1f0e1d626a58d36ad6898ea820567e87f18dfc9d24a9843a351aaa2ec09b87422589906d6ff1deed29693e176194dc88bcae7c9a852dc74b311dbf5
   languageName: node
   linkType: hard
 
@@ -47454,6 +47515,13 @@ __metadata:
   dependencies:
     os-tmpdir: ~1.0.1
   checksum: 6caab5b6660b0087c83727b5c34d668aa882f521d0c6bb8d2179b2220e4622fee6fc3a16f6c437c0f4da1e04f84dfd7b11da116803fcb60061e6cd29f7b19d6c
+  languageName: node
+  linkType: hard
+
+"tmp@npm:^0.2.1":
+  version: 0.2.3
+  resolution: "tmp@npm:0.2.3"
+  checksum: 73b5c96b6e52da7e104d9d44afb5d106bb1e16d9fa7d00dbeb9e6522e61b571fbdb165c756c62164be9a3bbe192b9b268c236d370a2a0955c7689cd2ae377b95
   languageName: node
   linkType: hard
 
@@ -49226,6 +49294,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vite-bundle-visualizer@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "vite-bundle-visualizer@npm:1.2.1"
+  dependencies:
+    cac: ^6.7.14
+    import-from-esm: ^1.3.3
+    rollup-plugin-visualizer: ^5.11.0
+    tmp: ^0.2.1
+  bin:
+    vite-bundle-visualizer: bin.js
+  checksum: 5a4764a60d44d46c82e978cd8c3229d6b4b1b26e17c167ac45df4b0b5f4e8c5cca0cc332a5cc2bf483dadb291dc4933e5ec44853a9d740ce639bb16d90443360
+  languageName: node
+  linkType: hard
+
 "vite@npm:5.2.14":
   version: 5.2.14
   resolution: "vite@npm:5.2.14"
@@ -50789,6 +50871,21 @@ __metadata:
     y18n: ^5.0.5
     yargs-parser: ^21.1.1
   checksum: 47da1b0d854fa16d45a3ded57b716b013b2179022352a5f7467409da5a04a1eef5b3b3d97a2dfc13e8bbe5f2ffc0afe3bc6a4a72f8254e60f5a4bd7947138643
+  languageName: node
+  linkType: hard
+
+"yargs@npm:^17.5.1":
+  version: 17.7.2
+  resolution: "yargs@npm:17.7.2"
+  dependencies:
+    cliui: ^8.0.1
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.3
+    y18n: ^5.0.5
+    yargs-parser: ^21.1.1
+  checksum: 73b572e863aa4a8cbef323dd911d79d193b772defd5a51aab0aca2d446655216f5002c42c5306033968193bdbf892a7a4c110b0d77954a7fdf563e653967b56a
   languageName: node
   linkType: hard
 

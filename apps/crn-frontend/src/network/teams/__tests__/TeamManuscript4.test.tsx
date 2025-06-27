@@ -9,6 +9,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
   within,
+  act,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, MemoryHistory } from 'history';
@@ -43,6 +44,18 @@ let history = createMemoryHistory({
 
 jest.mock('../../users/api');
 
+jest.mock('../../../shared-api/impact', () => ({
+  getImpacts: jest
+    .fn()
+    .mockResolvedValue({ items: [{ id: 'impact-id-1', name: 'My Impact' }] }),
+}));
+
+jest.mock('../../../shared-api/category', () => ({
+  getCategories: jest.fn().mockResolvedValue({
+    items: [{ id: 'category-id-1', name: 'My Category' }],
+  }),
+}));
+
 jest.mock('../api', () => ({
   createManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
   getManuscript: jest.fn().mockResolvedValue(null),
@@ -73,7 +86,6 @@ jest.mock('../useManuscriptToast', () => {
 });
 
 beforeEach(() => {
-  jest.resetModules();
   mockSetFormType.mockReset();
   jest.spyOn(console, 'error').mockImplementation();
 
@@ -146,16 +158,21 @@ it('shows default error toast when submitting with any other error', async () =>
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
-  typeTextbox.blur();
+  await act(async () => {
+    await userEvent.type(typeTextbox, 'Original');
+    await userEvent.type(typeTextbox, specialChars.enter);
+    typeTextbox.blur();
+  });
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Typeset proof');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
-  lifecycleTextbox.blur();
+
+  await act(async () => {
+    await userEvent.type(lifecycleTextbox, 'Typeset proof');
+    await userEvent.type(lifecycleTextbox, specialChars.enter);
+    lifecycleTextbox.blur();
+  });
 
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
@@ -168,14 +185,14 @@ it('shows default error toast when submitting with any other error', async () =>
   const descriptionTextbox = screen.getByRole('textbox', {
     name: /Manuscript Description/i,
   });
-  userEvent.type(descriptionTextbox, 'Some description');
+  await userEvent.type(descriptionTextbox, 'Some description');
 
   const shortDescriptionTextbox = screen.getByRole('textbox', {
     name: /Short Description/i,
   });
-  userEvent.type(shortDescriptionTextbox, 'Some short description');
+  await userEvent.type(shortDescriptionTextbox, 'Some short description');
 
-  userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+  await userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -184,10 +201,25 @@ it('shows default error toast when submitting with any other error', async () =>
   userEvent.click(screen.getByText(/Non CRN/i));
 
   expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
-  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+  await userEvent.type(
+    screen.getByLabelText(/Jane Doe Email/i),
+    'jane@doe.com',
+  );
 
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
+
+  const impactInput = screen.getByRole('textbox', {
+    name: /Impact/i,
+  });
+  await userEvent.type(impactInput, 'My Imp');
+  await userEvent.click(screen.getByText(/^My Impact$/i));
+
+  const categoryInput = screen.getByRole('textbox', {
+    name: /Category/i,
+  });
+  await userEvent.type(categoryInput, 'My Cat');
+  await userEvent.click(screen.getByText(/^My Category$/i));
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 

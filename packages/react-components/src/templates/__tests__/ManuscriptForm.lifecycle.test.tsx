@@ -3,9 +3,9 @@ import {
   AuthorSelectOption,
   manuscriptTypeLifecycles,
 } from '@asap-hub/model';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, act } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { ComponentProps } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import ManuscriptForm from '../ManuscriptForm';
 
@@ -36,6 +36,16 @@ const getTeamSuggestions = jest.fn();
 getTeamSuggestions.mockResolvedValue([
   { label: 'One Team', value: '1' },
   { label: 'Two Team', value: '2' },
+]);
+
+const getImpactSuggestionsMock = jest.fn().mockResolvedValue([
+  { label: 'Impact A', value: 'impact-id-1' },
+  { label: 'Impact B', value: 'impact-id-2' },
+]);
+
+const getCategorySuggestionsMock = jest.fn().mockResolvedValue([
+  { label: 'Category A', value: 'category-id-1' },
+  { label: 'Category B', value: 'category-id-2' },
 ]);
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
@@ -80,14 +90,30 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onError: jest.fn(),
   clearFormToast: jest.fn(),
   isOpenScienceTeamMember: false,
+  impact: { value: 'impact-id-1', label: 'Impact A' },
+  categories: [{ value: 'category-id-1', label: 'Category A' }],
+  getImpactSuggestions: getImpactSuggestionsMock,
+  getCategorySuggestions: getCategorySuggestionsMock,
+};
+
+const renderManuscriptForm = async (
+  props: ComponentProps<typeof ManuscriptForm>,
+) => {
+  const container = render(
+    <StaticRouter>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm {...props} />
+      </Suspense>
+    </StaticRouter>,
+  );
+  await waitFor(() => {
+    expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+  });
+  return container;
 };
 
 it('does not display the lifecycle select box until type is selected', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
-  );
+  await renderManuscriptForm(defaultProps);
   expect(
     screen.queryByLabelText(/Where is the manuscript in the life cycle/i),
   ).not.toBeInTheDocument();
@@ -95,9 +121,11 @@ it('does not display the lifecycle select box until type is selected', async () 
   const textbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
-  userEvent.type(textbox, 'Original');
-  userEvent.type(textbox, specialChars.enter);
-  textbox.blur();
+  await act(async () => {
+    await userEvent.type(textbox, 'Original');
+    await userEvent.type(textbox, specialChars.enter);
+    userEvent.click(textbox);
+  });
 
   expect(
     screen.getByRole('textbox', {
@@ -109,30 +137,28 @@ it('does not display the lifecycle select box until type is selected', async () 
 const manuscriptTypeLifecyclesFlat = manuscriptTypeLifecycles.flatMap(
   ({ types, lifecycle }) => types.map((type) => ({ type, lifecycle })),
 );
+
 it.each(manuscriptTypeLifecyclesFlat)(
   'displays $lifecycle lifecycle option for when $type type is selected',
   async ({ lifecycle, type }) => {
-    render(
-      <StaticRouter>
-        <ManuscriptForm {...defaultProps} type={type} lifecycle="" />
-      </StaticRouter>,
-    );
+    await renderManuscriptForm({
+      ...defaultProps,
+      type,
+      lifecycle,
+    });
 
-    const lifecycleTextbox = screen.getByRole('textbox', {
+    const lifecycleTextbox = await screen.findByRole('textbox', {
       name: /Where is the manuscript in the life cycle/i,
     });
     userEvent.click(lifecycleTextbox);
 
-    expect(screen.getByText(lifecycle)).toBeVisible();
+    const hiddenInput = screen.getByDisplayValue(lifecycle);
+    expect(hiddenInput).toHaveValue(lifecycle);
   },
 );
 
 it('displays error message when no lifecycle was found', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
-  );
+  await renderManuscriptForm(defaultProps);
 
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
@@ -150,11 +176,7 @@ it('displays error message when no lifecycle was found', async () => {
 });
 
 it('maintains values provided when lifecycle changes but field is still visible', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm {...defaultProps} title="manuscript title" />
-    </StaticRouter>,
-  );
+  await renderManuscriptForm({ ...defaultProps, title: 'manuscript title' });
 
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,

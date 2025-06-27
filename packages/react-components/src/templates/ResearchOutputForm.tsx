@@ -49,6 +49,8 @@ type ResearchOutputFormProps = Pick<
   | 'typeOptions'
   | 'urlRequired'
   | 'getShortDescriptionFromDescription'
+  | 'getImpactSuggestions'
+  | 'getCategorySuggestions'
 > &
   Pick<
     ComponentProps<typeof ResearchOutputContributorsCard>,
@@ -167,6 +169,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
+  getImpactSuggestions = noop,
+  getCategorySuggestions = noop,
   getRelatedResearchSuggestions = noop,
   getRelatedEventSuggestions,
   getShortDescriptionFromDescription,
@@ -189,6 +193,33 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>(
     researchOutputData?.title || '',
   );
+  const [impact, setImpact] = useState<
+    | NonNullable<
+        ComponentProps<typeof ResearchOutputFormSharingCard>['impact']
+      >
+    | undefined
+  >(
+    researchOutputData?.impact &&
+      researchOutputData.impact.id &&
+      researchOutputData.impact.name
+      ? {
+          value: researchOutputData.impact.id,
+          label: researchOutputData.impact.name,
+        }
+      : undefined,
+  );
+
+  const [categories, setCategories] = useState<
+    NonNullable<
+      ComponentProps<typeof ResearchOutputFormSharingCard>['categories']
+    >
+  >(
+    researchOutputData?.categories?.map((category) => ({
+      value: category.id,
+      label: category.name,
+    })) || [],
+  );
+
   const [labCatalogNumber, setLabCatalogNumber] = useState<
     ResearchOutputPostRequest['labCatalogNumber']
   >(researchOutputData?.labCatalogNumber || '');
@@ -389,6 +420,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     keywords,
     published,
     relatedEvents,
+    impact: (impact as MultiSelectOptionsType)?.value,
+    categories: (categories as MultiSelectOptionsType[]).map(
+      (category) => category.value,
+    ),
   });
   const [remotePayload, setRemotePayload] = useState(currentPayload);
 
@@ -502,6 +537,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               )}
               <div css={contentStyles}>
                 <ResearchOutputFormSharingCard
+                  isCreatingNewVersion={versionAction === 'create'}
                   displayChangelog={displayChangelog}
                   documentType={documentType}
                   isCreatingOutputRoute={!!isCreatingOutput}
@@ -515,6 +551,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangeShortDescription={setShortDescription}
                   changelog={changelog}
                   onChangeChangelog={setChangelog}
+                  impact={impact}
+                  onChangeImpact={setImpact}
+                  categories={categories}
+                  onChangeCategories={setCategories}
+                  getImpactSuggestions={getImpactSuggestions}
+                  getCategorySuggestions={getCategorySuggestions}
                   getShortDescriptionFromDescription={
                     getShortDescriptionFromDescription
                   }

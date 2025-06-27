@@ -256,9 +256,9 @@ it('can submit a form when form data is valid', async () => {
   const title = 'example42 title';
   const descriptionMD = 'example42 description';
   const shortDescription = 'example42 short description';
-  const type = 'Preprint';
+  const type = 'Code';
   const doi = '10.0777';
-  const outputDocumentType = 'article';
+  const outputDocumentType = 'bioinformatics';
 
   const history = createMemoryHistory({
     initialEntries: [
@@ -292,7 +292,7 @@ it('can submit a form when form data is valid', async () => {
   expect(mockCreateResearchOutput).toHaveBeenCalledWith(
     {
       doi,
-      documentType: 'Article',
+      documentType: 'Bioinformatics',
       sharingStatus: 'Network Only',
       teams: ['t0'],
       link,
@@ -321,6 +321,8 @@ it('can submit a form when form data is valid', async () => {
       asapFunded: undefined,
       usedInPublication: undefined,
       published: true,
+      categories: [],
+      impact: undefined,
     },
     expect.anything(),
   );
@@ -337,9 +339,9 @@ it('can save draft when form data is valid', async () => {
   const title = 'example42 title';
   const descriptionMD = 'example42 description';
   const shortDescription = 'example42 short description';
-  const type = 'Preprint';
+  const type = 'Code';
   const doi = '10.0777';
-  const outputDocumentType = 'article';
+  const outputDocumentType = 'bioinformatics';
 
   const history = createMemoryHistory({
     initialEntries: [
@@ -373,7 +375,7 @@ it('can save draft when form data is valid', async () => {
   expect(mockCreateResearchOutput).toHaveBeenCalledWith(
     {
       doi,
-      documentType: 'Article',
+      documentType: 'Bioinformatics',
       sharingStatus: 'Network Only',
       teams: ['t0'],
       link,
@@ -402,6 +404,8 @@ it('can save draft when form data is valid', async () => {
       asapFunded: undefined,
       usedInPublication: undefined,
       published: false,
+      categories: [],
+      impact: undefined,
     },
     expect.anything(),
   );
@@ -427,9 +431,9 @@ it('will show server side validation error for link', async () => {
   );
 
   await renderPage({
-    outputDocumentType: 'article',
+    outputDocumentType: 'bioinformatics',
   });
-  const { publish } = await mandatoryFields({}, true);
+  const { publish } = await mandatoryFields({ type: 'Code' }, true);
 
   await publish();
 
@@ -455,10 +459,10 @@ it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
   await renderPage({
-    outputDocumentType: 'article',
+    outputDocumentType: 'bioinformatics',
   });
 
-  const { publish } = await mandatoryFields({}, true);
+  const { publish } = await mandatoryFields({ type: 'Code' }, true);
 
   await publish();
 

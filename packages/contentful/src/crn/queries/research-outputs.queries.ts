@@ -26,6 +26,20 @@ export const researchOutputContentQueryFragment = gql`
     usedInAPublication
     type
     publishDate
+    impact {
+      sys {
+        id
+      }
+      name
+    }
+    categoriesCollection(limit: 2) {
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
     description {
       json
       links {

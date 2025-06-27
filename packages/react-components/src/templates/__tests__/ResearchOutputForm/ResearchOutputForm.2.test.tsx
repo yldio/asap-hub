@@ -12,28 +12,13 @@ import {
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory, History } from 'history';
-import ResearchOutputForm from '../ResearchOutputForm';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
-
-const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
-  displayChangelog: false,
-  onSave: jest.fn(() => Promise.resolve()),
-  onSaveDraft: jest.fn(() => Promise.resolve()),
-  published: false,
-  tagSuggestions: [],
-  researchTags: [],
-  documentType: 'Article',
-  selectedTeams: [],
-  typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
-  permissions: {
-    canEditResearchOutput: true,
-    canPublishResearchOutput: true,
-    canShareResearchOutput: true,
-  },
-  getRelatedResearchSuggestions: jest.fn(),
-  getRelatedEventSuggestions: jest.fn(),
-  getShortDescriptionFromDescription: jest.fn(),
-};
+import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
+import ResearchOutputForm from '../../ResearchOutputForm';
+import {
+  defaultProps,
+  initialResearchOutputData,
+  expectedRequest,
+} from '../../test-utils/research-output-form';
 
 jest.setTimeout(60000);
 
@@ -64,30 +49,6 @@ describe('on submit', () => {
     jest.resetAllMocks();
   });
 
-  const expectedRequest: ResearchOutputPostRequest = {
-    documentType: 'Article',
-    doi: '10.1234',
-    link: 'http://example.com',
-    title: 'example title',
-    description: '',
-    descriptionMD: 'example description',
-    shortDescription: 'short description',
-    changelog: '',
-    type: 'Preprint',
-    labs: [],
-    authors: [],
-    teams: ['TEAMID'],
-    sharingStatus: 'Network Only',
-    methods: [],
-    organisms: [],
-    environments: [],
-    usageNotes: '',
-    workingGroups: [],
-    relatedResearch: [],
-    keywords: [],
-    published: false,
-    relatedEvents: [],
-  };
   type Data = Pick<
     ResearchOutputPostRequest,
     'link' | 'title' | 'descriptionMD' | 'shortDescription' | 'type'
@@ -99,11 +60,11 @@ describe('on submit', () => {
         descriptionMD: 'example description',
         shortDescription: 'short description',
         title: 'example title',
-        type: 'Preprint',
+        type: 'Code',
         link: 'http://example.com',
       },
       propOverride = {},
-      documentType = 'Article',
+      documentType = 'Bioinformatics',
       researchTags = [{ id: '1', name: 'research tag 1' }],
       researchOutputData = undefined,
     }: {
@@ -117,10 +78,10 @@ describe('on submit', () => {
         descriptionMD: 'example description',
         shortDescription: 'short description',
         title: 'example title',
-        type: 'Preprint',
+        type: 'Code',
         link: 'http://example.com',
       },
-      documentType: 'Article',
+      documentType: 'Bioinformatics',
       researchTags: [],
     },
   ) => {
@@ -227,38 +188,7 @@ describe('on submit', () => {
   });
 
   it('will show you confirmation dialog and allow you to cancel it', async () => {
-    const documentType = 'Article' as const;
-    const initialResearchOutputData = {
-      id: 'id',
-      created: '2020-09-07T17:36:54Z',
-      addedDate: '2020-10-08T16:35:54Z',
-      lastUpdatedPartial: '2020-11-09T20:36:54Z',
-      lastModifiedDate: '2020-12-10T20:36:54Z',
-      title: 'Output',
-      description: 'description',
-      descriptionMD: 'descriptionMD',
-      shortDescription: 'shortDescription',
-      documentType,
-      authors: [],
-      teams: [],
-      publishingEntity: 'Working Group' as const,
-      workingGroups: undefined,
-      relatedEvents: [],
-      relatedResearch: [],
-      sharingStatus: 'Public' as const,
-      contactEmails: [],
-      labs: [],
-      methods: [],
-      organisms: [],
-      environments: [],
-      subtype: 'Metabolite',
-      keywords: [],
-      published: true,
-      isInReview: false,
-      versions: [],
-      link: 'http://example.com',
-      type: 'Preprint' as const,
-    };
+    const documentType = 'Bioinformatics' as const;
 
     render(
       <Router history={history}>

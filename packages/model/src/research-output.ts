@@ -1,6 +1,8 @@
+import { CategoryResponse } from './category';
 import { DecisionOption, ListResponse } from './common';
 import { EventDataObject } from './event';
 import { ExternalAuthorResponse } from './external-author';
+import { ImpactResponse } from './impact';
 import { LabResponse } from './lab';
 import { TeamResponse } from './team';
 import { UserDataObject, UserResponse } from './user';
@@ -252,6 +254,8 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   environments: string[];
   id: string;
   labs: LabResponse[];
+  impact?: ImpactResponse;
+  categories?: CategoryResponse[];
   lastUpdatedPartial: string;
   methods: string[];
   organisms: string[];
@@ -301,6 +305,8 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   workingGroups?: string[];
   relatedResearchIds: string[];
   relatedEventIds: string[];
+  impact?: string;
+  categories?: string[];
 };
 
 export type PublishedResearchOutputCreateDataObject =
@@ -329,6 +335,8 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   statusChangedById?: string;
   statusChangedAt?: string;
   versions?: string[];
+  impact?: string;
+  categories?: string[];
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -401,6 +409,8 @@ export type ResearchOutputPostRequest = {
   isInReview?: boolean;
   labCatalogNumber?: string;
   labs?: string[];
+  impact?: string;
+  categories?: string[];
   link?: string;
   methods: string[];
   organisms: string[];

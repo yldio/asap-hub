@@ -9,6 +9,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
   within,
+  act,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, MemoryHistory } from 'history';
@@ -59,6 +60,18 @@ jest.mock('../api', () => ({
     .mockResolvedValue([{ id: teamId, displayName: 'Team A' }]),
 }));
 
+jest.mock('../../../shared-api/impact', () => ({
+  getImpacts: jest
+    .fn()
+    .mockResolvedValue({ items: [{ id: 'impact-id-1', name: 'My Impact' }] }),
+}));
+
+jest.mock('../../../shared-api/category', () => ({
+  getCategories: jest.fn().mockResolvedValue({
+    items: [{ id: 'category-id-1', name: 'My Category' }],
+  }),
+}));
+
 const mockSetFormType = jest.fn();
 // mock useManuscriptToast hook
 jest.mock('../useManuscriptToast', () => {
@@ -73,7 +86,6 @@ jest.mock('../useManuscriptToast', () => {
 });
 
 beforeEach(() => {
-  jest.resetModules();
   mockSetFormType.mockReset();
   jest.spyOn(console, 'error').mockImplementation();
 
@@ -140,23 +152,27 @@ it('shows server validation error toast and a message when submitting with dupli
 
   await renderPage();
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /title of manuscript/i }),
     title,
   );
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
-  typeTextbox.blur();
+  await act(async () => {
+    await userEvent.type(typeTextbox, 'Original');
+    await userEvent.type(typeTextbox, specialChars.enter);
+    typeTextbox.blur();
+  });
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Typeset proof');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
-  lifecycleTextbox.blur();
+  await act(async () => {
+    await userEvent.type(lifecycleTextbox, 'Typeset proof');
+    await userEvent.type(lifecycleTextbox, specialChars.enter);
+    lifecycleTextbox.blur();
+  });
 
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
@@ -169,12 +185,24 @@ it('shows server validation error toast and a message when submitting with dupli
   const descriptionTextbox = screen.getByRole('textbox', {
     name: /Manuscript Description/i,
   });
-  userEvent.type(descriptionTextbox, 'Some description');
+  await userEvent.type(descriptionTextbox, 'Some description');
 
   const shortDescriptionTextbox = screen.getByRole('textbox', {
     name: /Short Description/i,
   });
-  userEvent.type(shortDescriptionTextbox, 'Some short description');
+  await userEvent.type(shortDescriptionTextbox, 'Some short description');
+
+  const impactInput = screen.getByRole('textbox', {
+    name: /Impact/i,
+  });
+  await userEvent.type(impactInput, 'My Imp');
+  await userEvent.click(screen.getByText(/^My Impact$/i));
+
+  const categoryInput = screen.getByRole('textbox', {
+    name: /Category/i,
+  });
+  await userEvent.type(categoryInput, 'My Cat');
+  await userEvent.click(screen.getByText(/^My Category$/i));
 
   userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 

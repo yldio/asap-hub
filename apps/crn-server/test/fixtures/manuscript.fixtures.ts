@@ -443,6 +443,8 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
     title,
     teamId,
     eligibilityReasons: [],
+    impact: 'impact-id',
+    categories: ['category-id-1'],
     versions: [
       {
         ...version,
@@ -492,6 +494,8 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
     title,
     teamId,
     eligibilityReasons: [],
+    impact: 'impact-id',
+    categories: ['category-id-1'],
     versions: [
       {
         ...version,

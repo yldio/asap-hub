@@ -465,6 +465,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                             setActiveTab('discussions');
                           }
                         }}
+                        categories={manuscript?.categories || []}
+                        impact={manuscript?.impact}
                       />
                     ))}
                   {versions.length > VERSION_LIMIT && (

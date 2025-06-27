@@ -1,40 +1,20 @@
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
 import { Router } from 'react-router-dom';
 
 import {
   createResearchOutputResponse,
   researchTagEnvironmentResponse,
 } from '@asap-hub/fixtures';
-import {
-  researchOutputDocumentTypeToType,
-  ResearchOutputPostRequest,
-} from '@asap-hub/model';
+import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory, History } from 'history';
-import ResearchOutputForm from '../ResearchOutputForm';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
-
-const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
-  displayChangelog: false,
-  onSave: jest.fn(() => Promise.resolve()),
-  onSaveDraft: jest.fn(() => Promise.resolve()),
-  published: false,
-  tagSuggestions: [],
-  researchTags: [],
-  documentType: 'Article',
-  selectedTeams: [],
-  typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
-  permissions: {
-    canEditResearchOutput: true,
-    canPublishResearchOutput: true,
-    canShareResearchOutput: true,
-  },
-  getRelatedResearchSuggestions: jest.fn(),
-  getRelatedEventSuggestions: jest.fn(),
-  getShortDescriptionFromDescription: jest.fn(),
-};
+import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
+import ResearchOutputForm from '../../ResearchOutputForm';
+import {
+  defaultProps,
+  expectedRequest,
+} from '../../test-utils/research-output-form';
 
 jest.setTimeout(60000);
 
@@ -65,31 +45,6 @@ describe('on submit 3', () => {
     jest.resetAllMocks();
   });
 
-  const expectedRequest: ResearchOutputPostRequest = {
-    documentType: 'Article',
-    doi: '10.1234',
-    link: 'http://example.com',
-    title: 'example title',
-    description: '',
-    descriptionMD: 'example description',
-    shortDescription: 'short description',
-    changelog: '',
-    type: 'Preprint',
-    labs: [],
-    authors: [],
-    teams: ['TEAMID'],
-    sharingStatus: 'Network Only',
-    methods: [],
-    organisms: [],
-    environments: [],
-    usageNotes: '',
-    workingGroups: [],
-    relatedResearch: [],
-    keywords: [],
-    published: false,
-    relatedEvents: [],
-  };
-
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
     userEvent.click(button);
@@ -104,10 +59,6 @@ describe('on submit 3', () => {
     const documentType = 'Protocol';
     const type = 'Model System';
     const researchTags = [researchTagEnvironmentResponse];
-    // await setupForm({
-    //   researchTags,
-    //   documentType,
-    // });
 
     const data = {
       descriptionMD: 'example description',

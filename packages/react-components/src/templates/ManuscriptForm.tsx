@@ -345,7 +345,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onError,
   handleFileUpload,
   teamId,
-  isOpenScienceTeamMember = false,
+  isOpenScienceTeamMember,
   title,
   url,
   impact,
@@ -1196,7 +1196,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   required: 'Please add at least one impact.',
                 }}
                 render={({
-                  field: { value, onChange },
+                  field: { value, onChange, onBlur },
                   fieldState: { error },
                 }) => (
                   <LabeledMultiSelect
@@ -1210,7 +1210,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       onChange(selectedOptions);
                     }}
                     customValidationMessage={error?.message}
-                    values={value}
+                    values={value ?? null}
                     noOptionsMessage={({
                       inputValue,
                     }: {
@@ -1219,6 +1219,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     enabled={
                       (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
                     }
+                    onBlur={onBlur}
                   />
                 )}
               />
@@ -1235,9 +1236,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 rules={{
                   required: 'Please add at least one category.',
                   validate: (value) => {
-                    if (!value || value.length === 0) {
-                      return 'Please add at least one category.';
-                    }
                     if (value.length > 2) {
                       return 'You can select up to two categories only.';
                     }
@@ -1245,7 +1243,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   },
                 }}
                 render={({
-                  field: { value, onChange },
+                  field: { value, onChange, onBlur },
                   fieldState: { error },
                 }) => (
                   <LabeledMultiSelect
@@ -1268,6 +1266,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     enabled={
                       (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
                     }
+                    onBlur={onBlur}
                   />
                 )}
               />

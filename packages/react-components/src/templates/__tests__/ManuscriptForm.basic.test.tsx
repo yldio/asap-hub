@@ -60,6 +60,7 @@ const getCategorySuggestionsMock = jest
     const all = [
       { label: 'Category A', value: 'category-id-1' },
       { label: 'Category B', value: 'category-id-2' },
+      { label: 'Category C', value: 'category-id-3' },
     ];
     return all.filter(({ label }) =>
       label.toLowerCase().includes(query.toLowerCase()),
@@ -491,48 +492,85 @@ describe('Manuscript form', () => {
       lifecycle: 'Preprint',
     });
 
-    // --- Impact field ---
-    const impactInput = getByRole('textbox', { name: /Impact/i });
-    await userEvent.type(impactInput, 'Impact');
-
-    await waitFor(() => {
-      expect(getByText('Impact A')).toBeVisible();
-    });
-
-    await userEvent.click(getByText('Impact A'));
-    expect(getByText('Impact A')).toBeInTheDocument();
-
     // --- Category field ---
     const categoryInput = getByRole('textbox', { name: /Category/i });
-    await userEvent.type(categoryInput, 'Category');
+
+    // --- Type invalid category ---
+    await userEvent.type(categoryInput, 'Unknown Category');
 
     await waitFor(() => {
-      expect(getByText('Category B')).toBeVisible();
+      expect(
+        getByText(/Sorry, no categories match Unknown Category/i),
+      ).toBeVisible();
     });
 
-    await userEvent.click(getByText('Category B'));
-    expect(getByText('Category B')).toBeInTheDocument();
+    // --- Required category error message ---
+    await userEvent.clear(categoryInput);
+
+    userEvent.click(categoryInput);
+    categoryInput.blur();
+
+    await waitFor(() => {
+      expect(getByText(/Please add at least one category/i)).toBeVisible();
+    });
+    await userEvent.type(categoryInput, 'Category');
+    userEvent.click(getByText('Category A'));
+    categoryInput.blur();
+
+    expect(getByText('Category A')).toBeInTheDocument();
+
+    // --- Category limit ---
+    userEvent.click(categoryInput);
+    userEvent.click(getByText('Category B'));
+    userEvent.click(categoryInput);
+    userEvent.click(getByText('Category C'));
+    await categoryInput.blur();
+
+    await waitFor(() => {
+      expect(
+        getByText(/You can select up to two categories only/i),
+      ).toBeVisible();
+    });
+
+    // --- Impact field ---
+    const impactInput = getByRole('textbox', { name: /Impact/i });
+
+    // --- Required impact error message ---
+    userEvent.click(impactInput);
+    impactInput.blur();
+
+    await waitFor(() => {
+      expect(getByText(/Please add at least one impact/i)).toBeVisible();
+    });
 
     // --- Type invalid impact ---
-    await act(async () => {
-      await userEvent.clear(impactInput);
-      await userEvent.type(impactInput, 'Unknown Impact');
-    });
-
+    await userEvent.type(impactInput, 'Unknown Impact');
     await waitFor(() => {
       expect(
         getByText(/Sorry, no impacts match Unknown Impact/i),
       ).toBeVisible();
     });
 
-    // --- Type invalid category ---
-    await userEvent.clear(categoryInput);
-    await userEvent.type(categoryInput, 'UnknownCategory');
+    // --- Valid impact field ---
+    userEvent.clear(impactInput);
+
+    await userEvent.type(impactInput, 'Impact');
 
     await waitFor(() => {
-      expect(
-        getByText(/Sorry, no categories match UnknownCategory/i),
-      ).toBeVisible();
+      expect(getByText('Impact A')).toBeVisible();
     });
+
+    userEvent.click(getByText('Impact A'));
+    expect(getByText('Impact A')).toBeInTheDocument();
+  });
+
+  it('should fill impact and category fields with existing values', async () => {
+    const { getByText } = await renderManuscriptForm({
+      ...defaultProps,
+      impact: { value: 'impact-id-1', label: 'Impact A' },
+      categories: [{ value: 'category-id-1', label: 'Category A' }],
+    });
+    expect(getByText('Impact A')).toBeInTheDocument();
+    expect(getByText('Category A')).toBeInTheDocument();
   });
 });

@@ -41,6 +41,16 @@ describe('Discussions Contentful Data Provider', () => {
     contentfulGraphqlClientMock,
     contentfulRestClientMock,
   );
+  const userMockEntry = {
+    fields: {
+      firstName: {
+        'en-US': 'Jane',
+      },
+      lastName: {
+        'en-US': 'Doe',
+      },
+    },
+  } as unknown as Entry;
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -92,6 +102,9 @@ describe('Discussions Contentful Data Provider', () => {
       when(environmentMock.getEntry)
         .calledWith(discussionRequestObject.manuscriptId)
         .mockResolvedValue(manuscriptMockEntry);
+      when(environmentMock.getEntry)
+        .calledWith(discussionRequestObject.userId)
+        .mockResolvedValue(userMockEntry);
 
       const result = await discussionDataProviderMock.create(
         discussionRequestObject,
@@ -212,6 +225,9 @@ describe('Discussions Contentful Data Provider', () => {
       when(environmentMock.getEntry)
         .calledWith(discussionRequestObject.manuscriptId)
         .mockResolvedValue(manuscriptMockEntry);
+      when(environmentMock.getEntry)
+        .calledWith(discussionRequestObject.userId)
+        .mockResolvedValue(userMockEntry);
 
       await discussionDataProviderMock.create(discussionRequestObject);
 
@@ -271,6 +287,9 @@ describe('Discussions Contentful Data Provider', () => {
       when(environmentMock.getEntry)
         .calledWith(discussionRequestObject.manuscriptId)
         .mockResolvedValue(manuscriptMockEntry);
+      when(environmentMock.getEntry)
+        .calledWith(discussionRequestObject.userId)
+        .mockResolvedValue(userMockEntry);
 
       await discussionDataProviderMock.create({
         ...discussionRequestObject,
@@ -285,10 +304,10 @@ describe('Discussions Contentful Data Provider', () => {
       expect(
         emailNotificationServiceMock.sendEmailNotification,
       ).toHaveBeenCalledWith(
-        'discussion_created',
+        'discussion_created_by_grantee',
         discussionRequestObject.manuscriptId,
         '',
-        discussionId,
+        { id: discussionId, userName: 'Jane Doe' },
       );
     });
   });
@@ -337,7 +356,13 @@ describe('Discussions Contentful Data Provider', () => {
       replyMock.publish = jest.fn().mockResolvedValueOnce(replyMock);
 
       const discussionMock = getEntry({});
-      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
+
+      when(environmentMock.getEntry)
+        .calledWith(discussionId)
+        .mockResolvedValue(discussionMock);
+      when(environmentMock.getEntry)
+        .calledWith(userId)
+        .mockResolvedValue(userMockEntry);
       const discussionMockUpdated = getEntry({});
       discussionMock.patch = jest
         .fn()
@@ -435,7 +460,12 @@ describe('Discussions Contentful Data Provider', () => {
           ],
         },
       });
-      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
+      when(environmentMock.getEntry)
+        .calledWith(discussionId)
+        .mockResolvedValue(discussionMock);
+      when(environmentMock.getEntry)
+        .calledWith(userId)
+        .mockResolvedValue(userMockEntry);
       const discussionMockUpdated = getEntry({});
       discussionMock.patch = jest
         .fn()
@@ -537,7 +567,12 @@ describe('Discussions Contentful Data Provider', () => {
           ],
         },
       });
-      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
+      when(environmentMock.getEntry)
+        .calledWith(discussionId)
+        .mockResolvedValue(discussionMock);
+      when(environmentMock.getEntry)
+        .calledWith(userId)
+        .mockResolvedValue(userMockEntry);
       const discussionMockUpdated = getEntry({});
       discussionMock.patch = jest
         .fn()
@@ -658,7 +693,12 @@ describe('Discussions Contentful Data Provider', () => {
           'en-US': [],
         },
       });
-      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
+      when(environmentMock.getEntry)
+        .calledWith(discussionId)
+        .mockResolvedValue(discussionMock);
+      when(environmentMock.getEntry)
+        .calledWith(userId)
+        .mockResolvedValue(userMockEntry);
       const discussionMockUpdated = getEntry({});
       discussionMock.patch = jest
         .fn()
@@ -682,11 +722,14 @@ describe('Discussions Contentful Data Provider', () => {
         'os_member_replied_to_discussion',
         'manuscript-id-1',
         '',
-        discussionId,
+        {
+          id: discussionId,
+          userName: 'Jane Doe',
+        },
       );
     });
 
-    test('Should not send email notification when a non-Open Science member replies', async () => {
+    test('Should send email notification when a non-Open Science member replies', async () => {
       const discussionId = 'discussion-id-1';
       const userId = 'user-id-1';
       const reply = {
@@ -705,7 +748,12 @@ describe('Discussions Contentful Data Provider', () => {
           'en-US': [],
         },
       });
-      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
+      when(environmentMock.getEntry)
+        .calledWith(discussionId)
+        .mockResolvedValue(discussionMock);
+      when(environmentMock.getEntry)
+        .calledWith(userId)
+        .mockResolvedValue(userMockEntry);
       const discussionMockUpdated = getEntry({});
       discussionMock.patch = jest
         .fn()
@@ -724,7 +772,15 @@ describe('Discussions Contentful Data Provider', () => {
 
       expect(
         emailNotificationServiceMock.sendEmailNotification,
-      ).not.toHaveBeenCalled();
+      ).toHaveBeenCalledWith(
+        'grantee_replied_to_discussion',
+        'manuscript-id-1',
+        '',
+        {
+          id: discussionId,
+          userName: 'Jane Doe',
+        },
+      );
     });
   });
 

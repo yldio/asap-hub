@@ -96,7 +96,7 @@ export class DiscussionContentfulDataProvider
       notificationList || '',
       {
         id: discussionEntry.sys.id,
-        userName: `${user.fields.firstName['en-US']} ${user.fields.lastName['en-US']}`,
+        userName: `${user.fields?.firstName?.['en-US']} ${user.fields?.lastName?.['en-US']}`,
       },
     );
 

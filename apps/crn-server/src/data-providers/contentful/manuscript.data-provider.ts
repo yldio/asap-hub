@@ -327,6 +327,8 @@ export class ManuscriptContentfulDataProvider
       url,
       teams: getLinkEntities(version.teams),
       status: 'Manuscript Resubmitted',
+      impact: getLinkEntity(input.impact || ''),
+      categories: getLinkEntities(input.categories || []),
     });
 
     await this.emailNotificationService.sendEmailNotification(

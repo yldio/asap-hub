@@ -1216,9 +1216,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     }: {
                       inputValue: string;
                     }) => `Sorry, no impacts match ${inputValue}`}
-                    enabled={
-                      (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
-                    }
+                    enabled={!isSubmitting}
                     onBlur={onBlur}
                   />
                 )}
@@ -1263,9 +1261,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     }: {
                       inputValue: string;
                     }) => `Sorry, no categories match ${inputValue}`}
-                    enabled={
-                      (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
-                    }
+                    enabled={!isSubmitting}
                     onBlur={onBlur}
                   />
                 )}

@@ -494,6 +494,16 @@ it('does not display reply button if isActiveVersion is false', async () => {
       {...props}
       version={updatedVersion}
       isActiveVersion={false}
+      impact={{
+        id: 'impact-id',
+        name: 'Impact Tag',
+      }}
+      categories={[
+        {
+          id: 'category-id',
+          name: 'Category Tag',
+        },
+      ]}
     />,
   );
   userEvent.click(getByLabelText('Expand Version'));
@@ -501,5 +511,7 @@ it('does not display reply button if isActiveVersion is false', async () => {
   await waitFor(() => {
     expect(getByText(/test discussion/i)).toBeVisible();
     expect(queryByRole('button', { name: /Reply/i })).not.toBeInTheDocument();
+    expect(getByText(/Impact Tag/i)).toBeVisible();
+    expect(getByText(/Category Tag/i)).toBeVisible();
   });
 });

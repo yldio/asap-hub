@@ -44,15 +44,27 @@ getTeamSuggestions.mockResolvedValue([
   { label: 'Two Team', value: '2' },
 ]);
 
-const getImpactSuggestionsMock = jest.fn().mockResolvedValue([
-  { label: 'Impact A', value: 'impact-id-1' },
-  { label: 'Impact B', value: 'impact-id-2' },
-]);
+const getImpactSuggestionsMock = jest.fn().mockImplementation(async (query) => {
+  const all = [
+    { label: 'Impact A', value: 'impact-id-1' },
+    { label: 'Impact B', value: 'impact-id-2' },
+  ];
+  return all.filter(({ label }) =>
+    label.toLowerCase().includes(query.toLowerCase()),
+  );
+});
 
-const getCategorySuggestionsMock = jest.fn().mockResolvedValue([
-  { label: 'Category A', value: 'category-id-1' },
-  { label: 'Category B', value: 'category-id-2' },
-]);
+const getCategorySuggestionsMock = jest
+  .fn()
+  .mockImplementation(async (query) => {
+    const all = [
+      { label: 'Category A', value: 'category-id-1' },
+      { label: 'Category B', value: 'category-id-2' },
+    ];
+    return all.filter(({ label }) =>
+      label.toLowerCase().includes(query.toLowerCase()),
+    );
+  });
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onCreate: jest.fn(() => Promise.resolve()),
@@ -468,5 +480,59 @@ describe('Manuscript form', () => {
     });
 
     expect(getByRole('textbox', { name: /Preprint DOI/i })).toBeDisabled();
+  });
+
+  it('lets user select valid impact and category, and shows no match message on invalid input', async () => {
+    const { getByRole, getByText } = await renderManuscriptForm({
+      ...defaultProps,
+      impact: undefined,
+      categories: [],
+      type: 'Original Research',
+      lifecycle: 'Preprint',
+    });
+
+    // --- Impact field ---
+    const impactInput = getByRole('textbox', { name: /Impact/i });
+    await userEvent.type(impactInput, 'Impact');
+
+    await waitFor(() => {
+      expect(getByText('Impact A')).toBeVisible();
+    });
+
+    await userEvent.click(getByText('Impact A'));
+    expect(getByText('Impact A')).toBeInTheDocument();
+
+    // --- Category field ---
+    const categoryInput = getByRole('textbox', { name: /Category/i });
+    await userEvent.type(categoryInput, 'Category');
+
+    await waitFor(() => {
+      expect(getByText('Category B')).toBeVisible();
+    });
+
+    await userEvent.click(getByText('Category B'));
+    expect(getByText('Category B')).toBeInTheDocument();
+
+    // --- Type invalid impact ---
+    await act(async () => {
+      await userEvent.clear(impactInput);
+      await userEvent.type(impactInput, 'Unknown Impact');
+    });
+
+    await waitFor(() => {
+      expect(
+        getByText(/Sorry, no impacts match Unknown Impact/i),
+      ).toBeVisible();
+    });
+
+    // --- Type invalid category ---
+    await userEvent.clear(categoryInput);
+    await userEvent.type(categoryInput, 'UnknownCategory');
+
+    await waitFor(() => {
+      expect(
+        getByText(/Sorry, no categories match UnknownCategory/i),
+      ).toBeVisible();
+    });
   });
 });

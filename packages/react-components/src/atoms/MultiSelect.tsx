@@ -5,6 +5,7 @@ import {
   ReactElement,
   ReactNode,
   useCallback,
+  useEffect,
   useRef,
 } from 'react';
 import Select, {
@@ -228,6 +229,10 @@ const MultiSelect = <
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    checkValidation();
+  }, [values, checkValidation]);
+
   let sortableProps: SortableContainerProps | undefined;
 
   if (sortable && isMulti && Array.isArray(values)) {
@@ -253,7 +258,7 @@ const MultiSelect = <
     placeholder,
     backspaceRemovesValue: true,
     isClearable: true,
-    value: isMulti ? values : (values as T)?.label ? values : null,
+    value: values,
     components: {
       MultiValueRemove,
       // @ts-expect-error // We're failing to provide a required index prop to SortableElement

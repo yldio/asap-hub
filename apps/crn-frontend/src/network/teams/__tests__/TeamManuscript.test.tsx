@@ -60,6 +60,12 @@ jest.mock('../api', () => ({
     .mockResolvedValue([{ id: teamId, displayName: 'Team A' }]),
 }));
 
+jest.mock('../../../shared-api/impact', () => ({
+  getImpacts: jest.fn().mockResolvedValue({
+    items: [{ id: 'impact-1', name: 'Impact 1' }],
+  }),
+}));
+
 const mockSetFormType = jest.fn();
 // mock useManuscriptToast hook
 jest.mock('../useManuscriptToast', () => {

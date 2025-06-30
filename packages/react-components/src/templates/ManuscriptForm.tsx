@@ -23,7 +23,7 @@ import {
 } from '@asap-hub/model';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentProps, useCallback, useState, lazy } from 'react';
+import { ComponentProps, useCallback, useState, lazy, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { colors } from '..';
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
@@ -326,9 +326,9 @@ type ManuscriptFormProps = Omit<
     additionalAuthors?: AuthorSelectOption[];
     onError: (error: ManuscriptError | Error) => void;
     clearFormToast: () => void;
-    getImpactSuggestions: NonNullable<
-      ComponentProps<typeof LabeledMultiSelect>['loadOptions']
-    >;
+    getImpactSuggestions: (
+      searchQuery: string,
+    ) => Promise<{ label: string; value: string }[]>;
     getCategorySuggestions: NonNullable<
       ComponentProps<typeof LabeledMultiSelect>['loadOptions']
     >;
@@ -396,6 +396,23 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const correspondingAuthorWithoutTeamAdded = new Set();
   const additionalAuthorsWithoutTeamAdded = new Set();
   const labsWithoutTeamAdded = new Set();
+
+  const [impactOtions, setImpactOptions] = useState<
+    {
+      label: string;
+      value: string;
+    }[]
+  >([]);
+
+  const getImpactOptions = useCallback(async () => {
+    const impactOptions = await getImpactSuggestions('');
+    setImpactOptions(impactOptions);
+  }, [getImpactSuggestions]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    getImpactOptions();
+  }, [getImpactOptions]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const getDefaultQuickCheckValue = (
@@ -1199,25 +1216,27 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   field: { value, onChange, onBlur },
                   fieldState: { error },
                 }) => (
-                  <LabeledMultiSelect
+                  <LabeledDropdown
                     title="Impact"
-                    description="Select the option that best describes the impact of this manuscript on the PD field."
                     subtitle="(required)"
-                    placeholder="Start typing..."
-                    loadOptions={getImpactSuggestions}
-                    isMulti={false}
-                    onChange={(selectedOptions: MultiSelectOptionsType) => {
-                      onChange(selectedOptions);
+                    description="Select the option that best describes the impact of this manuscript on the PD field."
+                    options={impactOtions}
+                    onChange={(e) => {
+                      const impactOption = impactOtions.find(
+                        (option) => option.value === e,
+                      );
+                      onChange(impactOption);
                     }}
-                    customValidationMessage={error?.message}
-                    values={value ?? null}
-                    noOptionsMessage={({
-                      inputValue,
-                    }: {
-                      inputValue: string;
-                    }) => `Sorry, no impacts match ${inputValue}`}
-                    enabled={!isSubmitting}
                     onBlur={onBlur}
+                    customValidationMessage={error?.message}
+                    value={value?.value}
+                    enabled={
+                      (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
+                    }
+                    noOptionsMessage={(option) =>
+                      `Sorry, no impacts match ${option.inputValue}`
+                    }
+                    placeholder="Choose an impact"
                   />
                 )}
               />

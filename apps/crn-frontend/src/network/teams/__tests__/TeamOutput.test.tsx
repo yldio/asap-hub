@@ -290,7 +290,7 @@ it('can publish a form when the data is valid', async () => {
       usedInPublication: undefined,
       published: true,
       categories: [],
-      impact: '',
+      impact: undefined,
     },
     expect.anything(),
   );
@@ -357,7 +357,7 @@ it('can save draft when form data is valid', async () => {
       usedInPublication: undefined,
       published: false,
       categories: [],
-      impact: '',
+      impact: undefined,
     },
     expect.anything(),
   );

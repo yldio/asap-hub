@@ -49,6 +49,7 @@
     "export:analytics": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export-analytics",
     "export:entity:crn": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export",
     "export:entity:gp2": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/gp2-server/tsconfig.json --files=./apps/gp2-server/@types ./apps/gp2-server/scripts/cli.ts export",
+    "export:compliance": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export-compliance-data",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint": "yarn test --config=jest-eslint.config.js",

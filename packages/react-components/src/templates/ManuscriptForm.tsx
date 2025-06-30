@@ -1230,9 +1230,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     onBlur={onBlur}
                     customValidationMessage={error?.message}
                     value={value?.value}
-                    enabled={
-                      (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
-                    }
+                    enabled={!isSubmitting}
                     noOptionsMessage={(option) =>
                       `Sorry, no impacts match ${option.inputValue}`
                     }

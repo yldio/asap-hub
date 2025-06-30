@@ -535,9 +535,7 @@ const parseGraphQLManuscript = (
       count,
     ),
     impact:
-      manuscript.impact &&
-      typeof manuscript.impact.name === 'string' &&
-      manuscript.impact.name
+      manuscript.impact && manuscript.impact.name
         ? {
             id: manuscript.impact.sys.id,
             name: manuscript.impact.name,

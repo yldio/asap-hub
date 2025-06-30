@@ -52,17 +52,28 @@ describe('Discussions Contentful Data Provider', () => {
     },
   } as unknown as Entry;
 
+  const discussionId = 'discussion-id-1';
+  const messageId = 'message-id-1';
+  const userId = 'user-id-1';
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   describe('Create', () => {
-    test('can create a discussion and links it to the manuscript with previous discussions', async () => {
-      const discussionId = 'discussion-id-1';
-      const messageId = 'message-id-1';
-      const discussionRequestObject = getDiscussionCreateRequestObject();
+    const emailNotificationServiceMock = jest.mocked(
+      discussionDataProviderMock['emailNotificationService'],
+      { shallow: true },
+    );
 
-      const publish = jest.fn();
+    const discussionRequestObject = getDiscussionCreateRequestObject();
+
+    const getManuscriptMock = (
+      manuscriptDiscussions: any,
+      useOSUser: boolean = false,
+      publishFunction?: jest.Mock,
+    ) => {
+      const publish = publishFunction || jest.fn();
       const patch = jest.fn().mockResolvedValue({
         publish,
       });
@@ -70,20 +81,24 @@ describe('Discussions Contentful Data Provider', () => {
       const manuscriptMockEntry = {
         sys: { id: discussionRequestObject.manuscriptId },
         fields: {
-          discussions: {
-            'en-US': [
-              {
-                sys: {
-                  id: 'previous-discussion',
-                  linkType: 'Entry',
-                  type: 'Link',
-                },
-              },
-            ],
-          },
+          discussions: manuscriptDiscussions,
         },
         publish,
         patch,
+      } as unknown as Entry;
+
+      const osMemberMockEntry = {
+        fields: {
+          firstName: {
+            'en-US': 'Jane',
+          },
+          lastName: {
+            'en-US': 'Doe',
+          },
+          openScienceTeamMember: {
+            'en-US': true,
+          },
+        },
       } as unknown as Entry;
 
       when(environmentMock.createEntry)
@@ -104,7 +119,28 @@ describe('Discussions Contentful Data Provider', () => {
         .mockResolvedValue(manuscriptMockEntry);
       when(environmentMock.getEntry)
         .calledWith(discussionRequestObject.userId)
-        .mockResolvedValue(userMockEntry);
+        .mockResolvedValue(useOSUser ? osMemberMockEntry : userMockEntry);
+
+      return manuscriptMockEntry;
+    };
+    test('can create a discussion and links it to the manuscript with previous discussions', async () => {
+      const publish = jest.fn();
+      const discussions = {
+        'en-US': [
+          {
+            sys: {
+              id: 'previous-discussion',
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        ],
+      };
+      const manuscriptMockEntry = getManuscriptMock(
+        discussions,
+        false,
+        publish,
+      );
 
       const result = await discussionDataProviderMock.create(
         discussionRequestObject,
@@ -188,46 +224,11 @@ describe('Discussions Contentful Data Provider', () => {
       expect(publish).toHaveBeenCalledTimes(3);
       expect(result).toEqual(discussionId);
     });
+
     test('can create a discussion and links it to the manuscript when there are no previous discussions', async () => {
-      const discussionId = 'discussion-id-1';
-      const messageId = 'message-id-1';
-      const discussionRequestObject = getDiscussionCreateRequestObject();
-
-      const publish = jest.fn();
-      const patch = jest.fn().mockResolvedValue({
-        publish,
+      const manuscriptMockEntry = getManuscriptMock({
+        'en-US': [],
       });
-
-      const manuscriptMockEntry = {
-        sys: { id: discussionRequestObject.manuscriptId },
-        fields: {
-          discussions: {
-            'en-US': [],
-          },
-        },
-        publish,
-        patch,
-      } as unknown as Entry;
-
-      when(environmentMock.createEntry)
-        .calledWith('messages', expect.anything())
-        .mockResolvedValue({
-          sys: { id: messageId },
-          publish,
-        } as unknown as Entry);
-      when(environmentMock.createEntry)
-        .calledWith('discussions', expect.anything())
-        .mockResolvedValue({
-          sys: { id: discussionId },
-          publish,
-        } as unknown as Entry);
-
-      when(environmentMock.getEntry)
-        .calledWith(discussionRequestObject.manuscriptId)
-        .mockResolvedValue(manuscriptMockEntry);
-      when(environmentMock.getEntry)
-        .calledWith(discussionRequestObject.userId)
-        .mockResolvedValue(userMockEntry);
 
       await discussionDataProviderMock.create(discussionRequestObject);
 
@@ -250,61 +251,43 @@ describe('Discussions Contentful Data Provider', () => {
       ]);
     });
 
-    test('Should send email notification when a discussion is created', async () => {
-      const discussionId = 'discussion-id-1';
-      const messageId = 'message-id-1';
-      const discussionRequestObject = getDiscussionCreateRequestObject();
-
-      const publish = jest.fn();
-      const patch = jest.fn().mockResolvedValue({
-        publish,
+    test('Should send email notification when a discussion is created by a grantee', async () => {
+      getManuscriptMock({
+        'en-US': [],
       });
-
-      const manuscriptMockEntry = {
-        sys: { id: discussionRequestObject.manuscriptId },
-        fields: {
-          discussions: {
-            'en-US': [],
-          },
-        },
-        publish,
-        patch,
-      } as unknown as Entry;
-
-      when(environmentMock.createEntry)
-        .calledWith('messages', expect.anything())
-        .mockResolvedValue({
-          sys: { id: messageId },
-          publish,
-        } as unknown as Entry);
-      when(environmentMock.createEntry)
-        .calledWith('discussions', expect.anything())
-        .mockResolvedValue({
-          sys: { id: discussionId },
-          publish,
-        } as unknown as Entry);
-
-      when(environmentMock.getEntry)
-        .calledWith(discussionRequestObject.manuscriptId)
-        .mockResolvedValue(manuscriptMockEntry);
-      when(environmentMock.getEntry)
-        .calledWith(discussionRequestObject.userId)
-        .mockResolvedValue(userMockEntry);
 
       await discussionDataProviderMock.create({
         ...discussionRequestObject,
         notificationList: '',
       });
 
-      const emailNotificationServiceMock = jest.mocked(
-        discussionDataProviderMock['emailNotificationService'],
-        { shallow: true },
-      );
-
       expect(
         emailNotificationServiceMock.sendEmailNotification,
       ).toHaveBeenCalledWith(
         'discussion_created_by_grantee',
+        discussionRequestObject.manuscriptId,
+        '',
+        { id: discussionId, userName: 'Jane Doe' },
+      );
+    });
+
+    test('Should send email notification when a discussion is created by an os member', async () => {
+      getManuscriptMock(
+        {
+          'en-US': [],
+        },
+        true,
+      );
+
+      await discussionDataProviderMock.create({
+        ...discussionRequestObject,
+        notificationList: '',
+      });
+
+      expect(
+        emailNotificationServiceMock.sendEmailNotification,
+      ).toHaveBeenCalledWith(
+        'discussion_created_by_os_member',
         discussionRequestObject.manuscriptId,
         '',
         { id: discussionId, userName: 'Jane Doe' },
@@ -334,7 +317,7 @@ describe('Discussions Contentful Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         discussions: getContentfulGraphqlDiscussion(),
       });
-      const discussionId = 'discussion-id-1';
+
       const result = await discussionDataProviderMock.fetchById(discussionId);
 
       expect(result).toMatchObject(getDiscussionDataObject());
@@ -342,20 +325,12 @@ describe('Discussions Contentful Data Provider', () => {
   });
 
   describe('Update', () => {
-    test('Should update a discussion without existing replies and make readBy to be a list with only the user who is replying', async () => {
-      const discussionId = 'discussion-id-1';
-      const userId = 'user-id-1';
-      const reply = {
-        text: 'test reply',
-        userId: userId,
-        isOpenScienceMember: true,
-      };
-
-      const replyMock = getEntry({});
+    const getDiscussionMocks = (
+      replyMock: Entry,
+      discussionMock: Entry,
+    ): Entry => {
       environmentMock.createEntry.mockResolvedValueOnce(replyMock);
       replyMock.publish = jest.fn().mockResolvedValueOnce(replyMock);
-
-      const discussionMock = getEntry({});
 
       when(environmentMock.getEntry)
         .calledWith(discussionId)
@@ -367,6 +342,22 @@ describe('Discussions Contentful Data Provider', () => {
       discussionMock.patch = jest
         .fn()
         .mockResolvedValueOnce(discussionMockUpdated);
+
+      return discussionMockUpdated;
+    };
+    test('Should update a discussion without existing replies and make readBy to be a list with only the user who is replying', async () => {
+      const reply = {
+        text: 'test reply',
+        userId: userId,
+        isOpenScienceMember: true,
+      };
+
+      const replyMock = getEntry({});
+      const discussionMock = getEntry({});
+      const discussionMockUpdated = getDiscussionMocks(
+        replyMock,
+        discussionMock,
+      );
 
       await discussionDataProviderMock.update(discussionId, {
         userId,
@@ -427,8 +418,6 @@ describe('Discussions Contentful Data Provider', () => {
     });
 
     test('Should update a discussion with existing replies and make readBy to be a list with only the user who is replying', async () => {
-      const discussionId = 'discussion-id-1';
-      const userId = 'user-id-1';
       const reply = {
         text: 'test reply',
         userId: userId,
@@ -437,8 +426,6 @@ describe('Discussions Contentful Data Provider', () => {
 
       const replyMock = getEntry({});
       replyMock.sys.id = 'new-reply';
-      environmentMock.createEntry.mockResolvedValueOnce(replyMock);
-      replyMock.publish = jest.fn().mockResolvedValueOnce(replyMock);
 
       const discussionMock = getEntry({
         replies: {
@@ -460,16 +447,10 @@ describe('Discussions Contentful Data Provider', () => {
           ],
         },
       });
-      when(environmentMock.getEntry)
-        .calledWith(discussionId)
-        .mockResolvedValue(discussionMock);
-      when(environmentMock.getEntry)
-        .calledWith(userId)
-        .mockResolvedValue(userMockEntry);
-      const discussionMockUpdated = getEntry({});
-      discussionMock.patch = jest
-        .fn()
-        .mockResolvedValueOnce(discussionMockUpdated);
+      const discussionMockUpdated = getDiscussionMocks(
+        replyMock,
+        discussionMock,
+      );
 
       await discussionDataProviderMock.update(discussionId, {
         userId,
@@ -544,9 +525,6 @@ describe('Discussions Contentful Data Provider', () => {
     });
 
     test('Should update a discussion with existing readBy', async () => {
-      const discussionId = 'discussion-id-1';
-      const userId = 'user-id-1';
-
       const discussionMock = getEntry({
         readBy: {
           'en-US': [
@@ -567,17 +545,11 @@ describe('Discussions Contentful Data Provider', () => {
           ],
         },
       });
-      when(environmentMock.getEntry)
-        .calledWith(discussionId)
-        .mockResolvedValue(discussionMock);
-      when(environmentMock.getEntry)
-        .calledWith(userId)
-        .mockResolvedValue(userMockEntry);
-      const discussionMockUpdated = getEntry({});
-      discussionMock.patch = jest
-        .fn()
-        .mockResolvedValueOnce(discussionMockUpdated);
 
+      const discussionMockUpdated = getDiscussionMocks(
+        getEntry({}),
+        discussionMock,
+      );
       await discussionDataProviderMock.update(discussionId, { userId });
 
       expect(environmentMock.getEntry).toHaveBeenCalledWith(discussionId);
@@ -617,9 +589,6 @@ describe('Discussions Contentful Data Provider', () => {
     });
 
     test('Should not add a user to readBy if they are already in the list', async () => {
-      const discussionId = 'discussion-id-1';
-      const userId = 'user-id-1';
-
       const discussionMock = getEntry({
         readBy: {
           'en-US': [
@@ -633,11 +602,10 @@ describe('Discussions Contentful Data Provider', () => {
           ],
         },
       });
-      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
-      const discussionMockUpdated = getEntry({});
-      discussionMock.patch = jest
-        .fn()
-        .mockResolvedValueOnce(discussionMockUpdated);
+      const discussionMockUpdated = getDiscussionMocks(
+        getEntry({}),
+        discussionMock,
+      );
 
       await discussionDataProviderMock.update(discussionId, { userId });
 
@@ -647,18 +615,13 @@ describe('Discussions Contentful Data Provider', () => {
     });
 
     test('Should add a user to readBy if the list is empty', async () => {
-      const discussionId = 'discussion-id-1';
-      const userId = 'user-id-1';
-
       const discussionMock = getEntry({
         readBy: undefined,
       });
-      environmentMock.getEntry.mockResolvedValueOnce(discussionMock);
-      const discussionMockUpdated = getEntry({});
-      discussionMock.patch = jest
-        .fn()
-        .mockResolvedValueOnce(discussionMockUpdated);
-
+      const discussionMockUpdated = getDiscussionMocks(
+        getEntry({}),
+        discussionMock,
+      );
       await discussionDataProviderMock.update(discussionId, { userId });
 
       expect(environmentMock.getEntry).toHaveBeenCalledWith(discussionId);
@@ -674,113 +637,98 @@ describe('Discussions Contentful Data Provider', () => {
       expect(discussionMockUpdated.publish).toHaveBeenCalled();
     });
 
-    test('Should send email notification when an Open Science member replies', async () => {
-      const discussionId = 'discussion-id-1';
-      const userId = 'user-id-1';
-      const reply = {
-        text: 'test reply',
-        userId: userId,
-        isOpenScienceMember: true,
-      };
+    describe('email notifications', () => {
+      beforeEach(() => {
+        const discussionMock = getEntry({
+          replies: {
+            'en-US': [],
+          },
+        });
+        when(environmentMock.getEntry)
+          .calledWith(discussionId)
+          .mockResolvedValue(discussionMock);
 
-      const replyMock = getEntry({});
-      replyMock.sys.id = 'new-reply';
-      environmentMock.createEntry.mockResolvedValueOnce(replyMock);
-      replyMock.publish = jest.fn().mockResolvedValueOnce(replyMock);
-
-      const discussionMock = getEntry({
-        replies: {
-          'en-US': [],
-        },
-      });
-      when(environmentMock.getEntry)
-        .calledWith(discussionId)
-        .mockResolvedValue(discussionMock);
-      when(environmentMock.getEntry)
-        .calledWith(userId)
-        .mockResolvedValue(userMockEntry);
-      const discussionMockUpdated = getEntry({});
-      discussionMock.patch = jest
-        .fn()
-        .mockResolvedValueOnce(discussionMockUpdated);
-
-      await discussionDataProviderMock.update(discussionId, {
-        userId,
-        reply,
-        manuscriptId: 'manuscript-id-1',
-        notificationList: '',
+        when(environmentMock.getEntry)
+          .calledWith(userId)
+          .mockResolvedValue(userMockEntry);
+        const discussionMockUpdated = getEntry({});
+        discussionMock.patch = jest
+          .fn()
+          .mockResolvedValueOnce(discussionMockUpdated);
       });
 
-      const emailNotificationServiceMock = jest.mocked(
-        discussionDataProviderMock['emailNotificationService'],
-        { shallow: true },
-      );
+      test('Should send email notification when an Open Science member replies', async () => {
+        const reply = {
+          text: 'test reply',
+          userId: userId,
+          isOpenScienceMember: true,
+        };
 
-      expect(
-        emailNotificationServiceMock.sendEmailNotification,
-      ).toHaveBeenCalledWith(
-        'os_member_replied_to_discussion',
-        'manuscript-id-1',
-        '',
-        {
-          id: discussionId,
-          userName: 'Jane Doe',
-        },
-      );
-    });
+        const replyMock = getEntry({});
+        replyMock.sys.id = 'new-reply';
+        environmentMock.createEntry.mockResolvedValueOnce(replyMock);
+        replyMock.publish = jest.fn().mockResolvedValueOnce(replyMock);
 
-    test('Should send email notification when a non-Open Science member replies', async () => {
-      const discussionId = 'discussion-id-1';
-      const userId = 'user-id-1';
-      const reply = {
-        text: 'test reply',
-        userId: userId,
-        isOpenScienceMember: false,
-      };
+        await discussionDataProviderMock.update(discussionId, {
+          userId,
+          reply,
+          manuscriptId: 'manuscript-id-1',
+          notificationList: '',
+        });
 
-      const replyMock = getEntry({});
-      replyMock.sys.id = 'new-reply';
-      environmentMock.createEntry.mockResolvedValueOnce(replyMock);
-      replyMock.publish = jest.fn().mockResolvedValueOnce(replyMock);
+        const emailNotificationServiceMock = jest.mocked(
+          discussionDataProviderMock['emailNotificationService'],
+          { shallow: true },
+        );
 
-      const discussionMock = getEntry({
-        replies: {
-          'en-US': [],
-        },
-      });
-      when(environmentMock.getEntry)
-        .calledWith(discussionId)
-        .mockResolvedValue(discussionMock);
-      when(environmentMock.getEntry)
-        .calledWith(userId)
-        .mockResolvedValue(userMockEntry);
-      const discussionMockUpdated = getEntry({});
-      discussionMock.patch = jest
-        .fn()
-        .mockResolvedValueOnce(discussionMockUpdated);
-
-      await discussionDataProviderMock.update(discussionId, {
-        userId,
-        reply,
-        manuscriptId: 'manuscript-id-1',
-        notificationList: '',
+        expect(
+          emailNotificationServiceMock.sendEmailNotification,
+        ).toHaveBeenCalledWith(
+          'os_member_replied_to_discussion',
+          'manuscript-id-1',
+          '',
+          {
+            id: discussionId,
+            userName: 'Jane Doe',
+          },
+        );
       });
 
-      const emailNotificationServiceMock = jest.mocked(
-        discussionDataProviderMock['emailNotificationService'],
-      );
+      test('Should send email notification when a non-Open Science member replies', async () => {
+        const reply = {
+          text: 'test reply',
+          userId: userId,
+          isOpenScienceMember: false,
+        };
 
-      expect(
-        emailNotificationServiceMock.sendEmailNotification,
-      ).toHaveBeenCalledWith(
-        'grantee_replied_to_discussion',
-        'manuscript-id-1',
-        '',
-        {
-          id: discussionId,
-          userName: 'Jane Doe',
-        },
-      );
+        const replyMock = getEntry({});
+        replyMock.sys.id = 'new-reply';
+        environmentMock.createEntry.mockResolvedValueOnce(replyMock);
+        replyMock.publish = jest.fn().mockResolvedValueOnce(replyMock);
+
+        await discussionDataProviderMock.update(discussionId, {
+          userId,
+          reply,
+          manuscriptId: 'manuscript-id-1',
+          notificationList: '',
+        });
+
+        const emailNotificationServiceMock = jest.mocked(
+          discussionDataProviderMock['emailNotificationService'],
+        );
+
+        expect(
+          emailNotificationServiceMock.sendEmailNotification,
+        ).toHaveBeenCalledWith(
+          'grantee_replied_to_discussion',
+          'manuscript-id-1',
+          '',
+          {
+            id: discussionId,
+            userName: 'Jane Doe',
+          },
+        );
+      });
     });
   });
 

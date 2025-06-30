@@ -8,15 +8,18 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
+import { css } from '@emotion/react';
 import { ComponentPropsWithRef, useEffect, useState } from 'react';
-import { OptionsType } from 'react-select';
+import { components, OptionsType } from 'react-select';
 import { getAjvErrorForPath } from '../ajv-errors';
 import { Markdown } from '../atoms';
 import {
   MultiSelectOptionsType,
   SingleSelectOnChange,
 } from '../atoms/MultiSelect';
-import { GlobeIcon } from '../icons';
+import { steel, paper } from '../colors';
+import { borderWidth } from '../form';
+import { crossIcon, GlobeIcon } from '../icons';
 import {
   FormCard,
   LabeledDateField,
@@ -27,8 +30,38 @@ import {
   LabeledTextEditor,
   LabeledTextField,
 } from '../molecules';
+import { rem } from '../pixels';
 import { noop } from '../utils';
 import ShortDescriptionCard from './ShortDescriptionCard';
+
+const optionStyles = css({
+  display: 'grid',
+  gridTemplateColumns: `${rem(24)} 1fr`,
+  gridColumnGap: rem(8),
+});
+
+const singleValueStyles = css({
+  padding: `${rem(5)} ${rem(15)} ${rem(5)} ${rem(8)}`,
+  margin: `${rem(5)} ${rem(6)} ${rem(5)}`,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderStyle: 'solid',
+  borderWidth: `${borderWidth}px`,
+  borderColor: steel.rgb,
+  borderRadius: rem(18),
+  backgroundColor: paper.rgb,
+});
+
+const singleValuesRemoveStyles = css({
+  display: 'inline-flex',
+  height: rem(24),
+  width: rem(12),
+  cursor: 'pointer',
+  svg: {
+    strokeWidth: 2.5,
+  },
+});
 
 type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
@@ -278,6 +311,38 @@ const ResearchOutputFormSharingCard: React.FC<
           noOptionsMessage={({ inputValue }) =>
             `Sorry, no impact options match ${inputValue}`
           }
+          components={{
+            SingleValue: (singleValueLabelProps) => {
+              if (
+                !singleValueLabelProps.children ||
+                singleValueLabelProps.children.toString().trim() === ''
+              ) {
+                return null;
+              }
+              return (
+                <components.SingleValue {...singleValueLabelProps}>
+                  <div css={[optionStyles, singleValueStyles]}>
+                    <span
+                      css={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: rem(400),
+                      }}
+                    >
+                      {singleValueLabelProps.children}
+                    </span>
+                    <div
+                      role="button"
+                      onClick={singleValueLabelProps.clearValue}
+                      css={singleValuesRemoveStyles}
+                    >
+                      {crossIcon}
+                    </div>
+                  </div>
+                </components.SingleValue>
+              );
+            },
+          }}
         />
       )}
       {documentType === 'Article' && (
@@ -346,7 +411,7 @@ const ResearchOutputFormSharingCard: React.FC<
         <LabeledTextArea
           title="Changelog"
           subtitle="(required)"
-          tip="Briefly explain what’s new or changed in this version in comparison to the prior version of the manuscript."
+          tip="Briefly explain what's new or changed in this version in comparison to the prior version of the manuscript."
           customValidationMessage={changelogValidationMessage}
           value={changelog ?? ''}
           onChange={(changelogNewValue) => {

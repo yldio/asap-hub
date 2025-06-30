@@ -206,10 +206,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           value: researchOutputData.impact.id,
           label: researchOutputData.impact.name,
         }
-      : {
-          value: '',
-          label: '',
-        },
+      : undefined,
   );
 
   const [categories, setCategories] = useState<

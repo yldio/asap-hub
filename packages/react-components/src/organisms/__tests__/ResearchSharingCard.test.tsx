@@ -9,6 +9,7 @@ import ResearchOutputFormSharingCard, {
 } from '../ResearchOutputFormSharingCard';
 
 const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
+  isFormSubmitted: false,
   descriptionMD: '',
   shortDescription: '',
   isSaving: false,

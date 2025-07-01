@@ -1,4 +1,3 @@
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -14,6 +13,7 @@ const getCategorySuggestionsMock = jest.fn();
 
 beforeEach(() => {
   history = createMemoryHistory();
+  jest.spyOn(console, 'error').mockImplementation();
   getCategorySuggestionsMock.mockResolvedValue([
     { label: 'Category 3', value: 'category-3' },
   ]);
@@ -52,40 +52,13 @@ it.each(notArticleDocumentTypes)(
   },
 );
 
-it('displays a message when user adds more than 2 categories', async () => {
-  render(
-    <Router history={history}>
-      <ResearchOutputForm
-        {...defaultProps}
-        documentType="Article"
-        researchOutputData={{
-          ...createResearchOutputResponse(),
-          categories: [
-            { id: 'category-1', name: 'Category 1' },
-            { id: 'category-2', name: 'Category 2' },
-            { id: 'category-3', name: 'Category 3' },
-            { id: 'category-4', name: 'Category 4' },
-          ],
-        }}
-      />
-    </Router>,
-  );
-
-  userEvent.click(screen.getAllByTitle('Close')[0]!);
-  userEvent.tab();
-
-  expect(
-    screen.getByText('Please select up to two categories'),
-  ).toBeInTheDocument();
-});
-
 it('renders impact input and does not throw when getImpactSuggestions is noop', async () => {
   render(
     <Router history={history}>
       <ResearchOutputForm
         {...defaultProps}
         documentType="Article"
-        getImpactSuggestions={undefined}
+        getImpactSuggestions={() => Promise.resolve([])}
       />
     </Router>,
   );

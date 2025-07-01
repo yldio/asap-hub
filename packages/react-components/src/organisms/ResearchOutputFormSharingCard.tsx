@@ -203,7 +203,6 @@ const ResearchOutputFormSharingCard: React.FC<
   const [impactValidationMessage, setImpactValidationMessage] =
     useState<string>();
   const validateImpact = () => {
-    console.log('validateImpact', impact);
     setImpactValidationMessage(
       impact?.value.length === 0
         ? 'Please add at least one impact.'

@@ -215,7 +215,7 @@ const ResearchOutputFormSharingCard: React.FC<
 
   useEffect(() => {
     validateImpact();
-  }, [impact]);
+  }, [impact, validateImpact]);
 
   const validateCategories = useCallback(
     (newValues: OptionsType<MultiSelectOptionsType>) => {

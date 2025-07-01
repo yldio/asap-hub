@@ -154,7 +154,7 @@ describe('ResearchOutputs controller', () => {
       );
 
       expect(result).toEqual(getResearchOutputResponse());
-      expect(researchOutputDataProviderMock.create).toBeCalledWith(
+      expect(researchOutputDataProviderMock.create).toHaveBeenCalledWith(
         {
           ...getResearchOutputCreateDataObject(),
           addedDate: mockDate.toISOString(),

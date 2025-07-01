@@ -7,6 +7,8 @@ import {
   TeamIcon,
   InactiveBadgeIcon,
   WorkingGroupsIcon,
+  ImpactIcon,
+  CategoryIcon,
 } from '../icons';
 import { Avatar, Link } from '../atoms';
 import { perRem } from '../pixels';
@@ -84,7 +86,7 @@ interface AssociationListProps {
     id: string;
     inactiveSince?: string;
   }>;
-  readonly type: 'Team' | 'Lab' | 'Working Group';
+  readonly type: 'Team' | 'Lab' | 'Working Group' | 'Impact' | 'Category';
   readonly inline?: boolean;
   readonly max?: number;
   readonly more?: number;
@@ -93,6 +95,8 @@ const icon: Record<AssociationListProps['type'], React.ReactElement> = {
   Lab: <LabIcon />,
   Team: <TeamIcon />,
   'Working Group': <WorkingGroupsIcon />,
+  Impact: <ImpactIcon />,
+  Category: <CategoryIcon />,
 };
 const Indicator = ({ type }: { type: AssociationListProps['type'] }) => (
   <div css={iconStyles}>{icon[type]}</div>
@@ -145,6 +149,7 @@ const AssociationList: FC<AssociationListProps> = ({
                 {displayName} {type}
               </>
             )}
+            {(type === 'Impact' || type === 'Category') && <>{displayName}</>}
             {type === 'Working Group' && (
               <Link
                 href={

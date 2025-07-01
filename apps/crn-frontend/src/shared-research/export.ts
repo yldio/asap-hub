@@ -139,6 +139,8 @@ export const researchOutputToCSV = (
     : undefined,
   statusChangedAt: output.statusChangedAt,
   isInReview: output.isInReview,
+  impact: output.impact?.name,
+  categories: output.categories?.map((category) => category.name).join(','),
   ...getFirstVersionData(output.versions),
 });
 

@@ -1,15 +1,11 @@
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
 import { Router } from 'react-router-dom';
 
 import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import {
-  researchOutputDocumentTypeToType,
-  ResearchOutputPostRequest,
-} from '@asap-hub/model';
+import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import {
   render,
@@ -18,28 +14,12 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { createMemoryHistory, History } from 'history';
-import ResearchOutputForm from '../ResearchOutputForm';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
-
-const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
-  displayChangelog: false,
-  onSave: jest.fn(() => Promise.resolve()),
-  onSaveDraft: jest.fn(() => Promise.resolve()),
-  published: false,
-  tagSuggestions: [],
-  researchTags: [],
-  documentType: 'Article',
-  selectedTeams: [],
-  typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
-  permissions: {
-    canEditResearchOutput: true,
-    canPublishResearchOutput: true,
-    canShareResearchOutput: true,
-  },
-  getRelatedResearchSuggestions: jest.fn(),
-  getRelatedEventSuggestions: jest.fn(),
-  getShortDescriptionFromDescription: jest.fn(),
-};
+import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
+import ResearchOutputForm from '../../ResearchOutputForm';
+import {
+  defaultProps,
+  expectedRequest,
+} from '../../test-utils/research-output-form';
 
 jest.setTimeout(60000);
 
@@ -69,31 +49,6 @@ describe('on submit', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
-
-  const expectedRequest: ResearchOutputPostRequest = {
-    documentType: 'Article',
-    doi: '10.1234',
-    link: 'http://example.com',
-    title: 'example title',
-    description: '',
-    descriptionMD: 'example description',
-    shortDescription: 'short description',
-    changelog: '',
-    type: 'Preprint',
-    labs: [],
-    authors: [],
-    teams: ['TEAMID'],
-    sharingStatus: 'Network Only',
-    methods: [],
-    organisms: [],
-    environments: [],
-    usageNotes: '',
-    workingGroups: [],
-    relatedResearch: [],
-    keywords: [],
-    published: false,
-    relatedEvents: [],
-  };
 
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
@@ -135,11 +90,11 @@ describe('on submit', () => {
       descriptionMD: 'example description',
       shortDescription: 'short description',
       title: 'example title',
-      type: 'Preprint',
+      type: 'Code',
       link: 'http://example.com',
     };
     const propOverride = {};
-    const documentType = 'Article';
+    const documentType = 'Bioinformatics';
     const researchTags = [{ id: '1', name: 'research tag 1' }];
 
     await render(
@@ -247,6 +202,8 @@ describe('on submit', () => {
         { externalAuthorName: 'Alex White' },
       ],
       usageNotes: 'Access Instructions',
+      documentType: 'Bioinformatics',
+      type: 'Code',
     });
   });
 });

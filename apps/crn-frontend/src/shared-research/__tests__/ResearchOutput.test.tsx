@@ -19,12 +19,14 @@ import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
 import { refreshResearchOutputState } from '../state';
 import { updateTeamResearchOutput } from '../../network/teams/api';
+import { getImpacts } from '../../shared-api/impact';
 
 jest.setTimeout(30000);
 jest.mock('../../network/teams/api');
 jest.mock('../../network/users/api');
 jest.mock('../../network/working-groups/api');
 jest.mock('../api');
+jest.mock('../../shared-api/impact');
 
 beforeEach(() => {
   window.scrollTo = jest.fn();
@@ -40,7 +42,13 @@ const mockUpdateTeamResearchOutput =
     typeof updateTeamResearchOutput
   >;
 
+const mockGetImpacts = getImpacts as jest.MockedFunction<typeof getImpacts>;
+
 beforeEach(() => {
+  mockGetImpacts.mockResolvedValue({
+    total: 0,
+    items: [],
+  });
   mockGetResearchOutput.mockClear();
   mockGetResearchOutput.mockResolvedValue({
     ...createResearchOutputResponse(),

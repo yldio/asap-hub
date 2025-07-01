@@ -451,6 +451,18 @@ describe('Research Outputs Data Provider', () => {
       expect(result!.researchTheme).toEqual([]);
     });
 
+    test('Should default missing categories to an empty array', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.categoriesCollection = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      const result = await researchOutputDataProvider.fetchById('1');
+
+      expect(result!.categories).toEqual([]);
+    });
+
     test('Should parse working group reference to array', async () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
       researchOutputs.workingGroup = {

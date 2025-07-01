@@ -1,7 +1,3 @@
-import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
-
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
   researchOutputDocumentTypeToType,
@@ -9,30 +5,17 @@ import {
   ResearchOutputType,
 } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
-import ResearchOutputForm from '../ResearchOutputForm';
-import { createIdentifierField } from '../../utils/research-output-form';
-
-const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
-  displayChangelog: false,
-  onSave: jest.fn(() => Promise.resolve()),
-  onSaveDraft: jest.fn(() => Promise.resolve()),
-  published: false,
-  tagSuggestions: [],
-  researchTags: [],
-  documentType: 'Article',
-  selectedTeams: [],
-  typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
-  permissions: {
-    canEditResearchOutput: true,
-    canPublishResearchOutput: true,
-    canShareResearchOutput: true,
-  },
-  getRelatedResearchSuggestions: jest.fn(),
-  getRelatedEventSuggestions: jest.fn(),
-  getShortDescriptionFromDescription: jest.fn(),
-};
+import userEvent from '@testing-library/user-event';
+import { StaticRouter } from 'react-router-dom';
+import { createIdentifierField } from '../../../utils/research-output-form';
+import ResearchOutputForm from '../../ResearchOutputForm';
+import { defaultProps } from '../../test-utils/research-output-form';
 
 jest.setTimeout(60000);
+
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
+});
 
 it('sets authors to required', () => {
   render(

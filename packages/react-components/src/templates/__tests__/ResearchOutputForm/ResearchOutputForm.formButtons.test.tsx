@@ -11,28 +11,9 @@ import {
 } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory, History } from 'history';
-import ResearchOutputForm from '../ResearchOutputForm';
-import { fern, paper } from '../../colors';
-
-const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
-  displayChangelog: false,
-  onSave: jest.fn(() => Promise.resolve()),
-  onSaveDraft: jest.fn(() => Promise.resolve()),
-  published: false,
-  tagSuggestions: [],
-  researchTags: [],
-  documentType: 'Article',
-  selectedTeams: [],
-  typeOptions: Array.from(researchOutputDocumentTypeToType.Article.values()),
-  permissions: {
-    canEditResearchOutput: true,
-    canPublishResearchOutput: true,
-    canShareResearchOutput: true,
-  },
-  getRelatedResearchSuggestions: jest.fn(),
-  getRelatedEventSuggestions: jest.fn(),
-  getShortDescriptionFromDescription: jest.fn(),
-};
+import ResearchOutputForm from '../../ResearchOutputForm';
+import { fern, paper } from '../../../colors';
+import { defaultProps } from '../../test-utils/research-output-form';
 
 jest.setTimeout(60000);
 

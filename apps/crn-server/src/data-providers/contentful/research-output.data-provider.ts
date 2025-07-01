@@ -27,7 +27,7 @@ import {
   ResearchOutputsOrder,
   RichTextFromQuery,
 } from '@asap-hub/contentful';
-import { parseUserDisplayName } from '@asap-hub/server-common';
+import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { isSharingStatus } from '../transformers/research-output';
 import {
   CreateResearchOutputOptions,
@@ -381,6 +381,18 @@ const parseGraphQLResearchOutput = (
     researchTheme: (researchOutputs.teamsCollection?.items || [])
       .map((teamItem) => teamItem?.researchTheme?.name)
       .filter((item): item is string => item !== undefined),
+    impact: researchOutputs?.impact
+      ? {
+          id: researchOutputs.impact.sys.id,
+          name: researchOutputs.impact.name || '',
+        }
+      : undefined,
+    categories: cleanArray(
+      researchOutputs.categoriesCollection?.items || [],
+    ).map((category) => ({
+      id: category.sys.id,
+      name: category.name || '',
+    })),
     description: researchOutputs.description
       ? parseRichText(researchOutputs.description as RichTextFromQuery)
       : undefined,
@@ -525,6 +537,8 @@ const prepareInput = (
     subtypeId,
     keywordIds,
     workingGroups,
+    impact,
+    categories,
     ...researchOutputData
   } = input;
 
@@ -557,6 +571,8 @@ const prepareInput = (
         ? getLinkEntity(workingGroups[0])
         : null,
     subtype: subtypeId ? getLinkEntity(subtypeId) : null,
+    impact: impact ? getLinkEntity(impact) : null,
+    categories: categories ? getLinkEntities(categories) : null,
   };
 
   return researchOutput;

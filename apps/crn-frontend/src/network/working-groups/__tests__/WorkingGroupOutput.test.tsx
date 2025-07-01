@@ -31,6 +31,7 @@ import {
   updateTeamResearchOutput,
 } from '../../teams/api';
 import { getWorkingGroup } from '../api';
+import { getImpacts } from '../../../shared-api/impact';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupOutput from '../WorkingGroupOutput';
 
@@ -39,6 +40,7 @@ jest.mock('../api');
 jest.mock('../../teams/api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
+jest.mock('../../../shared-api/impact');
 
 beforeEach(() => {
   window.scrollTo = jest.fn();
@@ -59,6 +61,8 @@ const mockUpdateResearchOutput =
 const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
   typeof getWorkingGroup
 >;
+
+const mockGetImpacts = getImpacts as jest.MockedFunction<typeof getImpacts>;
 
 const mandatoryFields = async (
   {
@@ -207,6 +211,13 @@ const renderPage = async ({
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
+beforeEach(() => {
+  mockGetImpacts.mockResolvedValue({
+    total: 0,
+    items: [],
+  });
+});
+
 it('Renders the working group research output form with relevant fields', async () => {
   await renderPage({
     outputDocumentType: 'article',
@@ -256,9 +267,9 @@ it('can submit a form when form data is valid', async () => {
   const title = 'example42 title';
   const descriptionMD = 'example42 description';
   const shortDescription = 'example42 short description';
-  const type = 'Preprint';
+  const type = 'Code';
   const doi = '10.0777';
-  const outputDocumentType = 'article';
+  const outputDocumentType = 'bioinformatics';
 
   const history = createMemoryHistory({
     initialEntries: [
@@ -292,7 +303,7 @@ it('can submit a form when form data is valid', async () => {
   expect(mockCreateResearchOutput).toHaveBeenCalledWith(
     {
       doi,
-      documentType: 'Article',
+      documentType: 'Bioinformatics',
       sharingStatus: 'Network Only',
       teams: ['t0'],
       link,
@@ -321,6 +332,8 @@ it('can submit a form when form data is valid', async () => {
       asapFunded: undefined,
       usedInPublication: undefined,
       published: true,
+      categories: [],
+      impact: '',
     },
     expect.anything(),
   );
@@ -337,9 +350,9 @@ it('can save draft when form data is valid', async () => {
   const title = 'example42 title';
   const descriptionMD = 'example42 description';
   const shortDescription = 'example42 short description';
-  const type = 'Preprint';
+  const type = 'Code';
   const doi = '10.0777';
-  const outputDocumentType = 'article';
+  const outputDocumentType = 'bioinformatics';
 
   const history = createMemoryHistory({
     initialEntries: [
@@ -373,7 +386,7 @@ it('can save draft when form data is valid', async () => {
   expect(mockCreateResearchOutput).toHaveBeenCalledWith(
     {
       doi,
-      documentType: 'Article',
+      documentType: 'Bioinformatics',
       sharingStatus: 'Network Only',
       teams: ['t0'],
       link,
@@ -402,6 +415,8 @@ it('can save draft when form data is valid', async () => {
       asapFunded: undefined,
       usedInPublication: undefined,
       published: false,
+      categories: [],
+      impact: '',
     },
     expect.anything(),
   );
@@ -427,9 +442,9 @@ it('will show server side validation error for link', async () => {
   );
 
   await renderPage({
-    outputDocumentType: 'article',
+    outputDocumentType: 'bioinformatics',
   });
-  const { publish } = await mandatoryFields({}, true);
+  const { publish } = await mandatoryFields({ type: 'Code' }, true);
 
   await publish();
 
@@ -455,10 +470,10 @@ it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
   await renderPage({
-    outputDocumentType: 'article',
+    outputDocumentType: 'bioinformatics',
   });
 
-  const { publish } = await mandatoryFields({}, true);
+  const { publish } = await mandatoryFields({ type: 'Code' }, true);
 
   await publish();
 

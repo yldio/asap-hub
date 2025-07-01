@@ -49,6 +49,8 @@ type ResearchOutputFormProps = Pick<
   | 'typeOptions'
   | 'urlRequired'
   | 'getShortDescriptionFromDescription'
+  | 'getImpactSuggestions'
+  | 'getCategorySuggestions'
 > &
   Pick<
     ComponentProps<typeof ResearchOutputContributorsCard>,
@@ -167,6 +169,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
+  getImpactSuggestions,
+  getCategorySuggestions = noop,
   getRelatedResearchSuggestions = noop,
   getRelatedEventSuggestions,
   getShortDescriptionFromDescription,
@@ -189,6 +193,36 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>(
     researchOutputData?.title || '',
   );
+  const [impact, setImpact] = useState<
+    | NonNullable<
+        ComponentProps<typeof ResearchOutputFormSharingCard>['impact']
+      >
+    | undefined
+  >(
+    researchOutputData?.impact &&
+      researchOutputData.impact.id &&
+      researchOutputData.impact.name
+      ? {
+          value: researchOutputData.impact.id,
+          label: researchOutputData.impact.name,
+        }
+      : {
+          value: '',
+          label: '',
+        },
+  );
+
+  const [categories, setCategories] = useState<
+    NonNullable<
+      ComponentProps<typeof ResearchOutputFormSharingCard>['categories']
+    >
+  >(
+    researchOutputData?.categories?.map((category) => ({
+      value: category.id,
+      label: category.name,
+    })) || [],
+  );
+
   const [labCatalogNumber, setLabCatalogNumber] = useState<
     ResearchOutputPostRequest['labCatalogNumber']
   >(researchOutputData?.labCatalogNumber || '');
@@ -389,9 +423,14 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     keywords,
     published,
     relatedEvents,
+    impact: (impact as MultiSelectOptionsType)?.value,
+    categories: (categories as MultiSelectOptionsType[]).map(
+      (category) => category.value,
+    ),
   });
   const [remotePayload, setRemotePayload] = useState(currentPayload);
 
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   return (
     <main css={mainStyles}>
       <Form<ResearchOutputResponse>
@@ -502,6 +541,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               )}
               <div css={contentStyles}>
                 <ResearchOutputFormSharingCard
+                  isFormSubmitted={isFormSubmitted}
+                  isCreatingNewVersion={versionAction === 'create'}
                   displayChangelog={displayChangelog}
                   documentType={documentType}
                   isCreatingOutputRoute={!!isCreatingOutput}
@@ -515,6 +556,16 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangeShortDescription={setShortDescription}
                   changelog={changelog}
                   onChangeChangelog={setChangelog}
+                  impact={impact}
+                  onChangeImpact={setImpact}
+                  categories={categories}
+                  onChangeCategories={setCategories}
+                  getImpactSuggestions={
+                    getImpactSuggestions as (
+                      searchQuery: string,
+                    ) => Promise<{ label: string; value: string }[]>
+                  }
+                  getCategorySuggestions={getCategorySuggestions}
                   getShortDescriptionFromDescription={
                     getShortDescriptionFromDescription
                   }
@@ -623,11 +674,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                       <Button
                         enabled={!isSaving}
                         fullWidth
-                        onClick={() =>
+                        onClick={async () => {
+                          setIsFormSubmitted(true);
                           promptDescriptionChange
                             ? setShowDescriptionChangePrompt('draft')
-                            : save(true)
-                        }
+                            : await save(true);
+                        }}
                         primary={showSaveDraftButton && !showPublishButton}
                       >
                         Save Draft
@@ -638,15 +690,17 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         enabled={!isSaving}
                         fullWidth
                         primary
-                        onClick={() =>
+                        onClick={async () => {
+                          setIsFormSubmitted(true);
+
                           promptDescriptionChange
                             ? setShowDescriptionChangePrompt('publish')
                             : promptNewVersion
                               ? setShowVersionPrompt(true)
                               : !published
                                 ? setShowConfirmPublish(true)
-                                : save(false)
-                        }
+                                : await save(false);
+                        }}
                       >
                         {published ? 'Save' : 'Publish'}
                       </Button>

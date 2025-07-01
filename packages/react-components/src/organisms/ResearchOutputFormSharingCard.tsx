@@ -8,20 +8,23 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
-import { useEffect, useState } from 'react';
+import { ComponentPropsWithRef, useCallback, useEffect, useState } from 'react';
+import { OptionsType } from 'react-select';
 import { getAjvErrorForPath } from '../ajv-errors';
+import { Markdown } from '../atoms';
+import { MultiSelectOptionsType } from '../atoms/MultiSelect';
 import { GlobeIcon } from '../icons';
 import {
   FormCard,
   LabeledDateField,
   LabeledDropdown,
+  LabeledMultiSelect,
   LabeledRadioButtonGroup,
   LabeledTextArea,
   LabeledTextEditor,
   LabeledTextField,
 } from '../molecules';
 import { noop } from '../utils';
-import { Markdown } from '../atoms/index';
 import ShortDescriptionCard from './ShortDescriptionCard';
 
 type ResearchOutputFormSharingCardProps = Pick<
@@ -34,6 +37,22 @@ type ResearchOutputFormSharingCardProps = Pick<
   | 'sharingStatus'
   | 'subtype'
 > & {
+  isFormSubmitted: boolean;
+  isCreatingNewVersion: boolean;
+  getImpactSuggestions: (
+    searchQuery: string,
+  ) => Promise<{ label: string; value: string }[]>;
+  impact?: MultiSelectOptionsType;
+  onChangeImpact: (
+    newValue: MultiSelectOptionsType & OptionsType<MultiSelectOptionsType>,
+  ) => void;
+  getCategorySuggestions: ComponentPropsWithRef<
+    typeof LabeledMultiSelect
+  >['loadOptions'];
+  categories: ComponentPropsWithRef<typeof LabeledMultiSelect>['values'];
+  onChangeCategories: NonNullable<
+    ComponentPropsWithRef<typeof LabeledMultiSelect>['onChange']
+  >;
   displayChangelog?: boolean;
   researchOutputData?: ResearchOutputResponse;
   documentType?: ResearchOutputResponse['documentType'];
@@ -73,6 +92,14 @@ export const getPublishDateValidationMessage = (e: ValidityState): string => {
 const ResearchOutputFormSharingCard: React.FC<
   ResearchOutputFormSharingCardProps
 > = ({
+  isFormSubmitted,
+  isCreatingNewVersion,
+  getImpactSuggestions,
+  impact,
+  onChangeImpact,
+  getCategorySuggestions = noop,
+  categories,
+  onChangeCategories,
   displayChangelog = false,
   researchOutputData,
   documentType,
@@ -117,6 +144,8 @@ const ResearchOutputFormSharingCard: React.FC<
   ] = useState<string>();
   const [changelogValidationMessage, setChangelogValidationMessage] =
     useState<string>();
+  const [categoryValidationMessage, setCategoryValidationMessage] =
+    useState<string>();
 
   const subtypeSuggestions = researchTags.filter(
     (tag) => tag.category === 'Subtype',
@@ -135,6 +164,27 @@ const ResearchOutputFormSharingCard: React.FC<
           : undefined,
     );
   };
+  const [impactOtions, setImpactOptions] = useState<
+    {
+      label: string;
+      value: string;
+    }[]
+  >([]);
+
+  const getImpactOptions = useCallback(async () => {
+    const impactOptions = await getImpactSuggestions('');
+    setImpactOptions(impactOptions || []);
+  }, [getImpactSuggestions]);
+
+  useEffect(() => {
+    const fetchImpactOptions = async () => {
+      if (documentType === 'Article') {
+        await getImpactOptions();
+      }
+    };
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchImpactOptions();
+  }, [getImpactOptions, documentType]);
 
   useEffect(() => {
     setUrlValidationMessage(
@@ -152,6 +202,40 @@ const ResearchOutputFormSharingCard: React.FC<
       ),
     );
   }, [serverValidationErrors]);
+
+  const [impactValidationMessage, setImpactValidationMessage] =
+    useState<string>();
+  const validateImpact = useCallback(() => {
+    setImpactValidationMessage(
+      !impact || (impact.value && impact.value.length === 0)
+        ? 'Please add at least one impact.'
+        : undefined,
+    );
+  }, [impact]);
+
+  useEffect(() => {
+    validateImpact();
+  }, [impact, validateImpact]);
+
+  const validateCategories = useCallback(
+    (newValues: OptionsType<MultiSelectOptionsType>) => {
+      const isValidSelection =
+        ((newValues as OptionsType<MultiSelectOptionsType>) || []).length <= 2;
+
+      setCategoryValidationMessage(
+        isValidSelection
+          ? undefined
+          : 'You can select up to two categories only.',
+      );
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (isFormSubmitted && documentType === 'Article') {
+      validateImpact();
+    }
+  }, [isFormSubmitted, validateImpact, documentType]);
 
   return (
     <FormCard title="What are you sharing?">
@@ -230,6 +314,61 @@ const ResearchOutputFormSharingCard: React.FC<
           placeholder="Select subtype"
         />
       )}
+
+      {documentType === 'Article' && (
+        <LabeledDropdown
+          title="Impact"
+          subtitle="(required)"
+          description="Select the option that best describes the impact of this manuscript on the PD field."
+          options={impactOtions}
+          onChange={(e) => {
+            const impactOption = impactOtions.find(
+              (option) => option.value === e,
+            );
+            onChangeImpact(
+              impactOption as MultiSelectOptionsType &
+                OptionsType<MultiSelectOptionsType>,
+            );
+          }}
+          onBlur={validateImpact}
+          customValidationMessage={impactValidationMessage}
+          value={impact?.value ?? ''}
+          enabled={!isSaving && !isCreatingNewVersion}
+          noOptionsMessage={(option) =>
+            `Sorry, no impacts match ${option.inputValue}`
+          }
+          placeholder="Choose an impact"
+        />
+      )}
+      {documentType === 'Article' && (
+        <LabeledMultiSelect
+          required
+          getValidationMessage={(validationState) =>
+            validationState.valueMissing
+              ? 'Please add at least one category.'
+              : 'You can select up to two categories only.'
+          }
+          title="Category"
+          description="Select up to two options that best describe the scientific category of this manuscript."
+          subtitle="(required)"
+          enabled={!isSaving && !isCreatingNewVersion}
+          placeholder="Start typing..."
+          loadOptions={getCategorySuggestions}
+          onChange={(newValues) => {
+            onChangeCategories(
+              newValues as MultiSelectOptionsType &
+                OptionsType<MultiSelectOptionsType>,
+            );
+            validateCategories(newValues);
+          }}
+          customValidationMessage={categoryValidationMessage}
+          values={categories as OptionsType<MultiSelectOptionsType>}
+          noOptionsMessage={({ inputValue }) =>
+            `Sorry, no category options match ${inputValue}`
+          }
+        />
+      )}
+
       <LabeledTextEditor
         title="Description"
         subtitle="(required)"

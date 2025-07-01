@@ -9,6 +9,7 @@ import ResearchOutputFormSharingCard, {
 } from '../ResearchOutputFormSharingCard';
 
 const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
+  isFormSubmitted: false,
   descriptionMD: '',
   shortDescription: '',
   isSaving: false,
@@ -21,6 +22,13 @@ const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   researchTags: [],
   typeOptions: [],
   getShortDescriptionFromDescription: jest.fn(),
+  getImpactSuggestions: jest.fn(),
+  impact: undefined,
+  onChangeImpact: jest.fn(),
+  getCategorySuggestions: jest.fn(),
+  categories: undefined,
+  onChangeCategories: jest.fn(),
+  isCreatingNewVersion: false,
 };
 it('renders the card with provided values', () => {
   // TODO: fix act error

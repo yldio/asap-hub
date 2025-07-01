@@ -116,6 +116,11 @@ describe('Email Notification Service', () => {
       });
     });
 
+    const discussionDetails = {
+      id: 'discussion-id-1',
+      userName: 'Jane Doe',
+    };
+
     test.each`
       template                    | action
       ${'manuscript_submitted'}   | ${'submitted'}
@@ -148,9 +153,81 @@ describe('Email Notification Service', () => {
       },
     );
 
+    test('Should send email notification only to OS team when discussion is created by grantee', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'discussion_created_by_grantee',
+        manuscript.sys.id,
+        '',
+        discussionDetails,
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledTimes(1);
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          To: 'openscience@parkinsonsroadmap.org',
+        }),
+      );
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.not.objectContaining({
+          To: 'fiona.first@email.com,second.external@email.com,connor.corresponding@email.com',
+        }),
+      );
+    });
+
+    test('Should send email notification to OS team and OS discussion participants when discussion is replied to by grantee', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        discussions: {
+          title: 'Discussion Title',
+        },
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        discussions: {
+          message: {
+            createdBy: {
+              email: 'jim@doe.asap.com',
+            },
+          },
+          repliesCollection: {
+            items: [
+              {
+                createdBy: {
+                  email: 'jane@doe.asap.com',
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'grantee_replied_to_discussion',
+        manuscript.sys.id,
+        '',
+        discussionDetails,
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledTimes(1);
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          To: 'jim@doe.asap.com,jane@doe.asap.com,openscience@parkinsonsroadmap.org',
+        }),
+      );
+    });
+
     test.each`
       template                                     | action
-      ${'discussion_created'}                      | ${'discussion created'}
+      ${'discussion_created_by_os_member'}         | ${'discussion created by an os member'}
       ${'os_member_replied_to_discussion'}         | ${'os member replied to discussion'}
       ${'status_changed_review_compliance_report'} | ${'manuscript status changed to review compliance report'}
       ${'status_changed_submit_final_publication'} | ${'manuscript status changed to submit final publication'}
@@ -426,6 +503,10 @@ describe('Email Notification Service', () => {
     });
 
     describe('Trigger action os_member_replied_to_discussion', () => {
+      const discussionDetails = {
+        id: 'discussion-id',
+        userName: 'John Doe',
+      };
       test('does not send email if discussion is not returned', async () => {
         mockEnvironmentGetter.mockReturnValueOnce('production');
 
@@ -441,7 +522,7 @@ describe('Email Notification Service', () => {
           'os_member_replied_to_discussion',
           manuscript.sys.id,
           '',
-          'discussion-id',
+          discussionDetails,
         );
 
         expect(mockedPostmark).not.toHaveBeenCalled();
@@ -479,7 +560,7 @@ describe('Email Notification Service', () => {
           'os_member_replied_to_discussion',
           manuscript.sys.id,
           '',
-          'discussion-id',
+          discussionDetails,
         );
 
         expect(mockedPostmark).not.toHaveBeenCalled();
@@ -521,7 +602,7 @@ describe('Email Notification Service', () => {
           'os_member_replied_to_discussion',
           manuscript.sys.id,
           'jim@doe.asap.com',
-          'discussion-id',
+          discussionDetails,
         );
 
         expect(mockedPostmark).toHaveBeenCalledWith(
@@ -570,7 +651,7 @@ describe('Email Notification Service', () => {
           'os_member_replied_to_discussion',
           manuscript.sys.id,
           'jim@doe.asap.com,jane@doe.asap.com',
-          'discussion-id',
+          discussionDetails,
         );
 
         expect(mockedPostmark).toHaveBeenCalledWith(
@@ -621,7 +702,7 @@ describe('Email Notification Service', () => {
           'os_member_replied_to_discussion',
           manuscript.sys.id,
           '',
-          'discussion-id',
+          discussionDetails,
         );
 
         expect(mockedPostmark).toHaveBeenCalledWith(
@@ -701,7 +782,10 @@ describe('Email Notification Service', () => {
       'os_member_replied_to_discussion',
       manuscript.sys.id,
       'jane@doe.asap.com',
-      'discussion-id',
+      {
+        id: 'discussion-id',
+        userName: 'John Doe',
+      },
     );
 
     expect(loggerErrorSpy).toHaveBeenCalledWith(

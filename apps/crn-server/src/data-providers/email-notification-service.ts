@@ -1,12 +1,12 @@
 import {
-  FetchDiscussionGranteeParticipantsQuery,
-  FetchDiscussionGranteeParticipantsQueryVariables,
+  FetchDiscussionParticipantsQuery,
+  FetchDiscussionParticipantsQueryVariables,
   FetchDiscussionTitleQuery,
   FetchDiscussionTitleQueryVariables,
   FetchManuscriptNotificationDetailsQuery,
   FetchManuscriptNotificationDetailsQueryVariables,
   FETCH_DISCUSSION_TITLE,
-  FETCH_DISCUSSION_GRANTEE_PARTICIPANTS,
+  FETCH_DISCUSSION_PARTICIPANTS,
   FETCH_MANUSCRIPT_NOTIFICATION_DETAILS,
   GraphQLClient,
 } from '@asap-hub/contentful';
@@ -39,7 +39,13 @@ type TemplateModel = {
   assignedOSMembers: string;
   discussion?: {
     title: string;
+    submitterName: string;
   };
+};
+
+type DiscussionNotificationInfo = {
+  id: string;
+  userName: string;
 };
 
 export class EmailNotificationService {
@@ -79,9 +85,13 @@ export class EmailNotificationService {
     action: EmailTriggerAction,
     manuscriptId: string,
     emailList: string,
-    discussionId?: string,
+    discussionDetails?: DiscussionNotificationInfo,
   ): Promise<void> {
     const isProduction = environmentName === 'production';
+    const isDiscussionCreatedAction = [
+      'discussion_created_by_os_member',
+      'discussion_created_by_grantee',
+    ].includes(action);
 
     const { manuscripts } = await this.contentfulClient.request<
       FetchManuscriptNotificationDetailsQuery,
@@ -122,11 +132,11 @@ export class EmailNotificationService {
       .filter(Boolean);
 
     let discussionTitle = '';
-    if (discussionId) {
+    if (discussionDetails?.id) {
       const { discussions } = await this.contentfulClient.request<
         FetchDiscussionTitleQuery,
         FetchDiscussionTitleQueryVariables
-      >(FETCH_DISCUSSION_TITLE, { id: discussionId });
+      >(FETCH_DISCUSSION_TITLE, { id: discussionDetails.id });
       discussionTitle = discussions?.title || '';
     }
 
@@ -144,14 +154,31 @@ export class EmailNotificationService {
       assignedOSMembers: getCommaAndString(assignedOSMembers || []),
       discussion: {
         title: discussionTitle,
+        submitterName: discussionDetails?.userName || '',
       },
     });
 
-    if (discussionId && action === 'os_member_replied_to_discussion') {
+    const sendDiscussionReplyEmailNotification = async (
+      discussionId: string,
+    ) => {
+      const isOSMemberReplyAction =
+        action === 'os_member_replied_to_discussion';
+      const messagesFilter = {
+        createdBy: {
+          alumniSinceDate: null,
+          ...(isOSMemberReplyAction
+            ? { openScienceTeamMember_not: true }
+            : { openScienceTeamMember: true }),
+        },
+      };
+
       const { discussions } = await this.contentfulClient.request<
-        FetchDiscussionGranteeParticipantsQuery,
-        FetchDiscussionGranteeParticipantsQueryVariables
-      >(FETCH_DISCUSSION_GRANTEE_PARTICIPANTS, { id: discussionId });
+        FetchDiscussionParticipantsQuery,
+        FetchDiscussionParticipantsQueryVariables
+      >(FETCH_DISCUSSION_PARTICIPANTS, {
+        id: discussionId,
+        messagesFilter,
+      });
 
       const recipients = Array.from(
         new Set(
@@ -165,6 +192,10 @@ export class EmailNotificationService {
       );
 
       let allowedRecipients = recipients;
+      if (!isOSMemberReplyAction) {
+        allowedRecipients.push('openscience@parkinsonsroadmap.org');
+      }
+
       if (!isProduction) {
         allowedRecipients = recipients.filter(
           (email) => email && emailList.includes(email),
@@ -172,14 +203,28 @@ export class EmailNotificationService {
       }
 
       const templateDetails = emailNotificationMapping[action];
-      if (templateDetails.grantee && allowedRecipients.length >= 1) {
-        await this.sendEmail(
-          allowedRecipients,
-          templateDetails.grantee,
-          notificationData('grantee'),
-        );
+      if (allowedRecipients.length >= 1) {
+        if (!isOSMemberReplyAction && templateDetails.open_science_team)
+          await this.sendEmail(
+            allowedRecipients,
+            templateDetails.open_science_team,
+            notificationData('open_science_team'),
+          );
+        if (isOSMemberReplyAction && templateDetails.grantee)
+          await this.sendEmail(
+            allowedRecipients,
+            templateDetails.grantee,
+            notificationData('grantee'),
+          );
       }
-    } else {
+    };
+
+    if (discussionDetails?.id && !isDiscussionCreatedAction) {
+      await sendDiscussionReplyEmailNotification(discussionDetails.id);
+    } else if (
+      !discussionDetails?.id ||
+      (discussionDetails?.id && isDiscussionCreatedAction)
+    ) {
       const contributingAuthors = [
         ...(versionData.firstAuthorsCollection?.items.map(
           (firstAuthor) => firstAuthor?.email,

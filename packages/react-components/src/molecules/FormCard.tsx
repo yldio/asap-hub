@@ -3,11 +3,11 @@ import { Card, Headline3, Paragraph } from '../atoms';
 import { paddingStyles } from '../card';
 import { perRem } from '../pixels';
 
-interface FormCardProps {
+export type FormCardProps = {
   title: string;
   description?: string | React.ReactNode;
   overrideStyles?: SerializedStyles;
-}
+};
 
 const cardStyles = css({
   paddingTop: `${14 / perRem}em`,

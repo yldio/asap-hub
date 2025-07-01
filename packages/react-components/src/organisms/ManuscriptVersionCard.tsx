@@ -1,4 +1,9 @@
-import { ManuscriptVersion, quickCheckQuestions } from '@asap-hub/model';
+import {
+  ManuscriptCategory,
+  ManuscriptImpact,
+  ManuscriptVersion,
+  quickCheckQuestions,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -33,6 +38,8 @@ type ManuscriptVersionCardProps = {
   manuscriptId: string;
   isActiveVersion?: boolean;
   isManuscriptContributor?: boolean;
+  categories?: ManuscriptCategory[];
+  impact?: ManuscriptImpact;
   openDiscussionTab: () => void;
 };
 
@@ -178,6 +185,8 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   manuscriptId,
   isActiveVersion = false,
   isManuscriptContributor = false,
+  categories,
+  impact,
   openDiscussionTab,
 }) => {
   const history = useHistory();
@@ -332,6 +341,30 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                     id,
                   }))}
                 />
+
+                {impact && (
+                  <AssociationList
+                    type="Impact"
+                    inline
+                    associations={[
+                      {
+                        displayName: impact.name,
+                        id: impact.id,
+                      },
+                    ]}
+                  />
+                )}
+
+                {categories && categories.length > 0 && (
+                  <AssociationList
+                    type="Category"
+                    inline
+                    associations={categories.map(({ name, id }) => ({
+                      displayName: name,
+                      id,
+                    }))}
+                  />
+                )}
               </div>
               <ExpandableText>{version.description}</ExpandableText>
               <div>

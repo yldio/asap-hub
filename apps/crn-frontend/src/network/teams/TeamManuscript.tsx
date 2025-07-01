@@ -1,3 +1,4 @@
+import React, { lazy } from 'react';
 import { Frame } from '@asap-hub/frontend-utils';
 import {
   AuthorResponse,
@@ -5,11 +6,7 @@ import {
   ManuscriptError,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import {
-  ManuscriptForm,
-  ManuscriptHeader,
-  usePushFromHere,
-} from '@asap-hub/react-components';
+import { ManuscriptHeader, usePushFromHere } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -19,6 +16,7 @@ import {
   useLabSuggestions,
   useGeneratedContent,
   useTeamSuggestions,
+  useImpactSuggestions,
 } from '../../shared-state';
 import {
   refreshTeamState,
@@ -31,6 +29,13 @@ import {
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
+import { useCategorySuggestions } from '../../shared-state/category';
+
+const loadManuscriptForm = () =>
+  import(
+    /* webpackChunkName: "manuscript-form" */ '@asap-hub/react-components/manuscript-form'
+  );
+const ManuscriptForm = lazy(loadManuscriptForm);
 
 type TeamManuscriptProps = {
   teamId: string;
@@ -59,6 +64,8 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getShortDescriptionFromDescription = useGeneratedContent();
+  const getImpactSuggestions = useImpactSuggestions();
+  const getCategorySuggestions = useCategorySuggestions();
 
   const pushFromHere = usePushFromHere();
 
@@ -87,6 +94,21 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
     additionalAuthors: manuscriptAdditionalAuthors,
     ...manuscriptVersion
   } = manuscript?.versions[0] || {};
+
+  const { impact: manuscriptImpact, categories: manuscriptCategories } =
+    manuscript || {};
+  const selectedImpact = manuscriptImpact
+    ? {
+        value: manuscriptImpact.id,
+        label: manuscriptImpact.name,
+      }
+    : undefined;
+
+  const selectedCategories = (manuscriptCategories || [])?.map((category) => ({
+    value: category.id,
+    label: category.name,
+  }));
+
   const selectedTeams = manuscriptTeams?.map((selectedTeam, index) => ({
     value: selectedTeam.id,
     label: selectedTeam.displayName,
@@ -137,7 +159,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           selectedTeams={selectedTeams}
           getLabSuggestions={getLabSuggestions}
           selectedLabs={selectedLabs}
-          getAuthorSuggestions={(input) =>
+          getAuthorSuggestions={(input: string) =>
             getAuthorSuggestions(input).then((authors) =>
               authors.map((author) => ({
                 author,
@@ -148,6 +170,8 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           }
           title={manuscript?.title}
           url={manuscript?.url}
+          impact={selectedImpact}
+          categories={selectedCategories}
           firstAuthors={convertAuthorsToSelectOptions(manuscriptFirstAuthors)}
           correspondingAuthor={convertAuthorsToSelectOptions(
             manuscriptCorrespondingAuthor,
@@ -159,6 +183,8 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           clearFormToast={() => {
             setFormType({ type: '', accent: 'successLarge' });
           }}
+          getImpactSuggestions={getImpactSuggestions}
+          getCategorySuggestions={getCategorySuggestions}
           {...manuscriptVersion}
         />
       </Frame>

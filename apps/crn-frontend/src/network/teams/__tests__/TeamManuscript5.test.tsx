@@ -12,6 +12,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
   within,
+  act,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, MemoryHistory } from 'history';
@@ -62,6 +63,18 @@ jest.mock('../api', () => ({
     .mockResolvedValue([{ id: teamId, displayName: 'Team A' }]),
 }));
 
+jest.mock('../../../shared-api/impact', () => ({
+  getImpacts: jest
+    .fn()
+    .mockResolvedValue({ items: [{ id: 'impact-id-1', name: 'My Impact' }] }),
+}));
+
+jest.mock('../../../shared-api/category', () => ({
+  getCategories: jest.fn().mockResolvedValue({
+    items: [{ id: 'category-id-1', name: 'My Category' }],
+  }),
+}));
+
 const mockSetFormType = jest.fn();
 // mock useManuscriptToast hook
 jest.mock('../useManuscriptToast', () => {
@@ -76,7 +89,6 @@ jest.mock('../useManuscriptToast', () => {
 });
 
 beforeEach(() => {
-  jest.resetModules();
   mockSetFormType.mockReset();
   jest.spyOn(console, 'error').mockImplementation();
 
@@ -151,6 +163,9 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
     } as AuthorResponse,
   ];
 
+  manuscript.impact = { id: 'impact-id-1', name: 'My Impact' };
+  manuscript.categories = [{ id: 'category-id-1', name: 'My Category' }];
+
   mockGetManuscript.mockResolvedValue(manuscript);
   mockResubmitManuscript.mockResolvedValue(manuscript);
 
@@ -166,22 +181,25 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
   const urlTextbox = screen.getByRole('textbox', {
     name: /URL/i,
   });
-  userEvent.type(urlTextbox, 'https://example.com/manuscript');
+  await userEvent.type(urlTextbox, 'https://example.com/manuscript');
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
 
-  userEvent.type(lifecycleTextbox, 'Preprint');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
-  lifecycleTextbox.blur();
+  await userEvent.type(lifecycleTextbox, 'Preprint');
+  await act(async () => {
+    await userEvent.type(lifecycleTextbox, specialChars.enter);
+    lifecycleTextbox.blur();
+  });
 
   const preprintDoi = '10.4444/test';
 
   const preprintDoiTextbox = screen.getByRole('textbox', {
     name: /Preprint DOI/i,
   });
-  userEvent.type(preprintDoiTextbox, preprintDoi);
+
+  await userEvent.type(preprintDoiTextbox, preprintDoi);
 
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',

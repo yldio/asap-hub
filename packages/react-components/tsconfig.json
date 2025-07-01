@@ -9,6 +9,7 @@
     "jsxImportSource": "@emotion/react"
   },
   "include": ["src", "src/lotties/*.json"],
+  "files": ["src/index.ts", "src/manuscript-form.ts"],
   "references": [
     { "path": "../algolia" },
     { "path": "../auth" },

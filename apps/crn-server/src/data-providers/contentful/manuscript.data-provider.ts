@@ -268,6 +268,8 @@ export class ManuscriptContentfulDataProvider
         count: currentCount + 1,
         teams: getLinkEntities(version.teams),
         versions: getLinkEntities([manuscriptVersionId]),
+        impact: getLinkEntity(input.impact || ''),
+        categories: getLinkEntities(input.categories || []),
         status: 'Waiting for Report',
       }),
     });
@@ -325,6 +327,8 @@ export class ManuscriptContentfulDataProvider
       url,
       teams: getLinkEntities(version.teams),
       status: 'Manuscript Resubmitted',
+      impact: getLinkEntity(input.impact || ''),
+      categories: getLinkEntities(input.categories || []),
     });
 
     await this.emailNotificationService.sendEmailNotification(
@@ -396,6 +400,8 @@ export class ManuscriptContentfulDataProvider
         title: manuscriptData.title,
         url: manuscriptData.url,
         teams: getLinkEntities(version.teams),
+        impact: getLinkEntity(manuscriptData.impact || ''),
+        categories: getLinkEntities(manuscriptData.categories || []),
       });
 
       await patchAndPublish(lastVersionEntry, {
@@ -528,6 +534,25 @@ const parseGraphQLManuscript = (
       teamId,
       count,
     ),
+    impact:
+      manuscript.impact && manuscript.impact.name
+        ? {
+            id: manuscript.impact.sys.id,
+            name: manuscript.impact.name,
+          }
+        : undefined,
+    categories: (manuscript.categoriesCollection?.items || [])
+      .filter(
+        (category): category is { sys: { id: string }; name: string } =>
+          !!category &&
+          !!category.sys?.id &&
+          typeof category.name === 'string' &&
+          !!category.name,
+      )
+      .map((category) => ({
+        id: category.sys.id,
+        name: category.name,
+      })),
   };
 };
 

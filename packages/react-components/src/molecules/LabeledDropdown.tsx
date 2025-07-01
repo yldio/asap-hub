@@ -22,7 +22,7 @@ const infoWrapperStyle = css({
   float: 'right',
 });
 
-type LabeledDropdownProps<V extends string> = {
+export type LabeledDropdownProps<V extends string> = {
   readonly title: React.ReactNode;
   readonly subtitle?: React.ReactNode;
   readonly description?: React.ReactNode;
@@ -57,3 +57,5 @@ export default function LabeledDropdown<V extends string>({
     </div>
   );
 }
+
+export type LabeledDropdownType = typeof LabeledDropdown;

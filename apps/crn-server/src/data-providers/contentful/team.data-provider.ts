@@ -350,6 +350,18 @@ const mapManuscripts = (
   const teamId = manuscript.teamsCollection?.items[0]?.teamId || '';
   const grantId = manuscript.teamsCollection?.items[0]?.grantId || '';
   const count = manuscript.count || 1;
+  const impact = manuscript.impact
+    ? {
+        id: manuscript.impact.sys.id || '',
+        name: manuscript.impact.name || '',
+      }
+    : undefined;
+  const categories = manuscript.categoriesCollection?.items
+    ? manuscript.categoriesCollection?.items.map((category) => ({
+        id: category?.sys.id || '',
+        name: category?.name || '',
+      }))
+    : [];
 
   return {
     id: manuscript.sys.id,
@@ -358,6 +370,8 @@ const mapManuscripts = (
     url: manuscript.url || undefined,
     teamId,
     grantId,
+    impact,
+    categories,
     status: manuscriptMapStatus(manuscript.status) || undefined,
     versions: parseGraphqlManuscriptVersion(
       manuscript.versionsCollection?.items || [],

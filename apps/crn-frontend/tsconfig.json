@@ -10,7 +10,13 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "react-jsx",
     "types": ["vite/client", "@testing-library/jest-dom"],
-    "isolatedModules": true
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@asap-hub/react-components/manuscript-form": [
+        "../../packages/react-components/src/manuscript-form"
+      ]
+    }
   },
   "include": ["src"],
   "references": [

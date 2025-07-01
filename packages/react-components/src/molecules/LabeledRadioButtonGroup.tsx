@@ -89,3 +89,5 @@ export default function LabeledRadioButtonGroup<V extends string>({
     </fieldset>
   );
 }
+
+export type LabeledRadioButtonGroupType = typeof LabeledRadioButtonGroup;

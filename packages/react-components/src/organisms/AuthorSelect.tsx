@@ -175,5 +175,5 @@ const AuthorSelect: React.FC<AuthorSelectProps> = ({
     }}
   />
 );
-
+export type AuthorSelectType = typeof AuthorSelect;
 export default AuthorSelect;

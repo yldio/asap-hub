@@ -1,11 +1,15 @@
 import { ResearchOutputSharingStatus } from '@asap-hub/model';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ComponentProps } from 'react';
+import { OptionsType } from 'react-select';
+import { MultiSelectOptionsType } from '../../atoms';
 import { noop } from '../../utils';
 
 import ResearchOutputFormSharingCard from '../ResearchOutputFormSharingCard';
 
 const defaultProps: ComponentProps<typeof ResearchOutputFormSharingCard> = {
+  isFormSubmitted: false,
+  documentType: 'Bioinformatics',
   link: '',
   title: '',
   descriptionMD: '',
@@ -31,14 +35,18 @@ const defaultProps: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   onChangeUsedInPublication: jest.fn(),
   onChangeSharingStatus: jest.fn(),
   onChangePublishDate: jest.fn(),
-  getImpactSuggestions: jest.fn(),
+  getImpactSuggestions: jest.fn().mockResolvedValue([]),
   impact: undefined,
   onChangeImpact: jest.fn(),
-  getCategorySuggestions: jest.fn(),
+  getCategorySuggestions: jest.fn().mockResolvedValue([]),
   categories: undefined,
   onChangeCategories: jest.fn(),
   isCreatingNewVersion: false,
 };
+
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
+});
 
 describe('Changelog validation', () => {
   it('shows validation message when changelog is empty', async () => {
@@ -103,15 +111,9 @@ it('renders the impact and categories', async () => {
   const categoryInput = screen.getByRole('textbox', { name: /category/i });
   expect(categoryInput).toBeInTheDocument();
 
-  fireEvent.change(impactInput, { target: { value: 'Impact' } });
-
   await waitFor(() => {
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
   });
-
-  expect(
-    screen.getByText(/no impact options match Impact/i),
-  ).toBeInTheDocument();
 
   fireEvent.change(categoryInput, { target: { value: 'Category' } });
 
@@ -122,29 +124,6 @@ it('renders the impact and categories', async () => {
   expect(
     screen.getByText(/no category options match Category/i),
   ).toBeInTheDocument();
-});
-
-it('renders impact input and does not throw when getImpactSuggestions is noop', async () => {
-  const { getImpactSuggestions, ...propsWithoutImpactSuggestions } =
-    defaultProps;
-  render(
-    <ResearchOutputFormSharingCard
-      {...propsWithoutImpactSuggestions}
-      documentType="Article"
-      getImpactSuggestions={undefined}
-    />,
-  );
-
-  const impactInput = screen.getByRole('textbox', { name: /impact/i });
-  expect(impactInput).toBeInTheDocument();
-
-  fireEvent.change(impactInput, { target: { value: 'Test' } });
-
-  await waitFor(() => {
-    expect(
-      screen.queryByText(/no impact options match/i),
-    ).not.toBeInTheDocument();
-  });
 });
 
 it('renders category input and does not throw when getCategorySuggestions is noop', async () => {
@@ -194,11 +173,25 @@ it('renders category input and does not throw when onChangeCategories is noop', 
 });
 
 it('shows validation message when more than two categories are selected', async () => {
-  const onChangeCategories = jest.fn();
   const getCategorySuggestions = jest
     .fn()
     .mockResolvedValue([{ label: 'Cat 3', value: 'cat3' }]);
-  render(
+
+  const onChangeCategories = (
+    newCategories: OptionsType<MultiSelectOptionsType>,
+  ) => {
+    rerender(
+      <ResearchOutputFormSharingCard
+        {...defaultProps}
+        documentType="Article"
+        onChangeCategories={onChangeCategories}
+        getCategorySuggestions={getCategorySuggestions}
+        categories={newCategories}
+      />,
+    );
+  };
+
+  const { rerender } = render(
     <ResearchOutputFormSharingCard
       {...defaultProps}
       documentType="Article"
@@ -223,16 +216,17 @@ it('shows validation message when more than two categories are selected', async 
   fireEvent.keyDown(categoryInput, { key: 'ArrowDown' });
   fireEvent.keyDown(categoryInput, { key: 'Enter' });
 
-  expect(onChangeCategories).toHaveBeenCalled();
+  fireEvent.blur(categoryInput);
 
   expect(
-    await screen.findByText('Please select up to two categories'),
+    await screen.findByText('You can select up to two categories only.'),
   ).toBeInTheDocument();
 
   fireEvent.click(screen.getAllByTitle(/close/i)[0]!);
+  fireEvent.blur(categoryInput);
 
   expect(
-    screen.queryByText('Please select up to two categories'),
+    screen.queryByText('You can select up to two categories only.'),
   ).not.toBeInTheDocument();
 });
 

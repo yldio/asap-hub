@@ -430,6 +430,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   });
   const [remotePayload, setRemotePayload] = useState(currentPayload);
 
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   return (
     <main css={mainStyles}>
       <Form<ResearchOutputResponse>
@@ -540,6 +541,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               )}
               <div css={contentStyles}>
                 <ResearchOutputFormSharingCard
+                  isFormSubmitted={isFormSubmitted}
                   isCreatingNewVersion={versionAction === 'create'}
                   displayChangelog={displayChangelog}
                   documentType={documentType}
@@ -558,7 +560,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangeImpact={setImpact}
                   categories={categories}
                   onChangeCategories={setCategories}
-                  getImpactSuggestions={getImpactSuggestions}
+                  getImpactSuggestions={
+                    getImpactSuggestions as (
+                      searchQuery: string,
+                    ) => Promise<{ label: string; value: string }[]>
+                  }
                   getCategorySuggestions={getCategorySuggestions}
                   getShortDescriptionFromDescription={
                     getShortDescriptionFromDescription
@@ -668,11 +674,12 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                       <Button
                         enabled={!isSaving}
                         fullWidth
-                        onClick={() =>
+                        onClick={() => {
+                          setIsFormSubmitted(true);
                           promptDescriptionChange
                             ? setShowDescriptionChangePrompt('draft')
-                            : save(true)
-                        }
+                            : save(true);
+                        }}
                         primary={showSaveDraftButton && !showPublishButton}
                       >
                         Save Draft
@@ -683,15 +690,17 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         enabled={!isSaving}
                         fullWidth
                         primary
-                        onClick={() =>
+                        onClick={() => {
+                          setIsFormSubmitted(true);
+
                           promptDescriptionChange
                             ? setShowDescriptionChangePrompt('publish')
                             : promptNewVersion
                               ? setShowVersionPrompt(true)
                               : !published
                                 ? setShowConfirmPublish(true)
-                                : save(false)
-                        }
+                                : save(false);
+                        }}
                       >
                         {published ? 'Save' : 'Publish'}
                       </Button>

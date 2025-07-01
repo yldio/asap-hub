@@ -182,6 +182,7 @@ const ResearchOutputFormSharingCard: React.FC<
         await getImpactOptions();
       }
     };
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchImpactOptions();
   }, [getImpactOptions, documentType]);
 
@@ -204,39 +205,33 @@ const ResearchOutputFormSharingCard: React.FC<
 
   const [impactValidationMessage, setImpactValidationMessage] =
     useState<string>();
-  const validateImpact = () => {
+  const validateImpact = useCallback(() => {
     setImpactValidationMessage(
       impact?.value.length === 0
         ? 'Please add at least one impact.'
         : undefined,
     );
-  };
+  }, [impact]);
 
-  const validateCategories = (
-    newValues: OptionsType<MultiSelectOptionsType>,
-  ) => {
-    const isValidSelection =
-      ((newValues as OptionsType<MultiSelectOptionsType>) || []).length <= 2;
+  const validateCategories = useCallback(
+    (newValues: OptionsType<MultiSelectOptionsType>) => {
+      const isValidSelection =
+        ((newValues as OptionsType<MultiSelectOptionsType>) || []).length <= 2;
 
-    setCategoryValidationMessage(
-      isValidSelection
-        ? undefined
-        : 'You can select up to two categories only.',
-    );
-  };
+      setCategoryValidationMessage(
+        isValidSelection
+          ? undefined
+          : 'You can select up to two categories only.',
+      );
+    },
+    [],
+  );
 
   useEffect(() => {
     if (isFormSubmitted && documentType === 'Article') {
       validateImpact();
-      validateCategories(categories as OptionsType<MultiSelectOptionsType>);
     }
-  }, [
-    isFormSubmitted,
-    validateImpact,
-    documentType,
-    validateCategories,
-    categories,
-  ]);
+  }, [isFormSubmitted, validateImpact, documentType]);
 
   return (
     <FormCard title="What are you sharing?">
@@ -343,6 +338,12 @@ const ResearchOutputFormSharingCard: React.FC<
       )}
       {documentType === 'Article' && (
         <LabeledMultiSelect
+          required
+          getValidationMessage={(validationState) =>
+            validationState.valueMissing
+              ? 'Please add at least one category.'
+              : 'You can select up to two categories only.'
+          }
           title="Category"
           description="Select up to two options that best describe the scientific category of this manuscript."
           subtitle="(required)"
@@ -356,11 +357,6 @@ const ResearchOutputFormSharingCard: React.FC<
             );
             validateCategories(newValues);
           }}
-          onBlur={() =>
-            validateCategories(
-              categories as OptionsType<MultiSelectOptionsType>,
-            )
-          }
           customValidationMessage={categoryValidationMessage}
           values={categories as OptionsType<MultiSelectOptionsType>}
           noOptionsMessage={({ inputValue }) =>

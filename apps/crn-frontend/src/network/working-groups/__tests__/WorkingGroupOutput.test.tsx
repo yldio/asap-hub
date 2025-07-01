@@ -31,6 +31,7 @@ import {
   updateTeamResearchOutput,
 } from '../../teams/api';
 import { getWorkingGroup } from '../api';
+import { getImpacts } from '../../../shared-api/impact';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupOutput from '../WorkingGroupOutput';
 
@@ -39,6 +40,7 @@ jest.mock('../api');
 jest.mock('../../teams/api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
+jest.mock('../../../shared-api/impact');
 
 beforeEach(() => {
   window.scrollTo = jest.fn();
@@ -59,6 +61,8 @@ const mockUpdateResearchOutput =
 const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
   typeof getWorkingGroup
 >;
+
+const mockGetImpacts = getImpacts as jest.MockedFunction<typeof getImpacts>;
 
 const mandatoryFields = async (
   {
@@ -206,6 +210,13 @@ const renderPage = async ({
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
+
+beforeEach(() => {
+  mockGetImpacts.mockResolvedValue({
+    total: 0,
+    items: [],
+  });
+});
 
 it('Renders the working group research output form with relevant fields', async () => {
   await renderPage({

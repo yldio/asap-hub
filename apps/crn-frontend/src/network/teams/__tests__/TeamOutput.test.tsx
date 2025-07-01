@@ -31,12 +31,14 @@ import {
   getTeam,
   updateTeamResearchOutput,
 } from '../api';
+import { getImpacts } from '../../../shared-api/impact';
 import { refreshTeamState } from '../state';
 import TeamOutput from '../TeamOutput';
 
 jest.setTimeout(60000);
 jest.mock('../api');
 jest.mock('../../users/api');
+jest.mock('../../../shared-api/impact');
 jest.mock('../../../shared-research/api');
 jest.mock('../../../shared-api/content-generator');
 
@@ -148,6 +150,7 @@ const mockGetGeneratedShortDescription =
     typeof getGeneratedShortDescription
   >;
 
+const mockGetImpacts = getImpacts as jest.MockedFunction<typeof getImpacts>;
 interface RenderPageOptions {
   user?: UserResponse;
   teamId: string;
@@ -158,6 +161,10 @@ interface RenderPageOptions {
 
 beforeEach(() => {
   disable('MANUSCRIPT_OUTPUTS');
+  mockGetImpacts.mockResolvedValue({
+    total: 0,
+    items: [],
+  });
 });
 
 it('Renders the research output', async () => {

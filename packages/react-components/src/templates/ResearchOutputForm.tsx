@@ -169,7 +169,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   getLabSuggestions = noop,
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
-  getImpactSuggestions = noop,
+  getImpactSuggestions,
   getCategorySuggestions = noop,
   getRelatedResearchSuggestions = noop,
   getRelatedEventSuggestions,

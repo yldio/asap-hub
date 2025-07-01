@@ -1,5 +1,6 @@
 import { ResearchOutputSharingStatus } from '@asap-hub/model';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { OptionsType } from 'react-select';
 import { MultiSelectOptionsType } from '../../atoms';
@@ -258,4 +259,40 @@ it('disables impact and category fields when isCreatingNewVersion is true', () =
   );
   expect(screen.getByLabelText(/impact/i)).toBeEnabled();
   expect(screen.getByLabelText(/category/i)).toBeEnabled();
+});
+
+it('calls onChangeImpact with the correct option when an impact is selected', async () => {
+  const impactOptions = [
+    { label: 'High Impact', value: 'high' },
+    { label: 'Low Impact', value: 'low' },
+  ];
+  const getImpactSuggestions = jest.fn().mockResolvedValue(impactOptions);
+  const onChangeImpact = jest.fn();
+
+  render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      documentType="Article"
+      impact={undefined}
+      onChangeImpact={onChangeImpact}
+      getImpactSuggestions={getImpactSuggestions}
+    />,
+  );
+
+  await waitFor(() => {
+    expect(getImpactSuggestions).toHaveBeenCalled();
+  });
+
+  const impactField = screen.getByLabelText(/impact/i);
+  userEvent.click(impactField);
+
+  await waitFor(() => {
+    expect(screen.getByText(/low impact/i)).toBeInTheDocument();
+  });
+
+  userEvent.click(screen.getByText('Low Impact'));
+
+  expect(onChangeImpact).toHaveBeenCalledWith(
+    expect.objectContaining({ label: 'Low Impact', value: 'low' }),
+  );
 });

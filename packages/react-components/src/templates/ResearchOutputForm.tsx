@@ -674,11 +674,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                       <Button
                         enabled={!isSaving}
                         fullWidth
-                        onClick={() => {
+                        onClick={async () => {
                           setIsFormSubmitted(true);
                           promptDescriptionChange
                             ? setShowDescriptionChangePrompt('draft')
-                            : save(true);
+                            : await save(true);
                         }}
                         primary={showSaveDraftButton && !showPublishButton}
                       >
@@ -690,7 +690,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         enabled={!isSaving}
                         fullWidth
                         primary
-                        onClick={() => {
+                        onClick={async () => {
                           setIsFormSubmitted(true);
 
                           promptDescriptionChange
@@ -699,7 +699,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                               ? setShowVersionPrompt(true)
                               : !published
                                 ? setShowConfirmPublish(true)
-                                : save(false);
+                                : await save(false);
                         }}
                       >
                         {published ? 'Save' : 'Publish'}

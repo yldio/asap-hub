@@ -177,10 +177,12 @@ const ResearchOutputFormSharingCard: React.FC<
   }, [getImpactSuggestions]);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    if (documentType === 'Article') {
-      getImpactOptions();
-    }
+    const fetchImpactOptions = async () => {
+      if (documentType === 'Article') {
+        await getImpactOptions();
+      }
+    };
+    fetchImpactOptions();
   }, [getImpactOptions, documentType]);
 
   useEffect(() => {
@@ -228,7 +230,13 @@ const ResearchOutputFormSharingCard: React.FC<
       validateImpact();
       validateCategories(categories as OptionsType<MultiSelectOptionsType>);
     }
-  }, [isFormSubmitted, validateImpact, documentType, validateCategories]);
+  }, [
+    isFormSubmitted,
+    validateImpact,
+    documentType,
+    validateCategories,
+    categories,
+  ]);
 
   return (
     <FormCard title="What are you sharing?">

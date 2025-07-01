@@ -13,6 +13,10 @@ import { defaultProps } from '../../test-utils/research-output-form';
 
 jest.setTimeout(60000);
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
+});
+
 it('sets authors to required', () => {
   render(
     <StaticRouter>

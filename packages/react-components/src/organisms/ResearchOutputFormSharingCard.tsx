@@ -207,10 +207,14 @@ const ResearchOutputFormSharingCard: React.FC<
     useState<string>();
   const validateImpact = useCallback(() => {
     setImpactValidationMessage(
-      impact?.value.length === 0
+      !impact || (impact.value && impact.value.length === 0)
         ? 'Please add at least one impact.'
         : undefined,
     );
+  }, [impact]);
+
+  useEffect(() => {
+    validateImpact();
   }, [impact]);
 
   const validateCategories = useCallback(

@@ -61,7 +61,7 @@ runs:
       shell: bash
       run: |
         COMPLIANCE_FILE_NAME=ComplianceFullDataset_$(date +%y%m%d).csv
-        yarn export:compliance $FILE_NAME -f COMPLIANCE_FILE_NAME
+        yarn export:compliance $FILE_NAME -f $COMPLIANCE_FILE_NAME
         aws s3api put-object --bucket $BUCKET_NAME --key $COMPLIANCE_FILE_NAME --body $COMPLIANCE_FILE_NAME --storage-class STANDARD_IA
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}

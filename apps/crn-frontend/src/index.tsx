@@ -7,6 +7,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 const container = document.getElementById('root');
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const root = createRoot(container!); // Non-null assertion because it's guaranteed to exist
 
 root.render(

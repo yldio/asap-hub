@@ -2,7 +2,6 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor, screen } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
 import {
   createTutorialsResponse,

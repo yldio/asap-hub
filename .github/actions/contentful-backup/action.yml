@@ -2,6 +2,9 @@ name: Contentful Backup
 description: Backs up the Contentful data
 
 inputs:
+  app:
+    description: 'crn or gp2'
+    required: true
   aws-access-key-id:
     description: 'AWS Access Key ID'
     required: true
@@ -20,6 +23,9 @@ inputs:
   contentful-token:
     description: 'Contentful Management Token'
     required: true
+  data-bucket-name:
+    description: 's3 bucket name for data backup'
+    required: false
 
 runs:
   using: 'composite'
@@ -50,3 +56,14 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
         BUCKET_NAME: ${{ inputs.bucket-name }}
+    - name: generate compliance csv
+      if: success() && inputs.app == 'crn'
+      shell: bash
+      run: |
+        COMPLIANCE_FILE_NAME=ComplianceFullDataset_$(date +%y%m%d).csv
+        yarn export:compliance $FILE_NAME -f COMPLIANCE_FILE_NAME
+        aws s3api put-object --bucket $BUCKET_NAME --key $COMPLIANCE_FILE_NAME --body $COMPLIANCE_FILE_NAME --storage-class STANDARD_IA
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        BUCKET_NAME: ${{ inputs.data-bucket-name }}

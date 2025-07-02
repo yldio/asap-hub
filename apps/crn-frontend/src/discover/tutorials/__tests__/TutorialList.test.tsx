@@ -110,26 +110,33 @@ it('renders error message when the response is not a 2XX', async () => {
   expect(getByText(/Something went wrong/i)).toBeVisible();
 });
 
+function TestComponent({ total }: { total: number }) {
+  const paginationParams = usePaginationParams();
+  const pagination = usePagination(total, pageSize);
+
+  // For debugging
+  return (
+    <div>
+      <div data-testid="number-of-pages">{pagination.numberOfPages}</div>
+      <div data-testid="current-page">{paginationParams.currentPage}</div>
+    </div>
+  );
+}
+
 it('renders a paginated list of tutorials', async () => {
   const numberOfItems = 40;
   mockGetTutorials.mockResolvedValue(
     createListTutorialsResponse(numberOfItems),
   );
 
-  const { result } = renderHook(
-    () => ({
-      usePaginationParams: usePaginationParams(),
-      usePagination: usePagination(numberOfItems, pageSize),
-    }),
-    {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [`/guides-tutorials/tutorials`],
-      },
-    },
+  const { getByTestId } = render(
+    <MemoryRouter initialEntries={['/guides-tutorials/tutorials']}>
+      <TestComponent total={numberOfItems} />
+    </MemoryRouter>,
   );
 
-  await renderTutorials();
-  expect(result.current.usePagination.numberOfPages).toBe(4);
-  expect(result.current.usePaginationParams.currentPage).toBe(0);
+  await waitFor(() => {
+    expect(getByTestId('number-of-pages').textContent).toBe('4');
+    expect(getByTestId('current-page').textContent).toBe('0');
+  });
 });

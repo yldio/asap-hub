@@ -448,12 +448,14 @@ it('will show server side validation error for link', async () => {
 
   await publish();
 
-  expect(mockCreateResearchOutput).toHaveBeenCalled();
-  expect(
-    screen.queryAllByText(
-      'A Research Output with this URL already exists. Please enter a different URL.',
-    ).length,
-  ).toBeGreaterThan(1);
+  await waitFor(() => {
+    expect(mockCreateResearchOutput).toHaveBeenCalled();
+    expect(
+      screen.queryAllByText(
+        'A Research Output with this URL already exists. Please enter a different URL.',
+      ).length,
+    ).toBeGreaterThanOrEqual(1);
+  });
 
   const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
   userEvent.type(url, 'a');

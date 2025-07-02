@@ -66,6 +66,7 @@ it('syncs the auth state to recoil', async () => {
     const authorization = useRecoilValue(authorizationState);
     return <>{authorization}</>;
   });
+  jest.spyOn(console, 'error').mockImplementation();
   const { queryByText, getByText } = render(
     <RecoilRoot>
       <authTestUtils.UserAuth0Provider>

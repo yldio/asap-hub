@@ -28,6 +28,7 @@ import {
   resubmitManuscriptIcon,
   StatusButton,
   Subtitle,
+  Tooltip,
 } from '..';
 import { mobileScreen, perRem, rem, smallDesktopScreen } from '../pixels';
 import { getReviewerStatusType } from '../utils';
@@ -236,6 +237,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   onMarkDiscussionAsRead,
   isTargetManuscript = false,
 }) => {
+  const [tooltipHoverShown, setTooltipHoverShown] = useState<boolean>(false);
+
   const [activeTab, setActiveTab] = useState<
     'manuscripts-and-reports' | 'discussions'
   >('manuscripts-and-reports');
@@ -423,6 +426,19 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                         )}
                         {hasUpdateAccess && (
                           <span>
+                            <Tooltip
+                              bottom={rem(6)}
+                              width={rem(296)}
+                              shown={tooltipHoverShown}
+                              textStyles={css({
+                                textAlign: 'center',
+                              })}
+                            >
+                              A compliance report must be shared by an Open
+                              Science team member before submitting a new
+                              version of the manuscript.
+                            </Tooltip>
+
                             <Button
                               primary
                               small
@@ -432,7 +448,23 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                                 !!currentManuscriptVersion?.complianceReport
                               }
                             >
-                              <span css={buttonStyles}>
+                              <span
+                                css={buttonStyles}
+                                onMouseOver={() => {
+                                  if (
+                                    !currentManuscriptVersion?.complianceReport
+                                  ) {
+                                    setTooltipHoverShown(true);
+                                  }
+                                }}
+                                onMouseOut={() => {
+                                  if (
+                                    !currentManuscriptVersion?.complianceReport
+                                  ) {
+                                    setTooltipHoverShown(false);
+                                  }
+                                }}
+                              >
                                 {resubmitManuscriptIcon}{' '}
                                 <span css={buttonTextStyles}>
                                   Submit Revised Manuscript

@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 
 import { themes } from '../theme';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 
 const triangleHeight = 5;
 
@@ -20,10 +20,10 @@ const tooltipStyles = css({
   bottom: 0,
   left: '50%',
   transform: 'translateX(-50%)',
-  width: `${256 / perRem}em`,
+  width: rem(256),
 
   display: 'grid',
-  gridTemplateRows: `auto ${triangleHeight / perRem}em`,
+  gridTemplateRows: `auto ${rem(triangleHeight)}`,
 
   '::before': {
     content: '""',
@@ -47,16 +47,16 @@ const bubbleStyles = css({
   ...themes.dark,
   display: 'block',
 
-  padding: `${9 / perRem}em ${12 / perRem}em`,
+  padding: `${rem(9)} ${rem(12)}`,
   boxSizing: 'border-box',
-  maxWidth: `${256 / perRem}em`,
+  maxWidth: rem(256),
 
-  borderRadius: `${4 / perRem}em`,
+  borderRadius: rem(4),
 
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     maxWidth: '100%',
-    marginLeft: `${12 / perRem}em`,
-    marginRight: `${12 / perRem}em`,
+    marginLeft: rem(12),
+    marginRight: rem(12),
   },
 });
 
@@ -65,33 +65,49 @@ interface TooltipProps {
   shown?: boolean;
   maxContent?: boolean;
   bottom?: string;
+  textStyles?: SerializedStyles;
+  width?: string | number;
 }
 const Tooltip: React.FC<TooltipProps> = ({
   children,
   shown = false,
   maxContent = false,
   bottom,
-}) => (
-  <span css={positionerStyles}>
-    <span
-      css={[
-        tooltipStyles,
-        shown || { display: 'none' },
-        maxContent && { width: 'max-content' },
-        bottom && { bottom },
-      ]}
-    >
+  textStyles,
+  width,
+}) => {
+  const widthValue =
+    width !== undefined
+      ? typeof width === 'number'
+        ? rem(width)
+        : width
+      : rem(256);
+
+  return (
+    <span css={positionerStyles}>
       <span
-        role="tooltip"
         css={[
-          bubbleStyles,
-          maxContent && { width: 'max-content', maxWidth: 'fit-content' },
+          tooltipStyles,
+          { width: widthValue },
+          shown || { display: 'none' },
+          maxContent && { width: 'max-content' },
+          bottom && { bottom },
         ]}
       >
-        {children}
+        <span
+          role="tooltip"
+          css={[
+            bubbleStyles,
+            { maxWidth: widthValue },
+            maxContent && { width: 'max-content', maxWidth: 'fit-content' },
+            textStyles,
+          ]}
+        >
+          {children}
+        </span>
       </span>
     </span>
-  </span>
-);
+  );
+};
 
 export default Tooltip;

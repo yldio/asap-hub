@@ -176,6 +176,48 @@ it('displays submit revised manuscript button if user is an author', () => {
   ).toBeVisible();
 });
 
+it('shows tooltip on hover over disabled Submit Revised Manuscript button when no compliance report exists', async () => {
+  const manuscriptVersions = [
+    {
+      ...mockVersion,
+      firstAuthors: [user],
+      complianceReport: undefined,
+    },
+  ];
+
+  const { getByRole, getByTestId, findByRole, queryByRole } = render(
+    <ManuscriptCard
+      {...props}
+      useManuscriptById={useManuscriptById.mockImplementation(() => [
+        {
+          id: 'manuscript_0',
+          title: 'Mock Manuscript Title',
+          status: 'Waiting for Report',
+          versions: manuscriptVersions,
+        },
+        jest.fn(),
+      ])}
+    />,
+  );
+  userEvent.click(getByTestId('collapsible-button'));
+
+  const button = getByRole('button', { name: /Submit Revised Manuscript/i });
+  expect(button).toBeDisabled();
+
+  const span = button.querySelector('span');
+  userEvent.hover(span!);
+
+  const tooltip = await findByRole('tooltip');
+  expect(tooltip).toHaveTextContent(
+    'A compliance report must be shared by an Open Science team member before submitting a new version of the manuscript.',
+  );
+
+  userEvent.unhover(span!);
+  await waitFor(() => {
+    expect(queryByRole('tooltip')).not.toBeInTheDocument();
+  });
+});
+
 it('displays submit revised manuscript button if user is team Lead PI', () => {
   const piUser = {
     ...user,

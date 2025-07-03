@@ -15,11 +15,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: Development
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Development
+      - name: Build
+        run: yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/crn-server}' run build:babel"
       - name: Backup
         uses: ./.github/actions/contentful-backup
         with:

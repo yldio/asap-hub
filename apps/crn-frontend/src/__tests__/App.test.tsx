@@ -1,9 +1,15 @@
 import { getConsentCookie } from '@asap-hub/frontend-utils';
 import { authTestUtils } from '@asap-hub/react-components';
 import { useFlags } from '@asap-hub/react-context';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useEffect } from 'react';
 
 import App from '../App';
 import Signin from '../auth/Signin';
@@ -16,7 +22,9 @@ jest.mock('../auth/AuthProvider', () =>
 );
 // We don't want to test the implementation just the routing
 jest.mock('../auth/Signin', () => jest.fn());
+
 jest.mock('../AuthenticatedApp', () => jest.fn());
+
 const MockSignin = Signin as jest.MockedFunction<typeof Signin>;
 const MockAuthenticatedApp = AuthenticatedApp as jest.MockedFunction<
   typeof AuthenticatedApp
@@ -36,7 +44,9 @@ afterEach(() => {
 });
 
 it('changes routing for logged in users', async () => {
-  const { container, rerender } = render(
+  jest.spyOn(console, 'error').mockImplementation();
+
+  const { container, getByText, unmount } = render(
     <authTestUtils.UserAuth0Provider>
       <App />
     </authTestUtils.UserAuth0Provider>,
@@ -44,38 +54,54 @@ it('changes routing for logged in users', async () => {
 
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
   expect(container).toHaveTextContent(/Signin/i);
-  rerender(
+  unmount();
+  const { container: container2 } = render(
     <authTestUtils.UserAuth0Provider>
       <authTestUtils.UserLoggedIn user={{}}>
         <App />
       </authTestUtils.UserLoggedIn>
     </authTestUtils.UserAuth0Provider>,
   );
-  await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
-  expect(container).toHaveTextContent(/Authenticated/i);
+  await waitForElementToBeRemoved(() => getByText(/loading/i));
+  expect(container2).toHaveTextContent(/Authenticated/i);
 });
 
 it('loads overrides for feature flags', async () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
+  const FlagsTestComponent = () => {
+    const flags = useFlags();
+    useEffect(() => {
+      flags.setCurrentOverrides({ ASAP_PERSISTENT_EXAMPLE: false });
+    }, [flags]);
 
-  const { container } = render(
+    return (
+      <div>
+        <div data-testid="is-enabled">
+          {flags.isEnabled('PERSISTENT_EXAMPLE') ? 'true' : 'false'}
+        </div>
+      </div>
+    );
+  };
+
+  const { getByTestId } = render(
     <authTestUtils.UserAuth0Provider>
       <authTestUtils.UserLoggedIn user={{}}>
-        <App />
+        <FlagsTestComponent />
       </authTestUtils.UserLoggedIn>
     </authTestUtils.UserAuth0Provider>,
   );
-  await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
-  current.setCurrentOverrides({ ASAP_PERSISTENT_EXAMPLE: false });
 
   document.cookie = 'ASAP_PERSISTENT_EXAMPLE=true';
-  expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+
+  await waitFor(() => {
+    expect(getByTestId('is-enabled').textContent).toBe('true');
+  });
+
   document.cookie = originalCookie;
 });
 
 describe('Cookie Modal & Button', () => {
+  jest.spyOn(console, 'error').mockImplementation();
+
   afterEach(() => {
     document.cookie = `crn-cookie-consent=;`;
     cleanup();

@@ -427,7 +427,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                         {hasUpdateAccess && (
                           <span>
                             <Tooltip
-                              bottom={rem(24)}
+                              bottom={rem(6)}
                               width={rem(296)}
                               shown={tooltipHoverShown}
                               textStyles={css({

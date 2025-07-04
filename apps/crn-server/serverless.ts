@@ -1112,6 +1112,22 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    generatePresignedUrl: {
+      handler:
+        './src/handlers/files-access/generate-presigned-url-handler.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/files/{filename}',
+          },
+        },
+      ],
+      environment: {
+        FILES_BUCKET: '${self:service}-${self:provider.stage}-data-backup',
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
 
     cronjobSyncOrcidContentful: {
       handler: './src/handlers/user/cronjob-sync-orcid.handler',

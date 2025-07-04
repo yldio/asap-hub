@@ -2,7 +2,7 @@ import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 
 import { getCookiePreferencesHandlerFactory } from '../../../src/handlers/cookie-preferences/get-cookie-preferences-handler-factory';
 import { Logger } from '../../../src/utils';
-import { getLambdaGetRequest, getLambdaRequest } from '../../helpers/events';
+import { getLambdaGetRequest } from '../../helpers/events';
 
 jest.mock('@aws-sdk/client-dynamodb');
 

@@ -33,6 +33,7 @@
     "@babel/runtime-corejs3": "7.23.8",
     "@googleapis/calendar": "^9.5.0",
     "@hapi/boom": "9.1.4",
+    "@opensearch-project/opensearch": "^3.5.1",
     "@sentry/serverless": "6.19.7",
     "ajv": "8.11.0",
     "ajv-formats": "2.1.1",

@@ -1827,6 +1827,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.23.8
     "@googleapis/calendar": ^9.5.0
     "@hapi/boom": 9.1.4
+    "@opensearch-project/opensearch": ^3.5.1
     "@sentry/serverless": 6.19.7
     "@types/apr-intercept": "workspace:*"
     "@types/async": ^3
@@ -14475,6 +14476,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@opensearch-project/opensearch@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "@opensearch-project/opensearch@npm:3.5.1"
+  dependencies:
+    aws4: ^1.11.0
+    debug: ^4.3.1
+    hpagent: ^1.2.0
+    json11: ^2.0.0
+    ms: ^2.1.3
+    secure-json-parse: ^2.4.0
+  checksum: b912385e375ea9435e8c121470c8a5cc282fe6c1a7c73c74113d0a2d0583ec666f58444d4fdbec47aa7e358c2573515b667c179b2264a59e182c8e840eab3254
+  languageName: node
+  linkType: hard
+
 "@panva/asn1.js@npm:^1.0.0":
   version: 1.0.0
   resolution: "@panva/asn1.js@npm:1.0.0"
@@ -22896,6 +22911,13 @@ __metadata:
   version: 0.7.0
   resolution: "aws-sign2@npm:0.7.0"
   checksum: b148b0bb0778098ad8cf7e5fc619768bcb51236707ca1d3e5b49e41b171166d8be9fdc2ea2ae43d7decf02989d0aaa3a9c4caa6f320af95d684de9b548a71525
+  languageName: node
+  linkType: hard
+
+"aws4@npm:^1.11.0":
+  version: 1.13.2
+  resolution: "aws4@npm:1.13.2"
+  checksum: 9ac924e4a91c088b4928ea86b68d8c4558b0e6289ccabaae0e3e96a611bd75277c2eab6e3965821028768700516f612b929a5ce822f33a8771f74ba2a8cedb9c
   languageName: node
   linkType: hard
 
@@ -32701,6 +32723,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hpagent@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "hpagent@npm:1.2.0"
+  checksum: b029da695edae438cee4da2a437386f9db4ac27b3ceb7306d02e1b586c9c194741ed2e943c8a222e0cfefaf27ee3f863aca7ba1721b0950a2a19bf25bc0d85e2
+  languageName: node
+  linkType: hard
+
 "html-encoding-sniffer@npm:^2.0.1":
   version: 2.0.1
   resolution: "html-encoding-sniffer@npm:2.0.1"
@@ -36562,6 +36591,15 @@ __metadata:
     remedial: "npm:^1.0.7"
     remove-trailing-spaces: "npm:^1.0.6"
   checksum: 4b78480f426e176e5fdac073e05877683bb026f1175deb52d0941b992f9c91a58a812c020f00aa67ba1fc7cadb220539a264146f222e48a48c8bb2a0931cac9b
+  languageName: node
+  linkType: hard
+
+"json11@npm:^2.0.0":
+  version: 2.0.2
+  resolution: "json11@npm:2.0.2"
+  bin:
+    json11: dist/cli.mjs
+  checksum: db4cf327fadf60f5a848308087545dd9bad676a6747028da13392a0c26210bfa085469ae0a375166e087213c28a5e08e0c469d633811c35d32ca8c2cf647fe9f
   languageName: node
   linkType: hard
 

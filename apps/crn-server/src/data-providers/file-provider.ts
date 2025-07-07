@@ -21,7 +21,7 @@ export default class FileProvider {
 
   async getPresignedUrl(
     filename: string,
-    action: 'download' | 'upload' = 'upload',
+    action: 'download' | 'upload',
     contentType?: string,
   ): Promise<string> {
     const lambdaPayload =
@@ -60,11 +60,11 @@ export default class FileProvider {
           ? JSON.parse(payload.body)
           : payload.body;
 
-      if (!parsedBody.uploadUrl) {
-        throw new Error(`Lambda response missing uploadUrl`);
+      if (!parsedBody.presignedUrl) {
+        throw new Error(`Lambda response missing presignedUrl`);
       }
 
-      return parsedBody.uploadUrl;
+      return parsedBody.presignedUrl;
     } catch (parseError) {
       logger.error('Error parsing Lambda response', {
         rawPayload: payloadText,

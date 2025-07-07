@@ -1163,7 +1163,6 @@ describe('getPresignedUrl', () => {
       payload.filename,
       authorization,
       payload.contentType,
-      'upload',
     );
 
     expect(response).toEqual({ presignedUrl });

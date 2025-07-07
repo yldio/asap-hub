@@ -29,6 +29,7 @@ describe('FileProvider', () => {
   describe('getPresignedUrl', () => {
     const filename = 'test.png';
     const contentType = 'image/png';
+    const action = 'upload';
 
     it('returns uploadUrl on success', async () => {
       const uploadUrl = 'https://example.com/upload';
@@ -41,7 +42,11 @@ describe('FileProvider', () => {
         Payload: Buffer.from(JSON.stringify(payload)),
       });
 
-      const result = await provider.getPresignedUrl(filename, contentType);
+      const result = await provider.getPresignedUrl(
+        filename,
+        action,
+        contentType,
+      );
       expect(result).toBe(uploadUrl);
       expect(mockSend).toHaveBeenCalledWith(expect.any(InvokeCommand));
     });
@@ -50,7 +55,7 @@ describe('FileProvider', () => {
       mockSend.mockResolvedValueOnce({});
 
       await expect(
-        provider.getPresignedUrl(filename, contentType),
+        provider.getPresignedUrl(filename, action, contentType),
       ).rejects.toThrow('Lambda returned an empty response');
     });
 
@@ -64,7 +69,7 @@ describe('FileProvider', () => {
       });
 
       await expect(
-        provider.getPresignedUrl(filename, contentType),
+        provider.getPresignedUrl(filename, action, contentType),
       ).rejects.toThrow(/Invalid JSON response from Lambda: /);
     });
 
@@ -77,7 +82,7 @@ describe('FileProvider', () => {
       });
 
       await expect(
-        provider.getPresignedUrl(filename, contentType),
+        provider.getPresignedUrl(filename, action, contentType),
       ).rejects.toThrow(/Invalid JSON response from Lambda: /);
     });
 
@@ -91,7 +96,7 @@ describe('FileProvider', () => {
       });
 
       await expect(
-        provider.getPresignedUrl(filename, contentType),
+        provider.getPresignedUrl(filename, action, contentType),
       ).rejects.toThrow(/Invalid JSON response from Lambda: /);
     });
 
@@ -101,7 +106,7 @@ describe('FileProvider', () => {
       });
 
       await expect(
-        provider.getPresignedUrl(filename, contentType),
+        provider.getPresignedUrl(filename, action, contentType),
       ).rejects.toThrow(/Invalid JSON response from Lambda/);
     });
   });

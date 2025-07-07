@@ -28,6 +28,7 @@ describe('FileProvider', () => {
 
     const result = await provider.getPresignedUrl(
       'file.pdf',
+      'upload',
       'application/pdf',
     );
 
@@ -43,7 +44,7 @@ describe('FileProvider', () => {
     });
 
     await expect(
-      provider.getPresignedUrl('file.pdf', 'application/pdf'),
+      provider.getPresignedUrl('file.pdf', 'upload', 'application/pdf'),
     ).rejects.toThrow(/Invalid JSON response from Lambda: λambda/);
   });
 
@@ -60,6 +61,7 @@ describe('FileProvider', () => {
 
     const result = await provider.getPresignedUrl(
       'file.pdf',
+      'upload',
       'application/pdf',
     );
     expect(result).toBe(url);
@@ -69,7 +71,7 @@ describe('FileProvider', () => {
     sendMock.mockResolvedValueOnce({});
 
     await expect(
-      provider.getPresignedUrl('file.pdf', 'application/pdf'),
+      provider.getPresignedUrl('file.pdf', 'upload', 'application/pdf'),
     ).rejects.toThrow('Lambda returned an empty response');
   });
 
@@ -79,7 +81,7 @@ describe('FileProvider', () => {
     });
 
     await expect(
-      provider.getPresignedUrl('file.pdf', 'application/pdf'),
+      provider.getPresignedUrl('file.pdf', 'upload', 'application/pdf'),
     ).rejects.toThrow('Invalid JSON response from Lambda: ');
   });
 
@@ -89,7 +91,7 @@ describe('FileProvider', () => {
     });
 
     await expect(
-      provider.getPresignedUrl('file.pdf', 'application/pdf'),
+      provider.getPresignedUrl('file.pdf', 'upload', 'application/pdf'),
     ).rejects.toThrow('Invalid JSON response from Lambda');
   });
 
@@ -104,7 +106,7 @@ describe('FileProvider', () => {
     });
 
     await expect(
-      provider.getPresignedUrl('file.pdf', 'application/pdf'),
+      provider.getPresignedUrl('file.pdf', 'upload', 'application/pdf'),
     ).rejects.toThrow('Invalid JSON response from Lambda: ');
   });
 });

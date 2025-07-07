@@ -1,20 +1,19 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitFor, screen } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
-import { RecoilRoot } from 'recoil';
 import {
-  createTutorialsResponse,
   createListTutorialsResponse,
+  createTutorialsResponse,
 } from '@asap-hub/fixtures';
 import { Frame } from '@asap-hub/frontend-utils';
+import { render, renderHook, screen, waitFor } from '@testing-library/react';
+import { Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import { usePagination, usePaginationParams } from '../../../hooks';
 
-import TutorialList from '../TutorialList';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getTutorials } from '../api';
 import { tutorialsListState } from '../state';
+import TutorialList from '../TutorialList';
 
 jest.mock('../api');
 

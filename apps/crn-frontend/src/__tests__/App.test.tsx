@@ -4,12 +4,12 @@ import { useFlags } from '@asap-hub/react-context';
 import {
   cleanup,
   render,
+  renderHook,
   screen,
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useEffect } from 'react';
 
 import App from '../App';
 import Signin from '../auth/Signin';
@@ -67,35 +67,22 @@ it('changes routing for logged in users', async () => {
 });
 
 it('loads overrides for feature flags', async () => {
-  const FlagsTestComponent = () => {
-    const flags = useFlags();
-    useEffect(() => {
-      flags.setCurrentOverrides({ ASAP_PERSISTENT_EXAMPLE: false });
-    }, [flags]);
+  const {
+    result: { current },
+  } = renderHook(useFlags);
 
-    return (
-      <div>
-        <div data-testid="is-enabled">
-          {flags.isEnabled('PERSISTENT_EXAMPLE') ? 'true' : 'false'}
-        </div>
-      </div>
-    );
-  };
-
-  const { getByTestId } = render(
+  const { container } = render(
     <authTestUtils.UserAuth0Provider>
       <authTestUtils.UserLoggedIn user={{}}>
-        <FlagsTestComponent />
+        <App />
       </authTestUtils.UserLoggedIn>
     </authTestUtils.UserAuth0Provider>,
   );
+  await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
+  current.setCurrentOverrides({ ASAP_PERSISTENT_EXAMPLE: false });
 
   document.cookie = 'ASAP_PERSISTENT_EXAMPLE=true';
-
-  await waitFor(() => {
-    expect(getByTestId('is-enabled').textContent).toBe('true');
-  });
-
+  expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
   document.cookie = originalCookie;
 });
 

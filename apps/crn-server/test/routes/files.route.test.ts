@@ -31,9 +31,10 @@ describe('/files route', () => {
     });
   });
 
-  describe('POST /files/upload-url', () => {
-    const endpoint = '/files/upload-url';
+  describe('POST /files/get-url', () => {
+    const endpoint = '/files/get-url';
     const validBody = {
+      action: 'upload',
       filename: 'test.pdf',
       contentType: 'application/pdf',
     };
@@ -45,7 +46,7 @@ describe('/files route', () => {
 
       expect(response.status).toBe(403);
       expect(loggerMock.warn).toHaveBeenCalledWith(
-        'No transaction id on request to /files/upload-url',
+        'No transaction id on request to /files/get-url',
       );
     });
 
@@ -60,13 +61,14 @@ describe('/files route', () => {
     test('logs warning and returns 403 if user is not authenticated', async () => {
       userMockFactory.mockReturnValue(undefined);
 
-      const response = await supertest(app).post('/files/upload-url').send({
+      const response = await supertest(app).post('/files/get-url').send({
+        action: 'upload',
         filename: 'test.pdf',
         contentType: 'application/pdf',
       });
 
       expect(loggerMock.warn).toHaveBeenCalledWith(
-        'No transaction id on request to /files/upload-url',
+        'No transaction id on request to /files/get-url',
       );
       expect(response.status).toBe(403);
     });
@@ -78,9 +80,10 @@ describe('/files route', () => {
       const response = await supertest(app).post(endpoint).send(validBody);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({ uploadUrl: mockUrl });
+      expect(response.body).toEqual({ presignedUrl: mockUrl });
       expect(filesController.getPresignedUrl).toHaveBeenCalledWith(
         'test.pdf',
+        'upload',
         'application/pdf',
       );
     });
@@ -92,12 +95,11 @@ describe('/files route', () => {
         // omit authHandler so loggedInUser stays undefined
       });
 
-      const response = await supertest(noAuthApp)
-        .post('/files/upload-url')
-        .send({
-          filename: 'test.pdf',
-          contentType: 'application/pdf',
-        });
+      const response = await supertest(noAuthApp).post('/files/get-url').send({
+        action: 'upload',
+        filename: 'test.pdf',
+        contentType: 'application/pdf',
+      });
 
       expect(response.status).toBe(401);
       expect(response.body.message).toBe('Unauthorized');

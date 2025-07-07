@@ -6,15 +6,16 @@ import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
 import Boom from '@hapi/boom';
 
-describe('/files/upload-url route', () => {
+describe('/files/get-url route', () => {
   const fileControllerMock = {
     getPresignedUrl: jest.fn(),
   } as unknown as jest.Mocked<FilesController>;
 
   const mockRoutes = Router();
-  mockRoutes.post('/files/upload-url', async (req, _res, next) => {
+  mockRoutes.post('/files/get-url', async (req, _res, next) => {
     req.body = {
       ...req.body,
+      action: 'upload',
       filename: 'some_file_name',
       contentType: 'application/pdf',
     };
@@ -32,22 +33,23 @@ describe('/files/upload-url route', () => {
     fileControllerMock.getPresignedUrl.mockReset();
   });
 
-  describe('POST /files/upload-url', () => {
+  describe('POST /files/get-url', () => {
     it('should generate and return a presigned url', async () => {
       fileControllerMock.getPresignedUrl.mockResolvedValueOnce(
         'https://aws.s3.some-url.com',
       );
 
-      const response = await supertest(app).post('/files/upload-url');
+      const response = await supertest(app).post('/files/get-url');
 
       expect(response.status).toBe(200);
       expect(fileControllerMock.getPresignedUrl).toHaveBeenCalledWith(
         'some_file_name',
+        'upload',
         'application/pdf',
       );
 
       expect(response.body).toEqual({
-        uploadUrl: 'https://aws.s3.some-url.com',
+        presignedUrl: 'https://aws.s3.some-url.com',
       });
     });
 
@@ -62,8 +64,7 @@ describe('/files/upload-url route', () => {
           logger: loggerMock,
         });
 
-        const response =
-          await supertest(notLoggedInApp).post('/files/upload-url');
+        const response = await supertest(notLoggedInApp).post('/files/get-url');
 
         expect(response.status).toBe(403);
         expect(fileControllerMock.getPresignedUrl).not.toHaveBeenCalled();
@@ -71,9 +72,10 @@ describe('/files/upload-url route', () => {
 
       it('should throw if filename is not provided', async () => {
         const mockRoutes = Router();
-        mockRoutes.post('/files/upload-url', async (req, _res, next) => {
+        mockRoutes.post('/files/get-url', async (req, _res, next) => {
           req.body = {
             ...req.body,
+            action: 'upload',
             filename: undefined,
             contentType: 'application/pdf',
           };
@@ -86,8 +88,7 @@ describe('/files/upload-url route', () => {
           mockRequestHandlers: [mockRoutes],
         });
 
-        const response =
-          await supertest(noFilenameApp).post('/files/upload-url');
+        const response = await supertest(noFilenameApp).post('/files/get-url');
 
         expect(response.status).toBe(400);
         expect(fileControllerMock.getPresignedUrl).not.toHaveBeenCalled();
@@ -95,9 +96,10 @@ describe('/files/upload-url route', () => {
 
       it('should throw if contentType is not provided', async () => {
         const mockRoutes = Router();
-        mockRoutes.post('/files/upload-url', async (req, _res, next) => {
+        mockRoutes.post('/files/get-url', async (req, _res, next) => {
           req.body = {
             ...req.body,
+            action: 'upload',
             filename: 'some_file_name',
             contentType: undefined,
           };
@@ -111,7 +113,7 @@ describe('/files/upload-url route', () => {
         });
 
         const response =
-          await supertest(noContentTypeApp).post('/files/upload-url');
+          await supertest(noContentTypeApp).post('/files/get-url');
 
         expect(response.status).toBe(400);
         expect(fileControllerMock.getPresignedUrl).not.toHaveBeenCalled();
@@ -122,7 +124,7 @@ describe('/files/upload-url route', () => {
           Boom.badImplementation(),
         );
 
-        const response = await supertest(app).post('/files/upload-url');
+        const response = await supertest(app).post('/files/get-url');
 
         expect(response.status).toBe(500);
         expect(response.body.message).toEqual(

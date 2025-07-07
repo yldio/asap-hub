@@ -2,32 +2,45 @@ import Boom from '@hapi/boom';
 import { Router, Response, Request } from 'express';
 import FileController from '../controllers/files.controller';
 import logger from '../utils/logger';
+import { validateFilePostRequestInput } from '../validation/file.validation';
 
 export const fileRouteFactory = (fileController: FileController): Router => {
   const fileRoutes = Router();
 
-  fileRoutes.post('/files/upload-url', async (req: Request, res: Response) => {
+  fileRoutes.post('/files/get-url', async (req: Request, res: Response) => {
     const { body, loggedInUser } = req;
+    const payload = validateFilePostRequestInput(body);
 
-    const { filename, contentType } = body;
-    if (!filename || !contentType) {
+    const { filename, contentType, action } = payload;
+    const isUploadAction = action === 'upload';
+
+    if (isUploadAction && !contentType) {
       throw Boom.badRequest('Filename and Content-Type are required.');
     }
 
     try {
-      const uploadUrl = await fileController.getPresignedUrl(
-        filename,
-        contentType,
-      );
+      let presignedUrl;
+      if (isUploadAction && contentType) {
+        presignedUrl = await fileController.getPresignedUrl(
+          filename,
+          'upload',
+          contentType,
+        );
+      } else {
+        presignedUrl = await fileController.getPresignedUrl(
+          filename,
+          'download',
+        );
+      }
 
       logger.info({
         message: 'Successfully generated pre-signed URL',
         user: loggedInUser?.id,
         filename,
-        uploadUrl,
+        presignedUrl,
       });
 
-      res.json({ uploadUrl });
+      res.json({ presignedUrl });
     } catch (error) {
       logger.error({
         message: 'Error generating pre-signed URL',

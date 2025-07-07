@@ -1094,16 +1094,6 @@ const serverlessConfig: AWS = {
             path: '/files/upload-url',
           },
         },
-      ],
-      environment: {
-        FILES_BUCKET: '${self:service}-${self:provider.stage}-files',
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
-    generatePresignedUrl: {
-      handler:
-        './src/handlers/files-access/generate-presigned-url-handler.handler',
-      events: [
         {
           httpApi: {
             method: 'GET',
@@ -1112,7 +1102,14 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        FILES_BUCKET: '${self:service}-${self:provider.stage}-data-backup',
+        FILES_BUCKET: '${self:service}-${self:provider.stage}-files',
+        DATA_BACKUP_BUCKET: {
+          'Fn::If': [
+            'IsProd',
+            '${self:service}-${self:provider.stage}-data-backup',
+            '${self:service}-dev-data-backup',
+          ],
+        },
         SENTRY_DSN: sentryDsnHandlers,
       },
     },

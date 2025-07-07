@@ -424,7 +424,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userRoutes = userRouteFactory(userController, interestGroupController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupsController);
 
-  const fileUploadRoutes = fileRouteFactory(filesController);
+  const fileRoutes = fileRouteFactory(filesController);
   /**
    * --- end of dependency inection
    */
@@ -479,7 +479,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(guideRoutes);
   app.use(eventRoutes);
   app.use(impactRoutes);
-  app.use(fileUploadRoutes);
+  app.use(fileRoutes);
   app.use(interestGroupRoutes);
   app.use(labRoutes);
   app.use(manuscriptRoutes);

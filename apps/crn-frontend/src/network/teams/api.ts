@@ -511,10 +511,11 @@ export const uploadManuscriptFileViaPresignedUrl = async (
 ): Promise<ManuscriptFileResponse | undefined> => {
   try {
     // Request presigned S3 URL
-    const { uploadUrl } = await getPresignedUrl(
+    const { presignedUrl: uploadUrl } = await getPresignedUrl(
       file.name,
-      file.type,
       authorization,
+      file.type,
+      'upload',
     );
 
     // Upload file to S3
@@ -576,17 +577,18 @@ export const uploadManuscriptFileViaPresignedUrl = async (
 
 export const getPresignedUrl = async (
   filename: string,
-  contentType: string,
   authorization: string,
-): Promise<{ uploadUrl: string }> => {
-  const resp = await fetch(`${API_BASE_URL}/files/upload-url`, {
+  contentType?: string,
+  action: 'upload' | 'download' = 'upload',
+): Promise<{ presignedUrl: string }> => {
+  const resp = await fetch(`${API_BASE_URL}/files/get-url`, {
     method: 'POST',
     headers: {
       authorization,
       'Content-Type': 'application/json',
       ...createSentryHeaders(),
     },
-    body: JSON.stringify({ filename, contentType }),
+    body: JSON.stringify({ filename, action, contentType }),
   });
 
   let response;

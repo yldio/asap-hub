@@ -5,8 +5,9 @@ export default class FilesController {
 
   async getPresignedUrl(
     filename: string,
-    contentType: string,
+    action: 'download' | 'upload' = 'upload',
+    contentType?: string,
   ): Promise<string> {
-    return this.fileProvider.getPresignedUrl(filename, contentType);
+    return this.fileProvider.getPresignedUrl(filename, action, contentType);
   }
 }

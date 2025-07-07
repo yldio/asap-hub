@@ -117,6 +117,10 @@ if (stage === 'local') {
 }
 
 const eventBusSourceContentful = 'asap.contentful';
+const openSearchDomainName =
+  stage === 'production'
+    ? `${service}-${stage}-search`
+    : `${service}-dev-search`;
 
 const serverlessConfig: AWS = {
   service,
@@ -173,10 +177,36 @@ const serverlessConfig: AWS = {
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
       CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: contentfulManagementAccessToken,
       CONTENTFUL_SPACE_ID: contentfulSpaceId,
+      OPENSEARCH_DOMAIN_NAME: openSearchDomainName,
     },
     iam: {
       role: {
         statements: [
+          {
+            Effect: 'Allow',
+            Action: [
+              'es:ESHttpGet',
+              'es:ESHttpPost',
+              'es:ESHttpPut',
+              'es:ESHttpDelete',
+              'es:ESHttpHead',
+              'es:ESHttpPatch',
+            ],
+            Resource: {
+              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: [
+              'es:DescribeDomain',
+              'es:ListDomainNames',
+              'es:DescribeDomains',
+            ],
+            Resource: {
+              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}`,
+            },
+          },
           {
             Effect: 'Allow',
             Action: ['s3:PutObject', 's3:GetObject', 's3:DeleteObject'],
@@ -323,6 +353,7 @@ const serverlessConfig: AWS = {
     excludeDevDependencies: false,
   },
   custom: {
+    openSearchDomainName,
     apiHostname: new URL(apiUrl).hostname,
     appHostname: new URL(appUrl).hostname,
     s3Sync: [
@@ -1139,6 +1170,49 @@ const serverlessConfig: AWS = {
         SLACK_WEBHOOK: slackWebhook,
       },
     },
+    openSearchHandler: {
+      handler: './src/handlers/opensearch/opensearch-handler.handler',
+      timeout: 30,
+      memorySize: 512,
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/opensearch/search/{index}',
+          },
+        },
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/opensearch/search/{index}',
+          },
+        },
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/opensearch/index/{index}',
+          },
+        },
+        {
+          httpApi: {
+            method: 'PUT',
+            path: '/opensearch/update/{index}/{id}',
+          },
+        },
+        {
+          httpApi: {
+            method: 'DELETE',
+            path: '/opensearch/delete/{index}/{id}',
+          },
+        },
+      ],
+      environment: {
+        OPENSEARCH_DOMAIN_ENDPOINT: {
+          'Fn::GetAtt': ['OpenSearchDomain', 'DomainEndpoint'],
+        },
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
   },
   resources: {
     Conditions: {
@@ -1929,6 +2003,64 @@ const serverlessConfig: AWS = {
             '${self:service}-${self:provider.stage}-invite-user-queue-dlq',
           MessageRetentionPeriod: 1209600, // 14 days
         },
+      },
+      OpenSearchDomain: {
+        Type: 'AWS::OpenSearchService::Domain',
+        Properties: {
+          DomainName: openSearchDomainName, // Already defined in your config
+          EngineVersion: 'OpenSearch_2.3',
+          ClusterConfig: {
+            InstanceType: 't3.small.search', // Free tier eligible
+            InstanceCount: 1,
+            DedicatedMasterEnabled: false,
+            ZoneAwarenessEnabled: false,
+          },
+          EBSOptions: {
+            EBSEnabled: true,
+            VolumeType: 'gp2', // gp2 is free tier eligible, gp3 is not
+            VolumeSize: 10, // 10GB free tier limit
+          },
+          AccessPolicies: {
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Effect: 'Allow',
+                Principal: {
+                  AWS: { 'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'] },
+                },
+                Action: 'es:*',
+                Resource: {
+                  'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+                },
+              },
+            ],
+          },
+          DomainEndpointOptions: {
+            EnforceHTTPS: true,
+            TLSSecurityPolicy: 'Policy-Min-TLS-1-2-2019-07',
+          },
+          EncryptionAtRestOptions: {
+            Enabled: true,
+          },
+          NodeToNodeEncryptionOptions: {
+            Enabled: true,
+          },
+          AdvancedSecurityOptions: {
+            Enabled: false, // Disable fine-grained access control for simplicity
+          },
+          LogPublishingOptions: {
+            ES_APPLICATION_LOGS: {
+              Enabled: false, // Disable to stay in free tier
+            },
+            SEARCH_SLOW_LOGS: {
+              Enabled: false,
+            },
+            INDEX_SLOW_LOGS: {
+              Enabled: false,
+            },
+          },
+        },
+        DeletionPolicy: stage === 'production' ? 'Retain' : 'Delete',
       },
     },
     extensions: {

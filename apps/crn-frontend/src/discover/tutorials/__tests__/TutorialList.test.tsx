@@ -1,19 +1,19 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitFor, screen } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import {
-  createTutorialsResponse,
   createListTutorialsResponse,
+  createTutorialsResponse,
 } from '@asap-hub/fixtures';
 import { Frame } from '@asap-hub/frontend-utils';
+import { render, renderHook, screen, waitFor } from '@testing-library/react';
+import { Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import { usePagination, usePaginationParams } from '../../../hooks';
 
-import TutorialList from '../TutorialList';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getTutorials } from '../api';
 import { tutorialsListState } from '../state';
+import TutorialList from '../TutorialList';
 
 jest.mock('../api');
 
@@ -109,33 +109,26 @@ it('renders error message when the response is not a 2XX', async () => {
   expect(getByText(/Something went wrong/i)).toBeVisible();
 });
 
-function TestComponent({ total }: { total: number }) {
-  const paginationParams = usePaginationParams();
-  const pagination = usePagination(total, pageSize);
-
-  // For debugging
-  return (
-    <div>
-      <div data-testid="number-of-pages">{pagination.numberOfPages}</div>
-      <div data-testid="current-page">{paginationParams.currentPage}</div>
-    </div>
-  );
-}
-
 it('renders a paginated list of tutorials', async () => {
   const numberOfItems = 40;
   mockGetTutorials.mockResolvedValue(
     createListTutorialsResponse(numberOfItems),
   );
 
-  const { getByTestId } = render(
-    <MemoryRouter initialEntries={['/guides-tutorials/tutorials']}>
-      <TestComponent total={numberOfItems} />
-    </MemoryRouter>,
+  const { result } = renderHook(
+    () => ({
+      usePaginationParams: usePaginationParams(),
+      usePagination: usePagination(numberOfItems, pageSize),
+    }),
+    {
+      wrapper: MemoryRouter,
+      initialProps: {
+        initialEntries: [`/guides-tutorials/tutorials`],
+      },
+    },
   );
 
-  await waitFor(() => {
-    expect(getByTestId('number-of-pages').textContent).toBe('4');
-    expect(getByTestId('current-page').textContent).toBe('0');
-  });
+  await renderTutorials();
+  expect(result.current.usePagination.numberOfPages).toBe(4);
+  expect(result.current.usePaginationParams.currentPage).toBe(0);
 });

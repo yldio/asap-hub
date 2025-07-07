@@ -120,7 +120,7 @@ describe('getPresignedUrlHandlerFactory', () => {
   test('returns 400 if action is missing', async () => {
     const request = {};
 
-      const response = await handler(request);
+    const response = await handler(request);
 
     expect(response.statusCode).toBe(400);
     expect(response.payload).toEqual({

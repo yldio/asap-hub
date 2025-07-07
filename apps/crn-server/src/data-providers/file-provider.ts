@@ -25,14 +25,10 @@ export default class FileProvider {
     action: FileAction,
     contentType?: string,
   ): Promise<string> {
-    const lambdaPayload =
-      action === 'upload'
-        ? JSON.stringify({ method: 'POST', filename, contentType })
-        : JSON.stringify({ method: 'GET', filename });
     const lambdaParams = {
       FunctionName: `asap-hub-${this.stage}-getPresignedUrl`,
       InvocationType: InvocationType.RequestResponse,
-      Payload: lambdaPayload,
+      Payload: JSON.stringify({ action, filename, contentType }),
     };
 
     const command = new InvokeCommand(lambdaParams);

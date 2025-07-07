@@ -1087,20 +1087,6 @@ const serverlessConfig: AWS = {
     },
     getPresignedUrl: {
       handler: './src/handlers/files-upload/get-presigned-url-handler.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/files/upload-url',
-          },
-        },
-        {
-          httpApi: {
-            method: 'GET',
-            path: '/files/{filename}',
-          },
-        },
-      ],
       environment: {
         FILES_BUCKET: '${self:service}-${self:provider.stage}-files',
         DATA_BACKUP_BUCKET: {

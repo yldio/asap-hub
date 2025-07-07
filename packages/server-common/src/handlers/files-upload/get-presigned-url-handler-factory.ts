@@ -7,7 +7,9 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Logger } from '../../utils';
 
+export type FileAction = 'upload' | 'download';
 type Input = {
+  action?: FileAction;
   filename?: string;
   contentType?: string;
 };
@@ -30,17 +32,26 @@ export const getPresignedUrlHandlerFactory =
     uploadBucket: string,
     downloadBucket: string,
     region: string,
-  ): ((request: lambda.Request) => Promise<lambda.Response<Output>>) =>
+  ): ((request: lambda.Request<Input>) => Promise<lambda.Response<Output>>) =>
   async (request) => {
     logger.info(`Received request: ${JSON.stringify(request)}`);
 
-    const method = request.method.toUpperCase();
+    const { action, filename, contentType } = request.payload;
+
+    if (!action) {
+      return {
+        statusCode: 400,
+        payload: {
+          error: 'action is required',
+        },
+      };
+    }
+
     const s3 = new S3Client({ region });
 
     let command;
 
-    if (method === 'POST') {
-      const { filename, contentType } = request.payload as Input;
+    if (action === 'upload') {
       if (!filename || !contentType) {
         return {
           statusCode: 400,
@@ -55,7 +66,7 @@ export const getPresignedUrlHandlerFactory =
         ContentType: contentType,
       });
     } else {
-      if (!request.params?.filename) {
+      if (!filename) {
         return {
           statusCode: 400,
           payload: { error: 'filename is required' },
@@ -63,16 +74,16 @@ export const getPresignedUrlHandlerFactory =
       }
       command = new GetObjectCommand({
         Bucket: downloadBucket,
-        Key: request.params.filename,
+        Key: filename,
       });
     }
 
     try {
       const presignedUrl = await getSignedUrl(s3, command, {
         expiresIn:
-          method === 'GET'
-            ? DOWNLOAD_PRESIGNED_URL_DURATION
-            : UPLOAD_PRESIGNED_URL_DURATION,
+          action === 'upload'
+            ? UPLOAD_PRESIGNED_URL_DURATION
+            : DOWNLOAD_PRESIGNED_URL_DURATION,
       });
 
       logger.info(`Generated pre-signed URL: ${presignedUrl}`);

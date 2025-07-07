@@ -19,7 +19,7 @@ describe('FileProvider', () => {
     const url = 'https://s3-url.com/upload';
     const payload = {
       statusCode: 200,
-      body: { uploadUrl: url }, // <--- object, not string
+      body: { presignedUrl: url },
     };
 
     sendMock.mockResolvedValueOnce({
@@ -48,11 +48,11 @@ describe('FileProvider', () => {
     ).rejects.toThrow(/Invalid JSON response from Lambda: λambda/);
   });
 
-  test('returns uploadUrl when Lambda returns success', async () => {
+  test('returns presignedUrl when Lambda returns success', async () => {
     const url = 'https://s3-url.com/upload';
     const payload = {
       statusCode: 200,
-      body: JSON.stringify({ uploadUrl: url }),
+      body: JSON.stringify({ presignedUrl: url }),
     };
 
     sendMock.mockResolvedValueOnce({
@@ -95,10 +95,10 @@ describe('FileProvider', () => {
     ).rejects.toThrow('Invalid JSON response from Lambda');
   });
 
-  test('throws if Lambda returns JSON without uploadUrl', async () => {
+  test('throws if Lambda returns JSON without presignedUrl', async () => {
     const payload = {
       statusCode: 200,
-      body: JSON.stringify({}), // no uploadUrl
+      body: JSON.stringify({}),
     };
 
     sendMock.mockResolvedValueOnce({

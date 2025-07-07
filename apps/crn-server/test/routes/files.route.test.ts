@@ -65,6 +65,21 @@ describe('/files route', () => {
       expect(response.status).toBe(403);
     });
 
+    test('returns 200 and the presigned URL on success', async () => {
+      const mockUrl = 'https://presigned-url.com';
+      filesController.getPresignedUrl.mockResolvedValueOnce(mockUrl);
+
+      const response = await supertest(app).post(endpoint).send(validBody);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ presignedUrl: mockUrl });
+      expect(filesController.getPresignedUrl).toHaveBeenCalledWith(
+        'test.pdf',
+        'upload',
+        'application/pdf',
+      );
+    });
+
     test('throws 401. Unauthorized when no loggedInUser is present', async () => {
       const noAuthApp = appFactory({
         filesController,

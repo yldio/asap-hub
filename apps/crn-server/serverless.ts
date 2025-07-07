@@ -1124,7 +1124,14 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        FILES_BUCKET: '${self:service}-${self:provider.stage}-data-backup',
+        FILES_BUCKET: '${self:service}-${self:provider.stage}-files',
+        DATA_BACKUP_BUCKET: {
+          'Fn::If': [
+            'IsProd',
+            '${self:service}-${self:provider.stage}-data-backup',
+            '${self:service}-dev-data-backup',
+          ],
+        },
         SENTRY_DSN: sentryDsnHandlers,
       },
     },

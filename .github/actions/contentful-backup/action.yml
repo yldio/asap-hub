@@ -63,7 +63,6 @@ runs:
         COMPLIANCE_FILE_NAME=ComplianceFullDataset.csv
         yarn export:compliance $FILE_NAME -f $COMPLIANCE_FILE_NAME
         aws s3api put-object --bucket $BUCKET_NAME --key $COMPLIANCE_FILE_NAME --body $COMPLIANCE_FILE_NAME --storage-class STANDARD_IA
-        aws s3api delete-object --bucket $BUCKET_NAME --key $PREVIOUS_COMPLIANCE_FILE_NAME
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}

@@ -1,3 +1,4 @@
+import { FileAction } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import {
   S3Client,
@@ -7,7 +8,6 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Logger } from '../../utils';
 
-export type FileAction = 'upload' | 'download';
 type Input = {
   action?: FileAction;
   filename?: string;

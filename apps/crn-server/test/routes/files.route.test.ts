@@ -91,6 +91,7 @@ describe('/files route', () => {
 
       expect(response.status).toBe(500);
       expect(response.body).toEqual({
+        action: 'upload',
         message: 'Error generating pre-signed URL',
         error: 'Something broke',
       });
@@ -135,13 +136,14 @@ describe('/files route', () => {
 
       const response = await supertest(app)
         .post(endpoint)
-        .send({ ...validBody, action: 'download' });
+        .send({ filename: 'test.pdf', action: 'download' });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ presignedUrl: mockUrl });
       expect(filesController.getPresignedUrl).toHaveBeenCalledWith(
         'test.pdf',
         'download',
+        undefined,
       );
     });
   });

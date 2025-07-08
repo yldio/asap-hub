@@ -1,3 +1,4 @@
+import { FileAction } from '@asap-hub/model';
 import {
   S3Client,
   PutObjectCommand,
@@ -6,7 +7,6 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 import {
-  FileAction,
   getPresignedUrlHandlerFactory,
 } from '../../../src/handlers/files-upload/get-presigned-url-handler-factory';
 import { Logger } from '../../../src/utils';

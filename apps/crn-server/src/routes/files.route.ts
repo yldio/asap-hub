@@ -19,23 +19,16 @@ export const fileRouteFactory = (fileController: FileController): Router => {
     }
 
     try {
-      let presignedUrl;
-      if (isUploadAction && contentType) {
-        presignedUrl = await fileController.getPresignedUrl(
-          filename,
-          'upload',
-          contentType,
-        );
-      } else {
-        presignedUrl = await fileController.getPresignedUrl(
-          filename,
-          'download',
-        );
-      }
+      const presignedUrl = await fileController.getPresignedUrl(
+        filename,
+        action,
+        contentType ?? undefined,
+      );
 
       logger.info({
         message: 'Successfully generated pre-signed URL',
         user: loggedInUser?.id,
+        action,
         filename,
         presignedUrl,
       });
@@ -46,11 +39,13 @@ export const fileRouteFactory = (fileController: FileController): Router => {
         message: 'Error generating pre-signed URL',
         user: loggedInUser?.id,
         filename,
+        action,
         error: error instanceof Error ? error.message : error,
       });
 
       res.status(500).json({
         message: 'Error generating pre-signed URL',
+        action,
         error: error instanceof Error ? error.message : 'Unknown error',
       });
     }

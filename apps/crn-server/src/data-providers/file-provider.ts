@@ -1,3 +1,4 @@
+import { FileAction } from '@asap-hub/model';
 import {
   LambdaClient,
   InvokeCommand,
@@ -21,7 +22,7 @@ export default class FileProvider {
 
   async getPresignedUrl(
     filename: string,
-    action: 'download' | 'upload',
+    action: FileAction,
     contentType?: string,
   ): Promise<string> {
     // const lambdaPayload = {
@@ -54,7 +55,9 @@ export default class FileProvider {
       throw new Error('Lambda returned an empty response');
     }
 
-    const payloadText = response.Payload.toString().trim();
+    const payloadText = Buffer.from(response.Payload as Uint8Array).toString(
+      'utf8',
+    );
 
     try {
       const parsed = JSON.parse(payloadText);

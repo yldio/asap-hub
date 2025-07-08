@@ -1,8 +1,9 @@
+import { FileAction } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 
 type FilePostRequest = {
-  action: string;
+  action: FileAction;
   filename: string;
   contentType?: string;
 };

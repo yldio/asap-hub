@@ -33,7 +33,7 @@ describe('useImpactSuggestions', () => {
     });
 
     expect(getImpacts).toHaveBeenCalledWith(
-      { search: 'example search' },
+      { search: 'example search', take: 1000 },
       mockAuthorization,
     );
 

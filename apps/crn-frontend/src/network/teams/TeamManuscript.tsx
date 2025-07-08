@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import {
   useAuthorSuggestions,
+  useCategorySuggestions,
   useLabSuggestions,
   useGeneratedContent,
   useTeamSuggestions,
@@ -29,7 +30,6 @@ import {
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
-import { useCategorySuggestions } from '../../shared-state/category';
 
 const loadManuscriptForm = () =>
   import(

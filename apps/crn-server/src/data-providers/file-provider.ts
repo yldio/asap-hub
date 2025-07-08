@@ -25,10 +25,26 @@ export default class FileProvider {
     action: FileAction,
     contentType?: string,
   ): Promise<string> {
+    const lambdaPayload = {
+      headers: {
+        'content-type': 'application/json',
+      },
+      requestContext: {
+        http: {
+          method: 'POST',
+          path: '/files/get-url',
+        },
+      },
+      pathParameters: {},
+      queryStringParameters: {},
+      body: JSON.stringify({ action, filename, contentType }),
+      isBase64Encoded: false,
+    };
+
     const lambdaParams = {
       FunctionName: `asap-hub-${this.stage}-getPresignedUrl`,
       InvocationType: InvocationType.RequestResponse,
-      Payload: JSON.stringify({ action, filename, contentType }),
+      Payload: JSON.stringify(lambdaPayload),
     };
 
     const command = new InvokeCommand(lambdaParams);

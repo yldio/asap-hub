@@ -35,7 +35,7 @@ describe('FileProvider', () => {
       const presignedUrl = 'https://example.com/upload';
       const payload = {
         statusCode: 200,
-        body: JSON.stringify({ presignedUrl }),
+        payload: { presignedUrl },
       };
 
       mockSend.mockResolvedValueOnce({
@@ -89,7 +89,7 @@ describe('FileProvider', () => {
     it('throws if presignedUrl is missing', async () => {
       const payload = {
         statusCode: 200,
-        body: JSON.stringify({}),
+        payload: {},
       };
       mockSend.mockResolvedValueOnce({
         Payload: Buffer.from(JSON.stringify(payload)),

@@ -15,11 +15,11 @@ describe('FileProvider', () => {
     jest.clearAllMocks();
   });
 
-  test('parses payload.body directly if it is already an object', async () => {
+  test('parses payload directly if it is already an object', async () => {
     const url = 'https://s3-url.com/upload';
     const payload = {
       statusCode: 200,
-      body: { presignedUrl: url },
+      payload: { presignedUrl: url },
     };
 
     sendMock.mockResolvedValueOnce({
@@ -52,7 +52,7 @@ describe('FileProvider', () => {
     const url = 'https://s3-url.com/upload';
     const payload = {
       statusCode: 200,
-      body: JSON.stringify({ presignedUrl: url }),
+      payload: { presignedUrl: url },
     };
 
     sendMock.mockResolvedValueOnce({
@@ -77,7 +77,7 @@ describe('FileProvider', () => {
 
   test('throws if Lambda returns non-200 status code', async () => {
     sendMock.mockResolvedValueOnce({
-      Payload: Buffer.from(JSON.stringify({ statusCode: 500, body: '{}' })),
+      Payload: Buffer.from(JSON.stringify({ statusCode: 500, payload: '{}' })),
     });
 
     await expect(
@@ -98,7 +98,7 @@ describe('FileProvider', () => {
   test('throws if Lambda returns JSON without presignedUrl', async () => {
     const payload = {
       statusCode: 200,
-      body: JSON.stringify({}),
+      payload: {},
     };
 
     sendMock.mockResolvedValueOnce({

@@ -191,6 +191,9 @@ const serverlessConfig: AWS = {
               'es:ESHttpDelete',
               'es:ESHttpHead',
               'es:ESHttpPatch',
+              'es:DescribeDomain',
+              'es:DescribeDomains',
+              'es:ListDomainNames',
             ],
             Resource: {
               'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,

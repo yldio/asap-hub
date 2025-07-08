@@ -6,11 +6,8 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-import {
-  getPresignedUrlHandlerFactory,
-} from '../../../src/handlers/files-upload/get-presigned-url-handler-factory';
+import { getPresignedUrlHandlerFactory } from '../../../src/handlers/files-upload/get-presigned-url-handler-factory';
 import { Logger } from '../../../src/utils';
-import { getLambdaRequest } from '../../helpers/events';
 
 jest.mock('@aws-sdk/client-s3');
 jest.mock('@aws-sdk/s3-request-presigner');

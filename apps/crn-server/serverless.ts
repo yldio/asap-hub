@@ -201,6 +201,19 @@ const serverlessConfig: AWS = {
           },
           {
             Effect: 'Allow',
+            Action: 's3:GetObject',
+            Resource: [
+              {
+                'Fn::If': [
+                  'IsProd',
+                  'arn:aws:s3:::asap-hub-prod-data-backup/*',
+                  'arn:aws:s3:::asap-hub-dev-data-backup/*',
+                ],
+              },
+            ],
+          },
+          {
+            Effect: 'Allow',
             Action: [
               'dynamodb:PutItem',
               'dynamodb:Get*',

@@ -24,26 +24,26 @@ export default class FileProvider {
     action: 'download' | 'upload',
     contentType?: string,
   ): Promise<string> {
-    const lambdaPayload = {
-      headers: {
-        'content-type': 'application/json',
-      },
-      requestContext: {
-        http: {
-          method: 'POST',
-          path: '/files/get-url',
-        },
-      },
-      pathParameters: {},
-      queryStringParameters: {},
-      body: JSON.stringify({ action, filename, contentType }),
-      isBase64Encoded: false,
-    };
+    // const lambdaPayload = {
+    //   headers: {
+    //     'content-type': 'application/json',
+    //   },
+    //   requestContext: {
+    //     http: {
+    //       method: 'POST',
+    //       path: '/files/get-url',
+    //     },
+    //   },
+    //   pathParameters: {},
+    //   queryStringParameters: {},
+    //   body: JSON.stringify({ action, filename, contentType }),
+    //   isBase64Encoded: false,
+    // };
 
     const lambdaParams = {
       FunctionName: `asap-hub-${this.stage}-getPresignedUrl`,
       InvocationType: InvocationType.RequestResponse,
-      Payload: JSON.stringify(lambdaPayload),
+      Payload: JSON.stringify({ action, filename, contentType }),
     };
 
     const command = new InvokeCommand(lambdaParams);
@@ -57,26 +57,29 @@ export default class FileProvider {
     const payloadText = response.Payload.toString().trim();
 
     try {
-      const payload = JSON.parse(payloadText);
+      const parsed = JSON.parse(payloadText);
 
-      if (payload.statusCode !== 200) {
-        throw new Error(`Lambda returned an error: ${JSON.stringify(payload)}`);
+      if (parsed.statusCode !== 200) {
+        throw new Error(`Lambda returned an error: ${JSON.stringify(parsed)}`);
       }
 
-      if (!payload.body) {
-        throw new Error(`Lambda response missing body`);
-      }
+      // if (!payload.body) {
+      //   throw new Error(`Lambda response missing body`);
+      // }
 
-      const parsedBody =
-        typeof payload.body === 'string'
-          ? JSON.parse(payload.body)
-          : payload.body;
+      // const parsedBody =
+      //   typeof payload.body === 'string'
+      //     ? JSON.parse(payload.body)
+      //     : payload.body;
 
-      if (!parsedBody.presignedUrl) {
+      if (!parsed.payload?.presignedUrl) {
         throw new Error(`Lambda response missing presignedUrl`);
       }
+      // if (!parsedBody.presignedUrl) {
+      //   throw new Error(`Lambda response missing presignedUrl`);
+      // }
 
-      return parsedBody.presignedUrl;
+      return parsed.payload.presignedUrl;
     } catch (parseError) {
       logger.error('Error parsing Lambda response', {
         rawPayload: payloadText,

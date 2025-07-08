@@ -32,11 +32,11 @@ export const getPresignedUrlHandlerFactory =
     uploadBucket: string,
     downloadBucket: string,
     region: string,
-  ): ((request: lambda.Request<Input>) => Promise<lambda.Response<Output>>) =>
+  ): ((request: Input) => Promise<lambda.Response<Output>>) =>
   async (request) => {
     logger.info(`Received request: ${JSON.stringify(request)}`);
 
-    const { action, filename, contentType } = request.payload;
+    const { action, filename, contentType } = request;
 
     if (!action) {
       return {

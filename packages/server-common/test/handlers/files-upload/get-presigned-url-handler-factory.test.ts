@@ -39,10 +39,7 @@ describe('getPresignedUrlHandlerFactory', () => {
   describe('upload', () => {
     const action = 'upload' as FileAction;
     test('returns 400 if filename is missing', async () => {
-      const request = getLambdaRequest(
-        { action, contentType: 'application/pdf' },
-        {},
-      );
+      const request = { action, contentType: 'application/pdf' };
 
       const response = await handler(request);
 
@@ -53,7 +50,7 @@ describe('getPresignedUrlHandlerFactory', () => {
     });
 
     test('returns 400 if contentType is missing', async () => {
-      const request = getLambdaRequest({ action, filename: 'file.pdf' }, {});
+      const request = { action, filename: 'file.pdf' };
 
       const response = await handler(request);
 
@@ -66,14 +63,11 @@ describe('getPresignedUrlHandlerFactory', () => {
     test('returns presigned URL when request is valid', async () => {
       (getSignedUrl as jest.Mock).mockResolvedValueOnce('https://signed-url');
 
-      const request = getLambdaRequest(
-        {
-          action,
-          filename: 'file.pdf',
-          contentType: 'application/pdf',
-        },
-        {},
-      );
+      const request = {
+        action,
+        filename: 'file.pdf',
+        contentType: 'application/pdf',
+      };
 
       const response = await handler(request);
 
@@ -93,7 +87,7 @@ describe('getPresignedUrlHandlerFactory', () => {
   describe('download', () => {
     const action = 'download' as FileAction;
     it('should return 400 if filename is not passed', async () => {
-      const request = getLambdaRequest({ action }, {});
+      const request = { action };
 
       const response = await handler(request);
 
@@ -104,13 +98,10 @@ describe('getPresignedUrlHandlerFactory', () => {
     test('returns presigned URL when request is valid', async () => {
       (getSignedUrl as jest.Mock).mockResolvedValueOnce('https://signed-url');
 
-      const request = getLambdaRequest(
-        {
-          action,
-          filename: 'file.pdf',
-        },
-        {},
-      );
+      const request = {
+        action,
+        filename: 'file.pdf',
+      };
 
       const response = await handler(request);
 
@@ -127,7 +118,7 @@ describe('getPresignedUrlHandlerFactory', () => {
   });
 
   test('returns 400 if action is missing', async () => {
-    const request = getLambdaRequest({}, {});
+    const request = {};
 
     const response = await handler(request);
 
@@ -141,14 +132,11 @@ describe('getPresignedUrlHandlerFactory', () => {
     const errorMessage = 'S3 error';
     (getSignedUrl as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
 
-    const request = getLambdaRequest(
-      {
-        action: 'upload' as FileAction,
-        filename: 'file.pdf',
-        contentType: 'application/pdf',
-      },
-      {},
-    );
+    const request = {
+      action: 'upload' as FileAction,
+      filename: 'file.pdf',
+      contentType: 'application/pdf',
+    };
 
     const response = await handler(request);
 

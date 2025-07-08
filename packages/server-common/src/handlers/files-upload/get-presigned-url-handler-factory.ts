@@ -6,6 +6,7 @@ import {
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { format } from 'date-fns';
 import { Logger } from '../../utils';
 
 type Input = {
@@ -72,9 +73,11 @@ export const getPresignedUrlHandlerFactory =
           payload: { error: 'filename is required' },
         };
       }
+      const currentDate = format(new Date(), 'yyMMdd');
       command = new GetObjectCommand({
         Bucket: downloadBucket,
         Key: filename,
+        ResponseContentDisposition: `attachment; filename="${filename}_${currentDate}.csv"`,
       });
     }
 

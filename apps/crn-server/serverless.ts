@@ -2020,8 +2020,8 @@ const serverlessConfig: AWS = {
           },
           EBSOptions: {
             EBSEnabled: true,
-            VolumeType: 'gp2', // gp2 is free tier eligible, gp3 is not
-            VolumeSize: 10, // 10GB free tier limit
+            VolumeType: 'gp3', // gp3 is free tier eligible, gp2 is not
+            VolumeSize: 10, // 10GB free tier (limit - 20GB)
           },
           AccessPolicies: {
             Version: '2012-10-17',

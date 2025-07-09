@@ -25,22 +25,6 @@ export default class FileProvider {
     action: FileAction,
     contentType?: string,
   ): Promise<string> {
-    // const lambdaPayload = {
-    //   headers: {
-    //     'content-type': 'application/json',
-    //   },
-    //   requestContext: {
-    //     http: {
-    //       method: 'POST',
-    //       path: '/files/get-url',
-    //     },
-    //   },
-    //   pathParameters: {},
-    //   queryStringParameters: {},
-    //   body: JSON.stringify({ action, filename, contentType }),
-    //   isBase64Encoded: false,
-    // };
-
     const lambdaParams = {
       FunctionName: `asap-hub-${this.stage}-getPresignedUrl`,
       InvocationType: InvocationType.RequestResponse,
@@ -66,21 +50,9 @@ export default class FileProvider {
         throw new Error(`Lambda returned an error: ${JSON.stringify(parsed)}`);
       }
 
-      // if (!payload.body) {
-      //   throw new Error(`Lambda response missing body`);
-      // }
-
-      // const parsedBody =
-      //   typeof payload.body === 'string'
-      //     ? JSON.parse(payload.body)
-      //     : payload.body;
-
       if (!parsed.payload?.presignedUrl) {
         throw new Error(`Lambda response missing presignedUrl`);
       }
-      // if (!parsedBody.presignedUrl) {
-      //   throw new Error(`Lambda response missing presignedUrl`);
-      // }
 
       return parsed.payload.presignedUrl;
     } catch (parseError) {

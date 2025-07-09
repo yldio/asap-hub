@@ -36,7 +36,9 @@ type InterestGroupTeamsTabbedCardProps = Pick<
   'description'
 > & {
   teams: ReadonlyArray<
-    Pick<TeamResponse, 'id' | 'displayName' | 'inactiveSince'>
+    Pick<TeamResponse, 'id' | 'displayName' | 'inactiveSince'> & {
+      endDate?: string;
+    }
   >;
   isInterestGroupActive: boolean;
 };
@@ -47,7 +49,10 @@ const GroupTeamsTabbedCard: React.FC<InterestGroupTeamsTabbedCardProps> = ({
 }) => {
   const [inactiveTeams, activeTeams] = splitListBy(
     teams,
-    (team) => !isInterestGroupActive || !!team?.inactiveSince,
+    (team) =>
+      !isInterestGroupActive ||
+      !!team?.inactiveSince ||
+      (!!team?.endDate && team.endDate < new Date().toISOString()),
   );
 
   return (
@@ -80,7 +85,7 @@ const GroupTeamsTabbedCard: React.FC<InterestGroupTeamsTabbedCardProps> = ({
     >
       {({ data }) => (
         <ul css={containerStyles}>
-          {data.map(({ id, displayName, inactiveSince }) => (
+          {data.map(({ id, displayName, inactiveSince, endDate }) => (
             <li key={`team-${id}`} css={listItemStyle}>
               <TeamIcon />
               <Link
@@ -89,11 +94,12 @@ const GroupTeamsTabbedCard: React.FC<InterestGroupTeamsTabbedCardProps> = ({
               >
                 {displayName}
               </Link>
-              {inactiveSince && (
-                <span css={inactiveBadgeStyles}>
-                  <InactiveBadgeIcon />
-                </span>
-              )}
+              {inactiveSince ||
+                (endDate && endDate < new Date().toISOString() && (
+                  <span css={inactiveBadgeStyles}>
+                    <InactiveBadgeIcon />
+                  </span>
+                ))}
             </li>
           ))}
         </ul>

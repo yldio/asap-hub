@@ -51,3 +51,40 @@ it('shows the correct more and less button text', () => {
   fireEvent.click(screen.getByText('View More Teams'));
   expect(screen.getByText(/View Less Teams/)).toBeVisible();
 });
+
+it('renders inactive badge for team with endDate in the past', () => {
+  const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+  const pastDate = new Date(Date.now() - ONE_DAY_IN_MS).toISOString();
+  render(
+    <GroupTeamsTabbedCard
+      {...props}
+      teams={[{ displayName: 'Past Team', id: 'past-team', endDate: pastDate }]}
+      isInterestGroupActive={true}
+    />,
+  );
+  fireEvent.click(screen.getByText('Past Teams (1)'));
+
+  expect(screen.getByTitle('Inactive Team')).toBeInTheDocument();
+  expect(screen.getByText('Past Team')).toBeVisible();
+});
+
+it('does not render inactive badge for team with endDate in the future', () => {
+  const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+  const futureDate = new Date(Date.now() + ONE_DAY_IN_MS).toISOString();
+  render(
+    <GroupTeamsTabbedCard
+      {...props}
+      teams={[
+        {
+          displayName: 'Not ended yet Team',
+          id: 'not-ended-yet-team',
+          endDate: futureDate,
+        },
+      ]}
+      isInterestGroupActive={true}
+    />,
+  );
+  expect(screen.queryByText('Past Teams (1)')).not.toBeInTheDocument();
+  expect(screen.getByText('Active Teams (1)')).toBeVisible();
+  expect(screen.getByText('Not ended yet Team')).toBeVisible();
+});

@@ -10,6 +10,7 @@ export default {
 
 export const Normal = () => (
   <TeamInterestGroupsTabbedCard
+    teamId="1"
     interestGroups={createListInterestGroupResponse(number('Groups', 3)).items}
     title={text('Title', 'Team Groups')}
     isTeamInactive={boolean('Inactive date', false)}

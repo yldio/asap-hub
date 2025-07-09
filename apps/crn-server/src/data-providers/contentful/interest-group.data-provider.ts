@@ -19,7 +19,9 @@ import {
   FetchInterestGroupsByUserIdQueryVariables,
   InterestGroupsOrder,
   InterestGroupsFilter,
-  Teams,
+  FETCH_INTEREST_GROUPS_BY_TEAM_ID,
+  FetchInterestGroupsByTeamIdQuery,
+  FetchInterestGroupsByTeamIdQueryVariables,
 } from '@asap-hub/contentful';
 
 import { InterestGroupDataProvider } from '../types';
@@ -28,7 +30,6 @@ import {
   parseInterestGroupLeader,
 } from '../transformers';
 import { parseContentfulGraphQlUsers } from './user.data-provider';
-import { parseContentfulGraphQlTeamListItem } from './team.data-provider';
 import { parseResearchTags } from './research-tag.data-provider';
 
 type InterestGroupItem = NonNullable<
@@ -36,6 +37,14 @@ type InterestGroupItem = NonNullable<
     FetchInterestGroupsQuery['interestGroupsCollection']
   >['items'][number]
 >;
+
+type InterestGroupTeams = NonNullable<
+  NonNullable<
+    NonNullable<
+      FetchInterestGroupsQuery['interestGroupsCollection']
+    >['items'][number]
+  >['teamsCollection']
+>['items'][number];
 
 type InterestGroupLeader = NonNullable<
   NonNullable<
@@ -62,6 +71,40 @@ export class InterestGroupContentfulDataProvider
     }
 
     return parseGraphQLInterestGroup(interestGroups);
+  }
+
+  async fetchByTeamId(teamId: string): Promise<ListInterestGroupDataObject> {
+    const { interestGroupsTeamsCollection } =
+      await this.contentfulClient.request<
+        FetchInterestGroupsByTeamIdQuery,
+        FetchInterestGroupsByTeamIdQueryVariables
+      >(FETCH_INTEREST_GROUPS_BY_TEAM_ID, {
+        id: teamId,
+      });
+
+    const items = interestGroupsTeamsCollection?.items
+      .filter(
+        (item) =>
+          !!(
+            item &&
+            item.linkedFrom &&
+            item.linkedFrom.interestGroupsCollection &&
+            item.linkedFrom.interestGroupsCollection.items[0]
+          ),
+      )
+      .map((item) => {
+        const interestGroup =
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          item!.linkedFrom!.interestGroupsCollection!.items[0]!;
+
+        return parseGraphQLInterestGroup(interestGroup);
+      })
+      .filter((x): x is InterestGroupDataObject => !!x);
+
+    return {
+      total: items?.length || 0,
+      items: items || [],
+    };
   }
 
   private async fetchByUserId(
@@ -117,6 +160,11 @@ export class InterestGroupContentfulDataProvider
     if (filter && filter.userId) {
       return this.fetchByUserId(filter.userId, options);
     }
+
+    if (filter && filter.teamId) {
+      return this.fetchByTeamId(filter.teamId);
+    }
+
     const where: InterestGroupsFilter = {};
 
     const words = (search || '').split(' ').filter(Boolean); // removes whitespaces
@@ -146,13 +194,6 @@ export class InterestGroupContentfulDataProvider
       where.AND = [...(where.AND || []), { active: filter.active }];
     }
 
-    if (filter && filter.teamId) {
-      where.AND = [
-        ...(where.AND || []),
-        { teams: { sys: { id_in: filter.teamId } } },
-      ];
-    }
-
     const { interestGroupsCollection } = await this.contentfulClient.request<
       FetchInterestGroupsQuery,
       FetchInterestGroupsQueryVariables
@@ -171,13 +212,15 @@ const parseGraphQLInterestGroup = (
   interestGroup: InterestGroupItem,
 ): InterestGroupDataObject => {
   const teams = (interestGroup.teamsCollection?.items || [])
-    .filter((x): x is Teams => x !== null)
-    .map((t) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { memberCount, labCount, ...team } =
-        parseContentfulGraphQlTeamListItem(t);
-      return team;
-    });
+    .filter((x): x is InterestGroupTeams => x !== null)
+    .map((t) => ({
+      id: t?.team?.sys.id ?? '',
+      inactiveSince: t?.team?.inactiveSince ?? undefined,
+      endDate: t?.endDate,
+      displayName: t?.team?.displayName ?? '',
+      projectTitle: t?.team?.projectTitle ?? '',
+      tags: parseResearchTags(t?.team?.researchTagsCollection?.items || []),
+    }));
 
   const calendars = interestGroup.calendar
     ? [parseContentfulGraphqlCalendarToResponse(interestGroup.calendar)]

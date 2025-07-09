@@ -160,7 +160,21 @@ export class ContentfulFixture implements Fixture {
           return getLinkEntity(leadership.sys.id);
         }),
       ),
-      teams: (props.teams || []).map((team) => getLinkEntity(team.id)),
+      teams: await Promise.all(
+        (props.teams || []).map(async (team) => {
+          const teamMembership = await environment.createEntry(
+            'interestGroupsTeams',
+            {
+              fields: addLocaleToFields({
+                team: getLinkEntity(team.id),
+                startDate: new Date().toISOString(),
+              }),
+            },
+          );
+          await teamMembership.publish();
+          return getLinkEntity(teamMembership.sys.id);
+        }),
+      ),
     };
   }
 

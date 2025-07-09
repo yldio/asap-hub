@@ -106,6 +106,9 @@ describe('getPresignedUrlHandlerFactory', () => {
       expect(GetObjectCommand).toHaveBeenCalledWith({
         Bucket: downloadBucket,
         Key: 'file.pdf',
+        ResponseContentDisposition: expect.stringMatching(
+          /attachment; filename="file.pdf_\d+\.csv"/,
+        ),
       });
       expect(getSignedUrl).toHaveBeenCalled();
 

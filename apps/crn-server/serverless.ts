@@ -2040,7 +2040,12 @@ const serverlessConfig: AWS = {
             Enabled: true,
           },
           AdvancedSecurityOptions: {
-            Enabled: false, // Disable fine-grained access control for simplicity
+            Enabled: true,
+            InternalUserDatabaseEnabled: true,
+            MasterUserOptions: {
+              MasterUserName: 'admin',
+              MasterUserPassword: '1njkM7FL/}fK',
+            },
           },
           LogPublishingOptions: {
             ES_APPLICATION_LOGS: {
@@ -2054,7 +2059,7 @@ const serverlessConfig: AWS = {
             },
           },
         },
-        DeletionPolicy: stage === 'production' ? 'Retain' : 'Delete',
+        DeletionPolicy: 'Retain',
       },
     },
     extensions: {

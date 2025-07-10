@@ -25,6 +25,7 @@
     "@aws-sdk/client-cloudfront": "^3.287.0",
     "@aws-sdk/client-dynamodb": "^3.687.0",
     "@aws-sdk/client-eventbridge": "^3.306.0",
+    "@aws-sdk/client-opensearch": "^3.687.0",
     "@aws-sdk/client-s3": "^3.758.0",
     "@aws-sdk/client-secrets-manager": "^3.306.0",
     "@aws-sdk/client-ses": "^3.306.0",

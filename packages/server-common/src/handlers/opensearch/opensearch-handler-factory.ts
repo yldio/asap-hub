@@ -1,9 +1,15 @@
 import { framework as lambda } from '@asap-hub/services-common';
 import { Client } from '@opensearch-project/opensearch';
+import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws';
+import { defaultProvider } from '@aws-sdk/credential-provider-node';
 import { Logger } from '../../utils';
 
-const getClient = (domainEndpoint: string) =>
+const getClient = (domainEndpoint: string, region: string) =>
   new Client({
+    ...AwsSigv4Signer({
+      getCredentials: defaultProvider(),
+      region,
+    }),
     node: `https://${domainEndpoint}`,
   });
 
@@ -48,6 +54,7 @@ export const opensearchHandlerFactory =
   (
     logger: Logger,
     domainEndpoint: string,
+    region: string,
   ): ((request: lambda.Request<Input>) => Promise<lambda.Response<Output>>) =>
   async (request) => {
     logger.info(`Received request: ${JSON.stringify(request)}`);
@@ -64,7 +71,7 @@ export const opensearchHandlerFactory =
       };
     }
     try {
-      const client = getClient(domainEndpoint);
+      const client = getClient(domainEndpoint, region);
 
       const response = await client.search({
         index,

@@ -1102,7 +1102,7 @@ const serverlessConfig: AWS = {
       handler: './src/handlers/files-upload/get-presigned-url-handler.handler',
       environment: {
         FILES_BUCKET: '${self:service}-${self:provider.stage}-files',
-        DATA_BACKUP_BUCKET: {
+        DATA_BUCKET: {
           'Fn::If': [
             'IsProd',
             '${self:service}-${self:provider.stage}-data-backup',

@@ -2017,7 +2017,12 @@ const serverlessConfig: AWS = {
               {
                 Effect: 'Allow',
                 Principal: {
-                  AWS: '*',
+                  AWS: [
+                    '*',
+                    {
+                      'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'], // Add Lambda role
+                    },
+                  ],
                 },
                 Action: 'es:*',
                 Resource: {

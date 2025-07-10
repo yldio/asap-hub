@@ -579,7 +579,7 @@ export const getPresignedUrl = async (
   filename: string,
   authorization: string,
   contentType?: string,
-  action: 'upload' | 'download' = 'upload',
+  action: FileAction = 'upload',
 ): Promise<{ presignedUrl: string }> => {
   const resp = await fetch(`${API_BASE_URL}/files/get-url`, {
     method: 'POST',

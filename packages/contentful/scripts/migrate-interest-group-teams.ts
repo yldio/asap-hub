@@ -19,7 +19,7 @@ const LIMIT = 1000;
 const queryOptions: QueryOptions = {
   content_type: 'interestGroups',
   'sys.archivedAt[exists]': false,
-  select: 'fields.teams_old,fields.name',
+  select: 'fields.teams,fields.name',
   limit: LIMIT,
 };
 
@@ -72,7 +72,8 @@ const migrateInterestGroupTeams = async () => {
       const oldTeams: Link<string>[] =
         interestGroupEntry.fields['teams']['en-US'];
 
-      const currentTeams: Link<string>[] = interestGroupEntry.fields['teams'];
+      const currentTeams: Link<string>[] =
+        interestGroupEntry.fields['teams_new'];
 
       if (
         currentTeams &&

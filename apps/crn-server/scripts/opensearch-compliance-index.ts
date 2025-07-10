@@ -1,4 +1,5 @@
 import { createClient } from 'contentful-management';
+import { getOpenSearchEndpoint } from '@asap-hub/server-common';
 
 // Environment variables
 const spaceId = process.env.CONTENTFUL_SPACE_ID!;
@@ -9,62 +10,7 @@ const contentfulManagementAccessToken =
 // OpenSearch endpoint configuration
 // Production domain: asap-hub-production-search
 // Dev/PR domain: asap-hub-dev-search (shared by dev and all PR environments)
-async function getOpenSearchEndpoint(): Promise<string> {
-  // Try manual override first (for local testing)
-  const manualEndpoint = process.env.OPENSEARCH_ENDPOINT;
-  if (manualEndpoint) {
-    console.log('✅ Using manual endpoint override');
-    return manualEndpoint;
-  }
-
-  // Fetch from AWS API
-  console.log('🔍 Fetching OpenSearch endpoint from AWS API...');
-
-  // Determine domain name (same logic as serverless.ts)
-  const stage = process.env.ENVIRONMENT || process.env.SLS_STAGE || 'dev';
-  const service = 'asap-hub';
-  const domainName =
-    stage === 'production'
-      ? `${service}-${stage}-search` // asap-hub-production-search
-      : `${service}-dev-search`; // asap-hub-dev-search
-
-  console.log(`📍 Looking up domain: ${domainName} (stage: ${stage})`);
-
-  try {
-    const url = `https://es.${awsRegion}.amazonaws.com/2021-01-01/opensearch/domain/${domainName}`;
-
-    const response = await fetch(url, {
-      headers: await createAWSSignature('GET', url),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${await response.text()}`);
-    }
-
-    const data = await response.json();
-    const endpoint = data.DomainStatus?.Endpoint;
-
-    if (!endpoint) {
-      throw new Error('Endpoint not found in response');
-    }
-
-    const fullEndpoint = `https://${endpoint}`;
-    console.log(`✅ Fetched endpoint from AWS API: ${fullEndpoint}`);
-    return fullEndpoint;
-  } catch (error) {
-    console.error(`❌ Failed to fetch endpoint for ${domainName}:`, error);
-    console.log('💡 Fallback options:');
-    console.log(
-      '💡 Set OPENSEARCH_ENDPOINT environment variable with the full URL',
-    );
-    console.log(
-      `💡 Get it from: AWS Console > OpenSearch Service > Domains > ${domainName}`,
-    );
-    throw new Error(
-      `Could not determine OpenSearch endpoint for ${domainName}`,
-    );
-  }
-}
+// Using shared getOpenSearchEndpoint utility from @asap-hub/server-common
 
 // OpenSearch endpoint will be determined at runtime
 
@@ -448,11 +394,11 @@ const indexComplianceData = async () => {
 
     // Test OpenSearch connection
     try {
-      const health = await makeOpenSearchRequest(
+      const health = (await makeOpenSearchRequest(
         opensearchEndpoint,
         'GET',
         '/_cluster/health',
-      );
+      )) as { status: string };
       console.log(`✅ OpenSearch connected! Status: ${health.status}`);
     } catch (error) {
       console.error('❌ OpenSearch connection failed:', error);
@@ -646,22 +592,12 @@ const indexComplianceData = async () => {
     await delay(1000);
 
     try {
-      const countResult = await makeOpenSearchRequest(
+      const countResult = (await makeOpenSearchRequest(
         opensearchEndpoint,
         'GET',
         `/${indexName}/_count`,
-      );
+      )) as { count: number };
       console.log(`🎉 Success! ${countResult.count} documents in index`);
-
-      const sample = await makeOpenSearchRequest(
-        opensearchEndpoint,
-        'GET',
-        `/${indexName}/_search?size=1`,
-      );
-      if (sample.hits.hits.length > 0) {
-        console.log('\n📄 Sample indexed document:');
-        console.log(JSON.stringify(sample.hits.hits[0]._source, null, 2));
-      }
     } catch (error) {
       console.error('❌ Verification failed:', error);
     }

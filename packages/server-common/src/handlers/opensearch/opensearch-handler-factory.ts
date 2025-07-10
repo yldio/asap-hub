@@ -2,16 +2,24 @@ import { framework as lambda } from '@asap-hub/services-common';
 import { Client } from '@opensearch-project/opensearch';
 import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws';
 import { defaultProvider } from '@aws-sdk/credential-provider-node';
-import { Logger } from '../../utils';
+import {
+  Logger,
+  getOpenSearchEndpoint,
+  extractDomainFromEndpoint,
+} from '../../utils';
 
-const getClient = (domainEndpoint: string, region: string) =>
-  new Client({
+const getClient = async (region: string): Promise<Client> => {
+  const endpoint = await getOpenSearchEndpoint();
+  const domainEndpoint = extractDomainFromEndpoint(endpoint);
+
+  return new Client({
     ...AwsSigv4Signer({
       getCredentials: defaultProvider(),
       region,
     }),
     node: `https://${domainEndpoint}`,
   });
+};
 
 type SearchResponse = {
   _shards: {
@@ -53,7 +61,6 @@ type Output =
 export const opensearchHandlerFactory =
   (
     logger: Logger,
-    domainEndpoint: string,
     region: string,
   ): ((request: lambda.Request<Input>) => Promise<lambda.Response<Output>>) =>
   async (request) => {
@@ -71,7 +78,7 @@ export const opensearchHandlerFactory =
       };
     }
     try {
-      const client = getClient(domainEndpoint, region);
+      const client = await getClient(region);
 
       const response = await client.search({
         index,

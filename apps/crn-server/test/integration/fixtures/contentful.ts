@@ -142,8 +142,9 @@ export class ContentfulFixture implements Fixture {
 
   private async prepareInterestGroup(props: InterestGroupCreateDataObject) {
     const environment = await this.getEnvironment();
+    const { teams, ...rest } = props;
     return {
-      ...props,
+      ...rest,
       leaders: await Promise.all(
         (props.leaders || []).map(async (leader) => {
           const leadership = await environment.createEntry(

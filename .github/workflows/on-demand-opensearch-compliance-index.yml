@@ -1,0 +1,88 @@
+# OpenSearch Compliance Index Sync
+#
+# This workflow indexes compliance data (manuscripts) from Contentful into OpenSearch.
+#
+# OpenSearch Domains (automatically detected):
+# - Production environment -> asap-hub-production-search domain
+# - Dev/PR environments -> asap-hub-dev-search domain (shared)
+#
+# The script automatically detects the correct domain and retrieves the endpoint URL from AWS.
+# No manual configuration required!
+
+name: OpenSearch Compliance Index Sync
+on:
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        required: true
+        type: environment
+        description: Choose which environment to sync
+        default: Branch
+      contentful-environment-id:
+        required: true
+        type: string
+        description: The contentful environment to sync from
+        default: Development
+      pr-number:
+        required: false
+        type: string
+        description: The PR number to run for
+
+jobs:
+  opensearch-index:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check PR Number
+        if: ${{ github.event.inputs.environment-name=='Branch' }}
+        uses: ./.github/actions/is-number
+        with:
+          number: ${{ github.event.inputs.pr-number }}
+
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ github.event.inputs.environment-name }}
+          pr-number: ${{ github.event.inputs.pr-number }}
+          crn-create-env: ${{ github.event.inputs.environment-name == 'Branch' }}
+
+      - name: Run OpenSearch Compliance Indexing
+        run: |
+          yarn workspace @asap-hub/crn-server opensearch:index-compliance
+        env:
+          # Contentful configuration
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          CONTENTFUL_ENV_ID: ${{ github.event.inputs.contentful-environment-id }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+
+          # AWS configuration
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ steps.setup.outputs.aws-default-region }}
+
+          # OpenSearch configuration
+          OPENSEARCH_USERNAME: ${{ secrets.AWS_OS_USERNAME }}
+          OPENSEARCH_PASSWORD: ${{ secrets.AWS_OS_PASSWORD }}
+          ENVIRONMENT: ${{ github.event.inputs.environment-name }}
+
+  notify_failure:
+    runs-on: ubuntu-latest
+    needs: [opensearch-index]
+    if: ${{ failure() && github.event.inputs.environment-name=='Production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/slack/
+        with:
+          message: OpenSearch Compliance Index Sync
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure

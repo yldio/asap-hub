@@ -5,11 +5,10 @@ import { Handler } from 'aws-lambda';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
-const domainEndpoint = process.env.OPENSEARCH_DOMAIN_ENDPOINT || '';
-const region = process.env.AWS_REGION || '';
+const region = process.env.AWS_REGION || 'us-east-1';
 
 export const opensearchHandler = framework.http(
-  opensearchHandlerFactory(logger, domainEndpoint, region),
+  opensearchHandlerFactory(logger, region),
 );
 
 export const handler: Handler = sentryWrapper(opensearchHandler);

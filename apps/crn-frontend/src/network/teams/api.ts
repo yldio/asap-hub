@@ -25,6 +25,7 @@ import {
   ResearchOutputResponse,
   TeamPatchRequest,
   TeamResponse,
+  FileAction,
 } from '@asap-hub/model';
 import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
 import { API_BASE_URL } from '../../config';

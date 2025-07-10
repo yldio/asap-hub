@@ -106,9 +106,20 @@ describe('/files route', () => {
     });
 
     describe('upload action', () => {
-      test('returns 400 if filename or contentType is missing', async () => {
+      const action = 'upload';
+      test('returns 400 if filename is missing', async () => {
         const response = await supertest(app).post(endpoint).send({
+          action,
           contentType: 'application/pdf',
+        });
+
+        expect(response.status).toBe(400);
+      });
+
+      test('returns 400 if contentType is missing', async () => {
+        const response = await supertest(app).post(endpoint).send({
+          action,
+          filename: 'test.pdf',
         });
 
         expect(response.status).toBe(400);
@@ -124,27 +135,39 @@ describe('/files route', () => {
         expect(response.body).toEqual({ presignedUrl: mockUrl });
         expect(filesController.getPresignedUrl).toHaveBeenCalledWith(
           'test.pdf',
-          'upload',
+          action,
           'application/pdf',
         );
       });
     });
 
-    test('returns 200 and the presigned URL on download url success', async () => {
-      const mockUrl = 'https://presigned-url.com';
-      filesController.getPresignedUrl.mockResolvedValueOnce(mockUrl);
+    describe('download action', () => {
+      const action = 'download';
+      test('returns 400 if filename is missing', async () => {
+        const response = await supertest(app).post(endpoint).send({
+          action,
+          contentType: 'application/pdf',
+        });
 
-      const response = await supertest(app)
-        .post(endpoint)
-        .send({ filename: 'test.pdf', action: 'download' });
+        expect(response.status).toBe(400);
+      });
 
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({ presignedUrl: mockUrl });
-      expect(filesController.getPresignedUrl).toHaveBeenCalledWith(
-        'test.pdf',
-        'download',
-        undefined,
-      );
+      test('returns 200 and the presigned URL on download url success', async () => {
+        const mockUrl = 'https://presigned-url.com';
+        filesController.getPresignedUrl.mockResolvedValueOnce(mockUrl);
+
+        const response = await supertest(app)
+          .post(endpoint)
+          .send({ filename: 'test.pdf', action });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({ presignedUrl: mockUrl });
+        expect(filesController.getPresignedUrl).toHaveBeenCalledWith(
+          'test.pdf',
+          action,
+          undefined,
+        );
+      });
     });
   });
 });

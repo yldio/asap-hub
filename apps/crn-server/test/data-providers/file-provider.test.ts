@@ -1,4 +1,4 @@
-import { LambdaClient } from '@aws-sdk/client-lambda';
+import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
 import FileProvider from '../../src/data-providers/file-provider';
 
 jest.mock('@aws-sdk/client-lambda');
@@ -13,6 +13,36 @@ describe('FileProvider', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe('isASCII', () => {
+    it('returns true for printable ASCII', () => {
+      expect(provider.isASCII('Hello123')).toBe(true);
+    });
+
+    it('returns false for non-ASCII', () => {
+      expect(provider.isASCII('こんにちは')).toBe(false);
+    });
+  });
+
+  test('returns presignedUrl when Lambda returns success', async () => {
+    const url = 'https://s3-url.com/upload';
+    const payload = {
+      statusCode: 200,
+      payload: { presignedUrl: url },
+    };
+
+    sendMock.mockResolvedValueOnce({
+      Payload: Buffer.from(JSON.stringify(payload)),
+    });
+
+    const result = await provider.getPresignedUrl(
+      'file.pdf',
+      'upload',
+      'application/pdf',
+    );
+    expect(result).toBe(url);
+    expect(sendMock).toHaveBeenCalledWith(expect.any(InvokeCommand));
   });
 
   test('parses payload directly if it is already an object', async () => {
@@ -46,25 +76,6 @@ describe('FileProvider', () => {
     await expect(
       provider.getPresignedUrl('file.pdf', 'upload', 'application/pdf'),
     ).rejects.toThrow(/Invalid JSON response from Lambda: λambda/);
-  });
-
-  test('returns presignedUrl when Lambda returns success', async () => {
-    const url = 'https://s3-url.com/upload';
-    const payload = {
-      statusCode: 200,
-      payload: { presignedUrl: url },
-    };
-
-    sendMock.mockResolvedValueOnce({
-      Payload: Buffer.from(JSON.stringify(payload)),
-    });
-
-    const result = await provider.getPresignedUrl(
-      'file.pdf',
-      'upload',
-      'application/pdf',
-    );
-    expect(result).toBe(url);
   });
 
   test('throws if Lambda returns no payload', async () => {
@@ -106,7 +117,7 @@ describe('FileProvider', () => {
     });
 
     await expect(
-      provider.getPresignedUrl('file.pdf', 'upload', 'application/pdf'),
+      provider.getPresignedUrl('file.pdf', 'download'),
     ).rejects.toThrow('Invalid JSON response from Lambda: ');
   });
 });

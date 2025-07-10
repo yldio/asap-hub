@@ -2029,16 +2029,13 @@ const serverlessConfig: AWS = {
               {
                 Effect: 'Allow',
                 Principal: {
-                  AWS: [
-                    { 'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'] },
-                    { 'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:role/admin' },
-                  ],
+                  AWS: '*',
                 },
                 Action: 'es:*',
-                Resource: {
-                  'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
-                },
+                Resource:
+                  'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${openSearchDomainName}/*',
               },
+              // still secure since we're using fine grained access control
             ],
           },
           DomainEndpointOptions: {

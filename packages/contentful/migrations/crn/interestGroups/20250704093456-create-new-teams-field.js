@@ -2,14 +2,13 @@ module.exports.description = 'Add new teams field';
 
 module.exports.up = (migration) => {
   const interestGroups = migration.editContentType('interestGroups');
-  interestGroups.changeFieldId('teams', 'teams_old');
 
-  interestGroups.editField('teams_old', {
+  interestGroups.editField('teams', {
     name: 'Teams (old)',
   });
 
   interestGroups
-    .createField('teams')
+    .createField('teams_new')
     .name('Teams')
     .type('Array')
     .localized(false)
@@ -29,42 +28,20 @@ module.exports.up = (migration) => {
       linkType: 'Entry',
     });
 
-  interestGroups.changeFieldControl('teams', 'app', 'Yp64pYYDuRNHdvAAAJPYa', {
-    entityName: 'team',
-  });
+  interestGroups.changeFieldControl(
+    'teams_new',
+    'app',
+    'Yp64pYYDuRNHdvAAAJPYa',
+    {
+      entityName: 'team',
+    },
+  );
 };
 
 module.exports.down = (migration) => {
   const interestGroups = migration.editContentType('interestGroups');
-  interestGroups.changeFieldId('teams', 'teams_old');
-  interestGroups.editField('teams_old', {
-    name: 'Teams (old)',
+  interestGroups.editField('teams', {
+    name: 'Teams',
   });
-
-  interestGroups
-    .createField('teams')
-    .name('Teams')
-    .type('Array')
-    .localized(false)
-    .required(false)
-    .validations([])
-    .disabled(false)
-    .omitted(false)
-    .items({
-      type: 'Link',
-
-      validations: [
-        {
-          linkContentType: ['teams'],
-        },
-      ],
-
-      linkType: 'Entry',
-    });
-
-  interestGroups.changeFieldControl('teams', 'builtin', 'entryCardsEditor', {
-    bulkEditing: false,
-    showLinkEntityAction: true,
-    showCreateEntityAction: true,
-  });
+  interestGroups.deleteField('teams_new');
 };

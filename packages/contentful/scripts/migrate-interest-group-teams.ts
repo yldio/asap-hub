@@ -61,8 +61,8 @@ const migrateInterestGroupTeams = async () => {
     if (
       !interestGroupEntry ||
       !interestGroupEntry.fields ||
-      !interestGroupEntry.fields['teams_old'] ||
-      !interestGroupEntry.fields['teams_old']?.['en-US'].length
+      !interestGroupEntry.fields['teams'] ||
+      !interestGroupEntry.fields['teams']?.['en-US'].length
     ) {
       console.log('No teams, skipping');
       continue;
@@ -70,7 +70,7 @@ const migrateInterestGroupTeams = async () => {
 
     try {
       const oldTeams: Link<string>[] =
-        interestGroupEntry.fields['teams_old']['en-US'];
+        interestGroupEntry.fields['teams']['en-US'];
 
       const currentTeams: Link<string>[] = interestGroupEntry.fields['teams'];
 
@@ -123,7 +123,7 @@ const migrateInterestGroupTeams = async () => {
         const updatedInterestGroup = await interestGroupEntry.patch([
           {
             op: 'add',
-            path: '/fields/teams',
+            path: '/fields/teams_new',
             value: {
               'en-US': teamIds.map((id) => ({
                 sys: {

@@ -2020,10 +2020,10 @@ const serverlessConfig: AWS = {
                   AWS: '*',
                 },
                 Action: 'es:*',
-                Resource:
-                  'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${openSearchDomainName}/*',
-              },
-              // still secure since we're using fine grained access control
+                Resource: {
+                  'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+                },
+              }, // still secure since we're using fine grained access control
             ],
           },
           DomainEndpointOptions: {
@@ -2040,8 +2040,8 @@ const serverlessConfig: AWS = {
             Enabled: true,
             InternalUserDatabaseEnabled: true,
             MasterUserOptions: {
-              MasterUserName: 'admin',
-              MasterUserPassword: '1njkM7FL/}fK',
+              MasterUserName: process.env.AWS_OS_USERNAME,
+              MasterUserPassword: process.env.AWS_OS_PASSWORD,
             },
           },
           LogPublishingOptions: {

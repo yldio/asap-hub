@@ -160,7 +160,7 @@ export class ContentfulFixture implements Fixture {
           return getLinkEntity(leadership.sys.id);
         }),
       ),
-      teams: await Promise.all(
+      teams_new: await Promise.all(
         (props.teams || []).map(async (team) => {
           const teamMembership = await environment.createEntry(
             'interestGroupsTeams',

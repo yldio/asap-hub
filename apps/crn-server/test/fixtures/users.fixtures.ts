@@ -531,7 +531,15 @@ export const getContentfulGraphqlUser = (
           },
           displayName: 'Team A',
           linkedFrom: {
-            interestGroupsCollection: getInterestGroupsCollection(),
+            interestGroupsTeamsCollection: {
+              items: [
+                {
+                  linkedFrom: {
+                    interestGroupsCollection: getInterestGroupsCollection(),
+                  },
+                },
+              ],
+            },
           },
           researchTheme: {
             name: 'PD Functional Genomics',

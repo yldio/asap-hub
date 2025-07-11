@@ -69,7 +69,15 @@ type PublicTeamMembership = NonNullable<
 
 type TeamInterestGroupItem = NonNullable<
   NonNullable<
-    NonNullable<PublicTeamItem['linkedFrom']>['interestGroupsCollection']
+    NonNullable<
+      NonNullable<
+        NonNullable<
+          NonNullable<
+            PublicTeamItem['linkedFrom']
+          >['interestGroupsTeamsCollection']
+        >['items'][number]
+      >['linkedFrom']
+    >['interestGroupsCollection']
   >['items'][number]
 >;
 
@@ -313,10 +321,12 @@ export const parseContentfulGraphQlPublicTeamListItem = (
   );
 
   const activeInterestGroups = cleanArray(
-    item.linkedFrom?.interestGroupsCollection?.items,
+    item.linkedFrom?.interestGroupsTeamsCollection?.items.flatMap(
+      (item) => item?.linkedFrom?.interestGroupsCollection?.items,
+    ),
   )
-    .filter((ig): ig is TeamInterestGroupItem => !!ig.active)
-    .map((ig) => ig.name || '');
+    .filter((ig): ig is TeamInterestGroupItem => !!ig?.active)
+    .map((ig) => ig?.name || '');
 
   const isInactiveTeam = !!item.inactiveSince;
 

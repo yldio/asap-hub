@@ -29,6 +29,7 @@ describe('manuscriptToCSV', () => {
       },
       teams: 'Alessi and Camel',
       manuscriptId: 'DA1-000463-005-org-G-1',
+      apcRequested: false,
     };
     expect(manuscriptToCSV(manuscript)).toEqual({
       'Manuscript ID': 'DA1-000463-005-org-G-1',
@@ -36,9 +37,13 @@ describe('manuscriptToCSV', () => {
       'Team Name': 'Alessi',
       'Last Updated': '2025-03-06T17:03:41.824Z',
       Status: 'Waiting for Report',
-      'Requested APC Coverage': '',
       'Assigned Users': 'Jane Smith, John Doe',
       'All Teams': 'Alessi and Camel',
+      'Requested APC Coverage': false,
+      'APC Requested Amount': undefined,
+      'APC Request Status': '',
+      'APC Paid Amount': undefined,
+      'APC Declined Reason': '',
     });
   });
 });

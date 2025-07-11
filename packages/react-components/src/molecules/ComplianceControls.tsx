@@ -49,6 +49,10 @@ const controlsContainerStyles = css({
   justifyContent: 'space-between',
 });
 
+const exportControlsStyles = css({
+  flexFlow: 'row-reverse',
+});
+
 const filtersWrapperStyles = css({
   display: 'flex',
   flexDirection: 'row',
@@ -57,6 +61,12 @@ const filtersWrapperStyles = css({
 
 const dropdownLabelStyles = css({
   marginRight: rem(8),
+});
+
+const controlsWrapperStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(24),
 });
 
 type ComplianceControlsProps = {
@@ -68,6 +78,7 @@ type ComplianceControlsProps = {
     requestedAPCCoverage: string,
   ) => string;
   exportResults?: () => Promise<void>;
+  getComplianceDataset?: () => Promise<void>;
 };
 
 const ComplianceControls = ({
@@ -76,78 +87,109 @@ const ComplianceControls = ({
   generateLink,
   manuscriptCount,
   exportResults,
+  getComplianceDataset,
 }: ComplianceControlsProps) => {
   const resultsFoundText =
     manuscriptCount === 1
       ? `${manuscriptCount} result found`
       : `${manuscriptCount} results found`;
+
+  const tooltip = (
+    <>
+      <strong>Data in Table:</strong> Download the data you can currently see in
+      the table;
+      <br />
+      <br />
+      <strong>Full Dataset:</strong> Download the data you can currently see in
+      the table and additional data from the CMS.
+    </>
+  );
+
   return (
-    <div css={controlsContainerStyles}>
-      <div css={countContainerStyles}>
-        <strong>{resultsFoundText}</strong>
-      </div>
-      <div css={filtersWrapperStyles}>
-        <div css={filterContainerStyles}>
-          <strong>Completed Status:</strong>
-          <DropdownButton
-            noMargin
-            customMenuWidth={100}
-            buttonChildren={() => (
-              <>
-                <span css={dropdownLabelStyles}>
-                  {completedStatusOptions[completedStatus]}
-                </span>
-                {dropdownChevronIcon}
-              </>
-            )}
-          >
-            {Object.keys(completedStatusOptions).map((statusOption) => ({
-              item: (
-                <>
-                  {
-                    completedStatusOptions[
-                      statusOption as CompletedStatusOption
-                    ]
-                  }
-                </>
-              ),
-              href: generateLink(statusOption, requestedAPCCoverage),
-            }))}
-          </DropdownButton>
+    <div css={controlsWrapperStyles}>
+      <div css={controlsContainerStyles}>
+        <div css={countContainerStyles}>
+          <strong>{resultsFoundText}</strong>
         </div>
-        <div css={filterContainerStyles}>
-          <strong>APC Coverage:</strong>
-          <DropdownButton
-            noMargin
-            buttonChildren={() => (
-              <>
-                <span css={dropdownLabelStyles}>
-                  {requestedAPCCoverageOptions[requestedAPCCoverage]}
-                </span>
-                {dropdownChevronIcon}
-              </>
-            )}
-            customMenuWidth={200}
-          >
-            {Object.keys(requestedAPCCoverageOptions).map(
-              (apcCoverageOption) => ({
+        <div css={filtersWrapperStyles}>
+          <div css={filterContainerStyles}>
+            <strong>Completed Status:</strong>
+            <DropdownButton
+              noMargin
+              customMenuWidth={100}
+              buttonChildren={() => (
+                <>
+                  <span css={dropdownLabelStyles}>
+                    {completedStatusOptions[completedStatus]}
+                  </span>
+                  {dropdownChevronIcon}
+                </>
+              )}
+            >
+              {Object.keys(completedStatusOptions).map((statusOption) => ({
                 item: (
                   <>
                     {
-                      requestedAPCCoverageOptions[
-                        apcCoverageOption as RequestedAPCCoverageOption
+                      completedStatusOptions[
+                        statusOption as CompletedStatusOption
                       ]
                     }
                   </>
                 ),
-                href: generateLink(completedStatus, apcCoverageOption),
-              }),
-            )}
-          </DropdownButton>
+                href: generateLink(statusOption, requestedAPCCoverage),
+              }))}
+            </DropdownButton>
+          </div>
+          <div css={filterContainerStyles}>
+            <strong>APC Coverage:</strong>
+            <DropdownButton
+              noMargin
+              buttonChildren={() => (
+                <>
+                  <span css={dropdownLabelStyles}>
+                    {requestedAPCCoverageOptions[requestedAPCCoverage]}
+                  </span>
+                  {dropdownChevronIcon}
+                </>
+              )}
+              customMenuWidth={200}
+            >
+              {Object.keys(requestedAPCCoverageOptions).map(
+                (apcCoverageOption) => ({
+                  item: (
+                    <>
+                      {
+                        requestedAPCCoverageOptions[
+                          apcCoverageOption as RequestedAPCCoverageOption
+                        ]
+                      }
+                    </>
+                  ),
+                  href: generateLink(completedStatus, apcCoverageOption),
+                }),
+              )}
+            </DropdownButton>
+          </div>
         </div>
-        <div css={filterContainerStyles}>
-          <ExportButton exportResults={exportResults} />
-        </div>
+      </div>
+      <div css={[controlsContainerStyles, exportControlsStyles]}>
+        <ExportButton
+          buttons={[
+            {
+              buttonText: 'Data in Table',
+              errorMessage:
+                'There was an issue exporting to CSV. Please try again.',
+              exportResults,
+            },
+            {
+              buttonText: 'Full Dataset',
+              errorMessage:
+                'There was a problem trying to retrieve the file you requested. Please try again later.',
+              exportResults: getComplianceDataset,
+            },
+          ]}
+          info={tooltip}
+        />
       </div>
     </div>
   );

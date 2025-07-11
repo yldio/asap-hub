@@ -45,6 +45,6 @@ describe('ComplianceControls', () => {
 
     render(<ComplianceControls {...props} exportResults={mockExport} />);
 
-    expect(screen.getByText(/export as:/i)).toBeVisible();
+    expect(screen.getByText(/download:/i)).toBeVisible();
   });
 });

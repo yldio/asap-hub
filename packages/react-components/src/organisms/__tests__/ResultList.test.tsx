@@ -75,7 +75,7 @@ it('renders export as csv button', () => {
       cards
     </ResultList>,
   );
-  expect(screen.queryByText(/export as:/i)).toBeNull();
+  expect(screen.queryByText(/download:/i)).toBeNull();
   expect(screen.queryByText(/csv/i)).toBeNull();
   const mockExport = jest.fn(() => Promise.resolve());
   rerender(
@@ -83,7 +83,7 @@ it('renders export as csv button', () => {
       cards
     </ResultList>,
   );
-  expect(screen.getByText(/export as:/i)).toBeVisible();
+  expect(screen.getByText(/download:/i)).toBeVisible();
   userEvent.click(screen.getByText(/csv/i));
   expect(mockExport).toHaveBeenCalled();
 });

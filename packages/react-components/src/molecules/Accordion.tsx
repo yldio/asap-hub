@@ -5,7 +5,14 @@ import { Headline5, Link, Paragraph } from '..';
 import { lineHeight, perRem, tabletScreen } from '../pixels';
 import { chevronDownIcon, ExternalLinkIcon, infoInfoIcon } from '../icons';
 import { isInternalLink } from '../utils';
-import { info500, info100, info200, silver, steel, neutral900 } from '../colors';
+import {
+  info500,
+  info100,
+  info200,
+  silver,
+  steel,
+  neutral900,
+} from '../colors';
 
 const containerStyles = css({
   padding: `0 ${9 / perRem}em`,

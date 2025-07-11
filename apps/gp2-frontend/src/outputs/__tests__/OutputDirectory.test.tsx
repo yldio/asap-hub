@@ -105,7 +105,7 @@ it('triggers export', async () => {
       }),
     ),
   );
-  userEvent.click(screen.getByRole('button', { name: 'Export CSV' }));
+  userEvent.click(screen.getByRole('button', { name: 'CSV' }));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.stringMatching(/output_export\.csv/),
     expect.anything(),

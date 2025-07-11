@@ -576,6 +576,19 @@ export const uploadManuscriptFileViaPresignedUrl = async (
   }
 };
 
+export const downloadFullComplianceDataset = async (
+  authorization: string,
+): Promise<string> => {
+  const { presignedUrl: downloadUrl } = await getPresignedUrl(
+    'ComplianceFullDataset.csv',
+    authorization,
+    undefined,
+    'download',
+  );
+
+  return downloadUrl;
+};
+
 export const getPresignedUrl = async (
   filename: string,
   authorization: string,

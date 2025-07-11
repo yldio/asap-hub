@@ -6,8 +6,11 @@ export const manuscriptToCSV = (manuscript: PartialManuscriptResponse) => ({
   'Team Name': manuscript.team.displayName,
   'Last Updated': manuscript.lastUpdated,
   Status: manuscript.status,
-  // TODO: fix this once the apcCoverageRequestStatus is properly implemented
-  'Requested APC Coverage': '',
+  'Requested APC Coverage': manuscript.apcRequested,
+  'APC Requested Amount': manuscript.apcAmountRequested,
+  'APC Request Status': manuscript.apcCoverageRequestStatus || '',
+  'APC Paid Amount': manuscript.apcAmountPaid,
+  'APC Declined Reason': manuscript.declinedReason || '',
   'Assigned Users': manuscript.assignedUsers
     .map((user) => `${user.firstName} ${user.lastName}`)
     .join(', '),

@@ -52,6 +52,7 @@ import {
   getPresignedUrl,
   uploadManuscriptFileViaPresignedUrl,
   markDiscussionAsRead,
+  downloadFullComplianceDataset,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -328,6 +329,12 @@ export const useUploadManuscriptFileViaPresignedUrl = () => {
       authorization,
       handleError,
     );
+};
+
+export const useDownloadFullComplianceDataset = () => {
+  const authorization = useRecoilValue(authorizationState);
+
+  return () => downloadFullComplianceDataset(authorization);
 };
 
 export const refreshDiscussionState = atomFamily<number, string>({

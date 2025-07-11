@@ -89,6 +89,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({
           noMargin
           small
           onClick={() =>
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             button.exportResults!().catch(() => {
               toast(button.errorMessage);
             })

@@ -322,7 +322,7 @@ export const parseContentfulGraphQlPublicTeamListItem = (
 
   const activeInterestGroups = cleanArray(
     item.linkedFrom?.interestGroupsTeamsCollection?.items.flatMap(
-      (item) => item?.linkedFrom?.interestGroupsCollection?.items,
+      (igTeams) => igTeams?.linkedFrom?.interestGroupsCollection?.items,
     ),
   )
     .filter((ig): ig is TeamInterestGroupItem => !!ig?.active)

@@ -448,7 +448,7 @@ describe('csv export', () => {
       expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByText(/csv/i));
+    userEvent.click(screen.getByRole('button', { name: /data in table/i }));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/manuscripts_\d+\.csv/),
       expect.anything(),

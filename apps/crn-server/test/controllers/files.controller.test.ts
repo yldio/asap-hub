@@ -16,13 +16,22 @@ describe('FilesController', () => {
   test('calls fileProvider.getPresignedUrl with the correct arguments and returns its result', async () => {
     const filename = 'example.pdf';
     const contentType = 'application/pdf';
+    const action = 'upload';
     const expectedUrl = 'https://s3-presigned-url.com';
 
     mockGetPresignedUrl.mockResolvedValueOnce(expectedUrl);
 
-    const result = await controller.getPresignedUrl(filename, contentType);
+    const result = await controller.getPresignedUrl(
+      filename,
+      'upload',
+      contentType,
+    );
 
-    expect(mockGetPresignedUrl).toHaveBeenCalledWith(filename, contentType);
+    expect(mockGetPresignedUrl).toHaveBeenCalledWith(
+      filename,
+      action,
+      contentType,
+    );
     expect(result).toBe(expectedUrl);
   });
 });

@@ -201,6 +201,19 @@ const serverlessConfig: AWS = {
           },
           {
             Effect: 'Allow',
+            Action: 's3:GetObject',
+            Resource: [
+              {
+                'Fn::If': [
+                  'IsProd',
+                  'arn:aws:s3:::asap-hub-prod-data-backup/*',
+                  'arn:aws:s3:::asap-hub-dev-data-backup/*',
+                ],
+              },
+            ],
+          },
+          {
+            Effect: 'Allow',
             Action: [
               'dynamodb:PutItem',
               'dynamodb:Get*',
@@ -1087,16 +1100,15 @@ const serverlessConfig: AWS = {
     },
     getPresignedUrl: {
       handler: './src/handlers/files-upload/get-presigned-url-handler.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/files/upload-url',
-          },
-        },
-      ],
       environment: {
         FILES_BUCKET: '${self:service}-${self:provider.stage}-files',
+        DATA_BUCKET: {
+          'Fn::If': [
+            'IsProd',
+            '${self:service}-${self:provider.stage}-data-backup',
+            '${self:service}-dev-data-backup',
+          ],
+        },
         SENTRY_DSN: sentryDsnHandlers,
       },
     },

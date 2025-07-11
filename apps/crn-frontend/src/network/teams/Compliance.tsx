@@ -29,6 +29,7 @@ import { useAssignedUsersSuggestions } from '../../shared-state/shared-research'
 import { getManuscripts } from './api';
 import { manuscriptToCSV } from './export';
 import {
+  useDownloadFullComplianceDataset,
   useIsComplianceReviewer,
   useManuscripts,
   usePutManuscript,
@@ -86,6 +87,11 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
     requestedAPCCoverage !== DEFAULT_REQUESTED_APC_COVERAGE;
 
   const updateManuscript = usePutManuscript();
+  const getComplianceDatasetLink = useDownloadFullComplianceDataset();
+  const getComplianceDataset = async () => {
+    const presignedUrl = await getComplianceDatasetLink();
+    window.open(presignedUrl, '_self');
+  };
 
   const handleUpdateManuscript = async (
     id: string,
@@ -105,7 +111,7 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
 
   const exportResults = () =>
     algoliaResultsToStream<PartialManuscriptResponse>(
-      createCsvFileStream(`manuscripts_${format(new Date(), 'MMddyy')}.csv`, {
+      createCsvFileStream(`manuscripts_${format(new Date(), 'yyMMdd')}.csv`, {
         header: true,
       }),
       (paginationParams) =>
@@ -123,6 +129,7 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
     <article>
       <ComplianceControls
         exportResults={exportResults}
+        getComplianceDataset={getComplianceDataset}
         generateLink={generateLinkFactory(
           href,
           currentPage,

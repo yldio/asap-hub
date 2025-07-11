@@ -942,6 +942,8 @@ export type ManuscriptError = {
   };
 };
 
+export type FileAction = 'upload' | 'download';
+
 export const apcRequestedOptions = ['Requested', 'Not Requested'] as const;
 export type APCRequestedOption = (typeof apcRequestedOptions)[number];
 

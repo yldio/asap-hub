@@ -755,7 +755,7 @@ describe('usePresignedUrl', () => {
 
   it('fetches the presigned URL successfully and updates loading state', async () => {
     const mockGetPresignedUrl = uploadApi.getPresignedUrl as jest.Mock;
-    mockGetPresignedUrl.mockResolvedValueOnce({ uploadUrl: mockUploadUrl });
+    mockGetPresignedUrl.mockResolvedValueOnce({ presignedUrl: mockUploadUrl });
 
     const { result } = renderHook(() => stateModule.usePresignedUrl(), {
       wrapper: RecoilRoot,
@@ -771,8 +771,8 @@ describe('usePresignedUrl', () => {
 
     expect(mockGetPresignedUrl).toHaveBeenCalledWith(
       'file.pdf',
-      'application/pdf',
       mockAuthorization,
+      'application/pdf',
     );
     expect(url).toBe(mockUploadUrl);
     expect(result.current.loading).toBe(false);

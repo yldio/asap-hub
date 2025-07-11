@@ -89,7 +89,7 @@ describe('Group controller', () => {
         total: 1,
         items: [getInterestGroupDataObject()],
       });
-      const result = await interestGroupController.fetchByTeamId(teamId, {});
+      const result = await interestGroupController.fetchByTeamId(teamId);
 
       expect(result).toEqual({ items: [getInterestGroupResponse()], total: 1 });
     });
@@ -99,36 +99,18 @@ describe('Group controller', () => {
         total: 1,
         items: [getInterestGroupDataObject()],
       });
-      await interestGroupController.fetchByTeamId(teamId, {});
+      await interestGroupController.fetchByTeamId(teamId);
 
-      expect(interestGroupDataProviderMock.fetch).toBeCalledWith({
-        filter: { teamId: [teamId] },
+      expect(interestGroupDataProviderMock.fetch).toHaveBeenCalledWith({
+        filter: { teamId },
       });
     });
 
     test('Should not call the data provider if teamId is empty and should return empty result', async () => {
-      const response = await interestGroupController.fetchByTeamId([], {});
+      const response = await interestGroupController.fetchByTeamId('');
 
       expect(interestGroupDataProviderMock.fetch).not.toHaveBeenCalled();
       expect(response).toEqual({ items: [], total: 0 });
-    });
-
-    test('Should filter by multiple team IDs and add pagination parameters', async () => {
-      const teamIds = [teamId, 'dc312b6e-195c-46e2-b347-58fb86715033'];
-      const pagination = {
-        take: 13,
-        skip: 3,
-      };
-      interestGroupDataProviderMock.fetch.mockResolvedValueOnce({
-        total: 1,
-        items: [getInterestGroupDataObject()],
-      });
-      await interestGroupController.fetchByTeamId(teamIds, pagination);
-
-      expect(interestGroupDataProviderMock.fetch).toBeCalledWith({
-        filter: { teamId: teamIds },
-        ...pagination,
-      });
     });
   });
 
@@ -194,12 +176,15 @@ describe('Group controller', () => {
 
       await interestGroupController.fetchByUserId(userId);
 
-      expect(userDataProviderMock.fetchById).toBeCalledWith(userId);
-      expect(interestGroupDataProviderMock.fetch).toBeCalledTimes(2);
-      expect(interestGroupDataProviderMock.fetch).toBeCalledWith({
-        filter: { teamId: teamIds },
+      expect(userDataProviderMock.fetchById).toHaveBeenCalledWith(userId);
+      expect(interestGroupDataProviderMock.fetch).toHaveBeenCalledTimes(3);
+      expect(interestGroupDataProviderMock.fetch).toHaveBeenNthCalledWith(1, {
+        filter: { teamId: teamIds[0] },
       });
-      expect(interestGroupDataProviderMock.fetch).toBeCalledWith({
+      expect(interestGroupDataProviderMock.fetch).toHaveBeenNthCalledWith(2, {
+        filter: { teamId: teamIds[1] },
+      });
+      expect(interestGroupDataProviderMock.fetch).toHaveBeenNthCalledWith(3, {
         filter: { userId },
       });
     });

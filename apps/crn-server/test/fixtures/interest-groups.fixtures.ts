@@ -152,6 +152,7 @@ export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
     {
       id: 'team-id-0',
       displayName: 'Team A',
+      endDate: '2025-01-11T14:00:00.000Z',
       tags: [],
       projectTitle:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
@@ -269,7 +270,12 @@ export const getContentfulGraphqlInterestGroup = (): NonNullable<
     ],
   },
   teamsCollection: {
-    items: [getContentfulGraphqlTeam()],
+    items: [
+      {
+        team: getContentfulGraphqlTeam(),
+        endDate: '2025-01-11T14:00:00.000Z',
+      },
+    ],
   },
   calendar: {
     sys: {

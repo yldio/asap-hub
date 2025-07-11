@@ -13,6 +13,7 @@
     "migrate-user-labs": "ts-node ./scripts/migrate-user-labs.ts",
     "migrate-assign-users-as-lab-pi": "ts-node ./scripts/assign-users-as-lab-pi.ts",
     "migrate-preprint-versions": "ts-node ./scripts/migrate-research-output-versions.ts",
+    "migrate-interest-group-teams": "ts-node ./scripts/migrate-interest-group-teams.ts",
     "watch:babel": "../../scripts/build-babel.sh watch",
     "space:rollback-migration": "yarn ctf-migrate down -c $CONTENT_TYPE -d $DRY_RUN",
     "space:migrate:run": "yarn ctf-migrate up --all",

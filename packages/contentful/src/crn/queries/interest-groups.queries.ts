@@ -28,20 +28,23 @@ export const interestGroupContentQueryFragment = gql`
     }
     teamsCollection(limit: 20) {
       items {
-        sys {
-          id
-        }
-        displayName
-        inactiveSince
-        researchTagsCollection(limit: 10) {
-          items {
-            sys {
-              id
-            }
-            name
+        team {
+          sys {
+            id
           }
+          displayName
+          inactiveSince
+          researchTagsCollection(limit: 10) {
+            items {
+              sys {
+                id
+              }
+              name
+            }
+          }
+          projectTitle
         }
-        projectTitle
+        endDate
       }
     }
     leadersCollection(limit: 20) {
@@ -136,6 +139,25 @@ export const FETCH_INTEREST_GROUPS_BY_USER_ID = gql`
       items {
         linkedFrom {
           interestGroupsCollection(limit: 1) {
+            items {
+              ...InterestGroupsContent
+            }
+          }
+        }
+      }
+    }
+  }
+  ${interestGroupContentQueryFragment}
+`;
+
+export const FETCH_INTEREST_GROUPS_BY_TEAM_ID = gql`
+  query FetchInterestGroupsByTeamId($id: String!) {
+    interestGroupsTeamsCollection(where: { team: { sys: { id: $id } } }) {
+      total
+      items {
+        linkedFrom {
+          interestGroupsCollection(limit: 1) {
+            total
             items {
               ...InterestGroupsContent
             }

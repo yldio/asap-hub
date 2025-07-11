@@ -73,44 +73,11 @@ describe('/teams/ route', () => {
       });
       const teamId = '123abcd';
 
-      await supertest(app).get(`/teams/${teamId}/interest-groups`).query({
-        take: 15,
-        skip: 5,
-        search: 'something',
-      });
+      await supertest(app).get(`/teams/${teamId}/interest-groups`);
 
-      const expectedParams: FetchOptions = {
-        take: 15,
-        skip: 5,
-        search: 'something',
-      };
-
-      expect(interestGroupControllerMock.fetchByTeamId).toBeCalledWith(
+      expect(interestGroupControllerMock.fetchByTeamId).toHaveBeenCalledWith(
         teamId,
-        expectedParams,
       );
-    });
-
-    describe('Parameter validation', () => {
-      test('Should return a 400 error when additional properties exist', async () => {
-        const response = await supertest(app)
-          .get('/teams/123/interest-groups')
-          .query({
-            additionalField: 'some-data',
-          });
-
-        expect(response.status).toBe(400);
-      });
-
-      test('Should return a validation error when the arguments are not valid', async () => {
-        const response = await supertest(app)
-          .get(`/teams/123/interest-groups`)
-          .query({
-            take: 'invalid param',
-          });
-
-        expect(response.status).toBe(400);
-      });
     });
   });
 

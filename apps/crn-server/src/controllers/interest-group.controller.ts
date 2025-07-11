@@ -1,7 +1,6 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
   FetchOptions,
-  FetchPaginationOptions,
   InterestGroupResponse,
   ListInterestGroupResponse,
 } from '@asap-hub/model';
@@ -56,26 +55,19 @@ export default class InterestGroupController {
     return interestGroup;
   }
 
-  async fetchByTeamId(
-    teamId: string | string[],
-    options: FetchPaginationOptions,
-  ): Promise<ListInterestGroupResponse> {
-    const teamIds = Array.isArray(teamId) ? teamId : [teamId];
-    const { total, items } = teamIds[0]
+  async fetchByTeamId(teamId: string): Promise<ListInterestGroupResponse> {
+    const interestGroups = teamId
       ? await this.interestGroupDataProvider.fetch({
           filter: {
-            // this [teamIds[0], ...teamIds.slice(1)] is necessary
-            // because the type of teams is [string, ...string[]],
-            teamId: [teamIds[0], ...teamIds.slice(1)],
+            teamId,
           },
-          ...options,
         })
       : {
           total: 0,
           items: [],
         };
 
-    return { total, items };
+    return interestGroups;
   }
 
   async fetchByUserId(userId: string): Promise<ListInterestGroupResponse> {
@@ -86,17 +78,17 @@ export default class InterestGroupController {
     }
 
     const teamIds = user.teams.map((team) => team.id);
-    const { items: interestGroupsByTeams } = teamIds[0]
-      ? await this.interestGroupDataProvider.fetch({
-          filter: {
-            // this [teamIds[0], ...teamIds.slice(1)] is necessary
-            // because the type of teams is [string, ...string[]],
-            teamId: [teamIds[0], ...teamIds.slice(1)],
-          },
-        })
-      : {
-          items: [],
-        };
+
+    const interestGroupsByTeams = [];
+    for (const teamId of teamIds) {
+      const { items } = await this.interestGroupDataProvider.fetch({
+        filter: {
+          teamId,
+        },
+      });
+
+      interestGroupsByTeams.push(...items);
+    }
 
     const { items: interestGroupsByUser } =
       await this.interestGroupDataProvider.fetch({

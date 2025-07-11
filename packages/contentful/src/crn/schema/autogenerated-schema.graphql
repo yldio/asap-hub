@@ -4,8 +4,18 @@ schema {
 
 directive @contentSourceMaps on QUERY
 
+directive @delegatedResourceLink(contentTypeId: String, field: JSON) on FIELD_DEFINITION | OBJECT
+
+directive @enumMapper(value: JSON) on ENUM_VALUE
+
+directive @featureFlag(featureName: String) on FIELD
+
+directive @fieldResolver(data: JSON, kind: String) on FIELD_DEFINITION
+
 "Indicates exactly one field must be supplied and this field must not be `null`."
 directive @oneOf on INPUT_OBJECT
+
+directive @typeIdentifier(contentTypeId: String) on OBJECT
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements)"""
 type Announcements implements Entry & _Node {
@@ -2024,7 +2034,7 @@ enum ExternalAuthorsOrder {
   sys_publishedVersion_DESC
 }
 
-"""Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools)"""
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools)"""
 type ExternalTools implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -2751,7 +2761,8 @@ type InterestGroups implements Entry & _Node {
   researchTagsCollection(limit: Int = 100, locale: String, order: [InterestGroupsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): InterestGroupsResearchTagsCollection
   slack(locale: String): String
   sys: Sys!
-  teamsCollection(limit: Int = 100, locale: String, order: [InterestGroupsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): InterestGroupsTeamsCollection
+  teamsCollection(limit: Int = 100, locale: String, order: [InterestGroupsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: InterestGroupsTeamsFilter): InterestGroupsTeamsCollection
+  teamsOldCollection(limit: Int = 100, locale: String, order: [InterestGroupsTeams_oldCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): InterestGroupsTeams_oldCollection
   thumbnail(locale: String, preview: Boolean): Asset
 }
 
@@ -2813,8 +2824,10 @@ input InterestGroupsFilter {
   slack_not_contains: String
   slack_not_in: [String]
   sys: SysFilter
-  teams: cfTeamsNestedFilter
+  teams: cfInterestGroupsTeamsNestedFilter
   teamsCollection_exists: Boolean
+  teams_old: cfTeamsNestedFilter
+  teams_oldCollection_exists: Boolean
   thumbnail_exists: Boolean
 }
 
@@ -2887,14 +2900,115 @@ enum InterestGroupsResearchTagsCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroupsTeams)"""
+type InterestGroupsTeams implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  endDate(locale: String): DateTime
+  linkedFrom(allowedLocales: [String]): InterestGroupsTeamsLinkingCollections
+  startDate(locale: String): DateTime
+  sys: Sys!
+  team(locale: String, preview: Boolean, where: TeamsFilter): Teams
+}
+
 type InterestGroupsTeamsCollection {
-  items: [Teams]!
+  items: [InterestGroupsTeams]!
   limit: Int!
   skip: Int!
   total: Int!
 }
 
 enum InterestGroupsTeamsCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  startDate_ASC
+  startDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+input InterestGroupsTeamsFilter {
+  AND: [InterestGroupsTeamsFilter]
+  OR: [InterestGroupsTeamsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  endDate: DateTime
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  startDate: DateTime
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  sys: SysFilter
+  team: cfTeamsNestedFilter
+  team_exists: Boolean
+}
+
+type InterestGroupsTeamsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  interestGroupsCollection(limit: Int = 100, locale: String, order: [InterestGroupsTeamsLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
+}
+
+enum InterestGroupsTeamsLinkingCollectionsInterestGroupsCollectionOrder {
+  active_ASC
+  active_DESC
+  googleDrive_ASC
+  googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  name_ASC
+  name_DESC
+  slack_ASC
+  slack_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum InterestGroupsTeamsOrder {
+  endDate_ASC
+  endDate_DESC
+  startDate_ASC
+  startDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type InterestGroupsTeams_oldCollection {
+  items: [Teams]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum InterestGroupsTeams_oldCollectionOrder {
   applicationNumber_ASC
   applicationNumber_DESC
   displayName_ASC
@@ -4177,7 +4291,7 @@ enum ManuscriptsVersionsCollectionOrder {
   type_DESC
 }
 
-"""Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
 type Media implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -4286,7 +4400,7 @@ enum MessagesOrder {
   sys_publishedVersion_DESC
 }
 
-"""Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)"""
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)"""
 type Migration implements Entry & _Node {
   _id: ID!
   contentTypeId(locale: String): String
@@ -4335,7 +4449,7 @@ enum MigrationOrder {
   sys_publishedVersion_DESC
 }
 
-"""ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)"""
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)"""
 type News implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -4697,6 +4811,8 @@ type Query {
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [InterestGroupLeadersOrder], preview: Boolean, skip: Int = 0, where: InterestGroupLeadersFilter): InterestGroupLeadersCollection
   interestGroups(id: String!, locale: String, preview: Boolean): InterestGroups
   interestGroupsCollection(limit: Int = 100, locale: String, order: [InterestGroupsOrder], preview: Boolean, skip: Int = 0, where: InterestGroupsFilter): InterestGroupsCollection
+  interestGroupsTeams(id: String!, locale: String, preview: Boolean): InterestGroupsTeams
+  interestGroupsTeamsCollection(limit: Int = 100, locale: String, order: [InterestGroupsTeamsOrder], preview: Boolean, skip: Int = 0, where: InterestGroupsTeamsFilter): InterestGroupsTeamsCollection
   labMembership(id: String!, locale: String, preview: Boolean): LabMembership
   labMembershipCollection(limit: Int = 100, locale: String, order: [LabMembershipOrder], preview: Boolean, skip: Int = 0, where: LabMembershipFilter): LabMembershipCollection
   labs(id: String!, locale: String, preview: Boolean): Labs
@@ -6497,6 +6613,7 @@ type TeamsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
+  interestGroupsTeamsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsInterestGroupsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsTeamsCollection
   manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
@@ -6537,6 +6654,21 @@ enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
   name_DESC
   slack_ASC
   slack_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum TeamsLinkingCollectionsInterestGroupsTeamsCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  startDate_ASC
+  startDate_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -8895,6 +9027,32 @@ input cfInterestGroupLeadersNestedFilter {
   role_not_in: [String]
   sys: SysFilter
   user_exists: Boolean
+}
+
+input cfInterestGroupsTeamsNestedFilter {
+  AND: [cfInterestGroupsTeamsNestedFilter]
+  OR: [cfInterestGroupsTeamsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  endDate: DateTime
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  startDate: DateTime
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  sys: SysFilter
+  team_exists: Boolean
 }
 
 input cfLabMembershipNestedFilter {

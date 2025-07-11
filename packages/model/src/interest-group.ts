@@ -13,7 +13,9 @@ export type InterestGroupTools = {
 export type InterestGroupTeam = Omit<
   TeamListItemResponse,
   'memberCount' | 'labCount'
->;
+> & {
+  endDate?: string;
+};
 
 export const interestGroupRole = ['Chair', 'Project Manager'] as const;
 
@@ -63,7 +65,7 @@ export type InterestGroupResponse = InterestGroupDataObject;
 export type ListInterestGroupResponse = ListResponse<InterestGroupResponse>;
 
 type InterestGroupFilter = {
-  teamId?: [string, ...string[]];
+  teamId?: string;
   userId?: string;
   active?: boolean;
 };

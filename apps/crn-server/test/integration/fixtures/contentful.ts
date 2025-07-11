@@ -142,8 +142,9 @@ export class ContentfulFixture implements Fixture {
 
   private async prepareInterestGroup(props: InterestGroupCreateDataObject) {
     const environment = await this.getEnvironment();
+    const { teams, ...rest } = props;
     return {
-      ...props,
+      ...rest,
       leaders: await Promise.all(
         (props.leaders || []).map(async (leader) => {
           const leadership = await environment.createEntry(
@@ -160,7 +161,21 @@ export class ContentfulFixture implements Fixture {
           return getLinkEntity(leadership.sys.id);
         }),
       ),
-      teams: (props.teams || []).map((team) => getLinkEntity(team.id)),
+      teams_new: await Promise.all(
+        (props.teams || []).map(async (team) => {
+          const teamMembership = await environment.createEntry(
+            'interestGroupsTeams',
+            {
+              fields: addLocaleToFields({
+                team: getLinkEntity(team.id),
+                startDate: new Date().toISOString(),
+              }),
+            },
+          );
+          await teamMembership.publish();
+          return getLinkEntity(teamMembership.sys.id);
+        }),
+      ),
     };
   }
 

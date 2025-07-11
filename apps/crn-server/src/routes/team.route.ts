@@ -72,14 +72,10 @@ export const teamRouteFactory = (
   teamRoutes.get<{ teamId: string }>(
     '/teams/:teamId/interest-groups',
     async (req, res: Response<ListInterestGroupResponse>) => {
-      const { query, params } = req;
+      const { params } = req;
       const { teamId } = validateTeamParameters(params);
-      const options = validateFetchOptions(query);
 
-      const result = await interestGroupController.fetchByTeamId(
-        teamId,
-        options,
-      );
+      const result = await interestGroupController.fetchByTeamId(teamId);
 
       res.json(result);
     },

@@ -2,11 +2,11 @@ import { InterestGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
-import { Paragraph } from '../atoms';
+import { Paragraph, StateTag } from '../atoms';
 import { charcoal, steel } from '../colors';
-import { TeamIcon } from '../icons';
+import { InactiveBadgeIcon, TeamIcon } from '../icons';
 import { LinkHeadline, TabbedCard } from '../molecules';
-import { perRem, rem, tabletScreen } from '../pixels';
+import { mobileScreen, perRem, rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
 
 const itemsListWrapper = css({
@@ -50,22 +50,47 @@ const iconStyles = css({
   paddingRight: `${15 / perRem}em`,
 });
 
+const titleStyle = css({
+  display: 'flex',
+  flexFlow: 'column',
+  gap: rem(12),
+  alignItems: 'flex-start',
+
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    flexFlow: 'row',
+    gap: rem(16),
+    alignItems: 'center',
+  },
+});
+
 type TeamGroupsTabbedCardProps = Pick<
   ComponentProps<typeof TabbedCard>,
   'title'
 > & {
+  teamId: string;
   interestGroups: InterestGroupResponse[];
   isTeamInactive: boolean;
 };
 
 const TeamInterestGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
   title,
+  teamId,
   interestGroups,
   isTeamInactive,
 }) => {
-  const [activeInterestGroups, inactiveInterestGroups] = splitListBy(
+  const [inactiveInterestGroups, activeInterestGroups] = splitListBy(
     interestGroups,
-    (interestGroup) => isTeamInactive || !!interestGroup?.active,
+    (interestGroup) => {
+      const interestGroupTeam = interestGroup.teams.find(
+        (team) => team.id === teamId,
+      );
+      return (
+        isTeamInactive ||
+        !interestGroup?.active ||
+        (!!interestGroupTeam?.endDate &&
+          interestGroupTeam.endDate < new Date().toISOString())
+      );
+    },
   );
 
   return (
@@ -107,30 +132,44 @@ const TeamInterestGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
       {({ data }) => (
         <div css={itemsListWrapper}>
           <ul css={listStyles}>
-            {data.map(({ id, teams, description, name }, index) => (
-              <li css={listElementStyles} key={`team-group-${index}`}>
-                <LinkHeadline
-                  href={
-                    network({})
-                      .interestGroups({})
-                      .interestGroup({ interestGroupId: id }).$
-                  }
-                  level={4}
-                  noMargin={true}
-                >
-                  {name}
-                </LinkHeadline>
-                <Paragraph noMargin accent="lead">
-                  {description}
-                </Paragraph>
-                <span css={teamsStyles}>
-                  <span css={iconStyles}>
-                    <TeamIcon />{' '}
+            {data.map(({ id, teams, description, name, active }, index) => {
+              const interestGroupTeam = teams.find(
+                (team) => team.id === teamId,
+              );
+              return (
+                <li css={listElementStyles} key={`team-group-${index}`}>
+                  <div css={titleStyle}>
+                    <LinkHeadline
+                      href={
+                        network({})
+                          .interestGroups({})
+                          .interestGroup({ interestGroupId: id }).$
+                      }
+                      level={4}
+                      noMargin={true}
+                    >
+                      {name}
+                    </LinkHeadline>
+                    {(!active ||
+                      (interestGroupTeam?.endDate &&
+                        interestGroupTeam.endDate <
+                          new Date().toISOString())) && (
+                      <StateTag icon={<InactiveBadgeIcon />} label="Inactive" />
+                    )}
+                  </div>
+
+                  <Paragraph noMargin accent="lead">
+                    {description}
+                  </Paragraph>
+                  <span css={teamsStyles}>
+                    <span css={iconStyles}>
+                      <TeamIcon />{' '}
+                    </span>
+                    {teams.length} Team{teams.length !== 1 ? 's' : ''}
                   </span>
-                  {teams.length} Team{teams.length !== 1 ? 's' : ''}
-                </span>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

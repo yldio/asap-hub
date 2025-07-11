@@ -107,7 +107,8 @@ export const getCurrentInterestGroupIdsFromTeamLeaders = (
 export const getCurrentInterestGroupIdsFromInterestGroupCollection = (
   team: Team,
 ): string[] =>
-  team.linkedFrom?.interestGroupsCollection?.items
+  team.linkedFrom?.interestGroupsTeamsCollection?.items
+    .flatMap((item) => item?.linkedFrom?.interestGroupsCollection?.items)
     .filter(
       (interestGroup): interestGroup is InterestGroup =>
         (interestGroup && !!interestGroup.active) || false,
@@ -131,7 +132,8 @@ export const getPreviousInterestGroupIdsFromTeamLeaders = (
 export const getPreviousInterestGroupIdsFromInterestGroupCollection = (
   team: Team,
 ): string[] =>
-  team.linkedFrom?.interestGroupsCollection?.items
+  team.linkedFrom?.interestGroupsTeamsCollection?.items
+    .flatMap((item) => item?.linkedFrom?.interestGroupsCollection?.items)
     .filter(
       (interestGroup): interestGroup is InterestGroup =>
         !!(interestGroup && (team.inactiveSince || !interestGroup?.active)),

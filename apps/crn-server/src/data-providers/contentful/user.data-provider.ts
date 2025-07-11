@@ -107,7 +107,7 @@ export type GroupLeaderItem = NonNullable<
 export type InterestGroupItem = NonNullable<
   NonNullable<
     NonNullable<TeamMembership['team']>['linkedFrom']
-  >['interestGroupsCollection']
+  >['interestGroupsTeamsCollection']
 >['items'][number];
 
 export type InterestGroupLeaderItem = NonNullable<
@@ -801,11 +801,15 @@ const parseToInterestGroups = (
   teams: TeamMembership[] | TeamMembershipPublic[],
 ): InterestGroupMembership[] =>
   teams.flatMap(({ team }) => {
-    const items = cleanArray(team?.linkedFrom?.interestGroupsCollection?.items);
+    const items = cleanArray(
+      team?.linkedFrom?.interestGroupsTeamsCollection?.items.flatMap(
+        (item) => item?.linkedFrom?.interestGroupsCollection?.items,
+      ),
+    );
     return items.map((group) => ({
-      id: group.sys.id,
-      name: group.name || '',
-      active: !!group.active,
+      id: group?.sys.id || '',
+      name: group?.name || '',
+      active: !!group?.active,
     }));
   });
 

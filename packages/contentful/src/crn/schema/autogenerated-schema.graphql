@@ -2762,7 +2762,6 @@ type InterestGroups implements Entry & _Node {
   slack(locale: String): String
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [InterestGroupsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: InterestGroupsTeamsFilter): InterestGroupsTeamsCollection
-  teamsOldCollection(limit: Int = 100, locale: String, order: [InterestGroupsTeams_oldCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): InterestGroupsTeams_oldCollection
   thumbnail(locale: String, preview: Boolean): Asset
 }
 
@@ -2826,8 +2825,6 @@ input InterestGroupsFilter {
   sys: SysFilter
   teams: cfInterestGroupsTeamsNestedFilter
   teamsCollection_exists: Boolean
-  teams_old: cfTeamsNestedFilter
-  teams_oldCollection_exists: Boolean
   thumbnail_exists: Boolean
 }
 
@@ -2999,34 +2996,6 @@ enum InterestGroupsTeamsOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-}
-
-type InterestGroupsTeams_oldCollection {
-  items: [Teams]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-enum InterestGroupsTeams_oldCollectionOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
-  displayName_ASC
-  displayName_DESC
-  grantId_ASC
-  grantId_DESC
-  inactiveSince_ASC
-  inactiveSince_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
 }
 
 """The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."""
@@ -6612,7 +6581,6 @@ type TeamsLinkingCollections {
   discoverCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsDiscoverCollectionOrder], preview: Boolean, skip: Int = 0): DiscoverCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
-  interestGroupsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
   interestGroupsTeamsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsInterestGroupsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsTeamsCollection
   manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
@@ -6633,27 +6601,6 @@ enum TeamsLinkingCollectionsDiscoverCollectionOrder {
 }
 
 enum TeamsLinkingCollectionsEventSpeakersCollectionOrder {
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-}
-
-enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
-  active_ASC
-  active_DESC
-  googleDrive_ASC
-  googleDrive_DESC
-  lastUpdated_ASC
-  lastUpdated_DESC
-  name_ASC
-  name_DESC
-  slack_ASC
-  slack_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC

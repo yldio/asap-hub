@@ -78,13 +78,19 @@ export const usersContentQueryFragment = gql`
             }
           }
           linkedFrom {
-            interestGroupsCollection(limit: 10) {
+            interestGroupsTeamsCollection(limit: 10) {
               items {
-                sys {
-                  id
+                linkedFrom {
+                  interestGroupsCollection(limit: 1) {
+                    items {
+                      sys {
+                        id
+                      }
+                      active
+                      name
+                    }
+                  }
                 }
-                active
-                name
               }
             }
           }
@@ -228,13 +234,19 @@ export const FETCH_PUBLIC_USERS = gql`
                 name
               }
               linkedFrom {
-                interestGroupsCollection(limit: 10) {
+                interestGroupsTeamsCollection(limit: 10) {
                   items {
-                    sys {
-                      id
+                    linkedFrom {
+                      interestGroupsCollection(limit: 1) {
+                        items {
+                          sys {
+                            id
+                          }
+                          active
+                          name
+                        }
+                      }
                     }
-                    active
-                    name
                   }
                 }
               }

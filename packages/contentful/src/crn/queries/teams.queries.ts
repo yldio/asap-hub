@@ -201,10 +201,19 @@ export const FETCH_PUBLIC_TEAMS = gql`
               }
             }
           }
-          interestGroupsCollection(limit: 100) {
+          interestGroupsTeamsCollection(limit: 100) {
             items {
-              name
-              active
+              linkedFrom {
+                interestGroupsCollection(limit: 1) {
+                  items {
+                    sys {
+                      id
+                    }
+                    active
+                    name
+                  }
+                }
+              }
             }
           }
         }

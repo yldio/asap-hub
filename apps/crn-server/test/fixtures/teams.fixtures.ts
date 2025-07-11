@@ -204,11 +204,22 @@ export const getContentfulGraphqlPublicTeam = (): NonNullable<
         },
       ],
     },
-    interestGroupsCollection: {
+    interestGroupsTeamsCollection: {
       items: [
         {
-          name: 'Interest Group 1',
-          active: true,
+          linkedFrom: {
+            interestGroupsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'interest-group-1',
+                  },
+                  name: 'Interest Group 1',
+                  active: true,
+                },
+              ],
+            },
+          },
         },
       ],
     },

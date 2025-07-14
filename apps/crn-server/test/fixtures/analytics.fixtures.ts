@@ -78,13 +78,21 @@ export const getAnalyticsTeamLeadershipQuery =
           },
           displayName: 'Team A',
           linkedFrom: {
-            interestGroupsCollection: {
+            interestGroupsTeamsCollection: {
               items: [
                 {
-                  sys: {
-                    id: 'interest-group-1',
+                  linkedFrom: {
+                    interestGroupsCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'interest-group-1',
+                          },
+                          active: true,
+                        },
+                      ],
+                    },
                   },
-                  active: true,
                 },
               ],
             },

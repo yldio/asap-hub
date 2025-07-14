@@ -947,7 +947,7 @@ describe('Analytics Data Provider', () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items =
             [];
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsTeamsCollection!.items =
             [];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
@@ -962,7 +962,7 @@ describe('Analytics Data Provider', () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection =
             null;
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection =
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsTeamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection =
             null;
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
@@ -975,7 +975,7 @@ describe('Analytics Data Provider', () => {
 
         test('Should return interestGroupMemberCount of 2 when the client returns a total of 2 active interest groups associated with a team', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsTeamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
               {
                 sys: {
@@ -1001,7 +1001,7 @@ describe('Analytics Data Provider', () => {
 
         test('Should return interestGroupMemberCount of 1 when the client returns a total of 2 interest groups associated with a team one of which is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsTeamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
               {
                 sys: {
@@ -1029,7 +1029,7 @@ describe('Analytics Data Provider', () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             pastDate;
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsTeamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
               {
                 sys: {
@@ -1059,7 +1059,7 @@ describe('Analytics Data Provider', () => {
             pastDate;
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items =
             [];
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsTeamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
@@ -1076,7 +1076,7 @@ describe('Analytics Data Provider', () => {
             pastDate;
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection =
             null;
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection =
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsTeamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection =
             null;
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
@@ -1091,7 +1091,7 @@ describe('Analytics Data Provider', () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             pastDate;
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsTeamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
               {
                 sys: {
@@ -1119,7 +1119,7 @@ describe('Analytics Data Provider', () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             null;
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsTeamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
               {
                 sys: {
@@ -1147,7 +1147,7 @@ describe('Analytics Data Provider', () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             null;
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsTeamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
               {
                 sys: {

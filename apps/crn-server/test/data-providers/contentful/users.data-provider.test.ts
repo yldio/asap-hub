@@ -153,8 +153,16 @@ describe('User data provider', () => {
                   },
                   displayName: 'Good team',
                   linkedFrom: {
-                    interestGroupsCollection: {
-                      items: [],
+                    interestGroupsTeamsCollection: {
+                      items: [
+                        {
+                          linkedFrom: {
+                            interestGroupsCollection: {
+                              items: [],
+                            },
+                          },
+                        },
+                      ],
                     },
                   },
                 },

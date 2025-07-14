@@ -16,10 +16,11 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAlgolia } from '../../../hooks/algolia';
 import { getOpenScienceMembers } from '../../users/api';
-import { getManuscripts, updateManuscript } from '../api';
+import { getManuscripts, updateManuscript, getPresignedUrl } from '../api';
 import Compliance from '../Compliance';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { manuscriptsState } from '../state';
+import * as api from '../api';
 
 mockConsoleError();
 
@@ -41,11 +42,12 @@ jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
   getOpenScienceMembers: jest.fn(),
   getManuscripts: jest.fn(),
+  getPresignedUrl: jest.fn(),
   updateManuscript: jest.fn(),
 }));
 
 jest.mock('../../users/api', () => ({
-  ...jest.requireActual('../api'),
+  ...jest.requireActual('../../users/api'),
   getOpenScienceMembers: jest.fn(),
 }));
 
@@ -57,6 +59,10 @@ const mockUseAlgolia = useAlgolia as jest.MockedFunction<typeof useAlgolia>;
 
 const mockGetManuscripts = getManuscripts as jest.MockedFunction<
   typeof getManuscripts
+>;
+
+const mockGetPresignedUrl = getPresignedUrl as jest.MockedFunction<
+  typeof getPresignedUrl
 >;
 
 const mockUpdateManuscript = updateManuscript as jest.MockedFunction<
@@ -110,6 +116,9 @@ const renderCompliancePage = async () => {
   return result;
 };
 
+const originalWindowOpen = window.open;
+let mockWindowOpen: jest.MockedFunction<typeof globalThis.open>;
+
 beforeEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
@@ -117,6 +126,11 @@ beforeEach(() => {
   mockUseAlgolia.mockReturnValue({
     client: useAlgolia as unknown as AlgoliaSearchClient<'crn'>,
   });
+  window.open = mockWindowOpen = jest.fn();
+});
+
+afterEach(() => {
+  window.open = originalWindowOpen;
 });
 
 it('renders error message when the request is not a 2XX', async () => {
@@ -423,7 +437,7 @@ it('displays success message when assigning users', async () => {
 });
 
 describe('csv export', () => {
-  it('exports analytics for user', async () => {
+  it('exports compliance dataset in the table', async () => {
     mockCreateCsvFileStream.mockReturnValue({
       write: jest.fn().mockResolvedValue(undefined),
       end: jest.fn().mockResolvedValue(undefined),
@@ -453,5 +467,41 @@ describe('csv export', () => {
       expect.stringMatching(/manuscripts_\d+\.csv/),
       expect.anything(),
     );
+  });
+
+  it.only('exports full compliance dataset', async () => {
+
+    const manuscriptId = 'manuscript-id-1';
+    const mockManuscript: PartialManuscriptResponse = {
+      ...createPartialManuscriptResponse(),
+      id: manuscriptId,
+      manuscriptId: 'SC1-000129-002-org-G-2',
+      status: 'Review Compliance Report',
+    };
+
+    mockGetManuscripts.mockResolvedValue({
+      items: [mockManuscript],
+      total: 1,
+    });
+
+    const expectedLink = 'https://some-download-link.test';
+
+    const mockGetPresignedUrl = api.getPresignedUrl as jest.Mock;
+    mockGetPresignedUrl.mockResolvedValue({ presignedUrl: expectedLink });
+    await renderCompliancePage();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /full dataset/i }));
+
+    expect(mockGetPresignedUrl).toHaveBeenCalledWith(
+      'ComplianceFullDataset.csv',
+      expect.anything(),
+      undefined,
+      'download',
+    );
+    expect(mockWindowOpen).toHaveBeenCalledWith(expectedLink, '_self');
   });
 });

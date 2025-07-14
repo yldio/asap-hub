@@ -89,6 +89,7 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   const updateManuscript = usePutManuscript();
   const getComplianceDatasetLink = useDownloadFullComplianceDataset();
   const getComplianceDataset = async () => {
+    console.log('in');
     const presignedUrl = await getComplianceDatasetLink();
     window.open(presignedUrl, '_self');
   };

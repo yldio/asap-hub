@@ -579,6 +579,7 @@ export const uploadManuscriptFileViaPresignedUrl = async (
 export const downloadFullComplianceDataset = async (
   authorization: string,
 ): Promise<string> => {
+  console.log('in 2');
   const { presignedUrl: downloadUrl } = await getPresignedUrl(
     'ComplianceFullDataset.csv',
     authorization,
@@ -586,6 +587,7 @@ export const downloadFullComplianceDataset = async (
     'download',
   );
 
+  console.log('what?!');
   return downloadUrl;
 };
 
@@ -595,6 +597,7 @@ export const getPresignedUrl = async (
   contentType?: string,
   action: FileAction = 'upload',
 ): Promise<{ presignedUrl: string }> => {
+  console.log('in 3');
   const resp = await fetch(`${API_BASE_URL}/files/get-url`, {
     method: 'POST',
     headers: {

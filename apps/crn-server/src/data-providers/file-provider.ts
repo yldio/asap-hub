@@ -1,3 +1,4 @@
+import { FileAction } from '@asap-hub/model';
 import {
   LambdaClient,
   InvokeCommand,
@@ -21,12 +22,13 @@ export default class FileProvider {
 
   async getPresignedUrl(
     filename: string,
-    contentType: string,
+    action: FileAction,
+    contentType?: string,
   ): Promise<string> {
     const lambdaParams = {
       FunctionName: `asap-hub-${this.stage}-getPresignedUrl`,
       InvocationType: InvocationType.RequestResponse,
-      Payload: JSON.stringify({ filename, contentType }),
+      Payload: JSON.stringify({ action, filename, contentType }),
     };
 
     const command = new InvokeCommand(lambdaParams);
@@ -37,29 +39,22 @@ export default class FileProvider {
       throw new Error('Lambda returned an empty response');
     }
 
-    const payloadText = response.Payload.toString().trim();
+    const payloadText = Buffer.from(response.Payload as Uint8Array).toString(
+      'utf8',
+    );
 
     try {
-      const payload = JSON.parse(payloadText);
+      const parsed = JSON.parse(payloadText);
 
-      if (payload.statusCode !== 200) {
-        throw new Error(`Lambda returned an error: ${JSON.stringify(payload)}`);
+      if (parsed.statusCode !== 200) {
+        throw new Error(`Lambda returned an error: ${JSON.stringify(parsed)}`);
       }
 
-      if (!payload.body) {
-        throw new Error(`Lambda response missing body`);
+      if (!parsed.payload?.presignedUrl) {
+        throw new Error(`Lambda response missing presignedUrl`);
       }
 
-      const parsedBody =
-        typeof payload.body === 'string'
-          ? JSON.parse(payload.body)
-          : payload.body;
-
-      if (!parsedBody.uploadUrl) {
-        throw new Error(`Lambda response missing uploadUrl`);
-      }
-
-      return parsedBody.uploadUrl;
+      return parsed.payload.presignedUrl;
     } catch (parseError) {
       logger.error('Error parsing Lambda response', {
         rawPayload: payloadText,

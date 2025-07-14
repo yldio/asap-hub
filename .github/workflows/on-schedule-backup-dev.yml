@@ -15,20 +15,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: Development
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Development
+      - name: Build
+        run: yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/crn-server}' run build:babel"
       - name: Backup
         uses: ./.github/actions/contentful-backup
         with:
+          app: 'crn'
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           bucket-name: ${{ steps.setup.outputs.crn-contentful-backup-bucket-name }}
           contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
           contentful-environment: ${{ steps.setup.outputs.contentful-environment }}
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          data-bucket-name: ${{ steps.setup.outputs.crn-data-backup-bucket-name }}
 
   gp2-contentful:
     runs-on: ubuntu-latest
@@ -49,6 +59,7 @@ jobs:
       - name: Backup
         uses: ./.github/actions/contentful-backup
         with:
+          app: 'gp2'
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           bucket-name: ${{ steps.setup.outputs.gp2-contentful-backup-bucket-name }}

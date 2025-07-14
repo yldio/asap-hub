@@ -24,6 +24,7 @@ const {
   COOKIE_PREFERENCES_TABLE_NAME,
   CRN_MEETING_MATERIALS_DRIVE,
   CURRENT_REVISION,
+  DATA_BUCKET,
   EMAIL_BCC,
   EMAIL_RETURN,
   EMAIL_SENDER,
@@ -92,6 +93,7 @@ export const eventBus = EVENT_BUS || 'asap-events-dev';
 export const eventSource = EVENT_SOURCE || '';
 
 export const filesBucket = FILES_BUCKET || 'asap-hub-dev-files';
+export const dataBucket = DATA_BUCKET || 'asap-hub-dev-data-backup';
 
 export const googleApiCredentialsSecretId =
   GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';

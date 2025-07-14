@@ -959,11 +959,11 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
 
     // 1. Mock presigned URL generation
     const presignedUrlScope = nock('http://api')
-      .post('/files/upload-url', (body) => {
+      .post('/files/get-url', (body) => {
         presignedUrlRequestBody.push(body);
         return true;
       })
-      .reply(200, { uploadUrl: mockPresignedUrl });
+      .reply(200, { presignedUrl: mockPresignedUrl });
 
     // 2. Mock S3 file upload
     const s3UploadScope = nock('https://bucket-name.s3.amazonaws.com')
@@ -992,6 +992,7 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
 
     // 5. Assert presigned URL request payload
     expect(presignedUrlRequestBody[0]).toEqual({
+      action: 'upload',
       filename: 'test-file.pdf',
       contentType: 'application/pdf',
     });
@@ -1020,8 +1021,8 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
     const handleError = jest.fn();
 
     nock('http://api')
-      .post('/files/upload-url')
-      .reply(200, { uploadUrl: mockPresignedUrl });
+      .post('/files/get-url')
+      .reply(200, { presignedUrl: mockPresignedUrl });
 
     nock('https://bucket-name.s3.amazonaws.com')
       .put('/test-file.pdf')
@@ -1047,8 +1048,8 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
     const handleError = jest.fn();
 
     nock('http://api')
-      .post('/files/upload-url')
-      .reply(200, { uploadUrl: mockPresignedUrl });
+      .post('/files/get-url')
+      .reply(200, { presignedUrl: mockPresignedUrl });
 
     nock('https://bucket-name.s3.amazonaws.com')
       .put('/test-file.pdf')
@@ -1072,8 +1073,8 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
     const handleError = jest.fn();
 
     nock('http://api')
-      .post('/files/upload-url')
-      .reply(200, { uploadUrl: mockPresignedUrl });
+      .post('/files/get-url')
+      .reply(200, { presignedUrl: mockPresignedUrl });
 
     nock('https://bucket-name.s3.amazonaws.com')
       .put('/test-file.pdf')
@@ -1102,7 +1103,7 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
   it('handles general error', async () => {
     const handleError = jest.fn();
 
-    nock('http://api').post('/files/upload-url').replyWithError('Boom');
+    nock('http://api').post('/files/get-url').replyWithError('Boom');
 
     const result = await uploadManuscriptFileViaPresignedUrl(
       file,
@@ -1112,7 +1113,7 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
     );
 
     expect(handleError).toHaveBeenCalledWith(
-      'request to http://api/files/upload-url failed, reason: Boom',
+      'request to http://api/files/get-url failed, reason: Boom',
     );
     expect(result).toBeUndefined();
   });
@@ -1121,8 +1122,8 @@ describe('uploadManuscriptFileViaPresignedUrl', () => {
     const handleError = jest.fn();
 
     nock('http://api')
-      .post('/files/upload-url')
-      .reply(200, { uploadUrl: mockPresignedUrl });
+      .post('/files/get-url')
+      .reply(200, { presignedUrl: mockPresignedUrl });
 
     const originalFetch = global.fetch;
     global.fetch = jest.fn(() => {
@@ -1153,35 +1154,45 @@ describe('getPresignedUrl', () => {
     contentType: 'application/pdf',
   };
 
-  it('successfully returns uploadUrl', async () => {
-    const uploadUrl =
+  it('successfully returns presignedUrl', async () => {
+    const presignedUrl =
       'https://bucket-name.s3.amazonaws.com/test-file.pdf?signature=abc';
-    nock('http://api').post('/files/upload-url').reply(200, { uploadUrl });
+    nock('http://api').post('/files/get-url').reply(200, { presignedUrl });
 
     const response = await getPresignedUrl(
       payload.filename,
-      payload.contentType,
       authorization,
+      payload.contentType,
     );
 
-    expect(response).toEqual({ uploadUrl });
+    expect(response).toEqual({ presignedUrl });
   });
 
   it('throws on invalid JSON response', async () => {
-    nock('http://api').post('/files/upload-url').reply(200, 'not-json');
+    nock('http://api').post('/files/get-url').reply(200, 'not-json');
 
     await expect(
-      getPresignedUrl(payload.filename, payload.contentType, authorization),
+      getPresignedUrl(
+        payload.filename,
+        authorization,
+        payload.contentType,
+        'upload',
+      ),
     ).rejects.toThrow('Failed to parse JSON response');
   });
 
   it('throws on non-200 status', async () => {
     nock('http://api')
-      .post('/files/upload-url')
+      .post('/files/get-url')
       .reply(500, { error: 'something broke' });
 
     await expect(
-      getPresignedUrl(payload.filename, payload.contentType, authorization),
+      getPresignedUrl(
+        payload.filename,
+        authorization,
+        payload.contentType,
+        'upload',
+      ),
     ).rejects.toThrow(
       'Failed to generate presigned URL. Expected status 200. Received status 500',
     );

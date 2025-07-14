@@ -666,10 +666,10 @@ export const usePresignedUrl = () => {
     setLoading(true);
     setError(null);
     try {
-      const { uploadUrl } = await getPresignedUrl(
+      const { presignedUrl: uploadUrl } = await getPresignedUrl(
         filename,
-        contentType,
         authorization,
+        contentType,
       );
       return uploadUrl;
     } catch (err) {

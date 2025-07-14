@@ -1,58 +1,99 @@
+import { FileAction } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { format } from 'date-fns';
 import { Logger } from '../../utils';
 
 type Input = {
+  action?: FileAction;
   filename?: string;
   contentType?: string;
 };
 
 type Output =
   | {
-      uploadUrl: string;
+      presignedUrl: string;
     }
   | {
       error: string;
       details?: string;
     };
 
+const UPLOAD_PRESIGNED_URL_DURATION = 3000;
+const DOWNLOAD_PRESIGNED_URL_DURATION = 300;
+
 export const getPresignedUrlHandlerFactory =
   (
     logger: Logger,
-    bucket: string,
+    uploadBucket: string,
+    downloadBucket: string,
     region: string,
-  ): ((request: lambda.Request<Input>) => Promise<lambda.Response<Output>>) =>
+  ): ((request: Input) => Promise<lambda.Response<Output>>) =>
   async (request) => {
-    const { filename, contentType } = request.payload;
-
     logger.info(`Received request: ${JSON.stringify(request)}`);
 
-    if (!filename || !contentType) {
+    const { action, filename, contentType } = request;
+
+    if (!action) {
       return {
         statusCode: 400,
         payload: {
-          error: 'filename and contentType are required',
+          error: 'action is required',
         },
       };
     }
 
-    try {
-      const s3 = new S3Client({ region });
-      const command = new PutObjectCommand({
-        Bucket: bucket,
+    const s3 = new S3Client({ region });
+
+    let command;
+
+    if (action === 'upload') {
+      if (!filename || !contentType) {
+        return {
+          statusCode: 400,
+          payload: {
+            error: 'filename and contentType are required',
+          },
+        };
+      }
+      command = new PutObjectCommand({
+        Bucket: uploadBucket,
         Key: filename,
         ContentType: contentType,
       });
+    } else {
+      if (!filename) {
+        return {
+          statusCode: 400,
+          payload: { error: 'filename is required' },
+        };
+      }
+      const currentDate = format(new Date(), 'yyMMdd');
+      command = new GetObjectCommand({
+        Bucket: downloadBucket,
+        Key: filename,
+        ResponseContentDisposition: `attachment; filename="${filename}_${currentDate}.csv"`,
+      });
+    }
 
-      // Generate the pre-signed URL
-      const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 3000 });
+    try {
+      const presignedUrl = await getSignedUrl(s3, command, {
+        expiresIn:
+          action === 'upload'
+            ? UPLOAD_PRESIGNED_URL_DURATION
+            : DOWNLOAD_PRESIGNED_URL_DURATION,
+      });
 
-      logger.info(`Generated pre-signed URL: ${uploadUrl}`);
+      logger.info(`Generated pre-signed URL: ${presignedUrl}`);
 
       return {
         statusCode: 200,
-        payload: { uploadUrl },
+        payload: { presignedUrl },
       };
     } catch (error) {
       logger.error('Error generating pre-signed URL', { error });

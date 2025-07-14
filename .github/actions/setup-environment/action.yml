@@ -143,6 +143,9 @@ outputs:
   crn-contentful-space-id:
     description: 'CRN Contentful Space ID'
     value: ${{ steps.vars.outputs.crn-contentful-space-id }}
+  crn-data-backup-bucket-name:
+    description: 'CRN Data Backup Bucket Name'
+    value: ${{ steps.vars.outputs.crn-data-backup-bucket-name }}
   crn-hostname:
     description: 'CRN Hostname'
     value: ${{ steps.vars.outputs.crn-hostname }}

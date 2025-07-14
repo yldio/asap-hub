@@ -1,3 +1,4 @@
+import { FileAction } from '@asap-hub/model';
 import FileProvider from '../data-providers/file-provider';
 
 export default class FilesController {
@@ -5,8 +6,9 @@ export default class FilesController {
 
   async getPresignedUrl(
     filename: string,
-    contentType: string,
+    action: FileAction,
+    contentType?: string,
   ): Promise<string> {
-    return this.fileProvider.getPresignedUrl(filename, contentType);
+    return this.fileProvider.getPresignedUrl(filename, action, contentType);
   }
 }

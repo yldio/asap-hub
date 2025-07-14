@@ -31,6 +31,7 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { getPresignedUrl } from '../../shared-api/files';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
@@ -49,7 +50,6 @@ import {
   createDiscussion,
   getManuscripts,
   ManuscriptsOptions,
-  getPresignedUrl,
   uploadManuscriptFileViaPresignedUrl,
   markDiscussionAsRead,
   downloadFullComplianceDataset,

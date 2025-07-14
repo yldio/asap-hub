@@ -27,6 +27,7 @@ import {
 } from '../state';
 
 import * as uploadApi from '../api';
+import { getPresignedUrl } from '../../../shared-api/files';
 
 const mockSetDiscussion = jest.fn();
 
@@ -34,9 +35,10 @@ jest.mock('../api', () => ({
   updateDiscussion: jest.fn(),
   getManuscript: jest.fn(),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
-  getPresignedUrl: jest.fn(),
   createDiscussion: jest.fn(),
 }));
+
+jest.mock('../../../shared-api/files');
 
 const teamId = 'team-id-0';
 
@@ -741,6 +743,7 @@ describe('useUploadManuscriptFileViaPresignedUrl', () => {
 
 describe('usePresignedUrl', () => {
   const mockUploadUrl = 'https://presigned-url.com/file.pdf';
+  const mockGetPresignedUrl = getPresignedUrl as jest.Mock;
 
   beforeEach(() => {
     jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
@@ -754,7 +757,6 @@ describe('usePresignedUrl', () => {
   });
 
   it('fetches the presigned URL successfully and updates loading state', async () => {
-    const mockGetPresignedUrl = uploadApi.getPresignedUrl as jest.Mock;
     mockGetPresignedUrl.mockResolvedValueOnce({ presignedUrl: mockUploadUrl });
 
     const { result } = renderHook(() => stateModule.usePresignedUrl(), {
@@ -780,7 +782,6 @@ describe('usePresignedUrl', () => {
   });
 
   it('sets error state on failure and throws error', async () => {
-    const mockGetPresignedUrl = uploadApi.getPresignedUrl as jest.Mock;
     mockGetPresignedUrl.mockRejectedValueOnce(new Error('Oops'));
 
     const { result } = renderHook(() => stateModule.usePresignedUrl(), {

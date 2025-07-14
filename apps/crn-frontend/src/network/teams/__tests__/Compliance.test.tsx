@@ -13,14 +13,14 @@ import { Stringifier } from 'csv-stringify';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { getPresignedUrl } from '../../../shared-api/files';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAlgolia } from '../../../hooks/algolia';
 import { getOpenScienceMembers } from '../../users/api';
-import { getManuscripts, updateManuscript, getPresignedUrl } from '../api';
+import { getManuscripts, updateManuscript } from '../api';
 import Compliance from '../Compliance';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { manuscriptsState } from '../state';
-import * as api from '../api';
 
 mockConsoleError();
 
@@ -50,6 +50,8 @@ jest.mock('../../users/api', () => ({
   ...jest.requireActual('../../users/api'),
   getOpenScienceMembers: jest.fn(),
 }));
+
+jest.mock('../../../shared-api/files');
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
@@ -469,8 +471,7 @@ describe('csv export', () => {
     );
   });
 
-  it.only('exports full compliance dataset', async () => {
-
+  it('exports full compliance dataset', async () => {
     const manuscriptId = 'manuscript-id-1';
     const mockManuscript: PartialManuscriptResponse = {
       ...createPartialManuscriptResponse(),
@@ -486,7 +487,6 @@ describe('csv export', () => {
 
     const expectedLink = 'https://some-download-link.test';
 
-    const mockGetPresignedUrl = api.getPresignedUrl as jest.Mock;
     mockGetPresignedUrl.mockResolvedValue({ presignedUrl: expectedLink });
     await renderCompliancePage();
 
@@ -502,6 +502,8 @@ describe('csv export', () => {
       undefined,
       'download',
     );
-    expect(mockWindowOpen).toHaveBeenCalledWith(expectedLink, '_self');
+    await waitFor(() =>
+      expect(mockWindowOpen).toHaveBeenCalledWith(expectedLink, '_self'),
+    );
   });
 });

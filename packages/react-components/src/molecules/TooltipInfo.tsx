@@ -1,19 +1,19 @@
 import { css, SerializedStyles } from '@emotion/react';
 
 import { Info } from '..';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const infoWrapperStyle = css({
   display: 'inline-flex',
   verticalAlign: 'bottom',
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
 });
 
 const infoStyle = css({
   display: 'grid',
-  gap: `${6 / perRem}em`,
-  paddingTop: `${6 / perRem}em`,
-  paddingBottom: `${6 / perRem}em`,
+  gap: rem(6),
+  paddingTop: rem(6),
+  paddingBottom: rem(6),
 });
 
 type TooltipInfoProps = {

@@ -26,6 +26,7 @@ import {
   RequestedAPCCoverageOption,
 } from '@asap-hub/model';
 import nock from 'nock';
+import { getPresignedUrl } from '../../../shared-api/files';
 
 import { API_BASE_URL } from '../../../config';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
@@ -38,7 +39,6 @@ import {
   getLabs,
   getManuscript,
   getManuscripts,
-  getPresignedUrl,
   getTeam,
   getTeams,
   markDiscussionAsRead,

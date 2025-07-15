@@ -81,12 +81,12 @@ describe('AnalyticsControls', () => {
     const { rerender, queryByText, getByText } = render(
       <AnalyticsControls {...defaultProps} />,
     );
-    expect(queryByText(/export as:/i)).toBeNull();
+    expect(queryByText(/download:/i)).toBeNull();
     const mockExport = jest.fn(() => Promise.resolve());
     rerender(
       <AnalyticsControls {...defaultProps} exportResults={mockExport} />,
     );
-    expect(getByText(/export as:/i)).toBeVisible();
+    expect(getByText(/download:/i)).toBeVisible();
   });
 
   it('maintains tag search when changing time range', () => {

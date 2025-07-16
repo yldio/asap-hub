@@ -77,7 +77,9 @@ export const getPresignedUrlHandlerFactory =
       command = new GetObjectCommand({
         Bucket: downloadBucket,
         Key: filename,
-        ResponseContentDisposition: `attachment; filename="${filename}_${currentDate}.csv"`,
+        ResponseContentDisposition: `attachment; filename="${
+          filename.split('.csv')[0]
+        }_${currentDate}.csv"`,
       });
     }
 

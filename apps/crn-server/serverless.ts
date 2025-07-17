@@ -206,7 +206,7 @@ const serverlessConfig: AWS = {
               {
                 'Fn::If': [
                   'IsProd',
-                  'arn:aws:s3:::asap-hub-prod-data-backup/*',
+                  'arn:aws:s3:::asap-hub-production-data-backup/*',
                   'arn:aws:s3:::asap-hub-dev-data-backup/*',
                 ],
               },

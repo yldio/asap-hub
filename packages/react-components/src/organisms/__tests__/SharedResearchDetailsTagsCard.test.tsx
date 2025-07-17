@@ -72,3 +72,53 @@ it('renders tags with links if provided', () => {
     '/tags?tag=TestTag',
   );
 });
+
+it('renders short description section when shortDescription is provided', () => {
+  const { getByText, queryByRole } = render(
+    <SharedResearchDetailsTagsCard
+      {...sharedResearchDetailsTagsCardProps}
+      shortDescription="Test short description"
+    />,
+  );
+
+  expect(
+    queryByRole('heading', { name: /short description/i }),
+  ).toBeInTheDocument();
+  expect(getByText('Test short description')).toBeVisible();
+});
+
+it('renders changelog section when changelog is provided', () => {
+  const { getByText, queryByRole } = render(
+    <SharedResearchDetailsTagsCard
+      {...sharedResearchDetailsTagsCardProps}
+      changelog="Test changelog"
+    />,
+  );
+
+  expect(queryByRole('heading', { name: /changelog/i })).toBeInTheDocument();
+  expect(getByText('Test changelog')).toBeVisible();
+});
+
+it('renders divider between short description and description when both are present', () => {
+  const { queryByRole } = render(
+    <SharedResearchDetailsTagsCard
+      {...sharedResearchDetailsTagsCardProps}
+      shortDescription="Test short description"
+      descriptionMD="Test description"
+    />,
+  );
+
+  expect(queryByRole('separator')).toBeInTheDocument();
+});
+
+it('renders divider between description and changelog when both are present', () => {
+  const { queryByRole } = render(
+    <SharedResearchDetailsTagsCard
+      {...sharedResearchDetailsTagsCardProps}
+      descriptionMD="Test description"
+      changelog="Test changelog"
+    />,
+  );
+
+  expect(queryByRole('separator')).toBeInTheDocument();
+});

@@ -96,7 +96,7 @@ describe('OutputDetailPage', () => {
       );
       expect(queryByText(/tags/i, { selector: 'h2' })).not.toBeInTheDocument();
       expect(
-        queryByText(/description/i, { selector: 'h2' }),
+        queryByText(/description/i, { selector: 'h3' }),
       ).not.toBeInTheDocument();
     });
 
@@ -108,9 +108,9 @@ describe('OutputDetailPage', () => {
           description={'Test Description'}
         />,
       );
-      expect(queryByText(/tags/i, { selector: 'h2' })).not.toBeInTheDocument();
+      expect(queryByText(/tags/i, { selector: 'h3' })).not.toBeInTheDocument();
       expect(
-        queryByText(/description/i, { selector: 'h2' }),
+        queryByText(/description/i, { selector: 'h3' }),
       ).toBeInTheDocument();
       expect(getByText('Test Description')).toBeVisible();
     });
@@ -126,7 +126,7 @@ describe('OutputDetailPage', () => {
       );
       expect(queryByText(/tags/i, { selector: 'h2' })).toBeInTheDocument();
       expect(
-        queryByText(/description/i, { selector: 'h2' }),
+        queryByText(/description/i, { selector: 'h3' }),
       ).not.toBeInTheDocument();
       expect(getByText('TestTag')).toBeVisible();
     });
@@ -141,7 +141,7 @@ describe('OutputDetailPage', () => {
       );
       expect(queryByText(/tags/i, { selector: 'h2' })).toBeInTheDocument();
       expect(
-        queryByText(/description/i, { selector: 'h2' }),
+        queryByText(/description/i, { selector: 'h3' }),
       ).toBeInTheDocument();
       expect(getByText('TestTag')).toBeVisible();
       expect(getByText('Test Description')).toBeVisible();

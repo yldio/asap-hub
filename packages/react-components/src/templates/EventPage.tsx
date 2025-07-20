@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps, PropsWithChildren, ReactNode } from 'react';
 import { css } from '@emotion/react';
 import { BasicEvent, EventResponse, gp2 } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
@@ -88,7 +88,7 @@ const EventPage = <
   getSourceIcon,
   tableTitles,
   ...props
-}: EventPageProps<T>) => (
+}: PropsWithChildren<EventPageProps<T>>) => (
   <div
     css={({ components }) => [
       containerStyles,

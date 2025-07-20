@@ -2,7 +2,7 @@ import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Match, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { useSearch } from '../hooks';
 
@@ -14,7 +14,7 @@ const NewsList = lazy(loadNewsList);
 const NewsDetailsPage = lazy(loadNews);
 
 const News: FC<Record<string, never>> = () => {
-  const { path } = useRouteMatch();
+  const { path } = useRouteMatch() as Match<{ path: string }>;
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadNews().then(loadNewsList);

@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import WorkingGroupPageHeader from './WorkingGroupPageHeader';
@@ -9,7 +9,7 @@ const mainStyles = css({
 });
 
 const WorkingGroupPage: React.FC<
-  ComponentProps<typeof WorkingGroupPageHeader>
+  PropsWithChildren<ComponentProps<typeof WorkingGroupPageHeader>>
 > = ({ children, ...props }) => (
   <article>
     <WorkingGroupPageHeader {...props} />

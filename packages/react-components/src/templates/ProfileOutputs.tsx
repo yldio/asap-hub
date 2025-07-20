@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, PropsWithChildren } from 'react';
 import { SharedResearchList } from '.';
 import { LinkConditional } from '../atoms';
 import { createMailTo } from '../mail';
@@ -21,7 +21,7 @@ export type ProfileOutputsProps = Omit<
   hasOutputs: boolean;
 };
 
-const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
+const ProfileOutputs: React.FC<PropsWithChildren<ProfileOutputsProps>> = ({
   algoliaIndexName,
   algoliaQueryId,
   researchOutputs,

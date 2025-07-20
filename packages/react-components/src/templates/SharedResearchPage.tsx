@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
@@ -11,13 +11,9 @@ const mainStyles = css({
 });
 
 type SharedResearchPageProps = ComponentProps<typeof SharedResearchPageHeader>;
-const SharedResearchPage: React.FC<SharedResearchPageProps> = ({
-  onChangeSearch,
-  searchQuery,
-  children,
-  onChangeFilter,
-  filters,
-}) => (
+const SharedResearchPage: React.FC<
+  PropsWithChildren<SharedResearchPageProps>
+> = ({ onChangeSearch, searchQuery, children, onChangeFilter, filters }) => (
   <article>
     <SharedResearchPageHeader
       onChangeSearch={onChangeSearch}

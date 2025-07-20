@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import InterestGroupProfileHeader from './InterestGroupProfileHeader';
@@ -12,11 +12,9 @@ const mainStyles = css({
 type InterestGroupProfilePageProps = ComponentProps<
   typeof InterestGroupProfileHeader
 >;
-const InterestGroupProfilePage: React.FC<InterestGroupProfilePageProps> = ({
-  children,
-  active,
-  ...props
-}) => (
+const InterestGroupProfilePage: React.FC<
+  PropsWithChildren<InterestGroupProfilePageProps>
+> = ({ children, active, ...props }) => (
   <article>
     {!active && (
       <Toast accent="warning">

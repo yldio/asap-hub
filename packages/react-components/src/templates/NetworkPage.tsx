@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import NetworkPageHeader from './NetworkPageHeader';
@@ -8,7 +8,9 @@ const mainStyles = css({
   padding: networkPageLayoutPaddingStyle,
 });
 
-const NetworkPage: React.FC<ComponentProps<typeof NetworkPageHeader>> = ({
+const NetworkPage: React.FC<
+  PropsWithChildren<ComponentProps<typeof NetworkPageHeader>>
+> = ({
   children,
 
   ...props

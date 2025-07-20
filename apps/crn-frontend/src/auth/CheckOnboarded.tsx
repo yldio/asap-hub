@@ -36,7 +36,13 @@ const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
 
   useEffect(
     () =>
-      history.block(({ pathname }) => navigationPromptHandler(user, pathname)),
+      history.block(({ pathname }: { pathname: string }) => {
+        const result = navigationPromptHandler(user, pathname);
+        if (result === undefined) {
+          return false;
+        }
+        return result;
+      }),
     [user, history],
   );
 

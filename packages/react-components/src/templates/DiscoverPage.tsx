@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
@@ -11,7 +11,9 @@ const mainStyles = css({
 
 type DashboardPageProps = ComponentProps<typeof DiscoverPageHeader>;
 
-const Dashboard: React.FC<DashboardPageProps> = ({ children }) => (
+const Dashboard: React.FC<PropsWithChildren<DashboardPageProps>> = ({
+  children,
+}) => (
   <article>
     <DiscoverPageHeader />
     <main css={mainStyles}>{children}</main>

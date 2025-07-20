@@ -23,11 +23,13 @@ const wrapper =
   }: {
     currentRoute: string;
     user?: Partial<User>;
-  }): React.FC =>
+  }): React.FC<{ children?: React.ReactNode }> =>
   ({ children }) => (
     <RecoilRoot
       initializeState={({ set }) => {
-        user?.id && set(refreshUserState(user.id), Math.random());
+        if (user?.id) {
+          set(refreshUserState(user.id), Math.random());
+        }
       }}
     >
       <Auth0Provider user={user}>

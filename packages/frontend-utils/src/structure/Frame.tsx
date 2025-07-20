@@ -1,4 +1,9 @@
-import React, { Suspense, ComponentProps, ReactNode } from 'react';
+import React, {
+  Suspense,
+  ComponentProps,
+  ReactNode,
+  PropsWithChildren,
+} from 'react';
 import { Titled } from 'react-titled';
 import {
   Loading,
@@ -30,7 +35,7 @@ const Frame = ({ fallback, children, title }: FrameProps) => (
   </Titled>
 );
 
-const DefaultFrame: React.FC<FrameBoundaryProps> = ({
+const DefaultFrame: React.FC<PropsWithChildren<FrameBoundaryProps>> = ({
   children,
   title,
   boundaryProps,
@@ -44,7 +49,7 @@ const DefaultFrame: React.FC<FrameBoundaryProps> = ({
 );
 
 export const SearchFrame: React.FC<
-  Omit<FrameBoundaryProps, 'boundaryProps'>
+  PropsWithChildren<Omit<FrameBoundaryProps, 'boundaryProps'>>
 > = ({ children, title, fallback = <Loading /> }) => (
   <ErrorBoundary
     title={'Something went wrong'}
@@ -58,11 +63,11 @@ export const SearchFrame: React.FC<
 );
 
 export const SkeletonHeaderFrame: React.FC<
-  Omit<FrameBoundaryProps, 'fallback'>
+  PropsWithChildren<Omit<FrameBoundaryProps, 'fallback'>>
 > = (props) => <DefaultFrame {...props} fallback={<LoadingContentHeader />} />;
 
 export const SkeletonBodyFrame: React.FC<
-  Omit<FrameBoundaryProps, 'fallback'>
+  PropsWithChildren<Omit<FrameBoundaryProps, 'fallback'>>
 > = (props) => <DefaultFrame {...props} fallback={<LoadingContentBody />} />;
 
 export default DefaultFrame;

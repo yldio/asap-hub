@@ -4,7 +4,6 @@ import { Integrations } from '@sentry/tracing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
-
 import { Frame, useCookieConsent } from '@asap-hub/frontend-utils';
 import {
   BasicLayout,

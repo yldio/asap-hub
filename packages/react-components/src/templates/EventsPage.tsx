@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
@@ -11,7 +11,10 @@ const mainStyles = css({
 
 type EventsPageProps = ComponentProps<typeof EventsPageHeader>;
 
-const EventsPage: React.FC<EventsPageProps> = ({ children, ...props }) => (
+const EventsPage: React.FC<PropsWithChildren<EventsPageProps>> = ({
+  children,
+  ...props
+}) => (
   <article>
     <EventsPageHeader {...props} />
     <main css={mainStyles}>{children}</main>

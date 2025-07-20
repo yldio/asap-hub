@@ -1,13 +1,14 @@
 import { ComponentProps } from 'react';
+import { ResearchOutputResponse } from '@asap-hub/model';
 import AlgoliaHit from '../atoms/AlgoliaHit';
 
+import { charcoal } from '../colors';
+import { LibraryIcon } from '../icons';
 import {
   ResultList,
   SharedResearchCard,
   SharedResearchListCard,
 } from '../organisms';
-import { LibraryIcon } from '../icons';
-import { charcoal } from '../colors';
 
 type SharedResearchListProps = Omit<
   ComponentProps<typeof ResultList>,
@@ -34,7 +35,7 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
     {cardListProps.isListView ? (
       <SharedResearchListCard
         algoliaQueryId={algoliaQueryId}
-        researchOutputs={researchOutputs}
+        researchOutputs={researchOutputs as ResearchOutputResponse[]}
       />
     ) : (
       researchOutputs.map((output, index) => (
@@ -44,7 +45,10 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
           algoliaQueryId={algoliaQueryId}
           objectId={output.id}
         >
-          <SharedResearchCard {...output} showTags={showTags} />
+          <SharedResearchCard
+            {...(output as ResearchOutputResponse)}
+            showTags={showTags}
+          />
         </AlgoliaHit>
       ))
     )}

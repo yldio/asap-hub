@@ -41,7 +41,7 @@ const hoverStyles = css({
   },
 });
 
-const UtilityBar: FC = ({ children }) => (
+const UtilityBar: FC<{ children?: React.ReactNode }> = ({ children }) => (
   <div css={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
     <div css={headerStyles}>
       <Paragraph>

@@ -134,6 +134,9 @@ import { GenerativeContentDataProvider } from './data-providers/contentful/gener
 import { fileRouteFactory } from './routes/files.route';
 import FilesController from './controllers/files.controller';
 import FileProvider from './data-providers/file-provider';
+import OpenSearchController from './controllers/opensearch.controller';
+import OpenSearchProvider from './data-providers/opensearch-provider';
+import { opensearchRouteFactory } from './routes/opensearch.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -371,6 +374,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     new WorkingGroupController(workingGroupDataProvider);
   const filesController =
     libs.filesController || new FilesController(new FileProvider());
+  const opensearchController =
+    libs.opensearchController ||
+    new OpenSearchController(new OpenSearchProvider());
 
   // Handlers
   const authHandler =
@@ -425,6 +431,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupsController);
 
   const fileRoutes = fileRouteFactory(filesController);
+  const opensearchRoutes = opensearchRouteFactory(opensearchController);
   /**
    * --- end of dependency inection
    */
@@ -480,6 +487,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(eventRoutes);
   app.use(impactRoutes);
   app.use(fileRoutes);
+  app.use(opensearchRoutes);
   app.use(interestGroupRoutes);
   app.use(labRoutes);
   app.use(manuscriptRoutes);
@@ -524,6 +532,7 @@ export type Libs = {
   impactController?: ImpactController;
   interestGroupController?: InterestGroupController;
   filesController?: FilesController;
+  opensearchController?: OpenSearchController;
   labController?: LabController;
   manuscriptController?: ManuscriptController;
   newsController?: NewsController;

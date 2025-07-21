@@ -1,5 +1,5 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { Client } from '@opensearch-project/opensearch';
+import { Client, API } from '@opensearch-project/opensearch';
 import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws';
 import { defaultProvider } from '@aws-sdk/credential-provider-node';
 import {
@@ -7,6 +7,9 @@ import {
   getOpenSearchEndpoint,
   extractDomainFromEndpoint,
 } from '../../utils';
+
+export type OpenSearchRequest = API.Search_RequestBody;
+export type OpenSearchResponse = API.Search_ResponseBody;
 
 const getClient = async (region: string): Promise<Client> => {
   const endpoint = await getOpenSearchEndpoint();
@@ -21,37 +24,13 @@ const getClient = async (region: string): Promise<Client> => {
   });
 };
 
-type SearchResponse = {
-  _shards: {
-    total: number;
-    successful: number;
-    skipped: number;
-    failed: number;
-  };
-  hits: {
-    total: {
-      value: number;
-      relation: string;
-    };
-    max_score: number;
-    hits: {
-      _index: string;
-      _id: string;
-      _score: number;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      _source: any;
-    }[];
-  };
-};
-
 type Input = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  query: Record<string, any> | null;
+  query: OpenSearchRequest;
 };
 
 type Output =
   | {
-      data: SearchResponse;
+      data: OpenSearchResponse;
     }
   | {
       error: string;
@@ -82,7 +61,7 @@ export const opensearchHandlerFactory =
 
       const response = await client.search({
         index,
-        body: query || { match_all: {} },
+        body: query || { query: { match_all: {} } },
       });
 
       if (!response.statusCode?.toString().startsWith('2')) {
@@ -97,7 +76,7 @@ export const opensearchHandlerFactory =
 
       return {
         statusCode: 200,
-        payload: { data: response.body as SearchResponse },
+        payload: { data: response.body },
       };
     } catch (error) {
       logger.error('Error executing OpenSearch query', { error });

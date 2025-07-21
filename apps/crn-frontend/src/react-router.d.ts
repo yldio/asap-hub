@@ -18,7 +18,7 @@ declare module 'react-router-dom' {
     block(
       message?:
         | string
-        | ((location: Location, action: string) => string | false),
+        | ((location: Location, action: string) => string | false | undefined),
     ): () => void;
     location: Location;
   }

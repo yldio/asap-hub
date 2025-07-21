@@ -88,7 +88,9 @@ const getStatusFilters = (
   completedStatus: CompletedStatusOption,
   selectedStatuses: ManuscriptStatus[],
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mustNotConditions: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mustConditions: any[] = [];
 
   // Handle completed status filter (hide/show Compliant and Closed)
@@ -147,20 +149,20 @@ const buildOpenSearchQuery = (
   if (mustNotConditions.length === 0 && mustConditions.length === 0) {
     // No conditions at all - use match_all
     return { match_all: {} };
-  } else {
-    // Build bool query
-    const boolQuery: any = { bool: {} };
-
-    if (mustNotConditions.length > 0) {
-      boolQuery.bool.must_not = mustNotConditions;
-    }
-
-    if (mustConditions.length > 0) {
-      boolQuery.bool.must = mustConditions;
-    }
-
-    return boolQuery;
   }
+  // Build bool query
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const boolQuery: any = { bool: {} };
+
+  if (mustNotConditions.length > 0) {
+    boolQuery.bool.must_not = mustNotConditions;
+  }
+
+  if (mustConditions.length > 0) {
+    boolQuery.bool.must = mustConditions;
+  }
+
+  return boolQuery;
 };
 
 type ComplianceListProps = Pick<
@@ -208,12 +210,13 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   );
 
   // Use OpenSearch with the pre-built query
-  const { total, results, refresh, isLoading } = useComplianceOSearch({
+  const { total, results } = useComplianceOSearch({
     query: opensearchQuery,
     size: pageSize,
     from: currentPage * pageSize,
   });
 
+  // eslint-disable-next-line no-console
   console.log('opensearch data', { total, results });
   const { setFormType } = useManuscriptToast();
 

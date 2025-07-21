@@ -1,7 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../config';
 
 export interface ComplianceSearchRequest {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   query?: any;
   size?: number;
   from?: number;
@@ -61,6 +63,7 @@ export const searchCompliance = async (
   const hits = data.data?.hits?.hits || [];
   const total = data.data?.hits?.total?.value || data.data?.hits?.total || 0;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const results = hits.map((hit: any) => ({
     id: hit._source.id,
     title: hit._source.title,

@@ -12,6 +12,7 @@ import {
 } from './api';
 
 export interface ComplianceSearchOptions {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   query: any; // Pre-built OpenSearch query
   size: number;
   from: number;
@@ -49,7 +50,6 @@ export const complianceSearchState = selectorFamily<
           authorization,
         );
       } catch (error) {
-        console.error('Failed to fetch compliance data:', error);
         return undefined;
       }
     },

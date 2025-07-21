@@ -2,6 +2,7 @@ import { framework as lambda } from '@asap-hub/services-common';
 import { Client, API } from '@opensearch-project/opensearch';
 import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws';
 import { defaultProvider } from '@aws-sdk/credential-provider-node';
+import { UpdateWriteResponseBase } from '@opensearch-project/opensearch/api/_types/_core.update';
 import {
   Logger,
   getOpenSearchEndpoint,
@@ -30,7 +31,7 @@ type Input = {
 
 type Output =
   | {
-      data: OpenSearchResponse;
+      data: OpenSearchResponse | UpdateWriteResponseBase;
     }
   | {
       error: string;
@@ -42,7 +43,7 @@ export const opensearchHandlerFactory =
     logger: Logger,
     region: string,
   ): ((request: lambda.Request<Input>) => Promise<lambda.Response<Output>>) =>
-  async (request) => {
+  async (request: lambda.Request<Input>): Promise<lambda.Response<Output>> => {
     logger.info(`Received request: ${JSON.stringify(request)}`);
 
     const { query } = request.payload;
@@ -83,7 +84,9 @@ export const opensearchHandlerFactory =
           statusCode: 200,
           payload: { data: response.body },
         };
-      } else if (method === 'put') {
+      }
+
+      if (method === 'put') {
         // Handle update request
         if (!id) {
           return {
@@ -114,15 +117,15 @@ export const opensearchHandlerFactory =
           statusCode: 200,
           payload: { data: response.body },
         };
-      } else {
-        return {
-          statusCode: 405,
-          payload: {
-            error: 'Method not allowed',
-            details: `HTTP method ${method} is not supported`,
-          },
-        };
       }
+
+      return {
+        statusCode: 405,
+        payload: {
+          error: 'Method not allowed',
+          details: `HTTP method ${method} is not supported`,
+        },
+      };
     } catch (error) {
       logger.error('Error executing OpenSearch operation', { error });
 

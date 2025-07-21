@@ -31,6 +31,8 @@ assert.ok(
   stage === 'dev' || stage === 'production' || !isNaN(Number.parseInt(stage)),
   'stage must be either "dev" or "production" or a PR number',
 );
+// Use 'dev' for function names when stage is 'local', otherwise use the actual stage
+const functionStage = stage === 'local' ? 'dev' : stage;
 
 const region = process.env.AWS_REGION as NonNullable<AWS['provider']['region']>;
 const envAlias = stage === 'production' ? 'prod' : 'dev';
@@ -229,8 +231,7 @@ const serverlessConfig: AWS = {
             Effect: 'Allow',
             Action: ['lambda:InvokeFunction'],
             Resource: {
-              'Fn::Sub':
-                'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:asap-hub-${self:provider.stage}-getPresignedUrl',
+              'Fn::Sub': `arn:aws:lambda:\${AWS::Region}:\${AWS::AccountId}:function:asap-hub-${functionStage}-getPresignedUrl`,
             },
           },
           {

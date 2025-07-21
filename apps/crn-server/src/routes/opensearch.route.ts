@@ -1,7 +1,6 @@
 import { OpenSearchResponse } from '@asap-hub/server-common';
-import { Router, Response, Request } from 'express';
+import { Router, Response } from 'express';
 import OpenSearchController from '../controllers/opensearch.controller';
-import { User } from '../utils/analytics/leadership';
 import logger from '../utils/logger';
 
 export const opensearchRouteFactory = (

@@ -39,6 +39,8 @@ type SharedResearchOutputProps = Pick<
   ResearchOutputResponse,
   | 'description'
   | 'descriptionMD'
+  | 'shortDescription'
+  | 'changelog'
   | 'keywords'
   | 'usageNotes'
   | 'usageNotesMD'
@@ -69,6 +71,8 @@ type SharedResearchOutputProps = Pick<
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   description = '',
   descriptionMD = '',
+  shortDescription,
+  changelog,
   backHref,
   usageNotes = '',
   usageNotesMD = '',
@@ -226,6 +230,8 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               displayDescription={!!displayDescription}
               description={description}
               descriptionMD={descriptionMD}
+              shortDescription={shortDescription}
+              changelog={changelog}
             />
           )}
           {!isGrantDocument && hasUsageNotes && (

@@ -10,6 +10,8 @@ import SharedResearchOutput from '../SharedResearchOutput';
 
 const props: ComponentProps<typeof SharedResearchOutput> = {
   ...createResearchOutputResponse(),
+  shortDescription: undefined,
+  changelog: undefined,
   descriptionMD: '',
   methods: [],
   subtype: undefined,
@@ -137,7 +139,7 @@ describe('Grant Documents', () => {
     );
     expect(queryByText(/tags/i, { selector: 'h2' })).toBeInTheDocument();
     expect(
-      queryByText(/description/i, { selector: 'h2' }),
+      queryByText('Description', { selector: 'h3' }),
     ).not.toBeInTheDocument();
     expect(getByText('tag1')).toBeVisible();
     expect(getByText('abc 123')).toBeVisible();
@@ -193,9 +195,9 @@ describe('Not Grant Documents', () => {
           descriptionMD=""
         />,
       );
-      expect(queryByText(/tags/i, { selector: 'h2' })).not.toBeInTheDocument();
+      expect(queryByText(/tags/i, { selector: 'h3' })).not.toBeInTheDocument();
       expect(
-        queryByText(/description/i, { selector: 'h2' }),
+        queryByText('Description', { selector: 'h3' }),
       ).not.toBeInTheDocument();
       expect(queryByRole('separator')).not.toBeInTheDocument();
     });
@@ -211,7 +213,7 @@ describe('Not Grant Documents', () => {
       );
       expect(queryByText(/tags/i, { selector: 'h2' })).not.toBeInTheDocument();
       expect(
-        queryByText(/description/i, { selector: 'h2' }),
+        queryByText('Description', { selector: 'h3' }),
       ).toBeInTheDocument();
       expect(getByText('text')).toBeVisible();
       expect(queryByRole('separator')).not.toBeInTheDocument();
@@ -228,7 +230,7 @@ describe('Not Grant Documents', () => {
         />,
       );
       expect(
-        queryByText(/description/i, { selector: 'h2' }),
+        queryByText('Description', { selector: 'h3' }),
       ).not.toBeInTheDocument();
     });
     it('handles just tags', () => {
@@ -243,7 +245,7 @@ describe('Not Grant Documents', () => {
       );
       expect(queryByText(/tags/i, { selector: 'h2' })).toBeInTheDocument();
       expect(
-        queryByText(/description/i, { selector: 'h2' }),
+        queryByText('Description', { selector: 'h3' }),
       ).not.toBeInTheDocument();
       expect(getByText('tag1')).toBeVisible();
       expect(queryByRole('separator')).not.toBeInTheDocument();
@@ -259,7 +261,7 @@ describe('Not Grant Documents', () => {
       );
       expect(queryByText(/tags/i, { selector: 'h2' })).toBeInTheDocument();
       expect(
-        queryByText(/description/i, { selector: 'h2' }),
+        queryByText('Description', { selector: 'h3' }),
       ).toBeInTheDocument();
       expect(getByText('tag1')).toBeVisible();
       expect(getByText('text')).toBeVisible();

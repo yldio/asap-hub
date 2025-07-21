@@ -21,8 +21,7 @@ gen_enforced_dependency(WorkspaceCwd, DependencyIdent, DependencyRange2, Depende
     DependencyIdent \= '@types/react',
     DependencyIdent \= '@types/react-dom',
     DependencyIdent \= '@testing-library/react',
-    DependencyIdent \= 'react-router-dom',
-    DependencyIdent \= '@types/react-router-dom'.
+    DependencyIdent \= '@testing-library/user-event'.
 
 % This rule will prevent workspaces from depending on non-workspace versions of available workspaces
 gen_enforced_dependency(WorkspaceCwd, DependencyIdent, WorkspaceRange, DependencyType) :-
@@ -60,12 +59,6 @@ gen_enforced_dependency(WorkspaceCwd, '@types/react-dom', '18.2.11', devDependen
 gen_enforced_dependency(WorkspaceCwd, '@testing-library/react', '14.1.2', devDependencies) :-
   workspace_ident(WorkspaceCwd, '@asap-hub/crn-frontend').
 
-gen_enforced_dependency(WorkspaceCwd, 'react-router-dom', '5.3.4', dependencies) :-
-  workspace_ident(WorkspaceCwd, '@asap-hub/crn-frontend').
-
-gen_enforced_dependency(WorkspaceCwd, '@types/react-router-dom', '5.3.3', devDependencies) :-
-  workspace_ident(WorkspaceCwd, '@asap-hub/crn-frontend').
-
 % REACT 17 CONSTRAINTS - For ALL other packages that use React
 gen_enforced_dependency(WorkspaceCwd, 'react', '17.0.2', dependencies) :-
   workspace_ident(WorkspaceCwd, WorkspaceIdent),
@@ -97,12 +90,10 @@ gen_enforced_dependency(WorkspaceCwd, '@testing-library/react', '12.1.5', devDep
   WorkspaceIdent \= '@asap-hub/crn-frontend',
   workspace_has_dependency(WorkspaceCwd, '@testing-library/react', _, devDependencies).
 
-gen_enforced_dependency(WorkspaceCwd, 'react-router-dom', '5.3.4', dependencies) :-
-  workspace_ident(WorkspaceCwd, WorkspaceIdent),
-  WorkspaceIdent \= '@asap-hub/crn-frontend',
-  workspace_has_dependency(WorkspaceCwd, 'react-router-dom', _, dependencies).
+gen_enforced_dependency(WorkspaceCwd, '@testing-library/user-event', '14.6.1', devDependencies) :-
+  workspace_ident(WorkspaceCwd, '@asap-hub/crn-frontend').
 
-gen_enforced_dependency(WorkspaceCwd, '@types/react-router-dom', '5.3.3', devDependencies) :-
+gen_enforced_dependency(WorkspaceCwd, '@testing-library/user-event', '12.8.3', devDependencies) :-
   workspace_ident(WorkspaceCwd, WorkspaceIdent),
   WorkspaceIdent \= '@asap-hub/crn-frontend',
-  workspace_has_dependency(WorkspaceCwd, '@types/react-router-dom', _, devDependencies).
+  workspace_has_dependency(WorkspaceCwd, '@testing-library/user-event', _, devDependencies).

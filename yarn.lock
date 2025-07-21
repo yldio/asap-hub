@@ -922,7 +922,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 14.1.2
     "@testing-library/react-hooks": 8.0.1
-    "@testing-library/user-event": 12.8.3
+    "@testing-library/user-event": 14.6.1
     "@types/file-saver": ^2
     "@types/history": 4.7.11
     "@types/jest": 29.5.14
@@ -18622,6 +18622,15 @@ __metadata:
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
   checksum: c9fb5ee07cbe79ddf32d81e1a353e556d02a1f1619456ccfad6abcdf1b7db400fdc9d7a8e0be3994f456e7135a0dfb7fa10b29fb98a0f5fc417b99fce0ce8166
+  languageName: node
+  linkType: hard
+
+"@testing-library/user-event@npm:14.6.1":
+  version: 14.6.1
+  resolution: "@testing-library/user-event@npm:14.6.1"
+  peerDependencies:
+    "@testing-library/dom": ">=7.21.4"
+  checksum: 4cb8a81fea1fea83a42619e9545137b51636bb7a3182c596bb468e5664f1e4699a275c2d0fb8b6dcc3fe2684f9d87b0637ab7cb4f566051539146872c9141fcb
   languageName: node
   linkType: hard
 

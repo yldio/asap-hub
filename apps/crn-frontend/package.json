@@ -63,7 +63,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "14.1.2",
     "@testing-library/react-hooks": "8.0.1",
-    "@testing-library/user-event": "12.8.3",
+    "@testing-library/user-event": "14.6.1",
     "@types/file-saver": "^2",
     "@types/history": "4.7.11",
     "@types/jest": "29.5.14",

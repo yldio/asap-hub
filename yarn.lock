@@ -1030,6 +1030,7 @@ __metadata:
     "@aws-sdk/client-lambda": ^3.758.0
     "@aws-sdk/client-ses": ^3.306.0
     "@aws-sdk/client-sqs": 3.478.0
+    "@aws-sdk/credential-provider-node": ^3.844.0
     "@babel/core": 7.23.7
     "@babel/preset-env": 7.23.8
     "@babel/preset-typescript": 7.23.3
@@ -1043,6 +1044,7 @@ __metadata:
     "@hapi/boom": 9.1.4
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
+    "@opensearch-project/opensearch": ^3.5.1
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.38.0
     "@slack/webhook": ^6.1.0

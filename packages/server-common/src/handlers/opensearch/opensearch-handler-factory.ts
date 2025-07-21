@@ -24,10 +24,8 @@ const getClient = async (region: string): Promise<Client> => {
     node: `https://${domainEndpoint}`,
   });
 };
-
-type Input = {
-  query: OpenSearchRequest;
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Input = any; // Use any for flexibility across different operations
 
 type Output =
   | {
@@ -46,10 +44,11 @@ export const opensearchHandlerFactory =
   async (request: lambda.Request<Input>): Promise<lambda.Response<Output>> => {
     logger.info(`Received request: ${JSON.stringify(request)}`);
 
-    const { query } = request.payload;
+    // Fix 1: Get the payload from the correct location
+    const payload = request.payload || {};
     const index = request.params?.index;
     const id = request.params?.id;
-    const method = request.method || 'post';
+    const method = request.method?.toLowerCase() || 'post';
 
     if (!index) {
       return {
@@ -65,12 +64,25 @@ export const opensearchHandlerFactory =
 
       if (method === 'post') {
         // Handle search request
+        const searchBody: API.Search_RequestBody = payload.query || {
+          query: { match_all: {} },
+        };
+
+        logger.info(
+          `Performing search with body: ${JSON.stringify(searchBody)}`,
+        );
+
         const response = await client.search({
           index,
-          body: query || { query: { match_all: {} } },
+          body: searchBody,
         });
 
         if (!response.statusCode?.toString().startsWith('2')) {
+          logger.error('OpenSearch search failed', {
+            statusCode: response.statusCode,
+            body: response.body,
+          });
+
           return {
             statusCode: response.statusCode || 500,
             payload: {
@@ -97,13 +109,38 @@ export const opensearchHandlerFactory =
           };
         }
 
+        // Fix 2: Extract the update body correctly - use the entire payload
+        const updateBody = payload;
+
+        logger.info(
+          `Performing update with body: ${JSON.stringify(updateBody)}`,
+        );
+        logger.info(`Update target: index=${index}, id=${id}`);
+
+        // Fix 3: Add proper error handling and timeout
         const response = await client.update({
           index,
           id,
-          body: query || {},
+          body: updateBody,
+          timeout: '30s',
+          retry_on_conflict: 3,
         });
 
+        logger.info(
+          `OpenSearch update response: ${JSON.stringify({
+            statusCode: response.statusCode,
+            result: response.body?.result,
+            version: response.body?._version,
+          })}`,
+        );
+
         if (!response.statusCode?.toString().startsWith('2')) {
+          logger.error('OpenSearch update failed', {
+            statusCode: response.statusCode,
+            body: response.body,
+            updateBody,
+          });
+
           return {
             statusCode: response.statusCode || 500,
             payload: {
@@ -127,13 +164,26 @@ export const opensearchHandlerFactory =
         },
       };
     } catch (error) {
-      logger.error('Error executing OpenSearch operation', { error });
+      logger.error('Error executing OpenSearch operation', {
+        error:
+          error instanceof Error
+            ? {
+                name: error.name,
+                message: error.message,
+                stack: error.stack,
+              }
+            : String(error),
+        method,
+        index,
+        id,
+        payload,
+      });
 
       return {
         statusCode: 500,
         payload: {
           error: 'Error executing OpenSearch operation',
-          details: (error as Error).message,
+          details: error instanceof Error ? error.message : String(error),
         },
       };
     }

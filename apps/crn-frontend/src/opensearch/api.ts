@@ -66,13 +66,17 @@ export const searchCompliance = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const results = hits.map((hit: any) => ({
     id: hit._source.id,
+    manuscriptId: hit._source.manuscriptId,
+    team: hit._source.team,
     title: hit._source.title,
     status: hit._source.status,
     lastUpdated: hit._source.lastUpdated,
-    teams: hit._source.teams || [],
+    teams: hit._source.teams || '',
     assignedUsers: hit._source.assignedUsers || [],
     apcRequested: hit._source.apcRequested,
     apcCoverageRequestStatus: hit._source.apcCoverageRequestStatus,
+    apcAmountRequested: hit._source.apcAmountRequested,
+    declinedReason: hit._source.declinedReason,
   }));
 
   return {

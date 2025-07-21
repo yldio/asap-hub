@@ -1,3 +1,7 @@
+import {
+  ManuscriptDataObject,
+  PartialManuscriptResponse,
+} from '@asap-hub/model';
 import { OpenSearchRequest, OpenSearchResponse } from '@asap-hub/server-common';
 import {
   LambdaClient,
@@ -6,6 +10,31 @@ import {
 } from '@aws-sdk/client-lambda';
 import { region, environment } from '../config';
 import logger from '../utils/logger';
+
+interface ManuscriptDocument {
+  id: string;
+  manuscriptId: string;
+  title: string;
+  url?: string;
+  teams: string;
+  assignedUsers: Array<{
+    id: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl?: string;
+  }>;
+  status: string;
+  apcRequested?: boolean;
+  apcAmountRequested?: number;
+  apcCoverageRequestStatus?: string | null;
+  apcAmountPaid?: number;
+  declinedReason?: string;
+  lastUpdated: string;
+  team: {
+    id: string;
+    displayName: string;
+  };
+}
 
 export default class OpenSearchProvider {
   private lambda: LambdaClient;
@@ -19,6 +48,25 @@ export default class OpenSearchProvider {
         : environment;
   }
 
+  private transformToManuscriptDocument(
+    manuscript: PartialManuscriptResponse,
+  ): ManuscriptDocument {
+    return {
+      id: manuscript.id,
+      manuscriptId: manuscript.manuscriptId,
+      title: manuscript.title,
+      teams: manuscript.teams,
+      assignedUsers: manuscript.assignedUsers || [],
+      status: manuscript.status || '',
+      apcRequested: manuscript.apcRequested,
+      apcAmountRequested: manuscript.apcAmountRequested,
+      apcCoverageRequestStatus: manuscript.apcCoverageRequestStatus,
+      apcAmountPaid: manuscript.apcAmountPaid,
+      declinedReason: manuscript.declinedReason,
+      lastUpdated: manuscript.lastUpdated,
+      team: manuscript.team,
+    };
+  }
   /**
    * Helper to invoke the OpenSearch Lambda function
    */
@@ -118,18 +166,54 @@ export default class OpenSearchProvider {
   async update(params: {
     index: string;
     id: string;
-    body: OpenSearchRequest;
+    body: {
+      doc: ManuscriptDataObject;
+      doc_as_upsert: boolean;
+    };
   }): Promise<OpenSearchResponse> {
     try {
-      const updatePath = `${params.index}`;
+      const lambdaParams = {
+        FunctionName: `asap-hub-${this.stage}-openSearchHandler`,
+        InvocationType: InvocationType.RequestResponse,
+        Payload: JSON.stringify({
+          httpMethod: 'PUT', // Should be POST for update operations
+          path: `/opensearch/update/${params.index}/${params.id}`, // Correct OpenSearch update path
+          body: JSON.stringify({
+            doc: this.transformToManuscriptDocument(
+              params.body.doc as unknown as PartialManuscriptResponse,
+            ),
+            doc_as_upsert: params.body.doc_as_upsert,
+            refresh: 'true',
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }),
+      };
 
-      const response = await this.invokeLambda(
-        'PUT',
-        `/opensearch/update/${updatePath}/${params.id}`,
-        params.body,
+      const command = new InvokeCommand(lambdaParams);
+      const response = await this.lambda.send(command);
+
+      if (!response.Payload) {
+        throw new Error('Lambda returned an empty response');
+      }
+
+      // Decode the Lambda response payload
+      const payloadString = Buffer.from(response.Payload).toString('utf-8');
+      const lambdaResponse = JSON.parse(payloadString);
+
+      // Check if Lambda execution was successful
+      if (lambdaResponse.statusCode !== 200) {
+        throw new Error(
+          `OpenSearch update failed with status ${lambdaResponse.statusCode}: ${lambdaResponse.body}`,
+        );
+      }
+
+      // Parse and return the OpenSearch response
+      const openSearchResponse: OpenSearchResponse = JSON.parse(
+        lambdaResponse.body,
       );
-
-      return response;
+      return openSearchResponse;
     } catch (error) {
       logger.error('OpenSearch update failed', {
         error,
@@ -163,35 +247,6 @@ export default class OpenSearchProvider {
   //       return response;
   //     } catch (error) {
   //       logger.error('OpenSearch document indexing failed', {
-  //         error,
-  //         index: params.index,
-  //         documentId: params.id,
-  //       });
-  //       throw error;
-  //     }
-  //   }
-
-  //   /**
-  //    * Update a document - might need to be updated - not tested
-  //    */
-  //   async updateDocument(params: {
-  //     index: string;
-  //     id: string;
-  //     body: OpenSearchRequest;
-  //     refresh?: boolean;
-  //   }): Promise<OpenSearchResponse> {
-  //     try {
-  //       const updatePath = `/opensearch/update/${params.index}/${params.id}`;
-  //       const requestBody = {
-  //         ...params.body,
-  //         ...(params.refresh && { refresh: 'true' }),
-  //       };
-
-  //       const response = await this.invokeLambda('PUT', updatePath, requestBody);
-
-  //       return response;
-  //     } catch (error) {
-  //       logger.error('OpenSearch document update failed', {
   //         error,
   //         index: params.index,
   //         documentId: params.id,

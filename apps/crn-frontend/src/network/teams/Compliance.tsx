@@ -210,7 +210,11 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   );
 
   // Use OpenSearch with the pre-built query
-  const { total, results } = useComplianceOSearch({
+  const {
+    total,
+    results,
+    refresh: refreshOS,
+  } = useComplianceOSearch({
     query: opensearchQuery,
     size: pageSize,
     from: currentPage * pageSize,
@@ -244,6 +248,7 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   ) => {
     const manuscriptResponse = await updateManuscript(id, manuscript);
     result.refresh(manuscriptResponse);
+    refreshOS();
     setFormType({ type: 'assigned-users', accent: 'successLarge' });
     return manuscriptResponse;
   };

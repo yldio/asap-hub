@@ -304,6 +304,9 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const generativeContentDataProvider = new GenerativeContentDataProvider();
 
+  const opensearchProvider =
+    libs.opensearchProvider || new OpenSearchProvider();
+
   // Controllers
   const analyticsController =
     libs.analyticsController || new AnalyticsController(analyticsDataProvider);
@@ -368,6 +371,7 @@ export const appFactory = (libs: Libs = {}): Express => {
       manuscriptDataProvider,
       externalAuthorDataProvider,
       assetDataProvider,
+      opensearchProvider,
     );
   const workingGroupsController =
     libs.workingGroupController ||
@@ -375,8 +379,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const filesController =
     libs.filesController || new FilesController(new FileProvider());
   const opensearchController =
-    libs.opensearchController ||
-    new OpenSearchController(new OpenSearchProvider());
+    libs.opensearchController || new OpenSearchController(opensearchProvider);
 
   // Handlers
   const authHandler =
@@ -575,4 +578,5 @@ export type Libs = {
   sentryTransactionIdHandler?: RequestHandler;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
+  opensearchProvider?: OpenSearchProvider;
 };

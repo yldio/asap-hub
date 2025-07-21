@@ -13,4 +13,16 @@ export default class OpenSearchController {
       body,
     });
   }
+
+  async update(
+    index: string,
+    id: string,
+    body: OpenSearchRequest,
+  ): Promise<OpenSearchResponse> {
+    return this.opensearchProvider.update({
+      index,
+      id,
+      body,
+    });
+  }
 }

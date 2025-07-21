@@ -47,6 +47,8 @@ export const opensearchHandlerFactory =
 
     const { query } = request.payload;
     const index = request.params?.index;
+    const id = request.params?.id;
+    const method = request.method || 'post';
 
     if (!index) {
       return {
@@ -56,35 +58,78 @@ export const opensearchHandlerFactory =
         },
       };
     }
+
     try {
       const client = await getClient(region);
 
-      const response = await client.search({
-        index,
-        body: query || { query: { match_all: {} } },
-      });
+      if (method === 'post') {
+        // Handle search request
+        const response = await client.search({
+          index,
+          body: query || { query: { match_all: {} } },
+        });
 
-      if (!response.statusCode?.toString().startsWith('2')) {
+        if (!response.statusCode?.toString().startsWith('2')) {
+          return {
+            statusCode: response.statusCode || 500,
+            payload: {
+              error: 'OpenSearch error',
+              details: JSON.stringify(response.body),
+            },
+          };
+        }
+
         return {
-          statusCode: response.statusCode || 500,
+          statusCode: 200,
+          payload: { data: response.body },
+        };
+      } else if (method === 'put') {
+        // Handle update request
+        if (!id) {
+          return {
+            statusCode: 400,
+            payload: {
+              error: 'Missing document id for update operation',
+            },
+          };
+        }
+
+        const response = await client.update({
+          index,
+          id,
+          body: query || {},
+        });
+
+        if (!response.statusCode?.toString().startsWith('2')) {
+          return {
+            statusCode: response.statusCode || 500,
+            payload: {
+              error: 'OpenSearch update error',
+              details: JSON.stringify(response.body),
+            },
+          };
+        }
+
+        return {
+          statusCode: 200,
+          payload: { data: response.body },
+        };
+      } else {
+        return {
+          statusCode: 405,
           payload: {
-            error: 'OpenSearch error',
-            details: JSON.stringify(response.body),
+            error: 'Method not allowed',
+            details: `HTTP method ${method} is not supported`,
           },
         };
       }
-
-      return {
-        statusCode: 200,
-        payload: { data: response.body },
-      };
     } catch (error) {
-      logger.error('Error executing OpenSearch query', { error });
+      logger.error('Error executing OpenSearch operation', { error });
 
       return {
         statusCode: 500,
         payload: {
-          error: 'Error executing search',
+          error: 'Error executing OpenSearch operation',
           details: (error as Error).message,
         },
       };

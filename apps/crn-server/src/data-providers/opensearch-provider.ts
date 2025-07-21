@@ -112,6 +112,35 @@ export default class OpenSearchProvider {
     }
   }
 
+  /**
+   * Update a document in an index
+   */
+  async update(params: {
+    index: string;
+    id: string;
+    body: OpenSearchRequest;
+  }): Promise<OpenSearchResponse> {
+    try {
+      const updatePath = `${params.index}`;
+
+      const response = await this.invokeLambda(
+        'PUT',
+        `/opensearch/update/${updatePath}/${params.id}`,
+        params.body,
+      );
+
+      return response;
+    } catch (error) {
+      logger.error('OpenSearch update failed', {
+        error,
+        index: params.index,
+        documentId: params.id,
+        updateBody: params.body,
+      });
+      throw error;
+    }
+  }
+
   //   /**
   //    * Index a document - might need to be updated - not tested
   //    */

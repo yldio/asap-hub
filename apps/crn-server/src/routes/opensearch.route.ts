@@ -47,5 +47,46 @@ export const opensearchRouteFactory = (
     },
   );
 
+  opensearchRoutes.put<{ index: string; id: string }>(
+    '/opensearch/update/:index/:id',
+    async (
+      req,
+      res: Response<OpenSearchResponse | { error: string; message: string }>,
+    ) => {
+      const {
+        body,
+        params: { index, id },
+        loggedInUser,
+      } = req;
+
+      try {
+        const result = await opensearchController.update(index, id, body);
+
+        logger.info({
+          message: 'Successfully called OpenSearch update',
+          index,
+          id,
+          body,
+          result,
+        });
+
+        res.json(result as OpenSearchResponse);
+      } catch (error) {
+        logger.error({
+          message: 'Error calling OpenSearch update',
+          user: loggedInUser?.id,
+          index,
+          id,
+          error: error instanceof Error ? error.message : error,
+        });
+
+        res.status(500).json({
+          message: 'Error calling OpenSearch update',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+    },
+  );
+
   return opensearchRoutes;
 };

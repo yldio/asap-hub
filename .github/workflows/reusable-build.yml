@@ -311,6 +311,8 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Package sls for crn
         uses: ./.github/actions/sls-package
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
         with:
           active-campaign-account: ${{ steps.setup.outputs.active-campaign-account }}
           active-campaign-token: ${{ secrets.ACTIVE_CAMPAIGN_TOKEN}}
@@ -358,6 +360,8 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Package sls for gp2
         uses: ./.github/actions/sls-package
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
         with:
           active-campaign-account: ${{ steps.setup.outputs.active-campaign-account }}
           active-campaign-token: ${{ secrets.ACTIVE_CAMPAIGN_TOKEN}}

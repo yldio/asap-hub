@@ -389,6 +389,7 @@ const serverlessConfig: AWS = {
       platform: 'node',
       target: 'node20',
       bundle: true,
+      exclude: ['@opensearch-project/opensearch'],
     },
     'serverless-offline-ssm': {
       stages: ['local'],

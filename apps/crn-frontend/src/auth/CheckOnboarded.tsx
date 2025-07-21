@@ -27,24 +27,22 @@ export const navigationPromptHandler = (
     window.alert('This link will be available when your profile is complete');
     return false;
   }
-  return undefined;
+  return undefined; // Allows navigation
 };
 
 const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
   const user = useCurrentUserCRN();
   const history = useHistory();
 
-  useEffect(
-    () =>
-      history.block(({ pathname }: { pathname: string }) => {
-        const result = navigationPromptHandler(user, pathname);
-        if (result === undefined) {
-          return false;
-        }
-        return result;
-      }),
-    [user, history],
-  );
+  useEffect(() => {
+    const unblock = history.block(({ pathname }: { pathname: string }) =>
+      navigationPromptHandler(user, pathname),
+    );
+
+    return () => {
+      unblock(); // Cleanup on unmount
+    };
+  }, [user, history]);
 
   if (!user) {
     throw new Error(

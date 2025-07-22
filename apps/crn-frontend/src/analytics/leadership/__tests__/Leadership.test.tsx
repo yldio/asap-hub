@@ -113,8 +113,8 @@ it('renders with interest group data', async () => {
   await renderPage();
   const input = screen.getAllByRole('textbox', { hidden: false })[0];
 
-  input && userEvent.click(input);
-  userEvent.click(screen.getByText(label));
+  input && (await userEvent.click(input));
+  await userEvent.click(screen.getByText(label));
 
   expect(screen.getAllByText(label).length).toBe(2);
 });
@@ -127,7 +127,9 @@ it('calls algolia client with the right index name', async () => {
       expect.not.stringContaining('team_desc'),
     );
   });
-  userEvent.click(screen.getByTitle('Active Alphabetical Ascending Sort Icon'));
+  await userEvent.click(
+    screen.getByTitle('Active Alphabetical Ascending Sort Icon'),
+  );
   await waitFor(() => {
     expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
       expect.stringContaining('team_desc'),
@@ -144,7 +146,7 @@ describe('search', () => {
     await renderPage();
     const searchBox = getSearchBox();
 
-    userEvent.type(searchBox, 'test123');
+    await userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenCalledWith(
@@ -163,8 +165,8 @@ describe('search', () => {
     await renderPage();
     const searchBox = getSearchBox();
 
-    userEvent.click(searchBox);
-    userEvent.click(screen.getByText('Alessi'));
+    await userEvent.click(searchBox);
+    await userEvent.click(screen.getByText('Alessi'));
     await waitFor(() =>
       expect(mockSearch).toHaveBeenCalledWith(
         expect.anything(),
@@ -178,7 +180,7 @@ describe('search', () => {
 describe('csv export', () => {
   it('exports analytics for working groups', async () => {
     await renderPage();
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/leadership_working-group_\d+\.csv/),
       expect.anything(),
@@ -191,9 +193,9 @@ describe('csv export', () => {
     await renderPage();
     const input = screen.getAllByRole('textbox', { hidden: false })[0];
 
-    input && userEvent.click(input);
-    userEvent.click(screen.getByText(label));
-    userEvent.click(screen.getByText(/csv/i));
+    input && (await userEvent.click(input));
+    await userEvent.click(screen.getByText(label));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/leadership_interest-group_\d+\.csv/),
       expect.anything(),

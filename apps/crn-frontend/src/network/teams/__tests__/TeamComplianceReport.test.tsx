@@ -116,17 +116,17 @@ it('can publish a form when the data is valid and navigates to team workspace', 
 
   const { getByTestId, getByRole } = await renderPage({}, history);
 
-  userEvent.type(getByRole('textbox', { name: /url/i }), url);
+  await userEvent.type(getByRole('textbox', { name: /url/i }), url);
   const editor = getByTestId('editor');
   await act(async () => {
-    userEvent.click(editor);
+    await userEvent.click(editor);
     // combining these two events to trigger validation and set the value in the editor
-    userEvent.type(editor, description); // needed to trigger validation but only types the first character
+    await userEvent.type(editor, description); // needed to trigger validation but only types the first character
     fireEvent.input(editor, { data: description.slice(1) }); // types all the characters but doesn't trigger validation
-    userEvent.tab();
+    await userEvent.tab();
   });
 
-  userEvent.click(screen.getByLabelText(/Status/i));
+  await userEvent.click(screen.getByLabelText(/Status/i));
   await act(async () => {
     await userEvent.click(screen.getByText(/Addendum Required/i));
   });
@@ -134,12 +134,12 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   const shareButton = getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
 
-  userEvent.click(shareButton);
+  await userEvent.click(shareButton);
 
   const confirmButton = getByRole('button', {
     name: /Share Compliance Report/i,
   });
-  userEvent.click(confirmButton);
+  await userEvent.click(confirmButton);
 
   await waitFor(() => {
     expect(createComplianceReport).toHaveBeenCalledWith(

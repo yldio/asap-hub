@@ -141,7 +141,9 @@ describe('Analytics page', () => {
       screen.queryByText(/Select metrics to export/i),
     ).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByRole('button', { name: /Multiple XLSX/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /Multiple XLSX/i }),
+    );
 
     expect(screen.getByText(/Select data range/i)).toBeVisible();
     expect(screen.getByText(/Select metrics to export/i)).toBeVisible();
@@ -152,12 +154,14 @@ describe('Analytics page', () => {
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /Multiple XLSX/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /Multiple XLSX/i }),
+    );
 
     expect(screen.getByText(/Select data range/i)).toBeVisible();
     expect(screen.getByText(/Select metrics to export/i)).toBeVisible();
 
-    userEvent.click(screen.getByRole('button', { name: /Cancel/i }));
+    await userEvent.click(screen.getByRole('button', { name: /Cancel/i }));
 
     expect(screen.queryByText(/Select data range/i)).not.toBeInTheDocument();
     expect(

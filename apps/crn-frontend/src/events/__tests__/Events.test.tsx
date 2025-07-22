@@ -72,7 +72,7 @@ describe('Events', () => {
   `('the events $expected page', ({ eventProperty, route, expected }) => {
     it('can search for events', async () => {
       await renderEventsPage(route);
-      userEvent.type(screen.getByRole('searchbox'), 'searchterm');
+      await userEvent.type(screen.getByRole('searchbox'), 'searchterm');
       await waitFor(() =>
         expect(mockGetEventsFromAlgolia).toHaveBeenLastCalledWith(
           expect.anything(),

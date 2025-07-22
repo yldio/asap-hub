@@ -53,7 +53,7 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
       </MemoryRouter>,
     );
 
-    userEvent.click(await findByTitle(/close/i));
+    await userEvent.click(await findByTitle(/close/i));
     expect(await findByText('Profile')).toBeVisible();
   });
 
@@ -69,7 +69,7 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
       </MemoryRouter>,
     );
 
-    userEvent.click(await findByText(/save/i));
+    await userEvent.click(await findByText(/save/i));
     expect(await findByText('Profile')).toBeVisible();
   });
 });
@@ -110,7 +110,7 @@ describe('the personal info modal', () => {
       </Auth0Provider>,
     );
 
-    userEvent.type(await findByDisplayValue('NCU'), ' 1');
+    await userEvent.type(await findByDisplayValue('NCU'), ' 1');
     expect(await findByText('ExampleInst')).toBeVisible();
     expect(mockGetInstitutions).toHaveBeenCalledWith({
       searchQuery: 'NCU 1',
@@ -141,10 +141,10 @@ describe('the personal info modal', () => {
       </Auth0Provider>,
     );
 
-    userEvent.type(await findByLabelText(/city/i), 'don');
+    await userEvent.type(await findByLabelText(/city/i), 'don');
     expect(getByDisplayValue('London')).toBeVisible();
 
-    userEvent.click(await findByText(/save/i));
+    await userEvent.click(await findByText(/save/i));
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('London')).not.toBeInTheDocument();
@@ -220,10 +220,10 @@ describe('the contact info modal', () => {
       </Auth0Provider>,
     );
 
-    userEvent.type(await findByLabelText(/e-?mail/i), 'm');
+    await userEvent.type(await findByLabelText(/e-?mail/i), 'm');
     expect(getByDisplayValue('contact@example.comm')).toBeVisible();
 
-    userEvent.click(await findByText(/save/i));
+    await userEvent.click(await findByText(/save/i));
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('Yorkshire')).not.toBeInTheDocument();
@@ -255,7 +255,7 @@ describe('the onboarded modal', () => {
       </Auth0Provider>,
     );
 
-    userEvent.click(await findByText(/publish profile/i));
+    await userEvent.click(await findByText(/publish profile/i));
     await waitFor(() => {
       expect(mockPatchUser).toHaveBeenLastCalledWith(
         id,
@@ -309,7 +309,7 @@ describe('the onboarded modal', () => {
       </Auth0Provider>,
     );
 
-    userEvent.click(await findByText(/publish profile/i));
+    await userEvent.click(await findByText(/publish profile/i));
     await waitFor(() => {
       expect(mockPatchUser).toHaveBeenLastCalledWith(
         id,

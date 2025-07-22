@@ -5,6 +5,10 @@ import { authTestUtils } from '@asap-hub/react-components';
 
 import CheckAuth from '../CheckAuth';
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
+});
+
 it('renders a loading indicator while Auth0 is initializing', async () => {
   const { getByText, queryByText } = render(
     <MemoryRouter>

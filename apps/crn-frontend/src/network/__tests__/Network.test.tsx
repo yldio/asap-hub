@@ -99,7 +99,7 @@ describe('when toggling from teams to users', () => {
     ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
     const peopleLink = screen.getByText(/people/i, { selector: 'nav a *' });
-    userEvent.click(peopleLink);
+    await userEvent.click(peopleLink);
     await waitForElementToBeRemoved(
       container.querySelectorAll('div[class*="animation"]')[0],
     );
@@ -175,18 +175,18 @@ it('allows typing in search queries', async () => {
   await renderNetworkPage(network({}).users({}).$);
   const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
-  userEvent.type(searchBox, 'test123');
+  await userEvent.type(searchBox, 'test123');
   expect(searchBox.value).toEqual('test123');
 });
 
 it('allows selection of user filters', async () => {
   await renderNetworkPage(network({}).users({}).$);
 
-  userEvent.click(screen.getByText('Filters'));
+  await userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Lead PI');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockUseUsers).toHaveBeenLastCalledWith(
@@ -200,11 +200,11 @@ it('allows selection of user filters', async () => {
 it('allows selection of group filters', async () => {
   await renderNetworkPage(network({}).interestGroups({}).$);
 
-  userEvent.click(screen.getByText('Filters'));
+  await userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Active');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockGetGroups).toHaveBeenLastCalledWith(
@@ -219,11 +219,11 @@ it('allows selection of group filters', async () => {
 it('allows selection of working group filters', async () => {
   await renderNetworkPage(network({}).workingGroups({}).$);
 
-  userEvent.click(screen.getByText('Filters'));
+  await userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Complete');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockGetWorkingGroups).toHaveBeenLastCalledWith(
@@ -238,11 +238,11 @@ it('allows selection of working group filters', async () => {
 it('allows selection of teams filters', async () => {
   await renderNetworkPage(network({}).teams({}).$);
 
-  userEvent.click(screen.getByText('Filters'));
+  await userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Active');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockGetGroups).toHaveBeenLastCalledWith(
@@ -260,7 +260,7 @@ it('reads filters from url', async () => {
     '?filter=Lead+PI+(Core Leadership)',
   );
 
-  userEvent.click(screen.getByText('Filters'));
+  await userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Lead PI');
   expect(checkbox).toBeChecked();
   await waitFor(() =>

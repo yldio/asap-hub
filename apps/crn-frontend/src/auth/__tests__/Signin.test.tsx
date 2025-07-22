@@ -1,4 +1,4 @@
-import { render, RenderResult, waitFor } from '@testing-library/react';
+import { render, RenderResult, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { JWK, JWT } from 'jose';
@@ -35,12 +35,22 @@ const renderSignin = async (): Promise<RenderResult> => {
       </authTestUtils.UserAuth0Provider>
     </StaticRouter>,
   );
-  await waitFor(() => !!result.container.textContent);
+
+  await waitFor(() => {
+    expect(result.container.textContent).toBeTruthy();
+  });
+
+  await waitFor(() => {
+    const loadingText = result.queryByText(/loading/i);
+    expect(loadingText).not.toBeInTheDocument();
+  });
+
   return result;
 };
 
 const { mockGetLocation, mockAssign } = mockLocation();
 beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
   mockGetLocation.mockReturnValue(new URL('http://localhost/page?search#hash'));
 });
 
@@ -70,6 +80,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   nock.cleanAll();
+  jest.restoreAllMocks();
 });
 
 it('renders a button to signin', async () => {
@@ -82,9 +93,23 @@ it('renders a button to signin', async () => {
 });
 
 describe('when clicking the button', () => {
+  let user: ReturnType<typeof userEvent.setup>;
+
   beforeEach(async () => {
+    // Setup userEvent for React 18 compatibility
+    user = userEvent.setup();
+
     const { getByText } = await renderSignin();
-    userEvent.click(getByText(/sign\sin/i));
+
+    // Wait a bit more to ensure Auth0 is fully ready
+    await waitFor(() => {
+      expect(getByText(/sign\sin/i)).toBeEnabled();
+    });
+
+    // Use async click for React 18 compatibility
+    await act(async () => {
+      await user.click(getByText(/sign\sin/i));
+    });
   });
 
   it('redirects to the Auth0 signin page', async () => {
@@ -126,6 +151,11 @@ describe('when clicking the button', () => {
 describe('after a failed flow', () => {
   let history: History;
   let result!: RenderResult;
+  let user: ReturnType<typeof userEvent.setup>;
+
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
 
   describe('for an unknown error', () => {
     beforeEach(() => {
@@ -146,8 +176,10 @@ describe('after a failed flow', () => {
     });
 
     describe('when closing the error message', () => {
-      beforeEach(() => {
-        userEvent.click(result.getByText('Close'));
+      beforeEach(async () => {
+        await act(async () => {
+          await user.click(result.getByText('Close'));
+        });
       });
 
       it('hides the error message', () => {

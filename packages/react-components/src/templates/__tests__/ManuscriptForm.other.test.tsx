@@ -15,7 +15,7 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import type {
@@ -1326,7 +1326,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
   });
 
   userEvent.type(lifecycleTextbox, 'Draft Manuscript (prior to Publication)');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  userEvent.type(lifecycleTextbox, '{enter}');
   lifecycleTextbox.blur();
 
   const testManuscriptFile = new File(['file content'], 'manuscript.pdf', {

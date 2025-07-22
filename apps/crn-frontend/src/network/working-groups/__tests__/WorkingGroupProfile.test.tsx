@@ -158,9 +158,9 @@ describe('the share outputs page', () => {
       history,
     );
     expect(screen.queryByText('About')).toBeInTheDocument();
-    userEvent.click(await screen.findByText(/share an output/i));
+    await userEvent.click(await screen.findByText(/share an output/i));
     expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
-    userEvent.click(screen.getByText(/article/i, { selector: 'span' }));
+    await userEvent.click(screen.getByText(/article/i, { selector: 'span' }));
     expect(history.location.pathname).toEqual(
       '/network/working-groups/working-group-id-0/create-output/article',
     );
@@ -341,9 +341,9 @@ describe('Duplicate Output', () => {
       history,
     );
     expect(screen.getByLabelText(/Title/i)).toHaveValue('Copy of Example');
-    userEvent.type(screen.getByLabelText(/URL/i), 'http://example.com');
-    userEvent.click(screen.getByText(/save draft/i));
-    userEvent.click(screen.getByText(/keep and/i));
+    await userEvent.type(screen.getByLabelText(/URL/i), 'http://example.com');
+    await userEvent.click(screen.getByText(/save draft/i));
+    await userEvent.click(screen.getByText(/keep and/i));
     expect(mockCreateResearchOutput).toHaveBeenCalledWith(
       expect.objectContaining({
         title: 'Copy of Example',
@@ -398,7 +398,7 @@ describe('Duplicate Output', () => {
 describe('the outputs tab', () => {
   it('can be switched to', async () => {
     await renderWorkingGroupProfile();
-    userEvent.click(
+    await userEvent.click(
       await screen.findByText(/outputs/i, { selector: 'nav a *' }),
     );
     expect(
@@ -412,7 +412,7 @@ describe('the outputs tab', () => {
 describe('the calendar tab', () => {
   it('can be switched to', async () => {
     await renderWorkingGroupProfile();
-    userEvent.click(
+    await userEvent.click(
       await screen.findByText(/calendar/i, { selector: 'nav a *' }),
     );
     expect(
@@ -434,7 +434,7 @@ describe('the calendar tab', () => {
 describe('the upcoming events tab', () => {
   it('can be switched to', async () => {
     await renderWorkingGroupProfile();
-    userEvent.click(
+    await userEvent.click(
       await screen.findByText(/upcoming/i, { selector: 'nav a *' }),
     );
     expect(await screen.findByText(/results/i)).toBeVisible();
@@ -458,7 +458,9 @@ describe('the upcoming events tab', () => {
 describe('the past events tab', () => {
   it('can be switched to', async () => {
     await renderWorkingGroupProfile();
-    userEvent.click(await screen.findByText(/past/i, { selector: 'nav a *' }));
+    await userEvent.click(
+      await screen.findByText(/past/i, { selector: 'nav a *' }),
+    );
     expect(await screen.findByText(/results/i)).toBeVisible();
   });
 });
@@ -498,7 +500,7 @@ describe('The draft output tab', () => {
         },
       ],
     });
-    userEvent.click(screen.getByText('Draft Outputs (10)'));
+    await userEvent.click(screen.getByText('Draft Outputs (10)'));
     await waitFor(() => expect(mockGetDraftResearchOutputs).toHaveBeenCalled());
     expect(screen.getByText('Draft Output0')).toBeVisible();
   });

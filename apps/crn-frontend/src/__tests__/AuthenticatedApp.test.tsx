@@ -140,7 +140,7 @@ it('renders the application layout correctly', async () => {
   const menu = getByText('Menu');
   expect(menu).toBeInTheDocument();
 
-  userEvent.click(menu);
+  await userEvent.click(menu);
 
   await waitFor(() => {
     expect(getByText('Team One')).toBeInTheDocument();

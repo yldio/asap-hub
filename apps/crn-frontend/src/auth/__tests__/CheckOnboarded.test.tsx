@@ -1,7 +1,7 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network, sharedResearch, staticPages } from '@asap-hub/routing';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { createBrowserHistory, History } from 'history';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Router } from 'react-router-dom';
@@ -86,14 +86,19 @@ describe('an authenticated and onboarded user', () => {
         </Auth0Provider>
       </RecoilRoot>,
     );
-
-    history.push(ownProfilePath);
+    await act(async () => {
+      history.push(ownProfilePath);
+    });
     expect(await findByText('profile page')).toBeVisible();
 
-    history.push(teamPage);
+    await act(async () => {
+      history.push(teamPage);
+    });
     expect(await findByText('team page')).toBeVisible();
 
-    history.push(outputs);
+    await act(async () => {
+      history.push(outputs);
+    });
     expect(await findByText('outputs page')).toBeVisible();
   });
 });

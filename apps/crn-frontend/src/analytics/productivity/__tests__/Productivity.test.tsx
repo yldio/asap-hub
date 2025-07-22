@@ -213,8 +213,8 @@ describe('user productivity', () => {
     const rangeButton = screen.getByRole('button', {
       name: /Since Hub Launch \(2020\) Chevron Down/i,
     });
-    userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Last 90 days/));
+    await userEvent.click(rangeButton);
+    await userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>
       expect(screen.getAllByText('User Productivity')).toHaveLength(2),
     );
@@ -222,8 +222,8 @@ describe('user productivity', () => {
     expect(screen.getByText('600')).toBeVisible();
     expect(screen.queryByText('200')).not.toBeInTheDocument();
 
-    userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/));
+    await userEvent.click(rangeButton);
+    await userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/));
     await waitFor(() =>
       expect(screen.getAllByText('User Productivity')).toHaveLength(2),
     );
@@ -261,8 +261,8 @@ describe('user productivity', () => {
     const categoryButton = screen.getByRole('button', {
       name: /all chevron down/i,
     });
-    userEvent.click(categoryButton);
-    userEvent.click(screen.getByText(/Article/));
+    await userEvent.click(categoryButton);
+    await userEvent.click(screen.getByText(/Article/));
     await waitFor(() =>
       expect(screen.getAllByText('User Productivity')).toHaveLength(2),
     );
@@ -270,8 +270,8 @@ describe('user productivity', () => {
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('200')).not.toBeInTheDocument();
 
-    userEvent.click(categoryButton);
-    userEvent.click(screen.getByText(/All/));
+    await userEvent.click(categoryButton);
+    await userEvent.click(screen.getByText(/All/));
     await waitFor(() =>
       expect(screen.getAllByText('User Productivity')).toHaveLength(2),
     );
@@ -290,7 +290,9 @@ describe('user productivity', () => {
         expect.not.stringContaining('user_desc'),
       );
     });
-    userEvent.click(getByTitle('User Active Alphabetical Ascending Sort Icon'));
+    await userEvent.click(
+      getByTitle('User Active Alphabetical Ascending Sort Icon'),
+    );
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
         expect.stringContaining('user_desc'),
@@ -307,8 +309,8 @@ describe('team productivity', () => {
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
     const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
-    userEvent.click(input);
-    userEvent.click(screen.getByText(label));
+    await userEvent.click(input);
+    await userEvent.click(screen.getByText(label));
 
     expect(screen.getAllByText(label).length).toBe(2);
   });
@@ -346,8 +348,8 @@ describe('team productivity', () => {
     const rangeButton = screen.getByRole('button', {
       name: /Since Hub Launch \(2020\) Chevron Down/i,
     });
-    userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Last 90 days/));
+    await userEvent.click(rangeButton);
+    await userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );
@@ -355,8 +357,8 @@ describe('team productivity', () => {
     expect(screen.getByText('60')).toBeVisible();
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
-    userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/i));
+    await userEvent.click(rangeButton);
+    await userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/i));
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );
@@ -397,8 +399,8 @@ describe('team productivity', () => {
     const outputTypeButton = screen.getByRole('button', {
       name: /ASAP Output chevron down/i,
     });
-    userEvent.click(outputTypeButton);
-    userEvent.click(screen.getByText(/ASAP Public Output/i));
+    await userEvent.click(outputTypeButton);
+    await userEvent.click(screen.getByText(/ASAP Public Output/i));
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );
@@ -406,8 +408,8 @@ describe('team productivity', () => {
     expect(screen.getByText('60')).toBeVisible();
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
-    userEvent.click(outputTypeButton);
-    userEvent.click(screen.getByText(/ASAP Output/));
+    await userEvent.click(outputTypeButton);
+    await userEvent.click(screen.getByText(/ASAP Output/));
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );
@@ -426,7 +428,9 @@ describe('team productivity', () => {
         expect.not.stringContaining('team_desc'),
       );
     });
-    userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+    await userEvent.click(
+      getByTitle('Active Alphabetical Ascending Sort Icon'),
+    );
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
         expect.stringContaining('team_desc'),
@@ -446,7 +450,7 @@ describe('search', () => {
     );
     const searchBox = getSearchBox();
 
-    userEvent.type(searchBox, 'test123');
+    await userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenCalledWith(
@@ -463,7 +467,7 @@ describe('csv export', () => {
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/productivity_user_\d+\.csv/),
       expect.anything(),
@@ -476,8 +480,8 @@ describe('csv export', () => {
     );
     const input = screen.getAllByRole('textbox', { hidden: false })[0];
 
-    input && userEvent.click(input);
-    userEvent.click(screen.getByText(/csv/i));
+    input && (await userEvent.click(input));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/productivity_team_\d+\.csv/),
       expect.anything(),

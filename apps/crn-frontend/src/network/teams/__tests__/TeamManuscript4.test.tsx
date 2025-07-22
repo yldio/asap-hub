@@ -11,7 +11,7 @@ import {
   within,
   act,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
@@ -151,7 +151,7 @@ it('shows default error toast when submitting with any other error', async () =>
 
   await renderPage();
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /title of manuscript/i }),
     title,
   );
@@ -160,7 +160,7 @@ it('shows default error toast when submitting with any other error', async () =>
   });
   await act(async () => {
     await userEvent.type(typeTextbox, 'Original');
-    await userEvent.type(typeTextbox, specialChars.enter);
+    await userEvent.type(typeTextbox, '{enter}');
     typeTextbox.blur();
   });
 
@@ -170,7 +170,7 @@ it('shows default error toast when submitting with any other error', async () =>
 
   await act(async () => {
     await userEvent.type(lifecycleTextbox, 'Typeset proof');
-    await userEvent.type(lifecycleTextbox, specialChars.enter);
+    await userEvent.type(lifecycleTextbox, '{enter}');
     lifecycleTextbox.blur();
   });
 
@@ -198,7 +198,7 @@ it('shows default error toast when submitting with any other error', async () =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
 
-  userEvent.click(screen.getByText(/Non CRN/i));
+  await userEvent.click(screen.getByText(/Non CRN/i));
 
   expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
   await userEvent.type(
@@ -206,8 +206,8 @@ it('shows default error toast when submitting with any other error', async () =>
     'jane@doe.com',
   );
 
-  userEvent.upload(manuscriptFileInput, testFile);
-  userEvent.upload(keyResourceTableInput, testFile);
+  await userEvent.upload(manuscriptFileInput, testFile);
+  await userEvent.upload(keyResourceTableInput, testFile);
 
   const impactInput = screen.getByRole('textbox', {
     name: /Impact/i,
@@ -223,17 +223,14 @@ it('shows default error toast when submitting with any other error', async () =>
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 
-  within(quickChecks)
-    .getAllByText('Yes')
-    .forEach((button) => {
-      userEvent.click(button);
-    });
+  const buttons = within(quickChecks).getAllByText('Yes');
+  await Promise.all(buttons.map((button) => userEvent.click(button)));
 
   await waitFor(() => {
     const submitButton = screen.getByRole('button', { name: /Submit/ });
     expect(submitButton).toBeEnabled();
   });
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+  await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
 
   await waitFor(() => {
     const confirmButton = screen.getByRole('button', {

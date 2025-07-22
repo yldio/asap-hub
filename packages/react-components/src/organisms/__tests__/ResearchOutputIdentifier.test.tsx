@@ -1,6 +1,6 @@
 import { ResearchOutputIdentifierType } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { ResearchOutputIdentifier } from '../ResearchOutputIdentifier';
 
@@ -51,7 +51,7 @@ it('should reset the identifier to a valid value on entering something unknown',
   );
   const textbox = screen.getByRole('textbox', { name: /identifier/i });
   userEvent.type(textbox, 'UNKNOWN');
-  userEvent.type(textbox, specialChars.enter);
+  userEvent.type(textbox, '{enter}');
   textbox.blur();
 
   expect(screen.getByText('Choose an identifier')).toBeVisible();
@@ -68,7 +68,7 @@ it('should set the identifier to the selected value', () => {
   );
   const textbox = screen.getByRole('textbox', { name: /identifier/i });
   userEvent.type(textbox, 'DOI');
-  userEvent.type(textbox, specialChars.enter);
+  userEvent.type(textbox, '{enter}');
   textbox.blur();
 
   expect(setIdentifierType).toHaveBeenCalledWith(

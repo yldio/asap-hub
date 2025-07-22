@@ -131,8 +131,8 @@ it('can perform a search', async () => {
 it('can perform a filter search', async () => {
   mockGetNews.mockResolvedValue(createListNewsResponse(pageSize));
   const { getByTitle, getByText } = await renderPage();
-  userEvent.click(getByTitle('Filter'));
-  userEvent.click(getByText(/Biweekly/i));
+  await userEvent.click(getByTitle('Filter'));
+  await userEvent.click(getByText(/Biweekly/i));
 
   await waitFor(() =>
     expect(mockGetNews).toHaveBeenLastCalledWith(

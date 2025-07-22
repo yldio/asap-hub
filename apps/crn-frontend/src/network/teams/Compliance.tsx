@@ -218,6 +218,13 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
     query: opensearchQuery,
     size: pageSize,
     from: currentPage * pageSize,
+    sort: [
+      {
+        'title.keyword': {
+          order: 'desc',
+        },
+      },
+    ],
   });
 
   // eslint-disable-next-line no-console

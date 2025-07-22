@@ -219,7 +219,16 @@ export default class OpenSearchProvider {
       throw new Error('Lambda returned an empty response');
     }
 
-    const payloadText = response.Payload.toString().trim();
+    // Fix: Properly handle the Lambda response payload
+    let payloadText: string;
+
+    if (response.Payload instanceof Uint8Array) {
+      // Handle Uint8Array response
+      payloadText = new TextDecoder().decode(response.Payload);
+    } else {
+      // Handle string response
+      payloadText = response.Payload.toString().trim();
+    }
 
     try {
       const payload = JSON.parse(payloadText);
@@ -321,7 +330,6 @@ export default class OpenSearchProvider {
       const updateBody = {
         doc,
         doc_as_upsert: params.body.doc_as_upsert,
-        refresh: 'wait_for',
         ...(params.retry_on_conflict && {
           retry_on_conflict: params.retry_on_conflict,
         }),

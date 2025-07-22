@@ -17,6 +17,7 @@ export interface ComplianceSearchOptions {
   query: any; // Pre-built OpenSearch query
   size: number;
   from: number;
+  sort: Array<Record<string, { order: 'desc' | 'asc' }>>;
 }
 
 // Atom to trigger refresh of compliance data
@@ -67,14 +68,19 @@ export const useComplianceSearch = (
   const setRefresh = useSetRecoilState(refreshComplianceState);
   const authorization = useRecoilValue(authorizationState);
   const refresh = async (manuscriptId: string) => {
-    await updateCompliance(
-      'compliance-data',
-      manuscriptId,
-      {
-        doc_as_upsert: false,
-      },
-      authorization,
-    );
+    try {
+      await updateCompliance(
+        'compliance-data',
+        manuscriptId,
+        {
+          doc_as_upsert: false,
+        },
+        authorization,
+      );
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('error updating compliance', error);
+    }
     setRefresh((prev) => prev + 1);
   };
 

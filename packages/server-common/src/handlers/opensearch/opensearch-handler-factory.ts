@@ -109,22 +109,32 @@ export const opensearchHandlerFactory =
           };
         }
 
-        // Fix 2: Extract the update body correctly - use the entire payload
-        const updateBody = payload;
+        // Extract the update body and separate query parameters
+        const { refresh, retry_on_conflict, ...updateBody } = payload;
 
         logger.info(
           `Performing update with body: ${JSON.stringify(updateBody)}`,
         );
         logger.info(`Update target: index=${index}, id=${id}`);
 
-        // Fix 3: Add proper error handling and timeout
-        const response = await client.update({
+        // Build the update parameters
+        const updateParams: any = {
           index,
           id,
           body: updateBody,
           timeout: '30s',
-          retry_on_conflict: 3,
-        });
+        };
+
+        // Add query parameters if they exist
+        if (refresh) {
+          updateParams.refresh = refresh;
+        }
+
+        if (retry_on_conflict) {
+          updateParams.retry_on_conflict = retry_on_conflict;
+        }
+
+        const response = await client.update(updateParams);
 
         logger.info(
           `OpenSearch update response: ${JSON.stringify({

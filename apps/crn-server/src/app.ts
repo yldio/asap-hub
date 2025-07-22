@@ -371,7 +371,6 @@ export const appFactory = (libs: Libs = {}): Express => {
       manuscriptDataProvider,
       externalAuthorDataProvider,
       assetDataProvider,
-      opensearchProvider,
     );
   const workingGroupsController =
     libs.workingGroupController ||

@@ -19,15 +19,12 @@ import {
   ManuscriptDataProvider,
 } from '../data-providers/types';
 import { ExternalAuthorDataProvider } from '../data-providers/types/external-authors.data-provider.types';
-import OpenSearchProvider from '../data-providers/opensearch-provider';
-import logger from '../utils/logger';
 
 export default class ManuscriptController {
   constructor(
     private manuscriptDataProvider: ManuscriptDataProvider,
     private externalAuthorDataProvider: ExternalAuthorDataProvider,
     private assetDataProvider: AssetDataProvider,
-    private openSearchProvider?: OpenSearchProvider,
   ) {}
 
   async fetchById(
@@ -227,19 +224,6 @@ export default class ManuscriptController {
     };
   };
 
-  private updateOpensearchIndex = async (
-    updatedManuscript: ManuscriptResponse,
-  ) => {
-    await this.openSearchProvider?.update({
-      index: 'compliance-data',
-      id: updatedManuscript.id,
-      body: {
-        doc: updatedManuscript,
-        doc_as_upsert: true,
-      },
-    });
-  };
-
   async update(
     id: string,
     manuscriptData: ManuscriptPutRequest,
@@ -264,14 +248,6 @@ export default class ManuscriptController {
     ) {
       await this.manuscriptDataProvider.update(id, manuscriptData, userId);
       const updatedManuscript = await this.fetchById(id, userId);
-      try {
-        await this.updateOpensearchIndex(updatedManuscript);
-      } catch (error) {
-        logger.error('Error updating opensearch index', {
-          error,
-          manuscriptId: id,
-        });
-      }
       return updatedManuscript;
     }
 
@@ -314,14 +290,6 @@ export default class ManuscriptController {
       );
     }
     const updatedManuscript = await this.fetchById(id, userId);
-    try {
-      await this.updateOpensearchIndex(updatedManuscript);
-    } catch (error) {
-      logger.error('Error updating opensearch index', {
-        error,
-        manuscriptId: id,
-      });
-    }
     return updatedManuscript;
   }
 }

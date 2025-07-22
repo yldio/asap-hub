@@ -84,3 +84,30 @@ export const searchCompliance = async (
     results,
   };
 };
+
+export const updateCompliance = async (
+  index: string,
+  id: string,
+  body: {
+    doc_as_upsert?: boolean;
+  },
+  authorization: string,
+): Promise<ComplianceSearchResponse> => {
+  const response = await fetch(
+    `${API_BASE_URL}/opensearch-api/update/${index}/${id}`,
+    {
+      method: 'PUT',
+      headers: {
+        authorization,
+        ...createSentryHeaders(),
+      },
+      body: JSON.stringify(body),
+    },
+  );
+  if (!response.ok) {
+    throw new Error(
+      `OpenSearch update request failed: ${response.status} ${response.statusText}`,
+    );
+  }
+  return response.json();
+};

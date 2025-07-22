@@ -48,7 +48,7 @@ export const opensearchRouteFactory = (
   );
 
   opensearchRoutes.put<{ index: string; id: string }>(
-    '/opensearch/update/:index/:id',
+    '/opensearch-api/update/:index/:id',
     async (
       req,
       res: Response<OpenSearchResponse | { error: string; message: string }>,
@@ -60,7 +60,10 @@ export const opensearchRouteFactory = (
       } = req;
 
       try {
-        const result = await opensearchController.update(index, id, body);
+        const result = await opensearchController.update(index, id, {
+          userId: loggedInUser?.id ?? '',
+          doc_as_upsert: body.doc_as_upsert ?? false,
+        });
 
         logger.info({
           message: 'Successfully called OpenSearch update',

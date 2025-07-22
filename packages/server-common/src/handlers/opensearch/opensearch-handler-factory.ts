@@ -130,7 +130,6 @@ export const opensearchHandlerFactory =
           `OpenSearch update response: ${JSON.stringify({
             statusCode: response.statusCode,
             result: response.body?.result,
-            version: response.body?._version,
           })}`,
         );
 

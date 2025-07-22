@@ -9,6 +9,7 @@ import {
   searchCompliance,
   ComplianceSearchRequest,
   ComplianceSearchResponse,
+  updateCompliance,
 } from './api';
 
 export interface ComplianceSearchOptions {
@@ -59,13 +60,21 @@ export const complianceSearchState = selectorFamily<
 export const useComplianceSearch = (
   options: ComplianceSearchOptions,
 ): ComplianceSearchResponse & {
-  refresh: () => void;
+  refresh: (manuscriptId: string) => Promise<void>;
   isLoading: boolean;
 } => {
   const complianceData = useRecoilValue(complianceSearchState(options));
   const setRefresh = useSetRecoilState(refreshComplianceState);
-
-  const refresh = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const refresh = async (manuscriptId: string) => {
+    await updateCompliance(
+      'compliance-data',
+      manuscriptId,
+      {
+        doc_as_upsert: false,
+      },
+      authorization,
+    );
     setRefresh((prev) => prev + 1);
   };
 

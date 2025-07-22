@@ -1,7 +1,4 @@
-import {
-  ManuscriptDataObject,
-  PartialManuscriptResponse,
-} from '@asap-hub/model';
+import { ManuscriptVersion } from '@asap-hub/model';
 import { OpenSearchRequest, OpenSearchResponse } from '@asap-hub/server-common';
 import {
   LambdaClient,
@@ -10,6 +7,11 @@ import {
 } from '@aws-sdk/client-lambda';
 import { region, environment } from '../config';
 import logger from '../utils/logger';
+import ManuscriptController from '../controllers/manuscript.controller';
+import { getExternalAuthorDataProvider } from '../dependencies/external-authors.dependencies';
+import { getAssetDataProvider } from '../dependencies/users.dependencies';
+import { getManuscriptsDataProvider } from '../dependencies/manuscripts.dependencies';
+import { getTeamDataProvider } from '../dependencies/team.dependencies';
 
 interface ManuscriptDocument {
   id: string;
@@ -48,14 +50,70 @@ export default class OpenSearchProvider {
         : environment;
   }
 
-  private transformToManuscriptDocument(
-    manuscript: PartialManuscriptResponse,
-  ): ManuscriptDocument {
-    return {
-      id: manuscript.id,
-      manuscriptId: manuscript.manuscriptId,
+  private async transformToManuscriptDocument(
+    manuscriptId: string,
+    userId: string,
+  ): Promise<Omit<ManuscriptDocument, 'id'>> {
+    const externalAuthorDataProvider = getExternalAuthorDataProvider();
+    const assetDataProvider = getAssetDataProvider();
+    const manuscriptDataProvider = getManuscriptsDataProvider();
+    const teamDataProvider = getTeamDataProvider();
+    const manuscriptController = new ManuscriptController(
+      manuscriptDataProvider,
+      externalAuthorDataProvider,
+      assetDataProvider,
+    );
+    const manuscript = await manuscriptController.fetchById(
+      manuscriptId,
+      userId,
+    );
+
+    // Extract the latest version to get team and version info
+    const latestVersion = manuscript.versions[manuscript.versions.length - 1];
+    const versionTeam = latestVersion?.teams?.[0];
+
+    // Fetch team data to get grantId and teamId code
+    let teamIdCode = '';
+    let grantId = '';
+    let teamDisplayName = '';
+
+    if (versionTeam?.id) {
+      try {
+        const teamData = await teamDataProvider.fetchById(versionTeam.id);
+        if (teamData) {
+          teamIdCode = teamData.teamId || '';
+          grantId = teamData.grantId || '';
+          teamDisplayName = teamData.displayName || versionTeam.displayName;
+        }
+      } catch (error) {
+        logger.error('Error fetching team data:', error);
+        // Fallback to version team data
+        teamDisplayName = versionTeam.displayName;
+      }
+    }
+
+    // Generate manuscriptId similar to how it's done in the data provider
+    const generatedManuscriptId = latestVersion
+      ? this.generateManuscriptVersionUID({
+          version: {
+            type: latestVersion.type,
+            count: latestVersion.count,
+            lifecycle: latestVersion.lifecycle,
+          },
+          teamIdCode,
+          grantId,
+          manuscriptCount: manuscript.count,
+        })
+      : '';
+
+    // Generate teams string from version teams
+    const teamsString =
+      latestVersion?.teams?.map((t) => t.displayName).join(', ') || '';
+    const doc = {
+      manuscriptId: generatedManuscriptId,
       title: manuscript.title,
-      teams: manuscript.teams,
+      url: manuscript.url,
+      teams: teamsString,
       assignedUsers: manuscript.assignedUsers || [],
       status: manuscript.status || '',
       apcRequested: manuscript.apcRequested,
@@ -63,9 +121,55 @@ export default class OpenSearchProvider {
       apcCoverageRequestStatus: manuscript.apcCoverageRequestStatus,
       apcAmountPaid: manuscript.apcAmountPaid,
       declinedReason: manuscript.declinedReason,
-      lastUpdated: manuscript.lastUpdated,
-      team: manuscript.team,
+      lastUpdated: latestVersion?.publishedAt || '',
+      team: {
+        id: versionTeam?.id || '',
+        displayName: teamDisplayName,
+      },
     };
+
+    return doc;
+  }
+
+  // Helper method to generate manuscript version UID (similar to the one in manuscript.data-provider.ts)
+  private generateManuscriptVersionUID({
+    version,
+    teamIdCode,
+    grantId,
+    manuscriptCount,
+  }: {
+    version: Pick<ManuscriptVersion, 'count' | 'lifecycle' | 'type'>;
+    teamIdCode: string;
+    grantId: string;
+    manuscriptCount: number;
+  }): string {
+    const manuscriptTypeCode =
+      version.type === 'Original Research' ? 'org' : 'rev';
+
+    const lifecycleCode = this.getLifecycleCode(version.lifecycle || '');
+    return `${teamIdCode}-${grantId}-${String(manuscriptCount).padStart(
+      3,
+      '0',
+    )}-${manuscriptTypeCode}-${lifecycleCode}-${version.count}`;
+  }
+
+  // Helper method to get lifecycle code (similar to the one in manuscript.data-provider.ts)
+  private getLifecycleCode(lifecycle: string): string {
+    switch (lifecycle) {
+      case 'Draft Manuscript (prior to Publication)':
+        return 'G';
+      case 'Preprint':
+        return 'P';
+      case 'Publication':
+        return 'D';
+      case 'Publication with addendum or corrigendum':
+        return 'C';
+      case 'Typeset proof':
+        return 'T';
+      case 'Other':
+      default:
+        return 'O';
+    }
   }
   /**
    * Helper to invoke the OpenSearch Lambda function
@@ -73,19 +177,42 @@ export default class OpenSearchProvider {
   private async invokeLambda(
     method: string,
     path: string,
-    query?: OpenSearchRequest,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body?: any,
+    pathParameters?: Record<string, string>,
   ): Promise<OpenSearchResponse> {
+    // Structure the event exactly like API Gateway would send it
+    const event = {
+      version: '2.0',
+      routeKey: `${method.toUpperCase()} ${path}`,
+      rawPath: path,
+      rawQueryString: '',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'application/json',
+      },
+      requestContext: {
+        http: {
+          method: method.toUpperCase(),
+          path,
+          protocol: 'HTTP/1.1',
+          sourceIp: '127.0.0.1',
+        },
+        requestId: `lambda-invoke-${Date.now()}`,
+        stage: '$default',
+      },
+      pathParameters: pathParameters || null,
+      queryStringParameters: null,
+      ...(body && {
+        body: JSON.stringify(body),
+        isBase64Encoded: false,
+      }),
+    };
+
     const lambdaParams = {
       FunctionName: `asap-hub-${this.stage}-openSearchHandler`,
       InvocationType: InvocationType.RequestResponse,
-      Payload: JSON.stringify({
-        httpMethod: method,
-        path,
-        ...(query && { body: JSON.stringify(query) }),
-        headers: {
-          'content-type': 'application/json',
-        },
-      }),
+      Payload: JSON.stringify(event),
     };
 
     const command = new InvokeCommand(lambdaParams);
@@ -100,9 +227,24 @@ export default class OpenSearchProvider {
     try {
       const payload = JSON.parse(payloadText);
 
-      if (payload.statusCode && payload.statusCode >= 400) {
+      // Check for Lambda execution errors
+      if (payload.errorType || payload.errorMessage) {
         throw new Error(
-          `OpenSearch operation failed: ${JSON.stringify(payload)}`,
+          `Lambda execution error: ${
+            payload.errorMessage || payload.errorType
+          }`,
+        );
+      }
+
+      if (payload.statusCode && payload.statusCode >= 400) {
+        const errorBody =
+          typeof payload.body === 'string'
+            ? JSON.parse(payload.body)
+            : payload.body;
+        throw new Error(
+          `OpenSearch operation failed with status ${
+            payload.statusCode
+          }: ${JSON.stringify(errorBody)}`,
         );
       }
 
@@ -115,7 +257,8 @@ export default class OpenSearchProvider {
           ? JSON.parse(payload.body)
           : payload.body;
 
-      return parsedBody;
+      // The framework wraps the response in a 'data' property for successful responses
+      return parsedBody.data || parsedBody;
     } catch (parseError) {
       logger.error('Error parsing Lambda response', {
         rawPayload: payloadText,
@@ -136,17 +279,16 @@ export default class OpenSearchProvider {
   }): Promise<OpenSearchResponse> {
     try {
       const searchQuery = {
-        ...params.body,
+        query: params.body,
         ...(params.size && { size: params.size }),
         ...(params.from && { from: params.from }),
       };
 
-      const indexPath = params.index;
-
       const response = await this.invokeLambda(
         'POST',
-        `/opensearch/search/${indexPath}`,
+        `/opensearch/search/${params.index}`,
         searchQuery,
+        { index: params.index },
       );
 
       return response;
@@ -167,59 +309,52 @@ export default class OpenSearchProvider {
     index: string;
     id: string;
     body: {
-      doc: ManuscriptDataObject;
       doc_as_upsert: boolean;
+      userId: string;
     };
+    timeout?: string;
+    retry_on_conflict?: number;
   }): Promise<OpenSearchResponse> {
     try {
-      const lambdaParams = {
-        FunctionName: `asap-hub-${this.stage}-openSearchHandler`,
-        InvocationType: InvocationType.RequestResponse,
-        Payload: JSON.stringify({
-          httpMethod: 'PUT', // Should be POST for update operations
-          path: `/opensearch/update/${params.index}/${params.id}`, // Correct OpenSearch update path
-          body: JSON.stringify({
-            doc: this.transformToManuscriptDocument(
-              params.body.doc as unknown as PartialManuscriptResponse,
-            ),
-            doc_as_upsert: params.body.doc_as_upsert,
-            refresh: 'true',
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      const doc = await this.transformToManuscriptDocument(
+        params.id,
+        params.body.userId,
+      );
+
+      const updateBody = {
+        doc,
+        doc_as_upsert: params.body.doc_as_upsert,
+        refresh: 'wait_for',
+        ...(params.retry_on_conflict && {
+          retry_on_conflict: params.retry_on_conflict,
         }),
       };
 
-      const command = new InvokeCommand(lambdaParams);
-      const response = await this.lambda.send(command);
-
-      if (!response.Payload) {
-        throw new Error('Lambda returned an empty response');
-      }
-
-      // Decode the Lambda response payload
-      const payloadString = Buffer.from(response.Payload).toString('utf-8');
-      const lambdaResponse = JSON.parse(payloadString);
-
-      // Check if Lambda execution was successful
-      if (lambdaResponse.statusCode !== 200) {
-        throw new Error(
-          `OpenSearch update failed with status ${lambdaResponse.statusCode}: ${lambdaResponse.body}`,
-        );
-      }
-
-      // Parse and return the OpenSearch response
-      const openSearchResponse: OpenSearchResponse = JSON.parse(
-        lambdaResponse.body,
+      const response = await this.invokeLambda(
+        'PUT',
+        `/opensearch/update/${params.index}/${params.id}`,
+        updateBody,
+        {
+          index: params.index,
+          id: params.id,
+        },
       );
-      return openSearchResponse;
+
+      return response;
     } catch (error) {
       logger.error('OpenSearch update failed', {
-        error,
+        error:
+          error instanceof Error
+            ? {
+                name: error.name,
+                message: error.message,
+                stack: error.stack,
+              }
+            : String(error),
         index: params.index,
         documentId: params.id,
-        updateBody: params.body,
+        timeout: params.timeout,
+        retryOnConflict: params.retry_on_conflict,
       });
       throw error;
     }

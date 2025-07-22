@@ -44,10 +44,7 @@ export default class OpenSearchProvider {
 
   constructor() {
     this.lambda = new LambdaClient({ region });
-    this.stage =
-      environment === 'development' || environment === 'local'
-        ? 'dev'
-        : environment;
+    this.stage = environment === 'production' ? 'production' : 'dev';
   }
 
   private async transformToManuscriptDocument(
@@ -199,7 +196,7 @@ export default class OpenSearchProvider {
           sourceIp: '127.0.0.1',
         },
         requestId: `lambda-invoke-${Date.now()}`,
-        stage: '$default',
+        stage: this.stage,
       },
       pathParameters: pathParameters || null,
       queryStringParameters: null,

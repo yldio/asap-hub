@@ -4,18 +4,8 @@ schema {
 
 directive @contentSourceMaps on QUERY
 
-directive @delegatedResourceLink(contentTypeId: String, field: JSON) on FIELD_DEFINITION | OBJECT
-
-directive @enumMapper(value: JSON) on ENUM_VALUE
-
-directive @featureFlag(featureName: String) on FIELD
-
-directive @fieldResolver(data: JSON, kind: String) on FIELD_DEFINITION
-
 "Indicates exactly one field must be supplied and this field must not be `null`."
 directive @oneOf on INPUT_OBJECT
-
-directive @typeIdentifier(contentTypeId: String) on OBJECT
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements)"""
 type Announcements implements Entry & _Node {
@@ -221,6 +211,81 @@ enum AssetOrder {
   url_DESC
   width_ASC
   width_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awards)"""
+type Awards implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  date(locale: String): DateTime
+  linkedFrom(allowedLocales: [String]): AwardsLinkingCollections
+  sys: Sys!
+  type(locale: String): String
+}
+
+type AwardsCollection {
+  items: [Awards]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input AwardsFilter {
+  AND: [AwardsFilter]
+  OR: [AwardsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  date: DateTime
+  date_exists: Boolean
+  date_gt: DateTime
+  date_gte: DateTime
+  date_in: [DateTime]
+  date_lt: DateTime
+  date_lte: DateTime
+  date_not: DateTime
+  date_not_in: [DateTime]
+  sys: SysFilter
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
+type AwardsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  teamMembershipCollection(limit: Int = 100, locale: String, order: [AwardsLinkingCollectionsTeamMembershipCollectionOrder], preview: Boolean, skip: Int = 0): TeamMembershipCollection
+}
+
+enum AwardsLinkingCollectionsTeamMembershipCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum AwardsOrder {
+  date_ASC
+  date_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars)"""
@@ -2034,7 +2099,7 @@ enum ExternalAuthorsOrder {
   sys_publishedVersion_DESC
 }
 
-"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools)"""
+"""Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools)"""
 type ExternalTools implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -4260,7 +4325,7 @@ enum ManuscriptsVersionsCollectionOrder {
   type_DESC
 }
 
-"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
+"""Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
 type Media implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -4369,7 +4434,7 @@ enum MessagesOrder {
   sys_publishedVersion_DESC
 }
 
-"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)"""
+"""Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)"""
 type Migration implements Entry & _Node {
   _id: ID!
   contentTypeId(locale: String): String
@@ -4418,7 +4483,7 @@ enum MigrationOrder {
   sys_publishedVersion_DESC
 }
 
-"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)"""
+"""ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)"""
 type News implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -4745,6 +4810,8 @@ type Query {
   announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): AnnouncementsCollection
   asset(id: String!, locale: String, preview: Boolean): Asset
   assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, where: AssetFilter): AssetCollection
+  awards(id: String!, locale: String, preview: Boolean): Awards
+  awardsCollection(limit: Int = 100, locale: String, order: [AwardsOrder], preview: Boolean, skip: Int = 0, where: AwardsFilter): AwardsCollection
   calendars(id: String!, locale: String, preview: Boolean): Calendars
   calendarsCollection(limit: Int = 100, locale: String, order: [CalendarsOrder], preview: Boolean, skip: Int = 0, where: CalendarsFilter): CalendarsCollection
   category(id: String!, locale: String, preview: Boolean): Category
@@ -6347,12 +6414,35 @@ type TaxonomyConcept {
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teamMembership)"""
 type TeamMembership implements Entry & _Node {
   _id: ID!
+  awardsCollection(limit: Int = 100, locale: String, order: [TeamMembershipAwardsCollectionOrder], preview: Boolean, skip: Int = 0, where: AwardsFilter): TeamMembershipAwardsCollection
   contentfulMetadata: ContentfulMetadata!
   inactiveSinceDate(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): TeamMembershipLinkingCollections
   role(locale: String): String
   sys: Sys!
   team(locale: String, preview: Boolean, where: TeamsFilter): Teams
+}
+
+type TeamMembershipAwardsCollection {
+  items: [Awards]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum TeamMembershipAwardsCollectionOrder {
+  date_ASC
+  date_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
 }
 
 type TeamMembershipCollection {
@@ -6365,6 +6455,8 @@ type TeamMembershipCollection {
 input TeamMembershipFilter {
   AND: [TeamMembershipFilter]
   OR: [TeamMembershipFilter]
+  awards: cfAwardsNestedFilter
+  awardsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   inactiveSinceDate: DateTime
   inactiveSinceDate_exists: Boolean
@@ -8626,6 +8718,29 @@ input cfAnnouncementsNestedFilter {
   sys: SysFilter
 }
 
+input cfAwardsNestedFilter {
+  AND: [cfAwardsNestedFilter]
+  OR: [cfAwardsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  date: DateTime
+  date_exists: Boolean
+  date_gt: DateTime
+  date_gte: DateTime
+  date_in: [DateTime]
+  date_lt: DateTime
+  date_lte: DateTime
+  date_not: DateTime
+  date_not_in: [DateTime]
+  sys: SysFilter
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
 input cfCalendarsNestedFilter {
   AND: [cfCalendarsNestedFilter]
   OR: [cfCalendarsNestedFilter]
@@ -9680,6 +9795,7 @@ input cfSupplementGrantNestedFilter {
 input cfTeamMembershipNestedFilter {
   AND: [cfTeamMembershipNestedFilter]
   OR: [cfTeamMembershipNestedFilter]
+  awardsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   inactiveSinceDate: DateTime
   inactiveSinceDate_exists: Boolean

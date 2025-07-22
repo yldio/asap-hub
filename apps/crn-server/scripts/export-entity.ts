@@ -11,6 +11,7 @@ import Users from '../src/controllers/user.controller';
 import WorkingGroups from '../src/controllers/working-group.controller';
 import InterestGroups from '../src/controllers/interest-group.controller';
 import Manuscripts from '../src/controllers/manuscript.controller';
+import ManuscriptVersions from '../src/controllers/manuscript-version.controller';
 import { getEventDataProvider } from '../src/dependencies/events.dependencies';
 import { getExternalAuthorDataProvider } from '../src/dependencies/external-authors.dependencies';
 import { getNewsDataProvider } from '../src/dependencies/news.dependencies';
@@ -27,6 +28,7 @@ import {
 import { getWorkingGroupDataProvider } from '../src/dependencies/working-groups.dependencies';
 import { getInterestGroupDataProvider } from '../src/dependencies/interest-groups.dependencies';
 import { getManuscriptsDataProvider } from '../src/dependencies/manuscripts.dependencies';
+import { getManuscriptVersionsDataProvider } from '../src/dependencies/manuscript-versions.dependencies';
 
 type EntityResponsesCRN = EntityResponses['crn'];
 export const PAGE_SIZE = 10;
@@ -37,35 +39,42 @@ export const exportEntity = async (
   const controller = getController(entity);
   const file = await fs.open(filename || `${entity}.json`, 'w');
   let recordCount = 0;
-  let total: number;
-  let records: ListResponse<EntityData>;
-  let page = 1;
 
   await file.write('[\n');
 
-  do {
-    records = await controller.fetch({
-      take: PAGE_SIZE,
-      skip: (page - 1) * PAGE_SIZE,
-    });
+  if (entity !== 'manuscript-version') {
+    let total: number;
+    let records: ListResponse<EntityData>;
+    let page = 1;
+    do {
+      records = await controller.fetch({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
+      });
 
-    total = records.total;
+      total = records.total;
 
-    if (page != 1) {
-      await file.write(',\n');
-    }
+      if (page != 1) {
+        await file.write(',\n');
+      }
 
-    await file.write(
-      JSON.stringify(
-        records.items.map((record) => transformRecords(record, entity)),
-        null,
-        2,
-      ).slice(1, -1),
+      await file.write(
+        JSON.stringify(
+          records.items.map((record) => transformRecords(record, entity)),
+          null,
+          2,
+        ).slice(1, -1),
+      );
+
+      page++;
+      recordCount += records.items.length;
+    } while (total > recordCount);
+  } else {
+    recordCount = await exportManuscriptVersion(
+      file,
+      controller as ManuscriptVersions,
     );
-
-    page++;
-    recordCount += records.items.length;
-  } while (total > recordCount);
+  }
 
   await file.write(']');
 
@@ -89,6 +98,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
   const newsDataProvider = getNewsDataProvider();
   const interestGroupDataProvider = getInterestGroupDataProvider();
   const manuscriptDataProvider = getManuscriptsDataProvider();
+  const manuscriptVersionDataProvider = getManuscriptVersionsDataProvider();
 
   const controllerMap = {
     user: new Users(
@@ -116,6 +126,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
       externalAuthorDataProvider,
       assetDataProvider,
     ),
+    'manuscript-version': new ManuscriptVersions(manuscriptVersionDataProvider),
   };
 
   return controllerMap[entity];
@@ -222,4 +233,43 @@ const transformRecords = (
     ...payload,
     _tags: [],
   };
+};
+
+const exportManuscriptVersion = async (
+  file: fs.FileHandle,
+  controller: ManuscriptVersions,
+) => {
+  let recordsFetched: number;
+
+  let records: ListResponse<EntityData>;
+  let page = 1;
+  let recordCount = 0;
+
+  do {
+    records = await controller.fetch({
+      take: PAGE_SIZE,
+      skip: (page - 1) * PAGE_SIZE,
+    });
+
+    recordsFetched = records.items.length;
+
+    if (page != 1) {
+      await file.write(',\n');
+    }
+
+    await file.write(
+      JSON.stringify(
+        records.items.map((record) =>
+          transformRecords(record, 'manuscript-version'),
+        ),
+        null,
+        2,
+      ).slice(1, -1),
+    );
+
+    page++;
+    recordCount += recordsFetched;
+  } while (recordsFetched);
+
+  return recordCount;
 };

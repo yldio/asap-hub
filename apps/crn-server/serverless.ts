@@ -1004,6 +1004,49 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    algoliaIndexManuscriptVersions: {
+      handler:
+        './src/handlers/manuscript-versions/algolia-index-manuscript-versions-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'ManuscriptVersionsPublished',
+                'ManuscriptVersionsUnpublished',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    algoliaIndexManuscriptVersionsManuscripts: {
+      handler:
+        './src/handlers/manuscript/algolia-index-manuscript-versions-manuscripts-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['ManuscriptsPublished', 'ManuscriptsUnpublished'],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
     updateContentfulWorkingGroupDeliverables: {
       handler:
         './src/handlers/working-group/update-deliverables-handler.handler',

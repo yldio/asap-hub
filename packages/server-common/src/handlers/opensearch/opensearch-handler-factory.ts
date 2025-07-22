@@ -110,6 +110,7 @@ export const opensearchHandlerFactory =
         }
 
         // Extract the update body and separate query parameters
+        // eslint-disable-next-line camelcase
         const { refresh, retry_on_conflict, ...updateBody } = payload;
 
         logger.info(
@@ -118,6 +119,7 @@ export const opensearchHandlerFactory =
         logger.info(`Update target: index=${index}, id=${id}`);
 
         // Build the update parameters
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const updateParams: any = {
           index,
           id,
@@ -130,7 +132,9 @@ export const opensearchHandlerFactory =
           updateParams.refresh = refresh;
         }
 
+        // eslint-disable-next-line camelcase
         if (retry_on_conflict) {
+          // eslint-disable-next-line camelcase
           updateParams.retry_on_conflict = retry_on_conflict;
         }
 

@@ -1,4 +1,3 @@
-import { ManuscriptVersion } from '@asap-hub/model';
 import { OpenSearchRequest, OpenSearchResponse } from '@asap-hub/server-common';
 import {
   LambdaClient,
@@ -12,6 +11,7 @@ import { getExternalAuthorDataProvider } from '../dependencies/external-authors.
 import { getAssetDataProvider } from '../dependencies/users.dependencies';
 import { getManuscriptsDataProvider } from '../dependencies/manuscripts.dependencies';
 import { getTeamDataProvider } from '../dependencies/team.dependencies';
+import { getManuscriptVersionUID } from './contentful/manuscript.data-provider';
 
 interface ManuscriptDocument {
   id: string;
@@ -66,7 +66,7 @@ export default class OpenSearchProvider {
     );
 
     // Extract the latest version to get team and version info
-    const latestVersion = manuscript.versions[manuscript.versions.length - 1];
+    const latestVersion = manuscript.versions[0];
     const versionTeam = latestVersion?.teams?.[0];
 
     // Fetch team data to get grantId and teamId code
@@ -89,25 +89,22 @@ export default class OpenSearchProvider {
       }
     }
 
-    // Generate manuscriptId similar to how it's done in the data provider
-    const generatedManuscriptId = latestVersion
-      ? this.generateManuscriptVersionUID({
-          version: {
-            type: latestVersion.type,
-            count: latestVersion.count,
-            lifecycle: latestVersion.lifecycle,
-          },
-          teamIdCode,
-          grantId,
-          manuscriptCount: manuscript.count,
-        })
-      : '';
-
     // Generate teams string from version teams
     const teamsString =
       latestVersion?.teams?.map((t) => t.displayName).join(', ') || '';
     const doc = {
-      manuscriptId: generatedManuscriptId,
+      manuscriptId: latestVersion
+        ? getManuscriptVersionUID({
+            version: {
+              type: latestVersion.type,
+              count: latestVersion.count,
+              lifecycle: latestVersion.lifecycle,
+            },
+            teamIdCode,
+            grantId,
+            manuscriptCount: manuscript.count,
+          })
+        : '',
       title: manuscript.title,
       url: manuscript.url,
       teams: teamsString,
@@ -128,46 +125,6 @@ export default class OpenSearchProvider {
     return doc;
   }
 
-  // Helper method to generate manuscript version UID (similar to the one in manuscript.data-provider.ts)
-  private generateManuscriptVersionUID({
-    version,
-    teamIdCode,
-    grantId,
-    manuscriptCount,
-  }: {
-    version: Pick<ManuscriptVersion, 'count' | 'lifecycle' | 'type'>;
-    teamIdCode: string;
-    grantId: string;
-    manuscriptCount: number;
-  }): string {
-    const manuscriptTypeCode =
-      version.type === 'Original Research' ? 'org' : 'rev';
-
-    const lifecycleCode = this.getLifecycleCode(version.lifecycle || '');
-    return `${teamIdCode}-${grantId}-${String(manuscriptCount).padStart(
-      3,
-      '0',
-    )}-${manuscriptTypeCode}-${lifecycleCode}-${version.count}`;
-  }
-
-  // Helper method to get lifecycle code (similar to the one in manuscript.data-provider.ts)
-  private getLifecycleCode(lifecycle: string): string {
-    switch (lifecycle) {
-      case 'Draft Manuscript (prior to Publication)':
-        return 'G';
-      case 'Preprint':
-        return 'P';
-      case 'Publication':
-        return 'D';
-      case 'Publication with addendum or corrigendum':
-        return 'C';
-      case 'Typeset proof':
-        return 'T';
-      case 'Other':
-      default:
-        return 'O';
-    }
-  }
   /**
    * Helper to invoke the OpenSearch Lambda function
    */
@@ -227,7 +184,9 @@ export default class OpenSearchProvider {
       payloadText = new TextDecoder().decode(response.Payload);
     } else {
       // Handle string response
-      payloadText = response.Payload.toString().trim();
+      payloadText = (response.Payload as Record<string, unknown>)
+        .toString()
+        .trim();
     }
 
     try {

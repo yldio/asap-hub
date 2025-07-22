@@ -236,6 +236,13 @@ const serverlessConfig: AWS = {
           },
           {
             Effect: 'Allow',
+            Action: ['lambda:InvokeFunction'],
+            Resource: {
+              'Fn::Sub': `arn:aws:lambda:\${AWS::Region}:\${AWS::AccountId}:function:asap-hub-${envAlias}-openSearchHandler`,
+            },
+          },
+          {
+            Effect: 'Allow',
             Action: 's3:GetObject',
             Resource: [
               {
@@ -1180,6 +1187,7 @@ const serverlessConfig: AWS = {
       handler: './src/handlers/opensearch/opensearch-handler.handler',
       timeout: 30,
       memorySize: 512,
+      name: `asap-hub-${envAlias}-openSearchHandler`,
       events: [
         {
           httpApi: {

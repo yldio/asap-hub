@@ -253,23 +253,24 @@ const exportManuscriptVersion = async (
 
     recordsFetched = records.items.length;
 
-    if (page != 1) {
-      await file.write(',\n');
+    if (recordsFetched > 0) {
+      if (page != 1) {
+        await file.write(',\n');
+      }
+      await file.write(
+        JSON.stringify(
+          records.items.map((record) =>
+            transformRecords(record, 'manuscript-version'),
+          ),
+          null,
+          2,
+        ).slice(1, -1),
+      );
     }
-
-    await file.write(
-      JSON.stringify(
-        records.items.map((record) =>
-          transformRecords(record, 'manuscript-version'),
-        ),
-        null,
-        2,
-      ).slice(1, -1),
-    );
 
     page++;
     recordCount += recordsFetched;
-  } while (recordsFetched);
+  } while (records.total !== 0);
 
   return recordCount;
 };

@@ -317,6 +317,8 @@ const ResearchOutputFormSharingCard: React.FC<
 
       {documentType === 'Article' && (
         <LabeledDropdown
+          required
+          getValidationMessage={() => 'Please choose an impact.'}
           title="Impact"
           subtitle="(required)"
           description="Select the option that best describes the impact of this manuscript on the PD field."

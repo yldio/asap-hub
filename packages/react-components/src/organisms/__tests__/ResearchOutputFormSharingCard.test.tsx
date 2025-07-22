@@ -296,3 +296,47 @@ it('calls onChangeImpact with the correct option when an impact is selected', as
     expect.objectContaining({ label: 'Low Impact', value: 'low' }),
   );
 });
+
+it('shows validation message when impact is not selected', async () => {
+  const getImpactSuggestions = jest.fn().mockResolvedValue([
+    { label: 'High Impact', value: 'high' },
+    { label: 'Low Impact', value: 'low' },
+  ]);
+
+  render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      documentType="Article"
+      isFormSubmitted={true}
+      impact={undefined}
+      getImpactSuggestions={getImpactSuggestions}
+    />,
+  );
+
+  await waitFor(() => {
+    expect(screen.getByText('Please choose an impact.')).toBeInTheDocument();
+  });
+});
+
+it('does not show impact validation message when impact is selected', async () => {
+  const getImpactSuggestions = jest.fn().mockResolvedValue([
+    { label: 'High Impact', value: 'high' },
+    { label: 'Low Impact', value: 'low' },
+  ]);
+
+  render(
+    <ResearchOutputFormSharingCard
+      {...defaultProps}
+      documentType="Article"
+      isFormSubmitted={true}
+      impact={{ label: 'High Impact', value: 'high' }}
+      getImpactSuggestions={getImpactSuggestions}
+    />,
+  );
+
+  await waitFor(() => {
+    expect(
+      screen.queryByText('Please choose an impact.'),
+    ).not.toBeInTheDocument();
+  });
+});

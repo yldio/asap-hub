@@ -40,6 +40,7 @@ import {
   useResearchTags,
   useTeamSuggestions,
 } from '../../shared-state';
+import { useManuscriptVersionSuggestions } from '../teams/state';
 import { useWorkingGroupById } from './state';
 
 type WorkingGroupOutputProps = {
@@ -101,6 +102,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   );
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
   const getShortDescriptionFromDescription = useGeneratedContent();
+  const getManuscriptVersionSuggestions = useManuscriptVersionSuggestions();
   const researchTags = useResearchTags();
 
   const published = researchOutputData ? !!researchOutputData.published : false;
@@ -156,6 +158,16 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             manuscriptOutputSelection={manuscriptOutputSelection}
             onChangeManuscriptOutputSelection={handleManuscriptOutputSelection}
             onSelectCreateManually={() => setShowManuscriptOutputFlow(false)}
+            getManuscriptVersionOptions={(input) =>
+              getManuscriptVersionSuggestions(input).then(
+                (versionSuggestions) =>
+                  versionSuggestions.map((version) => ({
+                    version,
+                    label: version.title,
+                    value: version.id,
+                  })),
+              )
+            }
           />
         </Frame>
       );

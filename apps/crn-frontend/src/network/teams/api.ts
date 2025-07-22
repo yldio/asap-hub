@@ -25,6 +25,8 @@ import {
   ResearchOutputResponse,
   TeamPatchRequest,
   TeamResponse,
+  ListManuscriptVersionResponse,
+  ManuscriptVersionResponse,
 } from '@asap-hub/model';
 import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
 import { getPresignedUrl } from '../../shared-api/files';
@@ -352,6 +354,53 @@ export const getManuscript = async (
     );
   }
   return resp.json();
+};
+
+export const getManuscriptVersions = async (
+  algoliaClient: AlgoliaClient<'crn'>,
+  { searchQuery, currentPage, pageSize }: GetListOptions,
+): Promise<ListManuscriptVersionResponse> => {
+  //   const result = await algoliaClient.search(
+  //   ['manuscript-version'],
+  //   searchQuery,
+  //   {
+  //     filters: undefined,
+  //     page: currentPage ?? undefined,
+  //     hitsPerPage: pageSize ?? undefined,
+  //     restrictSearchableAttributes: ['displayName'],
+  //   },
+  // );
+
+  const result = {
+    hits: [
+      {
+        id: 'manuscript-version-1',
+        title: 'A manuscript',
+        manuscriptId: 'DA-0001-455-454',
+        teamId: 'team-1',
+        lifecycle: 'Publication',
+        type: 'Original Research',
+      } as ManuscriptVersionResponse,
+      {
+        id: 'manuscript-version-2',
+        title: 'A manuscript',
+        manuscriptId: 'DA-0001-400-454',
+        teamId: 'team-1',
+        lifecycle: 'Publication',
+        type: 'Original Research',
+      } as ManuscriptVersionResponse,
+    ],
+    nbHits: 2,
+    index: '',
+    queryID: '123',
+  };
+
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };
 
 export const uploadManuscriptFile = async (

@@ -1,11 +1,16 @@
+import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
+import { ComponentProps, ReactElement, ReactNode, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { components } from 'react-select';
 import {
   Button,
   contentSidePaddingWithNavigation,
   FormCard,
   LabeledMultiSelect,
   LabeledRadioButtonGroup,
+  MultiSelectOptionsType,
+  Pill,
 } from '..';
 import { mobileScreen, rem } from '../pixels';
 
@@ -85,18 +90,55 @@ type ManuscriptOutputSelectionProps = {
     manuscriptOutputSelection: 'manually' | 'import' | '',
   ) => void;
   onSelectCreateManually: () => void;
+  getManuscriptVersionOptions: NonNullable<
+    ComponentProps<typeof LabeledMultiSelect>['loadOptions']
+  >;
 };
 
+export type ManuscriptVersionOption = {
+  version?: ManuscriptVersionResponse;
+} & MultiSelectOptionsType;
+
+const ManuscriptVersionLabel = ({
+  version,
+  children,
+}: {
+  version?: ManuscriptVersionResponse;
+  children: ReactElement | ReactNode;
+}) => (
+  <div>
+    {version && (
+      <div
+        style={{
+          display: 'flex',
+          gap: rem(10),
+          marginTop: rem(15),
+          paddingLeft: rem(40),
+        }}
+      >
+        <Pill accent="gray">{version.type}</Pill>
+        <Pill accent="gray">{version.lifecycle}</Pill>
+        <Pill accent="blue">{version.manuscriptId}</Pill>
+      </div>
+    )}
+    <span>{children}</span>
+  </div>
+);
 const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
   onChangeManuscriptOutputSelection,
   manuscriptOutputSelection,
   onSelectCreateManually,
+  getManuscriptVersionOptions,
 }) => {
   const history = useHistory();
 
   const handleCancel = () => {
     history.goBack();
   };
+
+  const [selectedVersion, setVersion] = useState<
+    ManuscriptVersionOption | undefined
+  >(undefined);
 
   const renderManuscriptImport = () => {
     if (manuscriptOutputSelection !== 'import') {
@@ -105,16 +147,48 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
 
     return (
       <div css={manuscriptImportStyles}>
-        <LabeledMultiSelect
+        <LabeledMultiSelect<ManuscriptVersionOption, false>
           noMargin
+          isMulti={false}
           title="Manuscript"
           description="Only the latest version of the manuscript is available for import. If the first preprint version hasn't been imported yet, it will be added automatically."
           subtitle="(required)"
           required
           placeholder="Start typing..."
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          loadOptions={() => {}}
-          values={[]}
+          noOptionsMessage={({ inputValue }: { inputValue: string }) =>
+            `Sorry, no manuscripts match ${inputValue}`
+          }
+          loadOptions={getManuscriptVersionOptions}
+          components={{
+            SingleValue: (singleValueLabelProps) => (
+              <components.SingleValue {...singleValueLabelProps}>
+                <div>
+                  <ManuscriptVersionLabel
+                    version={singleValueLabelProps.data.version}
+                  >
+                    {singleValueLabelProps.children}
+                  </ManuscriptVersionLabel>
+                </div>
+              </components.SingleValue>
+            ),
+            Option: (optionProps) => (
+              <components.Option {...optionProps}>
+                <div>
+                  {optionProps.data.version && (
+                    <ManuscriptVersionLabel version={optionProps.data.version}>
+                      {optionProps.children}
+                    </ManuscriptVersionLabel>
+                  )}
+                </div>
+              </components.Option>
+            ),
+          }}
+          onChange={(version: ManuscriptVersionOption | null) => {
+            if (version) {
+              setVersion(version);
+            }
+          }}
+          values={selectedVersion}
         />
       </div>
     );
@@ -135,7 +209,10 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
         <div css={confirmButtonStyles}>
           <Button
             noMargin
-            enabled={manuscriptOutputSelection !== 'import'}
+            enabled={
+              manuscriptOutputSelection !== 'import' ||
+              (manuscriptOutputSelection === 'import' && !!selectedVersion)
+            }
             onClick={
               manuscriptOutputSelection === 'manually'
                 ? onSelectCreateManually

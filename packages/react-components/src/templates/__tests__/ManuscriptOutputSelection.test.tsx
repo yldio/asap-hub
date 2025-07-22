@@ -17,6 +17,7 @@ describe('ManuscriptOutputSelection', () => {
     manuscriptOutputSelection: '' as '' | 'manually' | 'import',
     onChangeManuscriptOutputSelection: jest.fn(),
     onSelectCreateManually: jest.fn(),
+    getManuscriptVersionOptions: jest.fn(),
   };
 
   beforeEach(() => {

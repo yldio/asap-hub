@@ -1006,7 +1006,7 @@ const serverlessConfig: AWS = {
     },
     algoliaIndexManuscriptVersions: {
       handler:
-        './src/handlers/manuscript-versions/algolia-index-manuscript-versions-handler.handler',
+        './src/handlers/manuscript-version/algolia-index-manuscript-versions-handler.handler',
       events: [
         {
           eventBridge: {

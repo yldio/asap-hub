@@ -552,7 +552,7 @@ export const useManuscriptVersionSuggestions = () => {
       searchQuery,
       currentPage: null,
       pageSize: 100,
-      filters: [`teamId:${teamId}`],
+      teamId,
     }).then(({ items }) => items);
 };
 

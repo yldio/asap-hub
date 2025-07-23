@@ -355,15 +355,19 @@ export const getManuscript = async (
   return resp.json();
 };
 
+export type ManuscriptVersionOptions = Omit<GetListOptions, 'filters'> & {
+  teamId: string;
+};
+
 export const getManuscriptVersions = async (
   algoliaClient: AlgoliaClient<'crn'>,
-  { searchQuery, currentPage, pageSize, filters }: GetListOptions,
+  { searchQuery, currentPage, pageSize, teamId }: ManuscriptVersionOptions,
 ): Promise<ListManuscriptVersionResponse> => {
   const result = await algoliaClient.search(
     ['manuscript-version'],
     searchQuery,
     {
-      filters,
+      filters: `(teamId:"${teamId}")`,
       page: currentPage ?? undefined,
       hitsPerPage: pageSize ?? undefined,
       restrictSearchableAttributes: ['title', 'manuscriptId'],

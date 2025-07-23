@@ -32,6 +32,7 @@ type CardProps = {
 type MembershipCardProps = {
   entityName: string;
   showUserEmail: boolean;
+  booleanField: boolean | null;
   id: string;
   role?: string;
   workstreamRole?: string;
@@ -41,6 +42,7 @@ type MembershipCardProps = {
 const MembershipCard = ({
   entityName,
   showUserEmail,
+  booleanField,
   id,
   actions,
   inactiveSince,
@@ -83,6 +85,11 @@ const MembershipCard = ({
             {data.fields.email?.['en-US']}
           </Paragraph>
         )}
+      {booleanField !== null && (
+        <Paragraph marginBottom="none">
+          {String(booleanField) === 'true' ? 'Yes' : 'No'}
+        </Paragraph>
+      )}
       {role && <Paragraph marginBottom="none">{role}</Paragraph>}
       {workstreamRole && (
         <Paragraph marginBottom="none">{workstreamRole}</Paragraph>
@@ -117,17 +124,19 @@ const MissingMembershipCard = ({
 type ParameterInstance = {
   entityName: string;
   showUserEmail: boolean;
+  booleanFieldName: string;
 };
 
 const Card = ({ entity, onEdit, onRemove }: CustomEntryCardProps) => {
   const sdk = useSDK<FieldExtensionSDK>();
   const { fields, sys } = entity;
-  const { entityName, showUserEmail } = sdk.parameters
+  const { entityName, showUserEmail, booleanFieldName } = sdk.parameters
     .instance as ParameterInstance;
   const entityId = fields[entityName]?.['en-US'].sys.id;
   const role = fields.role?.['en-US'];
   const workstreamRole = fields.workstreamRole?.['en-US'];
   const inactiveSince = fields.inactiveSinceDate?.['en-US'];
+  const booleanField = fields[booleanFieldName]?.['en-US'];
   const removeMembership = async () => {
     if (sys.publishedVersion) {
       await sdk.space.unpublishEntry(entity);
@@ -156,6 +165,7 @@ const Card = ({ entity, onEdit, onRemove }: CustomEntryCardProps) => {
       {...defaultProps}
       entityName={entityName}
       showUserEmail={showUserEmail}
+      booleanField={booleanField ?? null}
       id={entityId}
       role={role}
       workstreamRole={workstreamRole}

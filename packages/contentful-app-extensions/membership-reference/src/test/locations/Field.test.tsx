@@ -329,6 +329,138 @@ describe('Field component', () => {
           expect(screen.getByText('Project Manager')).toBeInTheDocument();
         });
       });
+
+      it('displays boolean field if parameter booleanFieldName is set and its value is true', async () => {
+        sdk = {
+          ...mockBaseSdk(),
+          parameters: {
+            instance: {
+              entityName: 'team',
+              showUserEmail: false,
+              booleanFieldName: 'preliminaryDataShared',
+            },
+          },
+        } as unknown as jest.Mocked<FieldExtensionSDK>;
+        (useSDK as jest.Mock).mockReturnValue(sdk);
+
+        (useEntity as jest.Mock).mockImplementation((type, id) => {
+          if (id === 'team-1') {
+            return {
+              data: {
+                fields: {
+                  displayName: {
+                    'en-US': 'My Team',
+                  },
+                  preliminaryDataShared: {
+                    'en-US': true,
+                  },
+                },
+              },
+            };
+          }
+        });
+
+        const props = {
+          entity: {
+            fields: {
+              team: {
+                'en-US': {
+                  sys: {
+                    id: 'team-1',
+                  },
+                  displayName: {
+                    'en-US': 'My Team',
+                  },
+                },
+              },
+              preliminaryDataShared: {
+                'en-US': true,
+              },
+            },
+            sys: {
+              type: 'Entry',
+              publishedVersion: 1,
+              version: 1,
+            },
+          },
+          onEdit: jest.fn(),
+          onRemove: jest.fn(),
+        } as unknown as CustomEntityCardProps;
+
+        render(<CustomCard {...props} />);
+
+        await waitFor(() => {
+          expect(useEntity).toHaveBeenCalledWith('Entry', 'team-1');
+          expect(screen.getByText('My Team')).toBeInTheDocument();
+          expect(screen.getByText('Yes')).toBeInTheDocument();
+        });
+      });
+
+      it('displays boolean field if parameter booleanFieldName is set and its value is false', async () => {
+        sdk = {
+          ...mockBaseSdk(),
+          parameters: {
+            instance: {
+              entityName: 'team',
+              showUserEmail: false,
+              booleanFieldName: 'preliminaryDataShared',
+            },
+          },
+        } as unknown as jest.Mocked<FieldExtensionSDK>;
+        (useSDK as jest.Mock).mockReturnValue(sdk);
+
+        (useEntity as jest.Mock).mockImplementation((type, id) => {
+          if (id === 'team-1') {
+            return {
+              data: {
+                fields: {
+                  displayName: {
+                    'en-US': 'My Team',
+                  },
+                  preliminaryDataShared: {
+                    'en-US': false,
+                  },
+                },
+              },
+            };
+          }
+        });
+
+        const props = {
+          entity: {
+            fields: {
+              team: {
+                'en-US': {
+                  sys: {
+                    id: 'team-1',
+                  },
+                  displayName: {
+                    'en-US': 'My Team',
+                  },
+                },
+              },
+              preliminaryDataShared: {
+                'en-US': false,
+              },
+            },
+            sys: {
+              type: 'Entry',
+              publishedVersion: 1,
+              version: 1,
+            },
+          },
+          onEdit: jest.fn(),
+          onRemove: jest.fn(),
+        } as unknown as CustomEntityCardProps;
+
+        render(<CustomCard {...props} />);
+
+        await waitFor(() => {
+          expect(useEntity).toHaveBeenCalledWith('Entry', 'team-1');
+          expect(screen.getByText('My Team')).toBeInTheDocument();
+          expect(screen.getByText('No')).toBeInTheDocument();
+        });
+      });
     });
 
     describe('with entityName parameter equals user', () => {

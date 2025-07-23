@@ -10,6 +10,7 @@ import {
   DiscussionRequest,
   DiscussionResponse,
   ListLabsResponse,
+  ListManuscriptVersionResponse,
   ListPartialManuscriptResponse,
   ListTeamResponse,
   TeamPatchRequest,
@@ -94,5 +95,12 @@ export const getManuscripts = jest.fn(
         status: 'Compliant',
       },
     ],
+  }),
+);
+
+export const getManuscriptVersions = jest.fn(
+  async (): Promise<ListManuscriptVersionResponse> => ({
+    total: 1,
+    items: [],
   }),
 );

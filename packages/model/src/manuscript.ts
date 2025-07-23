@@ -909,15 +909,14 @@ export type PartialManuscriptResponse = Pick<ManuscriptVersion, 'id'> &
 export type ListPartialManuscriptResponse =
   ListResponse<PartialManuscriptResponse>;
 
-export type ManuscriptVersionResponse = Pick<
-  ManuscriptVersion,
-  'id' | 'type' | 'lifecycle'
-> & {
-  teamId: string;
+export type ManuscriptVersionResponse = {
+  id: string;
+  type?: ManuscriptType;
+  lifecycle?: ManuscriptLifecycle;
+  teamId?: string;
   title: string;
-  manuscriptId: string;
-  linkedManuscriptId: string;
-  previousManuscriptVersionId?: string;
+  manuscriptId?: string;
+  versionId?: string;
 };
 
 export type ListManuscriptVersionResponse =

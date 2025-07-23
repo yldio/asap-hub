@@ -71,9 +71,9 @@ export class ManuscriptVersionContentfulDataProvider
                 grantId: team?.grantId || '',
                 manuscriptCount: manuscript.count || 0,
               }),
-              linkedManuscriptId: manuscript.sys.id,
+              versionId: latestVersion.sys.id,
               title: manuscript.title || '',
-              id: latestVersion.sys.id,
+              id: `mv-${manuscript.sys.id}`,
               type: latestVersion.type,
               lifecycle: latestVersion.lifecycle,
               teamId: team?.sys.id,
@@ -107,9 +107,9 @@ export class ManuscriptVersionContentfulDataProvider
 
     const manuscript =
       manuscriptVersions.linkedFrom?.manuscriptsCollection?.items[0];
-    const validVersions = cleanArray(
+    const latestVersion = cleanArray(
       manuscript?.versionsCollection?.items,
-    ).filter((version) =>
+    ).find((version) =>
       [
         'Preprint',
         'Publication',
@@ -117,37 +117,31 @@ export class ManuscriptVersionContentfulDataProvider
       ].includes(version.lifecycle || ''),
     );
 
-    if (manuscript && validVersions && validVersions[0]) {
-      const team = manuscript?.teamsCollection?.items[0];
-      const latestVersion = validVersions[0];
-      const previousVersion = validVersions[1];
-      return {
-        versionFound: true,
-        latestManuscriptVersion: {
-          previousManuscriptVersionId: previousVersion
-            ? previousVersion.sys.id
-            : undefined,
-          manuscriptId: getManuscriptVersionUID({
-            version: {
-              type: latestVersion.type,
-              count: latestVersion.count,
-              lifecycle: latestVersion.lifecycle,
-            },
-            teamIdCode: team?.teamId || '',
-            grantId: team?.grantId || '',
-            manuscriptCount: manuscript?.count || 0,
-          }),
-          linkedManuscriptId: manuscript.sys.id,
-          title: manuscript?.title || '',
-          id: latestVersion.sys.id,
-          type: latestVersion.type,
-          lifecycle: latestVersion.lifecycle,
-          teamId: team?.sys.id,
-        } as ManuscriptVersionResponse,
-      };
-    }
+    const team = manuscript?.teamsCollection?.items[0];
     return {
       versionFound: true,
+      latestManuscriptVersion: manuscript
+        ? ({
+            manuscriptId: latestVersion
+              ? getManuscriptVersionUID({
+                  version: {
+                    type: latestVersion.type,
+                    count: latestVersion.count,
+                    lifecycle: latestVersion.lifecycle,
+                  },
+                  teamIdCode: team?.teamId || '',
+                  grantId: team?.grantId || '',
+                  manuscriptCount: manuscript?.count || 0,
+                })
+              : undefined,
+            versionId: latestVersion?.sys.id || undefined,
+            id: `mv-${manuscript.sys.id}`,
+            title: manuscript?.title || '',
+            type: latestVersion?.type || undefined,
+            lifecycle: latestVersion?.lifecycle || undefined,
+            teamId: team?.sys.id,
+          } as ManuscriptVersionResponse)
+        : undefined,
     };
   }
 }

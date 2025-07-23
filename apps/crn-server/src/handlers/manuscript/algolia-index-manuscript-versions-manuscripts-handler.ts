@@ -37,13 +37,15 @@ export const indexManuscriptVersionsManuscriptHandler =
 
           logger.debug(`Fetched latest version for manuscript ${manuscriptId}`);
 
+          await algoliaClient.remove(`mv-${manuscriptId}`);
+
           if (manuscriptVersion) {
             await algoliaClient.save({
               data: manuscriptVersion,
               type: 'manuscript-version',
             });
 
-            logger.debug(`Manuscript saved ${manuscriptId}`);
+            logger.debug(`Manuscript version for ${manuscriptId} saved`);
           }
         } catch (e) {
           if (
@@ -61,14 +63,7 @@ export const indexManuscriptVersionsManuscriptHandler =
         }
       },
       ManuscriptsUnpublished: async () => {
-        const relatedVersionRecords = await algoliaClient.search(
-          ['manuscript-version'],
-          'manuscriptId',
-        );
-        for (const record of relatedVersionRecords.hits) {
-          await algoliaClient.remove(record.id);
-          logger.debug(`Manuscript version removed ${record.id}`);
-        }
+        await algoliaClient.remove(`mv-${manuscriptId}`);
       },
     };
 

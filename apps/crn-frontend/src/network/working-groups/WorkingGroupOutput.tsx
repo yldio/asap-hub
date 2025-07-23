@@ -159,7 +159,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             onChangeManuscriptOutputSelection={handleManuscriptOutputSelection}
             onSelectCreateManually={() => setShowManuscriptOutputFlow(false)}
             getManuscriptVersionOptions={(input) =>
-              getManuscriptVersionSuggestions(input).then(
+              getManuscriptVersionSuggestions(input, 'RANDOM').then(
                 (versionSuggestions) =>
                   versionSuggestions.map((version) => ({
                     version,

@@ -73,7 +73,8 @@
     "complete",
     "openScienceTeamMember",
     "apcRequested",
-    "apcCoverageRequestStatus"
+    "apcCoverageRequestStatus",
+    "teamId"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

@@ -34,13 +34,15 @@ export const indexManuscriptVersionHandler =
       logger.debug(
         `Fetched details for manuscript version ${manuscriptVersionId}`,
       );
+      logger.debug(manuscriptVersion);
 
       await algoliaClient.remove(
-        manuscriptVersion?.previousManuscriptId || manuscriptVersionId,
+        manuscriptVersion?.previousManuscriptVersionId || manuscriptVersionId,
       );
 
       if (manuscriptVersion) {
-        const { previousManuscriptId: _, ...versionUpload } = manuscriptVersion;
+        const { previousManuscriptVersionId: _, ...versionUpload } =
+          manuscriptVersion;
         await algoliaClient.save({
           data: versionUpload,
           type: 'manuscript-version',

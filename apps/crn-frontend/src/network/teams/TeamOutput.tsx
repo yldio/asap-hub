@@ -165,7 +165,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             onChangeManuscriptOutputSelection={handleManuscriptOutputSelection}
             onSelectCreateManually={() => setShowManuscriptOutputFlow(false)}
             getManuscriptVersionOptions={(input) =>
-              getManuscriptVersionSuggestions(input).then(
+              getManuscriptVersionSuggestions(input, teamId).then(
                 (versionSuggestions) =>
                   versionSuggestions.map((version) => ({
                     version,

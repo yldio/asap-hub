@@ -917,7 +917,7 @@ export type ManuscriptVersionResponse = Pick<
   title: string;
   manuscriptId: string;
   linkedManuscriptId: string;
-  previousManuscriptId?: string;
+  previousManuscriptVersionId?: string;
 };
 
 export type ListManuscriptVersionResponse =
@@ -925,7 +925,6 @@ export type ListManuscriptVersionResponse =
 
 export type ManuscriptVersionDataObject = {
   versionFound: boolean;
-  previousManuscriptVersionId?: string;
   latestManuscriptVersion?: ManuscriptVersionResponse;
 };
 

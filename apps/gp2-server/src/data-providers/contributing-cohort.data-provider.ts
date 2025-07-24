@@ -25,7 +25,7 @@ export class ContributingCohortContentfulDataProvider
   ) {}
 
   async fetch(options: FetchOptions) {
-    const { take = 100, skip = 0 } = options;
+    const { take = 1000, skip = 0 } = options;
 
     const { contributingCohortsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchContributingCohortsQuery,

@@ -43,20 +43,33 @@ export const getManuscriptVersionDataObject =
   });
 
 export const getContentfulManuscriptVersion = (
-  id: string = 'version-id-1',
-  lifecycle: string = 'Preprint',
   count: number = 1,
+  lifecycle: string = 'Preprint',
 ) => ({
   sys: {
-    id,
+    id: `version-id-${count}`,
   },
   type: 'Original Research',
   lifecycle,
   count,
 });
 
+type VersionCollection = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        NonNullable<FetchVersionsByManuscriptQuery>['manuscriptsCollection']
+      >['items'][number]
+    >
+  >['versionsCollection']
+>['items'];
+
 export const getContentfulManuscript = (
   count: number = 1,
+  versionCollection: VersionCollection = [
+    getContentfulManuscriptVersion(2),
+    getContentfulManuscriptVersion(),
+  ],
 ): NonNullable<
   NonNullable<
     NonNullable<FetchVersionsByManuscriptQuery>['manuscriptsCollection']
@@ -75,10 +88,7 @@ export const getContentfulManuscript = (
     ],
   },
   versionsCollection: {
-    items: [
-      getContentfulManuscriptVersion('version-id-2', 'Preprint', 2),
-      getContentfulManuscriptVersion(),
-    ],
+    items: versionCollection,
   },
 });
 

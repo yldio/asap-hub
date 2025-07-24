@@ -6,6 +6,7 @@ import { ManuscriptVersionContentfulDataProvider } from '../../../src/data-provi
 import {
   getContentfulManuscript,
   getContentfulManuscriptsCollection,
+  getContentfulManuscriptVersion,
   getManuscriptVersionDataObject,
   getManuscriptVersionsListResponse,
 } from '../../fixtures/manuscript-versions.fixtures';
@@ -64,6 +65,52 @@ describe('Manuscript Versions Contentful Data Provider', () => {
         total: 0,
       });
     });
+
+    it.each([
+      'Draft Manuscript (prior to Publication)',
+      'Typeset proof',
+      'Other',
+    ])('should exclude versions in (%s) lifecycle', async (lifecycle) => {
+      const manuscriptVersion = getContentfulManuscriptVersion(1, lifecycle);
+      const contentfulGraphQLResponse =
+        getContentfulGraphqlManuscriptsCollection();
+
+      contentfulGraphQLResponse.total = 1;
+      contentfulGraphQLResponse.items = [
+        getContentfulManuscript(1, [manuscriptVersion]),
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items).toEqual([]);
+    });
+
+    test('Should return only the latest version for a manuscript', async () => {
+      const version1 = getContentfulManuscriptVersion(1, 'Preprint');
+      const version2 = getContentfulManuscriptVersion(2, 'Typeset proof');
+      const version3 = getContentfulManuscriptVersion(3, 'Publication');
+      const version4 = getContentfulManuscriptVersion(4, 'Other');
+
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        getContentfulManuscript(1, [version4, version3, version2, version1]),
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.total).toEqual(1);
+      expect(result.items[0]?.lifecycle).toEqual('Publication');
+    });
   });
 
   describe('Fetch-by-id', () => {
@@ -75,13 +122,45 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       expect(result).toMatchObject(getManuscriptVersionDataObject());
     });
 
-    test('returns versionFound as false if query does not return a result', async () => {
+    test('returns versionFound as false if manuscript version is not found', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscriptVersions: null,
       });
 
       const result = await manuscriptVersionDataProvider.fetchById('1');
       expect(result.versionFound).toBe(false);
+    });
+
+    test('returns latest manuscript version as undefined if version does not have a related manuscript', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscriptVersions: {
+          linkedFrom: null,
+        },
+      });
+
+      const result = await manuscriptVersionDataProvider.fetchById('1');
+      expect(result).toEqual({
+        versionFound: true,
+        latestManuscriptVersion: undefined,
+      });
+    });
+
+    test('returns version id field as undefined if there is no valid manuscript version', async () => {
+      const manuscriptVersion = getContentfulManuscriptVersion(1, 'Other');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscriptVersions: {
+          linkedFrom: {
+            manuscriptsCollection: {
+              items: [getContentfulManuscript(1, [manuscriptVersion])],
+            },
+          },
+        },
+      });
+
+      const result = await manuscriptVersionDataProvider.fetchById('1');
+      expect(result.latestManuscriptVersion).toEqual(
+        expect.objectContaining({ versionId: undefined }),
+      );
     });
 
     test('Should throw an error with a specific error message when the graphql client throws one', async () => {

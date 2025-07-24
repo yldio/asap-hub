@@ -547,7 +547,7 @@ export const useManuscripts = (
 export const useManuscriptVersionSuggestions = () => {
   const algoliaClient = useAlgolia();
 
-  return (searchQuery: string, teamId: string) =>
+  return (searchQuery: string, teamId?: string) =>
     getManuscriptVersions(algoliaClient.client, {
       searchQuery,
       currentPage: null,

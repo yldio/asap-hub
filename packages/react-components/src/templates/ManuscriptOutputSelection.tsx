@@ -10,6 +10,7 @@ import {
   LabeledMultiSelect,
   LabeledRadioButtonGroup,
   MultiSelectOptionsType,
+  paper,
   Pill,
 } from '..';
 import { mobileScreen, rem } from '../pixels';
@@ -84,6 +85,15 @@ const dismissButtonStyles = css({
   },
 });
 
+const singleValueStyles = css({
+  padding: `${rem(5)} ${rem(15)} ${rem(5)} ${rem(8)}`,
+  display: 'flex',
+  flexFlow: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: paper.rgb,
+});
+
 type ManuscriptOutputSelectionProps = {
   manuscriptOutputSelection: 'manually' | 'import' | '';
   onChangeManuscriptOutputSelection: (
@@ -106,7 +116,7 @@ const ManuscriptVersionLabel = ({
   version?: ManuscriptVersionResponse;
   children: ReactElement | ReactNode;
 }) => (
-  <div>
+  <>
     {version && (
       <div
         style={{
@@ -122,7 +132,7 @@ const ManuscriptVersionLabel = ({
       </div>
     )}
     <span>{children}</span>
-  </div>
+  </>
 );
 const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
   onChangeManuscriptOutputSelection,
@@ -136,9 +146,7 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
     history.goBack();
   };
 
-  const [selectedVersion, setVersion] = useState<
-    ManuscriptVersionOption | undefined
-  >(undefined);
+  const [selectedVersion, setVersion] = useState<ManuscriptVersionOption>();
 
   const renderManuscriptImport = () => {
     if (manuscriptOutputSelection !== 'import') {
@@ -161,8 +169,23 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
           loadOptions={getManuscriptVersionOptions}
           components={{
             SingleValue: (singleValueLabelProps) => (
-              <components.SingleValue {...singleValueLabelProps}>
-                <div>
+              <components.SingleValue
+                {...singleValueLabelProps}
+                innerProps={{
+                  ...singleValueLabelProps.innerProps,
+                  style: {
+                    position: 'static',
+                    transform: 'none',
+                    whiteSpace: 'normal',
+                    lineHeight: '1.4',
+                  },
+                }}
+              >
+                <div
+                  css={
+                    singleValueLabelProps.data.version && [singleValueStyles]
+                  }
+                >
                   <ManuscriptVersionLabel
                     version={singleValueLabelProps.data.version}
                   >
@@ -183,10 +206,8 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
               </components.Option>
             ),
           }}
-          onChange={(version: ManuscriptVersionOption | null) => {
-            if (version) {
-              setVersion(version);
-            }
+          onChange={(version: ManuscriptVersionOption) => {
+            setVersion(version ?? undefined);
           }}
           values={selectedVersion}
         />

@@ -356,7 +356,7 @@ export const getManuscript = async (
 };
 
 export type ManuscriptVersionOptions = Omit<GetListOptions, 'filters'> & {
-  teamId: string;
+  teamId?: string;
 };
 
 export const getManuscriptVersions = async (
@@ -367,36 +367,12 @@ export const getManuscriptVersions = async (
     ['manuscript-version'],
     searchQuery,
     {
-      filters: `(teamId:"${teamId}")`,
       page: currentPage ?? undefined,
       hitsPerPage: pageSize ?? undefined,
       restrictSearchableAttributes: ['title', 'manuscriptId'],
+      ...(teamId && { filters: `(teamId:"${teamId}")` }),
     },
   );
-
-  // const result = {
-  //   hits: [
-  //     {
-  //       id: 'manuscript-version-1',
-  //       title: 'A manuscript',
-  //       manuscriptId: 'DA-0001-455-454',
-  //       teamId: 'team-1',
-  //       lifecycle: 'Publication',
-  //       type: 'Original Research',
-  //     } as ManuscriptVersionResponse,
-  //     {
-  //       id: 'manuscript-version-2',
-  //       title: 'A manuscript',
-  //       manuscriptId: 'DA-0001-400-454',
-  //       teamId: 'team-1',
-  //       lifecycle: 'Publication',
-  //       type: 'Original Research',
-  //     } as ManuscriptVersionResponse,
-  //   ],
-  //   nbHits: 2,
-  //   index: '',
-  //   queryID: '123',
-  // };
 
   return {
     items: result.hits,

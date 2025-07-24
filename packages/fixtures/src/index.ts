@@ -9,6 +9,7 @@ export * as gp2 from './gp2';
 export * from './interest-groups';
 export * from './guides';
 export * from './labs';
+export * from './manuscript-versions';
 export * from './manuscripts';
 export * from './news';
 export * from './pages';

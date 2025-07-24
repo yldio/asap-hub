@@ -13,6 +13,17 @@ export default class ManuscriptVersionController {
     private manuscriptVersionDataProvider: ManuscriptVersionDataProvider,
   ) {}
 
+  async fetch(
+    options: FetchOptions<ManuscriptsFilter>,
+  ): Promise<ListManuscriptVersionResponse> {
+    const { take = 8, skip = 0 } = options;
+
+    return this.manuscriptVersionDataProvider.fetch({
+      take,
+      skip,
+    });
+  }
+
   async fetchById(
     manuscriptVersionId: string,
   ): Promise<ManuscriptVersionResponse | null> {
@@ -28,47 +39,4 @@ export default class ManuscriptVersionController {
 
     return response.latestManuscriptVersion || null;
   }
-
-  async fetch(
-    options: FetchOptions<ManuscriptsFilter>,
-  ): Promise<ListManuscriptVersionResponse> {
-    const { take = 8, skip = 0 } = options;
-
-    return this.manuscriptVersionDataProvider.fetch({
-      take,
-      skip,
-    });
-  }
-
-  //   private getManuscriptVersionData = async (
-  //     version: ManuscriptCreateControllerDataObject['versions'][number],
-  //   ) => {
-  //     const {
-  //       firstAuthors,
-  //       correspondingAuthor,
-  //       additionalAuthors,
-  //       ...versionData
-  //     } = version;
-
-  //     const firstAuthorsValues = await this.mapAuthorsPostRequestToId(
-  //       firstAuthors ?? [],
-  //     );
-  //     const correspondingAuthorValues = correspondingAuthor
-  //       ? await this.mapAuthorsPostRequestToId([correspondingAuthor] ?? [])
-  //       : [];
-
-  //     const additionalAuthorsValues = await this.mapAuthorsPostRequestToId(
-  //       additionalAuthors ?? [],
-  //     );
-
-  //     const getValidAuthorIds = (authorIds: (string | null)[]) =>
-  //       authorIds.filter((id): id is string => id !== null);
-
-  //     return {
-  //       ...versionData,
-  //       firstAuthors: getValidAuthorIds(firstAuthorsValues),
-  //       correspondingAuthor: getValidAuthorIds(correspondingAuthorValues),
-  //       additionalAuthors: getValidAuthorIds(additionalAuthorsValues),
-  //     };
-  //   };
 }

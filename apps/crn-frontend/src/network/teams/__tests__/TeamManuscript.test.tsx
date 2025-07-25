@@ -157,7 +157,7 @@ it('generates the short description based on the current description', async () 
   const descriptionTextbox = screen.getByRole('textbox', {
     name: /Manuscript Description/i,
   });
-  userEvent.type(descriptionTextbox, 'Some description');
+  await userEvent.type(descriptionTextbox, 'Some description');
 
   await userEvent.click(screen.getByRole('button', { name: 'Generate' }));
 

@@ -11,18 +11,18 @@ import {
   within,
   act,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { createManuscript } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
 import { refreshTeamState } from '../state';
 import TeamManuscript from '../TeamManuscript';
+import { createManuscript } from '../api';
 
 jest.mock('../../../shared-api/content-generator');
 
@@ -33,8 +33,7 @@ jest.mock(
       return <div>Loading...</div>;
     },
 );
-
-jest.setTimeout(100_000);
+jest.setTimeout(60_000);
 
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 
@@ -107,8 +106,8 @@ beforeEach(() => {
 
 const renderPage = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
-  resubmit: boolean = false,
-  path: string = network.template +
+  resubmit = false,
+  path = network.template +
     network({}).teams.template +
     network({}).teams({}).team.template +
     network({}).teams({}).team({ teamId }).workspace.template +
@@ -143,6 +142,11 @@ const renderPage = async (
     </RecoilRoot>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', { name: /title of manuscript/i }),
+    ).toBeInTheDocument();
+  });
   return { container };
 };
 
@@ -159,13 +163,13 @@ it('can publish a form when the data is valid and navigates to team workspace', 
     screen.getByRole('textbox', { name: /title of manuscript/i }),
     title,
   );
+
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
-
   await userEvent.type(typeTextbox, 'Original');
   await act(async () => {
-    await userEvent.type(typeTextbox, specialChars.enter);
+    await userEvent.type(typeTextbox, '{enter}');
     typeTextbox.blur();
   });
 
@@ -179,7 +183,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
 
   await userEvent.type(lifecycleTextbox, 'Typeset');
   await act(async () => {
-    await userEvent.type(lifecycleTextbox, specialChars.enter);
+    await userEvent.type(lifecycleTextbox, '{enter}');
     lifecycleTextbox.blur();
   });
 
@@ -194,71 +198,77 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   const keyResourceTableInput = screen.getByLabelText(
     /Upload Key Resource Table/i,
   );
+  await userEvent.upload(manuscriptFileInput, testFile);
+  await userEvent.upload(keyResourceTableInput, testFile);
 
-  const descriptionTextbox = screen.getByRole('textbox', {
-    name: /Manuscript Description/i,
-  });
-  await userEvent.type(descriptionTextbox, 'Some description');
-
-  const shortDescriptionTextbox = screen.getByRole('textbox', {
-    name: /Short Description/i,
-  });
-  await userEvent.type(shortDescriptionTextbox, 'Some short description');
-
-  const impactInput = screen.getByRole('textbox', {
-    name: /Impact/i,
-  });
-  await userEvent.type(impactInput, 'My Imp');
-  await userEvent.click(screen.getByText(/^My Impact$/i));
-
-  const categoryInput = screen.getByRole('textbox', {
-    name: /Category/i,
-  });
-  await userEvent.type(categoryInput, 'My Cat');
-  await userEvent.click(screen.getByText(/^My Category$/i));
-
-  userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
-
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  await userEvent.type(
+    screen.getByRole('textbox', {
+      name: /Manuscript Description/i,
+    }),
+    'Some description',
   );
 
-  userEvent.click(screen.getByText(/Non CRN/i));
+  await userEvent.type(
+    screen.getByRole('textbox', {
+      name: /Short Description/i,
+    }),
+    'Some short description',
+  );
 
-  expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
-  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
-  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), specialChars.enter);
+  await userEvent.type(
+    screen.getByRole('textbox', { name: /Impact/i }),
+    'My Imp',
+  );
+  await userEvent.click(screen.getByText(/^My Impact$/i));
 
-  userEvent.upload(manuscriptFileInput, testFile);
-  userEvent.upload(keyResourceTableInput, testFile);
+  expect(screen.getByText(/My Impact/i)).toBeInTheDocument();
+  await userEvent.type(
+    screen.getByRole('textbox', { name: /Category/i }),
+    'My Cat',
+  );
+  await userEvent.click(screen.getByText(/^My Category$/i));
+
+  await userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+  await act(async () => {
+    await userEvent.keyboard('{enter}');
+  });
+  await userEvent.tab();
+  const emailInput = screen.getByLabelText(/Jane Doe Email/i);
+  await act(async () => {
+    await userEvent.type(emailInput, 'jane@doe.com');
+  });
+
+  await userEvent.tab();
+
+  expect(screen.getByText(/Jane Doe \(Non CRN\)/i)).toBeInTheDocument();
+  await waitFor(() => {
+    expect(emailInput.getAttribute('value')).toBe('jane@doe.com');
+  });
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
+  const buttons = within(quickChecks).getAllByText('Yes');
 
-  within(quickChecks)
-    .getAllByText('Yes')
-    .forEach((button) => {
-      userEvent.click(button);
-    });
-
-  await waitFor(() => {
-    const submitButton = screen.getByRole('button', { name: /Submit/ });
-    expect(submitButton).toBeEnabled();
+  userEvent.setup({
+    skipHover: true,
   });
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
-
-  await waitFor(() => {
-    const confirmButton = screen.getByRole('button', {
-      name: /Submit Manuscript/i,
-    });
-    expect(confirmButton).toBeEnabled();
+  await act(async () => {
+    await Promise.all(
+      buttons.map(async (button: HTMLElement) => userEvent.click(button)),
+    );
   });
 
+  await userEvent.tab();
+
+  await waitFor(() => {
+    expect(screen.getByRole('button', { name: /Submit/ })).toBeEnabled();
+  });
+
+  await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
   await userEvent.click(
     screen.getByRole('button', { name: /Submit Manuscript/ }),
   );
 
   await waitFor(() => {
-    // expect setFormType to be called with successLarge
     expect(mockSetFormType).toHaveBeenCalledWith({
       type: '',
       accent: 'successLarge',

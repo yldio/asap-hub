@@ -176,7 +176,7 @@ describe('Engagement', () => {
       );
     });
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByTitle('Active Alphabetical Ascending Sort Icon'),
     );
 
@@ -197,8 +197,10 @@ describe('Engagement', () => {
       );
     });
 
-    userEvent.click(screen.getByRole('button', { name: /chevron down/i }));
-    userEvent.click(
+    await userEvent.click(
+      screen.getByRole('button', { name: /chevron down/i }),
+    );
+    await userEvent.click(
       screen.getByRole('link', { name: 'Since Hub Launch (2020)' }),
     );
 
@@ -213,7 +215,7 @@ describe('Engagement', () => {
   it('exports csv when user clicks on CSV button', async () => {
     await renderPage(analytics({}).engagement({}).$);
 
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/engagement_\d+\.csv/),
       expect.anything(),
@@ -230,7 +232,7 @@ describe('Engagement', () => {
 
       const searchBox = getSearchBox();
 
-      userEvent.type(searchBox, 'test123');
+      await userEvent.type(searchBox, 'test123');
       expect(searchBox.value).toEqual('test123');
       await waitFor(() =>
         expect(mockSearchForTagValues).toHaveBeenCalledWith(

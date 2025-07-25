@@ -107,13 +107,13 @@ it('should mark discussion as read and remove discussion notification dot', asyn
     />,
   );
 
-  userEvent.click(await screen.findByTestId('collapsible-button'));
+  await userEvent.click(await screen.findByTestId('collapsible-button'));
 
   expect(screen.getByTitle('Notification Dot')).toBeInTheDocument();
 
-  userEvent.click(screen.getByText('Discussions'));
+  await userEvent.click(screen.getByText('Discussions'));
   await act(async () => {
-    userEvent.click(
+    await userEvent.click(
       await screen.findByTestId(
         'discussion-collapsible-button-discussion-id-1',
       ),
@@ -195,13 +195,13 @@ it('if there are still unread discussions, the notification dot should be shown'
     />,
   );
 
-  userEvent.click(await screen.findByTestId('collapsible-button'));
+  await userEvent.click(await screen.findByTestId('collapsible-button'));
 
   expect(screen.getByTitle('Notification Dot')).toBeInTheDocument();
 
-  userEvent.click(screen.getByText('Discussions'));
+  await userEvent.click(screen.getByText('Discussions'));
   await act(async () => {
-    userEvent.click(
+    await userEvent.click(
       await screen.findByTestId(
         'discussion-collapsible-button-discussion-id-1',
       ),

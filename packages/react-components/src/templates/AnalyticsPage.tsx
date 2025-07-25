@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import AnalyticsPageHeader from './AnalyticsPageHeader';
@@ -23,7 +23,7 @@ const pageDesktopStyles = css({
 
 type AnalyticsPageProps = ComponentProps<typeof AnalyticsPageHeader>;
 
-const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
+const AnalyticsPage: React.FC<PropsWithChildren<AnalyticsPageProps>> = ({
   children,
   onExportAnalytics,
 }) => (

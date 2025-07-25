@@ -5,7 +5,13 @@ import {
 import { DiscoverPage, TutorialsPage } from '@asap-hub/react-components';
 import { discover } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import {
+  Match,
+  Redirect,
+  Route,
+  Switch,
+  useRouteMatch,
+} from 'react-router-dom';
 import { useSearch } from '../hooks';
 
 const loadGuides = () =>
@@ -30,7 +36,7 @@ const Discover: FC<Record<string, never>> = () => {
     loadGuides().then(loadTutorialList).then(loadTutorialPage);
   }, []);
 
-  const { path } = useRouteMatch();
+  const { path } = useRouteMatch() as Match<{ path: string }>;
   const { searchQuery, debouncedSearchQuery, setSearchQuery } = useSearch();
 
   return (

@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import TeamProfileHeader from './TeamProfileHeader';
@@ -13,7 +13,7 @@ const contentStyles = css({
 
 type TeamProfilePageProps = ComponentProps<typeof TeamProfileHeader>;
 
-const TeamProfilePage: React.FC<TeamProfilePageProps> = ({
+const TeamProfilePage: React.FC<PropsWithChildren<TeamProfilePageProps>> = ({
   children,
   ...profile
 }) => (

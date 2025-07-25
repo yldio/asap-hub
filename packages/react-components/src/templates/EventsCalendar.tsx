@@ -1,3 +1,4 @@
+import React, { PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 import { BasicCalendarResponse } from '@asap-hub/model';
 
@@ -13,10 +14,9 @@ type EventsCalendarPageProps = {
   calendars: ReadonlyArray<BasicCalendarResponse>;
 };
 
-const EventsCalendarPage: React.FC<EventsCalendarPageProps> = ({
-  calendars,
-  children,
-}) => (
+const EventsCalendarPage: React.FC<
+  PropsWithChildren<EventsCalendarPageProps>
+> = ({ calendars, children }) => (
   <div css={containerStyles}>
     <GoogleCalendar calendars={calendars} />
     {children}

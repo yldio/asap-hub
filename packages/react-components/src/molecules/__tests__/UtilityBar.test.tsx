@@ -3,7 +3,11 @@ import { render } from '@testing-library/react';
 import UtilityBar from '../UtilityBar';
 
 it('displays children', () => {
-  const { getByText } = render(<UtilityBar>CHILDREN</UtilityBar>);
+  const { getByText } = render(
+    <UtilityBar>
+      <div>CHILDREN</div>
+    </UtilityBar>,
+  );
   expect(getByText('CHILDREN')).toBeVisible();
 });
 it('displays Logos and links to external partner sites', () => {

@@ -2,7 +2,7 @@
 import type { Auth0, Auth0User, User } from '@asap-hub/auth';
 import { Auth0ContextCRN, getUserClaimKey } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import { useContext, useEffect } from 'react';
+import { PropsWithChildren, useContext, useEffect } from 'react';
 import {
   useRecoilRefresher_UNSTABLE as useRecoilRefresher,
   useRecoilState,
@@ -90,15 +90,17 @@ const createAuth0 = (
   };
 };
 
-export const Auth0Provider: React.FC<{
-  // no property ommission, only explicit undefined allowed if you really want the 'user-not-yet-fetched' state
-  readonly user: Partial<User> | undefined;
-  readonly children: React.ReactNode;
-  readonly auth0Overrides?: (
-    auth0Client?: Auth0Client,
-    auth0User?: Auth0User,
-  ) => Partial<Auth0>;
-}> = ({ user, children, auth0Overrides }) => {
+export const Auth0Provider: React.FC<
+  PropsWithChildren<{
+    // no property ommission, only explicit undefined allowed if you really want the 'user-not-yet-fetched' state
+    readonly user: Partial<User> | undefined;
+    readonly children: React.ReactNode;
+    readonly auth0Overrides?: (
+      auth0Client?: Auth0Client,
+      auth0User?: Auth0User,
+    ) => Partial<Auth0>;
+  }>
+> = ({ user, children, auth0Overrides }) => {
   const [auth0, setAuth0] = useRecoilState(auth0State);
   const resetAuth0 = useRecoilRefresher(auth0State);
   useEffect(() => {

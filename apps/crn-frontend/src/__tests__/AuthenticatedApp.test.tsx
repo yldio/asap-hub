@@ -66,6 +66,7 @@ it('syncs the auth state to recoil', async () => {
     const authorization = useRecoilValue(authorizationState);
     return <>{authorization}</>;
   });
+  jest.spyOn(console, 'error').mockImplementation();
   const { queryByText, getByText } = render(
     <RecoilRoot>
       <authTestUtils.UserAuth0Provider>
@@ -139,7 +140,7 @@ it('renders the application layout correctly', async () => {
   const menu = getByText('Menu');
   expect(menu).toBeInTheDocument();
 
-  userEvent.click(menu);
+  await userEvent.click(menu);
 
   await waitFor(() => {
     expect(getByText('Team One')).toBeInTheDocument();

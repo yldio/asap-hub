@@ -2,7 +2,13 @@ import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NetworkPage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import {
+  Match,
+  Redirect,
+  Route,
+  Switch,
+  useRouteMatch,
+} from 'react-router-dom';
 import { useSearch } from '../hooks';
 import InterestGroupProfile from './interest-groups/InterestGroupProfile';
 import WorkingGroupProfile from './working-groups/WorkingGroupProfile';
@@ -56,7 +62,7 @@ const Network: FC<Record<string, never>> = () => {
       .then(loadWorkingGroupProfile);
   }, []);
 
-  const { path } = useRouteMatch();
+  const { path } = useRouteMatch() as Match<{ path: string }>;
   const {
     searchQuery,
     debouncedSearchQuery,

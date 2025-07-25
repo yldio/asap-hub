@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { useRouteMatch, Route, useLocation } from 'react-router-dom';
+import { useRouteMatch, Route, useLocation, Match } from 'react-router-dom';
 import {
   NotFoundPage,
   TeamProfileWorkspace,
@@ -32,7 +32,7 @@ interface WorkspaceProps {
 }
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const route = network({}).teams({}).team({ teamId: team.id }).workspace({});
-  const { path } = useRouteMatch();
+  const { path } = useRouteMatch() as Match<{ path: string }>;
   const { setEligibilityReasons } = useEligibilityReason();
   const isComplianceReviewer = useIsComplianceReviewer();
 

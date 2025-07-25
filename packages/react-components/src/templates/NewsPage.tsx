@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 
 import { perRem } from '../pixels';
 import NewsPageHeader from './NewsPageHeader';
@@ -13,7 +13,10 @@ const mainStyles = css({
 
 type NewsPageProps = ComponentProps<typeof NewsPageHeader>;
 
-const NewsPage: React.FC<NewsPageProps> = ({ children, ...props }) => (
+const NewsPage: React.FC<PropsWithChildren<NewsPageProps>> = ({
+  children,
+  ...props
+}) => (
   <article>
     <NewsPageHeader {...props} />
     <main css={mainStyles}>{children}</main>

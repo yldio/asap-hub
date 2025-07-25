@@ -61,7 +61,14 @@ const ManuscriptAuthors = ({
         });
       }
     });
-  }, [append, getValues, fieldName]);
+    // Trigger validation after appending email fields
+    if (authors && authors.length > 0) {
+      setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        trigger();
+      }, 0);
+    }
+  }, [append, getValues, fieldName, trigger]);
 
   return (
     <>

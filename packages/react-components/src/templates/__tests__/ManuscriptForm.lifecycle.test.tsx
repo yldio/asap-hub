@@ -4,7 +4,7 @@ import {
   manuscriptTypeLifecycles,
 } from '@asap-hub/model';
 import { cleanup, render, screen, waitFor, act } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import ManuscriptForm from '../ManuscriptForm';
@@ -123,7 +123,7 @@ it('does not display the lifecycle select box until type is selected', async () 
   });
   await act(async () => {
     await userEvent.type(textbox, 'Original');
-    await userEvent.type(textbox, specialChars.enter);
+    await userEvent.type(textbox, '{enter}');
     userEvent.click(textbox);
   });
 
@@ -164,7 +164,7 @@ it('displays error message when no lifecycle was found', async () => {
     name: /Type of Manuscript/i,
   });
   userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
+  userEvent.type(typeTextbox, '{enter}');
   typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
@@ -182,14 +182,14 @@ it('maintains values provided when lifecycle changes but field is still visible'
     name: /Type of Manuscript/i,
   });
   userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
+  userEvent.type(typeTextbox, '{enter}');
   typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
   userEvent.type(lifecycleTextbox, 'Publication with addendum or corrigendum');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  userEvent.type(lifecycleTextbox, '{enter}');
   lifecycleTextbox.blur();
 
   const preprintDoi = '10.4444/test';
@@ -209,7 +209,7 @@ it('maintains values provided when lifecycle changes but field is still visible'
   expect(publicationDoiTextbox).toHaveValue(publicationDoi);
 
   userEvent.type(lifecycleTextbox, 'Preprint');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  userEvent.type(lifecycleTextbox, '{enter}');
   lifecycleTextbox.blur();
 
   expect(

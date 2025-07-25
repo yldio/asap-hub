@@ -5,7 +5,13 @@ import {
 } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  Switch,
+  useRouteMatch,
+  Match,
+} from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../hooks/algolia';
 
 import { downloadAnalyticsXLSX } from './utils/export';
@@ -35,7 +41,7 @@ const Routes = () => {
     loadLeadership().then(loadProductivity).then(loadCollaboration);
   }, []);
 
-  const { path } = useRouteMatch();
+  const { path } = useRouteMatch() as Match<{ path: string }>;
 
   const { client } = useAnalyticsAlgolia();
 

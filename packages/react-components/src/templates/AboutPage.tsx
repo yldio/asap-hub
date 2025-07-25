@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import AboutPageHeader from './AboutPageHeader';
@@ -10,7 +10,7 @@ const mainStyles = css({
 
 type AboutPageProps = ComponentProps<typeof AboutPageHeader>;
 
-const About: React.FC<AboutPageProps> = ({ children }) => (
+const About: React.FC<PropsWithChildren<AboutPageProps>> = ({ children }) => (
   <article>
     <AboutPageHeader />
     <main css={mainStyles}>{children}</main>

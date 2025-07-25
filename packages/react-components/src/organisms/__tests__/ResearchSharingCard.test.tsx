@@ -1,7 +1,7 @@
 import { researchTagSubtypeResponse } from '@asap-hub/fixtures';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, within, waitFor } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
 import { ComponentProps } from 'react';
 import ResearchOutputFormSharingCard, {
@@ -163,7 +163,7 @@ it('triggers an on change for type', async () => {
 
   const type = screen.getByLabelText(/type/i);
   userEvent.type(type, 'Preprint');
-  userEvent.type(type, specialChars.enter);
+  userEvent.type(type, '{enter}');
 
   expect(onChangeFn).toHaveBeenCalledWith('Preprint');
 });
@@ -181,7 +181,7 @@ it('triggers an on change for subtype', async () => {
 
   const type = screen.getByLabelText(/subtype/i);
   userEvent.type(type, 'Metabolite');
-  userEvent.type(type, specialChars.enter);
+  userEvent.type(type, '{enter}');
 
   expect(onChangeFn).toHaveBeenCalledWith('Metabolite');
 });

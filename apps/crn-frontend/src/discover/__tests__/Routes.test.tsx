@@ -73,7 +73,7 @@ it('renders tutorials list page when the tutorials tab is selected', async () =>
   expect(tutorialsAnchorTab).toBeVisible();
   expect(screen.queryByText(/Explore our tutorials/i)).not.toBeInTheDocument();
 
-  userEvent.click(tutorialsAnchorTab);
+  await userEvent.click(tutorialsAnchorTab);
   await waitFor(() =>
     expect(screen.queryByText(/Loading/i)).not.toBeInTheDocument(),
   );
@@ -95,7 +95,7 @@ it('allows search on tutorials list', async () => {
 
   const container = await renderDiscoverPage(discover({}).tutorials({}).$);
 
-  userEvent.type(screen.getByRole('searchbox'), 'Tutorial 1');
+  await userEvent.type(screen.getByRole('searchbox'), 'Tutorial 1');
 
   await waitFor(() =>
     expect(mockGetTutorials).toHaveBeenCalledWith(
@@ -146,7 +146,7 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
   expect(tutorialCardTitle).toBeVisible();
   expect(tutorialCardTitle.href).toContain('/tutorials/');
 
-  userEvent.click(tutorialCardTitle);
+  await userEvent.click(tutorialCardTitle);
 
   expect(
     await screen.findByText(/First Tutorial Title/i, { selector: 'h1' }),

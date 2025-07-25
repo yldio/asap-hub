@@ -21,7 +21,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -81,40 +81,43 @@ const mandatoryFields = async (
 ) => {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
-  userEvent.type(screen.getByRole('textbox', { name: url }), link);
-  userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
+  await userEvent.type(screen.getByRole('textbox', { name: url }), link);
+  await userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
 
   const descriptionEditor = screen.getByTestId('editor');
-  userEvent.click(descriptionEditor);
-  userEvent.tab();
+  await userEvent.click(descriptionEditor);
+  await userEvent.tab();
   fireEvent.input(descriptionEditor, { data: descriptionMD });
-  userEvent.tab();
+  await userEvent.tab();
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /short description/i }),
     shortDescription,
   );
 
   const typeInput = screen.getByRole('textbox', { name: /Select the type/i });
-  userEvent.type(typeInput, type);
-  userEvent.type(typeInput, specialChars.enter);
+  await userEvent.type(typeInput, type);
+  await userEvent.type(typeInput, '{enter}');
 
   const identifier = screen.getByRole('textbox', { name: /identifier/i });
-  userEvent.type(identifier, 'DOI');
-  userEvent.type(identifier, specialChars.enter);
-  userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
+  await userEvent.type(identifier, 'DOI');
+  await userEvent.type(identifier, '{enter}');
+  await userEvent.type(
+    screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'),
+    doi,
+  );
   return {
     publish: async () => {
       if (isEditMode && published) {
         const button = screen.getByRole('button', { name: /Save/i });
-        userEvent.click(button);
+        await userEvent.click(button);
         await waitFor(() => {
           expect(button).toBeEnabled();
         });
       } else {
-        userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+        await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
         const button = screen.getByRole('button', { name: /Publish Output/i });
-        userEvent.click(button);
+        await userEvent.click(button);
         await waitFor(() => {
           expect(button).not.toBeInTheDocument();
         });
@@ -125,7 +128,7 @@ const mandatoryFields = async (
         name: /Save Draft/i,
       });
       if (saveDraftButton) {
-        userEvent.click(saveDraftButton);
+        await userEvent.click(saveDraftButton);
         await waitFor(() => {
           expect(saveDraftButton).toBeEnabled();
         });
@@ -256,10 +259,10 @@ it('can publish a form when the data is valid', async () => {
     doi,
   });
 
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-  userEvent.click(screen.getByText('Example 1 Lab'));
-  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
-  userEvent.click(screen.getByText('Person A 3'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(screen.getByText('Example 1 Lab'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await userEvent.click(screen.getByText('Person A 3'));
 
   await publish();
 
@@ -323,10 +326,10 @@ it('can save draft when form data is valid', async () => {
     doi,
   });
 
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-  userEvent.click(screen.getByText('Example 1 Lab'));
-  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
-  userEvent.click(screen.getByText('Person A 3'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(screen.getByText('Example 1 Lab'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await userEvent.click(screen.getByText('Person A 3'));
 
   await saveDraft();
 
@@ -511,7 +514,7 @@ it('generates the short description based on the current description', async () 
     },
   });
 
-  userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+  await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
 
   await waitFor(() => {
     expect(
@@ -550,7 +553,7 @@ it('will show server side validation error for link', async () => {
   ).toBeGreaterThan(1);
 
   const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-  userEvent.type(url, 'a');
+  await userEvent.type(url, 'a');
   url.blur();
 
   expect(
@@ -763,7 +766,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       outputDocumentType: 'article',
     });
 
-    userEvent.click(screen.getByLabelText('Create manually'));
+    await userEvent.click(screen.getByLabelText('Create manually'));
 
     expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
     expect(
@@ -776,7 +779,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       teamId: '42',
       outputDocumentType: 'article',
     });
-    userEvent.click(screen.getByLabelText('Import from manuscript'));
+    await userEvent.click(screen.getByLabelText('Import from manuscript'));
 
     expect(screen.getByRole('button', { name: /Import/i })).toBeInTheDocument();
     expect(
@@ -790,10 +793,10 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       outputDocumentType: 'article',
     });
 
-    userEvent.click(screen.getByLabelText('Create manually'));
+    await userEvent.click(screen.getByLabelText('Create manually'));
 
     expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /Create/i }));
+    await userEvent.click(screen.getByRole('button', { name: /Create/i }));
 
     expect(
       screen.getByRole('heading', { name: 'What are you sharing?' }),

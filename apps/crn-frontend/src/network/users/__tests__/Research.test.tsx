@@ -113,9 +113,9 @@ describe('UserDetail', () => {
     };
     it('opens and closes the dialog', async () => {
       await renderResearch(user);
-      userEvent.click(screen.getByLabelText(/edit.+role/i));
+      await userEvent.click(screen.getByLabelText(/edit.+role/i));
       expect(screen.getByDisplayValue('My Interests')).toBeVisible();
-      userEvent.click(screen.getByText(/close/i));
+      await userEvent.click(screen.getByText(/close/i));
       expect(
         screen.queryByDisplayValue('My Interests'),
       ).not.toBeInTheDocument();
@@ -123,9 +123,9 @@ describe('UserDetail', () => {
 
     it('saves the changes from the dialog', async () => {
       await renderResearch(user);
-      userEvent.click(screen.getByLabelText(/edit.+role/i));
+      await userEvent.click(screen.getByLabelText(/edit.+role/i));
 
-      userEvent.click(screen.getByText(/save/i));
+      await userEvent.click(screen.getByText(/save/i));
       await waitFor(() => {
         expect(mockPatchUser).toHaveBeenCalledWith(
           user.id,
@@ -148,10 +148,10 @@ describe('UserDetail', () => {
     it('opens and closes the dialog', async () => {
       await renderResearch(user);
 
-      userEvent.click(screen.getByLabelText(/edit.+resources/i));
+      await userEvent.click(screen.getByLabelText(/edit.+resources/i));
       expect(screen.getByDisplayValue('Expertise Description')).toBeVisible();
 
-      userEvent.click(screen.getByText(/close/i));
+      await userEvent.click(screen.getByText(/close/i));
       expect(
         screen.queryByDisplayValue('Expertise Description'),
       ).not.toBeInTheDocument();
@@ -160,15 +160,20 @@ describe('UserDetail', () => {
     it('saves the changes from the dialog', async () => {
       await renderResearch(user);
 
-      userEvent.click(screen.getByLabelText(/edit.+resources/i));
-      userEvent.type(screen.getByDisplayValue('Expertise Description'), ' 2');
+      await userEvent.click(screen.getByLabelText(/edit.+resources/i));
+      await userEvent.type(
+        screen.getByDisplayValue('Expertise Description'),
+        ' 2',
+      );
       expect(screen.getByDisplayValue('Expertise Description 2')).toBeVisible();
-      tags.forEach((expertise) => {
-        userEvent.type(screen.getByLabelText(/tags/i), expertise);
-        userEvent.tab();
-      });
+      await Promise.all(
+        tags.map(async (expertise) => {
+          await userEvent.type(screen.getByLabelText(/tags/i), expertise);
+          await userEvent.tab();
+        }),
+      );
 
-      userEvent.click(screen.getByText(/save/i));
+      await userEvent.click(screen.getByText(/save/i));
       await waitFor(
         () => {
           expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -194,10 +199,10 @@ describe('UserDetail', () => {
     };
     it('opens and closes the dialog', async () => {
       await renderResearch(user);
-      userEvent.click(screen.getByLabelText(/edit.+questions/i));
+      await userEvent.click(screen.getByLabelText(/edit.+questions/i));
       expect(screen.getByDisplayValue('question 1')).toBeVisible();
 
-      userEvent.click(screen.getByText(/close/i));
+      await userEvent.click(screen.getByText(/close/i));
       await waitFor(() => {
         expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
       });
@@ -207,18 +212,18 @@ describe('UserDetail', () => {
     it('saves the changes from the dialog', async () => {
       await renderResearch(user);
 
-      userEvent.click(screen.getByLabelText(/edit.+questions/i));
-      userEvent.type(screen.getByDisplayValue('question 1'), ' a');
+      await userEvent.click(screen.getByLabelText(/edit.+questions/i));
+      await userEvent.type(screen.getByDisplayValue('question 1'), ' a');
       expect(screen.getByDisplayValue('question 1 a')).toBeVisible();
 
-      userEvent.type(screen.getByDisplayValue('question 2'), ' b');
+      await userEvent.type(screen.getByDisplayValue('question 2'), ' b');
       expect(screen.getByDisplayValue('question 2 b')).toBeVisible();
 
-      userEvent.type(screen.getByDisplayValue('question 3'), ' c');
+      await userEvent.type(screen.getByDisplayValue('question 3'), ' c');
       expect(screen.getByDisplayValue('question 3 c')).toBeVisible();
-      userEvent.type(screen.getByDisplayValue('question 4'), ' d');
+      await userEvent.type(screen.getByDisplayValue('question 4'), ' d');
       expect(screen.getByDisplayValue('question 4 d')).toBeVisible();
-      userEvent.click(screen.getByText(/save/i));
+      await userEvent.click(screen.getByText(/save/i));
       await waitFor(() => {
         expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
       });

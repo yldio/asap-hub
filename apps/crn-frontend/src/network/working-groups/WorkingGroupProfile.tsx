@@ -1,5 +1,11 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
+import {
+  Match,
+  Route,
+  Switch,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -61,7 +67,7 @@ type WorkingGroupProfileProps = {
   currentTime: Date;
 };
 const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
+  const { path } = useRouteMatch() as Match<{ path: string }>;
   const route = network({}).workingGroups({}).workingGroup;
   const [membersListElementId] = useState(`wg-members-${uuid()}`);
 

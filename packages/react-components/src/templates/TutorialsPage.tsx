@@ -1,10 +1,10 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 
 import TutorialsPageHeader from './TutorialsPageHeader';
 
 type TutorialsPageProps = ComponentProps<typeof TutorialsPageHeader>;
 
-const TutorialsPage: React.FC<TutorialsPageProps> = ({
+const TutorialsPage: React.FC<PropsWithChildren<TutorialsPageProps>> = ({
   children,
   ...props
 }) => (

@@ -1,4 +1,6 @@
+import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
+  considerEndedAfter,
   EventConversation,
   EventOwner,
   EventPage,
@@ -6,11 +8,10 @@ import {
   NotFoundPage,
   SpeakerList,
   useDateHasPassed,
-  considerEndedAfter,
 } from '@asap-hub/react-components';
 import { events, useRouteParams } from '@asap-hub/routing';
-import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 
+import { TagResponse } from '@asap-hub/model/src/gp2';
 import { useEventById, useQuietRefreshEventById } from './state';
 
 const Event: React.FC = () => {
@@ -29,7 +30,7 @@ const Event: React.FC = () => {
         <EventPage
           {...event}
           hasFinished={hasFinished}
-          tags={event.tags.map((tag) => tag.name)}
+          tags={event.tags.map((tag: TagResponse) => tag.name)}
           backHref={backHref}
           onRefresh={refreshEvent}
           getIconForDocumentType={getIconForDocumentType}

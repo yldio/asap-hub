@@ -102,7 +102,7 @@ it.each`
     mockGetEvents.mockResolvedValue(createListEventResponse(2));
     const pathName = getPath(constraint.userId || constraint.teamId);
     await renderEvents({ constraint, pathName });
-    userEvent.type(screen.getByRole('searchbox'), searchQuery);
+    await userEvent.type(screen.getByRole('searchbox'), searchQuery);
     expect(screen.getByText(/2 results found/i)).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: /Event 0/i }),

@@ -1,6 +1,12 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { render, waitFor, screen } from '@testing-library/react';
+import {
+  render,
+  waitFor,
+  screen,
+  act,
+  RenderResult,
+} from '@testing-library/react';
 import { createPageResponse } from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
@@ -9,8 +15,13 @@ import { getPageByPath } from '../api';
 
 jest.mock('../api');
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
 afterEach(() => {
   jest.clearAllMocks();
+  jest.restoreAllMocks();
 });
 
 const mockGetPageByPath = getPageByPath as jest.MockedFunction<
@@ -18,24 +29,33 @@ const mockGetPageByPath = getPageByPath as jest.MockedFunction<
 >;
 
 const renderPage = async (pageId: string = 'privacy-policy') => {
-  const result = render(
-    <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <Content pageId={pageId} />
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+  let result: RenderResult | undefined;
+
+  // Wrap the render in act to handle React 18 concurrent features
+  await act(async () => {
+    result = render(
+      <RecoilRoot>
+        <Suspense fallback={<div>loading</div>}>
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <Content pageId={pageId} />
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>,
+    );
+  });
+
+  // Wait for Auth0 to finish loading
+  await waitFor(() =>
+    expect(result?.queryByText(/auth0/i)).not.toBeInTheDocument(),
   );
 
+  // Wait for content loading to complete
   await waitFor(() =>
-    expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
+    expect(result?.queryByText('loading')).not.toBeInTheDocument(),
   );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
+
   return result;
 };
 
@@ -45,6 +65,7 @@ it('renders a page title', async () => {
     title: 'Example Title',
     text: 'Example Description',
   });
+
   await renderPage();
 
   expect(screen.getByRole('heading', { name: /Example Title/ })).toBeVisible();

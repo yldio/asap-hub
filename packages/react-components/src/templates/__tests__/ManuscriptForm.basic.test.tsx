@@ -8,7 +8,7 @@ import {
   render,
   waitFor,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps, Suspense } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
@@ -343,7 +343,7 @@ describe('Manuscript form', () => {
       lifecycleInput,
       'Draft Manuscript (prior to Publication)',
     );
-    await userEvent.type(lifecycleInput, specialChars.enter);
+    await userEvent.type(lifecycleInput, '{enter}');
     lifecycleInput.blur();
 
     expect(

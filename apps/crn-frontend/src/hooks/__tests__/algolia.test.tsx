@@ -39,7 +39,7 @@ describe('useAlgolia', () => {
         typeof algoliaSearchClientFactory
       >;
     const { waitForNextUpdate } = renderHook(() => useAlgolia(), {
-      wrapper: ({ children }) => (
+      wrapper: ({ children }: { children: React.ReactNode }) => (
         <RecoilRoot>
           <Auth0Provider user={{ algoliaApiKey: null, id: 'usertoken' }}>
             <WhenReady>{children}</WhenReady>
@@ -64,7 +64,7 @@ describe('useAlgolia', () => {
       >;
 
     const { result, waitForNextUpdate } = renderHook(() => useAlgolia(), {
-      wrapper: ({ children }) => (
+      wrapper: ({ children }: { children: React.ReactNode }) => (
         <RecoilRoot>
           <Auth0Provider
             user={{ algoliaApiKey: 'algolia key', id: 'usertoken' }}

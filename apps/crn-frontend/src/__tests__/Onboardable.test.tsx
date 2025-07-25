@@ -1,6 +1,6 @@
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter } from 'react-router-dom';
-import { render, act } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { waitFor } from '@testing-library/dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
@@ -13,6 +13,7 @@ import { getUser } from '../network/users/api';
 
 jest.mock('../network/users/api');
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+
 const onboardableUser: UserResponse = {
   ...createUserResponse(),
   questions: ['1', '2'],
@@ -37,6 +38,11 @@ const onboardableUser: UserResponse = {
   researchInterests: 'a',
   responsibilities: 'a',
 };
+
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
+  mockGetUser.mockClear();
+});
 
 it('is undefined when there is no logged in user', async () => {
   const { container } = render(
@@ -78,22 +84,30 @@ const renderOnboardable = (onboarded: boolean) => (
 
 it('is undefined when the logged in user is already onboarded', async () => {
   const { queryByText } = render(renderOnboardable(true));
-  await act(() =>
-    waitFor(() =>
-      expect(queryByText('isOnboardable: undefined')).toBeVisible(),
-    ),
-  );
+  await waitFor(() => {
+    expect(queryByText('Auth0 loading...')).not.toBeInTheDocument();
+  });
+
+  await waitFor(() => {
+    expect(queryByText('isOnboardable: undefined')).toBeVisible();
+  });
 });
 
 it('is true when: logged in, not onboarded and conditions met', async () => {
   mockGetUser.mockResolvedValue(onboardableUser);
   const { queryByText } = render(renderOnboardable(false));
-  await act(() =>
-    waitFor(() => {
-      expect(mockGetUser).toHaveBeenCalled();
-      expect(queryByText('isOnboardable: true')).toBeVisible();
-    }),
-  );
+
+  await waitFor(() => {
+    expect(queryByText('Auth0 loading...')).not.toBeInTheDocument();
+  });
+
+  await waitFor(() => {
+    expect(mockGetUser).toHaveBeenCalled();
+  });
+
+  await waitFor(() => {
+    expect(queryByText('isOnboardable: true')).toBeVisible();
+  });
 });
 
 it('is false when: logged in, not onboarded but conditions not met', async () => {
@@ -102,10 +116,16 @@ it('is false when: logged in, not onboarded but conditions not met', async () =>
     jobTitle: undefined,
   });
   const { queryByText } = render(renderOnboardable(false));
-  await act(() =>
-    waitFor(() => {
-      expect(mockGetUser).toHaveBeenCalled();
-      expect(queryByText('isOnboardable: false')).toBeVisible();
-    }),
-  );
+
+  await waitFor(() => {
+    expect(queryByText('Auth0 loading...')).not.toBeInTheDocument();
+  });
+
+  await waitFor(() => {
+    expect(mockGetUser).toHaveBeenCalled();
+  });
+
+  await waitFor(() => {
+    expect(queryByText('isOnboardable: false')).toBeVisible();
+  });
 });

@@ -278,7 +278,7 @@ const MultiSelect = <
       ...components,
     },
     noOptionsMessage,
-    styles: reactMultiSelectStyles(theme, !!validationMessage),
+    styles: reactMultiSelectStyles(theme, !!validationMessage, isMulti),
     ref: (ref: RefType<T>) => {
       inputRef = ref;
     },

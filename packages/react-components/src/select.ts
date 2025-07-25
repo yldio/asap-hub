@@ -149,6 +149,7 @@ export const reactMultiSelectStyles = <
     colors: { primary100 = mint, primary500 = fern, primary900 = pine } = {},
   }: Theme,
   isInvalid: boolean,
+  isMulti: boolean,
 ): StylesConfig<T, M> => ({
   ...baseSelectStyles,
   option: (provided, { isFocused }) => ({
@@ -215,11 +216,22 @@ export const reactMultiSelectStyles = <
     ...provided,
     padding: 0,
   }),
-  input: (provided) => ({
-    ...provided,
-    padding: `${5 / perRem}em 0 ${5 / perRem}em`,
-    margin: `${6 / perRem}em ${6 / perRem}em ${6 / perRem}em`,
-  }),
+  input: (provided, state) => {
+    const hasSingleSelectedValue =
+      !isMulti && Object.keys((state as any).selectProps.value).length > 0;
+
+    return {
+      ...provided,
+      ...(hasSingleSelectedValue
+        ? {
+            margin: 0,
+          }
+        : {
+            padding: `${5 / perRem}em 0 ${5 / perRem}em`,
+            margin: `${6 / perRem}em ${6 / perRem}em ${6 / perRem}em`,
+          }),
+    };
+  },
   placeholder: (provided) => ({
     ...provided,
     color: isInvalid ? ember.rgb : provided.color,

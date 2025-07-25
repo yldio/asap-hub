@@ -86,12 +86,22 @@ const dismissButtonStyles = css({
 });
 
 const singleValueStyles = css({
-  padding: `${rem(5)} ${rem(15)} ${rem(5)} ${rem(8)}`,
+  padding: `${rem(5)} ${rem(15)} ${rem(5)} ${rem(5)}`,
   display: 'flex',
   flexFlow: 'column',
   justifyContent: 'center',
-  alignItems: 'center',
+  alignItems: 'flex-start',
+  rowGap: rem(8),
   backgroundColor: paper.rgb,
+});
+
+const pillContainerStyles = css({
+  display: 'flex',
+  gap: rem(8),
+  marginTop: rem(8),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+  },
 });
 
 type ManuscriptOutputSelectionProps = {
@@ -118,14 +128,7 @@ const ManuscriptVersionLabel = ({
 }) => (
   <>
     {version && (
-      <div
-        style={{
-          display: 'flex',
-          gap: rem(10),
-          marginTop: rem(15),
-          paddingLeft: rem(40),
-        }}
-      >
+      <div css={pillContainerStyles}>
         <Pill accent="gray">{version.type}</Pill>
         <Pill accent="gray">{version.lifecycle}</Pill>
         <Pill accent="blue">{version.manuscriptId}</Pill>
@@ -204,6 +207,15 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
                   )}
                 </div>
               </components.Option>
+            ),
+            Input: (props) => (
+              <components.Input
+                {...props}
+                innerRef={props.innerRef}
+                style={{
+                  ...props.style,
+                }}
+              />
             ),
           }}
           onChange={(version: ManuscriptVersionOption) => {

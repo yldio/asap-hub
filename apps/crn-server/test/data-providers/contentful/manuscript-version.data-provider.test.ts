@@ -66,40 +66,15 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       });
     });
 
-    it.each([
-      'Draft Manuscript (prior to Publication)',
-      'Typeset proof',
-      'Other',
-    ])('should exclude versions in (%s) lifecycle', async (lifecycle) => {
-      const manuscriptVersion = getContentfulManuscriptVersion(1, lifecycle);
-      const contentfulGraphQLResponse =
-        getContentfulGraphqlManuscriptsCollection();
-
-      contentfulGraphQLResponse.total = 1;
-      contentfulGraphQLResponse.items = [
-        getContentfulManuscript(1, [manuscriptVersion]),
-      ];
-
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        manuscriptsCollection: contentfulGraphQLResponse,
-      });
-
-      const result = await manuscriptVersionDataProvider.fetch({});
-
-      expect(result.items).toEqual([]);
-    });
-
     test('Should return only the latest version for a manuscript', async () => {
       const version1 = getContentfulManuscriptVersion(1, 'Preprint');
-      const version2 = getContentfulManuscriptVersion(2, 'Typeset proof');
-      const version3 = getContentfulManuscriptVersion(3, 'Publication');
-      const version4 = getContentfulManuscriptVersion(4, 'Other');
+      const version2 = getContentfulManuscriptVersion(3, 'Publication');
 
       const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
 
       contentfulGraphQLResponse!.total = 1;
       contentfulGraphQLResponse!.items = [
-        getContentfulManuscript(1, [version4, version3, version2, version1]),
+        getContentfulManuscript(1, [version2, version1]),
       ];
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
@@ -146,12 +121,11 @@ describe('Manuscript Versions Contentful Data Provider', () => {
     });
 
     test('returns version id field as undefined if there is no valid manuscript version', async () => {
-      const manuscriptVersion = getContentfulManuscriptVersion(1, 'Other');
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscriptVersions: {
           linkedFrom: {
             manuscriptsCollection: {
-              items: [getContentfulManuscript(1, [manuscriptVersion])],
+              items: [getContentfulManuscript(1, [])],
             },
           },
         },

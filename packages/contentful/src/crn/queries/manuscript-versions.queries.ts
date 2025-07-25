@@ -22,7 +22,16 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
                 grantId
               }
             }
-            versionsCollection(order: count_DESC) {
+            versionsCollection(
+              order: count_DESC
+              where: {
+                lifecycle_in: [
+                  "Preprint"
+                  "Publication"
+                  "Publication with addendum or corrigendum"
+                ]
+              }
+            ) {
               items {
                 sys {
                   id
@@ -62,7 +71,16 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
             grantId
           }
         }
-        versionsCollection(order: count_DESC) {
+        versionsCollection(
+          order: count_DESC
+          where: {
+            lifecycle_in: [
+              "Preprint"
+              "Publication"
+              "Publication with addendum or corrigendum"
+            ]
+          }
+        ) {
           items {
             sys {
               id

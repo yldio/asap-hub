@@ -38,22 +38,26 @@ export const exportEntity = async (
 ): Promise<void> => {
   const controller = getController(entity);
   const file = await fs.open(filename || `${entity}.json`, 'w');
+  const isManuscriptVersionEntity = entity === 'manuscript-version';
   let recordCount = 0;
 
   await file.write('[\n');
 
-  if (entity !== 'manuscript-version') {
-    let total: number;
-    let records: ListResponse<EntityData>;
-    let page = 1;
-    do {
-      records = await controller.fetch({
-        take: PAGE_SIZE,
-        skip: (page - 1) * PAGE_SIZE,
-      });
+  let total: number;
+  let records: ListResponse<EntityData>;
+  let recordsFetched: number;
+  let page = 1;
+  let shouldContinue: boolean;
+  do {
+    records = await controller.fetch({
+      take: PAGE_SIZE,
+      skip: (page - 1) * PAGE_SIZE,
+    });
 
-      total = records.total;
+    total = records.total;
+    recordsFetched = records.items.length;
 
+    if (recordsFetched) {
       if (page != 1) {
         await file.write(',\n');
       }
@@ -65,16 +69,15 @@ export const exportEntity = async (
           2,
         ).slice(1, -1),
       );
+    }
 
-      page++;
-      recordCount += records.items.length;
-    } while (total > recordCount);
-  } else {
-    recordCount = await exportManuscriptVersion(
-      file,
-      controller as ManuscriptVersions,
-    );
-  }
+    page++;
+    recordCount += recordsFetched;
+
+    shouldContinue = isManuscriptVersionEntity
+      ? total !== 0
+      : total > recordCount;
+  } while (shouldContinue);
 
   await file.write(']');
 
@@ -233,44 +236,4 @@ const transformRecords = (
     ...payload,
     _tags: [],
   };
-};
-
-const exportManuscriptVersion = async (
-  file: fs.FileHandle,
-  controller: ManuscriptVersions,
-) => {
-  let recordsFetched: number;
-
-  let records: ListResponse<EntityData>;
-  let page = 1;
-  let recordCount = 0;
-
-  do {
-    records = await controller.fetch({
-      take: PAGE_SIZE,
-      skip: (page - 1) * PAGE_SIZE,
-    });
-
-    recordsFetched = records.items.length;
-
-    if (recordsFetched > 0) {
-      if (page != 1) {
-        await file.write(',\n');
-      }
-      await file.write(
-        JSON.stringify(
-          records.items.map((record) =>
-            transformRecords(record, 'manuscript-version'),
-          ),
-          null,
-          2,
-        ).slice(1, -1),
-      );
-    }
-
-    page++;
-    recordCount += recordsFetched;
-  } while (records.total !== 0);
-
-  return recordCount;
 };

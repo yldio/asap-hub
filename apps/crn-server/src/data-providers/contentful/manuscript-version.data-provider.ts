@@ -35,7 +35,16 @@ export class ManuscriptVersionContentfulDataProvider
     >(FETCH_VERSIONS_BY_MANUSCRIPT, {
       limit: take,
       skip,
-      where: filter,
+      where: {
+        ...filter,
+        versions: {
+          lifecycle_in: [
+            'Preprint',
+            'Publication',
+            'Publication with addendum or corrigendum',
+          ],
+        },
+      },
     });
 
     if (!manuscriptsCollection?.items) {
@@ -49,13 +58,7 @@ export class ManuscriptVersionContentfulDataProvider
       (latestVersions: ManuscriptVersionResponse[], manuscript) => {
         const latestVersion = cleanArray(
           manuscript.versionsCollection?.items,
-        ).find((version) =>
-          [
-            'Preprint',
-            'Publication',
-            'Publication with addendum or corrigendum',
-          ].includes(version.lifecycle || ''),
-        );
+        )[0];
         if (latestVersion) {
           const team = manuscript?.teamsCollection?.items[0];
           return [
@@ -107,15 +110,7 @@ export class ManuscriptVersionContentfulDataProvider
 
     const manuscript =
       manuscriptVersions.linkedFrom?.manuscriptsCollection?.items[0];
-    const latestVersion = cleanArray(
-      manuscript?.versionsCollection?.items,
-    ).find((version) =>
-      [
-        'Preprint',
-        'Publication',
-        'Publication with addendum or corrigendum',
-      ].includes(version.lifecycle || ''),
-    );
+    const latestVersion = cleanArray(manuscript?.versionsCollection?.items)[0];
 
     const team = manuscript?.teamsCollection?.items[0];
     return {

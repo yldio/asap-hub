@@ -218,6 +218,7 @@ export const reactMultiSelectStyles = <
   }),
   input: (provided, state) => {
     const hasSingleSelectedValue =
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       !isMulti && Object.keys((state as any).selectProps.value).length > 0;
 
     return {

@@ -21,26 +21,21 @@ export const indexManuscriptVersionHandler =
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    // get version
-    // get the latest publication version for the related manuscript
-    // search algolia for manuscript version with the related manuscript id and delete
-    // upload the latest publication version if one exists
-
     const manuscriptVersionId = event.detail.resourceId;
 
     try {
-      const manuscriptVersion =
+      const manuscriptVersionResponse =
         await manuscriptVersionController.fetchById(manuscriptVersionId);
       logger.debug(
         `Fetched details for manuscript version ${manuscriptVersionId}`,
       );
 
-      if (manuscriptVersion) {
-        await algoliaClient.remove(manuscriptVersion.id);
+      if (manuscriptVersionResponse) {
+        await algoliaClient.remove(manuscriptVersionResponse.id);
 
-        if (manuscriptVersion.versionId) {
+        if (manuscriptVersionResponse.versionId) {
           await algoliaClient.save({
-            data: manuscriptVersion,
+            data: manuscriptVersionResponse,
             type: 'manuscript-version',
           });
         }

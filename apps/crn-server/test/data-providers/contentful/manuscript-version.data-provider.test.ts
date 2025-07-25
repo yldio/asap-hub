@@ -66,6 +66,21 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       });
     });
 
+    test('Should exclude manuscripts with null versions', async () => {
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [getContentfulManuscript(1, [null])];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items.length).toEqual(0);
+    });
+
     test('Should return only the latest version for a manuscript', async () => {
       const version1 = getContentfulManuscriptVersion(1, 'Preprint');
       const version2 = getContentfulManuscriptVersion(3, 'Publication');

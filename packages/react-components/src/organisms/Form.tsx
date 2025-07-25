@@ -73,7 +73,7 @@ const Form = <T extends void | Record<string, unknown>>({
       try {
         const result = await onSaveFunction();
 
-        if (formRef.current && result) {
+        if (result) {
           setStatus('hasSaved');
         } else {
           throw new Error('Form saving error.');

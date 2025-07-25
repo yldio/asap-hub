@@ -28,3 +28,7 @@ export type NewsPayload = WebhookDetail<ContentfulWebhookPayload<'news'>>;
 export type ManuscriptPayload = WebhookDetail<
   ContentfulWebhookPayload<'manuscripts'>
 >;
+
+export type ManuscriptVersionPayload = WebhookDetail<
+  ContentfulWebhookPayload<'manuscriptVersions'>
+>;

@@ -21,6 +21,7 @@ yargs(hideBin(process.argv))
             'external-author',
             'interest-group',
             'manuscript',
+            'manuscript-version',
             'news',
             'research-output',
             'team',
@@ -42,6 +43,7 @@ yargs(hideBin(process.argv))
           | 'external-author'
           | 'interest-group'
           | 'manuscript'
+          | 'manuscript-version'
           | 'news'
           | 'research-output'
           | 'team'

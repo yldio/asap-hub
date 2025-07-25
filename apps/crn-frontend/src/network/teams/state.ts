@@ -53,6 +53,7 @@ import {
   uploadManuscriptFileViaPresignedUrl,
   markDiscussionAsRead,
   downloadFullComplianceDataset,
+  getManuscriptVersions,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -541,6 +542,18 @@ export const useManuscripts = (
     throw manuscripts;
   }
   return { ...manuscripts, refresh: refreshManuscripts };
+};
+
+export const useManuscriptVersionSuggestions = () => {
+  const algoliaClient = useAlgolia();
+
+  return (searchQuery: string, teamId?: string) =>
+    getManuscriptVersions(algoliaClient.client, {
+      searchQuery,
+      currentPage: null,
+      pageSize: 100,
+      teamId,
+    }).then(({ items }) => items);
 };
 
 export const versionSelector = selectorFamily<

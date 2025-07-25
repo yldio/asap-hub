@@ -784,6 +784,20 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('fetches manuscript version suggestions', async () => {
+    await renderPage({
+      teamId: '42',
+      outputDocumentType: 'article',
+    });
+    userEvent.click(screen.getByLabelText('Import from manuscript'));
+
+    const input = screen.getByRole('textbox');
+    await userEvent.type(input, 'Version One');
+    await userEvent.tab();
+
+    expect(screen.getByRole('button', { name: /import/i })).toBeEnabled();
+  });
+
   it('navigates to standard output form when manual creation is confirmed', async () => {
     await renderPage({
       teamId: '42',

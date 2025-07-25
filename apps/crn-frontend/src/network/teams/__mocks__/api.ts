@@ -10,6 +10,7 @@ import {
   DiscussionRequest,
   DiscussionResponse,
   ListLabsResponse,
+  ListManuscriptVersionResponse,
   ListPartialManuscriptResponse,
   ListTeamResponse,
   TeamPatchRequest,
@@ -92,6 +93,22 @@ export const getManuscripts = jest.fn(
           displayName: 'Team 1',
         },
         status: 'Compliant',
+      },
+    ],
+  }),
+);
+
+export const getManuscriptVersions = jest.fn(
+  async (): Promise<ListManuscriptVersionResponse> => ({
+    total: 1,
+    items: [
+      {
+        id: 'mv-manuscript-id-1',
+        title: 'Manuscript 1',
+        type: 'Original Research',
+        lifecycle: 'Preprint',
+        versionId: 'version-id-1',
+        manuscriptId: 'DA1-000463-002-org-G-1',
       },
     ],
   }),

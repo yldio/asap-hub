@@ -3,6 +3,7 @@ import {
   ExternalAuthorResponse,
   InterestGroupResponse,
   LabResponse,
+  ManuscriptVersionResponse,
   NewsResponse,
   PartialManuscriptResponse,
   ResearchOutputResponse,
@@ -24,6 +25,7 @@ export const TUTORIAL_ENTITY_TYPE = 'tutorial';
 export const USER_ENTITY_TYPE = 'user';
 export const WORKING_GROUP_ENTITY_TYPE = 'working-group';
 export const MANUSCRIPT_ENTITY_TYPE = 'manuscript';
+export const MANUSCRIPT_VERSION_ENTITY_TYPE = 'manuscript-version';
 
 export type Payload =
   | {
@@ -69,4 +71,8 @@ export type Payload =
   | {
       data: PartialManuscriptResponse;
       type: typeof MANUSCRIPT_ENTITY_TYPE;
+    }
+  | {
+      data: ManuscriptVersionResponse;
+      type: typeof MANUSCRIPT_VERSION_ENTITY_TYPE;
     };

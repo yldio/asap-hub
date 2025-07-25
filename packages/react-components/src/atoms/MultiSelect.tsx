@@ -152,7 +152,7 @@ export type MultiSelectProps<
   readonly onChange?: M extends true
     ? MultiSelectOnChange<T>
     : SingleSelectOnChange<T>;
-  readonly values?: M extends true ? OptionsType<T> : T;
+  readonly values?: M extends true ? OptionsType<T> : T | null;
   readonly sortable?: boolean;
   readonly creatable?: boolean;
   readonly required?: boolean;
@@ -177,8 +177,8 @@ export type MultiSelectProps<
 
 const getValues = <T extends MultiSelectOptionsType, M extends boolean>(
   isMulti: M,
-): M extends true ? OptionsType<T> : T =>
-  (isMulti ? [] : {}) as M extends true ? OptionsType<T> : T;
+): M extends true ? OptionsType<T> : T | null =>
+  (isMulti ? [] : {}) as M extends true ? OptionsType<T> : T | null;
 
 const MultiSelect = <
   T extends MultiSelectOptionsType,
@@ -258,7 +258,7 @@ const MultiSelect = <
     placeholder,
     backspaceRemovesValue: true,
     isClearable: true,
-    value: values,
+    value: values ?? getValues<T, M>(isMulti),
     components: {
       MultiValueRemove,
       // @ts-expect-error // We're failing to provide a required index prop to SortableElement
@@ -278,7 +278,7 @@ const MultiSelect = <
       ...components,
     },
     noOptionsMessage,
-    styles: reactMultiSelectStyles(theme, !!validationMessage),
+    styles: reactMultiSelectStyles(theme, !!validationMessage, isMulti),
     ref: (ref: RefType<T>) => {
       inputRef = ref;
     },
@@ -359,9 +359,9 @@ const MultiSelect = <
         value={
           Array.isArray(values)
             ? values.map((value) => value.label).join(',')
-            : values && 'label' in values
-              ? values?.label || ''
-              : undefined
+            : typeof values === 'object' && values !== null && 'label' in values
+              ? values.label ?? ''
+              : ''
         }
         required={required}
         disabled={!enabled}

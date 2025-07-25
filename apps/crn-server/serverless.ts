@@ -353,6 +353,7 @@ const serverlessConfig: AWS = {
       platform: 'node',
       target: 'node20',
       bundle: true,
+      concurrency: 8,
     },
     'serverless-offline-ssm': {
       stages: ['local'],
@@ -987,6 +988,49 @@ const serverlessConfig: AWS = {
     algoliaIndexManuscripts: {
       handler:
         './src/handlers/manuscript/algolia-index-manuscript-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['ManuscriptsPublished', 'ManuscriptsUnpublished'],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    algoliaIndexManuscriptVersions: {
+      handler:
+        './src/handlers/manuscript-version/algolia-index-manuscript-versions-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'ManuscriptVersionsPublished',
+                'ManuscriptVersionsUnpublished',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    algoliaIndexManuscriptVersionsManuscripts: {
+      handler:
+        './src/handlers/manuscript/algolia-index-manuscript-versions-manuscripts-handler.handler',
       events: [
         {
           eventBridge: {

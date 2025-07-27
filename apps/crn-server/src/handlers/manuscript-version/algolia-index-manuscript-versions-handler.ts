@@ -31,13 +31,13 @@ export const indexManuscriptVersionHandler =
       );
 
       if (manuscriptVersionResponse) {
-        await algoliaClient.remove(manuscriptVersionResponse.id);
-
         if (manuscriptVersionResponse.versionId) {
           await algoliaClient.save({
             data: manuscriptVersionResponse,
             type: 'manuscript-version',
           });
+        } else {
+          await algoliaClient.remove(manuscriptVersionResponse.id);
         }
       }
     } catch (e) {
@@ -50,7 +50,6 @@ export const indexManuscriptVersionHandler =
         e instanceof NotFoundError
       ) {
         logger.error(`Manuscript Version ${manuscriptVersionId} not found`);
-        await algoliaClient.remove(manuscriptVersionId);
       }
       throw e;
     }

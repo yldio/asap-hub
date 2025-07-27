@@ -37,8 +37,6 @@ export const indexManuscriptVersionsManuscriptHandler =
 
           logger.debug(`Fetched latest version for manuscript ${manuscriptId}`);
 
-          await algoliaClient.remove(`mv-${manuscriptId}`);
-
           if (manuscriptVersion) {
             await algoliaClient.save({
               data: manuscriptVersion,
@@ -46,6 +44,8 @@ export const indexManuscriptVersionsManuscriptHandler =
             });
 
             logger.debug(`Manuscript version for ${manuscriptId} saved`);
+          } else {
+            await algoliaClient.remove(`mv-${manuscriptId}`);
           }
         } catch (e) {
           if (

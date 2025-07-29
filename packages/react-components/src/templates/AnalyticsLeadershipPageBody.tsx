@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import {
   LeadershipAndMembershipSortingDirection,
   SortLeadershipAndMembership,

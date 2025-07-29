@@ -91,18 +91,26 @@ const singleValueStyles = css({
   flexFlow: 'column',
   justifyContent: 'center',
   alignItems: 'flex-start',
-  rowGap: rem(8),
   backgroundColor: paper.rgb,
 });
 
-const pillContainerStyles = css({
-  display: 'flex',
-  gap: rem(8),
-  marginTop: rem(8),
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    flexDirection: 'column',
-  },
-});
+const pillContainerStyles = (isFocused?: boolean) =>
+  css({
+    display: 'flex',
+    gap: rem(8),
+    marginTop: rem(8),
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      flexDirection: 'column',
+    },
+    '& > *:nth-of-type(1), & > *:nth-of-type(2)': {
+      backgroundColor: isFocused ? '#DFE5EA' : undefined,
+      color: isFocused ? '#4D646B' : undefined,
+    },
+    '& > *:nth-of-type(3)': {
+      backgroundColor: isFocused ? '#CFEDFB' : undefined,
+      color: isFocused ? '#006A92' : undefined,
+    },
+  });
 
 type ManuscriptOutputSelectionProps = {
   manuscriptOutputSelection: 'manually' | 'import' | '';
@@ -121,21 +129,23 @@ export type ManuscriptVersionOption = {
 
 const ManuscriptVersionLabel = ({
   version,
+  isFocused = false,
   children,
 }: {
   version?: ManuscriptVersionResponse;
+  isFocused?: boolean;
   children: ReactElement | ReactNode;
 }) => (
-  <>
+  <div css={{ display: 'flex', flexDirection: 'column', rowGap: rem(9) }}>
     {version && (
-      <div css={pillContainerStyles}>
+      <div css={pillContainerStyles(isFocused)}>
         <Pill accent="gray">{version.type}</Pill>
         <Pill accent="gray">{version.lifecycle}</Pill>
         <Pill accent="blue">{version.manuscriptId}</Pill>
       </div>
     )}
     <span>{children}</span>
-  </>
+  </div>
 );
 const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
   onChangeManuscriptOutputSelection,
@@ -159,7 +169,6 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
     return (
       <div css={manuscriptImportStyles}>
         <LabeledMultiSelect<ManuscriptVersionOption, false>
-          noMargin
           isMulti={false}
           title="Manuscript"
           description="Only the latest version of the manuscript is available for import. If the first preprint version hasn't been imported yet, it will be added automatically."
@@ -201,7 +210,10 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
               <components.Option {...optionProps}>
                 <div>
                   {optionProps.data.version && (
-                    <ManuscriptVersionLabel version={optionProps.data.version}>
+                    <ManuscriptVersionLabel
+                      version={optionProps.data.version}
+                      isFocused={optionProps.isFocused}
+                    >
                       {optionProps.children}
                     </ManuscriptVersionLabel>
                   )}
@@ -222,6 +234,7 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
             setVersion(version ?? undefined);
           }}
           values={selectedVersion}
+          maxMenuHeight={170}
         />
       </div>
     );

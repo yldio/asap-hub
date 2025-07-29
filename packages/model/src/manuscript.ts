@@ -909,6 +909,24 @@ export type PartialManuscriptResponse = Pick<ManuscriptVersion, 'id'> &
 export type ListPartialManuscriptResponse =
   ListResponse<PartialManuscriptResponse>;
 
+export type ManuscriptVersionResponse = {
+  id: string;
+  type?: ManuscriptType;
+  lifecycle?: ManuscriptLifecycle;
+  teamId?: string;
+  title: string;
+  manuscriptId?: string;
+  versionId?: string;
+};
+
+export type ListManuscriptVersionResponse =
+  ListResponse<ManuscriptVersionResponse>;
+
+export type ManuscriptVersionDataObject = {
+  versionFound: boolean;
+  latestManuscriptVersion?: ManuscriptVersionResponse;
+};
+
 export const completedStatusOptions = {
   show: 'Show',
   hide: 'Hide',

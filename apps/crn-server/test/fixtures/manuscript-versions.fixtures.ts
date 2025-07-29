@@ -1,0 +1,99 @@
+import { FetchVersionsByManuscriptQuery } from '@asap-hub/contentful';
+import {
+  ListManuscriptVersionResponse,
+  ManuscriptVersionDataObject,
+} from '@asap-hub/model';
+
+export const getManuscriptVersionsListResponse =
+  (): ListManuscriptVersionResponse => ({
+    total: 2,
+    items: [
+      {
+        id: 'mv-manuscript-id-1',
+        type: 'Original Research',
+        lifecycle: 'Preprint',
+        teamId: 'team-id-1',
+        manuscriptId: 'WH1-000282-001-org-P-2',
+        title: 'Manuscript 1',
+        versionId: 'version-id-2',
+      },
+      {
+        id: 'mv-manuscript-id-2',
+        type: 'Original Research',
+        lifecycle: 'Preprint',
+        teamId: 'team-id-1',
+        manuscriptId: 'WH1-000282-002-org-P-2',
+        title: 'Manuscript 2',
+        versionId: 'version-id-2',
+      },
+    ],
+  });
+
+export const getManuscriptVersionDataObject =
+  (): ManuscriptVersionDataObject => ({
+    versionFound: true,
+    latestManuscriptVersion: {
+      id: 'mv-manuscript-id-1',
+      lifecycle: 'Preprint',
+      teamId: 'team-id-1',
+      title: 'Manuscript 1',
+      manuscriptId: 'WH1-000282-001-org-P-2',
+      versionId: 'version-id-2',
+    },
+  });
+
+export const getContentfulManuscriptVersion = (
+  count: number = 1,
+  lifecycle: string = 'Preprint',
+) => ({
+  sys: {
+    id: `version-id-${count}`,
+  },
+  type: 'Original Research',
+  lifecycle,
+  count,
+});
+
+type VersionCollection = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        NonNullable<FetchVersionsByManuscriptQuery>['manuscriptsCollection']
+      >['items'][number]
+    >
+  >['versionsCollection']
+>['items'];
+
+export const getContentfulManuscript = (
+  count: number = 1,
+  versionCollection: VersionCollection = [
+    getContentfulManuscriptVersion(2),
+    getContentfulManuscriptVersion(),
+  ],
+): NonNullable<
+  NonNullable<
+    NonNullable<FetchVersionsByManuscriptQuery>['manuscriptsCollection']
+  >['items'][number]
+> => ({
+  sys: { id: `manuscript-id-${count}` },
+  count,
+  title: `Manuscript ${count}`,
+  teamsCollection: {
+    items: [
+      {
+        sys: { id: 'team-id-1' },
+        grantId: '000282',
+        teamId: 'WH1',
+      },
+    ],
+  },
+  versionsCollection: {
+    items: versionCollection,
+  },
+});
+
+export const getContentfulManuscriptsCollection =
+  (): NonNullable<FetchVersionsByManuscriptQuery>['manuscriptsCollection'] => ({
+    items: [getContentfulManuscript(), getContentfulManuscript(2)],
+    total: 2,
+  });

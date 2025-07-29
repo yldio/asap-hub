@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useHistory } from 'react-router-dom';
 import ManuscriptOutputSelection from '../ManuscriptOutputSelection';
@@ -17,6 +17,7 @@ describe('ManuscriptOutputSelection', () => {
     manuscriptOutputSelection: '' as '' | 'manually' | 'import',
     onChangeManuscriptOutputSelection: jest.fn(),
     onSelectCreateManually: jest.fn(),
+    getManuscriptVersionOptions: jest.fn(),
   };
 
   beforeEach(() => {
@@ -147,5 +148,57 @@ describe('ManuscriptOutputSelection', () => {
 
     const importButton = screen.getByRole('button', { name: 'Import' });
     expect(importButton).toBeDisabled();
+  });
+
+  it('shows message when no suggestions are found', async () => {
+    const { getByRole, getByText, queryByText } = render(
+      <ManuscriptOutputSelection
+        {...defaultProps}
+        manuscriptOutputSelection="import"
+        getManuscriptVersionOptions={jest.fn().mockResolvedValue([])}
+      />,
+    );
+
+    userEvent.type(getByRole('textbox'), 'asdflkjasdflkj');
+
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+
+    expect(
+      getByText('Sorry, no manuscripts match asdflkjasdflkj'),
+    ).toBeVisible();
+  });
+
+  it('lets a user select a version', async () => {
+    const mockOption = {
+      label: 'Version One',
+      value: 'mv-version-1',
+      version: {
+        manuscriptId: '123',
+        type: 'Original Research',
+        lifecycle: 'Preprint',
+      },
+    };
+
+    const getOptions = jest.fn().mockResolvedValue([mockOption]);
+
+    const { findByText, getByRole, getByText } = render(
+      <ManuscriptOutputSelection
+        {...defaultProps}
+        manuscriptOutputSelection="import"
+        getManuscriptVersionOptions={getOptions}
+      />,
+    );
+
+    const input = getByRole('textbox');
+    await userEvent.type(input, 'Version One');
+    await userEvent.tab();
+
+    expect(await findByText('Preprint')).toBeInTheDocument();
+    expect(getByText('Original Research')).toBeInTheDocument();
+    expect(getByText('123')).toBeInTheDocument();
+
+    expect(getByRole('button', { name: /import/i })).toBeEnabled();
   });
 });

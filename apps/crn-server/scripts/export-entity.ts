@@ -11,6 +11,7 @@ import Users from '../src/controllers/user.controller';
 import WorkingGroups from '../src/controllers/working-group.controller';
 import InterestGroups from '../src/controllers/interest-group.controller';
 import Manuscripts from '../src/controllers/manuscript.controller';
+import ManuscriptVersions from '../src/controllers/manuscript-version.controller';
 import { getEventDataProvider } from '../src/dependencies/events.dependencies';
 import { getExternalAuthorDataProvider } from '../src/dependencies/external-authors.dependencies';
 import { getNewsDataProvider } from '../src/dependencies/news.dependencies';
@@ -27,6 +28,7 @@ import {
 import { getWorkingGroupDataProvider } from '../src/dependencies/working-groups.dependencies';
 import { getInterestGroupDataProvider } from '../src/dependencies/interest-groups.dependencies';
 import { getManuscriptsDataProvider } from '../src/dependencies/manuscripts.dependencies';
+import { getManuscriptVersionsDataProvider } from '../src/dependencies/manuscript-versions.dependencies';
 
 type EntityResponsesCRN = EntityResponses['crn'];
 export const PAGE_SIZE = 10;
@@ -36,13 +38,16 @@ export const exportEntity = async (
 ): Promise<void> => {
   const controller = getController(entity);
   const file = await fs.open(filename || `${entity}.json`, 'w');
+  const isManuscriptVersionEntity = entity === 'manuscript-version';
   let recordCount = 0;
-  let total: number;
-  let records: ListResponse<EntityData>;
-  let page = 1;
 
   await file.write('[\n');
 
+  let total: number;
+  let records: ListResponse<EntityData>;
+  let recordsFetched: number;
+  let page = 1;
+  let shouldContinue: boolean;
   do {
     records = await controller.fetch({
       take: PAGE_SIZE,
@@ -50,22 +55,29 @@ export const exportEntity = async (
     });
 
     total = records.total;
+    recordsFetched = records.items.length;
 
-    if (page != 1) {
-      await file.write(',\n');
+    if (recordsFetched) {
+      if (page != 1) {
+        await file.write(',\n');
+      }
+
+      await file.write(
+        JSON.stringify(
+          records.items.map((record) => transformRecords(record, entity)),
+          null,
+          2,
+        ).slice(1, -1),
+      );
     }
 
-    await file.write(
-      JSON.stringify(
-        records.items.map((record) => transformRecords(record, entity)),
-        null,
-        2,
-      ).slice(1, -1),
-    );
-
     page++;
-    recordCount += records.items.length;
-  } while (total > recordCount);
+    recordCount += recordsFetched;
+
+    shouldContinue = isManuscriptVersionEntity
+      ? total !== 0
+      : total > recordCount;
+  } while (shouldContinue);
 
   await file.write(']');
 
@@ -89,6 +101,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
   const newsDataProvider = getNewsDataProvider();
   const interestGroupDataProvider = getInterestGroupDataProvider();
   const manuscriptDataProvider = getManuscriptsDataProvider();
+  const manuscriptVersionDataProvider = getManuscriptVersionsDataProvider();
 
   const controllerMap = {
     user: new Users(
@@ -116,6 +129,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
       externalAuthorDataProvider,
       assetDataProvider,
     ),
+    'manuscript-version': new ManuscriptVersions(manuscriptVersionDataProvider),
   };
 
   return controllerMap[entity];

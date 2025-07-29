@@ -44,7 +44,7 @@ import {
   useResearchTags,
   useTeamSuggestions,
 } from '../../shared-state';
-import { useTeamById } from './state';
+import { useManuscriptVersionSuggestions, useTeamById } from './state';
 
 const useParamOutputDocumentType = (
   teamId: string,
@@ -108,6 +108,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   );
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
   const researchTags = useResearchTags();
+  const getManuscriptVersionSuggestions = useManuscriptVersionSuggestions();
 
   const published = researchOutputData ? !!researchOutputData.published : false;
 
@@ -163,6 +164,16 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             manuscriptOutputSelection={manuscriptOutputSelection}
             onChangeManuscriptOutputSelection={handleManuscriptOutputSelection}
             onSelectCreateManually={() => setShowManuscriptOutputFlow(false)}
+            getManuscriptVersionOptions={(input) =>
+              getManuscriptVersionSuggestions(input, teamId).then(
+                (versionSuggestions) =>
+                  versionSuggestions.map((version) => ({
+                    version,
+                    label: version.title,
+                    value: version.id,
+                  })),
+              )
+            }
           />
         </Frame>
       );

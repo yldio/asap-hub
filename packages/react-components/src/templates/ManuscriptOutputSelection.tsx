@@ -1,11 +1,17 @@
+import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
+import { ComponentProps, ReactElement, ReactNode, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { components } from 'react-select';
 import {
   Button,
   contentSidePaddingWithNavigation,
   FormCard,
   LabeledMultiSelect,
   LabeledRadioButtonGroup,
+  MultiSelectOptionsType,
+  paper,
+  Pill,
 } from '..';
 import { mobileScreen, rem } from '../pixels';
 
@@ -79,24 +85,81 @@ const dismissButtonStyles = css({
   },
 });
 
+const singleValueStyles = css({
+  padding: `${rem(5)} ${rem(15)} ${rem(5)} ${rem(5)}`,
+  display: 'flex',
+  flexFlow: 'column',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  backgroundColor: paper.rgb,
+});
+
+const pillContainerStyles = (isFocused?: boolean) =>
+  css({
+    display: 'flex',
+    gap: rem(8),
+    marginTop: rem(8),
+    [`@media (max-width: ${mobileScreen.max}px)`]: {
+      flexDirection: 'column',
+    },
+    '& > *:nth-of-type(1), & > *:nth-of-type(2)': {
+      backgroundColor: isFocused ? '#DFE5EA' : undefined,
+      color: isFocused ? '#4D646B' : undefined,
+    },
+    '& > *:nth-of-type(3)': {
+      backgroundColor: isFocused ? '#CFEDFB' : undefined,
+      color: isFocused ? '#006A92' : undefined,
+    },
+  });
+
 type ManuscriptOutputSelectionProps = {
   manuscriptOutputSelection: 'manually' | 'import' | '';
   onChangeManuscriptOutputSelection: (
     manuscriptOutputSelection: 'manually' | 'import' | '',
   ) => void;
   onSelectCreateManually: () => void;
+  getManuscriptVersionOptions: NonNullable<
+    ComponentProps<typeof LabeledMultiSelect>['loadOptions']
+  >;
 };
 
+export type ManuscriptVersionOption = {
+  version?: ManuscriptVersionResponse;
+} & MultiSelectOptionsType;
+
+const ManuscriptVersionLabel = ({
+  version,
+  isFocused = false,
+  children,
+}: {
+  version?: ManuscriptVersionResponse;
+  isFocused?: boolean;
+  children: ReactElement | ReactNode;
+}) => (
+  <div css={{ display: 'flex', flexDirection: 'column', rowGap: rem(9) }}>
+    {version && (
+      <div css={pillContainerStyles(isFocused)}>
+        <Pill accent="gray">{version.type}</Pill>
+        <Pill accent="gray">{version.lifecycle}</Pill>
+        <Pill accent="blue">{version.manuscriptId}</Pill>
+      </div>
+    )}
+    <span>{children}</span>
+  </div>
+);
 const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
   onChangeManuscriptOutputSelection,
   manuscriptOutputSelection,
   onSelectCreateManually,
+  getManuscriptVersionOptions,
 }) => {
   const history = useHistory();
 
   const handleCancel = () => {
     history.goBack();
   };
+
+  const [selectedVersion, setVersion] = useState<ManuscriptVersionOption>();
 
   const renderManuscriptImport = () => {
     if (manuscriptOutputSelection !== 'import') {
@@ -105,16 +168,73 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
 
     return (
       <div css={manuscriptImportStyles}>
-        <LabeledMultiSelect
-          noMargin
+        <LabeledMultiSelect<ManuscriptVersionOption, false>
+          isMulti={false}
           title="Manuscript"
           description="Only the latest version of the manuscript is available for import. If the first preprint version hasn't been imported yet, it will be added automatically."
           subtitle="(required)"
           required
           placeholder="Start typing..."
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          loadOptions={() => {}}
-          values={[]}
+          noOptionsMessage={({ inputValue }: { inputValue: string }) =>
+            `Sorry, no manuscripts match ${inputValue}`
+          }
+          loadOptions={getManuscriptVersionOptions}
+          components={{
+            SingleValue: (singleValueLabelProps) => (
+              <components.SingleValue
+                {...singleValueLabelProps}
+                innerProps={{
+                  ...singleValueLabelProps.innerProps,
+                  style: {
+                    position: 'static',
+                    transform: 'none',
+                    whiteSpace: 'normal',
+                    lineHeight: '1.4',
+                  },
+                }}
+              >
+                <div
+                  css={
+                    singleValueLabelProps.data.version && [singleValueStyles]
+                  }
+                >
+                  <ManuscriptVersionLabel
+                    version={singleValueLabelProps.data.version}
+                  >
+                    {singleValueLabelProps.children}
+                  </ManuscriptVersionLabel>
+                </div>
+              </components.SingleValue>
+            ),
+            Option: (optionProps) => (
+              <components.Option {...optionProps}>
+                <div>
+                  {optionProps.data.version && (
+                    <ManuscriptVersionLabel
+                      version={optionProps.data.version}
+                      isFocused={optionProps.isFocused}
+                    >
+                      {optionProps.children}
+                    </ManuscriptVersionLabel>
+                  )}
+                </div>
+              </components.Option>
+            ),
+            Input: (props) => (
+              <components.Input
+                {...props}
+                innerRef={props.innerRef}
+                style={{
+                  ...props.style,
+                }}
+              />
+            ),
+          }}
+          onChange={(version: ManuscriptVersionOption) => {
+            setVersion(version ?? undefined);
+          }}
+          values={selectedVersion}
+          maxMenuHeight={170}
         />
       </div>
     );
@@ -135,7 +255,10 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
         <div css={confirmButtonStyles}>
           <Button
             noMargin
-            enabled={manuscriptOutputSelection !== 'import'}
+            enabled={
+              manuscriptOutputSelection !== 'import' ||
+              (manuscriptOutputSelection === 'import' && !!selectedVersion)
+            }
             onClick={
               manuscriptOutputSelection === 'manually'
                 ? onSelectCreateManually

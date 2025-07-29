@@ -12,6 +12,7 @@ export * from './impact.queries';
 export * from './interest-groups.queries';
 export * from './labs.queries';
 export * from './manuscript.queries';
+export * from './manuscript-versions.queries';
 export * from './news.queries';
 export * from './pages.queries';
 export * from './reminders.queries';

@@ -25,6 +25,7 @@ import {
   ResearchOutputResponse,
   TeamPatchRequest,
   TeamResponse,
+  ListManuscriptVersionResponse,
 } from '@asap-hub/model';
 import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
 import { getPresignedUrl } from '../../shared-api/files';
@@ -352,6 +353,33 @@ export const getManuscript = async (
     );
   }
   return resp.json();
+};
+
+export type ManuscriptVersionOptions = Omit<GetListOptions, 'filters'> & {
+  teamId?: string;
+};
+
+export const getManuscriptVersions = async (
+  algoliaClient: AlgoliaClient<'crn'>,
+  { searchQuery, currentPage, pageSize, teamId }: ManuscriptVersionOptions,
+): Promise<ListManuscriptVersionResponse> => {
+  const result = await algoliaClient.search(
+    ['manuscript-version'],
+    searchQuery,
+    {
+      page: currentPage ?? undefined,
+      hitsPerPage: pageSize ?? undefined,
+      restrictSearchableAttributes: ['title', 'manuscriptId'],
+      ...(teamId && { filters: `(teamId:"${teamId}")` }),
+    },
+  );
+
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };
 
 export const uploadManuscriptFile = async (

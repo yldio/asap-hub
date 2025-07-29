@@ -12,6 +12,7 @@ on:
           - external-authors
           - interest-groups
           - manuscripts
+          - manuscript-versions
           - news
           - research-outputs
           - teams

@@ -11,6 +11,7 @@ import {
   createMessage,
   createPartialManuscriptResponse,
   createTeamResponse,
+  createManuscriptVersionResponse,
 } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
@@ -49,6 +50,7 @@ import {
   updateTeamResearchOutput,
   uploadManuscriptFile,
   uploadManuscriptFileViaPresignedUrl,
+  getManuscriptVersions,
 } from '../api';
 
 jest.mock('../../../config', () => ({
@@ -634,6 +636,105 @@ describe('Manuscript', () => {
           true,
         );
       });
+    });
+  });
+
+  describe('getManuscriptVersions', () => {
+    type Search = () => Promise<
+      ClientSearchResponse<'crn', 'manuscript-version'>
+    >;
+    const search: jest.MockedFunction<Search> = jest.fn();
+    const algoliaSearchClient = {
+      search,
+    } as unknown as AlgoliaSearchClient<'crn'>;
+
+    const algoliaManuscriptVersionsResponse = createManuscriptVersionResponse();
+
+    beforeEach(() => {
+      search.mockReset();
+      search.mockResolvedValue(
+        createAlgoliaResponse<'crn', 'manuscript-version'>([
+          {
+            ...algoliaManuscriptVersionsResponse,
+            objectID: algoliaManuscriptVersionsResponse.id,
+            __meta: { type: 'manuscript-version' },
+          },
+        ]),
+      );
+    });
+
+    it('should return successfully fetched manuscript versions', async () => {
+      const versionSuggestions = await getManuscriptVersions(
+        algoliaSearchClient,
+        {
+          searchQuery: '',
+          pageSize: null,
+          currentPage: null,
+        },
+      );
+      expect(versionSuggestions).toEqual(
+        expect.objectContaining({
+          items: [
+            {
+              ...algoliaManuscriptVersionsResponse,
+              __meta: { type: 'manuscript-version' },
+              objectID: algoliaManuscriptVersionsResponse.id,
+            },
+          ],
+          total: 1,
+        }),
+      );
+    });
+
+    it('should pass through search query', async () => {
+      await getManuscriptVersions(algoliaSearchClient, {
+        searchQuery: 'test query',
+        pageSize: null,
+        currentPage: null,
+      });
+
+      expect(search).toHaveBeenCalledWith(
+        ['manuscript-version'],
+        'test query',
+        expect.any(Object),
+      );
+    });
+
+    it('should pass through pagination parameters', async () => {
+      await getManuscriptVersions(algoliaSearchClient, {
+        searchQuery: '',
+        pageSize: 25,
+        currentPage: 2,
+      });
+
+      expect(search).toHaveBeenCalledWith(
+        ['manuscript-version'],
+        '',
+        expect.objectContaining({
+          hitsPerPage: 25,
+          page: 2,
+        }),
+      );
+    });
+
+    it('can filter by team id', async () => {
+      const teamId = 'team-id-1';
+      await getManuscriptVersions(algoliaSearchClient, {
+        searchQuery: '',
+        pageSize: 25,
+        currentPage: 2,
+        teamId,
+      });
+
+      expect(search).toHaveBeenCalledWith(
+        ['manuscript-version'],
+        '',
+        expect.objectContaining({
+          hitsPerPage: 25,
+          page: 2,
+          filters: `(teamId:"${teamId}")`,
+        }),
+      );
     });
   });
 

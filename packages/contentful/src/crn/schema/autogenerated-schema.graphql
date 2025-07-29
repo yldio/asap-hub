@@ -223,6 +223,177 @@ enum AssetOrder {
   width_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/attendance)"""
+type Attendance implements Entry & _Node {
+  _id: ID!
+  attended(locale: String): Boolean
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): AttendanceLinkingCollections
+  sys: Sys!
+  team(locale: String, preview: Boolean, where: TeamsFilter): Teams
+}
+
+type AttendanceCollection {
+  items: [Attendance]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input AttendanceFilter {
+  AND: [AttendanceFilter]
+  OR: [AttendanceFilter]
+  attended: Boolean
+  attended_exists: Boolean
+  attended_not: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  sys: SysFilter
+  team: cfTeamsNestedFilter
+  team_exists: Boolean
+}
+
+type AttendanceLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [AttendanceLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+}
+
+enum AttendanceLinkingCollectionsEventsCollectionOrder {
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+enum AttendanceOrder {
+  attended_ASC
+  attended_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awards)"""
+type Awards implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  date(locale: String): DateTime
+  linkedFrom(allowedLocales: [String]): AwardsLinkingCollections
+  sys: Sys!
+  type(locale: String): String
+}
+
+type AwardsCollection {
+  items: [Awards]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input AwardsFilter {
+  AND: [AwardsFilter]
+  OR: [AwardsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  date: DateTime
+  date_exists: Boolean
+  date_gt: DateTime
+  date_gte: DateTime
+  date_in: [DateTime]
+  date_lt: DateTime
+  date_lte: DateTime
+  date_not: DateTime
+  date_not_in: [DateTime]
+  sys: SysFilter
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
+type AwardsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  teamMembershipCollection(limit: Int = 100, locale: String, order: [AwardsLinkingCollectionsTeamMembershipCollectionOrder], preview: Boolean, skip: Int = 0): TeamMembershipCollection
+}
+
+enum AwardsLinkingCollectionsTeamMembershipCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum AwardsOrder {
+  date_ASC
+  date_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars)"""
 type Calendars implements Entry & _Node {
   _id: ID!
@@ -1336,6 +1507,7 @@ input EventSpeakersUserFilter {
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events)"""
 type Events implements Entry & _Node {
   _id: ID!
+  attendanceCollection(limit: Int = 100, locale: String, order: [EventsAttendanceCollectionOrder], preview: Boolean, skip: Int = 0, where: AttendanceFilter): EventsAttendanceCollection
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
@@ -1353,6 +1525,7 @@ type Events implements Entry & _Node {
   notes(locale: String): EventsNotes
   notesPermanentlyUnavailable(locale: String): Boolean
   notesUpdatedAt(locale: String): DateTime
+  preliminaryDataSharedCollection(limit: Int = 100, locale: String, order: [EventsPreliminaryDataSharedCollectionOrder], preview: Boolean, skip: Int = 0, where: PreliminaryDataSharingFilter): EventsPreliminaryDataSharedCollection
   presentation(locale: String): EventsPresentation
   presentationPermanentlyUnavailable(locale: String): Boolean
   presentationUpdatedAt(locale: String): DateTime
@@ -1369,6 +1542,26 @@ type Events implements Entry & _Node {
   videoRecordingUpdatedAt(locale: String): DateTime
 }
 
+type EventsAttendanceCollection {
+  items: [Attendance]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum EventsAttendanceCollectionOrder {
+  attended_ASC
+  attended_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 type EventsCollection {
   items: [Events]!
   limit: Int!
@@ -1379,6 +1572,8 @@ type EventsCollection {
 input EventsFilter {
   AND: [EventsFilter]
   OR: [EventsFilter]
+  attendance: cfAttendanceNestedFilter
+  attendanceCollection_exists: Boolean
   calendar: cfCalendarsNestedFilter
   calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
@@ -1460,6 +1655,8 @@ input EventsFilter {
   notes_contains: String
   notes_exists: Boolean
   notes_not_contains: String
+  preliminaryDataShared: cfPreliminaryDataSharingNestedFilter
+  preliminaryDataSharedCollection_exists: Boolean
   presentationPermanentlyUnavailable: Boolean
   presentationPermanentlyUnavailable_exists: Boolean
   presentationPermanentlyUnavailable_not: Boolean
@@ -1697,6 +1894,26 @@ enum EventsOrder {
   videoRecordingPermanentlyUnavailable_DESC
   videoRecordingUpdatedAt_ASC
   videoRecordingUpdatedAt_DESC
+}
+
+type EventsPreliminaryDataSharedCollection {
+  items: [PreliminaryDataSharing]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum EventsPreliminaryDataSharedCollectionOrder {
+  preliminaryDataShared_ASC
+  preliminaryDataShared_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 type EventsPresentation {
@@ -4735,6 +4952,102 @@ type PagesTextResourcesInline implements ResourceLink {
   sys: ResourceSys!
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/preliminaryDataSharing)"""
+type PreliminaryDataSharing implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): PreliminaryDataSharingLinkingCollections
+  preliminaryDataShared(locale: String): Boolean
+  sys: Sys!
+  team(locale: String, preview: Boolean, where: TeamsFilter): Teams
+}
+
+type PreliminaryDataSharingCollection {
+  items: [PreliminaryDataSharing]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input PreliminaryDataSharingFilter {
+  AND: [PreliminaryDataSharingFilter]
+  OR: [PreliminaryDataSharingFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  preliminaryDataShared: Boolean
+  preliminaryDataShared_exists: Boolean
+  preliminaryDataShared_not: Boolean
+  sys: SysFilter
+  team: cfTeamsNestedFilter
+  team_exists: Boolean
+}
+
+type PreliminaryDataSharingLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [PreliminaryDataSharingLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+}
+
+enum PreliminaryDataSharingLinkingCollectionsEventsCollectionOrder {
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+enum PreliminaryDataSharingOrder {
+  preliminaryDataShared_ASC
+  preliminaryDataShared_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """The 'Quality' type represents quality as whole numeric values between `1` and `100`."""
 scalar Quality
 
@@ -4745,6 +5058,10 @@ type Query {
   announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): AnnouncementsCollection
   asset(id: String!, locale: String, preview: Boolean): Asset
   assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, where: AssetFilter): AssetCollection
+  attendance(id: String!, locale: String, preview: Boolean): Attendance
+  attendanceCollection(limit: Int = 100, locale: String, order: [AttendanceOrder], preview: Boolean, skip: Int = 0, where: AttendanceFilter): AttendanceCollection
+  awards(id: String!, locale: String, preview: Boolean): Awards
+  awardsCollection(limit: Int = 100, locale: String, order: [AwardsOrder], preview: Boolean, skip: Int = 0, where: AwardsFilter): AwardsCollection
   calendars(id: String!, locale: String, preview: Boolean): Calendars
   calendarsCollection(limit: Int = 100, locale: String, order: [CalendarsOrder], preview: Boolean, skip: Int = 0, where: CalendarsFilter): CalendarsCollection
   category(id: String!, locale: String, preview: Boolean): Category
@@ -4800,6 +5117,8 @@ type Query {
   newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
   pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
+  preliminaryDataSharing(id: String!, locale: String, preview: Boolean): PreliminaryDataSharing
+  preliminaryDataSharingCollection(limit: Int = 100, locale: String, order: [PreliminaryDataSharingOrder], preview: Boolean, skip: Int = 0, where: PreliminaryDataSharingFilter): PreliminaryDataSharingCollection
   researchOutputVersions(id: String!, locale: String, preview: Boolean): ResearchOutputVersions
   researchOutputVersionsCollection(limit: Int = 100, locale: String, order: [ResearchOutputVersionsOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputVersionsFilter): ResearchOutputVersionsCollection
   researchOutputs(id: String!, locale: String, preview: Boolean): ResearchOutputs
@@ -6347,12 +6666,35 @@ type TaxonomyConcept {
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teamMembership)"""
 type TeamMembership implements Entry & _Node {
   _id: ID!
+  awardsCollection(limit: Int = 100, locale: String, order: [TeamMembershipAwardsCollectionOrder], preview: Boolean, skip: Int = 0, where: AwardsFilter): TeamMembershipAwardsCollection
   contentfulMetadata: ContentfulMetadata!
   inactiveSinceDate(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): TeamMembershipLinkingCollections
   role(locale: String): String
   sys: Sys!
   team(locale: String, preview: Boolean, where: TeamsFilter): Teams
+}
+
+type TeamMembershipAwardsCollection {
+  items: [Awards]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum TeamMembershipAwardsCollectionOrder {
+  date_ASC
+  date_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
 }
 
 type TeamMembershipCollection {
@@ -6365,6 +6707,8 @@ type TeamMembershipCollection {
 input TeamMembershipFilter {
   AND: [TeamMembershipFilter]
   OR: [TeamMembershipFilter]
+  awards: cfAwardsNestedFilter
+  awardsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   inactiveSinceDate: DateTime
   inactiveSinceDate_exists: Boolean
@@ -6578,15 +6922,30 @@ input TeamsFilter {
 }
 
 type TeamsLinkingCollections {
+  attendanceCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsAttendanceCollectionOrder], preview: Boolean, skip: Int = 0): AttendanceCollection
   discoverCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsDiscoverCollectionOrder], preview: Boolean, skip: Int = 0): DiscoverCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupsTeamsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsInterestGroupsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsTeamsCollection
   manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
+  preliminaryDataSharingCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsPreliminaryDataSharingCollectionOrder], preview: Boolean, skip: Int = 0): PreliminaryDataSharingCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   teamMembershipCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsTeamMembershipCollectionOrder], preview: Boolean, skip: Int = 0): TeamMembershipCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
+}
+
+enum TeamsLinkingCollectionsAttendanceCollectionOrder {
+  attended_ASC
+  attended_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum TeamsLinkingCollectionsDiscoverCollectionOrder {
@@ -6714,6 +7073,19 @@ enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
   title_DESC
   url_ASC
   url_DESC
+}
+
+enum TeamsLinkingCollectionsPreliminaryDataSharingCollectionOrder {
+  preliminaryDataShared_ASC
+  preliminaryDataShared_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -8626,6 +8998,40 @@ input cfAnnouncementsNestedFilter {
   sys: SysFilter
 }
 
+input cfAttendanceNestedFilter {
+  AND: [cfAttendanceNestedFilter]
+  OR: [cfAttendanceNestedFilter]
+  attended: Boolean
+  attended_exists: Boolean
+  attended_not: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  sys: SysFilter
+  team_exists: Boolean
+}
+
+input cfAwardsNestedFilter {
+  AND: [cfAwardsNestedFilter]
+  OR: [cfAwardsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  date: DateTime
+  date_exists: Boolean
+  date_gt: DateTime
+  date_gte: DateTime
+  date_in: [DateTime]
+  date_lt: DateTime
+  date_lte: DateTime
+  date_not: DateTime
+  date_not_in: [DateTime]
+  sys: SysFilter
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
 input cfCalendarsNestedFilter {
   AND: [cfCalendarsNestedFilter]
   OR: [cfCalendarsNestedFilter]
@@ -8698,6 +9104,7 @@ input cfEventSpeakersNestedFilter {
 input cfEventsNestedFilter {
   AND: [cfEventsNestedFilter]
   OR: [cfEventsNestedFilter]
+  attendanceCollection_exists: Boolean
   calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   description: String
@@ -8778,6 +9185,7 @@ input cfEventsNestedFilter {
   notes_contains: String
   notes_exists: Boolean
   notes_not_contains: String
+  preliminaryDataSharedCollection_exists: Boolean
   presentationPermanentlyUnavailable: Boolean
   presentationPermanentlyUnavailable_exists: Boolean
   presentationPermanentlyUnavailable_not: Boolean
@@ -9342,6 +9750,17 @@ input cfPagesNestedFilter {
   title_not_in: [String]
 }
 
+input cfPreliminaryDataSharingNestedFilter {
+  AND: [cfPreliminaryDataSharingNestedFilter]
+  OR: [cfPreliminaryDataSharingNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  preliminaryDataShared: Boolean
+  preliminaryDataShared_exists: Boolean
+  preliminaryDataShared_not: Boolean
+  sys: SysFilter
+  team_exists: Boolean
+}
+
 input cfResearchOutputVersionsNestedFilter {
   AND: [cfResearchOutputVersionsNestedFilter]
   OR: [cfResearchOutputVersionsNestedFilter]
@@ -9680,6 +10099,7 @@ input cfSupplementGrantNestedFilter {
 input cfTeamMembershipNestedFilter {
   AND: [cfTeamMembershipNestedFilter]
   OR: [cfTeamMembershipNestedFilter]
+  awardsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   inactiveSinceDate: DateTime
   inactiveSinceDate_exists: Boolean

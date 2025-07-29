@@ -1,7 +1,8 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'COMPLIANCE_NOTIFICATION_LIST'
-  | 'MANUSCRIPT_OUTPUTS';
+  | 'MANUSCRIPT_OUTPUTS'
+  | 'ANALYTICS_OS_CHAMPION';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
 let overrides: Flags = {

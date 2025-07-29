@@ -61,14 +61,17 @@ export type SortLeadershipAndMembership =
   | 'ig_current_membership_asc'
   | 'ig_current_membership_desc'
   | 'ig_previous_membership_asc'
-  | 'ig_previous_membership_desc';
+  | 'ig_previous_membership_desc'
+  | 'os_champion_awards_asc'
+  | 'os_champion_awards_desc';
 
 export type LeadershipAndMembershipFields =
   | 'team'
   | 'currentLeadership'
   | 'previousLeadership'
   | 'currentMembership'
-  | 'previousMembership';
+  | 'previousMembership'
+  | 'osChampionAwards';
 
 export type SortingDirection = 'asc' | 'desc';
 
@@ -81,6 +84,7 @@ export const initialSortingDirection = {
   previousLeadership: descending,
   currentMembership: descending,
   previousMembership: descending,
+  osChampionAwards: descending,
 };
 
 export type LeadershipAndMembershipSortingDirection = {
@@ -532,7 +536,8 @@ export type Metric =
   | 'user-productivity'
   | 'team-collaboration'
   | 'user-collaboration'
-  | 'engagement';
+  | 'engagement'
+  | 'open-science';
 
 export type AnalyticsSortOptions =
   | SortEngagement

@@ -315,3 +315,4 @@ export type {
   TeamCollaborationMetric,
 } from './organisms';
 export type { ResearchOutputOption } from './utils';
+export type { MetricOption } from './templates/AnalyticsLeadershipPageBody';

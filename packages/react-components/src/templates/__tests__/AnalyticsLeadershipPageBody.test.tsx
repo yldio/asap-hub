@@ -1,4 +1,3 @@
-import * as flags from '@asap-hub/flags';
 import { initialSortingDirection } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
@@ -19,7 +18,9 @@ describe('AnalyticsLeadershipPageBody', () => {
     setSortingDirection: jest.fn(),
     setTags: jest.fn(),
     tags: [],
+    isOSChampionEnabled: true,
   };
+
   it('renders interest group tab', () => {
     const { getAllByText } = render(
       <AnalyticsLeadershipPageBody {...props} metric="interest-group" />,
@@ -49,9 +50,12 @@ describe('AnalyticsLeadershipPageBody', () => {
   });
 
   it('filters out OS champion option from dropdown when feature flag is off', async () => {
-    jest.spyOn(flags, 'isEnabled').mockReturnValue(false);
     const { queryByText } = render(
-      <AnalyticsLeadershipPageBody {...props} metric="interest-group" />,
+      <AnalyticsLeadershipPageBody
+        {...props}
+        metric="working-group"
+        isOSChampionEnabled={false}
+      />,
     );
 
     expect(queryByText('Open Science Champion')).not.toBeInTheDocument();

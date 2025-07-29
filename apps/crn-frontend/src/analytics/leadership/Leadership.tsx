@@ -120,6 +120,7 @@ const Leadership: FC<Record<string, never>> = () => {
     />
   ) : (
     <AnalyticsLeadershipPageBody
+      isOSChampionEnabled={isOSChampionEnabled}
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => {

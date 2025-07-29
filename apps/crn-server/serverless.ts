@@ -122,7 +122,7 @@ const eventBusSourceContentful = 'asap.contentful';
 const openSearchDomainName =
   stage === 'production'
     ? `${service}-${stage}-search`
-    : `${service}-dev-search`;
+    : `${service}-poc-search`;
 
 const serverlessConfig: AWS = {
   service,

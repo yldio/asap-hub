@@ -196,14 +196,16 @@ const serverlessConfig: AWS = {
               'es:ESHttpPatch',
             ],
             Resource: {
-              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+              'Fn::Sub':
+                'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.openSearchDomainName}/*',
             },
           },
           {
             Effect: 'Allow',
             Action: ['es:DescribeDomain', 'es:DescribeDomains'],
             Resource: {
-              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}`,
+              'Fn::Sub':
+                'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.openSearchDomainName}',
             },
           },
           {
@@ -2012,7 +2014,10 @@ const serverlessConfig: AWS = {
       OpenSearchLogGroup: {
         Type: 'AWS::Logs::LogGroup',
         Properties: {
-          LogGroupName: `/aws/opensearch/domains/${openSearchDomainName}/application-logs`,
+          LogGroupName: {
+            'Fn::Sub':
+              '/aws/opensearch/domains/${self:custom.openSearchDomainName}/application-logs',
+          },
           RetentionInDays: 30,
         },
       },
@@ -2050,7 +2055,8 @@ const serverlessConfig: AWS = {
                 },
                 Action: 'es:*',
                 Resource: {
-                  'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+                  'Fn::Sub':
+                    'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.openSearchDomainName}/*',
                 },
               },
             ],
@@ -2078,7 +2084,7 @@ const serverlessConfig: AWS = {
               Enabled: stage === 'production', // Enabled in prod
               CloudWatchLogsLogGroupArn: {
                 'Fn::Sub':
-                  'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/opensearch/domains/${openSearchDomainName}/application-logs',
+                  'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/opensearch/domains/${self:custom.openSearchDomainName}/application-logs',
               },
             },
             SEARCH_SLOW_LOGS: {

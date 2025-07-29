@@ -78,11 +78,18 @@ const logLevel = process.env.LOG_LEVEL!;
 const s3SyncEnabled = process.env.S3_SYNC_ENABLED !== 'false';
 const openaiApiKey = process.env.OPENAI_API_KEY!;
 const postmarkServerToken = process.env.POSTMARK_SERVER_TOKEN!;
+const opensearchMasterUser = process.env.AWS_OS_USERNAME!;
+const opensearchMasterPassword = process.env.AWS_OS_PASSWORD!;
 
 const algoliaIndex = process.env.ALGOLIA_INDEX
   ? process.env.ALGOLIA_INDEX
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
+
+const openSearchDomainName =
+  stage === 'production'
+    ? `${service}-${stage}-search`
+    : `${service}-dev-search`;
 
 export const plugins = [
   './serverless-plugins/serverless-esbuild',
@@ -173,10 +180,37 @@ const serverlessConfig: AWS = {
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
       CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: contentfulManagementAccessToken,
       CONTENTFUL_SPACE_ID: contentfulSpaceId,
+      OPENSEARCH_DOMAIN_NAME: openSearchDomainName,
     },
     iam: {
       role: {
         statements: [
+          {
+            Effect: 'Allow',
+            Action: [
+              'es:ESHttpGet',
+              'es:ESHttpPost',
+              'es:ESHttpPut',
+              'es:ESHttpDelete',
+              'es:ESHttpHead',
+              'es:ESHttpPatch',
+            ],
+            Resource: {
+              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['es:DescribeDomain', 'es:DescribeDomains'],
+            Resource: {
+              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}`,
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['es:ListDomainNames'],
+            Resource: '*',
+          },
           {
             Effect: 'Allow',
             Action: ['s3:PutObject', 's3:GetObject', 's3:DeleteObject'],
@@ -325,6 +359,7 @@ const serverlessConfig: AWS = {
   custom: {
     apiHostname: new URL(apiUrl).hostname,
     appHostname: new URL(appUrl).hostname,
+    openSearchDomainName,
     s3Sync: [
       {
         bucketName: '${self:service}-${self:provider.stage}-frontend',
@@ -1973,6 +2008,88 @@ const serverlessConfig: AWS = {
             '${self:service}-${self:provider.stage}-invite-user-queue-dlq',
           MessageRetentionPeriod: 1209600, // 14 days
         },
+      },
+      OpenSearchLogGroup: {
+        Type: 'AWS::Logs::LogGroup',
+        Properties: {
+          LogGroupName: `/aws/opensearch/domains/${openSearchDomainName}/application-logs`,
+          RetentionInDays: 30,
+        },
+      },
+      OpenSearchDomain: {
+        Type: 'AWS::OpenSearchService::Domain',
+        Properties: {
+          DomainName: openSearchDomainName,
+          EngineVersion: 'OpenSearch_2.19',
+          ClusterConfig: {
+            InstanceType:
+              stage === 'production' ? 't3.small.search' : 't3.micro.search',
+            InstanceCount: 1,
+            DedicatedMasterEnabled: false,
+            ZoneAwarenessEnabled: false,
+          },
+          EBSOptions: {
+            EBSEnabled: true,
+            VolumeType: 'gp3',
+            VolumeSize: 10,
+          },
+          AccessPolicies: {
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Effect: 'Allow',
+                Principal: {
+                  AWS: [
+                    {
+                      'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'], // Lambda access
+                    },
+                    {
+                      'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:role/admin', // Admin role
+                    },
+                  ],
+                },
+                Action: 'es:*',
+                Resource: {
+                  'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+                },
+              },
+            ],
+          },
+          DomainEndpointOptions: {
+            EnforceHTTPS: true,
+            TLSSecurityPolicy: 'Policy-Min-TLS-1-2-2019-07',
+          },
+          EncryptionAtRestOptions: {
+            Enabled: true,
+          },
+          NodeToNodeEncryptionOptions: {
+            Enabled: true,
+          },
+          AdvancedSecurityOptions: {
+            Enabled: true,
+            InternalUserDatabaseEnabled: true,
+            MasterUserOptions: {
+              MasterUserName: opensearchMasterUser,
+              MasterUserPassword: opensearchMasterPassword,
+            },
+          },
+          LogPublishingOptions: {
+            ES_APPLICATION_LOGS: {
+              Enabled: stage === 'production', // Enabled in prod
+              CloudWatchLogsLogGroupArn: {
+                'Fn::Sub':
+                  'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/opensearch/domains/${openSearchDomainName}/application-logs',
+              },
+            },
+            SEARCH_SLOW_LOGS: {
+              Enabled: true,
+            },
+            INDEX_SLOW_LOGS: {
+              Enabled: true,
+            },
+          },
+        },
+        DeletionPolicy: 'Retain',
       },
     },
     extensions: {

@@ -1,3 +1,4 @@
+import * as flags from '@asap-hub/flags';
 import { initialSortingDirection } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
@@ -37,5 +38,22 @@ describe('AnalyticsLeadershipPageBody', () => {
     expect(getAllByText('Working Group Leadership & Membership').length).toBe(
       2,
     );
+  });
+
+  it('renders OS champion tab', () => {
+    const { getAllByText } = render(
+      <AnalyticsLeadershipPageBody {...props} metric="os-champion" />,
+    );
+
+    expect(getAllByText('Open Science Champion').length).toBe(2);
+  });
+
+  it('filters out OS champion option from dropdown when feature flag is off', async () => {
+    jest.spyOn(flags, 'isEnabled').mockReturnValue(false);
+    const { queryByText } = render(
+      <AnalyticsLeadershipPageBody {...props} metric="interest-group" />,
+    );
+
+    expect(queryByText('Open Science Champion')).not.toBeInTheDocument();
   });
 });

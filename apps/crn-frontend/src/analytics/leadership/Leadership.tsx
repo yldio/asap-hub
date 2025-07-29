@@ -1,3 +1,4 @@
+import { isEnabled } from '@asap-hub/flags';
 import {
   algoliaResultsToStream,
   createCsvFileStream,
@@ -16,7 +17,7 @@ import {
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { getAnalyticsLeadership } from './api';
@@ -112,7 +113,12 @@ const Leadership: FC<Record<string, never>> = () => {
       leadershipToCSV(metric),
     );
 
-  return (
+  const isOSChampionEnabled = isEnabled('ANALYTICS_OS_CHAMPION');
+  return !isOSChampionEnabled && metric === 'os-champion' ? (
+    <Redirect
+      to={analytics({}).leadership({}).metric({ metric: 'working-group' }).$}
+    />
+  ) : (
     <AnalyticsLeadershipPageBody
       tags={tags}
       setTags={setTags}

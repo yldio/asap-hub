@@ -15,6 +15,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
+import * as flags from '@asap-hub/flags';
 import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
@@ -118,6 +119,14 @@ it('renders with interest group data', async () => {
 it('renders with open science data', async () => {
   await renderPage('os-champion');
   expect(screen.getAllByText('Open Science Champion').length).toBe(2);
+});
+
+it('redirects to working group if OS Champion feature flag is off', async () => {
+  jest.spyOn(flags, 'isEnabled').mockReturnValue(false);
+  await renderPage('os-champion');
+  expect(
+    screen.getAllByText('Working Group Leadership & Membership').length,
+  ).toBe(2);
 });
 
 it('calls algolia client with the right index name', async () => {

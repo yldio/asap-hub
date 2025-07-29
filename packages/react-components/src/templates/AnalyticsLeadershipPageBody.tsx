@@ -121,7 +121,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
       setTags={setTags}
       exportResults={exportResults}
     />
-    {isOSChampionEnabled && metric === 'os-champion' && (
+    {metric === 'os-champion' ? (
       <OSChampionTable
         data={data}
         sort={sort}
@@ -129,8 +129,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         sortingDirection={sortingDirection}
         setSortingDirection={setSortingDirection}
       />
-    )}
-    {isOSChampionEnabled && metric !== 'os-champion' && (
+    ) : (
       <LeadershipMembershipTable
         metric={metric}
         data={data}

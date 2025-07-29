@@ -2078,7 +2078,7 @@ const serverlessConfig: AWS = {
             },
           },
         },
-        DeletionPolicy: 'Retain',
+        DeletionPolicy: 'Delete',
       },
     },
     extensions: {

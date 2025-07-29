@@ -2044,7 +2044,8 @@ const serverlessConfig: AWS = {
                 },
                 Action: 'es:*',
                 Resource: {
-                  'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+                  'Fn::Sub':
+                    'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.openSearchDomainName}/*',
                 },
               },
             ],

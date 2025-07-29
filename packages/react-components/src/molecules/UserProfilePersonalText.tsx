@@ -1,18 +1,22 @@
-import { FC, useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import { css } from '@emotion/react';
-import { UserListItemResponse } from '@asap-hub/model';
+import { UserListItemResponse, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
-import { Link, Ellipsis, Avatar, Anchor } from '../atoms';
-import { locationIcon } from '../icons';
-import { perRem, lineHeight, rem, tabletScreen } from '../pixels';
+import { Link, Ellipsis, Anchor, Subtitle } from '../atoms';
+import { alumniBadgeIcon, locationIcon } from '../icons';
+import { perRem, lineHeight } from '../pixels';
 import { lead, tin } from '../colors';
-import { formatUserLocation, getUniqueCommaStringWithSuffix } from '../utils';
+import {
+  formatUserLocation,
+  getUniqueCommaStringWithSuffix,
+  splitListBy,
+} from '../utils';
 import TagList from './TagList';
+import { styles, getLinkColors } from '../atoms/Link';
 
-const MAX_TEAMS = 3;
-const avatarSize = 24;
+const MAX_TEAMS = 2;
 
 const locationStyles = css({
   padding: `${6 / perRem}em 0 ${24 / perRem}em`,
@@ -34,16 +38,9 @@ const paragraphStyles = css({
   color: lead.rgb,
 });
 
-const avatarStyles = css({
-  width: rem(avatarSize),
-  height: rem(avatarSize),
-  margin: 0,
-  marginLeft: `${6 / perRem}em`,
-  fontWeight: 700,
-  fontSize: `${20 / perRem}em`,
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    margin: 'auto',
-  },
+const badgeStyles = css({
+  lineHeight: `${8 / perRem}em`,
+  marginLeft: `${8 / perRem}em`,
 });
 
 const tagsContainerStyles = css({
@@ -57,10 +54,9 @@ type UserProfilePersonalTextProps = Pick<
   | 'country'
   | 'stateOrProvince'
   | 'city'
-  | 'teams'
   | 'labs'
   | 'tags'
-> & { userActiveTeamsRoute?: string };
+> & { userActiveTeamsRoute?: string; isAlumni?: boolean; teams: UserTeam[] };
 const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   institution,
   country,
@@ -69,8 +65,8 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   jobTitle,
   teams,
   labs,
-  userActiveTeamsRoute,
   tags,
+  isAlumni,
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
 
@@ -79,6 +75,11 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
     'Lab',
   );
 
+  const [inactiveTeams, activeTeams] = splitListBy(
+    teams,
+    (team) =>
+      isAlumni || !!team?.teamInactiveSince || !!team?.inactiveSinceDate,
+  );
   return (
     <div>
       <div css={paragraphStyles}>
@@ -100,26 +101,72 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
             <span>{labsList}</span>
           </>
         )}
-        {teams
+        {activeTeams
           .slice(0, MAX_TEAMS)
-          .map(({ id, role: teamRole, displayName }, idx) => (
+          .map(({ id, role: teamRole, displayName }) => (
             <div style={{ display: 'flex' }} key={id}>
               <div>{teamRole} on&nbsp;</div>
               <Link href={network({}).teams({}).team({ teamId: id }).$}>
                 Team {displayName}
               </Link>
-              {idx === MAX_TEAMS - 1 && teams.length > MAX_TEAMS && (
-                <span css={css({ gridRow: 1, gridColumn: 1 })}>
-                  <Anchor href={userActiveTeamsRoute}>
-                    <Avatar
-                      placeholder={`+${teams.length - MAX_TEAMS}`}
-                      overrideStyles={avatarStyles}
-                    />
-                  </Anchor>
-                </span>
-              )}
             </div>
           ))}
+        {activeTeams.length > MAX_TEAMS && (
+          <Anchor
+            href="#"
+            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+              e.preventDefault();
+              const teamsCard = document.getElementById(
+                'user-teams-tabbed-card',
+              );
+              if (teamsCard) {
+                teamsCard.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            css={(theme) => [styles, getLinkColors(theme.colors, 'light')]}
+          >
+            View all roles
+          </Anchor>
+        )}
+        {inactiveTeams.length ? (
+          <div
+            css={css({
+              display: 'flex',
+              alignItems: 'center',
+              marginTop: `${16 / perRem}em`,
+            })}
+          >
+            <Subtitle noMargin>Former Roles</Subtitle>
+            <span css={badgeStyles}>{alumniBadgeIcon}</span>
+          </div>
+        ) : null}
+        {inactiveTeams
+          .slice(0, MAX_TEAMS)
+          .map(({ id, role: teamRole, displayName }) => (
+            <div style={{ display: 'flex' }} key={id}>
+              <div>{teamRole} on&nbsp;</div>
+              <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                Team {displayName}
+              </Link>
+            </div>
+          ))}
+        {inactiveTeams.length > MAX_TEAMS && (
+          <Anchor
+            href="#"
+            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+              e.preventDefault();
+              const teamsCard = document.getElementById(
+                'user-teams-tabbed-card',
+              );
+              if (teamsCard) {
+                teamsCard.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            css={(theme) => [styles, getLinkColors(theme.colors, 'light')]}
+          >
+            View all former roles
+          </Anchor>
+        )}
       </div>
       {(country || stateOrProvince || city || isOwnProfile) && (
         <span css={locationStyles}>

@@ -129,7 +129,13 @@ it('shows placeholder text for degree on own profile when omitted', () => {
 
 describe('alumni', () => {
   it('shows the alumni badge when user is alumni', () => {
-    const { queryByText, queryByTitle, rerender } = render(
+    const {
+      queryAllByText,
+      queryByText,
+      queryAllByTitle,
+      queryByTitle,
+      rerender,
+    } = render(
       <UserProfileContext.Provider value={{ isOwnProfile: false }}>
         <UserProfileHeader
           {...boilerplateProps}
@@ -139,8 +145,8 @@ describe('alumni', () => {
         ,
       </UserProfileContext.Provider>,
     );
-    expect(queryByText('Alumni')).toBeInTheDocument();
-    expect(queryByTitle('Alumni Member')).toBeInTheDocument();
+    expect(queryAllByText('Alumni').length).toBeGreaterThan(0);
+    expect(queryAllByTitle('Alumni Member').length).toBeGreaterThan(0);
 
     rerender(
       <UserProfileContext.Provider value={{ isOwnProfile: false }}>

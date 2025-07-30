@@ -34,6 +34,14 @@ const metricOptions: Record<MetricOption, string> = {
   'os-champion': 'Open Science Champion',
 };
 
+const metricDescription = {
+  'working-group':
+    'Teams that are currently or have been previously in a leadership or a membership role within a Working Group.',
+  'interest-group':
+    'Teams that are currently or have been previously in a leadership or a membership role within a Interest Group.',
+  'os-champion': 'Number of Open Science Champion awards by team.',
+};
+
 type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   typeof PageControls
 > & {
@@ -82,12 +90,8 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   isOSChampionEnabled,
   ...pageControlProps
 }) => {
-  const removeFlaggedOptions = (option: string) => {
-    if (isOSChampionEnabled) {
-      return true;
-    }
-    return isOSChampionEnabled ? true : option !== 'os-champion';
-  };
+  const removeFlaggedOptions = (option: string) =>
+    isOSChampionEnabled || option !== 'os-champion';
 
   const metricOptionList = Object.keys(metricOptions)
     .filter(removeFlaggedOptions)
@@ -109,11 +113,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
       </div>
       <div css={tableHeaderStyles}>
         <Headline3>{metricOptions[metric]}</Headline3>
-        <Paragraph>
-          {metric === 'os-champion'
-            ? 'Number of Open Science Champion awards by team.'
-            : 'Teams that are currently or have been previously in a leadership or a membership role within a Working Group.'}
-        </Paragraph>
+        <Paragraph>{metricDescription[metric]}</Paragraph>
       </div>
       <AnalyticsControls
         metricOption={metric === 'os-champion' ? 'user' : 'team'}

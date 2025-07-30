@@ -116,6 +116,18 @@ it('renders with interest group data', async () => {
   ).toBe(2);
 });
 
+it('switches to interest group data', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
+  const label = /Interest Group Leadership & Membership/;
+
+  await renderPage('working-group');
+  const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
+  userEvent.click(input);
+  userEvent.click(screen.getByText(label));
+
+  expect(screen.getAllByText(label).length).toBe(2);
+});
+
 it('renders with open science data', async () => {
   await renderPage('os-champion');
   expect(screen.getAllByText('Open Science Champion').length).toBe(2);

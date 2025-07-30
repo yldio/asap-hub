@@ -12,8 +12,8 @@ import { formatDateToTimezone } from '../date';
 const MAX_TEAMS = 5;
 
 const inactiveBadgeStyles = css({
-  lineHeight: `${18 / perRem}em`,
-  verticalAlign: 'middle',
+  lineHeight: 0,
+  verticalAlign: 'top',
   marginLeft: `${8 / perRem}em`,
 });
 

@@ -135,6 +135,8 @@ jobs:
       GP2_OPENAI_API_KEY: ${{ secrets.GP2_OPENAI_API_KEY }}
       POSTMARK_SERVER_TOKEN: ${{ secrets.POSTMARK_SERVER_TOKEN }}
       SLACK_WEBHOOK: 'n-a'
+      AWS_OS_USERNAME: ${{ secrets.AWS_OS_USERNAME }}
+      AWS_OS_PASSWORD: ${{ secrets.AWS_OS_PASSWORD }}
 
   verify:
     needs: [setup, deployment]

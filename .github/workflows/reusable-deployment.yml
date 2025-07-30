@@ -75,6 +75,12 @@ on:
       SLACK_WEBHOOK:
         description: 'Slack webhook URL'
         required: false
+      AWS_OS_USERNAME:
+        description: 'OpenSearch master username'
+        required: true
+      AWS_OS_PASSWORD:
+        description: 'OpenSearch master password'
+        required: true
 
 jobs:
   crn-sls-deploy:

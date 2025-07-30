@@ -2011,16 +2011,6 @@ const serverlessConfig: AWS = {
           MessageRetentionPeriod: 1209600, // 14 days
         },
       },
-      OpenSearchLogGroup: {
-        Type: 'AWS::Logs::LogGroup',
-        Properties: {
-          LogGroupName: {
-            'Fn::Sub':
-              '/aws/opensearch/domains/${self:custom.openSearchDomainName}/application-logs',
-          },
-          RetentionInDays: 30,
-        },
-      },
       OpenSearchDomain: {
         Type: 'AWS::OpenSearchService::Domain',
         Properties: {
@@ -2044,18 +2034,15 @@ const serverlessConfig: AWS = {
                 Effect: 'Allow',
                 Principal: {
                   AWS: [
+                    '*',
                     {
-                      'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'], // Lambda access
-                    },
-                    {
-                      'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:role/admin', // Admin role
+                      'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'], // Add Lambda role
                     },
                   ],
                 },
                 Action: 'es:*',
                 Resource: {
-                  'Fn::Sub':
-                    'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.openSearchDomainName}/*',
+                  'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
                 },
               },
             ],
@@ -2076,21 +2063,6 @@ const serverlessConfig: AWS = {
             MasterUserOptions: {
               MasterUserName: opensearchMasterUser,
               MasterUserPassword: opensearchMasterPassword,
-            },
-          },
-          LogPublishingOptions: {
-            ES_APPLICATION_LOGS: {
-              Enabled: stage === 'production', // Enabled in prod
-              CloudWatchLogsLogGroupArn: {
-                'Fn::Sub':
-                  'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/opensearch/domains/${self:custom.openSearchDomainName}/application-logs',
-              },
-            },
-            SEARCH_SLOW_LOGS: {
-              Enabled: true,
-            },
-            INDEX_SLOW_LOGS: {
-              Enabled: true,
             },
           },
         },

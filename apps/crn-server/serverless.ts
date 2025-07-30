@@ -22,6 +22,8 @@ import assert from 'assert';
   'SES_REGION',
   'SLACK_WEBHOOK',
   'SLS_STAGE',
+  'AWS_OS_USERNAME',
+  'AWS_OS_PASSWORD',
 ].forEach((env) => {
   assert.ok(process.env[env], `${env} not defined`);
 });

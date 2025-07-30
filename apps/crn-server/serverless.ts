@@ -2027,8 +2027,7 @@ const serverlessConfig: AWS = {
           DomainName: openSearchDomainName,
           EngineVersion: 'OpenSearch_2.19',
           ClusterConfig: {
-            InstanceType:
-              stage === 'production' ? 't3.small.search' : 't3.micro.search',
+            InstanceType: 't3.small.search',
             InstanceCount: 1,
             DedicatedMasterEnabled: false,
             ZoneAwarenessEnabled: false,

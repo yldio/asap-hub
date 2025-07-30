@@ -1,7 +1,7 @@
-import { network } from '@asap-hub/routing';
+// import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { Card, Link } from '../atoms';
+import { Card /* , Link */ } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import { AlphabeticalSortingIcon, NumericalSortingIcon } from '../icons';
@@ -21,12 +21,12 @@ const gridTitleStyles = css({
   },
 });
 
-const rowTitleStyles = css({
-  paddingTop: `${32 / perRem}em`,
-  paddingBottom: `${16 / perRem}em`,
-  ':first-of-type': { paddingTop: 0 },
-  [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
-});
+// const rowTitleStyles = css({
+//   paddingTop: `${32 / perRem}em`,
+//   paddingBottom: `${16 / perRem}em`,
+//   ':first-of-type': { paddingTop: 0 },
+//   [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
+// });
 
 const rowStyles = css({
   display: 'grid',
@@ -61,10 +61,10 @@ const titleStyles = css({
   gap: `${8 / perRem}em`,
 });
 
-const teamNameStyles = css({
-  display: 'flex',
-  gap: `${3 / perRem}em`,
-});
+// const teamNameStyles = css({
+//   display: 'flex',
+//   gap: `${3 / perRem}em`,
+// });
 
 const buttonStyles = css({
   width: `${24 / perRem}em`,
@@ -103,8 +103,7 @@ const OSChampionTable: React.FC<OSChampionTableProps> = ({
             Team
             <button
               css={buttonStyles}
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-              onClick={() => {}}
+              // onClick={() => {}}
             >
               <AlphabeticalSortingIcon
                 active={isTeamSortActive}
@@ -117,8 +116,7 @@ const OSChampionTable: React.FC<OSChampionTableProps> = ({
             Total number of Open Science Champion awards
             <button
               css={buttonStyles}
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-              onClick={() => {}}
+              // onClick={() => {}}
             >
               <NumericalSortingIcon
                 active={isNumberOSChampionAwardsSortActive}
@@ -128,7 +126,7 @@ const OSChampionTable: React.FC<OSChampionTableProps> = ({
             </button>
           </span>
         </div>
-        {data.map((row) => (
+        {/* {data.map((row) => (
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Team</span>
             <p css={teamNameStyles}>
@@ -137,7 +135,7 @@ const OSChampionTable: React.FC<OSChampionTableProps> = ({
               </Link>
             </p>
           </div>
-        ))}
+        ))} */}
       </div>
     </Card>
   );

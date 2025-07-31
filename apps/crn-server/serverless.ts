@@ -2019,7 +2019,7 @@ const serverlessConfig: AWS = {
           DomainName: openSearchDomainName,
           EngineVersion: 'OpenSearch_2.19',
           ClusterConfig: {
-            InstanceType: 't3.small.search',
+            InstanceType: 't3.medium.search',
             InstanceCount: 1,
             DedicatedMasterEnabled: false,
             ZoneAwarenessEnabled: false,
@@ -2027,7 +2027,7 @@ const serverlessConfig: AWS = {
           EBSOptions: {
             EBSEnabled: true,
             VolumeType: 'gp3',
-            VolumeSize: 10,
+            VolumeSize: 20,
           },
           AccessPolicies: {
             Version: '2012-10-17',

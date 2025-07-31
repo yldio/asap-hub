@@ -11,7 +11,7 @@ const props = {
 it('displays the title', () => {
   render(<UserTeamsTabbedCard {...props} />);
 
-  expect(screen.getByText('Teams')).toBeInTheDocument();
+  expect(screen.getByText('Teams and Roles')).toBeInTheDocument();
 });
 
 it('renders the no teams message', () => {
@@ -66,7 +66,7 @@ it('splits the current and inactive teams', () => {
   expect(screen.queryByText(/team2/i)).not.toBeInTheDocument();
   expect(screen.queryByText(/team3/i)).not.toBeInTheDocument();
 
-  fireEvent.click(screen.getByText('Previous Teams (2)'));
+  fireEvent.click(screen.getByText('Former (2)'));
 
   expect(screen.getByText(/team2/i)).toBeVisible();
   expect(screen.getByText('Fri, 25 Sep 2020')).toBeVisible();

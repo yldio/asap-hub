@@ -60,42 +60,6 @@ it("generates information about the user's team", async () => {
   expect(container).toHaveTextContent(/Lead PI \(Core Leadership\) on Team/);
 });
 
-it('renders no more than 3 teams and roles', async () => {
-  const { container, getByLabelText } = render(
-    <UserProfilePersonalText
-      {...props}
-      teams={[
-        {
-          id: '42',
-          displayName: 'Team',
-          role: 'Lead PI (Core Leadership)',
-        },
-        {
-          id: '1337',
-          displayName: 'Meat',
-          role: 'Collaborating PI',
-        },
-        {
-          id: '2',
-          displayName: 'Drink',
-          role: 'Collaborating PI',
-        },
-        {
-          id: '3',
-          displayName: 'Desert',
-          role: 'Collaborating PI',
-        },
-      ]}
-    />,
-  );
-  expect(container).toHaveTextContent(/Lead PI \(Core Leadership\) on Team/);
-  expect(getByLabelText(/\+1/)).toBeVisible();
-});
-it('does not show team information if the user is not on a team', async () => {
-  const { container } = render(<UserProfilePersonalText {...props} />);
-  expect(container).not.toHaveTextContent(/\w on \w/);
-});
-
 it('only show lab information if the user is on a lab', async () => {
   const { container, rerender } = render(
     <UserProfilePersonalText {...props} />,
@@ -156,4 +120,247 @@ it('renders tags when present', async () => {
 
   expect(queryByText('Tag 1')).not.toBeInTheDocument();
   expect(queryByText('Tag 2')).not.toBeInTheDocument();
+});
+
+it('renders active teams with roles', () => {
+  const { container } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Alpha',
+          role: 'Lead PI (Core Leadership)',
+        },
+        {
+          id: '1337',
+          displayName: 'Beta',
+          role: 'Collaborating PI',
+        },
+      ]}
+    />,
+  );
+
+  expect(container).toHaveTextContent(
+    'Lead PI (Core Leadership) on Team Alpha',
+  );
+  expect(container).toHaveTextContent('Collaborating PI on Team Beta');
+});
+
+it('shows "View all roles" link when there are more than 2 active teams', () => {
+  const { getByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        { id: '1', displayName: 'Team A', role: 'Lead PI (Core Leadership)' },
+        { id: '2', displayName: 'Team B', role: 'Collaborating PI' },
+        { id: '3', displayName: 'Team C', role: 'Project Manager' },
+      ]}
+    />,
+  );
+
+  expect(getByText('View all roles')).toBeInTheDocument();
+});
+
+it('does not show "View all roles" link when there are 2 or fewer active teams', () => {
+  const { queryByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        { id: '1', displayName: 'Team A', role: 'Lead PI (Core Leadership)' },
+        { id: '2', displayName: 'Team B', role: 'Collaborating PI' },
+      ]}
+    />,
+  );
+
+  expect(queryByText('View all roles')).not.toBeInTheDocument();
+});
+
+it('renders inactive teams as "Former Roles" when user is alumni', () => {
+  const { container, getByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      isAlumni={true}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Former',
+          role: 'Lead PI (Core Leadership)',
+        },
+      ]}
+    />,
+  );
+
+  expect(getByText('Former Roles')).toBeInTheDocument();
+  expect(container).toHaveTextContent(
+    'Lead PI (Core Leadership) on Team Former',
+  );
+});
+
+it('renders inactive teams as "Former Roles" when teams have inactive dates', () => {
+  const { container, getByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Inactive',
+          role: 'Collaborating PI',
+          teamInactiveSince: '2023-01-01',
+        },
+      ]}
+    />,
+  );
+
+  expect(getByText('Former Roles')).toBeInTheDocument();
+  expect(container).toHaveTextContent('Collaborating PI on Team Inactive');
+});
+
+it('shows "View all former roles" link when there are more than 2 inactive teams', () => {
+  const { getByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      isAlumni={true}
+      teams={[
+        { id: '1', displayName: 'Former A', role: 'Lead PI (Core Leadership)' },
+        { id: '2', displayName: 'Former B', role: 'Collaborating PI' },
+        { id: '3', displayName: 'Former C', role: 'Project Manager' },
+      ]}
+    />,
+  );
+
+  expect(getByText('View all former roles')).toBeInTheDocument();
+});
+
+it('does not show "View all former roles" link when there are 2 or fewer inactive teams', () => {
+  const { queryByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      isAlumni={true}
+      teams={[
+        { id: '1', displayName: 'Former A', role: 'Lead PI (Core Leadership)' },
+        { id: '2', displayName: 'Former B', role: 'Collaborating PI' },
+      ]}
+    />,
+  );
+
+  expect(queryByText('View all former roles')).not.toBeInTheDocument();
+});
+
+it('separates active and inactive teams correctly', () => {
+  const { container, getByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        {
+          id: '1',
+          displayName: 'Active',
+          role: 'Lead PI (Core Leadership)',
+        },
+        {
+          id: '2',
+          displayName: 'Inactive',
+          role: 'Collaborating PI',
+          teamInactiveSince: '2023-01-01',
+        },
+      ]}
+    />,
+  );
+
+  expect(container).toHaveTextContent(
+    'Lead PI (Core Leadership) on Team Active',
+  );
+  expect(getByText('Former Roles')).toBeInTheDocument();
+  expect(container).toHaveTextContent('Collaborating PI on Team Inactive');
+});
+
+it('handles teams with inactiveSinceDate property', () => {
+  const { container, getByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        {
+          id: '1',
+          displayName: 'Inactive',
+          role: 'Project Manager',
+          inactiveSinceDate: '2023-06-01',
+        },
+      ]}
+    />,
+  );
+
+  expect(getByText('Former Roles')).toBeInTheDocument();
+  expect(container).toHaveTextContent('Project Manager on Team Inactive');
+});
+
+it('does not show "Former Roles" section when there are no inactive teams', () => {
+  const { queryByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        {
+          id: '1',
+          displayName: 'Active',
+          role: 'Lead PI (Core Leadership)',
+        },
+      ]}
+    />,
+  );
+
+  expect(queryByText('Former Roles')).not.toBeInTheDocument();
+});
+
+it('handles "View all roles" click event', () => {
+  const mockScrollIntoView = jest.fn();
+  const mockElement = {
+    scrollIntoView: mockScrollIntoView,
+  } as unknown as HTMLElement;
+  const mockGetElementById = jest.fn(() => mockElement);
+
+  document.getElementById = mockGetElementById;
+
+  const { getByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        { id: '1', displayName: 'Team A', role: 'Lead PI (Core Leadership)' },
+        { id: '2', displayName: 'Team B', role: 'Collaborating PI' },
+        { id: '3', displayName: 'Team C', role: 'Project Manager' },
+      ]}
+    />,
+  );
+
+  const viewAllLink = getByText('View all roles');
+  viewAllLink.click();
+
+  expect(mockGetElementById).toHaveBeenCalledWith('user-teams-tabbed-card');
+  expect(mockScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
+});
+
+it('handles "View all former roles" click event', () => {
+  const mockScrollIntoView = jest.fn();
+  const mockElement = {
+    scrollIntoView: mockScrollIntoView,
+  } as unknown as HTMLElement;
+  const mockGetElementById = jest.fn(() => mockElement);
+
+  document.getElementById = mockGetElementById;
+
+  const { getByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      isAlumni={true}
+      teams={[
+        { id: '1', displayName: 'Former A', role: 'Lead PI (Core Leadership)' },
+        { id: '2', displayName: 'Former B', role: 'Collaborating PI' },
+        { id: '3', displayName: 'Former C', role: 'Project Manager' },
+      ]}
+    />,
+  );
+
+  const viewAllLink = getByText('View all former roles');
+  viewAllLink.click();
+
+  expect(mockGetElementById).toHaveBeenCalledWith('user-teams-tabbed-card');
+  expect(mockScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
 });

@@ -5,7 +5,10 @@ import { Headline3, TabButton, Button } from '../atoms';
 import { steel } from '../colors';
 import { perRem, rem } from '../pixels';
 import { TabNav } from '.';
-import { paddingStyles } from '../card';
+
+const paddingStyles = css({
+  padding: `${rem(32)} ${rem(24)}`,
+});
 
 const headerStyles = css({
   display: 'grid',
@@ -62,8 +65,8 @@ export const TabbedContent = <T extends object>({
   return (
     <div>
       <div css={[paddingStyles, headerStyles]}>
-        <div css={{ marginBottom: '12px' }}>
-          <Headline3>{title}</Headline3>
+        <div css={{ marginBottom: rem(24) }}>
+          <Headline3 noMargin>{title}</Headline3>
         </div>
         {description}
         <TabNav>

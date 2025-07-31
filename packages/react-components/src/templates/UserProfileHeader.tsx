@@ -256,6 +256,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
               teams={teams}
               labs={labs}
               userActiveTeamsRoute={tabRoutes.research({}).$}
+              isAlumni={!!alumniSinceDate}
             />
           </div>
           <div css={avatarContainer}>

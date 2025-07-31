@@ -18,7 +18,9 @@ describe('AnalyticsLeadershipPageBody', () => {
     setSortingDirection: jest.fn(),
     setTags: jest.fn(),
     tags: [],
+    isOSChampionEnabled: true,
   };
+
   it('renders interest group tab', () => {
     const { getAllByText } = render(
       <AnalyticsLeadershipPageBody {...props} metric="interest-group" />,
@@ -37,5 +39,25 @@ describe('AnalyticsLeadershipPageBody', () => {
     expect(getAllByText('Working Group Leadership & Membership').length).toBe(
       2,
     );
+  });
+
+  it('renders OS champion tab', () => {
+    const { getAllByText } = render(
+      <AnalyticsLeadershipPageBody {...props} metric="os-champion" />,
+    );
+
+    expect(getAllByText('Open Science Champion').length).toBe(2);
+  });
+
+  it('filters out OS champion option from dropdown when feature flag is off', async () => {
+    const { queryByText } = render(
+      <AnalyticsLeadershipPageBody
+        {...props}
+        metric="working-group"
+        isOSChampionEnabled={false}
+      />,
+    );
+
+    expect(queryByText('Open Science Champion')).not.toBeInTheDocument();
   });
 });

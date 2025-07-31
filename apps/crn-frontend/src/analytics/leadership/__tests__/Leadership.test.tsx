@@ -15,10 +15,12 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
+import * as flags from '@asap-hub/flags';
 import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 
+jest.spyOn(console, 'error').mockImplementation();
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
   return {
@@ -63,9 +65,9 @@ beforeEach(() => {
   mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
 });
 
-const renderPage = async (
-  path = analytics({}).leadership({}).metric({ metric: 'working-group' }).$,
-) => {
+const getPath = (metric: string) =>
+  analytics({}).leadership({}).metric({ metric }).$;
+const renderPage = async (metric = 'working-group') => {
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) => {
@@ -82,7 +84,7 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[path]}>
+            <MemoryRouter initialEntries={[getPath(metric)]}>
               <Route path="/analytics/leadership/:metric">
                 <Leadership />
               </Route>
@@ -108,15 +110,35 @@ it('renders with working group data', async () => {
 });
 
 it('renders with interest group data', async () => {
-  const label = 'Interest Group Leadership & Membership';
+  await renderPage('interest-group');
+  expect(
+    screen.getAllByText('Interest Group Leadership & Membership').length,
+  ).toBe(2);
+});
 
-  await renderPage();
-  const input = screen.getAllByRole('textbox', { hidden: false })[0];
+it('switches to interest group data', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
+  const label = /Interest Group Leadership & Membership/;
 
-  input && userEvent.click(input);
+  await renderPage('working-group');
+  const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
+  userEvent.click(input);
   userEvent.click(screen.getByText(label));
 
   expect(screen.getAllByText(label).length).toBe(2);
+});
+
+it('renders with open science data', async () => {
+  await renderPage('os-champion');
+  expect(screen.getAllByText('Open Science Champion').length).toBe(2);
+});
+
+it('redirects to working group if OS Champion feature flag is off', async () => {
+  jest.spyOn(flags, 'isEnabled').mockReturnValue(false);
+  await renderPage('os-champion');
+  expect(
+    screen.getAllByText('Working Group Leadership & Membership').length,
+  ).toBe(2);
 });
 
 it('calls algolia client with the right index name', async () => {
@@ -186,13 +208,7 @@ describe('csv export', () => {
   });
 
   it('exports analytics for interest groups', async () => {
-    const label = 'Interest Group Leadership & Membership';
-
-    await renderPage();
-    const input = screen.getAllByRole('textbox', { hidden: false })[0];
-
-    input && userEvent.click(input);
-    userEvent.click(screen.getByText(label));
+    await renderPage('interest-group');
     userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/leadership_interest-group_\d+\.csv/),

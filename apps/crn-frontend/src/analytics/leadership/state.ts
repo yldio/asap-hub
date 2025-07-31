@@ -13,7 +13,9 @@ import { AnalyticsSearchOptions, getAnalyticsLeadership } from './api';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAlgoliaIndexName } from '../utils/state';
 
-type Options = AnalyticsSearchOptions & { sort: SortLeadershipAndMembership };
+type Options = AnalyticsSearchOptions & {
+  sort: SortLeadershipAndMembership;
+};
 type StateOptionKeyData = Pick<
   Options,
   'currentPage' | 'pageSize' | 'sort' | 'tags'

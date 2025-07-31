@@ -14,9 +14,10 @@ import {
 } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { LeadershipMembershipTable } from '../organisms';
+import OSChampionTable from '../organisms/OSChampionTable';
 import { rem } from '../pixels';
 
-type MetricOption = 'working-group' | 'interest-group';
+export type MetricOption = 'working-group' | 'interest-group' | 'os-champion';
 type MetricData = {
   id: string;
   name: string;
@@ -30,12 +31,16 @@ type MetricData = {
 const metricOptions: Record<MetricOption, string> = {
   'working-group': 'Working Group Leadership & Membership',
   'interest-group': 'Interest Group Leadership & Membership',
+  'os-champion': 'Open Science Champion',
 };
 
-const metricOptionList = Object.keys(metricOptions).map((value) => ({
-  value: value as MetricOption,
-  label: metricOptions[value as MetricOption],
-}));
+const metricDescription = {
+  'working-group':
+    'Teams that are currently or have been previously in a leadership or a membership role within a Working Group.',
+  'interest-group':
+    'Teams that are currently or have been previously in a leadership or a membership role within a Interest Group.',
+  'os-champion': 'Number of Open Science Champion awards by team.',
+};
 
 type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   typeof PageControls
@@ -53,6 +58,7 @@ type LeadershipAndMembershipAnalyticsProps = ComponentProps<
     React.SetStateAction<LeadershipAndMembershipSortingDirection>
   >;
   exportResults: () => Promise<void>;
+  isOSChampionEnabled: boolean;
 };
 
 const metricDropdownStyles = css({
@@ -81,44 +87,64 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   setMetric,
   data,
   exportResults,
+  isOSChampionEnabled,
   ...pageControlProps
-}) => (
-  <article>
-    <div css={metricDropdownStyles}>
-      <Subtitle>Metric</Subtitle>
-      <Dropdown
-        options={metricOptionList}
-        value={metric}
-        onChange={setMetric}
-        required
+}) => {
+  const removeFlaggedOptions = (option: string) =>
+    isOSChampionEnabled || option !== 'os-champion';
+
+  const metricOptionList = Object.keys(metricOptions)
+    .filter(removeFlaggedOptions)
+    .map((value) => ({
+      value: value as MetricOption,
+      label: metricOptions[value as MetricOption],
+    }));
+
+  return (
+    <article>
+      <div css={metricDropdownStyles}>
+        <Subtitle>Metric</Subtitle>
+        <Dropdown
+          options={metricOptionList}
+          value={metric}
+          onChange={setMetric}
+          required
+        />
+      </div>
+      <div css={tableHeaderStyles}>
+        <Headline3>{metricOptions[metric]}</Headline3>
+        <Paragraph>{metricDescription[metric]}</Paragraph>
+      </div>
+      <AnalyticsControls
+        metricOption={metric === 'os-champion' ? 'user' : 'team'}
+        tags={tags}
+        loadTags={loadTags}
+        setTags={setTags}
+        exportResults={exportResults}
       />
-    </div>
-    <div css={tableHeaderStyles}>
-      <Headline3>{metricOptions[metric]}</Headline3>
-      <Paragraph>
-        Teams that are currently or have been previously in a leadership or a
-        membership role within a Working Group.
-      </Paragraph>
-    </div>
-    <AnalyticsControls
-      metricOption={'team'}
-      tags={tags}
-      loadTags={loadTags}
-      setTags={setTags}
-      exportResults={exportResults}
-    />
-    <LeadershipMembershipTable
-      metric={metric}
-      data={data}
-      sort={sort}
-      setSort={setSort}
-      sortingDirection={sortingDirection}
-      setSortingDirection={setSortingDirection}
-    />
-    <section css={pageControlsStyles}>
-      <PageControls {...pageControlProps} />
-    </section>
-  </article>
-);
+      {metric === 'os-champion' ? (
+        <OSChampionTable
+          data={data}
+          sort={sort}
+          setSort={setSort}
+          sortingDirection={sortingDirection}
+          setSortingDirection={setSortingDirection}
+        />
+      ) : (
+        <LeadershipMembershipTable
+          metric={metric}
+          data={data}
+          sort={sort}
+          setSort={setSort}
+          sortingDirection={sortingDirection}
+          setSortingDirection={setSortingDirection}
+        />
+      )}
+      <section css={pageControlsStyles}>
+        <PageControls {...pageControlProps} />
+      </section>
+    </article>
+  );
+};
 
 export default LeadershipPageBody;

@@ -4,7 +4,7 @@ import { AnalyticsTeamLeadershipDataObject } from '@asap-hub/model';
 type LeadershipRowCSV = Record<string, CSVValue>;
 
 export const leadershipToCSV =
-  (metric: 'working-group' | 'interest-group') =>
+  (metric: 'working-group' | 'interest-group' | 'os-champion') =>
   (data: AnalyticsTeamLeadershipDataObject): LeadershipRowCSV => {
     const metricPrefix =
       metric === 'working-group' ? 'workingGroup' : 'interestGroup';

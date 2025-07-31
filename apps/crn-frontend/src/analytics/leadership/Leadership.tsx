@@ -1,3 +1,4 @@
+import { isEnabled } from '@asap-hub/flags';
 import {
   algoliaResultsToStream,
   createCsvFileStream,
@@ -8,11 +9,15 @@ import {
   LeadershipAndMembershipSortingDirection,
   SortLeadershipAndMembership,
 } from '@asap-hub/model';
-import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
+import {
+  AnalyticsLeadershipPageBody,
+  MetricOption,
+} from '@asap-hub/react-components';
+
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { getAnalyticsLeadership } from './api';
@@ -36,8 +41,11 @@ type MetricResponse = {
 
 const getDataForMetric = (
   data: MetricResponse[],
-  metric: 'working-group' | 'interest-group',
+  metric: 'working-group' | 'interest-group' | 'os-champion',
 ) => {
+  if (metric === 'os-champion') {
+    return [];
+  }
   if (metric === 'working-group') {
     return data.map((row) => ({
       id: row.id,
@@ -63,9 +71,9 @@ const getDataForMetric = (
 const Leadership: FC<Record<string, never>> = () => {
   const history = useHistory();
   const { metric } = useParams<{
-    metric: 'working-group' | 'interest-group';
+    metric: MetricOption;
   }>();
-  const setMetric = (newMetric: 'working-group' | 'interest-group') => {
+  const setMetric = (newMetric: MetricOption) => {
     history.push(analytics({}).leadership({}).metric({ metric: newMetric }).$);
     setSort('team_asc');
     setSortingDirection(initialSortingDirection);
@@ -83,6 +91,7 @@ const Leadership: FC<Record<string, never>> = () => {
     sort,
     currentPage,
     pageSize,
+    metric,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
@@ -97,14 +106,21 @@ const Leadership: FC<Record<string, never>> = () => {
       ),
       (paginationParams) =>
         getAnalyticsLeadership(client, {
+          metric,
           tags,
           ...paginationParams,
         }),
       leadershipToCSV(metric),
     );
 
-  return (
+  const isOSChampionEnabled = isEnabled('ANALYTICS_OS_CHAMPION');
+  return !isOSChampionEnabled && metric === 'os-champion' ? (
+    <Redirect
+      to={analytics({}).leadership({}).metric({ metric: 'working-group' }).$}
+    />
+  ) : (
     <AnalyticsLeadershipPageBody
+      isOSChampionEnabled={isOSChampionEnabled}
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => {

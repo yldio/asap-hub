@@ -87,9 +87,6 @@ jobs:
     concurrency:
       group: crn-${{ github.head_ref || inputs.environment-name }}
     runs-on: ubuntu-latest
-    env:
-      AWS_OS_USERNAME: ${{ secrets.AWS_OS_USERNAME }}
-      AWS_OS_PASSWORD: ${{ secrets.AWS_OS_PASSWORD }}
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
       credentials:

@@ -138,7 +138,7 @@ it('displays error message when manuscript title is not unique', async () => {
 
   const { container, findByRole } = render(
     <StaticRouter>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Test Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
           title="manuscript title"
@@ -162,7 +162,7 @@ it('displays error message when manuscript title is not unique', async () => {
     </StaticRouter>,
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../i));
+  await waitForElementToBeRemoved(() => screen.queryByText(/Test Loading.../i));
 
   const submitBtn = await findByRole('button', { name: /Submit/ });
   userEvent.click(submitBtn);

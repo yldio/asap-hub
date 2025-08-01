@@ -50,6 +50,7 @@ export {
   ScrollToTop,
 } from './atoms';
 export type { MultiSelectOptionsType, MultiSelectProps } from './atoms';
+export type { ManuscriptVersionOption } from './templates';
 export * from './colors';
 export { borderWidth } from './form';
 export * from './hooks';
@@ -156,6 +157,7 @@ export {
   ManuscriptAuthors,
   ManuscriptHeader,
   ManuscriptByStatus,
+  ManuscriptVersionImportCard,
   MenuHeader,
   NewsCard,
   NewsSection,

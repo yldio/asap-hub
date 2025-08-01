@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/model';
 import {
   ManuscriptOutputSelection,
+  ManuscriptVersionOption,
   NotFoundPage,
   OutputVersions,
   ResearchOutputForm,
@@ -57,6 +58,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   descriptionUnchangedWarning,
   versionAction,
 }) => {
+  const [selectedManuscriptVersion, setManuscriptVersion] =
+    useState<ManuscriptVersionOption>();
   const [manuscriptOutputSelection, setManuscriptOutputSelection] = useState<
     'manually' | 'import' | ''
   >('');
@@ -168,6 +171,11 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                   })),
               )
             }
+            selectedVersion={selectedManuscriptVersion}
+            setSelectedVersion={setManuscriptVersion}
+            onImportManuscript={() => {
+              setShowManuscriptOutputFlow(false);
+            }}
           />
         </Frame>
       );

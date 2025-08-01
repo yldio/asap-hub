@@ -1,6 +1,6 @@
 import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { ComponentProps, ReactElement, ReactNode, useState } from 'react';
+import { ComponentProps, ReactElement, ReactNode } from 'react';
 import { useHistory } from 'react-router-dom';
 import { components } from 'react-select';
 import {
@@ -112,20 +112,23 @@ const pillContainerStyles = (isFocused?: boolean) =>
     },
   });
 
+export type ManuscriptVersionOption = {
+  version?: ManuscriptVersionResponse;
+} & MultiSelectOptionsType;
+
 type ManuscriptOutputSelectionProps = {
   manuscriptOutputSelection: 'manually' | 'import' | '';
   onChangeManuscriptOutputSelection: (
     manuscriptOutputSelection: 'manually' | 'import' | '',
   ) => void;
   onSelectCreateManually: () => void;
+  onImportManuscript: () => void;
+  selectedVersion?: ManuscriptVersionOption;
+  setSelectedVersion: (versionOption: ManuscriptVersionOption) => void;
   getManuscriptVersionOptions: NonNullable<
     ComponentProps<typeof LabeledMultiSelect>['loadOptions']
   >;
 };
-
-export type ManuscriptVersionOption = {
-  version?: ManuscriptVersionResponse;
-} & MultiSelectOptionsType;
 
 const ManuscriptVersionLabel = ({
   version,
@@ -151,15 +154,16 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
   onChangeManuscriptOutputSelection,
   manuscriptOutputSelection,
   onSelectCreateManually,
+  onImportManuscript,
   getManuscriptVersionOptions,
+  selectedVersion,
+  setSelectedVersion,
 }) => {
   const history = useHistory();
 
   const handleCancel = () => {
     history.goBack();
   };
-
-  const [selectedVersion, setVersion] = useState<ManuscriptVersionOption>();
 
   const renderManuscriptImport = () => {
     if (manuscriptOutputSelection !== 'import') {
@@ -231,7 +235,7 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
             ),
           }}
           onChange={(version: ManuscriptVersionOption) => {
-            setVersion(version ?? undefined);
+            setSelectedVersion(version ?? undefined);
           }}
           values={selectedVersion}
           maxMenuHeight={170}
@@ -262,8 +266,7 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
             onClick={
               manuscriptOutputSelection === 'manually'
                 ? onSelectCreateManually
-                : // eslint-disable-next-line @typescript-eslint/no-empty-function
-                  () => {}
+                : onImportManuscript
             }
             primary
           >

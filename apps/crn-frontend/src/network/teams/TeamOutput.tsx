@@ -8,6 +8,8 @@ import {
 } from '@asap-hub/model';
 import {
   ManuscriptOutputSelection,
+  ManuscriptVersionImportCard,
+  ManuscriptVersionOption,
   NotFoundPage,
   OutputVersions,
   ResearchOutputForm,
@@ -62,6 +64,7 @@ type TeamOutputProps = {
   ComponentProps<typeof ResearchOutputForm>,
   'descriptionUnchangedWarning'
 >;
+
 const TeamOutput: React.FC<TeamOutputProps> = ({
   teamId,
   researchOutputData,
@@ -71,9 +74,15 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const [manuscriptOutputSelection, setManuscriptOutputSelection] = useState<
     'manually' | 'import' | ''
   >('');
+  const [selectedManuscriptVersion, setManuscriptVersion] =
+    useState<ManuscriptVersionOption>();
+  const [updatedOutput, setUpdatedOutput] = useState<
+    ResearchOutputResponse | undefined
+  >(researchOutputData);
+
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
   const documentType =
-    researchOutputData?.documentType ||
+    updatedOutput?.documentType ||
     paramOutputDocumentTypeToResearchOutputDocumentType(
       paramOutputDocumentType,
     );
@@ -84,6 +93,37 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const [toastNode, setToastNode] = useState<ReactNode>(undefined);
   const toast = useCallback((node: ReactNode) => setToastNode(node), []);
   const previousToast = usePrevious(toastNode);
+
+  useEffect(() => {
+    if (selectedManuscriptVersion && selectedManuscriptVersion.version) {
+      const manuscriptVersion = selectedManuscriptVersion.version;
+      setUpdatedOutput((prev) => ({
+        ...prev,
+        title: manuscriptVersion.title,
+        link: 'https://random.com',
+        labs: [],
+        authors: [],
+        teams: [],
+        isInReview: false,
+        published: false,
+        sharingStatus: 'Public',
+        environments: [],
+        id: '',
+        documentType: 'Article',
+        methods: [],
+        created: '',
+        contactEmails: [],
+        organisms: [],
+        versions: [],
+        relatedEvents: [],
+        relatedResearch: [],
+        keywords: [],
+        publishingEntity: 'Team',
+        lastUpdatedPartial: '',
+        workingGroups: undefined,
+      }));
+    }
+  }, [selectedManuscriptVersion]);
 
   useEffect(() => {
     if (
@@ -104,17 +144,17 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
   const getRelatedResearchSuggestions = useRelatedResearchSuggestions(
-    researchOutputData?.id,
+    updatedOutput?.id,
   );
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
   const researchTags = useResearchTags();
   const getManuscriptVersionSuggestions = useManuscriptVersionSuggestions();
 
-  const published = researchOutputData ? !!researchOutputData.published : false;
+  const published = updatedOutput ? !!updatedOutput.published : false;
 
   const permissions = useResearchOutputPermissions(
     'teams',
-    researchOutputData?.teams.map(({ id }) => id) ?? [teamId],
+    updatedOutput?.teams.map(({ id }) => id) ?? [teamId],
     published,
   );
   const getShortDescriptionFromDescription = useGeneratedContent();
@@ -123,27 +163,27 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     .map((keyword) => keyword.name);
 
   const researchOutputAsVersion: ResearchOutputVersion = {
-    id: researchOutputData?.id ?? '',
-    title: researchOutputData?.title ?? '',
-    documentType: researchOutputData?.documentType ?? 'Article',
-    type: researchOutputData?.type,
-    link: researchOutputData?.link,
-    addedDate: researchOutputData?.addedDate,
+    id: updatedOutput?.id ?? '',
+    title: updatedOutput?.title ?? '',
+    documentType: updatedOutput?.documentType ?? 'Article',
+    type: updatedOutput?.type,
+    link: updatedOutput?.link,
+    addedDate: updatedOutput?.addedDate,
   };
 
-  let versions: ResearchOutputVersion[] = researchOutputData?.versions
-    ? researchOutputData.versions.concat([researchOutputAsVersion])
+  let versions: ResearchOutputVersion[] = updatedOutput?.versions
+    ? updatedOutput.versions.concat([researchOutputAsVersion])
     : [researchOutputAsVersion];
 
   if (versionAction === 'edit') {
-    versions = researchOutputData?.versions ?? [];
+    versions = updatedOutput?.versions ?? [];
   }
 
   const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS');
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
     isManuscriptOutputFlagEnabled &&
       documentType === 'Article' &&
-      (!researchOutputData?.id || versionAction === 'create'),
+      (!updatedOutput?.id || versionAction === 'create'),
   );
 
   const handleManuscriptOutputSelection = (
@@ -164,6 +204,11 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             manuscriptOutputSelection={manuscriptOutputSelection}
             onChangeManuscriptOutputSelection={handleManuscriptOutputSelection}
             onSelectCreateManually={() => setShowManuscriptOutputFlow(false)}
+            selectedVersion={selectedManuscriptVersion}
+            setSelectedVersion={setManuscriptVersion}
+            onImportManuscript={() => {
+              setShowManuscriptOutputFlow(false);
+            }}
             getManuscriptVersionOptions={(input) =>
               getManuscriptVersionSuggestions(input, teamId).then(
                 (versionSuggestions) =>
@@ -199,10 +244,17 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               versionAction={versionAction}
             />
           )}
+          {selectedManuscriptVersion &&
+            selectedManuscriptVersion.version &&
+            !showManuscriptOutputFlow && (
+              <ManuscriptVersionImportCard
+                version={selectedManuscriptVersion.version}
+              />
+            )}
           <ResearchOutputForm
             displayChangelog={Boolean(
               versionAction === 'create' ||
-                (researchOutputData?.versions || []).length > 0,
+                (updatedOutput?.versions || []).length > 0,
             )}
             versionAction={versionAction}
             tagSuggestions={researchSuggestions}
@@ -230,12 +282,12 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             clearServerValidationError={(instancePath: string) =>
               setErrors(clearAjvErrorForPath(errors, instancePath))
             }
-            researchOutputData={researchOutputData}
+            researchOutputData={updatedOutput}
             typeOptions={Array.from(
               researchOutputDocumentTypeToType[documentType],
             )}
             urlRequired={documentType !== 'Lab Material'}
-            selectedTeams={(researchOutputData?.teams ?? [team]).map(
+            selectedTeams={(updatedOutput?.teams ?? [team]).map(
               (selectedTeam, index) => ({
                 label: selectedTeam.displayName,
                 value: selectedTeam.id,
@@ -246,25 +298,25 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             permissions={permissions}
             descriptionUnchangedWarning={descriptionUnchangedWarning}
             onSave={(output) =>
-              researchOutputData?.id
-                ? updateAndPublishResearchOutput(researchOutputData.id, {
+              updatedOutput?.id
+                ? updateAndPublishResearchOutput(updatedOutput.id, {
                     ...output,
                     published: true,
                     createVersion: versionAction === 'create',
-                    statusChangedById: researchOutputData.statusChangedBy?.id,
-                    isInReview: researchOutputData.isInReview,
+                    statusChangedById: updatedOutput.statusChangedBy?.id,
+                    isInReview: updatedOutput.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({ ...output, published: true }).catch(
                     handleError(['/link', '/title'], setErrors),
                   )
             }
             onSaveDraft={(output) =>
-              researchOutputData?.id
-                ? updateResearchOutput(researchOutputData.id, {
+              updatedOutput?.id
+                ? updateResearchOutput(updatedOutput.id, {
                     ...output,
                     published: false,
-                    statusChangedById: researchOutputData.statusChangedBy?.id,
-                    isInReview: researchOutputData.isInReview,
+                    statusChangedById: updatedOutput.statusChangedBy?.id,
+                    isInReview: updatedOutput.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,

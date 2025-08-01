@@ -18,6 +18,8 @@ describe('ManuscriptOutputSelection', () => {
     onChangeManuscriptOutputSelection: jest.fn(),
     onSelectCreateManually: jest.fn(),
     getManuscriptVersionOptions: jest.fn(),
+    onImportManuscript: jest.fn(),
+    setSelectedVersion: jest.fn(),
   };
 
   beforeEach(() => {

@@ -206,7 +206,7 @@ export default class ManuscriptController {
       firstAuthors ?? [],
     );
     const correspondingAuthorValues = correspondingAuthor
-      ? await this.mapAuthorsPostRequestToId([correspondingAuthor] ?? [])
+      ? await this.mapAuthorsPostRequestToId([correspondingAuthor])
       : [];
 
     const additionalAuthorsValues = await this.mapAuthorsPostRequestToId(
@@ -247,7 +247,8 @@ export default class ManuscriptController {
         manuscriptData.apcRequested !== undefined)
     ) {
       await this.manuscriptDataProvider.update(id, manuscriptData, userId);
-      return this.fetchById(id, userId);
+      const updatedManuscript = await this.fetchById(id, userId);
+      return updatedManuscript;
     }
 
     if ('versions' in manuscriptData && manuscriptData.versions?.[0]) {
@@ -262,7 +263,7 @@ export default class ManuscriptController {
         firstAuthors ?? [],
       );
       const correspondingAuthorValues = correspondingAuthor
-        ? await this.mapAuthorsPostRequestToId([correspondingAuthor] ?? [])
+        ? await this.mapAuthorsPostRequestToId([correspondingAuthor])
         : [];
 
       const additionalAuthorsValues = await this.mapAuthorsPostRequestToId(
@@ -288,8 +289,8 @@ export default class ManuscriptController {
         userId,
       );
     }
-
-    return this.fetchById(id, userId);
+    const updatedManuscript = await this.fetchById(id, userId);
+    return updatedManuscript;
   }
 }
 

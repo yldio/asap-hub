@@ -36,6 +36,134 @@ import {
 } from './state';
 import { useComplianceSearch } from './useComplianceSearch';
 import { useManuscriptToast } from './useManuscriptToast';
+import { useComplianceSearch as useComplianceOSearch } from '../../opensearch/state';
+
+// Helper function to build APC coverage filter
+const getAPCCoverageFilter = (
+  requestedAPCCoverage: RequestedAPCCoverageOption,
+) => {
+  if (!requestedAPCCoverage || requestedAPCCoverage === 'all') {
+    return undefined; // No filter
+  }
+
+  switch (requestedAPCCoverage) {
+    case 'apcNotRequested':
+      return { term: { apcRequested: false } };
+    case 'apcRequested':
+      return { term: { apcRequested: true } };
+    case 'paid':
+      return {
+        bool: {
+          must: [
+            { term: { apcRequested: true } },
+            { term: { apcCoverageRequestStatus: 'paid' } },
+          ],
+        },
+      };
+    case 'notPaid':
+      return {
+        bool: {
+          must: [
+            { term: { apcRequested: true } },
+            { term: { apcCoverageRequestStatus: 'notPaid' } },
+          ],
+        },
+      };
+    case 'declined':
+      return {
+        bool: {
+          must: [
+            { term: { apcRequested: true } },
+            { term: { apcCoverageRequestStatus: 'declined' } },
+          ],
+        },
+      };
+    default:
+      return undefined;
+  }
+};
+
+// Helper function to build status filters
+const getStatusFilters = (
+  completedStatus: CompletedStatusOption,
+  selectedStatuses: ManuscriptStatus[],
+) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mustNotConditions: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mustConditions: any[] = [];
+
+  // Handle completed status filter (hide/show Compliant and Closed)
+  if (completedStatus === 'hide') {
+    mustNotConditions.push({
+      terms: {
+        status: ['Closed (other)', 'Compliant'],
+      },
+    });
+  }
+
+  // Handle selected statuses filter
+  if (selectedStatuses.length > 0) {
+    mustConditions.push({
+      terms: {
+        status: selectedStatuses,
+      },
+    });
+  }
+
+  return { mustNotConditions, mustConditions };
+};
+
+// Function to build OpenSearch query
+const buildOpenSearchQuery = (
+  searchQuery: string,
+  requestedAPCCoverage: RequestedAPCCoverageOption,
+  completedStatus: CompletedStatusOption,
+  selectedStatuses: ManuscriptStatus[],
+) => {
+  // Build APC coverage filter
+  const apcFilter = getAPCCoverageFilter(requestedAPCCoverage);
+
+  // Build status filters
+  const { mustNotConditions, mustConditions } = getStatusFilters(
+    completedStatus,
+    selectedStatuses,
+  );
+
+  // Add APC filter to must conditions if it exists
+  if (apcFilter) {
+    mustConditions.push(apcFilter);
+  }
+
+  // Add search query to must conditions if provided
+  if (searchQuery.trim()) {
+    mustConditions.push({
+      multi_match: {
+        query: searchQuery,
+        fields: ['title', 'teams.name', 'assignedUsers.name'],
+      },
+    });
+  }
+
+  // Build the complete OpenSearch query
+  if (mustNotConditions.length === 0 && mustConditions.length === 0) {
+    // No conditions at all - use match_all
+    return { match_all: {} };
+  }
+  // Build bool query
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const boolQuery: any = { bool: {} };
+
+  if (mustNotConditions.length > 0) {
+    boolQuery.bool.must_not = mustNotConditions;
+  }
+
+  if (mustConditions.length > 0) {
+    boolQuery.bool.must = mustConditions;
+  }
+
+  return boolQuery;
+};
 
 type ComplianceListProps = Pick<
   ComponentProps<typeof ComplianceControls>,
@@ -73,6 +201,34 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
     selectedStatuses,
   });
 
+  // Build OpenSearch query for the current filters
+  const opensearchQuery = buildOpenSearchQuery(
+    searchQuery,
+    requestedAPCCoverage,
+    completedStatus,
+    selectedStatuses,
+  );
+
+  // Use OpenSearch with the pre-built query
+  const {
+    total,
+    results,
+    refresh: refreshOS,
+  } = useComplianceOSearch({
+    query: opensearchQuery,
+    size: pageSize,
+    from: currentPage * pageSize,
+    sort: [
+      {
+        'title.keyword': {
+          order: 'desc',
+        },
+      },
+    ],
+  });
+
+  // eslint-disable-next-line no-console
+  console.log('opensearch data', { total, results });
   const { setFormType } = useManuscriptToast();
 
   const { numberOfPages, renderPageHref } = usePagination(
@@ -99,6 +255,7 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   ) => {
     const manuscriptResponse = await updateManuscript(id, manuscript);
     result.refresh(manuscriptResponse);
+    await refreshOS(manuscriptResponse.id);
     setFormType({ type: 'assigned-users', accent: 'successLarge' });
     return manuscriptResponse;
   };
@@ -179,6 +336,7 @@ const Compliance: React.FC = () => {
     setStatus,
     generateLinkFactory,
   } = useComplianceSearch();
+
   const { currentPage, pageSize } = usePaginationParams();
 
   const isComplianceReviewer = useIsComplianceReviewer();

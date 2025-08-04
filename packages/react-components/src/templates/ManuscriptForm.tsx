@@ -23,7 +23,16 @@ import {
 } from '@asap-hub/model';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentProps, useCallback, useState, lazy, useEffect } from 'react';
+import {
+  ComponentProps,
+  useCallback,
+  useState,
+  lazy,
+  useEffect,
+  useMemo,
+  memo,
+  Suspense,
+} from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { colors } from '..';
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
@@ -920,35 +929,43 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     }
   };
 
-  const lifecycleSuggestions =
-    watchType === ''
-      ? []
-      : manuscriptTypeLifecycles
-          .filter(({ types }) => types.includes(watchType))
-          .map(({ lifecycle: lifecycleSuggestion }) => ({
-            value: lifecycleSuggestion,
-            label: lifecycleSuggestion,
-          }));
+  const lifecycleSuggestions = useMemo(
+    () =>
+      watchType === ''
+        ? []
+        : manuscriptTypeLifecycles
+            .filter(({ types }) => types.includes(watchType))
+            .map(({ lifecycle: lifecycleSuggestion }) => ({
+              value: lifecycleSuggestion,
+              label: lifecycleSuggestion,
+            })),
+    [watchType],
+  );
 
   const [modal, setModal] = useState<'submit' | 'cancel' | null>(null);
   const handleSubmitConfirmation = () => setModal('submit');
   const handleCancelConfirmation = () => setModal('cancel');
 
-  const isURLRequired =
-    watchLifecycle &&
-    manuscriptLifecycleRequiredURL.includes(
-      watchLifecycle as ManuscriptLifecycle,
-    );
+  const isURLRequired = useMemo(
+    () =>
+      watchLifecycle &&
+      manuscriptLifecycleRequiredURL.includes(
+        watchLifecycle as ManuscriptLifecycle,
+      ),
+    [watchLifecycle],
+  );
 
   return (
     <form onSubmit={handleSubmit(handleSubmitConfirmation)}>
-      <ManuscriptFormModals
-        isSubmitting={isSubmitting}
-        modal={modal}
-        handleSubmit={handleSubmit(onSubmit)}
-        setModal={setModal}
-        isEditMode={isEditMode}
-      />
+      <Suspense fallback={<div>Loading modals...</div>}>
+        <ManuscriptFormModals
+          isSubmitting={isSubmitting}
+          modal={modal}
+          handleSubmit={handleSubmit(onSubmit)}
+          setModal={setModal}
+          isEditMode={isEditMode}
+        />
+      </Suspense>
       <main css={mainStyles}>
         <div css={contentStyles}>
           <FormCard title="What are you sharing?">
@@ -1007,7 +1024,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 </FixMarginWrapper>
               )}
             />
-
             <Controller
               name="versions.0.type"
               control={control}
@@ -1044,47 +1060,49 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 />
               )}
             />
-
             {watchType && (
-              <Controller
-                name="versions.0.lifecycle"
-                control={control}
-                rules={{
-                  required: 'Please select an option.',
-                }}
-                render={({
-                  field: { value, onChange, onBlur },
-                  fieldState: { error },
-                }) => (
-                  <LabeledDropdown<ManuscriptLifecycle | ''>
-                    title="Where is the manuscript in the life cycle?"
-                    subtitle="(required)"
-                    description="Select the option that matches your manuscript the best."
-                    options={lifecycleSuggestions}
-                    onChange={(lifecycleEvent) => {
-                      onChange(lifecycleEvent);
+              <Suspense fallback={<div>Loading lifecycle...</div>}>
+                <Controller
+                  name="versions.0.lifecycle"
+                  control={control}
+                  rules={{
+                    required: 'Please select an option.',
+                  }}
+                  render={({
+                    field: { value, onChange, onBlur },
+                    fieldState: { error },
+                  }) => (
+                    <LabeledDropdown<ManuscriptLifecycle | ''>
+                      title="Where is the manuscript in the life cycle?"
+                      subtitle="(required)"
+                      description="Select the option that matches your manuscript the best."
+                      options={lifecycleSuggestions}
+                      onChange={(lifecycleEvent) => {
+                        onChange(lifecycleEvent);
 
-                      // Update optional fields based on new selections
-                      if (watchType && lifecycleEvent) {
-                        updateOptionalFields(
-                          watchType as ManuscriptType,
-                          lifecycleEvent as ManuscriptLifecycle,
-                        );
+                        // Update optional fields based on new selections
+                        if (watchType && lifecycleEvent) {
+                          updateOptionalFields(
+                            watchType as ManuscriptType,
+                            lifecycleEvent as ManuscriptLifecycle,
+                          );
+                        }
+                      }}
+                      onBlur={onBlur}
+                      customValidationMessage={error?.message}
+                      value={value}
+                      enabled={
+                        (!isEditMode || isOpenScienceTeamMember) &&
+                        !isSubmitting
                       }
-                    }}
-                    onBlur={onBlur}
-                    customValidationMessage={error?.message}
-                    value={value}
-                    enabled={
-                      (!isEditMode || isOpenScienceTeamMember) && !isSubmitting
-                    }
-                    noOptionsMessage={(option: { inputValue: string }) =>
-                      `Sorry, no options match ${option.inputValue}`
-                    }
-                    placeholder="Choose an option"
-                  />
-                )}
-              />
+                      noOptionsMessage={(option: { inputValue: string }) =>
+                        `Sorry, no options match ${option.inputValue}`
+                      }
+                      placeholder="Choose an option"
+                    />
+                  )}
+                />
+              </Suspense>
             )}
 
             {watchType &&
@@ -1092,42 +1110,44 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
                 'preprintDoi',
               ) && (
-                <Controller
-                  name="versions.0.preprintDoi"
-                  control={control}
-                  rules={{
-                    pattern: {
-                      value: /^10\.\d{4}.*$/,
-                      message: 'Your preprint DOI must start with 10.',
-                    },
-                    required:
-                      watchLifecycle === 'Preprint' &&
-                      'Please enter a Preprint DOI',
-                  }}
-                  render={({
-                    field: { value, onChange, onBlur },
-                    fieldState: { error },
-                  }) => (
-                    <LabeledTextField
-                      title="Preprint DOI"
-                      subtitle={
-                        watchLifecycle === 'Preprint'
-                          ? '(required)'
-                          : '(optional)'
-                      }
-                      description="Your preprint DOI must start with 10."
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      customValidationMessage={error?.message}
-                      value={value ?? ''}
-                      enabled={
-                        (!isEditMode || isOpenScienceTeamMember) &&
-                        !isSubmitting
-                      }
-                      placeholder="e.g. 10.5555/YFRU1371"
-                    />
-                  )}
-                />
+                <Suspense fallback={<div>Loading preprint DOI...</div>}>
+                  <Controller
+                    name="versions.0.preprintDoi"
+                    control={control}
+                    rules={{
+                      pattern: {
+                        value: /^10\.\d{4}.*$/,
+                        message: 'Your preprint DOI must start with 10.',
+                      },
+                      required:
+                        watchLifecycle === 'Preprint' &&
+                        'Please enter a Preprint DOI',
+                    }}
+                    render={({
+                      field: { value, onChange, onBlur },
+                      fieldState: { error },
+                    }) => (
+                      <LabeledTextField
+                        title="Preprint DOI"
+                        subtitle={
+                          watchLifecycle === 'Preprint'
+                            ? '(required)'
+                            : '(optional)'
+                        }
+                        description="Your preprint DOI must start with 10."
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        customValidationMessage={error?.message}
+                        value={value ?? ''}
+                        enabled={
+                          (!isEditMode || isOpenScienceTeamMember) &&
+                          !isSubmitting
+                        }
+                        placeholder="e.g. 10.5555/YFRU1371"
+                      />
+                    )}
+                  />
+                </Suspense>
               )}
 
             {watchType &&
@@ -1135,36 +1155,38 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
                 'publicationDoi',
               ) && (
-                <Controller
-                  name="versions.0.publicationDoi"
-                  control={control}
-                  rules={{
-                    pattern: {
-                      value: /^10\.\d{4}.*$/,
-                      message: 'Your publication DOI must start with 10.',
-                    },
-                    required: 'Please enter a Publication DOI',
-                  }}
-                  render={({
-                    field: { value, onChange, onBlur },
-                    fieldState: { error },
-                  }) => (
-                    <LabeledTextField
-                      title="Publication DOI"
-                      subtitle={'(required)'}
-                      description="Your publication DOI must start with 10."
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      customValidationMessage={error?.message}
-                      value={value ?? ''}
-                      enabled={
-                        (!isEditMode || isOpenScienceTeamMember) &&
-                        !isSubmitting
-                      }
-                      placeholder="e.g. 10.5555/YFRU1371"
-                    />
-                  )}
-                />
+                <Suspense fallback={<div>Loading publication DOI...</div>}>
+                  <Controller
+                    name="versions.0.publicationDoi"
+                    control={control}
+                    rules={{
+                      pattern: {
+                        value: /^10\.\d{4}.*$/,
+                        message: 'Your publication DOI must start with 10.',
+                      },
+                      required: 'Please enter a Publication DOI',
+                    }}
+                    render={({
+                      field: { value, onChange, onBlur },
+                      fieldState: { error },
+                    }) => (
+                      <LabeledTextField
+                        title="Publication DOI"
+                        subtitle={'(required)'}
+                        description="Your publication DOI must start with 10."
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        customValidationMessage={error?.message}
+                        value={value ?? ''}
+                        enabled={
+                          (!isEditMode || isOpenScienceTeamMember) &&
+                          !isSubmitting
+                        }
+                        placeholder="e.g. 10.5555/YFRU1371"
+                      />
+                    )}
+                  />
+                </Suspense>
               )}
 
             {watchType &&
@@ -1172,72 +1194,76 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
                 'otherDetails',
               ) && (
-                <Controller
-                  name="versions.0.otherDetails"
-                  control={control}
-                  rules={{
-                    required: 'Please provide details',
-                    maxLength: {
-                      value: 256,
-                      message: 'Details cannot exceed 256 characters.',
-                    },
-                  }}
-                  render={({
-                    field: { value, onChange, onBlur },
-                    fieldState: { error },
-                  }) => (
-                    <LabeledTextField
-                      title="Please provide details"
-                      subtitle={'(required)'}
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      customValidationMessage={error?.message}
-                      value={value ?? ''}
-                      enabled={
-                        (!isEditMode || isOpenScienceTeamMember) &&
-                        !isSubmitting
-                      }
-                    />
-                  )}
-                />
+                <Suspense fallback={<div>Loading other details...</div>}>
+                  <Controller
+                    name="versions.0.otherDetails"
+                    control={control}
+                    rules={{
+                      required: 'Please provide details',
+                      maxLength: {
+                        value: 256,
+                        message: 'Details cannot exceed 256 characters.',
+                      },
+                    }}
+                    render={({
+                      field: { value, onChange, onBlur },
+                      fieldState: { error },
+                    }) => (
+                      <LabeledTextField
+                        title="Please provide details"
+                        subtitle={'(required)'}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        customValidationMessage={error?.message}
+                        value={value ?? ''}
+                        enabled={
+                          (!isEditMode || isOpenScienceTeamMember) &&
+                          !isSubmitting
+                        }
+                      />
+                    )}
+                  />
+                </Suspense>
               )}
             <div
               css={css({
                 marginTop: rem(12),
               })}
             >
-              <Controller
-                name="impact"
-                control={control}
-                rules={{
-                  required: 'Please add at least one impact.',
-                }}
-                render={({
-                  field: { value, onChange, onBlur },
-                  fieldState: { error },
-                }) => (
-                  <LabeledDropdown
-                    title="Impact"
-                    subtitle="(required)"
-                    description="Select the option that best describes the impact of this manuscript on the PD field."
-                    options={impactOtions}
-                    onChange={(e) => {
-                      const impactOption = impactOtions.find(
-                        (option) => option.value === e,
-                      );
-                      onChange(impactOption);
-                    }}
-                    onBlur={onBlur}
-                    customValidationMessage={error?.message}
-                    value={value?.value}
-                    enabled={!isSubmitting}
-                    noOptionsMessage={(option) =>
-                      `Sorry, no impacts match ${option.inputValue}`
-                    }
-                    placeholder="Choose an impact"
-                  />
-                )}
-              />
+              <Suspense fallback={<div>Loading impact...</div>}>
+                <Controller
+                  name="impact"
+                  control={control}
+                  rules={{
+                    required: 'Please add at least one impact.',
+                  }}
+                  render={({
+                    field: { value, onChange, onBlur },
+                    fieldState: { error },
+                  }) => (
+                    <LabeledDropdown
+                      title="Impact"
+                      subtitle="(required)"
+                      description="Select the option that best describes the impact of this manuscript on the PD field."
+                      options={impactOtions}
+                      onChange={(e) => {
+                        const impactOption = impactOtions.find(
+                          (option) => option.value === e,
+                        );
+                        onChange(impactOption);
+                      }}
+                      onBlur={onBlur}
+                      customValidationMessage={error?.message}
+                      value={value?.value}
+                      enabled={!isSubmitting}
+                      noOptionsMessage={(option) =>
+                        `Sorry, no impacts match ${option.inputValue}`
+                      }
+                      placeholder="Choose an impact"
+                    />
+                  )}
+                />
+              </Suspense>
             </div>
 
             <div
@@ -1245,31 +1271,375 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 marginTop: rem(12),
               })}
             >
+              <Suspense fallback={<div>Loading categories...</div>}>
+                <Controller
+                  name="categories"
+                  control={control}
+                  rules={{
+                    required: 'Please add at least one category.',
+                    validate: (value) => {
+                      if (value.length > 2) {
+                        return 'You can select up to two categories only.';
+                      }
+                      return true;
+                    },
+                  }}
+                  render={({
+                    field: { value, onChange, onBlur },
+                    fieldState: { error },
+                  }) => (
+                    <LabeledMultiSelect
+                      title="Category"
+                      description="Select up to two options that best describe the scientific category of this manuscript."
+                      subtitle="(required)"
+                      placeholder="Start typing..."
+                      loadOptions={getCategorySuggestions}
+                      isMulti={true}
+                      onChange={(selectedOptions: MultiSelectOptionsType) => {
+                        onChange(selectedOptions);
+                      }}
+                      customValidationMessage={error?.message}
+                      values={value}
+                      noOptionsMessage={({
+                        inputValue,
+                      }: {
+                        inputValue: string;
+                      }) => `Sorry, no categories match ${inputValue}`}
+                      enabled={!isSubmitting}
+                      onBlur={onBlur}
+                    />
+                  )}
+                />
+              </Suspense>
+            </div>
+
+            {watchType && (
+              <Suspense fallback={<div>Loading manuscript file...</div>}>
+                <Controller
+                  name="versions.0.manuscriptFile"
+                  control={control}
+                  rules={{
+                    required: 'Please select a manuscript file.',
+                  }}
+                  render={({ field: { value }, fieldState: { error } }) => (
+                    <LabeledFileField
+                      title="Upload the main manuscript file"
+                      subtitle="(required)"
+                      description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures. The file size must not exceed 100 MB."
+                      placeholder="Upload Manuscript File"
+                      onRemove={async () => {
+                        resetField('versions.0.manuscriptFile', {
+                          defaultValue: null,
+                        });
+                        await trigger('versions.0.manuscriptFile');
+                      }}
+                      handleFileUpload={async (file: File) => {
+                        if (file.size > MAX_FILE_SIZE) {
+                          setError('versions.0.manuscriptFile', {
+                            type: 'custom',
+                            message:
+                              'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+                          });
+                        } else {
+                          setIsUploadingManuscriptFile(true);
+                          clearErrors('versions.0.manuscriptFile');
+
+                          const uploadedFile = await handleFileUpload(
+                            file,
+                            'Manuscript File',
+                            (validationErrorMessage) => {
+                              setError('versions.0.manuscriptFile', {
+                                type: 'custom',
+                                message: validationErrorMessage,
+                              });
+                            },
+                          );
+                          setIsUploadingManuscriptFile(false);
+
+                          if (!uploadedFile) return;
+
+                          setValue('versions.0.manuscriptFile', uploadedFile, {
+                            shouldValidate: true,
+                          });
+                        }
+                      }}
+                      currentFiles={value ? [value] : []}
+                      accept="application/pdf"
+                      customValidationMessage={error?.message}
+                      enabled={
+                        (!isEditMode || isOpenScienceTeamMember) &&
+                        !isSubmitting &&
+                        !isUploadingManuscriptFile
+                      }
+                      tagEnabled={!isEditMode || isOpenScienceTeamMember}
+                    />
+                  )}
+                />
+              </Suspense>
+            )}
+            {watchType &&
+              watchLifecycle &&
+              manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
+                'keyResourceTable',
+              ) && (
+                <Suspense fallback={<div>Loading key resource table...</div>}>
+                  <Controller
+                    name="versions.0.keyResourceTable"
+                    control={control}
+                    rules={{
+                      required: 'Please select a key resource table.',
+                    }}
+                    render={({ field: { value }, fieldState: { error } }) => (
+                      <LabeledFileField
+                        title="Upload a key resource table"
+                        subtitle="(required)"
+                        description={
+                          <>
+                            The key resource table must be submitted as a single
+                            CSV file and should outline the resources used and
+                            generated in this study. The file size must not
+                            exceed 100 MB. View guidance{' '}
+                            {<Link href={KRT_GUIDANCE_FILE}>here</Link>}.
+                          </>
+                        }
+                        placeholder="Upload Key Resource Table"
+                        onRemove={async () => {
+                          resetField('versions.0.keyResourceTable', {
+                            defaultValue: null,
+                          });
+                          await trigger('versions.0.keyResourceTable');
+                        }}
+                        handleFileUpload={async (file: File) => {
+                          if (file.size > MAX_FILE_SIZE) {
+                            setError('versions.0.keyResourceTable', {
+                              type: 'custom',
+                              message:
+                                'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+                            });
+                          } else {
+                            setIsUploadingKeyResourceTable(true);
+                            clearErrors('versions.0.keyResourceTable');
+
+                            const uploadedFile = await handleFileUpload(
+                              file,
+                              'Key Resource Table',
+                              (validationErrorMessage) => {
+                                setError('versions.0.keyResourceTable', {
+                                  type: 'custom',
+                                  message: validationErrorMessage,
+                                });
+                              },
+                            );
+                            setIsUploadingKeyResourceTable(false);
+
+                            if (!uploadedFile) return;
+
+                            setValue(
+                              'versions.0.keyResourceTable',
+                              uploadedFile,
+                              {
+                                shouldValidate: true,
+                              },
+                            );
+                          }
+                        }}
+                        currentFiles={value ? [value] : []}
+                        accept="text/csv"
+                        customValidationMessage={error?.message}
+                        enabled={
+                          (!isEditMode || isOpenScienceTeamMember) &&
+                          !isSubmitting &&
+                          !isUploadingKeyResourceTable
+                        }
+                        tagEnabled={!isEditMode || isOpenScienceTeamMember}
+                      />
+                    )}
+                  />
+                </Suspense>
+              )}
+            {watchType && (
+              <Suspense fallback={<div>Loading additional files...</div>}>
+                <Controller
+                  name="versions.0.additionalFiles"
+                  control={control}
+                  render={({ field: { value }, fieldState: { error } }) => (
+                    <LabeledFileField
+                      title="Upload any additional files"
+                      subtitle="(optional)"
+                      description={
+                        <>
+                          Additional files must be submitted in PDF and/or CSV
+                          formats. The file size must not exceed 100 MB.
+                        </>
+                      }
+                      placeholder="Upload Additional Files"
+                      onRemove={(id?: string) => {
+                        setValue(
+                          'versions.0.additionalFiles',
+                          value?.filter(
+                            (additionalFile) => additionalFile.id !== id,
+                          ),
+                        );
+                      }}
+                      maxFiles={5}
+                      handleFileUpload={async (file: File) => {
+                        const isExistingFile =
+                          value &&
+                          value.findIndex(
+                            (additionalFile) =>
+                              additionalFile.filename === file.name,
+                          ) !== -1;
+                        if (!isExistingFile) {
+                          if (file.size > MAX_FILE_SIZE) {
+                            setError('versions.0.additionalFiles', {
+                              type: 'custom',
+                              message:
+                                'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+                            });
+                          } else {
+                            setIsUploadingAdditionalFiles(true);
+                            clearErrors('versions.0.additionalFiles');
+
+                            const uploadedFile = await handleFileUpload(
+                              file,
+                              'Additional Files',
+                              (validationErrorMessage) => {
+                                setError('versions.0.additionalFiles', {
+                                  type: 'custom',
+                                  message: validationErrorMessage,
+                                });
+                              },
+                            );
+                            setIsUploadingAdditionalFiles(false);
+
+                            if (!uploadedFile) return;
+
+                            setValue(
+                              'versions.0.additionalFiles',
+                              [
+                                ...(getValues('versions.0.additionalFiles') ||
+                                  []),
+                                uploadedFile,
+                              ],
+                              {
+                                shouldValidate: true,
+                              },
+                            );
+                          }
+                        } else {
+                          setError('versions.0.additionalFiles', {
+                            type: 'custom',
+                            message: 'File uploaded already exists.',
+                          });
+                        }
+                      }}
+                      currentFiles={value}
+                      customValidationMessage={error?.message}
+                      accept="application/pdf,text/csv"
+                      enabled={
+                        (!isEditMode || isOpenScienceTeamMember) &&
+                        !isSubmitting &&
+                        !isUploadingAdditionalFiles
+                      }
+                      tagEnabled={!isEditMode || isOpenScienceTeamMember}
+                    />
+                  )}
+                />
+              </Suspense>
+            )}
+            <Suspense fallback={<div>Loading description...</div>}>
               <Controller
-                name="categories"
+                name="versions.0.description"
                 control={control}
                 rules={{
-                  required: 'Please add at least one category.',
-                  validate: (value) => {
-                    if (value.length > 2) {
-                      return 'You can select up to two categories only.';
-                    }
-                    return true;
-                  },
+                  required: 'Please enter the description.',
                 }}
                 render={({
                   field: { value, onChange, onBlur },
                   fieldState: { error },
                 }) => (
-                  <LabeledMultiSelect
-                    title="Category"
-                    description="Select up to two options that best describe the scientific category of this manuscript."
+                  <LabeledTextArea
+                    title="Manuscript Description"
                     subtitle="(required)"
+                    tip={
+                      <span>
+                        Please provide a description of the outcomes of your
+                        paper and how it relates to your ASAP project (view
+                        example{' '}
+                        <Link href="https://docs.google.com/document/d/1dU8VLqKjyJM_tBNWpxAAJyoALknQgbRlKm5PdqopFUM/edit">
+                          here
+                        </Link>
+                        ).
+                      </span>
+                    }
+                    customValidationMessage={error?.message}
+                    value={value || ''}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    enabled={!isSubmitting}
+                  />
+                )}
+              />
+            </Suspense>
+            <Suspense fallback={<div>Loading short description...</div>}>
+              <Controller
+                name="versions.0.shortDescription"
+                control={control}
+                rules={{
+                  required: 'Please enter the short description.',
+                  maxLength: {
+                    value: 250,
+                    message:
+                      'The short description exceeds the character limit. Please limit it to 250 characters.',
+                  },
+                }}
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <ShortDescriptionCard
+                    buttonEnabled={!!watch('versions.0.description')}
+                    enabled={!isSubmitting}
+                    onChange={async (e) => {
+                      onChange(e);
+                      await trigger('versions.0.shortDescription');
+                    }}
+                    value={value}
+                    customValidationMessage={error?.message}
+                    tip="Use AI to generate a short description or write your own based on the description field above."
+                    getShortDescription={() =>
+                      getShortDescriptionFromDescription(
+                        watch('versions.0.description'),
+                      )
+                    }
+                  />
+                )}
+              />
+            </Suspense>
+          </FormCard>
+          <Suspense fallback={<div>Loading contributors...</div>}>
+            <FormCard key="contributors" title="Who were the contributors?">
+              <Controller
+                name="versions.0.teams"
+                control={control}
+                rules={{
+                  required: 'Please add at least one team.',
+                }}
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <LabeledMultiSelect
+                    title="Teams"
+                    description="Add other teams that contributed to this manuscript. The Project Manager and Lead PI from all teams listed will receive updates. They will also be able to edit the manuscript metadata and submit a new version of the manuscript."
+                    subtitle="(required)"
+                    enabled={!isSubmitting}
                     placeholder="Start typing..."
-                    loadOptions={getCategorySuggestions}
-                    isMulti={true}
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    loadOptions={getTeamSuggestions!}
                     onChange={(selectedOptions: MultiSelectOptionsType) => {
                       onChange(selectedOptions);
+                      validateTeams();
                     }}
                     customValidationMessage={error?.message}
                     values={value}
@@ -1277,520 +1647,196 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       inputValue,
                     }: {
                       inputValue: string;
-                    }) => `Sorry, no categories match ${inputValue}`}
-                    enabled={!isSubmitting}
-                    onBlur={onBlur}
+                    }) => `Sorry, no teams match ${inputValue}`}
                   />
                 )}
               />
-            </div>
 
-            {watchType && (
-              <Controller
-                name="versions.0.manuscriptFile"
-                control={control}
-                rules={{
-                  required: 'Please select a manuscript file.',
-                }}
-                render={({ field: { value }, fieldState: { error } }) => (
-                  <LabeledFileField
-                    title="Upload the main manuscript file"
-                    subtitle="(required)"
-                    description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures. The file size must not exceed 100 MB."
-                    placeholder="Upload Manuscript File"
-                    onRemove={async () => {
-                      resetField('versions.0.manuscriptFile', {
-                        defaultValue: null,
-                      });
-                      await trigger('versions.0.manuscriptFile');
-                    }}
-                    handleFileUpload={async (file: File) => {
-                      if (file.size > MAX_FILE_SIZE) {
-                        setError('versions.0.manuscriptFile', {
-                          type: 'custom',
-                          message:
-                            'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-                        });
-                      } else {
-                        setIsUploadingManuscriptFile(true);
-                        clearErrors('versions.0.manuscriptFile');
-
-                        const uploadedFile = await handleFileUpload(
-                          file,
-                          'Manuscript File',
-                          (validationErrorMessage) => {
-                            setError('versions.0.manuscriptFile', {
-                              type: 'custom',
-                              message: validationErrorMessage,
-                            });
-                          },
-                        );
-                        setIsUploadingManuscriptFile(false);
-
-                        if (!uploadedFile) return;
-
-                        setValue('versions.0.manuscriptFile', uploadedFile, {
-                          shouldValidate: true,
-                        });
-                      }
-                    }}
-                    currentFiles={value ? [value] : []}
-                    accept="application/pdf"
-                    customValidationMessage={error?.message}
-                    enabled={
-                      (!isEditMode || isOpenScienceTeamMember) &&
-                      !isSubmitting &&
-                      !isUploadingManuscriptFile
-                    }
-                    tagEnabled={!isEditMode || isOpenScienceTeamMember}
-                  />
-                )}
+              <ManuscriptAuthors
+                isMultiSelect
+                isRequired
+                fieldName="firstAuthors"
+                fieldTitle="First Author Full Name"
+                fieldDescription="Add the name of the first author(s). First authors will receive updates. First authors who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
+                fieldEmailDescription="Provide a valid email address for the Non-CRN first author."
+                {...commonManuscriptAuthorProps}
               />
-            )}
-            {watchType &&
-              watchLifecycle &&
-              manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
-                'keyResourceTable',
-              ) && (
-                <Controller
-                  name="versions.0.keyResourceTable"
-                  control={control}
-                  rules={{
-                    required: 'Please select a key resource table.',
-                  }}
-                  render={({ field: { value }, fieldState: { error } }) => (
-                    <LabeledFileField
-                      title="Upload a key resource table"
-                      subtitle="(required)"
-                      description={
-                        <>
-                          The key resource table must be submitted as a single
-                          CSV file and should outline the resources used and
-                          generated in this study. The file size must not exceed
-                          100 MB. View guidance{' '}
-                          {<Link href={KRT_GUIDANCE_FILE}>here</Link>}.
-                        </>
-                      }
-                      placeholder="Upload Key Resource Table"
-                      onRemove={async () => {
-                        resetField('versions.0.keyResourceTable', {
-                          defaultValue: null,
-                        });
-                        await trigger('versions.0.keyResourceTable');
-                      }}
-                      handleFileUpload={async (file: File) => {
-                        if (file.size > MAX_FILE_SIZE) {
-                          setError('versions.0.keyResourceTable', {
-                            type: 'custom',
-                            message:
-                              'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-                          });
-                        } else {
-                          setIsUploadingKeyResourceTable(true);
-                          clearErrors('versions.0.keyResourceTable');
 
-                          const uploadedFile = await handleFileUpload(
-                            file,
-                            'Key Resource Table',
-                            (validationErrorMessage) => {
-                              setError('versions.0.keyResourceTable', {
-                                type: 'custom',
-                                message: validationErrorMessage,
-                              });
-                            },
-                          );
-                          setIsUploadingKeyResourceTable(false);
-
-                          if (!uploadedFile) return;
-
-                          setValue(
-                            'versions.0.keyResourceTable',
-                            uploadedFile,
-                            {
-                              shouldValidate: true,
-                            },
-                          );
-                        }
-                      }}
-                      currentFiles={value ? [value] : []}
-                      accept="text/csv"
-                      customValidationMessage={error?.message}
-                      enabled={
-                        (!isEditMode || isOpenScienceTeamMember) &&
-                        !isSubmitting &&
-                        !isUploadingKeyResourceTable
-                      }
-                      tagEnabled={!isEditMode || isOpenScienceTeamMember}
-                    />
-                  )}
-                />
-              )}
-            {watchType && (
               <Controller
-                name="versions.0.additionalFiles"
+                name="versions.0.labs"
                 control={control}
-                render={({ field: { value }, fieldState: { error } }) => (
-                  <LabeledFileField
-                    title="Upload any additional files"
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <LabeledMultiSelect
+                    title="Labs"
+                    description="Add ASAP labs that contributed to this manuscript. Only labs whose PI is part of the CRN will appear. PIs for each listed lab will receive an update on this manuscript. In addition, they will be able to edit the manuscript metadata and can submit a new version of the manuscript."
                     subtitle="(optional)"
-                    description={
-                      <>
-                        Additional files must be submitted in PDF and/or CSV
-                        formats. The file size must not exceed 100 MB.
-                      </>
-                    }
-                    placeholder="Upload Additional Files"
-                    onRemove={(id?: string) => {
-                      setValue(
-                        'versions.0.additionalFiles',
-                        value?.filter(
-                          (additionalFile) => additionalFile.id !== id,
-                        ),
-                      );
+                    enabled={!isSubmitting}
+                    placeholder="Start typing..."
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    loadOptions={getLabSuggestions!}
+                    onChange={(selectedOptions: MultiSelectOptionsType) => {
+                      onChange(selectedOptions);
+                      validateTeams();
                     }}
-                    maxFiles={5}
-                    handleFileUpload={async (file: File) => {
-                      const isExistingFile =
-                        value &&
-                        value.findIndex(
-                          (additionalFile) =>
-                            additionalFile.filename === file.name,
-                        ) !== -1;
-                      if (!isExistingFile) {
-                        if (file.size > MAX_FILE_SIZE) {
-                          setError('versions.0.additionalFiles', {
-                            type: 'custom',
-                            message:
-                              'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-                          });
-                        } else {
-                          setIsUploadingAdditionalFiles(true);
-                          clearErrors('versions.0.additionalFiles');
-
-                          const uploadedFile = await handleFileUpload(
-                            file,
-                            'Additional Files',
-                            (validationErrorMessage) => {
-                              setError('versions.0.additionalFiles', {
-                                type: 'custom',
-                                message: validationErrorMessage,
-                              });
-                            },
-                          );
-                          setIsUploadingAdditionalFiles(false);
-
-                          if (!uploadedFile) return;
-
-                          setValue(
-                            'versions.0.additionalFiles',
-                            [
-                              ...(getValues('versions.0.additionalFiles') ||
-                                []),
-                              uploadedFile,
-                            ],
-                            {
-                              shouldValidate: true,
-                            },
-                          );
-                        }
-                      } else {
-                        setError('versions.0.additionalFiles', {
-                          type: 'custom',
-                          message: 'File uploaded already exists.',
-                        });
-                      }
-                    }}
-                    currentFiles={value}
+                    values={value}
+                    noOptionsMessage={({
+                      inputValue,
+                    }: {
+                      inputValue: string;
+                    }) => `Sorry, no labs match ${inputValue}`}
                     customValidationMessage={error?.message}
-                    accept="application/pdf,text/csv"
-                    enabled={
-                      (!isEditMode || isOpenScienceTeamMember) &&
-                      !isSubmitting &&
-                      !isUploadingAdditionalFiles
-                    }
-                    tagEnabled={!isEditMode || isOpenScienceTeamMember}
                   />
                 )}
               />
-            )}
-            <Controller
-              name="versions.0.description"
-              control={control}
-              rules={{
-                required: 'Please enter the description.',
-              }}
-              render={({
-                field: { value, onChange, onBlur },
-                fieldState: { error },
-              }) => (
-                <LabeledTextArea
-                  title="Manuscript Description"
-                  subtitle="(required)"
-                  tip={
-                    <span>
-                      Please provide a description of the outcomes of your paper
-                      and how it relates to your ASAP project (view example{' '}
-                      <Link href="https://docs.google.com/document/d/1dU8VLqKjyJM_tBNWpxAAJyoALknQgbRlKm5PdqopFUM/edit">
-                        here
-                      </Link>
-                      ).
-                    </span>
-                  }
-                  customValidationMessage={error?.message}
-                  value={value || ''}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  enabled={!isSubmitting}
-                />
-              )}
-            />
 
-            <Controller
-              name="versions.0.shortDescription"
-              control={control}
-              rules={{
-                required: 'Please enter the short description.',
-                maxLength: {
-                  value: 250,
-                  message:
-                    'The short description exceeds the character limit. Please limit it to 250 characters.',
-                },
-              }}
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <ShortDescriptionCard
-                  buttonEnabled={!!watch('versions.0.description')}
-                  enabled={!isSubmitting}
-                  onChange={async (e) => {
-                    onChange(e);
-                    await trigger('versions.0.shortDescription');
-                  }}
-                  value={value}
-                  customValidationMessage={error?.message}
-                  tip="Use AI to generate a short description or write your own based on the description field above."
-                  getShortDescription={() =>
-                    getShortDescriptionFromDescription(
-                      watch('versions.0.description'),
-                    )
-                  }
-                />
-              )}
-            />
-          </FormCard>
+              <ManuscriptAuthors
+                fieldName="correspondingAuthor"
+                fieldTitle="Corresponding Author"
+                fieldDescription="Add the corresponding author. The corresponding author will receive updates. Corresponding Author who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
+                fieldEmailDescription="Provide a valid email address for the Non-CRN corresponding author."
+                {...commonManuscriptAuthorProps}
+              />
 
-          <FormCard key="contributors" title="Who were the contributors?">
-            <Controller
-              name="versions.0.teams"
-              control={control}
-              rules={{
-                required: 'Please add at least one team.',
-              }}
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <LabeledMultiSelect
-                  title="Teams"
-                  description="Add other teams that contributed to this manuscript. The Project Manager and Lead PI from all teams listed will receive updates. They will also be able to edit the manuscript metadata and submit a new version of the manuscript."
-                  subtitle="(required)"
-                  enabled={!isSubmitting}
-                  placeholder="Start typing..."
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  loadOptions={getTeamSuggestions!}
-                  onChange={(selectedOptions: MultiSelectOptionsType) => {
-                    onChange(selectedOptions);
-                    validateTeams();
-                  }}
-                  customValidationMessage={error?.message}
-                  values={value}
-                  noOptionsMessage={({ inputValue }: { inputValue: string }) =>
-                    `Sorry, no teams match ${inputValue}`
-                  }
-                />
-              )}
-            />
-
-            <ManuscriptAuthors
-              isMultiSelect
-              isRequired
-              fieldName="firstAuthors"
-              fieldTitle="First Author Full Name"
-              fieldDescription="Add the name of the first author(s). First authors will receive updates. First authors who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
-              fieldEmailDescription="Provide a valid email address for the Non-CRN first author."
-              {...commonManuscriptAuthorProps}
-            />
-
-            <Controller
-              name="versions.0.labs"
-              control={control}
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <LabeledMultiSelect
-                  title="Labs"
-                  description="Add ASAP labs that contributed to this manuscript. Only labs whose PI is part of the CRN will appear. PIs for each listed lab will receive an update on this manuscript. In addition, they will be able to edit the manuscript metadata and can submit a new version of the manuscript."
-                  subtitle="(optional)"
-                  enabled={!isSubmitting}
-                  placeholder="Start typing..."
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  loadOptions={getLabSuggestions!}
-                  onChange={(selectedOptions: MultiSelectOptionsType) => {
-                    onChange(selectedOptions);
-                    validateTeams();
-                  }}
-                  values={value}
-                  noOptionsMessage={({ inputValue }: { inputValue: string }) =>
-                    `Sorry, no labs match ${inputValue}`
-                  }
-                  customValidationMessage={error?.message}
-                />
-              )}
-            />
-
-            <ManuscriptAuthors
-              fieldName="correspondingAuthor"
-              fieldTitle="Corresponding Author"
-              fieldDescription="Add the corresponding author. The corresponding author will receive updates. Corresponding Author who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
-              fieldEmailDescription="Provide a valid email address for the Non-CRN corresponding author."
-              {...commonManuscriptAuthorProps}
-            />
-
-            <ManuscriptAuthors
-              isMultiSelect
-              fieldName="additionalAuthors"
-              fieldTitle="Additional Authors"
-              fieldDescription="Add the names of any additional authors who should receive updates. These additional authors, who are active on the CRN Hub, will be able to edit the manuscript metadata and can submit a new version of the manuscript."
-              fieldEmailDescription="Provide a valid email address for the Non-CRN additional author."
-              {...commonManuscriptAuthorProps}
-            />
-          </FormCard>
-
-          {watchType && watchLifecycle && (
-            <FormCard
-              key="quick-checks"
-              title="Quick Checks"
-              description={
-                <p>
-                  Before you submit your manuscript, please confirm that you
-                  have met the following requirements. For a more detailed
-                  explanation, please refer to the&nbsp;
-                  <Link href="https://docs.google.com/document/d/1rkAsm9UrElP8OhXCdxQXKxNGWz4HsOAIXrYtfxAn7kI">
-                    <span
-                      css={css({
-                        wordBreak: 'break-word',
-                        position: 'relative',
-                        '& svg': {
-                          position: 'absolute',
-                          bottom: '1px',
-                        },
-                      })}
-                    >
-                      Open Science Compliance Checklist for Authors
-                      <ExternalLinkIcon size={17} color={colors.pine} />
-                    </span>
-                  </Link>
-                </p>
-              }
-            >
-              <div
-                css={css({
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: rem(48),
-                  paddingTop: rem(8),
-                  paddingBottom: rem(8),
-                })}
-              >
-                {quickCheckQuestions.map(
-                  ({ field, question }) =>
-                    manuscriptFormFieldsMapping[watchType][
-                      watchLifecycle
-                    ].includes(field) && (
-                      <div key={field}>
-                        <Controller
-                          name={`versions.0.${field}`}
-                          control={control}
-                          rules={{
-                            required: 'Please select an option.',
-                          }}
-                          render={({
-                            field: { value, onChange },
-                            fieldState: { error },
-                          }) => (
-                            <LabeledRadioButtonGroup<QuestionChecksOption | ''>
-                              testId={field}
-                              title={question}
-                              subtitle="(required)"
-                              description={getQuickCheckDescription(field)}
-                              options={[
-                                {
-                                  value: 'Yes',
-                                  label: 'Yes',
-                                  disabled: isEditMode || isSubmitting,
-                                },
-                                {
-                                  value: 'No',
-                                  label: 'No',
-                                  disabled: isEditMode || isSubmitting,
-                                },
-                                {
-                                  value: 'Not applicable',
-                                  label: 'Not applicable',
-                                  disabled: isEditMode || isSubmitting,
-                                },
-                              ]}
-                              value={value as QuestionChecksOption}
-                              onChange={onChange}
-                              validationMessage={error?.message ?? ''}
-                            />
-                          )}
-                        />
-                        {['No', 'Not applicable'].includes(
-                          watch(`versions.0.${field}`) as string,
-                        ) && (
-                          <div
-                            css={css({
-                              marginTop: rem(12),
-                            })}
-                          >
-                            <Controller
-                              name={`versions.0.${field}Details`}
-                              control={control}
-                              rules={{
-                                required: 'Please enter the details.',
-                                maxLength: {
-                                  value: 256,
-                                  message:
-                                    'Reason cannot exceed 256 characters.',
-                                },
-                              }}
-                              render={({
-                                field: { value, onChange, onBlur },
-                                fieldState: { error },
-                              }) => (
-                                <LabeledTextField
-                                  noPadding
-                                  title="Please provide details"
-                                  subtitle="(required)"
-                                  description="The reason you provide must be accepted by the Open Science team."
-                                  value={value || ''}
-                                  customValidationMessage={error?.message}
-                                  onChange={onChange}
-                                  enabled={!isEditMode && !isSubmitting}
-                                  onBlur={onBlur}
-                                />
-                              )}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    ),
-                )}
-              </div>
+              <ManuscriptAuthors
+                isMultiSelect
+                fieldName="additionalAuthors"
+                fieldTitle="Additional Authors"
+                fieldDescription="Add the names of any additional authors who should receive updates. These additional authors, who are active on the CRN Hub, will be able to edit the manuscript metadata and can submit a new version of the manuscript."
+                fieldEmailDescription="Provide a valid email address for the Non-CRN additional author."
+                {...commonManuscriptAuthorProps}
+              />
             </FormCard>
+          </Suspense>
+          {watchType && watchLifecycle && (
+            <Suspense fallback={<div>Loading quick checks...</div>}>
+              <FormCard
+                key="quick-checks"
+                title="Quick Checks"
+                description={
+                  <p>
+                    Before you submit your manuscript, please confirm that you
+                    have met the following requirements. For a more detailed
+                    explanation, please refer to the&nbsp;
+                    <Link href="https://docs.google.com/document/d/1rkAsm9UrElP8OhXCdxQXKxNGWz4HsOAIXrYtfxAn7kI">
+                      <span
+                        css={css({
+                          wordBreak: 'break-word',
+                          position: 'relative',
+                          '& svg': {
+                            position: 'absolute',
+                            bottom: '1px',
+                          },
+                        })}
+                      >
+                        Open Science Compliance Checklist for Authors
+                        <ExternalLinkIcon size={17} color={colors.pine} />
+                      </span>
+                    </Link>
+                  </p>
+                }
+              >
+                <div
+                  css={css({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: rem(48),
+                    paddingTop: rem(8),
+                    paddingBottom: rem(8),
+                  })}
+                >
+                  {quickCheckQuestions.map(
+                    ({ field, question }) =>
+                      manuscriptFormFieldsMapping[watchType][
+                        watchLifecycle
+                      ].includes(field) && (
+                        <div key={field}>
+                          <Controller
+                            name={`versions.0.${field}`}
+                            control={control}
+                            rules={{
+                              required: 'Please select an option.',
+                            }}
+                            render={({
+                              field: { value, onChange },
+                              fieldState: { error },
+                            }) => (
+                              <LabeledRadioButtonGroup<
+                                QuestionChecksOption | ''
+                              >
+                                testId={field}
+                                title={question}
+                                subtitle="(required)"
+                                description={getQuickCheckDescription(field)}
+                                options={[
+                                  {
+                                    value: 'Yes',
+                                    label: 'Yes',
+                                    disabled: isEditMode || isSubmitting,
+                                  },
+                                  {
+                                    value: 'No',
+                                    label: 'No',
+                                    disabled: isEditMode || isSubmitting,
+                                  },
+                                  {
+                                    value: 'Not applicable',
+                                    label: 'Not applicable',
+                                    disabled: isEditMode || isSubmitting,
+                                  },
+                                ]}
+                                value={value as QuestionChecksOption}
+                                onChange={onChange}
+                                validationMessage={error?.message ?? ''}
+                              />
+                            )}
+                          />
+                          {['No', 'Not applicable'].includes(
+                            watch(`versions.0.${field}`) as string,
+                          ) && (
+                            <div
+                              css={css({
+                                marginTop: rem(12),
+                              })}
+                            >
+                              <Controller
+                                name={`versions.0.${field}Details`}
+                                control={control}
+                                rules={{
+                                  required: 'Please enter the details.',
+                                  maxLength: {
+                                    value: 256,
+                                    message:
+                                      'Reason cannot exceed 256 characters.',
+                                  },
+                                }}
+                                render={({
+                                  field: { value, onChange, onBlur },
+                                  fieldState: { error },
+                                }) => (
+                                  <LabeledTextField
+                                    noPadding
+                                    title="Please provide details"
+                                    subtitle="(required)"
+                                    description="The reason you provide must be accepted by the Open Science team."
+                                    value={value || ''}
+                                    customValidationMessage={error?.message}
+                                    onChange={onChange}
+                                    enabled={!isEditMode && !isSubmitting}
+                                    onBlur={onBlur}
+                                  />
+                                )}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ),
+                  )}
+                </div>
+              </FormCard>
+            </Suspense>
           )}
           <div css={buttonsOuterContainerStyles}>
             <div css={buttonsInnerContainerStyles}>
@@ -1824,4 +1870,4 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   );
 };
 
-export default ManuscriptForm;
+export default memo(ManuscriptForm);

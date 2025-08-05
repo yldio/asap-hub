@@ -17,7 +17,9 @@ import {
 } from '@asap-hub/model';
 import * as postmark from 'postmark';
 import {
+  alternativeAssignedOSEmail,
   environment as environmentName,
+  openScienceDL,
   origin,
   postmarkServerToken,
 } from '../config';
@@ -131,6 +133,15 @@ export class EmailNotificationService {
       .map((user) => `${user?.firstName} ${user?.lastName}`)
       .filter(Boolean);
 
+    const assignedOSMembersEmails =
+      manuscripts.assignedUsersCollection?.items
+        .map((user) => user?.email)
+        .filter(Boolean) || [];
+
+    if (!assignedOSMembersEmails.length) {
+      assignedOSMembersEmails.push(alternativeAssignedOSEmail);
+    }
+
     let discussionTitle = '';
     if (discussionDetails?.id) {
       const { discussions } = await this.contentfulClient.request<
@@ -191,9 +202,16 @@ export class EmailNotificationService {
         ),
       );
 
+      const addEmailIfNotYetIncluded = (email: string) =>
+        !allowedRecipients.includes(email) && allowedRecipients.push(email);
+
       let allowedRecipients = recipients;
       if (!isOSMemberReplyAction) {
-        allowedRecipients.push('openscience@parkinsonsroadmap.org');
+        allowedRecipients.push(openScienceDL);
+        assignedOSMembersEmails.forEach(
+          (assigneeEmail) =>
+            assigneeEmail && addEmailIfNotYetIncluded(assigneeEmail),
+        );
       }
 
       if (!isProduction) {
@@ -271,7 +289,10 @@ export class EmailNotificationService {
       ].filter(Boolean) as string[];
 
       let openScienceRecipients = isProduction
-        ? ['openscience@parkinsonsroadmap.org']
+        ? ([
+            openScienceDL,
+            ...(isDiscussionCreatedAction ? assignedOSMembersEmails : []),
+          ] as string[])
         : [];
 
       if (!isProduction) {

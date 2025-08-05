@@ -307,6 +307,8 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   relatedEventIds: string[];
   impact?: string;
   categories?: string[];
+  relatedManuscriptVersion?: string;
+  relatedManuscript?: string;
 };
 
 export type PublishedResearchOutputCreateDataObject =
@@ -337,6 +339,8 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   versions?: string[];
   impact?: string;
   categories?: string[];
+  relatedManuscriptVersion?: string;
+  relatedManuscript?: string;
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -422,6 +426,8 @@ export type ResearchOutputPostRequest = {
   teams: string[];
   workingGroups: string[];
   relatedResearch: string[];
+  relatedManuscriptVersion?: string;
+  relatedManuscript?: string;
   title: string;
   type?: ResearchOutputType;
   usageNotes?: string;

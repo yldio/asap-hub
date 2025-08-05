@@ -1,9 +1,12 @@
 import { JSONSchemaType } from 'ajv';
 import { ascending, descending, SortingDirection } from './analytics';
 import { AuthorAlgoliaResponse, AuthorResponse } from './authors';
+import { CategoryResponse } from './category';
 import { ListResponse } from './common';
 import { ComplianceReportDataObject } from './compliance-report';
 import { ManuscriptDiscussion } from './discussion';
+import { ExternalAuthorResponse } from './external-author';
+import { ImpactResponse } from './impact';
 import { UserResponse } from './user';
 
 export const manuscriptTypes = [
@@ -915,6 +918,27 @@ export type ManuscriptVersionResponse = {
   lifecycle?: ManuscriptLifecycle;
   teamId?: string;
   title: string;
+  url: string;
+  impact?: ImpactResponse;
+  categories?: CategoryResponse[];
+  labs?: { id: string; name: string }[];
+  authors?: (
+    | Pick<
+        UserResponse,
+        | 'id'
+        | 'firstName'
+        | 'lastName'
+        | 'displayName'
+        | 'avatarUrl'
+        | 'orcid'
+        | 'email'
+        | 'alumniSinceDate'
+      >
+    | ExternalAuthorResponse
+  )[];
+  teams?: { id: string; displayName: string }[];
+  description?: string;
+  shortDescription?: string;
   manuscriptId?: string;
   versionId?: string;
 };

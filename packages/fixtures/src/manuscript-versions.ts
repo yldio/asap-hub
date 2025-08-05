@@ -9,4 +9,5 @@ export const createManuscriptVersionResponse =
     teamId: 'team-id-1',
     type: 'Original Research',
     lifecycle: 'Preprint',
+    url: 'http://example.com',
   });

@@ -93,6 +93,9 @@ const openSearchDomainName =
     ? `${service}-${stage}-search`
     : `${service}-dev-search`;
 
+const OpenSearchDomain =
+  stage === 'production' ? 'OpenSearchDomainProd' : 'OpenSearchDomain';
+
 export const plugins = [
   './serverless-plugins/serverless-esbuild',
   './serverless-plugins/serverless-iam-roles-per-function',
@@ -2013,7 +2016,7 @@ const serverlessConfig: AWS = {
           MessageRetentionPeriod: 1209600, // 14 days
         },
       },
-      OpenSearchDomain: {
+      [OpenSearchDomain]: {
         Type: 'AWS::OpenSearchService::Domain',
         Properties: {
           DomainName: openSearchDomainName,

@@ -83,6 +83,12 @@ inputs:
   sls-stage:
     description: 'Serverless Stage'
     required: false
+  aws-os-username:
+    description: 'AWS OS Username'
+    required: true
+  aws-os-password:
+    description: 'AWS OS Password'
+    required: true
 
 runs:
   using: 'composite'
@@ -140,6 +146,8 @@ runs:
         SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
         SLS_STAGE: ${{ inputs.sls-stage }}
         S3_SYNC_ENABLED: 'false'
+        AWS_OS_USERNAME: ${{ inputs.aws-os-username }}
+        AWS_OS_PASSWORD: ${{ inputs.aws-os-password }}
     - uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.app }}-sls-package-${{ inputs.environment-name }}

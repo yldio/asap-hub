@@ -75,6 +75,12 @@ on:
       SLACK_WEBHOOK:
         description: 'Slack webhook URL'
         required: false
+      AWS_OS_USERNAME:
+        description: 'AWS OS Username'
+        required: true
+      AWS_OS_PASSWORD:
+        description: 'AWS OS Password'
+        required: true
 
 jobs:
   crn-sls-deploy:
@@ -128,6 +134,8 @@ jobs:
           ses-region: ${{ steps.setup.outputs.crn-ses-region }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
           sls-stage: ${{ steps.setup.outputs.sls-stage}}
+          aws-os-username: ${{ secrets.AWS_OS_USERNAME }}
+          aws-os-password: ${{ secrets.AWS_OS_PASSWORD }}
 
   gp2-sls-deploy:
     concurrency:

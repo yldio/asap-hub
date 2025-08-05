@@ -2,6 +2,99 @@
 
 import { gql } from 'graphql-tag';
 
+const userAuthorsContentQueryFragment = gql`
+  fragment UserAuthorsContent on Users {
+    sys {
+      id
+    }
+    firstName
+    nickname
+    lastName
+    email
+    onboarded
+    orcid
+    alumniSinceDate
+    avatar {
+      url
+    }
+  }
+`;
+
+const versionsContentQueryFragment = gql`
+  fragment VersionsContent on ManuscriptVersions {
+    sys {
+      id
+    }
+    description
+    shortDescription
+    type
+    lifecycle
+    count
+    labsCollection(limit: 10) {
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
+    teamsCollection(limit: 10) {
+      items {
+        sys {
+          id
+        }
+        displayName
+      }
+    }
+    firstAuthorsCollection(limit: 15) {
+      items {
+        __typename
+        ... on ExternalAuthors {
+          sys {
+            id
+          }
+          name
+          orcid
+        }
+        ... on Users {
+          ...UserAuthorsContent
+        }
+      }
+    }
+    additionalAuthorsCollection(limit: 15) {
+      items {
+        __typename
+        ... on ExternalAuthors {
+          sys {
+            id
+          }
+          name
+          orcid
+        }
+        ... on Users {
+          ...UserAuthorsContent
+        }
+      }
+    }
+    correspondingAuthorCollection(limit: 1) {
+      items {
+        __typename
+        ... on ExternalAuthors {
+          sys {
+            id
+          }
+          name
+          orcid
+        }
+        ... on Users {
+          ...UserAuthorsContent
+        }
+      }
+    }
+  }
+  ${userAuthorsContentQueryFragment}
+`;
+
 export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
   query FetchManuscriptVersionById($id: String!) {
     manuscriptVersions(id: $id) {
@@ -12,6 +105,7 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
               id
             }
             title
+            url
             count
             teamsCollection(limit: 1) {
               items {
@@ -20,6 +114,20 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
                 }
                 teamId
                 grantId
+              }
+            }
+            impact {
+              sys {
+                id
+              }
+              name
+            }
+            categoriesCollection(limit: 2) {
+              items {
+                sys {
+                  id
+                }
+                name
               }
             }
             versionsCollection(
@@ -33,12 +141,7 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
               }
             ) {
               items {
-                sys {
-                  id
-                }
-                type
-                lifecycle
-                count
+                ...VersionsContent
               }
             }
           }
@@ -46,6 +149,7 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
       }
     }
   }
+  ${versionsContentQueryFragment}
 `;
 
 export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
@@ -61,6 +165,7 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
           id
         }
         title
+        url
         count
         teamsCollection(limit: 1) {
           items {
@@ -69,6 +174,20 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
             }
             teamId
             grantId
+          }
+        }
+        impact {
+          sys {
+            id
+          }
+          name
+        }
+        categoriesCollection(limit: 2) {
+          items {
+            sys {
+              id
+            }
+            name
           }
         }
         versionsCollection(
@@ -82,15 +201,11 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
           }
         ) {
           items {
-            sys {
-              id
-            }
-            type
-            lifecycle
-            count
+            ...VersionsContent
           }
         }
       }
     }
   }
+  ${versionsContentQueryFragment}
 `;

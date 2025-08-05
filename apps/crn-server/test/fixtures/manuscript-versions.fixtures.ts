@@ -16,6 +16,7 @@ export const getManuscriptVersionsListResponse =
         manuscriptId: 'WH1-000282-001-org-P-2',
         title: 'Manuscript 1',
         versionId: 'version-id-2',
+        url: 'http://example.com',
       },
       {
         id: 'mv-manuscript-id-2',
@@ -25,6 +26,7 @@ export const getManuscriptVersionsListResponse =
         manuscriptId: 'WH1-000282-002-org-P-2',
         title: 'Manuscript 2',
         versionId: 'version-id-2',
+        url: 'http://example.com',
       },
     ],
   });
@@ -39,6 +41,7 @@ export const getManuscriptVersionDataObject =
       title: 'Manuscript 1',
       manuscriptId: 'WH1-000282-001-org-P-2',
       versionId: 'version-id-2',
+      url: 'http://example.com',
     },
   });
 

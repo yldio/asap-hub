@@ -109,6 +109,7 @@ export const getManuscriptVersions = jest.fn(
         lifecycle: 'Preprint',
         versionId: 'version-id-1',
         manuscriptId: 'DA1-000463-002-org-G-1',
+        url: 'http://example.com',
       },
     ],
   }),

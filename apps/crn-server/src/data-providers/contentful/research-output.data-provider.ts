@@ -26,6 +26,7 @@ import {
   ResearchOutputsFilter,
   ResearchOutputsOrder,
   RichTextFromQuery,
+  patchAndPublish,
 } from '@asap-hub/contentful';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { isSharingStatus } from '../transformers/research-output';
@@ -236,6 +237,15 @@ export class ResearchOutputContentfulDataProvider
 
     if (createOptions.publish) {
       await researchOutputEntry.publish();
+    }
+
+    if (input.relatedManuscriptVersion && input.relatedManuscript) {
+      const manuscriptEntry = await environment.getEntry(
+        input.relatedManuscript,
+      );
+      await patchAndPublish(manuscriptEntry, {
+        relatedResearchOutput: getLinkEntity(researchOutputEntry.sys.id),
+      });
     }
 
     return researchOutputEntry.sys.id;
@@ -539,12 +549,14 @@ const prepareInput = (
     workingGroups,
     impact,
     categories,
+    relatedManuscriptVersion,
     ...researchOutputData
   } = input;
 
   const {
     usedInPublication: _usedInPublication,
     description: _description,
+    relatedManuscript: _relatedManuscript,
     ...researchOutput
   } = {
     ...researchOutputData,
@@ -573,6 +585,9 @@ const prepareInput = (
     subtype: subtypeId ? getLinkEntity(subtypeId) : null,
     impact: impact ? getLinkEntity(impact) : null,
     categories: categories ? getLinkEntities(categories) : null,
+    relatedManuscriptVersion: relatedManuscriptVersion
+      ? getLinkEntity(relatedManuscriptVersion)
+      : null,
   };
 
   return researchOutput;

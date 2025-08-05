@@ -5529,6 +5529,8 @@ export type ManuscriptVersionsLinkingCollections = {
   complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
   entryCollection?: Maybe<EntryCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  researchOutputVersionsCollection?: Maybe<ResearchOutputVersionsCollection>;
+  researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
 };
 
 export type ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionArgs =
@@ -5562,6 +5564,32 @@ export type ManuscriptVersionsLinkingCollectionsManuscriptsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export type ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCollectionOrder>
+      >
+    >;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    skip?: InputMaybe<Scalars['Int']>;
+  };
+
+export type ManuscriptVersionsLinkingCollectionsResearchOutputsCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ManuscriptVersionsLinkingCollectionsResearchOutputsCollectionOrder>
+      >
+    >;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    skip?: InputMaybe<Scalars['Int']>;
+  };
 
 export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -5607,6 +5635,78 @@ export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
   TitleDesc = 'title_DESC',
   UrlAsc = 'url_ASC',
   UrlDesc = 'url_DESC',
+}
+
+export enum ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
+export enum ManuscriptVersionsLinkingCollectionsResearchOutputsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
 export enum ManuscriptVersionsOrder {
@@ -5712,6 +5812,7 @@ export type Manuscripts = Entry &
     impact?: Maybe<Impact>;
     linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
     previousStatus?: Maybe<Scalars['String']>;
+    relatedResearchOutput?: Maybe<ResearchOutputs>;
     status?: Maybe<Scalars['String']>;
     statusUpdatedAt?: Maybe<Scalars['DateTime']>;
     statusUpdatedBy?: Maybe<Users>;
@@ -5804,6 +5905,13 @@ export type ManuscriptsLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsPreviousStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsRelatedResearchOutputArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchOutputsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
@@ -6059,6 +6167,8 @@ export type ManuscriptsFilter = {
   previousStatus_not?: InputMaybe<Scalars['String']>;
   previousStatus_not_contains?: InputMaybe<Scalars['String']>;
   previousStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  relatedResearchOutput?: InputMaybe<CfResearchOutputsNestedFilter>;
+  relatedResearchOutput_exists?: InputMaybe<Scalars['Boolean']>;
   status?: InputMaybe<Scalars['String']>;
   statusUpdatedAt?: InputMaybe<Scalars['DateTime']>;
   statusUpdatedAt_exists?: InputMaybe<Scalars['Boolean']>;
@@ -7848,6 +7958,7 @@ export type ResearchOutputVersions = Entry &
     doi?: Maybe<Scalars['String']>;
     link?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ResearchOutputVersionsLinkingCollections>;
+    relatedManuscriptVersion?: Maybe<ManuscriptVersions>;
     rrid?: Maybe<Scalars['String']>;
     sys: Sys;
     title?: Maybe<Scalars['String']>;
@@ -7882,6 +7993,13 @@ export type ResearchOutputVersionsLinkArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
 export type ResearchOutputVersionsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
+export type ResearchOutputVersionsRelatedManuscriptVersionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ManuscriptVersionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
@@ -7947,6 +8065,8 @@ export type ResearchOutputVersionsFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  relatedManuscriptVersion?: InputMaybe<CfManuscriptVersionsNestedFilter>;
+  relatedManuscriptVersion_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
   rrid_exists?: InputMaybe<Scalars['Boolean']>;
@@ -8099,6 +8219,7 @@ export type ResearchOutputs = Entry &
     organismsCollection?: Maybe<ResearchOutputsOrganismsCollection>;
     publishDate?: Maybe<Scalars['DateTime']>;
     relatedEventsCollection?: Maybe<ResearchOutputsRelatedEventsCollection>;
+    relatedManuscriptVersion?: Maybe<ManuscriptVersions>;
     relatedResearchCollection?: Maybe<ResearchOutputsRelatedResearchCollection>;
     rrid?: Maybe<Scalars['String']>;
     sharingStatus?: Maybe<Scalars['String']>;
@@ -8297,6 +8418,13 @@ export type ResearchOutputsRelatedEventsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<EventsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsRelatedManuscriptVersionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ManuscriptVersionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
@@ -8654,6 +8782,8 @@ export type ResearchOutputsFilter = {
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEvents?: InputMaybe<CfEventsNestedFilter>;
   relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  relatedManuscriptVersion?: InputMaybe<CfManuscriptVersionsNestedFilter>;
+  relatedManuscriptVersion_exists?: InputMaybe<Scalars['Boolean']>;
   relatedResearch?: InputMaybe<CfResearchOutputsNestedFilter>;
   relatedResearchCollection_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
@@ -8777,6 +8907,7 @@ export enum ResearchOutputsLabsCollectionOrder {
 
 export type ResearchOutputsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  manuscriptsCollection?: Maybe<ManuscriptsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   supplementGrantCollection?: Maybe<SupplementGrantCollection>;
   teamsCollection?: Maybe<TeamsCollection>;
@@ -8785,6 +8916,18 @@ export type ResearchOutputsLinkingCollections = {
 export type ResearchOutputsLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ResearchOutputsLinkingCollectionsManuscriptsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder>
+    >
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -8822,6 +8965,39 @@ export type ResearchOutputsLinkingCollectionsTeamsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder {
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
 
 export enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
   AccessionAsc = 'accession_ASC',
@@ -14128,6 +14304,7 @@ export type CfResearchOutputVersionsNestedFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  relatedManuscriptVersion_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
   rrid_exists?: InputMaybe<Scalars['Boolean']>;
@@ -14273,6 +14450,7 @@ export type CfResearchOutputsNestedFilter = {
   publishDate_not?: InputMaybe<Scalars['DateTime']>;
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  relatedManuscriptVersion_exists?: InputMaybe<Scalars['Boolean']>;
   relatedResearchCollection_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
@@ -20370,6 +20548,90 @@ export type FetchLabsQuery = {
   >;
 };
 
+export type UserAuthorsContentFragment = Pick<
+  Users,
+  | 'firstName'
+  | 'nickname'
+  | 'lastName'
+  | 'email'
+  | 'onboarded'
+  | 'orcid'
+  | 'alumniSinceDate'
+> & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> };
+
+export type VersionsContentFragment = Pick<
+  ManuscriptVersions,
+  'description' | 'shortDescription' | 'type' | 'lifecycle' | 'count'
+> & {
+  sys: Pick<Sys, 'id'>;
+  labsCollection?: Maybe<{
+    items: Array<Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+  }>;
+  teamsCollection?: Maybe<{
+    items: Array<Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>>;
+  }>;
+  firstAuthorsCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        | ({ __typename: 'ExternalAuthors' } & Pick<
+            ExternalAuthors,
+            'name' | 'orcid'
+          > & { sys: Pick<Sys, 'id'> })
+        | ({ __typename: 'Users' } & Pick<
+            Users,
+            | 'firstName'
+            | 'nickname'
+            | 'lastName'
+            | 'email'
+            | 'onboarded'
+            | 'orcid'
+            | 'alumniSinceDate'
+          > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
+      >
+    >;
+  }>;
+  additionalAuthorsCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        | ({ __typename: 'ExternalAuthors' } & Pick<
+            ExternalAuthors,
+            'name' | 'orcid'
+          > & { sys: Pick<Sys, 'id'> })
+        | ({ __typename: 'Users' } & Pick<
+            Users,
+            | 'firstName'
+            | 'nickname'
+            | 'lastName'
+            | 'email'
+            | 'onboarded'
+            | 'orcid'
+            | 'alumniSinceDate'
+          > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
+      >
+    >;
+  }>;
+  correspondingAuthorCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        | ({ __typename: 'ExternalAuthors' } & Pick<
+            ExternalAuthors,
+            'name' | 'orcid'
+          > & { sys: Pick<Sys, 'id'> })
+        | ({ __typename: 'Users' } & Pick<
+            Users,
+            | 'firstName'
+            | 'nickname'
+            | 'lastName'
+            | 'email'
+            | 'onboarded'
+            | 'orcid'
+            | 'alumniSinceDate'
+          > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
+      >
+    >;
+  }>;
+};
+
 export type FetchManuscriptVersionByIdQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -20380,7 +20642,7 @@ export type FetchManuscriptVersionByIdQuery = {
       manuscriptsCollection?: Maybe<{
         items: Array<
           Maybe<
-            Pick<Manuscripts, 'title' | 'count'> & {
+            Pick<Manuscripts, 'title' | 'url' | 'count'> & {
               sys: Pick<Sys, 'id'>;
               teamsCollection?: Maybe<{
                 items: Array<
@@ -20389,11 +20651,107 @@ export type FetchManuscriptVersionByIdQuery = {
                   >
                 >;
               }>;
+              impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
+              categoriesCollection?: Maybe<{
+                items: Array<
+                  Maybe<Pick<Category, 'name'> & { sys: Pick<Sys, 'id'> }>
+                >;
+              }>;
               versionsCollection?: Maybe<{
                 items: Array<
                   Maybe<
-                    Pick<ManuscriptVersions, 'type' | 'lifecycle' | 'count'> & {
+                    Pick<
+                      ManuscriptVersions,
+                      | 'description'
+                      | 'shortDescription'
+                      | 'type'
+                      | 'lifecycle'
+                      | 'count'
+                    > & {
                       sys: Pick<Sys, 'id'>;
+                      labsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+                        >;
+                      }>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            Pick<Teams, 'displayName'> & {
+                              sys: Pick<Sys, 'id'>;
+                            }
+                          >
+                        >;
+                      }>;
+                      firstAuthorsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            | ({ __typename: 'ExternalAuthors' } & Pick<
+                                ExternalAuthors,
+                                'name' | 'orcid'
+                              > & { sys: Pick<Sys, 'id'> })
+                            | ({ __typename: 'Users' } & Pick<
+                                Users,
+                                | 'firstName'
+                                | 'nickname'
+                                | 'lastName'
+                                | 'email'
+                                | 'onboarded'
+                                | 'orcid'
+                                | 'alumniSinceDate'
+                              > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                })
+                          >
+                        >;
+                      }>;
+                      additionalAuthorsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            | ({ __typename: 'ExternalAuthors' } & Pick<
+                                ExternalAuthors,
+                                'name' | 'orcid'
+                              > & { sys: Pick<Sys, 'id'> })
+                            | ({ __typename: 'Users' } & Pick<
+                                Users,
+                                | 'firstName'
+                                | 'nickname'
+                                | 'lastName'
+                                | 'email'
+                                | 'onboarded'
+                                | 'orcid'
+                                | 'alumniSinceDate'
+                              > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                })
+                          >
+                        >;
+                      }>;
+                      correspondingAuthorCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            | ({ __typename: 'ExternalAuthors' } & Pick<
+                                ExternalAuthors,
+                                'name' | 'orcid'
+                              > & { sys: Pick<Sys, 'id'> })
+                            | ({ __typename: 'Users' } & Pick<
+                                Users,
+                                | 'firstName'
+                                | 'nickname'
+                                | 'lastName'
+                                | 'email'
+                                | 'onboarded'
+                                | 'orcid'
+                                | 'alumniSinceDate'
+                              > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                })
+                          >
+                        >;
+                      }>;
                     }
                   >
                 >;
@@ -20417,7 +20775,7 @@ export type FetchVersionsByManuscriptQuery = {
     Pick<ManuscriptsCollection, 'total'> & {
       items: Array<
         Maybe<
-          Pick<Manuscripts, 'title' | 'count'> & {
+          Pick<Manuscripts, 'title' | 'url' | 'count'> & {
             sys: Pick<Sys, 'id'>;
             teamsCollection?: Maybe<{
               items: Array<
@@ -20426,11 +20784,105 @@ export type FetchVersionsByManuscriptQuery = {
                 >
               >;
             }>;
+            impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
+            categoriesCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<Category, 'name'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
             versionsCollection?: Maybe<{
               items: Array<
                 Maybe<
-                  Pick<ManuscriptVersions, 'type' | 'lifecycle' | 'count'> & {
+                  Pick<
+                    ManuscriptVersions,
+                    | 'description'
+                    | 'shortDescription'
+                    | 'type'
+                    | 'lifecycle'
+                    | 'count'
+                  > & {
                     sys: Pick<Sys, 'id'>;
+                    labsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+                      >;
+                    }>;
+                    teamsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                        >
+                      >;
+                    }>;
+                    firstAuthorsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          | ({ __typename: 'ExternalAuthors' } & Pick<
+                              ExternalAuthors,
+                              'name' | 'orcid'
+                            > & { sys: Pick<Sys, 'id'> })
+                          | ({ __typename: 'Users' } & Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'email'
+                              | 'onboarded'
+                              | 'orcid'
+                              | 'alumniSinceDate'
+                            > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              })
+                        >
+                      >;
+                    }>;
+                    additionalAuthorsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          | ({ __typename: 'ExternalAuthors' } & Pick<
+                              ExternalAuthors,
+                              'name' | 'orcid'
+                            > & { sys: Pick<Sys, 'id'> })
+                          | ({ __typename: 'Users' } & Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'email'
+                              | 'onboarded'
+                              | 'orcid'
+                              | 'alumniSinceDate'
+                            > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              })
+                        >
+                      >;
+                    }>;
+                    correspondingAuthorCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          | ({ __typename: 'ExternalAuthors' } & Pick<
+                              ExternalAuthors,
+                              'name' | 'orcid'
+                            > & { sys: Pick<Sys, 'id'> })
+                          | ({ __typename: 'Users' } & Pick<
+                              Users,
+                              | 'firstName'
+                              | 'nickname'
+                              | 'lastName'
+                              | 'email'
+                              | 'onboarded'
+                              | 'orcid'
+                              | 'alumniSinceDate'
+                            > & {
+                                sys: Pick<Sys, 'id'>;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                              })
+                        >
+                      >;
+                    }>;
                   }
                 >
               >;
@@ -27686,6 +28138,409 @@ export const InterestGroupsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<InterestGroupsContentFragment, unknown>;
+export const UserAuthorsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserAuthorsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Users' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'alumniSinceDate' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'avatar' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserAuthorsContentFragment, unknown>;
+export const VersionsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'VersionsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ManuscriptVersions' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shortDescription' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lifecycle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'labsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teamsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'displayName' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'firstAuthorsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '15' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: '__typename' },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ExternalAuthors' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'orcid' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Users' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'UserAuthorsContent',
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'additionalAuthorsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '15' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: '__typename' },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ExternalAuthors' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'orcid' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Users' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'UserAuthorsContent',
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'correspondingAuthorCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: '__typename' },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ExternalAuthors' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'orcid' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Users' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'UserAuthorsContent',
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...UserAuthorsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<VersionsContentFragment, unknown>;
 export const ManuscriptsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -39722,6 +40577,10 @@ export const FetchManuscriptVersionByIdDocument = {
                                   },
                                   {
                                     kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                  {
+                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'count' },
                                   },
                                   {
@@ -39780,6 +40639,92 @@ export const FetchManuscriptVersionByIdDocument = {
                                                 name: {
                                                   kind: 'Name',
                                                   value: 'grantId',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'impact' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'name' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'categoriesCollection',
+                                    },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'limit' },
+                                        value: { kind: 'IntValue', value: '2' },
+                                      },
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'name',
                                                 },
                                               },
                                             ],
@@ -39854,43 +40799,10 @@ export const FetchManuscriptVersionByIdDocument = {
                                             kind: 'SelectionSet',
                                             selections: [
                                               {
-                                                kind: 'Field',
+                                                kind: 'FragmentSpread',
                                                 name: {
                                                   kind: 'Name',
-                                                  value: 'sys',
-                                                },
-                                                selectionSet: {
-                                                  kind: 'SelectionSet',
-                                                  selections: [
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'id',
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'type',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'lifecycle',
-                                                },
-                                              },
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'count',
+                                                  value: 'VersionsContent',
                                                 },
                                               },
                                             ],
@@ -39914,6 +40826,7 @@ export const FetchManuscriptVersionByIdDocument = {
         ],
       },
     },
+    ...VersionsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchManuscriptVersionByIdQuery,
@@ -40008,6 +40921,7 @@ export const FetchVersionsByManuscriptDocument = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'count' } },
                       {
                         kind: 'Field',
@@ -40048,6 +40962,74 @@ export const FetchVersionsByManuscriptDocument = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'grantId' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'impact' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'categoriesCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '2' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'name' },
                                   },
                                 ],
                               },
@@ -40109,29 +41091,11 @@ export const FetchVersionsByManuscriptDocument = {
                                 kind: 'SelectionSet',
                                 selections: [
                                   {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'sys' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'VersionsContent',
                                     },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'type' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'lifecycle' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'count' },
                                   },
                                 ],
                               },
@@ -40148,6 +41112,7 @@ export const FetchVersionsByManuscriptDocument = {
         ],
       },
     },
+    ...VersionsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchVersionsByManuscriptQuery,

@@ -3953,6 +3953,8 @@ type ManuscriptVersionsLinkingCollections {
   complianceReportsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder], preview: Boolean, skip: Int = 0): ComplianceReportsCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
+  researchOutputVersionsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputVersionsCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
 }
 
 enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
@@ -3999,6 +4001,78 @@ enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
   title_DESC
   url_ASC
   url_DESC
+}
+
+enum ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  link_ASC
+  link_DESC
+  rrid_ASC
+  rrid_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum ManuscriptVersionsLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  isInReview_ASC
+  isInReview_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
 }
 
 enum ManuscriptVersionsOrder {
@@ -4103,6 +4177,7 @@ type Manuscripts implements Entry & _Node {
   impact(locale: String, preview: Boolean, where: ImpactFilter): Impact
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
   previousStatus(locale: String): String
+  relatedResearchOutput(locale: String, preview: Boolean, where: ResearchOutputsFilter): ResearchOutputs
   status(locale: String): String
   statusUpdatedAt(locale: String): DateTime
   statusUpdatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
@@ -4309,6 +4384,8 @@ input ManuscriptsFilter {
   previousStatus_not: String
   previousStatus_not_contains: String
   previousStatus_not_in: [String]
+  relatedResearchOutput: cfResearchOutputsNestedFilter
+  relatedResearchOutput_exists: Boolean
   status: String
   statusUpdatedAt: DateTime
   statusUpdatedAt_exists: Boolean
@@ -5157,6 +5234,7 @@ type ResearchOutputVersions implements Entry & _Node {
   doi(locale: String): String
   link(locale: String): String
   linkedFrom(allowedLocales: [String]): ResearchOutputVersionsLinkingCollections
+  relatedManuscriptVersion(locale: String, preview: Boolean, where: ManuscriptVersionsFilter): ManuscriptVersions
   rrid(locale: String): String
   sys: Sys!
   title(locale: String): String
@@ -5211,6 +5289,8 @@ input ResearchOutputVersionsFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
+  relatedManuscriptVersion: cfManuscriptVersionsNestedFilter
+  relatedManuscriptVersion_exists: Boolean
   rrid: String
   rrid_contains: String
   rrid_exists: Boolean
@@ -5342,6 +5422,7 @@ type ResearchOutputs implements Entry & _Node {
   organismsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsOrganismsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchOutputsOrganismsCollection
   publishDate(locale: String): DateTime
   relatedEventsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): ResearchOutputsRelatedEventsCollection
+  relatedManuscriptVersion(locale: String, preview: Boolean, where: ManuscriptVersionsFilter): ManuscriptVersions
   relatedResearchCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedResearchCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsRelatedResearchCollection
   rrid(locale: String): String
   sharingStatus(locale: String): String
@@ -5609,6 +5690,8 @@ input ResearchOutputsFilter {
   publishDate_not_in: [DateTime]
   relatedEvents: cfEventsNestedFilter
   relatedEventsCollection_exists: Boolean
+  relatedManuscriptVersion: cfManuscriptVersionsNestedFilter
+  relatedManuscriptVersion_exists: Boolean
   relatedResearch: cfResearchOutputsNestedFilter
   relatedResearchCollection_exists: Boolean
   rrid: String
@@ -5732,9 +5815,43 @@ enum ResearchOutputsLabsCollectionOrder {
 
 type ResearchOutputsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  manuscriptsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   supplementGrantCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsSupplementGrantCollectionOrder], preview: Boolean, skip: Int = 0): SupplementGrantCollection
   teamsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): TeamsCollection
+}
+
+enum ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder {
+  apcAmountPaid_ASC
+  apcAmountPaid_DESC
+  apcAmountRequested_ASC
+  apcAmountRequested_DESC
+  apcCoverageRequestStatus_ASC
+  apcCoverageRequestStatus_DESC
+  apcRequested_ASC
+  apcRequested_DESC
+  count_ASC
+  count_DESC
+  declinedReason_ASC
+  declinedReason_DESC
+  previousStatus_ASC
+  previousStatus_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  url_ASC
+  url_DESC
 }
 
 enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -9802,6 +9919,7 @@ input cfResearchOutputVersionsNestedFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
+  relatedManuscriptVersion_exists: Boolean
   rrid: String
   rrid_contains: String
   rrid_exists: Boolean
@@ -9945,6 +10063,7 @@ input cfResearchOutputsNestedFilter {
   publishDate_not: DateTime
   publishDate_not_in: [DateTime]
   relatedEventsCollection_exists: Boolean
+  relatedManuscriptVersion_exists: Boolean
   relatedResearchCollection_exists: Boolean
   rrid: String
   rrid_contains: String

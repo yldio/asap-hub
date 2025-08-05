@@ -100,13 +100,15 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       setUpdatedOutput((prev) => ({
         ...prev,
         title: manuscriptVersion.title,
-        link: 'https://random.com',
-        labs: [],
-        authors: [],
-        teams: [],
+        link: manuscriptVersion.url,
+        labs: manuscriptVersion.labs || [],
+        authors: manuscriptVersion.authors || [],
+        teams: manuscriptVersion.teams || [],
         isInReview: false,
         published: false,
         sharingStatus: 'Public',
+        asapFunded: true,
+        usedInPublication: true,
         environments: [],
         id: '',
         documentType: 'Article',
@@ -321,6 +323,16 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                 : createResearchOutput({
                     ...output,
                     published: false,
+                    ...(selectedManuscriptVersion?.version
+                      ? {
+                          relatedManuscriptVersion:
+                            selectedManuscriptVersion?.version.versionId,
+                          relatedManuscript:
+                            selectedManuscriptVersion?.version.id.split(
+                              'mv-',
+                            )[1],
+                        }
+                      : {}),
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
           />

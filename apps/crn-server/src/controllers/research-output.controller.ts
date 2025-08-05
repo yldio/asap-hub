@@ -130,6 +130,9 @@ export default class ResearchOutputController {
       workingGroups: normalisedResearchOutputCreateData.workingGroups,
       impact: normalisedResearchOutputCreateData.impact,
       categories: normalisedResearchOutputCreateData.categories,
+      relatedManuscriptVersion:
+        normalisedResearchOutputCreateData.relatedManuscriptVersion,
+      relatedManuscript: normalisedResearchOutputCreateData.relatedManuscript,
     };
 
     const createOptions = {

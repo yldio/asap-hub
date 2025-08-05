@@ -96,6 +96,8 @@ const openSearchDomainName =
 const OpenSearchDomain =
   stage === 'production' ? 'OpenSearchDomainProd' : 'OpenSearchDomain';
 
+const shouldCreateDomain = stage === 'production' || stage === 'dev';
+
 export const plugins = [
   './serverless-plugins/serverless-esbuild',
   './serverless-plugins/serverless-iam-roles-per-function',
@@ -2016,63 +2018,65 @@ const serverlessConfig: AWS = {
           MessageRetentionPeriod: 1209600, // 14 days
         },
       },
-      [OpenSearchDomain]: {
-        Type: 'AWS::OpenSearchService::Domain',
-        Properties: {
-          DomainName: openSearchDomainName,
-          EngineVersion: 'OpenSearch_2.19',
-          ClusterConfig: {
-            InstanceType: 't3.medium.search',
-            InstanceCount: 1,
-            DedicatedMasterEnabled: false,
-            ZoneAwarenessEnabled: false,
-          },
-          EBSOptions: {
-            EBSEnabled: true,
-            VolumeType: 'gp3',
-            VolumeSize: 20,
-          },
-          AccessPolicies: {
-            Version: '2012-10-17',
-            Statement: [
-              {
-                Effect: 'Allow',
-                Principal: {
-                  AWS: [
-                    '*',
-                    {
-                      'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'], // Add Lambda role
-                    },
-                  ],
+      ...(shouldCreateDomain && {
+        [OpenSearchDomain]: {
+          Type: 'AWS::OpenSearchService::Domain',
+          Properties: {
+            DomainName: openSearchDomainName,
+            EngineVersion: 'OpenSearch_2.19',
+            ClusterConfig: {
+              InstanceType: 't3.medium.search',
+              InstanceCount: 1,
+              DedicatedMasterEnabled: false,
+              ZoneAwarenessEnabled: false,
+            },
+            EBSOptions: {
+              EBSEnabled: true,
+              VolumeType: 'gp3',
+              VolumeSize: 20,
+            },
+            AccessPolicies: {
+              Version: '2012-10-17',
+              Statement: [
+                {
+                  Effect: 'Allow',
+                  Principal: {
+                    AWS: [
+                      '*',
+                      {
+                        'Fn::GetAtt': ['IamRoleLambdaExecution', 'Arn'], // Add Lambda role
+                      },
+                    ],
+                  },
+                  Action: 'es:*',
+                  Resource: {
+                    'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+                  },
                 },
-                Action: 'es:*',
-                Resource: {
-                  'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
-                },
+              ],
+            },
+            DomainEndpointOptions: {
+              EnforceHTTPS: true,
+              TLSSecurityPolicy: 'Policy-Min-TLS-1-2-2019-07',
+            },
+            EncryptionAtRestOptions: {
+              Enabled: true,
+            },
+            NodeToNodeEncryptionOptions: {
+              Enabled: true,
+            },
+            AdvancedSecurityOptions: {
+              Enabled: true,
+              InternalUserDatabaseEnabled: true,
+              MasterUserOptions: {
+                MasterUserName: opensearchMasterUser,
+                MasterUserPassword: opensearchMasterPassword,
               },
-            ],
-          },
-          DomainEndpointOptions: {
-            EnforceHTTPS: true,
-            TLSSecurityPolicy: 'Policy-Min-TLS-1-2-2019-07',
-          },
-          EncryptionAtRestOptions: {
-            Enabled: true,
-          },
-          NodeToNodeEncryptionOptions: {
-            Enabled: true,
-          },
-          AdvancedSecurityOptions: {
-            Enabled: true,
-            InternalUserDatabaseEnabled: true,
-            MasterUserOptions: {
-              MasterUserName: opensearchMasterUser,
-              MasterUserPassword: opensearchMasterPassword,
             },
           },
+          DeletionPolicy: 'Retain',
         },
-        DeletionPolicy: 'Retain',
-      },
+      }),
     },
     extensions: {
       GcalSubscribeCalendarContentfulLambdaFunction: {

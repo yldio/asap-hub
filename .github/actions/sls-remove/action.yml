@@ -159,3 +159,5 @@ runs:
         SES_REGION: ${{ inputs.ses-region }}
         SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
         SLS_STAGE: ${{ inputs.sls-stage }}
+        AWS_OS_USERNAME: 'n-a'
+        AWS_OS_PASSWORD: 'n-a'

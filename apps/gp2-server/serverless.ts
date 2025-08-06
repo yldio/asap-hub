@@ -251,6 +251,7 @@ const serverlessConfig: AWS = {
       platform: 'node',
       target: 'node20',
       bundle: true,
+      concurrency: 8,
     },
     s3Sync: [
       {

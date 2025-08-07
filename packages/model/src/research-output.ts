@@ -213,6 +213,8 @@ export type ResearchOutputCoreObject = {
   usageNotes?: string;
   usedInPublication?: boolean;
   researchTheme?: string[];
+  relatedManuscriptVersion?: string;
+  relatedManuscript?: string;
 };
 
 export type ResearchOutputVersionCoreObject = Pick<
@@ -225,6 +227,7 @@ export type ResearchOutputVersionCoreObject = Pick<
   | 'doi'
   | 'rrid'
   | 'accession'
+  | 'relatedManuscriptVersion'
 >;
 
 export type ResearchOutputVersionPostRequest = ResearchOutputVersionCoreObject;
@@ -307,7 +310,6 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   relatedEventIds: string[];
   impact?: string;
   categories?: string[];
-  relatedManuscriptVersion?: string;
   relatedManuscript?: string;
 };
 

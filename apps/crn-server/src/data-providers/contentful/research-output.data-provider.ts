@@ -261,11 +261,15 @@ export class ResearchOutputContentfulDataProvider
     const data = input;
 
     if (updateOptions.newVersion) {
+      const { relatedManuscriptVersion } = updateOptions.newVersion;
       const versionEntry = await environment.createEntry(
         'researchOutputVersions',
         {
           fields: addLocaleToFields({
             ...updateOptions.newVersion,
+            relatedManuscriptVersion: relatedManuscriptVersion
+              ? getLinkEntity(relatedManuscriptVersion)
+              : null,
           }),
         },
       );
@@ -517,6 +521,7 @@ const parseGraphQLResearchOutput = (
           title: event?.title || '',
           endDate: event.endDate || '',
         })) || [],
+    relatedManuscriptVersion: researchOutputs.relatedManuscriptVersion?.sys.id,
     versions: mapOutputVersions(
       researchOutputs.versionsCollection?.items || [],
     ),

@@ -242,6 +242,11 @@ export const researchOutputContentQueryFragment = gql`
         accession
       }
     }
+    relatedManuscriptVersion {
+      sys {
+        id
+      }
+    }
   }
 `;
 

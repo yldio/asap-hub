@@ -1833,6 +1833,9 @@ describe('Research Outputs Data Provider', () => {
             type: {
               'en-US': '3D Printing',
             },
+            relatedManuscriptVersion: {
+              'en-US': null,
+            },
           },
         },
       );

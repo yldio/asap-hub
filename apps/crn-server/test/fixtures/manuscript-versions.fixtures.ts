@@ -81,6 +81,7 @@ export const getContentfulManuscript = (
   sys: { id: `manuscript-id-${count}` },
   count,
   title: `Manuscript ${count}`,
+  url: 'http://example.com',
   teamsCollection: {
     items: [
       {

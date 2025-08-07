@@ -21060,7 +21060,7 @@ export type FetchManuscriptNotificationDetailsQuery = {
         >;
       }>;
       assignedUsersCollection?: Maybe<{
-        items: Array<Maybe<Pick<Users, 'firstName' | 'lastName'>>>;
+        items: Array<Maybe<Pick<Users, 'firstName' | 'lastName' | 'email'>>>;
       }>;
       versionsCollection?: Maybe<{
         items: Array<
@@ -40514,6 +40514,10 @@ export const FetchManuscriptNotificationDetailsDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'email' },
                             },
                           ],
                         },

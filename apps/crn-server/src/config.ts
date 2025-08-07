@@ -6,6 +6,7 @@ const {
   ALGOLIA_API_KEY,
   ALGOLIA_APP_ID,
   ALGOLIA_INDEX,
+  ALTERNATIVE_ASSIGNED_OS_EMAIL,
   API_URL,
   APP_ORIGIN,
   AUTH0_AUDIENCE,
@@ -42,6 +43,7 @@ const {
   LOG_LEVEL,
   NODE_ENV,
   OPENAI_API_KEY,
+  OS_EMAIL_DL,
   POSTMARK_SERVER_TOKEN,
   REGION,
   SENTRY_DSN,
@@ -113,4 +115,7 @@ export const sesRegion = SES_REGION || 'eu-west-1';
 export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
 export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;
+export const openScienceDL = OS_EMAIL_DL || 'openscience@parkinsonsroadmap.org';
+export const alternativeAssignedOSEmail =
+  ALTERNATIVE_ASSIGNED_OS_EMAIL || 'rthibault@parkinsonsroadmap.org';
 export const inviteUserQueueUrl = QUEUE_URL || '';

@@ -1,4 +1,5 @@
 import { FetchManuscriptNotificationDetailsQuery } from '@asap-hub/contentful';
+import { alternativeAssignedOSEmail, openScienceDL } from '../../src/config';
 import { EmailNotificationService } from '../../src/data-providers/email-notification-service';
 
 import logger from '../../src/utils/logger';
@@ -44,10 +45,12 @@ describe('Email Notification Service', () => {
       {
         firstName: 'John',
         lastName: 'Doe',
+        email: 'john@doe.asap.com',
       },
       {
         firstName: 'Jane',
         lastName: 'Doe',
+        email: 'jane@doe.asap.com',
       },
     ],
   };
@@ -142,7 +145,7 @@ describe('Email Notification Service', () => {
         expect(mockedPostmark).toHaveBeenCalledTimes(2);
         expect(mockedPostmark).toHaveBeenCalledWith(
           expect.objectContaining({
-            To: 'openscience@parkinsonsroadmap.org',
+            To: openScienceDL,
           }),
         );
         expect(mockedPostmark).toHaveBeenCalledWith(
@@ -153,7 +156,7 @@ describe('Email Notification Service', () => {
       },
     );
 
-    test('Should send email notification only to OS team when discussion is created by grantee', async () => {
+    test('Should send email notification only to OS team and assigned OS team member when discussion is created by grantee', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('production');
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
@@ -169,7 +172,7 @@ describe('Email Notification Service', () => {
       expect(mockedPostmark).toHaveBeenCalledTimes(1);
       expect(mockedPostmark).toHaveBeenCalledWith(
         expect.objectContaining({
-          To: 'openscience@parkinsonsroadmap.org',
+          To: `${openScienceDL},john@doe.asap.com,jane@doe.asap.com`,
         }),
       );
       expect(mockedPostmark).toHaveBeenCalledWith(
@@ -179,7 +182,33 @@ describe('Email Notification Service', () => {
       );
     });
 
-    test('Should send email notification to OS team and OS discussion participants when discussion is replied to by grantee', async () => {
+    test('Should send email notification to OS team and alternative OS team member when discussion is created by grantee and there is no assignee', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: { ...manuscript, assignedUsersCollection: undefined },
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'discussion_created_by_grantee',
+        manuscript.sys.id,
+        '',
+        discussionDetails,
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledTimes(1);
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          To: [openScienceDL, alternativeAssignedOSEmail].join(','),
+        }),
+      );
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.not.objectContaining({
+          To: 'fiona.first@email.com,second.external@email.com,connor.corresponding@email.com',
+        }),
+      );
+    });
+
+    test('Should send email notification to OS team, assigned OS team member and OS discussion participants when discussion is replied to by grantee', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('production');
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscripts: manuscript,
@@ -220,7 +249,7 @@ describe('Email Notification Service', () => {
       expect(mockedPostmark).toHaveBeenCalledTimes(1);
       expect(mockedPostmark).toHaveBeenCalledWith(
         expect.objectContaining({
-          To: 'jim@doe.asap.com,jane@doe.asap.com,openscience@parkinsonsroadmap.org',
+          To: `jim@doe.asap.com,jane@doe.asap.com,${openScienceDL},john@doe.asap.com`,
         }),
       );
     });
@@ -251,7 +280,7 @@ describe('Email Notification Service', () => {
         expect(mockedPostmark).toHaveBeenCalledTimes(1);
         expect(mockedPostmark).toHaveBeenCalledWith(
           expect.not.objectContaining({
-            To: 'openscience@parkinsonsroadmap.org',
+            To: openScienceDL,
           }),
         );
       },
@@ -435,7 +464,7 @@ describe('Email Notification Service', () => {
 
       expect(mockedPostmark).toHaveBeenCalledWith(
         expect.objectContaining({
-          To: expect.stringContaining('openscience@parkinsonsroadmap.org'),
+          To: expect.stringContaining(openScienceDL),
         }),
       );
 
@@ -454,7 +483,7 @@ describe('Email Notification Service', () => {
 
       expect(mockedPostmark).not.toHaveBeenCalledWith(
         expect.objectContaining({
-          To: expect.stringContaining('openscience@parkinsonsroadmap.org'),
+          To: expect.stringContaining(openScienceDL),
         }),
       );
     });
@@ -733,7 +762,7 @@ describe('Email Notification Service', () => {
     await emailNotificationService.sendEmailNotification(
       'manuscript_submitted',
       manuscript.sys.id,
-      'second.external@email.com,openscience@parkinsonsroadmap.org',
+      `second.external@email.com,${openScienceDL}`,
     );
 
     expect(loggerErrorSpy).toHaveBeenNthCalledWith(

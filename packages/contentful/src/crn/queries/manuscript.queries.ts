@@ -433,6 +433,7 @@ export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
         items {
           firstName
           lastName
+          email
         }
       }
       versionsCollection(limit: 1, order: sys_firstPublishedAt_DESC) {

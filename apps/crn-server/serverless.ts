@@ -244,6 +244,14 @@ const serverlessConfig: AWS = {
           },
           {
             Effect: 'Allow',
+            Action: ['lambda:InvokeFunction'],
+            Resource: {
+              'Fn::Sub':
+                'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:asap-hub-${self:provider.stage}-opensearch-search-handler',
+            },
+          },
+          {
+            Effect: 'Allow',
             Action: 's3:GetObject',
             Resource: [
               {
@@ -1225,6 +1233,23 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SLACK_WEBHOOK: slackWebhook,
+      },
+    },
+    openSearchSearchHandler: {
+      handler: './src/handlers/opensearch/opensearch-search-handler.handler',
+      timeout: 30,
+      memorySize: 512,
+      name: 'asap-hub-${self:provider.stage}-opensearch-search-handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/opensearch/search/{index}',
+          },
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
   },

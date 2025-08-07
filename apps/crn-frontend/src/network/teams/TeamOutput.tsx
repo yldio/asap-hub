@@ -1,8 +1,6 @@
 import { isEnabled } from '@asap-hub/flags';
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
-  mapManuscriptLifecycleToType,
-  mapManuscriptTypeToSubType,
   researchOutputDocumentTypeToType,
   ResearchOutputResponse,
   ResearchOutputVersion,
@@ -32,6 +30,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { mapManuscriptVersionToResearchOutput } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
   handleError,
@@ -99,45 +98,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   useEffect(() => {
     if (selectedManuscriptVersion && selectedManuscriptVersion.version) {
       const manuscriptVersion = selectedManuscriptVersion.version;
-      setUpdatedOutput((prev) => ({
-        ...prev,
-        id: prev?.id || '',
-        title: manuscriptVersion.title,
-        link: manuscriptVersion.url,
-        type:
-          manuscriptVersion.lifecycle &&
-          mapManuscriptLifecycleToType(manuscriptVersion.lifecycle),
-        subtype:
-          manuscriptVersion.type &&
-          mapManuscriptTypeToSubType(manuscriptVersion.type),
-        description: manuscriptVersion.description,
-        shortDescription: manuscriptVersion.shortDescription,
-        labs: manuscriptVersion.labs || [],
-        authors: manuscriptVersion.authors || [],
-        teams: manuscriptVersion.teams || [],
-        isInReview: false,
-        published: false,
-        sharingStatus: 'Public',
-        asapFunded: true,
-        usedInPublication: true,
-        environments: [],
-        documentType: 'Article',
-        methods: [],
-        created: '',
-        contactEmails: [],
-        organisms: [],
-        versions: [],
-        relatedEvents: [],
-        relatedResearch: [],
-        keywords: [],
-        publishingEntity: 'Team',
-        lastUpdatedPartial: '',
-        workingGroups: undefined,
-        impact: manuscriptVersion.impact,
-        categories: manuscriptVersion.categories,
-        relatedManuscriptVersion: manuscriptVersion.versionId,
-        relatedManuscript: manuscriptVersion.id.split('mv-')[1],
-      }));
+      setUpdatedOutput((prev) =>
+        mapManuscriptVersionToResearchOutput(prev, manuscriptVersion, 'Team'),
+      );
     }
   }, [selectedManuscriptVersion]);
 
@@ -199,7 +162,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
     isManuscriptOutputFlagEnabled &&
       documentType === 'Article' &&
-      (!updatedOutput?.id || versionAction === 'create'),
+      !updatedOutput?.id,
   );
 
   const handleManuscriptOutputSelection = (
@@ -320,7 +283,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                     published: true,
                     createVersion: versionAction === 'create',
                     relatedManuscriptVersion:
-                      versionAction === 'create' && !selectedManuscriptVersion
+                      versionAction === 'create'
                         ? undefined
                         : updatedOutput.relatedManuscriptVersion,
                     statusChangedById: updatedOutput.statusChangedBy?.id,

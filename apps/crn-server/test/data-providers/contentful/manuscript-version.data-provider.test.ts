@@ -30,7 +30,12 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       ManuscriptsTeamsCollection: () => ({
         ...getContentfulManuscript().teamsCollection,
       }),
-
+      ManuscriptsCategoriesCollection: () => ({
+        ...getContentfulManuscript().categoriesCollection,
+      }),
+      ManuscriptVersionsFirstAuthorsCollection: () => ({
+        ...getContentfulManuscriptVersion()?.firstAuthorsCollection,
+      }),
       ManuscriptsVersionsCollection: () =>
         getContentfulManuscript().versionsCollection,
     });

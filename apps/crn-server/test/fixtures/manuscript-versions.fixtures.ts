@@ -14,6 +14,18 @@ export const getManuscriptVersionsListResponse =
         lifecycle: 'Preprint',
         teamId: 'team-id-1',
         manuscriptId: 'WH1-000282-001-org-P-2',
+        impact: { id: 'impact-id-1', name: 'Impact One' },
+        categories: [{ id: 'category-id-1', name: 'Category One' }],
+        authors: [
+          {
+            id: 'first-author-1',
+            firstName: 'First',
+            lastName: 'Author',
+            email: 'author1@gmail.com',
+            displayName: 'First (one) Author',
+          },
+          { id: 'external-author-1', displayName: 'External Author' },
+        ],
         title: 'Manuscript 1',
         versionId: 'version-id-2',
         url: 'http://example.com',
@@ -24,6 +36,18 @@ export const getManuscriptVersionsListResponse =
         lifecycle: 'Preprint',
         teamId: 'team-id-1',
         manuscriptId: 'WH1-000282-002-org-P-2',
+        impact: { id: 'impact-id-1', name: 'Impact One' },
+        categories: [{ id: 'category-id-1', name: 'Category One' }],
+        authors: [
+          {
+            id: 'first-author-1',
+            firstName: 'First',
+            lastName: 'Author',
+            email: 'author1@gmail.com',
+            displayName: 'First (one) Author',
+          },
+          { id: 'external-author-1', displayName: 'External Author' },
+        ],
         title: 'Manuscript 2',
         versionId: 'version-id-2',
         url: 'http://example.com',
@@ -48,13 +72,34 @@ export const getManuscriptVersionDataObject =
 export const getContentfulManuscriptVersion = (
   count: number = 1,
   lifecycle: string = 'Preprint',
-) => ({
+): Version => ({
   sys: {
     id: `version-id-${count}`,
   },
   type: 'Original Research',
   lifecycle,
   count,
+  firstAuthorsCollection: {
+    items: [
+      {
+        __typename: 'Users',
+        sys: {
+          id: 'first-author-1',
+        },
+        firstName: 'First',
+        lastName: 'Author',
+        email: 'author1@gmail.com',
+        nickname: 'one',
+      },
+      {
+        __typename: 'ExternalAuthors',
+        sys: {
+          id: 'external-author-1',
+        },
+        name: 'External Author',
+      },
+    ],
+  },
 });
 
 type VersionCollection = NonNullable<
@@ -66,6 +111,8 @@ type VersionCollection = NonNullable<
     >
   >['versionsCollection']
 >['items'];
+
+type Version = VersionCollection[number];
 
 export const getContentfulManuscript = (
   count: number = 1,
@@ -82,6 +129,22 @@ export const getContentfulManuscript = (
   count,
   title: `Manuscript ${count}`,
   url: 'http://example.com',
+  impact: {
+    sys: {
+      id: 'impact-id-1',
+    },
+    name: 'Impact One',
+  },
+  categoriesCollection: {
+    items: [
+      {
+        sys: {
+          id: 'category-id-1',
+        },
+        name: 'Category One',
+      },
+    ],
+  },
   teamsCollection: {
     items: [
       {

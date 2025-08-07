@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/model';
 import {
   ManuscriptOutputSelection,
+  ManuscriptVersionImportCard,
   ManuscriptVersionOption,
   NotFoundPage,
   OutputVersions,
@@ -25,6 +26,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { mapManuscriptVersionToResearchOutput } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
   handleError,
@@ -63,6 +65,9 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const [manuscriptOutputSelection, setManuscriptOutputSelection] = useState<
     'manually' | 'import' | ''
   >('');
+  const [updatedOutput, setUpdatedOutput] = useState<
+    ResearchOutputResponse | undefined
+  >(researchOutputData);
 
   const route = network({})
     .workingGroups({})
@@ -70,7 +75,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const { outputDocumentType } = useRouteParams(route);
 
   const documentType =
-    researchOutputData?.documentType ||
+    updatedOutput?.documentType ||
     paramOutputDocumentTypeToResearchOutputDocumentType(outputDocumentType);
 
   const workingGroup = useWorkingGroupById(workingGroupId);
@@ -81,6 +86,19 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const [toastNode, setToastNode] = useState<ReactNode>(undefined);
   const toast = useCallback((node: ReactNode) => setToastNode(node), []);
   const previousToast = usePrevious(toastNode);
+
+  useEffect(() => {
+    if (selectedManuscriptVersion && selectedManuscriptVersion.version) {
+      const manuscriptVersion = selectedManuscriptVersion.version;
+      setUpdatedOutput((prev) =>
+        mapManuscriptVersionToResearchOutput(
+          prev,
+          manuscriptVersion,
+          'Working Group',
+        ),
+      );
+    }
+  }, [selectedManuscriptVersion]);
 
   useEffect(() => {
     if (
@@ -101,14 +119,14 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
   const getRelatedResearchSuggestions = useRelatedResearchSuggestions(
-    researchOutputData?.id,
+    updatedOutput?.id,
   );
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
   const getShortDescriptionFromDescription = useGeneratedContent();
   const getManuscriptVersionSuggestions = useManuscriptVersionSuggestions();
   const researchTags = useResearchTags();
 
-  const published = researchOutputData ? !!researchOutputData.published : false;
+  const published = updatedOutput ? !!updatedOutput.published : false;
 
   const permissions = useResearchOutputPermissions(
     'workingGroups',
@@ -123,25 +141,25 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   let versions: ResearchOutputVersion[] = [];
   if (versionAction === 'create') {
     const researchOutputAsVersion: ResearchOutputVersion = {
-      id: researchOutputData?.id ?? '',
-      title: researchOutputData?.title ?? '',
-      documentType: researchOutputData?.documentType ?? 'Article',
-      type: researchOutputData?.type,
-      link: researchOutputData?.link,
-      addedDate: researchOutputData?.addedDate,
+      id: updatedOutput?.id ?? '',
+      title: updatedOutput?.title ?? '',
+      documentType: updatedOutput?.documentType ?? 'Article',
+      type: updatedOutput?.type,
+      link: updatedOutput?.link,
+      addedDate: updatedOutput?.addedDate,
     };
 
-    versions = researchOutputData?.versions
-      ? researchOutputData.versions.concat([researchOutputAsVersion])
+    versions = updatedOutput?.versions
+      ? updatedOutput.versions.concat([researchOutputAsVersion])
       : [researchOutputAsVersion];
   } else if (versionAction === 'edit') {
-    versions = researchOutputData?.versions ?? [];
+    versions = updatedOutput?.versions ?? [];
   }
   const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS');
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
     isManuscriptOutputFlagEnabled &&
       documentType === 'Article' &&
-      (!researchOutputData?.id || versionAction === 'create'),
+      !updatedOutput?.id,
   );
 
   const handleManuscriptOutputSelection = (
@@ -202,6 +220,13 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
               versionAction={versionAction}
             />
           )}
+          {selectedManuscriptVersion &&
+            selectedManuscriptVersion.version &&
+            !showManuscriptOutputFlow && (
+              <ManuscriptVersionImportCard
+                version={selectedManuscriptVersion.version}
+              />
+            )}
           <ResearchOutputForm
             displayChangelog={Boolean(
               versionAction === 'create' || versions.length > 0,
@@ -232,11 +257,11 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             clearServerValidationError={(instancePath: string) =>
               setErrors(clearAjvErrorForPath(errors, instancePath))
             }
-            researchOutputData={researchOutputData}
+            researchOutputData={updatedOutput}
             typeOptions={Array.from(
               researchOutputDocumentTypeToType[documentType],
             )}
-            selectedTeams={(researchOutputData?.teams ?? []).map(
+            selectedTeams={(updatedOutput?.teams ?? []).map(
               ({ displayName, id }) => ({
                 label: displayName,
                 value: id,
@@ -247,34 +272,46 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             permissions={permissions}
             descriptionUnchangedWarning={descriptionUnchangedWarning}
             onSave={(output) =>
-              researchOutputData?.id
-                ? updateAndPublishResearchOutput(researchOutputData.id, {
+              updatedOutput?.id
+                ? updateAndPublishResearchOutput(updatedOutput.id, {
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
                     createVersion: versionAction === 'create',
-                    statusChangedById: researchOutputData.statusChangedBy?.id,
-                    isInReview: researchOutputData.isInReview,
+                    relatedManuscriptVersion:
+                      versionAction === 'create'
+                        ? undefined
+                        : updatedOutput.relatedManuscriptVersion,
+                    statusChangedById: updatedOutput.statusChangedBy?.id,
+                    isInReview: updatedOutput.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
+                    relatedManuscriptVersion:
+                      updatedOutput?.relatedManuscriptVersion,
+                    relatedManuscript: updatedOutput?.relatedManuscript,
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
             onSaveDraft={(output) =>
-              researchOutputData?.id
-                ? updateResearchOutput(researchOutputData.id, {
+              updatedOutput?.id
+                ? updateResearchOutput(updatedOutput.id, {
                     ...output,
                     workingGroups: [workingGroupId],
                     published: false,
-                    statusChangedById: researchOutputData.statusChangedBy?.id,
-                    isInReview: researchOutputData.isInReview,
+                    relatedManuscriptVersion:
+                      updatedOutput.relatedManuscriptVersion,
+                    statusChangedById: updatedOutput.statusChangedBy?.id,
+                    isInReview: updatedOutput.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: false,
+                    relatedManuscriptVersion:
+                      updatedOutput?.relatedManuscriptVersion,
+                    relatedManuscript: updatedOutput?.relatedManuscript,
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
           />

@@ -291,7 +291,9 @@ export class EmailNotificationService {
       let openScienceRecipients = isProduction
         ? ([
             openScienceDL,
-            ...(isDiscussionCreatedAction ? assignedOSMembersEmails : []),
+            ...(action === 'discussion_created_by_grantee'
+              ? assignedOSMembersEmails
+              : []),
           ] as string[])
         : [];
 

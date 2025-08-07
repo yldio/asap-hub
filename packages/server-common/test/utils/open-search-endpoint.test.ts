@@ -1,7 +1,4 @@
-import {
-  getOpenSearchEndpoint,
-  extractDomainFromEndpoint,
-} from '../../src/utils/open-search-endpoint';
+import { getOpenSearchEndpoint } from '../../src/utils/open-search-endpoint';
 
 jest.mock('@aws-sdk/client-opensearch', () => ({
   OpenSearchClient: jest.fn(),
@@ -119,75 +116,6 @@ describe('OpenSearch Endpoint Utils', () => {
       ).rejects.toThrow(
         'Could not determine OpenSearch endpoint for asap-hub-dev-search',
       );
-    });
-  });
-
-  describe('extractDomainFromEndpoint', () => {
-    it('should extract domain from valid HTTPS URL', () => {
-      const endpoint =
-        'https://search-domain-abc123.us-east-1.es.amazonaws.com';
-      const result = extractDomainFromEndpoint(endpoint);
-
-      expect(result).toBe('search-domain-abc123.us-east-1.es.amazonaws.com');
-    });
-
-    it('should extract domain from valid HTTP URL', () => {
-      const endpoint = 'http://search-domain-abc123.us-east-1.es.amazonaws.com';
-      const result = extractDomainFromEndpoint(endpoint);
-
-      expect(result).toBe('search-domain-abc123.us-east-1.es.amazonaws.com');
-    });
-
-    it('should handle URL without protocol', () => {
-      const endpoint = 'search-domain-abc123.us-east-1.es.amazonaws.com';
-      const result = extractDomainFromEndpoint(endpoint);
-
-      expect(result).toBe('search-domain-abc123.us-east-1.es.amazonaws.com');
-    });
-
-    it('should handle URL with path', () => {
-      const endpoint =
-        'https://search-domain-abc123.us-east-1.es.amazonaws.com/some/path';
-      const result = extractDomainFromEndpoint(endpoint);
-
-      expect(result).toBe('search-domain-abc123.us-east-1.es.amazonaws.com');
-    });
-
-    it('should handle URL with query parameters', () => {
-      const endpoint =
-        'https://search-domain-abc123.us-east-1.es.amazonaws.com?param=value';
-      const result = extractDomainFromEndpoint(endpoint);
-
-      expect(result).toBe('search-domain-abc123.us-east-1.es.amazonaws.com');
-    });
-
-    it('should handle URL with port', () => {
-      const endpoint =
-        'https://search-domain-abc123.us-east-1.es.amazonaws.com:443';
-      const result = extractDomainFromEndpoint(endpoint);
-
-      expect(result).toBe('search-domain-abc123.us-east-1.es.amazonaws.com');
-    });
-
-    it('should handle malformed URL gracefully', () => {
-      const endpoint = 'not-a-valid-url';
-      const result = extractDomainFromEndpoint(endpoint);
-
-      expect(result).toBe('not-a-valid-url');
-    });
-
-    it('should handle empty string', () => {
-      const endpoint = '';
-      const result = extractDomainFromEndpoint(endpoint);
-
-      expect(result).toBe('');
-    });
-
-    it('should handle URL with just protocol', () => {
-      const endpoint = 'https://';
-      const result = extractDomainFromEndpoint(endpoint);
-
-      expect(result).toBe('');
     });
   });
 });

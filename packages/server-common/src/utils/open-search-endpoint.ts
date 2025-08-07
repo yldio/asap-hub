@@ -40,16 +40,3 @@ export async function getOpenSearchEndpoint({
     );
   }
 }
-
-/**
- * Extract just the domain part from a full endpoint URL
- * Example: "https://search-domain-abc123.us-east-1.es.amazonaws.com" → "search-domain-abc123.us-east-1.es.amazonaws.com"
- */
-export function extractDomainFromEndpoint(endpoint: string): string {
-  try {
-    const url = new URL(endpoint);
-    return url.host;
-  } catch {
-    return endpoint.replace(/^https?:\/\//, '');
-  }
-}

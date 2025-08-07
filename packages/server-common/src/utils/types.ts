@@ -28,3 +28,39 @@ export type EventBridgeHandler<TDetailType extends string, TDetail> = (
 export type NullableOptionalProperties<T> = {
   [P in keyof T]: Pick<T, P> extends Required<Pick<T, P>> ? T[P] : T[P] | null;
 };
+
+export type OpenSearchDataType =
+  | 'boolean'
+  | 'float'
+  | 'double'
+  | 'integer'
+  | 'object'
+  | 'text'
+  | 'keyword'
+  | 'nested';
+
+export type OpenSearchFieldMapping = {
+  type?: OpenSearchDataType;
+  properties?: {
+    [key: string]: OpenSearchFieldMapping;
+  };
+};
+
+export type OpenSearchMapping = {
+  mappings: {
+    properties: {
+      [fieldName: string]: OpenSearchFieldMapping;
+    };
+  };
+};
+
+export type AliasAction = {
+  add?: {
+    index: string;
+    alias: string;
+  };
+  remove?: {
+    index: string;
+    alias: string;
+  };
+};

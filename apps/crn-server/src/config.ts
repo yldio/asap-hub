@@ -12,6 +12,9 @@ const {
   AUTH0_CLIENT_ID,
   AUTH0_SHARED_SECRET,
   AWS_SES_ENDPOINT,
+  AWS_REGION,
+  OPENSEARCH_USERNAME,
+  OPENSEARCH_PASSWORD,
   CLOUDFRONT_DISTRIBUTION_ID,
   CONTENTFUL_ACCESS_TOKEN,
   CONTENTFUL_ENV_ID,
@@ -114,3 +117,6 @@ export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
 export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;
 export const inviteUserQueueUrl = QUEUE_URL || '';
+export const openSearchUsername = OPENSEARCH_USERNAME || '';
+export const openSearchPassword = OPENSEARCH_PASSWORD || '';
+export const awsRegion = AWS_REGION || 'us-east-1';

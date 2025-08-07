@@ -1,6 +1,7 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
   FetchEngagementQuery,
+  FetchOsChampionQuery,
   FetchTeamCollaborationQuery,
   FetchTeamProductivityQuery,
   FetchUserProductivityQuery,
@@ -15,12 +16,14 @@ import {
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
   ListEngagementResponse,
+  ListOSChampionResponse,
   ListTeamCollaborationResponse,
   ListTeamProductivityDataObject,
   ListTeamProductivityResponse,
   ListUserCollaborationResponse,
   ListUserProductivityDataObject,
   ListUserProductivityResponse,
+  OSChampionResponse,
   TeamCollaborationDataObject,
   TeamCollaborationResponse,
   TeamProductivityDataObject,
@@ -865,4 +868,109 @@ export const getEngagementResponse: () => EngagementResponse = () => ({
 export const getListEngagementResponse = (): ListEngagementResponse => ({
   total: 1,
   items: [getEngagementResponse()],
+});
+
+export const getOsChampionQuery = (): FetchOsChampionQuery => ({
+  teamsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'team-id-0',
+        },
+        displayName: 'Team A',
+        inactiveSince: null,
+        linkedFrom: {
+          teamMembershipCollection: {
+            items: [
+              {
+                awardsCollection: {
+                  total: 0,
+                },
+                linkedFrom: {
+                  usersCollection: {
+                    items: [
+                      {
+                        sys: {
+                          id: 'user-without-awards',
+                        },
+                        firstName: 'No Awards',
+                        middleName: null,
+                        nickname: null,
+                        lastName: 'User',
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                linkedFrom: {
+                  usersCollection: {
+                    items: [
+                      {
+                        sys: {
+                          id: 'user-with-2-awards',
+                        },
+                        firstName: 'Two-Awarded',
+                        middleName: null,
+                        nickname: null,
+                        lastName: 'User',
+                      },
+                    ],
+                  },
+                },
+                awardsCollection: {
+                  total: 2,
+                },
+              },
+              {
+                linkedFrom: {
+                  usersCollection: {
+                    items: [
+                      {
+                        sys: {
+                          id: 'user-with-1-award',
+                        },
+                        firstName: 'One-Awarded',
+                        middleName: null,
+                        nickname: null,
+                        lastName: 'User',
+                      },
+                    ],
+                  },
+                },
+                awardsCollection: {
+                  total: 1,
+                },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
+});
+
+export const getOSChampionResponse: () => OSChampionResponse = () => ({
+  teamId: 'team-id-0',
+  teamName: 'Team A',
+  isTeamInactive: false,
+  teamAwardsCount: 3,
+  users: [
+    {
+      id: 'user-with-2-awards',
+      name: 'Two-Awarded User',
+      awardsCount: 2,
+    },
+    {
+      id: 'user-with-1-award',
+      name: 'One-Awarded User',
+      awardsCount: 1,
+    },
+  ],
+});
+
+export const getListOSChampionResponse = (): ListOSChampionResponse => ({
+  total: 1,
+  items: [getOSChampionResponse()],
 });

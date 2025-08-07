@@ -28,6 +28,7 @@ import { RecoilRoot } from 'recoil';
 import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
 import {
   createResearchOutput,
+  getManuscriptVersions,
   getTeam,
   updateTeamResearchOutput,
 } from '../api';
@@ -724,10 +725,10 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
   it('skips manuscript output selection when editing existing research output', async () => {
     await renderPage({
       teamId: '42',
-      outputDocumentType: 'article',
       researchOutputData: {
         ...baseResearchOutput,
         id: '1',
+        documentType: 'Article',
       },
     });
 
@@ -743,8 +744,11 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
   it('skips manuscript output selection when creating a new research output version', async () => {
     await renderPage({
       teamId: '42',
-      outputDocumentType: 'article',
-      researchOutputData: { ...baseResearchOutput, id: '1' },
+      researchOutputData: {
+        ...baseResearchOutput,
+        id: '1',
+        documentType: 'Article',
+      },
       versionAction: 'create',
     });
 
@@ -796,6 +800,128 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
     await userEvent.tab();
 
     expect(screen.getByRole('button', { name: /import/i })).toBeEnabled();
+  });
+
+  it('can publish a form with selected manuscript version data', async () => {
+    const title = 'Version One';
+    const id = 'mv-manuscript-id-1';
+    const type = 'Original Research';
+    const lifecycle = 'Preprint';
+    const versionId = 'version-id-1';
+    const manuscriptId = 'DA1-000463-002-org-G-1';
+    const url = 'http://example.com';
+    const authors = [
+      {
+        displayName: 'First Author',
+        email: 'first.author@gmail.com',
+        firstName: 'First',
+        id: 'first-author-id-1',
+        lastName: 'Author',
+      },
+    ];
+    const categories = [
+      {
+        id: 'category-id-1',
+        name: 'Methods',
+      },
+    ];
+    const impact = {
+      id: 'impact-id-1',
+      name: 'New method/model to explore PD mechanism',
+    };
+    const description = 'example42 description';
+    const shortDescription = 'example42 short description';
+    const teams = [
+      {
+        displayName: 'Team One',
+        id: '42',
+      },
+    ];
+
+    const mockGetManuscriptVersions =
+      getManuscriptVersions as jest.MockedFunction<
+        typeof getManuscriptVersions
+      >;
+    mockGetManuscriptVersions.mockResolvedValue({
+      total: 1,
+      items: [
+        {
+          id,
+          title,
+          type,
+          lifecycle,
+          versionId,
+          manuscriptId,
+          url,
+          authors,
+          categories,
+          description,
+          shortDescription,
+          impact,
+          teams,
+        },
+      ],
+    });
+
+    await renderPage({ teamId: '42', outputDocumentType: 'article' });
+
+    userEvent.click(screen.getByLabelText('Import from manuscript'));
+    const input = screen.getByRole('textbox');
+    await userEvent.type(input, 'Version One');
+    await userEvent.tab();
+
+    userEvent.click(screen.getByRole('button', { name: /import/i }));
+
+    expect(
+      screen.getByRole('heading', { name: /Imported Manuscript Version/i }),
+    ).toBeInTheDocument();
+
+    userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+    const button = screen.getByRole('button', { name: /Publish Output/i });
+    userEvent.click(button);
+    await waitFor(() => {
+      expect(button).not.toBeInTheDocument();
+    });
+
+    expect(mockCreateResearchOutput).toHaveBeenCalledWith(
+      {
+        documentType: 'Article',
+        sharingStatus: 'Public',
+        teams: [teams[0]?.id],
+        link: url,
+        title,
+        descriptionMD: description,
+        description: '',
+        shortDescription,
+        changelog: '',
+        subtype: type,
+        type: lifecycle,
+        authors: [
+          {
+            userId: authors[0]?.id,
+          },
+        ],
+        methods: [],
+        labs: [],
+        organisms: [],
+        environments: [],
+        keywords: [],
+        workingGroups: [],
+        relatedResearch: [],
+        relatedEvents: [],
+        labCatalogNumber: undefined,
+        publishDate: undefined,
+        usageNotes: '',
+        asapFunded: true,
+        usedInPublication: true,
+        published: true,
+        categories: ['category-id-1'],
+        impact: 'impact-id-1',
+        relatedManuscript: 'manuscript-id-1',
+        relatedManuscriptVersion: versionId,
+      },
+      expect.anything(),
+    );
   });
 
   it('navigates to standard output form when manual creation is confirmed', async () => {

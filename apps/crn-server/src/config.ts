@@ -47,6 +47,8 @@ const {
   SENTRY_DSN,
   SES_REGION,
   QUEUE_URL,
+  OPENSEARCH_USERNAME,
+  OPENSEARCH_PASSWORD,
 } = process.env;
 
 export const activeCampaignAccount = ACTIVE_CAMPAIGN_ACCOUNT || '';
@@ -114,3 +116,5 @@ export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
 export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;
 export const inviteUserQueueUrl = QUEUE_URL || '';
+export const opensearchUsername = OPENSEARCH_USERNAME;
+export const opensearchPassword = OPENSEARCH_PASSWORD;

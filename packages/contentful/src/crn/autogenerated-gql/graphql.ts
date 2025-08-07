@@ -22996,6 +22996,7 @@ export type ResearchOutputsContentFragment = Pick<
       >
     >;
   }>;
+  relatedManuscriptVersion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
 };
 
 export type FetchResearchOutputByIdQueryVariables = Exact<{
@@ -23261,6 +23262,7 @@ export type FetchResearchOutputByIdQuery = {
           >
         >;
       }>;
+      relatedManuscriptVersion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
     }
   >;
 };
@@ -23594,6 +23596,7 @@ export type FetchResearchOutputsQuery = {
                 >
               >;
             }>;
+            relatedManuscriptVersion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
           }
         >
       >;
@@ -32166,6 +32169,25 @@ export const ResearchOutputsContentFragmentDoc = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'accession' },
                       },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'relatedManuscriptVersion' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                     ],
                   },
                 },

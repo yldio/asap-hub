@@ -30,7 +30,7 @@ describe('ResearchOutputs controller', () => {
   });
 
   describe('Fetch', () => {
-    test('Should return the reserach outputs', async () => {
+    test('Should return the research outputs', async () => {
       researchOutputDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
         items: [getResearchOutputDataObject()],

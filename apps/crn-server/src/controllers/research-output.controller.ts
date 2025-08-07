@@ -174,6 +174,8 @@ export default class ResearchOutputController {
         doi: currentResearchOutput.doi,
         rrid: currentResearchOutput.rrid,
         accession: currentResearchOutput.accession,
+        relatedManuscriptVersion:
+          currentResearchOutput.relatedManuscriptVersion,
       };
 
       this.validateVersionUniqueness(
@@ -229,6 +231,8 @@ export default class ResearchOutputController {
       teamIds: normalisedResearchOutputUpdateData.teams,
       relatedResearchIds: normalisedResearchOutputUpdateData.relatedResearch,
       relatedEventIds: normalisedResearchOutputUpdateData.relatedEvents,
+      relatedManuscriptVersion:
+        normalisedResearchOutputUpdateData.relatedManuscriptVersion,
       title: normalisedResearchOutputUpdateData.title,
       type: normalisedResearchOutputUpdateData.type,
       updatedBy: normalisedResearchOutputUpdateData.updatedBy,

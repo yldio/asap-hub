@@ -984,6 +984,13 @@ export type ManuscriptError = {
   };
 };
 
+export const mapManuscriptTypeToSubType = (manuscriptType: ManuscriptType) =>
+  manuscriptType === 'Original Research' ? 'Original Research' : 'Review';
+
+export const mapManuscriptLifecycleToType = (
+  manuscriptLifecycle: ManuscriptLifecycle,
+) => (manuscriptLifecycle === 'Preprint' ? 'Preprint' : 'Published');
+
 export type FileAction = 'upload' | 'download';
 
 export const apcRequestedOptions = ['Requested', 'Not Requested'] as const;

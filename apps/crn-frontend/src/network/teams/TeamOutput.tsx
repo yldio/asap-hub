@@ -1,6 +1,8 @@
 import { isEnabled } from '@asap-hub/flags';
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
+  mapManuscriptLifecycleToType,
+  mapManuscriptTypeToSubType,
   researchOutputDocumentTypeToType,
   ResearchOutputResponse,
   ResearchOutputVersion,
@@ -99,8 +101,17 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       const manuscriptVersion = selectedManuscriptVersion.version;
       setUpdatedOutput((prev) => ({
         ...prev,
+        id: prev?.id || '',
         title: manuscriptVersion.title,
         link: manuscriptVersion.url,
+        type:
+          manuscriptVersion.lifecycle &&
+          mapManuscriptLifecycleToType(manuscriptVersion.lifecycle),
+        subtype:
+          manuscriptVersion.type &&
+          mapManuscriptTypeToSubType(manuscriptVersion.type),
+        description: manuscriptVersion.description,
+        shortDescription: manuscriptVersion.shortDescription,
         labs: manuscriptVersion.labs || [],
         authors: manuscriptVersion.authors || [],
         teams: manuscriptVersion.teams || [],
@@ -110,7 +121,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
         asapFunded: true,
         usedInPublication: true,
         environments: [],
-        id: '',
         documentType: 'Article',
         methods: [],
         created: '',
@@ -123,6 +133,10 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
         publishingEntity: 'Team',
         lastUpdatedPartial: '',
         workingGroups: undefined,
+        impact: manuscriptVersion.impact,
+        categories: manuscriptVersion.categories,
+        relatedManuscriptVersion: manuscriptVersion.versionId,
+        relatedManuscript: manuscriptVersion.id.split('mv-')[1],
       }));
     }
   }, [selectedManuscriptVersion]);
@@ -305,34 +319,37 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                     ...output,
                     published: true,
                     createVersion: versionAction === 'create',
+                    relatedManuscriptVersion:
+                      versionAction === 'create' && !selectedManuscriptVersion
+                        ? undefined
+                        : updatedOutput.relatedManuscriptVersion,
                     statusChangedById: updatedOutput.statusChangedBy?.id,
                     isInReview: updatedOutput.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))
-                : createResearchOutput({ ...output, published: true }).catch(
-                    handleError(['/link', '/title'], setErrors),
-                  )
+                : createResearchOutput({
+                    ...output,
+                    published: true,
+                    relatedManuscriptVersion:
+                      updatedOutput?.relatedManuscriptVersion,
+                    relatedManuscript: updatedOutput?.relatedManuscript,
+                  }).catch(handleError(['/link', '/title'], setErrors))
             }
             onSaveDraft={(output) =>
               updatedOutput?.id
                 ? updateResearchOutput(updatedOutput.id, {
                     ...output,
                     published: false,
+                    relatedManuscriptVersion:
+                      updatedOutput.relatedManuscriptVersion,
                     statusChangedById: updatedOutput.statusChangedBy?.id,
                     isInReview: updatedOutput.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,
                     published: false,
-                    ...(selectedManuscriptVersion?.version
-                      ? {
-                          relatedManuscriptVersion:
-                            selectedManuscriptVersion?.version.versionId,
-                          relatedManuscript:
-                            selectedManuscriptVersion?.version.id.split(
-                              'mv-',
-                            )[1],
-                        }
-                      : {}),
+                    relatedManuscriptVersion:
+                      updatedOutput?.relatedManuscriptVersion,
+                    relatedManuscript: updatedOutput?.relatedManuscript,
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
           />

@@ -1,7 +1,5 @@
 import { framework as lambda } from '@asap-hub/services-common';
 import { Client, API } from '@opensearch-project/opensearch';
-import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws';
-import { defaultProvider } from '@aws-sdk/credential-provider-node';
 import {
   Logger,
   getOpenSearchEndpoint,
@@ -11,16 +9,26 @@ import {
 export type OpenSearchRequest = API.Search_RequestBody;
 export type OpenSearchResponse = API.Search_ResponseBody;
 
-const getClient = async (region: string): Promise<Client> => {
+const getClient = async (
+  opensearchUsername: string | undefined,
+  opensearchPassword: string | undefined,
+): Promise<Client> => {
   const endpoint = await getOpenSearchEndpoint();
   const domainEndpoint = extractDomainFromEndpoint(endpoint);
 
+  if (!opensearchUsername || !opensearchPassword) {
+    throw new Error('OPENSEARCH_USERNAME and OPENSEARCH_PASSWORD must be set');
+  }
+
   return new Client({
-    ...AwsSigv4Signer({
-      getCredentials: defaultProvider(),
-      region,
-    }),
     node: `https://${domainEndpoint}`,
+    auth: {
+      username: opensearchUsername,
+      password: opensearchPassword,
+    },
+    ssl: {
+      rejectUnauthorized: true,
+    },
   });
 };
 
@@ -40,7 +48,8 @@ type SearchOutput =
 export const opensearchSearchHandlerFactory =
   (
     logger: Logger,
-    region: string,
+    opensearchUsername: string | undefined,
+    opensearchPassword: string | undefined,
   ): ((
     request: lambda.Request<SearchInput>,
   ) => Promise<lambda.Response<SearchOutput>>) =>
@@ -62,7 +71,7 @@ export const opensearchSearchHandlerFactory =
     }
 
     try {
-      const client = await getClient(region);
+      const client = await getClient(opensearchUsername, opensearchPassword);
 
       const searchBody: API.Search_RequestBody = {
         query: { match_all: {} },
@@ -121,6 +130,18 @@ export const opensearchSearchHandlerFactory =
         },
       };
     } catch (error) {
+      // Add comprehensive error logging
+      // eslint-disable-next-line no-console
+      console.error('🚨 RAW ERROR:', error);
+      // eslint-disable-next-line no-console
+      console.error('🚨 ERROR JSON:', JSON.stringify(error, null, 2));
+
+      logger.error('Error JSON - logger:', {
+        error: JSON.stringify(error, null, 2),
+        index,
+        payload,
+      });
+
       logger.error('Error executing OpenSearch search operation', {
         error:
           error instanceof Error

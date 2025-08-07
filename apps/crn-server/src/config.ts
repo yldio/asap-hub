@@ -52,6 +52,8 @@ const {
   SENTRY_DSN,
   SES_REGION,
   QUEUE_URL,
+  OPENSEARCH_USERNAME,
+  OPENSEARCH_PASSWORD,
 } = process.env;
 
 export const activeCampaignAccount = ACTIVE_CAMPAIGN_ACCOUNT || '';

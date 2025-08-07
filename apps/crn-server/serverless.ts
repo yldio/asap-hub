@@ -244,6 +244,35 @@ const serverlessConfig: AWS = {
           },
           {
             Effect: 'Allow',
+            Action: [
+              'es:ESHttpGet',
+              'es:ESHttpPost',
+              'es:ESHttpPut',
+              'es:ESHttpDelete',
+              'es:ESHttpHead',
+              'es:ESHttpPatch',
+              'es:DescribeDomain',
+              'es:DescribeDomains',
+              'es:ListDomainNames',
+            ],
+            Resource: {
+              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['es:DescribeDomain', 'es:DescribeDomains'],
+            Resource: {
+              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}`,
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['es:ListDomainNames'],
+            Resource: '*',
+          },
+          {
+            Effect: 'Allow',
             Action: ['lambda:InvokeFunction'],
             Resource: {
               'Fn::Sub':
@@ -1250,6 +1279,8 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
+        OPENSEARCH_USERNAME: opensearchMasterUser,
+        OPENSEARCH_PASSWORD: opensearchMasterPassword,
       },
     },
   },

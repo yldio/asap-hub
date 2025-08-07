@@ -130,13 +130,8 @@ export const opensearchSearchHandlerFactory =
         },
       };
     } catch (error) {
-      // Add comprehensive error logging
-      // eslint-disable-next-line no-console
-      console.error('🚨 RAW ERROR:', error);
-      // eslint-disable-next-line no-console
-      console.error('🚨 ERROR JSON:', JSON.stringify(error, null, 2));
-
-      logger.error('Error JSON - logger:', {
+      logger.error('🚨 RAW ERROR:', error);
+      logger.error('🚨 FORMATED Error - logger:', {
         error: JSON.stringify(error, null, 2),
         index,
         payload,

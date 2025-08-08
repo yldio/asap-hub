@@ -26,6 +26,7 @@ export const getManuscriptVersionsListResponse =
           },
           { id: 'external-author-1', displayName: 'External Author' },
         ],
+        labs: [{ id: 'lab-id-1', name: 'Lab One' }],
         title: 'Manuscript 1',
         versionId: 'version-id-2',
         url: 'http://example.com',
@@ -48,6 +49,7 @@ export const getManuscriptVersionsListResponse =
           },
           { id: 'external-author-1', displayName: 'External Author' },
         ],
+        labs: [{ id: 'lab-id-1', name: 'Lab One' }],
         title: 'Manuscript 2',
         versionId: 'version-id-2',
         url: 'http://example.com',
@@ -97,6 +99,16 @@ export const getContentfulManuscriptVersion = (
           id: 'external-author-1',
         },
         name: 'External Author',
+      },
+    ],
+  },
+  labsCollection: {
+    items: [
+      {
+        sys: {
+          id: 'lab-id-1',
+        },
+        name: 'Lab One',
       },
     ],
   },

@@ -428,6 +428,57 @@ it('can save draft when form data is valid', async () => {
   });
 });
 
+it('can publish a new version for an output', async () => {
+  const baseResearchOutput = createResearchOutputResponse();
+  const { descriptionMD, title, shortDescription } = baseResearchOutput;
+  const link = 'https://example42.com';
+  const doi = '10.0777';
+  const changelog = 'creating new version';
+
+  await renderPage({
+    versionAction: 'create',
+    researchOutputData: { ...baseResearchOutput, documentType: 'Article' },
+  });
+
+  await mandatoryFields(
+    {
+      link,
+      title,
+      descriptionMD,
+      shortDescription,
+      type: 'Preprint',
+      doi,
+    },
+    true,
+  );
+
+  userEvent.type(
+    screen.getByRole('textbox', { name: /changelog/i }),
+    changelog,
+  );
+
+  userEvent.click(screen.getByRole('button', { name: /Save/i }));
+  const button = screen.getByRole('button', { name: /Publish new version/i });
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+      baseResearchOutput.id,
+      expect.objectContaining({
+        changelog,
+        relatedManuscriptVersion: undefined,
+        descriptionMD,
+        doi,
+        link,
+        createVersion: true,
+        type: 'Preprint',
+        documentType: 'Article',
+      }),
+      expect.anything(),
+    );
+  });
+});
+
 it('will show server side validation error for link', async () => {
   const validationResponse: ValidationErrorResponse = {
     message: 'Validation error',

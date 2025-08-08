@@ -1,3 +1,4 @@
+import { ManuscriptLifecycle, ManuscriptType } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useHistory } from 'react-router-dom';
@@ -170,5 +171,69 @@ describe('ManuscriptOutputSelection', () => {
     expect(
       getByText('Sorry, no manuscripts match asdflkjasdflkj'),
     ).toBeVisible();
+  });
+
+  it('lets a user select a version', async () => {
+    const mockOption = {
+      label: 'Version One',
+      value: 'mv-version-1',
+      version: {
+        manuscriptId: '123',
+        type: 'Original Research',
+        lifecycle: 'Preprint',
+      },
+    };
+    const setSelectedVersion = jest.fn();
+
+    const getOptions = jest.fn().mockResolvedValue([mockOption]);
+
+    const { getByRole } = render(
+      <ManuscriptOutputSelection
+        {...defaultProps}
+        manuscriptOutputSelection="import"
+        getManuscriptVersionOptions={getOptions}
+        setSelectedVersion={setSelectedVersion}
+      />,
+    );
+
+    const input = getByRole('textbox');
+    await userEvent.type(input, 'Version');
+    // await userEvent.tab();
+    const option = await screen.findByText('Version One');
+    await userEvent.click(option);
+
+    await waitFor(() => {
+      expect(setSelectedVersion).toHaveBeenCalledWith(mockOption);
+    });
+  });
+
+  it('displays selected version', async () => {
+    const mockOption = {
+      label: 'Version One',
+      value: 'mv-manuscript-1',
+      version: {
+        id: 'mv-manuscript-1',
+        title: 'Version One',
+        url: 'https://example.com',
+        manuscriptId: '123',
+        type: 'Original Research' as ManuscriptType,
+        lifecycle: 'Preprint' as ManuscriptLifecycle,
+      },
+    };
+
+    const getOptions = jest.fn().mockResolvedValue([mockOption]);
+
+    const { findByText, getByText } = render(
+      <ManuscriptOutputSelection
+        {...defaultProps}
+        manuscriptOutputSelection="import"
+        getManuscriptVersionOptions={getOptions}
+        selectedVersion={mockOption}
+      />,
+    );
+
+    expect(await findByText('Preprint')).toBeInTheDocument();
+    expect(getByText('Original Research')).toBeInTheDocument();
+    expect(getByText('123')).toBeInTheDocument();
   });
 });

@@ -498,6 +498,58 @@ it('can edit and publish a draft research output', async () => {
   );
 });
 
+it('can publish a new version for an output', async () => {
+  const { descriptionMD, title, shortDescription } = baseResearchOutput;
+  const link = 'https://example42.com';
+  const doi = '10.0777';
+  const changelog = 'creating new version';
+
+  await renderPage({
+    teamId: '42',
+    researchOutputData: { ...baseResearchOutput, documentType: 'Article' },
+    versionAction: 'create',
+  });
+
+  await mandatoryFields(
+    {
+      link,
+      title,
+      descriptionMD,
+      shortDescription,
+      type: 'Preprint',
+      doi,
+    },
+    true,
+    false,
+  );
+
+  userEvent.type(
+    screen.getByRole('textbox', { name: /changelog/i }),
+    changelog,
+  );
+
+  userEvent.click(screen.getByRole('button', { name: /Save/i }));
+  const button = screen.getByRole('button', { name: /Publish new version/i });
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+      baseResearchOutput.id,
+      expect.objectContaining({
+        changelog,
+        relatedManuscriptVersion: undefined,
+        descriptionMD,
+        doi,
+        link,
+        createVersion: true,
+        type: 'Preprint',
+        documentType: 'Article',
+      }),
+      expect.anything(),
+    );
+  });
+});
+
 it('generates the short description based on the current description', async () => {
   mockGetGeneratedShortDescription.mockResolvedValueOnce({
     shortDescription: 'test generated short description 1',
@@ -867,8 +919,9 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     userEvent.click(screen.getByLabelText('Import from manuscript'));
     const input = screen.getByRole('textbox');
-    await userEvent.type(input, 'Version One');
-    await userEvent.tab();
+    await userEvent.type(input, 'Version');
+    const option = await screen.findByText('Version One');
+    await userEvent.click(option);
 
     userEvent.click(screen.getByRole('button', { name: /import/i }));
 

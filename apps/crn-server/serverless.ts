@@ -244,6 +244,43 @@ const serverlessConfig: AWS = {
           },
           {
             Effect: 'Allow',
+            Action: [
+              'es:ESHttpGet',
+              'es:ESHttpPost',
+              'es:ESHttpPut',
+              'es:ESHttpDelete',
+              'es:ESHttpHead',
+              'es:ESHttpPatch',
+              'es:DescribeDomain',
+              'es:DescribeDomains',
+              'es:ListDomainNames',
+            ],
+            Resource: {
+              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['es:DescribeDomain', 'es:DescribeDomains'],
+            Resource: {
+              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}`,
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['es:ListDomainNames'],
+            Resource: '*',
+          },
+          {
+            Effect: 'Allow',
+            Action: ['lambda:InvokeFunction'],
+            Resource: {
+              'Fn::Sub':
+                'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:asap-hub-${self:provider.stage}-opensearch-search-handler',
+            },
+          },
+          {
+            Effect: 'Allow',
             Action: 's3:GetObject',
             Resource: [
               {
@@ -1225,6 +1262,17 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SLACK_WEBHOOK: slackWebhook,
+      },
+    },
+    openSearchSearchHandler: {
+      handler: './src/handlers/opensearch/opensearch-search-handler.handler',
+      timeout: 30,
+      memorySize: 512,
+      name: 'asap-hub-${self:provider.stage}-opensearch-search-handler',
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+        OPENSEARCH_USERNAME: opensearchMasterUser,
+        OPENSEARCH_PASSWORD: opensearchMasterPassword,
       },
     },
   },

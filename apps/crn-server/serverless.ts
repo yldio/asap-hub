@@ -1269,14 +1269,6 @@ const serverlessConfig: AWS = {
       timeout: 30,
       memorySize: 512,
       name: 'asap-hub-${self:provider.stage}-opensearch-search-handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/opensearch/search/{index}',
-          },
-        },
-      ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
         OPENSEARCH_USERNAME: opensearchMasterUser,

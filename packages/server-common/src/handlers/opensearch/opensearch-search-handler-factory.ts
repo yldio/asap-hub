@@ -8,6 +8,7 @@ import {
 
 export type OpenSearchRequest = API.Search_RequestBody;
 export type OpenSearchResponse = API.Search_ResponseBody;
+export type OpenSearchTotalHits = API.Search_ResponseBody['hits']['total'];
 
 const getClient = async (
   opensearchUsername: string | undefined,

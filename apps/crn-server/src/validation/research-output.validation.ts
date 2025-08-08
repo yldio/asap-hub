@@ -188,6 +188,8 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         nullable: true,
         default: false,
       },
+      relatedManuscriptVersion: { type: 'string', nullable: true },
+      relatedManuscript: { type: 'string', nullable: true },
     },
     required: [
       'documentType',
@@ -333,6 +335,8 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
         type: 'boolean',
         nullable: true,
       },
+      relatedManuscriptVersion: { type: 'string', nullable: true },
+      relatedManuscript: { type: 'string', nullable: true },
     },
     required: [
       'documentType',

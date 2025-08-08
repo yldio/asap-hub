@@ -213,6 +213,8 @@ export type ResearchOutputCoreObject = {
   usageNotes?: string;
   usedInPublication?: boolean;
   researchTheme?: string[];
+  relatedManuscriptVersion?: string;
+  relatedManuscript?: string;
 };
 
 export type ResearchOutputVersionCoreObject = Pick<
@@ -225,6 +227,7 @@ export type ResearchOutputVersionCoreObject = Pick<
   | 'doi'
   | 'rrid'
   | 'accession'
+  | 'relatedManuscriptVersion'
 >;
 
 export type ResearchOutputVersionPostRequest = ResearchOutputVersionCoreObject;
@@ -307,6 +310,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   relatedEventIds: string[];
   impact?: string;
   categories?: string[];
+  relatedManuscript?: string;
 };
 
 export type PublishedResearchOutputCreateDataObject =
@@ -337,6 +341,8 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   versions?: string[];
   impact?: string;
   categories?: string[];
+  relatedManuscriptVersion?: string;
+  relatedManuscript?: string;
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -422,6 +428,8 @@ export type ResearchOutputPostRequest = {
   teams: string[];
   workingGroups: string[];
   relatedResearch: string[];
+  relatedManuscriptVersion?: string;
+  relatedManuscript?: string;
   title: string;
   type?: ResearchOutputType;
   usageNotes?: string;

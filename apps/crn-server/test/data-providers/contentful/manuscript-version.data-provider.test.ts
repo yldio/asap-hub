@@ -30,7 +30,15 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       ManuscriptsTeamsCollection: () => ({
         ...getContentfulManuscript().teamsCollection,
       }),
-
+      ManuscriptsCategoriesCollection: () => ({
+        ...getContentfulManuscript().categoriesCollection,
+      }),
+      ManuscriptVersionsFirstAuthorsCollection: () => ({
+        ...getContentfulManuscriptVersion()?.firstAuthorsCollection,
+      }),
+      ManuscriptVersionsLabsCollection: () => ({
+        ...getContentfulManuscriptVersion()?.labsCollection,
+      }),
       ManuscriptsVersionsCollection: () =>
         getContentfulManuscript().versionsCollection,
     });
@@ -140,7 +148,7 @@ describe('Manuscript Versions Contentful Data Provider', () => {
         manuscriptVersions: {
           linkedFrom: {
             manuscriptsCollection: {
-              items: [getContentfulManuscript(1, [])],
+              items: [{ ...getContentfulManuscript(1, []), impact: null }],
             },
           },
         },

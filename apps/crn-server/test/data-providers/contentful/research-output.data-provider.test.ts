@@ -1319,6 +1319,57 @@ describe('Research Outputs Data Provider', () => {
       );
     });
 
+    test('links research output to manuscript & manuscript version when provided', async () => {
+      const publish: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
+      const patch: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
+      patch.mockResolvedValue({ publish } as unknown as Entry);
+      const manuscriptEntry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {},
+        patch,
+      } as unknown as Entry;
+      environmentMock.getEntry.mockResolvedValue(manuscriptEntry);
+
+      await researchOutputDataProvider.create(
+        {
+          ...getResearchOutputCreateDataObject(),
+          relatedManuscriptVersion: 'manuscript-version-1',
+          relatedManuscript: 'manuscript-1',
+        },
+        { publish: false },
+      );
+
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            relatedManuscriptVersion: {
+              'en-US': {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: 'manuscript-version-1',
+                },
+              },
+            },
+          }),
+        }),
+      );
+      expect(patch).toHaveBeenCalledWith([
+        {
+          op: 'add',
+          path: '/fields/relatedResearchOutput',
+          value: {
+            'en-US': {
+              sys: { id: '1', linkType: 'Entry', type: 'Link' },
+            },
+          },
+        },
+      ]);
+    });
+
     test('sets working group to null if undefined', async () => {
       await researchOutputDataProvider.create(
         {
@@ -1833,80 +1884,143 @@ describe('Research Outputs Data Provider', () => {
             type: {
               'en-US': '3D Printing',
             },
+            relatedManuscriptVersion: {
+              'en-US': null,
+            },
           },
         },
       );
       expect(publish).toHaveBeenCalled();
     });
-  });
-  test('can create a second version', async () => {
-    const researchOutputMock = getEntry({
-      versions: {
-        'en-US': [
-          getEntry(
-            {
-              documentType: {
-                'en-US': 'Article',
-              },
-              title: {
-                'en-US': 'Test',
-              },
-              addedDate: {
-                'en-US': '2022-01-01T12:00:00.000Z',
-              },
-              link: {
-                'en-US': 'https://example.com',
-              },
-              type: {
-                'en-US': '3D Printing',
-              },
-            },
-            { id: 'version-1' },
-          ),
-        ],
-      },
-    });
-    environmentMock.getEntry.mockResolvedValue(researchOutputMock);
 
-    environmentMock.createEntry.mockResolvedValue(
-      getEntry({}, { id: 'version-2' }),
-    );
-    await researchOutputDataProvider.update(
-      '1',
-      getResearchOutputUpdateDataObject(),
-      {
-        publish: false,
-        newVersion: {
-          documentType: 'Article',
-          title: 'Version 2',
-          addedDate: '2022-01-01T12:00:00.000Z',
-          link: 'https://example.com',
-          type: '3D Printing',
+    test('can create a version linked to a manuscript version', async () => {
+      const publish = jest.fn();
+      const researchOutputMock = getEntry({});
+      environmentMock.getEntry.mockResolvedValue(researchOutputMock);
+
+      environmentMock.createEntry.mockResolvedValue({
+        sys: { id: '1' },
+        publish,
+      } as unknown as Entry);
+      await researchOutputDataProvider.update(
+        '1',
+        getResearchOutputUpdateDataObject(),
+        {
+          publish: false,
+          newVersion: {
+            documentType: 'Article',
+            title: 'Test',
+            addedDate: '2022-01-01T12:00:00.000Z',
+            link: 'https://example.com',
+            type: '3D Printing',
+            relatedManuscriptVersion: 'manuscript-version-1',
+          },
         },
-      },
-    );
-    const mockPatch = patch as jest.MockedFunction<typeof patch>;
-    expect(mockPatch).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        versions: [
-          {
-            sys: {
-              id: 'version-1',
-              linkType: 'Entry',
-              type: 'Link',
+      );
+
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputVersions',
+        {
+          fields: {
+            documentType: {
+              'en-US': 'Article',
+            },
+            title: {
+              'en-US': 'Test',
+            },
+            addedDate: {
+              'en-US': '2022-01-01T12:00:00.000Z',
+            },
+            link: {
+              'en-US': 'https://example.com',
+            },
+            type: {
+              'en-US': '3D Printing',
+            },
+            relatedManuscriptVersion: {
+              'en-US': {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: 'manuscript-version-1',
+                },
+              },
             },
           },
-          {
-            sys: {
-              id: 'version-2',
-              linkType: 'Entry',
-              type: 'Link',
-            },
+        },
+      );
+      expect(publish).toHaveBeenCalled();
+    });
+
+    test('can create a second version', async () => {
+      const researchOutputMock = getEntry({
+        versions: {
+          'en-US': [
+            getEntry(
+              {
+                documentType: {
+                  'en-US': 'Article',
+                },
+                title: {
+                  'en-US': 'Test',
+                },
+                addedDate: {
+                  'en-US': '2022-01-01T12:00:00.000Z',
+                },
+                link: {
+                  'en-US': 'https://example.com',
+                },
+                type: {
+                  'en-US': '3D Printing',
+                },
+              },
+              { id: 'version-1' },
+            ),
+          ],
+        },
+      });
+      environmentMock.getEntry.mockResolvedValue(researchOutputMock);
+
+      environmentMock.createEntry.mockResolvedValue(
+        getEntry({}, { id: 'version-2' }),
+      );
+      await researchOutputDataProvider.update(
+        '1',
+        getResearchOutputUpdateDataObject(),
+        {
+          publish: false,
+          newVersion: {
+            documentType: 'Article',
+            title: 'Version 2',
+            addedDate: '2022-01-01T12:00:00.000Z',
+            link: 'https://example.com',
+            type: '3D Printing',
           },
-        ],
-      }),
-    );
+        },
+      );
+      const mockPatch = patch as jest.MockedFunction<typeof patch>;
+      expect(mockPatch).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          versions: [
+            {
+              sys: {
+                id: 'version-1',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+            {
+              sys: {
+                id: 'version-2',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        }),
+      );
+    });
   });
 });
 

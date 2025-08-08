@@ -67,6 +67,7 @@ const DuplicateOutput: FC = () => {
           published: false,
           link: undefined,
           title: `Copy of ${output.title}`,
+          relatedManuscriptVersion: undefined,
         }}
         descriptionUnchangedWarning
         teamId={output.teams[0].id}

@@ -159,11 +159,12 @@ const parseGraphQLManucriptVersion = (
         displayName: teamItem.displayName || '',
       }),
     ),
-    labs:
-      cleanArray(latestVersion?.labsCollection?.items).map((lab: LabItem) => ({
+    labs: cleanArray(latestVersion?.labsCollection?.items).map(
+      (lab: LabItem) => ({
         id: lab.sys.id,
         name: lab.name || '',
-      })) || [],
+      }),
+    ),
     authors: cleanArray([
       ...(latestVersion?.firstAuthorsCollection?.items || []),
       ...(latestVersion?.correspondingAuthorCollection?.items || []),

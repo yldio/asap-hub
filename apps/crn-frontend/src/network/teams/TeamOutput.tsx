@@ -223,13 +223,11 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               versionAction={versionAction}
             />
           )}
-          {selectedManuscriptVersion &&
-            selectedManuscriptVersion.version &&
-            !showManuscriptOutputFlow && (
-              <ManuscriptVersionImportCard
-                version={selectedManuscriptVersion.version}
-              />
-            )}
+          {selectedManuscriptVersion && selectedManuscriptVersion.version && (
+            <ManuscriptVersionImportCard
+              version={selectedManuscriptVersion.version}
+            />
+          )}
           <ResearchOutputForm
             displayChangelog={Boolean(
               versionAction === 'create' ||

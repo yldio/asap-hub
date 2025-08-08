@@ -2,7 +2,7 @@ import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { css, SerializedStyles } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
-import { Card, Headline2, Paragraph, Pill } from '../atoms';
+import { Card, Headline3, Paragraph, Pill } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
 import { fern, lead, neutral200, paper, pine } from '../colors';
 import { ThemeVariant } from '../theme';
@@ -75,7 +75,7 @@ const ManuscriptVersionImportCard: React.FC<
     <div css={wrapperStyles}>
       <Card padding={false} overrideStyles={cardStyles}>
         <div css={container}>
-          <Headline2 noMargin>Imported Manuscript Version</Headline2>
+          <Headline3 noMargin>Imported Manuscript Version</Headline3>
           <div css={descriptionStyles}>
             <Paragraph noMargin>
               The details in the form below have been imported from the

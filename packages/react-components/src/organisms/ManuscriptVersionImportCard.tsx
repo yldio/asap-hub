@@ -1,8 +1,9 @@
 import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { css, SerializedStyles } from '@emotion/react';
+import { network } from '@asap-hub/routing';
 
 import { Card, Headline2, Paragraph, Pill } from '../atoms';
-import { mobileScreen, rem, tabletScreen } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import { fern, lead, neutral200, paper, pine } from '../colors';
 import { ThemeVariant } from '../theme';
 import { contentSidePaddingWithNavigation } from '../layout';
@@ -13,18 +14,13 @@ const container = css({
 });
 
 const descriptionStyles = css({
-  marginTop: rem(24),
-  marginBottom: rem(12),
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    marginBottom: rem(32),
-  },
+  margin: `${rem(24)} 0`,
   color: lead.rgb,
 });
 
 const pillContainerStyles = css({
   display: 'flex',
   gap: rem(8),
-  marginTop: rem(8),
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',
   },
@@ -49,6 +45,23 @@ const wrapperStyles = css({
 
 const cardStyles = css({
   background: neutral200.rgb,
+});
+
+const titleStyles = css({
+  margin: `${rem(8)} 0 ${rem(12)}`,
+});
+
+const linkStyles = css({
+  textDecoration: 'underline solid transparent',
+  transition: 'text-decoration 100ms ease-in-out, color 100ms ease-in-out',
+  color: fern.rgb,
+
+  ':hover': {
+    textDecoration: 'underline',
+  },
+  ':active': {
+    textDecoration: 'none',
+  },
 });
 
 export type ManuscriptVersionImportCardProps = {
@@ -76,7 +89,22 @@ const ManuscriptVersionImportCard: React.FC<
             <Pill accent="gray">{version.lifecycle}</Pill>
             <Pill accent="blue">{version.manuscriptId}</Pill>
           </div>
-          <span>{version.title}</span>
+          <span css={titleStyles}>{version.title}</span>
+          {version.teamId && (
+            <a
+              href={
+                network({})
+                  .teams({})
+                  .team({ teamId: version.teamId })
+                  .workspace({}).$
+              }
+              target={'_blank'}
+              rel={'noreferrer noopener'}
+              css={linkStyles}
+            >
+              Access the Open Science Compliance Workspace
+            </a>
+          )}
         </div>
       </Card>
     </div>

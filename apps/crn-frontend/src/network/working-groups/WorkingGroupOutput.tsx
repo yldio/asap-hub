@@ -220,13 +220,11 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
               versionAction={versionAction}
             />
           )}
-          {selectedManuscriptVersion &&
-            selectedManuscriptVersion.version &&
-            !showManuscriptOutputFlow && (
-              <ManuscriptVersionImportCard
-                version={selectedManuscriptVersion.version}
-              />
-            )}
+          {selectedManuscriptVersion && selectedManuscriptVersion.version && (
+            <ManuscriptVersionImportCard
+              version={selectedManuscriptVersion.version}
+            />
+          )}
           <ResearchOutputForm
             displayChangelog={Boolean(
               versionAction === 'create' || versions.length > 0,

@@ -17,9 +17,6 @@ export async function getOpenSearchEndpoint(): Promise<string> {
       ? `${service}-${stage}-search`
       : `${service}-dev-search`;
 
-  // eslint-disable-next-line no-console
-  console.log(`📍 Looking up domain: ${domainName} (stage: ${stage})`);
-
   try {
     // Use AWS SDK
     const openSearchClient = new OpenSearchClient({ region: awsRegion });

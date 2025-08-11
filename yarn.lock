@@ -1859,7 +1859,7 @@ __metadata:
     nock: 13.4.0
     pino: 8.14.1
     pino-http: 8.3.3
-    pino-lambda: 4.4.0
+    pino-lambda: 4.4.1
     pino-noir: 2.2.1
     pino-pretty: 10.3.1
     pump: 3.0.2
@@ -41468,12 +41468,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-lambda@npm:4.4.0":
-  version: 4.4.0
-  resolution: "pino-lambda@npm:4.4.0"
+"pino-lambda@npm:4.4.1":
+  version: 4.4.1
+  resolution: "pino-lambda@npm:4.4.1"
   peerDependencies:
     pino: ">=6.0.0"
-  checksum: eedac2b9ea72863b701021c9db9da1b7e28c4b4236c5e050c427d58581902311920eff5419328ab219598a52a54434027549d83a4f979f8a1f403c255757cca0
+  checksum: ef669a1cccfb26af28d1ac62f0b2807c6b3fd0be1077e9125e235a8dcdcb9bae8f59467b746a0dbed60a110dc9a1a6c809fd2da85593530278c7a00373d52762
   languageName: node
   linkType: hard
 

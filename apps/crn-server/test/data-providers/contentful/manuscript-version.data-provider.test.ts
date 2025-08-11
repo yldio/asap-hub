@@ -9,6 +9,7 @@ import {
   getContentfulManuscriptVersion,
   getManuscriptVersionDataObject,
   getManuscriptVersionsListResponse,
+  Version,
 } from '../../fixtures/manuscript-versions.fixtures';
 import { getContentfulGraphqlManuscriptsCollection } from '../../fixtures/manuscript.fixtures';
 import { getContentfulGraphql } from '../../fixtures/teams.fixtures';
@@ -108,6 +109,57 @@ describe('Manuscript Versions Contentful Data Provider', () => {
 
       expect(result.total).toEqual(1);
       expect(result.items[0]?.lifecycle).toEqual('Publication');
+    });
+
+    test('Should remove duplicate authors', async () => {
+      const authorId = 'first-author-1';
+      const version = {
+        ...getContentfulManuscriptVersion(1, 'Preprint'),
+        firstAuthorsCollection: {
+          items: [
+            {
+              __typename: 'Users',
+              sys: {
+                id: authorId,
+              },
+              firstName: 'First',
+              lastName: 'Author',
+              email: 'author1@gmail.com',
+              nickname: 'one',
+            },
+          ],
+        },
+        correspondingAuthorCollection: {
+          items: [
+            {
+              __typename: 'Users',
+              sys: {
+                id: authorId,
+              },
+              firstName: 'First',
+              lastName: 'Author',
+              email: 'author1@gmail.com',
+              nickname: 'one',
+            },
+          ],
+        },
+      } as Version;
+
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        getContentfulManuscript(1, [version]),
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items[0]?.authors?.length).toEqual(1);
+      expect(result.items[0]?.authors?.[0]?.id).toEqual(authorId);
     });
   });
 

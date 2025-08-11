@@ -386,6 +386,7 @@ const ResearchOutputFormSharingCard: React.FC<
         `}
           ></Markdown>
         }
+        autofocus={false}
       />
       <ShortDescriptionCard
         onChange={(shortDescriptionNewValue) => {

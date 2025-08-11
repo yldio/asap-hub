@@ -120,6 +120,19 @@ const parseGraphQLManucriptVersion = (
   latestVersion: ManuscriptVersion | undefined,
 ): ManuscriptVersionResponse => {
   const team = manuscript?.teamsCollection?.items[0];
+  const manuscriptAuthors = cleanArray([
+    ...(latestVersion?.firstAuthorsCollection?.items || []),
+    ...(latestVersion?.correspondingAuthorCollection?.items || []),
+    ...(latestVersion?.additionalAuthorsCollection?.items || []),
+  ]);
+  const uniqueAuthors = Array.from(
+    new Map(
+      manuscriptAuthors.map((manuscriptAuthor) => [
+        manuscriptAuthor.sys.id,
+        manuscriptAuthor,
+      ]),
+    ).values(),
+  );
   return {
     manuscriptId: latestVersion
       ? getManuscriptVersionUID({
@@ -165,11 +178,7 @@ const parseGraphQLManucriptVersion = (
         name: lab.name || '',
       }),
     ),
-    authors: cleanArray([
-      ...(latestVersion?.firstAuthorsCollection?.items || []),
-      ...(latestVersion?.correspondingAuthorCollection?.items || []),
-      ...(latestVersion?.additionalAuthorsCollection?.items || []),
-    ]).map((author) => {
+    authors: uniqueAuthors.map((author) => {
       if (author.__typename === 'Users') {
         return {
           id: author.sys.id,

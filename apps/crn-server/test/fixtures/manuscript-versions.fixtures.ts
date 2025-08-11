@@ -124,7 +124,7 @@ type VersionCollection = NonNullable<
   >['versionsCollection']
 >['items'];
 
-type Version = VersionCollection[number];
+export type Version = VersionCollection[number];
 
 export const getContentfulManuscript = (
   count: number = 1,

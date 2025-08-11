@@ -159,10 +159,10 @@ describe('the share outputs page', () => {
     );
     expect(screen.queryByText('About')).toBeInTheDocument();
     userEvent.click(await screen.findByText(/share an output/i));
-    expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
-    userEvent.click(screen.getByText(/article/i, { selector: 'span' }));
+    expect(screen.getByText(/dataset/i, { selector: 'span' })).toBeVisible();
+    userEvent.click(screen.getByText(/dataset/i, { selector: 'span' }));
     expect(history.location.pathname).toEqual(
-      '/network/working-groups/working-group-id-0/create-output/article',
+      '/network/working-groups/working-group-id-0/create-output/dataset',
     );
     expect(screen.queryByText('About')).not.toBeInTheDocument();
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));

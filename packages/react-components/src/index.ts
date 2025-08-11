@@ -21,6 +21,7 @@ export {
   CopyButton,
   Display,
   Divider,
+  editorRef,
   Ellipsis,
   Headline2,
   Headline3,

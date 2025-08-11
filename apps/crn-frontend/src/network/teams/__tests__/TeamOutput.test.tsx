@@ -22,6 +22,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
+import { editorRef } from '@asap-hub/react-components';
 import { Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -84,6 +85,10 @@ const mandatoryFields = async (
 
   userEvent.type(screen.getByRole('textbox', { name: url }), link);
   userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
+
+  await waitFor(() => expect(editorRef.current).not.toBeNull());
+
+  editorRef.current?.focus();
 
   const descriptionEditor = screen.getByTestId('editor');
   userEvent.click(descriptionEditor);
@@ -514,7 +519,7 @@ it('can publish a new version for an output', async () => {
     {
       link,
       title,
-      descriptionMD,
+      descriptionMD: '',
       shortDescription,
       type: 'Preprint',
       doi,

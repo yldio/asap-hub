@@ -25,6 +25,7 @@ import { ember, lead, rose, silver } from '../colors';
 import { styles, useValidation, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import ToolbarPlugin from './TextEditorToolbar';
+import EditorRefPluginWrapper from './EditorRefPluginWrapper';
 
 const theme = {
   paragraph: 'editor-paragraph',
@@ -324,6 +325,7 @@ const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
             <ListPlugin />
             <HistoryPlugin />
             {autofocus && <AutoFocusPlugin />}
+            <EditorRefPluginWrapper />
           </div>
         </div>
         <div css={validationMessageStyles}>{validationMessage}</div>

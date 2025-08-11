@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
   researchOutputDocumentTypeToType,
@@ -7,9 +6,6 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
-  ManuscriptOutputSelection,
-  ManuscriptVersionImportCard,
-  ManuscriptVersionOption,
   NotFoundPage,
   OutputVersions,
   ResearchOutputForm,
@@ -26,7 +22,6 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { mapManuscriptVersionToResearchOutput } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
   handleError,
@@ -43,7 +38,6 @@ import {
   useResearchTags,
   useTeamSuggestions,
 } from '../../shared-state';
-import { useManuscriptVersionSuggestions } from '../teams/state';
 import { useWorkingGroupById } from './state';
 
 type WorkingGroupOutputProps = {
@@ -60,22 +54,13 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   descriptionUnchangedWarning,
   versionAction,
 }) => {
-  const [selectedManuscriptVersion, setManuscriptVersion] =
-    useState<ManuscriptVersionOption>();
-  const [manuscriptOutputSelection, setManuscriptOutputSelection] = useState<
-    'manually' | 'import' | ''
-  >('');
-  const [updatedOutput, setUpdatedOutput] = useState<
-    ResearchOutputResponse | undefined
-  >(researchOutputData);
-
   const route = network({})
     .workingGroups({})
     .workingGroup({ workingGroupId }).createOutput;
   const { outputDocumentType } = useRouteParams(route);
 
   const documentType =
-    updatedOutput?.documentType ||
+    researchOutputData?.documentType ||
     paramOutputDocumentTypeToResearchOutputDocumentType(outputDocumentType);
 
   const workingGroup = useWorkingGroupById(workingGroupId);
@@ -86,19 +71,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const [toastNode, setToastNode] = useState<ReactNode>(undefined);
   const toast = useCallback((node: ReactNode) => setToastNode(node), []);
   const previousToast = usePrevious(toastNode);
-
-  useEffect(() => {
-    if (selectedManuscriptVersion && selectedManuscriptVersion.version) {
-      const manuscriptVersion = selectedManuscriptVersion.version;
-      setUpdatedOutput((prev) =>
-        mapManuscriptVersionToResearchOutput(
-          prev,
-          manuscriptVersion,
-          'Working Group',
-        ),
-      );
-    }
-  }, [selectedManuscriptVersion]);
 
   useEffect(() => {
     if (
@@ -119,14 +91,13 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
   const getRelatedResearchSuggestions = useRelatedResearchSuggestions(
-    updatedOutput?.id,
+    researchOutputData?.id,
   );
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
   const getShortDescriptionFromDescription = useGeneratedContent();
-  const getManuscriptVersionSuggestions = useManuscriptVersionSuggestions();
   const researchTags = useResearchTags();
 
-  const published = updatedOutput ? !!updatedOutput.published : false;
+  const published = researchOutputData ? !!researchOutputData.published : false;
 
   const permissions = useResearchOutputPermissions(
     'workingGroups',
@@ -141,64 +112,22 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   let versions: ResearchOutputVersion[] = [];
   if (versionAction === 'create') {
     const researchOutputAsVersion: ResearchOutputVersion = {
-      id: updatedOutput?.id ?? '',
-      title: updatedOutput?.title ?? '',
-      documentType: updatedOutput?.documentType ?? 'Article',
-      type: updatedOutput?.type,
-      link: updatedOutput?.link,
-      addedDate: updatedOutput?.addedDate,
+      id: researchOutputData?.id ?? '',
+      title: researchOutputData?.title ?? '',
+      documentType: researchOutputData?.documentType ?? 'Article',
+      type: researchOutputData?.type,
+      link: researchOutputData?.link,
+      addedDate: researchOutputData?.addedDate,
     };
 
-    versions = updatedOutput?.versions
-      ? updatedOutput.versions.concat([researchOutputAsVersion])
+    versions = researchOutputData?.versions
+      ? researchOutputData.versions.concat([researchOutputAsVersion])
       : [researchOutputAsVersion];
   } else if (versionAction === 'edit') {
-    versions = updatedOutput?.versions ?? [];
+    versions = researchOutputData?.versions ?? [];
   }
-  const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS');
-  const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
-    isManuscriptOutputFlagEnabled &&
-      documentType === 'Article' &&
-      !updatedOutput?.id,
-  );
 
-  const handleManuscriptOutputSelection = (
-    selection: 'manually' | 'import' | '',
-  ) => {
-    setManuscriptOutputSelection(selection);
-  };
   if (workingGroup) {
-    if (showManuscriptOutputFlow) {
-      return (
-        <Frame title="Share Research Output">
-          <ResearchOutputHeader
-            documentType={documentType}
-            workingGroupAssociation
-          />
-          <ManuscriptOutputSelection
-            manuscriptOutputSelection={manuscriptOutputSelection}
-            onChangeManuscriptOutputSelection={handleManuscriptOutputSelection}
-            onSelectCreateManually={() => setShowManuscriptOutputFlow(false)}
-            getManuscriptVersionOptions={(input) =>
-              getManuscriptVersionSuggestions(input).then(
-                (versionSuggestions) =>
-                  versionSuggestions.map((version) => ({
-                    version,
-                    label: version.title,
-                    value: version.id,
-                  })),
-              )
-            }
-            selectedVersion={selectedManuscriptVersion}
-            setSelectedVersion={setManuscriptVersion}
-            onImportManuscript={() => {
-              setShowManuscriptOutputFlow(false);
-            }}
-          />
-        </Frame>
-      );
-    }
-
     return (
       <Frame title="Share Working Group Research Output">
         {versionAction === 'create' && (
@@ -218,11 +147,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
               app="crn"
               versions={versions}
               versionAction={versionAction}
-            />
-          )}
-          {selectedManuscriptVersion && selectedManuscriptVersion.version && (
-            <ManuscriptVersionImportCard
-              version={selectedManuscriptVersion.version}
             />
           )}
           <ResearchOutputForm
@@ -255,11 +179,11 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             clearServerValidationError={(instancePath: string) =>
               setErrors(clearAjvErrorForPath(errors, instancePath))
             }
-            researchOutputData={updatedOutput}
+            researchOutputData={researchOutputData}
             typeOptions={Array.from(
               researchOutputDocumentTypeToType[documentType],
             )}
-            selectedTeams={(updatedOutput?.teams ?? []).map(
+            selectedTeams={(researchOutputData?.teams ?? []).map(
               ({ displayName, id }) => ({
                 label: displayName,
                 value: id,
@@ -270,46 +194,34 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             permissions={permissions}
             descriptionUnchangedWarning={descriptionUnchangedWarning}
             onSave={(output) =>
-              updatedOutput?.id
-                ? updateAndPublishResearchOutput(updatedOutput.id, {
+              researchOutputData?.id
+                ? updateAndPublishResearchOutput(researchOutputData.id, {
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
                     createVersion: versionAction === 'create',
-                    relatedManuscriptVersion:
-                      versionAction === 'create'
-                        ? undefined
-                        : updatedOutput.relatedManuscriptVersion,
-                    statusChangedById: updatedOutput.statusChangedBy?.id,
-                    isInReview: updatedOutput.isInReview,
+                    statusChangedById: researchOutputData.statusChangedBy?.id,
+                    isInReview: researchOutputData.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
-                    relatedManuscriptVersion:
-                      updatedOutput?.relatedManuscriptVersion,
-                    relatedManuscript: updatedOutput?.relatedManuscript,
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
             onSaveDraft={(output) =>
-              updatedOutput?.id
-                ? updateResearchOutput(updatedOutput.id, {
+              researchOutputData?.id
+                ? updateResearchOutput(researchOutputData.id, {
                     ...output,
                     workingGroups: [workingGroupId],
                     published: false,
-                    relatedManuscriptVersion:
-                      updatedOutput.relatedManuscriptVersion,
-                    statusChangedById: updatedOutput.statusChangedBy?.id,
-                    isInReview: updatedOutput.isInReview,
+                    statusChangedById: researchOutputData.statusChangedBy?.id,
+                    isInReview: researchOutputData.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: false,
-                    relatedManuscriptVersion:
-                      updatedOutput?.relatedManuscriptVersion,
-                    relatedManuscript: updatedOutput?.relatedManuscript,
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
           />

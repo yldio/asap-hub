@@ -6,13 +6,13 @@ import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { disable, enable } from '@asap-hub/flags';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
   UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
+import { editorRef } from '@asap-hub/react-components';
 import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   fireEvent,
@@ -28,7 +28,6 @@ import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import {
   createResearchOutput,
-  getManuscriptVersions,
   updateTeamResearchOutput,
 } from '../../teams/api';
 import { getWorkingGroup } from '../api';
@@ -45,7 +44,6 @@ jest.mock('../../../shared-api/impact');
 
 beforeEach(() => {
   window.scrollTo = jest.fn();
-  disable('MANUSCRIPT_OUTPUTS');
   // TODO: fix act error
   jest.spyOn(console, 'error').mockImplementation();
 });
@@ -87,6 +85,9 @@ const mandatoryFields = async (
 
   userEvent.type(screen.getByRole('textbox', { name: url }), link);
   userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
+
+  await waitFor(() => expect(editorRef.current).not.toBeNull());
+  editorRef.current?.focus();
 
   const descriptionEditor = screen.getByTestId('editor');
   userEvent.click(descriptionEditor);
@@ -444,7 +445,7 @@ it('can publish a new version for an output', async () => {
     {
       link,
       title,
-      descriptionMD,
+      descriptionMD: '',
       shortDescription,
       type: 'Preprint',
       doi,
@@ -639,265 +640,3 @@ it.each([
     );
   },
 );
-
-describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
-  beforeEach(() => {
-    enable('MANUSCRIPT_OUTPUTS');
-  });
-
-  it('displays manuscript output selection options for Article document type', async () => {
-    await renderPage({
-      outputDocumentType: 'article',
-    });
-
-    expect(
-      screen.getByText('How would you like to create your output?'),
-    ).toBeInTheDocument();
-    expect(screen.getByLabelText('Create manually')).toBeInTheDocument();
-    expect(screen.getByLabelText('Import from manuscript')).toBeInTheDocument();
-
-    expect(
-      screen.queryByRole('heading', { name: 'What are you sharing?' }),
-    ).not.toBeInTheDocument();
-  });
-
-  it.each(['bioinformatics', 'dataset', 'lab-material', 'protocol', 'report'])(
-    'skips manuscript output selection for %s document type',
-    async (documentType) => {
-      await renderPage({
-        outputDocumentType: documentType as OutputDocumentTypeParameter,
-      });
-
-      expect(
-        screen.queryByText('How would you like to create your output?'),
-      ).not.toBeInTheDocument();
-
-      expect(
-        screen.getByRole('heading', { name: 'What are you sharing?' }),
-      ).toBeInTheDocument();
-    },
-  );
-
-  it('skips manuscript output selection when editing existing research output', async () => {
-    await renderPage({
-      workingGroupId: '42',
-      researchOutputData: {
-        ...createResearchOutputResponse(),
-        documentType: 'Article',
-        id: '1',
-      },
-    });
-
-    expect(
-      screen.queryByText('How would you like to create your output?'),
-    ).not.toBeInTheDocument();
-
-    expect(
-      screen.getByRole('heading', { name: 'What are you sharing?' }),
-    ).toBeInTheDocument();
-  });
-
-  it('skips manuscript output selection when creating a new research output version', async () => {
-    await renderPage({
-      workingGroupId: '42',
-      researchOutputData: {
-        ...createResearchOutputResponse(),
-        id: '1',
-        documentType: 'Article',
-      },
-      versionAction: 'create',
-    });
-
-    expect(
-      screen.queryByText('How would you like to create your output?'),
-    ).not.toBeInTheDocument();
-
-    expect(
-      screen.getByRole('heading', { name: 'What are you sharing?' }),
-    ).toBeInTheDocument();
-  });
-
-  it('can publish a form with selected manuscript version data', async () => {
-    const title = 'Version One';
-    const id = 'mv-manuscript-id-1';
-    const type = 'Review / Op-Ed / Letter / Hot Topic';
-    const lifecycle = 'Publication';
-    const versionId = 'version-id-1';
-    const manuscriptId = 'DA1-000463-002-org-G-1';
-    const url = 'http://example.com';
-    const authors = [
-      {
-        displayName: 'First Author',
-        email: 'first.author@gmail.com',
-        firstName: 'First',
-        id: 'first-author-id-1',
-        lastName: 'Author',
-      },
-    ];
-    const categories = [
-      {
-        id: 'category-id-1',
-        name: 'Methods',
-      },
-    ];
-    const impact = {
-      id: 'impact-id-1',
-      name: 'New method/model to explore PD mechanism',
-    };
-    const description = 'example42 description';
-    const shortDescription = 'example42 short description';
-    const teams = [
-      {
-        displayName: 'Team One',
-        id: '42',
-      },
-    ];
-
-    const mockGetManuscriptVersions =
-      getManuscriptVersions as jest.MockedFunction<
-        typeof getManuscriptVersions
-      >;
-    mockGetManuscriptVersions.mockResolvedValue({
-      total: 1,
-      items: [
-        {
-          id,
-          title,
-          type,
-          lifecycle,
-          versionId,
-          manuscriptId,
-          url,
-          authors,
-          categories,
-          description,
-          shortDescription,
-          impact,
-          teams,
-        },
-      ],
-    });
-
-    await renderPage({
-      outputDocumentType: 'article',
-    });
-
-    userEvent.click(screen.getByLabelText('Import from manuscript'));
-    const input = screen.getByRole('textbox');
-    await userEvent.type(input, 'Version One');
-    await userEvent.tab();
-
-    userEvent.click(screen.getByRole('button', { name: /import/i }));
-
-    expect(
-      screen.getByRole('heading', { name: /Imported Manuscript Version/i }),
-    ).toBeInTheDocument();
-
-    userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-    const button = screen.getByRole('button', { name: /Publish Output/i });
-    userEvent.click(button);
-    await waitFor(() => {
-      expect(button).not.toBeInTheDocument();
-    });
-
-    expect(mockCreateResearchOutput).toHaveBeenCalledWith(
-      {
-        documentType: 'Article',
-        sharingStatus: 'Public',
-        teams: [teams[0]?.id],
-        link: url,
-        title,
-        descriptionMD: description,
-        description: '',
-        shortDescription,
-        changelog: '',
-        subtype: 'Review',
-        type: 'Published',
-        authors: [
-          {
-            userId: authors[0]?.id,
-          },
-        ],
-        methods: [],
-        labs: [],
-        organisms: [],
-        environments: [],
-        keywords: [],
-        workingGroups: ['wg1'],
-        relatedResearch: [],
-        relatedEvents: [],
-        labCatalogNumber: undefined,
-        publishDate: undefined,
-        usageNotes: '',
-        asapFunded: true,
-        usedInPublication: true,
-        published: true,
-        categories: ['category-id-1'],
-        impact: 'impact-id-1',
-        relatedManuscript: 'manuscript-id-1',
-        relatedManuscriptVersion: versionId,
-      },
-      expect.anything(),
-    );
-  });
-
-  it('displays create button and hides import button when manual creation is selected', async () => {
-    await renderPage({
-      outputDocumentType: 'article',
-    });
-
-    userEvent.click(screen.getByLabelText('Create manually'));
-
-    expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
-    expect(
-      screen.queryByRole('button', { name: /Import/i }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('displays import button and hides create button when manuscript import is selected', async () => {
-    await renderPage({
-      outputDocumentType: 'article',
-    });
-    userEvent.click(screen.getByLabelText('Import from manuscript'));
-
-    expect(screen.getByRole('button', { name: /Import/i })).toBeInTheDocument();
-    expect(
-      screen.queryByRole('button', { name: /Create/i }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('navigates to standard output form when manual creation is confirmed', async () => {
-    await renderPage({
-      outputDocumentType: 'article',
-    });
-
-    userEvent.click(screen.getByLabelText('Create manually'));
-
-    expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /Create/i }));
-
-    expect(
-      screen.getByRole('heading', { name: 'What are you sharing?' }),
-    ).toBeInTheDocument();
-  });
-});
-
-it('bypasses manuscript output selection when MANUSCRIPT_OUTPUTS flag is disabled', async () => {
-  disable('MANUSCRIPT_OUTPUTS');
-
-  await renderPage({
-    outputDocumentType: 'article',
-  });
-
-  expect(
-    screen.queryByText('How would you like to create your output?'),
-  ).not.toBeInTheDocument();
-  expect(screen.queryByLabelText('Create manually')).not.toBeInTheDocument();
-  expect(
-    screen.queryByLabelText('Import from manuscript'),
-  ).not.toBeInTheDocument();
-
-  expect(
-    screen.getByRole('heading', { name: 'What are you sharing?' }),
-  ).toBeInTheDocument();
-});

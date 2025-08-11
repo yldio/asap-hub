@@ -4,6 +4,7 @@ import { render, screen, within, waitFor } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
 import { ComponentProps } from 'react';
+import { editorRef } from '../../atoms';
 import ResearchOutputFormSharingCard, {
   getPublishDateValidationMessage,
 } from '../ResearchOutputFormSharingCard';
@@ -107,6 +108,9 @@ it('triggers an onchange event for Description', async () => {
       onChangeDescription={onChangeFn}
     />,
   );
+  await waitFor(() => expect(editorRef.current).not.toBeNull());
+
+  editorRef.current?.focus();
   const input = screen.getByTestId('editor');
 
   userEvent.click(input);

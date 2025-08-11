@@ -18,6 +18,7 @@ import {
   defaultProps,
   expectedRequest,
 } from '../../test-utils/research-output-form';
+import { editorRef } from '../../../atoms';
 
 jest.setTimeout(60000);
 
@@ -115,6 +116,9 @@ describe('on submit', () => {
       target: { value: data.title },
     });
 
+    await waitFor(() => expect(editorRef.current).not.toBeNull());
+
+    editorRef.current?.focus();
     const descriptionEditor = screen.getByTestId('editor');
     userEvent.click(descriptionEditor);
     userEvent.tab();

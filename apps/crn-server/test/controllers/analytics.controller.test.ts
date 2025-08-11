@@ -14,6 +14,7 @@ import {
   getListUserCollaborationResponse,
   getListUserProductivityDataObject,
   getListUserProductivityResponse,
+  getListOSChampionResponse,
 } from '../fixtures/analytics.fixtures';
 import { analyticsDataProviderMock } from '../mocks/analytics.data-provider.mock';
 
@@ -237,6 +238,41 @@ describe('Analytics controller', () => {
       await analyticsController.fetchEngagement(options);
 
       expect(analyticsDataProviderMock.fetchEngagement).toHaveBeenCalledWith(
+        options,
+      );
+    });
+  });
+
+  describe('fetchOSChampion method', () => {
+    test('Should return an empty result when the data provider returns an empty list', async () => {
+      analyticsDataProviderMock.fetchOSChampion.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+
+      const result = await analyticsController.fetchOSChampion({});
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return the OS Champion data', async () => {
+      analyticsDataProviderMock.fetchOSChampion.mockResolvedValue(
+        getListOSChampionResponse(),
+      );
+
+      const result = await analyticsController.fetchOSChampion({});
+
+      expect(result).toEqual(getListOSChampionResponse());
+    });
+
+    test('Should call the data provider with the correct options', async () => {
+      const options: FetchPaginationOptions = {
+        take: 10,
+        skip: 5,
+      };
+      await analyticsController.fetchOSChampion(options);
+
+      expect(analyticsDataProviderMock.fetchOSChampion).toHaveBeenCalledWith(
         options,
       );
     });

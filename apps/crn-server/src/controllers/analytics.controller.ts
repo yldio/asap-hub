@@ -3,6 +3,7 @@ import {
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipResponse,
   ListEngagementResponse,
+  ListOSChampionResponse,
   ListTeamCollaborationResponse,
   ListTeamProductivityResponse,
   ListUserCollaborationResponse,
@@ -47,5 +48,11 @@ export default class AnalyticsController {
     options: FetchAnalyticsOptions,
   ): Promise<ListEngagementResponse> {
     return this.analyticsDataProvider.fetchEngagement(options);
+  }
+
+  async fetchOSChampion(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListOSChampionResponse> {
+    return this.analyticsDataProvider.fetchOSChampion(options);
   }
 }

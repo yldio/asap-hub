@@ -3,6 +3,8 @@ import {
   FetchAnalyticsTeamLeadershipQueryVariables,
   FetchEngagementQuery,
   FetchEngagementQueryVariables,
+  FetchOsChampionQuery,
+  FetchOsChampionQueryVariables,
   FetchTeamCollaborationQuery,
   FetchTeamCollaborationQueryVariables,
   FetchTeamProductivityQuery,
@@ -15,6 +17,7 @@ import {
   FetchUserTotalResearchOutputsQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
   FETCH_ENGAGEMENT,
+  FETCH_OS_CHAMPION,
   FETCH_TEAM_COLLABORATION,
   FETCH_TEAM_PRODUCTIVITY,
   FETCH_USER_PRODUCTIVITY,
@@ -31,6 +34,7 @@ import {
   ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserProductivityDataObject,
+  OSChampionDataObject,
   OutputTypeOption,
   TeamProductivityDataObject,
   TeamRole,
@@ -109,6 +113,19 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
         filter?.timeRange,
         filter?.outputType,
       ),
+    };
+  }
+
+  async fetchOSChampion(options: FetchAnalyticsOptions) {
+    const { take = 10, skip = 0 } = options;
+    const { teamsCollection } = await this.contentfulClient.request<
+      FetchOsChampionQuery,
+      FetchOsChampionQueryVariables
+    >(FETCH_OS_CHAMPION, { limit: take, skip });
+
+    return {
+      total: teamsCollection?.total || 0,
+      items: getOsChampionItems(teamsCollection),
     };
   }
 
@@ -371,5 +388,63 @@ const getTeamProductivityItems = (
       Dataset: documentTypesCount.Dataset,
       'Lab Material': documentTypesCount['Lab Material'],
       Protocol: documentTypesCount.Protocol,
+    };
+  });
+
+const getOsChampionItems = (
+  teamsCollection: FetchOsChampionQuery['teamsCollection'],
+): OSChampionDataObject[] =>
+  cleanArray(teamsCollection?.items).map((teamItem) => {
+    let awardsCount = 0;
+    if (teamItem.linkedFrom?.teamMembershipCollection?.items.length) {
+      const teamMembershipItems =
+        teamItem.linkedFrom?.teamMembershipCollection?.items;
+
+      const userAwardsCount = teamMembershipItems.reduce(
+        (
+          usersWithAwards: OSChampionDataObject['users'],
+          teamMembershipItem,
+        ) => {
+          const user =
+            teamMembershipItem?.linkedFrom?.usersCollection?.items[0];
+
+          if (
+            teamMembershipItem?.awardsCollection?.total &&
+            teamMembershipItem.awardsCollection.total > 0 &&
+            user
+          ) {
+            usersWithAwards.push({
+              id: user.sys.id,
+              name: parseUserDisplayName(
+                user.firstName ?? '',
+                user.lastName ?? '',
+                user.middleName ?? '',
+                user.nickname ?? '',
+              ),
+              awardsCount: teamMembershipItem.awardsCollection.total,
+            });
+            awardsCount += teamMembershipItem.awardsCollection.total;
+          }
+
+          return usersWithAwards;
+        },
+        [],
+      );
+
+      return {
+        teamId: teamItem.sys.id,
+        teamName: teamItem.displayName || '',
+        isTeamInactive: !!teamItem.inactiveSince,
+        teamAwardsCount: awardsCount,
+        users: userAwardsCount,
+      };
+    }
+
+    return {
+      teamId: teamItem.sys.id,
+      teamName: teamItem.displayName || '',
+      isTeamInactive: !!teamItem.inactiveSince,
+      teamAwardsCount: 0,
+      users: [],
     };
   });

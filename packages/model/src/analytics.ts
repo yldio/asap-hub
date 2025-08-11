@@ -546,3 +546,18 @@ export type AnalyticsSortOptions =
   | SortTeamProductivity
   | SortUserCollaboration
   | SortUserProductivity;
+
+export type OSChampionDataObject = {
+  teamId: string;
+  teamName: string;
+  isTeamInactive: boolean;
+  teamAwardsCount: number;
+  users: {
+    id: string;
+    name: string;
+    awardsCount: number;
+  }[];
+};
+export type ListOSChampionDataObject = ListResponse<OSChampionDataObject>;
+export type OSChampionResponse = OSChampionDataObject;
+export type ListOSChampionResponse = ListResponse<OSChampionResponse>;

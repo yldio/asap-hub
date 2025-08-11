@@ -3,6 +3,7 @@ import {
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipDataObject,
   ListEngagementDataObject,
+  ListOSChampionDataObject,
   ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserCollaborationDataObject,
@@ -28,4 +29,7 @@ export type AnalyticsDataProvider = {
   fetchEngagement(
     options: FetchAnalyticsOptions,
   ): Promise<ListEngagementDataObject>;
+  fetchOSChampion(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListOSChampionDataObject>;
 };

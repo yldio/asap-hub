@@ -348,3 +348,43 @@ export const FETCH_ENGAGEMENT = gql`
     }
   }
 `;
+
+export const FETCH_OS_CHAMPION = gql`
+  query FetchOsChampion($limit: Int, $skip: Int) {
+    teamsCollection(order: displayName_ASC, limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        displayName
+        inactiveSince
+        linkedFrom {
+          teamMembershipCollection(limit: 100) {
+            items {
+              linkedFrom {
+                usersCollection(limit: 1) {
+                  items {
+                    sys {
+                      id
+                    }
+                    firstName
+                    middleName
+                    nickname
+                    lastName
+                  }
+                }
+              }
+              awardsCollection(
+                limit: 10
+                where: { date_exists: true, type_exists: true }
+              ) {
+                total
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

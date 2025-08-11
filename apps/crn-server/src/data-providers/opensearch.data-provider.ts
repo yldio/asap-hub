@@ -71,7 +71,6 @@ export default class OpenSearchProvider {
       throw new Error('Lambda returned an empty response');
     }
 
-    // Fix: Properly handle the Lambda response payload
     let payloadText: string;
 
     if (response.Payload instanceof Uint8Array) {

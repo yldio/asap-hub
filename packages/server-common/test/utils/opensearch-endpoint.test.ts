@@ -51,6 +51,30 @@ describe('OpenSearch Endpoint Utils', () => {
       });
     });
 
+    test('should get endpoint for production environment', async () => {
+      const originalEnvironment = process.env.ENVIRONMENT;
+      process.env.ENVIRONMENT = 'production';
+
+      const mockResponse = {
+        DomainStatus: {
+          Endpoint:
+            'search-asap-hub-production-search-abc123.us-east-1.es.amazonaws.com',
+        },
+      };
+      mockSend.mockResolvedValueOnce(mockResponse);
+
+      const result = await getOpenSearchEndpoint();
+
+      expect(result).toBe(
+        'https://search-asap-hub-production-search-abc123.us-east-1.es.amazonaws.com',
+      );
+      expect(mockDescribeDomainCommand).toHaveBeenCalledWith({
+        DomainName: 'asap-hub-production-search',
+      });
+
+      process.env.ENVIRONMENT = originalEnvironment;
+    });
+
     test('should throw error when endpoint is not found', async () => {
       const mockResponse = { DomainStatus: {} };
       mockSend.mockResolvedValueOnce(mockResponse);

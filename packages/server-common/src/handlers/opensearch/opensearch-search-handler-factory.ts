@@ -33,7 +33,7 @@ const getClient = async (
   });
 };
 
-type SearchInput = API.Search_RequestBody;
+export type SearchInput = API.Search_RequestBody;
 
 type SearchOutput =
   | {

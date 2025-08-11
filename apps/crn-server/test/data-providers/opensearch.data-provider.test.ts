@@ -2,26 +2,26 @@ import { UserResponse } from '@asap-hub/model';
 import { OpenSearchRequest, OpenSearchResponse } from '@asap-hub/server-common';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import OpenSearchProvider from '../../src/data-providers/opensearch.data-provider';
+import logger from '../../src/utils/logger';
 
-jest.mock('@aws-sdk/client-lambda');
+jest.mock('@aws-sdk/client-lambda', () => {
+  const actual = jest.requireActual('@aws-sdk/client-lambda');
+  return {
+    ...actual,
+    LambdaClient: jest.fn(),
+  };
+});
 
 const mockConfig = {
   region: 'us-east-1',
   environment: 'test',
 };
 
-const mockLogger = {
-  info: jest.fn(),
-  error: jest.fn(),
-  warn: jest.fn(),
-  debug: jest.fn(),
-};
+jest.doMock('../../src/config', () => mockConfig);
 
 describe('OpenSearchProvider', () => {
   let openSearchProvider: OpenSearchProvider;
-  let mockLambdaClient: jest.Mocked<LambdaClient>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockSend: jest.MockedFunction<any>;
+  let mockSend: jest.Mock;
 
   const mockUser: UserResponse = {
     id: 'user-123',
@@ -92,19 +92,11 @@ describe('OpenSearchProvider', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockSend = jest.fn();
 
-    // Mock LambdaClient constructor and methods
-    mockSend = jest.fn() as jest.MockedFunction<LambdaClient['send']>;
-    mockLambdaClient = {
+    (LambdaClient as unknown as jest.Mock).mockImplementation(() => ({
       send: mockSend,
-    } as unknown as jest.Mocked<LambdaClient>;
-
-    (LambdaClient as jest.MockedClass<typeof LambdaClient>).mockImplementation(
-      () => mockLambdaClient,
-    );
-
-    jest.doMock('../../src/config', () => mockConfig);
-    jest.doMock('../../src/utils/logger', () => ({ default: mockLogger }));
+    }));
 
     openSearchProvider = new OpenSearchProvider();
   });
@@ -185,22 +177,32 @@ describe('OpenSearchProvider', () => {
         Payload: new TextEncoder().encode(
           JSON.stringify({
             statusCode: 200,
-            body: JSON.stringify({
+            body: {
               data: mockSearchResponse,
-            }),
+            },
           }),
         ),
       };
 
       mockSend.mockResolvedValueOnce(successfulLambdaResponse);
 
-      const result = await openSearchProvider.search({
+      await openSearchProvider.search({
         index: 'os-champion',
         body: requestWithoutPagination,
         loggedInUser: mockUser,
       });
 
-      expect(result).toEqual(mockSearchResponse);
+      const requestSent = mockSend.mock.calls[0][0];
+      const payloadString = requestSent.input.Payload;
+      const eventPayload = JSON.parse(payloadString);
+      const parsedBody = JSON.parse(eventPayload.body);
+
+      expect(parsedBody).toEqual(
+        expect.objectContaining({
+          size: 10,
+          from: 0,
+        }),
+      );
     });
 
     test('Should use provided size and from parameters', async () => {
@@ -216,16 +218,28 @@ describe('OpenSearchProvider', () => {
       };
 
       mockSend.mockResolvedValueOnce(successfulLambdaResponse);
+      const size = 20;
+      const from = 10;
 
-      const result = await openSearchProvider.search({
+      await openSearchProvider.search({
         index: 'os-champion',
         body: mockSearchRequest,
         loggedInUser: mockUser,
-        size: 20,
-        from: 10,
+        size,
+        from,
       });
 
-      expect(result).toEqual(mockSearchResponse);
+      const requestSent = mockSend.mock.calls[0][0];
+      const payloadString = requestSent.input.Payload;
+      const eventPayload = JSON.parse(payloadString);
+      const parsedBody = JSON.parse(eventPayload.body);
+
+      expect(parsedBody).toEqual(
+        expect.objectContaining({
+          size,
+          from,
+        }),
+      );
     });
 
     test('Should throw error when Lambda returns empty response', async () => {
@@ -241,11 +255,13 @@ describe('OpenSearchProvider', () => {
     });
 
     test('Should throw error when Lambda execution fails', async () => {
+      const loggerErrorSpy = jest.spyOn(logger, 'error');
+      const errorMessage = 'Function execution failed';
       const errorResponse = {
         Payload: new TextEncoder().encode(
           JSON.stringify({
             errorType: 'LambdaError',
-            errorMessage: 'Function execution failed',
+            errorMessage,
           }),
         ),
       };
@@ -259,31 +275,64 @@ describe('OpenSearchProvider', () => {
           loggedInUser: mockUser,
         }),
       ).rejects.toThrow('Invalid JSON response from Lambda');
+
+      expect(loggerErrorSpy).toHaveBeenCalledWith(
+        'Error parsing Lambda response',
+        expect.objectContaining({
+          errorMessage: 'Lambda execution error: Function execution failed',
+        }),
+      );
     });
 
-    test('Should throw error when OpenSearch returns 4xx status', async () => {
-      const errorResponse = {
-        Payload: new TextEncoder().encode(
-          JSON.stringify({
-            statusCode: 400,
-            body: JSON.stringify({
-              error: 'Bad Request',
-              message: 'Invalid query syntax',
+    test.each([
+      [
+        'body as stringified JSON',
+        JSON.stringify({
+          error: 'Bad Request',
+          message: 'Invalid query syntax',
+        }),
+      ],
+      [
+        'body as object',
+        {
+          error: 'Bad Request',
+          message: 'Invalid query syntax',
+        },
+      ],
+    ])(
+      'Should throw error when OpenSearch returns 4xx status with %s',
+      async (_desc, body) => {
+        const loggerErrorSpy = jest.spyOn(logger, 'error');
+
+        const errorResponse = {
+          Payload: new TextEncoder().encode(
+            JSON.stringify({
+              statusCode: 400,
+              body,
             }),
+          ),
+        };
+
+        mockSend.mockResolvedValueOnce(errorResponse);
+
+        await expect(
+          openSearchProvider.search({
+            index: 'os-champion',
+            body: mockSearchRequest,
+            loggedInUser: mockUser,
           }),
-        ),
-      };
+        ).rejects.toThrow(/Invalid JSON response from Lambda/i);
 
-      mockSend.mockResolvedValueOnce(errorResponse);
-
-      await expect(
-        openSearchProvider.search({
-          index: 'os-champion',
-          body: mockSearchRequest,
-          loggedInUser: mockUser,
-        }),
-      ).rejects.toThrow('Invalid JSON response from Lambda');
-    });
+        expect(loggerErrorSpy).toHaveBeenCalledWith(
+          'Error parsing Lambda response',
+          expect.objectContaining({
+            errorMessage: expect.stringMatching(
+              /OpenSearch operation failed with status 400:/i,
+            ),
+          }),
+        );
+      },
+    );
 
     test('Should throw error when Lambda response is missing body', async () => {
       const responseWithoutBody = {

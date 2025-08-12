@@ -6,7 +6,6 @@ export * from './fetch-orcid';
 export * from './google-auth-client';
 export * from './logger';
 export * from './loop-over-custom-collection';
-export * from './open-search-endpoint';
 export * from './open-search';
 export * from './opensearch-endpoint';
 export * from './reminder';

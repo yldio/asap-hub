@@ -11,21 +11,21 @@ export type OpenSearchResponse = API.Search_ResponseBody;
 export type OpenSearchTotalHits = API.Search_ResponseBody['hits']['total'];
 
 const getClient = async (
-  opensearchUsername: string | undefined,
-  opensearchPassword: string | undefined,
+  openSearchUsername: string | undefined,
+  openSearchPassword: string | undefined,
 ): Promise<Client> => {
   const endpoint = await getOpenSearchEndpoint();
   const domainEndpoint = extractDomainFromEndpoint(endpoint);
 
-  if (!opensearchUsername || !opensearchPassword) {
+  if (!openSearchUsername || !openSearchPassword) {
     throw new Error('OPENSEARCH_USERNAME and OPENSEARCH_PASSWORD must be set');
   }
 
   return new Client({
     node: `https://${domainEndpoint}`,
     auth: {
-      username: opensearchUsername,
-      password: opensearchPassword,
+      username: openSearchUsername,
+      password: openSearchPassword,
     },
     ssl: {
       rejectUnauthorized: true,
@@ -49,8 +49,8 @@ type SearchOutput =
 export const opensearchSearchHandlerFactory =
   (
     logger: Logger,
-    opensearchUsername: string | undefined,
-    opensearchPassword: string | undefined,
+    openSearchUsername: string | undefined,
+    openSearchPassword: string | undefined,
   ): ((
     request: lambda.Request<SearchInput>,
   ) => Promise<lambda.Response<SearchOutput>>) =>
@@ -72,7 +72,7 @@ export const opensearchSearchHandlerFactory =
     }
 
     try {
-      const client = await getClient(opensearchUsername, opensearchPassword);
+      const client = await getClient(openSearchUsername, openSearchPassword);
 
       const searchBody: API.Search_RequestBody = {
         query: { match_all: {} },

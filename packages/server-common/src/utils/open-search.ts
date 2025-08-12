@@ -1,11 +1,9 @@
 /* eslint-disable no-restricted-syntax, no-console, */
 import { Client } from '@opensearch-project/opensearch';
-import { getOpenSearchEndpoint } from './open-search-endpoint';
+import { getOpenSearchEndpoint } from './opensearch-endpoint';
 import type { OpenSearchMapping, AliasAction } from './types';
 
 interface IndexConfig<T> {
-  awsRegion: string;
-  stage: string;
   openSearchUsername?: string;
   openSearchPassword?: string;
   indexAlias: string;
@@ -16,17 +14,12 @@ interface IndexConfig<T> {
 }
 
 export const indexOpenSearchData = async <T>({
-  awsRegion,
-  stage,
   openSearchUsername,
   openSearchPassword,
   indexAlias,
   getData,
 }: IndexConfig<T>) => {
-  const endpoint = await getOpenSearchEndpoint({
-    awsRegion,
-    stage,
-  });
+  const endpoint = await getOpenSearchEndpoint();
 
   if (!openSearchUsername || !openSearchPassword) {
     throw new Error('OpenSearch username and password are required');

@@ -124,4 +124,4 @@ export const alternativeAssignedOSEmail =
 export const inviteUserQueueUrl = QUEUE_URL || '';
 export const openSearchUsername = OPENSEARCH_USERNAME || '';
 export const openSearchPassword = OPENSEARCH_PASSWORD || '';
-export const awsRegion = AWS_REGION || 'us-east-1';
+export const awsRegion = AWS_REGION || REGION || 'us-east-1';

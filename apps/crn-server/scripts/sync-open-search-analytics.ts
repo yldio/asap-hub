@@ -3,6 +3,8 @@ import { indexOpenSearchData } from '@asap-hub/server-common';
 import {
   openSearchUsername,
   openSearchPassword,
+  awsRegion,
+  environment,
 } from '../src/config';
 import AnalyticsController from '../src/controllers/analytics.controller';
 import { getAnalyticsDataProvider } from '../src/dependencies/analytics.dependencies';
@@ -99,6 +101,8 @@ const exportMetricToOpenSearch = async <T extends Metrics>(metric: T) => {
   const documents = await exportAnalyticsData(metric);
 
   await indexOpenSearchData({
+    awsRegion,
+    stage: environment,
     openSearchUsername,
     openSearchPassword,
     indexAlias: config.indexAlias,

@@ -1,9 +1,14 @@
 /* eslint-disable no-restricted-syntax, no-console, */
 import { Client } from '@opensearch-project/opensearch';
-import { getOpenSearchEndpoint } from './opensearch-endpoint';
+import {
+  extractDomainFromEndpoint,
+  getOpenSearchEndpoint,
+} from './opensearch-endpoint';
 import type { OpenSearchMapping, AliasAction } from './types';
 
 interface IndexConfig<T> {
+  awsRegion: string;
+  stage: string;
   openSearchUsername?: string;
   openSearchPassword?: string;
   indexAlias: string;
@@ -13,25 +18,45 @@ interface IndexConfig<T> {
   }>;
 }
 
+export const getClient = async (
+  awsRegion: string,
+  stage: string,
+  openSearchUsername: string | undefined,
+  openSearchPassword: string | undefined,
+): Promise<Client> => {
+  if (!openSearchUsername || !openSearchPassword) {
+    throw new Error('OPENSEARCH_USERNAME and OPENSEARCH_PASSWORD must be set');
+  }
+
+  const endpoint = await getOpenSearchEndpoint({ awsRegion, stage });
+  const domainEndpoint = extractDomainFromEndpoint(endpoint);
+
+  return new Client({
+    node: `https://${domainEndpoint}`,
+    auth: {
+      username: openSearchUsername,
+      password: openSearchPassword,
+    },
+    ssl: {
+      rejectUnauthorized: true,
+    },
+  });
+};
+
 export const indexOpenSearchData = async <T>({
+  awsRegion,
+  stage,
   openSearchUsername,
   openSearchPassword,
   indexAlias,
   getData,
 }: IndexConfig<T>) => {
-  const endpoint = await getOpenSearchEndpoint();
-
-  if (!openSearchUsername || !openSearchPassword) {
-    throw new Error('OpenSearch username and password are required');
-  }
-
-  const client = new Client({
-    node: endpoint,
-    auth: {
-      username: openSearchUsername,
-      password: openSearchPassword,
-    },
-  });
+  const client = await getClient(
+    awsRegion,
+    stage,
+    openSearchUsername,
+    openSearchPassword,
+  );
 
   const { documents, mapping } = await getData();
 

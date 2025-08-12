@@ -4,7 +4,10 @@ import { getOpenSearchEndpoint } from '../../src/utils/opensearch-endpoint';
 import type { OpenSearchMapping } from '../../src/utils/types';
 
 jest.mock('@opensearch-project/opensearch');
-jest.mock('../../src/utils/opensearch-endpoint');
+jest.mock('../../src/utils/opensearch-endpoint', () => ({
+  ...jest.requireActual('../../src/utils/opensearch-endpoint'),
+  getOpenSearchEndpoint: jest.fn(),
+}));
 
 const mockClient = {
   indices: {
@@ -61,6 +64,8 @@ describe('indexOpenSearchData', () => {
   describe('Client initialization', () => {
     test('should create client with username/password authentication when credentials provided', async () => {
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -73,22 +78,31 @@ describe('indexOpenSearchData', () => {
           username: 'testuser',
           password: 'testpass',
         },
+        ssl: {
+          rejectUnauthorized: true,
+        },
       });
     });
 
     test('should throw error when no credentials provided', async () => {
       await expect(
         indexOpenSearchData({
+          awsRegion: 'us-east-1',
+          stage: 'dev',
           indexAlias: mockIndexAlias,
           getData: mockGetData,
         }),
-      ).rejects.toThrow('OpenSearch username and password are required');
+      ).rejects.toThrow(
+        'OPENSEARCH_USERNAME and OPENSEARCH_PASSWORD must be set',
+      );
     });
   });
 
   describe('Index creation', () => {
     test('should create new index and log it', async () => {
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -131,6 +145,8 @@ describe('indexOpenSearchData', () => {
       } as any);
 
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -156,6 +172,8 @@ describe('indexOpenSearchData', () => {
       });
 
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -176,6 +194,8 @@ describe('indexOpenSearchData', () => {
       } as any);
 
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -203,6 +223,8 @@ describe('indexOpenSearchData', () => {
       mockClient.bulk.mockResolvedValue(bulkErrors as any);
 
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -224,6 +246,8 @@ describe('indexOpenSearchData', () => {
   describe('Index refresh', () => {
     test('should refresh index after bulk operation', async () => {
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -243,6 +267,8 @@ describe('indexOpenSearchData', () => {
       );
 
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -275,6 +301,8 @@ describe('indexOpenSearchData', () => {
       } as any);
 
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -298,6 +326,8 @@ describe('indexOpenSearchData', () => {
 
     test('should log alias update', async () => {
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -324,6 +354,8 @@ describe('indexOpenSearchData', () => {
       } as any);
 
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -348,6 +380,8 @@ describe('indexOpenSearchData', () => {
       mockClient.indices.delete.mockRejectedValue(new Error('Delete failed'));
 
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -371,6 +405,8 @@ describe('indexOpenSearchData', () => {
       } as any);
 
       await indexOpenSearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
         openSearchUsername: 'testuser',
         openSearchPassword: 'testpass',
         indexAlias: mockIndexAlias,
@@ -398,6 +434,8 @@ describe('indexOpenSearchData', () => {
 
       await expect(
         indexOpenSearchData({
+          awsRegion: 'us-east-1',
+          stage: 'dev',
           openSearchUsername: 'testuser',
           openSearchPassword: 'testpass',
           indexAlias: mockIndexAlias,
@@ -413,6 +451,8 @@ describe('indexOpenSearchData', () => {
 
       await expect(
         indexOpenSearchData({
+          awsRegion: 'us-east-1',
+          stage: 'dev',
           openSearchUsername: 'testuser',
           openSearchPassword: 'testpass',
           indexAlias: mockIndexAlias,
@@ -427,6 +467,8 @@ describe('indexOpenSearchData', () => {
 
       await expect(
         indexOpenSearchData({
+          awsRegion: 'us-east-1',
+          stage: 'dev',
           openSearchUsername: 'testuser',
           openSearchPassword: 'testpass',
           indexAlias: mockIndexAlias,
@@ -445,6 +487,8 @@ describe('indexOpenSearchData', () => {
 
       await expect(
         indexOpenSearchData({
+          awsRegion: 'us-east-1',
+          stage: 'dev',
           openSearchUsername: 'testuser',
           openSearchPassword: 'testpass',
           indexAlias: mockIndexAlias,

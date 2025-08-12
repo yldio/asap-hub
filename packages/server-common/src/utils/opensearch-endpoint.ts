@@ -7,10 +7,13 @@ import {
  * OpenSearch endpoint detection
  * AWS API lookup (auto-detection)
  */
-export async function getOpenSearchEndpoint(): Promise<string> {
-  const awsRegion = process.env.AWS_REGION || 'us-east-1';
-
-  const stage = process.env.ENVIRONMENT || process.env.SLS_STAGE || 'dev';
+export async function getOpenSearchEndpoint({
+  awsRegion,
+  stage,
+}: {
+  awsRegion: string;
+  stage: string;
+}): Promise<string> {
   const service = 'asap-hub';
   const domainName =
     stage === 'production'

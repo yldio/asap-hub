@@ -1,37 +1,10 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { Client, API } from '@opensearch-project/opensearch';
-import {
-  Logger,
-  getOpenSearchEndpoint,
-  extractDomainFromEndpoint,
-} from '../../utils';
+import { API } from '@opensearch-project/opensearch';
+import { Logger, getClient } from '../../utils';
 
 export type OpenSearchRequest = API.Search_RequestBody;
 export type OpenSearchResponse = API.Search_ResponseBody;
 export type OpenSearchTotalHits = API.Search_ResponseBody['hits']['total'];
-
-const getClient = async (
-  openSearchUsername: string | undefined,
-  openSearchPassword: string | undefined,
-): Promise<Client> => {
-  const endpoint = await getOpenSearchEndpoint();
-  const domainEndpoint = extractDomainFromEndpoint(endpoint);
-
-  if (!openSearchUsername || !openSearchPassword) {
-    throw new Error('OPENSEARCH_USERNAME and OPENSEARCH_PASSWORD must be set');
-  }
-
-  return new Client({
-    node: `https://${domainEndpoint}`,
-    auth: {
-      username: openSearchUsername,
-      password: openSearchPassword,
-    },
-    ssl: {
-      rejectUnauthorized: true,
-    },
-  });
-};
 
 export type SearchInput = API.Search_RequestBody;
 
@@ -49,6 +22,8 @@ type SearchOutput =
 export const opensearchSearchHandlerFactory =
   (
     logger: Logger,
+    awsRegion: string,
+    stage: string,
     openSearchUsername: string | undefined,
     openSearchPassword: string | undefined,
   ): ((
@@ -72,7 +47,12 @@ export const opensearchSearchHandlerFactory =
     }
 
     try {
-      const client = await getClient(openSearchUsername, openSearchPassword);
+      const client = await getClient(
+        awsRegion,
+        stage,
+        openSearchUsername,
+        openSearchPassword,
+      );
 
       const searchBody: API.Search_RequestBody = {
         query: { match_all: {} },

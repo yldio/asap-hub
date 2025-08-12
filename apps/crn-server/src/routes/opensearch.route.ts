@@ -10,7 +10,7 @@ export const opensearchRouteFactory = (
   const opensearchRoutes = Router();
 
   opensearchRoutes.post<{ index: string }>(
-    '/opensearch/query/:index',
+    '/opensearch/search/:index',
     async (
       req,
       res: Response<OpenSearchResponse | { error: string; message: string }>,

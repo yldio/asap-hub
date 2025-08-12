@@ -57,7 +57,7 @@ describe('/opensearch/ route', () => {
     opensearchControllerMock.search.mockReset();
   });
 
-  describe('POST /opensearch/query/:index', () => {
+  describe('POST /opensearch/search/:index', () => {
     const validSearchBody = {
       query: {
         match: {
@@ -72,7 +72,7 @@ describe('/opensearch/ route', () => {
       opensearchControllerMock.search.mockResolvedValueOnce(mockSearchResponse);
 
       const response = await supertest(app)
-        .post('/opensearch/query/os-champion')
+        .post('/opensearch/search/os-champion')
         .send(validSearchBody);
 
       expect(response.status).toBe(200);
@@ -107,7 +107,7 @@ describe('/opensearch/ route', () => {
       opensearchControllerMock.search.mockResolvedValueOnce(emptyResponse);
 
       const response = await supertest(app)
-        .post('/opensearch/query/os-champion')
+        .post('/opensearch/search/os-champion')
         .send(validSearchBody);
 
       expect(response.status).toBe(200);
@@ -118,7 +118,7 @@ describe('/opensearch/ route', () => {
       opensearchControllerMock.search.mockResolvedValueOnce(mockSearchResponse);
 
       const response = await supertest(app)
-        .post('/opensearch/query/os-champion')
+        .post('/opensearch/search/os-champion')
         .send({});
 
       expect(response.status).toBe(200);
@@ -135,7 +135,7 @@ describe('/opensearch/ route', () => {
       );
 
       const response = await supertest(app)
-        .post('/opensearch/query/os-champion')
+        .post('/opensearch/search/os-champion')
         .send(validSearchBody);
 
       expect(response.status).toBe(500);
@@ -145,7 +145,7 @@ describe('/opensearch/ route', () => {
       opensearchControllerMock.search.mockResolvedValueOnce(mockSearchResponse);
 
       const response = await supertest(app)
-        .post('/opensearch/query/other-index')
+        .post('/opensearch/search/other-index')
         .send(validSearchBody);
 
       expect(response.status).toBe(200);

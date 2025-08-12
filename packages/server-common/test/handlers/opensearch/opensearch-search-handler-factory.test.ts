@@ -1,10 +1,7 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import {
-  OpenSearchRequest,
-  opensearchSearchHandlerFactory,
-  SearchInput,
-} from '../../../src/handlers/opensearch';
+import { OpenSearchRequest, opensearchSearchHandlerFactory, SearchInput } from '../../../src/handlers/opensearch';
 import { Logger } from '../../../src/utils';
+
 
 const logger = {
   info: jest.fn(),
@@ -13,14 +10,8 @@ const logger = {
 const mockSearch = jest.fn();
 
 jest.mock('../../../src/utils', () => ({
-  getOpenSearchEndpoint: jest
-    .fn()
-    .mockResolvedValue(
-      'https://search-asap-hub-dev-search-xyz789.us-east-1.es.amazonaws.com',
-    ),
-  extractDomainFromEndpoint: jest
-    .fn()
-    .mockReturnValue('search-xyz789.us-east-1.es.amazonaws.com'),
+  getOpenSearchEndpoint: jest.fn().mockResolvedValue('https://search-asap-hub-dev-search-xyz789.us-east-1.es.amazonaws.com'),
+  extractDomainFromEndpoint: jest.fn().mockReturnValue('search-xyz789.us-east-1.es.amazonaws.com'),
 }));
 
 jest.mock('@opensearch-project/opensearch', () => {
@@ -41,73 +32,64 @@ const handler = opensearchSearchHandlerFactory(
 );
 
 describe('opensearchSearchHandlerFactory', () => {
-  const defaultPayload = { query: { match: { title: 'Test' } } };
+  const defaultPayload = {query: { match: { title: 'Test' } }};
 
   const defaultRequest: lambda.Request<SearchInput> = {
-    method: 'post',
-    rawPayload: JSON.stringify(defaultPayload),
-    headers: {},
-    payload: defaultPayload,
-    params: { index: 'test-index' },
-  };
+  method: 'post',
+  rawPayload: JSON.stringify(defaultPayload),
+  headers: {},
+  payload: defaultPayload,
+  params: { index: 'test-index' },
+};
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  test('returns 500 if openSearchUsername is not provided', async () => {
-    const handler = opensearchSearchHandlerFactory(
-      logger,
-      undefined,
-      opensearchPassword,
-    );
-    const request = {
-      params: { index: 'test-index' } as OpenSearchRequest,
-      payload: {},
-    } as lambda.Request<SearchInput>;
-    const response = await handler(request);
+    test('returns 500 if openSearchUsername is not provided', async () => {
+      const handler = opensearchSearchHandlerFactory(
+          logger,
+          undefined,
+          openSearchPassword,
+        );
+      const request = { params: {index: 'test-index'} as OpenSearchRequest, payload: {} } as lambda.Request<SearchInput>;
+      const response = await handler(request);
 
-    expect(response.statusCode).toBe(500);
-    expect(response.payload).toEqual(
-      expect.objectContaining({
+      expect(response.statusCode).toBe(500);
+      expect(response.payload).toEqual(expect.objectContaining({
         details: 'OPENSEARCH_USERNAME and OPENSEARCH_PASSWORD must be set',
-      }),
-    );
-  });
+      }));
+    });
 
-  test('returns 500 if openSearchPassword is not provided', async () => {
-    const handler = opensearchSearchHandlerFactory(
-      logger,
-      openSearchUsername,
-      undefined,
-    );
-    const request = {
-      params: { index: 'test-index' } as OpenSearchRequest,
-      payload: {},
-    } as lambda.Request<SearchInput>;
-    const response = await handler(request);
+    test('returns 500 if openSearchPassword is not provided', async () => {
+      const handler = opensearchSearchHandlerFactory(
+          logger,
+          openSearchUsername,
+          undefined,
+        );
+      const request = { params: {index: 'test-index'} as OpenSearchRequest, payload: {} } as lambda.Request<SearchInput>;
+      const response = await handler(request);
 
-    expect(response.statusCode).toBe(500);
-    expect(response.payload).toEqual(
-      expect.objectContaining({
+      expect(response.statusCode).toBe(500);
+      expect(response.payload).toEqual(expect.objectContaining({
         details: 'OPENSEARCH_USERNAME and OPENSEARCH_PASSWORD must be set',
-      }),
-    );
-    expect(logger.error).toHaveBeenCalledWith(
+      }));
+      expect(logger.error).toHaveBeenCalledWith(
       'Error executing OpenSearch search operation',
       expect.anything(),
     );
-  });
-
-  test('returns 400 if index is missing', async () => {
-    const request = { params: {}, payload: {} } as lambda.Request<SearchInput>;
-
-    const response = await handler(request);
-
-    expect(response.statusCode).toBe(400);
-    expect(response.payload).toEqual({
-      error: 'Missing index path parameter',
     });
-  });
+
+    test('returns 400 if index is missing', async () => {
+      const request = { params: {}, payload: {} } as lambda.Request<SearchInput>;
+
+      const response = await handler(request);
+
+      expect(response.statusCode).toBe(400);
+      expect(response.payload).toEqual({
+        error: 'Missing index path parameter',
+      });
+    });
+
 
   test('returns 200 and search results on success', async () => {
     const mockResponse = {
@@ -155,24 +137,24 @@ describe('opensearchSearchHandlerFactory', () => {
     });
   });
 
-  test('returns 500 if OpenSearch client throws error', async () => {
-    mockSearch.mockRejectedValue(new Error('OpenSearch failure'));
+test('returns 500 if OpenSearch client throws error', async () => {
+  mockSearch.mockRejectedValue(new Error('OpenSearch failure'));
 
-    const response = await handler(defaultRequest);
+  const response = await handler(defaultRequest);
 
-    expect(response.statusCode).toBe(500);
-    expect(response.payload).toEqual({
-      error: 'Error executing OpenSearch search operation',
-      details: 'OpenSearch failure',
-    });
-
-    expect(logger.error).toHaveBeenCalledWith(
-      'Error executing OpenSearch search operation',
-      expect.objectContaining({
-        error: expect.objectContaining({
-          message: 'OpenSearch failure',
-        }),
-      }),
-    );
+  expect(response.statusCode).toBe(500);
+  expect(response.payload).toEqual({
+    error: 'Error executing OpenSearch search operation',
+    details: 'OpenSearch failure',
   });
+
+  expect(logger.error).toHaveBeenCalledWith(
+    'Error executing OpenSearch search operation',
+    expect.objectContaining({
+      error: expect.objectContaining({
+        message: 'OpenSearch failure',
+      }),
+    }),
+  );
+});
 });

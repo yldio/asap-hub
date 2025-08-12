@@ -1,0 +1,88 @@
+name: Reusable CRN OpenSearch Sync
+
+on:
+  workflow_call:
+    inputs:
+      metric:
+        required: true
+        type: string
+        description: Choose which metric to sync
+      environment-name:
+        required: true
+        type: string
+        description: Choose which environment to sync
+      contentful-environment-id:
+        required: true
+        type: string
+        description: The contentful environment to sync from
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        description: 'AWS Access Key ID'
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: 'AWS Secret Access Key'
+        required: true
+      CRN_CONTENTFUL_ACCESS_TOKEN:
+        description: 'CRN Contentful Access Token'
+        required: true
+      CONTENTFUL_MANAGEMENT_TOKEN:
+        description: 'Contentful Management Token'
+        required: true
+      AWS_OS_USERNAME:
+        description: 'AWS OS Username'
+        required: true
+      AWS_OS_PASSWORD:
+        description: 'AWS OS Password'
+        required: true
+
+jobs:
+  opensearch-index:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Build
+        run: |
+          yarn install
+          yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/model,@asap-hub/server-common,@asap-hub/crn-server}' run build:babel"
+          yarn build:typecheck
+      - name: Run OpenSearch Sync
+        run: |
+          yarn workspace @asap-hub/crn-server sync:open-search ${{ inputs.metric }}
+        env:
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          CONTENTFUL_ENV_ID: ${{ inputs.contentful-environment-id }}
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ steps.setup.outputs.aws-default-region }}
+
+          OPENSEARCH_USERNAME: ${{ secrets.AWS_OS_USERNAME }}
+          OPENSEARCH_PASSWORD: ${{ secrets.AWS_OS_PASSWORD }}
+          ENVIRONMENT: ${{ inputs.environment-name }}
+
+  notify_failure:
+    runs-on: ubuntu-latest
+    needs: [opensearch-index]
+    if: ${{ failure() && inputs.environment-name=='Production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/slack/
+        with:
+          message: OpenSearch Analytics Sync
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure

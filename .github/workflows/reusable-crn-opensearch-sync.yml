@@ -7,17 +7,14 @@ on:
         required: true
         type: string
         description: Choose which metric to sync
-        default: all
       environment-name:
         required: true
         type: string
         description: Choose which environment to sync
-        default: Development
       contentful-environment-id:
         required: true
         type: string
         description: The contentful environment to sync from
-        default: Development
     secrets:
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
@@ -76,9 +73,6 @@ jobs:
           OPENSEARCH_USERNAME: ${{ secrets.AWS_OS_USERNAME }}
           OPENSEARCH_PASSWORD: ${{ secrets.AWS_OS_PASSWORD }}
           ENVIRONMENT: ${{ inputs.environment-name }}
-      - name: Log
-        run: |
-          echo "OpenSearch Sync completed using Reusable Workflow"
 
   notify_failure:
     runs-on: ubuntu-latest

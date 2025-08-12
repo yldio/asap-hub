@@ -26,6 +26,7 @@ import {
   ResearchOutputsFilter,
   ResearchOutputsOrder,
   RichTextFromQuery,
+  patchAndPublish,
 } from '@asap-hub/contentful';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { isSharingStatus } from '../transformers/research-output';
@@ -238,6 +239,15 @@ export class ResearchOutputContentfulDataProvider
       await researchOutputEntry.publish();
     }
 
+    if (input.relatedManuscriptVersion && input.relatedManuscript) {
+      const manuscriptEntry = await environment.getEntry(
+        input.relatedManuscript,
+      );
+      await patchAndPublish(manuscriptEntry, {
+        relatedResearchOutput: getLinkEntity(researchOutputEntry.sys.id),
+      });
+    }
+
     return researchOutputEntry.sys.id;
   }
 
@@ -251,11 +261,15 @@ export class ResearchOutputContentfulDataProvider
     const data = input;
 
     if (updateOptions.newVersion) {
+      const { relatedManuscriptVersion } = updateOptions.newVersion;
       const versionEntry = await environment.createEntry(
         'researchOutputVersions',
         {
           fields: addLocaleToFields({
             ...updateOptions.newVersion,
+            relatedManuscriptVersion: relatedManuscriptVersion
+              ? getLinkEntity(relatedManuscriptVersion)
+              : null,
           }),
         },
       );
@@ -507,6 +521,7 @@ const parseGraphQLResearchOutput = (
           title: event?.title || '',
           endDate: event.endDate || '',
         })) || [],
+    relatedManuscriptVersion: researchOutputs.relatedManuscriptVersion?.sys.id,
     versions: mapOutputVersions(
       researchOutputs.versionsCollection?.items || [],
     ),
@@ -539,12 +554,14 @@ const prepareInput = (
     workingGroups,
     impact,
     categories,
+    relatedManuscriptVersion,
     ...researchOutputData
   } = input;
 
   const {
     usedInPublication: _usedInPublication,
     description: _description,
+    relatedManuscript: _relatedManuscript,
     ...researchOutput
   } = {
     ...researchOutputData,
@@ -573,6 +590,9 @@ const prepareInput = (
     subtype: subtypeId ? getLinkEntity(subtypeId) : null,
     impact: impact ? getLinkEntity(impact) : null,
     categories: categories ? getLinkEntities(categories) : null,
+    relatedManuscriptVersion: relatedManuscriptVersion
+      ? getLinkEntity(relatedManuscriptVersion)
+      : null,
   };
 
   return researchOutput;

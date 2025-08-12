@@ -160,6 +160,8 @@ export type ResearchOutputPayload = {
   >;
   impact?: string;
   categories?: string[];
+  relatedManuscriptVersion?: string;
+  relatedManuscript?: string;
 };
 
 export const getPayload = ({
@@ -192,6 +194,8 @@ export const getPayload = ({
   relatedEvents,
   impact,
   categories,
+  relatedManuscriptVersion,
+  relatedManuscript,
 }: ResearchOutputPayload): ResearchOutputPostRequest => ({
   ...createIdentifierField(identifierType, identifier),
   documentType,
@@ -224,6 +228,8 @@ export const getPayload = ({
   relatedEvents: relatedEvents.map(({ value }) => value),
   impact,
   categories,
+  relatedManuscriptVersion,
+  relatedManuscript,
 });
 
 export function transformResearchOutputResponseToRequest({

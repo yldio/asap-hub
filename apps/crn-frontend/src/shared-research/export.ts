@@ -27,7 +27,12 @@ type FirstVersionCSV = {
 type ResearchOutputCSV = Record<
   keyof (Omit<
     ResearchOutputResponse,
-    'team' | 'descriptionMD' | 'usageNotesMD' | 'versions'
+    | 'team'
+    | 'descriptionMD'
+    | 'usageNotesMD'
+    | 'versions'
+    | 'relatedManuscriptVersion'
+    | 'relatedManuscript'
   > &
     FirstVersionCSV),
   CSVValue

@@ -11,13 +11,25 @@ import {
 import {
   FetchOptions,
   ListManuscriptVersionResponse,
+  ManuscriptLifecycle,
+  ManuscriptType,
   ManuscriptVersionDataObject,
   ManuscriptVersionResponse,
 } from '@asap-hub/model';
-import { cleanArray } from '@asap-hub/server-common';
+import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
 import { ManuscriptVersionDataProvider } from '../types';
+import { LabItem } from './lab.data-provider';
 import { getManuscriptVersionUID } from './manuscript.data-provider';
+
+type Manuscript = NonNullable<
+  NonNullable<
+    FetchVersionsByManuscriptQuery['manuscriptsCollection']
+  >['items'][number]
+>;
+type ManuscriptVersion = NonNullable<
+  Manuscript['versionsCollection']
+>['items'][number];
 
 export class ManuscriptVersionContentfulDataProvider
   implements ManuscriptVersionDataProvider
@@ -60,27 +72,9 @@ export class ManuscriptVersionContentfulDataProvider
           manuscript.versionsCollection?.items,
         )[0];
         if (latestVersion) {
-          const team = manuscript?.teamsCollection?.items[0];
           return [
             ...latestVersions,
-            {
-              manuscriptId: getManuscriptVersionUID({
-                version: {
-                  type: latestVersion.type,
-                  count: latestVersion.count,
-                  lifecycle: latestVersion.lifecycle,
-                },
-                teamIdCode: team?.teamId || '',
-                grantId: team?.grantId || '',
-                manuscriptCount: manuscript.count || 0,
-              }),
-              versionId: latestVersion.sys.id,
-              title: manuscript.title || '',
-              id: `mv-${manuscript.sys.id}`,
-              type: latestVersion.type,
-              lifecycle: latestVersion.lifecycle,
-              teamId: team?.sys.id,
-            } as ManuscriptVersionResponse,
+            parseGraphQLManucriptVersion(manuscript, latestVersion),
           ];
         }
         return latestVersions;
@@ -112,31 +106,102 @@ export class ManuscriptVersionContentfulDataProvider
       manuscriptVersions.linkedFrom?.manuscriptsCollection?.items[0];
     const latestVersion = cleanArray(manuscript?.versionsCollection?.items)[0];
 
-    const team = manuscript?.teamsCollection?.items[0];
     return {
       versionFound: true,
       latestManuscriptVersion: manuscript
-        ? ({
-            manuscriptId: latestVersion
-              ? getManuscriptVersionUID({
-                  version: {
-                    type: latestVersion.type,
-                    count: latestVersion.count,
-                    lifecycle: latestVersion.lifecycle,
-                  },
-                  teamIdCode: team?.teamId || '',
-                  grantId: team?.grantId || '',
-                  manuscriptCount: manuscript?.count || 0,
-                })
-              : undefined,
-            versionId: latestVersion?.sys.id || undefined,
-            id: `mv-${manuscript.sys.id}`,
-            title: manuscript?.title || '',
-            type: latestVersion?.type || undefined,
-            lifecycle: latestVersion?.lifecycle || undefined,
-            teamId: team?.sys.id,
-          } as ManuscriptVersionResponse)
+        ? parseGraphQLManucriptVersion(manuscript, latestVersion)
         : undefined,
     };
   }
 }
+
+const parseGraphQLManucriptVersion = (
+  manuscript: Manuscript,
+  latestVersion: ManuscriptVersion | undefined,
+): ManuscriptVersionResponse => {
+  const team = manuscript?.teamsCollection?.items[0];
+  const manuscriptAuthors = cleanArray([
+    ...(latestVersion?.firstAuthorsCollection?.items || []),
+    ...(latestVersion?.correspondingAuthorCollection?.items || []),
+    ...(latestVersion?.additionalAuthorsCollection?.items || []),
+  ]);
+  const uniqueAuthors = Array.from(
+    new Map(
+      manuscriptAuthors.map((manuscriptAuthor) => [
+        manuscriptAuthor.sys.id,
+        manuscriptAuthor,
+      ]),
+    ).values(),
+  );
+  return {
+    manuscriptId: latestVersion
+      ? getManuscriptVersionUID({
+          version: {
+            type: latestVersion.type,
+            count: latestVersion.count,
+            lifecycle: latestVersion.lifecycle,
+          },
+          teamIdCode: team?.teamId || '',
+          grantId: team?.grantId || '',
+          manuscriptCount: manuscript?.count || 0,
+        })
+      : undefined,
+    versionId: latestVersion?.sys.id || undefined,
+    id: `mv-${manuscript.sys.id}`,
+    title: manuscript?.title || '',
+    url: manuscript?.url || '',
+    type: (latestVersion?.type as ManuscriptType) || undefined,
+    lifecycle: (latestVersion?.lifecycle as ManuscriptLifecycle) || undefined,
+    description: latestVersion?.description || undefined,
+    shortDescription: latestVersion?.shortDescription || undefined,
+    impact: manuscript?.impact
+      ? {
+          id: manuscript.impact.sys.id,
+          name: manuscript.impact.name || '',
+        }
+      : undefined,
+    categories: cleanArray(manuscript.categoriesCollection?.items || []).map(
+      (category) => ({
+        id: category.sys.id,
+        name: category.name || '',
+      }),
+    ),
+    teams: cleanArray(latestVersion?.teamsCollection?.items).map(
+      (teamItem) => ({
+        id: teamItem.sys.id,
+        displayName: teamItem.displayName || '',
+      }),
+    ),
+    labs: cleanArray(latestVersion?.labsCollection?.items).map(
+      (lab: LabItem) => ({
+        id: lab.sys.id,
+        name: lab.name || '',
+      }),
+    ),
+    authors: uniqueAuthors.map((author) => {
+      if (author.__typename === 'Users') {
+        return {
+          id: author.sys.id,
+          firstName: author.firstName || '',
+          lastName: author.lastName || '',
+          email: author.email || '',
+          displayName: parseUserDisplayName(
+            author.firstName || '',
+            author.lastName || '',
+            undefined,
+            author.nickname || '',
+          ),
+          avatarUrl: author.avatar?.url || undefined,
+          alumniSinceDate: author.alumniSinceDate || undefined,
+        };
+      }
+
+      return {
+        id: author.sys.id,
+        displayName: author?.name || '',
+        orcid: author.orcid || '',
+      };
+    }),
+    teamId: team?.sys.id,
+  };
+};

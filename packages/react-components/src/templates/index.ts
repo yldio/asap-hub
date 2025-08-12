@@ -87,3 +87,4 @@ export { default as WelcomePage } from './WelcomePage';
 export { default as WorkingGroupAbout } from './WorkingGroupAbout';
 export { default as WorkingGroupPage } from './WorkingGroupPage';
 export { default as WorkingGroupPageHeader } from './WorkingGroupPageHeader';
+export type { ManuscriptVersionOption } from './ManuscriptOutputSelection';

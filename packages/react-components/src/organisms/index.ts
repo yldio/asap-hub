@@ -43,6 +43,7 @@ export { default as ManuscriptAuthors } from './ManuscriptAuthors';
 export { default as ManuscriptByStatus } from './ManuscriptByStatus';
 export { default as ManuscriptFormModals } from './ManuscriptFormModals';
 export { default as ManuscriptHeader } from './ManuscriptHeader';
+export { default as ManuscriptVersionImportCard } from './ManuscriptVersionImportCard';
 export { default as MenuHeader } from './MenuHeader';
 export { default as NewsCard } from './NewsCard';
 export { default as NewsSection } from './NewsSection';

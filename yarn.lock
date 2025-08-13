@@ -263,7 +263,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/prettier": 2.7.3
@@ -285,7 +285,7 @@ __metadata:
     "@babel/core": 7.23.7
     "@babel/plugin-transform-modules-commonjs": 7.23.3
     "@babel/plugin-transform-runtime": 7.23.7
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@hapi/boom": 9.1.4
     "@types/apr-intercept": "workspace:*"
     "@types/babel__core": 7.20.5
@@ -326,7 +326,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/core": 7.23.7
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/jest": 29.5.14
     "@types/jsdom": 16.2.15
     "@types/node": 20.10.5
@@ -344,7 +344,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@babel/core": 7.23.7
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/auth0-js": 9.21.5
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
@@ -366,7 +366,7 @@ __metadata:
     "@babel/core": 7.23.7
     "@babel/preset-env": 7.23.8
     "@babel/preset-typescript": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/jest": 29.5.14
     "@types/js-yaml": ^4
     "@types/node": 20.10.5
@@ -386,7 +386,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.6
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
   languageName: unknown
@@ -817,7 +817,7 @@ __metadata:
   dependencies:
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@contentful/rich-text-html-renderer": 16.3.0
     "@contentful/rich-text-types": 16.3.0
     "@graphql-codegen/cli": 2.16.5
@@ -864,7 +864,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 12.1.5
@@ -914,7 +914,7 @@ __metadata:
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.6
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@sentry/cli": ^2.20.3
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
@@ -990,7 +990,7 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@babel/core": 7.23.7
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@emotion/cache": 11.11.0
     "@emotion/react": 11.11.1
     "@emotion/server": 11.11.0
@@ -1035,7 +1035,7 @@ __metadata:
     "@babel/preset-env": 7.23.8
     "@babel/preset-typescript": 7.23.3
     "@babel/register": 7.23.7
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@graphql-tools/graphql-file-loader": 7.5.17
     "@graphql-tools/load": 7.8.14
     "@graphql-tools/mock": 8.7.20
@@ -1161,7 +1161,7 @@ __metadata:
   resolution: "@asap-hub/dom-test-utils@workspace:packages/dom-test-utils"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/jest": 29.5.14
   languageName: unknown
   linkType: soft
@@ -1170,7 +1170,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/e2e-tests@workspace:apps/e2e-tests"
   dependencies:
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@playwright/test": ^1.40.0
   languageName: unknown
   linkType: soft
@@ -1180,7 +1180,7 @@ __metadata:
   resolution: "@asap-hub/errors@workspace:packages/errors"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     got: 11.8.6
   languageName: unknown
   linkType: soft
@@ -1216,7 +1216,7 @@ __metadata:
     "@algolia/client-search": 4.22.1
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/jsonwebtoken": 8.5.9
     core-js: 3.34.0
     date-fns: 2.30.0
@@ -1230,7 +1230,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/flags@workspace:packages/flags"
   dependencies:
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     core-js: 3.34.0
@@ -1248,7 +1248,7 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@babel/core": 7.23.7
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@sentry/react": 6.19.7
     "@testing-library/dom": 9.3.4
     "@testing-library/react": 12.1.5
@@ -1300,7 +1300,7 @@ __metadata:
     "@asap-hub/gp2-components": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 12.1.5
@@ -1348,7 +1348,7 @@ __metadata:
     "@asap-hub/validation": "workspace:*"
     "@babel/core": 7.23.7
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@emotion/babel-plugin": 11.11.0
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.11.1
@@ -1414,7 +1414,7 @@ __metadata:
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.6
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@sentry/cli": ^2.20.3
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
@@ -1478,7 +1478,7 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@babel/core": 7.23.7
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@emotion/cache": 11.11.0
     "@emotion/react": 11.11.1
     "@emotion/server": 11.11.0
@@ -1519,7 +1519,7 @@ __metadata:
     "@aws-sdk/client-sqs": 3.478.0
     "@babel/preset-env": 7.23.8
     "@babel/preset-typescript": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@graphql-codegen/cli": 2.16.5
     "@graphql-codegen/gql-tag-operations-preset": 1.7.4
     "@graphql-codegen/introspection": 2.2.3
@@ -1598,7 +1598,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/message-templates@workspace:packages/message-templates"
   dependencies:
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
   languageName: unknown
   linkType: soft
 
@@ -1610,7 +1610,7 @@ __metadata:
     "@aws-sdk/client-ses": ^3.306.0
     "@babel/core": 7.23.7
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@emotion/cache": 11.11.0
     "@emotion/react": 11.11.1
     "@emotion/server": 11.11.0
@@ -1633,7 +1633,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/model@workspace:packages/model"
   dependencies:
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     ajv: 8.11.0
   languageName: unknown
   linkType: soft
@@ -1647,7 +1647,7 @@ __metadata:
     "@babel/core": 7.23.7
     "@babel/preset-env": 7.23.8
     "@babel/preset-typescript": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/jest": 29.5.14
     "@types/jsonwebtoken": 8.5.9
     jsonwebtoken: 9.0.1
@@ -1677,7 +1677,7 @@ __metadata:
     "@auth0/auth0-spa-js": 1.22.6
     "@babel/core": 7.23.7
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@emotion/babel-plugin": 11.11.0
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.11.1
@@ -1770,7 +1770,7 @@ __metadata:
     "@asap-hub/validation": "workspace:*"
     "@babel/core": 7.23.7
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@testing-library/react": 12.1.5
     "@testing-library/react-hooks": 8.0.1
     "@types/jest": 29.5.14
@@ -1792,7 +1792,7 @@ __metadata:
   resolution: "@asap-hub/routing@workspace:packages/routing"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/qs": 6.9.11
     "@types/react-router-dom": 5.3.3
     qs: 6.11.2
@@ -1828,7 +1828,7 @@ __metadata:
     "@aws-sdk/s3-request-presigner": ^3.758.0
     "@babel/core": 7.23.7
     "@babel/parser": 7.23.6
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@googleapis/calendar": ^9.5.0
     "@hapi/boom": 9.1.4
     "@opensearch-project/opensearch": ^3.5.1
@@ -1879,7 +1879,7 @@ __metadata:
   dependencies:
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@hapi/boom": 9.1.4
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
@@ -1963,7 +1963,7 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@babel/core": 7.23.7
     "@babel/preset-react": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/node": 20.10.5
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -1981,7 +1981,7 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/flags": "workspace:*"
     "@asap-hub/model": "workspace:*"
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@types/jest": 29.5.14
   languageName: unknown
   linkType: soft
@@ -9557,13 +9557,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime-corejs3@npm:7.23.8":
-  version: 7.23.8
-  resolution: "@babel/runtime-corejs3@npm:7.23.8"
+"@babel/runtime-corejs3@npm:7.26.10":
+  version: 7.26.10
+  resolution: "@babel/runtime-corejs3@npm:7.26.10"
   dependencies:
     core-js-pure: ^3.30.2
     regenerator-runtime: ^0.14.0
-  checksum: e786b79bcb3031bd7433fb4523e43f0acbd386cd7bb5b0a6df6e627c7965706b3d5612211ea3d729ce4459ba1d1b654ccdd8aefe791c6413f70882ee1be903b9
+  checksum: 771d986d824fb84503c348d24f71e50c4ff078a2b213412761f0ffc5c83257a2d149caa73db86a70d642fa0e7e57968bbbccc1dd8d0cb21dcca0389d0d39c8bd
   languageName: node
   linkType: hard
 
@@ -23306,7 +23306,7 @@ __metadata:
     "@babel/preset-env": 7.23.8
     "@babel/preset-react": 7.23.3
     "@babel/preset-typescript": 7.23.3
-    "@babel/runtime-corejs3": 7.23.8
+    "@babel/runtime-corejs3": 7.26.10
     "@emotion/jest": ^11.10.5
     "@jeysal/babel-plugin-ramda": 2.0.1
     "@peculiar/webcrypto": 1.4.6

@@ -32,7 +32,7 @@
     "@aws-sdk/client-sqs": "3.478.0",
     "@aws-sdk/credential-provider-node": "^3.844.0",
     "@aws-sdk/s3-request-presigner": "^3.758.0",
-    "@babel/runtime-corejs3": "7.23.8",
+    "@babel/runtime-corejs3": "7.26.10",
     "@googleapis/calendar": "^9.5.0",
     "@hapi/boom": "9.1.4",
     "@opensearch-project/opensearch": "^3.5.1",

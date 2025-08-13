@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@asap-hub/flags": "workspace:*",
-    "@babel/runtime-corejs3": "7.23.8",
+    "@babel/runtime-corejs3": "7.26.10",
     "csv-stringify": "6.4.5",
     "date-fns": "2.30.0",
     "js-cookie": "^3.0.5",

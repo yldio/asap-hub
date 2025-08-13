@@ -43,7 +43,7 @@
     "@asap-hub/model": "workspace:*",
     "@asap-hub/routing": "workspace:*",
     "@asap-hub/validation": "workspace:*",
-    "@babel/runtime-corejs3": "7.23.8",
+    "@babel/runtime-corejs3": "7.26.10",
     "@emotion/react": "11.11.1",
     "@emotion/serialize": "1.1.2",
     "@lexical/code": "0.18.0",

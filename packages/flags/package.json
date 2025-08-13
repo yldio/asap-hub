@@ -15,7 +15,7 @@
     "test:coverage": "WORKSPACE_PATH=packages/flags; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.23.8",
+    "@babel/runtime-corejs3": "7.26.10",
     "core-js": "3.34.0"
   },
   "devDependencies": {

@@ -15,7 +15,7 @@
     "test:coverage": "WORKSPACE_PATH=packages/auth-frontend-utils; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.23.8",
+    "@babel/runtime-corejs3": "7.26.10",
     "auth0-js": "9.24.1",
     "camelcase": "6.3.0",
     "pify": "5.0.0",

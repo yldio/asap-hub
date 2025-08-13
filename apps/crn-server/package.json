@@ -47,7 +47,7 @@
     "@aws-sdk/credential-provider-node": "^3.844.0",
     "@babel/core": "7.23.7",
     "@babel/register": "7.23.7",
-    "@babel/runtime-corejs3": "7.23.8",
+    "@babel/runtime-corejs3": "7.26.10",
     "@hapi/boom": "9.1.4",
     "@hapi/bourne": "2.1.0",
     "@hapi/joi": "17.1.1",

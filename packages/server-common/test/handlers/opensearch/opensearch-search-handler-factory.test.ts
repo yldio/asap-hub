@@ -18,8 +18,8 @@ const mockClient = {
 
 const getClientMock = getClient as jest.Mock;
 
-const openSearchUsername = 'test-username';
-const openSearchPassword = 'test-password';
+const opensearchUsername = 'test-username';
+const opensearchPassword = 'test-password';
 const awsRegion = 'us-east-1';
 const stage = 'dev';
 
@@ -27,8 +27,8 @@ const handler = opensearchSearchHandlerFactory(
   logger,
   awsRegion,
   stage,
-  openSearchUsername,
-  openSearchPassword,
+  opensearchUsername,
+  opensearchPassword,
 );
 
 describe('opensearchSearchHandlerFactory', () => {
@@ -110,7 +110,7 @@ describe('opensearchSearchHandlerFactory', () => {
     );
   });
 
-  test('returns error when OpenSearch responds with non-2xx status code', async () => {
+  test('returns error when Opensearch responds with non-2xx status code', async () => {
     const mockResponse: { statusCode: number; body: unknown } = {
       statusCode: 500,
       body: { error: 'Something went wrong' },
@@ -121,42 +121,42 @@ describe('opensearchSearchHandlerFactory', () => {
 
     expect(response.statusCode).toBe(500);
     expect(response.payload).toEqual({
-      error: 'OpenSearch search error',
+      error: 'Opensearch search error',
       details: JSON.stringify(mockResponse.body),
     });
   });
 
-  test('returns 500 if OpenSearch client throws error', async () => {
-    mockSearch.mockRejectedValue(new Error('OpenSearch failure'));
+  test('returns 500 if Opensearch client throws error', async () => {
+    mockSearch.mockRejectedValue(new Error('Opensearch failure'));
 
     const response = await handler(defaultRequest);
 
     expect(response.statusCode).toBe(500);
     expect(response.payload).toEqual({
-      error: 'Error executing OpenSearch search operation',
-      details: 'OpenSearch failure',
+      error: 'Error executing Opensearch search operation',
+      details: 'Opensearch failure',
     });
 
     expect(logger.error).toHaveBeenCalledWith(
-      'Error executing OpenSearch search operation',
+      'Error executing Opensearch search operation',
       expect.objectContaining({
         error: expect.objectContaining({
-          message: 'OpenSearch failure',
+          message: 'Opensearch failure',
         }),
       }),
     );
   });
 
   test('handles case when error thrown is not an instance of Error type', async () => {
-    mockSearch.mockRejectedValue('OpenSearch failure');
+    mockSearch.mockRejectedValue('Opensearch failure');
 
     const response = await handler(defaultRequest);
 
     expect(response.statusCode).toBe(500);
     expect(logger.error).toHaveBeenCalledWith(
-      'Error executing OpenSearch search operation',
+      'Error executing Opensearch search operation',
       expect.objectContaining({
-        error: 'OpenSearch failure',
+        error: 'Opensearch failure',
       }),
     );
   });

@@ -2,40 +2,40 @@
 import { Client } from '@opensearch-project/opensearch';
 import {
   extractDomainFromEndpoint,
-  getOpenSearchEndpoint,
+  getOpensearchEndpoint,
 } from './opensearch-endpoint';
-import type { OpenSearchMapping, AliasAction } from './types';
+import type { OpensearchMapping, AliasAction } from './types';
 
 interface IndexConfig<T> {
   awsRegion: string;
   stage: string;
-  openSearchUsername?: string;
-  openSearchPassword?: string;
+  opensearchUsername?: string;
+  opensearchPassword?: string;
   indexAlias: string;
   getData: () => Promise<{
     documents: T[];
-    mapping: OpenSearchMapping['mappings'];
+    mapping: OpensearchMapping['mappings'];
   }>;
 }
 
 export const getClient = async (
   awsRegion: string,
   stage: string,
-  openSearchUsername: string | undefined,
-  openSearchPassword: string | undefined,
+  opensearchUsername: string | undefined,
+  opensearchPassword: string | undefined,
 ): Promise<Client> => {
-  if (!openSearchUsername || !openSearchPassword) {
+  if (!opensearchUsername || !opensearchPassword) {
     throw new Error('OPENSEARCH_USERNAME and OPENSEARCH_PASSWORD must be set');
   }
 
-  const endpoint = await getOpenSearchEndpoint({ awsRegion, stage });
+  const endpoint = await getOpensearchEndpoint({ awsRegion, stage });
   const domainEndpoint = extractDomainFromEndpoint(endpoint);
 
   return new Client({
     node: `https://${domainEndpoint}`,
     auth: {
-      username: openSearchUsername,
-      password: openSearchPassword,
+      username: opensearchUsername,
+      password: opensearchPassword,
     },
     ssl: {
       rejectUnauthorized: true,
@@ -43,19 +43,19 @@ export const getClient = async (
   });
 };
 
-export const indexOpenSearchData = async <T>({
+export const indexOpensearchData = async <T>({
   awsRegion,
   stage,
-  openSearchUsername,
-  openSearchPassword,
+  opensearchUsername,
+  opensearchPassword,
   indexAlias,
   getData,
 }: IndexConfig<T>) => {
   const client = await getClient(
     awsRegion,
     stage,
-    openSearchUsername,
-    openSearchPassword,
+    opensearchUsername,
+    opensearchPassword,
   );
 
   const { documents, mapping } = await getData();

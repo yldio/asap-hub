@@ -134,8 +134,8 @@ import { GenerativeContentDataProvider } from './data-providers/contentful/gener
 import { fileRouteFactory } from './routes/files.route';
 import FilesController from './controllers/files.controller';
 import FileProvider from './data-providers/file-provider';
-import OpenSearchController from './controllers/opensearch.controller';
-import OpenSearchDataProvider from './data-providers/opensearch.data-provider';
+import OpensearchController from './controllers/opensearch.controller';
+import OpensearchDataProvider from './data-providers/opensearch.data-provider';
 import { opensearchRouteFactory } from './routes/opensearch.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
@@ -305,7 +305,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const generativeContentDataProvider = new GenerativeContentDataProvider();
 
   const opensearchProvider =
-    libs.opensearchProvider || new OpenSearchDataProvider();
+    libs.opensearchProvider || new OpensearchDataProvider();
 
   // Controllers
   const analyticsController =
@@ -378,7 +378,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const filesController =
     libs.filesController || new FilesController(new FileProvider());
   const opensearchController =
-    libs.opensearchController || new OpenSearchController(opensearchProvider);
+    libs.opensearchController || new OpensearchController(opensearchProvider);
 
   // Handlers
   const authHandler =
@@ -577,6 +577,6 @@ export type Libs = {
   sentryTransactionIdHandler?: RequestHandler;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
-  opensearchController?: OpenSearchController;
-  opensearchProvider?: OpenSearchDataProvider;
+  opensearchController?: OpensearchController;
+  opensearchProvider?: OpensearchDataProvider;
 };

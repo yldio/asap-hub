@@ -1,15 +1,15 @@
 import { UserResponse } from '@asap-hub/model';
-import { OpenSearchRequest, OpenSearchResponse } from '@asap-hub/server-common';
-import OpenSearchProvider from '../data-providers/opensearch.data-provider';
+import { OpensearchRequest, OpensearchResponse } from '@asap-hub/server-common';
+import OpensearchProvider from '../data-providers/opensearch.data-provider';
 
-export default class OpenSearchController {
-  constructor(private opensearchProvider: OpenSearchProvider) {}
+export default class OpensearchController {
+  constructor(private opensearchProvider: OpensearchProvider) {}
 
   async search(
     index: string,
-    body: OpenSearchRequest,
+    body: OpensearchRequest,
     loggedInUser: UserResponse,
-  ): Promise<OpenSearchResponse> {
+  ): Promise<OpensearchResponse> {
     return this.opensearchProvider.search({
       index,
       body,

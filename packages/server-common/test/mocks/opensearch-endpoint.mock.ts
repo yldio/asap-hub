@@ -1,11 +1,11 @@
 import {
-  getOpenSearchEndpoint,
+  getOpensearchEndpoint,
   extractDomainFromEndpoint,
 } from '../../src/utils/opensearch-endpoint';
 
 export const mockOpensearchEndpoint = {
-  getOpenSearchEndpoint: jest.fn() as jest.MockedFunction<
-    typeof getOpenSearchEndpoint
+  getOpensearchEndpoint: jest.fn() as jest.MockedFunction<
+    typeof getOpensearchEndpoint
   >,
   extractDomainFromEndpoint: jest.fn() as jest.MockedFunction<
     typeof extractDomainFromEndpoint

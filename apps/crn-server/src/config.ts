@@ -122,6 +122,6 @@ export const openScienceDL = OS_EMAIL_DL || 'openscience@parkinsonsroadmap.org';
 export const alternativeAssignedOSEmail =
   ALTERNATIVE_ASSIGNED_OS_EMAIL || 'rthibault@parkinsonsroadmap.org';
 export const inviteUserQueueUrl = QUEUE_URL || '';
-export const openSearchUsername = OPENSEARCH_USERNAME || '';
-export const openSearchPassword = OPENSEARCH_PASSWORD || '';
+export const opensearchUsername = OPENSEARCH_USERNAME || '';
+export const opensearchPassword = OPENSEARCH_PASSWORD || '';
 export const awsRegion = AWS_REGION || REGION || 'us-east-1';

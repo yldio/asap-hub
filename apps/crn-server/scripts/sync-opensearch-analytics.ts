@@ -1,8 +1,8 @@
 import { ListResponse, OSChampionDataObject } from '@asap-hub/model';
-import { indexOpenSearchData } from '@asap-hub/server-common';
+import { indexOpensearchData } from '@asap-hub/server-common';
 import {
-  openSearchUsername,
-  openSearchPassword,
+  opensearchUsername,
+  opensearchPassword,
   awsRegion,
   environment,
 } from '../src/config';
@@ -90,7 +90,7 @@ export const exportAnalyticsData = async <T extends Metrics>(
   return documents;
 };
 
-const exportMetricToOpenSearch = async <T extends Metrics>(metric: T) => {
+const exportMetricToOpensearch = async <T extends Metrics>(metric: T) => {
   console.log(`Starting export for metric: ${metric}`);
 
   const config = metricConfig[metric];
@@ -100,11 +100,11 @@ const exportMetricToOpenSearch = async <T extends Metrics>(metric: T) => {
 
   const documents = await exportAnalyticsData(metric);
 
-  await indexOpenSearchData({
+  await indexOpensearchData({
     awsRegion,
     stage: environment,
-    openSearchUsername,
-    openSearchPassword,
+    opensearchUsername,
+    opensearchPassword,
     indexAlias: config.indexAlias,
     getData: async () => ({
       documents,
@@ -122,7 +122,7 @@ const run = async () => {
 
   if (args.length === 0) {
     console.log(
-      'Usage: yarn workspace @asap-hub/crn-server sync:open-search <metric1> [metric2] [metric3] ...',
+      'Usage: yarn workspace @asap-hub/crn-server sync:opensearch <metric1> [metric2] [metric3] ...',
     );
     process.exit(1);
   }
@@ -130,7 +130,7 @@ const run = async () => {
   if (args.includes('all')) {
     console.log('Exporting all metrics');
     await Promise.all(
-      validMetrics.map((metric) => exportMetricToOpenSearch(metric)),
+      validMetrics.map((metric) => exportMetricToOpensearch(metric)),
     );
     process.exit(0);
   } else {
@@ -148,7 +148,7 @@ const run = async () => {
 
     for (const metric of metrics) {
       try {
-        await exportMetricToOpenSearch(metric);
+        await exportMetricToOpensearch(metric);
       } catch (error) {
         console.error(`Error exporting metric ${metric}:`, error);
         process.exit(1);

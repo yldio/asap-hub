@@ -1,13 +1,13 @@
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import OpenSearchController from '../../src/controllers/opensearch.controller';
+import OpensearchController from '../../src/controllers/opensearch.controller';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/opensearch/ route', () => {
   const opensearchControllerMock = {
     search: jest.fn(),
-  } as unknown as jest.Mocked<OpenSearchController>;
+  } as unknown as jest.Mocked<OpensearchController>;
 
   const app = appFactory({
     opensearchController: opensearchControllerMock,
@@ -131,7 +131,7 @@ describe('/opensearch/ route', () => {
 
     it('should return 500 when controller throws error', async () => {
       opensearchControllerMock.search.mockRejectedValueOnce(
-        new Error('OpenSearch service unavailable'),
+        new Error('Opensearch service unavailable'),
       );
 
       const response = await supertest(app)

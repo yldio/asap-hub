@@ -1,7 +1,7 @@
 import { UserResponse } from '@asap-hub/model';
-import { OpenSearchRequest, OpenSearchResponse } from '@asap-hub/server-common';
+import { OpensearchRequest, OpensearchResponse } from '@asap-hub/server-common';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
-import OpenSearchProvider from '../../src/data-providers/opensearch.data-provider';
+import OpensearchProvider from '../../src/data-providers/opensearch.data-provider';
 import logger from '../../src/utils/logger';
 
 jest.mock('@aws-sdk/client-lambda', () => {
@@ -19,8 +19,8 @@ const mockConfig = {
 
 jest.doMock('../../src/config', () => mockConfig);
 
-describe('OpenSearchProvider', () => {
-  let openSearchProvider: OpenSearchProvider;
+describe('OpensearchProvider', () => {
+  let opensearchProvider: OpensearchProvider;
   let mockSend: jest.Mock;
 
   const mockUser: UserResponse = {
@@ -30,7 +30,7 @@ describe('OpenSearchProvider', () => {
     lastName: 'User',
   } as UserResponse;
 
-  const mockSearchRequest: OpenSearchRequest = {
+  const mockSearchRequest: OpensearchRequest = {
     query: {
       match: {
         teamName: 'alpha',
@@ -40,7 +40,7 @@ describe('OpenSearchProvider', () => {
     from: 0,
   };
 
-  const mockSearchResponse: OpenSearchResponse = {
+  const mockSearchResponse: OpensearchResponse = {
     took: 2,
     timed_out: false,
     _shards: {
@@ -98,7 +98,7 @@ describe('OpenSearchProvider', () => {
       send: mockSend,
     }));
 
-    openSearchProvider = new OpenSearchProvider();
+    opensearchProvider = new OpensearchProvider();
   });
 
   afterEach(() => {
@@ -120,7 +120,7 @@ describe('OpenSearchProvider', () => {
 
       mockSend.mockResolvedValueOnce(successfulLambdaResponse);
 
-      const result = await openSearchProvider.search({
+      const result = await opensearchProvider.search({
         index: 'os-champion',
         body: mockSearchRequest,
         loggedInUser: mockUser,
@@ -133,7 +133,7 @@ describe('OpenSearchProvider', () => {
 
     test('Should throw Boom forbidden error when user is not logged in', async () => {
       await expect(
-        openSearchProvider.search({
+        opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
           loggedInUser: null as any,
@@ -157,7 +157,7 @@ describe('OpenSearchProvider', () => {
 
       mockSend.mockResolvedValueOnce(lambdaResponse);
 
-      const result = await openSearchProvider.search({
+      const result = await opensearchProvider.search({
         index: 'os-champion',
         body: mockSearchRequest,
         loggedInUser: mockUser,
@@ -186,7 +186,7 @@ describe('OpenSearchProvider', () => {
 
       mockSend.mockResolvedValueOnce(successfulLambdaResponse);
 
-      await openSearchProvider.search({
+      await opensearchProvider.search({
         index: 'os-champion',
         body: requestWithoutPagination,
         loggedInUser: mockUser,
@@ -221,7 +221,7 @@ describe('OpenSearchProvider', () => {
       const size = 20;
       const from = 10;
 
-      await openSearchProvider.search({
+      await opensearchProvider.search({
         index: 'os-champion',
         body: mockSearchRequest,
         loggedInUser: mockUser,
@@ -246,7 +246,7 @@ describe('OpenSearchProvider', () => {
       mockSend.mockResolvedValueOnce({ Payload: undefined });
 
       await expect(
-        openSearchProvider.search({
+        opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
           loggedInUser: mockUser,
@@ -269,7 +269,7 @@ describe('OpenSearchProvider', () => {
       mockSend.mockResolvedValueOnce(errorResponse);
 
       await expect(
-        openSearchProvider.search({
+        opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
           loggedInUser: mockUser,
@@ -300,7 +300,7 @@ describe('OpenSearchProvider', () => {
         },
       ],
     ])(
-      'Should throw error when OpenSearch returns 4xx status with %s',
+      'Should throw error when Opensearch returns 4xx status with %s',
       async (_desc, body) => {
         const loggerErrorSpy = jest.spyOn(logger, 'error');
 
@@ -316,7 +316,7 @@ describe('OpenSearchProvider', () => {
         mockSend.mockResolvedValueOnce(errorResponse);
 
         await expect(
-          openSearchProvider.search({
+          opensearchProvider.search({
             index: 'os-champion',
             body: mockSearchRequest,
             loggedInUser: mockUser,
@@ -327,7 +327,7 @@ describe('OpenSearchProvider', () => {
           'Error parsing Lambda response',
           expect.objectContaining({
             errorMessage: expect.stringMatching(
-              /OpenSearch operation failed with status 400:/i,
+              /Opensearch operation failed with status 400:/i,
             ),
           }),
         );
@@ -346,7 +346,7 @@ describe('OpenSearchProvider', () => {
       mockSend.mockResolvedValueOnce(responseWithoutBody);
 
       await expect(
-        openSearchProvider.search({
+        opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
           loggedInUser: mockUser,
@@ -362,7 +362,7 @@ describe('OpenSearchProvider', () => {
       mockSend.mockResolvedValueOnce(invalidJsonResponse);
 
       await expect(
-        openSearchProvider.search({
+        opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
           loggedInUser: mockUser,
@@ -382,7 +382,7 @@ describe('OpenSearchProvider', () => {
 
       mockSend.mockResolvedValueOnce(directResponse);
 
-      const result = await openSearchProvider.search({
+      const result = await opensearchProvider.search({
         index: 'os-champion',
         body: mockSearchRequest,
         loggedInUser: mockUser,
@@ -406,7 +406,7 @@ describe('OpenSearchProvider', () => {
 
       mockSend.mockResolvedValueOnce(stringPayloadResponse);
 
-      const result = await openSearchProvider.search({
+      const result = await opensearchProvider.search({
         index: 'os-champion',
         body: mockSearchRequest,
         loggedInUser: mockUser,
@@ -420,7 +420,7 @@ describe('OpenSearchProvider', () => {
       mockSend.mockRejectedValueOnce(invocationError);
 
       await expect(
-        openSearchProvider.search({
+        opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
           loggedInUser: mockUser,

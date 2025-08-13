@@ -5,8 +5,8 @@ import { Handler } from 'aws-lambda';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
-  openSearchUsername,
-  openSearchPassword,
+  opensearchUsername,
+  opensearchPassword,
   awsRegion,
   environment,
 } from '../../config';
@@ -16,8 +16,8 @@ export const opensearchSearchHandler = framework.http(
     logger,
     awsRegion,
     environment,
-    openSearchUsername,
-    openSearchPassword,
+    opensearchUsername,
+    opensearchPassword,
   ),
 );
 

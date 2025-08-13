@@ -1,5 +1,5 @@
 import { UserResponse } from '@asap-hub/model';
-import { OpenSearchRequest, OpenSearchResponse } from '@asap-hub/server-common';
+import { OpensearchRequest, OpensearchResponse } from '@asap-hub/server-common';
 import {
   LambdaClient,
   InvokeCommand,
@@ -9,7 +9,7 @@ import Boom from '@hapi/boom';
 import { region, environment } from '../config';
 import logger from '../utils/logger';
 
-export default class OpenSearchProvider {
+export default class OpensearchProvider {
   private lambda: LambdaClient;
   private stage: string;
   private opensearchDomainStage: string;
@@ -22,14 +22,14 @@ export default class OpenSearchProvider {
   }
 
   /**
-   * Helper to invoke the OpenSearch Lambda function
+   * Helper to invoke the Opensearch Lambda function
    */
   private async invokeLambda(
     method: string,
     path: string,
-    body?: OpenSearchRequest,
+    body?: OpensearchRequest,
     pathParameters?: Record<string, string>,
-  ): Promise<OpenSearchResponse> {
+  ): Promise<OpensearchResponse> {
     // Structure the event exactly like API Gateway would send it
     const event = {
       version: '2.0',
@@ -101,7 +101,7 @@ export default class OpenSearchProvider {
             ? JSON.parse(payload.body)
             : payload.body;
         throw new Error(
-          `OpenSearch operation failed with status ${
+          `Opensearch operation failed with status ${
             payload.statusCode
           }: ${JSON.stringify(errorBody)}`,
         );
@@ -132,12 +132,12 @@ export default class OpenSearchProvider {
    */
   async search(params: {
     index: string;
-    body: OpenSearchRequest;
+    body: OpensearchRequest;
     loggedInUser: UserResponse;
     size?: number;
     from?: number;
-  }): Promise<OpenSearchResponse> {
-    logger.info('Searching OpenSearch', {
+  }): Promise<OpensearchResponse> {
+    logger.info('Searching Opensearch', {
       index: params.index,
       body: params.body,
       loggedInUser: !!params.loggedInUser,
@@ -148,7 +148,7 @@ export default class OpenSearchProvider {
     }
 
     try {
-      const searchPayload: OpenSearchRequest = {
+      const searchPayload: OpensearchRequest = {
         ...params.body,
         size: params.size ?? 10,
         from: params.from ?? 0,
@@ -163,7 +163,7 @@ export default class OpenSearchProvider {
 
       return response;
     } catch (error) {
-      logger.error('OpenSearch search failed', {
+      logger.error('Opensearch search failed', {
         error,
         index: params.index,
         searchBody: params.body,

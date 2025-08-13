@@ -2,15 +2,15 @@ import { framework as lambda } from '@asap-hub/services-common';
 import { API } from '@opensearch-project/opensearch';
 import { Logger, getClient } from '../../utils';
 
-export type OpenSearchRequest = API.Search_RequestBody;
-export type OpenSearchResponse = API.Search_ResponseBody;
-export type OpenSearchTotalHits = API.Search_ResponseBody['hits']['total'];
+export type OpensearchRequest = API.Search_RequestBody;
+export type OpensearchResponse = API.Search_ResponseBody;
+export type OpensearchTotalHits = API.Search_ResponseBody['hits']['total'];
 
 export type SearchInput = API.Search_RequestBody;
 
 type SearchOutput =
   | {
-      data: OpenSearchResponse;
+      data: OpensearchResponse;
       totalHits?: number;
       maxScore?: string | number;
     }
@@ -24,8 +24,8 @@ export const opensearchSearchHandlerFactory =
     logger: Logger,
     awsRegion: string,
     stage: string,
-    openSearchUsername: string | undefined,
-    openSearchPassword: string | undefined,
+    opensearchUsername: string | undefined,
+    opensearchPassword: string | undefined,
   ): ((
     request: lambda.Request<SearchInput>,
   ) => Promise<lambda.Response<SearchOutput>>) =>
@@ -50,8 +50,8 @@ export const opensearchSearchHandlerFactory =
       const client = await getClient(
         awsRegion,
         stage,
-        openSearchUsername,
-        openSearchPassword,
+        opensearchUsername,
+        opensearchPassword,
       );
 
       const searchBody: API.Search_RequestBody = {
@@ -69,9 +69,8 @@ export const opensearchSearchHandlerFactory =
         body: searchBody,
       });
 
-      // Check for OpenSearch errors
       if (!response.statusCode?.toString().startsWith('2')) {
-        logger.error('OpenSearch search failed', {
+        logger.error('Opensearch search failed', {
           statusCode: response.statusCode,
           body: response.body,
           index,
@@ -81,14 +80,14 @@ export const opensearchSearchHandlerFactory =
         return {
           statusCode: response.statusCode || 500,
           payload: {
-            error: 'OpenSearch search error',
+            error: 'Opensearch search error',
             details: JSON.stringify(response.body),
           },
         };
       }
 
       // Extract useful metadata from response
-      const responseBody = response.body as OpenSearchResponse;
+      const responseBody = response.body as OpensearchResponse;
       const totalHits =
         typeof responseBody.hits?.total === 'object'
           ? responseBody.hits.total.value
@@ -118,7 +117,7 @@ export const opensearchSearchHandlerFactory =
         payload,
       });
 
-      logger.error('Error executing OpenSearch search operation', {
+      logger.error('Error executing Opensearch search operation', {
         error:
           error instanceof Error
             ? {
@@ -134,7 +133,7 @@ export const opensearchSearchHandlerFactory =
       return {
         statusCode: 500,
         payload: {
-          error: 'Error executing OpenSearch search operation',
+          error: 'Error executing Opensearch search operation',
           details: error instanceof Error ? error.message : String(error),
         },
       };

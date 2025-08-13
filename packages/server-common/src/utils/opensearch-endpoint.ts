@@ -4,10 +4,10 @@ import {
 } from '@aws-sdk/client-opensearch';
 
 /**
- * OpenSearch endpoint detection
+ * Opensearch endpoint detection
  * AWS API lookup (auto-detection)
  */
-export async function getOpenSearchEndpoint({
+export async function getOpensearchEndpoint({
   awsRegion,
   stage,
 }: {
@@ -22,10 +22,10 @@ export async function getOpenSearchEndpoint({
 
   try {
     // Use AWS SDK
-    const openSearchClient = new OpenSearchClient({ region: awsRegion });
+    const opensearchClient = new OpenSearchClient({ region: awsRegion });
     const command = new DescribeDomainCommand({ DomainName: domainName });
 
-    const response = await openSearchClient.send(command);
+    const response = await opensearchClient.send(command);
 
     const endpoint = response.DomainStatus?.Endpoint;
 
@@ -37,7 +37,7 @@ export async function getOpenSearchEndpoint({
     return fullEndpoint;
   } catch (error) {
     throw new Error(
-      `Could not determine OpenSearch endpoint for ${domainName}`,
+      `Could not determine Opensearch endpoint for ${domainName}`,
     );
   }
 }

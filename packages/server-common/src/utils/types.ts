@@ -29,7 +29,7 @@ export type NullableOptionalProperties<T> = {
   [P in keyof T]: Pick<T, P> extends Required<Pick<T, P>> ? T[P] : T[P] | null;
 };
 
-export type OpenSearchDataType =
+export type OpensearchDataType =
   | 'boolean'
   | 'float'
   | 'double'
@@ -39,17 +39,17 @@ export type OpenSearchDataType =
   | 'keyword'
   | 'nested';
 
-export type OpenSearchFieldMapping = {
-  type?: OpenSearchDataType;
+export type OpensearchFieldMapping = {
+  type?: OpensearchDataType;
   properties?: {
-    [key: string]: OpenSearchFieldMapping;
+    [key: string]: OpensearchFieldMapping;
   };
 };
 
-export type OpenSearchMapping = {
+export type OpensearchMapping = {
   mappings: {
     properties: {
-      [fieldName: string]: OpenSearchFieldMapping;
+      [fieldName: string]: OpensearchFieldMapping;
     };
   };
 };

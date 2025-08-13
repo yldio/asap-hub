@@ -1,4 +1,4 @@
-name: OpenSearch Analytics Sync
+name: Opensearch Analytics Sync
 on:
   workflow_dispatch:
     inputs:

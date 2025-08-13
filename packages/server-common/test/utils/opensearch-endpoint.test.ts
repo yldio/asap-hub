@@ -3,27 +3,27 @@ import {
   DescribeDomainCommand,
 } from '@aws-sdk/client-opensearch';
 import {
-  getOpenSearchEndpoint,
+  getOpensearchEndpoint,
   extractDomainFromEndpoint,
 } from '../../src/utils/opensearch-endpoint';
 
 jest.mock('@aws-sdk/client-opensearch');
 
-const mockOpenSearchClient = OpenSearchClient as jest.MockedClass<
+const mockOpensearchClient = OpenSearchClient as jest.MockedClass<
   typeof OpenSearchClient
 >;
 const mockDescribeDomainCommand = DescribeDomainCommand as jest.MockedClass<
   typeof DescribeDomainCommand
 >;
 
-describe('OpenSearch Endpoint Utils', () => {
+describe('Opensearch Endpoint Utils', () => {
   let mockSend: jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
     mockSend = jest.fn();
-    mockOpenSearchClient.mockImplementation(
+    mockOpensearchClient.mockImplementation(
       () =>
         ({
           send: mockSend,
@@ -31,7 +31,7 @@ describe('OpenSearch Endpoint Utils', () => {
     );
   });
 
-  describe('getOpenSearchEndpoint', () => {
+  describe('getOpensearchEndpoint', () => {
     const defaultConfig = {
       awsRegion: 'us-east-1',
       stage: 'dev',
@@ -45,7 +45,7 @@ describe('OpenSearch Endpoint Utils', () => {
       };
       mockSend.mockResolvedValueOnce(mockResponse);
 
-      const result = await getOpenSearchEndpoint(defaultConfig);
+      const result = await getOpensearchEndpoint(defaultConfig);
 
       expect(result).toBe(
         'https://search-asap-hub-dev-search-xyz789.us-east-1.es.amazonaws.com',
@@ -64,7 +64,7 @@ describe('OpenSearch Endpoint Utils', () => {
 
       mockSend.mockResolvedValue(mockResponse);
 
-      const result = await getOpenSearchEndpoint({
+      const result = await getOpensearchEndpoint({
         awsRegion: 'eu-west-1',
         stage: 'branch',
       });
@@ -72,7 +72,7 @@ describe('OpenSearch Endpoint Utils', () => {
       expect(result).toBe(
         'https://search-domain-def456.eu-west-1.es.amazonaws.com',
       );
-      expect(mockOpenSearchClient).toHaveBeenCalledWith({
+      expect(mockOpensearchClient).toHaveBeenCalledWith({
         region: 'eu-west-1',
       });
       expect(mockDescribeDomainCommand).toHaveBeenCalledWith({
@@ -89,7 +89,7 @@ describe('OpenSearch Endpoint Utils', () => {
       };
       mockSend.mockResolvedValueOnce(mockResponse);
 
-      const result = await getOpenSearchEndpoint({
+      const result = await getOpensearchEndpoint({
         stage: 'production',
         awsRegion: 'us-east-1',
       });
@@ -101,7 +101,7 @@ describe('OpenSearch Endpoint Utils', () => {
         DomainName: 'asap-hub-production-search',
       });
 
-      expect(mockOpenSearchClient).toHaveBeenCalledWith({
+      expect(mockOpensearchClient).toHaveBeenCalledWith({
         region: 'us-east-1',
       });
       expect(mockSend).toHaveBeenCalledTimes(1);
@@ -111,16 +111,16 @@ describe('OpenSearch Endpoint Utils', () => {
       const mockResponse = { DomainStatus: {} };
       mockSend.mockResolvedValueOnce(mockResponse);
 
-      await expect(getOpenSearchEndpoint(defaultConfig)).rejects.toThrow(
-        'Could not determine OpenSearch endpoint for asap-hub-dev-search',
+      await expect(getOpensearchEndpoint(defaultConfig)).rejects.toThrow(
+        'Could not determine Opensearch endpoint for asap-hub-dev-search',
       );
     });
 
     test('should throw error when AWS SDK call fails', async () => {
       mockSend.mockRejectedValueOnce(new Error('AWS service unavailable'));
 
-      await expect(getOpenSearchEndpoint(defaultConfig)).rejects.toThrow(
-        'Could not determine OpenSearch endpoint for asap-hub-dev-search',
+      await expect(getOpensearchEndpoint(defaultConfig)).rejects.toThrow(
+        'Could not determine Opensearch endpoint for asap-hub-dev-search',
       );
     });
   });

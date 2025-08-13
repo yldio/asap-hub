@@ -1103,7 +1103,7 @@ __metadata:
     esbuild: ^0.19.10
     express: 4.20.0
     express-async-errors: 3.1.1
-    form-data: 3.0.4
+    form-data: 4.0.4
     got: 11.8.6
     graphql: 15.8.0
     graphql-tag: 2.12.6
@@ -1563,7 +1563,7 @@ __metadata:
     esbuild: ^0.19.10
     express: 4.20.0
     express-async-errors: 3.1.1
-    form-data: 3.0.4
+    form-data: 4.0.4
     graphql: 15.8.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
@@ -31976,16 +31976,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:3.0.4":
-  version: 3.0.4
-  resolution: "form-data@npm:3.0.4"
+"form-data@npm:4.0.4":
+  version: 4.0.4
+  resolution: "form-data@npm:4.0.4"
   dependencies:
     asynckit: ^0.4.0
     combined-stream: ^1.0.8
     es-set-tostringtag: ^2.1.0
     hasown: ^2.0.2
-    mime-types: ^2.1.35
-  checksum: 989005f575b9a14a30144df1745ef60c64cf901e648ae198bf63e5caeaf8dacf595a85dfd56f90a845eceb14fe1bea58b3845e8171337a4cf72781fa19867efc
+    mime-types: ^2.1.12
+  checksum: 9b7788836df9fa5a6999e0c02515b001946b2a868cfe53f026c69e2c537a2ff9fbfb8e9d2b678744628f3dc7a2d6e14e4e45dfaf68aa6239727f0bdb8ce0abf2
   languageName: node
   linkType: hard
 

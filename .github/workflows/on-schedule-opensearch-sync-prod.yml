@@ -1,4 +1,4 @@
-name: PROD - Sync Open Search
+name: PROD - Sync Opensearch
 on:
   schedule:
     - cron: '0 6 * * *' # At 06:00 UTC, everyday.

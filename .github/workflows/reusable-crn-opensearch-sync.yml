@@ -1,4 +1,4 @@
-name: Reusable CRN OpenSearch Sync
+name: Reusable CRN Opensearch Sync
 
 on:
   workflow_call:
@@ -57,9 +57,9 @@ jobs:
           yarn install
           yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/model,@asap-hub/server-common,@asap-hub/crn-server}' run build:babel"
           yarn build:typecheck
-      - name: Run OpenSearch Sync
+      - name: Run Opensearch Sync
         run: |
-          yarn workspace @asap-hub/crn-server sync:open-search ${{ inputs.metric }}
+          yarn workspace @asap-hub/crn-server sync:opensearch ${{ inputs.metric }}
         env:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_ENV_ID: ${{ inputs.contentful-environment-id }}
@@ -83,6 +83,6 @@ jobs:
         uses: actions/checkout@v3
       - uses: ./.github/actions/slack/
         with:
-          message: OpenSearch Analytics Sync
+          message: Opensearch Analytics Sync
           webhook: ${{ secrets.SLACK_WEBHOOK }}
           status: failure

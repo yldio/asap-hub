@@ -14,8 +14,6 @@ const {
   AUTH0_SHARED_SECRET,
   AWS_SES_ENDPOINT,
   AWS_REGION,
-  OPENSEARCH_USERNAME,
-  OPENSEARCH_PASSWORD,
   CLOUDFRONT_DISTRIBUTION_ID,
   CONTENTFUL_ACCESS_TOKEN,
   CONTENTFUL_ENV_ID,
@@ -52,6 +50,8 @@ const {
   SENTRY_DSN,
   SES_REGION,
   QUEUE_URL,
+  OPENSEARCH_USERNAME,
+  OPENSEARCH_PASSWORD,
 } = process.env;
 
 export const activeCampaignAccount = ACTIVE_CAMPAIGN_ACCOUNT || '';
@@ -122,6 +122,6 @@ export const openScienceDL = OS_EMAIL_DL || 'openscience@parkinsonsroadmap.org';
 export const alternativeAssignedOSEmail =
   ALTERNATIVE_ASSIGNED_OS_EMAIL || 'rthibault@parkinsonsroadmap.org';
 export const inviteUserQueueUrl = QUEUE_URL || '';
-export const openSearchUsername = OPENSEARCH_USERNAME || '';
-export const openSearchPassword = OPENSEARCH_PASSWORD || '';
-export const awsRegion = AWS_REGION || 'us-east-1';
+export const opensearchUsername = OPENSEARCH_USERNAME || '';
+export const opensearchPassword = OPENSEARCH_PASSWORD || '';
+export const awsRegion = AWS_REGION || REGION || 'us-east-1';

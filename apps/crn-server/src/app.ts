@@ -134,6 +134,9 @@ import { GenerativeContentDataProvider } from './data-providers/contentful/gener
 import { fileRouteFactory } from './routes/files.route';
 import FilesController from './controllers/files.controller';
 import FileProvider from './data-providers/file-provider';
+import OpensearchController from './controllers/opensearch.controller';
+import OpensearchDataProvider from './data-providers/opensearch.data-provider';
+import { opensearchRouteFactory } from './routes/opensearch.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -301,6 +304,9 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const generativeContentDataProvider = new GenerativeContentDataProvider();
 
+  const opensearchProvider =
+    libs.opensearchProvider || new OpensearchDataProvider();
+
   // Controllers
   const analyticsController =
     libs.analyticsController || new AnalyticsController(analyticsDataProvider);
@@ -371,6 +377,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     new WorkingGroupController(workingGroupDataProvider);
   const filesController =
     libs.filesController || new FilesController(new FileProvider());
+  const opensearchController =
+    libs.opensearchController || new OpensearchController(opensearchProvider);
 
   // Handlers
   const authHandler =
@@ -412,6 +420,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const labRoutes = labRouteFactory(labController);
   const manuscriptRoutes = manuscriptRouteFactory(manuscriptController);
   const newsRoutes = newsRouteFactory(newsController);
+  const opensearchRoutes = opensearchRouteFactory(opensearchController);
   const pageRoutes = pageRouteFactory(pageController);
   const reminderRoutes = reminderRouteFactory(reminderController);
   const researchOutputRoutes = researchOutputRouteFactory(
@@ -425,6 +434,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupsController);
 
   const fileRoutes = fileRouteFactory(filesController);
+
   /**
    * --- end of dependency inection
    */
@@ -484,6 +494,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(labRoutes);
   app.use(manuscriptRoutes);
   app.use(newsRoutes);
+  app.use(opensearchRoutes);
   app.use(reminderRoutes);
   app.use(researchOutputRoutes);
   app.use(teamRoutes);
@@ -566,4 +577,6 @@ export type Libs = {
   sentryTransactionIdHandler?: RequestHandler;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
+  opensearchController?: OpensearchController;
+  opensearchProvider?: OpensearchDataProvider;
 };

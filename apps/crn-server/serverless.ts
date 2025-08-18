@@ -88,13 +88,13 @@ const algoliaIndex = process.env.ALGOLIA_INDEX
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
 
-const openSearchDomainName =
+const opensearchDomainName =
   stage === 'production'
     ? `${service}-${stage}-search`
     : `${service}-dev-search`;
 
-const OpenSearchDomain =
-  stage === 'production' ? 'OpenSearchDomainProd' : 'OpenSearchDomain';
+const opensearchDomain =
+  stage === 'production' ? 'OpensearchDomainProd' : 'OpensearchDomain';
 
 const shouldCreateDomain = stage === 'production' || stage === 'dev';
 
@@ -187,7 +187,7 @@ const serverlessConfig: AWS = {
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
       CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: contentfulManagementAccessToken,
       CONTENTFUL_SPACE_ID: contentfulSpaceId,
-      OPENSEARCH_DOMAIN_NAME: openSearchDomainName,
+      OPENSEARCH_DOMAIN_NAME: opensearchDomainName,
     },
     iam: {
       role: {
@@ -204,7 +204,7 @@ const serverlessConfig: AWS = {
             ],
             Resource: {
               'Fn::Sub':
-                'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.openSearchDomainName}/*',
+                'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.opensearchDomainName}/*',
             },
           },
           {
@@ -212,7 +212,7 @@ const serverlessConfig: AWS = {
             Action: ['es:DescribeDomain', 'es:DescribeDomains'],
             Resource: {
               'Fn::Sub':
-                'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.openSearchDomainName}',
+                'arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${self:custom.opensearchDomainName}',
             },
           },
           {
@@ -240,6 +240,43 @@ const serverlessConfig: AWS = {
             Resource: {
               'Fn::Sub':
                 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:asap-hub-${self:provider.stage}-getPresignedUrl',
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: [
+              'es:ESHttpGet',
+              'es:ESHttpPost',
+              'es:ESHttpPut',
+              'es:ESHttpDelete',
+              'es:ESHttpHead',
+              'es:ESHttpPatch',
+              'es:DescribeDomain',
+              'es:DescribeDomains',
+              'es:ListDomainNames',
+            ],
+            Resource: {
+              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${opensearchDomainName}/*`,
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['es:DescribeDomain', 'es:DescribeDomains'],
+            Resource: {
+              'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${opensearchDomainName}`,
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: ['es:ListDomainNames'],
+            Resource: '*',
+          },
+          {
+            Effect: 'Allow',
+            Action: ['lambda:InvokeFunction'],
+            Resource: {
+              'Fn::Sub':
+                'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:asap-hub-${self:provider.stage}-opensearch-search-handler',
             },
           },
           {
@@ -368,7 +405,7 @@ const serverlessConfig: AWS = {
   custom: {
     apiHostname: new URL(apiUrl).hostname,
     appHostname: new URL(appUrl).hostname,
-    openSearchDomainName,
+    opensearchDomainName,
     s3Sync: [
       {
         bucketName: '${self:service}-${self:provider.stage}-frontend',
@@ -1227,6 +1264,17 @@ const serverlessConfig: AWS = {
         SLACK_WEBHOOK: slackWebhook,
       },
     },
+    opensearchSearchHandler: {
+      handler: './src/handlers/opensearch/opensearch-search-handler.handler',
+      timeout: 30,
+      memorySize: 512,
+      name: 'asap-hub-${self:provider.stage}-opensearch-search-handler',
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+        OPENSEARCH_USERNAME: opensearchMasterUser,
+        OPENSEARCH_PASSWORD: opensearchMasterPassword,
+      },
+    },
   },
   resources: {
     Conditions: {
@@ -2019,10 +2067,10 @@ const serverlessConfig: AWS = {
         },
       },
       ...(shouldCreateDomain && {
-        [OpenSearchDomain]: {
+        [opensearchDomain]: {
           Type: 'AWS::OpenSearchService::Domain',
           Properties: {
-            DomainName: openSearchDomainName,
+            DomainName: opensearchDomainName,
             EngineVersion: 'OpenSearch_2.19',
             ClusterConfig: {
               InstanceType: 't3.medium.search',
@@ -2050,7 +2098,7 @@ const serverlessConfig: AWS = {
                   },
                   Action: 'es:*',
                   Resource: {
-                    'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${openSearchDomainName}/*`,
+                    'Fn::Sub': `arn:aws:es:\${AWS::Region}:\${AWS::AccountId}:domain/${opensearchDomainName}/*`,
                   },
                 },
               ],

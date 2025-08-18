@@ -134,8 +134,6 @@ export default class OpensearchProvider {
     index: string;
     body: OpensearchRequest;
     loggedInUser: UserResponse;
-    size?: number;
-    from?: number;
   }): Promise<OpensearchResponse> {
     logger.info('Searching Opensearch', {
       index: params.index,
@@ -150,8 +148,8 @@ export default class OpensearchProvider {
     try {
       const searchPayload: OpensearchRequest = {
         ...params.body,
-        size: params.size ?? 10,
-        from: params.from ?? 0,
+        size: params.body.size ?? 10,
+        from: params.body.from ?? 0,
       };
 
       const response = await this.invokeLambda(

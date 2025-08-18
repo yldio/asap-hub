@@ -223,10 +223,11 @@ describe('OpensearchProvider', () => {
 
       await opensearchProvider.search({
         index: 'os-champion',
-        body: mockSearchRequest,
+        body: {...mockSearchRequest,
+          size,
+          from
+        },
         loggedInUser: mockUser,
-        size,
-        from,
       });
 
       const requestSent = mockSend.mock.calls[0][0];

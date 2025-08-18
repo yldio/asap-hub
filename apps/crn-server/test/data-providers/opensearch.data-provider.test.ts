@@ -223,10 +223,7 @@ describe('OpensearchProvider', () => {
 
       await opensearchProvider.search({
         index: 'os-champion',
-        body: {...mockSearchRequest,
-          size,
-          from
-        },
+        body: { ...mockSearchRequest, size, from },
         loggedInUser: mockUser,
       });
 

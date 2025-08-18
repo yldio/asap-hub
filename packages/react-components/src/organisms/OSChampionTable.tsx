@@ -1,12 +1,16 @@
-// import { network } from '@asap-hub/routing';
+import {
+  OSChampionResponse,
+  OSChampionSortingDirection,
+  SortOSChampion,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { Card /* , Link */ } from '../atoms';
+import { Card } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import { AlphabeticalSortingIcon, NumericalSortingIcon } from '../icons';
-import { perRem, tabletScreen } from '../pixels';
-import LeadershipPageBody from '../templates/AnalyticsLeadershipPageBody';
+import { OSChampionRow, PageControls } from '../molecules';
+import { perRem, rem, tabletScreen } from '../pixels';
 
 const container = css({
   display: 'grid',
@@ -45,7 +49,7 @@ const rowStyles = css({
     borderRadius: `${borderRadius / perRem}em`,
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: '1fr 1fr',
+    gridTemplateColumns: '48px 1fr 1fr',
     columnGap: `${15 / perRem}em`,
     paddingTop: `${0 / perRem}em`,
     paddingBottom: 0,
@@ -63,7 +67,7 @@ const titleStyles = css({
 
 // const teamNameStyles = css({
 //   display: 'flex',
-//   gap: `${3 / perRem}em`,
+//   gap: rem(3),
 // });
 
 const buttonStyles = css({
@@ -76,68 +80,88 @@ const buttonStyles = css({
   alignSelf: 'center',
 });
 
-export type TeamMetric = {
-  id: string;
-  name: string;
-  memberCount: number;
+const pageControlsStyles = css({
+  justifySelf: 'center',
+  paddingTop: rem(36),
+  paddingBottom: rem(36),
+});
+
+type OSChampionTableProps = ComponentProps<typeof PageControls> & {
+  data: OSChampionResponse[];
+  sort: SortOSChampion;
+  setSort: React.Dispatch<React.SetStateAction<SortOSChampion>>;
+  sortingDirection: OSChampionSortingDirection;
+  setSortingDirection: React.Dispatch<
+    React.SetStateAction<OSChampionSortingDirection>
+  >;
 };
-type OSChampionTableProps = Pick<
-  ComponentProps<typeof LeadershipPageBody>,
-  'data' | 'sort' | 'setSort' | 'sortingDirection' | 'setSortingDirection'
->;
 
 const OSChampionTable: React.FC<OSChampionTableProps> = ({
   data,
   sort,
   sortingDirection,
+  ...pageControlProps
 }) => {
   const iconDescription = 'Open Science Champion';
   const isTeamSortActive = sort.includes('team');
   const isNumberOSChampionAwardsSortActive =
     sort.includes('os-champion-awards');
   return (
-    <Card padding={false}>
-      <div css={container}>
-        <div css={[rowStyles, gridTitleStyles]}>
-          <span css={titleStyles}>
-            Team
-            <button
-              css={buttonStyles}
-              // onClick={() => {}}
-            >
-              <AlphabeticalSortingIcon
-                active={isTeamSortActive}
-                ascending={sortingDirection.team === 'asc'}
-              />
-            </button>
-          </span>
+    <>
+      <Card padding={false}>
+        <div css={container}>
+          <div css={[rowStyles, gridTitleStyles]}>
+            <span css={titleStyles}></span>
+            <span css={titleStyles}>
+              Team
+              <button
+                css={buttonStyles}
+                // onClick={() => {}}
+              >
+                <AlphabeticalSortingIcon
+                  active={isTeamSortActive}
+                  ascending={sortingDirection.team === 'asc'}
+                />
+              </button>
+            </span>
 
-          <span css={titleStyles}>
-            Total number of Open Science Champion awards
-            <button
-              css={buttonStyles}
-              // onClick={() => {}}
-            >
-              <NumericalSortingIcon
-                active={isNumberOSChampionAwardsSortActive}
-                ascending={sortingDirection.osChampionAwards === 'asc'}
-                description={`${iconDescription} OS Champion Awards`}
-              />
-            </button>
-          </span>
-        </div>
-        {/* {data.map((row) => (
-          <div key={row.id} css={[rowStyles]}>
-            <span css={[titleStyles, rowTitleStyles]}>Team</span>
-            <p css={teamNameStyles}>
-              <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
-                {row.name}
-              </Link>
-            </p>
+            <span css={titleStyles}>
+              Total number of Open Science Champion awards
+              <button
+                css={buttonStyles}
+                // onClick={() => {}}
+              >
+                <NumericalSortingIcon
+                  active={isNumberOSChampionAwardsSortActive}
+                  ascending={sortingDirection.osChampionAwards === 'asc'}
+                  description={`${iconDescription} OS Champion Awards`}
+                />
+              </button>
+            </span>
           </div>
-        ))} */}
-      </div>
-    </Card>
+          {data.map((row) => (
+            <OSChampionRow rowItem={row} key={row.teamId} />
+            // <div key={row.teamId} css={[rowStyles]}>
+            //   <span css={[titleStyles, rowTitleStyles]}>Team</span>
+            //   <p css={teamNameStyles}>
+            //     <Link
+            //       href={network({}).teams({}).team({ teamId: row.teamId }).$}
+            //     >
+            //       {row.teamName}
+            //     </Link>
+            //   </p>
+            //   <span css={[titleStyles, rowTitleStyles]}>
+            //     Total number of Open Science Champion awards
+            //   </span>
+            //   <p>{row.teamAwardsCount}</p>
+            // </div>
+          ))}
+        </div>
+      </Card>
+      <section css={pageControlsStyles}>
+        <PageControls {...pageControlProps} />
+      </section>
+    </>
   );
 };
 

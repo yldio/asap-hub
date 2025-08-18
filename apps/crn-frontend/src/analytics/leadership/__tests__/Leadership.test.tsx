@@ -35,6 +35,16 @@ jest.mock('../../../hooks/algolia', () => ({
   useAnalyticsAlgolia: jest.fn(),
 }));
 
+jest.mock('../api', () => {
+  const original = jest.requireActual('../api');
+  return {
+    ...original,
+    getAnalyticsOSChampion: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+  };
+});
+
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
 >;
@@ -128,7 +138,8 @@ it('switches to interest group data', async () => {
   expect(screen.getAllByText(label).length).toBe(2);
 });
 
-it('renders with open science data', async () => {
+it('renders with open science data if flag is on', async () => {
+  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
   await renderPage('os-champion');
   expect(screen.getAllByText('Open Science Champion').length).toBe(2);
 });

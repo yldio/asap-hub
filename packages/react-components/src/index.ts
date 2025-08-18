@@ -165,6 +165,7 @@ export {
   NoEvents,
   OnboardingFooter,
   ShortDescriptionCard,
+  OSChampionTable,
   OutputVersions,
   PageCard,
   PagesSection,

@@ -61,7 +61,11 @@ export type SortLeadershipAndMembership =
   | 'ig_current_membership_asc'
   | 'ig_current_membership_desc'
   | 'ig_previous_membership_asc'
-  | 'ig_previous_membership_desc'
+  | 'ig_previous_membership_desc';
+
+export type SortOSChampion =
+  | 'team_asc'
+  | 'team_desc'
   | 'os_champion_awards_asc'
   | 'os_champion_awards_desc';
 
@@ -70,8 +74,9 @@ export type LeadershipAndMembershipFields =
   | 'currentLeadership'
   | 'previousLeadership'
   | 'currentMembership'
-  | 'previousMembership'
-  | 'osChampionAwards';
+  | 'previousMembership';
+
+export type OSChampionFields = 'team' | 'osChampionAwards';
 
 export type SortingDirection = 'asc' | 'desc';
 
@@ -87,8 +92,17 @@ export const initialSortingDirection = {
   osChampionAwards: descending,
 };
 
+export const osChampionInitialSortingDirection = {
+  team: ascending,
+  osChampionAwards: descending,
+};
+
 export type LeadershipAndMembershipSortingDirection = {
   [key in LeadershipAndMembershipFields]: SortingDirection;
+};
+
+export type OSChampionSortingDirection = {
+  [key in OSChampionFields]: SortingDirection;
 };
 
 export const timeRanges = [

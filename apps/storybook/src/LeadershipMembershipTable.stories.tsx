@@ -46,6 +46,9 @@ const props: ComponentProps<typeof LeadershipMembershipTable> = {
       previousMemberCount: 4,
     },
   ],
+  numberOfPages: 1,
+  currentPageIndex: 0,
+  renderPageHref: () => '',
 };
 
 export const Normal = () => <LeadershipMembershipTable {...props} />;

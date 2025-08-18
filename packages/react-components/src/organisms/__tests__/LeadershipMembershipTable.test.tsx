@@ -18,6 +18,12 @@ const dataItem: DataItem = {
 };
 const data: DataItem[] = [dataItem];
 
+const pageControlsProps = {
+  numberOfPages: 1,
+  currentPageIndex: 0,
+  renderPageHref: () => '',
+};
+
 describe('LeadershipMembershipTable', () => {
   it('renders data', () => {
     const { getByText } = render(
@@ -28,6 +34,7 @@ describe('LeadershipMembershipTable', () => {
         setSort={jest.fn()}
         sortingDirection={initialSortingDirection}
         setSortingDirection={jest.fn()}
+        {...pageControlsProps}
       />,
     );
     expect(getByText('Test Team')).toBeInTheDocument();
@@ -42,6 +49,7 @@ describe('LeadershipMembershipTable', () => {
         setSort={jest.fn()}
         sortingDirection={initialSortingDirection}
         setSortingDirection={jest.fn()}
+        {...pageControlsProps}
       />,
     );
 
@@ -55,6 +63,7 @@ describe('LeadershipMembershipTable', () => {
         setSort={jest.fn()}
         sortingDirection={initialSortingDirection}
         setSortingDirection={jest.fn()}
+        {...pageControlsProps}
       />,
     );
 
@@ -113,6 +122,7 @@ describe('LeadershipMembershipTable', () => {
           setSort={setSort}
           sortingDirection={sortingDirection}
           setSortingDirection={setSortingDirection}
+          {...pageControlsProps}
         />,
       );
 

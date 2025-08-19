@@ -5,14 +5,14 @@ import {
   ClientSearchResponse,
 } from '@asap-hub/algolia';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
+import { OSChampionDataObject } from '@asap-hub/model';
 import {
   AnalyticsSearchOptions,
   getAnalyticsLeadership,
   getAnalyticsOSChampion,
 } from '../api';
 import { API_BASE_URL } from '../../../config';
-import { OpenSearchHit } from 'src/analytics/utils/api';
-import { OSChampionDataObject } from '@asap-hub/model';
+import { OpenSearchHit } from '../../utils/api';
 
 jest.mock('../../../config');
 

@@ -126,6 +126,12 @@ it('renders with interest group data', async () => {
   ).toBe(2);
 });
 
+it('renders with open science data if flag is on', async () => {
+  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+  await renderPage('os-champion');
+  expect(screen.getAllByText('Open Science Champion').length).toBe(2);
+});
+
 it('switches to interest group data', async () => {
   jest.spyOn(console, 'error').mockImplementation();
   const label = /Interest Group Leadership & Membership/;
@@ -138,10 +144,17 @@ it('switches to interest group data', async () => {
   expect(screen.getAllByText(label).length).toBe(2);
 });
 
-it('renders with open science data if flag is on', async () => {
+it('switches to open science champion data if flag is on', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
   jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
-  await renderPage('os-champion');
-  expect(screen.getAllByText('Open Science Champion').length).toBe(2);
+  const label = /Open Science Champion/;
+
+  await renderPage();
+  const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
+  userEvent.click(input);
+  userEvent.click(screen.getByText(label));
+
+  expect(screen.getAllByText(label).length).toBe(3);
 });
 
 it('redirects to working group if OS Champion feature flag is off', async () => {

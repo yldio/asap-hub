@@ -141,20 +141,6 @@ const OSChampionTable: React.FC<OSChampionTableProps> = ({
           </div>
           {data.map((row) => (
             <OSChampionRow rowItem={row} key={row.teamId} />
-            // <div key={row.teamId} css={[rowStyles]}>
-            //   <span css={[titleStyles, rowTitleStyles]}>Team</span>
-            //   <p css={teamNameStyles}>
-            //     <Link
-            //       href={network({}).teams({}).team({ teamId: row.teamId }).$}
-            //     >
-            //       {row.teamName}
-            //     </Link>
-            //   </p>
-            //   <span css={[titleStyles, rowTitleStyles]}>
-            //     Total number of Open Science Champion awards
-            //   </span>
-            //   <p>{row.teamAwardsCount}</p>
-            // </div>
           ))}
         </div>
       </Card>

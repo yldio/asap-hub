@@ -87,11 +87,7 @@ const rowContainerStyles = css({
 interface OSChampionRowProps {
   rowItem: OSChampionResponse;
 }
-const OSChampionRow: React.FC<OSChampionRowProps> = ({
-  rowItem,
-  //   performance,
-  //   type,
-}) => {
+const OSChampionRow: React.FC<OSChampionRowProps> = ({ rowItem }) => {
   const [expanded, setExpanded] = useState(false);
   const canExpand = !!rowItem.users.length;
 

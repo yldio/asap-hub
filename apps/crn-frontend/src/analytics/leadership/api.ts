@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/model';
 import { MetricOption } from '@asap-hub/react-components';
 import { API_BASE_URL } from '../../config';
-import { OpenSearchHit } from '../utils/api';
+import { generateSearchQuery, OpenSearchHit } from '../utils/api';
 
 export type AnalyticsSearchOptions = {
   metric?: MetricOption;
@@ -36,10 +36,12 @@ export const getAnalyticsLeadership = async (
 
 export const getAnalyticsOSChampion = async (
   authorization: string,
+  { currentPage, pageSize }: AnalyticsSearchOptions,
 ): Promise<ListOSChampionResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/opensearch/search/os-champion`, {
     method: 'POST',
     headers: { authorization },
+    body: JSON.stringify(generateSearchQuery(currentPage, pageSize)),
   });
 
   if (!resp.ok) {
@@ -94,7 +96,7 @@ export const getAnalyticsOSChampion = async (
   // }
 
   const result = await resp.json();
-  const items = result.hits.hits.map(
+  const items = result.hits?.hits?.map(
     (osChampion: OpenSearchHit<OSChampionDataObject>) => {
       const { teamId, teamName, teamAwardsCount, isTeamInactive, users } =
         // eslint-disable-next-line no-underscore-dangle
@@ -112,6 +114,6 @@ export const getAnalyticsOSChampion = async (
 
   return {
     items,
-    total: result.hits.total.value,
+    total: result.hits?.total?.value || 0,
   };
 };

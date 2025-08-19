@@ -1,3 +1,5 @@
+const DEFAULT_PAGE_NUMBER = 0;
+const DEFAULT_PAGE_SIZE = 10;
 export interface OpenSearchHit<T> {
   _index: string;
   _id: string;
@@ -5,10 +7,13 @@ export interface OpenSearchHit<T> {
   _source: T;
 }
 
-export const generateSearchQuery = (page: number, size: number) => ({
+export const generateSearchQuery = (
+  page: number | null,
+  size: number | null,
+) => ({
   query: {
     match_all: {},
   },
-  size,
-  from: page * size,
+  size: size || DEFAULT_PAGE_SIZE,
+  from: (page || DEFAULT_PAGE_NUMBER) * (size || DEFAULT_PAGE_SIZE),
 });

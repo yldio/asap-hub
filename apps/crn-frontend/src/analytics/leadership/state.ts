@@ -173,7 +173,7 @@ export const useAnalyticsOSChampion = (options: OSOptions) => {
     analyticsOSChampionState(options),
   );
   if (osChampion === undefined) {
-    throw getAnalyticsOSChampion(authorization)
+    throw getAnalyticsOSChampion(authorization, options)
       .then(setOSChampion)
       .catch(setOSChampion);
   }

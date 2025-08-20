@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, within } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
 import { ComponentProps } from 'react';
 import {
@@ -57,11 +57,13 @@ describe('OSChampionTable', () => {
   });
 
   it('allows collapsing and expanding rows', () => {
-    const { getByRole, getByText, queryByText } = render(
+    const { getByTestId, getByText, queryByText } = render(
       <OSChampionTable {...defaultProps} />,
     );
     expect(queryByText('Test User')).not.toBeInTheDocument();
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(
+      within(getByTestId('os-champion-table-row')).getByRole('button'),
+    );
     expect(getByText('Test User')).toBeVisible();
   });
 });

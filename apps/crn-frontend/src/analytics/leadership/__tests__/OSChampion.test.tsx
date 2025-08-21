@@ -9,7 +9,6 @@ import { analyticsOSChampionState } from '../state';
 import OSChampion from '../OSChampion';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 
-
 jest.mock('../api');
 
 afterEach(() => {

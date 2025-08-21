@@ -16,9 +16,11 @@ import {
   ManuscriptVersion,
   PartialManuscriptResponse,
   ManuscriptDataObject,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useCallback, useState } from 'react';
+import { useSetResearchOutputItem } from '../../shared-research/state';
 import {
   atom,
   atomFamily,
@@ -54,6 +56,7 @@ import {
   markDiscussionAsRead,
   downloadFullComplianceDataset,
   getManuscriptVersions,
+  createPreprintResearchOutput,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -701,4 +704,18 @@ export const usePresignedUrl = () => {
   };
 
   return { fetchPresignedUrl, loading, error };
+};
+
+export const usePostPreprintResearchOutput = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const setResearchOutputItem = useSetResearchOutputItem();
+
+  return async (manuscriptId: string): Promise<ResearchOutputResponse> => {
+    const preprintResearchOutput = await createPreprintResearchOutput(
+      manuscriptId,
+      authorization,
+    );
+    setResearchOutputItem(preprintResearchOutput);
+    return preprintResearchOutput;
+  };
 };

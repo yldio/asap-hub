@@ -1,4 +1,4 @@
-import { isEnabled } from '@asap-hub/flags';
+import { Flag, isEnabled } from '@asap-hub/flags';
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
   researchOutputDocumentTypeToType,
@@ -47,7 +47,11 @@ import {
   useResearchTags,
   useTeamSuggestions,
 } from '../../shared-state';
-import { useManuscriptVersionSuggestions, useTeamById } from './state';
+import {
+  useManuscriptVersionSuggestions,
+  useTeamById,
+  usePostPreprintResearchOutput,
+} from './state';
 
 const useParamOutputDocumentType = (
   teamId: string,
@@ -70,8 +74,11 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   teamId,
   researchOutputData,
   descriptionUnchangedWarning,
-  versionAction,
+  versionAction: versionActionProp,
 }) => {
+  const [versionAction, setVersionAction] = useState<
+    'create' | 'edit' | undefined
+  >(versionActionProp);
   const [manuscriptOutputSelection, setManuscriptOutputSelection] = useState<
     'manually' | 'import' | ''
   >('');
@@ -81,6 +88,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     ResearchOutputResponse | undefined
   >(researchOutputData);
 
+  const [isImportingManuscript, setIsImportingManuscript] = useState(false);
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
   const documentType =
     updatedOutput?.documentType ||
@@ -116,6 +124,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const createResearchOutput = usePostResearchOutput();
   const updateResearchOutput = usePutResearchOutput();
   const updateAndPublishResearchOutput = usePutResearchOutput(true);
+  const createPreprintResearchOutput = usePostPreprintResearchOutput();
 
   const getImpactSuggestions = useImpactSuggestions();
   const getCategorySuggestions = useCategorySuggestions();
@@ -158,7 +167,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     versions = updatedOutput?.versions ?? [];
   }
 
-  const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS');
+  const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS' as Flag);
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
     isManuscriptOutputFlagEnabled &&
       documentType === 'Article' &&
@@ -175,33 +184,80 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     if (showManuscriptOutputFlow) {
       return (
         <Frame title="Share Research Output">
-          <ResearchOutputHeader
-            documentType={documentType}
-            workingGroupAssociation={false}
-          />
-          <ManuscriptOutputSelection
-            manuscriptOutputSelection={manuscriptOutputSelection}
-            onChangeManuscriptOutputSelection={handleManuscriptOutputSelection}
-            onSelectCreateManually={() => setShowManuscriptOutputFlow(false)}
-            selectedVersion={selectedManuscriptVersion}
-            setSelectedVersion={setManuscriptVersion}
-            onImportManuscript={() => {
-              setShowManuscriptOutputFlow(false);
-            }}
-            getManuscriptVersionOptions={(input) =>
-              getManuscriptVersionSuggestions(input, teamId).then(
-                (versionSuggestions) =>
-                  versionSuggestions.map((version) => ({
-                    version,
-                    label: version.title,
-                    value: version.id,
-                  })),
-              )
-            }
-          />
+          <InnerToastContext.Provider value={toast}>
+            {toastNode && (
+              <Toast accent="error" onClose={() => setToastNode(undefined)}>
+                {toastNode}
+              </Toast>
+            )}
+            <ResearchOutputHeader
+              documentType={documentType}
+              workingGroupAssociation={false}
+            />
+            <ManuscriptOutputSelection
+              isImportingManuscript={isImportingManuscript}
+              manuscriptOutputSelection={manuscriptOutputSelection}
+              onChangeManuscriptOutputSelection={
+                handleManuscriptOutputSelection
+              }
+              onSelectCreateManually={() => setShowManuscriptOutputFlow(false)}
+              selectedVersion={selectedManuscriptVersion}
+              setSelectedVersion={setManuscriptVersion}
+              onImportManuscript={async () => {
+                if (
+                  selectedManuscriptVersion?.version?.lifecycle === 'Preprint'
+                ) {
+                  setShowManuscriptOutputFlow(false);
+                } else if (selectedManuscriptVersion?.version?.manuscriptId) {
+                  try {
+                    setIsImportingManuscript(true);
+                    const preprintResearchOutput =
+                      await createPreprintResearchOutput(
+                        selectedManuscriptVersion.version.id.replace('mv-', ''),
+                      );
+
+                    if (preprintResearchOutput.id) {
+                      setUpdatedOutput((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              id: preprintResearchOutput.id,
+                              versions: [
+                                ...(prev?.versions ?? []),
+                                preprintResearchOutput,
+                              ],
+                              relatedManuscriptVersion:
+                                selectedManuscriptVersion.version?.id,
+                            }
+                          : undefined,
+                      );
+
+                      setVersionAction('create');
+                    }
+                    setShowManuscriptOutputFlow(false);
+                  } catch (error) {
+                    toast('An error has occurred. Please try again later.');
+                  } finally {
+                    setIsImportingManuscript(false);
+                  }
+                }
+              }}
+              getManuscriptVersionOptions={(input) =>
+                getManuscriptVersionSuggestions(input, teamId).then(
+                  (versionSuggestions) =>
+                    versionSuggestions.map((version) => ({
+                      version,
+                      label: version.title,
+                      value: version.id,
+                    })),
+                )
+              }
+            />
+          </InnerToastContext.Provider>
         </Frame>
       );
     }
+
     return (
       <Frame title="Share Research Output">
         {versionAction === 'create' && (
@@ -211,7 +267,11 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           </Toast>
         )}
         <InnerToastContext.Provider value={toast}>
-          {toastNode && <Toast accent="error">{toastNode}</Toast>}
+          {toastNode && (
+            <Toast accent="error" onClose={() => setToastNode(undefined)}>
+              {toastNode}
+            </Toast>
+          )}
           <ResearchOutputHeader
             documentType={documentType}
             workingGroupAssociation={false}
@@ -282,7 +342,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                     createVersion: versionAction === 'create',
                     relatedManuscriptVersion:
                       versionAction === 'create'
-                        ? undefined
+                        ? selectedManuscriptVersion
+                          ? selectedManuscriptVersion.version?.versionId
+                          : undefined
                         : updatedOutput.relatedManuscriptVersion,
                     statusChangedById: updatedOutput.statusChangedBy?.id,
                     isInReview: updatedOutput.isInReview,

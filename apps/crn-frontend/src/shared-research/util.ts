@@ -1,17 +1,10 @@
 import {
-  ManuscriptLifecycle,
-  ManuscriptType,
+  mapManuscriptLifecycleToType,
+  mapManuscriptTypeToSubType,
   ManuscriptVersionResponse,
   ResearchOutputPublishingEntities,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-
-export const mapManuscriptTypeToSubType = (manuscriptType: ManuscriptType) =>
-  manuscriptType === 'Original Research' ? 'Original Research' : 'Review';
-
-export const mapManuscriptLifecycleToType = (
-  manuscriptLifecycle: ManuscriptLifecycle,
-) => (manuscriptLifecycle === 'Preprint' ? 'Preprint' : 'Published');
 
 export const mapManuscriptVersionToResearchOutput = (
   output: ResearchOutputResponse | undefined,

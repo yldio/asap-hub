@@ -15,7 +15,12 @@ import {
   useRecoilValue,
 } from 'recoil';
 import { authorizationState } from '../../../auth/state';
-import { getManuscript, updateDiscussion, createDiscussion } from '../api';
+import {
+  getManuscript,
+  updateDiscussion,
+  createDiscussion,
+  createPreprintResearchOutput,
+} from '../api';
 import * as stateModule from '../state';
 import {
   patchedTeamState,
@@ -36,6 +41,7 @@ jest.mock('../api', () => ({
   getManuscript: jest.fn(),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
   createDiscussion: jest.fn(),
+  createPreprintResearchOutput: jest.fn(),
 }));
 
 jest.mock('../../../shared-api/files');
@@ -835,5 +841,108 @@ describe('useCreateDiscussion', () => {
     });
 
     expect(getManuscript).toHaveBeenCalledWith(manuscriptId, mockAuthorization);
+  });
+});
+
+describe('usePostPreprintResearchOutput', () => {
+  const mockAuthorization = 'mock-token';
+  const mockManuscriptId = 'manuscript-id-123';
+  const mockResearchOutputResponse = {
+    id: 'research-output-123',
+    title: 'Test Preprint',
+    documentType: 'Article',
+    teams: [{ id: '42', displayName: 'Team One' }],
+    published: true,
+  };
+
+  beforeEach(() => {
+    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
+      if (state === authorizationState) {
+        return mockAuthorization;
+      }
+      return undefined;
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('calls createPreprintResearchOutput with correct parameters and updates state', async () => {
+    (createPreprintResearchOutput as jest.Mock).mockResolvedValue(
+      mockResearchOutputResponse,
+    );
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(
+      () => stateModule.usePostPreprintResearchOutput(),
+      {
+        wrapper,
+      },
+    );
+
+    await act(async () => {
+      const response = await result.current(mockManuscriptId);
+      expect(response).toEqual(mockResearchOutputResponse);
+    });
+
+    expect(createPreprintResearchOutput).toHaveBeenCalledWith(
+      mockManuscriptId,
+      mockAuthorization,
+    );
+  });
+
+  it('handles errors from createPreprintResearchOutput', async () => {
+    const mockError = new Error('Failed to create preprint research output');
+    (createPreprintResearchOutput as jest.Mock).mockRejectedValue(mockError);
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(
+      () => stateModule.usePostPreprintResearchOutput(),
+      {
+        wrapper,
+      },
+    );
+
+    await act(async () => {
+      await expect(result.current(mockManuscriptId)).rejects.toThrow(
+        'Failed to create preprint research output',
+      );
+    });
+
+    expect(createPreprintResearchOutput).toHaveBeenCalledWith(
+      mockManuscriptId,
+      mockAuthorization,
+    );
+  });
+
+  it('returns the research output response from the API', async () => {
+    (createPreprintResearchOutput as jest.Mock).mockResolvedValue(
+      mockResearchOutputResponse,
+    );
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(
+      () => stateModule.usePostPreprintResearchOutput(),
+      {
+        wrapper,
+      },
+    );
+
+    let response;
+    await act(async () => {
+      response = await result.current(mockManuscriptId);
+    });
+
+    expect(response).toEqual(mockResearchOutputResponse);
   });
 });

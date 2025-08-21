@@ -57,6 +57,14 @@ export default class ManuscriptController {
     });
   }
 
+  async fetchResearchOutputExistenceByManuscriptVersionId(
+    manuscriptVersionId: string,
+  ): Promise<boolean> {
+    return this.manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+      manuscriptVersionId,
+    );
+  }
+
   private async validateTitleUniqueness(
     manuscriptData:
       | ManuscriptCreateControllerDataObject

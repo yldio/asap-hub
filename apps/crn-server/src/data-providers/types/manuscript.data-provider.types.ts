@@ -28,4 +28,7 @@ export type ManuscriptDataProvider = Omit<
     input: ManuscriptResubmitDataObject,
   ) => Promise<void>;
   fetchById(id: string, userId: string): Promise<ManuscriptDataObject | null>;
+  fetchResearchOutputExistenceByManuscriptVersionId(
+    manuscriptVersionId: string,
+  ): Promise<boolean>;
 };

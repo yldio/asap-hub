@@ -22,8 +22,10 @@ import {
   getResearchOutputPutRequest,
   getResearchOutputResponse,
 } from '../fixtures/research-output.fixtures';
+import { getManuscriptResponse } from '../fixtures/manuscript.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
 import { researchOutputControllerMock } from '../mocks/research-output.controller.mock';
+import { manuscriptControllerMock } from '../mocks/manuscript.controller.mock';
 
 describe('/research-outputs/ route', () => {
   const userMockFactory = jest.fn<UserResponse, []>();
@@ -33,6 +35,7 @@ describe('/research-outputs/ route', () => {
   };
   const app = appFactory({
     researchOutputController: researchOutputControllerMock,
+    manuscriptController: manuscriptControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });
@@ -824,6 +827,631 @@ describe('/research-outputs/ route', () => {
             ]),
           );
         });
+      });
+    });
+
+    describe('POST /research-outputs/preprint', () => {
+      const manuscriptResponse = getManuscriptResponse({
+        id: 'manuscript-id-1',
+        title: 'Test Manuscript',
+        url: 'https://example.com/manuscript',
+        versions: [
+          {
+            id: 'version-1',
+            lifecycle: 'Preprint',
+            type: 'Original Research',
+            description: 'A good description',
+            shortDescription: 'A good short description',
+            count: 1,
+            createdBy: {
+              id: 'user-id-1',
+              firstName: 'John',
+              lastName: 'Doe',
+              displayName: 'John Doe',
+              teams: [{ id: 'team-1', name: 'Team 1' }],
+            },
+            updatedBy: {
+              id: 'user-id-1',
+              firstName: 'John',
+              lastName: 'Doe',
+              displayName: 'John Doe',
+              teams: [{ id: 'team-1', name: 'Team 1' }],
+            },
+            createdDate: '2020-09-23T20:45:22.000Z',
+            publishedAt: '2020-09-23T20:45:22.000Z',
+            manuscriptFile: {
+              filename: 'manuscript.pdf',
+              url: 'https://example.com/manuscript.pdf',
+              id: 'file-id',
+            },
+            keyResourceTable: {
+              filename: 'manuscript.csv',
+              url: 'https://example.com/manuscript.csv',
+              id: 'file-table-id',
+            },
+            teams: [
+              { id: 'team-1', displayName: 'Test 1', inactiveSince: undefined },
+            ],
+            labs: [{ id: 'lab-1', name: 'Lab 1' }],
+            firstAuthors: [
+              {
+                id: 'author-1',
+                displayName: 'Author 1',
+                email: 'author1@example.com',
+                firstName: 'Author',
+                lastName: '1',
+                avatarUrl: undefined,
+              },
+            ],
+            correspondingAuthor: [
+              {
+                id: 'author-2',
+                displayName: 'Author 2',
+                email: 'author2@example.com',
+                firstName: 'Author',
+                lastName: '2',
+                avatarUrl: undefined,
+              },
+            ],
+            additionalAuthors: [
+              {
+                id: 'author-3',
+                displayName: 'Author 3',
+                email: 'author3@example.com',
+                firstName: 'Author',
+                lastName: '3',
+                avatarUrl: undefined,
+              },
+            ],
+          },
+        ],
+      });
+
+      const researchOutputResponse = getResearchOutputResponse();
+
+      beforeEach(() => {
+        userMockFactory.mockReturnValue(createUserResponse());
+      });
+
+      test('Should return 400 when manuscriptId is missing', async () => {
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({});
+
+        expect(response.status).toBe(400);
+      });
+
+      test('Should return 400 when additional fields exist', async () => {
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({
+            manuscriptId: 'manuscript-id-1',
+            additionalField: 'some-data',
+          });
+
+        expect(response.status).toBe(400);
+      });
+
+      test('Should return 404 when manuscript is not found', async () => {
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce(
+          undefined as any,
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({ manuscriptId: 'non-existent-manuscript' });
+
+        expect(response.status).toBe(404);
+        expect(manuscriptControllerMock.fetchById).toHaveBeenCalledWith(
+          'non-existent-manuscript',
+          'user-id-0',
+        );
+      });
+
+      test('Should return 200 when manuscript version with preprint lifecycle is not found', async () => {
+        const manuscriptWithoutPreprint = getManuscriptResponse({
+          versions: [
+            {
+              id: 'version-1',
+              lifecycle: 'Publication',
+              type: 'Original Research',
+              description: 'A good description',
+              shortDescription: 'A good short description',
+              count: 1,
+              createdBy: {
+                id: 'user-id-1',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                teams: [{ id: 'team-1', name: 'Team 1' }],
+              },
+              updatedBy: {
+                id: 'user-id-1',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                teams: [{ id: 'team-1', name: 'Team 1' }],
+              },
+              createdDate: '2020-09-23T20:45:22.000Z',
+              publishedAt: '2020-09-23T20:45:22.000Z',
+              manuscriptFile: {
+                filename: 'manuscript.pdf',
+                url: 'https://example.com/manuscript.pdf',
+                id: 'file-id',
+              },
+              keyResourceTable: {
+                filename: 'manuscript.csv',
+                url: 'https://example.com/manuscript.csv',
+                id: 'file-table-id',
+              },
+              teams: [
+                {
+                  id: 'team-1',
+                  displayName: 'Test 1',
+                  inactiveSince: undefined,
+                },
+              ],
+              labs: [{ id: 'lab-1', name: 'Lab 1' }],
+              firstAuthors: [],
+              correspondingAuthor: [],
+              additionalAuthors: [],
+            },
+          ],
+        });
+
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce(
+          manuscriptWithoutPreprint,
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({ manuscriptId: 'manuscript-id-1' });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({
+          message: 'Manuscript version with lifecycle preprint not found',
+        });
+      });
+
+      test('Should return 200 when research output already exists for manuscript version', async () => {
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce(
+          manuscriptResponse,
+        );
+        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+          true,
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({ manuscriptId: 'manuscript-id-1' });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({
+          message: 'Research output already exists for this manuscript version',
+        });
+        expect(
+          manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId,
+        ).toHaveBeenCalledWith('version-1');
+      });
+
+      test('Should create research output successfully when all conditions are met', async () => {
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce(
+          manuscriptResponse,
+        );
+        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+          false,
+        );
+        researchOutputControllerMock.create.mockResolvedValueOnce(
+          researchOutputResponse,
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({ manuscriptId: 'manuscript-id-1' });
+
+        expect(response.status).toBe(201);
+        expect(response.body).toEqual(researchOutputResponse);
+
+        expect(manuscriptControllerMock.fetchById).toHaveBeenCalledWith(
+          'manuscript-id-1',
+          'user-id-0',
+        );
+        expect(
+          manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId,
+        ).toHaveBeenCalledWith('version-1');
+
+        expect(researchOutputControllerMock.create).toHaveBeenCalledWith({
+          title: 'Test Manuscript',
+          link: 'https://example.com/manuscript',
+          type: 'Preprint',
+          subtype: 'Original Research',
+          descriptionMD: 'A good description',
+          shortDescription: 'A good short description',
+          labs: ['lab-1'],
+          authors: [
+            { userId: 'author-1' },
+            { userId: 'author-2' },
+            { userId: 'author-3' },
+          ],
+          teams: ['team-1'],
+          isInReview: false,
+          sharingStatus: 'Public',
+          asapFunded: true,
+          usedInPublication: true,
+          environments: [],
+          documentType: 'Article',
+          createdBy: 'user-id-0',
+          methods: [],
+          organisms: [],
+          relatedEvents: [],
+          relatedResearch: [],
+          keywords: [],
+          workingGroups: [],
+          impact: undefined,
+          categories: undefined,
+          relatedManuscriptVersion: 'version-1',
+          relatedManuscript: 'manuscript-id-1',
+          published: true,
+        });
+      });
+
+      test('Should handle manuscript with no authors correctly', async () => {
+        const manuscriptWithNoAuthors = getManuscriptResponse({
+          versions: [
+            {
+              id: 'version-1',
+              lifecycle: 'Preprint',
+              type: 'Original Research',
+              description: 'A good description',
+              shortDescription: 'A good short description',
+              count: 1,
+              createdBy: {
+                id: 'user-id-1',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                teams: [{ id: 'team-1', name: 'Team 1' }],
+              },
+              updatedBy: {
+                id: 'user-id-1',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                teams: [{ id: 'team-1', name: 'Team 1' }],
+              },
+              createdDate: '2020-09-23T20:45:22.000Z',
+              publishedAt: '2020-09-23T20:45:22.000Z',
+              manuscriptFile: {
+                filename: 'manuscript.pdf',
+                url: 'https://example.com/manuscript.pdf',
+                id: 'file-id',
+              },
+              keyResourceTable: {
+                filename: 'manuscript.csv',
+                url: 'https://example.com/manuscript.csv',
+                id: 'file-table-id',
+              },
+              teams: [
+                {
+                  id: 'team-1',
+                  displayName: 'Test 1',
+                  inactiveSince: undefined,
+                },
+              ],
+              labs: [],
+              firstAuthors: [],
+              correspondingAuthor: [],
+              additionalAuthors: [],
+            },
+          ],
+        });
+
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce(
+          manuscriptWithNoAuthors,
+        );
+        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+          false,
+        );
+        researchOutputControllerMock.create.mockResolvedValueOnce(
+          researchOutputResponse,
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({ manuscriptId: 'manuscript-id-1' });
+
+        expect(response.status).toBe(201);
+        expect(researchOutputControllerMock.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            authors: [],
+            labs: [],
+          }),
+        );
+      });
+
+      test('Should handle manuscript with empty optional fields correctly', async () => {
+        const manuscriptWithEmptyFields = getManuscriptResponse({
+          versions: [
+            {
+              id: 'version-1',
+              lifecycle: 'Preprint',
+              type: 'Original Research',
+              description: 'A good description',
+              shortDescription: 'A good short description',
+              count: 1,
+              createdBy: {
+                id: 'user-id-1',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                teams: [{ id: 'team-1', name: 'Team 1' }],
+              },
+              updatedBy: {
+                id: 'user-id-1',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                teams: [{ id: 'team-1', name: 'Team 1' }],
+              },
+              createdDate: '2020-09-23T20:45:22.000Z',
+              publishedAt: '2020-09-23T20:45:22.000Z',
+              manuscriptFile: {
+                filename: 'manuscript.pdf',
+                url: 'https://example.com/manuscript.pdf',
+                id: 'file-id',
+              },
+              keyResourceTable: {
+                filename: 'manuscript.csv',
+                url: 'https://example.com/manuscript.csv',
+                id: 'file-table-id',
+              },
+              teams: [],
+              labs: [],
+              firstAuthors: [],
+              correspondingAuthor: [],
+              additionalAuthors: [],
+            },
+          ],
+        });
+
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce(
+          manuscriptWithEmptyFields,
+        );
+        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+          false,
+        );
+        researchOutputControllerMock.create.mockResolvedValueOnce(
+          researchOutputResponse,
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({ manuscriptId: 'manuscript-id-1' });
+
+        expect(response.status).toBe(201);
+        expect(researchOutputControllerMock.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            authors: [],
+            labs: [],
+            teams: [],
+          }),
+        );
+      });
+
+      const author1 = {
+        id: 'author-1',
+        displayName: 'Author 1',
+        email: 'author1@example.com',
+        firstName: 'Author',
+        lastName: '1',
+        avatarUrl: undefined,
+      };
+      const author2 = {
+        id: 'author-2',
+        displayName: 'Author 2',
+        email: 'author2@example.com',
+        firstName: 'Author',
+        lastName: '2',
+        avatarUrl: undefined,
+      };
+      const author3 = {
+        id: 'author-3',
+        displayName: 'Author 3',
+        email: 'author3@example.com',
+        firstName: 'Author',
+        lastName: '3',
+        avatarUrl: undefined,
+      };
+
+      test.each([
+        {
+          testName: 'Should handle manuscript with no firstAuthors correctly',
+          firstAuthors: [],
+          correspondingAuthor: [author2],
+          additionalAuthors: [author3],
+          expectedAuthors: [{ userId: 'author-2' }, { userId: 'author-3' }],
+        },
+        {
+          testName:
+            'Should handle manuscript with empty correspondingAuthor correctly',
+          firstAuthors: [author1],
+          correspondingAuthor: [],
+          additionalAuthors: [author3],
+          expectedAuthors: [{ userId: 'author-1' }, { userId: 'author-3' }],
+        },
+        {
+          testName:
+            'Should handle manuscript with empty additionalAuthors correctly',
+          firstAuthors: [author1],
+          correspondingAuthor: [author2],
+          additionalAuthors: [],
+          expectedAuthors: [{ userId: 'author-1' }, { userId: 'author-2' }],
+        },
+      ])(
+        '$testName',
+        async ({
+          firstAuthors,
+          correspondingAuthor,
+          additionalAuthors,
+          expectedAuthors,
+        }) => {
+          const manuscriptWithEmptyAuthors = getManuscriptResponse({
+            versions: [
+              {
+                id: 'version-1',
+                lifecycle: 'Preprint',
+                type: 'Original Research',
+                description: 'A good description',
+                shortDescription: 'A good short description',
+                count: 1,
+                createdBy: {
+                  id: 'user-id-1',
+                  firstName: 'John',
+                  lastName: 'Doe',
+                  displayName: 'John Doe',
+                  teams: [{ id: 'team-1', name: 'Team 1' }],
+                },
+                updatedBy: {
+                  id: 'user-id-1',
+                  firstName: 'John',
+                  lastName: 'Doe',
+                  displayName: 'John Doe',
+                  teams: [{ id: 'team-1', name: 'Team 1' }],
+                },
+                createdDate: '2020-09-23T20:45:22.000Z',
+                publishedAt: '2020-09-23T20:45:22.000Z',
+                manuscriptFile: {
+                  filename: 'manuscript.pdf',
+                  url: 'https://example.com/manuscript.pdf',
+                  id: 'file-id',
+                },
+                keyResourceTable: {
+                  filename: 'manuscript.csv',
+                  url: 'https://example.com/manuscript.csv',
+                  id: 'file-table-id',
+                },
+                teams: [
+                  {
+                    id: 'team-1',
+                    displayName: 'Test 1',
+                    inactiveSince: undefined,
+                  },
+                ],
+                labs: [{ id: 'lab-1', name: 'Lab 1' }],
+                firstAuthors,
+                correspondingAuthor,
+                additionalAuthors,
+              },
+            ],
+          });
+
+          manuscriptControllerMock.fetchById.mockResolvedValueOnce(
+            manuscriptWithEmptyAuthors,
+          );
+          manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+            false,
+          );
+          researchOutputControllerMock.create.mockResolvedValueOnce(
+            researchOutputResponse,
+          );
+
+          const response = await supertest(app)
+            .post('/research-outputs/preprint')
+            .send({ manuscriptId: 'manuscript-id-1' });
+
+          expect(response.status).toBe(201);
+          expect(researchOutputControllerMock.create).toHaveBeenCalledWith(
+            expect.objectContaining({
+              authors: expectedAuthors,
+              labs: ['lab-1'],
+              teams: ['team-1'],
+            }),
+          );
+        },
+      );
+
+      test('Should handle manuscript with categories correctly', async () => {
+        const manuscriptWithCategories = getManuscriptResponse({
+          categories: [
+            { id: 'category-1', name: 'Category 1' },
+            { id: 'category-2', name: 'Category 2' },
+          ],
+        });
+
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce(
+          manuscriptWithCategories,
+        );
+        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+          false,
+        );
+        researchOutputControllerMock.create.mockResolvedValueOnce(
+          researchOutputResponse,
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({ manuscriptId: 'manuscript-id-1' });
+
+        expect(response.status).toBe(201);
+        expect(researchOutputControllerMock.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            categories: ['category-1', 'category-2'],
+          }),
+        );
+      });
+
+      test('Should handle manuscript with undefined categories correctly', async () => {
+        const manuscriptWithUndefinedCategories = getManuscriptResponse({
+          categories: undefined,
+        });
+
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce(
+          manuscriptWithUndefinedCategories,
+        );
+        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+          false,
+        );
+        researchOutputControllerMock.create.mockResolvedValueOnce(
+          researchOutputResponse,
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({ manuscriptId: 'manuscript-id-1' });
+
+        expect(response.status).toBe(201);
+        expect(researchOutputControllerMock.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            categories: undefined,
+          }),
+        );
+      });
+
+      test('Should handle manuscript with empty categories array correctly', async () => {
+        const manuscriptWithEmptyCategories = getManuscriptResponse({
+          categories: [],
+        });
+
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce(
+          manuscriptWithEmptyCategories,
+        );
+        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+          false,
+        );
+        researchOutputControllerMock.create.mockResolvedValueOnce(
+          researchOutputResponse,
+        );
+
+        const response = await supertest(app)
+          .post('/research-outputs/preprint')
+          .send({ manuscriptId: 'manuscript-id-1' });
+
+        expect(response.status).toBe(201);
+        expect(researchOutputControllerMock.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            categories: [],
+          }),
+        );
       });
     });
   });

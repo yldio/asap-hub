@@ -209,3 +209,18 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
   }
   ${versionsContentQueryFragment}
 `;
+
+export const FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID = gql`
+  query FetchResearchOutputByManuscriptVersionId($id: String!) {
+    manuscriptVersions(id: $id) {
+      linkedFrom {
+        researchOutputsCollection(limit: 1) {
+          total
+        }
+        researchOutputVersionsCollection(limit: 1) {
+          total
+        }
+      }
+    }
+  }
+`;

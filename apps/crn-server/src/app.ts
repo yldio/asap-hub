@@ -425,6 +425,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const reminderRoutes = reminderRouteFactory(reminderController);
   const researchOutputRoutes = researchOutputRouteFactory(
     researchOutputController,
+    manuscriptController,
   );
   const researchTagRoutes = researchTagRouteFactory(researchTagController);
   const teamRoutes = teamRouteFactory(interestGroupController, teamController);

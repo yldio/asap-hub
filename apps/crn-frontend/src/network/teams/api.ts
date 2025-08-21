@@ -122,6 +122,30 @@ export const createResearchOutput = async (
   return response;
 };
 
+export const createPreprintResearchOutput = async (
+  manuscriptId: string,
+  authorization: string,
+): Promise<ResearchOutputResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/research-outputs/preprint`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify({ manuscriptId }),
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to create preprint research output for manuscript ${manuscriptId}. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
+};
+
 export const updateTeamResearchOutput = async (
   researchOutputId: string,
   researchOutput: ResearchOutputPostRequest,

@@ -85,6 +85,60 @@ describe('Manuscript controller', () => {
     });
   });
 
+  describe('Fetch research output existence by manuscript version ID', () => {
+    test('Should return true when research output exists for the manuscript version', async () => {
+      const manuscriptVersionId = 'mv-123';
+      manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+        true,
+      );
+
+      const result =
+        await manuscriptController.fetchResearchOutputExistenceByManuscriptVersionId(
+          manuscriptVersionId,
+        );
+
+      expect(result).toBe(true);
+      expect(
+        manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId,
+      ).toHaveBeenCalledWith(manuscriptVersionId);
+    });
+
+    test('Should return false when research output does not exist for the manuscript version', async () => {
+      const manuscriptVersionId = 'mv-456';
+      manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+        false,
+      );
+
+      const result =
+        await manuscriptController.fetchResearchOutputExistenceByManuscriptVersionId(
+          manuscriptVersionId,
+        );
+
+      expect(result).toBe(false);
+      expect(
+        manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId,
+      ).toHaveBeenCalledWith(manuscriptVersionId);
+    });
+
+    test('Should propagate errors from the data provider', async () => {
+      const manuscriptVersionId = 'mv-789';
+      const error = new GenericError();
+      manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId.mockRejectedValueOnce(
+        error,
+      );
+
+      await expect(
+        manuscriptController.fetchResearchOutputExistenceByManuscriptVersionId(
+          manuscriptVersionId,
+        ),
+      ).rejects.toThrow(GenericError);
+
+      expect(
+        manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId,
+      ).toHaveBeenCalledWith(manuscriptVersionId);
+    });
+  });
+
   describe('Create method', () => {
     beforeEach(jest.clearAllMocks);
 

@@ -20894,6 +20894,23 @@ export type FetchVersionsByManuscriptQuery = {
   >;
 };
 
+export type FetchResearchOutputByManuscriptVersionIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchResearchOutputByManuscriptVersionIdQuery = {
+  manuscriptVersions?: Maybe<{
+    linkedFrom?: Maybe<{
+      researchOutputsCollection?: Maybe<
+        Pick<ResearchOutputsCollection, 'total'>
+      >;
+      researchOutputVersionsCollection?: Maybe<
+        Pick<ResearchOutputVersionsCollection, 'total'>
+      >;
+    }>;
+  }>;
+};
+
 export type ManuscriptsContentFragment = Pick<
   Manuscripts,
   | 'title'
@@ -41139,6 +41156,111 @@ export const FetchVersionsByManuscriptDocument = {
 } as unknown as DocumentNode<
   FetchVersionsByManuscriptQuery,
   FetchVersionsByManuscriptQueryVariables
+>;
+export const FetchResearchOutputByManuscriptVersionIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchResearchOutputByManuscriptVersionId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'manuscriptVersions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'researchOutputsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '1' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'researchOutputVersionsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '1' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchResearchOutputByManuscriptVersionIdQuery,
+  FetchResearchOutputByManuscriptVersionIdQueryVariables
 >;
 export const FetchManuscriptByIdDocument = {
   kind: 'Document',

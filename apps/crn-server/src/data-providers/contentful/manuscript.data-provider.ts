@@ -8,10 +8,13 @@ import {
   FetchManuscriptsQueryVariables,
   FetchManuscriptVersionCountByIdQuery,
   FetchManuscriptVersionCountByIdQueryVariables,
+  FetchResearchOutputByManuscriptVersionIdQuery,
+  FetchResearchOutputByManuscriptVersionIdQueryVariables,
   FETCH_MANUSCRIPTS,
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
   FETCH_MANUSCRIPT_VERSION_COUNT_BY_ID,
+  FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
   getLinkAsset,
   getLinkAssets,
   getLinkEntities,
@@ -140,6 +143,24 @@ export class ManuscriptContentfulDataProvider
           };
         }),
     };
+  }
+
+  async fetchResearchOutputExistenceByManuscriptVersionId(
+    manuscriptVersionId: string,
+  ): Promise<boolean> {
+    const { manuscriptVersions } = await this.contentfulClient.request<
+      FetchResearchOutputByManuscriptVersionIdQuery,
+      FetchResearchOutputByManuscriptVersionIdQueryVariables
+    >(FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID, {
+      id: manuscriptVersionId,
+    });
+
+    return (
+      (manuscriptVersions?.linkedFrom?.researchOutputsCollection?.total || 0) >
+        0 ||
+      (manuscriptVersions?.linkedFrom?.researchOutputVersionsCollection
+        ?.total || 0) > 0
+    );
   }
 
   async fetchCountByTeamId(id: string) {

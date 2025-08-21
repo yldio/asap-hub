@@ -9,13 +9,6 @@ import { ExternalAuthorResponse } from './external-author';
 import { ImpactResponse } from './impact';
 import { UserResponse } from './user';
 
-export const mapManuscriptTypeToSubType = (manuscriptType: ManuscriptType) =>
-  manuscriptType === 'Original Research' ? 'Original Research' : 'Review';
-
-export const mapManuscriptLifecycleToType = (
-  manuscriptLifecycle: ManuscriptLifecycle,
-) => (manuscriptLifecycle === 'Preprint' ? 'Preprint' : 'Published');
-
 export const manuscriptTypes = [
   'Original Research',
   'Review / Op-Ed / Letter / Hot Topic',
@@ -31,6 +24,13 @@ export const manuscriptLifecycles = [
   'Other',
 ] as const;
 export type ManuscriptLifecycle = (typeof manuscriptLifecycles)[number];
+
+export const mapManuscriptTypeToSubType = (manuscriptType: ManuscriptType) =>
+  manuscriptType === 'Original Research' ? 'Original Research' : 'Review';
+
+export const mapManuscriptLifecycleToType = (
+  manuscriptLifecycle: ManuscriptLifecycle,
+) => (manuscriptLifecycle === 'Preprint' ? 'Preprint' : 'Published');
 
 export const manuscriptLifecycleRequiredURL: ManuscriptLifecycle[] = [
   'Preprint',

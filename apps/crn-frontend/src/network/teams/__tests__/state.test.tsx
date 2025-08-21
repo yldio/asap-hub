@@ -845,7 +845,6 @@ describe('useCreateDiscussion', () => {
 });
 
 describe('usePostPreprintResearchOutput', () => {
-  const mockAuthorization = 'mock-token';
   const mockManuscriptId = 'manuscript-id-123';
   const mockResearchOutputResponse = {
     id: 'research-output-123',

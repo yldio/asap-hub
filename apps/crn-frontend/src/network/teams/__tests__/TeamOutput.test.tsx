@@ -884,9 +884,9 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       userEvent.click(screen.getByLabelText('Import from manuscript'));
       const input = screen.getByRole('textbox');
-      await userEvent.type(input, 'Version One');
+      userEvent.type(input, 'Version One');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
-      await userEvent.click(option);
+      userEvent.click(option);
 
       userEvent.click(screen.getByRole('button', { name: /import/i }));
 
@@ -894,6 +894,30 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
         expect(
           screen.getByRole('heading', { name: 'What are you sharing?' }),
         ).toBeInTheDocument();
+      });
+      const changelog = 'creating new version with manuscript';
+
+      userEvent.type(
+        screen.getByRole('textbox', { name: /changelog/i }),
+        changelog,
+      );
+
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+
+      const button = screen.getByRole('button', {
+        name: /Publish new version/i,
+      });
+
+      userEvent.click(button);
+
+      await waitFor(() => {
+        expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+          'preprint-output-1',
+          expect.objectContaining({
+            relatedManuscriptVersion: 'version-id-1',
+          }),
+          expect.anything(),
+        );
       });
     });
 
@@ -1079,10 +1103,6 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       },
     ];
 
-    const mockGetManuscriptVersions =
-      getManuscriptVersions as jest.MockedFunction<
-        typeof getManuscriptVersions
-      >;
     mockGetManuscriptVersions.mockResolvedValue({
       total: 1,
       items: [

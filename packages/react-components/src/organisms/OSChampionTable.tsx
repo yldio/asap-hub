@@ -48,11 +48,6 @@ const headerStyles = css({
   alignItems: 'start',
 });
 
-// const teamNameStyles = css({
-//   display: 'flex',
-//   gap: rem(3),
-// });
-
 const buttonStyles = css({
   width: `${24 / perRem}em`,
   margin: 0,

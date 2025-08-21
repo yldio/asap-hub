@@ -102,15 +102,6 @@ export type TeamMetric = {
   previousMemberCount: number;
 };
 
-// type MetricData = {
-//   id: string;
-//   name: string;
-//   inactiveSince?: string;
-//   leadershipRoleCount: number;
-//   previousLeadershipRoleCount: number;
-//   memberCount: number;
-//   previousMemberCount: number;
-// };
 type LeadershipMembershipTableProps = ComponentProps<typeof PageControls> &
   Pick<ComponentProps<typeof LeadershipPageBody>, 'metric'> & {
     data: TeamMetric[];

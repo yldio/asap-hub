@@ -1,4 +1,3 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { ListOSChampionResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
@@ -10,12 +9,6 @@ import { analyticsOSChampionState } from '../state';
 import OSChampion from '../OSChampion';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 
-jest.mock('@asap-hub/algolia', () => ({
-  ...jest.requireActual('@asap-hub/algolia'),
-  algoliaSearchClientFactory: jest
-    .fn()
-    .mockReturnValue({} as AlgoliaSearchClient<'analytics'>),
-}));
 
 jest.mock('../api');
 

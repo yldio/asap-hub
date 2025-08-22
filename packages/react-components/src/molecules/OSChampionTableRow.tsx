@@ -67,6 +67,11 @@ const iconStyles = css({
   maxWidth: '100%',
 });
 
+const expandButtonStyles = css({
+  maxHeight: rem(24),
+  verticalAlign: 'middle',
+});
+
 interface OSChampionTableRowProps {
   rowItem: OSChampionResponse;
   isEvenRow: boolean;
@@ -87,8 +92,12 @@ const OSChampionTableRow: React.FC<OSChampionTableRowProps> = ({
       >
         <td>
           {canExpand && (
-            <Button linkStyle onClick={() => setExpanded(!expanded)}>
-              <span>{expanded ? minusRectIcon : plusRectIcon}</span>
+            <Button
+              linkStyle
+              onClick={() => setExpanded(!expanded)}
+              overrideStyles={expandButtonStyles}
+            >
+              {expanded ? minusRectIcon : plusRectIcon}
             </Button>
           )}
         </td>

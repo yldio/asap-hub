@@ -415,6 +415,23 @@ describe('sharing prelim findings', () => {
       screen.queryByText('Sharing Preliminary Findings'),
     ).not.toBeInTheDocument();
   });
+
+  it('can navigate to sharing preliminary findings page', async () => {
+    jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+    await renderPage('user', 'within-team');
+    const input = screen.getAllByRole('textbox', { hidden: false });
+
+    userEvent.click(input[0]!);
+    userEvent.click(screen.getByText('Sharing Preliminary Findings'));
+
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    expect(
+      screen.getByRole('heading', { name: /Sharing Preliminary Findings/i }),
+    ).toBeVisible();
+    expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
+  });
 });
 
 it('navigates between user and team collaboration pages', async () => {

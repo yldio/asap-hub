@@ -59,6 +59,11 @@ const teamLinkStyles = css({
   whiteSpace: 'normal',
 });
 
+const spanStyles = css({
+  display: 'block',
+  paddingBottom: rem(1),
+});
+
 const iconStyles = css({
   display: 'flex',
   gap: rem(3),
@@ -92,13 +97,15 @@ const OSChampionTableRow: React.FC<OSChampionTableRowProps> = ({
       >
         <td>
           {canExpand && (
-            <Button
-              linkStyle
-              onClick={() => setExpanded(!expanded)}
-              overrideStyles={expandButtonStyles}
-            >
-              {expanded ? minusRectIcon : plusRectIcon}
-            </Button>
+            <span css={spanStyles}>
+              <Button
+                linkStyle
+                onClick={() => setExpanded(!expanded)}
+                overrideStyles={expandButtonStyles}
+              >
+                {expanded ? minusRectIcon : plusRectIcon}
+              </Button>
+            </span>
           )}
         </td>
         <td className={'team'}>

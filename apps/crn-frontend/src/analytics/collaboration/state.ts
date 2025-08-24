@@ -2,6 +2,7 @@ import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
+  SortSharingPrelimFindings,
   SortTeamCollaboration,
   SortUserCollaboration,
   TeamCollaborationAlgoliaResponse,
@@ -219,3 +220,10 @@ export const useUserCollaborationPerformance =
     userCollaborationPerformanceState,
     getUserCollaborationPerformance,
   );
+
+export const useAnalyticsSharingPrelimFindings = (
+  options: AnalyticsSearchOptionsWithFiltering<SortSharingPrelimFindings>,
+) => ({
+  items: [],
+  total: 0,
+});

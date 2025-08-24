@@ -197,6 +197,7 @@ export {
   SharedResearchMetadata,
   SharedResearchOutputBanners,
   SharedResearchOutputButtons,
+  SharingPrelimFindingsTable,
   SpeakerList,
   SsoButtons,
   TeamCard,

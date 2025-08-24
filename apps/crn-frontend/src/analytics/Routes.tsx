@@ -130,7 +130,7 @@ const Routes = () => {
             />
           </Switch>
         </Route>
-        <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />)
+        <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
       </Switch>
     </>
   );

@@ -15,6 +15,7 @@ import {
   SortUserCollaboration,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
+import * as flags from '@asap-hub/flags';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
@@ -167,20 +168,18 @@ const teamData: ListTeamCollaborationAlgoliaResponse = {
   ],
 };
 
-const renderPage = async (
-  metric: string = 'user',
-  type: string = 'within-team',
-) => {
+const renderPage = async (metric: string = 'user', type?: string) => {
   const path = analytics({})
     .collaboration({})
-    .collaborationPath({ metric, type }).$;
+    .collaborationPath(type !== undefined ? { metric, type } : { metric }).$;
+
   const result = render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
-              <Route path="/analytics/collaboration/:metric/:type">
+              <Route path="/analytics/collaboration/:metric/:type?">
                 <Collaboration />
               </Route>
             </MemoryRouter>
@@ -211,7 +210,7 @@ beforeEach(() => {
 
 describe('user collaboration', () => {
   it('renders with user data', async () => {
-    await renderPage();
+    await renderPage('user', 'within-team');
 
     expect(screen.getByText('User Co-Production')).toBeVisible();
     expect(screen.queryByText('Team Co-Production')).not.toBeInTheDocument();
@@ -265,7 +264,7 @@ describe('user collaboration', () => {
         ],
         total: 1,
       });
-    await renderPage();
+    await renderPage('user', 'within-team');
 
     expect(screen.getByText('300')).toBeVisible();
     expect(screen.queryByText('100')).not.toBeInTheDocument();
@@ -284,7 +283,7 @@ describe('user collaboration', () => {
   });
 
   it('calls algolia client with the right index name', async () => {
-    const { getByTitle } = await renderPage();
+    const { getByTitle } = await renderPage('user', 'within-team');
 
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
@@ -302,7 +301,7 @@ describe('user collaboration', () => {
 
 describe('team collaboration', () => {
   it('renders with team data', async () => {
-    await renderPage('team');
+    await renderPage('team', 'within-team');
 
     expect(screen.getByText('Team Co-Production')).toBeVisible();
     expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
@@ -359,7 +358,7 @@ describe('team collaboration', () => {
         ],
         total: 1,
       });
-    await renderPage('team');
+    await renderPage('team', 'within-team');
 
     expect(screen.getByText('100')).toBeVisible();
     expect(screen.queryByText('50')).not.toBeInTheDocument();
@@ -378,7 +377,7 @@ describe('team collaboration', () => {
   });
 
   it('calls algolia client with the right index name', async () => {
-    const { getByTitle } = await renderPage('team');
+    const { getByTitle } = await renderPage('team', 'within-team');
 
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
@@ -394,8 +393,32 @@ describe('team collaboration', () => {
   });
 });
 
+describe('sharing prelim findings', () => {
+  it('renders sharing prelim findings page when flag is enabled', async () => {
+    jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+    await renderPage('sharing-prelim-findings', undefined);
+
+    expect(
+      screen.getByRole('heading', { name: /Sharing Preliminary Findings/i }),
+    ).toBeVisible();
+    expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
+
+    expect(screen.queryByText('Type')).not.toBeInTheDocument();
+  });
+
+  it('redirects to user collaboration within team if analytics phase 2 feature flag is off', async () => {
+    jest.spyOn(flags, 'isEnabled').mockReturnValue(false);
+    await renderPage('sharing-prelim-findings', undefined);
+
+    expect(screen.getByText('User Co-Production')).toBeVisible();
+    expect(
+      screen.queryByText('Sharing Preliminary Findings'),
+    ).not.toBeInTheDocument();
+  });
+});
+
 it('navigates between user and team collaboration pages', async () => {
-  await renderPage();
+  await renderPage('user', 'within-team');
   const input = screen.getAllByRole('textbox', { hidden: false });
 
   userEvent.click(input[0]!);
@@ -422,7 +445,7 @@ describe('search', () => {
       client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
     });
 
-    await renderPage();
+    await renderPage('user', 'within-team');
     const searchBox = getSearchBox();
 
     userEvent.type(searchBox, 'test123');

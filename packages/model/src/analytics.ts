@@ -454,12 +454,18 @@ export type TeamCollaborationFields =
   | 'labMaterial'
   | 'protocol';
 
+export type SharingPrelimFindingsFields = 'team' | 'percentShared';
+
 export type TeamCollaborationSortingDirection = {
   [key in TeamCollaborationFields]: SortingDirection;
 };
 
 export type UserCollaborationSortingDirection = {
   [key in UserCollaborationFields]: SortingDirection;
+};
+
+export type SharingPrelimFindingsSortingDirection = {
+  [key in SharingPrelimFindingsFields]: SortingDirection;
 };
 
 export const userCollaborationInitialSortingDirection = {
@@ -476,6 +482,11 @@ export const teamCollaborationInitialSortingDirection = {
   dataset: descending,
   labMaterial: descending,
   protocol: descending,
+};
+
+export const sharingPrelimFindingsInitialSortingDirection = {
+  team: ascending,
+  percentShared: descending,
 };
 
 export type CollaborationType = 'across-teams' | 'within-team';
@@ -575,3 +586,21 @@ export type OSChampionDataObject = {
 export type ListOSChampionDataObject = ListResponse<OSChampionDataObject>;
 export type OSChampionResponse = OSChampionDataObject;
 export type ListOSChampionResponse = ListResponse<OSChampionResponse>;
+
+export type SharingPrelimFindingsDataObject = {
+  teamId: string;
+  teamName: string;
+  isTeamInactive: boolean;
+  teamPercentShared: number;
+};
+export type ListSharingPrelimFindingsDataObject =
+  ListResponse<SharingPrelimFindingsDataObject>;
+export type SharingPrelimFindingsResponse = SharingPrelimFindingsDataObject;
+export type ListSharingPrelimFindingsResponse =
+  ListResponse<SharingPrelimFindingsResponse>;
+
+export type SortSharingPrelimFindings =
+  | 'team_asc'
+  | 'team_desc'
+  | 'percent_shared_asc'
+  | 'percent_shared_desc';

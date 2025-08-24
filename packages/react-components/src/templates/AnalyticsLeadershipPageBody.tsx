@@ -10,6 +10,7 @@ import {
 } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { rem } from '../pixels';
+import { removeFlaggedOptions } from '../utils';
 
 export type MetricOption = 'working-group' | 'interest-group' | 'os-champion';
 
@@ -56,11 +57,8 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   exportResults,
   isOSChampionEnabled,
 }) => {
-  const removeFlaggedOptions = (option: string) =>
-    isOSChampionEnabled || option !== 'os-champion';
-
   const metricOptionList = Object.keys(metricOptions)
-    .filter(removeFlaggedOptions)
+    .filter((option) => removeFlaggedOptions(isOSChampionEnabled, option))
     .map((value) => ({
       value: value as MetricOption,
       label: metricOptions[value as MetricOption],

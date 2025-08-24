@@ -37,12 +37,14 @@ import {
 import TeamCollaboration from './TeamCollaboration';
 import UserCollaboration from './UserCollaboration';
 
+type CollaborationType = 'within-team' | 'across-teams' | undefined;
+
 const Collaboration = () => {
   const history = useHistory();
 
   const { metric, type } = useParams<{
     metric: 'user' | 'team' | 'sharing-prelim-findings';
-    type: 'within-team' | 'across-teams' | undefined;
+    type: CollaborationType;
   }>();
 
   const { timeRange, documentCategory, outputType } = useAnalytics();
@@ -64,18 +66,23 @@ const Collaboration = () => {
 
   const entityType =
     metric === 'user' ? 'user-collaboration' : 'team-collaboration';
-  const setMetric = (newMetric: 'user' | 'team' | 'sharing-prelim-findings') =>
+  const setMetric = (
+    newMetric: 'user' | 'team' | 'sharing-prelim-findings',
+  ) => {
+    let newType: CollaborationType;
+
+    if (newMetric === 'sharing-prelim-findings') {
+      newType = undefined;
+    } else {
+      newType = type || 'within-team';
+    }
     history.push(
-      analytics({})
-        .collaboration({})
-        .collaborationPath({
-          metric: newMetric,
-          type:
-            newMetric !== 'sharing-prelim-findings'
-              ? type || 'within-team'
-              : undefined,
-        }).$,
+      analytics({}).collaboration({}).collaborationPath({
+        metric: newMetric,
+        type: newType,
+      }).$,
     );
+  };
   const setType = (newType: 'within-team' | 'across-teams') => {
     if (metric === 'user') {
       setUserSort('user_asc');

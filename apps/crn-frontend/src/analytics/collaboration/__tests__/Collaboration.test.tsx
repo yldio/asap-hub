@@ -431,6 +431,7 @@ describe('sharing prelim findings', () => {
       screen.getByRole('heading', { name: /Sharing Preliminary Findings/i }),
     ).toBeVisible();
     expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
+    expect(screen.queryByText('Type')).not.toBeInTheDocument();
   });
 });
 

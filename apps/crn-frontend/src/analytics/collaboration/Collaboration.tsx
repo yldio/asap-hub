@@ -71,9 +71,9 @@ const Collaboration = () => {
         .collaborationPath({
           metric: newMetric,
           type:
-            newMetric === 'sharing-prelim-findings'
-              ? undefined
-              : type || 'within-team',
+            newMetric !== 'sharing-prelim-findings'
+              ? type || 'within-team'
+              : undefined,
         }).$,
     );
   const setType = (newType: 'within-team' | 'across-teams') => {

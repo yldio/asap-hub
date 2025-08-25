@@ -217,20 +217,16 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                       );
 
                     if (preprintResearchOutput.id) {
-                      setUpdatedOutput((prev) =>
-                        prev
-                          ? {
-                              ...prev,
-                              id: preprintResearchOutput.id,
-                              versions: [
-                                ...(prev?.versions ?? []),
-                                preprintResearchOutput,
-                              ],
-                              relatedManuscriptVersion:
-                                selectedManuscriptVersion.version?.id,
-                            }
-                          : undefined,
-                      );
+                      setUpdatedOutput((prev) => ({
+                        ...(prev as ResearchOutputResponse),
+                        id: preprintResearchOutput.id,
+                        versions: [
+                          ...(prev?.versions ?? []),
+                          preprintResearchOutput,
+                        ],
+                        relatedManuscriptVersion:
+                          selectedManuscriptVersion.version?.id,
+                      }));
 
                       setVersionAction('create');
                     }

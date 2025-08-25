@@ -187,15 +187,13 @@ export const researchOutputRouteFactory = (
       });
     }
 
-    const hasPreprintResearchOutput =
-      await manuscriptController.checkResearchOutputLinked(
+    const researchOutputLinked =
+      await manuscriptController.getResearchOutputLinked(
         preprintManuscriptVersion?.id,
       );
 
-    if (hasPreprintResearchOutput) {
-      return res.status(200).json({
-        message: 'Research output already exists for this manuscript version',
-      });
+    if (researchOutputLinked) {
+      return res.status(200).json(researchOutputLinked);
     }
 
     const authors = Array.from(

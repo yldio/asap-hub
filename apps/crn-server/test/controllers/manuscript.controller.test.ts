@@ -23,6 +23,7 @@ import {
   getManuscriptsListResponse,
   getManuscriptUpdateAPCCoverageDataObject,
 } from '../fixtures/manuscript.fixtures';
+import { getResearchOutputDataObject } from '../fixtures/research-output.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 import { manuscriptDataProviderMock as manuscriptDataProviderContentfulMock } from '../mocks/manuscript.data-provider.mock';
 
@@ -86,53 +87,49 @@ describe('Manuscript controller', () => {
   });
 
   describe('Fetch research output existence by manuscript version ID', () => {
-    test('Should return true when research output exists for the manuscript version', async () => {
+    test('Should return research output when it exists for the manuscript version', async () => {
       const manuscriptVersionId = 'mv-123';
-      manuscriptDataProviderMock.checkResearchOutputLinked.mockResolvedValueOnce(
-        true,
+      manuscriptDataProviderMock.getResearchOutputLinked.mockResolvedValueOnce(
+        getResearchOutputDataObject(),
       );
 
       const result =
-        await manuscriptController.checkResearchOutputLinked(
-          manuscriptVersionId,
-        );
+        await manuscriptController.getResearchOutputLinked(manuscriptVersionId);
 
-      expect(result).toBe(true);
+      expect(result).toEqual(getResearchOutputDataObject());
       expect(
-        manuscriptDataProviderMock.checkResearchOutputLinked,
+        manuscriptDataProviderMock.getResearchOutputLinked,
       ).toHaveBeenCalledWith(manuscriptVersionId);
     });
 
     test('Should return false when research output does not exist for the manuscript version', async () => {
       const manuscriptVersionId = 'mv-456';
-      manuscriptDataProviderMock.checkResearchOutputLinked.mockResolvedValueOnce(
-        false,
+      manuscriptDataProviderMock.getResearchOutputLinked.mockResolvedValueOnce(
+        null,
       );
 
       const result =
-        await manuscriptController.checkResearchOutputLinked(
-          manuscriptVersionId,
-        );
+        await manuscriptController.getResearchOutputLinked(manuscriptVersionId);
 
-      expect(result).toBe(false);
+      expect(result).toBeNull();
       expect(
-        manuscriptDataProviderMock.checkResearchOutputLinked,
+        manuscriptDataProviderMock.getResearchOutputLinked,
       ).toHaveBeenCalledWith(manuscriptVersionId);
     });
 
     test('Should propagate errors from the data provider', async () => {
       const manuscriptVersionId = 'mv-789';
       const error = new GenericError();
-      manuscriptDataProviderMock.checkResearchOutputLinked.mockRejectedValueOnce(
+      manuscriptDataProviderMock.getResearchOutputLinked.mockRejectedValueOnce(
         error,
       );
 
       await expect(
-        manuscriptController.checkResearchOutputLinked(manuscriptVersionId),
+        manuscriptController.getResearchOutputLinked(manuscriptVersionId),
       ).rejects.toThrow(GenericError);
 
       expect(
-        manuscriptDataProviderMock.checkResearchOutputLinked,
+        manuscriptDataProviderMock.getResearchOutputLinked,
       ).toHaveBeenCalledWith(manuscriptVersionId);
     });
   });

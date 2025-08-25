@@ -11,6 +11,7 @@ import {
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptResubmitControllerDataObject,
+  ResearchOutputDataObject,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 
@@ -57,10 +58,10 @@ export default class ManuscriptController {
     });
   }
 
-  async checkResearchOutputLinked(
+  async getResearchOutputLinked(
     manuscriptVersionId: string,
-  ): Promise<boolean> {
-    return this.manuscriptDataProvider.checkResearchOutputLinked(
+  ): Promise<ResearchOutputDataObject | null> {
+    return this.manuscriptDataProvider.getResearchOutputLinked(
       manuscriptVersionId,
     );
   }

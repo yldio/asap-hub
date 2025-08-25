@@ -7,6 +7,7 @@ import {
   ManuscriptResubmitDataObject,
   FetchOptions,
   PartialManuscriptResponse,
+  ResearchOutputDataObject,
 } from '@asap-hub/model';
 
 export type ManuscriptDataProvider = Omit<
@@ -28,5 +29,7 @@ export type ManuscriptDataProvider = Omit<
     input: ManuscriptResubmitDataObject,
   ) => Promise<void>;
   fetchById(id: string, userId: string): Promise<ManuscriptDataObject | null>;
-  checkResearchOutputLinked(manuscriptVersionId: string): Promise<boolean>;
+  getResearchOutputLinked(
+    manuscriptVersionId: string,
+  ): Promise<ResearchOutputDataObject | null>;
 };

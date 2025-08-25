@@ -44,12 +44,14 @@ import {
   ManuscriptVersion,
   QuickCheckDetails,
   ApcCoverageRequestStatus,
+  ResearchOutputDataObject,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
 
 import { getCommaAndString } from '../../utils/text';
 import { EmailNotificationService } from '../email-notification-service';
 import { ManuscriptDataProvider } from '../types';
+import { parseGraphQLResearchOutput } from './research-output.data-provider';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
 type ManuscriptListItem = NonNullable<
@@ -145,22 +147,21 @@ export class ManuscriptContentfulDataProvider
     };
   }
 
-  async checkResearchOutputLinked(
+  async getResearchOutputLinked(
     manuscriptVersionId: string,
-  ): Promise<boolean> {
+  ): Promise<ResearchOutputDataObject | null> {
     const { manuscriptVersions } = await this.contentfulClient.request<
       FetchResearchOutputByManuscriptVersionIdQuery,
       FetchResearchOutputByManuscriptVersionIdQueryVariables
     >(FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID, {
       id: manuscriptVersionId,
     });
+    const researchOutputItem =
+      manuscriptVersions?.linkedFrom?.researchOutputsCollection?.items?.[0];
 
-    return (
-      (manuscriptVersions?.linkedFrom?.researchOutputsCollection?.total || 0) >
-        0 ||
-      (manuscriptVersions?.linkedFrom?.researchOutputVersionsCollection
-        ?.total || 0) > 0
-    );
+    return researchOutputItem
+      ? parseGraphQLResearchOutput(researchOutputItem)
+      : null;
   }
 
   async fetchCountByTeamId(id: string) {

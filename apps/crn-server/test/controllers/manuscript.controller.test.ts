@@ -88,53 +88,51 @@ describe('Manuscript controller', () => {
   describe('Fetch research output existence by manuscript version ID', () => {
     test('Should return true when research output exists for the manuscript version', async () => {
       const manuscriptVersionId = 'mv-123';
-      manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+      manuscriptDataProviderMock.checkResearchOutputLinked.mockResolvedValueOnce(
         true,
       );
 
       const result =
-        await manuscriptController.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptController.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 
       expect(result).toBe(true);
       expect(
-        manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId,
+        manuscriptDataProviderMock.checkResearchOutputLinked,
       ).toHaveBeenCalledWith(manuscriptVersionId);
     });
 
     test('Should return false when research output does not exist for the manuscript version', async () => {
       const manuscriptVersionId = 'mv-456';
-      manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+      manuscriptDataProviderMock.checkResearchOutputLinked.mockResolvedValueOnce(
         false,
       );
 
       const result =
-        await manuscriptController.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptController.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 
       expect(result).toBe(false);
       expect(
-        manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId,
+        manuscriptDataProviderMock.checkResearchOutputLinked,
       ).toHaveBeenCalledWith(manuscriptVersionId);
     });
 
     test('Should propagate errors from the data provider', async () => {
       const manuscriptVersionId = 'mv-789';
       const error = new GenericError();
-      manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId.mockRejectedValueOnce(
+      manuscriptDataProviderMock.checkResearchOutputLinked.mockRejectedValueOnce(
         error,
       );
 
       await expect(
-        manuscriptController.fetchResearchOutputExistenceByManuscriptVersionId(
-          manuscriptVersionId,
-        ),
+        manuscriptController.checkResearchOutputLinked(manuscriptVersionId),
       ).rejects.toThrow(GenericError);
 
       expect(
-        manuscriptDataProviderMock.fetchResearchOutputExistenceByManuscriptVersionId,
+        manuscriptDataProviderMock.checkResearchOutputLinked,
       ).toHaveBeenCalledWith(manuscriptVersionId);
     });
   });

@@ -57,10 +57,10 @@ export default class ManuscriptController {
     });
   }
 
-  async fetchResearchOutputExistenceByManuscriptVersionId(
+  async checkResearchOutputLinked(
     manuscriptVersionId: string,
   ): Promise<boolean> {
-    return this.manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+    return this.manuscriptDataProvider.checkResearchOutputLinked(
       manuscriptVersionId,
     );
   }

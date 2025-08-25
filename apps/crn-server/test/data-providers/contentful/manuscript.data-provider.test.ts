@@ -1521,7 +1521,7 @@ describe('Manuscripts Contentful Data Provider', () => {
     });
   });
 
-  describe('fetchResearchOutputExistenceByManuscriptVersionId', () => {
+  describe('checkResearchOutputLinked', () => {
     test('should return true when research outputs exist', async () => {
       const manuscriptVersionId = 'manuscript-version-id-1';
 
@@ -1539,7 +1539,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
 
       const result =
-        await manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptDataProvider.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 
@@ -1567,7 +1567,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
 
       const result =
-        await manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptDataProvider.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 
@@ -1595,7 +1595,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
 
       const result =
-        await manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptDataProvider.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 
@@ -1623,7 +1623,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
 
       const result =
-        await manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptDataProvider.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 
@@ -1642,7 +1642,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
 
       const result =
-        await manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptDataProvider.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 
@@ -1663,7 +1663,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
 
       const result =
-        await manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptDataProvider.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 
@@ -1689,7 +1689,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
 
       const result =
-        await manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptDataProvider.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 
@@ -1715,7 +1715,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
 
       const result =
-        await manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptDataProvider.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 
@@ -1739,7 +1739,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
 
       const result =
-        await manuscriptDataProvider.fetchResearchOutputExistenceByManuscriptVersionId(
+        await manuscriptDataProvider.checkResearchOutputLinked(
           manuscriptVersionId,
         );
 

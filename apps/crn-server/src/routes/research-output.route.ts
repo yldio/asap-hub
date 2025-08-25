@@ -188,7 +188,7 @@ export const researchOutputRouteFactory = (
     }
 
     const hasPreprintResearchOutput =
-      await manuscriptController.fetchResearchOutputExistenceByManuscriptVersionId(
+      await manuscriptController.checkResearchOutputLinked(
         preprintManuscriptVersion?.id,
       );
 

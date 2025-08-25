@@ -6,5 +6,5 @@ export const manuscriptControllerMock = {
   createFile: jest.fn(),
   createVersion: jest.fn(),
   update: jest.fn(),
-  fetchResearchOutputExistenceByManuscriptVersionId: jest.fn(),
+  checkResearchOutputLinked: jest.fn(),
 } as unknown as jest.Mocked<ManuscriptController>;

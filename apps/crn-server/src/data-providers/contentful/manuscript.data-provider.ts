@@ -145,7 +145,7 @@ export class ManuscriptContentfulDataProvider
     };
   }
 
-  async fetchResearchOutputExistenceByManuscriptVersionId(
+  async checkResearchOutputLinked(
     manuscriptVersionId: string,
   ): Promise<boolean> {
     const { manuscriptVersions } = await this.contentfulClient.request<

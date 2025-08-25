@@ -6,5 +6,5 @@ export const manuscriptDataProviderMock = {
   create: jest.fn(),
   update: jest.fn(),
   createVersion: jest.fn(),
-  fetchResearchOutputExistenceByManuscriptVersionId: jest.fn(),
+  checkResearchOutputLinked: jest.fn(),
 } as unknown as jest.Mocked<ManuscriptDataProvider>;

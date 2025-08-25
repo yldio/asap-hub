@@ -1017,7 +1017,7 @@ describe('/research-outputs/ route', () => {
         manuscriptControllerMock.fetchById.mockResolvedValueOnce(
           manuscriptResponse,
         );
-        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+        manuscriptControllerMock.checkResearchOutputLinked.mockResolvedValueOnce(
           true,
         );
 
@@ -1030,7 +1030,7 @@ describe('/research-outputs/ route', () => {
           message: 'Research output already exists for this manuscript version',
         });
         expect(
-          manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId,
+          manuscriptControllerMock.checkResearchOutputLinked,
         ).toHaveBeenCalledWith('version-1');
       });
 
@@ -1038,7 +1038,7 @@ describe('/research-outputs/ route', () => {
         manuscriptControllerMock.fetchById.mockResolvedValueOnce(
           manuscriptResponse,
         );
-        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+        manuscriptControllerMock.checkResearchOutputLinked.mockResolvedValueOnce(
           false,
         );
         researchOutputControllerMock.create.mockResolvedValueOnce(
@@ -1057,7 +1057,7 @@ describe('/research-outputs/ route', () => {
           'user-id-0',
         );
         expect(
-          manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId,
+          manuscriptControllerMock.checkResearchOutputLinked,
         ).toHaveBeenCalledWith('version-1');
 
         expect(researchOutputControllerMock.create).toHaveBeenCalledWith({
@@ -1149,7 +1149,7 @@ describe('/research-outputs/ route', () => {
         manuscriptControllerMock.fetchById.mockResolvedValueOnce(
           manuscriptWithNoAuthors,
         );
-        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+        manuscriptControllerMock.checkResearchOutputLinked.mockResolvedValueOnce(
           false,
         );
         researchOutputControllerMock.create.mockResolvedValueOnce(
@@ -1217,7 +1217,7 @@ describe('/research-outputs/ route', () => {
         manuscriptControllerMock.fetchById.mockResolvedValueOnce(
           manuscriptWithEmptyFields,
         );
-        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+        manuscriptControllerMock.checkResearchOutputLinked.mockResolvedValueOnce(
           false,
         );
         researchOutputControllerMock.create.mockResolvedValueOnce(
@@ -1348,7 +1348,7 @@ describe('/research-outputs/ route', () => {
           manuscriptControllerMock.fetchById.mockResolvedValueOnce(
             manuscriptWithEmptyAuthors,
           );
-          manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+          manuscriptControllerMock.checkResearchOutputLinked.mockResolvedValueOnce(
             false,
           );
           researchOutputControllerMock.create.mockResolvedValueOnce(
@@ -1381,7 +1381,7 @@ describe('/research-outputs/ route', () => {
         manuscriptControllerMock.fetchById.mockResolvedValueOnce(
           manuscriptWithCategories,
         );
-        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+        manuscriptControllerMock.checkResearchOutputLinked.mockResolvedValueOnce(
           false,
         );
         researchOutputControllerMock.create.mockResolvedValueOnce(
@@ -1408,7 +1408,7 @@ describe('/research-outputs/ route', () => {
         manuscriptControllerMock.fetchById.mockResolvedValueOnce(
           manuscriptWithUndefinedCategories,
         );
-        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+        manuscriptControllerMock.checkResearchOutputLinked.mockResolvedValueOnce(
           false,
         );
         researchOutputControllerMock.create.mockResolvedValueOnce(
@@ -1435,7 +1435,7 @@ describe('/research-outputs/ route', () => {
         manuscriptControllerMock.fetchById.mockResolvedValueOnce(
           manuscriptWithEmptyCategories,
         );
-        manuscriptControllerMock.fetchResearchOutputExistenceByManuscriptVersionId.mockResolvedValueOnce(
+        manuscriptControllerMock.checkResearchOutputLinked.mockResolvedValueOnce(
           false,
         );
         researchOutputControllerMock.create.mockResolvedValueOnce(

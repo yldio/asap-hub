@@ -37,6 +37,10 @@ import {
   getManuscriptUpdateAPCCoverageDataObject,
 } from '../../fixtures/manuscript.fixtures';
 import {
+  getContentfulResearchOutputGraphqlResponse,
+  getResearchOutputDataObject,
+} from '../../fixtures/research-output.fixtures';
+import {
   getContentfulGraphql,
   getContentfulGraphqlManuscripts,
   getUsersTeamsCollection,
@@ -1522,17 +1526,14 @@ describe('Manuscripts Contentful Data Provider', () => {
   });
 
   describe('getResearchOutputLinked', () => {
-    test('should return true when research outputs exist', async () => {
+    test('should return the research output when it exists', async () => {
       const manuscriptVersionId = 'manuscript-version-id-1';
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscriptVersions: {
           linkedFrom: {
             researchOutputsCollection: {
-              total: 2,
-            },
-            researchOutputVersionsCollection: {
-              total: 0,
+              items: [getContentfulResearchOutputGraphqlResponse()],
             },
           },
         },
@@ -1547,20 +1548,21 @@ describe('Manuscripts Contentful Data Provider', () => {
         FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
         { id: manuscriptVersionId },
       );
-      expect(result).toBe(true);
+      expect(result).toEqual(
+        expect.objectContaining({
+          id: getResearchOutputDataObject().id,
+        }),
+      );
     });
 
-    test('should return true when research output versions exist', async () => {
+    test('should return null when no research outputs exist', async () => {
       const manuscriptVersionId = 'manuscript-version-id-1';
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscriptVersions: {
           linkedFrom: {
             researchOutputsCollection: {
-              total: 0,
-            },
-            researchOutputVersionsCollection: {
-              total: 1,
+              items: [],
             },
           },
         },
@@ -1575,85 +1577,10 @@ describe('Manuscripts Contentful Data Provider', () => {
         FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
         { id: manuscriptVersionId },
       );
-      expect(result).toBe(true);
+      expect(result).toBeNull();
     });
 
-    test('should return true when both research outputs and research output versions exist', async () => {
-      const manuscriptVersionId = 'manuscript-version-id-1';
-
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        manuscriptVersions: {
-          linkedFrom: {
-            researchOutputsCollection: {
-              total: 1,
-            },
-            researchOutputVersionsCollection: {
-              total: 1,
-            },
-          },
-        },
-      });
-
-      const result =
-        await manuscriptDataProvider.getResearchOutputLinked(
-          manuscriptVersionId,
-        );
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
-        { id: manuscriptVersionId },
-      );
-      expect(result).toBe(true);
-    });
-
-    test('should return false when no research outputs or research output versions exist', async () => {
-      const manuscriptVersionId = 'manuscript-version-id-1';
-
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        manuscriptVersions: {
-          linkedFrom: {
-            researchOutputsCollection: {
-              total: 0,
-            },
-            researchOutputVersionsCollection: {
-              total: 0,
-            },
-          },
-        },
-      });
-
-      const result =
-        await manuscriptDataProvider.getResearchOutputLinked(
-          manuscriptVersionId,
-        );
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
-        { id: manuscriptVersionId },
-      );
-      expect(result).toBe(false);
-    });
-
-    test('should return false when manuscriptVersions is null', async () => {
-      const manuscriptVersionId = 'manuscript-version-id-1';
-
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        manuscriptVersions: null,
-      });
-
-      const result =
-        await manuscriptDataProvider.getResearchOutputLinked(
-          manuscriptVersionId,
-        );
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
-        { id: manuscriptVersionId },
-      );
-      expect(result).toBe(false);
-    });
-
-    test('should return false when linkedFrom is null', async () => {
+    test('should return null when linkedFrom is null', async () => {
       const manuscriptVersionId = 'manuscript-version-id-1';
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
@@ -1671,19 +1598,16 @@ describe('Manuscripts Contentful Data Provider', () => {
         FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
         { id: manuscriptVersionId },
       );
-      expect(result).toBe(false);
+      expect(result).toBeNull();
     });
 
-    test('should return false when researchOutputsCollection is null and there is not any research output', async () => {
+    test('should return null when researchOutputsCollection is null', async () => {
       const manuscriptVersionId = 'manuscript-version-id-1';
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscriptVersions: {
           linkedFrom: {
             researchOutputsCollection: null,
-            researchOutputVersionsCollection: {
-              total: 0,
-            },
           },
         },
       });
@@ -1697,57 +1621,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
         { id: manuscriptVersionId },
       );
-      expect(result).toBe(false);
-    });
-
-    test('should return false when researchOutputVersionsCollection is null and there is not any research output version', async () => {
-      const manuscriptVersionId = 'manuscript-version-id-1';
-
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        manuscriptVersions: {
-          linkedFrom: {
-            researchOutputsCollection: {
-              total: 0,
-            },
-            researchOutputVersionsCollection: null,
-          },
-        },
-      });
-
-      const result =
-        await manuscriptDataProvider.getResearchOutputLinked(
-          manuscriptVersionId,
-        );
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
-        { id: manuscriptVersionId },
-      );
-      expect(result).toBe(false);
-    });
-
-    test('should return false when both collections are null', async () => {
-      const manuscriptVersionId = 'manuscript-version-id-1';
-
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        manuscriptVersions: {
-          linkedFrom: {
-            researchOutputsCollection: null,
-            researchOutputVersionsCollection: null,
-          },
-        },
-      });
-
-      const result =
-        await manuscriptDataProvider.getResearchOutputLinked(
-          manuscriptVersionId,
-        );
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
-        { id: manuscriptVersionId },
-      );
-      expect(result).toBe(false);
+      expect(result).toBeNull();
     });
   });
 

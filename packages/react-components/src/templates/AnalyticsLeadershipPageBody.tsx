@@ -1,10 +1,6 @@
-import {
-  LeadershipAndMembershipSortingDirection,
-  SortLeadershipAndMembership,
-} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { noop, PageControls } from '..';
+import { noop } from '..';
 import {
   Dropdown,
   Headline3,
@@ -13,20 +9,9 @@ import {
   Subtitle,
 } from '../atoms';
 import { AnalyticsControls } from '../molecules';
-import { LeadershipMembershipTable } from '../organisms';
-import OSChampionTable from '../organisms/OSChampionTable';
 import { rem } from '../pixels';
 
 export type MetricOption = 'working-group' | 'interest-group' | 'os-champion';
-type MetricData = {
-  id: string;
-  name: string;
-  inactiveSince?: string;
-  leadershipRoleCount: number;
-  previousLeadershipRoleCount: number;
-  memberCount: number;
-  previousMemberCount: number;
-};
 
 const metricOptions: Record<MetricOption, string> = {
   'working-group': 'Working Group Leadership & Membership',
@@ -42,21 +27,13 @@ const metricDescription = {
   'os-champion': 'Number of Open Science Champion awards by team.',
 };
 
-type LeadershipAndMembershipAnalyticsProps = ComponentProps<
-  typeof PageControls
-> & {
+type LeadershipAndMembershipAnalyticsProps = {
+  children: React.ReactNode;
   tags: string[];
   loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
   setTags: (tags: string[]) => void;
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
-  data: MetricData[];
-  sort: SortLeadershipAndMembership;
-  setSort: React.Dispatch<React.SetStateAction<SortLeadershipAndMembership>>;
-  sortingDirection: LeadershipAndMembershipSortingDirection;
-  setSortingDirection: React.Dispatch<
-    React.SetStateAction<LeadershipAndMembershipSortingDirection>
-  >;
   exportResults: () => Promise<void>;
   isOSChampionEnabled: boolean;
 };
@@ -69,26 +46,15 @@ const tableHeaderStyles = css({
   paddingBottom: rem(24),
 });
 
-const pageControlsStyles = css({
-  justifySelf: 'center',
-  paddingTop: rem(36),
-  paddingBottom: rem(36),
-});
-
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
+  children,
   tags,
   setTags,
   loadTags = noop,
-  sort,
-  setSort,
-  sortingDirection,
-  setSortingDirection,
   metric,
   setMetric,
-  data,
   exportResults,
   isOSChampionEnabled,
-  ...pageControlProps
 }) => {
   const removeFlaggedOptions = (option: string) =>
     isOSChampionEnabled || option !== 'os-champion';
@@ -122,27 +88,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         setTags={setTags}
         exportResults={exportResults}
       />
-      {metric === 'os-champion' ? (
-        <OSChampionTable
-          data={data}
-          sort={sort}
-          setSort={setSort}
-          sortingDirection={sortingDirection}
-          setSortingDirection={setSortingDirection}
-        />
-      ) : (
-        <LeadershipMembershipTable
-          metric={metric}
-          data={data}
-          sort={sort}
-          setSort={setSort}
-          sortingDirection={sortingDirection}
-          setSortingDirection={setSortingDirection}
-        />
-      )}
-      <section css={pageControlsStyles}>
-        <PageControls {...pageControlProps} />
-      </section>
+      {children}
     </article>
   );
 };

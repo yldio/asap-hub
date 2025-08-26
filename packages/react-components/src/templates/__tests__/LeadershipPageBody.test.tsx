@@ -1,4 +1,3 @@
-import { initialSortingDirection } from '@asap-hub/model';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -19,12 +18,8 @@ const renderComponent = (props = {}) =>
       setTags={jest.fn()}
       exportResults={() => Promise.resolve()}
       metric={'interest-group'}
-      data={[]}
       setMetric={() => {}}
-      sort="team_asc"
-      setSort={jest.fn()}
-      sortingDirection={initialSortingDirection}
-      setSortingDirection={jest.fn()}
+      children={<></>}
       {...props}
       {...pageControlProps}
     />,

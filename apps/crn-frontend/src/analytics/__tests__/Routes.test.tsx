@@ -5,6 +5,7 @@ import {
   userCollaborationPerformance,
   teamCollaborationPerformance,
 } from '@asap-hub/fixtures';
+import { enable } from '@asap-hub/flags';
 import { analytics } from '@asap-hub/routing';
 import {
   render,
@@ -25,7 +26,10 @@ import {
   getUserCollaborationPerformance,
 } from '../collaboration/api';
 import { getEngagement } from '../engagement/api';
-import { getAnalyticsLeadership } from '../leadership/api';
+import {
+  getAnalyticsLeadership,
+  getAnalyticsOSChampion,
+} from '../leadership/api';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -46,6 +50,9 @@ afterEach(() => {
 
 const mockGetAnalyticsLeadership =
   getAnalyticsLeadership as jest.MockedFunction<typeof getAnalyticsLeadership>;
+
+const mockGetAnalyticsOSChampion =
+  getAnalyticsOSChampion as jest.MockedFunction<typeof getAnalyticsOSChampion>;
 
 const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
   typeof getTeamProductivity
@@ -265,7 +272,7 @@ describe('Leadership & Membership', () => {
     ).toBeVisible();
   });
 
-  it('renders error message when the response is not a 2XX', async () => {
+  it('renders error message when team leadership response is not a 2XX', async () => {
     mockGetAnalyticsLeadership.mockRejectedValueOnce(
       new Error('Failed to fetch'),
     );
@@ -275,6 +282,22 @@ describe('Leadership & Membership', () => {
 
     await waitFor(() => {
       expect(mockGetAnalyticsLeadership).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
+
+  it('renders error message when os champion response is not a 2XX', async () => {
+    enable('ANALYTICS_OS_CHAMPION');
+    mockGetAnalyticsOSChampion.mockRejectedValueOnce(
+      new Error('Failed to fetch'),
+    );
+    await renderPage(
+      analytics({}).leadership({}).metric({ metric: 'os-champion' }).$,
+    );
+
+    await waitFor(() => {
+      expect(mockGetAnalyticsOSChampion).toHaveBeenCalled();
     });
 
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();

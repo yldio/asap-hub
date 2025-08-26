@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { Subtitle } from '../atoms';
 import { lead } from '../colors';
 import {
   happyFaceIcon,
@@ -27,6 +28,7 @@ const dataContainerStyles = css({
   flexDirection: 'row',
   alignItems: 'center',
   gap: rem(4),
+  textWrap: 'nowrap',
 });
 
 const dataTextStyles = css({
@@ -41,19 +43,22 @@ const StaticPerformanceCard: React.FC = () => (
     <div css={containerStyles}>
       <div css={dataContainerStyles}>
         {happyFaceIcon}
-        <span css={dataTextStyles}>Outstanding: &ge; 90%</span>
+        <Subtitle noMargin>Outstanding:</Subtitle>
+        <span css={dataTextStyles}>&ge; 90%</span>
       </div>
       <div css={dataContainerStyles}>
         {neutralFaceIcon}
-        <span css={dataTextStyles}>Adequate: 80% - 89%</span>
+        <Subtitle noMargin>Adequate:</Subtitle>
+        <span css={dataTextStyles}>80% - 89%</span>
       </div>
       <div css={dataContainerStyles}>
         {sadFaceIcon}
-        <span css={dataTextStyles}>Needs Improvement: &lt; 80%</span>
+        <Subtitle noMargin>Needs Improvement:</Subtitle>
+        <span css={dataTextStyles}>&lt; 80%</span>
       </div>
       <div css={dataContainerStyles}>
         {informationInverseIcon}
-        <span css={dataTextStyles}>Limited data</span>
+        <Subtitle noMargin>Limited data</Subtitle>
       </div>
     </div>
   </CaptionCard>

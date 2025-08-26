@@ -480,7 +480,7 @@ describe('search', () => {
 
 describe('csv export', () => {
   it('exports analytics for user', async () => {
-    await renderPage('user');
+    await renderPage('user', 'within-team');
     userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/collaboration_user_\d+\.csv/),

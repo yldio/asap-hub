@@ -68,16 +68,6 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
-// const buttonStyles = css({
-//   width: rem(24),
-//   margin: 0,
-//   padding: 0,
-//   border: 'none',
-//   backgroundColor: 'unset',
-//   cursor: 'pointer',
-//   alignSelf: 'center',
-// });
-
 type SharingPrelimFindingsTableProps = ComponentProps<typeof PageControls> & {
   data: SharingPrelimFindingsResponse[];
   setSort: React.Dispatch<React.SetStateAction<SortSharingPrelimFindings>>;
@@ -96,9 +86,6 @@ const SharingPrelimFindingsTable: React.FC<SharingPrelimFindingsTableProps> = ({
   setSortingDirection,
   ...pageControlProps
 }) => (
-  // const iconDescription = 'Sharing Prelim Findings';
-  // const isTeamSortActive = sort.includes('team');
-  // const isPercentSharedSortActive = sort.includes('percent_shared');
   <>
     <StaticPerformanceCard />
     <Card padding={false}>
@@ -117,32 +104,11 @@ const SharingPrelimFindingsTable: React.FC<SharingPrelimFindingsTableProps> = ({
           <thead>
             <tr>
               <th css={titleStyles} className={'team'}>
-                <span css={headerStyles}>
-                  Team
-                  {/* <button
-                      css={buttonStyles}
-                      // onClick={() => {}}
-                    >
-                      <AlphabeticalSortingIcon
-                        active={isTeamSortActive}
-                        ascending={sortingDirection.team === 'asc'}
-                      />
-                    </button> */}
-                </span>
+                <span css={headerStyles}>Team</span>
               </th>
               <th css={titleStyles}>
                 <span css={headerStyles}>
                   <span>Percent Shared</span>
-                  {/* <button
-                      css={buttonStyles}
-                      // onClick={() => {}}
-                    >
-                      <NumericalSortingIcon
-                        active={isPercentSharedSortActive}
-                        ascending={sortingDirection.percentShared === 'asc'}
-                        description={`${iconDescription} Percent Shared`}
-                      />
-                    </button> */}
                 </span>
               </th>
             </tr>

@@ -1,8 +1,10 @@
+import { isEnabled } from '@asap-hub/flags';
 import {
   algoliaResultsToStream,
   createCsvFileStream,
 } from '@asap-hub/frontend-utils';
 import {
+  SortSharingPrelimFindings,
   SortTeamCollaboration,
   SortUserCollaboration,
   TeamCollaborationAlgoliaResponse,
@@ -16,7 +18,7 @@ import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 
 import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
@@ -27,6 +29,7 @@ import {
   teamCollaborationWithinTeamToCSV,
   userCollaborationToCSV,
 } from './export';
+import SharingPreliminaryFindings from './SharingPrelimFindings';
 import {
   useTeamCollaborationPerformance,
   useUserCollaborationPerformance,
@@ -34,19 +37,24 @@ import {
 import TeamCollaboration from './TeamCollaboration';
 import UserCollaboration from './UserCollaboration';
 
+type CollaborationType = 'within-team' | 'across-teams' | undefined;
+
 const Collaboration = () => {
   const history = useHistory();
 
   const { metric, type } = useParams<{
-    metric: 'user' | 'team';
-    type: 'within-team' | 'across-teams';
+    metric: 'user' | 'team' | 'sharing-prelim-findings';
+    type: CollaborationType;
   }>();
+
   const { timeRange, documentCategory, outputType } = useAnalytics();
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
   const { currentPage } = usePaginationParams();
   const [userSort, setUserSort] = useState<SortUserCollaboration>('user_asc');
   const [teamSort, setTeamSort] = useState<SortTeamCollaboration>('team_asc');
+  const [teamPrelimSharingSort, setTeamPrelimSharingSort] =
+    useState<SortSharingPrelimFindings>('team_asc');
   const [userSortingDirection, setUserSortingDirection] =
     useState<UserCollaborationSortingDirection>(
       userCollaborationInitialSortingDirection,
@@ -58,12 +66,23 @@ const Collaboration = () => {
 
   const entityType =
     metric === 'user' ? 'user-collaboration' : 'team-collaboration';
-  const setMetric = (newMetric: 'user' | 'team') =>
+  const setMetric = (
+    newMetric: 'user' | 'team' | 'sharing-prelim-findings',
+  ) => {
+    let newType: CollaborationType;
+
+    if (newMetric === 'sharing-prelim-findings') {
+      newType = undefined;
+    } else {
+      newType = type || 'within-team';
+    }
     history.push(
-      analytics({})
-        .collaboration({})
-        .collaborationPath({ metric: newMetric, type }).$,
+      analytics({}).collaboration({}).collaborationPath({
+        metric: newMetric,
+        type: newType,
+      }).$,
     );
+  };
   const setType = (newType: 'within-team' | 'across-teams') => {
     if (metric === 'user') {
       setUserSort('user_asc');
@@ -97,7 +116,7 @@ const Collaboration = () => {
   });
 
   const exportResults = () => {
-    if (metric === 'user') {
+    if (metric === 'user' && type) {
       return algoliaResultsToStream<UserCollaborationAlgoliaResponse>(
         createCsvFileStream(
           `collaboration_${metric}_${format(new Date(), 'MMddyy')}.csv`,
@@ -150,7 +169,16 @@ const Collaboration = () => {
     }));
   };
 
-  return (
+  const isPrelimSharingEnabled = isEnabled('ANALYTICS_PHASE_TWO');
+  return !isPrelimSharingEnabled && metric === 'sharing-prelim-findings' ? (
+    <Redirect
+      to={
+        analytics({})
+          .collaboration({})
+          .collaborationPath({ metric: 'user', type: 'within-team' }).$
+      }
+    />
+  ) : (
     <AnalyticsCollaborationPageBody
       currentPage={currentPage}
       documentCategory={metric === 'user' ? documentCategory : undefined}
@@ -163,9 +191,10 @@ const Collaboration = () => {
       setType={setType}
       tags={tags}
       timeRange={timeRange}
-      type={type}
+      type={metric === 'sharing-prelim-findings' ? undefined : type}
+      isPrelimSharingEnabled={isPrelimSharingEnabled}
     >
-      {metric === 'user' ? (
+      {metric === 'user' && type ? (
         <UserCollaboration
           sort={userSort}
           setSort={setUserSort}
@@ -174,13 +203,19 @@ const Collaboration = () => {
           type={type}
           tags={tags}
         />
-      ) : (
+      ) : metric === 'team' && type ? (
         <TeamCollaboration
           sort={teamSort}
           setSort={setTeamSort}
           setSortingDirection={setTeamSortingDirection}
           sortingDirection={teamSortingDirection}
           type={type}
+          tags={tags}
+        />
+      ) : (
+        <SharingPreliminaryFindings
+          sort={teamPrelimSharingSort}
+          setSort={setTeamPrelimSharingSort}
           tags={tags}
         />
       )}

@@ -58,7 +58,7 @@ const Leadership: FC<Record<string, never>> = () => {
       leadershipToCSV(metric),
     );
 
-  const isOSChampionEnabled = isEnabled('ANALYTICS_OS_CHAMPION');
+  const isOSChampionEnabled = isEnabled('ANALYTICS_PHASE_TWO');
   return !isOSChampionEnabled && metric === 'os-champion' ? (
     <Redirect
       to={analytics({}).leadership({}).metric({ metric: 'working-group' }).$}

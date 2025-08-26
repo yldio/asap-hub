@@ -49,6 +49,7 @@ export { default as NewsCard } from './NewsCard';
 export { default as NewsSection } from './NewsSection';
 export { default as NoEvents } from './NoEvents';
 export { default as OnboardingFooter } from './OnboardingFooter';
+export { default as SharingPrelimFindingsTable } from './SharingPrelimFindingsTable';
 export { default as ShortDescriptionCard } from './ShortDescriptionCard';
 export { default as OSChampionTable } from './OSChampionTable';
 export { default as OutputVersions } from './OutputVersions';

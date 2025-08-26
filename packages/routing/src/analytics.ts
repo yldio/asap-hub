@@ -2,7 +2,7 @@ import { route, stringParser } from 'typesafe-routes';
 
 const metric = route('/:metric', { metric: stringParser }, {});
 const collaborationPath = route(
-  '/:metric/:type',
+  '/:metric/:type?',
   { metric: stringParser, type: stringParser },
   {},
 );

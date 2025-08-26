@@ -15,6 +15,7 @@ describe('AnalyticsCollaborationPageBody', () => {
     tags: [],
     timeRange: '30d',
     type: 'within-team',
+    isPrelimSharingEnabled: false,
   };
 
   describe('user tab', () => {
@@ -78,6 +79,39 @@ describe('AnalyticsCollaborationPageBody', () => {
       expect(container).toHaveTextContent(
         'additional teams are listed as contributors to the output',
       );
+    });
+  });
+
+  describe('sharing prelim findings tab', () => {
+    it('renders sharing preliminary findings page header & description', () => {
+      const { container, getByRole } = render(
+        <AnalyticsCollaborationPageBody
+          {...props}
+          metric="sharing-prelim-findings"
+          type={undefined}
+          isPrelimSharingEnabled
+        />,
+      );
+
+      expect(
+        getByRole('heading', { name: /Sharing Preliminary Findings/i }),
+      ).toBeInTheDocument();
+      expect(container).toHaveTextContent(
+        'Percentage of preliminary findings shared by each team',
+      );
+    });
+
+    it('does not display type dropdown when not provided', () => {
+      const { queryByText } = render(
+        <AnalyticsCollaborationPageBody
+          {...props}
+          metric="team"
+          isPrelimSharingEnabled
+          type={undefined}
+        />,
+      );
+
+      expect(queryByText(/Type/i)).not.toBeInTheDocument();
     });
   });
 });

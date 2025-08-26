@@ -5,13 +5,15 @@ import { ComponentProps } from 'react';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { perRem } from '../pixels';
+import { removeFlaggedOptions } from '../utils';
 
-type MetricOption = 'user' | 'team';
+type MetricOption = 'user' | 'team' | 'sharing-prelim-findings';
 type TypeOption = 'within-team' | 'across-teams';
 
 const metricOptions: Record<MetricOption, string> = {
   user: 'User Co-Production',
   team: 'Team Co-Production',
+  'sharing-prelim-findings': 'Sharing Preliminary Findings',
 };
 
 const typeOptions: Record<TypeOption, string> = {
@@ -19,16 +21,15 @@ const typeOptions: Record<TypeOption, string> = {
   'across-teams': 'Across Teams',
 };
 
-const metricOptionList = Object.keys(metricOptions).map((value) => ({
-  value: value as MetricOption,
-  label: metricOptions[value as MetricOption],
-}));
 const typeOptionList = Object.keys(typeOptions).map((value) => ({
   value: value as TypeOption,
   label: typeOptions[value as TypeOption],
 }));
 
-const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) =>
+const getPageHeaderDescription = (
+  metric: MetricOption,
+  type: TypeOption | undefined,
+) =>
   metric === 'user'
     ? type === 'within-team'
       ? {
@@ -41,16 +42,22 @@ const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) =>
           description:
             'Number of outputs where a user has co-authored an output with another CRN user who is not from the same CRN team',
         }
-    : type === 'within-team'
-      ? {
-          header: 'Co-Production Within Teams by Team',
-          description:
-            'Number of team outputs that are co-produced by different labs within same team',
-        }
+    : metric === 'team'
+      ? type === 'within-team'
+        ? {
+            header: 'Co-Production Within Teams by Team',
+            description:
+              'Number of team outputs that are co-produced by different labs within same team',
+          }
+        : {
+            header: 'Co-Production Across Teams by Team',
+            description:
+              'Number of outputs in which additional teams are listed as contributors to the output',
+          }
       : {
-          header: 'Co-Production Across Teams by Team',
+          header: 'Sharing Preliminary Findings',
           description:
-            'Number of outputs in which additional teams are listed as contributors to the output',
+            'Percentage of preliminary findings shared by each team during interest group meetings',
         };
 
 type CollaborationAnalyticsProps = Pick<
@@ -68,7 +75,8 @@ type CollaborationAnalyticsProps = Pick<
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   setType: (option: TypeOption) => void;
-  type: TypeOption;
+  type: TypeOption | undefined;
+  isPrelimSharingEnabled: boolean;
 };
 
 const metricDropdownStyles = css({
@@ -93,8 +101,15 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
   tags,
   timeRange,
   type,
+  isPrelimSharingEnabled,
 }) => {
   const { header, description } = getPageHeaderDescription(metric, type);
+  const metricOptionList = Object.keys(metricOptions)
+    .filter((option) => removeFlaggedOptions(isPrelimSharingEnabled, option))
+    .map((value) => ({
+      value: value as MetricOption,
+      label: metricOptions[value as MetricOption],
+    }));
   return (
     <article>
       <div css={metricDropdownStyles}>
@@ -106,15 +121,17 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
           required
         />
       </div>
-      <div css={metricDropdownStyles}>
-        <Subtitle>Type</Subtitle>
-        <Dropdown
-          options={typeOptionList}
-          value={type}
-          onChange={setType}
-          required
-        />
-      </div>
+      {type && (
+        <div css={metricDropdownStyles}>
+          <Subtitle>Type</Subtitle>
+          <Dropdown
+            options={typeOptionList}
+            value={type}
+            onChange={setType}
+            required
+          />
+        </div>
+      )}
       <div css={tableHeaderStyles}>
         <Headline3>{header}</Headline3>
         <Paragraph>{description}.</Paragraph>
@@ -127,7 +144,9 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
           analytics({}).collaboration({}).collaborationPath({ metric, type }).$
         }
         loadTags={loadTags}
-        metricOption={metric}
+        metricOption={
+          ['team', 'sharing-prelim-findings'].includes(metric) ? 'team' : 'user'
+        }
         outputType={outputType}
         setTags={setTags}
         tags={tags}

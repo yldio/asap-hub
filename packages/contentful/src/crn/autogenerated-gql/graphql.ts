@@ -20894,6 +20894,354 @@ export type FetchVersionsByManuscriptQuery = {
   >;
 };
 
+export type FetchResearchOutputByManuscriptVersionIdQueryVariables = Exact<{
+  id: Scalars['String'];
+  fetchPMs?: InputMaybe<Scalars['Boolean']>;
+  singleOutput?: InputMaybe<Scalars['Boolean']>;
+  relatedResearchWhere?: InputMaybe<ResearchOutputsFilter>;
+}>;
+
+export type FetchResearchOutputByManuscriptVersionIdQuery = {
+  manuscriptVersions?: Maybe<{
+    linkedFrom?: Maybe<{
+      researchOutputsCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<
+              ResearchOutputs,
+              | 'title'
+              | 'descriptionMd'
+              | 'shortDescription'
+              | 'changelog'
+              | 'link'
+              | 'addedDate'
+              | 'createdDate'
+              | 'lastUpdatedPartial'
+              | 'documentType'
+              | 'sharingStatus'
+              | 'labCatalogNumber'
+              | 'doi'
+              | 'accession'
+              | 'rrid'
+              | 'asapFunded'
+              | 'usedInAPublication'
+              | 'type'
+              | 'publishDate'
+              | 'usageNotes'
+              | 'statusChangedAt'
+              | 'isInReview'
+            > & {
+              sys: Pick<Sys, 'id' | 'publishedVersion'>;
+              impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
+              categoriesCollection?: Maybe<{
+                items: Array<
+                  Maybe<Pick<Category, 'name'> & { sys: Pick<Sys, 'id'> }>
+                >;
+              }>;
+              description?: Maybe<
+                Pick<ResearchOutputsDescription, 'json'> & {
+                  links: {
+                    entries: {
+                      inline: Array<
+                        Maybe<
+                          | ({ __typename: 'Announcements' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Attendance' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Awards' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Calendars' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Category' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'ComplianceReports' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Dashboard' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Discover' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Discussions' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'EventSpeakers' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Events' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'ExternalAuthors' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'ExternalTools' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'GuideCollections' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'GuideContent' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Guides' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Icon' } & { sys: Pick<Sys, 'id'> })
+                          | ({ __typename: 'Impact' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'InterestGroupLeaders' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'InterestGroups' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'InterestGroupsTeams' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'LabMembership' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                          | ({ __typename: 'ManuscriptVersions' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Manuscripts' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                          | ({ __typename: 'Messages' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Migration' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                          | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                          | ({ __typename: 'PreliminaryDataSharing' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'ResearchOutputVersions' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'ResearchOutputs' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'ResearchTags' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'ResearchTheme' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'SupplementGrant' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'TeamMembership' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                          | ({ __typename: 'Tutorials' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                          | ({ __typename: 'WorkingGroupDeliverables' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'WorkingGroupLeaders' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'WorkingGroupMembers' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'WorkingGroups' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                        >
+                      >;
+                    };
+                    assets: {
+                      block: Array<
+                        Maybe<
+                          Pick<
+                            Asset,
+                            | 'url'
+                            | 'description'
+                            | 'contentType'
+                            | 'width'
+                            | 'height'
+                          > & { sys: Pick<Sys, 'id'> }
+                        >
+                      >;
+                    };
+                  };
+                }
+              >;
+              statusChangedBy?: Maybe<
+                Pick<Users, 'firstName' | 'lastName' | 'email'> & {
+                  sys: Pick<Sys, 'id'>;
+                }
+              >;
+              authorsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    | ({ __typename: 'ExternalAuthors' } & Pick<
+                        ExternalAuthors,
+                        'name' | 'orcid'
+                      > & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'Users' } & Pick<
+                        Users,
+                        | 'firstName'
+                        | 'nickname'
+                        | 'lastName'
+                        | 'email'
+                        | 'onboarded'
+                        | 'orcid'
+                        | 'alumniSinceDate'
+                      > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        })
+                  >
+                >;
+              }>;
+              teamsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Teams, 'displayName'> & {
+                      sys: Pick<Sys, 'id'>;
+                      researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
+                      linkedFrom?: Maybe<{
+                        teamMembershipCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                TeamMembership,
+                                'role' | 'inactiveSinceDate'
+                              > & {
+                                linkedFrom?: Maybe<{
+                                  usersCollection?: Maybe<{
+                                    items: Array<Maybe<Pick<Users, 'email'>>>;
+                                  }>;
+                                }>;
+                              }
+                            >
+                          >;
+                        }>;
+                      }>;
+                    }
+                  >
+                >;
+              }>;
+              workingGroup?: Maybe<
+                Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+              >;
+              methodsCollection?: Maybe<{
+                items: Array<Maybe<Pick<ResearchTags, 'name'>>>;
+              }>;
+              keywordsCollection?: Maybe<{
+                items: Array<Maybe<Pick<ResearchTags, 'name'>>>;
+              }>;
+              organismsCollection?: Maybe<{
+                items: Array<Maybe<Pick<ResearchTags, 'name'>>>;
+              }>;
+              environmentsCollection?: Maybe<{
+                items: Array<Maybe<Pick<ResearchTags, 'name'>>>;
+              }>;
+              subtype?: Maybe<Pick<ResearchTags, 'name'>>;
+              labsCollection?: Maybe<{
+                items: Array<
+                  Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+                >;
+              }>;
+              relatedResearchCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<ResearchOutputs, 'title' | 'type' | 'documentType'> & {
+                      sys: Pick<Sys, 'id'>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            Pick<Teams, 'displayName'> & {
+                              sys: Pick<Sys, 'id'>;
+                            }
+                          >
+                        >;
+                      }>;
+                      workingGroup?: Maybe<
+                        Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                      >;
+                    }
+                  >
+                >;
+              }>;
+              linkedFrom?: Maybe<{
+                researchOutputsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<
+                        ResearchOutputs,
+                        'title' | 'type' | 'documentType'
+                      > & {
+                        sys: Pick<Sys, 'id'>;
+                        teamsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >
+                          >;
+                        }>;
+                        workingGroup?: Maybe<
+                          Pick<WorkingGroups, 'title'> & {
+                            sys: Pick<Sys, 'id'>;
+                          }
+                        >;
+                      }
+                    >
+                  >;
+                }>;
+              }>;
+              relatedEventsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Events, 'title' | 'endDate'> & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }>;
+              versionsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<
+                      ResearchOutputVersions,
+                      | 'title'
+                      | 'documentType'
+                      | 'type'
+                      | 'addedDate'
+                      | 'link'
+                      | 'rrid'
+                      | 'accession'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }>;
+              relatedManuscriptVersion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+            }
+          >
+        >;
+      }>;
+    }>;
+  }>;
+};
+
 export type ManuscriptsContentFragment = Pick<
   Manuscripts,
   | 'title'
@@ -41139,6 +41487,131 @@ export const FetchVersionsByManuscriptDocument = {
 } as unknown as DocumentNode<
   FetchVersionsByManuscriptQuery,
   FetchVersionsByManuscriptQueryVariables
+>;
+export const FetchResearchOutputByManuscriptVersionIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchResearchOutputByManuscriptVersionId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'fetchPMs' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'singleOutput' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'relatedResearchWhere' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ResearchOutputsFilter' },
+          },
+          defaultValue: { kind: 'ObjectValue', fields: [] },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'manuscriptVersions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'researchOutputsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '1' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'ResearchOutputsContent',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ResearchOutputsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchResearchOutputByManuscriptVersionIdQuery,
+  FetchResearchOutputByManuscriptVersionIdQueryVariables
 >;
 export const FetchManuscriptByIdDocument = {
   kind: 'Document',

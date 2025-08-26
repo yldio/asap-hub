@@ -7,8 +7,10 @@ import {
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { disable, enable } from '@asap-hub/flags';
+import type { Flag } from '@asap-hub/flags';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
+  ManuscriptVersionResponse,
   ResearchOutputResponse,
   UserResponse,
   ValidationErrorResponse,
@@ -34,8 +36,16 @@ import {
   updateTeamResearchOutput,
 } from '../api';
 import { getImpacts } from '../../../shared-api/impact';
-import { refreshTeamState } from '../state';
+import { refreshTeamState, usePostPreprintResearchOutput } from '../state';
 import TeamOutput from '../TeamOutput';
+
+jest.mock(
+  'react-lottie',
+  () =>
+    function MockLottie() {
+      return <div>Loading...</div>;
+    },
+);
 
 jest.setTimeout(60000);
 jest.mock('../api');
@@ -43,6 +53,10 @@ jest.mock('../../users/api');
 jest.mock('../../../shared-api/impact');
 jest.mock('../../../shared-research/api');
 jest.mock('../../../shared-api/content-generator');
+jest.mock('../state', () => ({
+  ...jest.requireActual('../state'),
+  usePostPreprintResearchOutput: jest.fn(),
+}));
 
 beforeEach(() => {
   window.scrollTo = jest.fn();
@@ -157,6 +171,16 @@ const mockGetGeneratedShortDescription =
   >;
 
 const mockGetImpacts = getImpacts as jest.MockedFunction<typeof getImpacts>;
+
+const mockUsePostPreprintResearchOutput =
+  usePostPreprintResearchOutput as jest.MockedFunction<
+    typeof usePostPreprintResearchOutput
+  >;
+
+const mockGetManuscriptVersions = getManuscriptVersions as jest.MockedFunction<
+  typeof getManuscriptVersions
+>;
+
 interface RenderPageOptions {
   user?: UserResponse;
   teamId: string;
@@ -166,7 +190,7 @@ interface RenderPageOptions {
 }
 
 beforeEach(() => {
-  disable('MANUSCRIPT_OUTPUTS');
+  disable('MANUSCRIPT_OUTPUTS' as Flag);
   mockGetImpacts.mockResolvedValue({
     total: 0,
     items: [],
@@ -636,6 +660,14 @@ it('will toast server side errors for unknown errors', async () => {
     ),
   ).toBeInTheDocument();
   expect(window.scrollTo).toHaveBeenCalled();
+
+  userEvent.click(screen.getByRole('button', { name: /Close/i }));
+
+  expect(
+    screen.queryByText(
+      'There was an error and we were unable to save your changes. Please try again.',
+    ),
+  ).not.toBeInTheDocument();
 });
 
 it('will toast server side errors for unknown errors in edit mode', async () => {
@@ -741,7 +773,183 @@ it('hides changelog input when editing a research output with no version history
 
 describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
   beforeEach(() => {
-    enable('MANUSCRIPT_OUTPUTS');
+    enable('MANUSCRIPT_OUTPUTS' as Flag);
+  });
+
+  describe('preprint automatically created', () => {
+    beforeEach(() => {
+      mockUsePostPreprintResearchOutput.mockReset();
+    });
+
+    const title = 'Version One';
+    const id = 'mv-manuscript-id-1';
+    const type = 'Original Research';
+    const lifecycle = 'Publication';
+    const versionId = 'version-id-1';
+    const manuscriptId = 'DA1-000463-002-org-G-1';
+    const url = 'http://example.com';
+    const authors = [
+      {
+        displayName: 'First Author',
+        email: 'first.author@gmail.com',
+        firstName: 'First',
+        id: 'first-author-id-1',
+        lastName: 'Author',
+      },
+    ];
+    const categories = [
+      {
+        id: 'category-id-1',
+        name: 'Methods',
+      },
+    ];
+    const impact = {
+      id: 'impact-id-1',
+      name: 'New method/model to explore PD mechanism',
+    };
+    const description = 'example42 description';
+    const shortDescription = 'example42 short description';
+    const teams = [
+      {
+        displayName: 'Team One',
+        id: '42',
+      },
+    ];
+
+    const manuscriptVersion: ManuscriptVersionResponse = {
+      id,
+      title,
+      type,
+      lifecycle,
+      versionId,
+      manuscriptId,
+      url,
+      authors,
+      categories,
+      description,
+      shortDescription,
+      impact,
+      teams,
+    };
+
+    mockGetManuscriptVersions.mockResolvedValue({
+      total: 1,
+      items: [manuscriptVersion],
+    });
+
+    it('handles error during preprint research output creation', async () => {
+      (usePostPreprintResearchOutput as jest.Mock).mockReturnValue(() =>
+        Promise.reject(new Error('Failed to create preprint')),
+      );
+
+      await renderPage({ teamId: '42', outputDocumentType: 'article' });
+
+      expect(
+        screen.getByLabelText('Import from manuscript'),
+      ).toBeInTheDocument();
+
+      userEvent.click(screen.getByLabelText('Import from manuscript'));
+      const input = screen.getByRole('textbox');
+      userEvent.type(input, 'Error');
+      const option = await screen.findByText('DA1-000463-002-org-G-1');
+      userEvent.click(option);
+
+      userEvent.click(screen.getByRole('button', { name: /import/i }));
+
+      await waitFor(() => {
+        expect(
+          screen.getByText('An error has occurred. Please try again later.'),
+        ).toBeInTheDocument();
+      });
+
+      userEvent.click(screen.getByRole('button', { name: /Close/i }));
+
+      expect(
+        screen.queryByText('An error has occurred. Please try again later.'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('handles successful preprint research output creation', async () => {
+      (usePostPreprintResearchOutput as jest.Mock).mockReturnValue(() =>
+        Promise.resolve({
+          id: 'preprint-output-1',
+          title: 'Preprint Output',
+          documentType: 'Article',
+          teams: [{ id: '42', displayName: 'Team One' }],
+          published: true,
+        }),
+      );
+
+      await renderPage({ teamId: '42', outputDocumentType: 'article' });
+
+      userEvent.click(screen.getByLabelText('Import from manuscript'));
+      const input = screen.getByRole('textbox');
+      userEvent.type(input, 'Version One');
+      const option = await screen.findByText('DA1-000463-002-org-G-1');
+      userEvent.click(option);
+
+      userEvent.click(screen.getByRole('button', { name: /import/i }));
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole('heading', { name: 'What are you sharing?' }),
+        ).toBeInTheDocument();
+      });
+      const changelog = 'creating new version with manuscript';
+
+      userEvent.type(
+        screen.getByRole('textbox', { name: /changelog/i }),
+        changelog,
+      );
+
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+
+      const button = screen.getByRole('button', {
+        name: /Publish new version/i,
+      });
+
+      userEvent.click(button);
+
+      await waitFor(() => {
+        expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+          'preprint-output-1',
+          expect.objectContaining({
+            relatedManuscriptVersion: 'version-id-1',
+          }),
+          expect.anything(),
+        );
+      });
+    });
+
+    it('handles preprint research output creation without id', async () => {
+      (usePostPreprintResearchOutput as jest.Mock).mockReturnValue(() =>
+        Promise.resolve({
+          title: 'Preprint Output',
+          documentType: 'Article',
+          teams: [{ id: '42', displayName: 'Team One' }],
+          published: true,
+        }),
+      );
+
+      mockGetManuscriptVersions.mockResolvedValue({
+        total: 1,
+        items: [manuscriptVersion],
+      });
+
+      await renderPage({ teamId: '42', outputDocumentType: 'article' });
+
+      userEvent.click(screen.getByLabelText('Import from manuscript'));
+      const input = screen.getByRole('textbox');
+      await userEvent.type(input, 'Version One');
+      const option = await screen.findByText('DA1-000463-002-org-G-1');
+      await userEvent.click(option);
+
+      userEvent.click(screen.getByRole('button', { name: /import/i }));
+
+      expect(
+        screen.getByText('How would you like to create your output?'),
+      ).toBeInTheDocument();
+    });
   });
 
   it('displays manuscript output selection options for Article document type', async () => {
@@ -895,10 +1103,6 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       },
     ];
 
-    const mockGetManuscriptVersions =
-      getManuscriptVersions as jest.MockedFunction<
-        typeof getManuscriptVersions
-      >;
     mockGetManuscriptVersions.mockResolvedValue({
       total: 1,
       items: [
@@ -1000,7 +1204,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 });
 
 it('bypasses manuscript output selection when MANUSCRIPT_OUTPUTS flag is disabled', async () => {
-  disable('MANUSCRIPT_OUTPUTS');
+  disable('MANUSCRIPT_OUTPUTS' as Flag);
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',

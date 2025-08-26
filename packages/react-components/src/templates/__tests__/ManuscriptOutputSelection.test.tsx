@@ -9,12 +9,21 @@ jest.mock('react-router-dom', () => ({
   useHistory: jest.fn(),
 }));
 
+jest.mock(
+  'react-lottie',
+  () =>
+    function MockLottie() {
+      return <div>Loading...</div>;
+    },
+);
+
 describe('ManuscriptOutputSelection', () => {
   const mockHistory = {
     goBack: jest.fn(),
   };
 
   const defaultProps = {
+    isImportingManuscript: false,
     manuscriptOutputSelection: '' as '' | 'manually' | 'import',
     onChangeManuscriptOutputSelection: jest.fn(),
     onSelectCreateManually: jest.fn(),
@@ -235,5 +244,32 @@ describe('ManuscriptOutputSelection', () => {
     expect(await findByText('Preprint')).toBeInTheDocument();
     expect(getByText('Original Research')).toBeInTheDocument();
     expect(getByText('123')).toBeInTheDocument();
+  });
+
+  it('shows loading animation when importing manuscript', () => {
+    render(
+      <ManuscriptOutputSelection
+        {...defaultProps}
+        manuscriptOutputSelection="import"
+        isImportingManuscript={true}
+        selectedVersion={{
+          label: 'Test Version',
+          value: 'test-version',
+          version: {
+            id: 'test-version',
+            title: 'Test Version',
+            url: 'https://example.com',
+            manuscriptId: '123',
+            type: 'Original Research' as ManuscriptType,
+            lifecycle: 'Preprint' as ManuscriptLifecycle,
+          },
+        }}
+      />,
+    );
+
+    const importButton = screen.getByRole('button', { name: /Import/i });
+    expect(importButton).toBeDisabled();
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 });

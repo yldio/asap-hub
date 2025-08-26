@@ -369,7 +369,7 @@ const mapRelatedResearch = (
       isOwnRelatedResearchLink,
     }));
 
-const parseGraphQLResearchOutput = (
+export const parseGraphQLResearchOutput = (
   researchOutputs: ResearchOutputItem,
 ): ResearchOutputDataObject => {
   const teams = mapTeams(researchOutputs.teamsCollection?.items || []);

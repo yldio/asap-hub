@@ -49,6 +49,7 @@ const cardStyles = css({
 
 const titleStyles = css({
   margin: `${rem(8)} 0 ${rem(12)}`,
+  color: lead.rgb,
 });
 
 const linkStyles = css({

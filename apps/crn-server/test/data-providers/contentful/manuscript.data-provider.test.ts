@@ -4,6 +4,7 @@ import {
   Environment,
   FetchManuscriptNotificationDetailsQuery,
   FETCH_MANUSCRIPT_BY_ID,
+  FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
   getContentfulGraphqlClientMockServer,
   pollContentfulGql,
 } from '@asap-hub/contentful';
@@ -35,6 +36,10 @@ import {
   getManuscriptDiscussions,
   getManuscriptUpdateAPCCoverageDataObject,
 } from '../../fixtures/manuscript.fixtures';
+import {
+  getContentfulResearchOutputGraphqlResponse,
+  getResearchOutputDataObject,
+} from '../../fixtures/research-output.fixtures';
 import {
   getContentfulGraphql,
   getContentfulGraphqlManuscripts,
@@ -1517,6 +1522,106 @@ describe('Manuscripts Contentful Data Provider', () => {
           }),
         ]);
       });
+    });
+  });
+
+  describe('getResearchOutputLinked', () => {
+    test('should return the research output when it exists', async () => {
+      const manuscriptVersionId = 'manuscript-version-id-1';
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptVersions: {
+          linkedFrom: {
+            researchOutputsCollection: {
+              items: [getContentfulResearchOutputGraphqlResponse()],
+            },
+          },
+        },
+      });
+
+      const result =
+        await manuscriptDataProvider.getResearchOutputLinked(
+          manuscriptVersionId,
+        );
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
+        { id: manuscriptVersionId },
+      );
+      expect(result).toEqual(
+        expect.objectContaining({
+          id: getResearchOutputDataObject().id,
+        }),
+      );
+    });
+
+    test('should return null when no research outputs exist', async () => {
+      const manuscriptVersionId = 'manuscript-version-id-1';
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptVersions: {
+          linkedFrom: {
+            researchOutputsCollection: {
+              items: [],
+            },
+          },
+        },
+      });
+
+      const result =
+        await manuscriptDataProvider.getResearchOutputLinked(
+          manuscriptVersionId,
+        );
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
+        { id: manuscriptVersionId },
+      );
+      expect(result).toBeNull();
+    });
+
+    test('should return null when linkedFrom is null', async () => {
+      const manuscriptVersionId = 'manuscript-version-id-1';
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptVersions: {
+          linkedFrom: null,
+        },
+      });
+
+      const result =
+        await manuscriptDataProvider.getResearchOutputLinked(
+          manuscriptVersionId,
+        );
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
+        { id: manuscriptVersionId },
+      );
+      expect(result).toBeNull();
+    });
+
+    test('should return null when researchOutputsCollection is null', async () => {
+      const manuscriptVersionId = 'manuscript-version-id-1';
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptVersions: {
+          linkedFrom: {
+            researchOutputsCollection: null,
+          },
+        },
+      });
+
+      const result =
+        await manuscriptDataProvider.getResearchOutputLinked(
+          manuscriptVersionId,
+        );
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
+        { id: manuscriptVersionId },
+      );
+      expect(result).toBeNull();
     });
   });
 

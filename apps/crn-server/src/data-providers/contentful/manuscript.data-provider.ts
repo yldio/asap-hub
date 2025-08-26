@@ -8,10 +8,13 @@ import {
   FetchManuscriptsQueryVariables,
   FetchManuscriptVersionCountByIdQuery,
   FetchManuscriptVersionCountByIdQueryVariables,
+  FetchResearchOutputByManuscriptVersionIdQuery,
+  FetchResearchOutputByManuscriptVersionIdQueryVariables,
   FETCH_MANUSCRIPTS,
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
   FETCH_MANUSCRIPT_VERSION_COUNT_BY_ID,
+  FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
   getLinkAsset,
   getLinkAssets,
   getLinkEntities,
@@ -41,12 +44,14 @@ import {
   ManuscriptVersion,
   QuickCheckDetails,
   ApcCoverageRequestStatus,
+  ResearchOutputDataObject,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
 
 import { getCommaAndString } from '../../utils/text';
 import { EmailNotificationService } from '../email-notification-service';
 import { ManuscriptDataProvider } from '../types';
+import { parseGraphQLResearchOutput } from './research-output.data-provider';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
 type ManuscriptListItem = NonNullable<
@@ -140,6 +145,23 @@ export class ManuscriptContentfulDataProvider
           };
         }),
     };
+  }
+
+  async getResearchOutputLinked(
+    manuscriptVersionId: string,
+  ): Promise<ResearchOutputDataObject | null> {
+    const { manuscriptVersions } = await this.contentfulClient.request<
+      FetchResearchOutputByManuscriptVersionIdQuery,
+      FetchResearchOutputByManuscriptVersionIdQueryVariables
+    >(FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID, {
+      id: manuscriptVersionId,
+    });
+    const researchOutputItem =
+      manuscriptVersions?.linkedFrom?.researchOutputsCollection?.items?.[0];
+
+    return researchOutputItem
+      ? parseGraphQLResearchOutput(researchOutputItem)
+      : null;
   }
 
   async fetchCountByTeamId(id: string) {

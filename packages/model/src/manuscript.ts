@@ -25,6 +25,13 @@ export const manuscriptLifecycles = [
 ] as const;
 export type ManuscriptLifecycle = (typeof manuscriptLifecycles)[number];
 
+export const mapManuscriptTypeToSubType = (manuscriptType: ManuscriptType) =>
+  manuscriptType === 'Original Research' ? 'Original Research' : 'Review';
+
+export const mapManuscriptLifecycleToType = (
+  manuscriptLifecycle: ManuscriptLifecycle,
+) => (manuscriptLifecycle === 'Preprint' ? 'Preprint' : 'Published');
+
 export const manuscriptLifecycleRequiredURL: ManuscriptLifecycle[] = [
   'Preprint',
   'Publication',

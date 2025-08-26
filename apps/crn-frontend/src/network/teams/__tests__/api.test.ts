@@ -8,10 +8,10 @@ import {
   createListLabsResponse,
   createListTeamResponse,
   createManuscriptResponse,
+  createManuscriptVersionResponse,
   createMessage,
   createPartialManuscriptResponse,
   createTeamResponse,
-  createManuscriptVersionResponse,
 } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
@@ -22,9 +22,9 @@ import {
   ManuscriptFileResponse,
   ManuscriptPostRequest,
   ManuscriptPutRequest,
+  RequestedAPCCoverageOption,
   ResearchOutputPostRequest,
   TeamResponse,
-  RequestedAPCCoverageOption,
 } from '@asap-hub/model';
 import nock from 'nock';
 import { getPresignedUrl } from '../../../shared-api/files';
@@ -32,14 +32,16 @@ import { getPresignedUrl } from '../../../shared-api/files';
 import { API_BASE_URL } from '../../../config';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import {
-  createDiscussion,
   createComplianceReport,
+  createDiscussion,
   createManuscript,
+  createPreprintResearchOutput,
   createResearchOutput,
   getDiscussion,
   getLabs,
   getManuscript,
   getManuscripts,
+  getManuscriptVersions,
   getTeam,
   getTeams,
   markDiscussionAsRead,
@@ -50,7 +52,6 @@ import {
   updateTeamResearchOutput,
   uploadManuscriptFile,
   uploadManuscriptFileViaPresignedUrl,
-  getManuscriptVersions,
 } from '../api';
 
 jest.mock('../../../config', () => ({
@@ -251,6 +252,27 @@ describe('Team Research Output', () => {
       updateTeamResearchOutput('123', payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update research output for teams 90210 Expected status 200. Received status 500."`,
+    );
+  });
+});
+
+describe('createPreprintResearchOutput', () => {
+  it('makes an authorized POST request to create a preprint research output', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .post('/research-outputs/preprint', { manuscriptId: '123' })
+      .reply(201, { id: 123 });
+
+    await createPreprintResearchOutput('123', 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('errors for an error status', async () => {
+    nock(API_BASE_URL).post('/research-outputs/preprint').reply(500, {});
+
+    await expect(
+      createPreprintResearchOutput('123', 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to create preprint research output for manuscript 123. Expected status 201. Received status 500."`,
     );
   });
 });

@@ -360,6 +360,20 @@ export const validateResearchOutputPostRequestParameters = validateInput(
   },
 );
 
+const researchOutputPostPreprintRequestValidationSchema: JSONSchemaType<{
+  manuscriptId: string;
+}> = {
+  type: 'object',
+  properties: {
+    manuscriptId: { type: 'string' },
+  },
+  required: ['manuscriptId'],
+  additionalProperties: false,
+};
+
+export const validateResearchOutputPostPreprintRequestParameters =
+  validateInput(researchOutputPostPreprintRequestValidationSchema);
+
 export const validateResearchOutputPostRequestParametersIdentifiers = (
   data: ResearchOutputPostRequest,
 ): void => {

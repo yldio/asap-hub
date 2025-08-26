@@ -11,6 +11,7 @@ import {
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptResubmitControllerDataObject,
+  ResearchOutputDataObject,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 
@@ -55,6 +56,14 @@ export default class ManuscriptController {
       take,
       skip,
     });
+  }
+
+  async getResearchOutputLinked(
+    manuscriptVersionId: string,
+  ): Promise<ResearchOutputDataObject | null> {
+    return this.manuscriptDataProvider.getResearchOutputLinked(
+      manuscriptVersionId,
+    );
   }
 
   private async validateTitleUniqueness(

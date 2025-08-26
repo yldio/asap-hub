@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
+import { researchOutputContentQueryFragment } from './research-outputs.queries';
 
 const userAuthorsContentQueryFragment = gql`
   fragment UserAuthorsContent on Users {
@@ -208,4 +209,24 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
     }
   }
   ${versionsContentQueryFragment}
+`;
+
+export const FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID = gql`
+  query FetchResearchOutputByManuscriptVersionId(
+    $id: String!
+    $fetchPMs: Boolean = false
+    $singleOutput: Boolean = false
+    $relatedResearchWhere: ResearchOutputsFilter = {}
+  ) {
+    manuscriptVersions(id: $id) {
+      linkedFrom {
+        researchOutputsCollection(limit: 1) {
+          items {
+            ...ResearchOutputsContent
+          }
+        }
+      }
+    }
+  }
+  ${researchOutputContentQueryFragment}
 `;

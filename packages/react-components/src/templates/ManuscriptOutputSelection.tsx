@@ -1,6 +1,7 @@
 import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, ReactElement, ReactNode } from 'react';
+import Lottie from 'react-lottie';
 import { useHistory } from 'react-router-dom';
 import { components } from 'react-select';
 import {
@@ -13,6 +14,7 @@ import {
   paper,
   Pill,
 } from '..';
+import loading from '../lotties/loading.json';
 import { mobileScreen, rem } from '../pixels';
 
 const mainStyles = css({
@@ -117,6 +119,7 @@ export type ManuscriptVersionOption = {
 } & MultiSelectOptionsType;
 
 type ManuscriptOutputSelectionProps = {
+  isImportingManuscript: boolean;
   manuscriptOutputSelection: 'manually' | 'import' | '';
   onChangeManuscriptOutputSelection: (
     manuscriptOutputSelection: 'manually' | 'import' | '',
@@ -151,6 +154,7 @@ const ManuscriptVersionLabel = ({
   </div>
 );
 const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
+  isImportingManuscript,
   onChangeManuscriptOutputSelection,
   manuscriptOutputSelection,
   onSelectCreateManually,
@@ -261,7 +265,9 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
             noMargin
             enabled={
               manuscriptOutputSelection !== 'import' ||
-              (manuscriptOutputSelection === 'import' && !!selectedVersion)
+              (manuscriptOutputSelection === 'import' &&
+                !!selectedVersion &&
+                !isImportingManuscript)
             }
             onClick={
               manuscriptOutputSelection === 'manually'
@@ -269,7 +275,28 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
                 : onImportManuscript
             }
             primary
+            overrideStyles={
+              isImportingManuscript
+                ? css({
+                    gap: rem(8),
+                  })
+                : undefined
+            }
           >
+            {isImportingManuscript && (
+              <Lottie
+                options={{
+                  loop: true,
+                  autoplay: true,
+                  animationData: loading,
+                  rendererSettings: {
+                    preserveAspectRatio: 'xMidYMid slice',
+                  },
+                }}
+                height={24}
+                width={24}
+              />
+            )}
             {manuscriptOutputSelection === 'manually' ? 'Create' : 'Import'}
           </Button>
         </div>

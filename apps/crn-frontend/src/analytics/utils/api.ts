@@ -1,6 +1,6 @@
 const DEFAULT_PAGE_NUMBER = 0;
 const DEFAULT_PAGE_SIZE = 10;
-export interface OpenSearchHit<T> {
+export interface OpensearchHit<T> {
   _index: string;
   _id: string;
   _score: number;

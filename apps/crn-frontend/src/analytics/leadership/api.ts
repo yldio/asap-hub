@@ -7,7 +7,7 @@ import {
 } from '@asap-hub/model';
 import { MetricOption } from '@asap-hub/react-components';
 import { API_BASE_URL } from '../../config';
-import { generateSearchQuery, OpenSearchHit } from '../utils/api';
+import { generateSearchQuery, OpensearchHit } from '../utils/api';
 
 export type AnalyticsSearchOptions = {
   metric?: MetricOption;
@@ -57,7 +57,7 @@ export const getAnalyticsOSChampion = async (
 
   const result = await resp.json();
   const items = result.hits?.hits?.map(
-    (osChampion: OpenSearchHit<OSChampionDataObject>) => {
+    (osChampion: OpensearchHit<OSChampionDataObject>) => {
       const { teamId, teamName, teamAwardsCount, isTeamInactive, users } =
         // eslint-disable-next-line no-underscore-dangle
         osChampion._source;

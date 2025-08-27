@@ -12,7 +12,7 @@ import {
   getAnalyticsOSChampion,
 } from '../api';
 import { API_BASE_URL } from '../../../config';
-import { OpenSearchHit } from '../../utils/api';
+import { OpensearchHit } from '../../utils/api';
 
 jest.mock('../../../config');
 
@@ -126,7 +126,7 @@ describe('getAnalyticsOSChampion', () => {
       hits: [
         {
           _source: defaultOSChampionData,
-        } as unknown as OpenSearchHit<OSChampionDataObject>,
+        } as unknown as OpensearchHit<OSChampionDataObject>,
       ],
     },
   };

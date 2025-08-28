@@ -26,6 +26,7 @@ import {
   TeamPatchRequest,
   TeamResponse,
   ListManuscriptVersionResponse,
+  ManuscriptVersionResponse,
 } from '@asap-hub/model';
 import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
 import { getPresignedUrl } from '../../shared-api/files';
@@ -381,6 +382,18 @@ export const getManuscript = async (
 
 export type ManuscriptVersionOptions = Omit<GetListOptions, 'filters'> & {
   teamId?: string;
+};
+
+export const getManuscriptVersionByManuscriptId = async (
+  algoliaClient: AlgoliaClient<'crn'>,
+  manuscriptId: string,
+): Promise<ManuscriptVersionResponse | undefined> => {
+  const result = algoliaClient.search(['manuscript-version'], manuscriptId, {
+    page: 0,
+    hitsPerPage: 1,
+    restrictSearchableAttributes: ['id'],
+  });
+  return (await result).hits[0];
 };
 
 export const getManuscriptVersions = async (

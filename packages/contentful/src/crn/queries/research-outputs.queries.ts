@@ -246,6 +246,15 @@ export const researchOutputContentQueryFragment = gql`
       sys {
         id
       }
+      linkedFrom {
+        manuscriptsCollection(limit: 1) {
+          items {
+            sys {
+              id
+            }
+          }
+        }
+      }
     }
   }
 `;

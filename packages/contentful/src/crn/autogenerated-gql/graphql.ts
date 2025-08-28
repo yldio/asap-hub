@@ -21291,7 +21291,14 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                   >
                 >;
               }>;
-              relatedManuscriptVersion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+              relatedManuscriptVersion?: Maybe<{
+                sys: Pick<Sys, 'id'>;
+                linkedFrom?: Maybe<{
+                  manuscriptsCollection?: Maybe<{
+                    items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                  }>;
+                }>;
+              }>;
             }
           >
         >;
@@ -23447,7 +23454,14 @@ export type ResearchOutputsContentFragment = Pick<
       >
     >;
   }>;
-  relatedManuscriptVersion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+  relatedManuscriptVersion?: Maybe<{
+    sys: Pick<Sys, 'id'>;
+    linkedFrom?: Maybe<{
+      manuscriptsCollection?: Maybe<{
+        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+      }>;
+    }>;
+  }>;
 };
 
 export type FetchResearchOutputByIdQueryVariables = Exact<{
@@ -23713,7 +23727,14 @@ export type FetchResearchOutputByIdQuery = {
           >
         >;
       }>;
-      relatedManuscriptVersion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+      relatedManuscriptVersion?: Maybe<{
+        sys: Pick<Sys, 'id'>;
+        linkedFrom?: Maybe<{
+          manuscriptsCollection?: Maybe<{
+            items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+          }>;
+        }>;
+      }>;
     }
   >;
 };
@@ -24047,7 +24068,14 @@ export type FetchResearchOutputsQuery = {
                 >
               >;
             }>;
-            relatedManuscriptVersion?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+            relatedManuscriptVersion?: Maybe<{
+              sys: Pick<Sys, 'id'>;
+              linkedFrom?: Maybe<{
+                manuscriptsCollection?: Maybe<{
+                  items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                }>;
+              }>;
+            }>;
           }
         >
       >;
@@ -32685,6 +32713,53 @@ export const ResearchOutputsContentFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'manuscriptsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '1' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },

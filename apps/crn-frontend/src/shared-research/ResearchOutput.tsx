@@ -17,6 +17,9 @@ import { useResearchOutputById, useResearchOutputPermissions } from './state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 import { usePutResearchOutput } from '../shared-state';
+import { useLatestManuscriptVersionByManuscriptId } from '../network/teams/state';
+import { useEffect, useState } from 'react';
+import { ManuscriptVersionResponse } from '@asap-hub/model';
 
 const ResearchOutput: React.FC = () => {
   const { researchOutputId } = useRouteParams(
@@ -55,6 +58,38 @@ const ResearchOutput: React.FC = () => {
   const publishResearchOutput = usePutResearchOutput(true);
 
   const currentUser = useCurrentUserCRN();
+  const getLatestManuscriptVersion = useLatestManuscriptVersionByManuscriptId();
+
+  let [latestManuscriptVersion, setLatestManuscriptVersion] = useState<
+    ManuscriptVersionResponse | undefined
+  >();
+
+  useEffect(() => {
+    if (researchOutputData?.relatedManuscript) {
+      getLatestManuscriptVersion(researchOutputData?.relatedManuscript).then(
+        (data) => setLatestManuscriptVersion(data),
+      );
+    }
+  }, []);
+
+  const checkForNewVersion = async () => {
+    if (researchOutputData?.relatedManuscript) {
+      getLatestManuscriptVersion(researchOutputData?.relatedManuscript).then(
+        (data) => setLatestManuscriptVersion(data),
+      );
+      // console.log(
+      //   latestManuscriptVersion?.versionId,
+      //   researchOutputData.relatedManuscriptVersion,
+      // );
+      return (
+        (latestManuscriptVersion?.versionId &&
+          latestManuscriptVersion?.versionId !==
+            researchOutputData.relatedManuscriptVersion) ||
+        false
+      );
+    }
+    return false;
+  };
 
   if (researchOutputData) {
     return (
@@ -89,6 +124,7 @@ const ResearchOutput: React.FC = () => {
                 }
                 publishedNow={publishedNow}
                 draftCreated={urlSearchParams.get('draftCreated') === 'true'}
+                checkForNewVersion={checkForNewVersion}
               />
             </Frame>
           </Route>
@@ -111,6 +147,7 @@ const ResearchOutput: React.FC = () => {
                   <TeamOutput
                     teamId={researchOutputData.teams[0]?.id}
                     researchOutputData={researchOutputData}
+                    latestManuscriptVersion={latestManuscriptVersion}
                     versionAction={'create'}
                   />
                 )

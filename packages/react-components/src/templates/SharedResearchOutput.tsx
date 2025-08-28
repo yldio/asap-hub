@@ -2,6 +2,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { Card, Headline2, Link, Markdown } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../layout';
@@ -56,6 +57,8 @@ type SharedResearchOutputProps = Pick<
   | 'statusChangedBy'
   | 'isInReview'
   | 'versions'
+  | 'relatedManuscript'
+  | 'relatedManuscriptVersion'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -66,6 +69,7 @@ type SharedResearchOutputProps = Pick<
       shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
     onPublish?: () => Promise<ResearchOutputResponse | void>;
+    checkForNewVersion: () => Promise<Boolean>;
   };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
@@ -88,8 +92,12 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   onRequestReview,
   versions,
   onPublish,
+  relatedManuscript,
+  relatedManuscriptVersion,
+  checkForNewVersion,
   ...props
 }) => {
+  const history = useHistory();
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
     props.documentType,
   );
@@ -108,6 +116,10 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const associationName = getResearchOutputAssociationName(props);
   const [reviewToggled, setReviewToggled] = useState(false);
   const [displayReviewModal, setDisplayReviewModal] = useState(false);
+  const [
+    displayNoNewManuscriptVersionModal,
+    setDisplayNoNewManuscriptVersionModal,
+  ] = useState(false);
   const [displayPublishModal, setDisplayPublishModal] = useState(false);
 
   const toggleReview = async (shouldReview: boolean) => {
@@ -123,6 +135,20 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     if (!onPublish) return;
     await onPublish();
     setDisplayPublishModal(false);
+  };
+
+  const checkForNewerManuscriptVersion = async () => {
+
+    const hasNewerVersion = await checkForNewVersion();
+    if (hasNewerVersion) {
+      history.push(
+        sharedResearch({})
+          .researchOutput({ researchOutputId: id })
+          .versionResearchOutput({}).$,
+      );
+    } else {
+      setDisplayNoNewManuscriptVersionModal(true);
+    }
   };
 
   const duplicateLink =
@@ -161,11 +187,13 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             id={id}
             displayReviewModal={displayReviewModal}
             setDisplayReviewModal={setDisplayReviewModal}
+            checkForNewerManuscriptVersion={checkForNewerManuscriptVersion}
             isInReview={isInReview}
             duplicateLink={duplicateLink}
             published={published}
             displayPublishModal={displayPublishModal}
             setDisplayPublishModal={setDisplayPublishModal}
+            hasRelatedManuscript={!!relatedManuscriptVersion}
           />
         )}
         {displayReviewModal && (
@@ -189,6 +217,24 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             onSave={() => toggleReview(!isInReview)}
             onCancel={() => {
               setDisplayReviewModal(false);
+            }}
+          />
+        )}
+        {displayNoNewManuscriptVersionModal && (
+          <ConfirmModal
+            title="No new manuscript versions available"
+            description="To import a manuscript version, please submit a new manuscript version in the Compliance area first. Once submitted, you'll be able to import the new version here."
+            cancelText="Cancel"
+            confirmText="Go to Compliance Area"
+            onSave={() => setDisplayNoNewManuscriptVersionModal(false)}
+            successHref={
+              network({})
+                .teams({})
+                .team({ teamId: props.teams[0]!.id })
+                .workspace({}).$
+            }
+            onCancel={() => {
+              setDisplayNoNewManuscriptVersionModal(false);
             }}
           />
         )}

@@ -47,6 +47,7 @@ import {
   getManuscript,
   getManuscripts,
   getManuscriptVersions,
+  getManuscriptVersionByManuscriptId,
   getTeam,
   getTeams,
   ManuscriptsOptions,
@@ -557,6 +558,13 @@ export const useManuscriptVersionSuggestions = () => {
       pageSize: 100,
       teamId,
     }).then(({ items }) => items);
+};
+
+export const useLatestManuscriptVersionByManuscriptId = () => {
+  const algoliaClient = useAlgolia();
+
+  return (manuscriptId: string) =>
+    getManuscriptVersionByManuscriptId(algoliaClient.client, manuscriptId);
 };
 
 export const versionSelector = selectorFamily<

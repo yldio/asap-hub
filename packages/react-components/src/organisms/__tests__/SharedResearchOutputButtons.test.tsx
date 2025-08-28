@@ -13,6 +13,7 @@ const props: ComponentProps<typeof SharedResearchOutputButtons> = {
   isInReview: false,
   duplicateLink: 'duplicateLink',
   published: false,
+  checkForNewerManuscriptVersion: jest.fn(),
 };
 
 it('displays edit button when user has permission', () => {

@@ -522,6 +522,9 @@ export const parseGraphQLResearchOutput = (
           endDate: event.endDate || '',
         })) || [],
     relatedManuscriptVersion: researchOutputs.relatedManuscriptVersion?.sys.id,
+    relatedManuscript:
+      researchOutputs.relatedManuscriptVersion?.linkedFrom
+        ?.manuscriptsCollection?.items[0]?.sys.id,
     versions: mapOutputVersions(
       researchOutputs.versionsCollection?.items || [],
     ),

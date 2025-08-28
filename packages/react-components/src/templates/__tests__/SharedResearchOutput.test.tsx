@@ -22,6 +22,7 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   draftCreated: false,
   onRequestReview: jest.fn(() => Promise.resolve()),
   onPublish: jest.fn(() => Promise.resolve()),
+  checkForNewVersion: jest.fn(() => Promise.resolve(false)),
 };
 
 beforeEach(() => {

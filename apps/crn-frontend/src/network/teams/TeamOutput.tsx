@@ -1,6 +1,7 @@
 import { Flag, isEnabled } from '@asap-hub/flags';
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
+  ManuscriptVersionResponse,
   researchOutputDocumentTypeToType,
   ResearchOutputResponse,
   ResearchOutputVersion,
@@ -51,6 +52,7 @@ import {
   useManuscriptVersionSuggestions,
   useTeamById,
   usePostPreprintResearchOutput,
+  // useLatestManuscriptVersionByManuscriptId,
 } from './state';
 
 const useParamOutputDocumentType = (
@@ -64,6 +66,7 @@ const useParamOutputDocumentType = (
 type TeamOutputProps = {
   teamId: string;
   researchOutputData?: ResearchOutputResponse;
+  latestManuscriptVersion?: ManuscriptVersionResponse;
   versionAction?: 'create' | 'edit';
 } & Pick<
   ComponentProps<typeof ResearchOutputForm>,
@@ -73,6 +76,7 @@ type TeamOutputProps = {
 const TeamOutput: React.FC<TeamOutputProps> = ({
   teamId,
   researchOutputData,
+  latestManuscriptVersion,
   descriptionUnchangedWarning,
   versionAction: versionActionProp,
 }) => {
@@ -84,6 +88,78 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   >('');
   const [selectedManuscriptVersion, setManuscriptVersion] =
     useState<ManuscriptVersionOption>();
+
+  useEffect(() => {
+    if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
+      console.log(
+        'IMPORT VERSION - manuscriptId',
+        researchOutputData?.relatedManuscript,
+      );
+      setManuscriptVersion({
+        version: latestManuscriptVersion,
+        label: '',
+        value: '',
+      });
+
+      // getLatestManuscriptVersion(researchOutputData.relatedManuscript).then(
+      //   (latestVersion) => {
+      //     if (latestVersion) {
+      //       // setUpdatedOutput((prev) => {
+      //       //   console.log('prev', prev);
+      //       //   return {
+      //       //     ...mapManuscriptVersionToResearchOutput(
+      //       //       prev,
+      //       //       latestVersion,
+      //       //       'Team',
+      //       //     ),
+      //       //     versions: [
+      //       //       ...(prev?.versions ?? []),
+      //       //       {
+      //       //         id: prev?.id ?? '',
+      //       //         title: prev?.title ?? '',
+      //       //         documentType: prev?.documentType ?? 'Article',
+      //       //         type: prev?.type,
+      //       //         link: prev?.link,
+      //       //         addedDate: prev?.addedDate,
+      //       //       },
+      //       //       // , (prev && mapResearchOutputToVersion(prev))
+      //       //     ],
+      //       //   };
+      //       // });
+      //       researchOutputData = {
+      //           ...mapManuscriptVersionToResearchOutput(
+      //             researchOutputData,
+      //             latestVersion,
+      //             'Team',
+      //           ),
+      //           versions: [
+      //             ...(researchOutputData?.versions ?? []),
+      //             {
+      //               id: researchOutputData?.id ?? '',
+      //               title: researchOutputData?.title ?? '',
+      //               documentType: researchOutputData?.documentType ?? 'Article',
+      //               type: researchOutputData?.type,
+      //               link: researchOutputData?.link,
+      //               addedDate: researchOutputData?.addedDate,
+      //             },
+      //             // , (prev && mapResearchOutputToVersion(prev))
+      //           ],
+      //         }
+      //       setManuscriptVersion({
+      //         version: latestVersion,
+      //         label: '',
+      //         value: '',
+      //       });
+      //       setManuscriptOutputSelection('import');
+      //       console.log('latestVersion loaded', latestVersion);
+      //       // setUpdatedOutput((prev) =>
+      //       //   mapManuscriptVersionToResearchOutput(prev, latestVersion, 'Team'),
+      //       // );
+      //     }
+      //   },
+      // );
+    }
+  }, []);
   const [updatedOutput, setUpdatedOutput] = useState<
     ResearchOutputResponse | undefined
   >(researchOutputData);
@@ -105,12 +181,92 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
 
   useEffect(() => {
     if (selectedManuscriptVersion && selectedManuscriptVersion.version) {
-      const manuscriptVersion = selectedManuscriptVersion.version;
-      setUpdatedOutput((prev) =>
-        mapManuscriptVersionToResearchOutput(prev, manuscriptVersion, 'Team'),
+      console.log(
+        'selectedManuscriptVersion',
+        selectedManuscriptVersion.version,
       );
+      const manuscriptVersion = selectedManuscriptVersion.version;
+      setUpdatedOutput((prev) => {
+        console.log('prev', prev);
+        const result = mapManuscriptVersionToResearchOutput(
+          prev,
+          manuscriptVersion,
+          'Team',
+        );
+        console.log('result', result);
+        return result;
+      });
     }
   }, [selectedManuscriptVersion]);
+
+  // const getLatestManuscriptVersion = useLatestManuscriptVersionByManuscriptId();
+
+  // useEffect(() => {
+  //   if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
+  //     getLatestManuscriptVersion(researchOutputData.relatedManuscript).then(
+  //       (latestVersion) => {
+  //         if (latestVersion) {
+  //           setManuscriptVersion({
+  //             version: latestVersion,
+  //             label: '',
+  //             value: '',
+  //           });
+  //           console.log('latestVersion loaded', latestVersion);
+  //           // setUpdatedOutput((prev) =>
+  //           //   mapManuscriptVersionToResearchOutput(prev, latestVersion, 'Team'),
+  //           // );
+  //         }
+  //       },
+  //     );
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
+  //     console.log(
+  //       'IMPORT VERSION - manuscriptId',
+  //       researchOutputData?.relatedManuscript,
+  //     );
+  //     getLatestManuscriptVersion(researchOutputData.relatedManuscript).then(
+  //       (latestVersion) => {
+  //         if (latestVersion) {
+  //           setUpdatedOutput((prev) => {
+  //             console.log('prev', prev);
+  //             return {
+  //               ...mapManuscriptVersionToResearchOutput(
+  //                 prev,
+  //                 latestVersion,
+  //                 'Team',
+  //               ),
+  //               versions: [
+  //                 ...(prev?.versions ?? []),
+  //                 {
+  //                   id: prev?.id ?? '',
+  //                   title: prev?.title ?? '',
+  //                   documentType: prev?.documentType ?? 'Article',
+  //                   type: prev?.type,
+  //                   link: prev?.link,
+  //                   addedDate: prev?.addedDate,
+  //                 },
+  //                 // , (prev && mapResearchOutputToVersion(prev))
+  //               ],
+  //             };
+  //           });
+  //           setManuscriptVersion({
+  //             version: latestVersion,
+  //             label: '',
+  //             value: '',
+  //           });
+  //           setManuscriptOutputSelection('import');
+  //           console.log('latestVersion loaded', latestVersion);
+  //           // setUpdatedOutput((prev) =>
+  //           //   mapManuscriptVersionToResearchOutput(prev, latestVersion, 'Team'),
+  //           // );
+  //         }
+  //       },
+  //     );
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (
@@ -163,11 +319,21 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     ? updatedOutput.versions.concat([researchOutputAsVersion])
     : [researchOutputAsVersion];
 
-  if (versionAction === 'edit') {
+  console.log('versions', versions);
+  if (
+    versionAction === 'edit' //||
+    // (versionAction === 'create' && updatedOutput?.relatedManuscript)
+  ) {
     versions = updatedOutput?.versions ?? [];
   }
 
   const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS' as Flag);
+
+  // console.log('updatedOutput', updatedOutput);
+  // if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
+  //   console.log('VESION - MANUSCRIPT VERSION');
+  // }
+
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
     isManuscriptOutputFlagEnabled &&
       documentType === 'Article' &&
@@ -254,6 +420,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       );
     }
 
+    console.log('selectedManuscriptVersion', selectedManuscriptVersion);
     return (
       <Frame title="Share Research Output">
         {versionAction === 'create' && (
@@ -279,7 +446,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               versionAction={versionAction}
             />
           )}
-          {selectedManuscriptVersion && selectedManuscriptVersion.version && (
+          {selectedManuscriptVersion && selectedManuscriptVersion?.version && (
             <ManuscriptVersionImportCard
               version={selectedManuscriptVersion.version}
             />

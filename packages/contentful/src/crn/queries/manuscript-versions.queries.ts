@@ -31,6 +31,14 @@ const versionsContentQueryFragment = gql`
     type
     lifecycle
     count
+    linkedFrom {
+      researchOutputsCollection(limit: 1) {
+        total
+      }
+      researchOutputVersionsCollection(limit: 1) {
+        total
+      }
+    }
     labsCollection(limit: 10) {
       items {
         sys {

@@ -104,6 +104,7 @@ export const getManuscriptVersions = jest.fn(
     items: [
       {
         id: 'mv-manuscript-id-1',
+        hasLinkedResearchOutput: false,
         title: 'Manuscript 1',
         type: 'Original Research',
         lifecycle: 'Preprint',

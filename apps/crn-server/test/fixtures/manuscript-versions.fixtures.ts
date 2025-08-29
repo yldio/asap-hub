@@ -10,6 +10,7 @@ export const getManuscriptVersionsListResponse =
     items: [
       {
         id: 'mv-manuscript-id-1',
+        hasLinkedResearchOutput: true,
         type: 'Original Research',
         lifecycle: 'Preprint',
         teamId: 'team-id-1',
@@ -33,6 +34,7 @@ export const getManuscriptVersionsListResponse =
       },
       {
         id: 'mv-manuscript-id-2',
+        hasLinkedResearchOutput: true,
         type: 'Original Research',
         lifecycle: 'Preprint',
         teamId: 'team-id-1',
@@ -62,6 +64,7 @@ export const getManuscriptVersionDataObject =
     versionFound: true,
     latestManuscriptVersion: {
       id: 'mv-manuscript-id-1',
+      hasLinkedResearchOutput: true,
       lifecycle: 'Preprint',
       teamId: 'team-id-1',
       title: 'Manuscript 1',

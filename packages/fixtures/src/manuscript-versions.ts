@@ -3,6 +3,7 @@ import { ManuscriptVersionResponse } from '@asap-hub/model';
 export const createManuscriptVersionResponse =
   (): ManuscriptVersionResponse => ({
     id: 'mv-manuscript-1',
+    hasLinkedResearchOutput: false,
     manuscriptId: 'DA1-000463-003-org-G-1',
     versionId: 'version-id-1',
     title: 'Manuscript 1',

@@ -6,6 +6,7 @@ import ManuscriptVersionImportCard from '../ManuscriptVersionImportCard';
 const props: ComponentProps<typeof ManuscriptVersionImportCard> = {
   version: {
     id: 'mv-manuscript-id-1',
+    hasLinkedResearchOutput: false,
     title: 'Manuscript 1',
     url: 'http://example.com',
     type: 'Original Research',

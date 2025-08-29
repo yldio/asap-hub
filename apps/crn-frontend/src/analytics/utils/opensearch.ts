@@ -251,7 +251,7 @@ const buildSearchQuery = (
     },
     sort: [
       {
-        'teamName': {
+        'teamName.keyword': {
           order: 'asc',
         },
       },

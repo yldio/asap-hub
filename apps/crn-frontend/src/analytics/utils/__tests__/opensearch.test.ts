@@ -134,7 +134,10 @@ describe('OpensearchClient', () => {
           aggregations: {
             matching_teams: {
               teams: {
-                buckets: [{ key: 'Jackson', doc_count: 5 }],
+                buckets: [
+                  { key: 'Jackson', doc_count: 5 },
+                  { key: 'Jacket', doc_count: 1 },
+                ],
               },
             },
             matching_users: {
@@ -153,7 +156,12 @@ describe('OpensearchClient', () => {
 
       const result = await client.getTagSuggestions('Jack');
 
-      expect(result).toEqual(['Jackson', 'Jack Richards', 'Chloe Jackson']);
+      expect(result).toEqual([
+        'Jackson',
+        'Jacket',
+        'Jack Richards',
+        'Chloe Jackson',
+      ]);
     });
 
     it('returns empty tag suggestions when no match is found', async () => {

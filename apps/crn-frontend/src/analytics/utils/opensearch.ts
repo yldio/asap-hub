@@ -52,8 +52,8 @@ type SearchScope = 'teams' | 'both';
 interface OpensearchSearchOptions {
   currentPage?: number | null;
   pageSize?: number | null;
-  searchTags?: string[];
-  searchScope?: SearchScope;
+  searchTags: string[];
+  searchScope: SearchScope;
   fetchTags?: boolean;
 }
 
@@ -220,7 +220,7 @@ const buildSearchQuery = (
   tags: string[],
   page: number,
   size: number,
-  searchScope: SearchScope = 'both',
+  searchScope: SearchScope,
 ) => {
   const shouldClauses = tags.flatMap((term) => {
     const clauses: Record<string, unknown>[] = [
@@ -268,7 +268,7 @@ const buildSearchQuery = (
 const buildOpenSearchQuery = (options: OpensearchSearchOptions) => {
   const { currentPage, pageSize, searchTags, searchScope } = options;
 
-  if (!searchTags) {
+  if (searchTags?.length === 0) {
     return generateDefaultQuery(
       currentPage || DEFAULT_PAGE_NUMBER,
       pageSize || DEFAULT_PAGE_SIZE,

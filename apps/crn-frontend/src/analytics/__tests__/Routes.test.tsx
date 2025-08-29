@@ -289,9 +289,7 @@ describe('Leadership & Membership', () => {
 
   it('renders error message when os champion response is not a 2XX', async () => {
     enable('ANALYTICS_PHASE_TWO');
-    mockGetAnalyticsOSChampion.mockRejectedValueOnce(
-      new Error('Failed to fetch'),
-    );
+    mockGetAnalyticsOSChampion.mockRejectedValue(new Error('Failed to fetch'));
     await renderPage(
       analytics({}).leadership({}).metric({ metric: 'os-champion' }).$,
     );

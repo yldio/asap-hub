@@ -11,8 +11,8 @@ import {
   getAnalyticsLeadership,
   getAnalyticsOSChampion,
 } from '../api';
-import { API_BASE_URL } from '../../../config';
-import { OpensearchHit } from '../../utils/api';
+
+import { OpensearchClient } from '../../utils/opensearch';
 
 jest.mock('../../../config');
 
@@ -113,69 +113,59 @@ describe('getAnalyticsLeadership', () => {
 describe('getAnalyticsOSChampion', () => {
   const defaultOSChampionData = {
     teamId: 'team-id-1',
-    teamName: 'Test Team',
+    teamName: 'Alessi',
     isTeamInactive: false,
     teamAwardsCount: 0,
     users: [],
   };
   const defaultResponse = {
-    hits: {
-      total: {
-        value: 1,
-      },
-      hits: [
-        {
-          _source: defaultOSChampionData,
-        } as unknown as OpensearchHit<OSChampionDataObject>,
-      ],
-    },
+    items: [defaultOSChampionData],
+    total: 1,
   };
 
-  const defaultRequest = {
-    query: {
-      match_all: {},
-    },
-    size: 10,
-    from: 0,
-  };
-  it('makes an authorized POST request for os champion analytics data', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .post('/opensearch/search/os-champion')
-      .reply(200, defaultResponse);
+  let mockOpensearchClient: jest.Mocked<OpensearchClient<OSChampionDataObject>>;
 
-    await getAnalyticsOSChampion('Bearer x', defaultOptions);
-    expect(nock.isDone()).toBe(true);
+  beforeEach(() => {
+    mockOpensearchClient = {
+      search: jest.fn(),
+    } as unknown as jest.Mocked<OpensearchClient<OSChampionDataObject>>;
   });
 
-  it('passes the post object in the body', async () => {
-    nock(API_BASE_URL)
-      .post('/opensearch/search/os-champion', defaultRequest)
-      .reply(200, defaultResponse);
+  it('should not default to any search, specific page or limit hits per page', async () => {
+    mockOpensearchClient.search.mockResolvedValue(defaultResponse);
 
-    await getAnalyticsOSChampion('Bearer x', defaultOptions);
-    expect(nock.isDone()).toBe(true);
+    await getAnalyticsOSChampion(mockOpensearchClient, defaultOptions);
+
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith([], null, null);
   });
 
-  it('should return successfully fetched os champion data', async () => {
-    nock(API_BASE_URL)
-      .post('/opensearch/search/os-champion', defaultRequest)
-      .reply(200, defaultResponse);
+  it('should pass the options if provided to search', async () => {
+    mockOpensearchClient.search.mockResolvedValue(defaultResponse);
 
-    expect(await getAnalyticsOSChampion('Bearer x', defaultOptions)).toEqual({
-      total: 1,
-      items: [defaultOSChampionData],
+    await getAnalyticsOSChampion(mockOpensearchClient, {
+      pageSize: 10,
+      currentPage: 0,
+      tags: ['Alessi'],
     });
+
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith(['Alessi'], 0, 10);
   });
 
-  it('errors for an error status', async () => {
-    nock(API_BASE_URL)
-      .post('/opensearch/search/os-champion', defaultRequest)
-      .reply(500, {});
-
-    await expect(
-      getAnalyticsOSChampion('Bearer x', defaultOptions),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to search os-champion index. Expected status 2xx. Received status 500."`,
+  it('should return successfully fetched team leadership', async () => {
+    mockOpensearchClient.search.mockResolvedValue(defaultResponse);
+    const analyticsOSChampion = await getAnalyticsOSChampion(
+      mockOpensearchClient,
+      {
+        pageSize: 10,
+        currentPage: 0,
+        tags: ['Alessi'],
+      },
+    );
+    expect(analyticsOSChampion).toEqual(
+      expect.objectContaining({
+        items: [defaultOSChampionData],
+        total: 1,
+      }),
     );
   });
 });

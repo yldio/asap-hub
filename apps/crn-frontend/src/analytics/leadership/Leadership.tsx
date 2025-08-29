@@ -18,7 +18,7 @@ import { FC, useState } from 'react';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
-import { useSearch } from '../../hooks';
+import { useSearch, useAnalyticsOpensearch } from '../../hooks';
 import { getAnalyticsLeadership } from './api';
 import { leadershipToCSV } from './export';
 import OSChampion from './OSChampion';
@@ -40,6 +40,7 @@ const Leadership: FC<Record<string, never>> = () => {
 
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
+  const osChampionClient = useAnalyticsOpensearch('os-champion');
 
   const exportResults = () =>
     algoliaResultsToStream<AnalyticsTeamLeadershipResponse>(
@@ -58,6 +59,27 @@ const Leadership: FC<Record<string, never>> = () => {
       leadershipToCSV(metric),
     );
 
+  const loadTags = async (tagQuery: string) => {
+    if (metric === 'os-champion') {
+      const response =
+        await osChampionClient.client.getTagSuggestions(tagQuery);
+
+      return response.map((value) => ({
+        label: value,
+        value,
+      }));
+    }
+    const searchedTags = await client.searchForTagValues(
+      ['team-leadership'],
+      tagQuery,
+      {},
+    );
+    return searchedTags.facetHits.map(({ value }) => ({
+      label: value,
+      value,
+    }));
+  };
+
   const isOSChampionEnabled = isEnabled('ANALYTICS_PHASE_TWO');
   return !isOSChampionEnabled && metric === 'os-champion' ? (
     <Redirect
@@ -68,17 +90,7 @@ const Leadership: FC<Record<string, never>> = () => {
       isOSChampionEnabled={isOSChampionEnabled}
       tags={tags}
       setTags={setTags}
-      loadTags={async (tagQuery) => {
-        const searchedTags = await client.searchForTagValues(
-          ['team-leadership'],
-          tagQuery,
-          {},
-        );
-        return searchedTags.facetHits.map(({ value }) => ({
-          label: value,
-          value,
-        }));
-      }}
+      loadTags={async (tagQuery) => loadTags(tagQuery)}
       metric={metric}
       setMetric={setMetric}
       exportResults={exportResults}

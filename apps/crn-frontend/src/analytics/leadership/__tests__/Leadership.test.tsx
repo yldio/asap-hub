@@ -16,9 +16,12 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import * as flags from '@asap-hub/flags';
+import { OSChampionDataObject } from '@asap-hub/model';
 import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
+import { useAnalyticsOpensearch } from '../../../hooks';
+import { OpensearchClient } from '../../utils/opensearch';
 
 jest.spyOn(console, 'error').mockImplementation();
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -35,15 +38,9 @@ jest.mock('../../../hooks/algolia', () => ({
   useAnalyticsAlgolia: jest.fn(),
 }));
 
-jest.mock('../api', () => {
-  const original = jest.requireActual('../api');
-  return {
-    ...original,
-    getAnalyticsOSChampion: jest
-      .fn()
-      .mockResolvedValue({ items: [], total: 0 }),
-  };
-});
+jest.mock('../../../hooks/opensearch', () => ({
+  useAnalyticsOpensearch: jest.fn(),
+}));
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
@@ -57,9 +54,20 @@ const mockSearch = jest.fn() as jest.MockedFunction<
   AlgoliaSearchClient<'analytics'>['search']
 >;
 
+const mockGetTagSuggestions = jest.fn() as jest.MockedFunction<
+  OpensearchClient<OSChampionDataObject>['getTagSuggestions']
+>;
+
+const mockOSChampionSearch = jest.fn() as jest.MockedFunction<
+  OpensearchClient<OSChampionDataObject>['search']
+>;
+
 const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
   typeof useAnalyticsAlgolia
 >;
+
+const mockUseAnalyticsOpensearch =
+  useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -69,10 +77,21 @@ beforeEach(() => {
     search: mockSearch,
   };
 
+  const mockOpensearchClient = {
+    getTagSuggestions: mockGetTagSuggestions,
+    search: mockOSChampionSearch,
+  };
+
   mockUseAnalyticsAlgolia.mockReturnValue({
     client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
   });
   mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
+
+  mockUseAnalyticsOpensearch.mockReturnValue({
+    client:
+      mockOpensearchClient as unknown as OpensearchClient<OSChampionDataObject>,
+  });
+  mockOpensearchClient.search.mockResolvedValue({ items: [], total: 0 });
 });
 
 const getPath = (metric: string) =>
@@ -186,38 +205,67 @@ describe('search', () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
     return within(searchContainer).getByRole('textbox') as HTMLInputElement;
   };
-  it('allows typing in search queries', async () => {
-    await renderPage();
-    const searchBox = getSearchBox();
+  describe('algolia', () => {
+    it('allows typing in search queries', async () => {
+      await renderPage();
+      const searchBox = getSearchBox();
 
-    userEvent.type(searchBox, 'test123');
-    expect(searchBox.value).toEqual('test123');
-    await waitFor(() =>
-      expect(mockSearchForTagValues).toHaveBeenCalledWith(
-        ['team-leadership'],
-        'test123',
-        {},
-      ),
-    );
-  });
-  it('Will search algolia using selected team', async () => {
-    mockSearchForTagValues.mockResolvedValue({
-      ...EMPTY_ALGOLIA_FACET_HITS,
-      facetHits: [{ value: 'Alessi', count: 1, highlighted: 'Alessi' }],
+      userEvent.type(searchBox, 'test123');
+      expect(searchBox.value).toEqual('test123');
+      await waitFor(() =>
+        expect(mockSearchForTagValues).toHaveBeenCalledWith(
+          ['team-leadership'],
+          'test123',
+          {},
+        ),
+      );
     });
+    it('Will search algolia using selected team', async () => {
+      mockSearchForTagValues.mockResolvedValue({
+        ...EMPTY_ALGOLIA_FACET_HITS,
+        facetHits: [{ value: 'Alessi', count: 1, highlighted: 'Alessi' }],
+      });
 
-    await renderPage();
-    const searchBox = getSearchBox();
+      await renderPage();
+      const searchBox = getSearchBox();
 
-    userEvent.click(searchBox);
-    userEvent.click(screen.getByText('Alessi'));
-    await waitFor(() =>
-      expect(mockSearch).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ tagFilters: [['Alessi']] }),
-      ),
-    );
+      userEvent.click(searchBox);
+      userEvent.click(screen.getByText('Alessi'));
+      await waitFor(() =>
+        expect(mockSearch).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.anything(),
+          expect.objectContaining({ tagFilters: [['Alessi']] }),
+        ),
+      );
+    });
+  });
+
+  describe('opensearch', () => {
+    it('allows typing in search queries', async () => {
+      jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+      await renderPage('os-champion');
+      const searchBox = getSearchBox();
+
+      userEvent.type(searchBox, 'test123');
+      expect(searchBox.value).toEqual('test123');
+      await waitFor(() =>
+        expect(mockGetTagSuggestions).toHaveBeenCalledWith('test123'),
+      );
+    });
+    it('Will search opensearch using selected team', async () => {
+      jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+      mockGetTagSuggestions.mockResolvedValue(['Alessi']);
+
+      await renderPage('os-champion');
+      const searchBox = getSearchBox();
+
+      userEvent.click(searchBox);
+      userEvent.click(screen.getByText('Alessi'));
+      await waitFor(() =>
+        expect(mockOSChampionSearch).toHaveBeenCalledWith(['Alessi'], 0, 10),
+      );
+    });
   });
 });
 

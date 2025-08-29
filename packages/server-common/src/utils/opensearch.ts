@@ -69,6 +69,28 @@ export const indexOpensearchData = async <T>({
       settings: {
         number_of_shards: 1,
         number_of_replicas: 1,
+        'index.max_ngram_diff': 10,
+        analysis: {
+          filter: {
+            ngram_filter: {
+              type: 'ngram',
+              min_gram: 1,
+              max_gram: 10,
+            },
+          },
+          analyzer: {
+            ngram_analyzer: {
+              type: 'custom',
+              tokenizer: 'standard',
+              filter: ['lowercase', 'ngram_filter'],
+            },
+            ngram_search_analyzer: {
+              type: 'custom',
+              tokenizer: 'standard',
+              filter: ['lowercase'],
+            },
+          },
+        },
       },
       mappings: mapping,
     },

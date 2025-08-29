@@ -2,6 +2,7 @@ import {
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipResponse,
   ListOSChampionResponse,
+  OSChampionDataObject,
   OSChampionResponse,
   SortLeadershipAndMembership,
   SortOSChampion,
@@ -11,7 +12,6 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useRecoilValue,
 } from 'recoil';
 import {
   AnalyticsSearchOptions,
@@ -20,7 +20,7 @@ import {
 } from './api';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAlgoliaIndexName } from '../utils/state';
-import { authorizationState } from '../../auth/state';
+import { useAnalyticsOpensearch } from '../../hooks';
 
 type Options = AnalyticsSearchOptions & {
   sort: SortLeadershipAndMembership;
@@ -167,13 +167,14 @@ export const useAnalyticsLeadership = (options: Options) => {
 };
 
 export const useAnalyticsOSChampion = (options: OSOptions) => {
-  const authorization = useRecoilValue(authorizationState);
+  const opensearchClient =
+    useAnalyticsOpensearch<OSChampionDataObject>('os-champion').client;
 
   const [osChampion, setOSChampion] = useRecoilState(
     analyticsOSChampionState(options),
   );
   if (osChampion === undefined) {
-    throw getAnalyticsOSChampion(authorization, options)
+    throw getAnalyticsOSChampion(opensearchClient, options)
       .then(setOSChampion)
       .catch(setOSChampion);
   }

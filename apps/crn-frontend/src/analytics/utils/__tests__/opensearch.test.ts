@@ -103,10 +103,12 @@ describe('OpensearchClient', () => {
 
       const shouldClauses = requestBody.query.bool.should;
       expect(
-        shouldClauses.some((clause: any) => clause.match_phrase?.teamName),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        shouldClauses.some((clause: any) => clause.term?.['teamName.keyword']),
       ).toBe(true);
 
       expect(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         shouldClauses.some((clause: any) => clause.nested?.path === 'users'),
       ).toBe(false);
     });

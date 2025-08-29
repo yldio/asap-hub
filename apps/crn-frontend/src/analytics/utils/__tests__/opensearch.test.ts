@@ -13,6 +13,7 @@ describe('OpensearchClient', () => {
   let client: OpensearchClient<MockData>;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     global.fetch = mockFetch;
     client = new OpensearchClient<MockData>('test-index', 'Bearer fake-token');
   });
@@ -21,8 +22,8 @@ describe('OpensearchClient', () => {
     global.fetch = originalFetch;
   });
 
-  it('returns parsed search result', async () => {
-    mockFetch.mockResolvedValueOnce({
+  describe('search', () => {
+    const defaultResponse = {
       ok: true,
       json: async () => ({
         hits: {
@@ -51,53 +52,158 @@ describe('OpensearchClient', () => {
           ],
         },
       }),
+    };
+    it('returns parsed search result', async () => {
+      mockFetch.mockResolvedValueOnce(defaultResponse);
+
+      const result = await client.search(['Team'], 0, 10);
+
+      expect(result.total).toBe(2);
+      expect(result.items).toHaveLength(2);
+      expect(result.items[0]?.teamName).toBe('Team A');
     });
 
-    const result = await client.search(['Team'], 0, 10);
+    it('handles default case', async () => {
+      mockFetch.mockResolvedValueOnce(defaultResponse);
 
-    expect(result.total).toBe(2);
-    expect(result.items).toHaveLength(2);
-    expect(result.items[0]?.teamName).toBe('Team A');
+      const result = await client.search([], null, null);
+
+      expect(result.total).toBe(2);
+      expect(result.items).toHaveLength(2);
+    });
+
+    it('queries only teams when search scope is "teams"', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          hits: {
+            total: { value: 1 },
+            hits: [
+              {
+                _id: '1',
+                _index: 'test-index',
+                _score: 1.0,
+                _source: {
+                  teamId: 'team-id-1',
+                  teamName: 'Team Only',
+                  users: [],
+                },
+              },
+            ],
+          },
+        }),
+      });
+
+      const result = await client.search(['Team Only'], 0, 10, 'teams');
+
+      expect(result.total).toBe(1);
+
+      const fetchArgs = mockFetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchArgs[1].body);
+
+      const shouldClauses = requestBody.query.bool.should;
+      expect(
+        shouldClauses.some((clause: any) => clause.match_phrase?.teamName),
+      ).toBe(true);
+
+      expect(
+        shouldClauses.some((clause: any) => clause.nested?.path === 'users'),
+      ).toBe(false);
+    });
+
+    it('throws an error on bad response', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+      });
+
+      await expect(client.search([], 0, 10)).rejects.toThrow(
+        'Failed to search os-champion index. Expected status 2xx. Received status 500 Internal Server Error.',
+      );
+    });
   });
 
-  it('returns parsed tag suggestions', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        aggregations: {
-          matching_teams: {
-            teams: {
-              buckets: [{ key: 'Jackson', doc_count: 5 }],
+  describe('getTagSuggestions', () => {
+    it('returns parsed tag suggestions', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          aggregations: {
+            matching_teams: {
+              teams: {
+                buckets: [{ key: 'Jackson', doc_count: 5 }],
+              },
             },
-          },
-          matching_users: {
-            filtered_names: {
-              names: {
-                buckets: [
-                  { key: 'Jack Richards', doc_count: 3 },
-                  { key: 'Chloe Jackson', doc_count: 2 },
-                ],
+            matching_users: {
+              filtered_names: {
+                names: {
+                  buckets: [
+                    { key: 'Jack Richards', doc_count: 3 },
+                    { key: 'Chloe Jackson', doc_count: 2 },
+                  ],
+                },
               },
             },
           },
-        },
-      }),
+        }),
+      });
+
+      const result = await client.getTagSuggestions('Jack');
+
+      expect(result).toEqual(['Jackson', 'Jack Richards', 'Chloe Jackson']);
     });
 
-    const result = await client.getTagSuggestions('Jack');
+    it('returns empty tag suggestions when no match is found', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          aggregations: {
+            matching_teams: {
+              teams: {
+                buckets: [],
+              },
+            },
+            matching_users: {
+              filtered_names: {
+                names: {
+                  buckets: [],
+                },
+              },
+            },
+          },
+        }),
+      });
 
-    expect(result).toEqual(['Jackson', 'Jack Richards', 'Chloe Jackson']);
-  });
+      const result = await client.getTagSuggestions('Jack');
 
-  it('throws an error on bad response', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 500,
-      statusText: 'Internal Server Error',
+      expect(result).toEqual([]);
     });
 
-    await expect(client.search([], 0, 10)).rejects.toThrow(
-      'Failed to search os-champion index. Expected status 2xx. Received status 500 Internal Server Error.',
-    );
+    it('queries only teams when search scope is team', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          aggregations: {
+            matching_teams: {
+              teams: {
+                buckets: [{ key: 'Team Alpha', doc_count: 10 }],
+              },
+            },
+          },
+        }),
+      });
+
+      const result = await client.getTagSuggestions('Alpha', 'teams');
+
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+
+      const fetchArgs = mockFetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchArgs[1].body);
+
+      expect(requestBody.aggs.matching_users).toBeUndefined();
+      expect(JSON.stringify(requestBody.query)).not.toContain('users.name');
+      expect(result).toEqual(['Team Alpha']);
+    });
   });
 });

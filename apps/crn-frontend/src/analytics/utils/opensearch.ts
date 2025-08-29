@@ -91,8 +91,14 @@ export class OpensearchClient<T> {
     searchTags: string[],
     currentPage: number | null,
     pageSize: number | null,
+    searchScope: SearchScope = 'both',
   ): Promise<SearchResult<T>> {
-    const query = buildOpenSearchQuery({ searchTags, currentPage, pageSize });
+    const query = buildOpenSearchQuery({
+      searchTags,
+      currentPage,
+      pageSize,
+      searchScope,
+    });
     const response = await this.request<OpensearchHitsResponse<T>>(query);
 
     const items = (response.hits?.hits || []).map(
@@ -136,10 +142,35 @@ const generateDefaultQuery = (page: number, size: number) => ({
 
 const buildAggregationQuery = (
   searchQuery: string,
-  searchScope: SearchScope = 'both',
+  searchScope: SearchScope,
 ) => {
   const shouldClauses: Record<string, unknown>[] = [
     {
+      match: {
+        teamName: searchQuery,
+      },
+    },
+  ];
+  const aggs: Record<string, unknown> = {
+    matching_teams: {
+      filter: {
+        match: {
+          teamName: searchQuery,
+        },
+      },
+      aggs: {
+        teams: {
+          terms: {
+            field: 'teamName.keyword',
+            size: 10,
+          },
+        },
+      },
+    },
+  };
+
+  if (searchScope === 'both') {
+    shouldClauses.push({
       nested: {
         path: 'users',
         query: {
@@ -148,10 +179,9 @@ const buildAggregationQuery = (
           },
         },
       },
-    },
-  ];
-  const aggs: Record<string, unknown> = {
-    matching_users: {
+    });
+
+    aggs.matching_users = {
       nested: {
         path: 'users',
       },
@@ -169,30 +199,6 @@ const buildAggregationQuery = (
                 size: 10,
               },
             },
-          },
-        },
-      },
-    },
-  };
-
-  if (searchScope === 'teams' || searchScope === 'both') {
-    shouldClauses.push({
-      match: {
-        teamName: searchQuery,
-      },
-    });
-
-    aggs.matching_teams = {
-      filter: {
-        match: {
-          teamName: searchQuery,
-        },
-      },
-      aggs: {
-        teams: {
-          terms: {
-            field: 'teamName.keyword',
-            size: 10,
           },
         },
       },
@@ -219,21 +225,21 @@ const buildSearchQuery = (
   const shouldClauses = tags.flatMap((term) => {
     const clauses: Record<string, unknown>[] = [
       {
-        nested: {
-          path: 'users',
-          query: {
-            match_phrase: {
-              'users.name': term,
-            },
-          },
+        term: {
+          'teamName.keyword': term,
         },
       },
     ];
 
-    if (searchScope === 'teams' || searchScope === 'both') {
+    if (searchScope === 'both') {
       clauses.push({
-        match_phrase: {
-          teamName: term,
+        nested: {
+          path: 'users',
+          query: {
+            term: {
+              'users.name.keyword': term,
+            },
+          },
         },
       });
     }

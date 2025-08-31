@@ -215,5 +215,21 @@ describe('OpensearchClient', () => {
       expect(JSON.stringify(requestBody.query)).not.toContain('users.name');
       expect(result).toEqual(['Team Alpha']);
     });
+
+    it('handles case where response is null', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          aggregations: {
+            matching_teams: null,
+          },
+        }),
+      });
+
+      const result = await client.getTagSuggestions('Alpha', 'teams');
+
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(result).toEqual([]);
+    });
   });
 });

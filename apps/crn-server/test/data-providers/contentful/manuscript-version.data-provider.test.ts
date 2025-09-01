@@ -161,6 +161,169 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       expect(result.items[0]?.authors?.length).toEqual(1);
       expect(result.items[0]?.authors?.[0]?.id).toEqual(authorId);
     });
+
+    test('Should set hasLinkedResearchOutput to true when researchOutputsCollection has items', async () => {
+      const version = {
+        ...getContentfulManuscriptVersion(1, 'Preprint'),
+        linkedFrom: {
+          researchOutputsCollection: {
+            total: 1,
+          },
+          researchOutputVersionsCollection: {
+            total: 0,
+          },
+        },
+      } as Version;
+
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        getContentfulManuscript(1, [version]),
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items[0]?.hasLinkedResearchOutput).toBe(true);
+    });
+
+    test('Should set hasLinkedResearchOutput to true when researchOutputVersionsCollection has items', async () => {
+      const version = {
+        ...getContentfulManuscriptVersion(1, 'Preprint'),
+        linkedFrom: {
+          researchOutputsCollection: {
+            total: 0,
+          },
+          researchOutputVersionsCollection: {
+            total: 1,
+          },
+        },
+      } as Version;
+
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        getContentfulManuscript(1, [version]),
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items[0]?.hasLinkedResearchOutput).toBe(true);
+    });
+
+    test('Should set hasLinkedResearchOutput to true when both collections have items', async () => {
+      const version = {
+        ...getContentfulManuscriptVersion(1, 'Preprint'),
+        linkedFrom: {
+          researchOutputsCollection: {
+            total: 1,
+          },
+          researchOutputVersionsCollection: {
+            total: 1,
+          },
+        },
+      } as Version;
+
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        getContentfulManuscript(1, [version]),
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items[0]?.hasLinkedResearchOutput).toBe(true);
+    });
+
+    test('Should set hasLinkedResearchOutput to false when both collections are empty', async () => {
+      const version = {
+        ...getContentfulManuscriptVersion(1, 'Preprint'),
+        linkedFrom: {
+          researchOutputsCollection: {
+            total: 0,
+          },
+          researchOutputVersionsCollection: {
+            total: 0,
+          },
+        },
+      } as Version;
+
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        getContentfulManuscript(1, [version]),
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items[0]?.hasLinkedResearchOutput).toBe(false);
+    });
+
+    test('Should set hasLinkedResearchOutput to false when linkedFrom is null', async () => {
+      const version = {
+        ...getContentfulManuscriptVersion(1, 'Preprint'),
+        linkedFrom: null,
+      } as Version;
+
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        getContentfulManuscript(1, [version]),
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items[0]?.hasLinkedResearchOutput).toBe(false);
+    });
+
+    test('Should set hasLinkedResearchOutput to false when collections are null', async () => {
+      const version = {
+        ...getContentfulManuscriptVersion(1, 'Preprint'),
+        linkedFrom: {
+          researchOutputsCollection: null,
+          researchOutputVersionsCollection: null,
+        },
+      } as Version;
+
+      const contentfulGraphQLResponse = getContentfulManuscriptsCollection();
+
+      contentfulGraphQLResponse!.total = 1;
+      contentfulGraphQLResponse!.items = [
+        getContentfulManuscript(1, [version]),
+      ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptVersionDataProvider.fetch({});
+
+      expect(result.items[0]?.hasLinkedResearchOutput).toBe(false);
+    });
   });
 
   describe('Fetch-by-id', () => {
@@ -220,6 +383,68 @@ describe('Manuscript Versions Contentful Data Provider', () => {
 
       await expect(manuscriptVersionDataProvider.fetchById(id)).rejects.toThrow(
         'some error message',
+      );
+    });
+
+    test('Should set hasLinkedResearchOutput to true when researchOutputsCollection has items in fetchById', async () => {
+      const versionId = 'version-id-1';
+      const version = {
+        ...getContentfulManuscriptVersion(1, 'Preprint'),
+        linkedFrom: {
+          researchOutputsCollection: {
+            total: 2,
+          },
+          researchOutputVersionsCollection: {
+            total: 0,
+          },
+        },
+      } as Version;
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscriptVersions: {
+          linkedFrom: {
+            manuscriptsCollection: {
+              items: [getContentfulManuscript(1, [version])],
+            },
+          },
+        },
+      });
+
+      const result = await manuscriptVersionDataProvider.fetchById(versionId);
+
+      expect(result.latestManuscriptVersion?.hasLinkedResearchOutput).toBe(
+        true,
+      );
+    });
+
+    test('Should set hasLinkedResearchOutput to false when both collections are empty in fetchById', async () => {
+      const versionId = 'version-id-1';
+      const version = {
+        ...getContentfulManuscriptVersion(1, 'Preprint'),
+        linkedFrom: {
+          researchOutputsCollection: {
+            total: 0,
+          },
+          researchOutputVersionsCollection: {
+            total: 0,
+          },
+        },
+      } as Version;
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscriptVersions: {
+          linkedFrom: {
+            manuscriptsCollection: {
+              items: [getContentfulManuscript(1, [version])],
+            },
+          },
+        },
+      });
+
+      const result = await manuscriptVersionDataProvider.fetchById(versionId);
+
+      expect(result.latestManuscriptVersion?.hasLinkedResearchOutput).toBe(
+        false,
       );
     });
   });

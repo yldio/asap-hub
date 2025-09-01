@@ -818,6 +818,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     const manuscriptVersion: ManuscriptVersionResponse = {
       id,
+      hasLinkedResearchOutput: false,
       title,
       type,
       lifecycle,
@@ -1108,6 +1109,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       items: [
         {
           id,
+          hasLinkedResearchOutput: false,
           title,
           type,
           lifecycle,

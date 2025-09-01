@@ -104,7 +104,9 @@ export class ManuscriptVersionContentfulDataProvider
 
     const manuscript =
       manuscriptVersions.linkedFrom?.manuscriptsCollection?.items[0];
-    const latestVersion = cleanArray(manuscript?.versionsCollection?.items)[0];
+    const latestVersion = manuscript?.versionsCollection?.items
+      ? cleanArray(manuscript.versionsCollection.items)[0]
+      : undefined;
 
     return {
       versionFound: true,
@@ -114,6 +116,16 @@ export class ManuscriptVersionContentfulDataProvider
     };
   }
 }
+
+const hasLinkedResearchOutput = (
+  latestVersion: ManuscriptVersion | undefined,
+): boolean =>
+  Boolean(
+    (latestVersion?.linkedFrom?.researchOutputsCollection?.total &&
+      latestVersion.linkedFrom?.researchOutputsCollection?.total > 0) ||
+      (latestVersion?.linkedFrom?.researchOutputVersionsCollection?.total &&
+        latestVersion?.linkedFrom?.researchOutputVersionsCollection?.total > 0),
+  );
 
 const parseGraphQLManucriptVersion = (
   manuscript: Manuscript,
@@ -134,6 +146,7 @@ const parseGraphQLManucriptVersion = (
     ).values(),
   );
   return {
+    hasLinkedResearchOutput: hasLinkedResearchOutput(latestVersion),
     manuscriptId: latestVersion
       ? getManuscriptVersionUID({
           version: {

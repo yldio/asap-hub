@@ -222,6 +222,7 @@ describe('ManuscriptOutputSelection', () => {
       value: 'mv-manuscript-1',
       version: {
         id: 'mv-manuscript-1',
+        hasLinkedResearchOutput: false,
         title: 'Version One',
         url: 'https://example.com',
         manuscriptId: '123',
@@ -257,6 +258,7 @@ describe('ManuscriptOutputSelection', () => {
           value: 'test-version',
           version: {
             id: 'test-version',
+            hasLinkedResearchOutput: false,
             title: 'Test Version',
             url: 'https://example.com',
             manuscriptId: '123',

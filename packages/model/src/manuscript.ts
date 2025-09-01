@@ -921,6 +921,7 @@ export type ListPartialManuscriptResponse =
 
 export type ManuscriptVersionResponse = {
   id: string;
+  hasLinkedResearchOutput: boolean;
   type?: ManuscriptType;
   lifecycle?: ManuscriptLifecycle;
   teamId?: string;

@@ -10,12 +10,15 @@ import {
 } from '../../fixtures/research-output.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { researchOutputControllerMock } from '../../mocks/research-output.controller.mock';
+import { manuscriptVersionControllerMock } from '../../mocks/manuscript-version.controller.mock';
+
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 jest.mock('../../../src/utils/logger');
 
 describe('Research Output index handler', () => {
   const indexHandler = indexResearchOutputHandler(
     researchOutputControllerMock,
+    manuscriptVersionControllerMock,
     algoliaSearchClientMock,
   );
   afterEach(() => jest.clearAllMocks());
@@ -285,6 +288,97 @@ describe('Research Output index handler', () => {
     await expect(indexHandler(unpublishedEvent('ro-1234'))).rejects.toThrow(
       algoliaError,
     );
+  });
+
+  test('Should remove related manuscript version from Algolia when research output has a related manuscript version', async () => {
+    const researchOutputResponse = getResearchOutputResponse();
+    researchOutputResponse.relatedResearch = [];
+    researchOutputResponse.relatedManuscriptVersion = 'version-id-1';
+
+    const manuscriptVersion = {
+      id: 'mv-manuscript-id-1',
+      hasLinkedResearchOutput: true,
+      lifecycle: 'Preprint' as const,
+      teamId: 'team-id-1',
+      title: 'Manuscript 1',
+      manuscriptId: 'WH1-000282-001-org-P-2',
+      versionId: 'version-id-1',
+      url: 'http://example.com',
+    };
+
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+      researchOutputResponse,
+    );
+    manuscriptVersionControllerMock.fetchById.mockResolvedValueOnce(
+      manuscriptVersion,
+    );
+
+    await indexHandler(publishedEvent('ro-1234'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: expect.objectContaining(researchOutputResponse),
+      type: 'research-output',
+    });
+    expect(manuscriptVersionControllerMock.fetchById).toHaveBeenCalledWith(
+      'version-id-1',
+    );
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      'mv-manuscript-id-1',
+    );
+  });
+
+  test('Should not remove manuscript version from Algolia when versionId does not match', async () => {
+    const researchOutputResponse = getResearchOutputResponse();
+    researchOutputResponse.relatedResearch = [];
+    researchOutputResponse.relatedManuscriptVersion = 'version-id-2';
+
+    const manuscriptVersion = {
+      id: 'mv-manuscript-id-1',
+      hasLinkedResearchOutput: true,
+      lifecycle: 'Preprint' as const,
+      teamId: 'team-id-1',
+      title: 'Manuscript 1',
+      manuscriptId: 'WH1-000282-001-org-P-2',
+      versionId: 'different-version-id',
+      url: 'http://example.com',
+    };
+
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+      researchOutputResponse,
+    );
+    manuscriptVersionControllerMock.fetchById.mockResolvedValueOnce(
+      manuscriptVersion,
+    );
+
+    await indexHandler(publishedEvent('ro-1234'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: expect.objectContaining(researchOutputResponse),
+      type: 'research-output',
+    });
+    expect(manuscriptVersionControllerMock.fetchById).toHaveBeenCalledWith(
+      'version-id-2',
+    );
+    expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
+  });
+
+  test('Should not attempt to remove manuscript version when relatedManuscriptVersion is not set', async () => {
+    const researchOutputResponse = getResearchOutputResponse();
+    researchOutputResponse.relatedResearch = [];
+    researchOutputResponse.relatedManuscriptVersion = undefined;
+
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+      researchOutputResponse,
+    );
+
+    await indexHandler(publishedEvent('ro-1234'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: expect.objectContaining(researchOutputResponse),
+      type: 'research-output',
+    });
+    expect(manuscriptVersionControllerMock.fetchById).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
   });
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {

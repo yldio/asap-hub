@@ -20564,6 +20564,12 @@ export type VersionsContentFragment = Pick<
   'description' | 'shortDescription' | 'type' | 'lifecycle' | 'count'
 > & {
   sys: Pick<Sys, 'id'>;
+  linkedFrom?: Maybe<{
+    researchOutputsCollection?: Maybe<Pick<ResearchOutputsCollection, 'total'>>;
+    researchOutputVersionsCollection?: Maybe<
+      Pick<ResearchOutputVersionsCollection, 'total'>
+    >;
+  }>;
   labsCollection?: Maybe<{
     items: Array<Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>>;
   }>;
@@ -20669,6 +20675,14 @@ export type FetchManuscriptVersionByIdQuery = {
                       | 'count'
                     > & {
                       sys: Pick<Sys, 'id'>;
+                      linkedFrom?: Maybe<{
+                        researchOutputsCollection?: Maybe<
+                          Pick<ResearchOutputsCollection, 'total'>
+                        >;
+                        researchOutputVersionsCollection?: Maybe<
+                          Pick<ResearchOutputVersionsCollection, 'total'>
+                        >;
+                      }>;
                       labsCollection?: Maybe<{
                         items: Array<
                           Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
@@ -20802,6 +20816,14 @@ export type FetchVersionsByManuscriptQuery = {
                     | 'count'
                   > & {
                     sys: Pick<Sys, 'id'>;
+                    linkedFrom?: Maybe<{
+                      researchOutputsCollection?: Maybe<
+                        Pick<ResearchOutputsCollection, 'total'>
+                      >;
+                      researchOutputVersionsCollection?: Maybe<
+                        Pick<ResearchOutputVersionsCollection, 'total'>
+                      >;
+                    }>;
                     labsCollection?: Maybe<{
                       items: Array<
                         Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
@@ -28562,6 +28584,52 @@ export const VersionsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lifecycle' } },
           { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'linkedFrom' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'researchOutputsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '1' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'researchOutputVersionsCollection',
+                  },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '1' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'labsCollection' },

@@ -4,8 +4,10 @@ import { ResearchOutputEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
+import ManuscriptVersionController from '../../controllers/manuscript-version.controller';
 import ResearchOutputController from '../../controllers/research-output.controller';
 import { getExternalAuthorDataProvider } from '../../dependencies/external-authors.dependencies';
+import { getManuscriptVersionsDataProvider } from '../../dependencies/manuscript-versions.dependencies';
 import { getResearchOutputDataProvider } from '../../dependencies/research-outputs.dependencies';
 import { getResearchTagDataProvider } from '../../dependencies/research-tags.dependencies';
 import logger from '../../utils/logger';
@@ -15,6 +17,7 @@ import { ResearchOutputPayload } from '../event-bus';
 export const indexResearchOutputHandler =
   (
     researchOutputController: ResearchOutputController,
+    manuscriptVersionController: ManuscriptVersionController,
     algoliaClient: AlgoliaClient<'crn'>,
   ): EventBridgeHandler<ResearchOutputEvent, ResearchOutputPayload> =>
   async (event) => {
@@ -48,6 +51,27 @@ export const indexResearchOutputHandler =
         });
 
         logger.debug(`Saved research-output ${researchOutput.id}`);
+
+        if (researchOutput.relatedManuscriptVersion) {
+          logger.debug(
+            `researchOutput.relatedManuscriptVersion ${researchOutput.relatedManuscriptVersion}`,
+          );
+
+          const manuscriptVersion = await manuscriptVersionController.fetchById(
+            researchOutput.relatedManuscriptVersion,
+          );
+
+          logger.debug(
+            `manuscriptVersion ${JSON.stringify(manuscriptVersion)}`,
+          );
+
+          if (
+            manuscriptVersion?.versionId ===
+            researchOutput.relatedManuscriptVersion
+          ) {
+            await algoliaClient.remove(manuscriptVersion.id);
+          }
+        }
 
         return researchOutput;
       } catch (e) {
@@ -97,6 +121,7 @@ export const handler = sentryWrapper(
       researchTagDataProvider,
       externalAuthorDataProvider,
     ),
+    new ManuscriptVersionController(getManuscriptVersionsDataProvider()),
     algoliaSearchClientFactory({
       algoliaApiKey,
       algoliaAppId,

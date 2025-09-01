@@ -31,6 +31,16 @@ export const indexManuscriptVersionHandler =
       );
 
       if (manuscriptVersionResponse) {
+        if (manuscriptVersionResponse.hasLinkedResearchOutput) {
+          logger.debug(
+            `Manuscript version ${
+              manuscriptVersionResponse.id
+            } with manuscript id ${`mv-${manuscriptVersionResponse.id}`} already has a linked research output, removing it from Algolia`,
+          );
+          await algoliaClient.remove(`mv-${manuscriptVersionResponse.id}`);
+          return;
+        }
+
         if (manuscriptVersionResponse.versionId) {
           await algoliaClient.save({
             data: manuscriptVersionResponse,

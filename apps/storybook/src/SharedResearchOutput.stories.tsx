@@ -97,6 +97,7 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     lastName: 'lastName',
   },
   isInReview: false,
+  checkForNewVersion: () => false,
 });
 
 export const Normal = () => (

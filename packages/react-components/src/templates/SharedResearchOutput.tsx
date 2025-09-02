@@ -69,7 +69,7 @@ type SharedResearchOutputProps = Pick<
       shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
     onPublish?: () => Promise<ResearchOutputResponse | void>;
-    checkForNewVersion: () => Promise<Boolean>;
+    checkForNewVersion: () => boolean;
   };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
@@ -138,7 +138,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   };
 
   const checkForNewerManuscriptVersion = async () => {
-    const hasNewerVersion = await checkForNewVersion();
+    const hasNewerVersion = checkForNewVersion();
     if (hasNewerVersion) {
       history.push(
         sharedResearch({})
@@ -229,6 +229,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             successHref={
               network({})
                 .teams({})
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 .team({ teamId: props.teams[0]!.id })
                 .workspace({}).$
             }

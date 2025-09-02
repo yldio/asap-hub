@@ -88,22 +88,21 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const [selectedManuscriptVersion, setManuscriptVersion] =
     useState<ManuscriptVersionOption>();
 
+  const isManuscriptVersion =
+    versionAction === 'create' && researchOutputData?.relatedManuscript;
+
   useEffect(() => {
-    if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
+    if (isManuscriptVersion) {
       setManuscriptVersion({
         version: latestManuscriptVersion,
         label: '',
         value: '',
       });
     }
-  }, []);
+  }, [isManuscriptVersion, latestManuscriptVersion]);
   const [updatedOutput, setUpdatedOutput] = useState<
     ResearchOutputResponse | undefined
-  >(
-    versionAction === 'create' && researchOutputData?.relatedManuscript
-      ? undefined
-      : researchOutputData,
-  );
+  >(isManuscriptVersion ? undefined : researchOutputData);
 
   const [isImportingManuscript, setIsImportingManuscript] = useState(false);
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
@@ -189,7 +188,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     versions = updatedOutput?.versions ?? [];
   }
 
-  if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
+  if (isManuscriptVersion) {
     versions = researchOutputData.versions.concat([
       {
         id: researchOutputData?.id ?? '',
@@ -205,7 +204,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS' as Flag);
 
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
-    !(versionAction === 'create' && researchOutputData?.relatedManuscript) &&
+    !isManuscriptVersion &&
       isManuscriptOutputFlagEnabled &&
       documentType === 'Article' &&
       !updatedOutput?.id,
@@ -291,10 +290,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       );
     }
 
-    if (
-      !(versionAction === 'create' && researchOutputData?.relatedManuscript) ||
-      !!updatedOutput
-    ) {
+    if (!isManuscriptVersion || !!updatedOutput) {
       return (
         <Frame title="Share Research Output">
           {versionAction === 'create' && (

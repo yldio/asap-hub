@@ -1,25 +1,25 @@
+import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
   NotFoundPage,
+  ScrollToTop,
   SharedResearchOutput,
   utils,
-  ScrollToTop,
 } from '@asap-hub/react-components';
-import { sharedResearch, useRouteParams } from '@asap-hub/routing';
-import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
 } from '@asap-hub/react-context';
-import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
+import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 
-import { useResearchOutputById, useResearchOutputPermissions } from './state';
+import { ManuscriptVersionResponse } from '@asap-hub/model';
+import { useEffect, useState } from 'react';
+import { useLatestManuscriptVersionByManuscriptId } from '../network/teams/state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 import { usePutResearchOutput } from '../shared-state';
-import { useLatestManuscriptVersionByManuscriptId } from '../network/teams/state';
-import { useEffect, useState } from 'react';
-import { ManuscriptVersionResponse } from '@asap-hub/model';
+import { useResearchOutputById, useResearchOutputPermissions } from './state';
 
 const ResearchOutput: React.FC = () => {
   const { researchOutputId } = useRouteParams(
@@ -60,23 +60,28 @@ const ResearchOutput: React.FC = () => {
   const currentUser = useCurrentUserCRN();
   const getLatestManuscriptVersion = useLatestManuscriptVersionByManuscriptId();
 
-  let [latestManuscriptVersion, setLatestManuscriptVersion] = useState<
+  const [latestManuscriptVersion, setLatestManuscriptVersion] = useState<
     ManuscriptVersionResponse | undefined
   >();
 
   useEffect(() => {
     if (researchOutputData?.relatedManuscript) {
-      getLatestManuscriptVersion(researchOutputData?.relatedManuscript).then(
-        (data) => setLatestManuscriptVersion(data),
-      );
+      getLatestManuscriptVersion(researchOutputData?.relatedManuscript)
+        .then((data) => setLatestManuscriptVersion(data))
+        .catch(() => {
+          setLatestManuscriptVersion(undefined);
+        });
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [researchOutputData?.relatedManuscript]);
 
-  const checkForNewVersion = async () => {
+  const checkForNewVersion = () => {
     if (researchOutputData?.relatedManuscript) {
-      getLatestManuscriptVersion(researchOutputData?.relatedManuscript).then(
-        (data) => setLatestManuscriptVersion(data),
-      );
+      getLatestManuscriptVersion(researchOutputData?.relatedManuscript)
+        .then((data) => setLatestManuscriptVersion(data))
+        .catch(() => {
+          setLatestManuscriptVersion(undefined);
+        });
 
       return (
         (latestManuscriptVersion?.versionId &&

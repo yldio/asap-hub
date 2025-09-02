@@ -52,7 +52,6 @@ import {
   useManuscriptVersionSuggestions,
   useTeamById,
   usePostPreprintResearchOutput,
-  // useLatestManuscriptVersionByManuscriptId,
 } from './state';
 
 const useParamOutputDocumentType = (
@@ -91,78 +90,20 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
 
   useEffect(() => {
     if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
-      console.log(
-        'IMPORT VERSION - manuscriptId',
-        researchOutputData?.relatedManuscript,
-      );
       setManuscriptVersion({
         version: latestManuscriptVersion,
         label: '',
         value: '',
       });
-
-      // getLatestManuscriptVersion(researchOutputData.relatedManuscript).then(
-      //   (latestVersion) => {
-      //     if (latestVersion) {
-      //       // setUpdatedOutput((prev) => {
-      //       //   console.log('prev', prev);
-      //       //   return {
-      //       //     ...mapManuscriptVersionToResearchOutput(
-      //       //       prev,
-      //       //       latestVersion,
-      //       //       'Team',
-      //       //     ),
-      //       //     versions: [
-      //       //       ...(prev?.versions ?? []),
-      //       //       {
-      //       //         id: prev?.id ?? '',
-      //       //         title: prev?.title ?? '',
-      //       //         documentType: prev?.documentType ?? 'Article',
-      //       //         type: prev?.type,
-      //       //         link: prev?.link,
-      //       //         addedDate: prev?.addedDate,
-      //       //       },
-      //       //       // , (prev && mapResearchOutputToVersion(prev))
-      //       //     ],
-      //       //   };
-      //       // });
-      //       researchOutputData = {
-      //           ...mapManuscriptVersionToResearchOutput(
-      //             researchOutputData,
-      //             latestVersion,
-      //             'Team',
-      //           ),
-      //           versions: [
-      //             ...(researchOutputData?.versions ?? []),
-      //             {
-      //               id: researchOutputData?.id ?? '',
-      //               title: researchOutputData?.title ?? '',
-      //               documentType: researchOutputData?.documentType ?? 'Article',
-      //               type: researchOutputData?.type,
-      //               link: researchOutputData?.link,
-      //               addedDate: researchOutputData?.addedDate,
-      //             },
-      //             // , (prev && mapResearchOutputToVersion(prev))
-      //           ],
-      //         }
-      //       setManuscriptVersion({
-      //         version: latestVersion,
-      //         label: '',
-      //         value: '',
-      //       });
-      //       setManuscriptOutputSelection('import');
-      //       console.log('latestVersion loaded', latestVersion);
-      //       // setUpdatedOutput((prev) =>
-      //       //   mapManuscriptVersionToResearchOutput(prev, latestVersion, 'Team'),
-      //       // );
-      //     }
-      //   },
-      // );
     }
   }, []);
   const [updatedOutput, setUpdatedOutput] = useState<
     ResearchOutputResponse | undefined
-  >(researchOutputData);
+  >(
+    versionAction === 'create' && researchOutputData?.relatedManuscript
+      ? undefined
+      : researchOutputData,
+  );
 
   const [isImportingManuscript, setIsImportingManuscript] = useState(false);
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
@@ -181,92 +122,17 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
 
   useEffect(() => {
     if (selectedManuscriptVersion && selectedManuscriptVersion.version) {
-      console.log(
-        'selectedManuscriptVersion',
-        selectedManuscriptVersion.version,
-      );
       const manuscriptVersion = selectedManuscriptVersion.version;
       setUpdatedOutput((prev) => {
-        console.log('prev', prev);
         const result = mapManuscriptVersionToResearchOutput(
           prev,
           manuscriptVersion,
           'Team',
         );
-        console.log('result', result);
         return result;
       });
     }
   }, [selectedManuscriptVersion]);
-
-  // const getLatestManuscriptVersion = useLatestManuscriptVersionByManuscriptId();
-
-  // useEffect(() => {
-  //   if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
-  //     getLatestManuscriptVersion(researchOutputData.relatedManuscript).then(
-  //       (latestVersion) => {
-  //         if (latestVersion) {
-  //           setManuscriptVersion({
-  //             version: latestVersion,
-  //             label: '',
-  //             value: '',
-  //           });
-  //           console.log('latestVersion loaded', latestVersion);
-  //           // setUpdatedOutput((prev) =>
-  //           //   mapManuscriptVersionToResearchOutput(prev, latestVersion, 'Team'),
-  //           // );
-  //         }
-  //       },
-  //     );
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
-  //     console.log(
-  //       'IMPORT VERSION - manuscriptId',
-  //       researchOutputData?.relatedManuscript,
-  //     );
-  //     getLatestManuscriptVersion(researchOutputData.relatedManuscript).then(
-  //       (latestVersion) => {
-  //         if (latestVersion) {
-  //           setUpdatedOutput((prev) => {
-  //             console.log('prev', prev);
-  //             return {
-  //               ...mapManuscriptVersionToResearchOutput(
-  //                 prev,
-  //                 latestVersion,
-  //                 'Team',
-  //               ),
-  //               versions: [
-  //                 ...(prev?.versions ?? []),
-  //                 {
-  //                   id: prev?.id ?? '',
-  //                   title: prev?.title ?? '',
-  //                   documentType: prev?.documentType ?? 'Article',
-  //                   type: prev?.type,
-  //                   link: prev?.link,
-  //                   addedDate: prev?.addedDate,
-  //                 },
-  //                 // , (prev && mapResearchOutputToVersion(prev))
-  //               ],
-  //             };
-  //           });
-  //           setManuscriptVersion({
-  //             version: latestVersion,
-  //             label: '',
-  //             value: '',
-  //           });
-  //           setManuscriptOutputSelection('import');
-  //           console.log('latestVersion loaded', latestVersion);
-  //           // setUpdatedOutput((prev) =>
-  //           //   mapManuscriptVersionToResearchOutput(prev, latestVersion, 'Team'),
-  //           // );
-  //         }
-  //       },
-  //     );
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (
@@ -319,23 +185,28 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     ? updatedOutput.versions.concat([researchOutputAsVersion])
     : [researchOutputAsVersion];
 
-  console.log('versions', versions);
-  if (
-    versionAction === 'edit' //||
-    // (versionAction === 'create' && updatedOutput?.relatedManuscript)
-  ) {
+  if (versionAction === 'edit') {
     versions = updatedOutput?.versions ?? [];
+  }
+
+  if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
+    versions = researchOutputData.versions.concat([
+      {
+        id: researchOutputData?.id ?? '',
+        title: researchOutputData?.title ?? '',
+        documentType: researchOutputData?.documentType ?? 'Article',
+        type: researchOutputData?.type,
+        link: researchOutputData?.link,
+        addedDate: researchOutputData?.addedDate,
+      },
+    ]);
   }
 
   const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS' as Flag);
 
-  // console.log('updatedOutput', updatedOutput);
-  // if (versionAction === 'create' && researchOutputData?.relatedManuscript) {
-  //   console.log('VESION - MANUSCRIPT VERSION');
-  // }
-
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
-    isManuscriptOutputFlagEnabled &&
+    !(versionAction === 'create' && researchOutputData?.relatedManuscript) &&
+      isManuscriptOutputFlagEnabled &&
       documentType === 'Article' &&
       !updatedOutput?.id,
   );
@@ -420,133 +291,134 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       );
     }
 
-    console.log('selectedManuscriptVersion', selectedManuscriptVersion);
-    return (
-      <Frame title="Share Research Output">
-        {versionAction === 'create' && (
-          <Toast accent="warning">
-            The previous output page will be replaced with a summarised version
-            history section.
-          </Toast>
-        )}
-        <InnerToastContext.Provider value={toast}>
-          {toastNode && (
-            <Toast accent="error" onClose={() => setToastNode(undefined)}>
-              {toastNode}
+    if (
+      !(versionAction === 'create' && researchOutputData?.relatedManuscript) ||
+      !!updatedOutput
+    ) {
+      return (
+        <Frame title="Share Research Output">
+          {versionAction === 'create' && (
+            <Toast accent="warning">
+              The previous output page will be replaced with a summarised
+              version history section.
             </Toast>
           )}
-          <ResearchOutputHeader
-            documentType={documentType}
-            workingGroupAssociation={false}
-          />
-          {versionAction && versions.length > 0 && (
-            <OutputVersions
-              app="crn"
-              versions={versions}
+          <InnerToastContext.Provider value={toast}>
+            {toastNode && (
+              <Toast accent="error" onClose={() => setToastNode(undefined)}>
+                {toastNode}
+              </Toast>
+            )}
+            <ResearchOutputHeader
+              documentType={documentType}
+              workingGroupAssociation={false}
+            />
+            {versionAction && versions.length > 0 && (
+              <OutputVersions
+                app="crn"
+                versions={versions}
+                versionAction={versionAction}
+              />
+            )}
+            {selectedManuscriptVersion &&
+              selectedManuscriptVersion?.version && (
+                <ManuscriptVersionImportCard
+                  version={selectedManuscriptVersion.version}
+                />
+              )}
+            <ResearchOutputForm
+              displayChangelog={Boolean(
+                versionAction === 'create' ||
+                  (updatedOutput?.versions || []).length > 0,
+              )}
               versionAction={versionAction}
+              tagSuggestions={researchSuggestions}
+              documentType={documentType}
+              getLabSuggestions={getLabSuggestions}
+              getImpactSuggestions={getImpactSuggestions}
+              getCategorySuggestions={getCategorySuggestions}
+              getShortDescriptionFromDescription={
+                getShortDescriptionFromDescription
+              }
+              getAuthorSuggestions={(input) =>
+                getAuthorSuggestions(input).then((authors) =>
+                  authors.map((author) => ({
+                    author,
+                    label: author.displayName,
+                    value: author.id,
+                  })),
+                )
+              }
+              getTeamSuggestions={getTeamSuggestions}
+              getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+              getRelatedEventSuggestions={getRelatedEventSuggestions}
+              researchTags={researchTags}
+              serverValidationErrors={errors}
+              clearServerValidationError={(instancePath: string) =>
+                setErrors(clearAjvErrorForPath(errors, instancePath))
+              }
+              researchOutputData={updatedOutput}
+              typeOptions={Array.from(
+                researchOutputDocumentTypeToType[documentType],
+              )}
+              urlRequired={documentType !== 'Lab Material'}
+              selectedTeams={(updatedOutput?.teams ?? [team]).map(
+                (selectedTeam, index) => ({
+                  label: selectedTeam.displayName,
+                  value: selectedTeam.id,
+                  isFixed: index === 0,
+                }),
+              )}
+              published={published}
+              permissions={permissions}
+              descriptionUnchangedWarning={descriptionUnchangedWarning}
+              onSave={(output) =>
+                updatedOutput?.id
+                  ? updateAndPublishResearchOutput(updatedOutput.id, {
+                      ...output,
+                      published: true,
+                      createVersion: versionAction === 'create',
+                      relatedManuscriptVersion:
+                        versionAction === 'create'
+                          ? selectedManuscriptVersion
+                            ? selectedManuscriptVersion.version?.versionId
+                            : undefined
+                          : updatedOutput.relatedManuscriptVersion,
+                      statusChangedById: updatedOutput.statusChangedBy?.id,
+                      isInReview: updatedOutput.isInReview,
+                    }).catch(handleError(['/link', '/title'], setErrors))
+                  : createResearchOutput({
+                      ...output,
+                      published: true,
+                      relatedManuscriptVersion:
+                        updatedOutput?.relatedManuscriptVersion,
+                      relatedManuscript: updatedOutput?.relatedManuscript,
+                    }).catch(handleError(['/link', '/title'], setErrors))
+              }
+              onSaveDraft={(output) =>
+                updatedOutput?.id
+                  ? updateResearchOutput(updatedOutput.id, {
+                      ...output,
+                      published: false,
+                      relatedManuscriptVersion:
+                        updatedOutput.relatedManuscriptVersion,
+                      statusChangedById: updatedOutput.statusChangedBy?.id,
+                      isInReview: updatedOutput.isInReview,
+                    }).catch(handleError(['/link', '/title'], setErrors))
+                  : createResearchOutput({
+                      ...output,
+                      published: false,
+                      relatedManuscriptVersion:
+                        updatedOutput?.relatedManuscriptVersion,
+                      relatedManuscript: updatedOutput?.relatedManuscript,
+                    }).catch(handleError(['/link', '/title'], setErrors))
+              }
             />
-          )}
-          {selectedManuscriptVersion && selectedManuscriptVersion?.version && (
-            <ManuscriptVersionImportCard
-              version={selectedManuscriptVersion.version}
-            />
-          )}
-          <ResearchOutputForm
-            displayChangelog={Boolean(
-              versionAction === 'create' ||
-                (updatedOutput?.versions || []).length > 0,
-            )}
-            versionAction={versionAction}
-            tagSuggestions={researchSuggestions}
-            documentType={documentType}
-            getLabSuggestions={getLabSuggestions}
-            getImpactSuggestions={getImpactSuggestions}
-            getCategorySuggestions={getCategorySuggestions}
-            getShortDescriptionFromDescription={
-              getShortDescriptionFromDescription
-            }
-            getAuthorSuggestions={(input) =>
-              getAuthorSuggestions(input).then((authors) =>
-                authors.map((author) => ({
-                  author,
-                  label: author.displayName,
-                  value: author.id,
-                })),
-              )
-            }
-            getTeamSuggestions={getTeamSuggestions}
-            getRelatedResearchSuggestions={getRelatedResearchSuggestions}
-            getRelatedEventSuggestions={getRelatedEventSuggestions}
-            researchTags={researchTags}
-            serverValidationErrors={errors}
-            clearServerValidationError={(instancePath: string) =>
-              setErrors(clearAjvErrorForPath(errors, instancePath))
-            }
-            researchOutputData={updatedOutput}
-            typeOptions={Array.from(
-              researchOutputDocumentTypeToType[documentType],
-            )}
-            urlRequired={documentType !== 'Lab Material'}
-            selectedTeams={(updatedOutput?.teams ?? [team]).map(
-              (selectedTeam, index) => ({
-                label: selectedTeam.displayName,
-                value: selectedTeam.id,
-                isFixed: index === 0,
-              }),
-            )}
-            published={published}
-            permissions={permissions}
-            descriptionUnchangedWarning={descriptionUnchangedWarning}
-            isImportedFromManuscript={Boolean(
-              selectedManuscriptVersion?.version ||
-                updatedOutput?.relatedManuscriptVersion ||
-                updatedOutput?.relatedManuscript,
-            )}
-            onSave={(output) =>
-              updatedOutput?.id
-                ? updateAndPublishResearchOutput(updatedOutput.id, {
-                    ...output,
-                    published: true,
-                    createVersion: versionAction === 'create',
-                    relatedManuscriptVersion:
-                      versionAction === 'create'
-                        ? selectedManuscriptVersion
-                          ? selectedManuscriptVersion.version?.versionId
-                          : undefined
-                        : updatedOutput.relatedManuscriptVersion,
-                    statusChangedById: updatedOutput.statusChangedBy?.id,
-                    isInReview: updatedOutput.isInReview,
-                  }).catch(handleError(['/link', '/title'], setErrors))
-                : createResearchOutput({
-                    ...output,
-                    published: true,
-                    relatedManuscriptVersion:
-                      updatedOutput?.relatedManuscriptVersion,
-                    relatedManuscript: updatedOutput?.relatedManuscript,
-                  }).catch(handleError(['/link', '/title'], setErrors))
-            }
-            onSaveDraft={(output) =>
-              updatedOutput?.id
-                ? updateResearchOutput(updatedOutput.id, {
-                    ...output,
-                    published: false,
-                    relatedManuscriptVersion:
-                      updatedOutput.relatedManuscriptVersion,
-                    statusChangedById: updatedOutput.statusChangedBy?.id,
-                    isInReview: updatedOutput.isInReview,
-                  }).catch(handleError(['/link', '/title'], setErrors))
-                : createResearchOutput({
-                    ...output,
-                    published: false,
-                    relatedManuscriptVersion:
-                      updatedOutput?.relatedManuscriptVersion,
-                    relatedManuscript: updatedOutput?.relatedManuscript,
-                  }).catch(handleError(['/link', '/title'], setErrors))
-            }
-          />
-        </InnerToastContext.Provider>
-      </Frame>
-    );
+          </InnerToastContext.Provider>
+        </Frame>
+      );
+    }
+    return <NotFoundPage />;
   }
   return <NotFoundPage />;
 };

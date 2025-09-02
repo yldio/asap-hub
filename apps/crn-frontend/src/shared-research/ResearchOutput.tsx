@@ -77,10 +77,7 @@ const ResearchOutput: React.FC = () => {
       getLatestManuscriptVersion(researchOutputData?.relatedManuscript).then(
         (data) => setLatestManuscriptVersion(data),
       );
-      // console.log(
-      //   latestManuscriptVersion?.versionId,
-      //   researchOutputData.relatedManuscriptVersion,
-      // );
+
       return (
         (latestManuscriptVersion?.versionId &&
           latestManuscriptVersion?.versionId !==

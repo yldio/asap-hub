@@ -189,11 +189,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const showPublishButton = canPublishResearchOutput;
   const displayThreeButtons = showSaveDraftButton && showPublishButton;
 
-  console.log('INITIAL researchOutputData ->', researchOutputData);
   const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>(
     researchOutputData?.type || undefined,
   );
-  console.log('INITIAL type ->', type);
   const [title, setTitle] = useState<ResearchOutputPostRequest['title']>(
     researchOutputData?.title || '',
   );

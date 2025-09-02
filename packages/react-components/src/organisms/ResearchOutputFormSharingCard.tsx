@@ -81,6 +81,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   urlRequired?: boolean;
   typeOptions: ResearchOutputType[];
   getShortDescriptionFromDescription: (description: string) => Promise<string>;
+  isImportingFromManuscript?: boolean;
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
@@ -122,6 +123,7 @@ const ResearchOutputFormSharingCard: React.FC<
   serverValidationErrors = [],
   typeDescription,
   urlRequired,
+  isImportingFromManuscript,
   getShortDescriptionFromDescription,
   clearServerValidationError = noop,
   onChangeDescription = noop,

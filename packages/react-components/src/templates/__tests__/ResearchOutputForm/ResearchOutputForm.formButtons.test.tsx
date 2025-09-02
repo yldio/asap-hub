@@ -355,28 +355,15 @@ describe('form buttons', () => {
   });
 
   it('pre-selects DOI on identifier type when importing from manuscript', async () => {
-    await setupForm({
-      isImportingFromManuscript: true,
-    });
+    await setupForm({ isImportingFromManuscript: true });
 
-    // When importing from manuscript, the identifier type should be pre-selected as DOI
-    const identifierTypeDropdown = screen.getByRole('textbox', {
-      name: /Identifier Type/i,
-    });
-    waitFor(() => {
-      expect(identifierTypeDropdown).toHaveValue('DOI');
-    });
+    const identifierType = await screen.findByDisplayValue('DOI');
+    expect(identifierType).toHaveValue('DOI');
   });
 
-  it('shows default identifier type when not importing from manuscript', async () => {
-    await setupForm({
-      isImportingFromManuscript: false,
-    });
+  it('shows placeholder text when not importing from manuscript', async () => {
+    await setupForm({ isImportingFromManuscript: false });
 
-    // When not importing from manuscript, the identifier type should show default value
-    const identifierTypeDropdown = screen.getByRole('textbox', {
-      name: /Identifier Type/i,
-    });
-    expect(identifierTypeDropdown).toHaveValue('');
+    expect(await screen.findByText('Choose an identifier')).toBeInTheDocument();
   });
 });

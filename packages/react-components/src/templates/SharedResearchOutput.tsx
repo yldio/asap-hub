@@ -20,7 +20,7 @@ import {
   SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
 } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import {
   getIconForDocumentType as getIconForDocumentTypeCRN,
   getResearchOutputAssociation,
@@ -28,12 +28,12 @@ import {
 } from '../utils';
 
 const containerStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)}`,
 });
 
 const cardsStyles = css({
   display: 'grid',
-  rowGap: `${36 / perRem}em`,
+  rowGap: rem(36),
 });
 
 type SharedResearchOutputProps = Pick<
@@ -138,7 +138,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   };
 
   const checkForNewerManuscriptVersion = async () => {
-
     const hasNewerVersion = await checkForNewVersion();
     if (hasNewerVersion) {
       history.push(
@@ -282,7 +281,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           )}
           {!isGrantDocument && hasUsageNotes && (
             <Card>
-              <div css={{ paddingBottom: `${12 / perRem}em` }}>
+              <div css={{ paddingBottom: rem(12) }}>
                 <Headline2 styleAsHeading={4}>Usage Notes</Headline2>
                 <Markdown value={usageNotesMD}></Markdown>
                 {!usageNotesMD && <RichText poorText text={usageNotes} />}

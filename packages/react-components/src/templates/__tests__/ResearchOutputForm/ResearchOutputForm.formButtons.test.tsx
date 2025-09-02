@@ -48,6 +48,7 @@ describe('form buttons', () => {
       descriptionUnchangedWarning = false,
       researchOutputData = undefined,
       versionAction = undefined,
+      isImportingFromManuscript = false,
     }: {
       canEditResearchOutput?: boolean;
       canPublishResearchOutput?: boolean;
@@ -64,6 +65,9 @@ describe('form buttons', () => {
       researchOutputData?: ComponentProps<
         typeof ResearchOutputForm
       >['researchOutputData'];
+      isImportingFromManuscript?: ComponentProps<
+        typeof ResearchOutputForm
+      >['isImportingFromManuscript'];
     } = {
       documentType: 'Article',
       researchTags: [],
@@ -87,6 +91,7 @@ describe('form buttons', () => {
             getAuthorSuggestions={getAuthorSuggestions}
             researchTags={researchTags}
             published={published}
+            isImportingFromManuscript={isImportingFromManuscript}
             permissions={{
               canEditResearchOutput,
               canPublishResearchOutput,
@@ -338,5 +343,40 @@ describe('form buttons', () => {
         screen.queryByText(/Publish new version for the whole hub?/i),
       ).toBeNull();
     });
+  });
+
+  it('disables CRN Only option when importing from manuscript', async () => {
+    await setupForm({
+      isImportingFromManuscript: true,
+    });
+
+    expect(screen.getByRole('radio', { name: /CRN Only/i })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: /Public/i })).toBeEnabled();
+  });
+
+  it('pre-selects DOI on identifier type when importing from manuscript', async () => {
+    await setupForm({
+      isImportingFromManuscript: true,
+    });
+
+    // When importing from manuscript, the identifier type should be pre-selected as DOI
+    const identifierTypeDropdown = screen.getByRole('textbox', {
+      name: /Identifier Type/i,
+    });
+    waitFor(() => {
+      expect(identifierTypeDropdown).toHaveValue('DOI');
+    });
+  });
+
+  it('shows default identifier type when not importing from manuscript', async () => {
+    await setupForm({
+      isImportingFromManuscript: false,
+    });
+
+    // When not importing from manuscript, the identifier type should show default value
+    const identifierTypeDropdown = screen.getByRole('textbox', {
+      name: /Identifier Type/i,
+    });
+    expect(identifierTypeDropdown).toHaveValue('');
   });
 });

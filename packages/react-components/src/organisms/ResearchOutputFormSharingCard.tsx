@@ -8,6 +8,7 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
+import { css } from '@emotion/react';
 import { ComponentPropsWithRef, useCallback, useEffect, useState } from 'react';
 import { OptionsType } from 'react-select';
 import { getAjvErrorForPath } from '../ajv-errors';
@@ -435,48 +436,59 @@ const ResearchOutputFormSharingCard: React.FC<
         value={asapFunded}
         onChange={onChangeAsapFunded}
       />
-
-      <LabeledRadioButtonGroup
-        title="Has this output been used in a publication"
-        subtitle="(required)"
-        options={[
-          { value: 'Yes', label: 'Yes' },
-          {
-            value: 'No',
-            label: 'No',
-            disabled:
-              isCreatingOutputRoute &&
-              documentType === 'Article' &&
-              researchOutputData?.usedInPublication === undefined,
-          },
-          {
-            value: 'Not Sure',
-            label: 'Not Sure',
-            disabled:
-              isCreatingOutputRoute &&
-              documentType === 'Article' &&
-              researchOutputData?.usedInPublication === undefined,
-          },
-        ]}
-        value={usedInPublication}
-        onChange={onChangeUsedInPublication}
-      />
-      <LabeledRadioButtonGroup
-        title="Sharing status"
-        subtitle="(required)"
-        options={[
-          {
-            value: 'Network Only',
-            label: 'CRN Only',
-            disabled:
-              documentType === 'Article' &&
-              researchOutputData?.sharingStatus === undefined,
-          },
-          { value: 'Public', label: 'Public' },
-        ]}
-        value={sharingStatus}
-        onChange={onChangeSharingStatus}
-      />
+      <div
+        css={css({
+          marginTop: '15px',
+        })}
+      >
+        <LabeledRadioButtonGroup
+          title="Has this output been used in a publication"
+          subtitle="(required)"
+          options={[
+            { value: 'Yes', label: 'Yes' },
+            {
+              value: 'No',
+              label: 'No',
+              disabled:
+                isCreatingOutputRoute &&
+                documentType === 'Article' &&
+                researchOutputData?.usedInPublication === undefined,
+            },
+            {
+              value: 'Not Sure',
+              label: 'Not Sure',
+              disabled:
+                isCreatingOutputRoute &&
+                documentType === 'Article' &&
+                researchOutputData?.usedInPublication === undefined,
+            },
+          ]}
+          value={usedInPublication}
+          onChange={onChangeUsedInPublication}
+        />
+      </div>
+      <div
+        css={css({
+          marginTop: '15px',
+        })}
+      >
+        <LabeledRadioButtonGroup
+          title="Sharing status"
+          subtitle="(required)"
+          options={[
+            {
+              value: 'Network Only',
+              label: 'CRN Only',
+              disabled:
+                documentType === 'Article' &&
+                researchOutputData?.sharingStatus === undefined,
+            },
+            { value: 'Public', label: 'Public' },
+          ]}
+          value={sharingStatus}
+          onChange={onChangeSharingStatus}
+        />
+      </div>
       {sharingStatus === 'Public' ? (
         <LabeledDateField
           title={'Date Published'}

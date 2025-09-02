@@ -437,8 +437,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   useEffect(() => {
     if (isImportingFromManuscript) {
       setIdentifierType(ResearchOutputIdentifierType.DOI);
+      setIdentifier(researchOutputData?.doi || '');
     }
-  }, [isImportingFromManuscript]);
+  }, [isImportingFromManuscript, researchOutputData?.doi]);
 
   return (
     <main css={mainStyles}>

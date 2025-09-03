@@ -6,9 +6,10 @@ on:
         required: true
         type: choice
         description: Choose which metric to sync
-        default: os-champion
+        default: all
         options:
           - os-champion
+          - preliminary-data-sharing
           - all
       environment-name:
         required: true

@@ -4,6 +4,7 @@ import {
   ListAnalyticsTeamLeadershipResponse,
   ListEngagementResponse,
   ListOSChampionResponse,
+  ListPreliminaryDataSharingResponse,
   ListTeamCollaborationResponse,
   ListTeamProductivityResponse,
   ListUserCollaborationResponse,
@@ -54,5 +55,11 @@ export default class AnalyticsController {
     options: FetchAnalyticsOptions,
   ): Promise<ListOSChampionResponse> {
     return this.analyticsDataProvider.fetchOSChampion(options);
+  }
+
+  async fetchPreliminaryDataSharing(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListPreliminaryDataSharingResponse> {
+    return this.analyticsDataProvider.fetchPreliminaryDataSharing(options);
   }
 }

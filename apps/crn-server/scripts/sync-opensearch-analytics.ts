@@ -1,4 +1,8 @@
-import { ListResponse, OSChampionDataObject } from '@asap-hub/model';
+import {
+  ListResponse,
+  OSChampionDataObject,
+  PreliminaryDataSharingDataObject,
+} from '@asap-hub/model';
 import { indexOpensearchData } from '@asap-hub/server-common';
 import {
   opensearchUsername,
@@ -11,12 +15,13 @@ import { getAnalyticsDataProvider } from '../src/dependencies/analytics.dependen
 
 export const PAGE_SIZE = 10;
 
-const validMetrics = ['os-champion'] as const;
+const validMetrics = ['os-champion', 'preliminary-data-sharing'] as const;
 
 type Metrics = (typeof validMetrics)[number];
 
 type MetricToObjectMap = {
   'os-champion': OSChampionDataObject;
+  'preliminary-data-sharing': PreliminaryDataSharingDataObject;
 };
 
 type MetricObject<T extends Metrics> = MetricToObjectMap[T];
@@ -38,6 +43,26 @@ const metricConfig = {
             awardsCount: { type: 'integer' },
           },
         },
+      },
+    },
+  },
+  'preliminary-data-sharing': {
+    indexAlias: 'preliminary-data-sharing',
+    mapping: {
+      properties: {
+        teamId: { type: 'text' },
+        teamName: {
+          type: 'text',
+          analyzer: 'ngram_analyzer',
+          search_analyzer: 'ngram_search_analyzer',
+          fields: {
+            keyword: { type: 'keyword' },
+          },
+        },
+        isTeamInactive: { type: 'boolean' },
+        percentShared: { type: 'integer' },
+        limitedData: { type: 'boolean' },
+        timeRange: { type: 'text' },
       },
     },
   },
@@ -67,6 +92,22 @@ export const exportAnalyticsData = async <T extends Metrics>(
         return analyticsController.fetchOSChampion(options) as Promise<
           ListResponse<MetricObject<T>>
         >;
+      case 'preliminary-data-sharing':
+        const timeRanges = ['all', 'last-year'] as const;
+        const allRecords = await Promise.all(
+          timeRanges.map(
+            (timeRange) =>
+              analyticsController.fetchPreliminaryDataSharing({
+                ...options,
+                filter: { timeRange },
+              }) as Promise<ListResponse<MetricObject<T>>>,
+          ),
+        );
+
+        return {
+          total: allRecords.reduce((sum, records) => sum + records.total, 0),
+          items: allRecords.flatMap((records) => records.items),
+        } as ListResponse<MetricObject<T>>;
       default:
         throw new Error(`Metric ${metric} not supported`);
     }

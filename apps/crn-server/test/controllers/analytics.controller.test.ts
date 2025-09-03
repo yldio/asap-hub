@@ -15,6 +15,7 @@ import {
   getListUserProductivityDataObject,
   getListUserProductivityResponse,
   getListOSChampionResponse,
+  getListPreliminaryDataSharingResponse,
 } from '../fixtures/analytics.fixtures';
 import { analyticsDataProviderMock } from '../mocks/analytics.data-provider.mock';
 
@@ -275,6 +276,41 @@ describe('Analytics controller', () => {
       expect(analyticsDataProviderMock.fetchOSChampion).toHaveBeenCalledWith(
         options,
       );
+    });
+  });
+
+  describe('fetchPreliminaryDataSharing method', () => {
+    test('Should return an empty result when the data provider returns an empty list', async () => {
+      analyticsDataProviderMock.fetchPreliminaryDataSharing.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+
+      const result = await analyticsController.fetchPreliminaryDataSharing({});
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return the preliminary data sharing data', async () => {
+      analyticsDataProviderMock.fetchPreliminaryDataSharing.mockResolvedValue(
+        getListPreliminaryDataSharingResponse(),
+      );
+
+      const result = await analyticsController.fetchPreliminaryDataSharing({});
+
+      expect(result).toEqual(getListPreliminaryDataSharingResponse());
+    });
+
+    test('Should call the data provider with the correct options', async () => {
+      const options: FetchPaginationOptions = {
+        take: 10,
+        skip: 5,
+      };
+      await analyticsController.fetchPreliminaryDataSharing(options);
+
+      expect(
+        analyticsDataProviderMock.fetchPreliminaryDataSharing,
+      ).toHaveBeenCalledWith(options);
     });
   });
 });

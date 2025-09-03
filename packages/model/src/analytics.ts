@@ -161,6 +161,12 @@ export const documentCategories = [
 export const outputTypes = ['public', 'all'] as const;
 
 export type TimeRangeOption = (typeof timeRanges)[number];
+
+export type TimeRangeOptionPreliminaryDataSharing = Extract<
+  TimeRangeOption,
+  'all' | 'last-year'
+>;
+
 export const timeRangeOptions: Record<TimeRangeOption, string> = {
   '30d': 'Last 30 days',
   '90d': 'Last 90 days',
@@ -586,6 +592,20 @@ export type OSChampionDataObject = {
 export type ListOSChampionDataObject = ListResponse<OSChampionDataObject>;
 export type OSChampionResponse = OSChampionDataObject;
 export type ListOSChampionResponse = ListResponse<OSChampionResponse>;
+
+export type PreliminaryDataSharingDataObject = {
+  teamId: string;
+  teamName: string;
+  isTeamInactive: boolean;
+  limitedData?: boolean;
+  percentShared: number;
+  timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
+};
+export type ListPreliminaryDataSharingDataObject =
+  ListResponse<PreliminaryDataSharingDataObject>;
+export type PreliminaryDataSharingResponse = PreliminaryDataSharingDataObject;
+export type ListPreliminaryDataSharingResponse =
+  ListResponse<PreliminaryDataSharingResponse>;
 
 export type SharingPrelimFindingsDataObject = {
   teamId: string;

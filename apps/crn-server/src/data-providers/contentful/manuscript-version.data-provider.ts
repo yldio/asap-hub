@@ -216,5 +216,7 @@ const parseGraphQLManucriptVersion = (
       };
     }),
     teamId: team?.sys.id,
+    publicationDoi: latestVersion?.publicationDoi || undefined,
+    preprintDoi: latestVersion?.preprintDoi || undefined,
   };
 };

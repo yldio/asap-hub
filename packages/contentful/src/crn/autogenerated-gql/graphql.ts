@@ -20597,7 +20597,13 @@ export type UserAuthorsContentFragment = Pick<
 
 export type VersionsContentFragment = Pick<
   ManuscriptVersions,
-  'description' | 'shortDescription' | 'type' | 'lifecycle' | 'count'
+  | 'description'
+  | 'shortDescription'
+  | 'type'
+  | 'lifecycle'
+  | 'count'
+  | 'publicationDoi'
+  | 'preprintDoi'
 > & {
   sys: Pick<Sys, 'id'>;
   linkedFrom?: Maybe<{
@@ -20709,6 +20715,8 @@ export type FetchManuscriptVersionByIdQuery = {
                       | 'type'
                       | 'lifecycle'
                       | 'count'
+                      | 'publicationDoi'
+                      | 'preprintDoi'
                     > & {
                       sys: Pick<Sys, 'id'>;
                       linkedFrom?: Maybe<{
@@ -20850,6 +20858,8 @@ export type FetchVersionsByManuscriptQuery = {
                     | 'type'
                     | 'lifecycle'
                     | 'count'
+                    | 'publicationDoi'
+                    | 'preprintDoi'
                   > & {
                     sys: Pick<Sys, 'id'>;
                     linkedFrom?: Maybe<{
@@ -28620,6 +28630,8 @@ export const VersionsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lifecycle' } },
           { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'publicationDoi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'preprintDoi' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'linkedFrom' },

@@ -48,7 +48,7 @@ describe('form buttons', () => {
       descriptionUnchangedWarning = false,
       researchOutputData = undefined,
       versionAction = undefined,
-      isImportingFromManuscript = false,
+      isImportedFromManuscript = false,
     }: {
       canEditResearchOutput?: boolean;
       canPublishResearchOutput?: boolean;
@@ -65,9 +65,9 @@ describe('form buttons', () => {
       researchOutputData?: ComponentProps<
         typeof ResearchOutputForm
       >['researchOutputData'];
-      isImportingFromManuscript?: ComponentProps<
+      isImportedFromManuscript?: ComponentProps<
         typeof ResearchOutputForm
-      >['isImportingFromManuscript'];
+      >['isImportedFromManuscript'];
     } = {
       documentType: 'Article',
       researchTags: [],
@@ -91,7 +91,7 @@ describe('form buttons', () => {
             getAuthorSuggestions={getAuthorSuggestions}
             researchTags={researchTags}
             published={published}
-            isImportingFromManuscript={isImportingFromManuscript}
+            isImportedFromManuscript={isImportedFromManuscript}
             permissions={{
               canEditResearchOutput,
               canPublishResearchOutput,
@@ -347,7 +347,7 @@ describe('form buttons', () => {
 
   it('disables CRN Only option when importing from manuscript', async () => {
     await setupForm({
-      isImportingFromManuscript: true,
+      isImportedFromManuscript: true,
     });
 
     expect(screen.getByRole('radio', { name: /CRN Only/i })).toBeDisabled();
@@ -355,14 +355,14 @@ describe('form buttons', () => {
   });
 
   it('pre-selects DOI on identifier type when importing from manuscript', async () => {
-    await setupForm({ isImportingFromManuscript: true });
+    await setupForm({ isImportedFromManuscript: true });
 
     const identifierType = await screen.findByDisplayValue('DOI');
     expect(identifierType).toHaveValue('DOI');
   });
 
   it('shows placeholder text when not importing from manuscript', async () => {
-    await setupForm({ isImportingFromManuscript: false });
+    await setupForm({ isImportedFromManuscript: false });
 
     expect(await screen.findByText('Choose an identifier')).toBeInTheDocument();
   });

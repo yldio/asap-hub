@@ -87,7 +87,7 @@ type ResearchOutputFormProps = Pick<
     tagSuggestions: string[];
     permissions: ResearchOutputPermissions;
     descriptionUnchangedWarning?: boolean;
-    isImportingFromManuscript?: boolean;
+    isImportedFromManuscript?: boolean;
   };
 
 const mainStyles = css({
@@ -181,7 +181,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   published,
   permissions,
   versionAction,
-  isImportingFromManuscript,
+  isImportedFromManuscript,
 }) => {
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
@@ -435,11 +435,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   useEffect(() => {
-    if (isImportingFromManuscript) {
+    if (isImportedFromManuscript) {
       setIdentifierType(ResearchOutputIdentifierType.DOI);
       setIdentifier(researchOutputData?.doi || '');
     }
-  }, [isImportingFromManuscript, researchOutputData?.doi]);
+  }, [isImportedFromManuscript, researchOutputData?.doi]);
 
   return (
     <main css={mainStyles}>
@@ -608,7 +608,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   typeOptions={typeOptions}
                   urlRequired={urlRequired}
                   typeDescription="Select the type that matches your output the best."
-                  isImportingFromManuscript={isImportingFromManuscript}
+                  isImportedFromManuscript={isImportedFromManuscript}
                 />
                 <ResearchOutputExtraInformationCard
                   documentType={documentType}

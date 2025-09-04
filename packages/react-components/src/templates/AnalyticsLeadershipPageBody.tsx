@@ -85,6 +85,11 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         loadTags={loadTags}
         setTags={setTags}
         exportResults={exportResults}
+        noOptionsMessage={
+          metric === 'os-champion'
+            ? 'Sorry, no teams or users match'
+            : undefined
+        }
       />
       {children}
     </article>

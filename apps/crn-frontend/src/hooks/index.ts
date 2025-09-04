@@ -3,3 +3,4 @@ export * from './search';
 export * from './current-user-profile-tab-route';
 export * from './onboarding';
 export * from './analytics';
+export * from './opensearch';

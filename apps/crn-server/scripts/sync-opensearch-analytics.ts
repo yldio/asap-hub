@@ -32,14 +32,28 @@ const metricConfig = {
     mapping: {
       properties: {
         teamId: { type: 'text' },
-        teamName: { type: 'keyword' },
+        teamName: {
+          type: 'text',
+          analyzer: 'ngram_analyzer',
+          search_analyzer: 'ngram_search_analyzer',
+          fields: {
+            keyword: { type: 'keyword' },
+          },
+        },
         isTeamInactive: { type: 'boolean' },
         teamAwardsCount: { type: 'integer' },
         users: {
           type: 'nested',
           properties: {
             id: { type: 'text' },
-            name: { type: 'keyword' },
+            name: {
+              type: 'text',
+              analyzer: 'ngram_analyzer',
+              search_analyzer: 'ngram_search_analyzer',
+              fields: {
+                keyword: { type: 'keyword' },
+              },
+            },
             awardsCount: { type: 'integer' },
           },
         },

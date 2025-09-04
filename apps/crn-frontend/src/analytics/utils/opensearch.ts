@@ -80,7 +80,9 @@ export class OpensearchClient<T> {
 
     if (!resp.ok) {
       throw new Error(
-        `Failed to search os-champion index. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+        `Failed to search ${
+          this.index
+        } index. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       );
     }
 
@@ -93,7 +95,7 @@ export class OpensearchClient<T> {
     pageSize: number | null,
     searchScope: SearchScope = 'both',
   ): Promise<SearchResult<T>> {
-    const query = buildOpenSearchQuery({
+    const query = buildOpensearchQuery({
       searchTags,
       currentPage,
       pageSize,
@@ -265,7 +267,7 @@ const buildSearchQuery = (
   };
 };
 
-const buildOpenSearchQuery = (options: OpensearchSearchOptions) => {
+const buildOpensearchQuery = (options: OpensearchSearchOptions) => {
   const { currentPage, pageSize, searchTags, searchScope } = options;
 
   if (searchTags?.length === 0) {

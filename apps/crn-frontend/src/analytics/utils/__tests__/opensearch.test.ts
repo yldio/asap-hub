@@ -121,7 +121,7 @@ describe('OpensearchClient', () => {
       });
 
       await expect(client.search([], 0, 10)).rejects.toThrow(
-        'Failed to search os-champion index. Expected status 2xx. Received status 500 Internal Server Error.',
+        'Failed to search test-index index. Expected status 2xx. Received status 500 Internal Server Error.',
       );
     });
   });

@@ -151,7 +151,7 @@ describe('getAnalyticsOSChampion', () => {
     expect(mockOpensearchClient.search).toHaveBeenCalledWith(['Alessi'], 0, 10);
   });
 
-  it('should return successfully fetched team leadership', async () => {
+  it('should return successfully fetched os champion data', async () => {
     mockOpensearchClient.search.mockResolvedValue(defaultResponse);
     const analyticsOSChampion = await getAnalyticsOSChampion(
       mockOpensearchClient,

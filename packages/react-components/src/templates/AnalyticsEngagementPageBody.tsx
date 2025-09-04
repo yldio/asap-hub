@@ -1,110 +1,109 @@
-import {
-  EngagementPerformance,
-  EngagementResponse,
-  EngagementSortingDirection,
-  SortEngagement,
-} from '@asap-hub/model';
+import { EngagementType } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
-import { CaptionItem, PageControls } from '..';
-import { Headline3, Paragraph } from '../atoms';
+import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { AnalyticsControls } from '../molecules';
-import { CaptionCard, EngagementTable } from '../organisms';
 import { rem } from '../pixels';
+import { removeFlaggedOptions } from '../utils';
 
 const tableHeaderStyles = css({
   paddingBottom: rem(24),
 });
 
-const pageControlsStyles = css({
-  justifySelf: 'center',
-  paddingTop: rem(36),
-  paddingBottom: rem(36),
+const metricDropdownStyles = css({
+  marginBottom: rem(48),
 });
+
+const metricOptions: Record<EngagementType, string> = {
+  presenters: 'Representation of Presenters',
+  attendance: 'Meeting Rep Attendance',
+};
 
 type AnalyticsEngagementPageBodyProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
   'currentPage' | 'loadTags' | 'setTags' | 'tags' | 'timeRange'
-> &
-  ComponentProps<typeof PageControls> & {
-    data: EngagementResponse[];
-    sort: SortEngagement;
-    setSort: React.Dispatch<React.SetStateAction<SortEngagement>>;
-    sortingDirection: EngagementSortingDirection;
-    setSortingDirection: React.Dispatch<
-      React.SetStateAction<EngagementSortingDirection>
-    >;
-    performance: EngagementPerformance;
-    exportResults: () => Promise<void>;
-  };
+> & {
+  children: React.ReactNode;
+
+  metric: EngagementType;
+  setMetric: (option: EngagementType) => void;
+  exportResults: () => Promise<void>;
+  isMeetingRepAttendanceEnabled: boolean;
+};
+
+const getPageHeaderDescription = (
+  metric: EngagementType,
+  isFlagEnabled: boolean,
+) =>
+  metric === 'attendance' && isFlagEnabled
+    ? {
+        header: 'Meeting Rep Attendance',
+        description:
+          'Percentage of team representatives attending interest group meetings.',
+      }
+    : {
+        header: 'Representation of Presenters',
+        description:
+          'Number of presentations conducted by each team, along with an overview of which type of presenters were represented.',
+      };
 
 const AnalyticsEngagementPageBody: React.FC<
   AnalyticsEngagementPageBodyProps
 > = ({
-  data,
   exportResults,
   tags,
   timeRange,
   setTags,
   loadTags,
-  sort,
-  setSort,
-  sortingDirection,
-  setSortingDirection,
-  performance,
-  ...pageControlsProps
-}) => (
-  <article>
-    <div css={tableHeaderStyles}>
-      <Headline3>Representation of Presenters</Headline3>
-      <Paragraph>
-        Number of presentations conducted by each team, along with an overview
-        of which type of presenters were represented.
-      </Paragraph>
-    </div>
-    <AnalyticsControls
-      currentPage={pageControlsProps.currentPageIndex}
-      metricOption={'team'}
-      tags={tags}
-      loadTags={loadTags}
-      setTags={setTags}
-      timeRange={timeRange}
-      href={analytics({}).engagement({}).$}
-      exportResults={exportResults}
-    />
-    <CaptionCard
-      legend={`'Unique Speakers: All Roles' and 'Unique Speakers: Key Personnel'
-            percentage is based on 'Members'`}
-    >
-      <>
-        <CaptionItem label="Events" {...performance.events} />
-        <CaptionItem label="Total Speakers" {...performance.totalSpeakers} />
-        <CaptionItem
-          label="U.S.: All Roles"
-          percentage
-          {...performance.uniqueAllRoles}
+  metric,
+  setMetric,
+  isMeetingRepAttendanceEnabled,
+  children,
+  currentPage,
+}) => {
+  const { header, description } = getPageHeaderDescription(
+    metric,
+    isMeetingRepAttendanceEnabled,
+  );
+
+  const metricOptionList = Object.keys(metricOptions)
+    .filter((option) =>
+      removeFlaggedOptions(isMeetingRepAttendanceEnabled, option),
+    )
+    .map((value) => ({
+      value: value as EngagementType,
+      label: metricOptions[value as EngagementType],
+    }));
+  return (
+    <article>
+      <div css={metricDropdownStyles}>
+        <Subtitle>Metric</Subtitle>
+        <Dropdown
+          options={metricOptionList}
+          value={metric}
+          onChange={setMetric}
+          required
         />
-        <CaptionItem
-          label="U.S.: Key Personnel"
-          percentage
-          {...performance.uniqueKeyPersonnel}
-        />
-      </>
-    </CaptionCard>
-    <EngagementTable
-      data={data}
-      performance={performance}
-      sort={sort}
-      setSort={setSort}
-      sortingDirection={sortingDirection}
-      setSortingDirection={setSortingDirection}
-    />
-    <section css={pageControlsStyles}>
-      <PageControls {...pageControlsProps} />
-    </section>
-  </article>
-);
+      </div>
+      <div css={tableHeaderStyles}>
+        <Headline3>{header}</Headline3>
+        <Paragraph>{description}</Paragraph>
+      </div>
+      <AnalyticsControls
+        currentPage={currentPage}
+        metricOption={'team'}
+        tags={tags}
+        loadTags={loadTags}
+        setTags={setTags}
+        timeRange={timeRange}
+        href={analytics({}).engagement({}).metric({ metric }).$}
+        exportResults={exportResults}
+      />
+      {children}
+    </article>
+  );
+};
 
 export default AnalyticsEngagementPageBody;

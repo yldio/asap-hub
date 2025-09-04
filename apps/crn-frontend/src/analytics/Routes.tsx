@@ -100,11 +100,27 @@ const Routes = () => {
           </Switch>
         </Route>
         <Route path={path + analytics({}).engagement.template}>
-          <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
-            <Frame title="Engagement">
-              <EngagementBody />
-            </Frame>
-          </AnalyticsPage>
+          <Switch>
+            <Route
+              exact
+              path={
+                path +
+                analytics({}).engagement.template +
+                analytics({}).engagement({}).metric.template
+              }
+            >
+              <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                <Frame title="Engagement">
+                  <EngagementBody />
+                </Frame>
+              </AnalyticsPage>
+            </Route>
+            <Redirect
+              to={
+                analytics({}).engagement({}).metric({ metric: 'presenters' }).$
+              }
+            />
+          </Switch>
         </Route>
         <Route path={path + analytics({}).leadership.template}>
           <Switch>

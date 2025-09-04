@@ -5,6 +5,7 @@ import {
   EngagementPerformance,
   ListEngagementAlgoliaResponse,
   SortEngagement,
+  SortMeetingRepAttendance,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -106,3 +107,10 @@ export const useEngagementPerformance =
     engagementPerformanceState,
     getEngagementPerformance,
   );
+
+export const useAnalyticsMeetingRepAttendance = (
+  options: AnalyticsSearchOptionsWithFiltering<SortMeetingRepAttendance>,
+) => ({
+  items: [],
+  total: 0,
+});

@@ -624,3 +624,35 @@ export type SortSharingPrelimFindings =
   | 'team_desc'
   | 'percent_shared_asc'
   | 'percent_shared_desc';
+
+export type MeetingRepAttendanceDataObject = {
+  teamId: string;
+  teamName: string;
+  isTeamInactive: boolean;
+  attendancePercentage: number;
+  limitedData: boolean;
+};
+export type ListMeetingRepAttendanceDataObject =
+  ListResponse<MeetingRepAttendanceDataObject>;
+export type MeetingRepAttendanceResponse = MeetingRepAttendanceDataObject;
+export type ListMeetingRepAttendanceResponse =
+  ListResponse<MeetingRepAttendanceResponse>;
+
+export type SortMeetingRepAttendance =
+  | 'team_asc'
+  | 'team_desc'
+  | 'attendance_percentage_asc'
+  | 'attendance_percentage_desc';
+
+export type MeetingRepAttendanceFields = 'team' | 'attendancePercentage';
+
+export type MeetingRepAttendanceSortingDirection = {
+  [key in MeetingRepAttendanceFields]: SortingDirection;
+};
+
+export const meetingRepAttendanceInitialSortingDirection = {
+  team: ascending,
+  attendancePercentage: descending,
+};
+
+export type EngagementType = 'presenters' | 'attendance';

@@ -13,7 +13,7 @@ const leadership = route('/leadership', {}, { metric });
 
 const productivity = route('/productivity', {}, { metric });
 
-const engagement = route('/engagement', {}, {});
+const engagement = route('/engagement', {}, { metric });
 
 export default route(
   '/analytics',

@@ -7,12 +7,14 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 
 import {
   AlphabeticalSortingIcon,
   HashtagIcon,
   InactiveBadgeIcon,
   NumericalSortingIcon,
+  PageControls,
   PercentageIcon,
 } from '..';
 import { Card, Link } from '../atoms';
@@ -96,7 +98,15 @@ const buttonStyles = css({
   alignSelf: 'center',
 });
 
-type EngagementTableProps = {
+const pageControlsStyles = css({
+  justifySelf: 'center',
+  paddingTop: rem(36),
+  paddingBottom: rem(36),
+});
+
+type RepresentationOfPresentersTableProps = ComponentProps<
+  typeof PageControls
+> & {
   data: EngagementResponse[];
   performance: EngagementPerformance;
   sort: SortEngagement;
@@ -107,13 +117,16 @@ type EngagementTableProps = {
   >;
 };
 
-const EngagementTable: React.FC<EngagementTableProps> = ({
+const RepresentationOfPresentersTable: React.FC<
+  RepresentationOfPresentersTableProps
+> = ({
   data,
   performance,
   sort,
   setSort,
   sortingDirection,
   setSortingDirection,
+  ...pageControlProps
 }) => {
   const isTeamSortActive = sort.includes('team');
   const isMembersSortActive = sort.includes('members');
@@ -442,9 +455,12 @@ const EngagementTable: React.FC<EngagementTableProps> = ({
             </div>
           ))}
         </div>
+        <section css={pageControlsStyles}>
+          <PageControls {...pageControlProps} />
+        </section>
       </Card>
     </>
   );
 };
 
-export default EngagementTable;
+export default RepresentationOfPresentersTable;

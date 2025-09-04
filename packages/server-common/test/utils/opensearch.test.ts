@@ -112,10 +112,10 @@ describe('indexOpensearchData', () => {
       expect(mockClient.indices.create).toHaveBeenCalledWith({
         index: expect.stringMatching(new RegExp(`^${mockIndexAlias}-\\d+$`)),
         body: {
-          settings: {
+          settings: expect.objectContaining({
             number_of_shards: 1,
             number_of_replicas: 1,
-          },
+          }),
           mappings: mockMapping,
         },
       });

@@ -388,3 +388,33 @@ export const FETCH_OS_CHAMPION = gql`
     }
   }
 `;
+
+export const FETCH_PRELIMINARY_DATA_SHARING = gql`
+  query FetchPreliminaryDataSharing($limit: Int, $skip: Int) {
+    teamsCollection(order: displayName_ASC, limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        displayName
+        inactiveSince
+        linkedFrom {
+          preliminaryDataSharingCollection(limit: 100) {
+            total
+            items {
+              linkedFrom {
+                eventsCollection(limit: 1) {
+                  items {
+                    startDate
+                  }
+                }
+              }
+              preliminaryDataShared
+            }
+          }
+        }
+      }
+    }
+  }
+`;

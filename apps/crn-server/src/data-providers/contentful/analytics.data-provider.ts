@@ -5,6 +5,8 @@ import {
   FetchEngagementQueryVariables,
   FetchOsChampionQuery,
   FetchOsChampionQueryVariables,
+  FetchPreliminaryDataSharingQuery,
+  FetchPreliminaryDataSharingQueryVariables,
   FetchTeamCollaborationQuery,
   FetchTeamCollaborationQueryVariables,
   FetchTeamProductivityQuery,
@@ -18,6 +20,7 @@ import {
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
   FETCH_ENGAGEMENT,
   FETCH_OS_CHAMPION,
+  FETCH_PRELIMINARY_DATA_SHARING,
   FETCH_TEAM_COLLABORATION,
   FETCH_TEAM_PRODUCTIVITY,
   FETCH_USER_PRODUCTIVITY,
@@ -36,6 +39,7 @@ import {
   ListUserProductivityDataObject,
   OSChampionDataObject,
   OutputTypeOption,
+  PreliminaryDataSharingDataObject,
   TeamProductivityDataObject,
   TeamRole,
   TimeRangeOption,
@@ -52,6 +56,7 @@ import {
   getFilterOutputByDocumentCategory,
   getFilterOutputByRange,
   getFilterOutputBySharingStatus,
+  getRangeFilterParams,
   isAsapFundedResearchOutput,
   isTeamOutputDocumentType,
 } from '../../utils/analytics/common';
@@ -126,6 +131,22 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
     return {
       total: teamsCollection?.total || 0,
       items: getOsChampionItems(teamsCollection),
+    };
+  }
+
+  async fetchPreliminaryDataSharing(options: FetchAnalyticsOptions) {
+    const { take = 10, skip = 0, filter } = options;
+    const { teamsCollection } = await this.contentfulClient.request<
+      FetchPreliminaryDataSharingQuery,
+      FetchPreliminaryDataSharingQueryVariables
+    >(FETCH_PRELIMINARY_DATA_SHARING, { limit: take, skip });
+
+    return {
+      total: teamsCollection?.total || 0,
+      items: getPreliminaryDataSharingItems(
+        teamsCollection,
+        filter?.timeRange as Extract<TimeRangeOption, 'all' | 'last-year'>,
+      ),
     };
   }
 
@@ -448,3 +469,60 @@ const getOsChampionItems = (
       users: [],
     };
   });
+
+const getPreliminaryDataSharingItems = (
+  teamsCollection: FetchPreliminaryDataSharingQuery['teamsCollection'],
+  rangeKey?: Extract<TimeRangeOption, 'all' | 'last-year'>,
+): PreliminaryDataSharingDataObject[] => {
+  const filter = getRangeFilterParams(rangeKey);
+
+  return cleanArray(teamsCollection?.items).map((teamItem) => {
+    let preliminaryDataSharedTotalCount = 0;
+    let preliminaryDataSharedYesCount = 0;
+
+    if (teamItem.linkedFrom?.preliminaryDataSharingCollection?.items.length) {
+      const preliminaryDataSharingItems =
+        teamItem.linkedFrom?.preliminaryDataSharingCollection?.items;
+
+      preliminaryDataSharingItems.forEach((item) => {
+        const eventStartDate =
+          item?.linkedFrom?.eventsCollection?.items[0]?.startDate;
+
+        if (
+          rangeKey === 'last-year' &&
+          eventStartDate &&
+          filter &&
+          eventStartDate <= filter
+        ) {
+          return;
+        }
+
+        if (item?.preliminaryDataShared === true) {
+          preliminaryDataSharedYesCount += 1;
+        }
+        preliminaryDataSharedTotalCount += 1;
+      });
+
+      return {
+        timeRange: rangeKey ?? 'all',
+        teamId: teamItem.sys.id,
+        teamName: teamItem.displayName || '',
+        isTeamInactive: !!teamItem.inactiveSince,
+        percentShared: Math.round(
+          (preliminaryDataSharedYesCount / preliminaryDataSharedTotalCount) *
+            100,
+        ),
+        limitedData: preliminaryDataSharedTotalCount === 0,
+      };
+    }
+
+    return {
+      timeRange: rangeKey ?? 'all',
+      teamId: teamItem.sys.id,
+      teamName: teamItem.displayName || '',
+      isTeamInactive: !!teamItem.inactiveSince,
+      percentShared: 0,
+      limitedData: true,
+    };
+  });
+};

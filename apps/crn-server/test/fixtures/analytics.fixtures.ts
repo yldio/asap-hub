@@ -2,6 +2,7 @@ import {
   FetchAnalyticsTeamLeadershipQuery,
   FetchEngagementQuery,
   FetchOsChampionQuery,
+  FetchPreliminaryDataSharingQuery,
   FetchTeamCollaborationQuery,
   FetchTeamProductivityQuery,
   FetchUserProductivityQuery,
@@ -17,6 +18,7 @@ import {
   ListAnalyticsTeamLeadershipResponse,
   ListEngagementResponse,
   ListOSChampionResponse,
+  ListPreliminaryDataSharingResponse,
   ListTeamCollaborationResponse,
   ListTeamProductivityDataObject,
   ListTeamProductivityResponse,
@@ -24,6 +26,7 @@ import {
   ListUserProductivityDataObject,
   ListUserProductivityResponse,
   OSChampionResponse,
+  PreliminaryDataSharingResponse,
   TeamCollaborationDataObject,
   TeamCollaborationResponse,
   TeamProductivityDataObject,
@@ -974,3 +977,78 @@ export const getListOSChampionResponse = (): ListOSChampionResponse => ({
   total: 1,
   items: [getOSChampionResponse()],
 });
+
+export const getPreliminaryDataSharingQuery =
+  (): FetchPreliminaryDataSharingQuery => ({
+    teamsCollection: {
+      total: 1,
+      items: [
+        {
+          sys: {
+            id: 'team-id-0',
+          },
+          displayName: 'Team A',
+          inactiveSince: null,
+          linkedFrom: {
+            preliminaryDataSharingCollection: {
+              total: 3,
+              items: [
+                {
+                  linkedFrom: {
+                    eventsCollection: {
+                      items: [
+                        {
+                          startDate: '2024-01-15',
+                        },
+                      ],
+                    },
+                  },
+                  preliminaryDataShared: true,
+                },
+                {
+                  linkedFrom: {
+                    eventsCollection: {
+                      items: [
+                        {
+                          startDate: '2024-02-20',
+                        },
+                      ],
+                    },
+                  },
+                  preliminaryDataShared: true,
+                },
+                {
+                  linkedFrom: {
+                    eventsCollection: {
+                      items: [
+                        {
+                          startDate: '2023-06-10',
+                        },
+                      ],
+                    },
+                  },
+                  preliminaryDataShared: false,
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  });
+
+export const getPreliminaryDataSharingResponse: () => PreliminaryDataSharingResponse =
+  () => ({
+    teamId: 'team-id-0',
+    teamName: 'Team A',
+    isTeamInactive: false,
+    percentShared: 67,
+    limitedData: false,
+    timeRange: 'all',
+  });
+
+export const getListPreliminaryDataSharingResponse =
+  (): ListPreliminaryDataSharingResponse => ({
+    total: 1,
+    items: [getPreliminaryDataSharingResponse()],
+  });

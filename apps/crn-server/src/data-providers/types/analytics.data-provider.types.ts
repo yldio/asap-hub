@@ -4,6 +4,7 @@ import {
   ListAnalyticsTeamLeadershipDataObject,
   ListEngagementDataObject,
   ListOSChampionDataObject,
+  ListPreliminaryDataSharingDataObject,
   ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserCollaborationDataObject,
@@ -32,4 +33,7 @@ export type AnalyticsDataProvider = {
   fetchOSChampion(
     options: FetchAnalyticsOptions,
   ): Promise<ListOSChampionDataObject>;
+  fetchPreliminaryDataSharing(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListPreliminaryDataSharingDataObject>;
 };

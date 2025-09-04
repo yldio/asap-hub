@@ -44,6 +44,14 @@ interface TagSuggestionsResponse {
         };
       };
     };
+    teams?: {
+      buckets?: AggregationBucket[];
+    };
+    users?: {
+      names?: {
+        buckets?: AggregationBucket[];
+      };
+    };
   };
 }
 
@@ -118,19 +126,25 @@ export class OpensearchClient<T> {
     queryText: string,
     searchScope: SearchScope = 'both',
   ): Promise<string[]> {
-    const query = buildAggregationQuery(queryText, searchScope);
+    const isEmptyQuery = !queryText;
+
+    const query = isEmptyQuery
+      ? buildDefaultAggregationQuery(searchScope)
+      : buildAggregationQuery(queryText, searchScope);
     const response = await this.request<TagSuggestionsResponse>(query);
 
-    const teams =
-      response.aggregations?.matching_teams?.teams?.buckets?.map(
-        (b: AggregationBucket) => b.key,
-      ) || [];
-    const users =
-      response.aggregations?.matching_users?.filtered_names?.names?.buckets?.map(
-        (b: AggregationBucket) => b.key,
-      ) || [];
+    const teams = isEmptyQuery
+      ? response.aggregations?.teams?.buckets?.map((b) => b.key)
+      : response.aggregations?.matching_teams?.teams?.buckets?.map(
+          (b) => b.key,
+        );
 
-    return [...teams, ...users];
+    const users = isEmptyQuery
+      ? response.aggregations?.users?.names?.buckets?.map((b) => b.key)
+      : response.aggregations?.matching_users?.filtered_names?.names?.buckets?.map(
+          (b) => b.key,
+        );
+    return [...(teams || []), ...(users || [])];
   }
 }
 
@@ -214,6 +228,40 @@ const buildAggregationQuery = (
         should: shouldClauses,
       },
     },
+    aggs,
+  };
+};
+
+const buildDefaultAggregationQuery = (
+  searchScope: SearchScope,
+): Record<string, unknown> => {
+  const aggs: Record<string, unknown> = {
+    teams: {
+      terms: {
+        field: 'teamName.keyword',
+        size: 5,
+      },
+    },
+  };
+
+  if (searchScope === 'both') {
+    aggs.users = {
+      nested: {
+        path: 'users',
+      },
+      aggs: {
+        names: {
+          terms: {
+            field: 'users.name.keyword',
+            size: 5,
+          },
+        },
+      },
+    };
+  }
+
+  return {
+    size: 0,
     aggs,
   };
 };

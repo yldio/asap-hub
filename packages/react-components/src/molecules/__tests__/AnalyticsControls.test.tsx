@@ -1,5 +1,6 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { ComponentProps } from 'react';
+import userEvent from '@testing-library/user-event';
 
 import AnalyticsControls from '../AnalyticsControls';
 import { getLocalTimezone } from '../../localization';
@@ -35,6 +36,39 @@ describe('AnalyticsControls', () => {
 
     rerender(<AnalyticsControls {...defaultProps} metricOption={'user'} />);
     expect(getByRole('search')).toBeVisible();
+  });
+
+  it('renders noOptionsMessage if provided', async () => {
+    const loadTags = jest.fn().mockResolvedValue([]);
+    const { getByRole, queryByText, rerender, getByText } = render(
+      <AnalyticsControls
+        {...defaultProps}
+        metricOption={'user'}
+        loadTags={loadTags}
+      />,
+    );
+
+    userEvent.type(getByRole('textbox'), 'te');
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    expect(getByText('No results found')).toBeVisible();
+
+    rerender(
+      <AnalyticsControls
+        {...defaultProps}
+        loadTags={loadTags}
+        metricOption={'user'}
+        noOptionsMessage={'no user matches'}
+      />,
+    );
+
+    userEvent.clear(getByRole('textbox'));
+    userEvent.type(getByRole('textbox'), 'te');
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    expect(getByText('no user matches te')).toBeVisible();
   });
 
   it('conditionally renders document category selector', () => {

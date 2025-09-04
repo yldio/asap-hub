@@ -178,6 +178,7 @@ interface AnalyticsControlsProps {
   readonly href?: string;
   readonly currentPage?: number;
   readonly exportResults?: () => Promise<void>;
+  readonly noOptionsMessage?: string;
 }
 const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   timeRange,
@@ -190,6 +191,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   exportResults,
   currentPage,
   href,
+  noOptionsMessage,
 }) => {
   const searchParams = updateSearchParams();
   const tagsQueryString = searchParams.has('tag')
@@ -205,7 +207,11 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
               <MultiSelect
                 noMargin
                 leftIndicator={searchIcon}
-                noOptionsMessage={() => 'No results found'}
+                noOptionsMessage={({ inputValue }) =>
+                  noOptionsMessage
+                    ? `${noOptionsMessage} ${inputValue}`
+                    : 'No results found'
+                }
                 loadOptions={loadTags}
                 onChange={(items) => setTags(items.map(({ value }) => value))}
                 values={tags.map((tag) => ({

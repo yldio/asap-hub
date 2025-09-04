@@ -216,6 +216,28 @@ describe('OpensearchClient', () => {
       expect(result).toEqual(['Team Alpha']);
     });
 
+    it('handles case when no search value is provided', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          aggregations: {
+            teams: {
+              buckets: [{ key: 'Team Alpha', doc_count: 10 }],
+            },
+            users: {
+              names: {
+                buckets: [{ key: 'Jackson', doc_count: 10 }],
+              },
+            },
+          },
+        }),
+      });
+
+      const result = await client.getTagSuggestions('', 'both');
+
+      expect(result).toEqual(['Team Alpha', 'Jackson']);
+    });
+
     it('handles case where response is null', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,

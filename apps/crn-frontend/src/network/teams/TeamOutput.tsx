@@ -414,7 +414,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
         </Frame>
       );
     }
-    return <NotFoundPage />;
+    // return <NotFoundPage />;
   }
   return <NotFoundPage />;
 };

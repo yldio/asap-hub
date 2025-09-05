@@ -4,7 +4,6 @@ import {
   ManuscriptVersionResponse,
   ResearchOutputPublishingEntities,
   ResearchOutputResponse,
-  ResearchOutputVersion,
 } from '@asap-hub/model';
 
 export const mapManuscriptVersionToResearchOutput = (
@@ -51,17 +50,17 @@ export const mapManuscriptVersionToResearchOutput = (
   relatedManuscript: manuscriptVersion.id.split('mv-')[1],
 });
 
-export const mapResearchOutputToVersion = (
-  researchOutput: ResearchOutputResponse,
-): ResearchOutputVersion =>
-  ({
-    documentType: researchOutput.documentType,
-    type: researchOutput.type,
-    title: researchOutput.title,
-    link: researchOutput.link,
-    addedDate: researchOutput.addedDate,
-    doi: researchOutput.doi,
-    rrid: researchOutput.rrid,
-    accession: researchOutput.accession,
-    relatedManuscriptVersion: researchOutput.relatedManuscriptVersion,
-  }) as ResearchOutputVersion;
+// export const mapResearchOutputToVersion = (
+//   researchOutput: ResearchOutputResponse,
+// ): ResearchOutputVersion =>
+//   ({
+//     documentType: researchOutput.documentType,
+//     type: researchOutput.type,
+//     title: researchOutput.title,
+//     link: researchOutput.link,
+//     addedDate: researchOutput.addedDate,
+//     doi: researchOutput.doi,
+//     rrid: researchOutput.rrid,
+//     accession: researchOutput.accession,
+//     relatedManuscriptVersion: researchOutput.relatedManuscriptVersion,
+//   }) as ResearchOutputVersion;

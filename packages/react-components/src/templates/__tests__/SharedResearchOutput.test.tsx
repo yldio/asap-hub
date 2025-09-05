@@ -1226,3 +1226,68 @@ describe('the publish button', () => {
     });
   });
 });
+
+describe('displayNoNewManuscriptVersionModal', () => {
+  const checkForNewVersion = jest.fn().mockReturnValue(false);
+  it('renders the modal when there is no new manuscript version', () => {
+    const { getByText } = render(
+      <MemoryRouter>
+        <ResearchOutputPermissionsContext.Provider
+          value={{
+            canVersionResearchOutput: true,
+          }}
+        >
+          <SharedResearchOutput
+            {...props}
+            documentType="Article"
+            published={true}
+            workingGroups={undefined}
+            checkForNewVersion={checkForNewVersion}
+            relatedManuscriptVersion={'manuscript-version-id-1'}
+          />
+          ,
+        </ResearchOutputPermissionsContext.Provider>
+        ,
+      </MemoryRouter>,
+    );
+
+    const importVersionButton = getByText('Import Manuscript Version');
+    fireEvent.click(importVersionButton);
+
+    expect(getByText('No new manuscript versions available')).toBeVisible();
+    expect(getByText('Go to Compliance Area')).toBeVisible();
+  });
+
+  it('closes the modal on clicking cancel', () => {
+    const { getByText, queryByText } = render(
+      <MemoryRouter>
+        <ResearchOutputPermissionsContext.Provider
+          value={{
+            canVersionResearchOutput: true,
+          }}
+        >
+          <SharedResearchOutput
+            {...props}
+            documentType="Article"
+            published={true}
+            workingGroups={undefined}
+            checkForNewVersion={checkForNewVersion}
+            relatedManuscriptVersion={'manuscript-version-id-1'}
+          />
+          ,
+        </ResearchOutputPermissionsContext.Provider>
+        ,
+      </MemoryRouter>,
+    );
+    const importVersionButton = getByText('Import Manuscript Version');
+    fireEvent.click(importVersionButton);
+
+    expect(getByText('No new manuscript versions available')).toBeVisible();
+
+    const cancelButton = getByText('Cancel');
+    fireEvent.click(cancelButton);
+    expect(
+      queryByText('No new manuscript versions available'),
+    ).not.toBeInTheDocument();
+  });
+});

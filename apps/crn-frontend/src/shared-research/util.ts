@@ -48,9 +48,5 @@ export const mapManuscriptVersionToResearchOutput = (
   categories: manuscriptVersion.categories,
   relatedManuscriptVersion: manuscriptVersion.versionId,
   relatedManuscript: manuscriptVersion.id.split('mv-')[1],
-  doi:
-    manuscriptVersion.lifecycle &&
-    mapManuscriptLifecycleToType(manuscriptVersion.lifecycle) === 'Preprint'
-      ? manuscriptVersion.preprintDoi
-      : manuscriptVersion.publicationDoi,
+  doi: manuscriptVersion.doi,
 });

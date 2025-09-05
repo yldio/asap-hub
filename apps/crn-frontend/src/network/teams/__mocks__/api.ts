@@ -126,5 +126,6 @@ export const getManuscriptVersionByManuscriptId = jest.fn(
     versionId: 'version-id-2',
     manuscriptId: 'DA1-000463-002-org-G-1',
     url: 'http://example.com',
+    hasLinkedResearchOutput: false,
   }),
 );

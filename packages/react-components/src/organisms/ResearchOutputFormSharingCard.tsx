@@ -81,6 +81,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   urlRequired?: boolean;
   typeOptions: ResearchOutputType[];
   getShortDescriptionFromDescription: (description: string) => Promise<string>;
+  isImportedFromManuscript?: boolean;
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
@@ -122,6 +123,7 @@ const ResearchOutputFormSharingCard: React.FC<
   serverValidationErrors = [],
   typeDescription,
   urlRequired,
+  isImportedFromManuscript,
   getShortDescriptionFromDescription,
   clearServerValidationError = noop,
   onChangeDescription = noop,
@@ -482,8 +484,9 @@ const ResearchOutputFormSharingCard: React.FC<
               value: 'Network Only',
               label: 'CRN Only',
               disabled:
-                documentType === 'Article' &&
-                researchOutputData?.sharingStatus === undefined,
+                (documentType === 'Article' &&
+                  researchOutputData?.sharingStatus === undefined) ||
+                isImportedFromManuscript,
             },
             { value: 'Public', label: 'Public' },
           ]}

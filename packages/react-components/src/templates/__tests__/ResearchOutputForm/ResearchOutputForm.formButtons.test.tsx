@@ -48,6 +48,7 @@ describe('form buttons', () => {
       descriptionUnchangedWarning = false,
       researchOutputData = undefined,
       versionAction = undefined,
+      isImportedFromManuscript = false,
     }: {
       canEditResearchOutput?: boolean;
       canPublishResearchOutput?: boolean;
@@ -64,6 +65,9 @@ describe('form buttons', () => {
       researchOutputData?: ComponentProps<
         typeof ResearchOutputForm
       >['researchOutputData'];
+      isImportedFromManuscript?: ComponentProps<
+        typeof ResearchOutputForm
+      >['isImportedFromManuscript'];
     } = {
       documentType: 'Article',
       researchTags: [],
@@ -87,6 +91,7 @@ describe('form buttons', () => {
             getAuthorSuggestions={getAuthorSuggestions}
             researchTags={researchTags}
             published={published}
+            isImportedFromManuscript={isImportedFromManuscript}
             permissions={{
               canEditResearchOutput,
               canPublishResearchOutput,
@@ -338,5 +343,27 @@ describe('form buttons', () => {
         screen.queryByText(/Publish new version for the whole hub?/i),
       ).toBeNull();
     });
+  });
+
+  it('disables CRN Only option when importing from manuscript', async () => {
+    await setupForm({
+      isImportedFromManuscript: true,
+    });
+
+    expect(screen.getByRole('radio', { name: /CRN Only/i })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: /Public/i })).toBeEnabled();
+  });
+
+  it('pre-selects DOI on identifier type when importing from manuscript', async () => {
+    await setupForm({ isImportedFromManuscript: true });
+
+    const identifierType = await screen.findByDisplayValue('DOI');
+    expect(identifierType).toHaveValue('DOI');
+  });
+
+  it('shows placeholder text when not importing from manuscript', async () => {
+    await setupForm({ isImportedFromManuscript: false });
+
+    expect(await screen.findByText('Choose an identifier')).toBeInTheDocument();
   });
 });

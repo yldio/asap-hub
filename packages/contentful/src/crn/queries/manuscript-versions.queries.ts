@@ -31,6 +31,8 @@ const versionsContentQueryFragment = gql`
     type
     lifecycle
     count
+    publicationDoi
+    preprintDoi
     linkedFrom {
       researchOutputsCollection(limit: 1) {
         total

@@ -484,8 +484,9 @@ const ResearchOutputFormSharingCard: React.FC<
               value: 'Network Only',
               label: 'CRN Only',
               disabled:
-                documentType === 'Article' &&
-                researchOutputData?.sharingStatus === undefined,
+                (documentType === 'Article' &&
+                  researchOutputData?.sharingStatus === undefined) ||
+                isImportedFromManuscript,
             },
             { value: 'Public', label: 'Public' },
           ]}

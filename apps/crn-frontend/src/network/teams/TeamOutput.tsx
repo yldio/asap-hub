@@ -216,6 +216,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     setManuscriptOutputSelection(selection);
   };
 
+  const isWaitingForManuscriptVersionImport =
+    isManuscriptVersion && !updatedOutput && !!latestManuscriptVersion;
+
   if (team) {
     if (showManuscriptOutputFlow) {
       return (
@@ -288,6 +291,10 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           </InnerToastContext.Provider>
         </Frame>
       );
+    }
+
+    if (isWaitingForManuscriptVersionImport) {
+      return null;
     }
 
     if (!isManuscriptVersion || !!updatedOutput) {
@@ -414,7 +421,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
         </Frame>
       );
     }
-    // return <NotFoundPage />;
   }
   return <NotFoundPage />;
 };

@@ -69,7 +69,7 @@ type SharedResearchOutputProps = Pick<
       shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
     onPublish?: () => Promise<ResearchOutputResponse | void>;
-    checkForNewVersion: () => boolean;
+    checkForNewVersion: () => Promise<boolean>;
   };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
@@ -138,7 +138,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   };
 
   const checkForNewerManuscriptVersion = async () => {
-    const hasNewerVersion = checkForNewVersion();
+    const hasNewerVersion = await checkForNewVersion();
     if (hasNewerVersion) {
       history.push(
         sharedResearch({})

@@ -431,6 +431,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [remotePayload, setRemotePayload] = useState(currentPayload);
 
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
   return (
     <main css={mainStyles}>
       <Form<ResearchOutputResponse>

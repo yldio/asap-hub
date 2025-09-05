@@ -41,6 +41,7 @@ import {
   getLabs,
   getManuscript,
   getManuscripts,
+  getManuscriptVersionByManuscriptId,
   getManuscriptVersions,
   getTeam,
   getTeams,
@@ -894,6 +895,35 @@ describe('Manuscript', () => {
         `"Failed to resubmit manuscript with id manuscript-id-1. Expected status 201. Received status 500."`,
       );
     });
+  });
+
+  it('should return successfully fetched manuscript version given manuscript id', async () => {
+    type Search = () => Promise<
+      ClientSearchResponse<'crn', 'manuscript-version'>
+    >;
+    const search: jest.MockedFunction<Search> = jest.fn();
+    const algoliaSearchClient = {
+      search,
+    } as unknown as AlgoliaSearchClient<'crn'>;
+    const manuscriptVersionResponse = createManuscriptVersionResponse();
+    search.mockResolvedValue(
+      createAlgoliaResponse<'crn', 'manuscript-version'>([
+        {
+          ...manuscriptVersionResponse,
+          objectID: manuscriptVersionResponse.id,
+          __meta: { type: 'manuscript-version' },
+        },
+      ]),
+    );
+    const version = await getManuscriptVersionByManuscriptId(
+      algoliaSearchClient,
+      manuscriptVersionResponse.id,
+    );
+    expect(version).toEqual(
+      expect.objectContaining({
+        ...manuscriptVersionResponse,
+      }),
+    );
   });
 });
 

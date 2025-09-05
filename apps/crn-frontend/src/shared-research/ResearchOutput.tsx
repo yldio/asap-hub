@@ -75,22 +75,42 @@ const ResearchOutput: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [researchOutputData?.relatedManuscript]);
 
-  const checkForNewVersion = () => {
-    if (researchOutputData?.relatedManuscript) {
-      getLatestManuscriptVersion(researchOutputData?.relatedManuscript)
-        .then((data) => setLatestManuscriptVersion(data))
-        .catch(() => {
-          setLatestManuscriptVersion(undefined);
-        });
+  // const checkForNewVersion = () => {
+  //   if (researchOutputData?.relatedManuscript) {
+  //     getLatestManuscriptVersion(researchOutputData?.relatedManuscript)
+  //       .then((data) => setLatestManuscriptVersion(data))
+  //       .catch(() => {
+  //         setLatestManuscriptVersion(undefined);
+  //       });
+
+  //     return (
+  //       (latestManuscriptVersion?.versionId &&
+  //         latestManuscriptVersion?.versionId !==
+  //           researchOutputData.relatedManuscriptVersion) ||
+  //       false
+  //     );
+  //   }
+  //   return false;
+  // };
+
+  const checkForNewVersion = async (): Promise<boolean> => {
+    if (!researchOutputData?.relatedManuscript) return false;
+
+    try {
+      const latest = await getLatestManuscriptVersion(
+        researchOutputData.relatedManuscript,
+      );
+
+      setLatestManuscriptVersion(latest);
 
       return (
-        (latestManuscriptVersion?.versionId &&
-          latestManuscriptVersion?.versionId !==
-            researchOutputData.relatedManuscriptVersion) ||
-        false
+        !!latest?.versionId &&
+        latest.versionId !== researchOutputData.relatedManuscriptVersion
       );
+    } catch (error) {
+      setLatestManuscriptVersion(undefined);
+      return false;
     }
-    return false;
   };
 
   if (researchOutputData) {

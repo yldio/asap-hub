@@ -4,7 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
+import { sharedResearch } from '@asap-hub/routing';
 
 import SharedResearchOutput from '../SharedResearchOutput';
 
@@ -1228,8 +1230,8 @@ describe('the publish button', () => {
 });
 
 describe('displayNoNewManuscriptVersionModal', () => {
-  const checkForNewVersion = jest.fn().mockReturnValue(false);
-  it('renders the modal when there is no new manuscript version', () => {
+  const checkForNewVersion = jest.fn().mockResolvedValue(false);
+  it('renders the modal when there is no new manuscript version', async () => {
     const { getByText } = render(
       <MemoryRouter>
         <ResearchOutputPermissionsContext.Provider
@@ -1252,13 +1254,13 @@ describe('displayNoNewManuscriptVersionModal', () => {
     );
 
     const importVersionButton = getByText('Import Manuscript Version');
-    fireEvent.click(importVersionButton);
+    await userEvent.click(importVersionButton);
 
     expect(getByText('No new manuscript versions available')).toBeVisible();
     expect(getByText('Go to Compliance Area')).toBeVisible();
   });
 
-  it('closes the modal on clicking cancel', () => {
+  it('closes the modal on clicking cancel', async () => {
     const { getByText, queryByText } = render(
       <MemoryRouter>
         <ResearchOutputPermissionsContext.Provider
@@ -1280,7 +1282,7 @@ describe('displayNoNewManuscriptVersionModal', () => {
       </MemoryRouter>,
     );
     const importVersionButton = getByText('Import Manuscript Version');
-    fireEvent.click(importVersionButton);
+    await userEvent.click(importVersionButton);
 
     expect(getByText('No new manuscript versions available')).toBeVisible();
 
@@ -1289,5 +1291,86 @@ describe('displayNoNewManuscriptVersionModal', () => {
     expect(
       queryByText('No new manuscript versions available'),
     ).not.toBeInTheDocument();
+  });
+
+  it('navigates to team workspace on clicking Go to Compliance Area', async () => {
+    const history = createMemoryHistory({
+      initialEntries: [
+        sharedResearch({}).researchOutput({ researchOutputId: props.id }).$,
+      ],
+    });
+    const { getByText, queryByText } = render(
+      <Router history={history}>
+        <ResearchOutputPermissionsContext.Provider
+          value={{
+            canVersionResearchOutput: true,
+          }}
+        >
+          <SharedResearchOutput
+            {...props}
+            documentType="Article"
+            published={true}
+            workingGroups={undefined}
+            checkForNewVersion={checkForNewVersion}
+            relatedManuscriptVersion={'manuscript-version-id-1'}
+          />
+          ,
+        </ResearchOutputPermissionsContext.Provider>
+        ,
+      </Router>,
+    );
+    const importVersionButton = getByText('Import Manuscript Version');
+    await userEvent.click(importVersionButton);
+
+    expect(getByText('No new manuscript versions available')).toBeVisible();
+
+    const goToComplianceButton = getByText('Go to Compliance Area');
+    userEvent.click(goToComplianceButton);
+
+    await waitFor(() => {
+      expect(
+        queryByText('No new manuscript versions available'),
+      ).not.toBeInTheDocument();
+    });
+    expect(history.location.pathname).toBe(
+      `/network/teams/${props.teams[0]?.id}/workspace`,
+    );
+  });
+});
+
+it('navigates to version creation page if there is a new manuscript version', async () => {
+  const history = createMemoryHistory({
+    initialEntries: [
+      sharedResearch({}).researchOutput({ researchOutputId: props.id }).$,
+    ],
+  });
+  const checkForNewVersion = jest.fn().mockResolvedValue(true);
+  const { getByText } = render(
+    <Router history={history}>
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          published={true}
+          workingGroups={undefined}
+          checkForNewVersion={checkForNewVersion}
+          relatedManuscriptVersion={'manuscript-version-id-1'}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>
+      ,
+    </Router>,
+  );
+  const importVersionButton = getByText('Import Manuscript Version');
+  await userEvent.click(importVersionButton);
+
+  await waitFor(() => {
+    expect(history.location.pathname).toBe(
+      `/shared-research/${props.id}/version`,
+    );
   });
 });

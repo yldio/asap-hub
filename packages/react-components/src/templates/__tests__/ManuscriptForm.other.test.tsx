@@ -422,6 +422,7 @@ describe('renders the necessary fields', () => {
     shortDescription: 'Add a short description',
     teams: 'Add other teams that contributed to this manuscript.',
     labs: 'Add ASAP labs that contributed to this manuscript.',
+    url: 'Please provide a URL',
   };
 
   describe.each(Object.keys(manuscriptFormFieldsMapping))(

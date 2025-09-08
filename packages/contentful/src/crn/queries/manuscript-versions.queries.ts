@@ -28,6 +28,7 @@ const versionsContentQueryFragment = gql`
     }
     description
     shortDescription
+    url
     type
     lifecycle
     count

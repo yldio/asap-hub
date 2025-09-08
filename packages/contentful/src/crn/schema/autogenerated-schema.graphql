@@ -2156,6 +2156,8 @@ enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   sys_publishedVersion_DESC
   type_ASC
   type_DESC
+  url_ASC
+  url_DESC
 }
 
 enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -3453,6 +3455,8 @@ enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   sys_publishedVersion_DESC
   type_ASC
   type_DESC
+  url_ASC
+  url_DESC
 }
 
 enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -3629,6 +3633,7 @@ type ManuscriptVersions implements Entry & _Node {
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptVersionsTeamsCollection
   type(locale: String): String
   updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
+  url(locale: String): String
 }
 
 type ManuscriptVersionsAdditionalAuthorsCollection {
@@ -3897,6 +3902,13 @@ input ManuscriptVersionsFilter {
   type_not_in: [String]
   updatedBy: cfUsersNestedFilter
   updatedBy_exists: Boolean
+  url: String
+  url_contains: String
+  url_exists: Boolean
+  url_in: [String]
+  url_not: String
+  url_not_contains: String
+  url_not_in: [String]
 }
 
 type ManuscriptVersionsFirstAuthorsCollection {
@@ -4130,6 +4142,8 @@ enum ManuscriptVersionsOrder {
   sys_publishedVersion_DESC
   type_ASC
   type_DESC
+  url_ASC
+  url_DESC
 }
 
 type ManuscriptVersionsTeamsCollection {
@@ -4552,6 +4566,8 @@ enum ManuscriptsVersionsCollectionOrder {
   sys_publishedVersion_DESC
   type_ASC
   type_DESC
+  url_ASC
+  url_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
@@ -7157,6 +7173,8 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   sys_publishedVersion_DESC
   type_ASC
   type_DESC
+  url_ASC
+  url_DESC
 }
 
 enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
@@ -8298,6 +8316,8 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   sys_publishedVersion_DESC
   type_ASC
   type_DESC
+  url_ASC
+  url_DESC
 }
 
 enum UsersLinkingCollectionsManuscriptsCollectionOrder {
@@ -9749,6 +9769,13 @@ input cfManuscriptVersionsNestedFilter {
   type_not_contains: String
   type_not_in: [String]
   updatedBy_exists: Boolean
+  url: String
+  url_contains: String
+  url_exists: Boolean
+  url_in: [String]
+  url_not: String
+  url_not_contains: String
+  url_not_in: [String]
 }
 
 input cfMessagesNestedFilter {

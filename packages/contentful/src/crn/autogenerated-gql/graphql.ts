@@ -21382,6 +21382,7 @@ export type ManuscriptsContentFragment = Pick<
           | 'description'
           | 'shortDescription'
           | 'count'
+          | 'url'
           | 'preprintDoi'
           | 'publicationDoi'
           | 'otherDetails'
@@ -21713,6 +21714,7 @@ export type FetchManuscriptByIdQuery = {
               | 'description'
               | 'shortDescription'
               | 'count'
+              | 'url'
               | 'preprintDoi'
               | 'publicationDoi'
               | 'otherDetails'
@@ -24225,6 +24227,7 @@ export type FetchTeamByIdQuery = {
                         | 'description'
                         | 'shortDescription'
                         | 'count'
+                        | 'url'
                         | 'preprintDoi'
                         | 'publicationDoi'
                         | 'otherDetails'
@@ -29266,6 +29269,7 @@ export const ManuscriptsContentFragmentDoc = {
                         name: { kind: 'Name', value: 'shortDescription' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'manuscriptFile' },

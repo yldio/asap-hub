@@ -908,6 +908,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       const doi = '10.1234/5678';
       const identifier = screen.getByRole('textbox', { name: /identifier/i });
+      userEvent.type(identifier, 'DOI');
       userEvent.type(identifier, specialChars.enter);
       userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
 
@@ -1149,12 +1150,12 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       screen.getByRole('heading', { name: /Imported Manuscript Version/i }),
     ).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole('button', { name: /Publish/i }));
-
     const identifier = screen.getByRole('textbox', { name: /identifier/i });
+    userEvent.type(identifier, 'DOI');
     userEvent.type(identifier, specialChars.enter);
     userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
 
+    userEvent.click(screen.getByRole('button', { name: /Publish/i }));
     const button = screen.getByRole('button', { name: /Publish Output/i });
     userEvent.click(button);
     await waitFor(() => {

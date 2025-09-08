@@ -20629,7 +20629,14 @@ export type UserAuthorsContentFragment = Pick<
 
 export type VersionsContentFragment = Pick<
   ManuscriptVersions,
-  'description' | 'shortDescription' | 'url' | 'type' | 'lifecycle' | 'count'
+  | 'description'
+  | 'shortDescription'
+  | 'url'
+  | 'type'
+  | 'lifecycle'
+  | 'count'
+  | 'publicationDoi'
+  | 'preprintDoi'
 > & {
   sys: Pick<Sys, 'id'>;
   linkedFrom?: Maybe<{

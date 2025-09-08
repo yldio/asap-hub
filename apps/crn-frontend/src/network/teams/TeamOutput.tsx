@@ -136,7 +136,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
         return result;
       });
     }
-  }, [isManuscriptVersion, selectedManuscriptVersion]);
+  }, [isManuscriptVersion, researchOutputData?.id, selectedManuscriptVersion]);
 
   useEffect(() => {
     if (

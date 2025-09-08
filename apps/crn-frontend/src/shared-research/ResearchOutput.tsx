@@ -11,6 +11,7 @@ import {
 } from '@asap-hub/react-context';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
+import { Flag, isEnabled } from '@asap-hub/flags';
 import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { ManuscriptVersionResponse } from '@asap-hub/model';
@@ -59,6 +60,7 @@ const ResearchOutput: React.FC = () => {
 
   const currentUser = useCurrentUserCRN();
   const getLatestManuscriptVersion = useLatestManuscriptVersionByManuscriptId();
+  const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS' as Flag);
 
   const [latestManuscriptVersion, setLatestManuscriptVersion] = useState<
     ManuscriptVersionResponse | undefined
@@ -129,6 +131,7 @@ const ResearchOutput: React.FC = () => {
                 publishedNow={publishedNow}
                 draftCreated={urlSearchParams.get('draftCreated') === 'true'}
                 checkForNewVersion={checkForNewVersion}
+                isManuscriptOutputFlagEnabled={isManuscriptOutputFlagEnabled}
               />
             </Frame>
           </Route>

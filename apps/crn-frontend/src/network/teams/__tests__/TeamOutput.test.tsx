@@ -3,6 +3,7 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
+  createManuscriptVersionResponse,
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
@@ -10,6 +11,7 @@ import { disable, enable } from '@asap-hub/flags';
 import type { Flag } from '@asap-hub/flags';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
+  ManuscriptLifecycle,
   ManuscriptVersionResponse,
   ResearchOutputResponse,
   UserResponse,
@@ -187,6 +189,7 @@ interface RenderPageOptions {
   versionAction?: 'create' | 'edit';
   outputDocumentType?: OutputDocumentTypeParameter;
   researchOutputData?: ResearchOutputResponse;
+  latestManuscriptVersion?: ManuscriptVersionResponse;
 }
 
 beforeEach(() => {
@@ -1200,6 +1203,59 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
     );
   });
 
+  it('can publish a new version for a manuscript output', async () => {
+    const teamId = '42';
+    const doi = '10.0777';
+    const description = 'version description';
+    const shortDescription = 'version short description';
+    const lifecycle = 'Publication' as ManuscriptLifecycle;
+    const changelog = 'importing new version';
+    const latestManuscriptVersion = {
+      ...createManuscriptVersionResponse(),
+      impact: { id: 'impact-id-1', name: 'Impact 1' },
+      categories: [{ id: 'category-id-1', name: 'Category 1' }],
+      description,
+      shortDescription,
+      doi,
+      lifecycle,
+      teams: [{ id: teamId, displayName: 'Test Team' }],
+    };
+
+    await renderPage({
+      teamId,
+      researchOutputData: {
+        ...baseResearchOutput,
+        documentType: 'Article',
+        relatedManuscript: 'manuscript-id-1',
+      },
+      versionAction: 'create',
+      latestManuscriptVersion,
+    });
+
+    userEvent.type(
+      screen.getByRole('textbox', { name: /changelog/i }),
+      changelog,
+    );
+
+    userEvent.click(screen.getByRole('button', { name: /Save/i }));
+    const button = screen.getByRole('button', { name: /Publish new version/i });
+    userEvent.click(button);
+
+    await waitFor(() => {
+      expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+        baseResearchOutput.id,
+        expect.objectContaining({
+          changelog,
+          relatedManuscriptVersion: latestManuscriptVersion.versionId,
+          createVersion: true,
+          type: 'Published',
+          documentType: 'Article',
+        }),
+        expect.anything(),
+      );
+    });
+  });
+
   it('navigates to standard output form when manual creation is confirmed', async () => {
     await renderPage({
       teamId: '42',
@@ -1246,6 +1302,7 @@ async function renderPage({
   outputDocumentType = 'bioinformatics',
   researchOutputData,
   versionAction,
+  latestManuscriptVersion,
 }: RenderPageOptions) {
   const path =
     network.template +
@@ -1275,6 +1332,7 @@ async function renderPage({
                   teamId={teamId}
                   researchOutputData={researchOutputData}
                   versionAction={versionAction}
+                  latestManuscriptVersion={latestManuscriptVersion}
                 />
               </Route>
             </StaticRouter>

@@ -14,6 +14,7 @@ const props: ComponentProps<typeof SharedResearchOutputButtons> = {
   duplicateLink: 'duplicateLink',
   published: false,
   checkForNewerManuscriptVersion: jest.fn(),
+  isManuscriptOutputFlagEnabled: false,
 };
 
 it('displays edit button when user has permission', () => {
@@ -421,7 +422,7 @@ describe('add version button', () => {
 });
 
 describe('import manuscript version button', () => {
-  it('is displayed when user has permissions and RO is published and RO is linked to manuscript', async () => {
+  it('is displayed when flag is enabled and user has permissions and RO is published and RO is linked to manuscript', async () => {
     const { getByText } = render(
       <ResearchOutputPermissionsContext.Provider
         value={{
@@ -432,6 +433,7 @@ describe('import manuscript version button', () => {
           {...props}
           published={true}
           hasRelatedManuscript
+          isManuscriptOutputFlagEnabled
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -441,6 +443,26 @@ describe('import manuscript version button', () => {
     expect(button).toBeInTheDocument();
   });
 
+  it('is not displayed when flag is disabled', async () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutputButtons
+          {...props}
+          isManuscriptOutputFlagEnabled={false}
+          published={true}
+          hasRelatedManuscript
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = queryByText('Import Manuscript Version');
+    expect(button).toBeNull();
+  });
   it('is not displayed when RO is not published', async () => {
     const { queryByText } = render(
       <ResearchOutputPermissionsContext.Provider
@@ -452,6 +474,7 @@ describe('import manuscript version button', () => {
           {...props}
           published={false}
           hasRelatedManuscript
+          isManuscriptOutputFlagEnabled={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -472,6 +495,7 @@ describe('import manuscript version button', () => {
           {...props}
           published={true}
           hasRelatedManuscript
+          isManuscriptOutputFlagEnabled={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -491,13 +515,14 @@ describe('import manuscript version button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={true}
-          hasRelatedManuscript
+          hasRelatedManuscript={false}
+          isManuscriptOutputFlagEnabled={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
     );
 
-    const button = queryByText('Add Version');
+    const button = queryByText('Import Manuscript Version');
     expect(button).toBeNull();
   });
 });

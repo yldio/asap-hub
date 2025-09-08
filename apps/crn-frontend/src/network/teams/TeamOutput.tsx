@@ -124,14 +124,19 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       const manuscriptVersion = selectedManuscriptVersion.version;
       setUpdatedOutput((prev) => {
         const result = mapManuscriptVersionToResearchOutput(
-          prev,
+          {
+            ...prev,
+            ...(isManuscriptVersion
+              ? { id: researchOutputData.id, published: true }
+              : {}),
+          } as ResearchOutputResponse,
           manuscriptVersion,
           'Team',
         );
         return result;
       });
     }
-  }, [selectedManuscriptVersion]);
+  }, [isManuscriptVersion, selectedManuscriptVersion]);
 
   useEffect(() => {
     if (

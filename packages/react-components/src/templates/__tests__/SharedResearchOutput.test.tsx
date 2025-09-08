@@ -22,6 +22,7 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   backHref: '#',
   publishedNow: false,
   draftCreated: false,
+  isManuscriptOutputFlagEnabled: false,
   onRequestReview: jest.fn(() => Promise.resolve()),
   onPublish: jest.fn(() => Promise.resolve()),
   checkForNewVersion: jest.fn(() => Promise.resolve(false)),
@@ -1231,6 +1232,10 @@ describe('the publish button', () => {
 
 describe('displayNoNewManuscriptVersionModal', () => {
   const checkForNewVersion = jest.fn().mockResolvedValue(false);
+  const versionImportProps = {
+    ...props,
+    isManuscriptOutputFlagEnabled: true,
+  };
   it('renders the modal when there is no new manuscript version', async () => {
     const { getByText } = render(
       <MemoryRouter>
@@ -1240,7 +1245,7 @@ describe('displayNoNewManuscriptVersionModal', () => {
           }}
         >
           <SharedResearchOutput
-            {...props}
+            {...versionImportProps}
             documentType="Article"
             published={true}
             workingGroups={undefined}
@@ -1269,7 +1274,7 @@ describe('displayNoNewManuscriptVersionModal', () => {
           }}
         >
           <SharedResearchOutput
-            {...props}
+            {...versionImportProps}
             documentType="Article"
             published={true}
             workingGroups={undefined}
@@ -1307,7 +1312,7 @@ describe('displayNoNewManuscriptVersionModal', () => {
           }}
         >
           <SharedResearchOutput
-            {...props}
+            {...versionImportProps}
             documentType="Article"
             published={true}
             workingGroups={undefined}
@@ -1359,6 +1364,7 @@ it('navigates to version creation page if there is a new manuscript version', as
           workingGroups={undefined}
           checkForNewVersion={checkForNewVersion}
           relatedManuscriptVersion={'manuscript-version-id-1'}
+          isManuscriptOutputFlagEnabled
         />
         ,
       </ResearchOutputPermissionsContext.Provider>

@@ -821,6 +821,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
     clearFormToast();
     const versionData = data.versions[0];
+    const urlValue = data.url || undefined;
 
     if (versionData?.type && versionData.lifecycle) {
       const {
@@ -855,9 +856,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         manuscriptFile: versionData.manuscriptFile!,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         keyResourceTable: versionData.keyResourceTable!,
+        url: urlValue,
       };
       try {
-        const urlValue = data.url || undefined;
         if (!manuscriptId) {
           await onCreate({
             ...data,

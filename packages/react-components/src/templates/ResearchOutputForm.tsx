@@ -13,7 +13,7 @@ import { OptionsType } from 'react-select';
 import { ResearchOutputPermissions } from '@asap-hub/react-context';
 import { network, sharedResearch } from '@asap-hub/routing';
 import equal from 'fast-deep-equal';
-import React, { ComponentProps, useState } from 'react';
+import React, { ComponentProps, useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
@@ -87,6 +87,7 @@ type ResearchOutputFormProps = Pick<
     tagSuggestions: string[];
     permissions: ResearchOutputPermissions;
     descriptionUnchangedWarning?: boolean;
+    isImportedFromManuscript?: boolean;
   };
 
 const mainStyles = css({
@@ -180,6 +181,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   published,
   permissions,
   versionAction,
+  isImportedFromManuscript,
 }) => {
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
@@ -431,6 +433,14 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const [remotePayload, setRemotePayload] = useState(currentPayload);
 
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (isImportedFromManuscript) {
+      setIdentifierType(ResearchOutputIdentifierType.DOI);
+      setIdentifier(researchOutputData?.doi || '');
+    }
+  }, [isImportedFromManuscript, researchOutputData?.doi]);
+
   return (
     <main css={mainStyles}>
       <Form<ResearchOutputResponse>
@@ -598,6 +608,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   typeOptions={typeOptions}
                   urlRequired={urlRequired}
                   typeDescription="Select the type that matches your output the best."
+                  isImportedFromManuscript={isImportedFromManuscript}
                 />
                 <ResearchOutputExtraInformationCard
                   documentType={documentType}

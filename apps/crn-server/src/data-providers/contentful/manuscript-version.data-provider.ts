@@ -15,6 +15,7 @@ import {
   ManuscriptType,
   ManuscriptVersionDataObject,
   ManuscriptVersionResponse,
+  mapManuscriptLifecycleToType,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
@@ -216,5 +217,12 @@ const parseGraphQLManucriptVersion = (
       };
     }),
     teamId: team?.sys.id,
+    doi:
+      (latestVersion?.lifecycle &&
+      mapManuscriptLifecycleToType(
+        latestVersion.lifecycle as ManuscriptLifecycle,
+      ) === 'Preprint'
+        ? latestVersion?.preprintDoi
+        : latestVersion?.publicationDoi) || undefined,
   };
 };

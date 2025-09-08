@@ -330,6 +330,11 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             published={published}
             permissions={permissions}
             descriptionUnchangedWarning={descriptionUnchangedWarning}
+            isImportedFromManuscript={Boolean(
+              selectedManuscriptVersion?.version ||
+                updatedOutput?.relatedManuscriptVersion ||
+                updatedOutput?.relatedManuscript,
+            )}
             onSave={(output) =>
               updatedOutput?.id
                 ? updateAndPublishResearchOutput(updatedOutput.id, {

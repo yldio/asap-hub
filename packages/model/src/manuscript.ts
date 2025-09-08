@@ -949,6 +949,7 @@ export type ManuscriptVersionResponse = {
   shortDescription?: string;
   manuscriptId?: string;
   versionId?: string;
+  doi?: string;
 };
 
 export type ListManuscriptVersionResponse =

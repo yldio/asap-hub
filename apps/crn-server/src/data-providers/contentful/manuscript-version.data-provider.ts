@@ -163,7 +163,7 @@ const parseGraphQLManucriptVersion = (
     versionId: latestVersion?.sys.id || undefined,
     id: `mv-${manuscript.sys.id}`,
     title: manuscript?.title || '',
-    url: manuscript?.url || '',
+    url: latestVersion?.url || manuscript?.url || '',
     type: (latestVersion?.type as ManuscriptType) || undefined,
     lifecycle: (latestVersion?.lifecycle as ManuscriptLifecycle) || undefined,
     description: latestVersion?.description || undefined,

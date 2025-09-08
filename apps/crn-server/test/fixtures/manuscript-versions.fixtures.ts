@@ -84,6 +84,7 @@ export const getContentfulManuscriptVersion = (
   type: 'Original Research',
   lifecycle,
   count,
+  url: 'http://example.com',
   firstAuthorsCollection: {
     items: [
       {

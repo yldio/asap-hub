@@ -2982,6 +2982,8 @@ export enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -4773,6 +4775,8 @@ export enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -4950,6 +4954,7 @@ export type ManuscriptVersions = Entry &
     teamsCollection?: Maybe<ManuscriptVersionsTeamsCollection>;
     type?: Maybe<Scalars['String']>;
     updatedBy?: Maybe<Users>;
+    url?: Maybe<Scalars['String']>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -5161,6 +5166,11 @@ export type ManuscriptVersionsUpdatedByArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<UsersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsUrlArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 export type ManuscriptVersionsAdditionalAuthorsCollection = {
@@ -5473,6 +5483,13 @@ export type ManuscriptVersionsFilter = {
   type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   updatedBy?: InputMaybe<CfUsersNestedFilter>;
   updatedBy_exists?: InputMaybe<Scalars['Boolean']>;
+  url?: InputMaybe<Scalars['String']>;
+  url_contains?: InputMaybe<Scalars['String']>;
+  url_exists?: InputMaybe<Scalars['Boolean']>;
+  url_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  url_not?: InputMaybe<Scalars['String']>;
+  url_not_contains?: InputMaybe<Scalars['String']>;
+  url_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type ManuscriptVersionsFirstAuthorsCollection = {
@@ -5764,6 +5781,8 @@ export enum ManuscriptVersionsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export type ManuscriptVersionsTeamsCollection = {
@@ -6342,6 +6361,8 @@ export enum ManuscriptsVersionsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
@@ -10735,6 +10756,8 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
@@ -12422,6 +12445,8 @@ export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export enum UsersLinkingCollectionsManuscriptsCollectionOrder {
@@ -14134,6 +14159,13 @@ export type CfManuscriptVersionsNestedFilter = {
   type_not_contains?: InputMaybe<Scalars['String']>;
   type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   updatedBy_exists?: InputMaybe<Scalars['Boolean']>;
+  url?: InputMaybe<Scalars['String']>;
+  url_contains?: InputMaybe<Scalars['String']>;
+  url_exists?: InputMaybe<Scalars['Boolean']>;
+  url_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  url_not?: InputMaybe<Scalars['String']>;
+  url_not_contains?: InputMaybe<Scalars['String']>;
+  url_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CfMessagesNestedFilter = {
@@ -20599,6 +20631,7 @@ export type VersionsContentFragment = Pick<
   ManuscriptVersions,
   | 'description'
   | 'shortDescription'
+  | 'url'
   | 'type'
   | 'lifecycle'
   | 'count'
@@ -20712,6 +20745,7 @@ export type FetchManuscriptVersionByIdQuery = {
                       ManuscriptVersions,
                       | 'description'
                       | 'shortDescription'
+                      | 'url'
                       | 'type'
                       | 'lifecycle'
                       | 'count'
@@ -20855,6 +20889,7 @@ export type FetchVersionsByManuscriptQuery = {
                     ManuscriptVersions,
                     | 'description'
                     | 'shortDescription'
+                    | 'url'
                     | 'type'
                     | 'lifecycle'
                     | 'count'
@@ -21347,6 +21382,7 @@ export type ManuscriptsContentFragment = Pick<
           | 'description'
           | 'shortDescription'
           | 'count'
+          | 'url'
           | 'preprintDoi'
           | 'publicationDoi'
           | 'otherDetails'
@@ -21678,6 +21714,7 @@ export type FetchManuscriptByIdQuery = {
               | 'description'
               | 'shortDescription'
               | 'count'
+              | 'url'
               | 'preprintDoi'
               | 'publicationDoi'
               | 'otherDetails'
@@ -24190,6 +24227,7 @@ export type FetchTeamByIdQuery = {
                         | 'description'
                         | 'shortDescription'
                         | 'count'
+                        | 'url'
                         | 'preprintDoi'
                         | 'publicationDoi'
                         | 'otherDetails'
@@ -28627,6 +28665,7 @@ export const VersionsContentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shortDescription' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lifecycle' } },
           { kind: 'Field', name: { kind: 'Name', value: 'count' } },
@@ -29230,6 +29269,7 @@ export const ManuscriptsContentFragmentDoc = {
                         name: { kind: 'Name', value: 'shortDescription' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'manuscriptFile' },

@@ -119,6 +119,7 @@ export type ManuscriptVersion = {
 
   teams: { displayName: string; id: string; inactiveSince?: string }[];
   labs: { name: string; id: string; labPi?: string; labPITeamIds?: string[] }[];
+  url?: string;
 
   createdBy: Pick<
     UserResponse,
@@ -408,6 +409,7 @@ export type ManuscriptPostCreateRequest = Pick<
     firstAuthors: ManuscriptPostAuthor[];
     correspondingAuthor?: ManuscriptPostAuthor;
     additionalAuthors?: ManuscriptPostAuthor[];
+    url?: string;
   }[];
   notificationList?: string;
 };
@@ -507,6 +509,7 @@ export type ManuscriptFormData = Pick<
     | 'protocolsDepositedDetails'
     | 'labMaterialsRegisteredDetails'
     | 'availabilityStatementDetails'
+    | 'url'
   > & {
     manuscriptFile: ManuscriptVersion['manuscriptFile'] | null;
     keyResourceTable: ManuscriptVersion['keyResourceTable'] | null;
@@ -566,6 +569,7 @@ export const manuscriptVersionSchema = {
     otherDetails: { type: 'string', nullable: true },
     description: { type: 'string' },
     shortDescription: { type: 'string', nullable: true, maxLength: 250 },
+    url: { type: 'string', nullable: true },
     manuscriptFile: {
       type: 'object',
       properties: {

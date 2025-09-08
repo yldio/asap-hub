@@ -56,6 +56,7 @@ export const manuscriptContentQueryFragment = gql`
         description
         shortDescription
         count
+        url
         manuscriptFile {
           sys {
             id

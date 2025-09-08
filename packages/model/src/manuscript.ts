@@ -119,6 +119,7 @@ export type ManuscriptVersion = {
 
   teams: { displayName: string; id: string; inactiveSince?: string }[];
   labs: { name: string; id: string; labPi?: string; labPITeamIds?: string[] }[];
+  url?: string;
 
   createdBy: Pick<
     UserResponse,

@@ -210,7 +210,7 @@ export const researchOutputRouteFactory = (
 
     const researchOutput = await researchOutputController.create({
       title: manuscript.title,
-      link: manuscript.url,
+      link: preprintManuscriptVersion.url || manuscript.url,
       type:
         preprintManuscriptVersion.lifecycle &&
         mapManuscriptLifecycleToType(preprintManuscriptVersion.lifecycle),

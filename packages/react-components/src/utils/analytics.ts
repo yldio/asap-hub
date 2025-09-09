@@ -37,7 +37,11 @@ export const getPerformanceText = (
   return 'Above';
 };
 
-const FLAGGED_ANALYTICS = ['os-champion', 'sharing-prelim-findings'];
+const FLAGGED_ANALYTICS = [
+  'os-champion',
+  'sharing-prelim-findings',
+  'attendance',
+];
 
 export const removeFlaggedOptions = (isFlagEnabled: boolean, option: string) =>
   isFlagEnabled || !FLAGGED_ANALYTICS.includes(option);

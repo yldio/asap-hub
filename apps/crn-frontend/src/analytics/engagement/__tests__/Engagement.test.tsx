@@ -1,5 +1,6 @@
 import { AlgoliaSearchClient, EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { disable, enable, Flag } from '@asap-hub/flags';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   EngagementPerformance,
@@ -7,6 +8,7 @@ import {
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -16,7 +18,7 @@ import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import { getEngagement, getEngagementPerformance } from '../api';
 import Engagement from '../Engagement';
-import { analyticsEngagementState } from '../state';
+import { analyticsEngagementState, useAnalyticsEngagement } from '../state';
 
 jest.mock('../api');
 mockConsoleError();
@@ -40,6 +42,10 @@ jest.mock('@asap-hub/frontend-utils', () => {
       .fn()
       .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
   };
+});
+
+beforeEach(() => {
+  disable('ANALYTICS_PHASE_TWO' as Flag);
 });
 
 afterEach(() => {
@@ -137,7 +143,7 @@ const renderPage = async (path: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
-              <Route path="/analytics/engagement/">
+              <Route path="/analytics/engagement/:metric">
                 <Engagement />
               </Route>
             </MemoryRouter>
@@ -156,9 +162,15 @@ const renderPage = async (path: string) => {
 
 describe('Engagement', () => {
   it('renders with data', async () => {
-    await renderPage(analytics({}).engagement({}).$);
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
+    );
 
-    expect(screen.getAllByText('Representation of Presenters').length).toBe(1);
+    expect(
+      screen.getByRole('heading', {
+        name: /Representation of Presenters/i,
+      }),
+    ).toBeVisible();
     expect(screen.getByText('Test Team')).toBeInTheDocument();
     expect(screen.getAllByText('1')).toHaveLength(2); // one of the 1s is pagination
     expect(screen.getAllByText('2 (67%)')).toHaveLength(1);
@@ -168,7 +180,9 @@ describe('Engagement', () => {
   });
 
   it('calls algolia client with the right index name', async () => {
-    await renderPage(analytics({}).engagement({}).$);
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
+    );
 
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
@@ -188,7 +202,9 @@ describe('Engagement', () => {
   });
 
   it('calls algolia with the correct time range', async () => {
-    await renderPage(analytics({}).engagement({}).$);
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
+    );
 
     await waitFor(() => {
       expect(mockGetEngagement).toHaveBeenLastCalledWith(
@@ -211,7 +227,9 @@ describe('Engagement', () => {
   });
 
   it('exports csv when user clicks on CSV button', async () => {
-    await renderPage(analytics({}).engagement({}).$);
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
+    );
 
     userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
@@ -226,7 +244,9 @@ describe('Engagement', () => {
       return within(searchContainer).getByRole('textbox') as HTMLInputElement;
     };
     it('allows typing in search queries', async () => {
-      await renderPage(analytics({}).engagement({}).$);
+      await renderPage(
+        analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
+      );
 
       const searchBox = getSearchBox();
 
@@ -239,6 +259,90 @@ describe('Engagement', () => {
           {},
         ),
       );
+    });
+  });
+
+  it('redirects to presenters when metric is attendance and flag is disabled', async () => {
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
+    );
+
+    expect(
+      screen.getByRole('heading', {
+        name: /Representation of Presenters/i,
+      }),
+    ).toBeVisible();
+  });
+
+  describe('when ANALYTICS_PHASE_TWO flag is enabled', () => {
+    beforeEach(() => {
+      enable('ANALYTICS_PHASE_TWO' as Flag);
+    });
+
+    it('renders meeting rep attendance', async () => {
+      await renderPage(
+        analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
+      );
+
+      expect(
+        screen.getByRole('heading', {
+          name: /Meeting Rep Attendance/i,
+        }),
+      ).toBeVisible();
+    });
+
+    it('can navigate to meeting rep attendance page', async () => {
+      await renderPage(
+        analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
+      );
+
+      expect(
+        screen.getByRole('heading', {
+          name: /Representation of Presenters/i,
+        }),
+      ).toBeVisible();
+
+      const input = screen.getAllByRole('textbox', { hidden: false });
+
+      userEvent.click(input[0]!);
+      userEvent.click(screen.getByText('Meeting Rep Attendance'));
+
+      await waitFor(() =>
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+      );
+      expect(
+        screen.getByRole('heading', { name: /Meeting Rep Attendance/i }),
+      ).toBeVisible();
+      expect(
+        screen.queryByText(/Representation of Presenters/i),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it('throws error when engagement state is an Error', async () => {
+    const error = new Error('Failed to fetch engagement data');
+    mockGetEngagement.mockRejectedValue(error);
+
+    const { result } = renderHook(
+      () =>
+        useAnalyticsEngagement({
+          currentPage: 0,
+          pageSize: 10,
+          sort: 'team_asc',
+          timeRange: 'all',
+          tags: ['engagement'],
+        }),
+      {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">{children}</Suspense>
+          </RecoilRoot>
+        ),
+      },
+    );
+
+    await waitFor(() => {
+      expect(result.error).toEqual(error);
     });
   });
 });

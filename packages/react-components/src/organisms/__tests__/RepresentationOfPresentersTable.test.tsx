@@ -5,9 +5,9 @@ import {
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import EngagementTable from '../EngagementTable';
+import RepresentationOfPresentersTable from '../RepresentationOfPresentersTable';
 
-describe('EngagementTable', () => {
+describe('RepresentationOfPresentersTable', () => {
   const pageControlsProps = {
     numberOfPages: 1,
     currentPageIndex: 0,
@@ -21,7 +21,7 @@ describe('EngagementTable', () => {
     aboveAverageMin: 3,
     aboveAverageMax: 5,
   };
-  const defaultProps: ComponentProps<typeof EngagementTable> = {
+  const defaultProps: ComponentProps<typeof RepresentationOfPresentersTable> = {
     ...pageControlsProps,
     data: [],
     sort: 'team_asc',
@@ -52,7 +52,7 @@ describe('EngagementTable', () => {
   it('renders data', () => {
     const data = [engagementData];
     const { getByText } = render(
-      <EngagementTable {...defaultProps} data={data} />,
+      <RepresentationOfPresentersTable {...defaultProps} data={data} />,
     );
     expect(getByText('Test Team')).toBeInTheDocument();
   });
@@ -65,7 +65,7 @@ describe('EngagementTable', () => {
       },
     ];
     const { getByTitle } = render(
-      <EngagementTable {...defaultProps} data={data} />,
+      <RepresentationOfPresentersTable {...defaultProps} data={data} />,
     );
     expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
@@ -84,7 +84,7 @@ describe('EngagementTable', () => {
       const setSort = jest.fn();
       const setSortingDirection = jest.fn();
       const { getByTitle } = render(
-        <EngagementTable
+        <RepresentationOfPresentersTable
           {...defaultProps}
           data={[engagementData]}
           sort={sort}
@@ -136,7 +136,7 @@ describe('EngagementTable', () => {
       const setSort = jest.fn();
       const setSortingDirection = jest.fn();
       const { getByTitle } = render(
-        <EngagementTable
+        <RepresentationOfPresentersTable
           {...defaultProps}
           data={[engagementData]}
           sort={sort}

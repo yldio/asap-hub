@@ -6,6 +6,7 @@ import {
   teamCollaborationPerformance,
 } from '@asap-hub/fixtures';
 import { enable } from '@asap-hub/flags';
+import { EngagementPerformance } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import {
   render,
@@ -25,7 +26,7 @@ import {
   getUserCollaboration,
   getUserCollaborationPerformance,
 } from '../collaboration/api';
-import { getEngagement } from '../engagement/api';
+import { getEngagement, getEngagementPerformance } from '../engagement/api';
 import {
   getAnalyticsLeadership,
   getAnalyticsOSChampion,
@@ -93,12 +94,36 @@ const mockGetEngagement = getEngagement as jest.MockedFunction<
   typeof getEngagement
 >;
 
+const mockGetEngagementPerformance =
+  getEngagementPerformance as jest.MockedFunction<
+    typeof getEngagementPerformance
+  >;
+
 mockGetUserCollaborationPerformance.mockResolvedValue(
   userCollaborationPerformance,
 );
 mockGetTeamCollaborationPerformance.mockResolvedValue(
   teamCollaborationPerformance,
 );
+
+const metric = {
+  belowAverageMin: 1,
+  belowAverageMax: 1,
+  averageMin: 1,
+  averageMax: 1,
+  aboveAverageMin: 1,
+  aboveAverageMax: 1,
+};
+
+const engagementPerformance: EngagementPerformance = {
+  events: metric,
+  totalSpeakers: metric,
+  uniqueAllRoles: metric,
+  uniqueKeyPersonnel: metric,
+};
+mockGetEngagementPerformance.mockResolvedValue({
+  ...engagementPerformance,
+});
 
 mockGetTeamProductivityPerformance.mockResolvedValue(performanceByDocumentType);
 mockGetUserProductivityPerformance.mockResolvedValue(

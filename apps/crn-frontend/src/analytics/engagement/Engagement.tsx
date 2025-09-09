@@ -1,50 +1,44 @@
+import { isEnabled } from '@asap-hub/flags';
 import {
   algoliaResultsToStream,
   createCsvFileStream,
 } from '@asap-hub/frontend-utils';
-import {
-  engagementInitialSortingDirection,
-  EngagementResponse,
-  EngagementSortingDirection,
-  SortEngagement,
-} from '@asap-hub/model';
+import { EngagementResponse, EngagementType } from '@asap-hub/model';
 import { AnalyticsEngagementPageBody } from '@asap-hub/react-components';
-import { useState } from 'react';
+import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 
-import {
-  useAnalytics,
-  usePagination,
-  usePaginationParams,
-  useSearch,
-} from '../../hooks';
+import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { useAnalyticsEngagement, useEngagementPerformance } from './state';
 import { getEngagement } from './api';
 import { engagementToCSV } from './export';
+import MeetingRepAttendance from './MeetingRepAttendance';
+import RepresentationOfPresenters from './RepresentationOfPresenters';
+import { useEngagementPerformance } from './state';
 
 const Engagement = () => {
-  const { currentPage, pageSize } = usePaginationParams();
+  const { currentPage } = usePaginationParams();
+  const history = useHistory();
   const { timeRange } = useAnalytics();
 
-  const [sort, setSort] = useState<SortEngagement>('team_asc');
-  const [sortingDirection, setSortingDirection] =
-    useState<EngagementSortingDirection>(engagementInitialSortingDirection);
-  const { client } = useAnalyticsAlgolia();
+  const { metric } = useParams<{
+    metric: EngagementType;
+  }>();
+
+  const setMetric = (newMetric: EngagementType) => {
+    history.push(
+      analytics({}).engagement({}).metric({
+        metric: newMetric,
+      }).$,
+    );
+  };
   const { tags, setTags } = useSearch();
 
-  const { items: data, total } = useAnalyticsEngagement({
-    currentPage,
-    pageSize,
-    sort,
-    tags,
-    timeRange,
-  });
+  const isMeetingRepAttendanceEnabled = isEnabled('ANALYTICS_PHASE_TWO');
 
   const performance = useEngagementPerformance({ timeRange });
-
-  const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
-
+  const { client } = useAnalyticsAlgolia();
   const exportResults = () =>
     algoliaResultsToStream<EngagementResponse>(
       createCsvFileStream(`engagement_${format(new Date(), 'MMddyy')}.csv`, {
@@ -58,10 +52,13 @@ const Engagement = () => {
         }),
       engagementToCSV(performance),
     );
-
-  return (
+  return !isMeetingRepAttendanceEnabled && metric === 'attendance' ? (
+    <Redirect
+      to={analytics({}).engagement({}).metric({ metric: 'presenters' }).$}
+    />
+  ) : (
     <AnalyticsEngagementPageBody
-      performance={performance}
+      exportResults={exportResults}
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => {
@@ -75,17 +72,18 @@ const Engagement = () => {
           value,
         }));
       }}
+      isMeetingRepAttendanceEnabled={isMeetingRepAttendanceEnabled}
+      metric={metric}
+      setMetric={setMetric}
       timeRange={timeRange}
-      data={data}
-      exportResults={exportResults}
-      sort={sort}
-      setSort={setSort}
-      sortingDirection={sortingDirection}
-      setSortingDirection={setSortingDirection}
-      currentPageIndex={currentPage}
-      numberOfPages={numberOfPages}
-      renderPageHref={renderPageHref}
-    />
+      currentPage={currentPage}
+    >
+      {metric === 'attendance' && isMeetingRepAttendanceEnabled ? (
+        <MeetingRepAttendance />
+      ) : (
+        <RepresentationOfPresenters />
+      )}
+    </AnalyticsEngagementPageBody>
   );
 };
 export default Engagement;

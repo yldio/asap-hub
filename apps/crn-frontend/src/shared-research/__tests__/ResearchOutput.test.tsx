@@ -18,7 +18,10 @@ import { User } from '@asap-hub/auth';
 import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
 import { refreshResearchOutputState } from '../state';
-import { updateTeamResearchOutput } from '../../network/teams/api';
+import {
+  getManuscriptVersionByManuscriptId,
+  updateTeamResearchOutput,
+} from '../../network/teams/api';
 import { getImpacts } from '../../shared-api/impact';
 
 jest.setTimeout(30000);
@@ -43,6 +46,11 @@ const mockUpdateTeamResearchOutput =
   >;
 
 const mockGetImpacts = getImpacts as jest.MockedFunction<typeof getImpacts>;
+
+const mockGetManuscriptVersionByManuscriptId =
+  getManuscriptVersionByManuscriptId as jest.MockedFunction<
+    typeof getManuscriptVersionByManuscriptId
+  >;
 
 beforeEach(() => {
   mockGetImpacts.mockResolvedValue({
@@ -453,4 +461,120 @@ it('publishes a research output', async () => {
     }),
     expect.anything(),
   );
+});
+
+describe('a research output linked to a manuscript', () => {
+  it('renders add version form on clicking Import Manuscript Version if manuscript output has new manuscript version', async () => {
+    const researchOutput = createResearchOutputResponse();
+    mockGetResearchOutput.mockResolvedValue({
+      ...researchOutput,
+      documentType: 'Article',
+      published: true,
+      workingGroups: undefined,
+      statusChangedBy: { ...defaultUser },
+      relatedManuscript: 'manuscript-id-1',
+      relatedManuscriptVersion: 'version-id-1',
+    });
+
+    const { queryByText, getByText } = await renderComponent(
+      researchOutputRoute.$,
+      {
+        ...defaultUser,
+        teams: [
+          {
+            id: researchOutput.teams[0]!.id,
+            role: 'Project Manager',
+            displayName: researchOutput.teams[0]!.displayName,
+          },
+        ],
+      },
+    );
+
+    const importVersionButton = queryByText('Import Manuscript Version');
+    expect(importVersionButton).toBeVisible();
+
+    fireEvent.click(importVersionButton as HTMLElement);
+    await waitFor(() => {
+      expect(getByText('Imported Manuscript Version')).toBeInTheDocument();
+    });
+
+    expect(
+      screen.getByRole('heading', { name: /Share a Team Article/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders no new version modal on clicking Import Manuscript Version if manuscript output does not have a new manuscript version', async () => {
+    const researchOutput = createResearchOutputResponse();
+    const recentVersionId = 'version-id-2';
+    mockGetResearchOutput.mockResolvedValue({
+      ...researchOutput,
+      documentType: 'Article',
+      published: true,
+      workingGroups: undefined,
+      statusChangedBy: { ...defaultUser },
+      relatedManuscript: 'manuscript-id-1',
+      relatedManuscriptVersion: recentVersionId,
+    });
+
+    const { queryByText, getByText } = await renderComponent(
+      researchOutputRoute.$,
+      {
+        ...defaultUser,
+        teams: [
+          {
+            id: researchOutput.teams[0]!.id,
+            role: 'Project Manager',
+            displayName: researchOutput.teams[0]!.displayName,
+          },
+        ],
+      },
+    );
+
+    const importVersionButton = queryByText('Import Manuscript Version');
+    expect(importVersionButton).toBeVisible();
+
+    fireEvent.click(importVersionButton as HTMLElement);
+    await waitFor(() => {
+      expect(getByText('No new manuscript versions available')).toBeVisible();
+    });
+  });
+
+  it('renders no new version modal on clicking Import Manuscript Version if unable to fetch manuscript version', async () => {
+    const researchOutput = createResearchOutputResponse();
+
+    mockGetResearchOutput.mockResolvedValue({
+      ...researchOutput,
+      documentType: 'Article',
+      published: true,
+      workingGroups: undefined,
+      statusChangedBy: { ...defaultUser },
+      relatedManuscript: 'manuscript-id-1',
+      relatedManuscriptVersion: 'version-id-1',
+    });
+    mockGetManuscriptVersionByManuscriptId.mockRejectedValue(
+      new Error('error'),
+    );
+
+    const { queryByText, getByText } = await renderComponent(
+      researchOutputRoute.$,
+      {
+        ...defaultUser,
+        teams: [
+          {
+            id: researchOutput.teams[0]!.id,
+            role: 'Project Manager',
+            displayName: researchOutput.teams[0]!.displayName,
+          },
+        ],
+      },
+    );
+
+    const importVersionButton = queryByText('Import Manuscript Version');
+    expect(importVersionButton).toBeVisible();
+
+    fireEvent.click(importVersionButton as HTMLElement);
+    await waitFor(() => {
+      expect(getByText('No new manuscript versions available')).toBeVisible();
+    });
+  });
 });

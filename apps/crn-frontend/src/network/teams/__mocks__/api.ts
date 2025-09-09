@@ -13,6 +13,7 @@ import {
   ListManuscriptVersionResponse,
   ListPartialManuscriptResponse,
   ListTeamResponse,
+  ManuscriptVersionResponse,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
@@ -113,5 +114,18 @@ export const getManuscriptVersions = jest.fn(
         url: 'http://example.com',
       },
     ],
+  }),
+);
+
+export const getManuscriptVersionByManuscriptId = jest.fn(
+  async (): Promise<ManuscriptVersionResponse> => ({
+    id: 'mv-manuscript-id-1',
+    title: 'Manuscript 1',
+    type: 'Original Research',
+    lifecycle: 'Publication',
+    versionId: 'version-id-2',
+    manuscriptId: 'DA1-000463-002-org-G-1',
+    url: 'http://example.com',
+    hasLinkedResearchOutput: false,
   }),
 );

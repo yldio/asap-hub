@@ -2,6 +2,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { Card, Headline2, Link, Markdown } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../layout';
@@ -19,7 +20,7 @@ import {
   SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
 } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import {
   getIconForDocumentType as getIconForDocumentTypeCRN,
   getResearchOutputAssociation,
@@ -27,12 +28,12 @@ import {
 } from '../utils';
 
 const containerStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)}`,
 });
 
 const cardsStyles = css({
   display: 'grid',
-  rowGap: `${36 / perRem}em`,
+  rowGap: rem(36),
 });
 
 type SharedResearchOutputProps = Pick<
@@ -56,6 +57,8 @@ type SharedResearchOutputProps = Pick<
   | 'statusChangedBy'
   | 'isInReview'
   | 'versions'
+  | 'relatedManuscript'
+  | 'relatedManuscriptVersion'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -66,6 +69,8 @@ type SharedResearchOutputProps = Pick<
       shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
     onPublish?: () => Promise<ResearchOutputResponse | void>;
+    checkForNewVersion: () => Promise<boolean>;
+    isManuscriptOutputFlagEnabled: boolean;
   };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
@@ -88,8 +93,13 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   onRequestReview,
   versions,
   onPublish,
+  relatedManuscript,
+  relatedManuscriptVersion,
+  checkForNewVersion,
+  isManuscriptOutputFlagEnabled,
   ...props
 }) => {
+  const history = useHistory();
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
     props.documentType,
   );
@@ -108,6 +118,10 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const associationName = getResearchOutputAssociationName(props);
   const [reviewToggled, setReviewToggled] = useState(false);
   const [displayReviewModal, setDisplayReviewModal] = useState(false);
+  const [
+    displayNoNewManuscriptVersionModal,
+    setDisplayNoNewManuscriptVersionModal,
+  ] = useState(false);
   const [displayPublishModal, setDisplayPublishModal] = useState(false);
 
   const toggleReview = async (shouldReview: boolean) => {
@@ -123,6 +137,19 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     if (!onPublish) return;
     await onPublish();
     setDisplayPublishModal(false);
+  };
+
+  const checkForNewerManuscriptVersion = async () => {
+    const hasNewerVersion = await checkForNewVersion();
+    if (hasNewerVersion) {
+      history.push(
+        sharedResearch({})
+          .researchOutput({ researchOutputId: id })
+          .versionResearchOutput({}).$,
+      );
+    } else {
+      setDisplayNoNewManuscriptVersionModal(true);
+    }
   };
 
   const duplicateLink =
@@ -161,11 +188,14 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             id={id}
             displayReviewModal={displayReviewModal}
             setDisplayReviewModal={setDisplayReviewModal}
+            checkForNewerManuscriptVersion={checkForNewerManuscriptVersion}
             isInReview={isInReview}
             duplicateLink={duplicateLink}
             published={published}
             displayPublishModal={displayPublishModal}
             setDisplayPublishModal={setDisplayPublishModal}
+            hasRelatedManuscript={!!relatedManuscriptVersion}
+            isManuscriptOutputFlagEnabled={isManuscriptOutputFlagEnabled}
           />
         )}
         {displayReviewModal && (
@@ -189,6 +219,25 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             onSave={() => toggleReview(!isInReview)}
             onCancel={() => {
               setDisplayReviewModal(false);
+            }}
+          />
+        )}
+        {displayNoNewManuscriptVersionModal && (
+          <ConfirmModal
+            title="No new manuscript versions available"
+            description="To import a manuscript version, please submit a new manuscript version in the Compliance area first. Once submitted, you'll be able to import the new version here."
+            cancelText="Cancel"
+            confirmText="Go to Compliance Area"
+            onSave={() => setDisplayNoNewManuscriptVersionModal(false)}
+            successHref={
+              network({})
+                .teams({})
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                .team({ teamId: props.teams[0]!.id })
+                .workspace({}).$
+            }
+            onCancel={() => {
+              setDisplayNoNewManuscriptVersionModal(false);
             }}
           />
         )}
@@ -236,7 +285,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           )}
           {!isGrantDocument && hasUsageNotes && (
             <Card>
-              <div css={{ paddingBottom: `${12 / perRem}em` }}>
+              <div css={{ paddingBottom: rem(12) }}>
                 <Headline2 styleAsHeading={4}>Usage Notes</Headline2>
                 <Markdown value={usageNotesMD}></Markdown>
                 {!usageNotesMD && <RichText poorText text={usageNotes} />}

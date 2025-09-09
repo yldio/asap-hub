@@ -1,22 +1,26 @@
+import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
   NotFoundPage,
+  ScrollToTop,
   SharedResearchOutput,
   utils,
-  ScrollToTop,
 } from '@asap-hub/react-components';
-import { sharedResearch, useRouteParams } from '@asap-hub/routing';
-import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
 } from '@asap-hub/react-context';
-import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
+import { Flag, isEnabled } from '@asap-hub/flags';
+import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 
-import { useResearchOutputById, useResearchOutputPermissions } from './state';
+import { ManuscriptVersionResponse } from '@asap-hub/model';
+import { useEffect, useState } from 'react';
+import { useLatestManuscriptVersionByManuscriptId } from '../network/teams/state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
 import { usePutResearchOutput } from '../shared-state';
+import { useResearchOutputById, useResearchOutputPermissions } from './state';
 
 const ResearchOutput: React.FC = () => {
   const { researchOutputId } = useRouteParams(
@@ -55,6 +59,43 @@ const ResearchOutput: React.FC = () => {
   const publishResearchOutput = usePutResearchOutput(true);
 
   const currentUser = useCurrentUserCRN();
+  const getLatestManuscriptVersion = useLatestManuscriptVersionByManuscriptId();
+  const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS' as Flag);
+
+  const [latestManuscriptVersion, setLatestManuscriptVersion] = useState<
+    ManuscriptVersionResponse | undefined
+  >();
+
+  useEffect(() => {
+    if (researchOutputData?.relatedManuscript) {
+      getLatestManuscriptVersion(researchOutputData?.relatedManuscript)
+        .then((data) => setLatestManuscriptVersion(data))
+        .catch(() => {
+          setLatestManuscriptVersion(undefined);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [researchOutputData?.relatedManuscript]);
+
+  const checkForNewVersion = async (): Promise<boolean> => {
+    if (!researchOutputData?.relatedManuscript) return false;
+
+    try {
+      const latest = await getLatestManuscriptVersion(
+        researchOutputData.relatedManuscript,
+      );
+
+      setLatestManuscriptVersion(latest);
+
+      return (
+        !!latest?.versionId &&
+        latest.versionId !== researchOutputData.relatedManuscriptVersion
+      );
+    } catch (error) {
+      setLatestManuscriptVersion(undefined);
+      return false;
+    }
+  };
 
   if (researchOutputData) {
     return (
@@ -89,6 +130,8 @@ const ResearchOutput: React.FC = () => {
                 }
                 publishedNow={publishedNow}
                 draftCreated={urlSearchParams.get('draftCreated') === 'true'}
+                checkForNewVersion={checkForNewVersion}
+                isManuscriptOutputFlagEnabled={isManuscriptOutputFlagEnabled}
               />
             </Frame>
           </Route>
@@ -111,6 +154,7 @@ const ResearchOutput: React.FC = () => {
                   <TeamOutput
                     teamId={researchOutputData.teams[0]?.id}
                     researchOutputData={researchOutputData}
+                    latestManuscriptVersion={latestManuscriptVersion}
                     versionAction={'create'}
                   />
                 )

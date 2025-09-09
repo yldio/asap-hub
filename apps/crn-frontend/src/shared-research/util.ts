@@ -27,7 +27,7 @@ export const mapManuscriptVersionToResearchOutput = (
   authors: manuscriptVersion.authors || [],
   teams: manuscriptVersion.teams || [],
   isInReview: false,
-  published: false,
+  published: output?.published ?? false,
   sharingStatus: 'Public',
   asapFunded: true,
   usedInPublication: true,

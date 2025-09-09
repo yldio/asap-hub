@@ -60,6 +60,9 @@ type SharedResearchOutputButtonsProps = {
   displayPublishModal: boolean;
   setDisplayPublishModal: (state: boolean) => void;
   isInReview: boolean;
+  checkForNewerManuscriptVersion: () => void;
+  hasRelatedManuscript?: boolean;
+  isManuscriptOutputFlagEnabled: boolean;
 };
 
 const SharedResearchOutputButtons: React.FC<
@@ -73,6 +76,9 @@ const SharedResearchOutputButtons: React.FC<
   displayPublishModal,
   setDisplayPublishModal,
   isInReview,
+  checkForNewerManuscriptVersion,
+  hasRelatedManuscript = false,
+  isManuscriptOutputFlagEnabled,
 }) => {
   const {
     canEditResearchOutput,
@@ -121,7 +127,22 @@ const SharedResearchOutputButtons: React.FC<
           </Button>
         </div>
       )}
-      {canVersionResearchOutput && published && (
+      {isManuscriptOutputFlagEnabled &&
+        canVersionResearchOutput &&
+        published &&
+        hasRelatedManuscript && (
+          <div css={leftButtons}>
+            <Button
+              noMargin
+              small
+              primary
+              onClick={checkForNewerManuscriptVersion}
+            >
+              <VersionIcon /> Import Manuscript Version
+            </Button>
+          </div>
+        )}
+      {canVersionResearchOutput && published && !hasRelatedManuscript && (
         <div css={leftButtons}>
           <Link
             noMargin

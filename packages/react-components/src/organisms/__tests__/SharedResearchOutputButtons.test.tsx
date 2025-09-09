@@ -13,6 +13,8 @@ const props: ComponentProps<typeof SharedResearchOutputButtons> = {
   isInReview: false,
   duplicateLink: 'duplicateLink',
   published: false,
+  checkForNewerManuscriptVersion: jest.fn(),
+  isManuscriptOutputFlagEnabled: false,
 };
 
 it('displays edit button when user has permission', () => {
@@ -395,6 +397,132 @@ describe('add version button', () => {
     );
 
     const button = queryByText('Add Version');
+    expect(button).toBeNull();
+  });
+
+  it('is not displayed when research output is linked to a manuscript', async () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutputButtons
+          {...props}
+          published={true}
+          hasRelatedManuscript
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = queryByText('Add Version');
+    expect(button).toBeNull();
+  });
+});
+
+describe('import manuscript version button', () => {
+  it('is displayed when flag is enabled and user has permissions and RO is published and RO is linked to manuscript', async () => {
+    const { getByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutputButtons
+          {...props}
+          published={true}
+          hasRelatedManuscript
+          isManuscriptOutputFlagEnabled
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = getByText('Import Manuscript Version');
+    expect(button).toBeInTheDocument();
+  });
+
+  it('is not displayed when flag is disabled', async () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutputButtons
+          {...props}
+          isManuscriptOutputFlagEnabled={false}
+          published={true}
+          hasRelatedManuscript
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = queryByText('Import Manuscript Version');
+    expect(button).toBeNull();
+  });
+  it('is not displayed when RO is not published', async () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutputButtons
+          {...props}
+          published={false}
+          hasRelatedManuscript
+          isManuscriptOutputFlagEnabled={true}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = queryByText('Import Manuscript Version');
+    expect(button).toBeNull();
+  });
+
+  it('is not displayed when user does not have permissions', async () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: false,
+        }}
+      >
+        <SharedResearchOutputButtons
+          {...props}
+          published={true}
+          hasRelatedManuscript
+          isManuscriptOutputFlagEnabled={true}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = queryByText('Import Manuscript Version');
+    expect(button).toBeNull();
+  });
+
+  it('is not displayed when RO is not linked to a manuscript', async () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutputButtons
+          {...props}
+          published={true}
+          hasRelatedManuscript={false}
+          isManuscriptOutputFlagEnabled={true}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = queryByText('Import Manuscript Version');
     expect(button).toBeNull();
   });
 });

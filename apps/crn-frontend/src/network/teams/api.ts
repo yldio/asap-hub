@@ -407,7 +407,9 @@ export const getManuscriptVersions = async (
       page: currentPage ?? undefined,
       hitsPerPage: pageSize ?? undefined,
       restrictSearchableAttributes: ['title', 'manuscriptId'],
-      ...(teamId && { filters: `(teamId:"${teamId}")` }),
+      ...(teamId && {
+        filters: `(teamId:"${teamId}" OR teams.id:"${teamId}")`,
+      }),
     },
   );
 

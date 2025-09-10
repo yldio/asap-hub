@@ -336,6 +336,7 @@ it('can submit a form when form data is valid', async () => {
       published: true,
       categories: [],
       impact: '',
+      isDuplicate: false,
     },
     expect.anything(),
   );
@@ -419,6 +420,7 @@ it('can save draft when form data is valid', async () => {
       published: false,
       categories: [],
       impact: '',
+      isDuplicate: false,
     },
     expect.anything(),
   );

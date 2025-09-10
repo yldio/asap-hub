@@ -711,6 +711,68 @@ describe('ResearchOutputs controller', () => {
         );
       });
     });
+
+    describe.only('Manuscript duplication validation', () => {
+      test('Should throw when trying to duplicate a research output with related manuscript version', async () => {
+        const researchOutputWithManuscript = getResearchOutputCreateData();
+        researchOutputWithManuscript.relatedManuscriptVersion =
+          'manuscript-version-id';
+        researchOutputWithManuscript.isDuplicate = true;
+
+        await expect(
+          researchOutputs.create(researchOutputWithManuscript),
+        ).rejects.toThrow(
+          'Cannot create research outputs duplicates that are related to manuscripts',
+        );
+      });
+
+      test('Should allow creating a research output with related manuscript version when not duplicating', async () => {
+        const researchOutputId = 'research-output-id-1';
+        researchOutputDataProviderMock.create.mockResolvedValueOnce(
+          researchOutputId,
+        );
+
+        const researchOutputWithManuscript = getResearchOutputCreateData();
+        researchOutputWithManuscript.relatedManuscriptVersion =
+          'manuscript-version-id';
+        researchOutputWithManuscript.isDuplicate = false;
+
+        const result = await researchOutputs.create(
+          researchOutputWithManuscript,
+        );
+
+        expect(result).toEqual(getResearchOutputResponse());
+        expect(researchOutputDataProviderMock.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            relatedManuscriptVersion: 'manuscript-version-id',
+          }),
+          { publish: true },
+        );
+      });
+
+      test('Should allow duplicating a research output without related manuscript version', async () => {
+        const researchOutputId = 'research-output-id-1';
+        researchOutputDataProviderMock.create.mockResolvedValueOnce(
+          researchOutputId,
+        );
+
+        const researchOutputWithoutManuscript = getResearchOutputCreateData();
+        researchOutputWithoutManuscript.relatedManuscriptVersion = undefined;
+        researchOutputWithoutManuscript.isDuplicate = true;
+
+        const result = await researchOutputs.create(
+          researchOutputWithoutManuscript,
+        );
+
+        expect(result).toEqual(getResearchOutputResponse());
+        expect(researchOutputDataProviderMock.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            relatedManuscriptVersion: undefined,
+          }),
+          { publish: true },
+        );
+      });
+    });
   });
 
   describe('Update method', () => {

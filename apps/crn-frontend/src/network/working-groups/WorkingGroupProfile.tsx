@@ -51,6 +51,7 @@ const DuplicateOutput: FC = () => {
         }}
         workingGroupId={output.workingGroups[0].id}
         descriptionUnchangedWarning
+        isDuplicate={true}
       />
     );
   }

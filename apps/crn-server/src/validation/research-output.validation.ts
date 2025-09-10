@@ -190,6 +190,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       },
       relatedManuscriptVersion: { type: 'string', nullable: true },
       relatedManuscript: { type: 'string', nullable: true },
+      isDuplicate: { type: 'boolean', nullable: true },
     },
     required: [
       'documentType',

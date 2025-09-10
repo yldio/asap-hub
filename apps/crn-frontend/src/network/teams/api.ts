@@ -99,6 +99,8 @@ export const createResearchOutput = async (
   researchOutput: ResearchOutputPostRequest,
   authorization: string,
 ): Promise<ResearchOutputResponse> => {
+  console.log('createResearchOutput', researchOutput);
+
   const resp = await fetch(`${API_BASE_URL}/research-outputs`, {
     method: 'POST',
     headers: {

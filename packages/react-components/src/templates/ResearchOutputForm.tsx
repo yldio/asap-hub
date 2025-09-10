@@ -88,6 +88,7 @@ type ResearchOutputFormProps = Pick<
     permissions: ResearchOutputPermissions;
     descriptionUnchangedWarning?: boolean;
     isImportedFromManuscript?: boolean;
+    isDuplicate?: boolean;
   };
 
 const mainStyles = css({
@@ -182,6 +183,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   permissions,
   versionAction,
   isImportedFromManuscript,
+  isDuplicate = false,
 }) => {
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
@@ -429,6 +431,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     categories: (categories as MultiSelectOptionsType[]).map(
       (category) => category.value,
     ),
+    isDuplicate,
   });
   const [remotePayload, setRemotePayload] = useState(currentPayload);
 

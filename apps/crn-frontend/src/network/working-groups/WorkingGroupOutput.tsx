@@ -44,6 +44,7 @@ type WorkingGroupOutputProps = {
   workingGroupId: string;
   researchOutputData?: ResearchOutputResponse;
   versionAction?: 'create' | 'edit';
+  isDuplicate?: boolean;
 } & Pick<
   ComponentProps<typeof ResearchOutputForm>,
   'descriptionUnchangedWarning'
@@ -53,6 +54,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   researchOutputData,
   descriptionUnchangedWarning,
   versionAction,
+  isDuplicate = false,
 }) => {
   const route = network({})
     .workingGroups({})
@@ -193,6 +195,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             published={published}
             permissions={permissions}
             descriptionUnchangedWarning={descriptionUnchangedWarning}
+            isDuplicate={isDuplicate}
             onSave={(output) =>
               researchOutputData?.id
                 ? updateAndPublishResearchOutput(researchOutputData.id, {
@@ -207,6 +210,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
+                    isDuplicate,
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
             onSaveDraft={(output) =>
@@ -222,6 +226,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: false,
+                    isDuplicate,
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
           />

@@ -755,7 +755,7 @@ describe('Manuscript', () => {
         expect.objectContaining({
           hitsPerPage: 25,
           page: 2,
-          filters: `(teamId:"${teamId}")`,
+          filters: `(teamId:"${teamId}" OR teams.id:"${teamId}")`,
         }),
       );
     });

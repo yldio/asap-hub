@@ -185,7 +185,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 }) => {
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
-  const showSaveDraftButton = !published && canShareResearchOutput;
+  const showSaveDraftButton =
+    !isImportedFromManuscript && !published && canShareResearchOutput;
   const showPublishButton = canPublishResearchOutput;
   const displayThreeButtons = showSaveDraftButton && showPublishButton;
 

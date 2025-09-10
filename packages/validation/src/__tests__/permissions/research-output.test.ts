@@ -200,28 +200,38 @@ describe('hasShareResearchOutputPermission', () => {
 
 describe('hasPublishResearchOutputPermission', () => {
   test.each`
-    userRole    | expected
-    ${`Staff`}  | ${true}
-    ${`Member`} | ${false}
-    ${`None`}   | ${false}
+    userRole    | isManuscriptOutput | expected
+    ${`Staff`}  | ${false}           | ${true}
+    ${`Member`} | ${false}           | ${false}
+    ${`None`}   | ${false}           | ${false}
+    ${`Staff`}  | ${true}            | ${true}
+    ${`Member`} | ${true}            | ${true}
+    ${`None`}   | ${true}            | ${false}
   `(
     'returns $expected when user role is $userRole',
-    ({ userRole, expected }) => {
-      expect(hasPublishResearchOutputPermission(userRole)).toEqual(expected);
+    ({ userRole, isManuscriptOutput, expected }) => {
+      expect(
+        hasPublishResearchOutputPermission(userRole, isManuscriptOutput),
+      ).toEqual(expected);
     },
   );
 });
 
 describe('hasVersionResearchOutputPermission', () => {
   test.each`
-    userRole    | expected
-    ${`Staff`}  | ${true}
-    ${`Member`} | ${false}
-    ${`None`}   | ${false}
+    userRole    | isManuscriptOutput | expected
+    ${`Staff`}  | ${false}           | ${true}
+    ${`Member`} | ${false}           | ${false}
+    ${`None`}   | ${false}           | ${false}
+    ${`Staff`}  | ${true}            | ${true}
+    ${`Member`} | ${true}            | ${true}
+    ${`None`}   | ${true}            | ${false}
   `(
     'returns $expected when user role is $userRole',
-    ({ userRole, expected }) => {
-      expect(hasVersionResearchOutputPermission(userRole)).toEqual(expected);
+    ({ userRole, isManuscriptOutput, expected }) => {
+      expect(
+        hasVersionResearchOutputPermission(userRole, isManuscriptOutput),
+      ).toEqual(expected);
     },
   );
 });
@@ -256,19 +266,29 @@ describe('hasDuplicateResearchOutputPermission', () => {
 
 describe('hasEditResearchOutputPermission', () => {
   test.each`
-    userRole    | published | expected
-    ${`Staff`}  | ${true}   | ${true}
-    ${`Staff`}  | ${false}  | ${true}
-    ${`Member`} | ${true}   | ${false}
-    ${`Member`} | ${false}  | ${true}
-    ${`None`}   | ${true}   | ${false}
-    ${`None`}   | ${false}  | ${false}
+    userRole    | published | isManuscriptOutput | expected
+    ${`Staff`}  | ${true}   | ${false}           | ${true}
+    ${`Staff`}  | ${false}  | ${false}           | ${true}
+    ${`Member`} | ${true}   | ${false}           | ${false}
+    ${`Member`} | ${false}  | ${false}           | ${true}
+    ${`None`}   | ${true}   | ${false}           | ${false}
+    ${`None`}   | ${false}  | ${false}           | ${false}
+    ${`Staff`}  | ${true}   | ${true}            | ${true}
+    ${`Staff`}  | ${false}  | ${true}            | ${true}
+    ${`Member`} | ${true}   | ${true}            | ${true}
+    ${`Member`} | ${false}  | ${true}            | ${true}
+    ${`None`}   | ${true}   | ${true}            | ${false}
+    ${`None`}   | ${false}  | ${true}            | ${false}
   `(
     'returns $expected when user role is $userRole and published is $published',
-    ({ userRole, published, expected }) => {
-      expect(hasEditResearchOutputPermission(userRole, published)).toEqual(
-        expected,
-      );
+    ({ userRole, published, isManuscriptOutput, expected }) => {
+      expect(
+        hasEditResearchOutputPermission(
+          userRole,
+          published,
+          isManuscriptOutput,
+        ),
+      ).toEqual(expected);
     },
   );
 });

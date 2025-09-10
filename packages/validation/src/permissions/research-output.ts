@@ -74,13 +74,19 @@ export const hasDuplicateResearchOutputPermission = (
 
 export const hasPublishResearchOutputPermission = (
   userRole: UserRole,
-): boolean => userRole === 'Staff';
+  isManuscriptOutput: boolean,
+): boolean =>
+  userRole === 'Staff' || (isManuscriptOutput && userRole === 'Member');
 
 export const hasVersionResearchOutputPermission = (
   userRole: UserRole,
-): boolean => hasPublishResearchOutputPermission(userRole);
+  isManuscriptOutput: boolean,
+): boolean => hasPublishResearchOutputPermission(userRole, isManuscriptOutput);
 
 export const hasEditResearchOutputPermission = (
   userRole: UserRole,
   published: boolean,
-): boolean => userRole === 'Staff' || (userRole === 'Member' && !published);
+  isManuscriptOutput: boolean,
+): boolean =>
+  userRole === 'Staff' ||
+  (userRole === 'Member' && (!published || isManuscriptOutput));

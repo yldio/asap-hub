@@ -93,12 +93,6 @@ export default class ResearchOutputController {
     const { methods, organisms, environments, subtype, keywords } =
       await this.parseResearchTags(normalisedResearchOutputCreateData);
 
-    console.log(
-      'related manuscript version: ',
-      normalisedResearchOutputCreateData.relatedManuscriptVersion,
-    );
-    console.log('duplicate: ', isDuplicate);
-
     // This prevents creation of research outputs that are related to manuscripts
     if (
       normalisedResearchOutputCreateData.relatedManuscriptVersion &&

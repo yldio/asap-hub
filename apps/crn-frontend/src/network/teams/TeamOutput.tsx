@@ -121,8 +121,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const toast = useCallback((node: ReactNode) => setToastNode(node), []);
   const previousToast = usePrevious(toastNode);
 
-  console.log('selectedManuscriptVersion', selectedManuscriptVersion);
-
   useEffect(() => {
     if (selectedManuscriptVersion && selectedManuscriptVersion.version) {
       const manuscriptVersion = selectedManuscriptVersion.version;

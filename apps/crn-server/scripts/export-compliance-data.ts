@@ -352,14 +352,31 @@ const formatComplianceData = (entries: GroupedEntries) => {
 };
 
 const generateCSVContent = (versionExports: ManuscriptVersionExport[]) => {
-  if (versionExports.length > 0 && versionExports[0]) {
-    const headers = Object.keys(versionExports[0]);
-    const rows = versionExports.map((row) =>
-      (headers as [keyof ManuscriptVersionExport])
-        .map((field) => JSON.stringify(row[field]))
-        .join(','),
-    );
-    return [headers.join(','), ...rows].join('\n');
-  }
-  return '';
+  if (versionExports.length === 0 || !versionExports[0]) return '';
+
+  const headers = Object.keys(versionExports[0]);
+
+  const escapeForCSV = (value: unknown) => {
+    if (value === null || value === undefined) return '';
+    let str = String(value);
+
+    // Any double quote characters in the value should be escaped with another double quote.
+    // See: https://stackoverflow.com/a/21749399
+    str = str.replace(/"/g, '""');
+
+    // This is necessary to wrap the value in quotes if it contains a comma, quote, or newline.
+    // So the value is not split into multiple columns.
+    // For example, if the value is `Hello, World`, it will be wrapped in quotes to `"Hello, World"`
+    if (/[",\n]/.test(str)) {
+      str = `"${str}"`;
+    }
+
+    return str;
+  };
+
+  const rows = versionExports.map((row) =>
+    headers.map((field) => escapeForCSV((row as any)[field])).join(','),
+  );
+
+  return [headers.join(','), ...rows].join('\n');
 };

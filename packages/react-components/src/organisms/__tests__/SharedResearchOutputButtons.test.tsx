@@ -126,10 +126,24 @@ it('displays duplicate button when user has permission', () => {
         canDuplicateResearchOutput: true,
       }}
     >
-      <SharedResearchOutputButtons {...props} />,
+      <SharedResearchOutputButtons {...props} canDuplicate={true} />,
     </ResearchOutputPermissionsContext.Provider>,
   );
   expect(queryByTitle('Duplicate')).toBeInTheDocument();
+
+  rerender(
+    <ResearchOutputPermissionsContext.Provider
+      value={{
+        canEditResearchOutput: false,
+        canPublishResearchOutput: false,
+        canShareResearchOutput: false,
+        canDuplicateResearchOutput: false,
+      }}
+    >
+      <SharedResearchOutputButtons {...props} canDuplicate={true} />,
+    </ResearchOutputPermissionsContext.Provider>,
+  );
+  expect(queryByTitle('Duplicate')).toBeNull();
 });
 
 describe('ready for review button', () => {

@@ -331,6 +331,7 @@ it('can publish a form when the data is valid', async () => {
       published: true,
       categories: [],
       impact: '',
+      isDuplicate: false,
     },
     expect.anything(),
   );
@@ -398,6 +399,7 @@ it('can save draft when form data is valid', async () => {
       published: false,
       categories: [],
       impact: '',
+      isDuplicate: false,
     },
     expect.anything(),
   );
@@ -1197,6 +1199,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
         relatedManuscript: 'manuscript-id-1',
         relatedManuscriptVersion: versionId,
         doi,
+        isDuplicate: false,
       },
       expect.anything(),
     );

@@ -431,7 +431,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     categories: (categories as MultiSelectOptionsType[]).map(
       (category) => category.value,
     ),
-    isDuplicate,
   });
   const [remotePayload, setRemotePayload] = useState(currentPayload);
 

@@ -348,6 +348,7 @@ describe('Duplicate Output', () => {
       expect.objectContaining({
         title: 'Copy of Example',
         link: 'http://example.com',
+        isDuplicate: true,
       }),
       expect.anything(),
     );

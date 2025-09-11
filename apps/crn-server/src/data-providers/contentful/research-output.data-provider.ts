@@ -137,6 +137,12 @@ export class ResearchOutputContentfulDataProvider
       if (filter.asapFunded) {
         where.asapFunded = filter.asapFunded;
       }
+
+      if (filter.relatedManuscriptVersion) {
+        where.relatedManuscriptVersion = {
+          sys: { id: filter.relatedManuscriptVersion },
+        };
+      }
     }
     const client = includeDrafts
       ? this.contentfulPreviewClient

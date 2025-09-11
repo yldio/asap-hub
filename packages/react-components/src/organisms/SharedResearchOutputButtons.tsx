@@ -63,6 +63,7 @@ type SharedResearchOutputButtonsProps = {
   checkForNewerManuscriptVersion: () => void;
   hasRelatedManuscript?: boolean;
   isManuscriptOutputFlagEnabled: boolean;
+  canDuplicate?: boolean;
 };
 
 const SharedResearchOutputButtons: React.FC<
@@ -79,6 +80,7 @@ const SharedResearchOutputButtons: React.FC<
   checkForNewerManuscriptVersion,
   hasRelatedManuscript = false,
   isManuscriptOutputFlagEnabled,
+  canDuplicate,
 }) => {
   const {
     canEditResearchOutput,
@@ -108,7 +110,7 @@ const SharedResearchOutputButtons: React.FC<
             </Link>
           </div>
         )}
-      {canDuplicateResearchOutput && duplicateLink && (
+      {canDuplicateResearchOutput && duplicateLink && canDuplicate && (
         <div css={leftButtons}>
           <Link noMargin href={duplicateLink} buttonStyle small primary>
             {duplicateIcon} Duplicate

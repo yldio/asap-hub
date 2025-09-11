@@ -165,11 +165,17 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const getManuscriptVersionSuggestions = useManuscriptVersionSuggestions();
 
   const published = updatedOutput ? !!updatedOutput.published : false;
+  const isImportedFromManuscript = Boolean(
+    selectedManuscriptVersion?.version ||
+      updatedOutput?.relatedManuscriptVersion ||
+      updatedOutput?.relatedManuscript,
+  );
 
   const permissions = useResearchOutputPermissions(
     'teams',
     updatedOutput?.teams.map(({ id }) => id) ?? [teamId],
     published,
+    isImportedFromManuscript,
   );
   const getShortDescriptionFromDescription = useGeneratedContent();
   const researchSuggestions = researchTags
@@ -380,11 +386,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               published={published}
               permissions={permissions}
               descriptionUnchangedWarning={descriptionUnchangedWarning}
-              isImportedFromManuscript={Boolean(
-                selectedManuscriptVersion?.version ||
-                  updatedOutput?.relatedManuscriptVersion ||
-                  updatedOutput?.relatedManuscript,
-              )}
+              isImportedFromManuscript={isImportedFromManuscript}
               onSave={(output) =>
                 updatedOutput?.id
                   ? updateAndPublishResearchOutput(updatedOutput.id, {
@@ -413,17 +415,12 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                   ? updateResearchOutput(updatedOutput.id, {
                       ...output,
                       published: false,
-                      relatedManuscriptVersion:
-                        updatedOutput.relatedManuscriptVersion,
                       statusChangedById: updatedOutput.statusChangedBy?.id,
                       isInReview: updatedOutput.isInReview,
                     }).catch(handleError(['/link', '/title'], setErrors))
                   : createResearchOutput({
                       ...output,
                       published: false,
-                      relatedManuscriptVersion:
-                        updatedOutput?.relatedManuscriptVersion,
-                      relatedManuscript: updatedOutput?.relatedManuscript,
                     }).catch(handleError(['/link', '/title'], setErrors))
               }
             />

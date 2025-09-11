@@ -150,6 +150,52 @@ describe('form buttons', () => {
     expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
   });
 
+  it('shows only Cancel and Save buttons when research output is manuscript output and the research output has already been published', async () => {
+    await setupForm({
+      isImportedFromManuscript: true,
+      canPublishResearchOutput: true,
+      published: true,
+    });
+
+    expect(
+      screen.queryByRole('button', { name: /Publish/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Save Draft/i }),
+    ).not.toBeInTheDocument();
+
+    const saveButton = screen.getByRole('button', { name: /Save/i });
+    expect(saveButton).toBeInTheDocument();
+    expect(saveButton).toHaveStyle(`background-color:${primaryButtonBg}`);
+
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+    expect(cancelButton).toBeInTheDocument();
+    expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
+  });
+
+  it('shows only Cancel and Publish buttons when research output is manuscript output and the research output has not been published', async () => {
+    await setupForm({
+      isImportedFromManuscript: true,
+      canPublishResearchOutput: true,
+      published: false,
+    });
+
+    expect(
+      screen.queryByRole('button', { name: /Save/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Save Draft/i }),
+    ).not.toBeInTheDocument();
+
+    const saveButton = screen.getByRole('button', { name: /Publish/i });
+    expect(saveButton).toBeInTheDocument();
+    expect(saveButton).toHaveStyle(`background-color:${primaryButtonBg}`);
+
+    const cancelButton = screen.getByRole('button', { name: /Cancel/i });
+    expect(cancelButton).toBeInTheDocument();
+    expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
+  });
+
   it('shows only Cancel and Save Draft buttons when user has editing permission and the research output has not been published yet', async () => {
     await setupForm({
       canEditResearchOutput: true,

@@ -53,6 +53,7 @@ const ResearchOutput: React.FC = () => {
     association,
     associationIds,
     researchOutputData?.published,
+    !!researchOutputData?.relatedManuscriptVersion,
   );
 
   const updateResearchOutput = usePutResearchOutput();

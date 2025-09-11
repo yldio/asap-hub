@@ -67,7 +67,6 @@ type TeamOutputProps = {
   researchOutputData?: ResearchOutputResponse;
   latestManuscriptVersion?: ManuscriptVersionResponse;
   versionAction?: 'create' | 'edit';
-  isDuplicate?: boolean;
 } & Pick<
   ComponentProps<typeof ResearchOutputForm>,
   'descriptionUnchangedWarning'
@@ -79,7 +78,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   latestManuscriptVersion,
   descriptionUnchangedWarning,
   versionAction: versionActionProp,
-  isDuplicate = false,
 }) => {
   const [versionAction, setVersionAction] = useState<
     'create' | 'edit' | undefined
@@ -408,7 +406,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                       relatedManuscriptVersion:
                         updatedOutput?.relatedManuscriptVersion,
                       relatedManuscript: updatedOutput?.relatedManuscript,
-                      isDuplicate,
                     }).catch(handleError(['/link', '/title'], setErrors))
               }
               onSaveDraft={(output) =>
@@ -427,7 +424,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                       relatedManuscriptVersion:
                         updatedOutput?.relatedManuscriptVersion,
                       relatedManuscript: updatedOutput?.relatedManuscript,
-                      isDuplicate,
                     }).catch(handleError(['/link', '/title'], setErrors))
               }
             />

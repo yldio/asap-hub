@@ -436,7 +436,6 @@ export type ResearchOutputPostRequest = {
   usedInPublication?: boolean;
   published: boolean;
   relatedEvents: string[];
-  isDuplicate?: boolean;
 };
 
 export type OutputGenerateContentResponse = Partial<
@@ -449,10 +448,7 @@ export type ResearchOutputGenerateContentRequest = Partial<
 
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
 
-export type ResearchOutputPutRequest = Omit<
-  ResearchOutputPostRequest,
-  'isDuplicate'
-> & {
+export type ResearchOutputPutRequest = ResearchOutputPostRequest & {
   statusChangedById?: string;
   hasStatusChanged?: boolean;
   isInReview: boolean;

@@ -88,7 +88,6 @@ type ResearchOutputFormProps = Pick<
     permissions: ResearchOutputPermissions;
     descriptionUnchangedWarning?: boolean;
     isImportedFromManuscript?: boolean;
-    isDuplicate?: boolean;
   };
 
 const mainStyles = css({
@@ -183,7 +182,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   permissions,
   versionAction,
   isImportedFromManuscript,
-  isDuplicate = false,
 }) => {
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 

@@ -70,7 +70,6 @@ const DuplicateOutput: FC = () => {
         }}
         descriptionUnchangedWarning
         teamId={output.teams[0].id}
-        isDuplicate={true}
       />
     );
   }

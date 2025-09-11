@@ -712,7 +712,7 @@ describe('ResearchOutputs controller', () => {
       });
     });
 
-    describe.only('Manuscript duplication validation', () => {
+    describe('Manuscript duplication validation', () => {
       test('Should throw when trying to duplicate a research output with related manuscript version', async () => {
         const researchOutputWithManuscript = getResearchOutputCreateData();
         researchOutputWithManuscript.relatedManuscriptVersion =

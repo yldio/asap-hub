@@ -108,9 +108,7 @@ export const researchOutputRouteFactory = (
       workingGroupOutput ? createRequest.workingGroups : createRequest.teams,
     );
 
-    const isManuscriptOutput = !!(
-      createRequest.relatedManuscript && createRequest.relatedManuscriptVersion
-    );
+    const isManuscriptOutput = !!createRequest.relatedManuscriptVersion;
 
     if (
       !loggedInUser ||
@@ -148,10 +146,7 @@ export const researchOutputRouteFactory = (
         workingGroupOutput ? updateRequest.workingGroups : updateRequest.teams,
       );
 
-      const isManuscriptOutput = !!(
-        updateRequest.relatedManuscript &&
-        updateRequest.relatedManuscriptVersion
-      );
+      const isManuscriptOutput = !!updateRequest.relatedManuscriptVersion;
 
       if (
         !loggedInUser ||

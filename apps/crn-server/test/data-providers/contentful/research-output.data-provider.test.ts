@@ -257,6 +257,27 @@ describe('Research Outputs Data Provider', () => {
           );
         });
 
+        test('Should pass the parameters to filter by relatedManuscriptVersion as expected', async () => {
+          await researchOutputDataProvider.fetch({
+            take: 13,
+            skip: 7,
+            filter: {
+              relatedManuscriptVersion: 'manuscript-version-1',
+            },
+          });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              where: {
+                relatedManuscriptVersion: {
+                  sys: { id: 'manuscript-version-1' },
+                },
+              },
+            }),
+          );
+        });
+
         test('Should pass the parameters to filter by document type as expected when document type is an array', async () => {
           await researchOutputDataProvider.fetch({
             take: 13,

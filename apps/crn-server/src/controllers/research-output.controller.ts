@@ -86,22 +86,30 @@ export default class ResearchOutputController {
   async create(
     researchOutputCreateData: ResearchOutputCreateData,
   ): Promise<ResearchOutputResponse | null> {
-    const { isDuplicate, ...rest } = researchOutputCreateData;
-    const normalisedResearchOutputCreateData =
-      this.normaliseResearchOutputData(rest);
+    const normalisedResearchOutputCreateData = this.normaliseResearchOutputData(
+      researchOutputCreateData,
+    );
+
+    // This prevents creation of research outputs that are related to manuscripts
+    if (normalisedResearchOutputCreateData.relatedManuscriptVersion) {
+      const existingOutputs = await this.researchOutputDataProvider.fetch({
+        filter: {
+          relatedManuscriptVersion:
+            normalisedResearchOutputCreateData.relatedManuscriptVersion,
+        },
+        includeDrafts: true,
+      });
+
+      if (existingOutputs.total > 0) {
+        throw Boom.forbidden(
+          'Cannot create research outputs that are related to manuscripts - a research output with this manuscript version already exists',
+        );
+      }
+    }
+
     await this.validateResearchOutput(normalisedResearchOutputCreateData);
     const { methods, organisms, environments, subtype, keywords } =
       await this.parseResearchTags(normalisedResearchOutputCreateData);
-
-    // This prevents creation of research outputs that are related to manuscripts
-    if (
-      normalisedResearchOutputCreateData.relatedManuscriptVersion &&
-      isDuplicate
-    ) {
-      throw Boom.badRequest(
-        'Cannot create research outputs duplicates that are related to manuscripts',
-      );
-    }
 
     const researchOutputCreateDataObject: ResearchOutputCreateDataObject = {
       authors: await this.mapAuthorsPostRequestToId(

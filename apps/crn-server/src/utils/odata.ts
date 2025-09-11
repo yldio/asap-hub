@@ -6,6 +6,7 @@ export type ResearchOutputFilter = {
   documentType?: string | string[];
   title?: string;
   link?: string;
+  relatedManuscriptVersion?: string;
 };
 
 export const buildODataFilter = (filterObj: Filter): string =>

@@ -162,7 +162,6 @@ export type ResearchOutputPayload = {
   categories?: string[];
   relatedManuscriptVersion?: string;
   relatedManuscript?: string;
-  isDuplicate?: boolean;
 };
 
 export const getPayload = ({
@@ -197,7 +196,6 @@ export const getPayload = ({
   categories,
   relatedManuscriptVersion,
   relatedManuscript,
-  isDuplicate,
 }: ResearchOutputPayload): ResearchOutputPostRequest => ({
   ...createIdentifierField(identifierType, identifier),
   documentType,
@@ -232,7 +230,6 @@ export const getPayload = ({
   categories,
   relatedManuscriptVersion,
   relatedManuscript,
-  isDuplicate,
 });
 
 export function transformResearchOutputResponseToRequest({

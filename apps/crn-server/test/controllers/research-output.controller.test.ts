@@ -713,20 +713,25 @@ describe('ResearchOutputs controller', () => {
     });
 
     describe('Manuscript duplication validation', () => {
-      test('Should throw when trying to duplicate a research output with related manuscript version', async () => {
+      test('Should throw forbidden when trying to create a research output with existing manuscript version', async () => {
         const researchOutputWithManuscript = getResearchOutputCreateData();
         researchOutputWithManuscript.relatedManuscriptVersion =
           'manuscript-version-id';
-        researchOutputWithManuscript.isDuplicate = true;
+
+        // Mock that there's already an existing research output with this manuscript version
+        researchOutputDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [getResearchOutputDataObject()],
+        });
 
         await expect(
           researchOutputs.create(researchOutputWithManuscript),
         ).rejects.toThrow(
-          'Cannot create research outputs duplicates that are related to manuscripts',
+          'Cannot create research outputs that are related to manuscripts - a research output with this manuscript version already exists',
         );
       });
 
-      test('Should allow creating a research output with related manuscript version when not duplicating', async () => {
+      test('Should allow creating a research output with related manuscript version when no existing output exists', async () => {
         const researchOutputId = 'research-output-id-1';
         researchOutputDataProviderMock.create.mockResolvedValueOnce(
           researchOutputId,
@@ -735,7 +740,12 @@ describe('ResearchOutputs controller', () => {
         const researchOutputWithManuscript = getResearchOutputCreateData();
         researchOutputWithManuscript.relatedManuscriptVersion =
           'manuscript-version-id';
-        researchOutputWithManuscript.isDuplicate = false;
+
+        // Mock that there's no existing research output with this manuscript version
+        researchOutputDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 0,
+          items: [],
+        });
 
         const result = await researchOutputs.create(
           researchOutputWithManuscript,
@@ -750,7 +760,7 @@ describe('ResearchOutputs controller', () => {
         );
       });
 
-      test('Should allow duplicating a research output without related manuscript version', async () => {
+      test('Should allow creating a research output without related manuscript version', async () => {
         const researchOutputId = 'research-output-id-1';
         researchOutputDataProviderMock.create.mockResolvedValueOnce(
           researchOutputId,
@@ -758,7 +768,6 @@ describe('ResearchOutputs controller', () => {
 
         const researchOutputWithoutManuscript = getResearchOutputCreateData();
         researchOutputWithoutManuscript.relatedManuscriptVersion = undefined;
-        researchOutputWithoutManuscript.isDuplicate = true;
 
         const result = await researchOutputs.create(
           researchOutputWithoutManuscript,

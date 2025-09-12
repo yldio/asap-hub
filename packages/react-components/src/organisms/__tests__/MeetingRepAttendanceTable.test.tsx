@@ -28,6 +28,7 @@ describe('MeetingRepAttendanceTable', () => {
     isTeamInactive: false,
     attendancePercentage: 85,
     limitedData: false,
+    timeRange: 'all',
   };
 
   const mockInactiveTeamData: MeetingRepAttendanceResponse = {
@@ -36,6 +37,7 @@ describe('MeetingRepAttendanceTable', () => {
     isTeamInactive: true,
     attendancePercentage: 45,
     limitedData: true,
+    timeRange: 'all',
   };
 
   beforeEach(() => {

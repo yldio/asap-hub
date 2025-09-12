@@ -1,5 +1,6 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
+  FetchAttendanceQuery,
   FetchEngagementQuery,
   FetchOsChampionQuery,
   FetchPreliminaryDataSharingQuery,
@@ -17,6 +18,7 @@ import {
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
   ListEngagementResponse,
+  ListMeetingRepAttendanceResponse,
   ListOSChampionResponse,
   ListPreliminaryDataSharingResponse,
   ListTeamCollaborationResponse,
@@ -25,6 +27,7 @@ import {
   ListUserCollaborationResponse,
   ListUserProductivityDataObject,
   ListUserProductivityResponse,
+  MeetingRepAttendanceResponse,
   OSChampionResponse,
   PreliminaryDataSharingResponse,
   TeamCollaborationDataObject,
@@ -1051,4 +1054,78 @@ export const getListPreliminaryDataSharingResponse =
   (): ListPreliminaryDataSharingResponse => ({
     total: 1,
     items: [getPreliminaryDataSharingResponse()],
+  });
+
+export const getAttendanceQuery = (): FetchAttendanceQuery => ({
+  teamsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'team-id-0',
+        },
+        displayName: 'Team A',
+        inactiveSince: null,
+        linkedFrom: {
+          attendanceCollection: {
+            total: 3,
+            items: [
+              {
+                linkedFrom: {
+                  eventsCollection: {
+                    items: [
+                      {
+                        startDate: '2024-01-15',
+                      },
+                    ],
+                  },
+                },
+                attended: true,
+              },
+              {
+                linkedFrom: {
+                  eventsCollection: {
+                    items: [
+                      {
+                        startDate: '2024-02-20',
+                      },
+                    ],
+                  },
+                },
+                attended: true,
+              },
+              {
+                linkedFrom: {
+                  eventsCollection: {
+                    items: [
+                      {
+                        startDate: '2023-06-10',
+                      },
+                    ],
+                  },
+                },
+                attended: false,
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
+});
+
+export const getAttendanceResponse: () => MeetingRepAttendanceResponse =
+  () => ({
+    teamId: 'team-id-0',
+    teamName: 'Team A',
+    isTeamInactive: false,
+    attendancePercentage: 67,
+    limitedData: false,
+    timeRange: 'all',
+  });
+
+export const getListAttendanceResponse =
+  (): ListMeetingRepAttendanceResponse => ({
+    total: 1,
+    items: [getAttendanceResponse()],
   });

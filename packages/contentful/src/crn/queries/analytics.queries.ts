@@ -418,3 +418,33 @@ export const FETCH_PRELIMINARY_DATA_SHARING = gql`
     }
   }
 `;
+
+export const FETCH_ATTENDANCE = gql`
+  query FetchAttendance($limit: Int, $skip: Int) {
+    teamsCollection(order: displayName_ASC, limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        displayName
+        inactiveSince
+        linkedFrom {
+          attendanceCollection(limit: 100) {
+            total
+            items {
+              attended
+              linkedFrom {
+                eventsCollection(limit: 1) {
+                  items {
+                    startDate
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

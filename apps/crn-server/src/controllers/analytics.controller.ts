@@ -3,6 +3,7 @@ import {
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipResponse,
   ListEngagementResponse,
+  ListMeetingRepAttendanceResponse,
   ListOSChampionResponse,
   ListPreliminaryDataSharingResponse,
   ListTeamCollaborationResponse,
@@ -61,5 +62,11 @@ export default class AnalyticsController {
     options: FetchAnalyticsOptions,
   ): Promise<ListPreliminaryDataSharingResponse> {
     return this.analyticsDataProvider.fetchPreliminaryDataSharing(options);
+  }
+
+  async fetchAttendance(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListMeetingRepAttendanceResponse> {
+    return this.analyticsDataProvider.fetchAttendance(options);
   }
 }

@@ -1,5 +1,6 @@
 import {
   ListResponse,
+  MeetingRepAttendanceDataObject,
   OSChampionDataObject,
   PreliminaryDataSharingDataObject,
 } from '@asap-hub/model';
@@ -15,13 +16,18 @@ import { getAnalyticsDataProvider } from '../src/dependencies/analytics.dependen
 
 export const PAGE_SIZE = 10;
 
-const validMetrics = ['os-champion', 'preliminary-data-sharing'] as const;
+const validMetrics = [
+  'os-champion',
+  'preliminary-data-sharing',
+  'attendance',
+] as const;
 
 type Metrics = (typeof validMetrics)[number];
 
 type MetricToObjectMap = {
   'os-champion': OSChampionDataObject;
   'preliminary-data-sharing': PreliminaryDataSharingDataObject;
+  attendance: MeetingRepAttendanceDataObject;
 };
 
 type MetricObject<T extends Metrics> = MetricToObjectMap[T];
@@ -80,6 +86,26 @@ const metricConfig = {
       },
     },
   },
+  attendance: {
+    indexAlias: 'attendance',
+    mapping: {
+      properties: {
+        teamId: { type: 'text' },
+        teamName: {
+          type: 'text',
+          analyzer: 'ngram_analyzer',
+          search_analyzer: 'ngram_search_analyzer',
+          fields: {
+            keyword: { type: 'keyword' },
+          },
+        },
+        isTeamInactive: { type: 'boolean' },
+        attendancePercentage: { type: 'integer' },
+        limitedData: { type: 'boolean' },
+        timeRange: { type: 'text' },
+      },
+    },
+  },
 } as const;
 
 export const exportAnalyticsData = async <T extends Metrics>(
@@ -107,9 +133,9 @@ export const exportAnalyticsData = async <T extends Metrics>(
           ListResponse<MetricObject<T>>
         >;
       case 'preliminary-data-sharing':
-        const timeRanges = ['all', 'last-year'] as const;
-        const allRecords = await Promise.all(
-          timeRanges.map(
+        const preliminaryDataSharingTimeRanges = ['all', 'last-year'] as const;
+        const preliminaryDataSharingRecords = await Promise.all(
+          preliminaryDataSharingTimeRanges.map(
             (timeRange) =>
               analyticsController.fetchPreliminaryDataSharing({
                 ...options,
@@ -119,8 +145,32 @@ export const exportAnalyticsData = async <T extends Metrics>(
         );
 
         return {
-          total: allRecords.reduce((sum, records) => sum + records.total, 0),
-          items: allRecords.flatMap((records) => records.items),
+          total: preliminaryDataSharingRecords.reduce(
+            (sum, records) => sum + records.total,
+            0,
+          ),
+          items: preliminaryDataSharingRecords.flatMap(
+            (records) => records.items,
+          ),
+        } as ListResponse<MetricObject<T>>;
+      case 'attendance':
+        const attendanceTimeRanges = ['all', 'last-year'] as const;
+        const attendanceRecords = await Promise.all(
+          attendanceTimeRanges.map(
+            (timeRange) =>
+              analyticsController.fetchAttendance({
+                ...options,
+                filter: { timeRange },
+              }) as Promise<ListResponse<MetricObject<T>>>,
+          ),
+        );
+
+        return {
+          total: attendanceRecords.reduce(
+            (sum, records) => sum + records.total,
+            0,
+          ),
+          items: attendanceRecords.flatMap((records) => records.items),
         } as ListResponse<MetricObject<T>>;
       default:
         throw new Error(`Metric ${metric} not supported`);

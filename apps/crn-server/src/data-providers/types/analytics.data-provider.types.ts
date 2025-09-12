@@ -3,6 +3,7 @@ import {
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipDataObject,
   ListEngagementDataObject,
+  ListMeetingRepAttendanceDataObject,
   ListOSChampionDataObject,
   ListPreliminaryDataSharingDataObject,
   ListTeamCollaborationDataObject,
@@ -36,4 +37,7 @@ export type AnalyticsDataProvider = {
   fetchPreliminaryDataSharing(
     options: FetchAnalyticsOptions,
   ): Promise<ListPreliminaryDataSharingDataObject>;
+  fetchAttendance(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListMeetingRepAttendanceDataObject>;
 };

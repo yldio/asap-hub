@@ -631,6 +631,7 @@ export type MeetingRepAttendanceDataObject = {
   isTeamInactive: boolean;
   attendancePercentage: number;
   limitedData: boolean;
+  timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };
 export type ListMeetingRepAttendanceDataObject =
   ListResponse<MeetingRepAttendanceDataObject>;

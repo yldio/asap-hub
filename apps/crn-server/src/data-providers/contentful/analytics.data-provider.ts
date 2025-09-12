@@ -1,6 +1,8 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
   FetchAnalyticsTeamLeadershipQueryVariables,
+  FetchAttendanceQuery,
+  FetchAttendanceQueryVariables,
   FetchEngagementQuery,
   FetchEngagementQueryVariables,
   FetchOsChampionQuery,
@@ -18,6 +20,7 @@ import {
   FetchUserTotalResearchOutputsQuery,
   FetchUserTotalResearchOutputsQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
+  FETCH_ATTENDANCE,
   FETCH_ENGAGEMENT,
   FETCH_OS_CHAMPION,
   FETCH_PRELIMINARY_DATA_SHARING,
@@ -37,6 +40,7 @@ import {
   ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserProductivityDataObject,
+  MeetingRepAttendanceDataObject,
   OSChampionDataObject,
   OutputTypeOption,
   PreliminaryDataSharingDataObject,
@@ -144,6 +148,22 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
     return {
       total: teamsCollection?.total || 0,
       items: getPreliminaryDataSharingItems(
+        teamsCollection,
+        filter?.timeRange as Extract<TimeRangeOption, 'all' | 'last-year'>,
+      ),
+    };
+  }
+
+  async fetchAttendance(options: FetchAnalyticsOptions) {
+    const { take = 10, skip = 0, filter } = options;
+    const { teamsCollection } = await this.contentfulClient.request<
+      FetchAttendanceQuery,
+      FetchAttendanceQueryVariables
+    >(FETCH_ATTENDANCE, { limit: take, skip });
+
+    return {
+      total: teamsCollection?.total || 0,
+      items: getAttendanceItems(
         teamsCollection,
         filter?.timeRange as Extract<TimeRangeOption, 'all' | 'last-year'>,
       ),
@@ -522,6 +542,61 @@ const getPreliminaryDataSharingItems = (
       teamName: teamItem.displayName || '',
       isTeamInactive: !!teamItem.inactiveSince,
       percentShared: 0,
+      limitedData: true,
+    };
+  });
+};
+
+const getAttendanceItems = (
+  teamsCollection: FetchAttendanceQuery['teamsCollection'],
+  rangeKey?: Extract<TimeRangeOption, 'all' | 'last-year'>,
+): MeetingRepAttendanceDataObject[] => {
+  const filter = getRangeFilterParams(rangeKey);
+
+  return cleanArray(teamsCollection?.items).map((teamItem) => {
+    let attendanceTotalCount = 0;
+    let attendanceYesCount = 0;
+
+    if (teamItem.linkedFrom?.attendanceCollection?.items.length) {
+      const attendanceItems = teamItem.linkedFrom?.attendanceCollection?.items;
+
+      attendanceItems.forEach((item) => {
+        const eventStartDate =
+          item?.linkedFrom?.eventsCollection?.items[0]?.startDate;
+
+        if (
+          rangeKey === 'last-year' &&
+          eventStartDate &&
+          filter &&
+          eventStartDate <= filter
+        ) {
+          return;
+        }
+
+        if (item?.attended === true) {
+          attendanceYesCount += 1;
+        }
+        attendanceTotalCount += 1;
+      });
+
+      return {
+        timeRange: rangeKey ?? 'all',
+        teamId: teamItem.sys.id,
+        teamName: teamItem.displayName || '',
+        isTeamInactive: !!teamItem.inactiveSince,
+        attendancePercentage: Math.round(
+          (attendanceYesCount / attendanceTotalCount) * 100,
+        ),
+        limitedData: attendanceTotalCount === 0,
+      };
+    }
+
+    return {
+      timeRange: rangeKey ?? 'all',
+      teamId: teamItem.sys.id,
+      teamName: teamItem.displayName || '',
+      isTeamInactive: !!teamItem.inactiveSince,
+      attendancePercentage: 0,
       limitedData: true,
     };
   });

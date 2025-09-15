@@ -4,6 +4,7 @@ export { default as actionIcon } from './action';
 export { default as addUserIcon } from './add-user';
 export { default as aiGenerate } from './ai-generate';
 export { default as AlphabeticalSortingIcon } from './alphabetical-sorting';
+export { default as AzSortingIcon } from './az-sorting';
 export { default as alumniBadgeIcon } from './alumni-badge';
 export { default as analyticsIcon } from './analytics';
 export { default as article } from './article';

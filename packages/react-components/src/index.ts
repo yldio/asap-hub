@@ -167,7 +167,6 @@ export {
   NoEvents,
   OnboardingFooter,
   ShortDescriptionCard,
-  OpensciencePerformanceCard,
   OSChampionTable,
   OutputVersions,
   PageCard,
@@ -177,6 +176,8 @@ export {
   PerformanceCard,
   ProfileCardList,
   ProfileExpertiseAndResources,
+  PublicationComplianceTable,
+  PreprintComplianceTable,
   QuestionsSection,
   RecentSharedOutputs,
   RelatedEventsCard,
@@ -322,6 +323,9 @@ export type {
   Association,
   UserCollaborationMetric,
   TeamCollaborationMetric,
+  SortPreprintCompliance,
+  PreprintComplianceSortingDirection,
+  PreprintComplianceResponse,
 } from './organisms';
 export type { ResearchOutputOption } from './utils';
 export type { MetricOption } from './templates/AnalyticsLeadershipPageBody';

@@ -58,9 +58,10 @@ export { default as PagesSection } from './PagesSection';
 export { default as PastEventsDashboardCard } from './PastEventsDashboardCard';
 export { default as PeopleCard } from './PeopleCard';
 export { default as PerformanceCard } from './PerformanceCard';
+export { default as PreprintComplianceTable } from './PreprintComplianceTable';
 export { default as ProfileCardList } from './ProfileCardList';
+export { default as PublicationComplianceTable } from './PublicationComplianceTable';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
-export { default as OpensciencePerformanceCard } from './OpensciencePerformanceCard';
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as DiscussionModal } from './DiscussionModal';
 export { default as RecentSharedOutputs } from './RecentSharedOutputs';
@@ -122,3 +123,9 @@ export { default as WorkingGroupsTabbedCard } from './WorkingGroupsTabbedCard';
 export type { Association } from './SharedOutputDropdown';
 export type { TeamCollaborationMetric } from './TeamCollaborationTable';
 export type { UserCollaborationMetric } from './UserCollaborationTable';
+
+export type {
+  SortPreprintCompliance,
+  PreprintComplianceSortingDirection,
+  PreprintComplianceResponse,
+} from './PreprintComplianceTable';

@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { analytics } from '@asap-hub/routing';
+import { useFlags } from '@asap-hub/react-context';
 import { Button, Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
@@ -13,7 +14,6 @@ import {
   TeamIcon,
   uploadIcon,
 } from '../icons';
-import { useFlags } from '@asap-hub/react-context';
 
 const containerStyles = css({
   display: 'flex',

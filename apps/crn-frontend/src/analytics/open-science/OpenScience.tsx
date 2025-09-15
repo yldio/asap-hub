@@ -22,10 +22,8 @@ const OpenScience: FC<Record<string, never>> = () => {
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
 
-  const exportResults = () => {
-    // TODO: Implement export functionality for Open Science metrics
-    return Promise.resolve();
-  };
+  // TODO: Implement export functionality for Open Science metrics
+  const exportResults = () => Promise.resolve();
 
   const loadTags = async (tagQuery: string) => {
     const searchedTags = await client.searchForTagValues(

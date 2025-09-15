@@ -37,7 +37,7 @@ export const mapManuscriptVersionToResearchOutput = (
   created: '',
   contactEmails: [],
   organisms: [],
-  versions: [],
+  versions: output?.versions || [],
   relatedEvents: [],
   relatedResearch: [],
   keywords: [],

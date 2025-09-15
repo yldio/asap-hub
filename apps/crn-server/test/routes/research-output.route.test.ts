@@ -437,9 +437,40 @@ describe('/research-outputs/ route', () => {
           expected: 201,
           userRole: 'Staff',
         },
+        {
+          publish: true,
+          teamRole: 'Key Personnel',
+          expected: 201,
+          userRole: 'Grantee',
+          relatedManuscript: 'manuscript-id-1',
+          relatedManuscriptVersion: 'manuscript-version-id-1',
+        },
+        {
+          publish: true,
+          teamRole: 'Project Manager',
+          expected: 201,
+          userRole: 'Grantee',
+          relatedManuscript: 'manuscript-id-1',
+          relatedManuscriptVersion: 'manuscript-version-id-1',
+        },
+        {
+          publish: true,
+          teamRole: 'Key Personnel',
+          expected: 201,
+          userRole: 'Staff',
+          relatedManuscript: 'manuscript-id-1',
+          relatedManuscriptVersion: 'manuscript-version-id-1',
+        },
       ])(
         'Should return $expected when a user has team role: $teamRole and has user role: $userRole and tries to publish: $publish',
-        async ({ publish, teamRole, expected, userRole }) => {
+        async ({
+          publish,
+          teamRole,
+          expected,
+          userRole,
+          relatedManuscript,
+          relatedManuscriptVersion,
+        }) => {
           userMockFactory.mockReturnValueOnce({
             ...user,
             role: userRole as Role,
@@ -460,6 +491,8 @@ describe('/research-outputs/ route', () => {
               ...getResearchOutputPostRequest(),
               teams: ['team-1'],
               published: publish,
+              relatedManuscript,
+              relatedManuscriptVersion,
             });
           expect(response.status).toBe(expected);
         },
@@ -1539,97 +1572,191 @@ describe('/research-outputs/ route', () => {
     });
 
     describe('Publishing a research output', () => {
-      test('Should return 403 when user is not ASAP Staff or team PM', async () => {
-        userMockFactory.mockReturnValueOnce({
-          ...user,
-          role: 'Grantee',
-          teams: [
-            { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
-          ],
-        });
-        const response = await supertest(app)
-          .put('/research-outputs/abc123')
-          .send({
-            ...researchOutputPutRequest,
-            teams: ['team-1'],
-            published: true,
+      describe('when research output is not a manuscript output', () => {
+        test('Should return 403 when user is not ASAP Staff or team PM', async () => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: 'Grantee',
+            teams: [
+              { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
+            ],
           });
-        expect(response.status).toBe(403);
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              teams: ['team-1'],
+              published: true,
+            });
+          expect(response.status).toBe(403);
+        });
+
+        test('Should return 403 when user is not ASAP Staff or working group PM', async () => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: 'Grantee',
+            workingGroups: [
+              { id: 'wg-1', name: 'wg-1', role: 'Member', active: true },
+            ],
+          });
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              teams: ['team-does-not-belong-to-user'],
+              workingGroups: ['wg-1'],
+              published: true,
+            });
+          expect(response.status).toBe(403);
+        });
+
+        test('Should return 200 when user is a PM of the team', async () => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: 'Grantee',
+            teams: [
+              { id: 'team-1', displayName: 'team-1', role: 'Project Manager' },
+            ],
+          });
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              teams: ['team-1'],
+              published: true,
+            });
+          expect(response.status).toBe(200);
+        });
+
+        test('Should return 200 when user is a PM of the working group', async () => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: 'Grantee',
+            teams: [
+              { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
+            ],
+            workingGroups: [
+              {
+                id: 'wg-1',
+                name: 'wg-1',
+                role: 'Project Manager',
+                active: true,
+              },
+            ],
+          });
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              workingGroups: ['wg-1'],
+              published: true,
+            });
+          expect(response.status).toBe(200);
+        });
+
+        test('Should return 200 when user is asap staff', async () => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: 'Staff',
+            teams: [
+              { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
+            ],
+            workingGroups: [
+              { id: 'wg-1', name: 'wg-1', role: 'Member', active: true },
+            ],
+          });
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({ ...researchOutputPutRequest, published: true });
+          expect(response.status).toBe(200);
+        });
       });
 
-      test('Should return 403 when user is not ASAP Staff or working group PM', async () => {
-        userMockFactory.mockReturnValueOnce({
-          ...user,
-          role: 'Grantee',
-          workingGroups: [
-            { id: 'wg-1', name: 'wg-1', role: 'Member', active: true },
-          ],
-        });
-        const response = await supertest(app)
-          .put('/research-outputs/abc123')
-          .send({
-            ...researchOutputPutRequest,
-            teams: ['team-does-not-belong-to-user'],
-            workingGroups: ['wg-1'],
-            published: true,
+      describe('when research output is a manuscript output', () => {
+        const relatedManuscriptVersion = 'manuscript-version-id-1';
+        const relatedManuscript = 'manuscript-id-1';
+        test('Should return 403 when user is not team member', async () => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: 'Grantee',
+            teams: [
+              {
+                id: 'other-team',
+                displayName: 'Other Team',
+                role: 'Key Personnel',
+              },
+            ],
           });
-        expect(response.status).toBe(403);
-      });
-
-      test('Should return 200 when user is a PM of the team', async () => {
-        userMockFactory.mockReturnValueOnce({
-          ...user,
-          role: 'Grantee',
-          teams: [
-            { id: 'team-1', displayName: 'team-1', role: 'Project Manager' },
-          ],
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              teams: ['team-1'],
+              published: true,
+              relatedManuscriptVersion,
+              relatedManuscript,
+            });
+          expect(response.status).toBe(403);
         });
-        const response = await supertest(app)
-          .put('/research-outputs/abc123')
-          .send({
-            ...researchOutputPutRequest,
-            teams: ['team-1'],
-            published: true,
+
+        test('Should return 200 when user is a team member', async () => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: 'Grantee',
+            teams: [
+              { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
+            ],
           });
-        expect(response.status).toBe(200);
-      });
-
-      test('Should return 200 when user is a PM of the working group', async () => {
-        userMockFactory.mockReturnValueOnce({
-          ...user,
-          role: 'Grantee',
-          teams: [
-            { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
-          ],
-          workingGroups: [
-            { id: 'wg-1', name: 'wg-1', role: 'Project Manager', active: true },
-          ],
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              teams: ['team-1'],
+              published: true,
+              relatedManuscriptVersion,
+              relatedManuscript,
+            });
+          expect(response.status).toBe(200);
         });
-        const response = await supertest(app)
-          .put('/research-outputs/abc123')
-          .send({
-            ...researchOutputPutRequest,
-            workingGroups: ['wg-1'],
-            published: true,
+
+        test('Should return 200 when user is a PM of the team', async () => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: 'Grantee',
+            teams: [
+              { id: 'team-1', displayName: 'team-1', role: 'Project Manager' },
+            ],
           });
-        expect(response.status).toBe(200);
-      });
-
-      test('Should return 200 when user is asap staff', async () => {
-        userMockFactory.mockReturnValueOnce({
-          ...user,
-          role: 'Staff',
-          teams: [
-            { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
-          ],
-          workingGroups: [
-            { id: 'wg-1', name: 'wg-1', role: 'Member', active: true },
-          ],
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              teams: ['team-1'],
+              published: true,
+              relatedManuscriptVersion,
+              relatedManuscript,
+            });
+          expect(response.status).toBe(200);
         });
-        const response = await supertest(app)
-          .put('/research-outputs/abc123')
-          .send({ ...researchOutputPutRequest, published: true });
-        expect(response.status).toBe(200);
+
+        test('Should return 200 when user is asap staff', async () => {
+          userMockFactory.mockReturnValueOnce({
+            ...user,
+            role: 'Staff',
+            teams: [
+              { id: 'team-1', displayName: 'team-1', role: 'Key Personnel' },
+            ],
+          });
+          const response = await supertest(app)
+            .put('/research-outputs/abc123')
+            .send({
+              ...researchOutputPutRequest,
+              published: true,
+              relatedManuscriptVersion,
+              relatedManuscript,
+            });
+          expect(response.status).toBe(200);
+        });
       });
     });
 

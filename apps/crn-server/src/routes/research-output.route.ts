@@ -108,9 +108,15 @@ export const researchOutputRouteFactory = (
       workingGroupOutput ? createRequest.workingGroups : createRequest.teams,
     );
 
+    const isManuscriptOutput = !!createRequest.relatedManuscriptVersion;
+
     if (
       !loggedInUser ||
-      !hasEditResearchOutputPermission(userRole, createRequest.published)
+      !hasEditResearchOutputPermission(
+        userRole,
+        createRequest.published,
+        isManuscriptOutput,
+      )
     ) {
       throw Boom.forbidden();
     }
@@ -140,9 +146,15 @@ export const researchOutputRouteFactory = (
         workingGroupOutput ? updateRequest.workingGroups : updateRequest.teams,
       );
 
+      const isManuscriptOutput = !!updateRequest.relatedManuscriptVersion;
+
       if (
         !loggedInUser ||
-        !hasEditResearchOutputPermission(userRole, updateRequest.published)
+        !hasEditResearchOutputPermission(
+          userRole,
+          updateRequest.published,
+          isManuscriptOutput,
+        )
       ) {
         throw Boom.forbidden();
       }

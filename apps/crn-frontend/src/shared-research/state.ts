@@ -221,6 +221,7 @@ export const useResearchOutputPermissions = (
   association: 'teams' | 'workingGroups',
   associationIds: string[],
   published?: boolean,
+  isManuscriptOutput: boolean = false,
 ) => {
   const user = useCurrentUserCRN();
   const userRole = getUserRole(user, association, associationIds);
@@ -233,9 +234,16 @@ export const useResearchOutputPermissions = (
     canEditResearchOutput: hasEditResearchOutputPermission(
       userRole,
       published ?? false,
+      isManuscriptOutput,
     ),
-    canVersionResearchOutput: hasVersionResearchOutputPermission(userRole),
-    canPublishResearchOutput: hasPublishResearchOutputPermission(userRole),
+    canVersionResearchOutput: hasVersionResearchOutputPermission(
+      userRole,
+      isManuscriptOutput,
+    ),
+    canPublishResearchOutput: hasPublishResearchOutputPermission(
+      userRole,
+      isManuscriptOutput,
+    ),
     canShareResearchOutput: hasShareResearchOutputPermission(userRole),
     canDuplicateResearchOutput: hasDuplicateResearchOutputPermission(
       originalAssociationUserRole,

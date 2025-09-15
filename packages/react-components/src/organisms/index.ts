@@ -60,6 +60,7 @@ export { default as PeopleCard } from './PeopleCard';
 export { default as PerformanceCard } from './PerformanceCard';
 export { default as ProfileCardList } from './ProfileCardList';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
+export { default as OpensciencePerformanceCard } from './OpensciencePerformanceCard';
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as DiscussionModal } from './DiscussionModal';
 export { default as RecentSharedOutputs } from './RecentSharedOutputs';

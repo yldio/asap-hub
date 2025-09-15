@@ -442,7 +442,6 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       );
     }
   }
-  console.log('it looks like its here');
   return <NotFoundPage />;
 };
 

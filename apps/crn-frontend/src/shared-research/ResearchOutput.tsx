@@ -39,6 +39,7 @@ const ResearchOutput: React.FC = () => {
   const { path } = useRouteMatch();
   const urlSearchParams = new URLSearchParams(useLocation().search);
   const researchOutputData = useResearchOutputById(researchOutputId);
+
   const backHref = useBackHref() ?? sharedResearch({}).$;
 
   const isLinkedToWorkingGroup =

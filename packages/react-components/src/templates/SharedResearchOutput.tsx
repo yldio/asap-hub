@@ -94,12 +94,13 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   versions,
   onPublish,
   relatedManuscript,
-  relatedManuscriptVersion,
   checkForNewVersion,
   isManuscriptOutputFlagEnabled,
   ...props
 }) => {
   const history = useHistory();
+  const { relatedManuscriptVersion } = props;
+
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
     props.documentType,
   );
@@ -196,6 +197,10 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             setDisplayPublishModal={setDisplayPublishModal}
             hasRelatedManuscript={!!relatedManuscriptVersion}
             isManuscriptOutputFlagEnabled={isManuscriptOutputFlagEnabled}
+            canDuplicate={
+              Boolean(props.workingGroups && props.workingGroups[0]?.id) ||
+              !relatedManuscriptVersion
+            }
           />
         )}
         {displayReviewModal && (

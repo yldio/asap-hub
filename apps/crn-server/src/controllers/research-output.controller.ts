@@ -89,6 +89,24 @@ export default class ResearchOutputController {
     const normalisedResearchOutputCreateData = this.normaliseResearchOutputData(
       researchOutputCreateData,
     );
+
+    // This prevents creation of research outputs that are related to manuscripts
+    if (normalisedResearchOutputCreateData.relatedManuscriptVersion) {
+      const existingOutputs = await this.researchOutputDataProvider.fetch({
+        filter: {
+          relatedManuscriptVersion:
+            normalisedResearchOutputCreateData.relatedManuscriptVersion,
+        },
+        includeDrafts: true,
+      });
+
+      if (existingOutputs.total > 0) {
+        throw Boom.forbidden(
+          'Cannot create research outputs that are related to manuscripts - a research output with this manuscript version already exists',
+        );
+      }
+    }
+
     await this.validateResearchOutput(normalisedResearchOutputCreateData);
     const { methods, organisms, environments, subtype, keywords } =
       await this.parseResearchTags(normalisedResearchOutputCreateData);

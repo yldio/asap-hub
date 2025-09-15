@@ -8,6 +8,7 @@ import TabNav from '../molecules/TabNav';
 import {
   EngagementIcon,
   LeadershipIcon,
+  OpenScienceIcon,
   ProductivityIcon,
   TeamIcon,
   uploadIcon,
@@ -72,6 +73,9 @@ const AnalyticsPageHeader: React.FC<AnalyticsPageHeaderProps> = ({
         </TabLink>
         <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
           Engagement
+        </TabLink>
+        <TabLink href={analytics({}).openScience({}).$} Icon={OpenScienceIcon}>
+          Open Science
         </TabLink>
       </TabNav>
     </div>

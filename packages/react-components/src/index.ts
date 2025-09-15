@@ -234,6 +234,7 @@ export {
   AnalyticsProductivityPageBody,
   AnalyticsLeadershipPageBody,
   AnalyticsEngagementPageBody,
+  AnalyticsOpenSciencePageBody,
   AnalyticsPageHeader,
   BasicLayout,
   BiographyModal,

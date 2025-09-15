@@ -399,3 +399,42 @@ describe('Engagement', () => {
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 });
+
+describe('Open Science', () => {
+  it('renders the Open Science tab successfully', async () => {
+    await renderPage(
+      analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
+    );
+    expect(
+      await screen.findByText(/Analytics/i, {
+        selector: 'h1',
+      }),
+    ).toBeVisible();
+    expect(
+      await screen.findByText(/Preprint Compliance/i, {
+        selector: 'h3',
+      }),
+    ).toBeVisible();
+  });
+
+  it('renders Publication Compliance when metric is selected', async () => {
+    await renderPage(
+      analytics({}).openScience({}).metric({ metric: 'publication-compliance' })
+        .$,
+    );
+    expect(
+      await screen.findByText(/Publication Compliance/i, {
+        selector: 'h3',
+      }),
+    ).toBeVisible();
+  });
+
+  it('redirects to preprint-compliance when no metric is specified', async () => {
+    await renderPage(analytics({}).openScience({}).$);
+    expect(
+      await screen.findByText(/Preprint Compliance/i, {
+        selector: 'h3',
+      }),
+    ).toBeVisible();
+  });
+});

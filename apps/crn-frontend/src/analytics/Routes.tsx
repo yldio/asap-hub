@@ -24,10 +24,14 @@ const loadCollaboration = () =>
 const loadEngagement = () =>
   import(/* webpackChunkName: "engagement" */ './engagement/Engagement');
 
+const loadOpenScience = () =>
+  import(/* webpackChunkName: "open-science" */ './open-science/OpenScience');
+
 const LeadershipBody = lazy(loadLeadership);
 const ProductivityBody = lazy(loadProductivity);
 const CollaborationBody = lazy(loadCollaboration);
 const EngagementBody = lazy(loadEngagement);
+const OpenScienceBody = lazy(loadOpenScience);
 
 const Routes = () => {
   useEffect(() => {
@@ -138,10 +142,36 @@ const Routes = () => {
                 </Frame>
               </AnalyticsPage>
             </Route>
+
             <Redirect
               to={
                 analytics({}).leadership({}).metric({ metric: 'working-group' })
                   .$
+              }
+            />
+          </Switch>
+        </Route>
+        <Route path={path + analytics({}).openScience.template}>
+          <Switch>
+            <Route
+              exact
+              path={
+                path +
+                analytics({}).openScience.template +
+                analytics({}).openScience({}).metric.template
+              }
+            >
+              <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                <Frame title="Open Science">
+                  <OpenScienceBody />
+                </Frame>
+              </AnalyticsPage>
+            </Route>
+            <Redirect
+              to={
+                analytics({})
+                  .openScience({})
+                  .metric({ metric: 'preprint-compliance' }).$
               }
             />
           </Switch>

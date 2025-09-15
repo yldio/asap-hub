@@ -4,6 +4,7 @@ import {
   ExportAnalyticsModal,
 } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
+import { useFlags } from '@asap-hub/react-context';
 import { lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../hooks/algolia';
@@ -34,6 +35,8 @@ const EngagementBody = lazy(loadEngagement);
 const OpenScienceBody = lazy(loadOpenScience);
 
 const Routes = () => {
+  const { isEnabled } = useFlags();
+
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadLeadership().then(loadProductivity).then(loadCollaboration);
@@ -151,31 +154,33 @@ const Routes = () => {
             />
           </Switch>
         </Route>
-        <Route path={path + analytics({}).openScience.template}>
-          <Switch>
-            <Route
-              exact
-              path={
-                path +
-                analytics({}).openScience.template +
-                analytics({}).openScience({}).metric.template
-              }
-            >
-              <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
-                <Frame title="Open Science">
-                  <OpenScienceBody />
-                </Frame>
-              </AnalyticsPage>
-            </Route>
-            <Redirect
-              to={
-                analytics({})
-                  .openScience({})
-                  .metric({ metric: 'preprint-compliance' }).$
-              }
-            />
-          </Switch>
-        </Route>
+        {isEnabled('ANALYTICS_OPEN_SCIENCE') && (
+          <Route path={path + analytics({}).openScience.template}>
+            <Switch>
+              <Route
+                exact
+                path={
+                  path +
+                  analytics({}).openScience.template +
+                  analytics({}).openScience({}).metric.template
+                }
+              >
+                <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                  <Frame title="Open Science">
+                    <OpenScienceBody />
+                  </Frame>
+                </AnalyticsPage>
+              </Route>
+              <Redirect
+                to={
+                  analytics({})
+                    .openScience({})
+                    .metric({ metric: 'preprint-compliance' }).$
+                }
+              />
+            </Switch>
+          </Route>
+        )}
         <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
       </Switch>
     </>

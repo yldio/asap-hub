@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
 import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
+import * as flags from '@asap-hub/flags';
 import {
   createResearchOutputResponse,
   createUserResponse,
@@ -464,6 +465,9 @@ it('publishes a research output', async () => {
 });
 
 describe('a research output linked to a manuscript', () => {
+  beforeEach(() => {
+    jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+  });
   it('renders add version form on clicking Import Manuscript Version if manuscript output has new manuscript version', async () => {
     const researchOutput = createResearchOutputResponse();
     mockGetResearchOutput.mockResolvedValue({

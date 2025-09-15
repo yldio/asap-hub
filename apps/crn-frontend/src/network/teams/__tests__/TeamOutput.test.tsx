@@ -28,8 +28,9 @@ import {
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { editorRef } from '@asap-hub/react-components';
 import { Suspense } from 'react';
-import { Route, StaticRouter } from 'react-router-dom';
+import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { createMemoryHistory, History } from 'history';
 import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
 import {
   createResearchOutput,
@@ -190,6 +191,7 @@ interface RenderPageOptions {
   outputDocumentType?: OutputDocumentTypeParameter;
   researchOutputData?: ResearchOutputResponse;
   latestManuscriptVersion?: ManuscriptVersionResponse;
+  history?: History;
 }
 
 beforeEach(() => {
@@ -1255,6 +1257,47 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
     });
   });
 
+  it('navigates to create output version page when selected manuscript version belongs to a linked manuscript', async () => {
+    const teamId = '42';
+    const outputDocumentType = 'article';
+    const researchOutputId = 'linked-output-id';
+
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({})
+          .teams({})
+          .team({ teamId })
+          .createOutput({ outputDocumentType }).$,
+      ],
+    });
+    mockGetManuscriptVersions.mockResolvedValue({
+      total: 1,
+      items: [
+        {
+          id: 'mv-manuscript-id-1',
+          hasLinkedResearchOutput: false,
+          title: 'Version One',
+          url: 'http://example.com',
+          researchOutputId,
+        },
+      ],
+    });
+
+    await renderPage({ teamId, outputDocumentType, history });
+
+    userEvent.click(screen.getByLabelText('Import from manuscript'));
+    const input = screen.getByRole('textbox');
+    await userEvent.type(input, 'Version');
+    const option = await screen.findByText('Version One');
+    await userEvent.click(option);
+
+    userEvent.click(screen.getByRole('button', { name: /import/i }));
+
+    expect(history.location.pathname).toBe(
+      `/shared-research/${researchOutputId}/version`,
+    );
+  });
+
   it('navigates to standard output form when manual creation is confirmed', async () => {
     await renderPage({
       teamId: '42',
@@ -1302,6 +1345,14 @@ async function renderPage({
   researchOutputData,
   versionAction,
   latestManuscriptVersion,
+  history = createMemoryHistory({
+    initialEntries: [
+      network({})
+        .teams({})
+        .team({ teamId })
+        .createOutput({ outputDocumentType }).$,
+    ],
+  }),
 }: RenderPageOptions) {
   const path =
     network.template +
@@ -1318,14 +1369,7 @@ async function renderPage({
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <StaticRouter
-              location={
-                network({})
-                  .teams({})
-                  .team({ teamId })
-                  .createOutput({ outputDocumentType }).$
-              }
-            >
+            <Router history={history}>
               <Route path={path}>
                 <TeamOutput
                   teamId={teamId}
@@ -1334,7 +1378,7 @@ async function renderPage({
                   latestManuscriptVersion={latestManuscriptVersion}
                 />
               </Route>
-            </StaticRouter>
+            </Router>
           </WhenReady>
         </Auth0Provider>
       </Suspense>

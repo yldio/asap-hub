@@ -71,48 +71,46 @@ const OpensciencePerformanceCard = ({
   needsImprovement?: number;
   limitedData?: number;
   legend?: string;
-}) => {
-  return (
-    <CaptionCard>
-      <div css={containerStyles}>
-        <div css={dataContainerStyles}>
-          {happyFaceIcon}
-          <Subtitle noMargin>Outstanding:</Subtitle>
-          <span css={dataTextStyles}>&ge; {outstanding}%</span>
-        </div>
-        <div css={dataContainerStyles}>
-          {neutralFaceIcon}
-          <Subtitle noMargin>Adequate:</Subtitle>
-          <span css={dataTextStyles}>
-            {adequate}% - {needsImprovement - 1}%
-          </span>
-        </div>
-        <div css={dataContainerStyles}>
-          {sadFaceIcon}
-          <Subtitle noMargin>Needs Improvement:</Subtitle>
-          <span css={dataTextStyles}>&lt; {needsImprovement}%</span>
-        </div>
-        <div css={dataContainerStyles}>
-          {informationInverseIcon}
-          <Subtitle noMargin>Limited data</Subtitle>
-        </div>
+}) => (
+  <CaptionCard>
+    <div css={containerStyles}>
+      <div css={dataContainerStyles}>
+        {happyFaceIcon}
+        <Subtitle noMargin>Outstanding:</Subtitle>
+        <span css={dataTextStyles}>&ge; {outstanding}%</span>
       </div>
-      {legend && (
-        <div css={captionLegendStyles}>
-          <div css={iconContainerStyles}>
-            {PercentageIcon({ title: 'percentage', color: lead.rgb })}
-          </div>
-          <Paragraph
-            accent="lead"
-            noMargin
-            styles={css(paragraphContainerStyles)}
-          >
-            {legend}
-          </Paragraph>
+      <div css={dataContainerStyles}>
+        {neutralFaceIcon}
+        <Subtitle noMargin>Adequate:</Subtitle>
+        <span css={dataTextStyles}>
+          {adequate}% - {needsImprovement - 1}%
+        </span>
+      </div>
+      <div css={dataContainerStyles}>
+        {sadFaceIcon}
+        <Subtitle noMargin>Needs Improvement:</Subtitle>
+        <span css={dataTextStyles}>&lt; {needsImprovement}%</span>
+      </div>
+      <div css={dataContainerStyles}>
+        {informationInverseIcon}
+        <Subtitle noMargin>Limited data</Subtitle>
+      </div>
+    </div>
+    {legend && (
+      <div css={captionLegendStyles}>
+        <div css={iconContainerStyles}>
+          {PercentageIcon({ title: 'percentage', color: lead.rgb })}
         </div>
-      )}
-    </CaptionCard>
-  );
-};
+        <Paragraph
+          accent="lead"
+          noMargin
+          styles={css(paragraphContainerStyles)}
+        >
+          {legend}
+        </Paragraph>
+      </div>
+    )}
+  </CaptionCard>
+);
 
 export default OpensciencePerformanceCard;

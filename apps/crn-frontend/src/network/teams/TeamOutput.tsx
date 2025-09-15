@@ -8,6 +8,7 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
+  Loading,
   ManuscriptOutputSelection,
   ManuscriptVersionImportCard,
   ManuscriptVersionOption,
@@ -22,6 +23,7 @@ import { InnerToastContext } from '@asap-hub/react-context';
 import {
   network,
   OutputDocumentTypeParameter,
+  sharedResearch,
   useRouteParams,
 } from '@asap-hub/routing';
 import React, {
@@ -31,6 +33,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useHistory } from 'react-router-dom';
 import { mapManuscriptVersionToResearchOutput } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
@@ -79,6 +82,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   descriptionUnchangedWarning,
   versionAction: versionActionProp,
 }) => {
+  const history = useHistory();
   const [versionAction, setVersionAction] = useState<
     'create' | 'edit' | undefined
   >(versionActionProp);
@@ -228,7 +232,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   };
 
   const isWaitingForManuscriptVersionImport =
-    isManuscriptVersion && !updatedOutput && !!latestManuscriptVersion;
+    isManuscriptVersion && (!latestManuscriptVersion || !updatedOutput);
 
   if (team) {
     if (showManuscriptOutputFlow) {
@@ -254,7 +258,16 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               selectedVersion={selectedManuscriptVersion}
               setSelectedVersion={setManuscriptVersion}
               onImportManuscript={async () => {
-                if (
+                if (selectedManuscriptVersion?.version?.researchOutputId) {
+                  history.push(
+                    sharedResearch({})
+                      .researchOutput({
+                        researchOutputId:
+                          selectedManuscriptVersion?.version?.researchOutputId,
+                      })
+                      .versionResearchOutput({}).$,
+                  );
+                } else if (
                   selectedManuscriptVersion?.version?.lifecycle === 'Preprint'
                 ) {
                   setShowManuscriptOutputFlow(false);
@@ -305,7 +318,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     }
 
     if (isWaitingForManuscriptVersionImport) {
-      return null;
+      return <Loading />;
     }
 
     if (!isManuscriptVersion || !!updatedOutput) {
@@ -429,6 +442,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
       );
     }
   }
+  console.log('it looks like its here');
   return <NotFoundPage />;
 };
 

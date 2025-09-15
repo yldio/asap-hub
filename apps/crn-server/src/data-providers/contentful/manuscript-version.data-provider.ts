@@ -168,6 +168,7 @@ const parseGraphQLManucriptVersion = (
     lifecycle: (latestVersion?.lifecycle as ManuscriptLifecycle) || undefined,
     description: latestVersion?.description || undefined,
     shortDescription: latestVersion?.shortDescription || undefined,
+    researchOutputId: manuscript?.relatedResearchOutput?.sys.id || undefined,
     impact: manuscript?.impact
       ? {
           id: manuscript.impact.sys.id,

@@ -954,6 +954,7 @@ export type ManuscriptVersionResponse = {
   manuscriptId?: string;
   versionId?: string;
   doi?: string;
+  researchOutputId?: string;
 };
 
 export type ListManuscriptVersionResponse =

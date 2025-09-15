@@ -119,6 +119,11 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
             title
             url
             count
+            relatedResearchOutput {
+              sys {
+                id
+              }
+            }
             teamsCollection(limit: 1) {
               items {
                 sys {
@@ -179,6 +184,11 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
         title
         url
         count
+        relatedResearchOutput {
+          sys {
+            id
+          }
+        }
         teamsCollection(limit: 1) {
           items {
             sys {

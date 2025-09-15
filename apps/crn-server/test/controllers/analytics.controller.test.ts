@@ -16,6 +16,7 @@ import {
   getListUserProductivityResponse,
   getListOSChampionResponse,
   getListPreliminaryDataSharingResponse,
+  getListAttendanceResponse,
 } from '../fixtures/analytics.fixtures';
 import { analyticsDataProviderMock } from '../mocks/analytics.data-provider.mock';
 
@@ -311,6 +312,41 @@ describe('Analytics controller', () => {
       expect(
         analyticsDataProviderMock.fetchPreliminaryDataSharing,
       ).toHaveBeenCalledWith(options);
+    });
+  });
+
+  describe('fetchAttendance method', () => {
+    test('Should return an empty result when the data provider returns an empty list', async () => {
+      analyticsDataProviderMock.fetchAttendance.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+
+      const result = await analyticsController.fetchAttendance({});
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return the attendance data', async () => {
+      analyticsDataProviderMock.fetchAttendance.mockResolvedValue(
+        getListAttendanceResponse(),
+      );
+
+      const result = await analyticsController.fetchAttendance({});
+
+      expect(result).toEqual(getListAttendanceResponse());
+    });
+
+    test('Should call the data provider with the correct options', async () => {
+      const options: FetchPaginationOptions = {
+        take: 10,
+        skip: 5,
+      };
+      await analyticsController.fetchAttendance(options);
+
+      expect(analyticsDataProviderMock.fetchAttendance).toHaveBeenCalledWith(
+        options,
+      );
     });
   });
 });

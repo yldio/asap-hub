@@ -129,3 +129,8 @@ export type {
   PreprintComplianceSortingDirection,
   PreprintComplianceResponse,
 } from './PreprintComplianceTable';
+export type {
+  SortPublicationCompliance,
+  PublicationComplianceSortingDirection,
+  PublicationComplianceResponse,
+} from './PublicationComplianceTable';

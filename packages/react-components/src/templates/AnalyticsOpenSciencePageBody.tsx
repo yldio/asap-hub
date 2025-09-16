@@ -26,7 +26,10 @@ const metricDescription = {
     'Percent compliance by research output type for each team',
 };
 
-type OpenScienceAnalyticsProps = {
+type OpenScienceAnalyticsProps = Pick<
+  ComponentProps<typeof AnalyticsControls>,
+  'timeRange'
+> & {
   children: React.ReactNode;
   tags: string[];
   loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
@@ -52,6 +55,7 @@ const AnalyticsOpenSciencePageBody: React.FC<OpenScienceAnalyticsProps> = ({
   metric,
   setMetric,
   exportResults,
+  timeRange,
 }) => {
   const metricOptionList = Object.keys(metricOptions).map((value) => ({
     value: value as MetricOption,
@@ -85,7 +89,7 @@ const AnalyticsOpenSciencePageBody: React.FC<OpenScienceAnalyticsProps> = ({
         outputType={undefined}
         setTags={setTags}
         tags={tags}
-        timeRange="all"
+        timeRange={timeRange}
       />
       {children}
     </article>

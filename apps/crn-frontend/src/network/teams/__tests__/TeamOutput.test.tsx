@@ -192,6 +192,7 @@ interface RenderPageOptions {
   researchOutputData?: ResearchOutputResponse;
   latestManuscriptVersion?: ManuscriptVersionResponse;
   history?: History;
+  isDuplicate?: boolean;
 }
 
 beforeEach(() => {
@@ -1017,6 +1018,27 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
     ).toBeInTheDocument();
   });
 
+  it('skips manuscript output selection when duplicating a research output', async () => {
+    await renderPage({
+      teamId: '42',
+      researchOutputData: {
+        ...baseResearchOutput,
+        id: '1',
+        documentType: 'Article',
+      },
+      versionAction: 'create',
+      isDuplicate: true,
+    });
+
+    expect(
+      screen.queryByText('How would you like to create your output?'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByRole('heading', { name: 'What are you sharing?' }),
+    ).toBeInTheDocument();
+  });
+
   it('skips manuscript output selection when creating a new research output version', async () => {
     await renderPage({
       teamId: '42',
@@ -1353,6 +1375,7 @@ async function renderPage({
         .createOutput({ outputDocumentType }).$,
     ],
   }),
+  isDuplicate = false,
 }: RenderPageOptions) {
   const path =
     network.template +
@@ -1376,6 +1399,7 @@ async function renderPage({
                   researchOutputData={researchOutputData}
                   versionAction={versionAction}
                   latestManuscriptVersion={latestManuscriptVersion}
+                  isDuplicate={isDuplicate}
                 />
               </Route>
             </Router>

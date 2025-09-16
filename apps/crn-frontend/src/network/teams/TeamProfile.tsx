@@ -69,6 +69,7 @@ const DuplicateOutput: FC = () => {
           title: `Copy of ${output.title}`,
         }}
         descriptionUnchangedWarning
+        isDuplicate
         teamId={output.teams[0].id}
       />
     );

@@ -70,6 +70,7 @@ type TeamOutputProps = {
   researchOutputData?: ResearchOutputResponse;
   latestManuscriptVersion?: ManuscriptVersionResponse;
   versionAction?: 'create' | 'edit';
+  isDuplicate?: boolean;
 } & Pick<
   ComponentProps<typeof ResearchOutputForm>,
   'descriptionUnchangedWarning'
@@ -81,6 +82,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   latestManuscriptVersion,
   descriptionUnchangedWarning,
   versionAction: versionActionProp,
+  isDuplicate = false,
 }) => {
   const history = useHistory();
   const [versionAction, setVersionAction] = useState<
@@ -221,6 +223,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
     !isManuscriptVersion &&
       isManuscriptOutputFlagEnabled &&
+      !isDuplicate &&
       documentType === 'Article' &&
       !updatedOutput?.id,
   );

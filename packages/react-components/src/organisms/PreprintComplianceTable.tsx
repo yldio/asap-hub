@@ -149,7 +149,7 @@ const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
 
   return (
     <>
-      <StaticPerformanceCard legend="Percentage is calculated as total research outputs shared across all publications divided by total research outputs identified across all publications." />
+      <StaticPerformanceCard />
       <Card padding={false}>
         <div css={container}>
           <table

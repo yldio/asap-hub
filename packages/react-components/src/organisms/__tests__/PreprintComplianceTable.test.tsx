@@ -214,16 +214,6 @@ describe('PreprintComplianceTable', () => {
     expect(screen.getByRole('navigation')).toBeInTheDocument();
   });
 
-  it('renders static performance card', () => {
-    render(<PreprintComplianceTable {...defaultProps} />);
-
-    expect(
-      screen.getByText(
-        /Percentage is calculated as total research outputs shared across all publications divided by total research outputs identified across all publications/,
-      ),
-    ).toBeInTheDocument();
-  });
-
   it('handles empty data array', () => {
     render(<PreprintComplianceTable {...defaultProps} data={[]} />);
 

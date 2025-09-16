@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { analytics } from '@asap-hub/routing';
 import { AnalyticsOpenSciencePageBody } from '@asap-hub/react-components';
-import { useSearch } from '../../hooks';
+import { useSearch, useAnalytics } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import PreprintCompliance from './PreprintCompliance';
 import PublicationCompliance from './PublicationCompliance';
@@ -19,6 +19,7 @@ const OpenScience: FC<Record<string, never>> = () => {
     history.push(analytics({}).openScience({}).metric({ metric: newMetric }).$);
   };
 
+  const { timeRange } = useAnalytics();
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
 
@@ -45,6 +46,7 @@ const OpenScience: FC<Record<string, never>> = () => {
       metric={metric}
       setMetric={setMetric}
       exportResults={exportResults}
+      timeRange={timeRange}
     >
       {metric === 'preprint-compliance' ? (
         <PreprintCompliance tags={tags} />

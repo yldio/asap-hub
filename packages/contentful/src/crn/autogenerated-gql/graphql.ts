@@ -20761,6 +20761,7 @@ export type FetchManuscriptVersionByIdQuery = {
           Maybe<
             Pick<Manuscripts, 'title' | 'url' | 'count'> & {
               sys: Pick<Sys, 'id'>;
+              relatedResearchOutput?: Maybe<{ sys: Pick<Sys, 'id'> }>;
               teamsCollection?: Maybe<{
                 items: Array<
                   Maybe<
@@ -20905,6 +20906,7 @@ export type FetchVersionsByManuscriptQuery = {
         Maybe<
           Pick<Manuscripts, 'title' | 'url' | 'count'> & {
             sys: Pick<Sys, 'id'>;
+            relatedResearchOutput?: Maybe<{ sys: Pick<Sys, 'id'> }>;
             teamsCollection?: Maybe<{
               items: Array<
                 Maybe<
@@ -41626,6 +41628,34 @@ export const FetchManuscriptVersionByIdDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
+                                      value: 'relatedResearchOutput',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
                                       value: 'teamsCollection',
                                     },
                                     arguments: [
@@ -41962,6 +41992,28 @@ export const FetchVersionsByManuscriptDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'relatedResearchOutput' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'teamsCollection' },

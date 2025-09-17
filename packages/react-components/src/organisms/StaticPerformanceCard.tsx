@@ -13,18 +13,16 @@ import { rem, smallDesktopScreen } from '../pixels';
 import CaptionCard from './CaptionCard';
 
 const containerStyles = css({
-  display: 'flex',
-  justifyContent: 'space-between',
-  flexWrap: 'wrap',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(4, 1fr)',
+  gap: rem(12),
   gridColumn: '1 / span 2',
   paddingRight: rem(48),
   [`@media (max-width: calc(${
     smallDesktopScreen.width
   }px + ${contentSidePaddingWithNavigation(2)}))`]: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
+    gridTemplateColumns: 'repeat(2, 1fr)',
     gap: rem(12),
-    justifyContent: 'stretch',
   },
 });
 

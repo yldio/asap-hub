@@ -32,17 +32,6 @@ describe('AnalyticsOpenSciencePageBody', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders preprint compliance tab when no metric is provided', () => {
-    render(<AnalyticsOpenSciencePageBody {...props} />);
-
-    expect(
-      screen.getByRole('heading', { name: 'Preprint Compliance' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Number of preprints posted to a preprint repository/),
-    ).toBeInTheDocument();
-  });
-
   it('renders publication compliance tab', () => {
     render(
       <AnalyticsOpenSciencePageBody

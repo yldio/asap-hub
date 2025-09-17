@@ -1,10 +1,10 @@
 import { FC /* useState */ } from 'react';
+import { PublicationComplianceTable } from '@asap-hub/react-components';
 import {
-  PublicationComplianceTable,
+  PublicationComplianceResponse,
   // SortPublicationCompliance,
   // PublicationComplianceSortingDirection,
-  PublicationComplianceResponse,
-} from '@asap-hub/react-components';
+} from '@asap-hub/model';
 import { usePagination, usePaginationParams } from '../../hooks';
 
 interface PublicationComplianceProps {

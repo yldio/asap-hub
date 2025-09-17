@@ -323,12 +323,6 @@ export type {
   Association,
   UserCollaborationMetric,
   TeamCollaborationMetric,
-  SortPreprintCompliance,
-  PreprintComplianceSortingDirection,
-  PreprintComplianceResponse,
-  SortPublicationCompliance,
-  PublicationComplianceSortingDirection,
-  PublicationComplianceResponse,
 } from './organisms';
 export type { ResearchOutputOption } from './utils';
 export type { MetricOption } from './templates/AnalyticsLeadershipPageBody';

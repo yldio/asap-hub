@@ -123,14 +123,3 @@ export { default as WorkingGroupsTabbedCard } from './WorkingGroupsTabbedCard';
 export type { Association } from './SharedOutputDropdown';
 export type { TeamCollaborationMetric } from './TeamCollaborationTable';
 export type { UserCollaborationMetric } from './UserCollaborationTable';
-
-export type {
-  SortPreprintCompliance,
-  PreprintComplianceSortingDirection,
-  PreprintComplianceResponse,
-} from './PreprintComplianceTable';
-export type {
-  SortPublicationCompliance,
-  PublicationComplianceSortingDirection,
-  PublicationComplianceResponse,
-} from './PublicationComplianceTable';

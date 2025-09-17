@@ -1,10 +1,10 @@
 import { FC /* useState */ } from 'react';
+import { PreprintComplianceTable } from '@asap-hub/react-components';
 import {
-  PreprintComplianceTable,
-  // SortPreprintCompliance,
-  // PreprintComplianceSortingDirection,
   PreprintComplianceResponse,
-} from '@asap-hub/react-components';
+  // PreprintComplianceSortingDirection,
+  // SortPreprintCompliance
+} from '@asap-hub/model';
 import { usePagination, usePaginationParams } from '../../hooks';
 
 const mockData: PreprintComplianceResponse[] = [

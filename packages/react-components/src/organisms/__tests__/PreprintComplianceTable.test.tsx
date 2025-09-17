@@ -1,5 +1,8 @@
 /* eslint-disable jest/no-commented-out-tests */
-import { PreprintComplianceResponse } from '@asap-hub/model';
+import {
+  PreprintComplianceResponse,
+  // SortPreprintCompliance,
+} from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import PreprintComplianceTable from '../PreprintComplianceTable';

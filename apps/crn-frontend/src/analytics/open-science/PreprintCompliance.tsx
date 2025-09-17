@@ -1,8 +1,8 @@
-import { FC, useState } from 'react';
+import { FC /* useState */ } from 'react';
 import {
   PreprintComplianceTable,
-  SortPreprintCompliance,
-  PreprintComplianceSortingDirection,
+  // SortPreprintCompliance,
+  // PreprintComplianceSortingDirection,
   PreprintComplianceResponse,
 } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../../hooks';
@@ -40,9 +40,10 @@ interface PreprintComplianceProps {
 
 const PreprintCompliance: FC<PreprintComplianceProps> = ({ tags: _tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const [sort, setSort] = useState<SortPreprintCompliance>('team_asc');
-  const [sortingDirection, setSortingDirection] =
-    useState<PreprintComplianceSortingDirection>('asc');
+  // TODO: add these back post MVP
+  // const [sort, setSort] = useState<SortPreprintCompliance>('team_asc');
+  // const [sortingDirection, setSortingDirection] =
+  //   useState<PreprintComplianceSortingDirection>('asc');
 
   const total = mockData.length;
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
@@ -54,10 +55,10 @@ const PreprintCompliance: FC<PreprintComplianceProps> = ({ tags: _tags }) => {
         data={mockData}
         numberOfPages={numberOfPages}
         renderPageHref={renderPageHref}
-        setSort={setSort}
-        setSortingDirection={setSortingDirection}
-        sort={sort}
-        sortingDirection={sortingDirection}
+        // setSort={setSort}
+        // setSortingDirection={setSortingDirection}
+        // sort={sort}
+        // sortingDirection={sortingDirection}
       />
     </div>
   );

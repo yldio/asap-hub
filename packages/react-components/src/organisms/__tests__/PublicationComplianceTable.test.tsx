@@ -1,10 +1,7 @@
+import { PublicationComplianceResponse } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import PublicationComplianceTable, {
-  PublicationComplianceResponse,
-  SortPublicationCompliance,
-  PublicationComplianceSortingDirection,
-} from '../PublicationComplianceTable';
+import PublicationComplianceTable from '../PublicationComplianceTable';
 
 describe('PublicationComplianceTable', () => {
   const pageControlsProps = {
@@ -27,10 +24,10 @@ describe('PublicationComplianceTable', () => {
   const defaultProps: ComponentProps<typeof PublicationComplianceTable> = {
     ...pageControlsProps,
     data: [publicationComplianceData],
-    sort: 'team_asc' as SortPublicationCompliance,
-    setSort: jest.fn(),
-    sortingDirection: 'asc' as PublicationComplianceSortingDirection,
-    setSortingDirection: jest.fn(),
+    // sort: 'team_asc' as SortPublicationCompliance,
+    // setSort: jest.fn(),
+    // sortingDirection: 'asc' as PublicationComplianceSortingDirection,
+    // setSortingDirection: jest.fn(),
   };
 
   beforeEach(() => {
@@ -80,100 +77,102 @@ describe('PublicationComplianceTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('handles sorting when header is clicked', () => {
-    const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
+  // TODO: add these back post MVP
 
-    render(
-      <PublicationComplianceTable
-        {...defaultProps}
-        setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
-      />,
-    );
+  // it('handles sorting when header is clicked', () => {
+  //   const mockSetSort = jest.fn();
+  //   const mockSetSortingDirection = jest.fn();
 
-    // Find the clickable span inside the team header
-    const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
-    const clickableSpan = teamHeader.querySelector('span');
-    clickableSpan?.click();
+  //   render(
+  //     <PublicationComplianceTable
+  //       {...defaultProps}
+  //       setSort={mockSetSort}
+  //       setSortingDirection={mockSetSortingDirection}
+  //     />,
+  //   );
 
-    expect(mockSetSort).toHaveBeenCalledWith('team_asc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith('desc');
-  });
+  //   // Find the clickable span inside the team header
+  //   const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
+  //   const clickableSpan = teamHeader.querySelector('span');
+  //   clickableSpan?.click();
 
-  it('toggles sorting direction when same header is clicked twice', () => {
-    const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
+  //   expect(mockSetSort).toHaveBeenCalledWith('team_asc');
+  //   expect(mockSetSortingDirection).toHaveBeenCalledWith('desc');
+  // });
 
-    render(
-      <PublicationComplianceTable
-        {...defaultProps}
-        sort="team_asc"
-        sortingDirection="asc"
-        setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
-      />,
-    );
+  // it('toggles sorting direction when same header is clicked twice', () => {
+  //   const mockSetSort = jest.fn();
+  //   const mockSetSortingDirection = jest.fn();
 
-    // Find the clickable span inside the team header
-    const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
-    const clickableSpan = teamHeader.querySelector('span');
-    clickableSpan?.click();
+  //   render(
+  //     <PublicationComplianceTable
+  //       {...defaultProps}
+  //       sort="team_asc"
+  //       sortingDirection="asc"
+  //       setSort={mockSetSort}
+  //       setSortingDirection={mockSetSortingDirection}
+  //     />,
+  //   );
 
-    expect(mockSetSort).toHaveBeenCalledWith('team_asc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith('desc');
-  });
+  //   // Find the clickable span inside the team header
+  //   const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
+  //   const clickableSpan = teamHeader.querySelector('span');
+  //   clickableSpan?.click();
 
-  it('handles sorting for different columns', () => {
-    const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
+  //   expect(mockSetSort).toHaveBeenCalledWith('team_asc');
+  //   expect(mockSetSortingDirection).toHaveBeenCalledWith('desc');
+  // });
 
-    render(
-      <PublicationComplianceTable
-        {...defaultProps}
-        setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
-      />,
-    );
+  // it('handles sorting for different columns', () => {
+  //   const mockSetSort = jest.fn();
+  //   const mockSetSortingDirection = jest.fn();
 
-    // Test publications column sorting
-    const publicationsHeader = screen.getByRole('columnheader', {
-      name: /Publications/,
-    });
-    const publicationsSpan = publicationsHeader.querySelector('span');
-    publicationsSpan?.click();
-    expect(mockSetSort).toHaveBeenCalledWith('publications_asc');
+  //   render(
+  //     <PublicationComplianceTable
+  //       {...defaultProps}
+  //       setSort={mockSetSort}
+  //       setSortingDirection={mockSetSortingDirection}
+  //     />,
+  //   );
 
-    // Test datasets column sorting
-    const datasetsHeader = screen.getByRole('columnheader', {
-      name: /Datasets/,
-    });
-    const datasetsSpan = datasetsHeader.querySelector('span');
-    datasetsSpan?.click();
-    expect(mockSetSort).toHaveBeenCalledWith('datasets_asc');
+  //   // Test publications column sorting
+  //   const publicationsHeader = screen.getByRole('columnheader', {
+  //     name: /Publications/,
+  //   });
+  //   const publicationsSpan = publicationsHeader.querySelector('span');
+  //   publicationsSpan?.click();
+  //   expect(mockSetSort).toHaveBeenCalledWith('publications_asc');
 
-    // Test protocols column sorting
-    const protocolsHeader = screen.getByRole('columnheader', {
-      name: /Protocols/,
-    });
-    const protocolsSpan = protocolsHeader.querySelector('span');
-    protocolsSpan?.click();
-    expect(mockSetSort).toHaveBeenCalledWith('protocols_asc');
+  //   // Test datasets column sorting
+  //   const datasetsHeader = screen.getByRole('columnheader', {
+  //     name: /Datasets/,
+  //   });
+  //   const datasetsSpan = datasetsHeader.querySelector('span');
+  //   datasetsSpan?.click();
+  //   expect(mockSetSort).toHaveBeenCalledWith('datasets_asc');
 
-    // Test code column sorting
-    const codeHeader = screen.getByRole('columnheader', { name: /Code/ });
-    const codeSpan = codeHeader.querySelector('span');
-    codeSpan?.click();
-    expect(mockSetSort).toHaveBeenCalledWith('code_asc');
+  //   // Test protocols column sorting
+  //   const protocolsHeader = screen.getByRole('columnheader', {
+  //     name: /Protocols/,
+  //   });
+  //   const protocolsSpan = protocolsHeader.querySelector('span');
+  //   protocolsSpan?.click();
+  //   expect(mockSetSort).toHaveBeenCalledWith('protocols_asc');
 
-    // Test lab materials column sorting
-    const labMaterialsHeader = screen.getByRole('columnheader', {
-      name: /Lab Materials/,
-    });
-    const labMaterialsSpan = labMaterialsHeader.querySelector('span');
-    labMaterialsSpan?.click();
-    expect(mockSetSort).toHaveBeenCalledWith('lab_materials_asc');
-  });
+  //   // Test code column sorting
+  //   const codeHeader = screen.getByRole('columnheader', { name: /Code/ });
+  //   const codeSpan = codeHeader.querySelector('span');
+  //   codeSpan?.click();
+  //   expect(mockSetSort).toHaveBeenCalledWith('code_asc');
+
+  //   // Test lab materials column sorting
+  //   const labMaterialsHeader = screen.getByRole('columnheader', {
+  //     name: /Lab Materials/,
+  //   });
+  //   const labMaterialsSpan = labMaterialsHeader.querySelector('span');
+  //   labMaterialsSpan?.click();
+  //   expect(mockSetSort).toHaveBeenCalledWith('lab_materials_asc');
+  // });
 
   it('renders performance icons correctly', () => {
     const data = [

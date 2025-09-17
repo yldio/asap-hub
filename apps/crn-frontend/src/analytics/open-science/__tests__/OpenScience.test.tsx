@@ -121,16 +121,6 @@ describe('OpenScience', () => {
 
     // Check that the component renders without errors
     expect(screen.getAllByRole('heading', { name: 'Metric' })).toHaveLength(1);
-  });
-
-  it('renders the page body component with correct content', async () => {
-    await renderPage(
-      analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
-    );
-
-    expect(
-      screen.getByRole('heading', { name: 'Preprint Compliance' }),
-    ).toBeInTheDocument();
     expect(
       screen.getByText(/Number of preprints posted to a preprint repository/),
     ).toBeInTheDocument();
@@ -147,18 +137,6 @@ describe('OpenScience', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Percent compliance by research output type/),
-    ).toBeInTheDocument();
-  });
-
-  it('calls algolia client for tag search', async () => {
-    await renderPage(
-      analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
-    );
-
-    // The loadTags function is passed to the MultiSelect component
-    // Verify the component renders without errors
-    expect(
-      screen.getByRole('heading', { name: 'Preprint Compliance' }),
     ).toBeInTheDocument();
   });
 

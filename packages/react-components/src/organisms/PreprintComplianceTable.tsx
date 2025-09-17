@@ -1,3 +1,8 @@
+import {
+  PreprintComplianceResponse,
+  PreprintComplianceSortingDirection,
+  SortPreprintCompliance,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
@@ -83,56 +88,40 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
-export type SortPreprintCompliance =
-  | 'team_asc'
-  | 'preprints_asc'
-  | 'posted_prior_asc';
-
-export type PreprintComplianceSortingDirection = 'asc' | 'desc';
-
-export interface PreprintComplianceResponse {
-  teamId: string;
-  teamName: string;
-  isTeamInactive: boolean;
-  numberOfPreprints: number;
-  postedPriorToJournalSubmission: number;
-  postedPriorPercentage: number;
-}
-
 type PreprintComplianceTableProps = ComponentProps<typeof PageControls> & {
   data: PreprintComplianceResponse[];
-  setSort: React.Dispatch<React.SetStateAction<SortPreprintCompliance>>;
-  setSortingDirection: React.Dispatch<
-    React.SetStateAction<PreprintComplianceSortingDirection>
-  >;
-  sort: SortPreprintCompliance;
-  sortingDirection: PreprintComplianceSortingDirection;
+  // setSort: React.Dispatch<React.SetStateAction<SortPreprintCompliance>>; // TODO: add these back post MVP
+  // setSortingDirection: React.Dispatch<
+  //   React.SetStateAction<PreprintComplianceSortingDirection>
+  // >;
+  // sort: SortPreprintCompliance;
+  // sortingDirection: PreprintComplianceSortingDirection;
 };
 
 const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
   data,
-  sort,
-  setSort,
-  sortingDirection,
-  setSortingDirection,
+  // sort, // TODO: add these back post MVP
+  // setSort,
+  // sortingDirection,
+  //setSortingDirection,
   ...pageControlProps
 }) => {
-  const handleSort = (sortKey: SortPreprintCompliance) => {
-    const newDirection =
-      sort === sortKey && sortingDirection === 'asc' ? 'desc' : 'asc';
-    setSortingDirection(newDirection);
-    setSort(sortKey);
-  };
+  // const handleSort = (sortKey: SortPreprintCompliance) => {
+  //   const newDirection =
+  //     sort === sortKey && sortingDirection === 'asc' ? 'desc' : 'asc';
+  //   setSortingDirection(newDirection);
+  //   setSort(sortKey);
+  // };
 
-  const getSortIcon = (sortKey: SortPreprintCompliance) => {
-    const isActive = sort === sortKey;
+  // const getSortIcon = (sortKey: SortPreprintCompliance) => {
+  //   const isActive = sort === sortKey;
 
-    if (sortKey.startsWith('team_')) {
-      return <AzSortingIcon active={isActive} description="" />;
-    }
+  //   if (sortKey.startsWith('team_')) {
+  //     return <AzSortingIcon active={isActive} description="" />;
+  //   }
 
-    return <NumericalSortingIcon active={isActive} description="" />;
-  };
+  //   return <NumericalSortingIcon active={isActive} description="" />;
+  // };
 
   const getPerformanceIcon = (percentage: number) => {
     if (percentage >= 90) {
@@ -169,28 +158,28 @@ const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
                 <th css={titleStyles} className={'team'}>
                   <span
                     css={headerStyles}
-                    onClick={() => handleSort('team_asc')}
+                    // onClick={() => handleSort('team_asc')}
                   >
                     Team
-                    {getSortIcon('team_asc')}
+                    {/* getSortIcon('team_asc') */}
                   </span>
                 </th>
                 <th css={titleStyles} className={'preprints'}>
                   <span
                     css={headerStyles}
-                    onClick={() => handleSort('preprints_asc')}
+                    // onClick={() => handleSort('preprints_asc')}
                   >
                     Number of Preprints
-                    {getSortIcon('preprints_asc')}
+                    {/* getSortIcon('preprints_asc') */}
                   </span>
                 </th>
                 <th css={titleStyles}>
                   <span
                     css={headerStyles}
-                    onClick={() => handleSort('posted_prior_asc')}
+                    // onClick={() => handleSort('posted_prior_asc')}
                   >
                     Posted Prior to Journal Submission
-                    {getSortIcon('posted_prior_asc')}
+                    {/* getSortIcon('posted_prior_asc') */}
                   </span>
                 </th>
               </tr>

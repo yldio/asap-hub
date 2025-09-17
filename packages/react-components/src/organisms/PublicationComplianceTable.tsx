@@ -1,3 +1,8 @@
+import {
+  PublicationComplianceResponse,
+  // PublicationComplianceSortingDirection,
+  // SortPublicationCompliance,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
@@ -8,8 +13,8 @@ import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import {
   InactiveBadgeIcon,
-  AzSortingIcon,
-  NumericalSortingIcon,
+  // AzSortingIcon,
+  // NumericalSortingIcon,
   happyFaceIcon,
   neutralFaceIcon,
   sadFaceIcon,
@@ -92,69 +97,42 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
-export type SortPublicationCompliance =
-  | 'team_asc'
-  | 'team_desc'
-  | 'publications_asc'
-  | 'publications_desc'
-  | 'datasets_asc'
-  | 'datasets_desc'
-  | 'protocols_asc'
-  | 'protocols_desc'
-  | 'code_asc'
-  | 'code_desc'
-  | 'lab_materials_asc'
-  | 'lab_materials_desc';
-
-export type PublicationComplianceSortingDirection = 'asc' | 'desc';
-
-export interface PublicationComplianceResponse {
-  teamId: string;
-  teamName: string;
-  isTeamInactive: boolean;
-  publications: number;
-  datasets: number;
-  protocols: number;
-  code: number;
-  labMaterials: number;
-}
-
 type PublicationComplianceTableProps = ComponentProps<typeof PageControls> & {
   data: PublicationComplianceResponse[];
-  setSort: React.Dispatch<React.SetStateAction<SortPublicationCompliance>>;
-  setSortingDirection: React.Dispatch<
-    React.SetStateAction<PublicationComplianceSortingDirection>
-  >;
-  sort: SortPublicationCompliance;
-  sortingDirection: PublicationComplianceSortingDirection;
+  // setSort: React.Dispatch<React.SetStateAction<SortPublicationCompliance>>; // TODO: add these back post MVP
+  // setSortingDirection: React.Dispatch<
+  //   React.SetStateAction<PublicationComplianceSortingDirection>
+  // >;
+  // sort: SortPublicationCompliance;
+  // sortingDirection: PublicationComplianceSortingDirection;
 };
 
 const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
   data,
-  sort,
-  setSort,
-  sortingDirection,
-  setSortingDirection,
+  // sort, // TODO: add these back post MVP
+  // setSort,
+  // sortingDirection,
+  // setSortingDirection,
   ...pageControlProps
 }) => {
-  const handleSort = (sortKey: SortPublicationCompliance) => {
-    const newDirection =
-      sort === sortKey && sortingDirection === 'asc' ? 'desc' : 'asc';
-    setSortingDirection(newDirection);
-    setSort(sortKey);
-  };
+  // const handleSort = (sortKey: SortPublicationCompliance) => { // TODO: add these back post MVP
+  //   const newDirection =
+  //     sort === sortKey && sortingDirection === 'asc' ? 'desc' : 'asc';
+  //   setSortingDirection(newDirection);
+  //   setSort(sortKey);
+  // };
 
-  const getSortIcon = (sortKey: SortPublicationCompliance) => {
-    const isActive = sort === sortKey;
+  // const getSortIcon = (sortKey: SortPublicationCompliance) => { // TODO: add these back post MVP
+  //   const isActive = sort === sortKey;
 
-    // Use AzSortingIcon for team column (alphabetical)
-    if (sortKey.startsWith('team_')) {
-      return <AzSortingIcon active={isActive} description="" />;
-    }
+  //   // Use AzSortingIcon for team column (alphabetical)
+  //   if (sortKey.startsWith('team_')) {
+  //     return <AzSortingIcon active={isActive} description="" />;
+  //   }
 
-    // Use NumericalSortingDescIcon for numerical columns
-    return <NumericalSortingIcon active={isActive} description="" />;
-  };
+  //   // Use NumericalSortingDescIcon for numerical columns
+  //   return <NumericalSortingIcon active={isActive} description="" />;
+  // };
 
   const getPerformanceIcon = (percentage: number) => {
     if (percentage >= 90) {
@@ -194,55 +172,55 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                 <th css={titleStyles} className={'team'}>
                   <span
                     css={headerStyles}
-                    onClick={() => handleSort('team_asc')}
+                    // onClick={() => handleSort('team_asc')}
                   >
                     Team
-                    {getSortIcon('team_asc')}
+                    {/* {getSortIcon('team_asc')} */}
                   </span>
                 </th>
                 <th css={titleStyles} className={'publications'}>
                   <span
                     css={headerStyles}
-                    onClick={() => handleSort('publications_asc')}
+                    // onClick={() => handleSort('publications_asc')}
                   >
                     Publications
-                    {getSortIcon('publications_asc')}
+                    {/* {getSortIcon('publications_asc')} */}
                   </span>
                 </th>
                 <th css={titleStyles} className={'datasets'}>
                   <span
                     css={headerStyles}
-                    onClick={() => handleSort('datasets_asc')}
+                    // onClick={() => handleSort('datasets_asc')}
                   >
                     Datasets
-                    {getSortIcon('datasets_asc')}
+                    {/* {getSortIcon('datasets_asc')} */}
                   </span>
                 </th>
                 <th css={titleStyles} className={'protocols'}>
                   <span
                     css={headerStyles}
-                    onClick={() => handleSort('protocols_asc')}
+                    // onClick={() => handleSort('protocols_asc')}
                   >
                     Protocols
-                    {getSortIcon('protocols_asc')}
+                    {/* {getSortIcon('protocols_asc')} */}
                   </span>
                 </th>
                 <th css={titleStyles} className={'code'}>
                   <span
                     css={headerStyles}
-                    onClick={() => handleSort('code_asc')}
+                    // onClick={() => handleSort('code_asc')}
                   >
                     Code
-                    {getSortIcon('code_asc')}
+                    {/* {getSortIcon('code_asc')} */}
                   </span>
                 </th>
                 <th css={titleStyles}>
                   <span
                     css={headerStyles}
-                    onClick={() => handleSort('lab_materials_asc')}
+                    // onClick={() => handleSort('lab_materials_asc')}
                   >
                     Lab Materials
-                    {getSortIcon('lab_materials_asc')}
+                    {/* {getSortIcon('lab_materials_asc')} */}
                   </span>
                 </th>
               </tr>

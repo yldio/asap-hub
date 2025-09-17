@@ -1,8 +1,8 @@
-import { FC, useState } from 'react';
+import { FC /* useState */ } from 'react';
 import {
   PublicationComplianceTable,
-  SortPublicationCompliance,
-  PublicationComplianceSortingDirection,
+  // SortPublicationCompliance,
+  // PublicationComplianceSortingDirection,
   PublicationComplianceResponse,
 } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../../hooks';
@@ -15,9 +15,10 @@ const PublicationCompliance: FC<PublicationComplianceProps> = ({
   tags: _tags,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const [sort, setSort] = useState<SortPublicationCompliance>('team_asc');
-  const [sortingDirection, setSortingDirection] =
-    useState<PublicationComplianceSortingDirection>('asc');
+  // TODO: add these back post MVP
+  // const [sort, setSort] = useState<SortPublicationCompliance>('team_asc');
+  // const [sortingDirection, setSortingDirection] =
+  //   useState<PublicationComplianceSortingDirection>('asc');
 
   // Mock data - replace with actual data fetching logic
   const mockData: PublicationComplianceResponse[] = [
@@ -83,10 +84,10 @@ const PublicationCompliance: FC<PublicationComplianceProps> = ({
         data={mockData}
         numberOfPages={numberOfPages}
         renderPageHref={renderPageHref}
-        setSort={setSort}
-        setSortingDirection={setSortingDirection}
-        sort={sort}
-        sortingDirection={sortingDirection}
+        // setSort={setSort}
+        // setSortingDirection={setSortingDirection}
+        // sort={sort}
+        // sortingDirection={sortingDirection}
       />
     </div>
   );

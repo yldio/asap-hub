@@ -1,10 +1,7 @@
+import { PreprintComplianceResponse } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import PreprintComplianceTable, {
-  PreprintComplianceResponse,
-  SortPreprintCompliance,
-  PreprintComplianceSortingDirection,
-} from '../PreprintComplianceTable';
+import PreprintComplianceTable from '../PreprintComplianceTable';
 
 describe('PreprintComplianceTable', () => {
   const pageControlsProps = {
@@ -25,10 +22,10 @@ describe('PreprintComplianceTable', () => {
   const defaultProps: ComponentProps<typeof PreprintComplianceTable> = {
     ...pageControlsProps,
     data: [preprintComplianceData],
-    sort: 'team_asc' as SortPreprintCompliance,
-    setSort: jest.fn(),
-    sortingDirection: 'asc' as PreprintComplianceSortingDirection,
-    setSortingDirection: jest.fn(),
+    // sort: 'team_asc' as SortPreprintCompliance,
+    // setSort: jest.fn(),
+    // sortingDirection: 'asc' as PreprintComplianceSortingDirection,
+    // setSortingDirection: jest.fn(),
   };
 
   beforeEach(() => {
@@ -68,78 +65,80 @@ describe('PreprintComplianceTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('handles sorting when header is clicked', () => {
-    const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
+  // TODO: add these back post MVP
 
-    render(
-      <PreprintComplianceTable
-        {...defaultProps}
-        setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
-      />,
-    );
+  //   it('handles sorting when header is clicked', () => { // TODO: add these back post MVP
+  //     const mockSetSort = jest.fn();
+  //     const mockSetSortingDirection = jest.fn();
 
-    // Find the clickable span inside the team header
-    const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
-    const clickableSpan = teamHeader.querySelector('span');
-    clickableSpan?.click();
+  //     render(
+  //       <PreprintComplianceTable
+  //         {...defaultProps}
+  //         setSort={mockSetSort}
+  //         setSortingDirection={mockSetSortingDirection}
+  //       />,
+  //     );
 
-    expect(mockSetSort).toHaveBeenCalledWith('team_asc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith('desc');
-  });
+  //     // Find the clickable span inside the team header
+  //     const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
+  //     const clickableSpan = teamHeader.querySelector('span');
+  //     clickableSpan?.click();
 
-  it('toggles sorting direction when same header is clicked twice', () => {
-    const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
+  //     expect(mockSetSort).toHaveBeenCalledWith('team_asc');
+  //     expect(mockSetSortingDirection).toHaveBeenCalledWith('desc');
+  //   });
 
-    render(
-      <PreprintComplianceTable
-        {...defaultProps}
-        sort="team_asc"
-        sortingDirection="asc"
-        setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
-      />,
-    );
+  //   it('toggles sorting direction when same header is clicked twice', () => {
+  //     const mockSetSort = jest.fn();
+  //     const mockSetSortingDirection = jest.fn();
 
-    // Find the clickable span inside the team header
-    const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
-    const clickableSpan = teamHeader.querySelector('span');
-    clickableSpan?.click();
+  //     render(
+  //       <PreprintComplianceTable
+  //         {...defaultProps}
+  //         sort="team_asc"
+  //         sortingDirection="asc"
+  //         setSort={mockSetSort}
+  //         setSortingDirection={mockSetSortingDirection}
+  //       />,
+  //     );
 
-    expect(mockSetSort).toHaveBeenCalledWith('team_asc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith('desc');
-  });
+  //     // Find the clickable span inside the team header
+  //     const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
+  //     const clickableSpan = teamHeader.querySelector('span');
+  //     clickableSpan?.click();
 
-  it('handles sorting for different columns', () => {
-    const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
+  //     expect(mockSetSort).toHaveBeenCalledWith('team_asc');
+  //     expect(mockSetSortingDirection).toHaveBeenCalledWith('desc');
+  //   });
 
-    render(
-      <PreprintComplianceTable
-        {...defaultProps}
-        setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
-      />,
-    );
+  //   it('handles sorting for different columns', () => {
+  //     const mockSetSort = jest.fn();
+  //     const mockSetSortingDirection = jest.fn();
 
-    // Test number of preprints column sorting
-    const preprintsHeader = screen.getByRole('columnheader', {
-      name: /Number of Preprints/,
-    });
-    const preprintsSpan = preprintsHeader.querySelector('span');
-    preprintsSpan?.click();
-    expect(mockSetSort).toHaveBeenCalledWith('preprints_asc');
+  //     render(
+  //       <PreprintComplianceTable
+  //         {...defaultProps}
+  //         setSort={mockSetSort}
+  //         setSortingDirection={mockSetSortingDirection}
+  //       />,
+  //     );
 
-    // Test posted prior to journal submission column sorting
-    const postedPriorHeader = screen.getByRole('columnheader', {
-      name: /Posted Prior to Journal Submission/,
-    });
-    const postedPriorSpan = postedPriorHeader.querySelector('span');
-    postedPriorSpan?.click();
-    expect(mockSetSort).toHaveBeenCalledWith('posted_prior_asc');
-  });
+  //     // Test number of preprints column sorting
+  //     const preprintsHeader = screen.getByRole('columnheader', {
+  //       name: /Number of Preprints/,
+  //     });
+  //     const preprintsSpan = preprintsHeader.querySelector('span');
+  //     preprintsSpan?.click();
+  //     expect(mockSetSort).toHaveBeenCalledWith('preprints_asc');
+
+  //     // Test posted prior to journal submission column sorting
+  //     const postedPriorHeader = screen.getByRole('columnheader', {
+  //       name: /Posted Prior to Journal Submission/,
+  //     });
+  //     const postedPriorSpan = postedPriorHeader.querySelector('span');
+  //     postedPriorSpan?.click();
+  //     expect(mockSetSort).toHaveBeenCalledWith('posted_prior_asc');
+  //   });
 
   it('renders performance icons correctly', () => {
     const data = [

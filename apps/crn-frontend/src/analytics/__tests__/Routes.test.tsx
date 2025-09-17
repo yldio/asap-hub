@@ -5,7 +5,7 @@ import {
   userCollaborationPerformance,
   teamCollaborationPerformance,
 } from '@asap-hub/fixtures';
-import { enable } from '@asap-hub/flags';
+import { enable, disable } from '@asap-hub/flags';
 import { EngagementPerformance } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import {
@@ -401,6 +401,25 @@ describe('Engagement', () => {
 });
 
 describe('Open Science', () => {
+  disable('ANALYTICS_PHASE_TWO');
+  it('does not render the Open Science tab when the flag is disabled', async () => {
+    await renderPage(
+      analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
+    );
+    expect(
+      await screen.findByText(/Analytics/i, {
+        selector: 'h1',
+      }),
+    ).toBeVisible();
+    expect(
+      await screen.findByText(/Preprint Compliance/i, {
+        selector: 'h3',
+      }),
+    ).toBeVisible();
+  });
+
+  enable('ANALYTICS_PHASE_TWO');
+
   it('renders the Open Science tab successfully', async () => {
     await renderPage(
       analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,

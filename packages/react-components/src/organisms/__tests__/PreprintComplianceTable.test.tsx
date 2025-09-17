@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-commented-out-tests */
 import { PreprintComplianceResponse } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';

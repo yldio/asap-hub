@@ -1,7 +1,7 @@
 import {
   PreprintComplianceResponse,
-  PreprintComplianceSortingDirection,
-  SortPreprintCompliance,
+  // PreprintComplianceSortingDirection,
+  // SortPreprintCompliance,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -13,8 +13,8 @@ import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import {
   InactiveBadgeIcon,
-  AzSortingIcon,
-  NumericalSortingIcon,
+  // AzSortingIcon,
+  // NumericalSortingIcon,
   happyFaceIcon,
   neutralFaceIcon,
   sadFaceIcon,
@@ -103,7 +103,7 @@ const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
   // sort, // TODO: add these back post MVP
   // setSort,
   // sortingDirection,
-  //setSortingDirection,
+  // setSortingDirection,
   ...pageControlProps
 }) => {
   // const handleSort = (sortKey: SortPreprintCompliance) => {

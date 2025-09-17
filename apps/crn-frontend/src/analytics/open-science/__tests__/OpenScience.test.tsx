@@ -3,6 +3,7 @@ import {
   EMPTY_ALGOLIA_FACET_HITS,
 } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { enable } from '@asap-hub/flags';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -58,9 +59,6 @@ const renderPage = async (path: string) => {
               <Route path="/analytics/open-science/:metric">
                 <OpenScience />
               </Route>
-              <Route path="/analytics/open-science">
-                <OpenScience />
-              </Route>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -76,6 +74,10 @@ const renderPage = async (path: string) => {
 };
 
 describe('OpenScience', () => {
+  beforeEach(() => {
+    enable('ANALYTICS_PHASE_TWO');
+  });
+
   it('renders with preprint-compliance metric', async () => {
     await renderPage(
       analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
@@ -109,13 +111,6 @@ describe('OpenScience', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders preprint-compliance by default when no metric is provided', async () => {
-    await renderPage(analytics({}).openScience({}).$);
-
-    // When no metric is provided, only one Metric heading is shown
-    expect(screen.getByRole('heading', { name: 'Metric' })).toBeInTheDocument();
-  });
-
   it('renders metric dropdown with correct options', async () => {
     await renderPage(
       analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
@@ -125,7 +120,7 @@ describe('OpenScience', () => {
     expect(screen.getByDisplayValue('preprint-compliance')).toBeInTheDocument();
 
     // Check that the component renders without errors
-    expect(screen.getAllByRole('heading', { name: 'Metric' })).toHaveLength(2);
+    expect(screen.getAllByRole('heading', { name: 'Metric' })).toHaveLength(1);
   });
 
   it('renders the page body component with correct content', async () => {

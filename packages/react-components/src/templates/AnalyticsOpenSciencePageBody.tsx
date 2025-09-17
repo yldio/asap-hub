@@ -81,12 +81,10 @@ const AnalyticsOpenSciencePageBody: React.FC<OpenScienceAnalyticsProps> = ({
       </div>
       <AnalyticsControls
         currentPage={1}
-        documentCategory={undefined}
         exportResults={exportResults}
         href={analytics({}).openScience({}).metric({ metric }).$}
         loadTags={loadTags}
         metricOption={'team'}
-        outputType={undefined}
         setTags={setTags}
         tags={tags}
         timeRange={timeRange}

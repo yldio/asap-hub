@@ -154,7 +154,7 @@ const Routes = () => {
             />
           </Switch>
         </Route>
-        {isEnabled('ANALYTICS_OPEN_SCIENCE') && (
+        {isEnabled('ANALYTICS_PHASE_TWO') && (
           <Route path={path + analytics({}).openScience.template}>
             <Switch>
               <Route

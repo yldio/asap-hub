@@ -78,7 +78,7 @@ const AnalyticsPageHeader: React.FC<AnalyticsPageHeaderProps> = ({
           <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
             Engagement
           </TabLink>
-          {isEnabled('ANALYTICS_OPEN_SCIENCE') && (
+          {isEnabled('ANALYTICS_PHASE_TWO') && (
             <TabLink
               href={analytics({}).openScience({}).$}
               Icon={OpenScienceIcon}

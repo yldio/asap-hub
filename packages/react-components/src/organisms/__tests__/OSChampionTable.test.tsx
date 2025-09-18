@@ -20,6 +20,7 @@ describe('OSChampionTable', () => {
     teamName: 'Test Team',
     isTeamInactive: false,
     teamAwardsCount: 2,
+    timeRange: 'all',
     users: [
       {
         id: 'user-id-1',

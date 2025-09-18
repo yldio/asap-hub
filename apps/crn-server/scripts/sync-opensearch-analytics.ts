@@ -3,6 +3,7 @@ import {
   MeetingRepAttendanceDataObject,
   OSChampionDataObject,
   PreliminaryDataSharingDataObject,
+  timeRanges,
 } from '@asap-hub/model';
 import { indexOpensearchData } from '@asap-hub/server-common';
 import {
@@ -63,6 +64,7 @@ const metricConfig = {
             awardsCount: { type: 'integer' },
           },
         },
+        timeRange: { type: 'text' },
       },
     },
   },
@@ -129,9 +131,22 @@ export const exportAnalyticsData = async <T extends Metrics>(
 
     switch (metric) {
       case 'os-champion':
-        return analyticsController.fetchOSChampion(options) as Promise<
-          ListResponse<MetricObject<T>>
-        >;
+        const osChampionRecords = await Promise.all(
+          timeRanges.map(
+            (timeRange) =>
+              analyticsController.fetchOSChampion({
+                ...options,
+                filter: { timeRange },
+              }) as Promise<ListResponse<MetricObject<T>>>,
+          ),
+        );
+        return {
+          total: osChampionRecords.reduce(
+            (sum, records) => sum + records.total,
+            0,
+          ),
+          items: osChampionRecords.flatMap((records) => records.items),
+        } as ListResponse<MetricObject<T>>;
       case 'preliminary-data-sharing':
         const preliminaryDataSharingTimeRanges = ['all', 'last-year'] as const;
         const preliminaryDataSharingRecords = await Promise.all(

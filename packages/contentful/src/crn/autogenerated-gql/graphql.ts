@@ -15731,6 +15731,7 @@ export type FetchEngagementQuery = {
 export type FetchOsChampionQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+  dateFilter?: InputMaybe<Scalars['DateTime']>;
 }>;
 
 export type FetchOsChampionQuery = {
@@ -37643,6 +37644,17 @@ export const FetchOsChampionDocument = {
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'dateFilter' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'DateTime' },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -37877,6 +37889,20 @@ export const FetchOsChampionDocument = {
                                                     value: {
                                                       kind: 'BooleanValue',
                                                       value: true,
+                                                    },
+                                                  },
+                                                  {
+                                                    kind: 'ObjectField',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'date_gte',
+                                                    },
+                                                    value: {
+                                                      kind: 'Variable',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'dateFilter',
+                                                      },
                                                     },
                                                   },
                                                 ],

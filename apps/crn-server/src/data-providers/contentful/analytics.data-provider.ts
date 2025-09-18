@@ -126,11 +126,12 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
   }
 
   async fetchOSChampion(options: FetchAnalyticsOptions) {
-    const { take = 10, skip = 0 } = options;
+    const { take = 10, skip = 0, filter } = options;
+    const dateFilter = getRangeFilterParams(filter?.timeRange);
     const { teamsCollection } = await this.contentfulClient.request<
       FetchOsChampionQuery,
       FetchOsChampionQueryVariables
-    >(FETCH_OS_CHAMPION, { limit: take, skip });
+    >(FETCH_OS_CHAMPION, { limit: take, skip, dateFilter });
 
     return {
       total: teamsCollection?.total || 0,
@@ -434,6 +435,7 @@ const getTeamProductivityItems = (
 
 const getOsChampionItems = (
   teamsCollection: FetchOsChampionQuery['teamsCollection'],
+  rangeKey?: TimeRangeOption,
 ): OSChampionDataObject[] =>
   cleanArray(teamsCollection?.items).map((teamItem) => {
     let awardsCount = 0;
@@ -477,6 +479,7 @@ const getOsChampionItems = (
         teamName: teamItem.displayName || '',
         isTeamInactive: !!teamItem.inactiveSince,
         teamAwardsCount: awardsCount,
+        timeRange: rangeKey ?? 'all',
         users: userAwardsCount,
       };
     }
@@ -486,6 +489,7 @@ const getOsChampionItems = (
       teamName: teamItem.displayName || '',
       isTeamInactive: !!teamItem.inactiveSince,
       teamAwardsCount: 0,
+      timeRange: rangeKey ?? 'all',
       users: [],
     };
   });

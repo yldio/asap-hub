@@ -28,6 +28,7 @@ const data: ListOSChampionResponse = {
       teamName: 'Team One',
       isTeamInactive: false,
       teamAwardsCount: 2,
+      timeRange: 'all',
       users: [
         {
           id: 'user-id-1',
@@ -46,6 +47,7 @@ const data: ListOSChampionResponse = {
       teamName: 'Team Two',
       isTeamInactive: false,
       teamAwardsCount: 0,
+      timeRange: 'all',
       users: [],
     },
   ],

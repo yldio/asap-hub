@@ -583,6 +583,7 @@ export type OSChampionDataObject = {
   teamName: string;
   isTeamInactive: boolean;
   teamAwardsCount: number;
+  timeRange: TimeRangeOption;
   users: {
     id: string;
     name: string;

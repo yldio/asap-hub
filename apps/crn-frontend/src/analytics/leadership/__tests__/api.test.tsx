@@ -5,7 +5,7 @@ import {
   ClientSearchResponse,
 } from '@asap-hub/algolia';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
-import { OSChampionDataObject } from '@asap-hub/model';
+import { OSChampionDataObject, OSChampionResponse } from '@asap-hub/model';
 import {
   AnalyticsSearchOptions,
   getAnalyticsLeadership,
@@ -116,8 +116,9 @@ describe('getAnalyticsOSChampion', () => {
     teamName: 'Alessi',
     isTeamInactive: false,
     teamAwardsCount: 0,
+    timeRange: 'all',
     users: [],
-  };
+  } as OSChampionResponse;
   const defaultResponse = {
     items: [defaultOSChampionData],
     total: 1,

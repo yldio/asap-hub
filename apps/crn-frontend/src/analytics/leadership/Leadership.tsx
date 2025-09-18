@@ -18,7 +18,7 @@ import { FC, useState } from 'react';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
-import { useSearch, useAnalyticsOpensearch } from '../../hooks';
+import { useSearch, useAnalyticsOpensearch, useAnalytics } from '../../hooks';
 import { getAnalyticsLeadership } from './api';
 import { leadershipToCSV } from './export';
 import OSChampion from './OSChampion';
@@ -39,8 +39,10 @@ const Leadership: FC<Record<string, never>> = () => {
   };
 
   const { tags, setTags } = useSearch();
+  const { timeRange } = useAnalytics();
   const { client } = useAnalyticsAlgolia();
   const osChampionClient = useAnalyticsOpensearch('os-champion');
+  const isOSChampionPage = metric === 'os-champion';
 
   const exportResults = () =>
     algoliaResultsToStream<AnalyticsTeamLeadershipResponse>(
@@ -94,6 +96,7 @@ const Leadership: FC<Record<string, never>> = () => {
       metric={metric}
       setMetric={setMetric}
       exportResults={exportResults}
+      timeRange={isOSChampionPage ? timeRange : undefined}
     >
       {metric === 'os-champion' ? (
         <OSChampion

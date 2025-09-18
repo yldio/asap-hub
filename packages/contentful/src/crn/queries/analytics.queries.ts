@@ -350,7 +350,7 @@ export const FETCH_ENGAGEMENT = gql`
 `;
 
 export const FETCH_OS_CHAMPION = gql`
-  query FetchOsChampion($limit: Int, $skip: Int) {
+  query FetchOsChampion($limit: Int, $skip: Int, $dateFilter: DateTime) {
     teamsCollection(order: displayName_ASC, limit: $limit, skip: $skip) {
       total
       items {
@@ -377,7 +377,11 @@ export const FETCH_OS_CHAMPION = gql`
               }
               awardsCollection(
                 limit: 10
-                where: { date_exists: true, type_exists: true }
+                where: {
+                  date_exists: true
+                  type_exists: true
+                  date_gte: $dateFilter
+                }
               ) {
                 total
               }

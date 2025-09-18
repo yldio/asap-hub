@@ -3,9 +3,14 @@ import {
   createAlgoliaResponse,
   AlgoliaSearchClient,
   ClientSearchResponse,
+  AnalyticsSearchOptionsWithFiltering,
 } from '@asap-hub/algolia';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
-import { OSChampionDataObject, OSChampionResponse } from '@asap-hub/model';
+import {
+  OSChampionDataObject,
+  OSChampionResponse,
+  SortOSChampion,
+} from '@asap-hub/model';
 import {
   AnalyticsSearchOptions,
   getAnalyticsLeadership,
@@ -111,6 +116,12 @@ describe('getAnalyticsLeadership', () => {
 });
 
 describe('getAnalyticsOSChampion', () => {
+  const defaultOSChampionOptions: AnalyticsSearchOptionsWithFiltering<SortOSChampion> =
+    {
+      ...defaultOptions,
+      sort: 'team_asc',
+      timeRange: 'all',
+    };
   const defaultOSChampionData = {
     teamId: 'team-id-1',
     teamName: 'Alessi',
@@ -135,9 +146,17 @@ describe('getAnalyticsOSChampion', () => {
   it('should not default to any search, specific page or limit hits per page', async () => {
     mockOpensearchClient.search.mockResolvedValue(defaultResponse);
 
-    await getAnalyticsOSChampion(mockOpensearchClient, defaultOptions);
+    await getAnalyticsOSChampion(
+      mockOpensearchClient,
+      defaultOSChampionOptions,
+    );
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith([], null, null);
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
+      [],
+      null,
+      null,
+      'all',
+    );
   });
 
   it('should pass the options if provided to search', async () => {
@@ -147,9 +166,16 @@ describe('getAnalyticsOSChampion', () => {
       pageSize: 10,
       currentPage: 0,
       tags: ['Alessi'],
+      timeRange: 'all',
+      sort: 'team_asc',
     });
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith(['Alessi'], 0, 10);
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
+      ['Alessi'],
+      0,
+      10,
+      'all',
+    );
   });
 
   it('should return successfully fetched os champion data', async () => {
@@ -160,6 +186,8 @@ describe('getAnalyticsOSChampion', () => {
         pageSize: 10,
         currentPage: 0,
         tags: ['Alessi'],
+        timeRange: 'all',
+        sort: 'team_asc',
       },
     );
     expect(analyticsOSChampion).toEqual(

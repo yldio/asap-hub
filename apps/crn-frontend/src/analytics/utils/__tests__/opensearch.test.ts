@@ -94,7 +94,7 @@ describe('OpensearchClient', () => {
         }),
       });
 
-      const result = await client.search(['Team Only'], 0, 10, 'teams');
+      const result = await client.search(['Team Only'], 0, 10, 'all', 'teams');
 
       expect(result.total).toBe(1);
 

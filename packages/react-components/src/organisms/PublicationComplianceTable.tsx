@@ -13,7 +13,7 @@ import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import {
   InactiveBadgeIcon,
-  // AzSortingIcon,
+  // AlphabeticalSortingIcon,
   // NumericalSortingIcon,
   happyFaceIcon,
   neutralFaceIcon,
@@ -125,9 +125,9 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
   // const getSortIcon = (sortKey: SortPublicationCompliance) => { // TODO: add these back post MVP
   //   const isActive = sort === sortKey;
 
-  //   // Use AzSortingIcon for team column (alphabetical)
+  //   // Use AlphabeticalSortingIcon for team column (alphabetical)
   //   if (sortKey.startsWith('team_')) {
-  //     return <AzSortingIcon active={isActive} description="" />;
+  //     return <AlphabeticalSortingIcon active={isActive} description="" />;
   //   }
 
   //   // Use NumericalSortingDescIcon for numerical columns

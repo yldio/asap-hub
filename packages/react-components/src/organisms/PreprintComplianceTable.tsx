@@ -13,7 +13,7 @@ import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import {
   InactiveBadgeIcon,
-  // AzSortingIcon,
+  // AlphabeticalSortingIcon,
   // NumericalSortingIcon,
   happyFaceIcon,
   neutralFaceIcon,
@@ -117,7 +117,7 @@ const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
   //   const isActive = sort === sortKey;
 
   //   if (sortKey.startsWith('team_')) {
-  //     return <AzSortingIcon active={isActive} description="" />;
+  //     return <AlphabeticalSortingIcon active={isActive} description="" />;
   //   }
 
   //   return <NumericalSortingIcon active={isActive} description="" />;

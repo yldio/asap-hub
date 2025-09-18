@@ -5,7 +5,7 @@ import {
   userCollaborationPerformance,
   teamCollaborationPerformance,
 } from '@asap-hub/fixtures';
-import { enable } from '@asap-hub/flags';
+import { enable, disable } from '@asap-hub/flags';
 import { EngagementPerformance } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import {
@@ -397,5 +397,74 @@ describe('Engagement', () => {
     });
 
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
+});
+
+describe('Open Science', () => {
+  beforeEach(() => {
+    enable('ANALYTICS_PHASE_TWO');
+  });
+
+  it('does not render the Open Science tab when the flag is disabled', async () => {
+    disable('ANALYTICS_PHASE_TWO');
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
+    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
+
+    await renderPage(
+      analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
+    );
+    expect(
+      await screen.findByText(/Analytics/i, {
+        selector: 'h1',
+      }),
+    ).toBeVisible();
+    expect(
+      screen.queryByText(/Preprint Compliance/i, {
+        selector: 'h3',
+      }),
+    ).not.toBeInTheDocument();
+
+    expect(
+      await screen.findByText(/User Productivity/i, {
+        selector: 'h3',
+      }),
+    ).toBeVisible();
+  });
+
+  it('renders the Open Science tab successfully', async () => {
+    await renderPage(
+      analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
+    );
+    expect(
+      await screen.findByText(/Analytics/i, {
+        selector: 'h1',
+      }),
+    ).toBeVisible();
+    expect(
+      await screen.findByText(/Preprint Compliance/i, {
+        selector: 'h3',
+      }),
+    ).toBeVisible();
+  });
+
+  it('renders Publication Compliance when metric is selected', async () => {
+    await renderPage(
+      analytics({}).openScience({}).metric({ metric: 'publication-compliance' })
+        .$,
+    );
+    expect(
+      await screen.findByText(/Publication Compliance/i, {
+        selector: 'h3',
+      }),
+    ).toBeVisible();
+  });
+
+  it('redirects to preprint-compliance when no metric is specified', async () => {
+    await renderPage(analytics({}).openScience({}).$);
+    expect(
+      await screen.findByText(/Preprint Compliance/i, {
+        selector: 'h3',
+      }),
+    ).toBeVisible();
   });
 });

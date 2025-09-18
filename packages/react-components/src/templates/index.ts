@@ -6,6 +6,7 @@ export { default as AnalyticsCollaborationPageBody } from './AnalyticsCollaborat
 export { default as AnalyticsLeadershipPageBody } from './AnalyticsLeadershipPageBody';
 export { default as AnalyticsProductivityPageBody } from './AnalyticsProductivityPageBody';
 export { default as AnalyticsEngagementPageBody } from './AnalyticsEngagementPageBody';
+export { default as AnalyticsOpenSciencePageBody } from './AnalyticsOpenSciencePageBody';
 export { default as AnalyticsPageHeader } from './AnalyticsPageHeader';
 export { default as BasicLayout } from './BasicLayout';
 export { default as BiographyModal } from './BiographyModal';

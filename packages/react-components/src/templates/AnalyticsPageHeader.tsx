@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { analytics } from '@asap-hub/routing';
+import { useFlags } from '@asap-hub/react-context';
 import { Button, Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
@@ -8,6 +9,7 @@ import TabNav from '../molecules/TabNav';
 import {
   EngagementIcon,
   LeadershipIcon,
+  OpenScienceIcon,
   ProductivityIcon,
   TeamIcon,
   uploadIcon,
@@ -35,47 +37,59 @@ type AnalyticsPageHeaderProps = {
 
 const AnalyticsPageHeader: React.FC<AnalyticsPageHeaderProps> = ({
   onExportAnalytics,
-}) => (
-  <header>
-    <div css={visualHeaderStyles}>
-      <Display styleAsHeading={2}>Analytics</Display>
-      <div css={containerStyles}>
-        <div css={textStyles}>
-          <Paragraph accent="lead">
-            Explore dashboards related to CRN activities.
-          </Paragraph>
+}) => {
+  const { isEnabled } = useFlags();
+
+  return (
+    <header>
+      <div css={visualHeaderStyles}>
+        <Display styleAsHeading={2}>Analytics</Display>
+        <div css={containerStyles}>
+          <div css={textStyles}>
+            <Paragraph accent="lead">
+              Explore dashboards related to CRN activities.
+            </Paragraph>
+          </div>
+          <div>
+            <Button
+              onClick={onExportAnalytics}
+              primary
+              noMargin
+              small
+              overrideStyles={css({ whiteSpace: 'nowrap' })}
+            >
+              {uploadIcon} Multiple XLSX
+            </Button>
+          </div>
         </div>
-        <div>
-          <Button
-            onClick={onExportAnalytics}
-            primary
-            noMargin
-            small
-            overrideStyles={css({ whiteSpace: 'nowrap' })}
+        <TabNav>
+          <TabLink
+            href={analytics({}).productivity({}).$}
+            Icon={ProductivityIcon}
           >
-            {uploadIcon} Multiple XLSX
-          </Button>
-        </div>
+            Resource & Data Sharing
+          </TabLink>
+          <TabLink href={analytics({}).collaboration({}).$} Icon={TeamIcon}>
+            Collaboration
+          </TabLink>
+          <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>
+            Leadership & Membership
+          </TabLink>
+          <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
+            Engagement
+          </TabLink>
+          {isEnabled('ANALYTICS_PHASE_TWO') && (
+            <TabLink
+              href={analytics({}).openScience({}).$}
+              Icon={OpenScienceIcon}
+            >
+              Open Science
+            </TabLink>
+          )}
+        </TabNav>
       </div>
-      <TabNav>
-        <TabLink
-          href={analytics({}).productivity({}).$}
-          Icon={ProductivityIcon}
-        >
-          Resource & Data Sharing
-        </TabLink>
-        <TabLink href={analytics({}).collaboration({}).$} Icon={TeamIcon}>
-          Collaboration
-        </TabLink>
-        <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>
-          Leadership & Membership
-        </TabLink>
-        <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
-          Engagement
-        </TabLink>
-      </TabNav>
-    </div>
-  </header>
-);
+    </header>
+  );
+};
 
 export default AnalyticsPageHeader;

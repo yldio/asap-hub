@@ -4,6 +4,7 @@ import {
   ExportAnalyticsModal,
 } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
+import { useFlags } from '@asap-hub/react-context';
 import { lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../hooks/algolia';
@@ -24,12 +25,18 @@ const loadCollaboration = () =>
 const loadEngagement = () =>
   import(/* webpackChunkName: "engagement" */ './engagement/Engagement');
 
+const loadOpenScience = () =>
+  import(/* webpackChunkName: "open-science" */ './open-science/OpenScience');
+
 const LeadershipBody = lazy(loadLeadership);
 const ProductivityBody = lazy(loadProductivity);
 const CollaborationBody = lazy(loadCollaboration);
 const EngagementBody = lazy(loadEngagement);
+const OpenScienceBody = lazy(loadOpenScience);
 
 const Routes = () => {
+  const { isEnabled } = useFlags();
+
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadLeadership().then(loadProductivity).then(loadCollaboration);
@@ -138,6 +145,7 @@ const Routes = () => {
                 </Frame>
               </AnalyticsPage>
             </Route>
+
             <Redirect
               to={
                 analytics({}).leadership({}).metric({ metric: 'working-group' })
@@ -146,6 +154,33 @@ const Routes = () => {
             />
           </Switch>
         </Route>
+        {isEnabled('ANALYTICS_PHASE_TWO') && (
+          <Route path={path + analytics({}).openScience.template}>
+            <Switch>
+              <Route
+                exact
+                path={
+                  path +
+                  analytics({}).openScience.template +
+                  analytics({}).openScience({}).metric.template
+                }
+              >
+                <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                  <Frame title="Open Science">
+                    <OpenScienceBody />
+                  </Frame>
+                </AnalyticsPage>
+              </Route>
+              <Redirect
+                to={
+                  analytics({})
+                    .openScience({})
+                    .metric({ metric: 'preprint-compliance' }).$
+                }
+              />
+            </Switch>
+          </Route>
+        )}
         <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
       </Switch>
     </>

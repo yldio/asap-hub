@@ -401,8 +401,15 @@ describe('Engagement', () => {
 });
 
 describe('Open Science', () => {
-  disable('ANALYTICS_PHASE_TWO');
+  beforeEach(() => {
+    enable('ANALYTICS_PHASE_TWO');
+  });
+
   it('does not render the Open Science tab when the flag is disabled', async () => {
+    disable('ANALYTICS_PHASE_TWO');
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
+    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
+
     await renderPage(
       analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
     );
@@ -412,13 +419,17 @@ describe('Open Science', () => {
       }),
     ).toBeVisible();
     expect(
-      await screen.findByText(/Preprint Compliance/i, {
+      screen.queryByText(/Preprint Compliance/i, {
+        selector: 'h3',
+      }),
+    ).not.toBeInTheDocument();
+
+    expect(
+      await screen.findByText(/User Productivity/i, {
         selector: 'h3',
       }),
     ).toBeVisible();
   });
-
-  enable('ANALYTICS_PHASE_TWO');
 
   it('renders the Open Science tab successfully', async () => {
     await renderPage(

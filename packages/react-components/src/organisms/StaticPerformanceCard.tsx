@@ -14,14 +14,13 @@ import CaptionCard from './CaptionCard';
 
 const containerStyles = css({
   display: 'grid',
-  gridTemplateColumns: 'repeat(4, 1fr)',
+  gridTemplateColumns: 'repeat(4, auto)',
   gap: rem(12),
   gridColumn: '1 / span 2',
-  paddingRight: rem(48),
   [`@media (max-width: calc(${
     smallDesktopScreen.width
   }px + ${contentSidePaddingWithNavigation(2)}))`]: {
-    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateColumns: 'repeat(2, auto)',
     gap: rem(12),
   },
 });

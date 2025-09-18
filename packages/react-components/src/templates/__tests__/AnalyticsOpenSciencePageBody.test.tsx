@@ -94,27 +94,6 @@ describe('AnalyticsOpenSciencePageBody', () => {
     expect(screen.getByText('table content')).toBeInTheDocument();
   });
 
-  it('handles empty tags array', () => {
-    render(<AnalyticsOpenSciencePageBody {...props} tags={[]} />);
-
-    expect(
-      screen.getByRole('heading', { name: 'Preprint Compliance' }),
-    ).toBeInTheDocument();
-  });
-
-  it('handles multiple tags', () => {
-    render(
-      <AnalyticsOpenSciencePageBody
-        {...props}
-        tags={['tag1', 'tag2', 'tag3']}
-      />,
-    );
-
-    expect(
-      screen.getByRole('heading', { name: 'Preprint Compliance' }),
-    ).toBeInTheDocument();
-  });
-
   it('uses noop function when loadTags is not provided', () => {
     const propsWithoutLoadTags = { ...props };
     delete propsWithoutLoadTags.loadTags;

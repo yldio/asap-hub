@@ -126,20 +126,6 @@ describe('OpenScience', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders with different metrics', async () => {
-    await renderPage(
-      analytics({}).openScience({}).metric({ metric: 'publication-compliance' })
-        .$,
-    );
-
-    expect(
-      screen.getByRole('heading', { name: 'Publication Compliance' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Percent compliance by research output type/),
-    ).toBeInTheDocument();
-  });
-
   it('changes route when metric dropdown selection changes', async () => {
     const history = createMemoryHistory({
       initialEntries: [

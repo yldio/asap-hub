@@ -7,6 +7,7 @@ import {
   SortLeadershipAndMembership,
   SortOSChampion,
 } from '@asap-hub/model';
+import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   atomFamily,
   DefaultValue,
@@ -21,7 +22,6 @@ import {
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAlgoliaIndexName } from '../utils/state';
 import { useAnalyticsOpensearch } from '../../hooks';
-import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 
 type Options = AnalyticsSearchOptions & {
   sort: SortLeadershipAndMembership;

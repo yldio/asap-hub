@@ -160,7 +160,11 @@ const generateDefaultQuery = (page: number, size: number) => ({
   from: page * size,
 });
 
-const generateDefaultQueryWithTimeRange = (page: number, size: number, timeRange: TimeRangeOption) => ({
+const generateDefaultQueryWithTimeRange = (
+  page: number,
+  size: number,
+  timeRange: TimeRangeOption,
+) => ({
   query: {
     bool: {
       must: [
@@ -170,7 +174,7 @@ const generateDefaultQueryWithTimeRange = (page: number, size: number, timeRange
           },
         },
       ],
-        }
+    },
   },
   size,
   from: page * size,
@@ -327,7 +331,6 @@ const buildSearchQuery = (
     });
   }
 
-
   return {
     from: page * size,
     size,
@@ -354,10 +357,10 @@ const buildOpensearchQuery = (options: OpensearchSearchOptions) => {
   if (searchTags?.length === 0) {
     if (timeRange) {
       return generateDefaultQueryWithTimeRange(
-      currentPage || DEFAULT_PAGE_NUMBER,
-      pageSize || DEFAULT_PAGE_SIZE,
-      timeRange        
-      )
+        currentPage || DEFAULT_PAGE_NUMBER,
+        pageSize || DEFAULT_PAGE_SIZE,
+        timeRange,
+      );
     }
     return generateDefaultQuery(
       currentPage || DEFAULT_PAGE_NUMBER,
@@ -370,6 +373,6 @@ const buildOpensearchQuery = (options: OpensearchSearchOptions) => {
     currentPage || DEFAULT_PAGE_NUMBER,
     pageSize || DEFAULT_PAGE_SIZE,
     searchScope,
-    timeRange
+    timeRange,
   );
 };

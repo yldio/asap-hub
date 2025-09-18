@@ -657,3 +657,46 @@ export const meetingRepAttendanceInitialSortingDirection = {
 };
 
 export type EngagementType = 'presenters' | 'attendance';
+
+export type SortPublicationCompliance =
+  | 'team_asc'
+  | 'team_desc'
+  | 'publications_asc'
+  | 'publications_desc'
+  | 'datasets_asc'
+  | 'datasets_desc'
+  | 'protocols_asc'
+  | 'protocols_desc'
+  | 'code_asc'
+  | 'code_desc'
+  | 'lab_materials_asc'
+  | 'lab_materials_desc';
+
+export type PublicationComplianceSortingDirection = 'asc' | 'desc';
+
+export interface PublicationComplianceResponse {
+  teamId: string;
+  teamName: string;
+  isTeamInactive: boolean;
+  publications: number;
+  datasets: number;
+  protocols: number;
+  code: number;
+  labMaterials: number;
+}
+
+export type SortPreprintCompliance =
+  | 'team_asc'
+  | 'preprints_asc'
+  | 'posted_prior_asc';
+
+export type PreprintComplianceSortingDirection = 'asc' | 'desc';
+
+export interface PreprintComplianceResponse {
+  teamId: string;
+  teamName: string;
+  isTeamInactive: boolean;
+  numberOfPreprints: number;
+  postedPriorToJournalSubmission: number;
+  postedPriorPercentage: number;
+}

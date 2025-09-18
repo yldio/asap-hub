@@ -11,6 +11,8 @@ const collaboration = route('/collaboration', {}, { collaborationPath });
 
 const leadership = route('/leadership', {}, { metric });
 
+const openScience = route('/open-science', {}, { metric });
+
 const productivity = route('/productivity', {}, { metric });
 
 const engagement = route('/engagement', {}, { metric });
@@ -18,5 +20,5 @@ const engagement = route('/engagement', {}, { metric });
 export default route(
   '/analytics',
   {},
-  { collaboration, leadership, productivity, engagement },
+  { collaboration, leadership, productivity, engagement, openScience },
 );

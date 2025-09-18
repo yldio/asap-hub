@@ -18,7 +18,12 @@ import { FC, useState } from 'react';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
-import { useSearch, useAnalyticsOpensearch, useAnalytics } from '../../hooks';
+import {
+  useSearch,
+  useAnalyticsOpensearch,
+  useAnalytics,
+  usePaginationParams,
+} from '../../hooks';
 import { getAnalyticsLeadership } from './api';
 import { leadershipToCSV } from './export';
 import OSChampion from './OSChampion';
@@ -29,6 +34,7 @@ const Leadership: FC<Record<string, never>> = () => {
   const { metric } = useParams<{
     metric: MetricOption;
   }>();
+  const { currentPage } = usePaginationParams();
 
   const [osChampionSort, setOsChampionSort] =
     useState<SortOSChampion>('team_asc');
@@ -97,6 +103,7 @@ const Leadership: FC<Record<string, never>> = () => {
       setMetric={setMetric}
       exportResults={exportResults}
       timeRange={isOSChampionPage ? timeRange : undefined}
+      currentPage={currentPage}
     >
       {metric === 'os-champion' ? (
         <OSChampion

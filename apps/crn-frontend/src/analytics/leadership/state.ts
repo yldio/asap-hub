@@ -21,14 +21,13 @@ import {
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAlgoliaIndexName } from '../utils/state';
 import { useAnalyticsOpensearch } from '../../hooks';
+import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 
 type Options = AnalyticsSearchOptions & {
   sort: SortLeadershipAndMembership;
 };
 
-type OSOptions = AnalyticsSearchOptions & {
-  sort: SortOSChampion;
-};
+type OSOptions = AnalyticsSearchOptionsWithFiltering<SortOSChampion>;
 type StateOptionKeyData = Pick<
   Options,
   'currentPage' | 'pageSize' | 'sort' | 'tags'

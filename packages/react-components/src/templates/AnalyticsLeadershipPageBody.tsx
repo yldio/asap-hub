@@ -1,3 +1,4 @@
+import { analytics } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { noop } from '..';
@@ -30,7 +31,7 @@ const metricDescription = {
 
 type LeadershipAndMembershipAnalyticsProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
-  'timeRange'
+  'currentPage' | 'timeRange'
 > & {
   children: React.ReactNode;
   tags: string[];
@@ -56,6 +57,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   setTags,
   loadTags = noop,
   timeRange,
+  currentPage,
   metric,
   setMetric,
   exportResults,
@@ -84,6 +86,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         <Paragraph>{metricDescription[metric]}</Paragraph>
       </div>
       <AnalyticsControls
+        currentPage={currentPage}
         metricOption={metric === 'os-champion' ? 'user' : 'team'}
         tags={tags}
         loadTags={loadTags}
@@ -94,6 +97,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
             ? 'Sorry, no teams or users match'
             : undefined
         }
+        href={analytics({}).leadership({}).metric({ metric }).$}
         timeRange={timeRange}
       />
       {children}

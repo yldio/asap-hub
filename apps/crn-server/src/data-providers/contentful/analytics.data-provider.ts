@@ -135,7 +135,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: teamsCollection?.total || 0,
-      items: getOsChampionItems(teamsCollection),
+      items: getOsChampionItems(teamsCollection, filter?.timeRange),
     };
   }
 

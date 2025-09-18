@@ -64,7 +64,7 @@ const metricConfig = {
             awardsCount: { type: 'integer' },
           },
         },
-        timeRange: { type: 'text' },
+        timeRange: { type: 'keyword' },
       },
     },
   },

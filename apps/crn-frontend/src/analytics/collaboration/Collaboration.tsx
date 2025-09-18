@@ -217,6 +217,7 @@ const Collaboration = () => {
           sort={teamPrelimSharingSort}
           setSort={setTeamPrelimSharingSort}
           tags={tags}
+          timeRange={timeRange}
         />
       )}
     </AnalyticsCollaborationPageBody>

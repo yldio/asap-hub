@@ -9,6 +9,10 @@ import {
   TeamCollaborationPerformance,
   UserCollaborationAlgoliaResponse,
   UserCollaborationPerformance,
+  ListPreliminaryDataSharingResponse,
+  PreliminaryDataSharingDataObject,
+  ListSharingPrelimFindingsResponse,
+  SharingPrelimFindingsResponse,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -17,6 +21,7 @@ import {
   useRecoilState,
 } from 'recoil';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import {
   getAlgoliaIndexName,
   makePerformanceHook,
@@ -27,6 +32,8 @@ import {
   getTeamCollaboration,
   getTeamCollaborationPerformance,
   getUserCollaborationPerformance,
+  getPreliminaryDataSharing,
+  PreliminaryDataSharingSearchOptions,
 } from './api';
 
 const analyticsUserCollaborationIndexState = atomFamily<
@@ -221,9 +228,58 @@ export const useUserCollaborationPerformance =
     getUserCollaborationPerformance,
   );
 
+const analyticsPreliminaryDataSharingState = atomFamily<
+  ListPreliminaryDataSharingResponse | Error | undefined,
+  PreliminaryDataSharingSearchOptions
+>({
+  key: 'analyticsPreliminaryDataSharing',
+  default: undefined,
+});
+
 export const useAnalyticsSharingPrelimFindings = (
   options: AnalyticsSearchOptionsWithFiltering<SortSharingPrelimFindings>,
-) => ({
-  items: [],
-  total: 0,
-});
+): ListSharingPrelimFindingsResponse => {
+  const opensearchClient =
+    useAnalyticsOpensearch<PreliminaryDataSharingDataObject>(
+      'preliminary-data-sharing',
+    ).client;
+
+  const [preliminaryDataSharing, setPreliminaryDataSharing] = useRecoilState(
+    analyticsPreliminaryDataSharingState({
+      currentPage: options.currentPage,
+      pageSize: options.pageSize,
+      tags: options.tags,
+      timeRange: options.timeRange || 'all',
+    }),
+  );
+
+  if (preliminaryDataSharing === undefined) {
+    throw getPreliminaryDataSharing(opensearchClient, {
+      currentPage: options.currentPage,
+      pageSize: options.pageSize,
+      tags: options.tags,
+      timeRange: options.timeRange || 'all',
+    })
+      .then(setPreliminaryDataSharing)
+      .catch(setPreliminaryDataSharing);
+  }
+
+  if (preliminaryDataSharing instanceof Error) {
+    throw preliminaryDataSharing;
+  }
+
+  const transformedItems: SharingPrelimFindingsResponse[] =
+    preliminaryDataSharing.items.map((item) => ({
+      teamId: item.teamId,
+      teamName: item.teamName,
+      isTeamInactive: item.isTeamInactive,
+      teamPercentShared: item.percentShared,
+      limitedData: item.limitedData,
+      timeRange: item.timeRange,
+    }));
+
+  return {
+    items: transformedItems,
+    total: preliminaryDataSharing.total,
+  };
+};

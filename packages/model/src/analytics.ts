@@ -175,6 +175,14 @@ export const timeRangeOptions: Record<TimeRangeOption, string> = {
   all: 'Since Hub Launch (2020)',
 };
 
+export const timeRangeOptionsPreliminaryDataSharing: Record<
+  TimeRangeOptionPreliminaryDataSharing,
+  string
+> = {
+  'last-year': timeRangeOptions['last-year'],
+  all: timeRangeOptions.all,
+};
+
 export type DocumentCategoryOption = (typeof documentCategories)[number];
 export type OutputTypeOption = (typeof outputTypes)[number];
 
@@ -604,7 +612,7 @@ export type PreliminaryDataSharingDataObject = {
   teamName: string;
   isTeamInactive: boolean;
   limitedData?: boolean;
-  percentShared: number;
+  percentShared: number | null;
   timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };
 export type ListPreliminaryDataSharingDataObject =
@@ -617,7 +625,9 @@ export type SharingPrelimFindingsDataObject = {
   teamId: string;
   teamName: string;
   isTeamInactive: boolean;
-  teamPercentShared: number;
+  teamPercentShared: number | null;
+  limitedData?: boolean;
+  timeRange?: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };
 export type ListSharingPrelimFindingsDataObject =
   ListResponse<SharingPrelimFindingsDataObject>;

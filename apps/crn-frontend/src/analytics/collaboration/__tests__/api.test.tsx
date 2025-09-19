@@ -9,6 +9,8 @@ import {
   teamCollaborationResponse,
   userCollaborationPerformance,
   userCollaborationResponse,
+  preliminaryDataSharingResponse,
+  mockOpensearchResponse,
 } from '@asap-hub/fixtures';
 import {
   DocumentCategoryOption,
@@ -16,6 +18,7 @@ import {
   SortTeamCollaboration,
   SortUserCollaboration,
   TimeRangeOption,
+  PreliminaryDataSharingDataObject,
 } from '@asap-hub/model';
 import nock from 'nock';
 
@@ -24,7 +27,9 @@ import {
   getTeamCollaborationPerformance,
   getUserCollaboration,
   getUserCollaborationPerformance,
+  getPreliminaryDataSharing,
 } from '../api';
+import { OpensearchClient } from '../../utils/opensearch';
 
 jest.mock('../../../config');
 
@@ -404,4 +409,201 @@ describe('getTeamCollaborationPerformance', () => {
       );
     },
   );
+});
+
+describe('getPreliminaryDataSharing', () => {
+  const mockRequest = jest.fn();
+  const opensearchClient = {
+    request: mockRequest,
+  } as unknown as OpensearchClient<PreliminaryDataSharingDataObject>;
+
+  beforeEach(() => {
+    mockRequest.mockReset();
+    mockRequest.mockResolvedValue(mockOpensearchResponse);
+  });
+
+  it('returns successfully fetched preliminary data sharing', async () => {
+    const result = await getPreliminaryDataSharing(opensearchClient, {
+      currentPage: 0,
+      pageSize: 10,
+      tags: [],
+      timeRange: 'all',
+    });
+
+    expect(result).toEqual(preliminaryDataSharingResponse);
+  });
+
+  it('calls opensearch with correct query for basic request', async () => {
+    await getPreliminaryDataSharing(opensearchClient, {
+      currentPage: 0,
+      pageSize: 10,
+      tags: [],
+      timeRange: 'all',
+    });
+
+    expect(mockRequest).toHaveBeenCalledWith({
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                timeRange: 'all',
+              },
+            },
+          ],
+        },
+      },
+      from: 0,
+      size: 10,
+      sort: [
+        {
+          'teamName.keyword': {
+            order: 'asc',
+          },
+        },
+      ],
+    });
+  });
+
+  it.each`
+    range                        | timeRange
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `('handles time range $range', async ({ timeRange }) => {
+    await getPreliminaryDataSharing(opensearchClient, {
+      currentPage: 0,
+      pageSize: 10,
+      tags: [],
+      timeRange,
+    });
+
+    expect(mockRequest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: {
+          bool: {
+            must: [
+              {
+                match: {
+                  timeRange,
+                },
+              },
+            ],
+          },
+        },
+      }),
+    );
+  });
+
+  it('handles tags filtering', async () => {
+    await getPreliminaryDataSharing(opensearchClient, {
+      currentPage: 0,
+      pageSize: 10,
+      tags: ['Team A', 'Team B'],
+      timeRange: 'all',
+    });
+
+    expect(mockRequest).toHaveBeenCalledWith({
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                timeRange: 'all',
+              },
+            },
+            {
+              bool: {
+                should: [
+                  {
+                    term: {
+                      'teamName.keyword': 'Team A',
+                    },
+                  },
+                  {
+                    term: {
+                      'teamName.keyword': 'Team B',
+                    },
+                  },
+                ],
+                minimum_should_match: 1,
+              },
+            },
+          ],
+        },
+      },
+      from: 0,
+      size: 10,
+      sort: [
+        {
+          'teamName.keyword': {
+            order: 'asc',
+          },
+        },
+      ],
+    });
+  });
+
+  it('handles pagination correctly', async () => {
+    await getPreliminaryDataSharing(opensearchClient, {
+      currentPage: 2,
+      pageSize: 5,
+      tags: [],
+      timeRange: 'all',
+    });
+
+    expect(mockRequest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        from: 10, // (currentPage: 2) * (pageSize: 5)
+        size: 5,
+      }),
+    );
+  });
+
+  it('handles null pagination parameters with defaults', async () => {
+    await getPreliminaryDataSharing(opensearchClient, {
+      currentPage: null,
+      pageSize: null,
+      tags: [],
+      timeRange: 'all',
+    });
+
+    expect(mockRequest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        from: 0, // (null || 0) * (null || 10)
+        size: 10,
+      }),
+    );
+  });
+
+  it('handles empty tags array', async () => {
+    await getPreliminaryDataSharing(opensearchClient, {
+      currentPage: 0,
+      pageSize: 10,
+      tags: [],
+      timeRange: 'all',
+    });
+
+    expect(mockRequest).toHaveBeenCalledWith({
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                timeRange: 'all',
+              },
+            },
+          ],
+        },
+      },
+      from: 0,
+      size: 10,
+      sort: [
+        {
+          'teamName.keyword': {
+            order: 'asc',
+          },
+        },
+      ],
+    });
+  });
 });

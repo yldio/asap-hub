@@ -1,9 +1,8 @@
 import {
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipResponse,
-  ListOSChampionResponse,
-  OSChampionDataObject,
-  OSChampionResponse,
+  ListOSChampionOpensearchResponse,
+  OSChampionOpensearchResponse,
   SortLeadershipAndMembership,
   SortOSChampion,
 } from '@asap-hub/model';
@@ -35,7 +34,7 @@ type StateOptionKeyData = Pick<
 
 type OSStateOptionKeyData = Pick<
   OSOptions,
-  'currentPage' | 'pageSize' | 'sort' | 'tags'
+  'currentPage' | 'pageSize' | 'sort' | 'tags' | 'timeRange'
 >;
 
 const analyticsLeadershipIndexState = atomFamily<
@@ -100,7 +99,7 @@ const analyticsOSChampionIndexState = atomFamily<
 });
 
 export const analyticsOSChampionListState = atomFamily<
-  OSChampionResponse | undefined,
+  OSChampionOpensearchResponse | undefined,
   string
 >({
   key: 'analyticsOSChampionList',
@@ -108,7 +107,7 @@ export const analyticsOSChampionListState = atomFamily<
 });
 
 export const analyticsOSChampionState = selectorFamily<
-  ListOSChampionResponse | Error | undefined,
+  ListOSChampionOpensearchResponse | Error | undefined,
   OSStateOptionKeyData
 >({
   key: 'osChampion',
@@ -117,7 +116,7 @@ export const analyticsOSChampionState = selectorFamily<
     ({ get }) => {
       const index = get(analyticsOSChampionIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const teams: OSChampionResponse[] = [];
+      const teams: OSChampionOpensearchResponse[] = [];
       for (const id of index.ids) {
         const team = get(analyticsOSChampionListState(id));
         if (team === undefined) return undefined;
@@ -134,11 +133,11 @@ export const analyticsOSChampionState = selectorFamily<
         set(analyticsOSChampionIndexState(options), newTeams);
       } else {
         newTeams?.items.forEach((team) =>
-          set(analyticsOSChampionListState(team.teamId), team),
+          set(analyticsOSChampionListState(team.objectID), team),
         );
         set(analyticsOSChampionIndexState(options), {
           total: newTeams.total,
-          ids: newTeams.items.map((team) => team.teamId),
+          ids: newTeams.items.map((team) => team.objectID),
         });
       }
     },
@@ -167,7 +166,7 @@ export const useAnalyticsLeadership = (options: Options) => {
 
 export const useAnalyticsOSChampion = (options: OSOptions) => {
   const opensearchClient =
-    useAnalyticsOpensearch<OSChampionDataObject>('os-champion').client;
+    useAnalyticsOpensearch<OSChampionOpensearchResponse>('os-champion').client;
 
   const [osChampion, setOSChampion] = useRecoilState(
     analyticsOSChampionState(options),

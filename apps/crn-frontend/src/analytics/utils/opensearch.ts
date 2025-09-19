@@ -117,7 +117,10 @@ export class OpensearchClient<T> {
 
     const items = (response.hits?.hits || []).map(
       // eslint-disable-next-line no-underscore-dangle
-      (hit: OpensearchHit<T>) => hit._source,
+      (hit: OpensearchHit<T>) => ({
+        ...hit._source,
+        objectID: hit._id,
+      })
     );
 
     return {

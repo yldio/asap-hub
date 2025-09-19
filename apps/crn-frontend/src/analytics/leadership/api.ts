@@ -4,8 +4,8 @@ import {
 } from '@asap-hub/algolia';
 import {
   ListAnalyticsTeamLeadershipResponse,
-  ListOSChampionResponse,
-  OSChampionDataObject,
+  ListOSChampionOpensearchResponse,
+  OSChampionOpensearchResponse,
   SortOSChampion,
 } from '@asap-hub/model';
 import { MetricOption } from '@asap-hub/react-components';
@@ -38,12 +38,12 @@ export const getAnalyticsLeadership = async (
 };
 
 export const getAnalyticsOSChampion = async (
-  opensearchClient: OpensearchClient<OSChampionDataObject>,
+  opensearchClient: OpensearchClient<OSChampionOpensearchResponse>,
   {
     tags,
     currentPage,
     pageSize,
     timeRange,
   }: AnalyticsSearchOptionsWithFiltering<SortOSChampion>,
-): Promise<ListOSChampionResponse | undefined> =>
+): Promise<ListOSChampionOpensearchResponse | undefined> =>
   opensearchClient.search(tags, currentPage, pageSize, timeRange);

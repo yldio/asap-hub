@@ -592,7 +592,11 @@ export type OSChampionDataObject = {
 };
 export type ListOSChampionDataObject = ListResponse<OSChampionDataObject>;
 export type OSChampionResponse = OSChampionDataObject;
+export type OSChampionOpensearchResponse = OSChampionResponse & {
+  objectID: string;
+};
 export type ListOSChampionResponse = ListResponse<OSChampionResponse>;
+export type ListOSChampionOpensearchResponse = ListResponse<OSChampionOpensearchResponse>;
 
 export type PreliminaryDataSharingDataObject = {
   teamId: string;

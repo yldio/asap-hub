@@ -6,11 +6,7 @@ import {
   AnalyticsSearchOptionsWithFiltering,
 } from '@asap-hub/algolia';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
-import {
-  OSChampionDataObject,
-  OSChampionResponse,
-  SortOSChampion,
-} from '@asap-hub/model';
+import { OSChampionOpensearchResponse, SortOSChampion } from '@asap-hub/model';
 import {
   AnalyticsSearchOptions,
   getAnalyticsLeadership,
@@ -123,27 +119,30 @@ describe('getAnalyticsOSChampion', () => {
       timeRange: 'all',
     };
   const defaultOSChampionData = {
+    objectID: 'object-id-1',
     teamId: 'team-id-1',
     teamName: 'Alessi',
     isTeamInactive: false,
     teamAwardsCount: 0,
     timeRange: 'all',
     users: [],
-  } as OSChampionResponse;
+  } as OSChampionOpensearchResponse;
   const defaultResponse = {
     items: [defaultOSChampionData],
     total: 1,
   };
 
-  let mockOpensearchClient: jest.Mocked<OpensearchClient<OSChampionDataObject>>;
+  let mockOpensearchClient: jest.Mocked<
+    OpensearchClient<OSChampionOpensearchResponse>
+  >;
 
   beforeEach(() => {
     mockOpensearchClient = {
       search: jest.fn(),
-    } as unknown as jest.Mocked<OpensearchClient<OSChampionDataObject>>;
+    } as unknown as jest.Mocked<OpensearchClient<OSChampionOpensearchResponse>>;
   });
 
-  it('should not default to any search, specific page or limit hits per page', async () => {
+  it('should not default to any search tags, specific page or limit hits per page', async () => {
     mockOpensearchClient.search.mockResolvedValue(defaultResponse);
 
     await getAnalyticsOSChampion(

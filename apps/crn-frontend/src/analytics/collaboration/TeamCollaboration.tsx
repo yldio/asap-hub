@@ -9,10 +9,11 @@ import {
 } from '@asap-hub/react-components';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useTeamCollaborationPerformanceZustand } from './hooks/use-team-collaboration-performance';
-import {
-  useAnalyticsTeamCollaboration,
-  // useTeamCollaborationPerformance,
-} from './state';
+import { useTeamCollaboration } from './hooks/use-team-collaboration';
+// import {
+//   useAnalyticsTeamCollaboration,
+//   useTeamCollaborationPerformance,
+// } from './state';
 import { CollaborationProps } from './UserCollaboration';
 
 const getDataForType = (
@@ -42,8 +43,21 @@ const TeamCollaboration: React.FC<
 > = ({ sort, setSort, setSortingDirection, sortingDirection, type, tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange, outputType } = useAnalytics();
-
-  const { items: data, total } = useAnalyticsTeamCollaboration({
+  // const { items: data, total } = useAnalyticsTeamCollaboration({
+  //   currentPage,
+  //   outputType,
+  //   pageSize,
+  //   sort,
+  //   tags,
+  //   timeRange,
+  // });
+  const {
+    data,
+    total,
+    isLoading: isDataLoading,
+    isError: isDataError,
+    error: dataError,
+  } = useTeamCollaboration({
     currentPage,
     outputType,
     pageSize,
@@ -74,11 +88,11 @@ const TeamCollaboration: React.FC<
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
+  if (isError || isDataError) {
+    return <div>Error: {error?.message || dataError?.message}</div>;
   }
 
-  if (isLoading || !performanceData) {
+  if (isLoading || isDataLoading || !performanceData || !data) {
     return <div>Loading...</div>;
   }
 

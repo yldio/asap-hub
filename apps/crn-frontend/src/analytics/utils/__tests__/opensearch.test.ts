@@ -113,6 +113,30 @@ describe('OpensearchClient', () => {
       ).toBe(false);
     });
 
+    it('queries by time range when provided', async () => {
+      mockFetch.mockResolvedValueOnce(defaultResponse);
+      const timeRange = '30d';
+
+      await client.search(['Team A'], 0, 10, timeRange);
+
+      const fetchArgs = mockFetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchArgs[1].body);
+
+      const mustClauses = requestBody.query.bool.must;
+      expect(mustClauses[0]).toEqual({ term: { timeRange } });
+    });
+
+    it('excludes must clause if time range not provided', async () => {
+      mockFetch.mockResolvedValueOnce(defaultResponse);
+
+      await client.search(['Team Only'], 0, 10);
+
+      const fetchArgs = mockFetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchArgs[1].body);
+
+      expect(requestBody.query.bool.must).toBe(undefined);
+    });
+
     it('throws an error on bad response', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,

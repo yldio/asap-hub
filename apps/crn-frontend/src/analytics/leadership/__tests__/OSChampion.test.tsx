@@ -1,4 +1,4 @@
-import { ListOSChampionResponse } from '@asap-hub/model';
+import { ListOSChampionOpensearchResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -20,10 +20,11 @@ const mockGetAnalyticsOSChampion =
 
 const mockSetSort = jest.fn();
 
-const data: ListOSChampionResponse = {
+const data: ListOSChampionOpensearchResponse = {
   total: 2,
   items: [
     {
+      objectID: 'object-id-1',
       teamId: 'team-id-1',
       teamName: 'Team One',
       isTeamInactive: false,
@@ -43,6 +44,7 @@ const data: ListOSChampionResponse = {
       ],
     },
     {
+      objectID: 'object-id-2',
       teamId: 'team-id-2',
       teamName: 'Team Two',
       isTeamInactive: false,
@@ -63,6 +65,7 @@ const renderPage = async () => {
             pageSize: 10,
             tags: [],
             sort: 'team_asc',
+            timeRange: 'all',
           }),
         );
       }}

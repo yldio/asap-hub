@@ -39,17 +39,20 @@ test('Should return zero team awards and no users when the team membership colle
         teamName: 'Team A',
         isTeamInactive: false,
         teamAwardsCount: 0,
+        timeRange: 'all',
         users: [],
       },
     ],
   });
 });
 
-test('Should return the correct team awards and user awards when the client returns a valid response', async () => {
+test('Should return the correct team awards, user awards and time range when the client returns a valid response', async () => {
   const graphqlResponse = getOsChampionQuery();
   contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
 
-  const result = await analyticsDataProvider.fetchOSChampion({});
+  const result = await analyticsDataProvider.fetchOSChampion({
+    filter: { timeRange: '90d' },
+  });
 
   expect(result).toEqual({
     total: 1,
@@ -59,6 +62,7 @@ test('Should return the correct team awards and user awards when the client retu
         teamName: 'Team A',
         isTeamInactive: false,
         teamAwardsCount: 3,
+        timeRange: '90d',
         users: [
           {
             id: 'user-with-2-awards',

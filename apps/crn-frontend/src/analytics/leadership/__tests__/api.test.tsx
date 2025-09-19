@@ -177,6 +177,29 @@ describe('getAnalyticsOSChampion', () => {
     );
   });
 
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `('returns os champion data for $range', async ({ timeRange }) => {
+    mockOpensearchClient.search.mockResolvedValue(defaultResponse);
+
+    await getAnalyticsOSChampion(mockOpensearchClient, {
+      ...defaultOSChampionOptions,
+      timeRange,
+    });
+
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
+      [],
+      null,
+      null,
+      timeRange,
+    );
+  });
+
   it('should return successfully fetched os champion data', async () => {
     mockOpensearchClient.search.mockResolvedValue(defaultResponse);
     const analyticsOSChampion = await getAnalyticsOSChampion(

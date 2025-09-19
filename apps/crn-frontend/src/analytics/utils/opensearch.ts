@@ -103,7 +103,7 @@ export class OpensearchClient<T> {
     searchTags: string[],
     currentPage: number | null,
     pageSize: number | null,
-    timeRange: TimeRangeOption = 'all',
+    timeRange?: TimeRangeOption,
     searchScope: SearchScope = 'both',
   ): Promise<SearchResult<T>> {
     const query = buildOpensearchQuery({
@@ -115,13 +115,12 @@ export class OpensearchClient<T> {
     });
     const response = await this.request<OpensearchHitsResponse<T>>(query);
 
-    const items = (response.hits?.hits || []).map(
+    const items = (response.hits?.hits || []).map((hit: OpensearchHit<T>) => ({
       // eslint-disable-next-line no-underscore-dangle
-      (hit: OpensearchHit<T>) => ({
-        ...hit._source,
-        objectID: hit._id,
-      })
-    );
+      ...hit._source,
+      // eslint-disable-next-line no-underscore-dangle
+      objectID: hit._id,
+    }));
 
     return {
       items,

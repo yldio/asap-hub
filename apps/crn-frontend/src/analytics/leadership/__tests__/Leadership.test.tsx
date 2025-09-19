@@ -10,13 +10,14 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
+import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import * as flags from '@asap-hub/flags';
-import { OSChampionDataObject } from '@asap-hub/model';
+import { OSChampionOpensearchResponse } from '@asap-hub/model';
 import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
@@ -55,11 +56,11 @@ const mockSearch = jest.fn() as jest.MockedFunction<
 >;
 
 const mockGetTagSuggestions = jest.fn() as jest.MockedFunction<
-  OpensearchClient<OSChampionDataObject>['getTagSuggestions']
+  OpensearchClient<OSChampionOpensearchResponse>['getTagSuggestions']
 >;
 
 const mockOSChampionSearch = jest.fn() as jest.MockedFunction<
-  OpensearchClient<OSChampionDataObject>['search']
+  OpensearchClient<OSChampionOpensearchResponse>['search']
 >;
 
 const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
@@ -89,7 +90,7 @@ beforeEach(() => {
 
   mockUseAnalyticsOpensearch.mockReturnValue({
     client:
-      mockOpensearchClient as unknown as OpensearchClient<OSChampionDataObject>,
+      mockOpensearchClient as unknown as OpensearchClient<OSChampionOpensearchResponse>,
   });
   mockOpensearchClient.search.mockResolvedValue({ items: [], total: 0 });
 });
@@ -287,4 +288,69 @@ describe('csv export', () => {
       expect.anything(),
     );
   });
+});
+
+it('renders data for different time ranges', async () => {
+  const osChampionResponse: OSChampionOpensearchResponse = {
+    objectID: 'object-id-1',
+    teamId: 'team-id-1',
+    teamName: 'Team One',
+    isTeamInactive: false,
+    teamAwardsCount: 20,
+    timeRange: 'all',
+    users: [
+      {
+        id: 'user-id-1',
+        name: 'Test User One',
+        awardsCount: 1,
+      },
+      {
+        id: 'user-id-2',
+        name: 'Test User Two',
+        awardsCount: 1,
+      },
+    ],
+  };
+  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+  when(mockOSChampionSearch)
+    .calledWith([], 0, 10, 'all')
+    .mockResolvedValue({ items: [osChampionResponse], total: 1 });
+  when(mockOSChampionSearch)
+    .calledWith([], 0, 10, '30d')
+    .mockResolvedValue({
+      items: [
+        {
+          ...osChampionResponse,
+          objectID: 'object-id-2',
+          timeRange: '30d',
+          teamAwardsCount: 10,
+        },
+      ],
+      total: 1,
+    });
+  await renderPage('os-champion');
+
+  expect(screen.getByText('20')).toBeVisible();
+  expect(screen.queryByText('10')).not.toBeInTheDocument();
+
+  const rangeButton = screen.getByRole('button', {
+    name: /Since Hub Launch \(2020\) Chevron Down/i,
+  });
+  userEvent.click(rangeButton);
+  userEvent.click(screen.getByText(/Last 30 days/));
+  await waitFor(() =>
+    expect(screen.getAllByText('Open Science Champion')).toHaveLength(2),
+  );
+
+  expect(screen.getByText('10')).toBeVisible();
+  expect(screen.queryByText('20')).not.toBeInTheDocument();
+
+  // userEvent.click(rangeButton);
+  // userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/));
+  // await waitFor(() =>
+  //   expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+  // );
+
+  // expect(screen.getByText('200')).toBeVisible();
+  // expect(screen.queryByText('600')).not.toBeInTheDocument();
 });

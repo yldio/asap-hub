@@ -8,9 +8,10 @@ import {
   TeamCollaborationTable,
 } from '@asap-hub/react-components';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
+import { useTeamCollaborationPerformanceZustand } from './hooks/use-team-collaboration-performance';
 import {
   useAnalyticsTeamCollaboration,
-  useTeamCollaborationPerformance,
+  // useTeamCollaborationPerformance,
 } from './state';
 import { CollaborationProps } from './UserCollaboration';
 
@@ -51,12 +52,35 @@ const TeamCollaboration: React.FC<
     timeRange,
   });
 
-  const performance = useTeamCollaborationPerformance({
+  // const performance = useTeamCollaborationPerformance({
+  //   timeRange,
+  //   outputType,
+  // });
+
+  const {
+    performance: performanceData,
+    isLoading,
+    isError,
+    error,
+    // isFetching,
+    // refetch,
+    // dataUpdatedAt,
+    // setOptimisticPerformance,
+    // resetOptimisticState,
+  } = useTeamCollaborationPerformanceZustand({
     timeRange,
     outputType,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
+
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
+
+  if (isLoading || !performanceData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <TeamCollaborationTable
@@ -64,7 +88,9 @@ const TeamCollaboration: React.FC<
       data={getDataForType(data, type)}
       numberOfPages={numberOfPages}
       performance={
-        type === 'within-team' ? performance.withinTeam : performance.acrossTeam
+        type === 'within-team'
+          ? performanceData.withinTeam
+          : performanceData.acrossTeam
       }
       renderPageHref={renderPageHref}
       setSort={setSort}

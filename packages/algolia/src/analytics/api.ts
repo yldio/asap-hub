@@ -31,6 +31,7 @@ export const getPerformanceForMetric =
     algoliaClient: AlgoliaClient<'analytics'>,
     options: AnalyticsPerformanceOptions,
   ): Promise<T | undefined> => {
+    // throw new Error('Not implemented'); // to test Error Boundary and optimistic updates
     const { timeRange, documentCategory, outputType } = options;
     const rangeFilter = `__meta.range:"${timeRange || 'all'}"`;
     const documentCategoryFilter = `__meta.documentCategory:"${

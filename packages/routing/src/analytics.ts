@@ -7,7 +7,13 @@ const collaborationPath = route(
   {},
 );
 
-const collaboration = route('/collaboration', {}, { collaborationPath });
+const pocDemo = route('/poc-demo', {}, {});
+
+const collaboration = route(
+  '/collaboration',
+  {},
+  { collaborationPath, pocDemo },
+);
 
 const leadership = route('/leadership', {}, { metric });
 

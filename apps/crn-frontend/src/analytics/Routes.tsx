@@ -21,6 +21,10 @@ const loadCollaboration = () =>
   import(
     /* webpackChunkName: "collaboration" */ './collaboration/Collaboration'
   );
+const loadPocDemo = () =>
+  import(
+    /* webpackChunkName: "poc-demo" */ './collaboration/components/TeamCollaborationPerformanceDemo'
+  );
 
 const loadEngagement = () =>
   import(/* webpackChunkName: "engagement" */ './engagement/Engagement');
@@ -31,6 +35,7 @@ const loadOpenScience = () =>
 const LeadershipBody = lazy(loadLeadership);
 const ProductivityBody = lazy(loadProductivity);
 const CollaborationBody = lazy(loadCollaboration);
+const PocDemoBody = lazy(loadPocDemo);
 const EngagementBody = lazy(loadEngagement);
 const OpenScienceBody = lazy(loadOpenScience);
 
@@ -83,6 +88,20 @@ const Routes = () => {
         </Route>
         <Route path={path + analytics({}).collaboration.template}>
           <Switch>
+            <Route
+              exact
+              path={
+                path +
+                analytics({}).collaboration.template +
+                analytics({}).collaboration({}).pocDemo.template
+              }
+            >
+              <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                <Frame title="POC Demo - React Query + Zustand">
+                  <PocDemoBody />
+                </Frame>
+              </AnalyticsPage>
+            </Route>
             <Route
               exact
               path={

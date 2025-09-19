@@ -1,5 +1,13 @@
 import { PerformanceMetrics } from '@asap-hub/model';
-import { aboveAverageIcon, averageIcon, belowAverageIcon } from '../icons';
+import {
+  aboveAverageIcon,
+  averageIcon,
+  belowAverageIcon,
+  informationInverseIcon,
+  happyFaceIcon,
+  neutralFaceIcon,
+  sadFaceIcon,
+} from '../icons';
 
 export const getPerformanceIcon = (
   value: number,
@@ -45,3 +53,16 @@ const FLAGGED_ANALYTICS = [
 
 export const removeFlaggedOptions = (isFlagEnabled: boolean, option: string) =>
   isFlagEnabled || !FLAGGED_ANALYTICS.includes(option);
+
+export const getPrelimPerformanceIcon = (percentage: number) => {
+  if (percentage >= 90) {
+    return happyFaceIcon;
+  }
+  if (percentage >= 80) {
+    return neutralFaceIcon;
+  }
+  if (percentage > 0) {
+    return sadFaceIcon;
+  }
+  return informationInverseIcon;
+};

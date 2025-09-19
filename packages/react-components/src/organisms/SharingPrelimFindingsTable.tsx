@@ -11,15 +11,10 @@ import { PageControls } from '..';
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, lead, neutral200, steel } from '../colors';
-import {
-  happyFaceIcon,
-  InactiveBadgeIcon,
-  neutralFaceIcon,
-  informationInverseIcon,
-  sadFaceIcon,
-} from '../icons';
+import { InactiveBadgeIcon } from '../icons';
 import { rem } from '../pixels';
 import StaticPerformanceCard from './StaticPerformanceCard';
+import { getPrelimPerformanceIcon } from '../utils';
 
 const container = css({
   overflowX: 'auto',
@@ -92,19 +87,6 @@ type SharingPrelimFindingsTableProps = ComponentProps<typeof PageControls> & {
   sortingDirection: SharingPrelimFindingsSortingDirection;
 };
 
-const getPerformanceIcon = (percentage: number) => {
-  if (percentage >= 90) {
-    return happyFaceIcon;
-  }
-  if (percentage >= 80) {
-    return neutralFaceIcon;
-  }
-  if (percentage > 0) {
-    return sadFaceIcon;
-  }
-  return informationInverseIcon;
-};
-
 const SharingPrelimFindingsTable: React.FC<SharingPrelimFindingsTableProps> = ({
   data,
   sort,
@@ -164,7 +146,7 @@ const SharingPrelimFindingsTable: React.FC<SharingPrelimFindingsTableProps> = ({
                         ? `${row.teamPercentShared}%`
                         : 'N/A'}
                     </span>
-                    {getPerformanceIcon(row.teamPercentShared || 0)}
+                    {getPrelimPerformanceIcon(row.teamPercentShared || 0)}
                   </p>
                 </td>
               </tr>

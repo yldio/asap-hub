@@ -72,6 +72,7 @@ jobs:
 
           OPENSEARCH_USERNAME: ${{ secrets.AWS_OS_USERNAME }}
           OPENSEARCH_PASSWORD: ${{ secrets.AWS_OS_PASSWORD }}
+          OPENSEARCH_ANALYTICS_SPREADSHEET_URL: ${{ steps.setup.outputs.opensearch-analytics-spreadsheet-url }}
           ENVIRONMENT: ${{ inputs.environment-name }}
 
   notify_failure:

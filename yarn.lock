@@ -1830,6 +1830,7 @@ __metadata:
     "@babel/parser": 7.23.6
     "@babel/runtime-corejs3": 7.26.10
     "@googleapis/calendar": ^9.5.0
+    "@googleapis/sheets": ^9.5.0
     "@hapi/boom": 9.1.4
     "@opensearch-project/opensearch": ^3.5.1
     "@sentry/serverless": 6.19.7
@@ -12568,6 +12569,15 @@ __metadata:
   dependencies:
     googleapis-common: ^7.0.0
   checksum: 1920bb98fd1fa5ef80803be0555999b0b8a21d053d0937a83c4933caa212dbb50dccc4f25197f67593a4cfe9df712dbf19e21746992323a0870036c7929dd8dd
+  languageName: node
+  linkType: hard
+
+"@googleapis/sheets@npm:^9.5.0":
+  version: 9.8.0
+  resolution: "@googleapis/sheets@npm:9.8.0"
+  dependencies:
+    googleapis-common: ^7.0.0
+  checksum: 28ff73b896478b30d83b5b474413ca8d9a7dab76438950f889e554a82d4a7239e78028d45d046b476250aa4253e17fef55f34cb94ab30af7974347cc03f81699
   languageName: node
   linkType: hard
 

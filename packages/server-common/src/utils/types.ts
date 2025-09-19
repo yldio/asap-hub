@@ -41,6 +41,13 @@ export type OpensearchDataType =
 
 export type OpensearchFieldMapping = {
   type?: OpensearchDataType;
+  analyzer?: string;
+  search_analyzer?: string;
+  fields?: {
+    keyword?: {
+      type: 'keyword';
+    };
+  };
   properties?: {
     [key: string]: OpensearchFieldMapping;
   };
@@ -52,6 +59,11 @@ export type OpensearchMapping = {
       [fieldName: string]: OpensearchFieldMapping;
     };
   };
+};
+
+export type OpensearchMetricConfig = {
+  indexAlias: string;
+  mapping: OpensearchMapping['mappings'];
 };
 
 export type AliasAction = {

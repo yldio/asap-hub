@@ -13,7 +13,8 @@
     "test": "WORKSPACE_PATH=apps/crn-server yarn workspace asap-hub test:workspace",
     "test:coverage": "WORKSPACE_PATH=apps/crn-server; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/",
     "import:entries": "ts-node ./scripts/import-entries.ts",
-    "sync:opensearch": "ts-node ./scripts/sync-opensearch-analytics.ts"
+    "sync:opensearch": "ts-node ./scripts/opensearch/sync-opensearch-analytics.ts",
+    "sync:preprint-compliance-local": "ts-node ./scripts/opensearch/sync-opensearch-preprint-compliance-local.ts"
   },
   "dependenciesMeta": {
     "serverless": {

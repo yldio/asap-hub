@@ -49,4 +49,16 @@ describe('SharingPrelimFindingsTable', () => {
     );
     expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
+  it('renders N/A when teamPercentShared is null', () => {
+    const data = [
+      {
+        ...teamSharingPrelimFindingsData,
+        teamPercentShared: null,
+      },
+    ];
+    const { getByText } = render(
+      <SharingPrelimFindingsTable {...defaultProps} data={data} />,
+    );
+    expect(getByText('N/A')).toBeInTheDocument();
+  });
 });

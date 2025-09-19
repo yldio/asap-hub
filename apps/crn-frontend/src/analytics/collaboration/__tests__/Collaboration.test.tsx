@@ -19,6 +19,7 @@ import {
 import { analytics } from '@asap-hub/routing';
 import * as flags from '@asap-hub/flags';
 import { render, screen, waitFor, within } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';
@@ -37,6 +38,7 @@ import {
   getPreliminaryDataSharing,
 } from '../api';
 import Collaboration from '../Collaboration';
+import { useAnalyticsSharingPrelimFindings } from '../state';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -461,6 +463,31 @@ describe('sharing prelim findings', () => {
     ).toBeVisible();
     expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
     expect(screen.queryByText('Type')).not.toBeInTheDocument();
+  });
+
+  it('throws error when preliminary data sharing fails', async () => {
+    const error = new Error('API Error');
+    mockGetPreliminaryDataSharing.mockRejectedValue(error);
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(
+      () =>
+        useAnalyticsSharingPrelimFindings({
+          currentPage: 0,
+          pageSize: 10,
+          sort: 'team_asc',
+          tags: [],
+          timeRange: 'all',
+        }),
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      expect(() => result.current).toThrow('API Error');
+    });
   });
 });
 

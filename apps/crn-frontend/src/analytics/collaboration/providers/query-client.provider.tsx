@@ -6,7 +6,7 @@ interface QueryClientProviderProps {
   children: ReactNode;
 }
 
-export const AnalyticsQueryClientProvider = ({
+export const AppQueryClientProvider = ({
   children,
 }: QueryClientProviderProps) => {
   const [queryClient] = useState(

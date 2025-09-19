@@ -6,11 +6,13 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   teamCollaborationPerformance,
   userCollaborationPerformance,
+  preliminaryDataSharingResponse,
 } from '@asap-hub/fixtures';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
+  PreliminaryDataSharingDataObject,
   SortTeamCollaboration,
   SortUserCollaboration,
 } from '@asap-hub/model';
@@ -23,13 +25,16 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
+import { OpensearchClient } from '../../utils/opensearch';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
+import { useAnalyticsOpensearch } from '../../../hooks/opensearch';
 import {
   getTeamCollaboration,
   getTeamCollaborationPerformance,
   getUserCollaboration,
   getUserCollaborationPerformance,
+  getPreliminaryDataSharing,
 } from '../api';
 import Collaboration from '../Collaboration';
 
@@ -45,6 +50,10 @@ jest.mock('@asap-hub/frontend-utils', () => {
 jest.mock('../api');
 jest.mock('../../../hooks/algolia', () => ({
   useAnalyticsAlgolia: jest.fn(),
+}));
+
+jest.mock('../../../hooks/opensearch', () => ({
+  useAnalyticsOpensearch: jest.fn(),
 }));
 mockConsoleError();
 
@@ -79,12 +88,20 @@ mockGetUserCollaborationPerformance.mockResolvedValue(
   userCollaborationPerformance,
 );
 
+const mockGetPreliminaryDataSharing =
+  getPreliminaryDataSharing as jest.MockedFunction<
+    typeof getPreliminaryDataSharing
+  >;
+mockGetPreliminaryDataSharing.mockResolvedValue(preliminaryDataSharingResponse);
+
 const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
   AlgoliaSearchClient<'analytics'>['searchForTagValues']
 >;
 const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
   typeof useAnalyticsAlgolia
 >;
+const mockUseAnalyticsOpensearch =
+  useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
 const userData: ListUserCollaborationAlgoliaResponse = {
   total: 2,
@@ -201,9 +218,19 @@ beforeEach(() => {
     searchForTagValues: mockSearchForTagValues,
   };
 
+  const mockOpensearchClient = {
+    request: jest.fn(),
+  };
+
   mockUseAnalyticsAlgolia.mockReturnValue({
     client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
   });
+
+  mockUseAnalyticsOpensearch.mockReturnValue({
+    client:
+      mockOpensearchClient as unknown as OpensearchClient<PreliminaryDataSharingDataObject>,
+  });
+
   mockGetUserCollaboration.mockResolvedValue(userData);
   mockGetTeamCollaboration.mockResolvedValue(teamData);
 });
@@ -394,8 +421,11 @@ describe('team collaboration', () => {
 });
 
 describe('sharing prelim findings', () => {
+  beforeEach(() => {
+    flags.enable('ANALYTICS_PHASE_TWO');
+  });
+
   it('renders sharing prelim findings page when flag is enabled', async () => {
-    jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
     await renderPage('sharing-prelim-findings', undefined);
 
     expect(
@@ -407,7 +437,7 @@ describe('sharing prelim findings', () => {
   });
 
   it('redirects to user collaboration within team if analytics phase 2 feature flag is off', async () => {
-    jest.spyOn(flags, 'isEnabled').mockReturnValue(false);
+    flags.disable('ANALYTICS_PHASE_TWO');
     await renderPage('sharing-prelim-findings', undefined);
 
     expect(screen.getByText('User Co-Production')).toBeVisible();
@@ -417,7 +447,6 @@ describe('sharing prelim findings', () => {
   });
 
   it('can navigate to sharing preliminary findings page', async () => {
-    jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
     await renderPage('user', 'within-team');
     const input = screen.getAllByRole('textbox', { hidden: false });
 

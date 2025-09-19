@@ -264,7 +264,12 @@ describe('search', () => {
       userEvent.click(searchBox);
       userEvent.click(screen.getByText('Alessi'));
       await waitFor(() =>
-        expect(mockOSChampionSearch).toHaveBeenCalledWith(['Alessi'], 0, 10),
+        expect(mockOSChampionSearch).toHaveBeenCalledWith(
+          ['Alessi'],
+          0,
+          10,
+          'all',
+        ),
       );
     });
   });

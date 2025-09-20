@@ -31,6 +31,7 @@ import {
   useRecoilValue,
   useSetRecoilState,
 } from 'recoil';
+import { useAuthStore } from '../../auth/state-zustand';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
@@ -182,7 +183,7 @@ export const useTeams = (options: GetListOptions): ListTeamResponse => {
 
 export const useTeamById = (id: string) => useRecoilValue(teamState(id));
 export const usePatchTeamById = (id: string) => {
-  const authorization = useRecoilValue(authorizationState);
+  const authorization = useRecoilValue(authorizationState); // TODO: Can be replaced with useAuthorization from '../../auth/hooks/use-authorization'
   const setPatchedTeam = useSetRecoilState(patchedTeamState(id));
   return async (patch: TeamPatchRequest) => {
     setPatchedTeam(await patchTeam(id, patch, authorization));
@@ -241,9 +242,12 @@ export const useSetManuscriptItem = () => {
 };
 
 export const usePostManuscript = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const { authorization } = useAuthStore(); // TODO: Can be replaced with useAuthorization from '../../auth/hooks/use-authorization'
   const setManuscriptItem = useSetManuscriptItem();
   return async (payload: ManuscriptPostRequest) => {
+    if (!authorization) {
+      throw new Error('Authorization not available');
+    }
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
     const manuscript = await createManuscript(
@@ -256,7 +260,7 @@ export const usePostManuscript = () => {
 };
 
 export const useResubmitManuscript = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const authorization = useRecoilValue(authorizationState); // TODO: Can be replaced with useAuthorization from '../../auth/hooks/use-authorization'
   const setManuscriptItem = useSetManuscriptItem();
   return async (id: string, payload: ManuscriptPostRequest) => {
     const notificationList = getOverrides()
@@ -272,7 +276,7 @@ export const useResubmitManuscript = () => {
 };
 
 export const usePutManuscript = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const authorization = useRecoilValue(authorizationState); // TODO: Can be replaced with useAuthorization from '../../auth/hooks/use-authorization'
   const setManuscriptItem = useSetManuscriptItem();
   const invalidateManuscriptIndex = useInvalidateManuscriptIndex();
 

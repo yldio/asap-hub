@@ -18,6 +18,8 @@ import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 
 import CheckOnboarded from './auth/CheckOnboarded';
 import { auth0State } from './auth/state';
+// import { useAuthStore } from './auth/stores/auth.store';
+import { useAuthStore } from './auth/stores/auth.store'; // NEW: Zustand store for auth
 import { useCurrentUserProfileTabRoute } from './hooks';
 import Onboardable from './Onboardable';
 
@@ -56,10 +58,15 @@ const AuthenticatedApp: FC<{
   const auth0 = useAuth0CRN();
   const [recoilAuth0, setAuth0] = useRecoilState(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
+  const setAuth0Zustand = useAuthStore((state) => state.setAuth0); // NEW: Zustand store sync
 
   useEffect(() => {
     setAuth0(auth0);
-    return () => resetAuth0();
+    setAuth0Zustand(auth0); // NEW: Sync auth0 to Zustand store
+    return () => {
+      resetAuth0();
+      setAuth0Zustand(undefined); // NEW: Clear Zustand store on cleanup
+    };
   }, [auth0, setAuth0, resetAuth0]);
 
   useEffect(() => {

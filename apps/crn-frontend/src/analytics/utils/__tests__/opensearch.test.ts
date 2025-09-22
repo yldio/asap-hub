@@ -72,6 +72,21 @@ describe('OpensearchClient', () => {
       expect(result.items).toHaveLength(2);
     });
 
+    it('handles default case with time range', async () => {
+      mockFetch.mockResolvedValueOnce(defaultResponse);
+      const timeRange = '90d';
+
+      const result = await client.search([], null, null, timeRange);
+
+      const fetchArgs = mockFetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchArgs[1].body);
+
+      const mustClauses = requestBody.query.bool.must;
+      expect(mustClauses[0]).toEqual({ term: { timeRange } });
+      expect(result.total).toBe(2);
+      expect(result.items).toHaveLength(2);
+    });
+
     it('queries only teams when search scope is "teams"', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,

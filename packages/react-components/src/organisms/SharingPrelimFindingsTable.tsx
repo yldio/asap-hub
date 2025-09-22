@@ -142,11 +142,14 @@ const SharingPrelimFindingsTable: React.FC<SharingPrelimFindingsTableProps> = ({
                 <td>
                   <p css={iconStyles}>
                     <span css={valueStyles}>
-                      {row.teamPercentShared !== null
-                        ? `${row.teamPercentShared}%`
-                        : 'N/A'}
+                      {row.teamPercentShared === null || row.limitedData
+                        ? 'N/A'
+                        : `${row.teamPercentShared}%`}
                     </span>
-                    {getPrelimPerformanceIcon(row.teamPercentShared || 0)}
+                    {getPrelimPerformanceIcon(
+                      row.teamPercentShared,
+                      row.limitedData,
+                    )}
                   </p>
                 </td>
               </tr>

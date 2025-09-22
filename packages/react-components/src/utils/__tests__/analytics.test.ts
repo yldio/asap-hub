@@ -27,12 +27,15 @@ describe('getPerformanceText', () => {
   });
 
   it('getPerformanceIcon returns correct icons for different percentages', () => {
-    expect(getPrelimPerformanceIcon(95)).toBe(happyFaceIcon);
-    expect(getPrelimPerformanceIcon(90)).toBe(happyFaceIcon);
-    expect(getPrelimPerformanceIcon(85)).toBe(neutralFaceIcon);
-    expect(getPrelimPerformanceIcon(80)).toBe(neutralFaceIcon);
-    expect(getPrelimPerformanceIcon(50)).toBe(sadFaceIcon);
-    expect(getPrelimPerformanceIcon(1)).toBe(sadFaceIcon);
-    expect(getPrelimPerformanceIcon(0)).toBe(informationInverseIcon);
+    expect(getPrelimPerformanceIcon(95, false)).toBe(happyFaceIcon);
+    expect(getPrelimPerformanceIcon(90, false)).toBe(happyFaceIcon);
+    expect(getPrelimPerformanceIcon(85, false)).toBe(neutralFaceIcon);
+    expect(getPrelimPerformanceIcon(80, false)).toBe(neutralFaceIcon);
+    expect(getPrelimPerformanceIcon(50, false)).toBe(sadFaceIcon);
+    expect(getPrelimPerformanceIcon(1, false)).toBe(sadFaceIcon);
+    expect(getPrelimPerformanceIcon(0, false)).toBe(sadFaceIcon);
+    expect(getPrelimPerformanceIcon(0, true)).toBe(informationInverseIcon);
+    expect(getPrelimPerformanceIcon(null, true)).toBe(informationInverseIcon);
+    expect(getPrelimPerformanceIcon(null, false)).toBe(informationInverseIcon);
   });
 });

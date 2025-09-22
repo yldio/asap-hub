@@ -54,15 +54,18 @@ const FLAGGED_ANALYTICS = [
 export const removeFlaggedOptions = (isFlagEnabled: boolean, option: string) =>
   isFlagEnabled || !FLAGGED_ANALYTICS.includes(option);
 
-export const getPrelimPerformanceIcon = (percentage: number) => {
+export const getPrelimPerformanceIcon = (
+  percentage: number | null,
+  isLimitedData: boolean = false,
+) => {
+  if (isLimitedData || percentage === null) {
+    return informationInverseIcon;
+  }
   if (percentage >= 90) {
     return happyFaceIcon;
   }
   if (percentage >= 80) {
     return neutralFaceIcon;
   }
-  if (percentage > 0) {
-    return sadFaceIcon;
-  }
-  return informationInverseIcon;
+  return sadFaceIcon;
 };

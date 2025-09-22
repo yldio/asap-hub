@@ -291,33 +291,3 @@ export const preliminaryDataSharingResponse: ListPreliminaryDataSharingResponse 
     total: 1,
     items: [preliminaryDataSharingItem],
   };
-
-interface OpensearchHit<T> {
-  _index: string;
-  _id: string;
-  _score: number;
-  _source: T;
-}
-interface OpensearchHitsResponse<T> {
-  hits: {
-    total: {
-      value: number;
-    };
-    hits: OpensearchHit<T>[];
-  };
-}
-
-export const mockOpensearchResponse: OpensearchHitsResponse<PreliminaryDataSharingDataObject> =
-  {
-    hits: {
-      total: { value: 1 },
-      hits: [
-        {
-          _index: 'preliminary-data-sharing',
-          _id: '1',
-          _score: 1.0,
-          _source: preliminaryDataSharingItem,
-        },
-      ],
-    },
-  };

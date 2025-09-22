@@ -19,8 +19,9 @@ import {
   SortTeamCollaboration,
   ListPreliminaryDataSharingResponse,
   PreliminaryDataSharingDataObject,
+  TimeRangeOptionPreliminaryDataSharing,
 } from '@asap-hub/model';
-import { OpensearchClient, OpensearchHitsResponse } from '../utils/opensearch';
+import { OpensearchClient } from '../utils/opensearch';
 
 export type CollaborationListOptions = Pick<
   GetListOptions,
@@ -55,7 +56,7 @@ export type PreliminaryDataSharingSearchOptions = {
   currentPage: number | null;
   pageSize: number | null;
   tags: string[];
-  timeRange: TimeRangeOption;
+  timeRange: TimeRangeOptionPreliminaryDataSharing;
 };
 
 export const getPreliminaryDataSharing = async (
@@ -67,51 +68,16 @@ export const getPreliminaryDataSharing = async (
     timeRange,
   }: PreliminaryDataSharingSearchOptions,
 ): Promise<ListPreliminaryDataSharingResponse | undefined> => {
-  const query = {
-    query: {
-      bool: {
-        must: [
-          {
-            match: {
-              timeRange,
-            },
-          },
-          ...(tags && tags.length > 0
-            ? [
-                {
-                  bool: {
-                    should: tags.map((tag) => ({
-                      term: {
-                        'teamName.keyword': tag,
-                      },
-                    })),
-                    minimum_should_match: 1,
-                  },
-                },
-              ]
-            : []),
-        ],
-      },
-    },
-    from: (currentPage || 0) * (pageSize || 10),
-    size: pageSize || 10,
-    sort: [
-      {
-        'teamName.keyword': {
-          order: 'asc',
-        },
-      },
-    ],
-  };
-
-  const response =
-    await opensearchClient.request<
-      OpensearchHitsResponse<PreliminaryDataSharingDataObject>
-    >(query);
+  const response = await opensearchClient.search(
+    tags,
+    currentPage,
+    pageSize,
+    timeRange,
+    'teams',
+  );
 
   return {
-    // eslint-disable-next-line no-underscore-dangle
-    items: response.hits?.hits?.map((hit) => hit._source) || [],
-    total: response.hits?.total?.value || 0,
+    items: response.items || [],
+    total: response.total || 0,
   };
 };

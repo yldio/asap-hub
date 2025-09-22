@@ -68,7 +68,7 @@ const Leadership: FC<Record<string, never>> = () => {
     );
 
   const loadTags = async (tagQuery: string) => {
-    if (metric === 'os-champion') {
+    if (isOSChampionPage) {
       const response =
         await osChampionClient.client.getTagSuggestions(tagQuery);
 
@@ -89,7 +89,7 @@ const Leadership: FC<Record<string, never>> = () => {
   };
 
   const isOSChampionEnabled = isEnabled('ANALYTICS_PHASE_TWO');
-  return !isOSChampionEnabled && metric === 'os-champion' ? (
+  return !isOSChampionEnabled && isOSChampionPage ? (
     <Redirect
       to={analytics({}).leadership({}).metric({ metric: 'working-group' }).$}
     />
@@ -105,7 +105,7 @@ const Leadership: FC<Record<string, never>> = () => {
       timeRange={isOSChampionPage ? timeRange : undefined}
       currentPage={currentPage}
     >
-      {metric === 'os-champion' ? (
+      {isOSChampionPage ? (
         <OSChampion
           tags={tags}
           sort={osChampionSort}

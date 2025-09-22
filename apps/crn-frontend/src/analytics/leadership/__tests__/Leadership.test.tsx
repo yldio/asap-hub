@@ -349,13 +349,4 @@ it('renders data for different time ranges', async () => {
 
   expect(screen.getByText('10')).toBeVisible();
   expect(screen.queryByText('20')).not.toBeInTheDocument();
-
-  // userEvent.click(rangeButton);
-  // userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/));
-  // await waitFor(() =>
-  //   expect(screen.getAllByText('User Productivity')).toHaveLength(2),
-  // );
-
-  // expect(screen.getByText('200')).toBeVisible();
-  // expect(screen.queryByText('600')).not.toBeInTheDocument();
 });

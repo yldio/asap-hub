@@ -14,11 +14,13 @@ import {
 import {
   DocumentCategoryOption,
   OutputTypeOption,
+  PreliminaryDataSharingDataObject,
   SortTeamCollaboration,
   SortUserCollaboration,
   TimeRangeOption,
 } from '@asap-hub/model';
 import nock from 'nock';
+import { OpensearchClient } from 'src/analytics/utils/opensearch';
 
 import {
   getTeamCollaboration,
@@ -412,7 +414,7 @@ describe('getPreliminaryDataSharing', () => {
   const mockSearch = jest.fn();
   const opensearchClient = {
     search: mockSearch,
-  };
+  } as unknown as OpensearchClient<PreliminaryDataSharingDataObject>;
 
   beforeEach(() => {
     mockSearch.mockReset();

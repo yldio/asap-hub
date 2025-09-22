@@ -13,6 +13,7 @@ import {
   PreliminaryDataSharingDataObject,
   ListSharingPrelimFindingsResponse,
   SharingPrelimFindingsResponse,
+  TimeRangeOptionPreliminaryDataSharing,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -237,7 +238,12 @@ const analyticsPreliminaryDataSharingState = atomFamily<
 });
 
 export const useAnalyticsSharingPrelimFindings = (
-  options: AnalyticsSearchOptionsWithFiltering<SortSharingPrelimFindings>,
+  options: Omit<
+    AnalyticsSearchOptionsWithFiltering<SortSharingPrelimFindings>,
+    'timeRange'
+  > & {
+    timeRange: TimeRangeOptionPreliminaryDataSharing;
+  },
 ): ListSharingPrelimFindingsResponse => {
   const opensearchClient =
     useAnalyticsOpensearch<PreliminaryDataSharingDataObject>(
@@ -249,7 +255,7 @@ export const useAnalyticsSharingPrelimFindings = (
       currentPage: options.currentPage,
       pageSize: options.pageSize,
       tags: options.tags,
-      timeRange: options.timeRange || 'all',
+      timeRange: options.timeRange,
     }),
   );
 
@@ -258,7 +264,7 @@ export const useAnalyticsSharingPrelimFindings = (
       currentPage: options.currentPage,
       pageSize: options.pageSize,
       tags: options.tags,
-      timeRange: options.timeRange || 'all',
+      timeRange: options.timeRange,
     })
       .then(setPreliminaryDataSharing)
       .catch(setPreliminaryDataSharing);

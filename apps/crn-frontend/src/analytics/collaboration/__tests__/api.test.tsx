@@ -9,21 +9,25 @@ import {
   teamCollaborationResponse,
   userCollaborationPerformance,
   userCollaborationResponse,
+  preliminaryDataSharingResponse,
 } from '@asap-hub/fixtures';
 import {
   DocumentCategoryOption,
   OutputTypeOption,
+  PreliminaryDataSharingDataObject,
   SortTeamCollaboration,
   SortUserCollaboration,
   TimeRangeOption,
 } from '@asap-hub/model';
 import nock from 'nock';
+import { OpensearchClient } from 'src/analytics/utils/opensearch';
 
 import {
   getTeamCollaboration,
   getTeamCollaborationPerformance,
   getUserCollaboration,
   getUserCollaborationPerformance,
+  getPreliminaryDataSharing,
 } from '../api';
 
 jest.mock('../../../config');
@@ -404,4 +408,27 @@ describe('getTeamCollaborationPerformance', () => {
       );
     },
   );
+});
+
+describe('getPreliminaryDataSharing', () => {
+  const mockSearch = jest.fn();
+  const opensearchClient = {
+    search: mockSearch,
+  } as unknown as OpensearchClient<PreliminaryDataSharingDataObject>;
+
+  beforeEach(() => {
+    mockSearch.mockReset();
+    mockSearch.mockResolvedValue(preliminaryDataSharingResponse);
+  });
+
+  it('returns successfully fetched preliminary data sharing', async () => {
+    await getPreliminaryDataSharing(opensearchClient, {
+      currentPage: 0,
+      pageSize: 10,
+      tags: [],
+      timeRange: 'all',
+    });
+
+    expect(mockSearch).toHaveBeenCalledWith([], 0, 10, 'all', 'teams');
+  });
 });

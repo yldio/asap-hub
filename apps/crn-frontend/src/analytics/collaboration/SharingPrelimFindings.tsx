@@ -2,6 +2,7 @@ import {
   sharingPrelimFindingsInitialSortingDirection,
   SharingPrelimFindingsSortingDirection,
   SortSharingPrelimFindings,
+  TimeRangeOptionPreliminaryDataSharing,
 } from '@asap-hub/model';
 import { SharingPrelimFindingsTable } from '@asap-hub/react-components';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -12,12 +13,14 @@ interface SharingPreliminaryFindingsProps {
   sort: SortSharingPrelimFindings;
   setSort: Dispatch<SetStateAction<SortSharingPrelimFindings>>;
   tags: string[];
+  timeRange: TimeRangeOptionPreliminaryDataSharing;
 }
 
 const SharingPreliminaryFindings: React.FC<SharingPreliminaryFindingsProps> = ({
   sort,
   setSort,
   tags,
+  timeRange,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const [sortingDirection, setSortingDirection] =
@@ -30,7 +33,7 @@ const SharingPreliminaryFindings: React.FC<SharingPreliminaryFindingsProps> = ({
     pageSize,
     sort,
     tags,
-    timeRange: 'all',
+    timeRange: timeRange || 'all',
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

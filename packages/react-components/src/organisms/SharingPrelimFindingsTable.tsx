@@ -10,10 +10,11 @@ import { PageControls } from '..';
 
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
-import { charcoal, neutral200, steel } from '../colors';
+import { charcoal, lead, neutral200, steel } from '../colors';
 import { InactiveBadgeIcon } from '../icons';
 import { rem } from '../pixels';
 import StaticPerformanceCard from './StaticPerformanceCard';
+import { getPrelimPerformanceIcon } from '../utils';
 
 const container = css({
   overflowX: 'auto',
@@ -60,6 +61,14 @@ const rowStyles = css({
 const iconStyles = css({
   display: 'flex',
   gap: rem(3),
+});
+
+const valueStyles = css({
+  fontWeight: 400,
+  fontSize: rem(17),
+  textWrap: 'nowrap',
+  color: lead.rgb,
+  width: rem(45),
 });
 
 const pageControlsStyles = css({
@@ -131,7 +140,17 @@ const SharingPrelimFindingsTable: React.FC<SharingPrelimFindingsTableProps> = ({
                   </p>
                 </td>
                 <td>
-                  <p>{row.teamPercentShared}%</p>
+                  <p css={iconStyles}>
+                    <span css={valueStyles}>
+                      {row.teamPercentShared === null || row.limitedData
+                        ? 'N/A'
+                        : `${row.teamPercentShared}%`}
+                    </span>
+                    {getPrelimPerformanceIcon(
+                      row.teamPercentShared,
+                      row.limitedData,
+                    )}
+                  </p>
                 </td>
               </tr>
             ))}

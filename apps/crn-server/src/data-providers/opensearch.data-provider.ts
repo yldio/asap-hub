@@ -16,7 +16,7 @@ export default class OpensearchProvider {
 
   constructor() {
     this.lambda = new LambdaClient({ region });
-    this.stage = environment;
+    this.stage = environment === 'local' ? 'dev' : environment;
     this.opensearchDomainStage =
       environment === 'production' ? 'production' : 'dev';
   }

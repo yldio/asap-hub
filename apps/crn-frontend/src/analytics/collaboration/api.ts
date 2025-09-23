@@ -17,7 +17,11 @@ import {
   OutputTypeOption,
   SortUserCollaboration,
   SortTeamCollaboration,
+  ListPreliminaryDataSharingResponse,
+  PreliminaryDataSharingDataObject,
+  TimeRangeOptionPreliminaryDataSharing,
 } from '@asap-hub/model';
+import { OpensearchClient } from '../utils/opensearch';
 
 export type CollaborationListOptions = Pick<
   GetListOptions,
@@ -47,3 +51,33 @@ export const getUserCollaborationPerformance =
   getPerformanceForMetric<UserCollaborationPerformance>(
     USER_COLLABORATION_PERFORMANCE,
   );
+
+export type PreliminaryDataSharingSearchOptions = {
+  currentPage: number | null;
+  pageSize: number | null;
+  tags: string[];
+  timeRange: TimeRangeOptionPreliminaryDataSharing;
+};
+
+export const getPreliminaryDataSharing = async (
+  opensearchClient: OpensearchClient<PreliminaryDataSharingDataObject>,
+  {
+    tags,
+    currentPage,
+    pageSize,
+    timeRange,
+  }: PreliminaryDataSharingSearchOptions,
+): Promise<ListPreliminaryDataSharingResponse | undefined> => {
+  const response = await opensearchClient.search(
+    tags,
+    currentPage,
+    pageSize,
+    timeRange,
+    'teams',
+  );
+
+  return {
+    items: response.items || [],
+    total: response.total || 0,
+  };
+};

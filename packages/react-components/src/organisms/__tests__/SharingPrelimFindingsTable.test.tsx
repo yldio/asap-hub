@@ -49,4 +49,30 @@ describe('SharingPrelimFindingsTable', () => {
     );
     expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
+  it('renders N/A when limitedData is true', () => {
+    const teamprelimFindingsData = {
+      ...teamSharingPrelimFindingsData,
+      teamPercentShared: null,
+      limitedData: true,
+    };
+    const data = [teamprelimFindingsData];
+    const renderer = render(
+      <SharingPrelimFindingsTable {...defaultProps} data={data} />,
+    );
+    expect(renderer.getByText('N/A')).toBeInTheDocument();
+
+    renderer.rerender(
+      <SharingPrelimFindingsTable
+        {...defaultProps}
+        data={[
+          {
+            ...teamprelimFindingsData,
+            limitedData: true,
+            teamPercentShared: 0,
+          },
+        ]}
+      />,
+    );
+    expect(renderer.getByText('N/A')).toBeInTheDocument();
+  });
 });

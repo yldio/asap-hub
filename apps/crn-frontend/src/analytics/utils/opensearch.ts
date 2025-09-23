@@ -22,7 +22,7 @@ interface AggregationBucket {
   doc_count: number;
 }
 
-interface OpensearchHitsResponse<T> {
+export interface OpensearchHitsResponse<T> {
   hits: {
     total: {
       value: number;
@@ -76,7 +76,7 @@ export class OpensearchClient<T> {
     this.authorization = authorization;
   }
 
-  private async request<S>(query: object): Promise<S> {
+  async request<S>(query: object): Promise<S> {
     const url = `${API_BASE_URL}/opensearch/search/${this.index}`;
     const resp = await fetch(url, {
       method: 'POST',

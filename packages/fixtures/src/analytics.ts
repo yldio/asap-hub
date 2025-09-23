@@ -10,6 +10,8 @@ import {
   UserCollaborationPerformance,
   UserProductivityAlgoliaResponse,
   UserProductivityPerformance,
+  PreliminaryDataSharingDataObject,
+  ListPreliminaryDataSharingResponse,
 } from '@asap-hub/model';
 
 export const teamLeadershipResponse: AnalyticsTeamLeadershipResponse = {
@@ -274,3 +276,18 @@ export const listEngagementResponse: ListEngagementAlgoliaResponse = {
     },
   ],
 };
+
+export const preliminaryDataSharingItem: PreliminaryDataSharingDataObject = {
+  teamId: 'team-1',
+  teamName: 'Test Team',
+  isTeamInactive: false,
+  limitedData: false,
+  percentShared: 85,
+  timeRange: 'all',
+};
+
+export const preliminaryDataSharingResponse: ListPreliminaryDataSharingResponse =
+  {
+    total: 1,
+    items: [preliminaryDataSharingItem],
+  };

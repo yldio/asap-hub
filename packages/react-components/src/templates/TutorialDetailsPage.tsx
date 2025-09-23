@@ -57,7 +57,7 @@ const TutorialDetailsPage: React.FC<TutorialDetailsPageProps> = ({
             {text && (
               <div css={{ paddingBottom: `${12 / perRem}em` }}>
                 <Headline2>Description</Headline2>
-                <RichText poorText text={text} />
+                <RichText text={text} />
               </div>
             )}
             {text && !!tags.length && <Divider />}

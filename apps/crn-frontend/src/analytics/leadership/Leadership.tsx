@@ -18,7 +18,12 @@ import { FC, useState } from 'react';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
-import { useSearch, useAnalyticsOpensearch } from '../../hooks';
+import {
+  useSearch,
+  useAnalyticsOpensearch,
+  useAnalytics,
+  usePaginationParams,
+} from '../../hooks';
 import { getAnalyticsLeadership } from './api';
 import { leadershipToCSV } from './export';
 import OSChampion from './OSChampion';
@@ -29,6 +34,7 @@ const Leadership: FC<Record<string, never>> = () => {
   const { metric } = useParams<{
     metric: MetricOption;
   }>();
+  const { currentPage } = usePaginationParams();
 
   const [osChampionSort, setOsChampionSort] =
     useState<SortOSChampion>('team_asc');
@@ -39,8 +45,10 @@ const Leadership: FC<Record<string, never>> = () => {
   };
 
   const { tags, setTags } = useSearch();
+  const { timeRange } = useAnalytics();
   const { client } = useAnalyticsAlgolia();
   const osChampionClient = useAnalyticsOpensearch('os-champion');
+  const isOSChampionPage = metric === 'os-champion';
 
   const exportResults = () =>
     algoliaResultsToStream<AnalyticsTeamLeadershipResponse>(
@@ -60,7 +68,7 @@ const Leadership: FC<Record<string, never>> = () => {
     );
 
   const loadTags = async (tagQuery: string) => {
-    if (metric === 'os-champion') {
+    if (isOSChampionPage) {
       const response =
         await osChampionClient.client.getTagSuggestions(tagQuery);
 
@@ -81,7 +89,7 @@ const Leadership: FC<Record<string, never>> = () => {
   };
 
   const isOSChampionEnabled = isEnabled('ANALYTICS_PHASE_TWO');
-  return !isOSChampionEnabled && metric === 'os-champion' ? (
+  return !isOSChampionEnabled && isOSChampionPage ? (
     <Redirect
       to={analytics({}).leadership({}).metric({ metric: 'working-group' }).$}
     />
@@ -94,8 +102,10 @@ const Leadership: FC<Record<string, never>> = () => {
       metric={metric}
       setMetric={setMetric}
       exportResults={exportResults}
+      timeRange={isOSChampionPage ? timeRange : undefined}
+      currentPage={currentPage}
     >
-      {metric === 'os-champion' ? (
+      {isOSChampionPage ? (
         <OSChampion
           tags={tags}
           sort={osChampionSort}

@@ -1,4 +1,5 @@
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import { TimeRangeOption } from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
 
 const DEFAULT_PAGE_NUMBER = 0;
@@ -60,6 +61,7 @@ type SearchScope = 'teams' | 'both';
 interface OpensearchSearchOptions {
   currentPage?: number | null;
   pageSize?: number | null;
+  timeRange?: TimeRangeOption;
   searchTags: string[];
   searchScope: SearchScope;
   fetchTags?: boolean;
@@ -101,6 +103,7 @@ export class OpensearchClient<T> {
     searchTags: string[],
     currentPage: number | null,
     pageSize: number | null,
+    timeRange?: TimeRangeOption,
     searchScope: SearchScope = 'both',
   ): Promise<SearchResult<T>> {
     const query = buildOpensearchQuery({
@@ -108,13 +111,16 @@ export class OpensearchClient<T> {
       currentPage,
       pageSize,
       searchScope,
+      timeRange,
     });
     const response = await this.request<OpensearchHitsResponse<T>>(query);
 
-    const items = (response.hits?.hits || []).map(
+    const items = (response.hits?.hits || []).map((hit: OpensearchHit<T>) => ({
       // eslint-disable-next-line no-underscore-dangle
-      (hit: OpensearchHit<T>) => hit._source,
-    );
+      ...hit._source,
+      // eslint-disable-next-line no-underscore-dangle
+      objectID: hit._id,
+    }));
 
     return {
       items,
@@ -151,6 +157,26 @@ export class OpensearchClient<T> {
 const generateDefaultQuery = (page: number, size: number) => ({
   query: {
     match_all: {},
+  },
+  size,
+  from: page * size,
+});
+
+const generateDefaultQueryWithTimeRange = (
+  page: number,
+  size: number,
+  timeRange: TimeRangeOption,
+) => ({
+  query: {
+    bool: {
+      must: [
+        {
+          term: {
+            timeRange,
+          },
+        },
+      ],
+    },
   },
   size,
   from: page * size,
@@ -271,6 +297,7 @@ const buildSearchQuery = (
   page: number,
   size: number,
   searchScope: SearchScope,
+  timeRange?: TimeRangeOption,
 ) => {
   const shouldClauses = tags.flatMap((term) => {
     const clauses: Record<string, unknown>[] = [
@@ -296,6 +323,16 @@ const buildSearchQuery = (
     return clauses;
   });
 
+  const mustClauses: Record<string, unknown>[] = [];
+
+  if (timeRange) {
+    mustClauses.push({
+      term: {
+        timeRange,
+      },
+    });
+  }
+
   return {
     from: page * size,
     size,
@@ -303,6 +340,7 @@ const buildSearchQuery = (
       bool: {
         should: shouldClauses,
         minimum_should_match: 1,
+        ...(mustClauses.length > 0 ? { must: mustClauses } : {}),
       },
     },
     sort: [
@@ -316,9 +354,16 @@ const buildSearchQuery = (
 };
 
 const buildOpensearchQuery = (options: OpensearchSearchOptions) => {
-  const { currentPage, pageSize, searchTags, searchScope } = options;
+  const { currentPage, pageSize, searchTags, searchScope, timeRange } = options;
 
   if (searchTags?.length === 0) {
+    if (timeRange) {
+      return generateDefaultQueryWithTimeRange(
+        currentPage || DEFAULT_PAGE_NUMBER,
+        pageSize || DEFAULT_PAGE_SIZE,
+        timeRange,
+      );
+    }
     return generateDefaultQuery(
       currentPage || DEFAULT_PAGE_NUMBER,
       pageSize || DEFAULT_PAGE_SIZE,
@@ -330,5 +375,6 @@ const buildOpensearchQuery = (options: OpensearchSearchOptions) => {
     currentPage || DEFAULT_PAGE_NUMBER,
     pageSize || DEFAULT_PAGE_SIZE,
     searchScope,
+    timeRange,
   );
 };

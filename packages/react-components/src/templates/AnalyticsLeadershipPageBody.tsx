@@ -1,3 +1,4 @@
+import { analytics } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { noop } from '..';
@@ -28,7 +29,10 @@ const metricDescription = {
   'os-champion': 'Number of Open Science Champion awards by team.',
 };
 
-type LeadershipAndMembershipAnalyticsProps = {
+type LeadershipAndMembershipAnalyticsProps = Pick<
+  ComponentProps<typeof AnalyticsControls>,
+  'currentPage' | 'timeRange'
+> & {
   children: React.ReactNode;
   tags: string[];
   loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
@@ -52,6 +56,8 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   tags,
   setTags,
   loadTags = noop,
+  timeRange,
+  currentPage,
   metric,
   setMetric,
   exportResults,
@@ -80,6 +86,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         <Paragraph>{metricDescription[metric]}</Paragraph>
       </div>
       <AnalyticsControls
+        currentPage={currentPage}
         metricOption={metric === 'os-champion' ? 'user' : 'team'}
         tags={tags}
         loadTags={loadTags}
@@ -90,6 +97,8 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
             ? 'Sorry, no teams or users match'
             : undefined
         }
+        href={analytics({}).leadership({}).metric({ metric }).$}
+        timeRange={timeRange}
       />
       {children}
     </article>

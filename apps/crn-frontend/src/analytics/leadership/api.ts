@@ -1,8 +1,12 @@
-import { AlgoliaClient } from '@asap-hub/algolia';
+import {
+  AlgoliaClient,
+  AnalyticsSearchOptionsWithFiltering,
+} from '@asap-hub/algolia';
 import {
   ListAnalyticsTeamLeadershipResponse,
-  ListOSChampionResponse,
-  OSChampionDataObject,
+  ListOSChampionOpensearchResponse,
+  OSChampionOpensearchResponse,
+  SortOSChampion,
 } from '@asap-hub/model';
 import { MetricOption } from '@asap-hub/react-components';
 import { OpensearchClient } from '../utils/opensearch';
@@ -34,7 +38,12 @@ export const getAnalyticsLeadership = async (
 };
 
 export const getAnalyticsOSChampion = async (
-  opensearchClient: OpensearchClient<OSChampionDataObject>,
-  { tags, currentPage, pageSize }: AnalyticsSearchOptions,
-): Promise<ListOSChampionResponse | undefined> =>
-  opensearchClient.search(tags, currentPage, pageSize);
+  opensearchClient: OpensearchClient<OSChampionOpensearchResponse>,
+  {
+    tags,
+    currentPage,
+    pageSize,
+    timeRange,
+  }: AnalyticsSearchOptionsWithFiltering<SortOSChampion>,
+): Promise<ListOSChampionOpensearchResponse | undefined> =>
+  opensearchClient.search(tags, currentPage, pageSize, timeRange);

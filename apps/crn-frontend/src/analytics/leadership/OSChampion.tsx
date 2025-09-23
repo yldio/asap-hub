@@ -5,7 +5,7 @@ import {
 } from '@asap-hub/model';
 import { OSChampionTable } from '@asap-hub/react-components';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { usePagination, usePaginationParams } from '../../hooks';
+import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsOSChampion } from './state';
 
 interface OSChampionProps {
@@ -16,6 +16,7 @@ interface OSChampionProps {
 
 const OSChampion: React.FC<OSChampionProps> = ({ sort, setSort, tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const { timeRange } = useAnalytics();
 
   const [sortingDirection, setSortingDirection] =
     useState<OSChampionSortingDirection>(osChampionInitialSortingDirection);
@@ -25,6 +26,7 @@ const OSChampion: React.FC<OSChampionProps> = ({ sort, setSort, tags }) => {
     sort,
     currentPage,
     pageSize,
+    timeRange,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

@@ -3,9 +3,10 @@ import {
   createAlgoliaResponse,
   AlgoliaSearchClient,
   ClientSearchResponse,
+  AnalyticsSearchOptionsWithFiltering,
 } from '@asap-hub/algolia';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
-import { OSChampionDataObject } from '@asap-hub/model';
+import { OSChampionOpensearchResponse, SortOSChampion } from '@asap-hub/model';
 import {
   AnalyticsSearchOptions,
   getAnalyticsLeadership,
@@ -111,32 +112,50 @@ describe('getAnalyticsLeadership', () => {
 });
 
 describe('getAnalyticsOSChampion', () => {
+  const defaultOSChampionOptions: AnalyticsSearchOptionsWithFiltering<SortOSChampion> =
+    {
+      ...defaultOptions,
+      sort: 'team_asc',
+      timeRange: 'all',
+    };
   const defaultOSChampionData = {
+    objectID: 'object-id-1',
     teamId: 'team-id-1',
     teamName: 'Alessi',
     isTeamInactive: false,
     teamAwardsCount: 0,
+    timeRange: 'all',
     users: [],
-  };
+  } as OSChampionOpensearchResponse;
   const defaultResponse = {
     items: [defaultOSChampionData],
     total: 1,
   };
 
-  let mockOpensearchClient: jest.Mocked<OpensearchClient<OSChampionDataObject>>;
+  let mockOpensearchClient: jest.Mocked<
+    OpensearchClient<OSChampionOpensearchResponse>
+  >;
 
   beforeEach(() => {
     mockOpensearchClient = {
       search: jest.fn(),
-    } as unknown as jest.Mocked<OpensearchClient<OSChampionDataObject>>;
+    } as unknown as jest.Mocked<OpensearchClient<OSChampionOpensearchResponse>>;
   });
 
-  it('should not default to any search, specific page or limit hits per page', async () => {
+  it('should not default to any search tags, specific page or limit hits per page', async () => {
     mockOpensearchClient.search.mockResolvedValue(defaultResponse);
 
-    await getAnalyticsOSChampion(mockOpensearchClient, defaultOptions);
+    await getAnalyticsOSChampion(
+      mockOpensearchClient,
+      defaultOSChampionOptions,
+    );
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith([], null, null);
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
+      [],
+      null,
+      null,
+      'all',
+    );
   });
 
   it('should pass the options if provided to search', async () => {
@@ -146,9 +165,39 @@ describe('getAnalyticsOSChampion', () => {
       pageSize: 10,
       currentPage: 0,
       tags: ['Alessi'],
+      timeRange: 'all',
+      sort: 'team_asc',
     });
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith(['Alessi'], 0, 10);
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
+      ['Alessi'],
+      0,
+      10,
+      'all',
+    );
+  });
+
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `('returns os champion data for $range', async ({ timeRange }) => {
+    mockOpensearchClient.search.mockResolvedValue(defaultResponse);
+
+    await getAnalyticsOSChampion(mockOpensearchClient, {
+      ...defaultOSChampionOptions,
+      timeRange,
+    });
+
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
+      [],
+      null,
+      null,
+      timeRange,
+    );
   });
 
   it('should return successfully fetched os champion data', async () => {
@@ -159,6 +208,8 @@ describe('getAnalyticsOSChampion', () => {
         pageSize: 10,
         currentPage: 0,
         tags: ['Alessi'],
+        timeRange: 'all',
+        sort: 'team_asc',
       },
     );
     expect(analyticsOSChampion).toEqual(

@@ -72,6 +72,21 @@ describe('OpensearchClient', () => {
       expect(result.items).toHaveLength(2);
     });
 
+    it('handles default case with time range', async () => {
+      mockFetch.mockResolvedValueOnce(defaultResponse);
+      const timeRange = '90d';
+
+      const result = await client.search([], null, null, timeRange);
+
+      const fetchArgs = mockFetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchArgs[1].body);
+
+      const mustClauses = requestBody.query.bool.must;
+      expect(mustClauses[0]).toEqual({ term: { timeRange } });
+      expect(result.total).toBe(2);
+      expect(result.items).toHaveLength(2);
+    });
+
     it('queries only teams when search scope is "teams"', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -94,7 +109,7 @@ describe('OpensearchClient', () => {
         }),
       });
 
-      const result = await client.search(['Team Only'], 0, 10, 'teams');
+      const result = await client.search(['Team Only'], 0, 10, 'all', 'teams');
 
       expect(result.total).toBe(1);
 
@@ -111,6 +126,30 @@ describe('OpensearchClient', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         shouldClauses.some((clause: any) => clause.nested?.path === 'users'),
       ).toBe(false);
+    });
+
+    it('queries by time range when provided', async () => {
+      mockFetch.mockResolvedValueOnce(defaultResponse);
+      const timeRange = '30d';
+
+      await client.search(['Team A'], 0, 10, timeRange);
+
+      const fetchArgs = mockFetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchArgs[1].body);
+
+      const mustClauses = requestBody.query.bool.must;
+      expect(mustClauses[0]).toEqual({ term: { timeRange } });
+    });
+
+    it('excludes must clause if time range not provided', async () => {
+      mockFetch.mockResolvedValueOnce(defaultResponse);
+
+      await client.search(['Team Only'], 0, 10);
+
+      const fetchArgs = mockFetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchArgs[1].body);
+
+      expect(requestBody.query.bool.must).toBe(undefined);
     });
 
     it('throws an error on bad response', async () => {

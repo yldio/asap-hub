@@ -962,6 +962,7 @@ export const getOSChampionResponse: () => OSChampionResponse = () => ({
   teamName: 'Team A',
   isTeamInactive: false,
   teamAwardsCount: 3,
+  timeRange: 'all',
   users: [
     {
       id: 'user-with-2-awards',

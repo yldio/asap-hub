@@ -738,5 +738,5 @@ export type PreprintComplianceSortingDirection = {
 export const preprintComplianceInitialSortingDirection = {
   team: ascending,
   numberOfPreprints: descending,
-  preprintsPercentage: descending,
+  postedPriorPercentage: descending,
 };

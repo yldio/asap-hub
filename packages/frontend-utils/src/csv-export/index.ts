@@ -81,3 +81,39 @@ export const algoliaResultsToStream = async <T>(
   }
   csvStream.end();
 };
+
+export const opensearchResultsToStream = async <T>(
+  csvStream: Stringifier,
+  getResults: ({
+    currentPage,
+    pageSize,
+  }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
+    Promise<ListResponse<T> | undefined>
+  >,
+  transform: (result: T) => Record<string, unknown>[],
+  pageSize: number = 30,
+) => {
+  let morePages = true;
+  let currentPage = 0;
+  while (morePages) {
+    // eslint-disable-next-line no-await-in-loop
+    const data = await getResults({
+      currentPage,
+      pageSize,
+    });
+    if (data) {
+      const nbPages = data.total / pageSize;
+      data.items.forEach((item) => {
+        const rows = transform(item);
+        rows.forEach((row) => {
+          csvStream.write(row);
+        });
+      });
+      currentPage += 1;
+      morePages = currentPage <= nbPages;
+    } else {
+      morePages = false;
+    }
+  }
+  csvStream.end();
+};

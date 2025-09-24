@@ -2,9 +2,11 @@ import { isEnabled } from '@asap-hub/flags';
 import {
   algoliaResultsToStream,
   createCsvFileStream,
+  opensearchResultsToStream,
 } from '@asap-hub/frontend-utils';
 import {
   AnalyticsTeamLeadershipResponse,
+  OSChampionOpensearchResponse,
   SortLeadershipAndMembership,
   SortOSChampion,
 } from '@asap-hub/model';
@@ -24,8 +26,8 @@ import {
   useAnalytics,
   usePaginationParams,
 } from '../../hooks';
-import { getAnalyticsLeadership } from './api';
-import { leadershipToCSV } from './export';
+import { getAnalyticsLeadership, getAnalyticsOSChampion } from './api';
+import { leadershipToCSV, osChampionToCSV } from './export';
 import OSChampion from './OSChampion';
 import TeamLeadership from './TeamLeadership';
 
@@ -47,10 +49,11 @@ const Leadership: FC<Record<string, never>> = () => {
   const { tags, setTags } = useSearch();
   const { timeRange } = useAnalytics();
   const { client } = useAnalyticsAlgolia();
-  const osChampionClient = useAnalyticsOpensearch('os-champion');
+  const osChampionClient =
+    useAnalyticsOpensearch<OSChampionOpensearchResponse>('os-champion');
   const isOSChampionPage = metric === 'os-champion';
 
-  const exportResults = () =>
+  const exportTeamLeadership = () =>
     algoliaResultsToStream<AnalyticsTeamLeadershipResponse>(
       createCsvFileStream(
         `leadership_${metric}_${format(new Date(), 'MMddyy')}.csv`,
@@ -66,6 +69,28 @@ const Leadership: FC<Record<string, never>> = () => {
         }),
       leadershipToCSV(metric),
     );
+
+  const exportOSChampion = () =>
+    opensearchResultsToStream<OSChampionOpensearchResponse>(
+      createCsvFileStream(
+        `leadership_${metric}_${format(new Date(), 'MMddyy')}.csv`,
+        {
+          header: true,
+        },
+      ),
+      (paginationParams) =>
+        getAnalyticsOSChampion(osChampionClient.client, {
+          tags,
+          timeRange,
+          sort: osChampionSort,
+          ...paginationParams,
+        }),
+      osChampionToCSV,
+    );
+
+  const exportResults = isOSChampionPage
+    ? exportOSChampion
+    : exportTeamLeadership;
 
   const loadTags = async (tagQuery: string) => {
     if (isOSChampionPage) {

@@ -52,6 +52,17 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Set Environment Alias
+        id: env-alias
+        run: |
+          if [ "${{ inputs.environment-name }}" = "Branch" ] || [ "${{ inputs.environment-name }}" = "Development" ]; then
+            echo "env-alias=dev" >> $GITHUB_OUTPUT
+          elif [ "${{ inputs.environment-name }}" = "Production" ]; then
+            echo "env-alias=prod" >> $GITHUB_OUTPUT
+          else
+            echo "Unknown environment: ${{ inputs.environment-name }}"
+            exit 1
+          fi
       - name: Build
         run: |
           yarn install
@@ -73,6 +84,7 @@ jobs:
           OPENSEARCH_USERNAME: ${{ secrets.AWS_OS_USERNAME }}
           OPENSEARCH_PASSWORD: ${{ secrets.AWS_OS_PASSWORD }}
           OPENSEARCH_ANALYTICS_SPREADSHEET_URL: ${{ steps.setup.outputs.opensearch-analytics-spreadsheet-url }}
+          GOOGLE_API_CREDENTIALS_SECRET_ID: google-api-credentials-${{ steps.env-alias.outputs.env-alias }}
           ENVIRONMENT: ${{ inputs.environment-name }}
 
   notify_failure:

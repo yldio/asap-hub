@@ -10,7 +10,7 @@ import {
 import AnalyticsController from '../../src/controllers/analytics.controller';
 import { getAnalyticsDataProvider } from '../../src/dependencies/analytics.dependencies';
 import { metricConfig, PAGE_SIZE, validMetrics } from './constants';
-import { exportPreprintComplianceData } from './sync-opensearch-preprint-compliance-local';
+import { exportPreprintComplianceData } from './preprint-compliance';
 import type { MetricObject, Metrics } from './types';
 
 export const exportAnalyticsData = async <T extends Metrics>(

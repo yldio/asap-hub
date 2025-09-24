@@ -263,6 +263,9 @@ outputs:
   gp2-on-branch-env:
     description: 'Whether the gp2 Contentful environment being used is a PR environment'
     value: ${{ steps.vars.outputs.gp2-on-branch-env }}
+  opensearch-analytics-spreadsheet-url:
+    description: 'Opensearch Analytics Spreadsheet URL'
+    value: ${{ steps.vars.outputs.opensearch-analytics-spreadsheet-url }}
 runs:
   using: 'composite'
   steps:

@@ -11,6 +11,7 @@ on:
           - os-champion
           - preliminary-data-sharing
           - attendance
+          - preprint-compliance
           - all
       environment-name:
         required: true

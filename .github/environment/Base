@@ -38,3 +38,4 @@ gp2-contentful-space-id=6ekgyp1432o9
 gp2-hostname=gp2.asap.science
 gp2-max-contentful-envs=6
 print-sync-logs-on-success=TRUE
+opensearch-analytics-spreadsheet-url=https://docs.google.com/spreadsheets/d/14vskvwDpwrzUMY_Fg2ln10EAlCS6DtvE0nHgB_CN2JM/edit

@@ -701,18 +701,42 @@ export interface PublicationComplianceResponse {
   labMaterials: number;
 }
 
-export type SortPreprintCompliance =
-  | 'team_asc'
-  | 'preprints_asc'
-  | 'posted_prior_asc';
-
-export type PreprintComplianceSortingDirection = 'asc' | 'desc';
-
-export interface PreprintComplianceResponse {
+export type PreprintComplianceDataObject = {
   teamId: string;
   teamName: string;
   isTeamInactive: boolean;
   numberOfPreprints: number;
-  postedPriorToJournalSubmission: number;
+  numberOfPublications: number;
   postedPriorPercentage: number;
-}
+  ranking: string;
+  timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
+};
+
+export type ListPreprintComplianceDataObject =
+  ListResponse<PreprintComplianceDataObject>;
+export type PreprintComplianceResponse = PreprintComplianceDataObject;
+export type ListPreprintComplianceResponse =
+  ListResponse<PreprintComplianceResponse>;
+
+export type SortPreprintCompliance =
+  | 'team_asc'
+  | 'team_desc'
+  | 'number_of_preprints_asc'
+  | 'number_of_preprints_desc'
+  | 'posted_prior_asc'
+  | 'posted_prior_desc';
+
+export type PreprintComplianceFields =
+  | 'team'
+  | 'numberOfPreprints'
+  | 'postedPriorPercentage';
+
+export type PreprintComplianceSortingDirection = {
+  [key in PreprintComplianceFields]: SortingDirection;
+};
+
+export const preprintComplianceInitialSortingDirection = {
+  team: ascending,
+  numberOfPreprints: descending,
+  postedPriorPercentage: descending,
+};

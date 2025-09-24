@@ -44,6 +44,7 @@ const {
   LOG_LEVEL,
   NODE_ENV,
   OPENAI_API_KEY,
+  OPENSEARCH_ANALYTICS_SPREADSHEET_URL,
   OS_EMAIL_DL,
   POSTMARK_SERVER_TOKEN,
   REGION,
@@ -125,3 +126,5 @@ export const inviteUserQueueUrl = QUEUE_URL || '';
 export const opensearchUsername = OPENSEARCH_USERNAME || '';
 export const opensearchPassword = OPENSEARCH_PASSWORD || '';
 export const awsRegion = AWS_REGION || REGION || 'us-east-1';
+export const opensearchAnalyticsSpreadsheetUrl =
+  OPENSEARCH_ANALYTICS_SPREADSHEET_URL || '';

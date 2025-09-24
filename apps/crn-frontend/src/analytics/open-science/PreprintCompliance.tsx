@@ -13,24 +13,30 @@ const mockData: PreprintComplianceResponse[] = [
     teamName: 'Team Alpha',
     isTeamInactive: false,
     numberOfPreprints: 15,
-    postedPriorToJournalSubmission: 12,
-    postedPriorPercentage: 80, // 12/15 = 80%
+    numberOfPublications: 12,
+    ranking: 'ADEQUATE',
+    timeRange: 'all',
+    postedPriorPercentage: 80,
   },
   {
     teamId: '2',
     teamName: 'Team Beta',
     isTeamInactive: false,
     numberOfPreprints: 8,
-    postedPriorToJournalSubmission: 6,
-    postedPriorPercentage: 75, // 6/8 = 75%
+    numberOfPublications: 6,
+    ranking: 'NEEDS IMPROVEMENT',
+    timeRange: 'all',
+    postedPriorPercentage: 75,
   },
   {
     teamId: '3',
     teamName: 'Team Gamma',
     isTeamInactive: true,
     numberOfPreprints: 22,
-    postedPriorToJournalSubmission: 18,
-    postedPriorPercentage: 82, // 18/22 = 82%
+    numberOfPublications: 18,
+    ranking: 'ADEQUATE',
+    timeRange: 'all',
+    postedPriorPercentage: 82,
   },
 ];
 

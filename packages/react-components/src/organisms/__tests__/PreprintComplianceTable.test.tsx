@@ -19,8 +19,10 @@ describe('PreprintComplianceTable', () => {
     teamName: 'Test Team',
     isTeamInactive: false,
     numberOfPreprints: 5,
-    postedPriorToJournalSubmission: 4,
     postedPriorPercentage: 80,
+    numberOfPublications: 0,
+    ranking: 'ADEQUATE',
+    timeRange: 'all',
   };
 
   const defaultProps: ComponentProps<typeof PreprintComplianceTable> = {

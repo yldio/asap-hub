@@ -4,6 +4,7 @@ export * from './aws-secret-manager';
 export * from './csv-parse';
 export * from './fetch-orcid';
 export * from './google-auth-client';
+export * from './google-sheets-reader';
 export * from './logger';
 export * from './loop-over-custom-collection';
 export * from './opensearch';

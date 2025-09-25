@@ -1,7 +1,7 @@
 import {
   SearchFrame,
   createCsvFileStream,
-  algoliaResultsToStream,
+  resultsToStream,
 } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
@@ -99,7 +99,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
             ),
           researchOutputToCSV,
         )
-      : algoliaResultsToStream<ResearchOutputResponse>(
+      : resultsToStream<ResearchOutputResponse>(
           createCsvFileStream(
             `SharedOutputs_WorkingGroup_${utils
               .titleCase(displayName)

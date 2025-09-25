@@ -1,8 +1,5 @@
 import { isEnabled } from '@asap-hub/flags';
-import {
-  algoliaResultsToStream,
-  createCsvFileStream,
-} from '@asap-hub/frontend-utils';
+import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import { EngagementResponse, EngagementType } from '@asap-hub/model';
 import { AnalyticsEngagementPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
@@ -40,7 +37,7 @@ const Engagement = () => {
   const performance = useEngagementPerformance({ timeRange });
   const { client } = useAnalyticsAlgolia();
   const exportResults = () =>
-    algoliaResultsToStream<EngagementResponse>(
+    resultsToStream<EngagementResponse>(
       createCsvFileStream(`engagement_${format(new Date(), 'MMddyy')}.csv`, {
         header: true,
       }),

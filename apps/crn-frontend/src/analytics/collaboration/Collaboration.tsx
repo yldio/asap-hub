@@ -1,8 +1,5 @@
 import { isEnabled } from '@asap-hub/flags';
-import {
-  algoliaResultsToStream,
-  createCsvFileStream,
-} from '@asap-hub/frontend-utils';
+import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   SortSharingPrelimFindings,
   SortTeamCollaboration,
@@ -118,7 +115,7 @@ const Collaboration = () => {
 
   const exportResults = () => {
     if (metric === 'user' && type) {
-      return algoliaResultsToStream<UserCollaborationAlgoliaResponse>(
+      return resultsToStream<UserCollaborationAlgoliaResponse>(
         createCsvFileStream(
           `collaboration_${metric}_${format(new Date(), 'MMddyy')}.csv`,
           {
@@ -137,7 +134,7 @@ const Collaboration = () => {
       );
     }
 
-    return algoliaResultsToStream<TeamCollaborationAlgoliaResponse>(
+    return resultsToStream<TeamCollaborationAlgoliaResponse>(
       createCsvFileStream(
         `collaboration_${metric}_${format(new Date(), 'MMddyy')}.csv`,
         {

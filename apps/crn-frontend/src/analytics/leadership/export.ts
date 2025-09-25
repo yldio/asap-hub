@@ -1,5 +1,8 @@
 import { CSVValue } from '@asap-hub/frontend-utils';
-import { AnalyticsTeamLeadershipDataObject } from '@asap-hub/model';
+import {
+  AnalyticsTeamLeadershipDataObject,
+  OSChampionDataObject,
+} from '@asap-hub/model';
 
 type LeadershipRowCSV = Record<string, CSVValue>;
 
@@ -23,3 +26,31 @@ export const leadershipToCSV =
         data[`${metricPrefix}PreviousMemberCount`].toString(),
     };
   };
+
+export const osChampionToCSV = (
+  data: OSChampionDataObject,
+): LeadershipRowCSV[] => {
+  const userRows: LeadershipRowCSV[] = [];
+
+  // If there are users, create a row for each user
+  if (data.users && data.users.length > 0) {
+    data.users.forEach((user) => {
+      userRows.push({
+        'Team Name': data.teamName,
+        'Team Status': data.isTeamInactive ? 'Inactive' : 'Active',
+        'User Name': user.name,
+        'No.of Awards': user.awardsCount.toString(),
+      });
+    });
+  } else {
+    // If no users, create a placeholder entry
+    userRows.push({
+      'Team Name': data.teamName,
+      'Team Status': data.isTeamInactive ? 'Inactive' : 'Active',
+      'User Name': '',
+      'No.of Awards': '0',
+    });
+  }
+
+  return userRows;
+};

@@ -1,5 +1,5 @@
 import {
-  algoliaResultsToStream,
+  resultsToStream,
   createCsvFileStream,
   SearchFrame,
 } from '@asap-hub/frontend-utils';
@@ -110,7 +110,7 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   const href = renderPageHref(currentPage);
 
   const exportResults = () =>
-    algoliaResultsToStream<PartialManuscriptResponse>(
+    resultsToStream<PartialManuscriptResponse>(
       createCsvFileStream(`manuscripts_${format(new Date(), 'yyMMdd')}.csv`, {
         header: true,
       }),

@@ -1,4 +1,5 @@
-import { leadershipToCSV } from '../export';
+import { OSChampionDataObject } from '@asap-hub/model';
+import { leadershipToCSV, osChampionToCSV } from '../export';
 
 describe('leadershipToCSV', () => {
   it('handles basic data', () => {
@@ -68,5 +69,76 @@ describe('leadershipToCSV', () => {
       'Currently a member': '7',
       'Previously a member': '8',
     });
+  });
+});
+
+describe('osChampionToCSV', () => {
+  it('handles data with users', () => {
+    const data = {
+      teamId: '1',
+      teamName: 'Team 1',
+      isTeamInactive: false,
+      teamAwardsCount: 8,
+      timeRange: 'last-year',
+      users: [
+        { id: 'user1', name: 'User 1', awardsCount: 5 },
+        { id: 'user2', name: 'User 2', awardsCount: 3 },
+      ],
+    } as OSChampionDataObject;
+
+    expect(osChampionToCSV(data)).toEqual([
+      {
+        'Team Name': 'Team 1',
+        'Team Status': 'Active',
+        'User Name': 'User 1',
+        'No.of Awards': '5',
+      },
+      {
+        'Team Name': 'Team 1',
+        'Team Status': 'Active',
+        'User Name': 'User 2',
+        'No.of Awards': '3',
+      },
+    ]);
+  });
+
+  it('handles data with inactive team', () => {
+    const data = {
+      teamId: '1',
+      teamName: 'Team 1',
+      isTeamInactive: true,
+      teamAwardsCount: 2,
+      timeRange: 'last-year' as const,
+      users: [{ id: 'user1', name: 'User 1', awardsCount: 2 }],
+    };
+
+    expect(osChampionToCSV(data)).toEqual([
+      {
+        'Team Name': 'Team 1',
+        'Team Status': 'Inactive',
+        'User Name': 'User 1',
+        'No.of Awards': '2',
+      },
+    ]);
+  });
+
+  it('handles data with no users', () => {
+    const data = {
+      teamId: '1',
+      teamName: 'Team 1',
+      isTeamInactive: false,
+      teamAwardsCount: 0,
+      timeRange: 'last-year' as const,
+      users: [],
+    };
+
+    expect(osChampionToCSV(data)).toEqual([
+      {
+        'Team Name': 'Team 1',
+        'Team Status': 'Active',
+        'User Name': '',
+        'No.of Awards': '0',
+      },
+    ]);
   });
 });

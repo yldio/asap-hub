@@ -49,7 +49,7 @@ export const createCsvFileStream = (fileName: string, csvOptions?: Options) => {
     .on('end', () => fileWriter.close());
 };
 
-export const algoliaResultsToStream = async <T>(
+export const resultsToStream = async <T>(
   csvStream: Stringifier,
   getResults: ({
     currentPage,
@@ -57,7 +57,7 @@ export const algoliaResultsToStream = async <T>(
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
     Promise<ListResponse<T> | undefined>
   >,
-  transform: (result: T) => Record<string, unknown>,
+  transform: (result: T) => Record<string, unknown> | Record<string, unknown>[],
   pageSize: number = 10,
 ) => {
   let morePages = true;
@@ -69,12 +69,16 @@ export const algoliaResultsToStream = async <T>(
       pageSize,
     });
     if (data) {
-      const nbPages = data.total / pageSize;
-      data.items.map(transform).forEach((row) => {
-        csvStream.write(row);
+      const nbPages = Math.ceil(data.total / pageSize);
+      data.items.forEach((item) => {
+        const transformed = transform(item);
+        const rows = Array.isArray(transformed) ? transformed : [transformed];
+        rows.forEach((row) => {
+          csvStream.write(row);
+        });
       });
       currentPage += 1;
-      morePages = currentPage <= nbPages;
+      morePages = currentPage < nbPages;
     } else {
       morePages = false;
     }

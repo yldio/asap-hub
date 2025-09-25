@@ -3,7 +3,7 @@ import { Stringifier } from 'csv-stringify';
 
 import streamSaver from 'streamsaver';
 import {
-  algoliaResultsToStream,
+  resultsToStream,
   caseInsensitive,
   createCsvFileStream,
   EXCEL_CELL_CHARACTER_LIMIT,
@@ -69,14 +69,14 @@ describe('htmlToCsvText', () => {
   });
 });
 
-describe('algoliaResultsToStream', () => {
+describe('resultsToStream', () => {
   const mockCsvStream = {
     write: jest.fn(),
     end: jest.fn(),
   };
 
   it('streams results', async () => {
-    await algoliaResultsToStream(
+    await resultsToStream(
       mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve({
@@ -118,7 +118,72 @@ describe('algoliaResultsToStream', () => {
 
   it('handles undefined response', async () => {
     const transformSpy = jest.fn();
-    await algoliaResultsToStream(
+    await resultsToStream(
+      mockCsvStream as unknown as Stringifier,
+      () => Promise.resolve(undefined),
+      transformSpy,
+    );
+    expect(transformSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('resultsToStream with array transform', () => {
+  const mockCsvStream = {
+    write: jest.fn(),
+    end: jest.fn(),
+  };
+
+  it('streams results', async () => {
+    await resultsToStream(
+      mockCsvStream as unknown as Stringifier,
+      () =>
+        Promise.resolve({
+          total: 2,
+          items: [
+            {
+              id: '1',
+              teamName: 'Team 1',
+              userName: 'User 1',
+              awardsCount: 1,
+            },
+            {
+              id: '2',
+              teamName: 'Team 2',
+              userName: 'User 2',
+              awardsCount: 2,
+            },
+          ],
+        }),
+      (item) => [
+        {
+          team: item.teamName,
+          id: item.id,
+          user: item.userName,
+          awards: item.awardsCount,
+        },
+      ],
+    );
+
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(2);
+    expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(2);
+    expect(mockCsvStream.write).toHaveBeenCalledWith({
+      team: 'Team 1',
+      id: '1',
+      user: 'User 1',
+      awards: 1,
+    });
+    expect(mockCsvStream.write).toHaveBeenCalledWith({
+      team: 'Team 2',
+      id: '2',
+      user: 'User 2',
+      awards: 2,
+    });
+  });
+
+  it('handles undefined response', async () => {
+    const transformSpy = jest.fn();
+    await resultsToStream(
       mockCsvStream as unknown as Stringifier,
       () => Promise.resolve(undefined),
       transformSpy,

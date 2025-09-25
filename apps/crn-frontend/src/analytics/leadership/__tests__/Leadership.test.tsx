@@ -293,6 +293,16 @@ describe('csv export', () => {
       expect.anything(),
     );
   });
+
+  it('exports analytics for os champion', async () => {
+    jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+    await renderPage('os-champion');
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/leadership_os-champion_\d+\.csv/),
+      expect.anything(),
+    );
+  });
 });
 
 it('renders data for different time ranges', async () => {

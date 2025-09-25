@@ -2,7 +2,7 @@ import {
   MeetingRepAttendanceSortingDirection,
   meetingRepAttendanceInitialSortingDirection,
   SortMeetingRepAttendance,
-  TimeRangeOptionPreliminaryDataSharing,
+  LimitedTimeRangeOption,
 } from '@asap-hub/model';
 import { MeetingRepAttendanceTable } from '@asap-hub/react-components';
 import { useState } from 'react';
@@ -11,7 +11,7 @@ import { useAnalyticsMeetingRepAttendance } from './state';
 
 interface MeetingRepAttendanceProps {
   tags: string[];
-  timeRange: TimeRangeOptionPreliminaryDataSharing;
+  timeRange: LimitedTimeRangeOption;
 }
 
 const MeetingRepAttendance: React.FC<MeetingRepAttendanceProps> = ({

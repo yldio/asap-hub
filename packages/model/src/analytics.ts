@@ -162,7 +162,7 @@ export const outputTypes = ['public', 'all'] as const;
 
 export type TimeRangeOption = (typeof timeRanges)[number];
 
-export type TimeRangeOptionPreliminaryDataSharing = Extract<
+export type LimitedTimeRangeOption = Extract<
   TimeRangeOption,
   'all' | 'last-year'
 >;
@@ -175,10 +175,7 @@ export const timeRangeOptions: Record<TimeRangeOption, string> = {
   all: 'Since Hub Launch (2020)',
 };
 
-export const timeRangeOptionsPreliminaryDataSharing: Record<
-  TimeRangeOptionPreliminaryDataSharing,
-  string
-> = {
+export const limitedTimeRangeOptions: Record<LimitedTimeRangeOption, string> = {
   'last-year': timeRangeOptions['last-year'],
   all: timeRangeOptions.all,
 };

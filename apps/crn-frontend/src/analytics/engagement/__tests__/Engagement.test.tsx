@@ -5,6 +5,7 @@ import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   EngagementPerformance,
   ListEngagementAlgoliaResponse,
+  MeetingRepAttendanceResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -13,9 +14,11 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { OpensearchClient } from '../../utils/opensearch';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
+import { useAnalyticsOpensearch } from '../../../hooks/opensearch';
 import { getEngagement, getEngagementPerformance } from '../api';
 import Engagement from '../Engagement';
 import { analyticsEngagementState, useAnalyticsEngagement } from '../state';
@@ -32,6 +35,10 @@ jest.mock('@asap-hub/algolia', () => ({
 
 jest.mock('../../../hooks/algolia', () => ({
   useAnalyticsAlgolia: jest.fn(),
+}));
+
+jest.mock('../../../hooks/opensearch', () => ({
+  useAnalyticsOpensearch: jest.fn(),
 }));
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -68,9 +75,20 @@ const mockSearch = jest.fn() as jest.MockedFunction<
   AlgoliaSearchClient<'analytics'>['search']
 >;
 
+const mockGetTagSuggestions = jest.fn() as jest.MockedFunction<
+  OpensearchClient<MeetingRepAttendanceResponse>['getTagSuggestions']
+>;
+
+const mockOSChampionSearch = jest.fn() as jest.MockedFunction<
+  OpensearchClient<MeetingRepAttendanceResponse>['search']
+>;
+
 const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
   typeof useAnalyticsAlgolia
 >;
+
+const mockUseAnalyticsOpensearch =
+  useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
@@ -99,6 +117,12 @@ const mockAlgoliaClient = {
   searchForTagValues: mockSearchForTagValues,
   search: mockSearch,
 };
+
+const mockOpensearchClient = {
+  getTagSuggestions: mockGetTagSuggestions,
+  search: mockOSChampionSearch,
+};
+
 beforeEach(() => {
   jest.clearAllMocks();
 
@@ -125,6 +149,12 @@ beforeEach(() => {
   mockGetPerformance.mockResolvedValue({
     ...engagementPerformance,
   });
+
+  mockUseAnalyticsOpensearch.mockReturnValue({
+    client:
+      mockOpensearchClient as unknown as OpensearchClient<MeetingRepAttendanceResponse>,
+  });
+  mockOpensearchClient.search.mockResolvedValue({ items: [], total: 0 });
 });
 
 const renderPage = async (path: string) => {

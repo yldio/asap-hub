@@ -100,6 +100,7 @@ const AnalyticsEngagementPageBody: React.FC<
         timeRange={timeRange}
         href={analytics({}).engagement({}).metric({ metric }).$}
         exportResults={exportResults}
+        useLimitedTimeRange={metric === 'attendance'}
       />
       {children}
     </article>

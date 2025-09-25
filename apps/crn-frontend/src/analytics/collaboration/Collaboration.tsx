@@ -7,7 +7,7 @@ import {
   TeamCollaborationAlgoliaResponse,
   teamCollaborationInitialSortingDirection,
   TeamCollaborationSortingDirection,
-  TimeRangeOptionPreliminaryDataSharing,
+  LimitedTimeRangeOption,
   UserCollaborationAlgoliaResponse,
   userCollaborationInitialSortingDirection,
   UserCollaborationSortingDirection,
@@ -215,7 +215,7 @@ const Collaboration = () => {
           sort={teamPrelimSharingSort}
           setSort={setTeamPrelimSharingSort}
           tags={tags}
-          timeRange={timeRange as TimeRangeOptionPreliminaryDataSharing}
+          timeRange={timeRange as LimitedTimeRangeOption}
         />
       )}
     </AnalyticsCollaborationPageBody>

@@ -14,7 +14,7 @@ import { charcoal, lead, neutral200, steel } from '../colors';
 import { InactiveBadgeIcon } from '../icons';
 import { rem } from '../pixels';
 import StaticPerformanceCard from './StaticPerformanceCard';
-import { getPrelimPerformanceIcon } from '../utils';
+import { getPerformanceMoodIcon } from '../utils';
 
 const container = css({
   overflowX: 'auto',
@@ -146,7 +146,7 @@ const SharingPrelimFindingsTable: React.FC<SharingPrelimFindingsTableProps> = ({
                         ? 'N/A'
                         : `${row.teamPercentShared}%`}
                     </span>
-                    {getPrelimPerformanceIcon(
+                    {getPerformanceMoodIcon(
                       row.teamPercentShared,
                       row.limitedData,
                     )}

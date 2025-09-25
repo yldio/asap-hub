@@ -1,7 +1,6 @@
 import { Card } from '@asap-hub/react-components';
 import { useState } from 'react';
 import { useTeamCollaborationPerformanceZustand } from '../hooks/use-team-collaboration-performance';
-import { AnalyticsQueryClientProvider } from '../providers/query-client.provider';
 import { useTeamCollaborationPerformance as useRecoilTeamCollaborationPerformance } from '../state';
 
 /**
@@ -17,44 +16,40 @@ const TeamCollaborationPerformanceDemo = () => {
   const [showComparison, setShowComparison] = useState(false);
 
   return (
-    <AnalyticsQueryClientProvider>
-      <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-        <h1>Team Collaboration Performance - State Management Comparison</h1>
+    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+      <h1>Team Collaboration Performance - State Management Comparison</h1>
 
-        <div style={{ marginBottom: '20px' }}>
-          <button
-            onClick={() => setShowComparison(!showComparison)}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-          >
-            {showComparison
-              ? 'Hide Comparison'
-              : 'Show Side-by-Side Comparison'}
-          </button>
-        </div>
-
-        {showComparison ? (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '20px',
-            }}
-          >
-            <RecoilImplementation />
-            <ReactQueryZustandImplementation />
-          </div>
-        ) : (
-          <ReactQueryZustandImplementation />
-        )}
+      <div style={{ marginBottom: '20px' }}>
+        <button
+          onClick={() => setShowComparison(!showComparison)}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          {showComparison ? 'Hide Comparison' : 'Show Side-by-Side Comparison'}
+        </button>
       </div>
-    </AnalyticsQueryClientProvider>
+
+      {showComparison ? (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '20px',
+          }}
+        >
+          <RecoilImplementation />
+          <ReactQueryZustandImplementation />
+        </div>
+      ) : (
+        <ReactQueryZustandImplementation />
+      )}
+    </div>
   );
 };
 

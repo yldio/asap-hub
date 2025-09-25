@@ -27,7 +27,6 @@ import {
   teamCollaborationWithinTeamToCSV,
   userCollaborationToCSV,
 } from './export';
-import { AnalyticsQueryClientProvider } from './providers/query-client.provider';
 import SharingPreliminaryFindings from './SharingPrelimFindings';
 import {
   useTeamCollaborationPerformance,
@@ -203,16 +202,14 @@ const Collaboration = () => {
           tags={tags}
         />
       ) : metric === 'team' && type ? (
-        <AnalyticsQueryClientProvider>
-          <TeamCollaboration
-            sort={teamSort}
-            setSort={setTeamSort}
-            setSortingDirection={setTeamSortingDirection}
-            sortingDirection={teamSortingDirection}
-            type={type}
-            tags={tags}
-          />
-        </AnalyticsQueryClientProvider>
+        <TeamCollaboration
+          sort={teamSort}
+          setSort={setTeamSort}
+          setSortingDirection={setTeamSortingDirection}
+          sortingDirection={teamSortingDirection}
+          type={type}
+          tags={tags}
+        />
       ) : (
         <SharingPreliminaryFindings
           sort={teamPrelimSharingSort}

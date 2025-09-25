@@ -67,7 +67,7 @@ const AuthenticatedApp: FC<{
       resetAuth0();
       setAuth0Zustand(undefined); // NEW: Clear Zustand store on cleanup
     };
-  }, [auth0, setAuth0, resetAuth0]);
+  }, [auth0, setAuth0, resetAuth0, setAuth0Zustand]);
 
   useEffect(() => {
     // order by the likelyhood of user navigating there

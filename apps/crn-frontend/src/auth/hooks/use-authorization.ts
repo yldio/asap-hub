@@ -19,5 +19,6 @@ export const useAuthorization = (): string => {
   }
 
   // With suspense: true, authorization will always exist when this runs
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return authorization!;
 };

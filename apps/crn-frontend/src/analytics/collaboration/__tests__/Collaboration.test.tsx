@@ -13,7 +13,6 @@ import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
   PreliminaryDataSharingDataObject,
-  SortTeamCollaboration,
   SortUserCollaboration,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
@@ -370,16 +369,6 @@ describe('team collaboration', () => {
   });
 
   it('renders data for different output types', async () => {
-    const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration> =
-      {
-        pageSize: 10,
-        currentPage: 0,
-        timeRange: 'all',
-        outputType: 'all',
-        sort: 'team_asc',
-        tags: [],
-      };
-
     const publicTeamData = {
       items: [
         {

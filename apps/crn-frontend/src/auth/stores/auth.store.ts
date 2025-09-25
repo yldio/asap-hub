@@ -21,13 +21,9 @@ export const useAuthStore = create<AuthState>()(
 
           // Auto-populate authorization when auth0 is available
           if (auth0) {
-            try {
-              const accessToken = await auth0.getTokenSilently();
-              const authorization = `Bearer ${accessToken}`;
-              set({ authorization }, false, 'setAuthorization');
-            } catch (error) {
-              console.error('Failed to get initial token:', error);
-            }
+            const accessToken = await auth0.getTokenSilently();
+            const authorization = `Bearer ${accessToken}`;
+            set({ authorization }, false, 'setAuthorization');
           }
         },
 
@@ -38,16 +34,11 @@ export const useAuthStore = create<AuthState>()(
             throw new Error('Auth0 not available');
           }
 
-          try {
-            // This is smart - only fetches if needed
-            const accessToken = await auth0.getTokenSilently();
-            const newAuthorization = `Bearer ${accessToken}`;
-            set({ authorization: newAuthorization }, false, 'setAuthorization');
-            return newAuthorization;
-          } catch (error) {
-            console.error('Failed to get authorization token:', error);
-            throw error;
-          }
+          // This is smart - only fetches if needed
+          const accessToken = await auth0.getTokenSilently();
+          const newAuthorization = `Bearer ${accessToken}`;
+          set({ authorization: newAuthorization }, false, 'setAuthorization');
+          return newAuthorization;
         },
       }),
       {

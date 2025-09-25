@@ -31,8 +31,8 @@ import {
   useRecoilValue,
   useSetRecoilState,
 } from 'recoil';
-import { useAuthStore } from '../../auth/state-zustand';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { useAuthStore } from '../../auth/state-zustand';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';

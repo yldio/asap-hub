@@ -1,9 +1,5 @@
 import { isEnabled } from '@asap-hub/flags';
-import {
-  algoliaResultsToStream,
-  createCsvFileStream,
-  opensearchResultsToStream,
-} from '@asap-hub/frontend-utils';
+import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   AnalyticsTeamLeadershipResponse,
   OSChampionOpensearchResponse,
@@ -54,7 +50,7 @@ const Leadership: FC<Record<string, never>> = () => {
   const isOSChampionPage = metric === 'os-champion';
 
   const exportTeamLeadership = () =>
-    algoliaResultsToStream<AnalyticsTeamLeadershipResponse>(
+    resultsToStream<AnalyticsTeamLeadershipResponse>(
       createCsvFileStream(
         `leadership_${metric}_${format(new Date(), 'MMddyy')}.csv`,
         {
@@ -71,7 +67,7 @@ const Leadership: FC<Record<string, never>> = () => {
     );
 
   const exportOSChampion = () =>
-    opensearchResultsToStream<OSChampionOpensearchResponse>(
+    resultsToStream<OSChampionOpensearchResponse>(
       createCsvFileStream(
         `leadership_${metric}_${format(new Date(), 'MMddyy')}.csv`,
         {

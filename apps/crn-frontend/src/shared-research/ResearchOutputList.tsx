@@ -2,10 +2,7 @@ import { format } from 'date-fns';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
-import {
-  algoliaResultsToStream,
-  createCsvFileStream,
-} from '@asap-hub/frontend-utils';
+import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
@@ -37,7 +34,7 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
     pageSize,
   );
   const exportResults = () =>
-    algoliaResultsToStream<ResearchOutputResponse>(
+    resultsToStream<ResearchOutputResponse>(
       createCsvFileStream(`SharedOutputs_${format(new Date(), 'MMddyy')}.csv`, {
         header: true,
       }),

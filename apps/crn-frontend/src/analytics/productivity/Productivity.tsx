@@ -1,7 +1,4 @@
-import {
-  algoliaResultsToStream,
-  createCsvFileStream,
-} from '@asap-hub/frontend-utils';
+import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   SortTeamProductivity,
   SortUserProductivity,
@@ -65,7 +62,7 @@ const Productivity = () => {
 
   const exportResults = () => {
     if (metric === 'user') {
-      return algoliaResultsToStream<UserProductivityAlgoliaResponse>(
+      return resultsToStream<UserProductivityAlgoliaResponse>(
         createCsvFileStream(
           `productivity_${metric}_${format(new Date(), 'MMddyy')}.csv`,
           {
@@ -84,7 +81,7 @@ const Productivity = () => {
       );
     }
 
-    return algoliaResultsToStream<TeamProductivityAlgoliaResponse>(
+    return resultsToStream<TeamProductivityAlgoliaResponse>(
       createCsvFileStream(
         `productivity_${metric}_${format(new Date(), 'MMddyy')}.csv`,
         {

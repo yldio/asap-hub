@@ -3,12 +3,11 @@ import { Stringifier } from 'csv-stringify';
 
 import streamSaver from 'streamsaver';
 import {
-  algoliaResultsToStream,
+  resultsToStream,
   caseInsensitive,
   createCsvFileStream,
   EXCEL_CELL_CHARACTER_LIMIT,
   htmlToCsvText,
-  opensearchResultsToStream,
 } from '..';
 
 const mockWriteStream = {
@@ -70,14 +69,14 @@ describe('htmlToCsvText', () => {
   });
 });
 
-describe('algoliaResultsToStream', () => {
+describe('resultsToStream', () => {
   const mockCsvStream = {
     write: jest.fn(),
     end: jest.fn(),
   };
 
   it('streams results', async () => {
-    await algoliaResultsToStream(
+    await resultsToStream(
       mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve({
@@ -119,7 +118,7 @@ describe('algoliaResultsToStream', () => {
 
   it('handles undefined response', async () => {
     const transformSpy = jest.fn();
-    await algoliaResultsToStream(
+    await resultsToStream(
       mockCsvStream as unknown as Stringifier,
       () => Promise.resolve(undefined),
       transformSpy,
@@ -128,14 +127,14 @@ describe('algoliaResultsToStream', () => {
   });
 });
 
-describe('opensearchResultsToStream', () => {
+describe('resultsToStream with array transform', () => {
   const mockCsvStream = {
     write: jest.fn(),
     end: jest.fn(),
   };
 
   it('streams results', async () => {
-    await opensearchResultsToStream(
+    await resultsToStream(
       mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve({
@@ -184,7 +183,7 @@ describe('opensearchResultsToStream', () => {
 
   it('handles undefined response', async () => {
     const transformSpy = jest.fn();
-    await opensearchResultsToStream(
+    await resultsToStream(
       mockCsvStream as unknown as Stringifier,
       () => Promise.resolve(undefined),
       transformSpy,

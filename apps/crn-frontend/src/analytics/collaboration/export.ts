@@ -1,5 +1,6 @@
 import {
   DocumentCategoryOption,
+  PreliminaryDataSharingResponse,
   TeamCollaborationDataObject,
   TeamCollaborationPerformance,
   UserCollaborationDataObject,
@@ -266,3 +267,31 @@ export const teamCollaborationAcrossTeamToCSV =
         acrossTeamData.protocolTeams.join(', '),
     };
   };
+
+export const getPrelimPerformanceRanking = (
+  percentage: number | null,
+  isLimitedData: boolean,
+) => {
+  if (isLimitedData || percentage === null) {
+    return 'Limited Data';
+  }
+  if (percentage >= 90) {
+    return 'Outstanding';
+  }
+  if (percentage >= 80) {
+    return 'Adequate';
+  }
+  return 'Needs Improvement';
+};
+
+export const preliminaryDataSharingToCSV = (
+  data: PreliminaryDataSharingResponse,
+) => ({
+  'Team Name': data.teamName,
+  'Team Status': data.isTeamInactive ? 'Inactive' : 'Active',
+  'Percent Shared':
+    data.limitedData || data.percentShared === null
+      ? 'N/A'
+      : `${data.percentShared}%`,
+  Ranking: getPrelimPerformanceRanking(data.percentShared, data.limitedData),
+});

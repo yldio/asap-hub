@@ -137,7 +137,7 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
         <Paragraph>{description}.</Paragraph>
       </div>
       <AnalyticsControls
-        isPrelimenaryDataSharing={metric === 'sharing-prelim-findings'}
+        useMinimalTimeRange={metric === 'sharing-prelim-findings'}
         currentPage={currentPage}
         documentCategory={documentCategory}
         exportResults={exportResults}

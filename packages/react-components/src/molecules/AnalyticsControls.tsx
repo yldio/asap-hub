@@ -168,7 +168,7 @@ const getLastUpdate = () => {
 };
 
 interface AnalyticsControlsProps {
-  readonly isPrelimenaryDataSharing?: boolean;
+  readonly useMinimalTimeRange?: boolean;
   readonly timeRange?: TimeRangeOption;
   readonly documentCategory?: DocumentCategoryOption;
   readonly outputType?: OutputTypeOption;
@@ -194,7 +194,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   currentPage,
   href,
   noOptionsMessage,
-  isPrelimenaryDataSharing = false,
+  useMinimalTimeRange = false,
 }) => {
   const searchParams = updateSearchParams();
   const tagsQueryString = searchParams.has('tag')
@@ -305,7 +305,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
                 )}
               >
                 {Object.keys(
-                  isPrelimenaryDataSharing
+                  useMinimalTimeRange
                     ? timeRangeOptionsPreliminaryDataSharing
                     : timeRangeOptions,
                 ).map((key) => ({

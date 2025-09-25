@@ -1,6 +1,7 @@
 import {
   AlgoliaClient,
   AnalyticsSearchOptions,
+  AnalyticsSearchOptionsWithFiltering,
   ENGAGEMENT_PERFORMANCE,
   getPerformanceForMetric,
 } from '@asap-hub/algolia';
@@ -8,14 +9,26 @@ import {
 import {
   EngagementPerformance,
   ListEngagementAlgoliaResponse,
+  ListMeetingRepAttendanceResponse,
+  MeetingRepAttendanceResponse,
+  SortMeetingRepAttendance,
   TimeRangeOption,
+  TimeRangeOptionPreliminaryDataSharing,
 } from '@asap-hub/model';
+import { OpensearchClient } from '../utils/opensearch';
 
 export type EngagementListOptions = Pick<
   AnalyticsSearchOptions,
   'currentPage' | 'pageSize' | 'tags'
 > & {
   timeRange: TimeRangeOption;
+};
+
+export type MeetingRepAttendanceOptions = Omit<
+  AnalyticsSearchOptionsWithFiltering<SortMeetingRepAttendance>,
+  'timeRange'
+> & {
+  timeRange: TimeRangeOptionPreliminaryDataSharing;
 };
 
 export const getEngagement = async (
@@ -39,3 +52,9 @@ export const getEngagement = async (
 
 export const getEngagementPerformance =
   getPerformanceForMetric<EngagementPerformance>(ENGAGEMENT_PERFORMANCE);
+
+export const getMeetingRepAttendance = async (
+  opensearchClient: OpensearchClient<MeetingRepAttendanceResponse>,
+  { tags, currentPage, pageSize, timeRange }: MeetingRepAttendanceOptions,
+): Promise<ListMeetingRepAttendanceResponse | undefined> =>
+  opensearchClient.search(tags, currentPage, pageSize, timeRange);

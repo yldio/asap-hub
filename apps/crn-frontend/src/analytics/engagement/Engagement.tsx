@@ -1,6 +1,10 @@
 import { isEnabled } from '@asap-hub/flags';
 import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
-import { EngagementResponse, EngagementType } from '@asap-hub/model';
+import {
+  EngagementResponse,
+  EngagementType,
+  TimeRangeOptionPreliminaryDataSharing,
+} from '@asap-hub/model';
 import { AnalyticsEngagementPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
@@ -76,9 +80,12 @@ const Engagement = () => {
       currentPage={currentPage}
     >
       {metric === 'attendance' && isMeetingRepAttendanceEnabled ? (
-        <MeetingRepAttendance />
+        <MeetingRepAttendance
+          tags={tags}
+          timeRange={timeRange as TimeRangeOptionPreliminaryDataSharing}
+        />
       ) : (
-        <RepresentationOfPresenters />
+        <RepresentationOfPresenters tags={tags} timeRange={timeRange} />
       )}
     </AnalyticsEngagementPageBody>
   );

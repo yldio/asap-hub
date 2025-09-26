@@ -3,6 +3,10 @@ import { Metrics } from './types';
 
 export const PAGE_SIZE = 10;
 export const PREPRINT_COMPLIANCE_SHEET_NAME = 'Preprint Compliance';
+export const PUBLICATION_COMPLIANCE_ALL_TIME_SHEET_NAME =
+  'Publication Compliance_All Time';
+export const PUBLICATION_COMPLIANCE_LAST_12_MONTHS_SHEET_NAME =
+  'Publication Compliance_Last 12 months';
 export const BATCH_SIZE = 50;
 export const SHEET_RANGE = 'A:Z';
 
@@ -13,11 +17,31 @@ export const PREPRINT_COMPLIANCE_HEADER_MAPPINGS = {
   Ranking: 'ranking',
 } as const;
 
+export const PUBLICATION_COMPLIANCE_HEADER_MAPPINGS = {
+  'OVERALL COMPLIANCE - Overall Compliance': 'overallCompliance',
+  'OVERALL COMPLIANCE - Ranking': 'ranking',
+  'RESEARCH OUTPUT COMPLIANCE - Datasets %': 'datasetsPercentage',
+  'RESEARCH OUTPUT COMPLIANCE - Datasets Ranking': 'datasetsRanking',
+  'RESEARCH OUTPUT COMPLIANCE - Protocols %': 'protocolsPercentage',
+  'RESEARCH OUTPUT COMPLIANCE - Protocols Ranking': 'protocolsRanking',
+  'RESEARCH OUTPUT COMPLIANCE - Code %': 'codePercentage',
+  'RESEARCH OUTPUT COMPLIANCE - Code Ranking': 'codeRanking',
+  'RESEARCH OUTPUT COMPLIANCE - Lab Materials %': 'labMaterialsPercentage',
+  'RESEARCH OUTPUT COMPLIANCE - Lab Materials Ranking': 'labMaterialsRanking',
+  'OVERALL COMPLIANCE - # publications': 'numberOfPublications',
+  'OVERALL COMPLIANCE - # outputs': 'numberOfOutputs',
+  'RESEARCH OUTPUT COMPLIANCE - # datasets': 'numberOfDatasets',
+  'RESEARCH OUTPUT COMPLIANCE - # protocols': 'numberOfProtocols',
+  'RESEARCH OUTPUT COMPLIANCE - # code': 'numberOfCode',
+  'RESEARCH OUTPUT COMPLIANCE - # lab materials': 'numberOfLabMaterials',
+} as const;
+
 export const validMetrics = [
   'os-champion',
   'preliminary-data-sharing',
   'attendance',
   'preprint-compliance',
+  'publication-compliance',
 ] as const;
 
 export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
@@ -113,6 +137,40 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         numberOfPublications: { type: 'integer' },
         postedPriorPercentage: { type: 'integer' },
         ranking: { type: 'text' },
+        timeRange: { type: 'keyword' },
+      },
+    },
+  },
+  'publication-compliance': {
+    indexAlias: 'publication-compliance',
+    mapping: {
+      properties: {
+        teamId: { type: 'text' },
+        teamName: {
+          type: 'text',
+          analyzer: 'ngram_analyzer',
+          search_analyzer: 'ngram_search_analyzer',
+          fields: {
+            keyword: { type: 'keyword' },
+          },
+        },
+        isTeamInactive: { type: 'boolean' },
+        overallCompliance: { type: 'integer' },
+        ranking: { type: 'text' },
+        datasetsPercentage: { type: 'integer' },
+        datasetsRanking: { type: 'text' },
+        protocolsPercentage: { type: 'integer' },
+        protocolsRanking: { type: 'text' },
+        codePercentage: { type: 'integer' },
+        codeRanking: { type: 'text' },
+        labMaterialsPercentage: { type: 'integer' },
+        labMaterialsRanking: { type: 'text' },
+        numberOfPublications: { type: 'integer' },
+        numberOfOutputs: { type: 'integer' },
+        numberOfDatasets: { type: 'integer' },
+        numberOfProtocols: { type: 'integer' },
+        numberOfCode: { type: 'integer' },
+        numberOfLabMaterials: { type: 'integer' },
         timeRange: { type: 'keyword' },
       },
     },

@@ -11,6 +11,7 @@ import AnalyticsController from '../../src/controllers/analytics.controller';
 import { getAnalyticsDataProvider } from '../../src/dependencies/analytics.dependencies';
 import { metricConfig, PAGE_SIZE, validMetrics } from './constants';
 import { exportPreprintComplianceData } from './preprint-compliance';
+import { exportPublicationComplianceData } from './publication-compliance';
 import type { MetricObject, Metrics } from './types';
 
 export const exportAnalyticsData = async <T extends Metrics>(
@@ -18,6 +19,10 @@ export const exportAnalyticsData = async <T extends Metrics>(
 ): Promise<MetricObject<T>[]> => {
   if (metric === 'preprint-compliance') {
     return exportPreprintComplianceData() as Promise<MetricObject<T>[]>;
+  }
+
+  if (metric === 'publication-compliance') {
+    return exportPublicationComplianceData() as Promise<MetricObject<T>[]>;
   }
 
   const analyticsController = new AnalyticsController(
@@ -159,7 +164,11 @@ const run = async () => {
     console.log('Exporting all metrics');
     await Promise.all(
       validMetrics
-        .filter((metric) => metric !== 'preprint-compliance') // TODO: remove this credentials issue is fixed
+        .filter(
+          (metric) =>
+            metric !== 'preprint-compliance' &&
+            metric !== 'publication-compliance',
+        ) // TODO: remove this credentials issue is fixed
         .map((metric) => exportMetricToOpensearch(metric)),
     );
     process.exit(0);

@@ -690,16 +690,31 @@ export type SortPublicationCompliance =
 
 export type PublicationComplianceSortingDirection = 'asc' | 'desc';
 
-export interface PublicationComplianceResponse {
+export type PublicationComplianceDataObject = {
   teamId: string;
   teamName: string;
   isTeamInactive: boolean;
-  publications: number;
-  datasets: number;
-  protocols: number;
-  code: number;
-  labMaterials: number;
-}
+  overallCompliance: number;
+  ranking: string;
+  datasetsPercentage: number;
+  datasetsRanking: string;
+  protocolsPercentage: number;
+  protocolsRanking: string;
+  codePercentage: number;
+  codeRanking: string;
+  labMaterialsPercentage: number;
+  labMaterialsRanking: string;
+  numberOfPublications: number;
+  numberOfOutputs: number;
+  numberOfDatasets: number;
+  numberOfProtocols: number;
+  numberOfCode: number;
+  numberOfLabMaterials: number;
+  timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
+};
+
+export type PublicationComplianceResponse =
+  Partial<PublicationComplianceDataObject>;
 
 export type PreprintComplianceDataObject = {
   teamId: string;
@@ -711,6 +726,11 @@ export type PreprintComplianceDataObject = {
   ranking: string;
   timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };
+
+export type ListPublicationComplianceDataObject =
+  ListResponse<PublicationComplianceDataObject>;
+export type ListPublicationComplianceResponse =
+  ListResponse<PublicationComplianceResponse>;
 
 export type ListPreprintComplianceDataObject =
   ListResponse<PreprintComplianceDataObject>;

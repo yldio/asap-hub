@@ -233,7 +233,9 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                       <span>
                         <Link
                           href={
-                            network({}).teams({}).team({ teamId: row.teamId }).$
+                            network({})
+                              .teams({})
+                              .team({ teamId: row.teamId ?? '' }).$
                           }
                         >
                           {row.teamName}
@@ -244,32 +246,32 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                   </td>
                   <td className={'publications'}>
                     <p css={iconStyles}>
-                      <span>{row.publications}%</span>
-                      {getPerformanceIcon(row.publications)}
+                      <span>{row.numberOfPublications ?? 0}%</span>
+                      {getPerformanceIcon(row.numberOfPublications ?? 0)}
                     </p>
                   </td>
                   <td className={'datasets'}>
                     <p css={iconStyles}>
-                      <span>{row.datasets}%</span>
-                      {getPerformanceIcon(row.datasets)}
+                      <span>{row.datasetsPercentage ?? 0}%</span>
+                      {getPerformanceIcon(row.datasetsPercentage ?? 0)}
                     </p>
                   </td>
                   <td className={'protocols'}>
                     <p css={iconStyles}>
-                      <span>{row.protocols}%</span>
-                      {getPerformanceIcon(row.protocols)}
+                      <span>{row.protocolsPercentage ?? 0}%</span>
+                      {getPerformanceIcon(row.protocolsPercentage ?? 0)}
                     </p>
                   </td>
                   <td className={'code'}>
                     <p css={iconStyles}>
-                      <span>{row.code}%</span>
-                      {getPerformanceIcon(row.code)}
+                      <span>{row.codePercentage ?? 0}%</span>
+                      {getPerformanceIcon(row.codePercentage ?? 0)}
                     </p>
                   </td>
                   <td>
                     <p css={iconStyles}>
-                      <span>{row.labMaterials}%</span>
-                      {getPerformanceIcon(row.labMaterials)}
+                      <span>{row.labMaterialsPercentage ?? 0}%</span>
+                      {getPerformanceIcon(row.labMaterialsPercentage ?? 0)}
                     </p>
                   </td>
                 </tr>

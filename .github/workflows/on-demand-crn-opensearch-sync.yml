@@ -12,6 +12,7 @@ on:
           - preliminary-data-sharing
           - attendance
           - preprint-compliance
+          - publication-compliance
           - all
       environment-name:
         required: true

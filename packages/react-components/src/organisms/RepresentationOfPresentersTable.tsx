@@ -455,10 +455,10 @@ const RepresentationOfPresentersTable: React.FC<
             </div>
           ))}
         </div>
-        <section css={pageControlsStyles}>
-          <PageControls {...pageControlProps} />
-        </section>
       </Card>
+      <section css={pageControlsStyles}>
+        <PageControls {...pageControlProps} />
+      </section>
     </>
   );
 };

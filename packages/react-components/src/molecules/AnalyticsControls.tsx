@@ -4,7 +4,7 @@ import {
   OutputTypeOption,
   TimeRangeOption,
   timeRangeOptions,
-  timeRangeOptionsPreliminaryDataSharing,
+  limitedTimeRangeOptions,
 } from '@asap-hub/model';
 import { ComponentProps } from 'react';
 import { add } from 'date-fns';
@@ -168,11 +168,10 @@ const getLastUpdate = () => {
 };
 
 interface AnalyticsControlsProps {
-  readonly isPrelimenaryDataSharing?: boolean;
+  readonly useLimitedTimeRange?: boolean;
   readonly timeRange?: TimeRangeOption;
   readonly documentCategory?: DocumentCategoryOption;
   readonly outputType?: OutputTypeOption;
-  // metric is optional for now since we haven't added search to the collaboration page
   readonly metricOption?: MetricOption;
   readonly tags: string[];
   readonly loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
@@ -194,7 +193,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   currentPage,
   href,
   noOptionsMessage,
-  isPrelimenaryDataSharing = false,
+  useLimitedTimeRange = false,
 }) => {
   const searchParams = updateSearchParams();
   const tagsQueryString = searchParams.has('tag')
@@ -305,8 +304,8 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
                 )}
               >
                 {Object.keys(
-                  isPrelimenaryDataSharing
-                    ? timeRangeOptionsPreliminaryDataSharing
+                  useLimitedTimeRange
+                    ? limitedTimeRangeOptions
                     : timeRangeOptions,
                 ).map((key) => ({
                   item: <>{timeRangeOptions[key as TimeRangeOption]}</>,

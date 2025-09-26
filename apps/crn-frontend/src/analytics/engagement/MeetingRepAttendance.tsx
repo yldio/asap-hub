@@ -2,13 +2,22 @@ import {
   MeetingRepAttendanceSortingDirection,
   meetingRepAttendanceInitialSortingDirection,
   SortMeetingRepAttendance,
+  LimitedTimeRangeOption,
 } from '@asap-hub/model';
 import { MeetingRepAttendanceTable } from '@asap-hub/react-components';
 import { useState } from 'react';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsMeetingRepAttendance } from './state';
 
-const MeetingRepAttendance: React.FC = () => {
+interface MeetingRepAttendanceProps {
+  tags: string[];
+  timeRange: LimitedTimeRangeOption;
+}
+
+const MeetingRepAttendance: React.FC<MeetingRepAttendanceProps> = ({
+  tags,
+  timeRange,
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
   const [sort, setSort] = useState<SortMeetingRepAttendance>('team_asc');
   const [sortingDirection, setSortingDirection] =
@@ -19,8 +28,8 @@ const MeetingRepAttendance: React.FC = () => {
     currentPage,
     pageSize,
     sort,
-    tags: [],
-    timeRange: 'all',
+    tags,
+    timeRange,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

@@ -19,7 +19,7 @@ import {
   SortTeamCollaboration,
   ListPreliminaryDataSharingResponse,
   PreliminaryDataSharingDataObject,
-  TimeRangeOptionPreliminaryDataSharing,
+  LimitedTimeRangeOption,
 } from '@asap-hub/model';
 import { OpensearchClient } from '../utils/opensearch';
 
@@ -56,7 +56,7 @@ export type PreliminaryDataSharingSearchOptions = {
   currentPage: number | null;
   pageSize: number | null;
   tags: string[];
-  timeRange: TimeRangeOptionPreliminaryDataSharing;
+  timeRange: LimitedTimeRangeOption;
 };
 
 export const getPreliminaryDataSharing = async (

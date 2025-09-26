@@ -1,8 +1,8 @@
 import {
+  LimitedTimeRangeOption,
   sharingPrelimFindingsInitialSortingDirection,
   SharingPrelimFindingsSortingDirection,
   SortSharingPrelimFindings,
-  TimeRangeOptionPreliminaryDataSharing,
 } from '@asap-hub/model';
 import { SharingPrelimFindingsTable } from '@asap-hub/react-components';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -13,7 +13,7 @@ interface SharingPreliminaryFindingsProps {
   sort: SortSharingPrelimFindings;
   setSort: Dispatch<SetStateAction<SortSharingPrelimFindings>>;
   tags: string[];
-  timeRange: TimeRangeOptionPreliminaryDataSharing;
+  timeRange: LimitedTimeRangeOption;
 }
 
 const SharingPreliminaryFindings: React.FC<SharingPreliminaryFindingsProps> = ({

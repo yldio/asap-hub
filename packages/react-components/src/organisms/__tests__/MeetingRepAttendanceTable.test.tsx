@@ -35,7 +35,7 @@ describe('MeetingRepAttendanceTable', () => {
     teamId: 'team-2',
     teamName: 'Inactive Team Beta',
     isTeamInactive: true,
-    attendancePercentage: 45,
+    attendancePercentage: 0,
     limitedData: true,
     timeRange: 'all',
   };
@@ -70,7 +70,7 @@ describe('MeetingRepAttendanceTable', () => {
     expect(screen.getByText('Test Team Alpha')).toBeInTheDocument();
     expect(screen.getByText('85%')).toBeInTheDocument();
     expect(screen.getByText('Inactive Team Beta')).toBeInTheDocument();
-    expect(screen.getByText('45%')).toBeInTheDocument();
+    expect(screen.getByText('N/A')).toBeInTheDocument();
   });
 
   it('renders team name as a link with correct href', () => {
@@ -131,7 +131,7 @@ describe('MeetingRepAttendanceTable', () => {
       expect(screen.getByText('Test Team Alpha')).toBeInTheDocument();
       expect(screen.getByText('Inactive Team Beta')).toBeInTheDocument();
       expect(screen.getByText('85%')).toBeInTheDocument();
-      expect(screen.getByText('45%')).toBeInTheDocument();
+      expect(screen.getByText('N/A')).toBeInTheDocument();
     },
   );
 });

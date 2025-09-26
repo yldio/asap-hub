@@ -4,8 +4,9 @@ import {
   EngagementAlgoliaResponse,
   EngagementPerformance,
   ListEngagementAlgoliaResponse,
+  ListMeetingRepAttendanceResponse,
+  MeetingRepAttendanceDataObject,
   SortEngagement,
-  SortMeetingRepAttendance,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -15,12 +16,18 @@ import {
 } from 'recoil';
 
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { useAnalyticsOpensearch } from '../../hooks';
 import {
   getAlgoliaIndexName,
   makePerformanceHook,
   makePerformanceState,
 } from '../utils/state';
-import { getEngagement, getEngagementPerformance } from './api';
+import {
+  getEngagement,
+  getEngagementPerformance,
+  getMeetingRepAttendance,
+  MeetingRepAttendanceOptions,
+} from './api';
 
 const analyticsEngagementIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -108,9 +115,45 @@ export const useEngagementPerformance =
     getEngagementPerformance,
   );
 
-export const useAnalyticsMeetingRepAttendance = (
-  options: AnalyticsSearchOptionsWithFiltering<SortMeetingRepAttendance>,
-) => ({
-  items: [],
-  total: 0,
+const analyticsMeetingRepAttendanceState = atomFamily<
+  ListMeetingRepAttendanceResponse | Error | undefined,
+  MeetingRepAttendanceOptions
+>({
+  key: 'analyticsMeetingRepAttendance',
+  default: undefined,
 });
+
+export const useAnalyticsMeetingRepAttendance = (
+  options: MeetingRepAttendanceOptions,
+): ListMeetingRepAttendanceResponse => {
+  const opensearchClient =
+    useAnalyticsOpensearch<MeetingRepAttendanceDataObject>('attendance').client;
+
+  const [meetingRepAttendance, setMeetingRepAttendance] = useRecoilState(
+    analyticsMeetingRepAttendanceState({
+      currentPage: options.currentPage,
+      pageSize: options.pageSize,
+      tags: options.tags,
+      timeRange: options.timeRange,
+      sort: options.sort,
+    }),
+  );
+
+  if (meetingRepAttendance === undefined) {
+    throw getMeetingRepAttendance(opensearchClient, {
+      currentPage: options.currentPage,
+      pageSize: options.pageSize,
+      tags: options.tags,
+      timeRange: options.timeRange,
+      sort: options.sort,
+    })
+      .then(setMeetingRepAttendance)
+      .catch(setMeetingRepAttendance);
+  }
+
+  if (meetingRepAttendance instanceof Error) {
+    throw meetingRepAttendance;
+  }
+
+  return meetingRepAttendance;
+};

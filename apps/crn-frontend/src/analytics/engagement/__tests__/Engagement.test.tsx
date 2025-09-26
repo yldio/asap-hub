@@ -91,7 +91,7 @@ const mockGetTagSuggestions = jest.fn() as jest.MockedFunction<
   OpensearchClient<MeetingRepAttendanceResponse>['getTagSuggestions']
 >;
 
-const mockOSChampionSearch = jest.fn() as jest.MockedFunction<
+const mockAttendanceSearch = jest.fn() as jest.MockedFunction<
   OpensearchClient<MeetingRepAttendanceResponse>['search']
 >;
 
@@ -132,7 +132,7 @@ const mockAlgoliaClient = {
 
 const mockOpensearchClient = {
   getTagSuggestions: mockGetTagSuggestions,
-  search: mockOSChampionSearch,
+  search: mockAttendanceSearch,
 };
 
 beforeEach(() => {

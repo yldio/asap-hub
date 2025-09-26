@@ -146,7 +146,7 @@ describe('getMeetingRepAttendance', () => {
     ${'This year (Jan-Today)'}   | ${'current-year'}
     ${'Last 12 months'}          | ${'last-year'}
     ${'Since Hub Launch (2020)'} | ${'all'}
-  `('returns os champion data for $range', async ({ timeRange }) => {
+  `('returns attendance data for $range', async ({ timeRange }) => {
     mockOpensearchClient.search.mockResolvedValue(defaultResponse);
 
     await getMeetingRepAttendance(mockOpensearchClient, {
@@ -163,9 +163,9 @@ describe('getMeetingRepAttendance', () => {
     );
   });
 
-  it('should return successfully fetched os champion data', async () => {
+  it('should return successfully fetched attendance data', async () => {
     mockOpensearchClient.search.mockResolvedValue(defaultResponse);
-    const analyticsOSChampion = await getMeetingRepAttendance(
+    const analyticsAttendance = await getMeetingRepAttendance(
       mockOpensearchClient,
       {
         pageSize: 10,
@@ -175,7 +175,7 @@ describe('getMeetingRepAttendance', () => {
         sort: 'team_asc',
       },
     );
-    expect(analyticsOSChampion).toEqual(
+    expect(analyticsAttendance).toEqual(
       expect.objectContaining({
         items: [defaultAttendanceData],
         total: 1,

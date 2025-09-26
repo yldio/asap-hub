@@ -19,7 +19,11 @@ import { OpensearchClient } from '../../utils/opensearch';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import { useAnalyticsOpensearch } from '../../../hooks/opensearch';
-import { getEngagement, getEngagementPerformance } from '../api';
+import {
+  getEngagement,
+  getEngagementPerformance,
+  getMeetingRepAttendance,
+} from '../api';
 import Engagement from '../Engagement';
 import { analyticsEngagementState, useAnalyticsEngagement } from '../state';
 
@@ -62,6 +66,10 @@ afterEach(() => {
 const mockGetEngagement = getEngagement as jest.MockedFunction<
   typeof getEngagement
 >;
+const mockGetMeetingRepAttendance =
+  getMeetingRepAttendance as jest.MockedFunction<
+    typeof getMeetingRepAttendance
+  >;
 
 const mockGetPerformance = getEngagementPerformance as jest.MockedFunction<
   typeof getEngagementPerformance
@@ -131,6 +139,7 @@ beforeEach(() => {
   });
   mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
   mockGetEngagement.mockResolvedValue(data);
+  mockGetMeetingRepAttendance.mockResolvedValue({ items: [], total: 0 });
   const metric = {
     belowAverageMin: 1,
     belowAverageMax: 1,
@@ -154,7 +163,7 @@ beforeEach(() => {
     client:
       mockOpensearchClient as unknown as OpensearchClient<MeetingRepAttendanceResponse>,
   });
-  mockOpensearchClient.search.mockResolvedValue({ items: [], total: 0 });
+  mockOpensearchClient.getTagSuggestions.mockResolvedValue([]);
 });
 
 const renderPage = async (path: string) => {

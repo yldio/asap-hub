@@ -11,12 +11,7 @@ import {
 } from '@asap-hub/react-components';
 import { useState } from 'react';
 
-import {
-  // useAnalytics,
-  usePagination,
-  usePaginationParams,
-  // useSearch,
-} from '../../hooks';
+import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsEngagement, useEngagementPerformance } from './state';
 
 interface RepresentationOfPresentersProps {
@@ -30,12 +25,9 @@ const RepresentationOfPresenters: React.FC<RepresentationOfPresentersProps> = ({
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
-  // const { timeRange } = useAnalytics();
-
   const [sort, setSort] = useState<SortEngagement>('team_asc');
   const [sortingDirection, setSortingDirection] =
     useState<EngagementSortingDirection>(engagementInitialSortingDirection);
-  // const { tags } = useSearch();
 
   const { items: data, total } = useAnalyticsEngagement({
     currentPage,

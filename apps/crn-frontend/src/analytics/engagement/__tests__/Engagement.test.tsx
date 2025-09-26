@@ -25,7 +25,11 @@ import {
   getMeetingRepAttendance,
 } from '../api';
 import Engagement from '../Engagement';
-import { analyticsEngagementState, useAnalyticsEngagement } from '../state';
+import {
+  analyticsEngagementState,
+  useAnalyticsEngagement,
+  useAnalyticsMeetingRepAttendance,
+} from '../state';
 
 jest.mock('../api');
 mockConsoleError();
@@ -355,6 +359,33 @@ describe('Engagement', () => {
       expect(
         screen.queryByText(/Representation of Presenters/i),
       ).not.toBeInTheDocument();
+    });
+
+    it('throws error when fails to fetch attendance data', async () => {
+      const error = new Error('Failed to fetch engagement data');
+      mockGetMeetingRepAttendance.mockRejectedValue(error);
+
+      const { result } = renderHook(
+        () =>
+          useAnalyticsMeetingRepAttendance({
+            currentPage: 0,
+            pageSize: 10,
+            sort: 'team_asc',
+            timeRange: 'all',
+            tags: [],
+          }),
+        {
+          wrapper: ({ children }) => (
+            <RecoilRoot>
+              <Suspense fallback="loading">{children}</Suspense>
+            </RecoilRoot>
+          ),
+        },
+      );
+
+      await waitFor(() => {
+        expect(result.error).toEqual(error);
+      });
     });
   });
 

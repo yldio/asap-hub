@@ -157,10 +157,3 @@ export const useAnalyticsMeetingRepAttendance = (
 
   return meetingRepAttendance;
 };
-
-// export const useAnalyticsMeetingRepAttendance = (
-//   options: AnalyticsSearchOptionsWithFiltering<SortMeetingRepAttendance>,
-// ) => ({
-//   items: [],
-//   total: 0,
-// });

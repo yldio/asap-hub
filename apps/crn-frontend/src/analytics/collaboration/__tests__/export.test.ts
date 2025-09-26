@@ -3,11 +3,14 @@ import {
   TeamCollaborationPerformance,
   UserCollaborationDataObject,
   UserCollaborationPerformance,
+  PreliminaryDataSharingResponse,
 } from '@asap-hub/model';
 import {
   userCollaborationToCSV,
   teamCollaborationAcrossTeamToCSV,
   teamCollaborationWithinTeamToCSV,
+  getPrelimPerformanceRanking,
+  preliminaryDataSharingToCSV,
 } from '../export';
 
 const performanceMetric = {
@@ -284,6 +287,135 @@ describe('teamCollaborationWithinTeamToCSV', () => {
         [`${prefix} Protocol Output: No. of teams collaborated with`]: 2,
         [`${prefix} Protocol Output: Name of teams collaborated with`]:
           'Team B, Team C',
+      });
+    },
+  );
+});
+
+describe('getPrelimPerformanceRanking', () => {
+  it.each`
+    percentage | isLimitedData | expected
+    ${null}    | ${false}      | ${'Limited Data'}
+    ${null}    | ${true}       | ${'Limited Data'}
+    ${85}      | ${true}       | ${'Limited Data'}
+    ${95}      | ${true}       | ${'Limited Data'}
+    ${95}      | ${false}      | ${'Outstanding'}
+    ${90}      | ${false}      | ${'Outstanding'}
+    ${89}      | ${false}      | ${'Adequate'}
+    ${80}      | ${false}      | ${'Adequate'}
+    ${79}      | ${false}      | ${'Needs Improvement'}
+    ${0}       | ${false}      | ${'Needs Improvement'}
+  `(
+    'returns $expected when percentage is $percentage and isLimitedData is $isLimitedData',
+    ({ percentage, isLimitedData, expected }) => {
+      expect(getPrelimPerformanceRanking(percentage, isLimitedData)).toBe(
+        expected,
+      );
+    },
+  );
+});
+
+describe('preliminaryDataSharingToCSV', () => {
+  it('exports preliminary data sharing data for active team with full data', () => {
+    const data: PreliminaryDataSharingResponse = {
+      teamId: 'team-1',
+      teamName: 'Test Team',
+      isTeamInactive: false,
+      percentShared: 85,
+      limitedData: false,
+      timeRange: 'all',
+    };
+
+    expect(preliminaryDataSharingToCSV(data)).toEqual({
+      'Team Name': 'Test Team',
+      'Team Status': 'Active',
+      'Percent Shared': '85%',
+      Ranking: 'Adequate',
+    });
+  });
+
+  it('exports preliminary data sharing data for inactive team with full data', () => {
+    const data: PreliminaryDataSharingResponse = {
+      teamId: 'team-2',
+      teamName: 'Inactive Team',
+      isTeamInactive: true,
+      percentShared: 95,
+      limitedData: false,
+      timeRange: 'all',
+    };
+
+    expect(preliminaryDataSharingToCSV(data)).toEqual({
+      'Team Name': 'Inactive Team',
+      'Team Status': 'Inactive',
+      'Percent Shared': '95%',
+      Ranking: 'Outstanding',
+    });
+  });
+
+  it('exports preliminary data sharing data with limited data', () => {
+    const data: PreliminaryDataSharingResponse = {
+      teamId: 'team-3',
+      teamName: 'Limited Data Team',
+      isTeamInactive: false,
+      percentShared: null,
+      limitedData: true,
+      timeRange: 'all',
+    };
+
+    expect(preliminaryDataSharingToCSV(data)).toEqual({
+      'Team Name': 'Limited Data Team',
+      'Team Status': 'Active',
+      'Percent Shared': 'N/A',
+      Ranking: 'Limited Data',
+    });
+  });
+
+  it('exports preliminary data sharing data with null percentage', () => {
+    const data: PreliminaryDataSharingResponse = {
+      teamId: 'team-4',
+      teamName: 'Null Percentage Team',
+      isTeamInactive: false,
+      percentShared: null,
+      limitedData: false,
+      timeRange: 'all',
+    };
+
+    expect(preliminaryDataSharingToCSV(data)).toEqual({
+      'Team Name': 'Null Percentage Team',
+      'Team Status': 'Active',
+      'Percent Shared': 'N/A',
+      Ranking: 'Limited Data',
+    });
+  });
+
+  it.each`
+    percentShared | expectedRanking
+    ${100}        | ${'Outstanding'}
+    ${95}         | ${'Outstanding'}
+    ${90}         | ${'Outstanding'}
+    ${89}         | ${'Adequate'}
+    ${85}         | ${'Adequate'}
+    ${80}         | ${'Adequate'}
+    ${79}         | ${'Needs Improvement'}
+    ${50}         | ${'Needs Improvement'}
+    ${0}          | ${'Needs Improvement'}
+  `(
+    'exports correct ranking for $percentShared% shared data',
+    ({ percentShared, expectedRanking }) => {
+      const data: PreliminaryDataSharingResponse = {
+        teamId: 'team-5',
+        teamName: 'Test Team',
+        isTeamInactive: false,
+        percentShared,
+        limitedData: false,
+        timeRange: 'all',
+      };
+
+      expect(preliminaryDataSharingToCSV(data)).toEqual({
+        'Team Name': 'Test Team',
+        'Team Status': 'Active',
+        'Percent Shared': `${percentShared}%`,
+        Ranking: expectedRanking,
       });
     },
   );

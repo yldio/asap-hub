@@ -611,7 +611,7 @@ export type PreliminaryDataSharingDataObject = {
   teamId: string;
   teamName: string;
   isTeamInactive: boolean;
-  limitedData?: boolean;
+  limitedData: boolean;
   percentShared: number | null;
   timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };
@@ -626,7 +626,7 @@ export type SharingPrelimFindingsDataObject = {
   teamName: string;
   isTeamInactive: boolean;
   teamPercentShared: number | null;
-  limitedData?: boolean;
+  limitedData: boolean;
   timeRange?: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };
 export type ListSharingPrelimFindingsDataObject =

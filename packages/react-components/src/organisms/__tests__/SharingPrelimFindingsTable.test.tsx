@@ -19,6 +19,7 @@ describe('SharingPrelimFindingsTable', () => {
     teamName: 'Test Team',
     isTeamInactive: false,
     teamPercentShared: 90,
+    limitedData: false,
   };
 
   const defaultProps: ComponentProps<typeof SharingPrelimFindingsTable> = {

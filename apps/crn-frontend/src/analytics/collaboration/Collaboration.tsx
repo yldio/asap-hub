@@ -1,6 +1,8 @@
 import { isEnabled } from '@asap-hub/flags';
 import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
+  PreliminaryDataSharingDataObject,
+  PreliminaryDataSharingResponse,
   SortSharingPrelimFindings,
   SortTeamCollaboration,
   SortUserCollaboration,
@@ -18,14 +20,24 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 
-import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
+import {
+  useAnalytics,
+  useAnalyticsOpensearch,
+  usePaginationParams,
+  useSearch,
+} from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAlgoliaIndexName } from '../utils/state';
-import { getTeamCollaboration, getUserCollaboration } from './api';
+import {
+  getTeamCollaboration,
+  getUserCollaboration,
+  getPreliminaryDataSharing,
+} from './api';
 import {
   teamCollaborationAcrossTeamToCSV,
   teamCollaborationWithinTeamToCSV,
   userCollaborationToCSV,
+  preliminaryDataSharingToCSV,
 } from './export';
 import SharingPreliminaryFindings from './SharingPrelimFindings';
 import {
@@ -96,6 +108,10 @@ const Collaboration = () => {
     );
   };
 
+  const preliminaryDataSharingClient =
+    useAnalyticsOpensearch<PreliminaryDataSharingDataObject>(
+      'preliminary-data-sharing',
+    );
   const userClient = useAnalyticsAlgolia(
     getAlgoliaIndexName(userSort, 'user-collaboration'),
   ).client;
@@ -114,6 +130,23 @@ const Collaboration = () => {
   });
 
   const exportResults = () => {
+    if (metric === 'sharing-prelim-findings') {
+      return resultsToStream<PreliminaryDataSharingResponse>(
+        createCsvFileStream(
+          `collaboration_${metric}_${format(new Date(), 'MMddyy')}.csv`,
+          {
+            header: true,
+          },
+        ),
+        (paginationParams) =>
+          getPreliminaryDataSharing(preliminaryDataSharingClient.client, {
+            tags,
+            timeRange: timeRange as TimeRangeOptionPreliminaryDataSharing,
+            ...paginationParams,
+          }),
+        preliminaryDataSharingToCSV,
+      );
+    }
     if (metric === 'user' && type) {
       return resultsToStream<UserCollaborationAlgoliaResponse>(
         createCsvFileStream(

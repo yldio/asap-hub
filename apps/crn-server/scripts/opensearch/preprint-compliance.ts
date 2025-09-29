@@ -1,22 +1,8 @@
-import {
-  awsRegion,
-  googleApiCredentialsSecretId,
-  opensearchAnalyticsSpreadsheetUrl,
-} from '../../src/config';
-import {
-  extractSpreadsheetIdFromUrl,
-  getJWTCredentialsFactory,
-  readGoogleSheetsData,
-  readGoogleSheetsDataLocal,
-} from '@asap-hub/server-common';
-import TeamController from '../../src/controllers/team.controller';
-import { getTeamDataProvider } from '../../src/dependencies/team.dependencies';
+import { fetchAllTeams, readComplianceData } from './shared-utils';
 
 import {
   PREPRINT_COMPLIANCE_SHEET_NAME,
-  SHEET_RANGE,
   PREPRINT_COMPLIANCE_HEADER_MAPPINGS,
-  BATCH_SIZE,
 } from './constants';
 import { MetricObject } from './types';
 
@@ -25,53 +11,13 @@ interface SpreadsheetRow {
   [key: string]: unknown;
 }
 
-const fetchAllTeams = async () => {
-  const teamController = new TeamController(getTeamDataProvider());
-
-  const initialResponse = await teamController.fetch({
-    take: BATCH_SIZE,
-    skip: 0,
-  });
-
-  const allTeams = [...initialResponse.items];
-  const total = initialResponse.total;
-
-  for (let skip = BATCH_SIZE; skip < total; skip += BATCH_SIZE) {
-    const response = await teamController.fetch({
-      take: BATCH_SIZE,
-      skip,
-    });
-    allTeams.push(...response.items);
-  }
-
-  return allTeams;
-};
-
 const readPreprintComplianceData = async (
   environment: 'local' | 'production' = 'production',
 ): Promise<SpreadsheetRow[]> => {
-  const spreadsheetId = extractSpreadsheetIdFromUrl(
-    opensearchAnalyticsSpreadsheetUrl,
+  const rawData = await readComplianceData(
+    PREPRINT_COMPLIANCE_SHEET_NAME,
+    environment,
   );
-
-  if (environment === 'local') {
-    const rawData = await readGoogleSheetsDataLocal(
-      spreadsheetId,
-      `${PREPRINT_COMPLIANCE_SHEET_NAME}!${SHEET_RANGE}`,
-    );
-    return rawData as SpreadsheetRow[];
-  }
-
-  const getJWTCredentials = getJWTCredentialsFactory({
-    googleApiCredentialsSecretId,
-    region: awsRegion,
-  });
-
-  const rawData = await readGoogleSheetsData(getJWTCredentials, {
-    spreadsheetId,
-    range: `${PREPRINT_COMPLIANCE_SHEET_NAME}!${SHEET_RANGE}`,
-  });
-
   return rawData as SpreadsheetRow[];
 };
 

@@ -15,11 +15,11 @@ describe('PublicationComplianceTable', () => {
     teamId: 'team-id-1',
     teamName: 'Test Team',
     isTeamInactive: false,
-    publications: 85,
-    datasets: 70,
-    protocols: 60,
-    code: 45,
-    labMaterials: 30,
+    numberOfPublications: 85,
+    datasetsPercentage: 70,
+    protocolsPercentage: 60,
+    codePercentage: 45,
+    labMaterialsPercentage: 30,
   };
 
   const defaultProps: ComponentProps<typeof PublicationComplianceTable> = {
@@ -179,11 +179,11 @@ describe('PublicationComplianceTable', () => {
     const data = [
       {
         ...publicationComplianceData,
-        publications: 95, // Should show happy face
-        datasets: 85, // Should show neutral face
-        protocols: 50, // Should show sad face
-        code: 0, // Should show info icon
-        labMaterials: 100, // Should show happy face
+        numberOfPublications: 95, // Should show happy face
+        datasetsPercentage: 85, // Should show neutral face
+        protocolsPercentage: 50, // Should show sad face
+        codePercentage: 0, // Should show info icon
+        labMaterialsPercentage: 100, // Should show happy face
       },
     ];
 
@@ -211,11 +211,11 @@ describe('PublicationComplianceTable', () => {
         ...publicationComplianceData,
         teamId: 'team-id-2',
         teamName: 'Test Team 2',
-        publications: 90,
-        datasets: 80,
-        protocols: 70,
-        code: 60,
-        labMaterials: 50,
+        numberOfPublications: 90,
+        datasetsPercentage: 80,
+        protocolsPercentage: 70,
+        codePercentage: 60,
+        labMaterialsPercentage: 50,
       },
     ];
 
@@ -277,11 +277,11 @@ describe('PublicationComplianceTable', () => {
     const data = [
       {
         ...publicationComplianceData,
-        publications: 100,
-        datasets: 0,
-        protocols: 50,
-        code: 25,
-        labMaterials: 75,
+        numberOfPublications: 100,
+        datasetsPercentage: 0,
+        protocolsPercentage: 50,
+        codePercentage: 25,
+        labMaterialsPercentage: 75,
       },
     ];
 

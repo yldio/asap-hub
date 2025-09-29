@@ -323,7 +323,7 @@ const serverlessConfig: AWS = {
                   { Ref: 'AWS::Region' },
                   { Ref: 'AWS::AccountId' },
                   'secret',
-                  `google-api-credentials-${envAlias}*`,
+                  `google-new-api-credentials-${envAlias}*`,
                 ],
               ],
             },

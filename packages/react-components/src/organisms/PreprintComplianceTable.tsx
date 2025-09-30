@@ -15,12 +15,9 @@ import {
   InactiveBadgeIcon,
   // AlphabeticalSortingIcon,
   // NumericalSortingIcon,
-  happyFaceIcon,
-  neutralFaceIcon,
-  sadFaceIcon,
-  informationInverseIcon,
 } from '../icons';
 import { rem } from '../pixels';
+import { getPerformanceMoodIcon } from '../utils/analytics';
 import StaticPerformanceCard from './StaticPerformanceCard';
 
 const container = css({
@@ -113,7 +110,7 @@ const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
   // sortingDirection,
   // setSortingDirection,
   ...pageControlProps
-}) => {
+}) => (
   // const handleSort = (sortKey: SortPreprintCompliance) => {
   //   const newDirection =
   //     sort === sortKey && sortingDirection === 'asc' ? 'desc' : 'asc';
@@ -131,111 +128,99 @@ const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
   //   return <NumericalSortingIcon active={isActive} description="" />;
   // };
 
-  const getPerformanceIcon = (percentage: number) => {
-    if (percentage >= 90) {
-      return happyFaceIcon;
-    }
-    if (percentage >= 80) {
-      return neutralFaceIcon;
-    }
-    if (percentage > 0) {
-      return sadFaceIcon;
-    }
-    return informationInverseIcon;
-  };
-
-  return (
-    <>
-      <StaticPerformanceCard />
-      <Card padding={false}>
-        <div css={container}>
-          <table
-            css={{
-              width: '100%',
-              tableLayout: 'fixed',
-              borderCollapse: 'collapse',
-            }}
-          >
-            <colgroup>
-              <col css={{ width: '33.33%' }} />
-              <col css={{ width: '33.33%' }} />
-              <col css={{ width: '33.33%' }} />
-            </colgroup>
-            <thead>
-              <tr>
-                <th css={titleStyles} className={'team'}>
-                  <span
-                    css={headerStyles}
-                    // onClick={() => handleSort('team_asc')}
-                  >
-                    Team
-                    {/* getSortIcon('team_asc') */}
-                  </span>
-                </th>
-                <th css={titleStyles} className={'preprints'}>
-                  <span
-                    css={headerStyles}
-                    // onClick={() => handleSort('preprints_asc')}
-                  >
-                    Number of Preprints
-                    {/* getSortIcon('preprints_asc') */}
-                  </span>
-                </th>
-                <th css={titleStyles}>
-                  <span
-                    css={headerStyles}
-                    // onClick={() => handleSort('posted_prior_asc')}
-                  >
-                    Posted Prior to Journal Submission
-                    {/* getSortIcon('posted_prior_asc') */}
-                  </span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((row, index) => (
-                <tr
-                  key={row.teamId || `${row.teamName}-${index}`}
-                  css={rowStyles}
+  <>
+    <StaticPerformanceCard />
+    <Card padding={false}>
+      <div css={container}>
+        <table
+          css={{
+            width: '100%',
+            tableLayout: 'fixed',
+            borderCollapse: 'collapse',
+          }}
+        >
+          <colgroup>
+            <col css={{ width: '33.33%' }} />
+            <col css={{ width: '33.33%' }} />
+            <col css={{ width: '33.33%' }} />
+          </colgroup>
+          <thead>
+            <tr>
+              <th css={titleStyles} className={'team'}>
+                <span
+                  css={headerStyles}
+                  // onClick={() => handleSort('team_asc')}
                 >
-                  <td className={'team'}>
-                    <p css={iconStyles}>
-                      <span>
-                        <Link
-                          href={
-                            network({}).teams({}).team({ teamId: row.teamId }).$
-                          }
-                        >
-                          {row.teamName}
-                        </Link>
-                      </span>
-                      {row.isTeamInactive && <InactiveBadgeIcon />}
-                    </p>
-                  </td>
-                  <td className={'preprints'}>
-                    <p>{row.numberOfPreprints}</p>
-                  </td>
-                  <td>
-                    <p css={iconStyles}>
-                      <span css={valueStyles}>
-                        {row.postedPriorPercentage === null
-                          ? 'N/A'
-                          : `${row.postedPriorPercentage}%`}
-                      </span>
-                      {getPerformanceIcon(row.postedPriorPercentage)}
-                    </p>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-      <section css={pageControlsStyles}>
-        <PageControls {...pageControlProps} />
-      </section>
-    </>
-  );
-};
+                  Team
+                  {/* getSortIcon('team_asc') */}
+                </span>
+              </th>
+              <th css={titleStyles} className={'preprints'}>
+                <span
+                  css={headerStyles}
+                  // onClick={() => handleSort('preprints_asc')}
+                >
+                  Number of Preprints
+                  {/* getSortIcon('preprints_asc') */}
+                </span>
+              </th>
+              <th css={titleStyles}>
+                <span
+                  css={headerStyles}
+                  // onClick={() => handleSort('posted_prior_asc')}
+                >
+                  Posted Prior to Journal Submission
+                  {/* getSortIcon('posted_prior_asc') */}
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row, index) => (
+              <tr
+                key={row.teamId || `${row.teamName}-${index}`}
+                css={rowStyles}
+              >
+                <td className={'team'}>
+                  <p css={iconStyles}>
+                    <span>
+                      <Link
+                        href={
+                          network({}).teams({}).team({ teamId: row.teamId }).$
+                        }
+                      >
+                        {row.teamName}
+                      </Link>
+                    </span>
+                    {row.isTeamInactive && <InactiveBadgeIcon />}
+                  </p>
+                </td>
+                <td className={'preprints'}>
+                  <p>{row.numberOfPreprints}</p>
+                </td>
+                <td>
+                  <p css={iconStyles}>
+                    <span css={valueStyles}>
+                      {row.postedPriorPercentage === null
+                        ? 'N/A'
+                        : `${row.postedPriorPercentage}%`}
+                    </span>
+                    {getPerformanceMoodIcon(
+                      row.postedPriorPercentage,
+                      row.postedPriorPercentage === null,
+                    )}
+                  </p>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
+    <section css={pageControlsStyles}>
+      <PageControls {...pageControlProps} />
+    </section>
+  </>
+);
 
 export default PreprintComplianceTable;

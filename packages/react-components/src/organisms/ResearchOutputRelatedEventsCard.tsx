@@ -63,6 +63,7 @@ const ResearchOutputRelatedEventsCard: React.FC<
       noOptionsMessage={({ inputValue }) =>
         `Sorry, no related events match ${inputValue}`
       }
+      noPadding
       components={{
         MultiValueContainer: (multiValueContainerProps) => (
           <div

@@ -1,7 +1,5 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { Card, Headline3, Paragraph } from '../atoms';
-import { paddingStyles } from '../card';
-import { perRem } from '../pixels';
 
 export type FormCardProps = {
   title: string;
@@ -14,12 +12,8 @@ const cardStyles = css({
 });
 
 const descriptionStyles = css({
-  paddingTop: 0,
+  paddingTop: 24,
   paddingBottom: 0,
-  'p:first-of-type': {
-    marginTop: 0,
-    marginBottom: `${10 / perRem}em`,
-  },
 });
 
 const childrenWrapStyles = css({
@@ -40,8 +34,10 @@ const FormCard: React.FC<FormCardProps> = ({
       <Headline3 noMargin>{title}</Headline3>
     </div>
     {!!description && (
-      <div css={[paddingStyles, descriptionStyles]}>
-        <Paragraph accent="lead">{description}</Paragraph>
+      <div css={[descriptionStyles]}>
+        <Paragraph noMargin accent="lead">
+          {description}
+        </Paragraph>
       </div>
     )}
     <div css={[childrenWrapStyles]}>{children}</div>

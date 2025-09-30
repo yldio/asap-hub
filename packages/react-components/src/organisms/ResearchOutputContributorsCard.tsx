@@ -67,6 +67,7 @@ const ResearchOutputContributorsCard: React.FC<
       noOptionsMessage={({ inputValue }) =>
         `Sorry, no teams match ${inputValue}`
       }
+      noPadding
     />
     <LabeledMultiSelect
       title="Labs"
@@ -80,6 +81,7 @@ const ResearchOutputContributorsCard: React.FC<
       noOptionsMessage={({ inputValue }) =>
         `Sorry, no labs match ${inputValue}`
       }
+      noPadding
     />
     <AuthorSelect
       title="Authors"
@@ -94,6 +96,7 @@ const ResearchOutputContributorsCard: React.FC<
       noOptionsMessage={({ inputValue }) =>
         `Sorry, no authors match ${inputValue}`
       }
+      noPadding
     />
   </FormCard>
 );

@@ -679,6 +679,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                       enabled={!isSaving}
                       fullWidth
                       onClick={handleCancel}
+                      noMargin
                     >
                       Cancel
                     </Button>
@@ -693,6 +694,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                             : await save(true);
                         }}
                         primary={showSaveDraftButton && !showPublishButton}
+                        noMargin
                       >
                         Save Draft
                       </Button>
@@ -702,6 +704,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         enabled={!isSaving}
                         fullWidth
                         primary
+                        noMargin
                         onClick={async () => {
                           setIsFormSubmitted(true);
 

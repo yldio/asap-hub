@@ -24,13 +24,13 @@ const mainStyles = css({
 });
 
 const contentStyles = css({
-  display: 'grid',
-  gridTemplateColumns: '1fr',
+  display: 'flex',
+  flexFlow: 'column',
   maxWidth: rem(800),
   width: '100%',
   justifyContent: 'center',
   gridAutoFlow: 'row',
-  rowGap: rem(32),
+  gap: 32,
 });
 
 const optionListStyles = css({

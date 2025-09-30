@@ -95,12 +95,12 @@ const mainStyles = css({
 });
 
 const contentStyles = css({
-  display: 'grid',
-  gridTemplateColumns: '1fr',
+  display: 'flex',
+  flexFlow: 'column',
   maxWidth: `${800 / perRem}em`,
   justifyContent: 'center',
   gridAutoFlow: 'row',
-  rowGap: `${36 / perRem}em`,
+  gap: 32,
 });
 
 const formControlsContainerStyles = css({

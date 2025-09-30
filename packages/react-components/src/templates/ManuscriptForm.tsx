@@ -104,13 +104,12 @@ const mainStyles = css({
 });
 
 const contentStyles = css({
-  display: 'grid',
-  gridTemplateColumns: '1fr',
+  display: 'flex',
+  flexFlow: 'column',
+  gap: 32,
   width: '100%',
   maxWidth: rem(800),
   justifyContent: 'center',
-  gridAutoFlow: 'row',
-  rowGap: rem(36),
 });
 
 const buttonsOuterContainerStyles = css({

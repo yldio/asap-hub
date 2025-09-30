@@ -1,12 +1,22 @@
 import { isEnabled } from '@asap-hub/flags';
 import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
-import { EngagementResponse, EngagementType } from '@asap-hub/model';
+import {
+  EngagementResponse,
+  EngagementType,
+  LimitedTimeRangeOption,
+  MeetingRepAttendanceResponse,
+} from '@asap-hub/model';
 import { AnalyticsEngagementPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 
-import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
+import {
+  useAnalytics,
+  useAnalyticsOpensearch,
+  usePaginationParams,
+  useSearch,
+} from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getEngagement } from './api';
 import { engagementToCSV } from './export';
@@ -36,6 +46,10 @@ const Engagement = () => {
 
   const performance = useEngagementPerformance({ timeRange });
   const { client } = useAnalyticsAlgolia();
+  const attendanceClient =
+    useAnalyticsOpensearch<MeetingRepAttendanceResponse>('attendance');
+  const isAttendancePage = metric === 'attendance';
+
   const exportResults = () =>
     resultsToStream<EngagementResponse>(
       createCsvFileStream(`engagement_${format(new Date(), 'MMddyy')}.csv`, {
@@ -49,7 +63,30 @@ const Engagement = () => {
         }),
       engagementToCSV(performance),
     );
-  return !isMeetingRepAttendanceEnabled && metric === 'attendance' ? (
+
+  const loadTags = async (tagQuery: string) => {
+    if (isAttendancePage) {
+      const response = await attendanceClient.client.getTagSuggestions(
+        tagQuery,
+        'teams',
+      );
+
+      return response.map((value) => ({
+        label: value,
+        value,
+      }));
+    }
+    const searchedTags = await client.searchForTagValues(
+      ['engagement'],
+      tagQuery,
+      {},
+    );
+    return searchedTags.facetHits.map(({ value }) => ({
+      label: value,
+      value,
+    }));
+  };
+  return !isMeetingRepAttendanceEnabled && isAttendancePage ? (
     <Redirect
       to={analytics({}).engagement({}).metric({ metric: 'presenters' }).$}
     />
@@ -58,27 +95,20 @@ const Engagement = () => {
       exportResults={exportResults}
       tags={tags}
       setTags={setTags}
-      loadTags={async (tagQuery) => {
-        const searchedTags = await client.searchForTagValues(
-          ['engagement'],
-          tagQuery,
-          {},
-        );
-        return searchedTags.facetHits.map(({ value }) => ({
-          label: value,
-          value,
-        }));
-      }}
+      loadTags={async (tagQuery) => loadTags(tagQuery)}
       isMeetingRepAttendanceEnabled={isMeetingRepAttendanceEnabled}
       metric={metric}
       setMetric={setMetric}
       timeRange={timeRange}
       currentPage={currentPage}
     >
-      {metric === 'attendance' && isMeetingRepAttendanceEnabled ? (
-        <MeetingRepAttendance />
+      {isAttendancePage && isMeetingRepAttendanceEnabled ? (
+        <MeetingRepAttendance
+          tags={tags}
+          timeRange={timeRange as LimitedTimeRangeOption}
+        />
       ) : (
-        <RepresentationOfPresenters />
+        <RepresentationOfPresenters tags={tags} timeRange={timeRange} />
       )}
     </AnalyticsEngagementPageBody>
   );

@@ -13,7 +13,7 @@ import {
   PreliminaryDataSharingDataObject,
   ListSharingPrelimFindingsResponse,
   SharingPrelimFindingsResponse,
-  TimeRangeOptionPreliminaryDataSharing,
+  LimitedTimeRangeOption,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -242,7 +242,7 @@ export const useAnalyticsSharingPrelimFindings = (
     AnalyticsSearchOptionsWithFiltering<SortSharingPrelimFindings>,
     'timeRange'
   > & {
-    timeRange: TimeRangeOptionPreliminaryDataSharing;
+    timeRange: LimitedTimeRangeOption;
   },
 ): ListSharingPrelimFindingsResponse => {
   const opensearchClient =

@@ -5,6 +5,7 @@ import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   EngagementPerformance,
   ListEngagementAlgoliaResponse,
+  MeetingRepAttendanceResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -13,12 +14,22 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { OpensearchClient } from '../../utils/opensearch';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
-import { getEngagement, getEngagementPerformance } from '../api';
+import { useAnalyticsOpensearch } from '../../../hooks/opensearch';
+import {
+  getEngagement,
+  getEngagementPerformance,
+  getMeetingRepAttendance,
+} from '../api';
 import Engagement from '../Engagement';
-import { analyticsEngagementState, useAnalyticsEngagement } from '../state';
+import {
+  analyticsEngagementState,
+  useAnalyticsEngagement,
+  useAnalyticsMeetingRepAttendance,
+} from '../state';
 
 jest.mock('../api');
 mockConsoleError();
@@ -32,6 +43,10 @@ jest.mock('@asap-hub/algolia', () => ({
 
 jest.mock('../../../hooks/algolia', () => ({
   useAnalyticsAlgolia: jest.fn(),
+}));
+
+jest.mock('../../../hooks/opensearch', () => ({
+  useAnalyticsOpensearch: jest.fn(),
 }));
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -55,6 +70,10 @@ afterEach(() => {
 const mockGetEngagement = getEngagement as jest.MockedFunction<
   typeof getEngagement
 >;
+const mockGetMeetingRepAttendance =
+  getMeetingRepAttendance as jest.MockedFunction<
+    typeof getMeetingRepAttendance
+  >;
 
 const mockGetPerformance = getEngagementPerformance as jest.MockedFunction<
   typeof getEngagementPerformance
@@ -68,9 +87,20 @@ const mockSearch = jest.fn() as jest.MockedFunction<
   AlgoliaSearchClient<'analytics'>['search']
 >;
 
+const mockGetTagSuggestions = jest.fn() as jest.MockedFunction<
+  OpensearchClient<MeetingRepAttendanceResponse>['getTagSuggestions']
+>;
+
+const mockAttendanceSearch = jest.fn() as jest.MockedFunction<
+  OpensearchClient<MeetingRepAttendanceResponse>['search']
+>;
+
 const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
   typeof useAnalyticsAlgolia
 >;
+
+const mockUseAnalyticsOpensearch =
+  useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
@@ -99,6 +129,12 @@ const mockAlgoliaClient = {
   searchForTagValues: mockSearchForTagValues,
   search: mockSearch,
 };
+
+const mockOpensearchClient = {
+  getTagSuggestions: mockGetTagSuggestions,
+  search: mockAttendanceSearch,
+};
+
 beforeEach(() => {
   jest.clearAllMocks();
 
@@ -107,6 +143,7 @@ beforeEach(() => {
   });
   mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
   mockGetEngagement.mockResolvedValue(data);
+  mockGetMeetingRepAttendance.mockResolvedValue({ items: [], total: 0 });
   const metric = {
     belowAverageMin: 1,
     belowAverageMax: 1,
@@ -125,6 +162,12 @@ beforeEach(() => {
   mockGetPerformance.mockResolvedValue({
     ...engagementPerformance,
   });
+
+  mockUseAnalyticsOpensearch.mockReturnValue({
+    client:
+      mockOpensearchClient as unknown as OpensearchClient<MeetingRepAttendanceResponse>,
+  });
+  mockOpensearchClient.getTagSuggestions.mockResolvedValue([]);
 });
 
 const renderPage = async (path: string) => {
@@ -316,6 +359,33 @@ describe('Engagement', () => {
       expect(
         screen.queryByText(/Representation of Presenters/i),
       ).not.toBeInTheDocument();
+    });
+
+    it('throws error when fails to fetch attendance data', async () => {
+      const error = new Error('Failed to fetch engagement data');
+      mockGetMeetingRepAttendance.mockRejectedValue(error);
+
+      const { result } = renderHook(
+        () =>
+          useAnalyticsMeetingRepAttendance({
+            currentPage: 0,
+            pageSize: 10,
+            sort: 'team_asc',
+            timeRange: 'all',
+            tags: [],
+          }),
+        {
+          wrapper: ({ children }) => (
+            <RecoilRoot>
+              <Suspense fallback="loading">{children}</Suspense>
+            </RecoilRoot>
+          ),
+        },
+      );
+
+      await waitFor(() => {
+        expect(result.error).toEqual(error);
+      });
     });
   });
 

@@ -54,7 +54,7 @@ const FLAGGED_ANALYTICS = [
 export const removeFlaggedOptions = (isFlagEnabled: boolean, option: string) =>
   isFlagEnabled || !FLAGGED_ANALYTICS.includes(option);
 
-export const getPrelimPerformanceIcon = (
+export const getPerformanceMoodIcon = (
   percentage: number | null,
   isLimitedData: boolean = false,
 ) => {

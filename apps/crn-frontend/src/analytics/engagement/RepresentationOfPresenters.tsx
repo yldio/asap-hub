@@ -2,6 +2,7 @@ import {
   engagementInitialSortingDirection,
   EngagementSortingDirection,
   SortEngagement,
+  TimeRangeOption,
 } from '@asap-hub/model';
 import {
   CaptionCard,
@@ -10,23 +11,23 @@ import {
 } from '@asap-hub/react-components';
 import { useState } from 'react';
 
-import {
-  useAnalytics,
-  usePagination,
-  usePaginationParams,
-  useSearch,
-} from '../../hooks';
+import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsEngagement, useEngagementPerformance } from './state';
 
-const RepresentationOfPresenters: React.FC = () => {
-  const { currentPage, pageSize } = usePaginationParams();
+interface RepresentationOfPresentersProps {
+  tags: string[];
+  timeRange: TimeRangeOption;
+}
 
-  const { timeRange } = useAnalytics();
+const RepresentationOfPresenters: React.FC<RepresentationOfPresentersProps> = ({
+  tags,
+  timeRange,
+}) => {
+  const { currentPage, pageSize } = usePaginationParams();
 
   const [sort, setSort] = useState<SortEngagement>('team_asc');
   const [sortingDirection, setSortingDirection] =
     useState<EngagementSortingDirection>(engagementInitialSortingDirection);
-  const { tags } = useSearch();
 
   const { items: data, total } = useAnalyticsEngagement({
     currentPage,

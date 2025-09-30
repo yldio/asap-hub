@@ -100,6 +100,10 @@ const AnalyticsEngagementPageBody: React.FC<
         timeRange={timeRange}
         href={analytics({}).engagement({}).metric({ metric }).$}
         exportResults={exportResults}
+        useLimitedTimeRange={metric === 'attendance'}
+        noOptionsMessage={
+          metric === 'attendance' ? 'Sorry, no teams match' : undefined
+        }
       />
       {children}
     </article>

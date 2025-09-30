@@ -10,7 +10,7 @@ import { PageControls } from '..';
 
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
-import { charcoal, neutral200, steel } from '../colors';
+import { charcoal, lead, neutral200, steel } from '../colors';
 import {
   InactiveBadgeIcon,
   // AlphabeticalSortingIcon,
@@ -80,6 +80,14 @@ const rowStyles = css({
 const iconStyles = css({
   display: 'flex',
   gap: rem(3),
+});
+
+const valueStyles = css({
+  fontWeight: 400,
+  fontSize: rem(17),
+  textWrap: 'nowrap',
+  color: lead.rgb,
+  width: rem(60),
 });
 
 const pageControlsStyles = css({
@@ -185,8 +193,11 @@ const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
               </tr>
             </thead>
             <tbody>
-              {data.map((row) => (
-                <tr key={row.teamId} css={rowStyles}>
+              {data.map((row, index) => (
+                <tr
+                  key={row.teamId || `${row.teamName}-${index}`}
+                  css={rowStyles}
+                >
                   <td className={'team'}>
                     <p css={iconStyles}>
                       <span>
@@ -206,7 +217,11 @@ const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
                   </td>
                   <td>
                     <p css={iconStyles}>
-                      <span>{row.postedPriorPercentage}%</span>
+                      <span css={valueStyles}>
+                        {row.postedPriorPercentage === null
+                          ? 'N/A'
+                          : `${row.postedPriorPercentage}%`}
+                      </span>
                       {getPerformanceIcon(row.postedPriorPercentage)}
                     </p>
                   </td>

@@ -732,8 +732,14 @@ export type ListPublicationComplianceResponse =
 export type ListPreprintComplianceDataObject =
   ListResponse<PreprintComplianceDataObject>;
 export type PreprintComplianceResponse = PreprintComplianceDataObject;
+export type PreprintComplianceOpensearchResponse =
+  PreprintComplianceResponse & {
+    objectID: string;
+  };
 export type ListPreprintComplianceResponse =
   ListResponse<PreprintComplianceResponse>;
+export type ListPreprintComplianceOpensearchResponse =
+  ListResponse<PreprintComplianceOpensearchResponse>;
 
 export type SortPreprintCompliance =
   | 'team_asc'

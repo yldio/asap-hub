@@ -11,13 +11,23 @@ import { createMemoryHistory } from 'history';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { PreprintComplianceOpensearchResponse } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
+import { useAnalyticsOpensearch } from '../../../hooks';
+import { OpensearchClient } from '../../utils/opensearch';
 import OpenScience from '../OpenScience';
 
 jest.mock('../../../hooks/algolia', () => ({
   useAnalyticsAlgolia: jest.fn(),
+}));
+
+jest.mock('../../../hooks', () => ({
+  ...jest.requireActual('../../../hooks'),
+  useAnalyticsOpensearch: jest.fn(),
+  useSearch: () => ({ tags: [], setTags: jest.fn() }),
+  useAnalytics: () => ({ timeRange: 'all' }),
 }));
 
 mockConsoleError();
@@ -26,15 +36,27 @@ const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
   AlgoliaSearchClient<'analytics'>['searchForTagValues']
 >;
 
+const mockGetTagSuggestions = jest.fn() as jest.MockedFunction<
+  OpensearchClient<PreprintComplianceOpensearchResponse>['getTagSuggestions']
+>;
+
 const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
   typeof useAnalyticsAlgolia
 >;
+
+const mockUseAnalyticsOpensearch =
+  useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
 beforeEach(() => {
   jest.clearAllMocks();
 
   const mockAlgoliaClient = {
     searchForTagValues: mockSearchForTagValues,
+  };
+
+  const mockOpensearchClient = {
+    getTagSuggestions: mockGetTagSuggestions,
+    search: jest.fn().mockResolvedValue({ items: [], total: 0 }),
   };
 
   mockUseAnalyticsAlgolia.mockReturnValue({
@@ -47,6 +69,12 @@ beforeEach(() => {
       { value: 'tag2', highlighted: 'tag2', count: 1 },
     ],
   });
+
+  mockUseAnalyticsOpensearch.mockReturnValue({
+    client:
+      mockOpensearchClient as unknown as OpensearchClient<PreprintComplianceOpensearchResponse>,
+  });
+  mockGetTagSuggestions.mockResolvedValue(['tag1', 'tag2']);
 });
 
 const renderPage = async (path: string) => {
@@ -83,14 +111,14 @@ describe('OpenScience', () => {
       analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
     );
 
-    // Check that the preprint compliance section is rendered
-    expect(
-      screen.getByRole('heading', { name: 'Preprint Compliance' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText('Posted Prior to Journal Submission'),
-    ).toBeInTheDocument();
-
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: 'Preprint Compliance' }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Posted Prior to Journal Submission'),
+      ).toBeInTheDocument();
+    });
     // The table rendering is tested in PreprintCompliance.test.tsx
   });
 
@@ -176,6 +204,87 @@ describe('OpenScience', () => {
       expect(
         screen.getByRole('heading', { name: 'Publication Compliance' }),
       ).toBeInTheDocument();
+    });
+  });
+
+  describe('OpenSearch tag loading', () => {
+    it('uses OpenSearch client for tag suggestions', async () => {
+      await renderPage(
+        analytics({}).openScience({}).metric({ metric: 'preprint-compliance' })
+          .$,
+      );
+
+      expect(mockUseAnalyticsOpensearch).toHaveBeenCalledWith(
+        'preprint-compliance',
+      );
+    });
+  });
+
+  describe('PreprintCompliance state management', () => {
+    it('handles preprint compliance data fetching', async () => {
+      const mockPreprintData = {
+        items: [
+          {
+            objectID: 'team1',
+            teamId: 'team1',
+            teamName: 'Test Team',
+            isTeamInactive: false,
+            numberOfPreprints: 5,
+            numberOfPublications: 3,
+            ranking: 'ADEQUATE',
+            timeRange: 'all',
+            postedPriorPercentage: 80,
+          },
+        ],
+        total: 1,
+      };
+
+      const mockSearch = jest.fn().mockResolvedValue(mockPreprintData);
+      const mockOpensearchClient = {
+        getTagSuggestions: mockGetTagSuggestions,
+        search: mockSearch,
+      };
+
+      mockUseAnalyticsOpensearch.mockReturnValue({
+        client:
+          mockOpensearchClient as unknown as OpensearchClient<PreprintComplianceOpensearchResponse>,
+      });
+
+      await renderPage(
+        analytics({}).openScience({}).metric({ metric: 'preprint-compliance' })
+          .$,
+      );
+
+      expect(mockUseAnalyticsOpensearch).toHaveBeenCalledWith(
+        'preprint-compliance',
+      );
+    });
+
+    it('uses OpenSearch client for data fetching', async () => {
+      const mockPreprintData = {
+        items: [],
+        total: 0,
+      };
+
+      const mockSearch = jest.fn().mockResolvedValue(mockPreprintData);
+      const mockOpensearchClient = {
+        getTagSuggestions: mockGetTagSuggestions,
+        search: mockSearch,
+      };
+
+      mockUseAnalyticsOpensearch.mockReturnValue({
+        client:
+          mockOpensearchClient as unknown as OpensearchClient<PreprintComplianceOpensearchResponse>,
+      });
+
+      await renderPage(
+        analytics({}).openScience({}).metric({ metric: 'preprint-compliance' })
+          .$,
+      );
+
+      expect(mockUseAnalyticsOpensearch).toHaveBeenCalledWith(
+        'preprint-compliance',
+      );
     });
   });
 });

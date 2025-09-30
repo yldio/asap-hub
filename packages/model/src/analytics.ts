@@ -719,7 +719,7 @@ export type PreprintComplianceDataObject = {
   isTeamInactive: boolean;
   numberOfPreprints: number;
   numberOfPublications: number;
-  postedPriorPercentage: number;
+  postedPriorPercentage: number | null;
   ranking: string;
   timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };

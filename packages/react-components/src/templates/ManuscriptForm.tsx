@@ -263,10 +263,6 @@ const setDefaultFieldValues = (fieldsList: OptionalVersionFields) => {
   return fieldDefaultValueMap;
 };
 
-const FixMarginWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div css={{ marginTop: rem(18), marginBottom: rem(18) }}>{children}</div>
-);
-
 type ManuscriptFormProps = Omit<
   ManuscriptVersion,
   | 'id'
@@ -491,28 +487,28 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           ),
           acknowledgedGrantNumberDetails: resubmitManuscript
             ? undefined
-            : acknowledgedGrantNumberDetails ?? undefined,
+            : (acknowledgedGrantNumberDetails ?? undefined),
           asapAffiliationIncludedDetails: resubmitManuscript
             ? undefined
-            : asapAffiliationIncludedDetails ?? undefined,
+            : (asapAffiliationIncludedDetails ?? undefined),
           manuscriptLicenseDetails: resubmitManuscript
             ? undefined
-            : manuscriptLicenseDetails ?? undefined,
+            : (manuscriptLicenseDetails ?? undefined),
           datasetsDepositedDetails: resubmitManuscript
             ? undefined
-            : datasetsDepositedDetails ?? undefined,
+            : (datasetsDepositedDetails ?? undefined),
           codeDepositedDetails: resubmitManuscript
             ? undefined
-            : codeDepositedDetails ?? undefined,
+            : (codeDepositedDetails ?? undefined),
           protocolsDepositedDetails: resubmitManuscript
             ? undefined
-            : protocolsDepositedDetails ?? undefined,
+            : (protocolsDepositedDetails ?? undefined),
           labMaterialsRegisteredDetails: resubmitManuscript
             ? undefined
-            : labMaterialsRegisteredDetails ?? undefined,
+            : (labMaterialsRegisteredDetails ?? undefined),
           availabilityStatementDetails: resubmitManuscript
             ? undefined
-            : availabilityStatementDetails ?? undefined,
+            : (availabilityStatementDetails ?? undefined),
           teams: selectedTeams || [],
           labs: selectedLabs || [],
           description: description || '',
@@ -992,6 +988,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   onChange={onChange}
                   onBlur={onBlur}
                   enabled={!isSubmitting}
+                  noPadding
                 />
               )}
             />
@@ -1010,19 +1007,18 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 field: { value, onChange, onBlur },
                 fieldState: { error },
               }) => (
-                <FixMarginWrapper>
-                  <LabeledTextField
-                    title="URL"
-                    subtitle={isURLRequired ? '(required)' : '(optional)'}
-                    value={value ?? ''}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    enabled={!isSubmitting}
-                    customValidationMessage={error?.message}
-                    labelIndicator={<GlobeIcon />}
-                    placeholder="https://example.com"
-                  />
-                </FixMarginWrapper>
+                <LabeledTextField
+                  title="URL"
+                  subtitle={isURLRequired ? '(required)' : '(optional)'}
+                  value={value ?? ''}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  enabled={!isSubmitting}
+                  customValidationMessage={error?.message}
+                  labelIndicator={<GlobeIcon />}
+                  placeholder="https://example.com"
+                  noPadding
+                />
               )}
             />
             <Controller
@@ -1058,6 +1054,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     `Sorry, no types match ${option.inputValue}`
                   }
                   placeholder="Choose a type of manuscript"
+                  noPadding
                 />
               )}
             />
@@ -1100,6 +1097,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         `Sorry, no options match ${option.inputValue}`
                       }
                       placeholder="Choose an option"
+                      noPadding
                     />
                   )}
                 />
@@ -1145,6 +1143,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           !isSubmitting
                         }
                         placeholder="e.g. 10.5555/YFRU1371"
+                        noPadding
                       />
                     )}
                   />
@@ -1184,6 +1183,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           !isSubmitting
                         }
                         placeholder="e.g. 10.5555/YFRU1371"
+                        noPadding
                       />
                     )}
                   />
@@ -1221,6 +1221,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           (!isEditMode || isOpenScienceTeamMember) &&
                           !isSubmitting
                         }
+                        noPadding
                       />
                     )}
                   />
@@ -1261,6 +1262,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         `Sorry, no impacts match ${option.inputValue}`
                       }
                       placeholder="Choose an impact"
+                      noPadding
                     />
                   )}
                 />
@@ -1308,6 +1310,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       }) => `Sorry, no categories match ${inputValue}`}
                       enabled={!isSubmitting}
                       onBlur={onBlur}
+                      noPadding
                     />
                   )}
                 />
@@ -1373,6 +1376,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         !isUploadingManuscriptFile
                       }
                       tagEnabled={!isEditMode || isOpenScienceTeamMember}
+                      noPadding
                     />
                   )}
                 />
@@ -1453,6 +1457,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           !isUploadingKeyResourceTable
                         }
                         tagEnabled={!isEditMode || isOpenScienceTeamMember}
+                        noPadding
                       />
                     )}
                   />
@@ -1543,6 +1548,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         !isUploadingAdditionalFiles
                       }
                       tagEnabled={!isEditMode || isOpenScienceTeamMember}
+                      noPadding
                     />
                   )}
                 />
@@ -1578,6 +1584,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     onChange={onChange}
                     onBlur={onBlur}
                     enabled={!isSubmitting}
+                    noPadding
                   />
                 )}
               />
@@ -1649,6 +1656,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     }: {
                       inputValue: string;
                     }) => `Sorry, no teams match ${inputValue}`}
+                    noPadding
                   />
                 )}
               />
@@ -1689,6 +1697,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       inputValue: string;
                     }) => `Sorry, no labs match ${inputValue}`}
                     customValidationMessage={error?.message}
+                    noPadding
                   />
                 )}
               />

@@ -93,6 +93,7 @@ const AuthorSelect: React.FC<AuthorSelectProps> = ({
   isMulti,
   creatable = true,
   useDefaultErrorMessage = true,
+  noPadding = false,
   ...props
 }) => (
   <LabeledMultiSelect<AuthorOption, boolean>
@@ -173,6 +174,7 @@ const AuthorSelect: React.FC<AuthorSelectProps> = ({
         </components.Option>
       ),
     }}
+    noPadding={noPadding}
   />
 );
 export type AuthorSelectType = typeof AuthorSelect;

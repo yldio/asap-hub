@@ -65,6 +65,7 @@ type LabeledFileFieldProps = {
   readonly handleFileUpload: (file: File) => Promise<void>;
   readonly accept?: string;
   readonly tagEnabled?: boolean;
+  readonly noPadding?: boolean;
 } & Pick<ComponentProps<typeof Button>, 'enabled'>;
 
 const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
@@ -81,6 +82,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   customValidationMessage,
   handleFileUpload,
   tagEnabled = true,
+  noPadding = false,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -102,7 +104,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   const canUploadFile = !currentFiles || currentFiles.length < maxFiles;
 
   return (
-    <div css={containerStyles}>
+    <div css={[containerStyles, noPadding && { paddingBottom: 0 }]}>
       <input
         onChange={handleFileChange}
         multiple={maxFiles > 1}

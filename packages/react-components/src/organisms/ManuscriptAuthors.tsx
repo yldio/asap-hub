@@ -178,6 +178,7 @@ const ManuscriptAuthors = ({
             noOptionsMessage={({ inputValue }) =>
               `Sorry, no authors match ${inputValue}`
             }
+            noPadding
           />
         )}
       />
@@ -209,6 +210,7 @@ const ManuscriptAuthors = ({
                   trigger(`versions.0.${fieldName}Emails.${index}.email`);
                 }}
                 enabled={!isSubmitting}
+                noPadding
               />
             )}
           />

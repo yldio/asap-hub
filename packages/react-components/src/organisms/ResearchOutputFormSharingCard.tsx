@@ -392,6 +392,7 @@ const ResearchOutputFormSharingCard: React.FC<
           ></Markdown>
         }
         autofocus={false}
+        noPadding
       />
       <ShortDescriptionCard
         onChange={(shortDescriptionNewValue) => {
@@ -430,87 +431,75 @@ const ResearchOutputFormSharingCard: React.FC<
           noPadding
         />
       )}
-      <div css={css({ marginTop: '30px' })}>
-        <LabeledRadioButtonGroup
-          title="Has this output been funded by ASAP"
-          subtitle="(required)"
-          options={[
-            { value: 'Yes', label: 'Yes' },
-            { value: 'No', label: 'No' },
-            { value: 'Not Sure', label: 'Not Sure' },
-          ]}
-          value={asapFunded}
-          onChange={onChangeAsapFunded}
-        />
-      </div>
-      <div
-        css={css({
-          marginTop: '48px',
-        })}
-      >
-        <LabeledRadioButtonGroup
-          title="Has this output been used in a publication"
-          subtitle="(required)"
-          options={[
-            { value: 'Yes', label: 'Yes' },
-            {
-              value: 'No',
-              label: 'No',
-              disabled:
-                isCreatingOutputRoute &&
-                documentType === 'Article' &&
-                researchOutputData?.usedInPublication === undefined,
-            },
-            {
-              value: 'Not Sure',
-              label: 'Not Sure',
-              disabled:
-                isCreatingOutputRoute &&
-                documentType === 'Article' &&
-                researchOutputData?.usedInPublication === undefined,
-            },
-          ]}
-          value={usedInPublication}
-          onChange={onChangeUsedInPublication}
-        />
-      </div>
-      <div
-        css={css({
-          marginTop: '48px',
-        })}
-      >
-        <LabeledRadioButtonGroup
-          title="Sharing status"
-          subtitle="(required)"
-          options={[
-            {
-              value: 'Network Only',
-              label: 'CRN Only',
-              disabled:
-                (documentType === 'Article' &&
-                  researchOutputData?.sharingStatus === undefined) ||
-                isImportedFromManuscript,
-            },
-            { value: 'Public', label: 'Public' },
-          ]}
-          value={sharingStatus}
-          onChange={onChangeSharingStatus}
-        />
-      </div>
+      <LabeledRadioButtonGroup
+        title="Has this output been funded by ASAP"
+        subtitle="(required)"
+        options={[
+          { value: 'Yes', label: 'Yes' },
+          { value: 'No', label: 'No' },
+          { value: 'Not Sure', label: 'Not Sure' },
+        ]}
+        value={asapFunded}
+        onChange={onChangeAsapFunded}
+      />
+
+      <LabeledRadioButtonGroup
+        title="Has this output been used in a publication"
+        subtitle="(required)"
+        options={[
+          { value: 'Yes', label: 'Yes' },
+          {
+            value: 'No',
+            label: 'No',
+            disabled:
+              isCreatingOutputRoute &&
+              documentType === 'Article' &&
+              researchOutputData?.usedInPublication === undefined,
+          },
+          {
+            value: 'Not Sure',
+            label: 'Not Sure',
+            disabled:
+              isCreatingOutputRoute &&
+              documentType === 'Article' &&
+              researchOutputData?.usedInPublication === undefined,
+          },
+        ]}
+        value={usedInPublication}
+        onChange={onChangeUsedInPublication}
+      />
+
+      <LabeledRadioButtonGroup
+        title="Sharing status"
+        subtitle="(required)"
+        options={[
+          {
+            value: 'Network Only',
+            label: 'CRN Only',
+            disabled:
+              (documentType === 'Article' &&
+                researchOutputData?.sharingStatus === undefined) ||
+              isImportedFromManuscript,
+          },
+          { value: 'Public', label: 'Public' },
+        ]}
+        value={sharingStatus}
+        onChange={onChangeSharingStatus}
+      />
+
       {sharingStatus === 'Public' ? (
-        <div css={css({ marginTop: '36px' })}>
-          <LabeledDateField
-            title={'Date Published'}
-            subtitle={'(optional)'}
-            description={
-              'This should be the date your output was shared publicly on its repository.'
-            }
-            onChange={onChangePublishDate}
-            value={publishDate}
-            max={new Date()}
-            getValidationMessage={(e) => getPublishDateValidationMessage(e)}
-          />
-        </div>
+        <LabeledDateField
+          title={'Date Published'}
+          subtitle={'(optional)'}
+          description={
+            'This should be the date your output was shared publicly on its repository.'
+          }
+          onChange={onChangePublishDate}
+          value={publishDate}
+          max={new Date()}
+          getValidationMessage={(e) => getPublishDateValidationMessage(e)}
+          noPadding
+        />
       ) : null}
     </FormCard>
   );

@@ -83,6 +83,7 @@ const ShortDescriptionCard: React.FC<ShortDescriptionCardProps> = ({
             : 'Regenerate'}
         </Button>
       }
+      noPadding
     />
   );
 };

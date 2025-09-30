@@ -7,6 +7,8 @@ import { lead } from '../colors';
 import { perRem } from '../pixels';
 import { noop } from '../utils';
 
+const containerStyles = css({ paddingBottom: `${18 / perRem}em` });
+
 type LabeledDateFieldProps = {
   readonly title: React.ReactNode;
   readonly subtitle?: React.ReactNode;
@@ -16,6 +18,7 @@ type LabeledDateFieldProps = {
   readonly value?: Date;
   readonly max?: Date;
   readonly onChange?: (newDate: Date | undefined) => void;
+  readonly noPadding?: boolean;
 } & Pick<
   ComponentProps<typeof TextField>,
   'required' | 'customValidationMessage' | 'getValidationMessage'
@@ -48,9 +51,10 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
   max,
   value,
   onChange = noop,
+  noPadding = false,
   ...dateFieldProps
 }) => (
-  <div css={{ paddingBottom: `${18 / perRem}em` }}>
+  <div css={[containerStyles, noPadding && { paddingBottom: 0 }]}>
     <Label
       forContent={(id) => (
         <TextField
@@ -63,7 +67,7 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
         />
       )}
     >
-      <Paragraph>
+      <Paragraph noMargin styles={css({ paddingBottom: 16 })}>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span> <br />
         <span css={descriptionStyles}>{description}</span>

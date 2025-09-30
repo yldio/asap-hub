@@ -62,7 +62,7 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
 }) => (
   <div css={[containerStyles, noPadding && { paddingBottom: 0 }]}>
     <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
-      <Paragraph>
+      <Paragraph noMargin styles={css({ paddingBottom: 16 })}>
         <span css={{ display: 'flex', marginBottom: 0 }}>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>

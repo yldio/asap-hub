@@ -2,12 +2,7 @@
 import { InputHTMLAttributes } from 'react';
 import { css } from '@emotion/react';
 
-import {
-  useValidation,
-  styles,
-  validationMessageStyles,
-  hiddenWhenEmptyStyles,
-} from '../form';
+import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import { ember, rose, fern, tin, lead, silver } from '../colors';
 import { perRem, tabletScreen } from '../pixels';

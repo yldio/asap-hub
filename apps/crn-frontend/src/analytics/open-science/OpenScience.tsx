@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { analytics } from '@asap-hub/routing';
 import { AnalyticsOpenSciencePageBody } from '@asap-hub/react-components';
@@ -21,22 +21,43 @@ const OpenScience: FC<Record<string, never>> = () => {
 
   const { timeRange } = useAnalytics();
   const { tags, setTags } = useSearch();
-  const osPreprintClient = useAnalyticsOpensearch<OSChampionOpensearchResponse>(
+  const osChampionClient = useAnalyticsOpensearch<OSChampionOpensearchResponse>(
     'preprint-compliance',
   );
 
   // TODO: Implement export functionality for Open Science metrics
   const exportResults = () => Promise.resolve();
 
+  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+
   const loadTags = useCallback(
     async (tagQuery: string) => {
-      const response = await osPreprintClient.client.getTagSuggestions(
-        tagQuery,
-        'teams',
-      );
-      return response.map((value) => ({ label: value, value }));
+      // Clear any existing timeout
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+
+      // Return a promise that resolves after debounce delay
+      return new Promise<Array<{ label: string; value: string }>>((resolve) => {
+        debounceTimeoutRef.current = setTimeout(async () => {
+          try {
+            const response = await osChampionClient.client.getTagSuggestions(
+              tagQuery,
+              'teams',
+            );
+
+            const result = response.map((value) => ({
+              label: value,
+              value,
+            }));
+            resolve(result);
+          } catch (error) {
+            resolve([]);
+          }
+        }, 500); // 500ms debounce delay
+      });
     },
-    [osPreprintClient.client],
+    [osChampionClient.client],
   );
 
   return (

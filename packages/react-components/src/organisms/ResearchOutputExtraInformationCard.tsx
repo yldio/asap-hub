@@ -89,6 +89,7 @@ const ResearchOutputExtraInformationCard: React.FC<
           onChange={(options) =>
             onChangeMethods(options.map(({ value }) => value))
           }
+          noPadding
         />
       )}
       {organismSuggestions.length > 0 && (
@@ -109,6 +110,7 @@ const ResearchOutputExtraInformationCard: React.FC<
           onChange={(options) =>
             onChangeOrganisms(options.map(({ value }) => value))
           }
+          noPadding
         />
       )}
       {environmentSuggestions.length > 0 && (
@@ -129,23 +131,30 @@ const ResearchOutputExtraInformationCard: React.FC<
           onChange={(options) =>
             onChangeEnvironments(options.map(({ value }) => value))
           }
+          noPadding
         />
       )}
 
-      <LabeledMultiSelect
-        title="Additional Tags"
-        description="Increase the discoverability of this output by adding keywords."
-        subtitle="(optional)"
-        values={tags.map((tag) => ({ label: tag, value: tag }))}
-        enabled={!isSaving}
-        suggestions={tagSuggestions}
-        placeholder="Start typing... (E.g. Cell Biology)"
-        onChange={(options) => onChangeTags(options.map(({ value }) => value))}
-      />
+      <div style={{ display: 'flex', flexFlow: 'column', gap: 16 }}>
+        <LabeledMultiSelect
+          title="Additional Tags"
+          description="Increase the discoverability of this output by adding keywords."
+          subtitle="(optional)"
+          values={tags.map((tag) => ({ label: tag, value: tag }))}
+          enabled={!isSaving}
+          suggestions={tagSuggestions}
+          placeholder="Start typing... (E.g. Cell Biology)"
+          onChange={(options) =>
+            onChangeTags(options.map(({ value }) => value))
+          }
+          noPadding
+        />
 
-      <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>
-        Ask ASAP to add a new keyword
-      </Link>
+        <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>
+          Ask ASAP to add a new keyword
+        </Link>
+      </div>
+
       {documentType !== 'Report' && (
         <>
           <ResearchOutputIdentifier
@@ -164,6 +173,7 @@ const ResearchOutputExtraInformationCard: React.FC<
               placeholder="Catalog number and vendor e.g. AB123 (Abcam)"
               enabled={!isSaving}
               value={labCatalogNumber || ''}
+              noPadding
             />
           )}
           <LabeledTextArea
@@ -173,6 +183,7 @@ const ResearchOutputExtraInformationCard: React.FC<
             placeholder="E.g. To access the output, you will first need to create an account on..."
             enabled={!isSaving}
             value={usageNotes || ''}
+            noPadding
           />
         </>
       )}

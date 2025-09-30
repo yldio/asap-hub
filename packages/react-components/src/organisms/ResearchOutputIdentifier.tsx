@@ -139,6 +139,7 @@ export const ResearchOutputIdentifier: React.FC<
         getValidationMessage={() => `Please choose an identifier`}
         required={true}
         info={infoText}
+        noPadding
       />
 
       <TeamCreateOutputIdentifierField
@@ -173,6 +174,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
           onChange={setIdentifier}
           pattern={regex}
           required={required}
+          noPadding
         />
       )}
       {type === ResearchOutputIdentifierType.DOI && (
@@ -186,6 +188,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
           onChange={setIdentifier}
           pattern={regex}
           required={required}
+          noPadding
         />
       )}
       {type === ResearchOutputIdentifierType.RRID && (
@@ -199,6 +202,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
           onChange={setIdentifier}
           pattern={regex}
           required={required}
+          noPadding
         />
       )}
     </>

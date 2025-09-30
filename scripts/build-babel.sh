@@ -13,12 +13,6 @@ case $1 in
     wait
   ;;
   watch)
-    echo Building ESM
-    eval $BUILD_CMD &
-    echo Building CJS
-    eval $BUILD_CJS_CMD &
-    wait
-
     echo Watching ESM
     eval $BUILD_CMD -w --verbose --skip-initial-build &
     echo Watching CJS

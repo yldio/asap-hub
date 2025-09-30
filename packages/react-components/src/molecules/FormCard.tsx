@@ -10,7 +10,7 @@ export type FormCardProps = {
 };
 
 const cardStyles = css({
-  paddingTop: `${14 / perRem}em`,
+  padding: '32px 24px',
 });
 
 const descriptionStyles = css({
@@ -22,6 +22,13 @@ const descriptionStyles = css({
   },
 });
 
+const childrenWrapStyles = css({
+  marginTop: 32,
+  display: 'flex',
+  flexFlow: 'column',
+  gap: 48,
+});
+
 const FormCard: React.FC<FormCardProps> = ({
   children,
   title,
@@ -29,7 +36,7 @@ const FormCard: React.FC<FormCardProps> = ({
   overrideStyles,
 }) => (
   <Card padding={false} overrideStyles={cardStyles} title={title}>
-    <div role="presentation" css={[paddingStyles, overrideStyles]}>
+    <div role="presentation" css={[overrideStyles]}>
       <Headline3 noMargin>{title}</Headline3>
     </div>
     {!!description && (
@@ -37,7 +44,7 @@ const FormCard: React.FC<FormCardProps> = ({
         <Paragraph accent="lead">{description}</Paragraph>
       </div>
     )}
-    <div css={[paddingStyles]}>{children}</div>
+    <div css={[childrenWrapStyles]}>{children}</div>
   </Card>
 );
 

@@ -259,6 +259,7 @@ const ResearchOutputFormSharingCard: React.FC<
         value={title}
         required
         enabled={!isSaving}
+        noPadding
       />
       <LabeledTextField
         title="URL"
@@ -280,6 +281,7 @@ const ResearchOutputFormSharingCard: React.FC<
         enabled={!isSaving}
         labelIndicator={<GlobeIcon />}
         placeholder="https://example.com"
+        noPadding
       />
       {!!typeOptions.length && (
         <LabeledDropdown<ResearchOutputType | ''>
@@ -425,6 +427,7 @@ const ResearchOutputFormSharingCard: React.FC<
           }}
           required
           enabled={!isSaving}
+          noPadding
         />
       )}
       <div css={css({ marginTop: '30px' })}>

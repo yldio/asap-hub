@@ -2,7 +2,12 @@
 import { InputHTMLAttributes } from 'react';
 import { css } from '@emotion/react';
 
-import { useValidation, styles, validationMessageStyles } from '../form';
+import {
+  useValidation,
+  styles,
+  validationMessageStyles,
+  hiddenWhenEmptyStyles,
+} from '../form';
 import { noop } from '../utils';
 import { ember, rose, fern, tin, lead, silver } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
@@ -58,6 +63,9 @@ const limitAndExtrasStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
   paddingTop: `${16 / perRem}em`,
+  ':empty': {
+    display: 'none',
+  },
 });
 
 type TextAreaProps = {
@@ -125,12 +133,12 @@ const TextArea: React.FC<TextAreaProps> = ({
         ]}
         {...(onBlur ? { onBlur } : {})}
       />
-      <div>
+      <>
         <div css={validationMessageStyles}>
           {validationMessage || (reachedMaxLength && 'Character count reached')}
         </div>
         <div css={limitAndExtrasStyles}>
-          <div>{extras}</div>
+          {extras && <div>{extras}</div>}
           {maxLength !== undefined && (
             <div
               css={({ colors: { primary500 = fern } = {} }) => [
@@ -143,7 +151,7 @@ const TextArea: React.FC<TextAreaProps> = ({
             </div>
           )}
         </div>
-      </div>
+      </>
     </div>
   );
 };

@@ -6,6 +6,8 @@ import { Label, Paragraph, TextArea } from '../atoms';
 import { lead, paper } from '../colors';
 import { TooltipInfo } from '.';
 
+const containerStyles = css({ paddingBottom: `${18 / perRem}em` });
+
 const tipStyles = css({
   marginTop: 0,
   ':empty': {
@@ -25,6 +27,7 @@ type LabeledTextAreaProps = {
   readonly subtitle?: React.ReactNode;
   readonly tip?: React.ReactNode;
   readonly info?: React.ReactNode;
+  readonly noPadding?: boolean;
 } & Exclude<ComponentProps<typeof TextArea>, 'id'>;
 
 const infoStyle = css({
@@ -54,9 +57,10 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   subtitle,
   tip,
   info,
+  noPadding = false,
   ...textAreaProps
 }) => (
-  <div css={{ paddingBottom: `${18 / perRem}em` }}>
+  <div css={[containerStyles, noPadding && { paddingBottom: 0 }]}>
     <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
       <Paragraph>
         <span css={{ display: 'flex', marginBottom: 0 }}>

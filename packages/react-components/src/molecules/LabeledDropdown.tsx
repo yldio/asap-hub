@@ -5,6 +5,8 @@ import { lead } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
 import { TooltipInfo } from '.';
 
+const containerStyles = css({ paddingBottom: `${18 / perRem}em` });
+
 const subtitleStyles = css({
   paddingLeft: `${6 / perRem}em`,
 });
@@ -27,18 +29,20 @@ export type LabeledDropdownProps<V extends string> = {
   readonly subtitle?: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly info?: Array<ReactElement>;
+  readonly noPadding?: boolean;
 } & Exclude<DropdownProps<V>, 'id'>;
 export default function LabeledDropdown<V extends string>({
   title,
   subtitle,
   description,
   info,
+  noPadding = false,
   ...dropdownProps
 }: LabeledDropdownProps<V>): ReturnType<React.FC> {
   return (
-    <div css={{ paddingBottom: `${18 / perRem}em` }}>
+    <div css={[containerStyles, noPadding && { paddingBottom: 0 }]}>
       <Label forContent={(id) => <Dropdown {...dropdownProps} id={id} />}>
-        <Paragraph>
+        <Paragraph noMargin styles={css({ paddingBottom: 16 })}>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>
           {info ? (

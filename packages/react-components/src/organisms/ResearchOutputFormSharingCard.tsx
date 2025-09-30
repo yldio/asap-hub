@@ -8,7 +8,6 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
-import { css } from '@emotion/react';
 import { ComponentPropsWithRef, useCallback, useEffect, useState } from 'react';
 import { OptionsType } from 'react-select';
 import { getAjvErrorForPath } from '../ajv-errors';
@@ -301,6 +300,7 @@ const ResearchOutputFormSharingCard: React.FC<
             `Sorry, no types match ${option.inputValue}`
           }
           placeholder="Choose a type"
+          noPadding
         />
       )}
       {!!subtypeSuggestions.length && (
@@ -317,6 +317,7 @@ const ResearchOutputFormSharingCard: React.FC<
           getValidationMessage={() => 'Please choose a subtype'}
           enabled={!isSaving}
           placeholder="Select subtype"
+          noPadding
         />
       )}
 
@@ -345,6 +346,7 @@ const ResearchOutputFormSharingCard: React.FC<
             `Sorry, no impacts match ${option.inputValue}`
           }
           placeholder="Choose an impact"
+          noPadding
         />
       )}
       {documentType === 'Article' && (
@@ -373,6 +375,7 @@ const ResearchOutputFormSharingCard: React.FC<
           noOptionsMessage={({ inputValue }) =>
             `Sorry, no category options match ${inputValue}`
           }
+          noPadding
         />
       )}
 

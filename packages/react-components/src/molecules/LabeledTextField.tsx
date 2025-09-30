@@ -48,7 +48,7 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
     css={[containerStyles, overrideStyles, noPadding && { paddingBottom: 0 }]}
   >
     <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
-      <Paragraph>
+      <Paragraph noMargin styles={css({ paddingBottom: 16 })}>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span>
         <br />

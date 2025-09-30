@@ -10,6 +10,8 @@ import {
 import { lead } from '../colors';
 import { perRem } from '../pixels';
 
+const containerStyles = css({ paddingBottom: `${18 / perRem}em` });
+
 const subtitleStyles = css({
   paddingLeft: `${6 / perRem}em`,
 });
@@ -25,6 +27,7 @@ export type LabeledMultiSelectProps<
   readonly title: ReactNode;
   readonly subtitle?: React.ReactNode;
   readonly description?: ReactNode;
+  readonly noPadding?: boolean;
 } & Exclude<MultiSelectProps<T, M>, 'id'>;
 
 const LabeledMultiSelect = <
@@ -34,11 +37,16 @@ const LabeledMultiSelect = <
   title,
   subtitle,
   description,
+  noPadding = false,
   ...multiSelectProps
 }: LabeledMultiSelectProps<T, M>): ReactElement => (
-  <div css={{ paddingBottom: `${18 / perRem}em` }}>
-    <Label forContent={(id) => <MultiSelect {...multiSelectProps} id={id} />}>
-      <Paragraph noMargin>
+  <div css={[containerStyles, noPadding && { paddingBottom: 0 }]}>
+    <Label
+      forContent={(id) => (
+        <MultiSelect noMargin {...multiSelectProps} id={id} />
+      )}
+    >
+      <Paragraph noMargin styles={css({ paddingBottom: 16 })}>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span>
         <br />

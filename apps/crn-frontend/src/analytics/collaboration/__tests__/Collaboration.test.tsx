@@ -465,6 +465,15 @@ describe('sharing prelim findings', () => {
     expect(screen.queryByText('Type')).not.toBeInTheDocument();
   });
 
+  it('exports analytics for sharing preliminary findings', async () => {
+    await renderPage('sharing-prelim-findings', undefined);
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/collaboration_sharing-prelim-findings_\d+\.csv/),
+      expect.anything(),
+    );
+  });
+
   it('throws error when preliminary data sharing fails', async () => {
     const error = new Error('API Error');
     mockGetPreliminaryDataSharing.mockRejectedValue(error);

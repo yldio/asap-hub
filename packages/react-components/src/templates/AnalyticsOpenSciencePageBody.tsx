@@ -88,6 +88,7 @@ const AnalyticsOpenSciencePageBody: React.FC<OpenScienceAnalyticsProps> = ({
         setTags={setTags}
         tags={tags}
         timeRange={timeRange}
+        useLimitedTimeRange={true}
       />
       {children}
     </article>

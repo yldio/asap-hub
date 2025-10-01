@@ -486,28 +486,28 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           ),
           acknowledgedGrantNumberDetails: resubmitManuscript
             ? undefined
-            : (acknowledgedGrantNumberDetails ?? undefined),
+            : acknowledgedGrantNumberDetails ?? undefined,
           asapAffiliationIncludedDetails: resubmitManuscript
             ? undefined
-            : (asapAffiliationIncludedDetails ?? undefined),
+            : asapAffiliationIncludedDetails ?? undefined,
           manuscriptLicenseDetails: resubmitManuscript
             ? undefined
-            : (manuscriptLicenseDetails ?? undefined),
+            : manuscriptLicenseDetails ?? undefined,
           datasetsDepositedDetails: resubmitManuscript
             ? undefined
-            : (datasetsDepositedDetails ?? undefined),
+            : datasetsDepositedDetails ?? undefined,
           codeDepositedDetails: resubmitManuscript
             ? undefined
-            : (codeDepositedDetails ?? undefined),
+            : codeDepositedDetails ?? undefined,
           protocolsDepositedDetails: resubmitManuscript
             ? undefined
-            : (protocolsDepositedDetails ?? undefined),
+            : protocolsDepositedDetails ?? undefined,
           labMaterialsRegisteredDetails: resubmitManuscript
             ? undefined
-            : (labMaterialsRegisteredDetails ?? undefined),
+            : labMaterialsRegisteredDetails ?? undefined,
           availabilityStatementDetails: resubmitManuscript
             ? undefined
-            : (availabilityStatementDetails ?? undefined),
+            : availabilityStatementDetails ?? undefined,
           teams: selectedTeams || [],
           labs: selectedLabs || [],
           description: description || '',

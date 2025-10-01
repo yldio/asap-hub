@@ -8,10 +8,12 @@ import {
   TeamCollaborationTable,
 } from '@asap-hub/react-components';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
-import {
-  useAnalyticsTeamCollaboration,
-  useTeamCollaborationPerformance,
-} from './state';
+import { useTeamCollaborationPerformanceZustand } from './hooks/use-team-collaboration-performance';
+import { useTeamCollaboration } from './hooks/use-team-collaboration';
+// import {
+//   useAnalyticsTeamCollaboration,
+//   useTeamCollaborationPerformance,
+// } from './state';
 import { CollaborationProps } from './UserCollaboration';
 
 const getDataForType = (
@@ -41,8 +43,21 @@ const TeamCollaboration: React.FC<
 > = ({ sort, setSort, setSortingDirection, sortingDirection, type, tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange, outputType } = useAnalytics();
-
-  const { items: data, total } = useAnalyticsTeamCollaboration({
+  // const { items: data, total } = useAnalyticsTeamCollaboration({
+  //   currentPage,
+  //   outputType,
+  //   pageSize,
+  //   sort,
+  //   tags,
+  //   timeRange,
+  // });
+  const {
+    data,
+    total,
+    isLoading: isDataLoading,
+    isError: isDataError,
+    error: dataError,
+  } = useTeamCollaboration({
     currentPage,
     outputType,
     pageSize,
@@ -51,12 +66,35 @@ const TeamCollaboration: React.FC<
     timeRange,
   });
 
-  const performance = useTeamCollaborationPerformance({
+  // const performance = useTeamCollaborationPerformance({
+  //   timeRange,
+  //   outputType,
+  // });
+
+  const {
+    performance: performanceData,
+    isLoading,
+    isError,
+    error,
+    // isFetching,
+    // refetch,
+    // dataUpdatedAt,
+    // setOptimisticPerformance,
+    // resetOptimisticState,
+  } = useTeamCollaborationPerformanceZustand({
     timeRange,
     outputType,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
+
+  if (isError || isDataError) {
+    return <div>Error: {error?.message || dataError?.message}</div>;
+  }
+
+  if (isLoading || isDataLoading || !performanceData || !data) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <TeamCollaborationTable
@@ -64,7 +102,9 @@ const TeamCollaboration: React.FC<
       data={getDataForType(data, type)}
       numberOfPages={numberOfPages}
       performance={
-        type === 'within-team' ? performance.withinTeam : performance.acrossTeam
+        type === 'within-team'
+          ? performanceData.withinTeam
+          : performanceData.acrossTeam
       }
       renderPageHref={renderPageHref}
       setSort={setSort}

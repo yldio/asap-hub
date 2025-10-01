@@ -323,7 +323,7 @@ const serverlessConfig: AWS = {
                   { Ref: 'AWS::Region' },
                   { Ref: 'AWS::AccountId' },
                   'secret',
-                  `google-api-credentials-${envAlias}*`,
+                  `google-new-api-credentials-${envAlias}*`,
                 ],
               ],
             },
@@ -526,7 +526,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-new-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
         LOG_LEVEL: 'warn',
@@ -541,7 +541,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-new-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
         LOG_LEVEL: 'warn',
@@ -882,7 +882,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-new-api-credentials-${envAlias}`,
         SENTRY_DSN: sentryDsnHandlers,
         LOG_LEVEL: 'warn',
       },

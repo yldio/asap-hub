@@ -61,6 +61,9 @@ const DOC_TYPES_COHORTS_NOT_REQUIRED: gp2Model.OutputDocumentType[] = [
   'Code/Software',
 ];
 
+/** Auxiliary empty space to match designs */
+const EmptyGap = () => <div />;
+
 export const getRelatedOutputs = (
   relatedOutputs: gp2Model.OutputResponse['relatedOutputs'],
 ) =>
@@ -95,7 +98,7 @@ const linkStyles = css({
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(32),
+  gap: 32,
 });
 
 type OutputFormProps = {
@@ -462,6 +465,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                       }}
                       required
                       enabled={!isSaving}
+                      noPadding
                     />
                     <LabeledTextField
                       title="URL"
@@ -483,6 +487,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                       enabled={!isSaving}
                       labelIndicator={<GlobeIcon />}
                       placeholder="https://example.com"
+                      noPadding
                     />
                     {documentType === 'Article' && (
                       <LabeledDropdown
@@ -495,6 +500,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                           value: name,
                         }))}
                         onChange={setType}
+                        noPadding
                       />
                     )}
                     {newType === 'Research' && (
@@ -508,6 +514,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                           value: name,
                         }))}
                         onChange={setSubtype}
+                        noPadding
                       />
                     )}
 
@@ -526,6 +533,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
         `}
                         ></Markdown>
                       }
+                      noPadding
                     />
                     <ShortDescriptionCard
                       onChange={(shortDescriptionNewValue) => {
@@ -603,9 +611,13 @@ const OutputForm: React.FC<OutputFormProps> = ({
                         getValidationMessage={(e) =>
                           getPublishDateValidationMessage(e)
                         }
+                        noPadding
                       />
                     ) : null}
                   </FormCard>
+
+                  <EmptyGap />
+
                   <FormCard title="What extra information can you provide?">
                     <LabeledMultiSelect
                       title="Additional Tags"
@@ -640,6 +652,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                       }}
                       placeholder="Start typing... (E.g. Neurology)"
                       maxMenuHeight={160}
+                      noPadding
                     />
                     <div css={linkStyles}>
                       <Link
@@ -702,6 +715,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                       noOptionsMessage={({ inputValue }) =>
                         `Sorry, no working groups match ${inputValue}`
                       }
+                      noPadding
                     />
                     <LabeledMultiSelect
                       title="Projects"
@@ -737,6 +751,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                       noOptionsMessage={({ inputValue }) =>
                         `Sorry, no projects match ${inputValue}`
                       }
+                      noPadding
                     />
                     {!DOC_TYPES_COHORTS_NOT_REQUIRED.includes(documentType) ? (
                       <>
@@ -774,6 +789,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                           }}
                           placeholder="Start typing..."
                           maxMenuHeight={160}
+                          noPadding
                         />
                         <div css={linkStyles}>
                           Don’t see a cohort in this list?{' '}
@@ -802,6 +818,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                       noOptionsMessage={({ inputValue }) =>
                         `Sorry, no authors match ${inputValue}`
                       }
+                      noPadding
                     />
                   </FormCard>
                   <OutputRelatedResearchCard

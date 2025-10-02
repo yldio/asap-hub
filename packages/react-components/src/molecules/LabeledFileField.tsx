@@ -5,12 +5,8 @@ import { Button, Label, Paragraph, Tag } from '../atoms';
 import { lead } from '../colors';
 import { validationMessageStyles } from '../form';
 import { plusIcon } from '../icons';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import loading from '../lotties/loading.json';
-
-const containerStyles = css({
-  paddingBottom: `${18 / perRem}em`,
-});
 
 const buttonContainerStyles = css({
   display: 'block',
@@ -24,23 +20,23 @@ const hintStyles = css({
   ':empty': {
     display: 'none',
   },
-  paddingTop: `${6 / perRem}em`,
+  paddingTop: rem(6),
 
   color: lead.rgb,
 });
 
 const subtitleStyles = css({
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
 });
 
 const iconStyles = css({
   display: 'flex',
-  marginRight: `${8 / perRem}em`,
+  marginRight: rem(8),
 });
 
 const uploadedButtonTagStyles = css({
   display: 'inline-block',
-  paddingBottom: `${15 / perRem}em`,
+  paddingBottom: rem(15),
 });
 
 const fileSelectionContainerStyles = css({
@@ -102,7 +98,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   const canUploadFile = !currentFiles || currentFiles.length < maxFiles;
 
   return (
-    <div css={containerStyles}>
+    <div>
       <input
         onChange={handleFileChange}
         multiple={maxFiles > 1}
@@ -164,7 +160,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
           </>
         )}
       >
-        <Paragraph>
+        <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>
           <br />

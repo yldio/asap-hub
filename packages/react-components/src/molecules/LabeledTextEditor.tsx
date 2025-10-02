@@ -1,7 +1,7 @@
 import { ComponentProps, forwardRef } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { Label, Paragraph, TextEditor } from '../atoms';
 import { lead } from '../colors';
 
@@ -16,7 +16,7 @@ const tipStyles = css({
 });
 
 const subtitleStyles = css({
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
 });
 
 type LabeledTextEditorProps = {
@@ -33,11 +33,11 @@ const LabeledTextEditor: React.FC<LabeledTextEditorProps> = forwardRef<
   HTMLDivElement,
   LabeledTextEditorProps
 >(({ title, subtitle, tip, info, ...textEditorProps }, ref) => (
-  <div css={{ paddingBottom: `${18 / perRem}em` }}>
+  <div>
     <Label
       forContent={(id) => <TextEditor {...textEditorProps} id={id} ref={ref} />}
     >
-      <Paragraph>
+      <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
         <span css={{ display: 'flex', marginBottom: 0 }}>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>

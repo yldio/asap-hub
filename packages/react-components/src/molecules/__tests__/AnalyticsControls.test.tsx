@@ -135,6 +135,82 @@ describe('AnalyticsControls', () => {
     );
   });
 
+  describe('debouncedLoadTags', () => {
+    it('handles array results from loadTags', async () => {
+      const mockResults = [{ label: 'Test User', value: 'test-user' }];
+      const loadTags = jest.fn().mockResolvedValue(mockResults);
+      const { getByRole, getByText } = render(
+        <AnalyticsControls
+          {...defaultProps}
+          metricOption={'user'}
+          loadTags={loadTags}
+        />,
+      );
+
+      userEvent.type(getByRole('textbox'), 'test');
+      await waitFor(() => {
+        expect(loadTags).toHaveBeenCalledWith('test');
+      });
+
+      userEvent.click(getByRole('textbox'));
+
+      // ahouls ahoq test-user
+      await waitFor(() => {
+        expect(getByText('Test User')).toBeVisible();
+      });
+    });
+
+    it('handles loadTags with null/undefined results', async () => {
+      const loadTags = jest.fn().mockResolvedValue(null);
+      const { getByRole, getByText } = render(
+        <AnalyticsControls
+          {...defaultProps}
+          metricOption={'user'}
+          loadTags={loadTags}
+        />,
+      );
+
+      userEvent.type(getByRole('textbox'), 'test');
+      await waitFor(() => {
+        expect(loadTags).toHaveBeenCalledWith('test');
+      });
+
+      userEvent.click(getByRole('textbox'));
+
+      // should show no results found
+      await waitFor(() => {
+        expect(getByText('No results found')).toBeVisible();
+      });
+    });
+
+    it('calls setTags when tags are selected', async () => {
+      const setTags = jest.fn();
+      const loadTags = jest.fn().mockResolvedValue([
+        { label: 'Test User', value: 'test-user' },
+        { label: 'Another User', value: 'another-user' },
+      ]);
+
+      const { getByRole, getByText } = render(
+        <AnalyticsControls
+          {...defaultProps}
+          metricOption={'user'}
+          loadTags={loadTags}
+          setTags={setTags}
+        />,
+      );
+
+      userEvent.type(getByRole('textbox'), 'test');
+      await waitFor(() => {
+        expect(loadTags).toHaveBeenCalledWith('test');
+      });
+
+      userEvent.click(getByText('Test User'));
+      await waitFor(() => {
+        expect(setTags).toHaveBeenCalledWith(['test-user']);
+      });
+    });
+  });
+
   describe('getLastUpdate', () => {
     const zone = 'Europe/Moscow';
     beforeAll(() => {

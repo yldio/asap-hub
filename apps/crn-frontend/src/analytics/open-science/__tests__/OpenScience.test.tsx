@@ -5,7 +5,7 @@ import {
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { enable } from '@asap-hub/flags';
 import { analytics } from '@asap-hub/routing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { Suspense } from 'react';
@@ -29,6 +29,8 @@ jest.mock('../../../hooks', () => ({
   useSearch: () => ({ tags: [], setTags: jest.fn() }),
   useAnalytics: () => ({ timeRange: 'all' }),
 }));
+
+jest.useFakeTimers();
 
 mockConsoleError();
 
@@ -286,5 +288,36 @@ describe('OpenScience', () => {
         'preprint-compliance',
       );
     });
+  });
+
+  it('debounces tag suggestions and loads initial options', async () => {
+    await renderPage(
+      analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
+    );
+
+    // Should be called immediately with empty string for initial load
+    await waitFor(() =>
+      expect(mockGetTagSuggestions).toHaveBeenCalledWith('', 'teams'),
+    );
+
+    // Clear previous calls
+    mockGetTagSuggestions.mockClear();
+
+    const teamsSection = screen.getByText('Teams:').closest('div')!;
+    const input = within(teamsSection).getByRole('textbox');
+
+    // Type something to trigger the debounced function
+    await userEvent.type(input, 'bio');
+
+    // Wait for debounce delay (500ms) + a bit more for the API call
+    await waitFor(
+      () => {
+        expect(mockGetTagSuggestions).toHaveBeenCalledWith('bio', 'teams');
+      },
+      { timeout: 1000 },
+    );
+
+    // Should only be called once with the final value due to debouncing
+    expect(mockGetTagSuggestions).toHaveBeenCalledTimes(1);
   });
 });

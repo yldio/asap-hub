@@ -235,7 +235,45 @@ describe('PreprintComplianceTable', () => {
       }),
     ).toBeInTheDocument();
 
-    // But no data rows
     expect(screen.queryByText('Test Team')).not.toBeInTheDocument();
+  });
+
+  it('handles missing teamId with fallback key', () => {
+    const dataWithMissingTeamId = [
+      {
+        ...preprintComplianceData,
+        teamId: '', // Empty teamId to trigger fallback
+        teamName: 'Team Without ID',
+      },
+    ];
+
+    render(
+      <PreprintComplianceTable
+        {...defaultProps}
+        data={dataWithMissingTeamId}
+      />,
+    );
+
+    // Should still render the team name
+    expect(screen.getByText('Team Without ID')).toBeInTheDocument();
+  });
+
+  it('handles null postedPriorPercentage', () => {
+    const dataWithNullPercentage = [
+      {
+        ...preprintComplianceData,
+        postedPriorPercentage: null,
+      },
+    ];
+
+    render(
+      <PreprintComplianceTable
+        {...defaultProps}
+        data={dataWithNullPercentage}
+      />,
+    );
+
+    // Should display 'N/A' instead of percentage
+    expect(screen.getByText('N/A')).toBeInTheDocument();
   });
 });

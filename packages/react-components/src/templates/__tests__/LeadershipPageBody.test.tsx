@@ -53,10 +53,11 @@ describe('search', () => {
     });
 
     userEvent.type(getSearchBox(), 'foo');
-    expect(loadTags).toHaveBeenCalled();
-    await waitFor(() =>
-      expect(screen.getByText('No results found')).toBeVisible(),
-    );
+
+    await waitFor(() => {
+      expect(loadTags).toHaveBeenCalled();
+      expect(screen.getByText('No results found')).toBeVisible();
+    });
   });
   it('will call set tags when a tag has been selected', async () => {
     const loadTags = jest

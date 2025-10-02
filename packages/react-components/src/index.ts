@@ -263,6 +263,7 @@ export {
   Layout,
   LoadingLayout,
   LoadingContentBody,
+  LoadingContentBodyTable,
   LoadingContentHeader,
   ManuscriptOutputSelection,
   NetworkInterestGroups,

@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 
 import LoadingLayout, {
   LoadingContentBody,
+  LoadingContentBodyTable,
   LoadingContentHeader,
 } from '../LoadingLayout';
 
@@ -18,6 +19,12 @@ it('renders LoadingContentHeader', async () => {
 
 it('renders LoadingContentBody', async () => {
   const { container } = render(<LoadingContentBody />);
+
+  expect(container.querySelectorAll('div[class*="animation"]')).toHaveLength(3);
+});
+
+it('renders LoadingContentBodyTable', async () => {
+  const { container } = render(<LoadingContentBodyTable />);
 
   expect(container.querySelectorAll('div[class*="animation"]')).toHaveLength(3);
 });

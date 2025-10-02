@@ -209,6 +209,28 @@ describe('AnalyticsControls', () => {
         expect(setTags).toHaveBeenCalledWith(['test-user']);
       });
     });
+
+    it('handles loadTags errors gracefully', async () => {
+      const loadTags = jest.fn().mockResolvedValue(new Error('API Error'));
+      const { getByRole, getByText } = render(
+        <AnalyticsControls
+          {...defaultProps}
+          metricOption={'user'}
+          loadTags={loadTags}
+        />,
+      );
+
+      userEvent.type(getByRole('textbox'), 'test');
+      await waitFor(() => {
+        expect(loadTags).toHaveBeenCalledWith('test');
+      });
+
+      userEvent.click(getByRole('textbox'));
+
+      await waitFor(() => {
+        expect(getByText('No results found')).toBeVisible();
+      });
+    });
   });
 
   describe('getLastUpdate', () => {

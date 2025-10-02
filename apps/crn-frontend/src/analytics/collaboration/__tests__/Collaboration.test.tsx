@@ -1,6 +1,7 @@
 import {
   AlgoliaSearchClient,
   AnalyticsSearchOptionsWithFiltering,
+  EMPTY_ALGOLIA_FACET_HITS,
 } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
@@ -223,6 +224,14 @@ beforeEach(() => {
   const mockOpensearchClient = {
     request: jest.fn(),
   };
+
+  mockSearchForTagValues.mockResolvedValue({
+    ...EMPTY_ALGOLIA_FACET_HITS,
+    facetHits: [
+      { value: 'tag1', highlighted: 'tag1', count: 1 },
+      { value: 'tag2', highlighted: 'tag2', count: 1 },
+    ],
+  });
 
   mockUseAnalyticsAlgolia.mockReturnValue({
     client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,

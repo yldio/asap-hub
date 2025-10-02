@@ -1,4 +1,8 @@
-import { AlgoliaSearchClient, EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  EMPTY_ALGOLIA_FACET_HITS,
+  EMPTY_ALGOLIA_RESPONSE,
+} from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { disable, enable, Flag } from '@asap-hub/flags';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
@@ -142,6 +146,13 @@ beforeEach(() => {
     client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
   });
   mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
+  mockSearchForTagValues.mockResolvedValue({
+    ...EMPTY_ALGOLIA_FACET_HITS,
+    facetHits: [
+      { value: 'tag1', highlighted: 'tag1', count: 1 },
+      { value: 'tag2', highlighted: 'tag2', count: 1 },
+    ],
+  });
   mockGetEngagement.mockResolvedValue(data);
   mockGetMeetingRepAttendance.mockResolvedValue({ items: [], total: 0 });
   const metric = {
@@ -294,14 +305,14 @@ describe('Engagement', () => {
       const searchBox = getSearchBox();
 
       userEvent.type(searchBox, 'test123');
-      expect(searchBox.value).toEqual('test123');
-      await waitFor(() =>
+      await waitFor(() => {
+        expect(searchBox.value).toEqual('test123');
         expect(mockSearchForTagValues).toHaveBeenCalledWith(
           ['engagement'],
           'test123',
           {},
-        ),
-      );
+        );
+      });
     });
   });
 

@@ -83,10 +83,20 @@ beforeEach(() => {
     search: mockOSChampionSearch,
   };
 
+  mockSearchForTagValues.mockResolvedValue({
+    ...EMPTY_ALGOLIA_FACET_HITS,
+    facetHits: [
+      { value: 'Alessi', highlighted: 'Alessi', count: 1 },
+      { value: 'tag2', highlighted: 'tag2', count: 1 },
+    ],
+  });
+
   mockUseAnalyticsAlgolia.mockReturnValue({
     client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
   });
   mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
+
+  mockGetTagSuggestions.mockResolvedValue(['Alessi', 'tag2']);
 
   mockUseAnalyticsOpensearch.mockReturnValue({
     client:
@@ -231,6 +241,9 @@ describe('search', () => {
       const searchBox = getSearchBox();
 
       userEvent.click(searchBox);
+      await waitFor(() => {
+        expect(screen.getByText('Alessi')).toBeInTheDocument();
+      });
       userEvent.click(screen.getByText('Alessi'));
       await waitFor(() =>
         expect(mockSearch).toHaveBeenCalledWith(
@@ -262,6 +275,9 @@ describe('search', () => {
       const searchBox = getSearchBox();
 
       userEvent.click(searchBox);
+      await waitFor(() => {
+        expect(screen.getByText('Alessi')).toBeInTheDocument();
+      });
       userEvent.click(screen.getByText('Alessi'));
       await waitFor(() =>
         expect(mockOSChampionSearch).toHaveBeenCalledWith(

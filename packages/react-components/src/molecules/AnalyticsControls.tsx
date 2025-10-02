@@ -220,9 +220,8 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   const debouncedLoadTags = useCallback(
     (inputValue: string) =>
       new Promise<Array<{ label: string; value: string }>>((resolve) => {
-        debouncedFetch(inputValue, resolve)?.catch(() => {
-          resolve([]);
-        });
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        debouncedFetch(inputValue, resolve);
       }),
     [debouncedFetch],
   );

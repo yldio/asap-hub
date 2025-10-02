@@ -249,6 +249,10 @@ describe('transformResearchOutputResponseToRequest', () => {
         ? researchOutputResponse.statusChangedBy.id
         : undefined,
       isInReview: true,
+      impact: researchOutputResponse.impact?.id,
+      categories: researchOutputResponse.categories?.map(
+        (category) => category.id,
+      ),
     });
   });
 });

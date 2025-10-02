@@ -1,4 +1,4 @@
-import { FC, useCallback, useRef } from 'react';
+import { FC, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { analytics } from '@asap-hub/routing';
 import { AnalyticsOpenSciencePageBody } from '@asap-hub/react-components';
@@ -28,22 +28,21 @@ const OpenScience: FC<Record<string, never>> = () => {
 
   const { timeRange } = useAnalytics();
   const { tags, setTags } = useSearch();
-  const osClient = useAnalyticsOpensearch<OSChampionOpensearchResponse>(metric);
+  const osChampionClient =
+    useAnalyticsOpensearch<OSChampionOpensearchResponse>(metric);
 
   // TODO: Implement export functionality for Open Science metrics
   const exportResults = () => Promise.resolve();
 
-  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-
   const loadTags = useCallback(
     async (tagQuery: string) => {
-      const response = await osClient.client.getTagSuggestions(
+      const response = await osChampionClient.client.getTagSuggestions(
         tagQuery,
         'teams',
       );
       return response.map((value) => ({ label: value, value }));
     },
-    [osClient.client],
+    [osChampionClient.client],
   );
 
   return (

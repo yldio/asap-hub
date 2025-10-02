@@ -2,11 +2,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { Label, Paragraph, TextField } from '../atoms';
 import { lead } from '../colors';
-import { perRem } from '../pixels';
-
-const containerStyles = css({
-  paddingBottom: `${18 / perRem}em`,
-});
+import { rem } from '../pixels';
 
 const descriptionStyles = css({
   color: lead.rgb,
@@ -16,7 +12,7 @@ const hintStyles = css({
   ':empty': {
     display: 'none',
   },
-  paddingTop: `${6 / perRem}em`,
+  paddingTop: rem(6),
 
   color: lead.rgb,
 });
@@ -28,11 +24,10 @@ type LabeledTextFieldProps = {
   readonly hint?: React.ReactNode;
   readonly overrideStyles?: SerializedStyles;
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-  readonly noPadding?: boolean;
 } & Exclude<ComponentProps<typeof TextField>, 'id'>;
 
 const subtitleStyles = css({
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
 });
 
 const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
@@ -41,14 +36,11 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   description,
   hint,
   overrideStyles,
-  noPadding = false,
   ...textFieldProps
 }) => (
-  <div
-    css={[containerStyles, overrideStyles, noPadding && { paddingBottom: 0 }]}
-  >
+  <div>
     <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
-      <Paragraph>
+      <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span>
         <br />

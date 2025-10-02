@@ -1,14 +1,8 @@
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { analytics } from '@asap-hub/routing';
-import { colors, noop } from '..';
-import {
-  Dropdown,
-  Headline3,
-  MultiSelect,
-  Paragraph,
-  Subtitle,
-} from '../atoms';
+import { colors } from '..';
+import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { rem } from '../pixels';
 
@@ -32,7 +26,9 @@ type OpenScienceAnalyticsProps = Pick<
 > & {
   children: React.ReactNode;
   tags: string[];
-  loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
+  loadTags?: (
+    tagsQuery: string,
+  ) => Promise<Array<{ label: string; value: string }>>;
   setTags: (tags: string[]) => void;
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
@@ -51,7 +47,7 @@ const AnalyticsOpenSciencePageBody: React.FC<OpenScienceAnalyticsProps> = ({
   children,
   tags,
   setTags,
-  loadTags = noop,
+  loadTags = async () => [],
   metric,
   setMetric,
   exportResults,

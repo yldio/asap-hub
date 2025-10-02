@@ -28,21 +28,22 @@ const OpenScience: FC<Record<string, never>> = () => {
 
   const { timeRange } = useAnalytics();
   const { tags, setTags } = useSearch();
-  const osChampionClient =
-    useAnalyticsOpensearch<OSChampionOpensearchResponse>(metric);
+  const osPreprintClient = useAnalyticsOpensearch<OSChampionOpensearchResponse>(
+    'preprint-compliance',
+  );
 
   // TODO: Implement export functionality for Open Science metrics
   const exportResults = () => Promise.resolve();
 
   const loadTags = useCallback(
     async (tagQuery: string) => {
-      const response = await osChampionClient.client.getTagSuggestions(
+      const response = await osPreprintClient.client.getTagSuggestions(
         tagQuery,
         'teams',
       );
       return response.map((value) => ({ label: value, value }));
     },
-    [osChampionClient.client],
+    [osPreprintClient.client],
   );
 
   return (

@@ -154,7 +154,7 @@ describe('AnalyticsControls', () => {
 
       userEvent.click(getByRole('textbox'));
 
-      // ahouls ahoq test-user
+      // shouls show test-user
       await waitFor(() => {
         expect(getByText('Test User')).toBeVisible();
       });

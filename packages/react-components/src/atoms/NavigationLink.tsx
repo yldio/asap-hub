@@ -7,7 +7,7 @@ import {
   largeDesktopScreen,
   lineHeight,
   mobileScreen,
-  perRem,
+  rem,
   vminLinearCalc,
 } from '../pixels';
 import { useHasRouter } from '../routing';
@@ -17,8 +17,8 @@ const activeClassName = 'active-link';
 
 const styles = css({
   display: 'block',
-  paddingLeft: `${12 / perRem}em`,
-  paddingRight: `${12 / perRem}em`,
+  paddingLeft: rem(12),
+  paddingRight: rem(12),
   paddingTop: vminLinearCalc(
     mobileScreen,
     12 + 1,
@@ -40,7 +40,7 @@ const styles = css({
   },
   textDecoration: 'none',
   outline: 'none',
-  borderRadius: `${6 / perRem}em`,
+  borderRadius: rem(6),
   transition: 'background-color 100ms ease-in-out, color 100ms ease-in-out',
   ':hover, :focus': {
     backgroundColor: silver.rgb,
@@ -54,9 +54,9 @@ const textStyles = css({
 });
 const iconStyles = css({
   display: 'inline-block',
-  width: `${lineHeight / perRem}em`,
-  height: `${lineHeight / perRem}em`,
-  paddingRight: `${14 / perRem}em`,
+  width: rem(lineHeight),
+  height: rem(lineHeight),
+  paddingRight: rem(14),
 });
 
 const disableStyles = css({

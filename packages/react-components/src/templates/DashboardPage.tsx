@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
 
-import { perRem, rem } from '../pixels';
+import { rem } from '../pixels';
 import { Display } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const mainStyles = css({
-  padding: `${48 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: `${rem(48)} ${contentSidePaddingWithNavigation(8)}`,
 });
 
 const headerStyles = css({

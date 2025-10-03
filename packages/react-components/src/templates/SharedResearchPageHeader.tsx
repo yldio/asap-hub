@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
 import { Display, Paragraph } from '../atoms';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { noop } from '../utils';
@@ -9,10 +9,8 @@ import ResearchOutputsSearch from './ResearchOutputsSearch';
 import { SharedOutputDropdown } from '../organisms';
 
 const visualHeaderStyles = css({
-  marginBottom: `${30 / perRem}em`,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-    48 / perRem
-  }em `,
+  marginBottom: rem(30),
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} ${rem(48)} `,
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
@@ -23,8 +21,8 @@ const controlsStyles = css({
 
 const textStyles = css({
   display: 'grid',
-  columnGap: `${39 / perRem}em`,
-  rowGap: `${9 / perRem}em`,
+  columnGap: rem(39),
+  rowGap: rem(9),
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     gridTemplateColumns: `minmax(auto, ${rem(610)}) auto`,
   },

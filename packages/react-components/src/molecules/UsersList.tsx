@@ -6,7 +6,7 @@ import { isExternalUser } from '@asap-hub/validation';
 
 import { Avatar, Link } from '../atoms';
 import { ImageLink } from '.';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { alumniBadgeIcon, userPlaceholderIcon } from '../icons';
 import { lead } from '../colors';
 
@@ -27,9 +27,9 @@ const listStyles = css({
   color: lead.rgb,
 });
 const itemStyles = css({
-  paddingBottom: `${12 / perRem}em`,
+  paddingBottom: rem(12),
   '&:not(:last-of-type)': {
-    paddingRight: `${24 / perRem}em`,
+    paddingRight: rem(24),
   },
 
   overflow: 'hidden',
@@ -38,7 +38,7 @@ const userStyles = css({
   overflow: 'hidden',
   display: 'grid',
   gridTemplateColumns: 'min-content 1fr min-content',
-  gridColumnGap: `${9 / perRem}em`,
+  gridColumnGap: rem(9),
   alignItems: 'center',
 });
 const nameStyles = css({

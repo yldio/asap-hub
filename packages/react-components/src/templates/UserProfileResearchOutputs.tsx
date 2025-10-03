@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { SharedResearchList } from '.';
 import {
-  perRem,
+  rem,
   vminLinearCalc,
   mobileScreen,
   largeDesktopScreen,
@@ -12,7 +12,7 @@ import {
 import NoOutputsPage from './NoOutputsPage';
 
 const styles = css({
-  padding: `${24 / perRem}em calc(${36 / perRem}em + ${vminLinearCalc(
+  padding: `${rem(24)} calc(${rem(36)} + ${vminLinearCalc(
     mobileScreen,
     24,
     largeDesktopScreen,
@@ -20,7 +20,7 @@ const styles = css({
     'px',
   )})`,
   [`@media (max-width: ${tabletScreen.max}px)`]: {
-    padding: `${24 / perRem}em 0`,
+    padding: `${rem(24)} 0`,
   },
 });
 

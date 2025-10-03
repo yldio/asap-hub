@@ -42,7 +42,7 @@ const outputFilters: ReadonlyArray<Option<gp2Model.EntityType> | Title> = [
 const styles = css({
   display: 'grid',
   gridTemplateColumns: 'auto min-content',
-  gridColumnGap: `${18 / pixels.perRem}em`,
+  gridColumnGap: pixels.rem(18),
   alignItems: 'end',
 });
 
@@ -50,8 +50,8 @@ const TagSearchPageList: React.FC<TagSearchPageListProps> = ({
   children,
   filters,
   onChangeFilter,
-  onChangeSearch,
-  searchQuery,
+  // onChangeSearch,
+  // searchQuery,
   tags = [],
   loadTags = noop,
   setTags = noop,

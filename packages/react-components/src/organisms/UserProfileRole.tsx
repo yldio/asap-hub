@@ -4,7 +4,7 @@ import { UserResponse } from '@asap-hub/model';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Card, Headline2, Headline3 } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
 
 type UserProfileRoleProps = Pick<
@@ -13,7 +13,7 @@ type UserProfileRoleProps = Pick<
 >;
 
 const detailsContentStyle = css({
-  marginBottom: `${24 / perRem}em`,
+  marginBottom: rem(24),
 });
 
 const textStyle = css({

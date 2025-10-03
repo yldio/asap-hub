@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 
 import { noop } from '../utils';
 import { menuIcon, crossIcon } from '../icons';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const buttonResetStyles = css({
   margin: 0,
@@ -19,7 +19,7 @@ const styles = css({
 });
 
 const iconStyles = css({
-  width: `${30 / perRem}em`,
+  width: rem(30),
   display: 'flex',
   justifyContent: 'center',
 });

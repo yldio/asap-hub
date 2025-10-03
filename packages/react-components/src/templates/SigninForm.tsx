@@ -8,11 +8,11 @@ import {
   largeDesktopScreen,
   vminLinearCalc,
   formTargetWidth,
-  perRem,
+  rem,
 } from '../pixels';
 
 const styles = css({
-  width: `${formTargetWidth / perRem}em`,
+  width: rem(formTargetWidth),
   maxWidth: '100%',
   display: 'grid',
   gridGap: vminLinearCalc(mobileScreen, 12, largeDesktopScreen, 24, 'px'),

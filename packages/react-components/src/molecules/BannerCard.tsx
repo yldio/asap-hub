@@ -5,7 +5,7 @@ import {
   ceruleanFernGradientStyles,
   magentaCeruleanGradientStyles,
 } from '../appearance';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { paper } from '../colors';
 import { paddingStyles, borderRadius } from '../card';
 import { Card } from '../atoms';
@@ -18,8 +18,8 @@ const gradientStyles: Record<BannerCardProps['type'], CSSObject> = {
 const bannerStyles = css({
   borderTopLeftRadius: borderRadius,
   borderTopRightRadius: borderRadius,
-  height: `${36 / perRem}em`,
-  padding: `${24 / perRem}em 0`,
+  height: rem(36),
+  padding: `${rem(24)} 0`,
 
   display: 'flex',
   flexDirection: 'column',
@@ -29,8 +29,8 @@ const bannerStyles = css({
 });
 
 const contentStyles = css({
-  paddingTop: `${24 / perRem}em`,
-  paddingBottom: `${24 / perRem}em`,
+  paddingTop: rem(24),
+  paddingBottom: rem(24),
 
   textAlign: 'center',
 });

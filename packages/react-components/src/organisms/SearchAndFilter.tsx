@@ -2,7 +2,7 @@ import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
 import { SearchField } from '../molecules';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { noop } from '../utils';
 import { Filter } from '.';
 import { Option } from '../select';
@@ -11,7 +11,7 @@ import { Title } from './CheckboxGroup';
 const styles = css({
   display: 'grid',
   gridTemplateColumns: 'auto min-content',
-  gridColumnGap: `${18 / perRem}em`,
+  gridColumnGap: rem(18),
   alignItems: 'center',
 });
 

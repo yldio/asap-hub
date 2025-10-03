@@ -21,11 +21,11 @@ import { createMailTo, mailToSupport } from '../mail';
 import { EligibilityModal, ToolCard } from '../organisms';
 import DiscussionCard from '../organisms/DiscussionCard';
 import ManuscriptCard from '../organisms/ManuscriptCard';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 
 const containerStyles = css({
   display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
+  gridRowGap: rem(36),
 });
 const newToolStyles = css({
   gridArea: 'contact',
@@ -56,10 +56,10 @@ const manuscriptButtonStyles = css({
 const toolContainerStyles = css({
   listStyle: 'none',
   margin: 0,
-  padding: `${24 / perRem}em 0`,
+  padding: `${rem(24)} 0`,
 
   display: 'grid',
-  gridRowGap: `${24 / perRem}em`,
+  gridRowGap: rem(24),
 });
 
 const complianceCardContainerStyles = css({

@@ -11,25 +11,25 @@ import {
 } from '../molecules';
 import { formatDate } from '../date';
 import { SharedResearchMetadata } from '.';
-import { perRem, rem } from '../pixels';
+import { rem } from '../pixels';
 
 const associationStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
-  columnGap: `${24 / perRem}em`,
-  rowGap: `${12 / perRem}em`,
+  columnGap: rem(24),
+  rowGap: rem(12),
 });
 
 const titleStyles = css({
   display: 'flex',
-  columnGap: `${15 / perRem}em`,
+  columnGap: rem(15),
   flexWrap: 'wrap',
-  marginBottom: `${12 / perRem}em`,
+  marginBottom: rem(12),
 });
 
 const tagContainerStyles = css({
-  marginTop: `${24 / perRem}em`,
-  marginBottom: `${12 / perRem}em`,
+  marginTop: rem(24),
+  marginBottom: rem(12),
 });
 
 type SharedResearchCardProps = Pick<

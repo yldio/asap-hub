@@ -4,7 +4,7 @@ import { events as eventsRoute } from '@asap-hub/routing';
 
 import { Card, Link, MaterialAvailability } from '../atoms';
 import { charcoal, lead, steel } from '../colors';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { formatDateToTimezone } from '../date';
 
 const container = css({
@@ -18,13 +18,13 @@ const gridTitleStyles = css({
     display: 'inherit',
     borderBottom: 0,
     marginBottom: 0,
-    paddingBottom: `${15 / perRem}em`,
+    paddingBottom: rem(15),
   },
 });
 
 const rowTitleStyles = css({
-  paddingTop: `${33 / perRem}em`,
-  paddingBottom: `${15 / perRem}em`,
+  paddingTop: rem(33),
+  paddingBottom: rem(15),
   ':first-of-type': { paddingTop: 0 },
   [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
@@ -32,8 +32,8 @@ const rowTitleStyles = css({
 const rowStyles = css({
   display: 'grid',
   borderBottom: `1px solid ${steel.rgb}`,
-  paddingBottom: `${21 / perRem}em`,
-  marginBottom: `${21 / perRem}em`,
+  paddingBottom: rem(21),
+  marginBottom: rem(21),
   ':last-child': {
     borderBottom: 'none',
     marginBottom: 0,
@@ -41,7 +41,7 @@ const rowStyles = css({
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '3fr 2fr 2fr',
-    columnGap: `${15 / perRem}em`,
+    columnGap: rem(15),
   },
 });
 

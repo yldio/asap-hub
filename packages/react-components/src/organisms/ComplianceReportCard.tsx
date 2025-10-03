@@ -17,22 +17,22 @@ import {
 } from '..';
 import { paddingStyles } from '../card';
 import UserTeamInfo from '../molecules/UserTeamInfo';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import { getTeams, getUserHref } from '../utils';
 
 export type ComplianceReportCardProps =
   ComplianceReportResponse['complianceReport'];
 
 const toastStyles = css({
-  padding: `${24 / perRem}em ${15 / perRem}em `,
+  padding: `${rem(24)} ${rem(15)} `,
   borderRadius: `${rem(8)} ${rem(8)} 0 0`,
 });
 
 const iconStyles = css({
   display: 'inline-block',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
-  paddingRight: `${12 / perRem}em`,
+  width: rem(24),
+  height: rem(24),
+  paddingRight: rem(12),
 });
 
 const toastHeaderStyles = css({
@@ -45,7 +45,7 @@ const toastHeaderStyles = css({
 });
 
 const toastContentStyles = css({
-  paddingLeft: `${60 / perRem}em`,
+  paddingLeft: rem(60),
   paddingTop: 0,
   marginTop: rem(-9),
 });

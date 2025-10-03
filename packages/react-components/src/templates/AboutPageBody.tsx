@@ -3,14 +3,14 @@ import { DiscoverResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { HelpSection, RichText, TeamMembersSection } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { Card, Link } from '../atoms';
 import { ExternalLinkIcon } from '../icons';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${33 / perRem}em`,
-  paddingBottom: `${57 / perRem}em`,
+  gridRowGap: rem(33),
+  paddingBottom: rem(57),
 });
 
 type AboutPageBodyProps = Pick<

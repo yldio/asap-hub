@@ -13,7 +13,7 @@ import Creatable from 'react-select/creatable';
 import { useValidation, validationMessageStyles } from '../form';
 import { dropdownChevronIcon } from '../icons';
 import { loadingImage } from '../images';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { reactSelectStyles } from '../select';
 import { noop } from '../utils';
 
@@ -26,8 +26,8 @@ const LoadingIndicator: FC = () => (
   <div
     css={{
       display: 'flex',
-      width: `${24 / perRem}em`,
-      height: `${24 / perRem}em`,
+      width: rem(24),
+      height: rem(24),
       backgroundImage: `url(${loadingImage})`,
       backgroundSize: 'cover',
     }}

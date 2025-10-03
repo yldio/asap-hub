@@ -5,7 +5,7 @@ import { WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { useContext } from 'react';
 
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import {
   Link,
   Display,
@@ -48,10 +48,10 @@ const titleStyle = css({
   flexFlow: 'column',
   gap: rem(3),
   alignItems: 'flex-start',
-  paddingBottom: `${12 / perRem}em`,
+  paddingBottom: rem(12),
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     flexFlow: 'row',
-    gap: `${15 / perRem}em`,
+    gap: rem(15),
     alignItems: 'center',
   },
 });
@@ -63,14 +63,14 @@ const rowStyles = css({
     flexFlow: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    gap: `${16 / perRem}em`,
+    gap: rem(16),
   },
 });
 
 const toolsStyles = css({
   display: 'flex',
   flexFlow: 'column',
-  gap: `${12 / perRem}em`,
+  gap: rem(12),
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     flexFlow: 'row',
     justifyContent: 'space-between',
@@ -94,7 +94,7 @@ const contactSectionStyles = css({
   alignItems: 'center',
 
   display: 'grid',
-  gridColumnGap: `${16 / perRem}em`,
+  gridColumnGap: rem(16),
 
   grid: `
     "members" auto
@@ -114,8 +114,8 @@ const contactSectionStyles = css({
 const pointOfContactStyles = css({
   gridArea: 'contact',
   display: 'flex',
-  gap: `${8 / perRem}em`,
-  margin: `${12 / perRem}em 0`,
+  gap: rem(8),
+  margin: `${rem(12)} 0`,
 });
 
 const createStyles = css({
@@ -128,7 +128,7 @@ const createStyles = css({
 
 const dropdownButtonStyling = css({
   display: 'flex',
-  columnGap: `${9 / perRem}em`,
+  columnGap: rem(9),
   svg: {
     color: pine.rgb,
   },

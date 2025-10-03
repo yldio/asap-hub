@@ -5,7 +5,7 @@ import { Prompt } from 'react-router-dom';
 
 import { paddingStyles } from '../card';
 import { Modal, ModalEditHeader } from '../molecules';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { usePushFromHere } from '../routing';
 import { noop } from '../utils';
 import Toast from './Toast';
@@ -18,7 +18,7 @@ const styles = css({
   overflow: 'auto',
 });
 const bodyStyles = css(paddingStyles, {
-  paddingTop: `${12 / perRem}em`,
+  paddingTop: rem(12),
 
   overflowY: 'auto',
 });

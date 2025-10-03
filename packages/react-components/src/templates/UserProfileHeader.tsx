@@ -13,7 +13,6 @@ import { Toast } from '../organisms';
 import {
   largeDesktopScreen,
   mobileScreen,
-  perRem,
   rem,
   tabletScreen,
   vminLinearCalc,
@@ -25,36 +24,36 @@ const bigSizeQuery = `@media (min-width: ${tabletScreen.width}px)`;
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
-  padding: `${12 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  padding: `${rem(12)} ${contentSidePaddingWithNavigation(8)} 0`,
 
   display: 'grid',
   grid: `
-    ".             edit-personal-info" ${24 / perRem}em
+    ".             edit-personal-info" ${rem(24)}
     "personal-info personal-info     " auto
     "contact       edit-contact-info " auto
     "social        social            " auto
     "tab-nav       tab-nav           " auto
-      / 1fr ${36 / perRem}em
+      / 1fr ${rem(36)}
   `,
-  gridColumnGap: `${12 / perRem}em`,
+  gridColumnGap: rem(12),
 
   [middleSizeQuery]: {
     grid: `
-      ".             .             edit-personal-info" ${24 / perRem}em
+      ".             .             edit-personal-info" ${rem(24)}
       "personal-info personal-info personal-info     " auto
       "contact       social        edit-contact-info " auto
       "tab-nav       tab-nav       tab-nav           " auto
-        / max-content 1fr ${36 / perRem}em
+        / max-content 1fr ${rem(36)}
     `,
   },
 
   [bigSizeQuery]: {
-    paddingTop: `${36 / perRem}em`,
+    paddingTop: rem(36),
     grid: `
       "edit-personal-info personal-info personal-info ."
       "edit-contact-info  contact       social        ."
       ".                  tab-nav       tab-nav       ."
-        / ${36 / perRem}em max-content 1fr ${36 / perRem}em
+        / ${rem(36)} max-content 1fr ${rem(36)}
     `,
     gridColumnGap: vminLinearCalc(
       mobileScreen,
@@ -69,11 +68,11 @@ const containerStyles = css({
 const nameHeaderStyles = css({
   display: 'flex',
   alignItems: 'center',
-  gap: `${6 / perRem}em`,
+  gap: rem(6),
   [`@media (max-width: ${tabletScreen.max}px)`]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    marginBottom: `${24 / perRem}em`,
+    marginBottom: rem(24),
   },
 });
 
@@ -131,7 +130,7 @@ const avatarContainer = css({
   display: 'grid',
   width: 90,
   height: 90,
-  paddingBottom: `${12 / perRem}em`,
+  paddingBottom: rem(12),
 });
 const imageContainer = css({ gridRow: 1, gridColumn: 1 });
 const editButtonContainer = css({

@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { css, Theme } from '@emotion/react';
 
 import { layoutStyles } from '../text';
-import { perRem, rem } from '../pixels';
+import { rem } from '../pixels';
 import { fern, lead, charcoal } from '../colors';
 import { useHasRouter } from '../routing';
 import IconProps from '../icons/props';
@@ -31,7 +31,7 @@ const activeStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
 const iconStyles = css({
   display: 'inline-grid',
   verticalAlign: 'middle',
-  paddingRight: `${6 / perRem}em`,
+  paddingRight: rem(6),
 });
 
 interface TabLinkProps {

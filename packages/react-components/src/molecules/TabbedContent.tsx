@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { ReactNode, useEffect, useState } from 'react';
 import { Headline3, TabButton, Button } from '../atoms';
 import { steel } from '../colors';
-import { perRem, rem } from '../pixels';
+import { rem } from '../pixels';
 import { TabNav } from '.';
 
 const paddingStyles = css({
@@ -19,8 +19,8 @@ const headerStyles = css({
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  paddingTop: `${16 / perRem}em`,
-  paddingBottom: `${16 / perRem}em`,
+  paddingTop: rem(16),
+  paddingBottom: rem(16),
   borderTop: `1px solid ${steel.rgb}`,
 });
 

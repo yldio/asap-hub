@@ -106,11 +106,9 @@ const mainStyles = css({
 const contentStyles = css({
   display: 'grid',
   gridTemplateColumns: '1fr',
-  width: '100%',
   maxWidth: rem(800),
   justifyContent: 'center',
-  gridAutoFlow: 'row',
-  rowGap: rem(36),
+  rowGap: rem(32),
 });
 
 const buttonsOuterContainerStyles = css({
@@ -262,10 +260,6 @@ const setDefaultFieldValues = (fieldsList: OptionalVersionFields) => {
 
   return fieldDefaultValueMap;
 };
-
-const FixMarginWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div css={{ marginTop: rem(18), marginBottom: rem(18) }}>{children}</div>
-);
 
 type ManuscriptFormProps = Omit<
   ManuscriptVersion,
@@ -1010,19 +1004,17 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 field: { value, onChange, onBlur },
                 fieldState: { error },
               }) => (
-                <FixMarginWrapper>
-                  <LabeledTextField
-                    title="URL"
-                    subtitle={isURLRequired ? '(required)' : '(optional)'}
-                    value={value ?? ''}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    enabled={!isSubmitting}
-                    customValidationMessage={error?.message}
-                    labelIndicator={<GlobeIcon />}
-                    placeholder="https://example.com"
-                  />
-                </FixMarginWrapper>
+                <LabeledTextField
+                  title="URL"
+                  subtitle={isURLRequired ? '(required)' : '(optional)'}
+                  value={value ?? ''}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  enabled={!isSubmitting}
+                  customValidationMessage={error?.message}
+                  labelIndicator={<GlobeIcon />}
+                  placeholder="https://example.com"
+                />
               )}
             />
             <Controller

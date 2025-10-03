@@ -26,9 +26,9 @@ const optionListStyles = css({
   marginTop: rem(16),
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr',
+  rowGap: rem(16),
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     gridTemplateColumns: '1fr',
-    rowGap: rem(16),
   },
 });
 

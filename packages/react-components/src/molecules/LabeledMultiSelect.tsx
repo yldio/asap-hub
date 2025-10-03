@@ -37,7 +37,11 @@ const LabeledMultiSelect = <
   ...multiSelectProps
 }: LabeledMultiSelectProps<T, M>): ReactElement => (
   <div>
-    <Label forContent={(id) => <MultiSelect {...multiSelectProps} id={id} />}>
+    <Label
+      forContent={(id) => (
+        <MultiSelect noMargin {...multiSelectProps} id={id} />
+      )}
+    >
       <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span>

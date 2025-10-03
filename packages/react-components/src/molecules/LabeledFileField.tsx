@@ -8,10 +8,6 @@ import { plusIcon } from '../icons';
 import { rem } from '../pixels';
 import loading from '../lotties/loading.json';
 
-const buttonContainerStyles = css({
-  display: 'block',
-});
-
 const descriptionStyles = css({
   color: lead.rgb,
 });
@@ -35,14 +31,20 @@ const iconStyles = css({
 });
 
 const uploadedButtonTagStyles = css({
-  display: 'inline-block',
-  paddingBottom: rem(15),
+  display: 'flex',
 });
 
 const fileSelectionContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
+  gap: rem(16),
+});
+
+const currentFilesContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(8),
 });
 
 type FileUploadResponse = { id: string; url: string; filename: string };
@@ -114,48 +116,49 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
           <>
             <div style={{ width: '100%' }} />
             <div css={fileSelectionContainerStyles}>
-              {currentFiles &&
-                currentFiles.map((file) => (
-                  <div css={uploadedButtonTagStyles} key={file.id}>
-                    <Tag
-                      onRemove={() => handleRemove(file.id)}
-                      enabled={tagEnabled}
-                    >
-                      {file.filename}
-                    </Tag>
-                  </div>
-                ))}
-              <div css={buttonContainerStyles}>
-                <Button
-                  submit={false}
-                  primary
-                  small
-                  enabled={!!enabled && canUploadFile}
-                  noMargin
-                  id={id}
-                  preventDefault={false}
-                  onClick={() => canUploadFile && fileInputRef.current?.click()}
-                >
-                  {isSubmitting ? (
-                    <Lottie
-                      options={{
-                        loop: true,
-                        autoplay: true,
-                        animationData: loading,
-                        rendererSettings: {
-                          preserveAspectRatio: 'xMidYMid slice',
-                        },
-                      }}
-                      height={24}
-                      width={24}
-                      style={{ marginRight: '8px' }}
-                    />
-                  ) : (
-                    <div css={iconStyles}>{plusIcon}</div>
-                  )}
-                  Add File
-                </Button>
-              </div>
+              {currentFiles && (
+                <div css={currentFilesContainerStyles}>
+                  {currentFiles.map((file) => (
+                    <div css={uploadedButtonTagStyles} key={file.id}>
+                      <Tag
+                        onRemove={() => handleRemove(file.id)}
+                        enabled={tagEnabled}
+                      >
+                        {file.filename}
+                      </Tag>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <Button
+                submit={false}
+                primary
+                small
+                enabled={!!enabled && canUploadFile}
+                noMargin
+                id={id}
+                preventDefault={false}
+                onClick={() => canUploadFile && fileInputRef.current?.click()}
+              >
+                {isSubmitting ? (
+                  <Lottie
+                    options={{
+                      loop: true,
+                      autoplay: true,
+                      animationData: loading,
+                      rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice',
+                      },
+                    }}
+                    height={24}
+                    width={24}
+                    style={{ marginRight: '8px' }}
+                  />
+                ) : (
+                  <div css={iconStyles}>{plusIcon}</div>
+                )}
+                Add File
+              </Button>
             </div>
           </>
         )}

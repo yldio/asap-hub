@@ -207,6 +207,47 @@ export const LoadingContentBody: React.FC = () => (
   </div>
 );
 
+const contentBodyContainerStylesTable = css({
+  display: `flex`,
+  boxSizing: 'border-box',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: rem(12),
+  width: '100%',
+});
+
+const bodyDescriptionStylesTable = (width: string) => [
+  css({
+    width,
+    height: rem(238),
+    backgroundColor: neutral300.rgb,
+    borderRadius: rem(4),
+    alignSelf: 'center',
+  }),
+  animation(width, rem(238)),
+];
+
+const tableHeaderAndFooterStyles = [
+  css({
+    width: '100%',
+    height: rem(32),
+    backgroundColor: neutral300.rgb,
+    marginBottom: rem(16),
+    marginTop: rem(16),
+    borderRadius: rem(4),
+    alignSelf: 'center',
+  }),
+  animation('100%', rem(32)),
+];
+
+export const LoadingContentBodyTable: React.FC = () => (
+  <div css={contentBodyContainerStylesTable}>
+    <div css={tableHeaderAndFooterStyles} />
+    <div css={bodyDescriptionStylesTable('100%')} />
+    <div css={tableHeaderAndFooterStyles} />
+  </div>
+);
+
 const LoadingLayout: React.FC<Record<string, never>> = () => (
   <article css={styles}>
     <div css={headerStyles}>

@@ -693,20 +693,20 @@ export type PublicationComplianceDataObject = {
   isTeamInactive: boolean;
   overallCompliance: number;
   ranking: string;
-  datasetsPercentage: number;
+  datasetsPercentage: number | null;
   datasetsRanking: string;
-  protocolsPercentage: number;
+  protocolsPercentage: number | null;
   protocolsRanking: string;
-  codePercentage: number;
+  codePercentage: number | null;
   codeRanking: string;
-  labMaterialsPercentage: number;
+  labMaterialsPercentage: number | null;
   labMaterialsRanking: string;
-  numberOfPublications: number;
-  numberOfOutputs: number;
-  numberOfDatasets: number;
-  numberOfProtocols: number;
-  numberOfCode: number;
-  numberOfLabMaterials: number;
+  numberOfPublications: number | null;
+  numberOfOutputs: number | null;
+  numberOfDatasets: number | null;
+  numberOfProtocols: number | null;
+  numberOfCode: number | null;
+  numberOfLabMaterials: number | null;
   timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };
 
@@ -719,21 +719,33 @@ export type PreprintComplianceDataObject = {
   isTeamInactive: boolean;
   numberOfPreprints: number;
   numberOfPublications: number;
-  postedPriorPercentage: number;
+  postedPriorPercentage: number | null;
   ranking: string;
   timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };
 
 export type ListPublicationComplianceDataObject =
   ListResponse<PublicationComplianceDataObject>;
+export type PublicationComplianceOpensearchResponse =
+  PublicationComplianceDataObject & {
+    objectID: string;
+  };
+export type ListPublicationComplianceOpensearchResponse =
+  ListResponse<PublicationComplianceOpensearchResponse>;
 export type ListPublicationComplianceResponse =
   ListResponse<PublicationComplianceResponse>;
 
 export type ListPreprintComplianceDataObject =
   ListResponse<PreprintComplianceDataObject>;
 export type PreprintComplianceResponse = PreprintComplianceDataObject;
+export type PreprintComplianceOpensearchResponse =
+  PreprintComplianceResponse & {
+    objectID: string;
+  };
 export type ListPreprintComplianceResponse =
   ListResponse<PreprintComplianceResponse>;
+export type ListPreprintComplianceOpensearchResponse =
+  ListResponse<PreprintComplianceOpensearchResponse>;
 
 export type SortPreprintCompliance =
   | 'team_asc'

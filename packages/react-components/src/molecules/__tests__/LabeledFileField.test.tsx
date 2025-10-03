@@ -6,7 +6,6 @@ import { LabeledFileField } from '../..';
 const handleFileUploadMock: jest.MockedFunction<
   ComponentProps<typeof LabeledFileField>['handleFileUpload']
 > = jest.fn();
-jest.mock('react-lottie', () => () => <div data-testid="lottie-mock" />);
 
 beforeEach(() => {
   jest.resetAllMocks();

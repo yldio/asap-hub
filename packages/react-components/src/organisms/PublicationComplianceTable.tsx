@@ -240,7 +240,7 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                     <span css={valueStyles}>
                       {row.numberOfPublications === null
                         ? 'N/A'
-                        : `${row.numberOfPublications}%`}
+                        : row.numberOfPublications}
                     </span>
                     {getPerformanceMoodIcon(row.numberOfPublications ?? 0)}
                   </p>

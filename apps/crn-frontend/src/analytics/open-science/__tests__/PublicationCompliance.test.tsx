@@ -1,13 +1,13 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { ListPublicationComplianceOpensearchResponse } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import {
-  RecoilRoot,
-  useRecoilState,
   DefaultValue,
+  RecoilRoot,
   SetterOrUpdater,
+  useRecoilState,
 } from 'recoil';
-import { ListPublicationComplianceOpensearchResponse } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import PublicationCompliance from '../PublicationCompliance';

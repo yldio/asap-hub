@@ -2,19 +2,22 @@ import { css } from '@emotion/react';
 import Lottie from 'react-lottie';
 import { Paragraph } from '../atoms';
 import loading from '../lotties/loading.json';
+import { rem } from '../pixels';
 
 const loadingContainerStyles = css({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  minHeight: '400px',
-  gap: '12px',
+  minHeight: 400,
+  gap: rem(12),
 });
+
+const lottieWrapStyles = css({ width: rem(24), height: rem(24) });
 
 const Loading: React.FC<Record<string, never>> = () => (
   <div css={[loadingContainerStyles]}>
-    <div css={css({ width: 24, height: 24 })}>
+    <div css={lottieWrapStyles}>
       <Lottie
         options={{
           loop: true,

@@ -3,9 +3,9 @@ import {
   PublicationComplianceTable,
   LoadingContentBodyTable,
 } from '@asap-hub/react-components';
+import { LimitedTimeRangeOption } from '@asap-hub/model';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsPublicationCompliance } from './state';
-import { LimitedTimeRangeOption } from '@asap-hub/model';
 
 interface PublicationComplianceProps {
   tags: string[];

@@ -1,6 +1,6 @@
 /* eslint-disable jest/no-commented-out-tests */
 import { PublicationComplianceResponse } from '@asap-hub/model';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import PublicationComplianceTable from '../PublicationComplianceTable';
 

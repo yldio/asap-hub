@@ -5,18 +5,18 @@ import React, { ComponentProps } from 'react';
 import { Link, Paragraph } from '../atoms';
 import { InactiveBadgeIcon, TeamIcon } from '../icons';
 import { TabbedCard } from '../molecules';
-import { perRem, rem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
 
 const inactiveBadgeStyles = css({
-  lineHeight: `${18 / perRem}em`,
+  lineHeight: rem(18),
   verticalAlign: 'middle',
 });
 
 const listItemStyle = css({
   display: 'flex',
   flexFlow: 'row',
-  gap: `${9 / perRem}em`,
+  gap: rem(9),
 });
 
 const containerStyles = css({

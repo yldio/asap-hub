@@ -3,22 +3,22 @@ import { EventResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Card, Headline3, Paragraph, Link } from '../atoms';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { slackIcon } from '../icons';
 
-const BUTTON_SPACING = 12 / perRem;
+const BUTTON_SPACING = rem(12);
 const buttons = css({
   display: 'flex',
   flexFlow: 'wrap',
-  width: `calc(100% + ${BUTTON_SPACING}em)`,
+  width: `calc(100% + ${BUTTON_SPACING})`,
   listStyle: 'none',
-  margin: `${12 / perRem}em 0 0 0`,
+  margin: `${rem(12)} 0 0 0`,
   padding: 0,
 });
 
 const button = css({
   display: 'flex',
-  marginRight: `${BUTTON_SPACING}em`,
+  marginRight: BUTTON_SPACING,
   flexGrow: 1,
 
   [`@media (min-width: ${tabletScreen.min}px)`]: {

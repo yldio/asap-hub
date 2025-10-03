@@ -2,24 +2,24 @@ import { css } from '@emotion/react';
 import React from 'react';
 
 import { Pill } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const ROW_GAP_OFFSET = 12;
 const listStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
   alignItems: 'center',
-  columnGap: `${12 / perRem}em`,
+  columnGap: rem(12),
 
   listStyle: 'none',
   margin: 0,
-  marginTop: `${ROW_GAP_OFFSET / perRem}em`,
+  marginTop: rem(ROW_GAP_OFFSET),
   padding: 0,
 
   textTransform: 'capitalize',
 });
 const listItemStyles = css({
-  marginTop: `-${ROW_GAP_OFFSET / perRem}em`,
+  marginTop: `-${rem(ROW_GAP_OFFSET)}`,
 });
 
 interface PillListProps {

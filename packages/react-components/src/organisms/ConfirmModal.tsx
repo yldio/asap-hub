@@ -4,7 +4,7 @@ import useIsMounted from 'ismounted';
 
 import { Modal } from '../molecules';
 import { noop } from '../utils';
-import { mobileScreen, perRem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import { crossIcon } from '../icons';
 import { Button, Headline3, Link, Paragraph } from '../atoms';
 import { paddingStyles } from '../card';
@@ -27,7 +27,7 @@ const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
 
 const buttonContainerStyles = css({
   display: 'grid',
-  columnGap: `${30 / perRem}em`,
+  columnGap: rem(30),
   gridTemplateRows: 'max-content 12px max-content',
   [buttonMediaQuery]: {
     gridTemplateColumns: 'max-content max-content',

@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { projectsImage } from '../images';
 import PageBanner from './PageBanner';
 
-const { perRem, mobileScreen } = pixels;
+const { rem, mobileScreen } = pixels;
 const props = {
   image: projectsImage,
   position: 'center',
@@ -21,7 +21,7 @@ const buttonStyle = css({
 const externalIconStyle = css({
   display: 'flex',
   alignSelf: 'center',
-  marginLeft: `${8 / perRem}em`,
+  marginLeft: rem(8),
 });
 
 const ProjectsHeader: React.FC = () => (

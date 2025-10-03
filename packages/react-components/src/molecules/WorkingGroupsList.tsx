@@ -3,13 +3,13 @@ import { Fragment } from 'react';
 import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { Link, Divider } from '../atoms';
 
 const containerStyles = css({
   display: 'grid',
 
-  gridColumnGap: `${12 / perRem}em`,
+  gridColumnGap: rem(12),
 
   margin: 0,
 
@@ -26,10 +26,10 @@ const listItemStyle = css({
 
   gridTemplateColumns: '1fr',
   gridTemplateRows: '1fr 1fr',
-  gridRowGap: `${12 / perRem}em`,
+  gridRowGap: rem(12),
 
   '&:not(:last-of-type)': {
-    marginBottom: `${8 / perRem}em`,
+    marginBottom: rem(8),
   },
 
   [`@media (min-width: ${tabletScreen.min}px)`]: {

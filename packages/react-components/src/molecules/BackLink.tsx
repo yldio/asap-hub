@@ -1,19 +1,19 @@
 import { css } from '@emotion/react';
 
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { chevronCircleLeftIcon, Link } from '..';
 
 const iconStyles = css({
   display: 'inline-grid',
   verticalAlign: 'middle',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
-  paddingRight: `${15 / perRem}em`,
+  width: rem(24),
+  height: rem(24),
+  paddingRight: rem(15),
 });
 
 const containerStyles = css({
   alignSelf: 'flex-start',
-  padding: `${30 / perRem}em 0 `,
+  padding: `${rem(30)} 0 `,
 });
 
 interface BackLinkProps {

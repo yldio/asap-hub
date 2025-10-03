@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 
 import { Card } from '..';
 import { lead, steel } from '../colors';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { Button } from '../atoms';
 import ReminderItem from '../molecules/ReminderItem';
 import { borderRadius } from '../card';
@@ -12,23 +12,23 @@ import { borderRadius } from '../card';
 const container = css({
   display: 'grid',
   color: lead.rgb,
-  padding: `0 ${24 / perRem}em`,
+  padding: `0 ${rem(24)}`,
 });
 
 const row = (hasShowMore: boolean) =>
   css({
     borderBottom: `1px solid ${steel.rgb}`,
-    padding: `${12 / perRem}em 0`,
+    padding: `${rem(12)} 0`,
     ':last-child': {
       borderBottom: 'none',
     },
     ...(hasShowMore
       ? {
           ':nth-last-of-type(2)': {
-            margin: `0 -${24 / perRem}em 0 -${(24 - borderRadius) / perRem}em`,
-            padding: `${12 / perRem}em ${24 / perRem}em ${12 / perRem}em ${
-              (24 - borderRadius) / perRem
-            }em`,
+            margin: `0 -${rem(24)} 0 -${rem(24 - borderRadius)}`,
+            padding: `${rem(12)} ${rem(24)} ${rem(12)} ${rem(
+              24 - borderRadius,
+            )}`,
           },
         }
       : {}),

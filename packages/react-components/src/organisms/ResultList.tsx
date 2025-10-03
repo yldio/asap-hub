@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { ExportButton, ListControls, PageControls } from '../molecules';
 import { Headline3, Paragraph } from '../atoms';
 import {
-  perRem,
+  rem,
   vminLinearCalcClamped,
   mobileScreen,
   tabletScreen,
@@ -14,7 +14,7 @@ import { charcoal } from '../colors';
 const headerStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
-  columnGap: `${12 / perRem}em`,
+  columnGap: rem(12),
   justifyContent: 'space-between',
   alignItems: 'center',
 });
@@ -39,7 +39,7 @@ const resultsHeaderStyles = css({
 
 const viewOptionsStyles = css({
   display: 'flex',
-  gap: `${33 / perRem}em`,
+  gap: rem(33),
   [`@media (max-width: ${tabletScreen.min}px)`]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -50,8 +50,8 @@ const viewOptionsStyles = css({
 
 const mainStyles = css({
   justifySelf: 'stretch',
-  paddingTop: `${18 / perRem}em`,
-  paddingBottom: `${36 / perRem}em`,
+  paddingTop: rem(18),
+  paddingBottom: rem(36),
 
   display: 'grid',
   gridRowGap: `${vminLinearCalcClamped(
@@ -67,16 +67,16 @@ const mainStyles = css({
 });
 const pageControlsStyles = css({
   justifySelf: 'center',
-  paddingTop: `${36 / perRem}em`,
-  paddingBottom: `${36 / perRem}em`,
+  paddingTop: rem(36),
+  paddingBottom: rem(36),
 });
 
 const iconStyles = css({
   color: charcoal.rgb,
   display: 'inline-flex',
   svg: {
-    width: `${48 / perRem}em`,
-    height: `${48 / perRem}em`,
+    width: rem(48),
+    height: rem(48),
   },
 });
 

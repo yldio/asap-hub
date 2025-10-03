@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import React, { Fragment } from 'react';
 import { Divider, Link } from '../atoms';
 import { lead } from '../colors';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 
 const titleStyle = css({
   fontWeight: 'bold',
@@ -17,10 +17,10 @@ const roleStyle = css({
 const containerStyles = css({
   display: 'grid',
 
-  gridColumnGap: `${18 / perRem}em`,
+  gridColumnGap: rem(18),
 
   margin: 0,
-  marginTop: `${24 / perRem}em`,
+  marginTop: rem(24),
 
   padding: 0,
   listStyle: 'none',
@@ -31,7 +31,7 @@ const listItemStyle = css({
 
   gridTemplateColumns: '1fr',
   gridTemplateRows: '1fr 1fr',
-  gridRowGap: `${12 / perRem}em`,
+  gridRowGap: rem(12),
 
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridAutoFlow: 'column',

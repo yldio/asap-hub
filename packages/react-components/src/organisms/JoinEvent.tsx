@@ -10,7 +10,7 @@ import { Headline2, Paragraph, Anchor, Link } from '../atoms';
 import { WarningIcon } from '../icons';
 import { clay } from '../colors';
 import { layoutStyles } from '../text';
-import { perRem, mobileScreen } from '../pixels';
+import { rem, mobileScreen } from '../pixels';
 import { mailToSupport } from '../mail';
 import { useDateHasPassed } from '../date';
 
@@ -91,7 +91,7 @@ const JoinEvent: React.FC<JoinEventProps> = ({
           css={{
             display: 'grid',
             gridTemplateColumns: 'max-content auto',
-            columnGap: `${12 / perRem}em`,
+            columnGap: rem(12),
           }}
         >
           <div css={layoutStyles}>

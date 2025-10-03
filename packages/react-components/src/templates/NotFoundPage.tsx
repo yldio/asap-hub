@@ -5,7 +5,7 @@ import {
   vminLinearCalc,
   mobileScreen,
   largeDesktopScreen,
-  perRem,
+  rem,
   tabletScreen,
 } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
@@ -20,7 +20,7 @@ const styles = css({
   )} ${contentSidePaddingWithNavigation()}`,
 
   display: 'grid',
-  gridRowGap: `${12 / perRem}em`,
+  gridRowGap: rem(12),
   textAlign: 'center',
 
   [`@media (min-width: ${mobileScreen.width + 1}px)`]: {

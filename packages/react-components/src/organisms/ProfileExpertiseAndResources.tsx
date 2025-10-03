@@ -5,7 +5,7 @@ import { ResearchTagDataObject } from '@asap-hub/model';
 import { Card, Divider, Headline2, Paragraph } from '../atoms';
 import { TagList } from '../molecules';
 import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 type ProfileExpertiseAndResourcesProps = {
   readonly tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[] | undefined;
@@ -33,7 +33,7 @@ const ProfileExpertiseAndResources: React.FC<
           ) : (
             <Paragraph>{expertiseAndResourceDescription}</Paragraph>
           )}
-          <div css={{ marginTop: `${24 / perRem}em` }}>
+          <div css={{ marginTop: rem(24) }}>
             <Divider />
           </div>
         </>
@@ -43,8 +43,8 @@ const ProfileExpertiseAndResources: React.FC<
         <>
           <div
             css={{
-              marginTop: `${12 / perRem}em`,
-              marginBottom: `${24 / perRem}em`,
+              marginTop: rem(12),
+              marginBottom: rem(24),
             }}
           >
             <Paragraph noMargin accent="lead">
@@ -56,12 +56,12 @@ const ProfileExpertiseAndResources: React.FC<
           <TagList tags={tags.map(({ name }) => name)} />
         </>
       ) : (
-        <div css={{ marginTop: `${4 / perRem}em` }}>
+        <div css={{ marginTop: rem(4) }}>
           <UserProfilePlaceholderCard title="Add tags to your profile">
             Help other researchers find you by adding keywords about your
             skills, techniques, resources, and tools. Completing this section
             will make you more likely to come up in search results.
-            <div css={{ marginTop: `${16 / perRem}em` }}>
+            <div css={{ marginTop: rem(16) }}>
               <TagList
                 tags={[
                   'Structural biology',

@@ -5,13 +5,13 @@ import deepEqual from 'fast-deep-equal';
 
 import { LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { Paragraph } from '../atoms';
 import { EditUserModal } from '../organisms';
 
 const fieldsContainerStyles = css({
   display: 'grid',
-  columnGap: `${24 / perRem}em`,
+  columnGap: rem(24),
 });
 
 type OpenQuestionsModalProps = Pick<UserResponse, 'questions'> & {

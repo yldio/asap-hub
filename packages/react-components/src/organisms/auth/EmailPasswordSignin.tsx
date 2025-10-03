@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 
 import { LabeledPasswordField, LabeledTextField } from '../../molecules';
 import { noop } from '../../utils';
-import { perRem } from '../../pixels';
+import { rem } from '../../pixels';
 import { Button } from '../../atoms';
 
 const containerStyles = css({
@@ -11,7 +11,7 @@ const containerStyles = css({
   flexDirection: 'column',
 });
 const fieldsContainerStyles = css({
-  paddingBottom: `${12 / perRem}em`,
+  paddingBottom: rem(12),
 });
 
 type EmailPasswordSigninProps = Pick<

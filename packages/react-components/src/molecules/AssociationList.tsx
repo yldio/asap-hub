@@ -11,7 +11,7 @@ import {
   CategoryIcon,
 } from '../icons';
 import { Avatar, Link } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { lead, silver } from '../colors';
 
 const containerStyles = css({
@@ -27,12 +27,12 @@ const inlineContainerStyles = css({
 
 const itemStyles = css({
   borderBottom: `1px solid ${silver.rgb}`,
-  paddingBottom: `${24 / perRem}em`,
-  paddingTop: `${24 / perRem}em`,
+  paddingBottom: rem(24),
+  paddingTop: rem(24),
   color: lead.rgb,
 
   '&:first-of-type': {
-    paddingTop: `${18 / perRem}em`,
+    paddingTop: rem(18),
   },
 });
 
@@ -43,7 +43,7 @@ const inlineItemStyles = css({
 });
 
 const bulletStyles = css({
-  padding: `0 ${6 / perRem}em`,
+  padding: `0 ${rem(6)}`,
   'li:last-of-type > &': {
     display: 'none',
   },
@@ -52,29 +52,29 @@ const bulletStyles = css({
 const iconStyles = css({
   verticalAlign: 'middle',
   display: 'inline-block',
-  height: `${24 / perRem}em`,
-  marginRight: `${9 / perRem}em`,
+  height: rem(24),
+  marginRight: rem(9),
 });
 
 const inactiveBadgeStyles = css({
-  lineHeight: `${18 / perRem}em`,
+  lineHeight: rem(18),
   verticalAlign: 'middle',
-  marginLeft: `${8 / perRem}em`,
+  marginLeft: rem(8),
 });
 
 const moreStyles = css({
   overflow: 'hidden',
   display: 'grid',
   gridTemplateColumns: 'min-content 1fr',
-  gridColumnGap: `${6 / perRem}em`,
+  gridColumnGap: rem(6),
   alignItems: 'center',
 });
 
 const avatarStyles = css({
-  fontSize: `${20 / perRem}em`,
+  fontSize: rem(20),
 });
 const nameStyles = css({
-  fontSize: `${17 / perRem}em`,
+  fontSize: rem(17),
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',

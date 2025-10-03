@@ -10,7 +10,7 @@ import {
   Paragraph,
   TextEditor,
 } from '../atoms';
-import { perRem, rem } from '../pixels';
+import { rem } from '../pixels';
 
 type SharedResearchDetailsTagsCardProps = Pick<
   ResearchOutputResponse,
@@ -89,8 +89,8 @@ const SharedResearchDetailsTagsCard: React.FC<
         <Headline2 styleAsHeading={4}>Tags</Headline2>
         <div
           css={{
-            marginTop: `${12 / perRem}em`,
-            marginBottom: `${24 / perRem}em`,
+            marginTop: rem(12),
+            marginBottom: rem(24),
           }}
         >
           <Paragraph noMargin accent="lead">

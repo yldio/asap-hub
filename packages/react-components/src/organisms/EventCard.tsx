@@ -10,7 +10,7 @@ import {
 import { subMinutes, parseISO } from 'date-fns';
 
 import { ToastCard, EventInfo } from '../molecules';
-import { perRem, mobileScreen } from '../pixels';
+import { rem, mobileScreen } from '../pixels';
 import { Link } from '../atoms';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
@@ -33,7 +33,7 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
 
 const buttonStyle = css({
   [`@media (max-width: ${mobileScreen.max}px)`]: {
-    marginTop: `${15 / perRem}em`,
+    marginTop: rem(15),
     width: '100%',
   },
 });
@@ -41,7 +41,7 @@ const buttonStyle = css({
 const externalIconStyle = css({
   display: 'flex',
   alignSelf: 'center',
-  marginLeft: `${8 / perRem}em`,
+  marginLeft: rem(8),
 });
 
 const EventCard: React.FC<EventCardProps> = ({

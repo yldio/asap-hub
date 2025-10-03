@@ -1,14 +1,12 @@
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import NewsPageHeader from './NewsPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const mainStyles = css({
-  padding: `${24 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-    36 / perRem
-  }em`,
+  padding: `${rem(24)} ${contentSidePaddingWithNavigation(8)} ${rem(36)}`,
 });
 
 type NewsPageProps = ComponentProps<typeof NewsPageHeader>;

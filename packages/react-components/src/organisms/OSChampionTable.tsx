@@ -48,7 +48,7 @@ const headerStyles = css({
 });
 
 // const buttonStyles = css({
-//   width: `${24 / perRem}em`,
+//   width: rem(24),
 //   margin: 0,
 //   padding: 0,
 //   border: 'none',

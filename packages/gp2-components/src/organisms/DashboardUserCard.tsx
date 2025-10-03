@@ -13,23 +13,23 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 
-const { perRem } = pixels;
+const { rem } = pixels;
 const NUMBER_OF_TAGS_TO_DISPLAY = 5;
 
 const cardStyles = css({
-  padding: `${32 / perRem}em ${24 / perRem}em`,
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: `${15 / perRem}em`,
+  gap: rem(15),
 });
 
 const avatarStyles = css({
-  width: `${96 / perRem}em`,
-  height: `${96 / perRem}em`,
+  width: rem(96),
+  height: rem(96),
 });
 
 const roleStyles = css({

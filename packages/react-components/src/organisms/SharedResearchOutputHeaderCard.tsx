@@ -5,7 +5,7 @@ import { network } from '@asap-hub/routing';
 import { Card, Display, StateTag } from '../atoms';
 import { lead } from '../colors';
 import { formatDate } from '../date';
-import { perRem, mobileScreen } from '../pixels';
+import { rem, mobileScreen } from '../pixels';
 import { captionStyles } from '../text';
 import { AssociationList, UsersList } from '../molecules';
 import { SharedResearchMetadata } from '.';
@@ -15,30 +15,30 @@ const timestampStyles = css({
   display: 'flex',
   flexDirection: 'row',
   whiteSpace: 'pre',
-  marginTop: `${24 / perRem}em`,
+  marginTop: rem(24),
   marginBottom: 0,
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',
-    marginTop: `${12 / perRem}em`,
-    marginBottom: `${12 / perRem}em`,
+    marginTop: rem(12),
+    marginBottom: rem(12),
   },
 });
 const associationStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  rowGap: `${12 / perRem}em`,
+  rowGap: rem(12),
 });
 
 const headerStyle = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  paddingBottom: `${24 / perRem}em`,
+  paddingBottom: rem(24),
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: `${15 / perRem}em`,
+    gap: rem(15),
   },
 });
 

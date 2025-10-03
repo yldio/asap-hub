@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
 
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import {
   ProfileExpertiseAndResources,
   TeamMembersTabbedCard,
@@ -13,7 +13,7 @@ import { createMailTo } from '../mail';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
+  gridRowGap: rem(36),
 });
 
 const membersCardStyles = css({

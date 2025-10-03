@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { ReminderResponse, gp2 as gp2Model } from '@asap-hub/model';
 
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { EventIcon, infoCircleIcon, LibraryIcon, article } from '../icons';
 import { Anchor, Markdown } from '../atoms';
 import { neutral200, cerulean } from '../colors';
@@ -15,20 +15,20 @@ const containerStyle = css({
   display: 'grid',
   gridAutoFlow: 'column',
   gridTemplateColumns: 'min-content 1fr',
-  columnGap: `${15 / perRem}em`,
+  columnGap: rem(15),
   alignContent: 'center',
-  padding: `${8 / perRem}em`,
+  padding: rem(8),
 });
 
 const iconStyles = css({
   display: 'inline-block',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
+  width: rem(24),
+  height: rem(24),
 });
 
 const linkStyles = css({
   ':hover': {
-    borderRadius: `${3 / perRem}em`,
+    borderRadius: rem(3),
     background: neutral200.rgb,
   },
 });
@@ -42,8 +42,8 @@ const descriptionStyles = css({
 const subtextStyles = css({
   display: 'flex',
   alignItems: 'start',
-  marginTop: `${12 / perRem}em`,
-  gap: `${8 / perRem}em`,
+  marginTop: rem(12),
+  gap: rem(8),
 });
 
 const timeElapsedStyles = css({

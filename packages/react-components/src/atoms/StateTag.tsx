@@ -1,6 +1,6 @@
 import { css, CSSObject } from '@emotion/react';
 import * as colors from '../colors';
-import { lineHeight, perRem } from '../pixels';
+import { lineHeight, rem } from '../pixels';
 
 export type AccentVariant = 'default' | 'green' | 'blue';
 
@@ -22,24 +22,24 @@ export const accents: Record<AccentVariant, CSSObject> = {
 const styles = css({
   display: 'inline-flex',
   boxSizing: 'border-box',
-  padding: `${3 / perRem}em 0`,
-  height: `calc(${lineHeight}px + ${6 / perRem}em)`,
+  padding: `${rem(3)} 0`,
+  height: `calc(${lineHeight}px + ${rem(6)})`,
   backgroundColor: colors.apricot.rgb,
   color: colors.clay.rgb,
-  borderRadius: `${18 / perRem}em`,
+  borderRadius: rem(18),
 });
 
 const iconStyles = css({
   display: 'inline-flex',
   alignSelf: 'center',
-  marginLeft: `${9 / perRem}em`,
-  marginRight: `${3 / perRem}em`,
+  marginLeft: rem(9),
+  marginRight: rem(3),
 });
 
 const labelStyles = (withIcon: boolean) =>
   css({
-    marginRight: `${15 / perRem}em`,
-    marginLeft: `${(withIcon ? 0 : 15) / perRem}em`,
+    marginRight: rem(15),
+    marginLeft: rem(withIcon ? 0 : 15),
   });
 
 type StateTagProps = {

@@ -2,17 +2,15 @@ import React from 'react';
 import { css } from '@emotion/react';
 
 import { Display, Paragraph } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const headerStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-    60 / perRem
-  }em `,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} ${rem(60)} `,
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-  marginBottom: `${30 / perRem}em`,
+  marginBottom: rem(30),
   display: 'flex',
   justifyContent: 'center',
 });
@@ -20,7 +18,7 @@ const headerStyles = css({
 const contentStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  maxWidth: `${800 / perRem}em`,
+  maxWidth: rem(800),
   width: '100%',
   justifyContent: 'center',
 });

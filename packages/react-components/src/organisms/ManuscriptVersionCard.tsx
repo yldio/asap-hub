@@ -28,7 +28,7 @@ import {
 import { paddingStyles } from '../card';
 import ManuscriptFileSection from '../molecules/ManuscriptFileSection';
 import UserTeamInfo from '../molecules/UserTeamInfo';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import { getTeams, getUserHref } from '../utils';
 import ComplianceReportCard from './ComplianceReportCard';
 
@@ -44,7 +44,7 @@ type ManuscriptVersionCardProps = {
 };
 
 const toastStyles = css({
-  padding: `${24 / perRem}em ${15 / perRem}em `,
+  padding: `${rem(24)} ${rem(15)}`,
 });
 
 const iconStyles = css({
@@ -64,7 +64,7 @@ const toastHeaderStyles = css({
 });
 
 const toastContentStyles = css({
-  paddingLeft: `${56 / perRem}em`,
+  paddingLeft: rem(56),
   paddingTop: rem(9),
 });
 

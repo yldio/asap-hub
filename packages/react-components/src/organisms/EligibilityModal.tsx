@@ -12,7 +12,7 @@ import {
   LabeledRadioButtonGroup,
   Modal,
 } from '../molecules';
-import { mobileScreen, perRem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 
 const headerStyles = css(paddingStyles, {
   paddingBottom: 0,
@@ -30,7 +30,7 @@ const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
 
 const buttonContainerStyles = css({
   display: 'grid',
-  columnGap: `${30 / perRem}em`,
+  columnGap: rem(30),
   gridTemplateRows: 'max-content 12px max-content',
   [buttonMediaQuery]: {
     gridTemplateColumns: 'max-content max-content',
@@ -62,7 +62,7 @@ const dismissButtonStyles = css({
 const formStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  rowGap: `${32 / perRem}em`,
+  rowGap: rem(32),
 });
 
 export const asapFunded = ['Yes', 'No'] as const;

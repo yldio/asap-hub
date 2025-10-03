@@ -3,7 +3,7 @@ import { TutorialsResponse } from '@asap-hub/model';
 import { network, discover } from '@asap-hub/routing';
 
 import { Card, Paragraph } from '../atoms';
-import { perRem, smallDesktopScreen } from '../pixels';
+import { rem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../date';
 import { trainingPlaceholderIcon } from '../icons';
 import {
@@ -25,13 +25,13 @@ const imageStyle = css({
 
 const imageContainerStyle = css({
   flexShrink: 0,
-  borderRadius: `${6 / perRem}em`,
-  height: `${184 / perRem}em`,
-  marginTop: `${9 / perRem}em`,
-  marginBottom: `${3 / perRem}em`,
+  borderRadius: rem(6),
+  height: rem(184),
+  marginTop: rem(9),
+  marginBottom: rem(3),
 
-  marginRight: `${24 / perRem}em`,
-  width: `${184 / perRem}em`,
+  marginRight: rem(24),
+  width: rem(184),
   overflow: 'hidden',
 
   [`@media (max-width: ${smallDesktopScreen.min}px)`]: {
@@ -45,13 +45,13 @@ const headerStyles = css({
 });
 
 const associationsContainer = css({
-  margin: `${24 / perRem}em 0 ${12 / perRem}em 0`,
+  margin: `${rem(24)} 0 ${rem(12)} 0`,
 });
 
 const cardStyle = css({
   display: 'flex',
   flexDirection: 'row',
-  marginBottom: `${6 / perRem}em`,
+  marginBottom: rem(6),
 });
 
 const containerStyle = css({
@@ -116,7 +116,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
         </div>
         <div css={containerStyle}>
           <div css={headerStyles}>
-            <div css={{ paddingRight: `${15 / perRem}em` }}>
+            <div css={{ paddingRight: rem(15) }}>
               <LinkHeadline href={href} level={4}>
                 {title}
               </LinkHeadline>

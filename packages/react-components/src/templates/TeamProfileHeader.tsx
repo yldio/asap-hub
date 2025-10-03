@@ -19,12 +19,12 @@ import {
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { DropdownButton, UserAvatarList, TabNav } from '../molecules';
-import { mobileScreen, perRem, tabletScreen } from '../pixels';
+import { mobileScreen, rem, tabletScreen } from '../pixels';
 import { getCounterString } from '../utils';
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} 0`,
 });
 
 const titleStyle = css({
@@ -32,10 +32,10 @@ const titleStyle = css({
   flexFlow: 'column',
   gap: 3,
   alignItems: 'flex-start',
-  paddingBottom: `${12 / perRem}em`,
+  paddingBottom: rem(12),
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     flexFlow: 'row',
-    gap: `${15 / perRem}em`,
+    gap: rem(15),
     alignItems: 'center',
   },
 });
@@ -43,7 +43,7 @@ const contactSectionStyles = css({
   alignItems: 'center',
 
   display: 'grid',
-  gridColumnGap: `${16 / perRem}em`,
+  gridColumnGap: rem(16),
 
   grid: `
     "members" auto
@@ -63,7 +63,7 @@ const createSectionStyles = css({
   alignItems: 'center',
 
   display: 'grid',
-  gridColumnGap: `${16 / perRem}em`,
+  gridColumnGap: rem(16),
 
   grid: `
     "members" auto
@@ -82,8 +82,8 @@ const createSectionStyles = css({
 const pointOfContactStyles = css({
   display: 'flex',
   flexFlow: 'row',
-  gap: `${8 / perRem}em`,
-  margin: `${12 / perRem}em 0`,
+  gap: rem(8),
+  margin: `${rem(12)} 0`,
 });
 
 const buttonStyles = css({
@@ -97,7 +97,7 @@ const labCountStyles = css({
   gridArea: 'lab',
   display: 'flex',
   alignItems: 'center',
-  padding: `${12 / perRem}em 0`,
+  padding: `${rem(12)} 0`,
   color: lead.rgb,
 });
 const createStyles = css({
@@ -111,14 +111,14 @@ const createStyles = css({
 
 const dropdownButtonStyling = css({
   display: 'flex',
-  columnGap: `${9 / perRem}em`,
+  columnGap: rem(9),
   svg: {
     color: pine.rgb,
   },
 });
 const iconStyles = css({
   display: 'inline-grid',
-  paddingRight: `${12 / perRem}em`,
+  paddingRight: rem(12),
 });
 
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {

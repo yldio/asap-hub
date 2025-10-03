@@ -5,6 +5,7 @@ import { AnalyticsOpenSciencePageBody } from '..';
 
 describe('AnalyticsOpenSciencePageBody', () => {
   const props: ComponentProps<typeof AnalyticsOpenSciencePageBody> = {
+    currentPage: 0,
     children: <span data-testid="children">table content</span>,
     exportResults: jest.fn(() => Promise.resolve()),
     loadTags: jest.fn().mockResolvedValue([]),

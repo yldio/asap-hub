@@ -4,7 +4,7 @@ import { TeamTool } from '@asap-hub/model';
 
 import { Card, Headline3, Paragraph, Anchor, Link, Button } from '../atoms';
 import { placeholderIcon } from '../icons';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { getIconFromUrl } from '../utils';
 import { fern } from '../colors';
 import { useIsMounted } from '../hooks';
@@ -23,7 +23,7 @@ const containerStyle = css({
     flexDirection: 'row',
   },
 
-  gridColumnGap: `${24 / perRem}em`,
+  gridColumnGap: rem(24),
 });
 
 const logoIconStyle = css({
@@ -39,7 +39,7 @@ const linksStyles = css({
 
   display: 'flex',
   '> *:not(:last-of-type)': {
-    paddingRight: `${24 / perRem}em`,
+    paddingRight: rem(24),
   },
 });
 

@@ -2,11 +2,11 @@ import { css } from '@emotion/react';
 import { ReactElement } from 'react';
 import { Dropdown, DropdownProps, Label, Paragraph } from '../atoms';
 import { lead } from '../colors';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { TooltipInfo } from '.';
 
 const subtitleStyles = css({
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
 });
 
 const descriptionStyles = css({
@@ -18,7 +18,7 @@ const descriptionStyles = css({
 });
 
 const infoWrapperStyle = css({
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
   float: 'right',
 });
 
@@ -36,9 +36,9 @@ export default function LabeledDropdown<V extends string>({
   ...dropdownProps
 }: LabeledDropdownProps<V>): ReturnType<React.FC> {
   return (
-    <div css={{ paddingBottom: `${18 / perRem}em` }}>
+    <div>
       <Label forContent={(id) => <Dropdown {...dropdownProps} id={id} />}>
-        <Paragraph>
+        <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>
           {info ? (

@@ -6,7 +6,7 @@ import { Paragraph, StateTag } from '../atoms';
 import { charcoal, steel } from '../colors';
 import { InactiveBadgeIcon, TeamIcon } from '../icons';
 import { LinkHeadline, TabbedCard } from '../molecules';
-import { mobileScreen, perRem, rem, tabletScreen } from '../pixels';
+import { mobileScreen, rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
 
 const itemsListWrapper = css({
@@ -28,9 +28,9 @@ const listStyles = css({
 const listElementStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: `${24 / perRem}em`,
-  paddingTop: `${28 / perRem}em`,
-  paddingBottom: `${28 / perRem}em`,
+  gap: rem(24),
+  paddingTop: rem(28),
+  paddingBottom: rem(28),
   borderBottom: `1px solid ${steel.rgb}`,
   ':last-child': {
     borderBottom: 'none',
@@ -45,9 +45,9 @@ const teamsStyles = css({
 
 const iconStyles = css({
   display: 'inline-block',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
-  paddingRight: `${15 / perRem}em`,
+  width: rem(24),
+  height: rem(24),
+  paddingRight: rem(15),
 });
 
 const titleStyle = css({

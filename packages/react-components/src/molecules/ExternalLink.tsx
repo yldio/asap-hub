@@ -4,7 +4,7 @@ import { css, CSSObject, Theme } from '@emotion/react';
 import { Anchor } from '../atoms';
 import { ExternalLinkIcon } from '../icons';
 import { fern, pine } from '../colors';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import { getLinkColors } from '../atoms/Link';
 
 const containerStyles = css({
@@ -22,15 +22,15 @@ const styles = (
     alignItems: 'center',
     justifyContent: 'center',
     width: 'max-content',
-    borderRadius: `${36 / perRem}em`,
+    borderRadius: rem(36),
     minWidth: '24px',
     color: colors?.primary500?.rgba || fern.rgb,
     boxSizing: 'border-box',
     border: `${borderWidth}px solid ${colors?.primary500?.rgba || fern.rgb}`,
-    margin: noMargin ? '0' : `${12 / perRem}em 0`,
-    padding: withLabel ? `0 ${(12 - borderWidth) / perRem}em` : rem(3),
+    margin: noMargin ? '0' : `${rem(12)} 0`,
+    padding: withLabel ? `0 ${rem(12 - borderWidth)}` : rem(3),
     [`@media (max-width: ${mobileScreen.max}px)`]: {
-      padding: full ? `0 ${(12 - borderWidth) / perRem}em` : rem(3),
+      padding: full ? `0 ${rem(12 - borderWidth)}` : rem(3),
     },
     svg: {
       stroke: colors?.primary500?.rgba || fern.rgb,
@@ -46,7 +46,7 @@ const styles = (
 
 const textStyles = (full: boolean) =>
   css({
-    paddingTop: `${1 / perRem}em`,
+    paddingTop: rem(1),
     [`@media (max-width: ${mobileScreen.max}px)`]: {
       display: full ? 'initial' : 'none',
     },
@@ -56,10 +56,10 @@ export type SizeVariant = 'default' | 'large';
 
 export const textSizes: Record<SizeVariant, CSSObject> = {
   default: {
-    fontSize: `${13.6 / perRem}em`,
+    fontSize: rem(13.6),
   },
   large: {
-    fontSize: `${17 / perRem}em`,
+    fontSize: rem(17),
   },
 };
 
@@ -67,15 +67,15 @@ export const containerSizes: Record<SizeVariant, CSSObject> = {
   default: {
     height: '24px',
     svg: {
-      width: `${17.8 / perRem}em`,
-      height: `${17.8 / perRem}em`,
+      width: rem(17.8),
+      height: rem(17.8),
     },
   },
   large: {
     height: '24px',
     svg: {
-      width: `${24 / perRem}em`,
-      height: `${24 / perRem}em`,
+      width: rem(24),
+      height: rem(24),
     },
   },
 };

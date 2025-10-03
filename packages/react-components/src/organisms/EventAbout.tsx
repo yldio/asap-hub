@@ -7,7 +7,7 @@ import {
 import { Divider, Headline2, Paragraph } from '../atoms';
 import { RichText, TagList } from '..';
 import { Collapsible } from '../molecules';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 type EventAboutProps = Pick<BasicEvent, 'description' | 'endDate'> & {
   tags: string[];
@@ -37,8 +37,8 @@ const EventAbout: React.FC<EventAboutProps> = ({
       <Headline2 styleAsHeading={4}>Tags</Headline2>
       <div
         css={{
-          marginTop: `${12 / perRem}em`,
-          marginBottom: `${24 / perRem}em`,
+          marginTop: rem(12),
+          marginBottom: rem(24),
         }}
       >
         <Paragraph noMargin accent="lead">

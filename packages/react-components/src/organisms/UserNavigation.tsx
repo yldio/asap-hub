@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { logout, staticPages } from '@asap-hub/routing';
 
 import {
-  perRem,
+  rem,
   vminLinearCalc,
   mobileScreen,
   largeDesktopScreen,
@@ -20,7 +20,7 @@ const containerStyles = css({
   flexDirection: 'column',
 
   boxSizing: 'border-box',
-  padding: `${9 / perRem}em ${12 / perRem}em ${vminLinearCalc(
+  padding: `${rem(9)} ${rem(12)} ${vminLinearCalc(
     mobileScreen,
     8,
     largeDesktopScreen,
@@ -37,8 +37,8 @@ const listStyles = css({
 
 const dividerStyle = css({
   display: 'block',
-  marginLeft: `${12 / perRem}em`,
-  marginRight: `${12 / perRem}em`,
+  marginLeft: rem(12),
+  marginRight: rem(12),
 });
 
 const bottomLinksStyles = css({
@@ -46,7 +46,7 @@ const bottomLinksStyles = css({
 
   display: 'flex',
   alignItems: 'flex-end',
-  padding: `${12 / perRem}em ${12 / perRem}em 0`,
+  padding: `${rem(12)} ${rem(12)} 0`,
 });
 
 export interface UserNavigationProps {

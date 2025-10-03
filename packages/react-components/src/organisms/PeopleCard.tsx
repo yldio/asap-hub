@@ -4,7 +4,7 @@ import { network } from '@asap-hub/routing';
 
 import { Card, Avatar, Caption, StateTag } from '../atoms';
 import { LinkHeadline, UserProfilePersonalText, ImageLink } from '../molecules';
-import { tabletScreen, perRem } from '../pixels';
+import { tabletScreen, rem } from '../pixels';
 import { formatDate } from '../date';
 import { alumniBadgeIcon } from '../icons';
 
@@ -33,12 +33,12 @@ const moveStyles = css({
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     display: 'flex',
     alignItems: 'baseline',
-    columnGap: `${15 / perRem}em`,
+    columnGap: rem(15),
     flexBasis: 'auto',
     order: -1,
   },
   [`@media (max-width: ${tabletScreen.min}px)`]: {
-    marginBottom: `${15 / perRem}em`,
+    marginBottom: rem(15),
   },
 });
 

@@ -4,7 +4,7 @@ import { ComponentProps } from 'react';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { AnalyticsControls } from '../molecules';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { removeFlaggedOptions } from '../utils';
 
 type MetricOption = 'user' | 'team' | 'sharing-prelim-findings';
@@ -80,11 +80,11 @@ type CollaborationAnalyticsProps = Pick<
 };
 
 const metricDropdownStyles = css({
-  marginBottom: `${48 / perRem}em`,
+  marginBottom: rem(48),
 });
 
 const tableHeaderStyles = css({
-  paddingBottom: `${24 / perRem}em`,
+  paddingBottom: rem(24),
 });
 
 const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({

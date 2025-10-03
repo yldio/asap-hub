@@ -15,32 +15,32 @@ import {
   NumericalSortingIcon,
 } from '../icons';
 import { PageControls } from '../molecules';
-import { perRem, rem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import LeadershipPageBody from '../templates/AnalyticsLeadershipPageBody';
 
 const container = css({
   display: 'grid',
-  paddingTop: `${32 / perRem}em`,
+  paddingTop: rem(32),
 });
 
 const gridTitleStyles = css({
   display: 'none',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     display: 'inherit',
-    paddingBottom: `${16 / perRem}em`,
+    paddingBottom: rem(16),
   },
 });
 
 const rowTitleStyles = css({
-  paddingTop: `${32 / perRem}em`,
-  paddingBottom: `${16 / perRem}em`,
+  paddingTop: rem(32),
+  paddingBottom: rem(16),
   ':first-of-type': { paddingTop: 0 },
   [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
 
 const rowStyles = css({
   display: 'grid',
-  padding: `${20 / perRem}em ${24 / perRem}em 0`,
+  padding: `${rem(20)} ${rem(24)} 0`,
   borderBottom: `1px solid ${steel.rgb}`,
   ':first-of-type': {
     borderBottom: 'none',
@@ -52,7 +52,7 @@ const rowStyles = css({
     borderBottom: 'none',
     marginBottom: 0,
     paddingBottom: rem(15),
-    borderRadius: `${borderRadius / perRem}em`,
+    borderRadius: rem(borderRadius),
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',

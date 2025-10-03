@@ -11,11 +11,11 @@ import { crossIcon, plusIcon, userPlaceholderIcon } from '../icons';
 import LabeledMultiSelect, {
   LabeledMultiSelectProps,
 } from '../molecules/LabeledMultiSelect';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const externalAuthorStyles = css({
   borderRadius: '50%',
-  height: `${24 / perRem}em`,
+  height: rem(24),
   overflow: 'hidden',
 });
 
@@ -50,13 +50,13 @@ const LabelWithAvatar = ({
 const optionStyles = css({
   display: 'grid',
 
-  gridTemplateColumns: `${24 / perRem}em 1fr`,
-  gridColumnGap: `${8 / perRem}em`,
+  gridTemplateColumns: `${rem(24)} 1fr`,
+  gridColumnGap: rem(8),
 });
 
 const singleValueStyles = css({
-  padding: `${5 / perRem}em ${15 / perRem}em ${5 / perRem}em ${8 / perRem}em`,
-  margin: `${5 / perRem}em ${6 / perRem}em ${5 / perRem}em`,
+  padding: `${rem(5)} ${rem(15)} ${rem(5)} ${rem(8)}`,
+  margin: `${rem(5)} ${rem(6)} ${rem(5)}`,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -64,14 +64,14 @@ const singleValueStyles = css({
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderColor: steel.rgb,
-  borderRadius: `${18 / perRem}em`,
+  borderRadius: rem(18),
   backgroundColor: paper.rgb,
 });
 
 const singleValuesRemoveStyles = css({
   display: 'inline-flex',
-  height: `${24 / perRem}em`,
-  width: `${12 / perRem}em`,
+  height: rem(24),
+  width: rem(12),
   cursor: 'pointer',
 
   svg: {
@@ -126,7 +126,7 @@ const AuthorSelect: React.FC<AuthorSelectProps> = ({
         <div
           css={{
             ...multiValueContainerProps.selectProps.styles.multiValue(),
-            paddingLeft: `${8 / perRem}em`,
+            paddingLeft: rem(8),
           }}
         >
           {multiValueContainerProps.children}

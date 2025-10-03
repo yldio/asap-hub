@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { Button } from '../atoms';
 import { chevronCircleDownIcon, chevronCircleUpIcon } from '../icons';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { colorWithTransparency, lead } from '../colors';
 
 const previewStyles = (containerMaxHeight: number | string) =>
@@ -41,7 +41,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
       </div>
       <div
         css={{
-          padding: `${12 / perRem}em 0`,
+          padding: `${rem(12)} 0`,
           display: 'flex',
           justifyContent: 'center',
         }}
@@ -51,7 +51,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({
             css={{
               display: 'inline-grid',
               verticalAlign: 'middle',
-              paddingRight: `${12 / perRem}em`,
+              paddingRight: rem(12),
             }}
           >
             {expanded ? chevronCircleUpIcon : chevronCircleDownIcon}

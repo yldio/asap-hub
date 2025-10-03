@@ -3,7 +3,7 @@ import { EventSpeaker } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { useState } from 'react';
 import { Headline3, Headline4, Avatar, Link, Button } from '../atoms';
-import { tabletScreen, perRem } from '../pixels';
+import { tabletScreen, rem } from '../pixels';
 import {
   userPlaceholderIcon,
   chevronCircleDownIcon,
@@ -18,7 +18,7 @@ import { steel, lead, colorWithTransparency } from '../colors';
 const gridStyles = css({
   display: 'grid',
   flexFlow: 'column',
-  gap: `${15 / perRem}em`,
+  gap: rem(15),
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     gap: 0,
   },
@@ -28,7 +28,7 @@ const userStyles = css({
   overflow: 'hidden',
   display: 'grid',
   gridTemplateColumns: 'min-content 1fr',
-  gridColumnGap: `${15 / perRem}em`,
+  gridColumnGap: rem(15),
   alignItems: 'center',
 });
 
@@ -67,8 +67,8 @@ const groupStyle = css({
   display: 'flex',
   flexFlow: 'column',
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    paddingBottom: `${12 / perRem}em`,
-    paddingTop: `${12 / perRem}em`,
+    paddingBottom: rem(12),
+    paddingTop: rem(12),
   },
 });
 
@@ -78,7 +78,7 @@ const toBeAnnouncedStyle = css({
 });
 
 const previewStyle = {
-  maxHeight: `${69 / perRem}em`,
+  maxHeight: rem(69),
   overflow: 'hidden',
   background: `linear-gradient(180deg, ${lead.rgb} 26.56%, ${
     colorWithTransparency(lead, 0).rgba
@@ -93,8 +93,8 @@ const speakerListMobileMixin = {
   gridAutoFlow: 'row',
   alignItems: 'start',
   borderBottom: `1px solid ${steel.rgb}`,
-  paddingBottom: `${12 / perRem}em`,
-  paddingTop: `${12 / perRem}em`,
+  paddingBottom: rem(12),
+  paddingTop: rem(12),
 };
 
 const iconStyles = css({
@@ -103,7 +103,7 @@ const iconStyles = css({
 
 const internalSpeakerStyle = css({
   display: 'inline-flex',
-  gap: `${8 / perRem}em`,
+  gap: rem(8),
 });
 
 const speakerListStyles = {
@@ -115,9 +115,9 @@ const speakerListStyles = {
 };
 
 const inactiveBadgeStyles = {
-  lineHeight: `${18 / perRem}em`,
+  lineHeight: rem(18),
   verticalAlign: 'middle',
-  marginLeft: `${8 / perRem}em`,
+  marginLeft: rem(8),
 };
 
 const hideStyles = css({
@@ -130,8 +130,8 @@ const hideStyles = css({
 });
 
 const buttonWrapperStyles = css({
-  paddingBottom: `${21 / perRem}em`,
-  marginBottom: `${21 / perRem}em`,
+  paddingBottom: rem(21),
+  marginBottom: rem(21),
   display: 'flex',
   justifyContent: 'center',
   width: '100%',
@@ -257,7 +257,7 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
                 css={{
                   display: 'inline-grid',
                   verticalAlign: 'middle',
-                  paddingRight: `${12 / perRem}em`,
+                  paddingRight: rem(12),
                 }}
               >
                 {expanded ? chevronCircleUpIcon : chevronCircleDownIcon}

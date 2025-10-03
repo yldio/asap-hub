@@ -2,24 +2,24 @@ import { TutorialsResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { Card, Divider, Headline2 } from '../atoms';
-import { mobileScreen, perRem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 
 const additionalInformationListStyles = css({
   listStyle: 'none',
   margin: 0,
-  padding: `${6 / perRem}em 0`,
+  padding: `${rem(6)} 0`,
 });
 const additionalInformationEntryStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
-  padding: `${6 / perRem}em 0`,
+  padding: `${rem(6)} 0`,
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',
   },
 });
 const additionalInformationValueStyles = css({
   [`@media (max-width: ${mobileScreen.max}px)`]: {
-    marginTop: `${12 / perRem}em`,
+    marginTop: rem(12),
   },
 });
 

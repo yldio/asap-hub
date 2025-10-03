@@ -8,10 +8,10 @@ import {
   Label,
 } from '../atoms';
 import { lead } from '../colors';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const subtitleStyles = css({
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
 });
 
 const descriptionStyles = css({
@@ -36,9 +36,13 @@ const LabeledMultiSelect = <
   description,
   ...multiSelectProps
 }: LabeledMultiSelectProps<T, M>): ReactElement => (
-  <div css={{ paddingBottom: `${18 / perRem}em` }}>
-    <Label forContent={(id) => <MultiSelect {...multiSelectProps} id={id} />}>
-      <Paragraph noMargin>
+  <div>
+    <Label
+      forContent={(id) => (
+        <MultiSelect noMargin {...multiSelectProps} id={id} />
+      )}
+    >
+      <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span>
         <br />

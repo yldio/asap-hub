@@ -23,14 +23,6 @@ import TeamManuscript from '../TeamManuscript';
 
 jest.mock('../../../shared-api/content-generator');
 
-jest.mock(
-  'react-lottie',
-  () =>
-    function MockLottie() {
-      return <div>Loading...</div>;
-    },
-);
-
 jest.setTimeout(100_000);
 
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };

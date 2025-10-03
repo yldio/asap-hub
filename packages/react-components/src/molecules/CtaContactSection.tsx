@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 
 import { CopyButton, Link } from '../atoms';
-import { perRem, smallDesktopScreen, tabletScreen } from '../pixels';
+import { rem, smallDesktopScreen, tabletScreen } from '../pixels';
 import { colors } from '..';
 
 const contactStyles = css({
   display: 'flex',
-  gap: `${8 / perRem}em`,
+  gap: rem(8),
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
     alignSelf: 'center',
   },

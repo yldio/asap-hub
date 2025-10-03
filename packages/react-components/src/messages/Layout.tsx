@@ -6,41 +6,41 @@ import { Link } from '../atoms';
 import { silver } from '../colors';
 import { asapImage } from '../images';
 import { ceruleanFernGradientStyles } from '../appearance';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const containerStyles = css({
-  maxWidth: `${600 / perRem}em`,
+  maxWidth: rem(600),
   marginLeft: 'auto',
   marginRight: 'auto',
 });
 
 const coloredLineStyles = css({
-  height: `${6 / perRem}em`,
+  height: rem(6),
 });
 
 const imageContainerStyle = css({
-  height: `${32 / perRem}em`,
-  paddingTop: `${6 / perRem}em`,
-  marginTop: `${24 / perRem}em`,
-  marginBottom: `${24 / perRem}em`,
+  height: rem(32),
+  paddingTop: rem(6),
+  marginTop: rem(24),
+  marginBottom: rem(24),
 });
 
 const contentContainerStyles = css({
-  paddingLeft: `${24 / perRem}em`,
-  marginTop: `${72 / perRem}em`,
-  marginBottom: `${72 / perRem}em`,
+  paddingLeft: rem(24),
+  marginTop: rem(72),
+  marginBottom: rem(72),
 });
 
 const footerContainerStyles = css({
   backgroundColor: silver.rgb,
-  padding: `${12 / perRem}em`,
+  padding: rem(12),
 });
 
 const footerContentContainerStyles = css({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'start',
-  '*': { paddingRight: `${12 / perRem}em` },
+  '*': { paddingRight: rem(12) },
 });
 
 interface LayoutProps {

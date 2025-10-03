@@ -3,12 +3,12 @@ import { css } from '@emotion/react';
 
 import { Headline2, Paragraph } from '../atoms';
 import { SearchField } from '../molecules';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${57 / perRem}em`,
-  paddingBottom: `${24 / perRem}em`,
+  gridRowGap: rem(57),
+  paddingBottom: rem(24),
 });
 
 type TutorialsPageHeaderProps = {

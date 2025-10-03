@@ -4,21 +4,19 @@ import {
   vminLinearCalc,
   mobileScreen,
   largeDesktopScreen,
-  perRem,
+  rem,
 } from '../pixels';
 import { paper } from '../colors';
 
 const shadowWidth = 18;
 
 const containerStyles = css({
-  width: `calc(100% + ${(2 * shadowWidth) / perRem}em)`,
+  width: `calc(100% + ${rem(2 * shadowWidth)})`,
   overflowX: 'auto',
 
-  margin: `0 ${-shadowWidth / perRem}em`,
+  margin: `0 ${rem(-shadowWidth)}`,
   display: 'grid',
-  gridTemplateColumns: `${shadowWidth / perRem}em max-content ${
-    shadowWidth / perRem
-  }em`,
+  gridTemplateColumns: `${rem(shadowWidth)} max-content ${rem(shadowWidth)}`,
   '::before, ::after': {
     content: '""',
     position: 'sticky',

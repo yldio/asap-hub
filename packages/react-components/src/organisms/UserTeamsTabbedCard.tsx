@@ -5,7 +5,7 @@ import React, { Fragment } from 'react';
 import { Divider, Link, Paragraph } from '../atoms';
 import { InactiveBadgeIcon } from '../icons';
 import { TabbedCard } from '../molecules';
-import { perRem, rem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
 import { formatDateToTimezone } from '../date';
 
@@ -14,7 +14,7 @@ const MAX_TEAMS = 5;
 const inactiveBadgeStyles = css({
   lineHeight: 0,
   verticalAlign: 'top',
-  marginLeft: `${8 / perRem}em`,
+  marginLeft: rem(8),
 });
 
 const listItemStyle = css({
@@ -44,7 +44,7 @@ const containerStyle = css({
   columnGap: rem(12),
 
   margin: 0,
-  marginTop: `${24 / perRem}em`,
+  marginTop: rem(24),
 
   padding: 0,
   listStyle: 'none',
@@ -55,7 +55,7 @@ const titleStyle = css({
 });
 
 const detailsContentStyle = css({
-  marginBottom: `${32 / perRem}em`,
+  marginBottom: rem(32),
 });
 
 const priorities: Record<TeamRole, number> = {

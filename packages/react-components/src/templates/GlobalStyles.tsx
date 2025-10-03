@@ -4,7 +4,7 @@ import emotionNormalize from 'emotion-normalize';
 
 import { fontStyles } from '../text';
 import { themes } from '../theme';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const styles = {
   html: {
@@ -16,7 +16,7 @@ const styles = {
     width: '100%',
   },
   p: {
-    letterSpacing: `${0.1 / perRem}em`,
+    letterSpacing: rem(0.1),
   },
 } as const;
 const GlobalStyles: FC<Record<string, never>> = () => (

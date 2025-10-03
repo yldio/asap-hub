@@ -6,17 +6,17 @@ import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { queryParamString } from '../routing';
 
 const visualHeaderStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
-  marginBottom: `${30 / perRem}em`,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} 0`,
+  marginBottom: rem(30),
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 const textStyles = css({
-  maxWidth: `${610 / perRem}em`,
+  maxWidth: rem(610),
 });
 
 const controlsStyles = css({

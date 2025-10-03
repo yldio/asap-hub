@@ -7,7 +7,7 @@ import { components } from 'react-select';
 import { Pill } from '../atoms';
 import { charcoal } from '../colors';
 import { FormCard, LabeledMultiSelect } from '../molecules';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { noop, ResearchOutputOption } from '../utils';
 
 const optionStyles = (showPill: boolean) =>
@@ -24,10 +24,10 @@ const iconStyles = css({
   svg: {
     width: '18px',
     height: '18px',
-    paddingLeft: `${3 / perRem}em`,
-    paddingTop: `${4.5 / perRem}em`,
+    paddingLeft: rem(3),
+    paddingTop: rem(4.5),
     stroke: charcoal.rgb,
-    strokeWidth: `${0.3 / perRem}em`,
+    strokeWidth: rem(0.3),
   },
 });
 
@@ -86,7 +86,7 @@ const ResearchOutputRelatedResearchCard = <
           <div
             css={{
               ...multiValueContainerProps.selectProps.styles.multiValue(),
-              paddingLeft: `${8 / perRem}em`,
+              paddingLeft: rem(8),
             }}
           >
             {multiValueContainerProps.children}

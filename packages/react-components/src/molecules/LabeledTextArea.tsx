@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { Label, Paragraph, TextArea } from '../atoms';
 import { lead, paper } from '../colors';
 import { TooltipInfo } from '.';
@@ -17,7 +17,7 @@ const tipStyles = css({
 });
 
 const subtitleStyles = css({
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
 });
 
 type LabeledTextAreaProps = {
@@ -29,10 +29,10 @@ type LabeledTextAreaProps = {
 
 const infoStyle = css({
   [`p:first-of-type`]: {
-    marginBottom: `${8 / perRem}em`,
+    marginBottom: rem(8),
   },
   [`p:not(:first-of-type)`]: {
-    marginBottom: `${2 / perRem}em`,
+    marginBottom: rem(2),
   },
   [`& p`]: {
     textAlign: 'left',
@@ -42,7 +42,7 @@ const infoStyle = css({
 });
 
 const infoWrapperStyle = css({
-  paddingLeft: `${16 / perRem}em`,
+  paddingLeft: rem(16),
   lineHeight: 0,
   [`span, button`]: {
     lineHeight: 0,
@@ -56,9 +56,9 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   info,
   ...textAreaProps
 }) => (
-  <div css={{ paddingBottom: `${18 / perRem}em` }}>
+  <div>
     <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
-      <Paragraph>
+      <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
         <span css={{ display: 'flex', marginBottom: 0 }}>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>

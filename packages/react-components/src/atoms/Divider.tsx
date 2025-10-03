@@ -2,10 +2,10 @@ import { ReactText } from 'react';
 import { css } from '@emotion/react';
 
 import { lead, steel, paper } from '../colors';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const containerStyles = css({
-  height: `${24 / perRem}em`,
+  height: rem(24),
   display: 'grid',
   alignItems: 'center',
 });
@@ -28,7 +28,7 @@ const textStyles = css({
   boxSizing: 'border-box',
   paddingLeft: '.5em',
   paddingRight: '.5em',
-  minWidth: `${36 / perRem}em`,
+  minWidth: rem(36),
   justifySelf: 'center',
   textAlign: 'center',
 
@@ -36,7 +36,7 @@ const textStyles = css({
   color: lead.rgb,
   textTransform: 'uppercase',
   fontWeight: 'bold',
-  fontSize: `${13.6 / perRem}em`,
+  fontSize: rem(13.6),
   lineHeight: `${18 / 13.6}em`,
 });
 

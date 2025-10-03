@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 export const imageStyle = (imageUrl: string) =>
   css({
     backgroundImage: `url(${JSON.stringify(imageUrl)})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    width: `${24 / perRem}em`,
-    height: `${24 / perRem}em`,
+    width: rem(24),
+    height: rem(24),
   });
 
 interface IconProps {

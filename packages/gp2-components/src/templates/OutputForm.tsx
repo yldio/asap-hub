@@ -89,9 +89,12 @@ const footerStyles = css({
   },
 });
 
-const linkStyles = css({
-  marginBottom: rem(36),
+const fieldWithLinkStyles = css({
+  display: 'flex',
+  flexFlow: 'column',
+  gap: 16,
 });
+
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -607,41 +610,41 @@ const OutputForm: React.FC<OutputFormProps> = ({
                     ) : null}
                   </FormCard>
                   <FormCard title="What extra information can you provide?">
-                    <LabeledMultiSelect
-                      title="Additional Tags"
-                      subtitle="(optional)"
-                      description={
-                        <>
-                          Increase the discoverability of this output by adding
-                          keywords.{' '}
-                        </>
-                      }
-                      values={newTags.map(({ id, name }) => ({
-                        label: name,
-                        value: id,
-                      }))}
-                      enabled={!isSaving}
-                      suggestions={tagSuggestions.map(({ id, name }) => ({
-                        label: name,
-                        value: id,
-                      }))}
-                      onChange={(newValues) => {
-                        setNewTags(
-                          newValues
-                            .slice(0, 10)
-                            .reduce(
-                              (acc, curr) => [
-                                ...acc,
-                                { id: curr.value, name: curr.label },
-                              ],
-                              [] as gp2Model.TagDataObject[],
-                            ),
-                        );
-                      }}
-                      placeholder="Start typing... (E.g. Neurology)"
-                      maxMenuHeight={160}
-                    />
-                    <div css={linkStyles}>
+                    <div css={fieldWithLinkStyles}>
+                      <LabeledMultiSelect
+                        title="Additional Tags"
+                        subtitle="(optional)"
+                        description={
+                          <>
+                            Increase the discoverability of this output by
+                            adding keywords.{' '}
+                          </>
+                        }
+                        values={newTags.map(({ id, name }) => ({
+                          label: name,
+                          value: id,
+                        }))}
+                        enabled={!isSaving}
+                        suggestions={tagSuggestions.map(({ id, name }) => ({
+                          label: name,
+                          value: id,
+                        }))}
+                        onChange={(newValues) => {
+                          setNewTags(
+                            newValues
+                              .slice(0, 10)
+                              .reduce(
+                                (acc, curr) => [
+                                  ...acc,
+                                  { id: curr.value, name: curr.label },
+                                ],
+                                [] as gp2Model.TagDataObject[],
+                              ),
+                          );
+                        }}
+                        placeholder="Start typing... (E.g. Neurology)"
+                        maxMenuHeight={160}
+                      />
                       <Link
                         href={mailToSupport({
                           email: INVITE_SUPPORT_EMAIL,
@@ -739,7 +742,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                       }
                     />
                     {!DOC_TYPES_COHORTS_NOT_REQUIRED.includes(documentType) ? (
-                      <>
+                      <div css={fieldWithLinkStyles}>
                         <LabeledMultiSelect
                           title="Cohorts"
                           subtitle="(optional)"
@@ -775,7 +778,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                           placeholder="Start typing..."
                           maxMenuHeight={160}
                         />
-                        <div css={linkStyles}>
+                        <div>
                           Don’t see a cohort in this list?{' '}
                           <Link
                             href={mailToSupport({
@@ -786,7 +789,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                             Contact {INVITE_SUPPORT_EMAIL}
                           </Link>
                         </div>
-                      </>
+                      </div>
                     ) : null}
                     <AuthorSelect
                       title="Authors"

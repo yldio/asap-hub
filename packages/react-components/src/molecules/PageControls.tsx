@@ -5,7 +5,7 @@ import { aperture, filter, uniqBy, sortWith, pipe, ascend } from 'ramda';
 import { css, Theme } from '@emotion/react';
 
 import {
-  perRem,
+  rem,
   tabletScreen,
   vminLinearCalc,
   mobileScreen,
@@ -26,14 +26,14 @@ const containerStyles = css({
 });
 const listStyles = css({
   margin: 0,
-  padding: `${12 / perRem}em`,
-  border: `${1 / perRem}em solid ${steel.rgb}`,
-  borderRadius: `${6 / perRem}em`,
+  padding: rem(12),
+  border: `${rem(1)} solid ${steel.rgb}`,
+  borderRadius: rem(6),
 
   display: 'grid',
   gridAutoFlow: 'column',
-  gridTemplateRows: `${30 / perRem}em`,
-  gridAutoColumns: `${30 / perRem}em`,
+  gridTemplateRows: rem(30),
+  gridAutoColumns: rem(30),
   gridGap: vminLinearCalc(mobileScreen, 6, largeDesktopScreen, 12, 'px'),
 
   backgroundColor: paper.rgb,

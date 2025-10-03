@@ -1,7 +1,7 @@
 import { Component, ReactNode } from 'react';
 import { css } from '@emotion/react';
 
-import { perRem, mobileScreen } from '../pixels';
+import { rem, mobileScreen } from '../pixels';
 import { Card } from '../atoms';
 import { lead, silver, apricot, clay, info500, info100 } from '../colors';
 import { WarningIcon, clockIcon, paperClipIcon, errorIcon } from '../icons';
@@ -11,7 +11,7 @@ const toastStyles = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: `${15 / perRem}em ${24 / perRem}em`,
+  padding: `${rem(15)} ${rem(24)}`,
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',
@@ -21,9 +21,9 @@ const toastStyles = css({
 
 const iconStyles = css({
   display: 'inline-block',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
-  paddingRight: `${12 / perRem}em`,
+  width: rem(24),
+  height: rem(24),
+  paddingRight: rem(12),
 });
 
 const alertStyles = css({

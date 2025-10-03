@@ -15,7 +15,7 @@ import {
   tin,
   TransparentColor,
 } from './colors';
-import { formTargetWidth, mobileScreen, perRem, rem } from './pixels';
+import { formTargetWidth, mobileScreen, rem } from './pixels';
 
 export const activePrimaryBackgroundColorDefault = color(122, 210, 169, 0.18);
 
@@ -26,14 +26,14 @@ const styles = css({
   justifyContent: 'center',
   textAlign: 'center',
 
-  maxWidth: `${formTargetWidth / perRem}em`,
+  maxWidth: rem(formTargetWidth),
 
   outline: 'none',
 
   boxSizing: 'border-box',
   borderStyle: 'solid',
-  borderWidth: `${borderWidth / perRem}em`,
-  borderRadius: `${4 / perRem}em`,
+  borderWidth: rem(borderWidth),
+  borderRadius: rem(4),
 
   cursor: 'pointer',
 
@@ -59,42 +59,42 @@ const fullWidthStyles = css({
 
 const largeStyles = css({
   '> svg': {
-    height: `${24 / perRem}em`,
+    height: rem(24),
     width: 'auto',
   },
   '> svg + span': {
     marginLeft: rem(10),
   },
   ':has(> svg + span)': {
-    paddingLeft: `${(24 - borderWidth) / perRem}em`,
+    paddingLeft: rem(24 - borderWidth),
   },
   '> span + svg': {
     marginLeft: rem(10),
   },
   ':has(> span + svg )': {
-    paddingRight: `${(24 - borderWidth) / perRem}em`,
+    paddingRight: rem(24 - borderWidth),
   },
 
-  paddingTop: `${(15 - borderWidth) / perRem}em`,
-  paddingBottom: `${(15 - borderWidth) / perRem}em`,
-  paddingLeft: `${(32 - borderWidth) / perRem}em`,
-  paddingRight: `${(32 - borderWidth) / perRem}em`,
+  paddingTop: rem(15 - borderWidth),
+  paddingBottom: rem(15 - borderWidth),
+  paddingLeft: rem(32 - borderWidth),
+  paddingRight: rem(32 - borderWidth),
 });
 
 const largeWithSpaceStyles = css({
-  marginTop: `${18 / perRem}em`,
-  marginBottom: `${18 / perRem}em`,
+  marginTop: rem(18),
+  marginBottom: rem(18),
 });
 const smallWithSpaceStyles = css({
-  marginTop: `${12 / perRem}em`,
-  marginBottom: `${12 / perRem}em`,
+  marginTop: rem(12),
+  marginBottom: rem(12),
 });
 
 const smallStyles = css({
   '> svg': {
-    height: `${18 / perRem}em`,
-    paddingTop: `${3 / perRem}em`,
-    paddingBottom: `${3 / perRem}em`,
+    height: rem(18),
+    paddingTop: rem(3),
+    paddingBottom: rem(3),
     width: 'auto',
   },
   '> svg + span': {
@@ -110,23 +110,23 @@ const smallStyles = css({
     paddingRight: rem(8 - borderWidth),
   },
 
-  paddingTop: `${(6 - borderWidth) / perRem}em`,
-  paddingBottom: `${(6 - borderWidth) / perRem}em`,
-  paddingLeft: `${(16 - borderWidth) / perRem}em`,
-  paddingRight: `${(16 - borderWidth) / perRem}em`,
+  paddingTop: rem(6 - borderWidth),
+  paddingBottom: rem(6 - borderWidth),
+  paddingLeft: rem(16 - borderWidth),
+  paddingRight: rem(16 - borderWidth),
 });
 
 const largeTextOnlyStyles = css({
-  paddingLeft: `${(42 - borderWidth) / perRem}em`,
-  paddingRight: `${(42 - borderWidth) / perRem}em`,
+  paddingLeft: rem(42 - borderWidth),
+  paddingRight: rem(42 - borderWidth),
 });
 const largeIconOnlyStyles = css({
-  paddingLeft: `${(15 - borderWidth) / perRem}em`,
-  paddingRight: `${(15 - borderWidth) / perRem}em`,
+  paddingLeft: rem(15 - borderWidth),
+  paddingRight: rem(15 - borderWidth),
 });
 const smallIconOnlyStyles = css({
-  paddingLeft: `${(9 - borderWidth) / perRem}em`,
-  paddingRight: `${(9 - borderWidth) / perRem}em`,
+  paddingLeft: rem(9 - borderWidth),
+  paddingRight: rem(9 - borderWidth),
 });
 
 const boxShadow = (opaqueColor: OpaqueColor | TransparentColor) =>

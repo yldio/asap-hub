@@ -13,7 +13,7 @@ import {
   Paragraph,
   Link,
 } from '../atoms';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { ExternalLinkIcon, OrcidIcon } from '../icons';
 import { charcoal, lead } from '../colors';
 import { mailToSupport } from '../mail';
@@ -68,7 +68,7 @@ const typeMap: { [key in OrcidWork['type']]: string } = {
 const headerStyles = css({
   display: 'grid',
   alignItems: 'center',
-  gridColumnGap: `${12 / perRem}em`,
+  gridColumnGap: rem(12),
 
   gridTemplateColumns: '100% 0 0',
   overflow: 'hidden',
@@ -84,7 +84,7 @@ const listStyles = css({
   padding: 0,
 
   display: 'grid',
-  gridRowGap: `${12 / perRem}em`,
+  gridRowGap: rem(12),
 });
 
 const titleStyle = css({ fontWeight: 'bold', color: charcoal.rgb });

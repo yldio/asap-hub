@@ -251,7 +251,10 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                         ? 'N/A'
                         : `${row.datasetsPercentage}%`}
                     </span>
-                    {getPerformanceMoodIcon(row.datasetsPercentage ?? 0)}
+                    {getPerformanceMoodIcon(
+                      row.datasetsPercentage ?? 0,
+                      row.datasetsRanking === 'LIMITED DATA',
+                    )}
                   </p>
                 </td>
                 <td className={'protocols'}>
@@ -261,7 +264,10 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                         ? 'N/A'
                         : `${row.protocolsPercentage}%`}
                     </span>
-                    {getPerformanceMoodIcon(row.protocolsPercentage ?? 0)}
+                    {getPerformanceMoodIcon(
+                      row.protocolsPercentage ?? 0,
+                      row.protocolsRanking === 'LIMITED DATA',
+                    )}
                   </p>
                 </td>
                 <td className={'code'}>
@@ -271,7 +277,10 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                         ? 'N/A'
                         : `${row.codePercentage}%`}
                     </span>
-                    {getPerformanceMoodIcon(row.codePercentage ?? 0)}
+                    {getPerformanceMoodIcon(
+                      row.codePercentage ?? 0,
+                      row.codeRanking === 'LIMITED DATA',
+                    )}
                   </p>
                 </td>
                 <td>
@@ -281,7 +290,10 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                         ? 'N/A'
                         : `${row.labMaterialsPercentage}%`}
                     </span>
-                    {getPerformanceMoodIcon(row.labMaterialsPercentage ?? 0)}
+                    {getPerformanceMoodIcon(
+                      row.labMaterialsPercentage ?? 0,
+                      row.labMaterialsRanking === 'LIMITED DATA',
+                    )}
                   </p>
                 </td>
               </tr>

@@ -1,7 +1,7 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { Card, Headline3, Paragraph } from '../atoms';
 import { paddingStyles } from '../card';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 export type FormCardProps = {
   title: string;
@@ -10,7 +10,7 @@ export type FormCardProps = {
 };
 
 const cardStyles = css({
-  paddingTop: `${14 / perRem}em`,
+  paddingTop: rem(14),
 });
 
 const descriptionStyles = css({
@@ -18,7 +18,7 @@ const descriptionStyles = css({
   paddingBottom: 0,
   'p:first-of-type': {
     marginTop: 0,
-    marginBottom: `${10 / perRem}em`,
+    marginBottom: rem(10),
   },
 });
 

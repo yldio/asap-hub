@@ -242,7 +242,6 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                         ? 'N/A'
                         : row.numberOfPublications}
                     </span>
-                    {getPerformanceMoodIcon(row.numberOfPublications ?? 0)}
                   </p>
                 </td>
                 <td className={'datasets'}>

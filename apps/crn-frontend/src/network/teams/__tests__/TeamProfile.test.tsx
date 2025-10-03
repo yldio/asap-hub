@@ -43,14 +43,6 @@ import {
 } from '../state';
 import TeamProfile from '../TeamProfile';
 
-jest.mock(
-  'react-lottie',
-  () =>
-    function MockLottie() {
-      return <div>Loading...</div>;
-    },
-);
-
 jest.mock('../../../shared-api/impact', () => ({
   getImpacts: jest
     .fn()

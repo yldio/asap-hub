@@ -28,7 +28,7 @@ import {
 } from '../organisms';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
-import { mobileScreen, perRem } from '../pixels';
+import { mobileScreen, perRem, rem } from '../pixels';
 
 import {
   getDecision,
@@ -100,7 +100,7 @@ const contentStyles = css({
   maxWidth: `${800 / perRem}em`,
   justifyContent: 'center',
   gridAutoFlow: 'row',
-  rowGap: `${36 / perRem}em`,
+  rowGap: rem(32),
 });
 
 const formControlsContainerStyles = css({
@@ -679,6 +679,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                       enabled={!isSaving}
                       fullWidth
                       onClick={handleCancel}
+                      noMargin
                     >
                       Cancel
                     </Button>
@@ -693,6 +694,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                             : await save(true);
                         }}
                         primary={showSaveDraftButton && !showPublishButton}
+                        noMargin
                       >
                         Save Draft
                       </Button>
@@ -702,6 +704,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         enabled={!isSaving}
                         fullWidth
                         primary
+                        noMargin
                         onClick={async () => {
                           setIsFormSubmitted(true);
 

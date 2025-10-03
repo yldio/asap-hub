@@ -726,6 +726,12 @@ export type PreprintComplianceDataObject = {
 
 export type ListPublicationComplianceDataObject =
   ListResponse<PublicationComplianceDataObject>;
+export type PublicationComplianceOpensearchResponse =
+  PublicationComplianceDataObject & {
+    objectID: string;
+  };
+export type ListPublicationComplianceOpensearchResponse =
+  ListResponse<PublicationComplianceOpensearchResponse>;
 export type ListPublicationComplianceResponse =
   ListResponse<PublicationComplianceResponse>;
 

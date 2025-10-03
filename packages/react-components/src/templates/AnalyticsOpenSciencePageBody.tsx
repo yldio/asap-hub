@@ -25,12 +25,13 @@ type OpenScienceAnalyticsProps = Pick<
   'timeRange'
 > & {
   children: React.ReactNode;
+  metric: MetricOption;
   tags: string[];
+  currentPage: number;
   loadTags?: (
     tagsQuery: string,
   ) => Promise<Array<{ label: string; value: string }>>;
   setTags: (tags: string[]) => void;
-  metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   exportResults: () => Promise<void>;
 };
@@ -45,13 +46,14 @@ const tableHeaderStyles = css({
 
 const AnalyticsOpenSciencePageBody: React.FC<OpenScienceAnalyticsProps> = ({
   children,
+  metric,
   tags,
+  timeRange,
+  currentPage,
   setTags,
   loadTags = async () => [],
-  metric,
   setMetric,
   exportResults,
-  timeRange,
 }) => {
   const metricOptionList = Object.keys(metricOptions).map((value) => ({
     value: value as MetricOption,
@@ -76,7 +78,7 @@ const AnalyticsOpenSciencePageBody: React.FC<OpenScienceAnalyticsProps> = ({
         </Paragraph>
       </div>
       <AnalyticsControls
-        currentPage={1}
+        currentPage={currentPage}
         exportResults={exportResults}
         href={analytics({}).openScience({}).metric({ metric }).$}
         loadTags={loadTags}

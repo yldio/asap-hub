@@ -40,7 +40,7 @@ const PreprintComplianceContent: FC<PreprintComplianceProps> = ({ tags }) => {
 
 const PreprintCompliance: FC<PreprintComplianceProps> = ({ tags }) => (
   <Suspense fallback={<LoadingContentBodyTable />}>
-    <PreprintComplianceContent tags={tags} />
+    <PreprintComplianceContent key={tags.join(',')} tags={tags} />
   </Suspense>
 );
 

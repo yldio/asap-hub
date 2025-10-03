@@ -87,6 +87,7 @@ export {
   ImageLink,
   Info,
   LabeledCheckbox,
+  LabeledCheckboxGroup,
   LabeledDateField,
   LabeledDropdown,
   LabeledFileField,

@@ -12,6 +12,7 @@ import {
   LabeledTextArea,
   LabeledTextField,
 } from '../molecules';
+import { rem } from '../pixels';
 import { noop } from '../utils';
 import {
   ResearchOutputIdentifier,
@@ -131,21 +132,24 @@ const ResearchOutputExtraInformationCard: React.FC<
           }
         />
       )}
+      <div style={{ display: 'flex', flexFlow: 'column', gap: rem(16) }}>
+        <LabeledMultiSelect
+          title="Additional Tags"
+          description="Increase the discoverability of this output by adding keywords."
+          subtitle="(optional)"
+          values={tags.map((tag) => ({ label: tag, value: tag }))}
+          enabled={!isSaving}
+          suggestions={tagSuggestions}
+          placeholder="Start typing... (E.g. Cell Biology)"
+          onChange={(options) =>
+            onChangeTags(options.map(({ value }) => value))
+          }
+        />
 
-      <LabeledMultiSelect
-        title="Additional Tags"
-        description="Increase the discoverability of this output by adding keywords."
-        subtitle="(optional)"
-        values={tags.map((tag) => ({ label: tag, value: tag }))}
-        enabled={!isSaving}
-        suggestions={tagSuggestions}
-        placeholder="Start typing... (E.g. Cell Biology)"
-        onChange={(options) => onChangeTags(options.map(({ value }) => value))}
-      />
-
-      <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>
-        Ask ASAP to add a new keyword
-      </Link>
+        <Link href={mailToSupport({ subject: 'New keyword' }).toString()}>
+          Ask ASAP to add a new keyword
+        </Link>
+      </div>
       {documentType !== 'Report' && (
         <>
           <ResearchOutputIdentifier

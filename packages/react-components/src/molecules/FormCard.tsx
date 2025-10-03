@@ -36,7 +36,9 @@ const FormCard: React.FC<FormCardProps> = ({
     </div>
     {!!description && (
       <div css={[descriptionStyles]}>
-        <Paragraph accent="lead">{description}</Paragraph>
+        <Paragraph noMargin accent="lead">
+          {description}
+        </Paragraph>
       </div>
     )}
     <div css={[childrenWrapStyles]}>{children}</div>

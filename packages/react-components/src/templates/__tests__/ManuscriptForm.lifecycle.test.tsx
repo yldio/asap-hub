@@ -9,14 +9,6 @@ import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import ManuscriptForm from '../ManuscriptForm';
 
-jest.mock(
-  'react-lottie',
-  () =>
-    function MockLottie() {
-      return <div>Loading...</div>;
-    },
-);
-
 jest.setTimeout(30_000);
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation();

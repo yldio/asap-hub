@@ -10,17 +10,14 @@ import { PageControls } from '..';
 
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
-import { charcoal, neutral200, steel } from '../colors';
+import { charcoal, lead, neutral200, steel } from '../colors';
 import {
   InactiveBadgeIcon,
   // AlphabeticalSortingIcon,
   // NumericalSortingIcon,
-  happyFaceIcon,
-  neutralFaceIcon,
-  sadFaceIcon,
-  informationInverseIcon,
 } from '../icons';
 import { rem } from '../pixels';
+import { getPerformanceMoodIcon } from '../utils';
 import StaticPerformanceCard from './StaticPerformanceCard';
 
 const container = css({
@@ -86,6 +83,14 @@ const rowStyles = css({
   },
 });
 
+const valueStyles = css({
+  fontWeight: 400,
+  fontSize: rem(17),
+  textWrap: 'nowrap',
+  color: lead.rgb,
+  width: rem(60),
+});
+
 const iconStyles = css({
   display: 'flex',
   gap: rem(3),
@@ -133,19 +138,6 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
   //   // Use NumericalSortingDescIcon for numerical columns
   //   return <NumericalSortingIcon active={isActive} description="" />;
   // };
-
-  const getPerformanceIcon = (percentage: number) => {
-    if (percentage >= 90) {
-      return happyFaceIcon;
-    }
-    if (percentage >= 80) {
-      return neutralFaceIcon;
-    }
-    if (percentage > 0) {
-      return sadFaceIcon;
-    }
-    return informationInverseIcon;
-  };
 
   return (
     <>
@@ -246,32 +238,52 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                   </td>
                   <td className={'publications'}>
                     <p css={iconStyles}>
-                      <span>{row.numberOfPublications ?? 0}%</span>
-                      {getPerformanceIcon(row.numberOfPublications ?? 0)}
+                      <span css={valueStyles}>
+                        {row.numberOfPublications === null
+                          ? 'N/A'
+                          : `${row.numberOfPublications}%`}
+                      </span>
+                      {getPerformanceMoodIcon(row.numberOfPublications ?? 0)}
                     </p>
                   </td>
                   <td className={'datasets'}>
                     <p css={iconStyles}>
-                      <span>{row.datasetsPercentage ?? 0}%</span>
-                      {getPerformanceIcon(row.datasetsPercentage ?? 0)}
+                      <span css={valueStyles}>
+                        {row.datasetsPercentage === null
+                          ? 'N/A'
+                          : `${row.datasetsPercentage}%`}
+                      </span>
+                      {getPerformanceMoodIcon(row.datasetsPercentage ?? 0)}
                     </p>
                   </td>
                   <td className={'protocols'}>
                     <p css={iconStyles}>
-                      <span>{row.protocolsPercentage ?? 0}%</span>
-                      {getPerformanceIcon(row.protocolsPercentage ?? 0)}
+                      <span css={valueStyles}>
+                        {row.protocolsPercentage === null
+                          ? 'N/A'
+                          : `${row.protocolsPercentage}%`}
+                      </span>
+                      {getPerformanceMoodIcon(row.protocolsPercentage ?? 0)}
                     </p>
                   </td>
                   <td className={'code'}>
                     <p css={iconStyles}>
-                      <span>{row.codePercentage ?? 0}%</span>
-                      {getPerformanceIcon(row.codePercentage ?? 0)}
+                      <span css={valueStyles}>
+                        {row.codePercentage === null
+                          ? 'N/A'
+                          : `${row.codePercentage}%`}
+                      </span>
+                      {getPerformanceMoodIcon(row.codePercentage ?? 0)}
                     </p>
                   </td>
                   <td>
                     <p css={iconStyles}>
-                      <span>{row.labMaterialsPercentage ?? 0}%</span>
-                      {getPerformanceIcon(row.labMaterialsPercentage ?? 0)}
+                      <span css={valueStyles}>
+                        {row.labMaterialsPercentage === null
+                          ? 'N/A'
+                          : `${row.labMaterialsPercentage}%`}
+                      </span>
+                      {getPerformanceMoodIcon(row.labMaterialsPercentage ?? 0)}
                     </p>
                   </td>
                 </tr>

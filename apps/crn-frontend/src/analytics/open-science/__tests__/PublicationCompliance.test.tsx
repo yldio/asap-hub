@@ -1,7 +1,12 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { render, screen } from '@testing-library/react';
 import { Suspense } from 'react';
-import { RecoilRoot, useRecoilState } from 'recoil';
+import {
+  RecoilRoot,
+  useRecoilState,
+  DefaultValue,
+  SetterOrUpdater,
+} from 'recoil';
 import { ListPublicationComplianceOpensearchResponse } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -62,9 +67,9 @@ describe('PublicationCompliance', () => {
       | ListPublicationComplianceOpensearchResponse
       | Error
       | undefined;
-    let setState: (
-      val: ListPublicationComplianceOpensearchResponse | Error | undefined,
-    ) => void = () => {};
+    let setState: SetterOrUpdater<
+      ListPublicationComplianceOpensearchResponse | Error | undefined
+    > = () => {};
 
     const TestComponent = () => {
       const [value, setValue] = useRecoilState(
@@ -153,9 +158,9 @@ describe('PublicationCompliance', () => {
       | ListPublicationComplianceOpensearchResponse
       | Error
       | undefined;
-    let setState: (
-      val: ListPublicationComplianceOpensearchResponse | Error | undefined,
-    ) => void = () => {};
+    let setState: SetterOrUpdater<
+      ListPublicationComplianceOpensearchResponse | Error | undefined
+    > = () => {};
 
     const TestComponent = () => {
       const [value, setValue] = useRecoilState(
@@ -218,9 +223,9 @@ describe('PublicationCompliance', () => {
       | ListPublicationComplianceOpensearchResponse
       | Error
       | undefined;
-    let setState: (
-      val: ListPublicationComplianceOpensearchResponse | Error | undefined,
-    ) => void = () => {};
+    let setState: SetterOrUpdater<
+      ListPublicationComplianceOpensearchResponse | Error | undefined
+    > = () => {};
 
     const TestComponent = () => {
       const [value, setValue] = useRecoilState(
@@ -238,8 +243,12 @@ describe('PublicationCompliance', () => {
     );
 
     // Test DefaultValue handling
-    const { DefaultValue } = require('recoil');
-    setState(new DefaultValue());
+    setState(
+      new DefaultValue() as unknown as
+        | ListPublicationComplianceOpensearchResponse
+        | Error
+        | undefined,
+    );
     expect(capturedValue).toBeUndefined();
   });
 
@@ -256,9 +265,9 @@ describe('PublicationCompliance', () => {
       | ListPublicationComplianceOpensearchResponse
       | Error
       | undefined;
-    let setState: (
-      val: ListPublicationComplianceOpensearchResponse | Error | undefined,
-    ) => void = () => {};
+    let setState: SetterOrUpdater<
+      ListPublicationComplianceOpensearchResponse | Error | undefined
+    > = () => {};
 
     const TestComponent = () => {
       const [value, setValue] = useRecoilState(
@@ -294,9 +303,9 @@ describe('PublicationCompliance', () => {
       | ListPublicationComplianceOpensearchResponse
       | Error
       | undefined;
-    let setState: (
-      val: ListPublicationComplianceOpensearchResponse | Error | undefined,
-    ) => void = () => {};
+    let setState: SetterOrUpdater<
+      ListPublicationComplianceOpensearchResponse | Error | undefined
+    > = () => {};
 
     const TestComponent = () => {
       const [value, setValue] = useRecoilState(

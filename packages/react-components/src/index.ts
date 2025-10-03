@@ -93,6 +93,7 @@ export {
   LabeledFileField,
   LabeledMultiSelect,
   LabeledPasswordField,
+  LabeledRadioButton,
   LabeledRadioButtonGroup,
   LabeledTextArea,
   LabeledTextField,

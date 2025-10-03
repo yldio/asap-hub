@@ -45,6 +45,9 @@ const currentFilesContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(8),
+  ':empty': {
+    display: 'none',
+  },
 });
 
 type FileUploadResponse = { id: string; url: string; filename: string };

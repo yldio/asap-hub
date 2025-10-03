@@ -3,9 +3,9 @@ import {
   PreprintComplianceTable,
   LoadingContentBodyTable,
 } from '@asap-hub/react-components';
+import { LimitedTimeRangeOption } from '@asap-hub/model';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsPreprintCompliance } from './state';
-import { LimitedTimeRangeOption } from '@asap-hub/model';
 
 interface PreprintComplianceProps {
   tags: string[];

@@ -5,9 +5,12 @@ import {
 } from '@asap-hub/react-components';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsPublicationCompliance } from './state';
+import { LimitedTimeRangeOption } from '@asap-hub/model';
 
 interface PublicationComplianceProps {
   tags: string[];
+  timeRange: LimitedTimeRangeOption;
+  currentPage: number;
 }
 
 const PublicationComplianceContent: FC<PublicationComplianceProps> = ({

@@ -2,7 +2,10 @@ import { FC, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { analytics } from '@asap-hub/routing';
 import { AnalyticsOpenSciencePageBody } from '@asap-hub/react-components';
-import { OSChampionOpensearchResponse } from '@asap-hub/model';
+import {
+  LimitedTimeRangeOption,
+  OSChampionOpensearchResponse,
+} from '@asap-hub/model';
 import PreprintCompliance from './PreprintCompliance';
 import PublicationCompliance from './PublicationCompliance';
 import {
@@ -57,13 +60,21 @@ const OpenScience: FC<Record<string, never>> = () => {
     >
       {metric === 'preprint-compliance' ? (
         <PreprintCompliance
-          key={`preprint-compliance-${tags.join(',')}`}
+          key={`preprint-compliance-${tags.join(
+            ',',
+          )}-${timeRange}-${currentPage}`}
           tags={tags}
+          timeRange={timeRange as LimitedTimeRangeOption}
+          currentPage={currentPage}
         />
       ) : (
         <PublicationCompliance
-          key={`publication-compliance-${tags.join(',')}`}
+          key={`publication-compliance-${tags.join(
+            ',',
+          )}-${timeRange}-${currentPage}`}
           tags={tags}
+          timeRange={timeRange as LimitedTimeRangeOption}
+          currentPage={currentPage}
         />
       )}
     </AnalyticsOpenSciencePageBody>

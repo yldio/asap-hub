@@ -5,9 +5,12 @@ import {
 } from '@asap-hub/react-components';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsPreprintCompliance } from './state';
+import { LimitedTimeRangeOption } from '@asap-hub/model';
 
 interface PreprintComplianceProps {
   tags: string[];
+  timeRange: LimitedTimeRangeOption;
+  currentPage: number;
 }
 
 const PreprintComplianceContent: FC<PreprintComplianceProps> = ({ tags }) => {
@@ -38,9 +41,18 @@ const PreprintComplianceContent: FC<PreprintComplianceProps> = ({ tags }) => {
   );
 };
 
-const PreprintCompliance: FC<PreprintComplianceProps> = ({ tags }) => (
+const PreprintCompliance: FC<PreprintComplianceProps> = ({
+  tags,
+  timeRange,
+  currentPage,
+}) => (
   <Suspense fallback={<LoadingContentBodyTable />}>
-    <PreprintComplianceContent key={tags.join(',')} tags={tags} />
+    <PreprintComplianceContent
+      key={`${tags.join(',')}-${timeRange}-${currentPage}`}
+      tags={tags}
+      timeRange={timeRange as LimitedTimeRangeOption}
+      currentPage={currentPage}
+    />
   </Suspense>
 );
 

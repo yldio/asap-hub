@@ -2,16 +2,12 @@ import { ComponentProps, useState } from 'react';
 import { css } from '@emotion/react';
 
 import { Label, TextField, Paragraph, Link, Button } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { showPasswordIcon, hidePasswordIcon } from '../icons';
 import { fern } from '../colors';
 
-const containerStyles = css({
-  paddingBottom: `${18 / perRem}em`,
-});
-
 const forgotPasswordStyles = css({
-  paddingTop: `${6 / perRem}em`,
+  paddingTop: rem(6),
 });
 
 const showPasswordIndicatorStyles = css({
@@ -19,7 +15,7 @@ const showPasswordIndicatorStyles = css({
   height: '100%',
   // because our indicator is just text,
   // move it down from the center to align with the field text that is also below center
-  paddingTop: `${1 / perRem}em`,
+  paddingTop: rem(1),
 
   fill: fern.rgb,
 });
@@ -43,7 +39,7 @@ const LabeledPasswordField: React.FC<LabeledPasswordFieldProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div css={containerStyles}>
+    <div>
       <Label
         forContent={(id) => (
           <TextField
@@ -66,7 +62,7 @@ const LabeledPasswordField: React.FC<LabeledPasswordFieldProps> = ({
           />
         )}
       >
-        <Paragraph>
+        <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
           <strong>{title}</strong>
         </Paragraph>
       </Label>

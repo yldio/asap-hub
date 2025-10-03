@@ -31,14 +31,6 @@ type FindByRole = (
   waitForElementOptions?: waitForOptions | undefined,
 ) => Promise<HTMLElement>;
 
-jest.mock(
-  'react-lottie',
-  () =>
-    function MockLottie() {
-      return <div>Loading...</div>;
-    },
-);
-
 jest.setTimeout(30_000);
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation();

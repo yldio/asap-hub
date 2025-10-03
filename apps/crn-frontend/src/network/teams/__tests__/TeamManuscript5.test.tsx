@@ -26,14 +26,6 @@ import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
 import TeamManuscript from '../TeamManuscript';
 
-jest.mock(
-  'react-lottie',
-  () =>
-    function MockLottie() {
-      return <div>Loading...</div>;
-    },
-);
-
 jest.setTimeout(100_000);
 
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };

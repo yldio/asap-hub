@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 
 import { Link } from '../atoms';
 import {
-  perRem,
+  rem,
   tabletScreen,
   vminLinearCalc,
   mobileScreen,
@@ -14,19 +14,19 @@ import { editIcon } from '../icons';
 const styles = (numEntries: number) =>
   css({
     // compensate for cards having more bottom than top padding (see below)
-    paddingTop: `${24 / perRem}em`,
-    paddingBottom: `${12 / perRem}em`,
+    paddingTop: rem(24),
+    paddingBottom: rem(12),
 
     display: 'grid',
     gridTemplate: `
-    repeat(${numEntries}, [edit] minmax(${12 / perRem}em, auto) [card] auto)
+    repeat(${numEntries}, [edit] minmax(${rem(12)}, auto) [card] auto)
   / [card edit] auto
   `,
 
     [`@media (min-width: ${tabletScreen.width}px)`]: {
       gridTemplate: `
       repeat(${numEntries}, [card edit] auto)
-    / [none] ${36 / perRem}em [card] auto [edit] ${36 / perRem}em
+    / [none] ${rem(36)} [card] auto [edit] ${rem(36)}
     `,
       gridColumnGap: vminLinearCalc(
         mobileScreen,
@@ -42,10 +42,10 @@ const cardStyles = css({
     display: 'none',
   },
   // bottom only to separate from the pencil belonging to the next card
-  paddingBottom: `${24 / perRem}em`,
+  paddingBottom: rem(24),
   [`@media (min-width: ${tabletScreen.width}px)`]: {
     // top to align with pencil on the side
-    paddingTop: `${12 / perRem}em`,
+    paddingTop: rem(12),
   },
 });
 const editButtonStyles = css({

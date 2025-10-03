@@ -4,7 +4,7 @@ import { ComponentProps, useState } from 'react';
 import { ContactSupport } from '../molecules';
 import EditUserModal from './EditUserModal';
 
-const { perRem } = pixels;
+const { rem } = pixels;
 
 type TagsModalProps = Pick<gp2.UserResponse, 'tags'> &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
@@ -37,7 +37,7 @@ const TagsModal: React.FC<TagsModalProps> = ({
       dirty={checkDirty()}
     >
       {({ isSaving }) => (
-        <div css={{ paddingBottom: `${162 / perRem}em` }}>
+        <div css={{ paddingBottom: rem(162) }}>
           <LabeledMultiSelect
             title="Tags"
             subtitle="(required)"

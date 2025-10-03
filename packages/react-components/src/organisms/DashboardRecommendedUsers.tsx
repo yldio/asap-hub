@@ -3,18 +3,18 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Card, Avatar, Ellipsis, Paragraph } from '../atoms';
 import { ImageLink, LinkHeadline, TagList } from '../molecules';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 
 const NUMBER_OF_TAGS_TO_DISPLAY = 5;
 
 const recommendedUsersStyles = css({
   display: 'flex',
   flexFlow: 'column',
-  gap: `${24 / perRem}em`,
+  gap: rem(24),
   [`@media (min-width: ${tabletScreen.width}px)`]: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr',
-    gridGap: `${15 / perRem}em`,
+    gridGap: rem(15),
   },
 });
 
@@ -22,12 +22,12 @@ const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: `${15 / perRem}em`,
+  gap: rem(15),
 });
 
 const avatarStyles = css({
-  width: `${96 / perRem}em`,
-  height: `${96 / perRem}em`,
+  width: rem(96),
+  height: rem(96),
 });
 
 const roleStyles = css({

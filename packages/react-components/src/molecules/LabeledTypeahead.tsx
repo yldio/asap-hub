@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 import { ComponentProps, ReactNode } from 'react';
 import { Typeahead, Paragraph, Label } from '../atoms';
-import { perRem, rem } from '../pixels';
+import { rem } from '../pixels';
 
 const subtitleStyles = {
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
 };
 
 type LabeledTypeaheadProps = {

@@ -5,7 +5,7 @@ import { Link, Paragraph } from '../atoms';
 import {
   largeDesktopScreen,
   mobileScreen,
-  perRem,
+  rem,
   vminLinearCalcClamped,
 } from '../pixels';
 import { asapLogo, gp2Logo } from '../icons';
@@ -15,9 +15,9 @@ const headerStyles = css({
   display: 'flex',
   alignItems: 'center',
   backgroundColor: color(3, 92, 129).rgb,
-  gap: `${24 / perRem}em`,
+  gap: rem(24),
   color: paper.rgb,
-  padding: `${6 / perRem}em ${vminLinearCalcClamped(
+  padding: `${rem(6)} ${vminLinearCalcClamped(
     mobileScreen,
     24,
     largeDesktopScreen,

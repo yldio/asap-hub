@@ -1,23 +1,23 @@
 import { css } from '@emotion/react';
 import { Divider, Headline5, NavigationLink } from '../atoms';
 import { InterestGroupsIcon, TeamIcon, WorkingGroupsIcon } from '../icons';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const dividerStyle = css({
   display: 'block',
-  marginLeft: `${12 / perRem}em`,
-  marginRight: `${12 / perRem}em`,
+  marginLeft: rem(12),
+  marginRight: rem(12),
 });
 
 const headlineStyle = css({
-  padding: `${12 / perRem}em ${12 / perRem}em`,
+  padding: `${rem(12)} ${rem(12)}`,
   display: 'block',
 });
 
 const listStyle = css({
   a: {
-    paddingTop: `${12 / perRem}em`,
-    paddingBottom: `${12 / perRem}em`,
+    paddingTop: rem(12),
+    paddingBottom: rem(12),
     p: {
       span: {
         svg: {

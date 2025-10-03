@@ -18,7 +18,7 @@ import {
   lead,
   steel,
 } from '../colors';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { headlineStyles, fontStyles } from '../text';
 
 const hash = (str: string) => {
@@ -40,15 +40,15 @@ const borderWidth = 1;
 
 const ringStyle = css({
   boxSizing: 'border-box',
-  minWidth: `${minWidth / perRem}em`,
-  width: `min(100%, ${maxWidth / perRem}em)`,
+  minWidth: rem(minWidth),
+  width: `min(100%, ${rem(maxWidth)})`,
 
   // margin only for Avatars that get all the space (max) they want
   margin: `clamp(0px, calc(100% - ${maxWidth - 12}px), 12px) 0`,
 });
 
 const ringBorderStyle = css({
-  padding: `${borderPadding / perRem}em`,
+  padding: rem(borderPadding),
 
   borderWidth,
   borderStyle: 'solid',

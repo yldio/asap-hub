@@ -7,7 +7,7 @@ import {
   vminLinearCalcClamped,
   mobileScreen,
   tabletScreen,
-  perRem,
+  rem,
 } from '../pixels';
 
 const overlayContainerStyles = css({
@@ -38,11 +38,11 @@ const modalStyles = css({
   alignSelf: 'center',
   zIndex: 1,
 
-  maxWidth: `${850 / perRem}em`,
+  maxWidth: rem(850),
   maxHeight: '80%',
 
   display: 'flex',
-  padding: `${12 / perRem}em ${vminLinearCalcClamped(
+  padding: `${rem(12)} ${vminLinearCalcClamped(
     mobileScreen,
     24,
     tabletScreen,

@@ -12,9 +12,9 @@ import githubSanitizationSchema from 'hast-util-sanitize/lib/github';
 import { Paragraph, Headline4, Headline5, Headline6, Link } from '../atoms';
 import { isAllowedChildren } from '../text';
 import { ErrorCard } from '../molecules';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
-const headline1Spacing = css({ paddingTop: `${24 / perRem}em` });
+const headline1Spacing = css({ paddingTop: rem(24) });
 const iframeContainer = css({
   display: 'block',
   position: 'relative',

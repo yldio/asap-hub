@@ -1,10 +1,10 @@
 import { css, SerializedStyles } from '@emotion/react';
 import * as colors from '../colors';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { AccentColorName, layoutStyles } from '../text';
 
 const primaryStyles = css({
-  fontSize: `${17 / perRem}em`,
+  fontSize: rem(17),
   lineHeight: `${24 / 17}em`,
 });
 

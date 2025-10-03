@@ -23,7 +23,7 @@ import {
   paddingLeftRight,
   styles,
 } from './form';
-import { lineHeight, perRem } from './pixels';
+import { lineHeight, rem } from './pixels';
 
 export interface Option<V extends string> {
   value: V;
@@ -49,14 +49,14 @@ const baseSelectStyles = {
     },
   }),
   indicatorSeparator: () => ({
-    padding: `0 ${6 / perRem}em`,
+    padding: `0 ${rem(6)}`,
   }),
   indicatorsContainer: (provided: CSSObject) => ({
     ...provided,
 
-    minWidth: `${lineHeight / perRem}em`,
-    minHeight: `${lineHeight / perRem}em`,
-    paddingRight: `${3 / perRem}em`,
+    minWidth: rem(lineHeight),
+    minHeight: rem(lineHeight),
+    paddingRight: rem(3),
 
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -66,7 +66,7 @@ const baseSelectStyles = {
     ...provided,
 
     margin: 0,
-    paddingTop: `${9 / perRem}em`,
+    paddingTop: rem(9),
 
     borderRadius: 0,
     boxShadow: `0px 2px 4px ${steel.rgb}`,
@@ -75,13 +75,13 @@ const baseSelectStyles = {
     ...provided,
 
     borderStyle: 'solid',
-    borderWidth: `${borderWidth / perRem}em`,
+    borderWidth: rem(borderWidth),
     borderColor: steel.rgb,
   }),
 
   noOptionsMessage: () => ({
     ...disabledStyles,
-    padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
+    padding: `${rem(12)} ${rem(paddingLeftRight)}`,
   }),
 };
 
@@ -95,7 +95,7 @@ export const reactSelectStyles = (
   option: (provided, { isFocused }) => ({
     ...provided,
 
-    padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
+    padding: `${rem(12)} ${rem(paddingLeftRight)}`,
 
     backgroundColor: isFocused ? primary100.rgba : 'unset',
     color: isFocused ? primary900.rgba : 'unset',
@@ -127,7 +127,7 @@ export const reactSelectStyles = (
   valueContainer: (provided) => ({
     ...provided,
     padding: 0,
-    paddingRight: `${indicatorPadding / perRem}em`,
+    paddingRight: rem(indicatorPadding),
   }),
   placeholder: (provided) => ({
     ...provided,
@@ -155,7 +155,7 @@ export const reactMultiSelectStyles = <
   option: (provided, { isFocused }) => ({
     ...provided,
 
-    padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
+    padding: `${rem(12)} ${rem(paddingLeftRight)}`,
 
     backgroundColor: isFocused ? primary100.rgba : 'unset',
     color: isFocused ? primary900.rgba : 'unset',
@@ -163,7 +163,7 @@ export const reactMultiSelectStyles = <
   }),
   control: (_provided, { isFocused, isDisabled }) => ({
     ...baseStyles,
-    padding: `${3 / perRem}em ${9 / perRem}em`,
+    padding: `${rem(3)} ${rem(9)}`,
 
     display: 'flex',
     justifyContent: 'space-between',
@@ -180,8 +180,8 @@ export const reactMultiSelectStyles = <
     ...(isDisabled ? disabledStyles : {}),
   }),
   multiValue: () => ({
-    padding: `${5 / perRem}em ${15 / perRem}em ${5 / perRem}em`,
-    margin: `${5 / perRem}em ${6 / perRem}em ${5 / perRem}em`,
+    padding: `${rem(5)} ${rem(15)} ${rem(5)}`,
+    margin: `${rem(5)} ${rem(6)} ${rem(5)}`,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -189,7 +189,7 @@ export const reactMultiSelectStyles = <
     borderStyle: 'solid',
     borderWidth: `${borderWidth}px`,
     borderColor: isInvalid ? tin.rgba : steel.rgb,
-    borderRadius: `${18 / perRem}em`,
+    borderRadius: rem(18),
     backgroundColor: paper.rgb,
   }),
   multiValueLabel: (provided) => ({
@@ -205,7 +205,7 @@ export const reactMultiSelectStyles = <
       : {
           ...provided,
           padding: 0,
-          marginLeft: `${9 / perRem}em`,
+          marginLeft: rem(9),
           display: 'flex',
           cursor: 'pointer',
           svg: { width: '12px', height: '12px', strokeWidth: '2.5' },
@@ -228,8 +228,8 @@ export const reactMultiSelectStyles = <
             margin: 0,
           }
         : {
-            padding: `${5 / perRem}em 0 ${5 / perRem}em`,
-            margin: `${6 / perRem}em ${6 / perRem}em ${6 / perRem}em`,
+            padding: `${rem(5)} 0 ${rem(5)}`,
+            margin: `${rem(6)} ${rem(6)} ${rem(6)}`,
           }),
     };
   },
@@ -237,6 +237,6 @@ export const reactMultiSelectStyles = <
     ...provided,
     color: isInvalid ? ember.rgb : provided.color,
     opacity: isInvalid ? 0.4 : provided.opacity,
-    marginLeft: `${6 / perRem}em`,
+    marginLeft: rem(6),
   }),
 });

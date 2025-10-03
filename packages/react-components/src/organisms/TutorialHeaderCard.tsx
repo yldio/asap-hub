@@ -3,7 +3,7 @@ import { TutorialsResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Card, Display } from '../atoms';
-import { perRem, mobileScreen } from '../pixels';
+import { rem, mobileScreen } from '../pixels';
 import { formatDate } from '../date';
 import { ExternalLink, UsersList, AssociationList } from '../molecules';
 import { lead } from '..';
@@ -14,12 +14,12 @@ const timestampStyles = css({
   display: 'flex',
   flexDirection: 'row',
   whiteSpace: 'pre',
-  marginTop: `${24 / perRem}em`,
+  marginTop: rem(24),
   marginBottom: 0,
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',
-    marginTop: `${12 / perRem}em`,
-    marginBottom: `${12 / perRem}em`,
+    marginTop: rem(12),
+    marginBottom: rem(12),
   },
 });
 
@@ -28,19 +28,19 @@ const headerStyle = css({
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'space-between',
-  paddingBottom: `${24 / perRem}em`,
+  paddingBottom: rem(24),
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: `${15 / perRem}em`,
+    gap: rem(15),
   },
 });
 
 const associationStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  rowGap: `${6 / perRem}em`,
+  rowGap: rem(6),
 });
 
 type TutorialHeaderCardProps = Pick<
@@ -65,7 +65,7 @@ const TutorialHeaderCard: React.FC<TutorialHeaderCardProps> = ({
 }) => (
   <Card>
     <div css={headerStyle}>
-      <div css={{ paddingRight: `${15 / perRem}em` }}>
+      <div css={{ paddingRight: rem(15) }}>
         <Display styleAsHeading={3}>{title}</Display>
       </div>
       {link ? <ExternalLink label={linkText} href={link} /> : null}

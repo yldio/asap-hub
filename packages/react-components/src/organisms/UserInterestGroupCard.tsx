@@ -5,19 +5,19 @@ import React from 'react';
 import { Divider, Link, Paragraph } from '../atoms';
 import { lead } from '../colors';
 import { TabbedCard } from '../molecules';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
 
 const itemsListWrapper = css({
   display: 'flex',
   flexDirection: 'column',
-  paddingTop: `${33 / perRem}em`,
-  paddingBottom: `${33 / perRem}em`,
+  paddingTop: rem(33),
+  paddingBottom: rem(33),
 });
 
 const dividerStyles = css({
   display: 'flex',
-  height: `${42 / perRem}em`,
+  height: rem(42),
   flexDirection: 'column',
   justifyContent: 'center',
 });
@@ -35,7 +35,7 @@ const listItemStyle = css({
 
   gridTemplateColumns: '1fr',
   gridTemplateRows: '1fr 1fr',
-  gridRowGap: `${12 / perRem}em`,
+  gridRowGap: rem(12),
 
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridAutoFlow: 'column',

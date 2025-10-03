@@ -28,7 +28,7 @@ import {
 } from '../organisms';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 
 import {
   getDecision,
@@ -97,7 +97,7 @@ const mainStyles = css({
 const contentStyles = css({
   display: 'grid',
   gridTemplateColumns: '1fr',
-  maxWidth: `${800 / perRem}em`,
+  maxWidth: rem(800),
   justifyContent: 'center',
   gridAutoFlow: 'row',
   rowGap: rem(32),
@@ -106,7 +106,7 @@ const contentStyles = css({
 const formControlsContainerStyles = css({
   display: 'flex',
   justifyContent: 'end',
-  paddingBottom: `${200 / perRem}em`, // Hack for labs selector
+  paddingBottom: rem(200), // Hack for labs selector
   [`@media (max-width: 810px)`]: {
     justifySelf: 'end',
     width: '100%',
@@ -116,7 +116,7 @@ const formControlsContainerStyles = css({
 const formControlsTwoButtonsStyles = css({
   display: 'grid',
   alignItems: 'end',
-  gridGap: `${24 / perRem}em`,
+  gridGap: rem(24),
   gridTemplateColumns: '1fr 1fr',
   [`@media (max-width: ${mobileScreen.width}px)`]: {
     gridTemplateColumns: '1fr',
@@ -135,7 +135,7 @@ const formControlsTwoButtonsStyles = css({
 const formControlsThreeButtonsStyles = css({
   display: 'grid',
   alignItems: 'end',
-  gap: `${24 / perRem}em`,
+  gap: rem(24),
   gridTemplateColumns: '1fr 1fr 1fr',
   [`@media (max-width: 1110px)`]: {
     gridTemplateColumns: '1fr',

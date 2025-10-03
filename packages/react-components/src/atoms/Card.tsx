@@ -1,7 +1,7 @@
 import { css, CSSObject, SerializedStyles } from '@emotion/react';
 import { borderRadius, paddingStyles } from '../card';
 import * as colors from '../colors';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { themes } from '../theme';
 
 const containerStyles = css({
@@ -9,7 +9,7 @@ const containerStyles = css({
   width: '100%',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderRadius: `${borderRadius / perRem}em`,
+  borderRadius: `${rem(borderRadius)}`,
 });
 
 export type AccentVariant =

@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/routing';
 
 import {
-  perRem,
+  rem,
   vminLinearCalc,
   largeDesktopScreen,
   mobileScreen,
@@ -30,13 +30,13 @@ const listStyles = css({
   listStyle: 'none',
   margin: 0,
   boxSizing: 'border-box',
-  padding: `${12 / perRem}em`,
-  paddingTop: `max(${12 / perRem}em, ${vminLinearCalc(
+  padding: rem(12),
+  paddingTop: `max(${rem(12)}, ${vminLinearCalc(
     mobileScreen,
-    18 / perRem,
+    18,
     largeDesktopScreen,
-    12 / perRem,
-    'em',
+    12,
+    'px',
   )})`,
   li: {
     marginBottom: '3px',

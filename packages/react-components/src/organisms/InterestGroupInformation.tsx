@@ -1,7 +1,7 @@
 import { InterestGroupResponse } from '@asap-hub/model';
 import { Card, Divider, Headline3, Paragraph } from '../atoms';
 import TagList from '../molecules/TagList';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 type InterestGroupInformationProps = Pick<
   InterestGroupResponse,
@@ -20,8 +20,8 @@ const InterestGroupInformation: React.FC<InterestGroupInformationProps> = ({
     <Headline3>Tags</Headline3>
     <div
       css={{
-        marginTop: `${12 / perRem}em`,
-        marginBottom: `${24 / perRem}em`,
+        marginTop: rem(12),
+        marginBottom: rem(24),
       }}
     >
       <Paragraph noMargin accent="lead">

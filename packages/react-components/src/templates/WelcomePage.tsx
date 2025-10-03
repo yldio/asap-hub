@@ -5,7 +5,7 @@ import { Anchor, Link, Paragraph } from '../atoms';
 import { backgroundNeuronsImage } from '../images';
 import { mailToSupport } from '../mail';
 import { Toast, WelcomeCard } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { themes } from '../theme';
 import { noop } from '../utils';
 
@@ -67,7 +67,7 @@ const welcomeStyles = css({
   flexBasis: '100%',
   order: 2,
 
-  margin: `${12 / perRem}em`,
+  margin: rem(12),
   display: 'flex',
   justifyContent: 'center',
 });

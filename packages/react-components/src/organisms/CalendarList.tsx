@@ -3,13 +3,13 @@ import { BasicCalendarResponse } from '@asap-hub/model';
 import { FC, useState } from 'react';
 
 import { Card, Headline3, Paragraph, Link, Button } from '../atoms';
-import { tabletScreen, perRem } from '../pixels';
+import { tabletScreen, rem } from '../pixels';
 import { CalendarLink } from '../molecules';
 import { steel } from '../colors';
 
 const containerStyles = css({
   display: 'grid',
-  gridRowGap: `${24 / perRem}em`,
+  gridRowGap: rem(24),
 });
 
 const headerStyles = css({
@@ -17,9 +17,9 @@ const headerStyles = css({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginTop: `${33 / perRem}em`,
-  marginLeft: `${24 / perRem}em`,
-  marginRight: `${24 / perRem}em`,
+  marginTop: rem(33),
+  marginLeft: rem(24),
+  marginRight: rem(24),
 });
 
 const subheaderStyles = css({
@@ -27,10 +27,10 @@ const subheaderStyles = css({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginTop: `${24 / perRem}em`,
-  marginLeft: `${24 / perRem}em`,
-  marginRight: `${24 / perRem}em`,
-  marginBottom: `${(33 - 12) / perRem}em`,
+  marginTop: rem(24),
+  marginLeft: rem(24),
+  marginRight: rem(24),
+  marginBottom: rem(33 - 12),
 });
 
 const dataGrid = css({
@@ -57,15 +57,15 @@ const gridButton = css({
 const orderList = css({
   listStyle: 'none',
   margin: 0,
-  paddingLeft: `${24 / perRem}em`,
-  paddingRight: `${24 / perRem}em`,
+  paddingLeft: rem(24),
+  paddingRight: rem(24),
   li: {
     width: '100%',
     display: 'inline-flex',
   },
   '&> li + li': {
     [`@media (max-width: ${tabletScreen.min}px)`]: {
-      marginTop: `${12 / perRem}em`,
+      marginTop: rem(12),
     },
     borderTop: `1px solid ${steel.rgb}`,
   },
@@ -74,8 +74,8 @@ const orderList = css({
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  paddingTop: `${15 / perRem}em`,
-  paddingBottom: `${15 / perRem}em`,
+  paddingTop: rem(15),
+  paddingBottom: rem(15),
   borderTop: `1px solid ${steel.rgb}`,
 });
 
@@ -112,9 +112,7 @@ const CalendarList: FC<CalendarListProps> = ({
           <ul
             css={[
               orderList,
-              ...(!displayShowMoreButton
-                ? [{ paddingBottom: `${24 / perRem}em` }]
-                : []),
+              ...(!displayShowMoreButton ? [{ paddingBottom: rem(24) }] : []),
             ]}
           >
             {calendars
@@ -125,11 +123,7 @@ const CalendarList: FC<CalendarListProps> = ({
                     <div css={gridText}>
                       <Paragraph accent="charcoal">
                         <span css={{ display: 'flex' }}>
-                          <span
-                            css={{ color, paddingRight: `${14 / perRem}em` }}
-                          >
-                            ●
-                          </span>
+                          <span css={{ color, paddingRight: rem(14) }}>●</span>
                           <span css={{ fontWeight: 'bold' }}>{name}</span>
                         </span>
                       </Paragraph>

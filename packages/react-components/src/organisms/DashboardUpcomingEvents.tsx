@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import React, { ComponentProps, Fragment } from 'react';
 import { Card } from '../atoms';
 import { lead } from '../colors';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import EventCard from './EventCard';
 import { calendarIcon } from '../icons';
 
@@ -13,14 +13,14 @@ type DashboardUpcomingEventsProps = {
 const upcomingEventsWrapper = css({
   display: 'flex',
   flexFlow: 'column',
-  gap: `${24 / perRem}em`,
+  gap: rem(24),
 });
 
 const noUpcomingEvents = css({
   display: 'flex',
   flexFlow: 'row',
   color: lead.rgb,
-  gap: `${15 / perRem}em`,
+  gap: rem(15),
 });
 
 const DashboardUpcomingEvents: React.FC<DashboardUpcomingEventsProps> = ({

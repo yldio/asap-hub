@@ -8,7 +8,9 @@ export default {
 };
 
 const mockUpload = async (file: File) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => {
+    setTimeout(resolve, 1000);
+  });
   console.log('Uploaded:', file.name);
 };
 

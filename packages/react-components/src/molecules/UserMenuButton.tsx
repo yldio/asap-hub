@@ -3,7 +3,7 @@ import { ComponentProps } from 'react';
 
 import { Avatar, Paragraph } from '../atoms';
 import { chevronDownIcon, chevronUpIcon, verticalDividerIcon } from '../icons';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { noop } from '../utils';
 
 const buttonResetStyles = css({
@@ -13,11 +13,11 @@ const buttonResetStyles = css({
   outline: 'none',
 });
 const styles = css({
-  padding: `${12 / perRem}em ${24 / perRem}em`,
+  padding: `${rem(12)} ${rem(24)}`,
   cursor: 'pointer',
 
   display: 'grid',
-  gridTemplateColumns: `auto ${48 / perRem}em auto auto`,
+  gridTemplateColumns: `auto ${rem(48)} auto auto`,
   alignItems: 'center',
 });
 
@@ -49,15 +49,13 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
     }}
   >
     <Paragraph>
-      <strong css={{ paddingRight: `${15 / perRem}em` }}>
-        {children || displayName}
-      </strong>
+      <strong css={{ paddingRight: rem(15) }}>{children || displayName}</strong>
     </Paragraph>
     <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
     <div
       css={{
-        paddingLeft: `${12 / perRem}em`,
-        paddingRight: `${9 / perRem}em`,
+        paddingLeft: rem(12),
+        paddingRight: rem(9),
       }}
     >
       {verticalDividerIcon}

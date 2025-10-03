@@ -11,7 +11,7 @@ import {
   useValidation,
   validationMessageStyles,
 } from '../form';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { getSvgAspectRatio, noop } from '../utils';
 
 type Position = 'left' | 'right';
@@ -32,7 +32,7 @@ const disabledStyles = css({
 
 const LABEL_INDICATOR_CLASS_NAME = 'labelIndicator';
 const labelIndicatorStyles = css({
-  padding: `${15 / perRem}em ${18 / perRem}em`,
+  padding: `${rem(15)} ${rem(18)}`,
   backgroundColor: silver.rgb,
   border: `1px solid ${steel.rgb}`,
   borderRight: 0,
@@ -75,11 +75,11 @@ const invalidStyles = css({
 
 const textFieldStyles = ({ primary900 = pine }: Theme['colors'] = {}) =>
   css({
-    backgroundPosition: `right ${paddingLeftRight / perRem}em top ${
-      paddingTopBottom / perRem
-    }em`,
+    backgroundPosition: `right ${rem(paddingLeftRight)} top ${rem(
+      paddingTopBottom,
+    )}`,
     backgroundRepeat: 'no-repeat',
-    backgroundSize: `auto ${indicatorSize / perRem}em`,
+    backgroundSize: `auto ${rem(indicatorSize)}`,
 
     '::placeholder': {
       color: tin.rgb,
@@ -106,9 +106,7 @@ const containerStyles = css({
 
 const getIndicatorPadding = (icon: React.ReactElement) => {
   const aspectRatio = getSvgAspectRatio(icon);
-  return `${
-    (paddingLeftRight + indicatorSize * aspectRatio + indicatorPadding) / perRem
-  }em`;
+  return rem(paddingLeftRight + indicatorSize * aspectRatio + indicatorPadding);
 };
 
 const getIndicatorStyles = (aspectRatio: number, position: Position) =>
@@ -118,11 +116,11 @@ const getIndicatorStyles = (aspectRatio: number, position: Position) =>
     justifyContent: 'center',
     alignItems: 'center',
 
-    top: `${paddingTopBottom / perRem}em`,
-    [position]: `${paddingLeftRight / perRem}em`,
+    top: rem(paddingTopBottom),
+    [position]: rem(paddingLeftRight),
 
-    height: `${indicatorSize / perRem}em`,
-    width: `${(indicatorSize * aspectRatio) / perRem}em`,
+    height: rem(indicatorSize),
+    width: rem(indicatorSize * aspectRatio),
   });
 
 type TextFieldProps = {

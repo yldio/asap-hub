@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { GuideDataObject } from '@asap-hub/model';
 
 import { HelpSection } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { Card, Headline2, Icon, Link, Paragraph } from '../atoms';
 import { Accordion } from '../molecules';
 import { ExternalLinkIcon } from '../icons';
@@ -11,8 +11,8 @@ import { isInternalLink } from '../utils';
 const styles = css({
   display: 'flex',
   flexFlow: 'column',
-  gap: `${12 / perRem}em`,
-  marginBottom: `${57 / perRem}em`,
+  gap: rem(12),
+  marginBottom: rem(57),
 });
 
 type DiscoverGuidesProps = {

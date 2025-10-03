@@ -5,13 +5,13 @@ import { css } from '@emotion/react';
 
 import { LabeledTextField } from '../molecules';
 import { noop } from '../utils';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { EditModal } from '../organisms';
 import { GlobeIcon } from '../icons';
 
 const fieldsContainer = css({
   display: 'grid',
-  rowGap: `${12 / perRem}em`,
+  rowGap: rem(12),
 });
 
 type ToolModalProps = Partial<TeamTool> & {

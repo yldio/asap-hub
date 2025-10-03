@@ -11,7 +11,7 @@ import { noop } from '../utils';
 import { Link } from '../atoms';
 import { EditUserModal } from '../organisms';
 import { mailToSupport } from '../mail';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 type ExpertiseAndResourcesModalProps = Pick<
   UserResponse,
@@ -23,7 +23,7 @@ type ExpertiseAndResourcesModalProps = Pick<
 };
 const fieldsContainerStyles = css({
   display: 'grid',
-  rowGap: `${14 / perRem}em`,
+  rowGap: rem(14),
 });
 
 const MINIMUM_EXPERTISE_AND_RESOURCES = 5;

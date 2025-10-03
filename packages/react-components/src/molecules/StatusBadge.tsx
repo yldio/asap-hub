@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { ManuscriptStatus } from '@asap-hub/model';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import {
   info100,
   info500,
@@ -38,15 +38,15 @@ const getStatusBadgeStyles = (type: StatusType) => {
     backgroundColor: bgColor,
     color: textColor,
     padding: '0em 0.7em',
-    borderRadius: `${24 / perRem}em`,
+    borderRadius: rem(24),
     fontSize: '0.9em',
     marginLeft: '0.1em',
     display: 'flex',
     alignItems: 'center',
-    gap: `${6 / perRem}rem`,
+    gap: `${rem(6)}`,
     '& svg': {
-      width: `${16 / perRem}rem`,
-      height: `${16 / perRem}rem`,
+      width: rem(16),
+      height: rem(16),
       margin: 0,
       '& > g > path': {
         fill: iconFill,

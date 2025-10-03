@@ -89,10 +89,6 @@ const footerStyles = css({
   },
 });
 
-const linkStyles = css({
-  marginBottom: rem(36),
-});
-
 const fieldWithLinkStyles = css({
   display: 'flex',
   flexFlow: 'column',

@@ -1,6 +1,5 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { Card, Headline3, Paragraph } from '../atoms';
-import { paddingStyles } from '../card';
 import { rem } from '../pixels';
 
 export type FormCardProps = {
@@ -10,16 +9,19 @@ export type FormCardProps = {
 };
 
 const cardStyles = css({
-  paddingTop: rem(14),
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const descriptionStyles = css({
-  paddingTop: 0,
+  paddingTop: rem(24),
   paddingBottom: 0,
-  'p:first-of-type': {
-    marginTop: 0,
-    marginBottom: rem(10),
-  },
+});
+
+const childrenWrapStyles = css({
+  marginTop: rem(32),
+  display: 'flex',
+  flexFlow: 'column',
+  gap: rem(48),
 });
 
 const FormCard: React.FC<FormCardProps> = ({
@@ -29,15 +31,17 @@ const FormCard: React.FC<FormCardProps> = ({
   overrideStyles,
 }) => (
   <Card padding={false} overrideStyles={cardStyles} title={title}>
-    <div role="presentation" css={[paddingStyles, overrideStyles]}>
+    <div role="presentation" css={[overrideStyles]}>
       <Headline3 noMargin>{title}</Headline3>
     </div>
     {!!description && (
-      <div css={[paddingStyles, descriptionStyles]}>
-        <Paragraph accent="lead">{description}</Paragraph>
+      <div css={[descriptionStyles]}>
+        <Paragraph noMargin accent="lead">
+          {description}
+        </Paragraph>
       </div>
     )}
-    <div css={[paddingStyles]}>{children}</div>
+    <div css={[childrenWrapStyles]}>{children}</div>
   </Card>
 );
 

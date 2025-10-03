@@ -39,7 +39,7 @@ describe('PreprintCompliance', () => {
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
-              <PreprintCompliance tags={[]} />
+              <PreprintCompliance tags={[]} timeRange="all" currentPage={0} />
             </WhenReady>
           </Auth0Provider>
         </Suspense>

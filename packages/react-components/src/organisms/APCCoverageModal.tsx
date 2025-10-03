@@ -251,7 +251,6 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                         onChange={onChange}
                         onBlur={onBlur}
                         enabled={!isSubmitting}
-                        noPadding
                       />
                     </div>
                   )}
@@ -322,7 +321,6 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                           onChange={onChange}
                           onBlur={onBlur}
                           enabled={!isSubmitting}
-                          noPadding
                         />
                       </div>
                     )}
@@ -347,7 +345,6 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                         onChange={onChange}
                         onBlur={onBlur}
                         enabled={!isSubmitting}
-                        noPadding
                       />
                     )}
                   />

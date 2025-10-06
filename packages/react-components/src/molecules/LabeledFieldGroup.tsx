@@ -11,7 +11,6 @@ const childrenWrapStyles = css({
   display: 'flex',
   flexFlow: 'column',
   gap: rem(48),
-  background: 'red',
 });
 
 const LabeledFieldGroup: React.FC<LabeledFieldGroupProps> = ({ children }) => (

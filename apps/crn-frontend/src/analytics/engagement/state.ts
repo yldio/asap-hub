@@ -13,6 +13,7 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
+  useRecoilValueLoadable,
 } from 'recoil';
 
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
@@ -114,6 +115,13 @@ export const useEngagementPerformance =
     engagementPerformanceState,
     getEngagementPerformance,
   );
+
+export const useEngagementPerformanceValue = (
+  options: Parameters<typeof getEngagementPerformance>[1],
+) => {
+  const loadable = useRecoilValueLoadable(engagementPerformanceState(options));
+  return loadable.state === 'hasValue' ? loadable.contents : undefined;
+};
 
 const analyticsMeetingRepAttendanceState = atomFamily<
   ListMeetingRepAttendanceResponse | Error | undefined,

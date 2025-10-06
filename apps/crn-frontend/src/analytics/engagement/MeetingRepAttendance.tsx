@@ -4,8 +4,11 @@ import {
   SortMeetingRepAttendance,
   LimitedTimeRangeOption,
 } from '@asap-hub/model';
-import { MeetingRepAttendanceTable } from '@asap-hub/react-components';
-import { useState } from 'react';
+import {
+  LoadingContentBodyTable,
+  MeetingRepAttendanceTable,
+} from '@asap-hub/react-components';
+import { FC, Suspense, useState } from 'react';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsMeetingRepAttendance } from './state';
 
@@ -14,7 +17,7 @@ interface MeetingRepAttendanceProps {
   timeRange: LimitedTimeRangeOption;
 }
 
-const MeetingRepAttendance: React.FC<MeetingRepAttendanceProps> = ({
+const MeetingRepAttendanceContent: FC<MeetingRepAttendanceProps> = ({
   tags,
   timeRange,
 }) => {
@@ -47,5 +50,14 @@ const MeetingRepAttendance: React.FC<MeetingRepAttendanceProps> = ({
     />
   );
 };
+
+const MeetingRepAttendance: FC<MeetingRepAttendanceProps> = ({
+  tags,
+  timeRange,
+}) => (
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <MeetingRepAttendanceContent tags={tags} timeRange={timeRange} />
+  </Suspense>
+);
 
 export default MeetingRepAttendance;

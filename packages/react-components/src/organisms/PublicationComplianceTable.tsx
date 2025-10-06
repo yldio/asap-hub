@@ -238,10 +238,14 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                 <td className={'publications'}>
                   <p css={iconStyles}>
                     <span css={valueStyles}>
-                      {row.numberOfPublications === null
+                      {row.overallCompliance === null
                         ? 'N/A'
-                        : row.numberOfPublications}
+                        : `${row.overallCompliance}%`}
                     </span>
+                    {getPerformanceMoodIcon(
+                      row.overallCompliance ?? 0,
+                      row.overallCompliance === null,
+                    )}
                   </p>
                 </td>
                 <td className={'datasets'}>

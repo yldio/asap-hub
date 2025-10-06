@@ -15,11 +15,15 @@ describe('PublicationComplianceTable', () => {
     teamId: 'team-id-1',
     teamName: 'Test Team',
     isTeamInactive: false,
-    numberOfPublications: 85,
     datasetsPercentage: 70,
     protocolsPercentage: 60,
     codePercentage: 45,
     labMaterialsPercentage: 30,
+    overallCompliance: 50,
+    datasetsRanking: 'NEEDS IMPROVEMENT',
+    protocolsRanking: 'NEEDS IMPROVEMENT',
+    codeRanking: 'NEEDS IMPROVEMENT',
+    labMaterialsRanking: 'NEEDS IMPROVEMENT',
   };
 
   const defaultProps: ComponentProps<typeof PublicationComplianceTable> = {
@@ -38,7 +42,7 @@ describe('PublicationComplianceTable', () => {
   it('renders data', () => {
     render(<PublicationComplianceTable {...defaultProps} />);
     expect(screen.getByText('Test Team')).toBeInTheDocument();
-    expect(screen.getByText('85')).toBeInTheDocument();
+    expect(screen.getByText('50%')).toBeInTheDocument();
     expect(screen.getByText('70%')).toBeInTheDocument();
     expect(screen.getByText('60%')).toBeInTheDocument();
     expect(screen.getByText('45%')).toBeInTheDocument();
@@ -208,11 +212,27 @@ describe('PublicationComplianceTable', () => {
             protocolsPercentage: null,
             codePercentage: null,
             labMaterialsPercentage: null,
+            overallCompliance: null,
           },
         ]}
       />,
     );
     expect(getAllByText('N/A')).toHaveLength(5);
+  });
+
+  it('renders N/A for limited data', () => {
+    const data = [
+      {
+        ...publicationComplianceData,
+        datasetsRanking: 'LIMITED DATA',
+        protocolsRanking: 'LIMITED DATA',
+        codeRanking: 'LIMITED DATA',
+        labMaterialsRanking: 'LIMITED DATA',
+        overallCompliance: null,
+      },
+    ];
+    render(<PublicationComplianceTable {...defaultProps} data={data} />);
+    expect(screen.getAllByText('N/A')).toHaveLength(5);
   });
 
   it('renders team links correctly', () => {
@@ -230,11 +250,15 @@ describe('PublicationComplianceTable', () => {
         ...publicationComplianceData,
         teamId: 'team-id-2',
         teamName: 'Test Team 2',
-        numberOfPublications: 90,
-        datasetsPercentage: 80,
+        overallCompliance: 55,
+        datasetsPercentage: 85,
         protocolsPercentage: 70,
         codePercentage: 65,
-        labMaterialsPercentage: 50,
+        labMaterialsPercentage: 53,
+        datasetsRanking: 'ADEQUATE',
+        protocolsRanking: 'NEEDS IMPROVEMENT',
+        codeRanking: 'NEEDS IMPROVEMENT',
+        labMaterialsRanking: 'NEEDS IMPROVEMENT',
       },
     ];
 
@@ -242,11 +266,11 @@ describe('PublicationComplianceTable', () => {
 
     expect(screen.getByText('Test Team')).toBeInTheDocument();
     expect(screen.getByText('Test Team 2')).toBeInTheDocument();
-    expect(screen.getByText('90')).toBeInTheDocument();
-    expect(screen.getByText('80%')).toBeInTheDocument();
+    expect(screen.getByText('55%')).toBeInTheDocument();
+    expect(screen.getByText('85%')).toBeInTheDocument();
     expect(screen.getAllByText('70%')).toHaveLength(2);
     expect(screen.getByText('65%')).toBeInTheDocument();
-    expect(screen.getByText('50%')).toBeInTheDocument();
+    expect(screen.getByText('53%')).toBeInTheDocument();
   });
 
   it('renders page controls', () => {

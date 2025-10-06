@@ -238,7 +238,6 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                 <td className={'publications'}>
                   <p css={iconStyles}>
                     <span css={valueStyles}>
-                      {console.log({ pverall: row.overallCompliance })}
                       {row.overallCompliance === null
                         ? 'N/A'
                         : `${row.overallCompliance}%`}

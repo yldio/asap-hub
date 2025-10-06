@@ -691,7 +691,7 @@ export type PublicationComplianceDataObject = {
   teamId: string;
   teamName: string;
   isTeamInactive: boolean;
-  overallCompliance: number;
+  overallCompliance: number | null;
   ranking: string;
   datasetsPercentage: number | null;
   datasetsRanking: string;

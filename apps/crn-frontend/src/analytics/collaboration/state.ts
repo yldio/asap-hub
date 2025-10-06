@@ -20,6 +20,7 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
+  useRecoilValueLoadable,
 } from 'recoil';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
@@ -218,6 +219,15 @@ export const useTeamCollaborationPerformance =
     getTeamCollaborationPerformance,
   );
 
+export const useTeamCollaborationPerformanceValue = (
+  options: Parameters<typeof getTeamCollaborationPerformance>[1],
+) => {
+  const loadable = useRecoilValueLoadable(
+    teamCollaborationPerformanceState(options),
+  );
+  return loadable.state === 'hasValue' ? loadable.contents : undefined;
+};
+
 export const userCollaborationPerformanceState =
   makePerformanceState<UserCollaborationPerformance>(
     'analyticsUserCollaborationPerformance',
@@ -228,6 +238,15 @@ export const useUserCollaborationPerformance =
     userCollaborationPerformanceState,
     getUserCollaborationPerformance,
   );
+
+export const useUserCollaborationPerformanceValue = (
+  options: Parameters<typeof getUserCollaborationPerformance>[1],
+) => {
+  const loadable = useRecoilValueLoadable(
+    userCollaborationPerformanceState(options),
+  );
+  return loadable.state === 'hasValue' ? loadable.contents : undefined;
+};
 
 const analyticsPreliminaryDataSharingState = atomFamily<
   ListPreliminaryDataSharingResponse | Error | undefined,

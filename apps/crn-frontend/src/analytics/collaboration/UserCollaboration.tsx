@@ -6,10 +6,11 @@ import {
   UserCollaborationSortingDirection,
 } from '@asap-hub/model';
 import {
+  LoadingContentBodyTable,
   UserCollaborationMetric,
   UserCollaborationTable,
 } from '@asap-hub/react-components';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, FC, SetStateAction, Suspense } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsUserCollaboration,
@@ -69,7 +70,7 @@ export interface CollaborationProps<
   tags: string[];
 }
 
-const UserCollaboration: React.FC<CollaborationProps> = ({
+const UserCollaborationContent: FC<CollaborationProps> = ({
   sort,
   setSort,
   sortingDirection,
@@ -112,5 +113,11 @@ const UserCollaboration: React.FC<CollaborationProps> = ({
     />
   );
 };
+
+const UserCollaboration: FC<CollaborationProps> = (props) => (
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <UserCollaborationContent {...props} />
+  </Suspense>
+);
 
 export default UserCollaboration;

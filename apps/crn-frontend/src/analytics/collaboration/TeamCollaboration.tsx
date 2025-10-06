@@ -4,9 +4,11 @@ import {
   TeamCollaborationSortingDirection,
 } from '@asap-hub/model';
 import {
+  LoadingContentBodyTable,
   TeamCollaborationMetric,
   TeamCollaborationTable,
 } from '@asap-hub/react-components';
+import { FC, Suspense } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsTeamCollaboration,
@@ -36,7 +38,7 @@ const getDataForType = (
   }));
 };
 
-const TeamCollaboration: React.FC<
+const TeamCollaborationContent: FC<
   CollaborationProps<SortTeamCollaboration, TeamCollaborationSortingDirection>
 > = ({ sort, setSort, setSortingDirection, sortingDirection, type, tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
@@ -75,5 +77,13 @@ const TeamCollaboration: React.FC<
     />
   );
 };
+
+const TeamCollaboration: FC<
+  CollaborationProps<SortTeamCollaboration, TeamCollaborationSortingDirection>
+> = (props) => (
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <TeamCollaborationContent {...props} />
+  </Suspense>
+);
 
 export default TeamCollaboration;

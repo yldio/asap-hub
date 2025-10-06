@@ -8,6 +8,7 @@ import { noop } from '../utils';
 import { Button, Paragraph, Headline3, Link } from '../atoms';
 import EditModal from './EditModal';
 import { crossIcon } from '../icons';
+import LabeledFieldGroup from '../molecules/LabeledFieldGroup';
 
 const mobileQuery = `@media (max-width: ${tabletScreen.width - 1}px)`;
 const buttonStyles = css({
@@ -87,7 +88,11 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
             </Paragraph>
           )}
         </header>
-        {children ? <div>{children({ isSaving }, asyncWrapper)}</div> : null}
+        {children ? (
+          <LabeledFieldGroup>
+            {children({ isSaving }, asyncWrapper)}
+          </LabeledFieldGroup>
+        ) : null}
         <footer css={[footerStyles]}>
           <div css={buttonStyles}>
             <Link href={backHref} buttonStyle fullWidth noMargin>

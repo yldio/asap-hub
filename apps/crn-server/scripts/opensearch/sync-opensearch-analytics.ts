@@ -163,13 +163,7 @@ const run = async () => {
   if (args.includes('all')) {
     console.log('Exporting all metrics');
     await Promise.all(
-      validMetrics
-        .filter(
-          (metric) =>
-            metric !== 'preprint-compliance' &&
-            metric !== 'publication-compliance',
-        ) // TODO: remove this credentials issue is fixed
-        .map((metric) => exportMetricToOpensearch(metric)),
+      validMetrics.map((metric) => exportMetricToOpensearch(metric)),
     );
     process.exit(0);
   } else {

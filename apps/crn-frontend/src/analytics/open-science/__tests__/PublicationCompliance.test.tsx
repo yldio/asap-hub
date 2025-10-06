@@ -1,5 +1,5 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import {
   RecoilRoot,
@@ -38,7 +38,7 @@ jest.mock('../../../hooks', () => ({
 mockConsoleError();
 
 describe('PublicationCompliance', () => {
-  it('renders publication compliance correctly', () => {
+  it('renders publication compliance correctly', async () => {
     render(
       <RecoilRoot>
         <Suspense fallback="loading">
@@ -51,7 +51,9 @@ describe('PublicationCompliance', () => {
       </RecoilRoot>,
     );
 
-    expect(screen.getByText('Auth0 loading...')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Publications')).toBeInTheDocument();
+    });
   });
 
   it('resets publication compliance state to undefined when reset is triggered', () => {

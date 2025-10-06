@@ -238,6 +238,7 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                 <td className={'publications'}>
                   <p css={iconStyles}>
                     <span css={valueStyles}>
+                      {console.log({ pverall: row.overallCompliance })}
                       {row.overallCompliance === null
                         ? 'N/A'
                         : `${row.overallCompliance}%`}
@@ -251,7 +252,8 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                 <td className={'datasets'}>
                   <p css={iconStyles}>
                     <span css={valueStyles}>
-                      {row.datasetsPercentage === null
+                      {row.datasetsPercentage === null ||
+                      row.datasetsRanking === 'LIMITED DATA'
                         ? 'N/A'
                         : `${row.datasetsPercentage}%`}
                     </span>
@@ -264,7 +266,8 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                 <td className={'protocols'}>
                   <p css={iconStyles}>
                     <span css={valueStyles}>
-                      {row.protocolsPercentage === null
+                      {row.protocolsPercentage === null ||
+                      row.protocolsRanking === 'LIMITED DATA'
                         ? 'N/A'
                         : `${row.protocolsPercentage}%`}
                     </span>
@@ -277,7 +280,8 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                 <td className={'code'}>
                   <p css={iconStyles}>
                     <span css={valueStyles}>
-                      {row.codePercentage === null
+                      {row.codePercentage === null ||
+                      row.codeRanking === 'LIMITED DATA'
                         ? 'N/A'
                         : `${row.codePercentage}%`}
                     </span>
@@ -290,7 +294,8 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                 <td>
                   <p css={iconStyles}>
                     <span css={valueStyles}>
-                      {row.labMaterialsPercentage === null
+                      {row.labMaterialsPercentage === null ||
+                      row.labMaterialsRanking === 'LIMITED DATA'
                         ? 'N/A'
                         : `${row.labMaterialsPercentage}%`}
                     </span>

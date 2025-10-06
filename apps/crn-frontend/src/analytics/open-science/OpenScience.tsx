@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { analytics } from '@asap-hub/routing';
 import { AnalyticsOpenSciencePageBody } from '@asap-hub/react-components';
-import { useSearch, useAnalytics } from '../../hooks';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { OSChampionOpensearchResponse } from '@asap-hub/model';
 import PreprintCompliance from './PreprintCompliance';
 import PublicationCompliance from './PublicationCompliance';
+import { useSearch, useAnalytics, useAnalyticsOpensearch } from '../../hooks';
 
 type MetricOption = 'preprint-compliance' | 'publication-compliance';
 
@@ -21,22 +21,23 @@ const OpenScience: FC<Record<string, never>> = () => {
 
   const { timeRange } = useAnalytics();
   const { tags, setTags } = useSearch();
-  const { client } = useAnalyticsAlgolia();
+  const osPreprintClient = useAnalyticsOpensearch<OSChampionOpensearchResponse>(
+    'preprint-compliance',
+  );
 
   // TODO: Implement export functionality for Open Science metrics
   const exportResults = () => Promise.resolve();
 
-  const loadTags = async (tagQuery: string) => {
-    const searchedTags = await client.searchForTagValues(
-      ['engagement'],
-      tagQuery,
-      {},
-    );
-    return searchedTags.facetHits.map(({ value }) => ({
-      label: value,
-      value,
-    }));
-  };
+  const loadTags = useCallback(
+    async (tagQuery: string) => {
+      const response = await osPreprintClient.client.getTagSuggestions(
+        tagQuery,
+        'teams',
+      );
+      return response.map((value) => ({ label: value, value }));
+    },
+    [osPreprintClient.client],
+  );
 
   return (
     <AnalyticsOpenSciencePageBody

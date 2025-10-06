@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useCallback } from 'react';
 import {
   DocumentCategoryOption,
   OutputTypeOption,
@@ -6,7 +7,7 @@ import {
   timeRangeOptions,
   limitedTimeRangeOptions,
 } from '@asap-hub/model';
-import { ComponentProps } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 import { add } from 'date-fns';
 
 import { dropdownChevronIcon } from '../icons';
@@ -174,7 +175,9 @@ interface AnalyticsControlsProps {
   readonly outputType?: OutputTypeOption;
   readonly metricOption?: MetricOption;
   readonly tags: string[];
-  readonly loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
+  readonly loadTags?: (
+    tagsQuery: string,
+  ) => Promise<Array<{ label: string; value: string }>>;
   readonly setTags?: (tags: string[]) => void;
   readonly href?: string;
   readonly currentPage?: number;
@@ -188,7 +191,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   metricOption,
   tags,
   setTags = noop,
-  loadTags = noop,
+  loadTags = async () => [],
   exportResults,
   currentPage,
   href,
@@ -199,6 +202,29 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   const tagsQueryString = searchParams.has('tag')
     ? `&${searchParams.toString()}`
     : '';
+
+  const debouncedFetch = useDebouncedCallback(
+    async (
+      inputValue: string,
+      resolve: (options: Array<{ label: string; value: string }>) => void,
+    ) => {
+      const results = await loadTags(inputValue);
+      if (Array.isArray(results)) {
+        resolve(results);
+      }
+      resolve([]);
+    },
+    500,
+  );
+
+  const debouncedLoadTags = useCallback(
+    (inputValue: string) =>
+      new Promise<Array<{ label: string; value: string }>>((resolve) => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        debouncedFetch(inputValue, resolve);
+      }),
+    [debouncedFetch],
+  );
   return (
     <>
       <div css={searchSelectContainerStyles}>
@@ -214,7 +240,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
                     ? `${noOptionsMessage} ${inputValue}`
                     : 'No results found'
                 }
-                loadOptions={loadTags}
+                loadOptions={debouncedLoadTags}
                 onChange={(items) => setTags(items.map(({ value }) => value))}
                 values={tags.map((tag) => ({
                   label: tag,

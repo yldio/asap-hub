@@ -82,6 +82,7 @@ export {
   ExternalLink,
   ExpandableText,
   FormCard,
+  FormSection,
   GoogleSigninButton,
   Header,
   ImageLink,

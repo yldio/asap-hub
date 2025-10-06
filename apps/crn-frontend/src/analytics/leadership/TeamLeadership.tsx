@@ -3,8 +3,11 @@ import {
   LeadershipAndMembershipSortingDirection,
   SortLeadershipAndMembership,
 } from '@asap-hub/model';
-import { LeadershipMembershipTable } from '@asap-hub/react-components';
-import { Dispatch, SetStateAction, useState } from 'react';
+import {
+  LeadershipMembershipTable,
+  LoadingContentBodyTable,
+} from '@asap-hub/react-components';
+import { Dispatch, FC, SetStateAction, Suspense, useState } from 'react';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsLeadership } from './state';
 
@@ -58,7 +61,7 @@ const getDataForMetric = (
   }));
 };
 
-const TeamLeadership: React.FC<TeamLeadershipProps> = ({
+const TeamLeadershipTableContent: FC<TeamLeadershipProps> = ({
   sort,
   setSort,
   tags,
@@ -92,5 +95,15 @@ const TeamLeadership: React.FC<TeamLeadershipProps> = ({
     />
   );
 };
+
+const TeamLeadershipContent: FC<TeamLeadershipProps> = (props) => (
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <TeamLeadershipTableContent {...props} />
+  </Suspense>
+);
+
+const TeamLeadership: FC<TeamLeadershipProps> = (props) => (
+  <TeamLeadershipContent {...props} />
+);
 
 export default TeamLeadership;

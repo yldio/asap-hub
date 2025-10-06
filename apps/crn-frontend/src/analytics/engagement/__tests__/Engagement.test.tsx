@@ -361,6 +361,17 @@ describe('Engagement', () => {
       ).not.toBeInTheDocument();
     });
 
+    it('exports analytics for meeting rep attendance', async () => {
+      await renderPage(
+        analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
+      );
+      userEvent.click(screen.getByText(/csv/i));
+      expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+        expect.stringMatching(/engagement_attendance_\d+\.csv/),
+        expect.anything(),
+      );
+    });
+
     it('throws error when fails to fetch attendance data', async () => {
       const error = new Error('Failed to fetch engagement data');
       mockGetMeetingRepAttendance.mockRejectedValue(error);

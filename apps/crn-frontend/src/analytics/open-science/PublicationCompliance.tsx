@@ -3,14 +3,11 @@ import {
   PublicationComplianceTable,
   LoadingContentBodyTable,
 } from '@asap-hub/react-components';
-import { LimitedTimeRangeOption } from '@asap-hub/model';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsPublicationCompliance } from './state';
 
 interface PublicationComplianceProps {
   tags: string[];
-  timeRange: LimitedTimeRangeOption;
-  currentPage: number;
 }
 
 const PublicationComplianceContent: FC<PublicationComplianceProps> = ({
@@ -47,19 +44,17 @@ const PublicationComplianceContent: FC<PublicationComplianceProps> = ({
   );
 };
 
-const PublicationCompliance: FC<PublicationComplianceProps> = ({
-  tags,
-  timeRange,
-  currentPage,
-}) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <PublicationComplianceContent
-      key={`${tags.join(',')}-${timeRange}-${currentPage}`}
-      tags={tags}
-      timeRange={timeRange}
-      currentPage={currentPage}
-    />
-  </Suspense>
-);
+const PublicationCompliance: FC<PublicationComplianceProps> = ({ tags }) => {
+  const { timeRange } = useAnalytics();
+  const { currentPage } = usePaginationParams();
+  return (
+    <Suspense fallback={<LoadingContentBodyTable />}>
+      <PublicationComplianceContent
+        key={`${tags.join(',')}-${timeRange}-${currentPage}`}
+        tags={tags}
+      />
+    </Suspense>
+  );
+};
 
 export default PublicationCompliance;

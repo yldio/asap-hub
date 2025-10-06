@@ -1,6 +1,7 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { Card, Headline3, Paragraph } from '../atoms';
 import { rem } from '../pixels';
+import LabeledFieldGroup from './LabeledFieldGroup';
 
 export type FormCardProps = {
   title: string;
@@ -15,13 +16,6 @@ const cardStyles = css({
 const descriptionStyles = css({
   paddingTop: rem(24),
   paddingBottom: 0,
-});
-
-const childrenWrapStyles = css({
-  marginTop: rem(32),
-  display: 'flex',
-  flexFlow: 'column',
-  gap: rem(48),
 });
 
 const FormCard: React.FC<FormCardProps> = ({
@@ -41,7 +35,7 @@ const FormCard: React.FC<FormCardProps> = ({
         </Paragraph>
       </div>
     )}
-    <div css={[childrenWrapStyles]}>{children}</div>
+    <LabeledFieldGroup>{children}</LabeledFieldGroup>
   </Card>
 );
 

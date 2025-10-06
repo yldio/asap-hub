@@ -3,8 +3,11 @@ import {
   userProductivityInitialSortingDirection,
   UserProductivitySortingDirection,
 } from '@asap-hub/model';
-import { UserProductivityTable } from '@asap-hub/react-components';
-import { Dispatch, SetStateAction, useState } from 'react';
+import {
+  LoadingContentBodyTable,
+  UserProductivityTable,
+} from '@asap-hub/react-components';
+import { Dispatch, FC, SetStateAction, Suspense, useState } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsUserProductivity,
@@ -16,7 +19,7 @@ interface UserProductivityProps {
   setSort: Dispatch<SetStateAction<SortUserProductivity>>;
   tags: string[];
 }
-const UserProductivity: React.FC<UserProductivityProps> = ({
+const UserProductivityContent: FC<UserProductivityProps> = ({
   sort,
   setSort,
   tags,
@@ -58,5 +61,11 @@ const UserProductivity: React.FC<UserProductivityProps> = ({
     />
   );
 };
+
+const UserProductivity: FC<UserProductivityProps> = (props) => (
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <UserProductivityContent {...props} />
+  </Suspense>
+);
 
 export default UserProductivity;

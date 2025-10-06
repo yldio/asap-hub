@@ -3,8 +3,11 @@ import {
   teamProductivityInitialSortingDirection,
   TeamProductivitySortingDirection,
 } from '@asap-hub/model';
-import { TeamProductivityTable } from '@asap-hub/react-components';
-import { Dispatch, SetStateAction, useState } from 'react';
+import {
+  LoadingContentBodyTable,
+  TeamProductivityTable,
+} from '@asap-hub/react-components';
+import { Dispatch, FC, SetStateAction, Suspense, useState } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsTeamProductivity,
@@ -16,7 +19,7 @@ interface TeamProductivityProps {
   setSort: Dispatch<SetStateAction<SortTeamProductivity>>;
   tags: string[];
 }
-const TeamProductivity: React.FC<TeamProductivityProps> = ({
+const TeamProductivityTableContent: FC<TeamProductivityProps> = ({
   sort,
   setSort,
   tags,
@@ -55,5 +58,15 @@ const TeamProductivity: React.FC<TeamProductivityProps> = ({
     />
   );
 };
+
+const TeamProductivityContent: FC<TeamProductivityProps> = (props) => (
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <TeamProductivityTableContent {...props} />
+  </Suspense>
+);
+
+const TeamProductivity: FC<TeamProductivityProps> = (props) => (
+  <TeamProductivityContent {...props} />
+);
 
 export default TeamProductivity;

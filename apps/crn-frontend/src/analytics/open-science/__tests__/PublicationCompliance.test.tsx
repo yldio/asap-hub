@@ -44,11 +44,7 @@ describe('PublicationCompliance', () => {
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
-              <PublicationCompliance
-                tags={[]}
-                timeRange="all"
-                currentPage={0}
-              />
+              <PublicationCompliance tags={[]} />
             </WhenReady>
           </Auth0Provider>
         </Suspense>

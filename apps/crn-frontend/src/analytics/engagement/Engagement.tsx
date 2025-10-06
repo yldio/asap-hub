@@ -18,8 +18,8 @@ import {
   useSearch,
 } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { getEngagement } from './api';
-import { engagementToCSV } from './export';
+import { getEngagement, getMeetingRepAttendance } from './api';
+import { engagementToCSV, meetingRepAttendanceToCSV } from './export';
 import MeetingRepAttendance from './MeetingRepAttendance';
 import RepresentationOfPresenters from './RepresentationOfPresenters';
 import { useEngagementPerformance } from './state';
@@ -50,8 +50,26 @@ const Engagement = () => {
     useAnalyticsOpensearch<MeetingRepAttendanceResponse>('attendance');
   const isAttendancePage = metric === 'attendance';
 
-  const exportResults = () =>
-    resultsToStream<EngagementResponse>(
+  const exportResults = () => {
+    if (isAttendancePage) {
+      return resultsToStream<MeetingRepAttendanceResponse>(
+        createCsvFileStream(
+          `engagement_${metric}_${format(new Date(), 'MMddyy')}.csv`,
+          {
+            header: true,
+          },
+        ),
+        (paginationParams) =>
+          getMeetingRepAttendance(attendanceClient.client, {
+            tags,
+            timeRange: timeRange as LimitedTimeRangeOption,
+            ...paginationParams,
+            sort: 'team_asc',
+          }),
+        meetingRepAttendanceToCSV,
+      );
+    }
+    return resultsToStream<EngagementResponse>(
       createCsvFileStream(`engagement_${format(new Date(), 'MMddyy')}.csv`, {
         header: true,
       }),
@@ -63,6 +81,7 @@ const Engagement = () => {
         }),
       engagementToCSV(performance),
     );
+  };
 
   const loadTags = async (tagQuery: string) => {
     if (isAttendancePage) {

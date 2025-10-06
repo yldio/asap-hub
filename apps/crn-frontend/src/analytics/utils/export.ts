@@ -260,3 +260,19 @@ export const downloadAnalyticsXLSX =
       `crn-analytics-${timeRange}-${format(new Date(), 'MMddyy')}.xlsx`,
     );
   };
+
+export const getPerformanceRanking = (
+  percentage: number | null,
+  isLimitedData: boolean,
+) => {
+  if (isLimitedData || percentage === null) {
+    return 'Limited Data';
+  }
+  if (percentage >= 90) {
+    return 'Outstanding';
+  }
+  if (percentage >= 80) {
+    return 'Adequate';
+  }
+  return 'Needs Improvement';
+};

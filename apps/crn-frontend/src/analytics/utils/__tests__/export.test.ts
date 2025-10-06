@@ -19,7 +19,11 @@ import { MetricExportKeys } from '@asap-hub/model';
 import { when } from 'jest-when';
 import * as XLSX from 'xlsx';
 
-import { downloadAnalyticsXLSX, getAllData } from '../export';
+import {
+  downloadAnalyticsXLSX,
+  getAllData,
+  getPerformanceRanking,
+} from '../export';
 
 jest.mock('xlsx', () => ({
   utils: {
@@ -539,4 +543,25 @@ describe('downloadAnalyticsXLSX', () => {
       expect.stringContaining('crn-analytics-current-year'),
     );
   });
+});
+
+describe('getPerformanceRanking', () => {
+  it.each`
+    percentage | isLimitedData | expected
+    ${null}    | ${false}      | ${'Limited Data'}
+    ${null}    | ${true}       | ${'Limited Data'}
+    ${85}      | ${true}       | ${'Limited Data'}
+    ${95}      | ${true}       | ${'Limited Data'}
+    ${95}      | ${false}      | ${'Outstanding'}
+    ${90}      | ${false}      | ${'Outstanding'}
+    ${89}      | ${false}      | ${'Adequate'}
+    ${80}      | ${false}      | ${'Adequate'}
+    ${79}      | ${false}      | ${'Needs Improvement'}
+    ${0}       | ${false}      | ${'Needs Improvement'}
+  `(
+    'returns $expected when percentage is $percentage and isLimitedData is $isLimitedData',
+    ({ percentage, isLimitedData, expected }) => {
+      expect(getPerformanceRanking(percentage, isLimitedData)).toBe(expected);
+    },
+  );
 });

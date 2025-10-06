@@ -7,6 +7,7 @@ import {
   UserCollaborationPerformance,
 } from '@asap-hub/model';
 import { utils } from '@asap-hub/react-components';
+import { getPerformanceRanking } from '../utils/export';
 
 const getOutputPrefix = (documentCategory: DocumentCategoryOption) => {
   switch (documentCategory) {
@@ -268,22 +269,6 @@ export const teamCollaborationAcrossTeamToCSV =
     };
   };
 
-export const getPrelimPerformanceRanking = (
-  percentage: number | null,
-  isLimitedData: boolean,
-) => {
-  if (isLimitedData || percentage === null) {
-    return 'Limited Data';
-  }
-  if (percentage >= 90) {
-    return 'Outstanding';
-  }
-  if (percentage >= 80) {
-    return 'Adequate';
-  }
-  return 'Needs Improvement';
-};
-
 export const preliminaryDataSharingToCSV = (
   data: PreliminaryDataSharingResponse,
 ) => ({
@@ -293,5 +278,5 @@ export const preliminaryDataSharingToCSV = (
     data.limitedData || data.percentShared === null
       ? 'N/A'
       : `${data.percentShared}%`,
-  Ranking: getPrelimPerformanceRanking(data.percentShared, data.limitedData),
+  Ranking: getPerformanceRanking(data.percentShared, data.limitedData),
 });

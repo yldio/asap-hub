@@ -9,7 +9,6 @@ import {
   userCollaborationToCSV,
   teamCollaborationAcrossTeamToCSV,
   teamCollaborationWithinTeamToCSV,
-  getPrelimPerformanceRanking,
   preliminaryDataSharingToCSV,
 } from '../export';
 
@@ -288,29 +287,6 @@ describe('teamCollaborationWithinTeamToCSV', () => {
         [`${prefix} Protocol Output: Name of teams collaborated with`]:
           'Team B, Team C',
       });
-    },
-  );
-});
-
-describe('getPrelimPerformanceRanking', () => {
-  it.each`
-    percentage | isLimitedData | expected
-    ${null}    | ${false}      | ${'Limited Data'}
-    ${null}    | ${true}       | ${'Limited Data'}
-    ${85}      | ${true}       | ${'Limited Data'}
-    ${95}      | ${true}       | ${'Limited Data'}
-    ${95}      | ${false}      | ${'Outstanding'}
-    ${90}      | ${false}      | ${'Outstanding'}
-    ${89}      | ${false}      | ${'Adequate'}
-    ${80}      | ${false}      | ${'Adequate'}
-    ${79}      | ${false}      | ${'Needs Improvement'}
-    ${0}       | ${false}      | ${'Needs Improvement'}
-  `(
-    'returns $expected when percentage is $percentage and isLimitedData is $isLimitedData',
-    ({ percentage, isLimitedData, expected }) => {
-      expect(getPrelimPerformanceRanking(percentage, isLimitedData)).toBe(
-        expected,
-      );
     },
   );
 });

@@ -1,4 +1,4 @@
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import { Card, Headline3, Paragraph } from '../atoms';
 import { rem } from '../pixels';
 import LabeledFieldGroup from './LabeledFieldGroup';
@@ -6,11 +6,26 @@ import LabeledFieldGroup from './LabeledFieldGroup';
 export type FormCardProps = {
   title: string;
   description?: string | React.ReactNode;
-  overrideStyles?: SerializedStyles;
+  borderless?: boolean;
+  headerDecorator?: React.ReactNode;
 };
 
 const cardStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
+});
+
+const titleStyles = css({
+  display: 'flex',
+  flexFlow: 'row',
+  gap: rem(10),
+  alignItems: 'center',
+  justifyContent: 'space-between',
+});
+
+const cardStylesBorderless = css({
+  border: 'none',
+  borderRadius: 0,
+  boxShadow: 'none',
 });
 
 const descriptionStyles = css({
@@ -22,11 +37,21 @@ const FormCard: React.FC<FormCardProps> = ({
   children,
   title,
   description,
-  overrideStyles,
+  borderless = false,
+  headerDecorator,
 }) => (
-  <Card padding={false} overrideStyles={cardStyles} title={title}>
-    <div role="presentation" css={[overrideStyles]}>
-      <Headline3 noMargin>{title}</Headline3>
+  <Card
+    padding={false}
+    stroke={false}
+    shadow={false}
+    title={title}
+    overrideStyles={css([cardStyles, borderless && cardStylesBorderless])}
+  >
+    <div role="presentation" css={[titleStyles]}>
+      <div style={{ flex: 1 }}>
+        <Headline3 noMargin>{title}</Headline3>
+      </div>
+      <div>{headerDecorator}</div>
     </div>
     {!!description && (
       <div css={[descriptionStyles]}>

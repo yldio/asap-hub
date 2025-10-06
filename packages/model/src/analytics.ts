@@ -642,7 +642,7 @@ export type MeetingRepAttendanceDataObject = {
   teamId: string;
   teamName: string;
   isTeamInactive: boolean;
-  attendancePercentage: number;
+  attendancePercentage: number | null;
   limitedData: boolean;
   timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };

@@ -1,5 +1,9 @@
-import { EngagementDataObject, EngagementPerformance } from '@asap-hub/model';
-import { engagementToCSV } from '../export';
+import {
+  EngagementDataObject,
+  EngagementPerformance,
+  MeetingRepAttendanceResponse,
+} from '@asap-hub/model';
+import { engagementToCSV, meetingRepAttendanceToCSV } from '../export';
 
 describe('engagementToCSV', () => {
   const data: EngagementDataObject = {
@@ -57,4 +61,110 @@ describe('engagementToCSV', () => {
       }),
     );
   });
+});
+
+describe('meetingRepAttendanceToCSV', () => {
+  it('exports meeting rep attendance data for active team with full data', () => {
+    const data: MeetingRepAttendanceResponse = {
+      teamId: 'team-1',
+      teamName: 'Test Team',
+      isTeamInactive: false,
+      attendancePercentage: 85,
+      limitedData: false,
+      timeRange: 'all',
+    };
+
+    expect(meetingRepAttendanceToCSV(data)).toEqual({
+      'Team Name': 'Test Team',
+      'Team Status': 'Active',
+      Attendance: '85%',
+      Ranking: 'Adequate',
+    });
+  });
+
+  it('exports meeting rep attendance data for inactive team with full data', () => {
+    const data: MeetingRepAttendanceResponse = {
+      teamId: 'team-2',
+      teamName: 'Inactive Team',
+      isTeamInactive: true,
+      attendancePercentage: 95,
+      limitedData: false,
+      timeRange: 'all',
+    };
+
+    expect(meetingRepAttendanceToCSV(data)).toEqual({
+      'Team Name': 'Inactive Team',
+      'Team Status': 'Inactive',
+      Attendance: '95%',
+      Ranking: 'Outstanding',
+    });
+  });
+
+  it('exports meeting rep attendance data with limited data', () => {
+    const data: MeetingRepAttendanceResponse = {
+      teamId: 'team-3',
+      teamName: 'Limited Data Team',
+      isTeamInactive: false,
+      attendancePercentage: null,
+      limitedData: true,
+      timeRange: 'all',
+    };
+
+    expect(meetingRepAttendanceToCSV(data)).toEqual({
+      'Team Name': 'Limited Data Team',
+      'Team Status': 'Active',
+      Attendance: 'N/A',
+      Ranking: 'Limited Data',
+    });
+  });
+
+  it('exports meeting rep attendance data with null percentage', () => {
+    const data: MeetingRepAttendanceResponse = {
+      teamId: 'team-4',
+      teamName: 'Null Percentage Team',
+      isTeamInactive: false,
+      attendancePercentage: null,
+      limitedData: false,
+      timeRange: 'all',
+    };
+
+    expect(meetingRepAttendanceToCSV(data)).toEqual({
+      'Team Name': 'Null Percentage Team',
+      'Team Status': 'Active',
+      Attendance: 'N/A',
+      Ranking: 'Limited Data',
+    });
+  });
+
+  it.each`
+    attendancePercentage | expectedRanking
+    ${100}               | ${'Outstanding'}
+    ${95}                | ${'Outstanding'}
+    ${90}                | ${'Outstanding'}
+    ${89}                | ${'Adequate'}
+    ${85}                | ${'Adequate'}
+    ${80}                | ${'Adequate'}
+    ${79}                | ${'Needs Improvement'}
+    ${50}                | ${'Needs Improvement'}
+    ${0}                 | ${'Needs Improvement'}
+  `(
+    'exports correct ranking for $attendancePercentage% shared data',
+    ({ attendancePercentage, expectedRanking }) => {
+      const data: MeetingRepAttendanceResponse = {
+        teamId: 'team-5',
+        teamName: 'Test Team',
+        isTeamInactive: false,
+        attendancePercentage,
+        limitedData: false,
+        timeRange: 'all',
+      };
+
+      expect(meetingRepAttendanceToCSV(data)).toEqual({
+        'Team Name': 'Test Team',
+        'Team Status': 'Active',
+        Attendance: `${attendancePercentage}%`,
+        Ranking: expectedRanking,
+      });
+    },
+  );
 });

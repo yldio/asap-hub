@@ -1,5 +1,10 @@
-import { EngagementDataObject, EngagementPerformance } from '@asap-hub/model';
+import {
+  EngagementDataObject,
+  EngagementPerformance,
+  MeetingRepAttendanceResponse,
+} from '@asap-hub/model';
 import { utils } from '@asap-hub/react-components';
+import { getPerformanceRanking } from '../utils/export';
 
 export const engagementToCSV =
   (performance: EngagementPerformance) => (data: EngagementDataObject) => ({
@@ -32,3 +37,15 @@ export const engagementToCSV =
       performance.uniqueKeyPersonnel,
     ),
   });
+
+export const meetingRepAttendanceToCSV = (
+  data: MeetingRepAttendanceResponse,
+) => ({
+  'Team Name': data.teamName,
+  'Team Status': data.isTeamInactive ? 'Inactive' : 'Active',
+  Attendance:
+    data.limitedData || data.attendancePercentage === null
+      ? 'N/A'
+      : `${data.attendancePercentage}%`,
+  Ranking: getPerformanceRanking(data.attendancePercentage, data.limitedData),
+});

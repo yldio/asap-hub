@@ -19,7 +19,7 @@ interface TeamProductivityProps {
   setSort: Dispatch<SetStateAction<SortTeamProductivity>>;
   tags: string[];
 }
-const TeamProductivityTableContent: FC<TeamProductivityProps> = ({
+const TeamProductivityContent: FC<TeamProductivityProps> = ({
   sort,
   setSort,
   tags,
@@ -59,14 +59,10 @@ const TeamProductivityTableContent: FC<TeamProductivityProps> = ({
   );
 };
 
-const TeamProductivityContent: FC<TeamProductivityProps> = (props) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <TeamProductivityTableContent {...props} />
-  </Suspense>
-);
-
 const TeamProductivity: FC<TeamProductivityProps> = (props) => (
-  <TeamProductivityContent {...props} />
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <TeamProductivityContent {...props} />
+  </Suspense>
 );
 
 export default TeamProductivity;

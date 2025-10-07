@@ -44,17 +44,10 @@ const PublicationComplianceContent: FC<PublicationComplianceProps> = ({
   );
 };
 
-const PublicationCompliance: FC<PublicationComplianceProps> = ({ tags }) => {
-  const { timeRange } = useAnalytics();
-  const { currentPage } = usePaginationParams();
-  return (
-    <Suspense fallback={<LoadingContentBodyTable />}>
-      <PublicationComplianceContent
-        key={`${tags.join(',')}-${timeRange}-${currentPage}`}
-        tags={tags}
-      />
-    </Suspense>
-  );
-};
+const PublicationCompliance: FC<PublicationComplianceProps> = ({ tags }) => (
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <PublicationComplianceContent tags={tags} />
+  </Suspense>
+);
 
 export default PublicationCompliance;

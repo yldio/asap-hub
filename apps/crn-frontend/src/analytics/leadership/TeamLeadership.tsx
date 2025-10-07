@@ -61,7 +61,7 @@ const getDataForMetric = (
   }));
 };
 
-const TeamLeadershipTableContent: FC<TeamLeadershipProps> = ({
+const TeamLeadershipContent: FC<TeamLeadershipProps> = ({
   sort,
   setSort,
   tags,
@@ -96,14 +96,10 @@ const TeamLeadershipTableContent: FC<TeamLeadershipProps> = ({
   );
 };
 
-const TeamLeadershipContent: FC<TeamLeadershipProps> = (props) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <TeamLeadershipTableContent {...props} />
-  </Suspense>
-);
-
 const TeamLeadership: FC<TeamLeadershipProps> = (props) => (
-  <TeamLeadershipContent {...props} />
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <TeamLeadershipContent {...props} />
+  </Suspense>
 );
 
 export default TeamLeadership;

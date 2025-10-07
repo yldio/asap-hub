@@ -27,6 +27,7 @@ import {
   useSearch,
 } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { TEAM_PERFORMANCE_INITIAL_DATA } from '../utils/constants';
 import { getAlgoliaIndexName } from '../utils/state';
 import {
   getTeamCollaboration,
@@ -205,181 +206,11 @@ const Collaboration = () => {
         }),
       type === 'within-team'
         ? teamCollaborationWithinTeamToCSV(
-            teamPerformance ?? {
-              withinTeam: {
-                article: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                bioinformatics: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                dataset: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                labMaterial: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                protocol: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-              },
-              acrossTeam: {
-                article: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                bioinformatics: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                dataset: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                labMaterial: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                protocol: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-              },
-            },
+            teamPerformance ?? TEAM_PERFORMANCE_INITIAL_DATA,
             outputType,
           )
         : teamCollaborationAcrossTeamToCSV(
-            teamPerformance ?? {
-              withinTeam: {
-                article: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                bioinformatics: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                dataset: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                labMaterial: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                protocol: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-              },
-              acrossTeam: {
-                article: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                bioinformatics: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                dataset: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                labMaterial: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-                protocol: {
-                  belowAverageMin: 0,
-                  belowAverageMax: 0,
-                  averageMin: 0,
-                  averageMax: 0,
-                  aboveAverageMin: 0,
-                  aboveAverageMax: 0,
-                },
-              },
-            },
+            teamPerformance ?? TEAM_PERFORMANCE_INITIAL_DATA,
             outputType,
           ),
     );

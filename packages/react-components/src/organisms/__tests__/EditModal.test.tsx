@@ -61,7 +61,14 @@ describe('when saving', () => {
       const handleSave = jest.fn();
       renderModal(
         <EditModal {...props} onSave={handleSave} dirty>
-          {() => <input type="text" required />}
+          {({ isSaving }, asyncWrapper) => (
+            <>
+              <input type="text" required />
+              <button type="button" onClick={() => asyncWrapper(handleSave)}>
+                Save
+              </button>
+            </>
+          )}
         </EditModal>,
       );
 
@@ -80,7 +87,14 @@ describe('when saving', () => {
           onSave={handleSave}
           dirty
         >
-          {() => <input type="text" />}
+          {({ isSaving }, asyncWrapper) => (
+            <>
+              <input type="text" />
+              <button type="button" onClick={() => asyncWrapper(handleSave)}>
+                Save
+              </button>
+            </>
+          )}
         </EditModal>,
       );
 
@@ -98,7 +112,17 @@ describe('when saving', () => {
       const history = createMemoryHistory({ getUserConfirmation });
       const { rerender } = renderModal(
         <Router history={history}>
-          <EditModal {...props} backHref="/back" onSave={handleSave} dirty />
+          <EditModal {...props} backHref="/back" onSave={handleSave} dirty>
+            {({ isSaving }, asyncWrapper) => (
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => asyncWrapper(handleSave)}
+              >
+                Save
+              </button>
+            )}
+          </EditModal>
         </Router>,
       );
       return { rerender, getUserConfirmation, history, handleSave };
@@ -176,7 +200,16 @@ describe('when saving', () => {
           // not going to be dirty anymore since the values have just been saved
           rerender(
             <Router history={history}>
-              <EditModal {...props} backHref="/back" onSave={handleSave} />
+              <EditModal {...props} backHref="/back" onSave={handleSave}>
+                {({ isSaving }, asyncWrapper) => (
+                  <button
+                    type="button"
+                    onClick={() => asyncWrapper(handleSave)}
+                  >
+                    Save
+                  </button>
+                )}
+              </EditModal>
             </Router>,
           );
           userEvent.click(screen.getByTitle(/close/i));
@@ -194,12 +227,16 @@ describe('when saving', () => {
           });
           rerender(
             <Router history={history}>
-              <EditModal
-                {...props}
-                backHref="/back"
-                onSave={handleSave}
-                dirty
-              />
+              <EditModal {...props} backHref="/back" onSave={handleSave} dirty>
+                {({ isSaving }, asyncWrapper) => (
+                  <button
+                    type="button"
+                    onClick={() => asyncWrapper(handleSave)}
+                  >
+                    Save
+                  </button>
+                )}
+              </EditModal>
             </Router>,
           );
           userEvent.click(screen.getByTitle(/close/i));
@@ -261,7 +298,16 @@ describe('when saving', () => {
         const handleSaveAgain = jest.fn().mockRejectedValue(new Error());
         rerender(
           <Router history={history}>
-            <EditModal {...props} onSave={handleSaveAgain} dirty />
+            <EditModal {...props} onSave={handleSaveAgain} dirty>
+              {({ isSaving }, asyncWrapper) => (
+                <button
+                  type="button"
+                  onClick={() => asyncWrapper(handleSaveAgain)}
+                >
+                  Save
+                </button>
+              )}
+            </EditModal>
           </Router>,
         );
 

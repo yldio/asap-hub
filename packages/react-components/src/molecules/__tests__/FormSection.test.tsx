@@ -78,3 +78,52 @@ it('renders section with aria-label from title', () => {
   const section = container.querySelector('section');
   expect(section).toHaveAttribute('aria-label', 'Account Settings');
 });
+
+it('renders the secondaryTitle alone', () => {
+  const { container } = render(
+    <FormSection secondaryTitle="Secondary">Text</FormSection>,
+  );
+  expect(container).toHaveTextContent('Secondary');
+  expect(container).toHaveTextContent('Text');
+});
+
+it('renders both title and secondaryTitle', () => {
+  const { container } = render(
+    <FormSection title="Main Title" secondaryTitle="Secondary Title">
+      Text
+    </FormSection>,
+  );
+  expect(container).toHaveTextContent('Main Title');
+  expect(container).toHaveTextContent('Secondary Title');
+  expect(container).toHaveTextContent('Text');
+});
+
+it('renders secondaryTitle with description but no title', () => {
+  const { container } = render(
+    <FormSection secondaryTitle="Secondary" description="Some description">
+      Text
+    </FormSection>,
+  );
+  expect(container).toHaveTextContent('Secondary');
+  expect(container).toHaveTextContent('Some description');
+  expect(container).toHaveTextContent('Text');
+  expect(container.querySelector('h3')).not.toBeInTheDocument();
+});
+
+it('renders title, secondaryTitle, description and header decorator together', () => {
+  const { container } = render(
+    <FormSection
+      title="Main"
+      secondaryTitle="Sub"
+      description="Description text"
+      headerDecorator={<button>Action</button>}
+    >
+      Text
+    </FormSection>,
+  );
+  expect(container).toHaveTextContent('Main');
+  expect(container).toHaveTextContent('Sub');
+  expect(container).toHaveTextContent('Description text');
+  expect(container).toHaveTextContent('Action');
+  expect(container).toHaveTextContent('Text');
+});

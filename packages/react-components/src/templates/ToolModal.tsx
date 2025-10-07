@@ -39,6 +39,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
         newUrl !== url || newDescription !== description || newName !== name
       }
       backHref={backHref}
+      showHeadingSave
       onSave={() =>
         onSave({
           name: newName,

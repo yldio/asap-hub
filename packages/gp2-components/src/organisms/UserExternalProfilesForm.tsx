@@ -5,7 +5,7 @@ import {
   lead,
   Paragraph,
   Subtitle,
-  FormCard,
+  FormSection,
 } from '@asap-hub/react-components';
 import { urlExpression, USER_SOCIAL_NOT_URL } from '@asap-hub/validation';
 import { css, Interpolation, Theme } from '@emotion/react';
@@ -148,7 +148,7 @@ const UserExternalProfilesForm: React.FC<UserExternalProfilesFormProps> = ({
     onChange({ ...newSocial, [property]: value } as gp2.UserSocial);
 
   return (
-    <FormCard borderless title="External Profiles">
+    <FormSection title="External Profiles">
       <>
         <header css={sectionStyles}>
           <Subtitle styleAsHeading={4}>Research Networks</Subtitle>
@@ -194,7 +194,7 @@ const UserExternalProfilesForm: React.FC<UserExternalProfilesFormProps> = ({
           />
         ))}
       </>
-    </FormCard>
+    </FormSection>
   );
 };
 

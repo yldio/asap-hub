@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
 import { Prompt } from 'react-router-dom';
-import { FormCard, Modal, ModalEditHeaderDecorator } from '../molecules';
+import { FormSection, Modal, ModalEditHeaderDecorator } from '../molecules';
 import { rem } from '../pixels';
 import { usePushFromHere } from '../routing';
 import Toast from './Toast';
@@ -84,10 +84,9 @@ const EditModal: React.FC<EditModalProps> = ({
         </Toast>
       )}
       <form ref={formRef} css={contentStyles}>
-        <FormCard
+        <FormSection
           title={title}
           description={description}
-          borderless={true}
           headerDecorator={
             <ModalEditHeaderDecorator
               saveEnabled={status !== 'isSaving'}
@@ -101,7 +100,7 @@ const EditModal: React.FC<EditModalProps> = ({
           }
         >
           {children({ isSaving: status === 'isSaving' }, asyncFunctionWrapper)}
-        </FormCard>
+        </FormSection>
       </form>
     </Modal>
   );

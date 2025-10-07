@@ -1,4 +1,4 @@
-import { Button, pixels, FormCard } from '@asap-hub/react-components';
+import { Button, pixels, FormSection } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import UserPosition from './UserPosition';
@@ -48,8 +48,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
     onChange(positions.filter((_, idx) => idx !== index));
   };
   return (
-    <FormCard
-      borderless
+    <FormSection
       title="Positions"
       description="Share your institutional positions (up to three)"
     >
@@ -80,7 +79,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
           </Button>
         </div>
       )}
-    </FormCard>
+    </FormSection>
   );
 };
 

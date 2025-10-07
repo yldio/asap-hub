@@ -4,7 +4,7 @@ import {
   LabeledTextField,
   LabeledTypeahead,
   Subtitle,
-  FormCard,
+  FormSection,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
@@ -57,7 +57,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
           </div>
         )}
       </div>
-      <FormCard borderless>
+      <FormSection>
         <LabeledTypeahead
           title="Institution"
           subtitle={required}
@@ -87,7 +87,7 @@ const UserPosition: React.FC<UserPositionProps> = ({
           required
           getValidationMessage={() => 'Please add your role'}
         />
-      </FormCard>
+      </FormSection>
     </>
   );
 };

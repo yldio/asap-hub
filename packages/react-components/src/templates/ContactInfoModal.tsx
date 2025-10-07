@@ -16,7 +16,7 @@ import {
   XIcon,
 } from '../icons';
 import { mailToSupport } from '../mail';
-import { FormCard, LabeledTextField } from '../molecules';
+import { FormSection, LabeledTextField } from '../molecules';
 import { EditUserModal } from '../organisms';
 import { formatUserSocial, noop } from '../utils';
 
@@ -146,7 +146,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             placeholder="https://example.com"
           />
 
-          <FormCard borderless title="Social Networks">
+          <FormSection title="Social Networks">
             <LabeledTextField
               hint={
                 <>
@@ -229,7 +229,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               labelIndicator={wrapIcon(GoogleScholarIcon, true)}
               placeholder="https://scholar.google.com/citations?user=profileID"
             />
-          </FormCard>
+          </FormSection>
         </>
       )}
     </EditUserModal>

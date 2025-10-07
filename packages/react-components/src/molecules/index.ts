@@ -25,6 +25,7 @@ export { default as ExpandableText } from './ExpandableText';
 export { default as ExportButton } from './ExportButton';
 export { default as ExternalLink } from './ExternalLink';
 export { default as FormCard } from './FormCard';
+export { default as FormSection } from './FormSection';
 export { default as GoogleSigninButton } from './GoogleSigninButton';
 export { default as Header } from './Header';
 export { default as ImageLink } from './ImageLink';

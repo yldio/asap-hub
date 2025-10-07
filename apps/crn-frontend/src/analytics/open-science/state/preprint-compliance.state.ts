@@ -11,8 +11,8 @@ import {
   selectorFamily,
   useRecoilState,
 } from 'recoil';
-import { getPreprintCompliance } from './api';
-import { useAnalyticsOpensearch } from '../../hooks';
+import { getPreprintCompliance } from '../api';
+import { useAnalyticsOpensearch } from '../../../hooks';
 
 type PreprintComplianceOptions =
   AnalyticsSearchOptionsWithFiltering<SortPreprintCompliance>;
@@ -53,7 +53,7 @@ export const preprintComplianceState = selectorFamily<
         pageSize: options.pageSize,
         sort: options.sort,
         tags: options.tags,
-        timeRange: options.timeRange,
+        timeRange: options.timeRange ?? 'all',
       });
       for (const id of index.ids) {
         const team = get(preprintComplianceListState({ teamId: id, pageKey }));
@@ -75,7 +75,7 @@ export const preprintComplianceState = selectorFamily<
           pageSize: options.pageSize,
           sort: options.sort,
           tags: options.tags,
-          timeRange: options.timeRange,
+          timeRange: options.timeRange ?? 'all',
         });
 
         // Set new data - no need to clear since each page gets its own unique key
@@ -108,7 +108,7 @@ export const useAnalyticsPreprintCompliance = (
     pageSize: options.pageSize,
     sort: options.sort,
     tags: options.tags,
-    timeRange: options.timeRange as Extract<
+    timeRange: (options.timeRange ?? 'all') as Extract<
       TimeRangeOption,
       'all' | 'last-year'
     >,

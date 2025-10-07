@@ -691,22 +691,22 @@ export type PublicationComplianceDataObject = {
   teamId: string;
   teamName: string;
   isTeamInactive: boolean;
-  overallCompliance: number;
+  overallCompliance: number | null;
   ranking: string;
-  datasetsPercentage: number;
+  datasetsPercentage: number | null;
   datasetsRanking: string;
-  protocolsPercentage: number;
+  protocolsPercentage: number | null;
   protocolsRanking: string;
-  codePercentage: number;
+  codePercentage: number | null;
   codeRanking: string;
-  labMaterialsPercentage: number;
+  labMaterialsPercentage: number | null;
   labMaterialsRanking: string;
-  numberOfPublications: number;
-  numberOfOutputs: number;
-  numberOfDatasets: number;
-  numberOfProtocols: number;
-  numberOfCode: number;
-  numberOfLabMaterials: number;
+  numberOfPublications: number | null;
+  numberOfOutputs: number | null;
+  numberOfDatasets: number | null;
+  numberOfProtocols: number | null;
+  numberOfCode: number | null;
+  numberOfLabMaterials: number | null;
   timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;
 };
 
@@ -726,6 +726,12 @@ export type PreprintComplianceDataObject = {
 
 export type ListPublicationComplianceDataObject =
   ListResponse<PublicationComplianceDataObject>;
+export type PublicationComplianceOpensearchResponse =
+  PublicationComplianceDataObject & {
+    objectID: string;
+  };
+export type ListPublicationComplianceOpensearchResponse =
+  ListResponse<PublicationComplianceOpensearchResponse>;
 export type ListPublicationComplianceResponse =
   ListResponse<PublicationComplianceResponse>;
 

@@ -1,5 +1,5 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import { ListPreprintComplianceOpensearchResponse } from '@asap-hub/model';
@@ -33,7 +33,7 @@ jest.mock('../../../hooks', () => ({
 mockConsoleError();
 
 describe('PreprintCompliance', () => {
-  it('renders preprint compliance correctly', () => {
+  it('renders preprint compliance correctly', async () => {
     render(
       <RecoilRoot>
         <Suspense fallback="loading">
@@ -46,7 +46,9 @@ describe('PreprintCompliance', () => {
       </RecoilRoot>,
     );
 
-    expect(screen.getByText('Auth0 loading...')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Number of Preprints')).toBeInTheDocument();
+    });
   });
 
   it('resets preprint compliance state to undefined when reset is triggered', () => {

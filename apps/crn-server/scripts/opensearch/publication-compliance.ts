@@ -54,18 +54,10 @@ const mapSpreadsheetDataToMetrics = (
 ): MetricObject<'publication-compliance'>[] => {
   const teamLookup = new Map(teams.map((team) => [team.displayName, team]));
 
-  // Valid team names should not be ranking values
-  const validTeamNames = [
-    'OUTSTANDING',
-    'ADEQUATE',
-    'NEEDS IMPROVEMENT',
-    'LIMITED DATA',
-  ];
-
   return rawData
     .filter((row) => {
       const teamName = row[' - Team'];
-      return teamName && teamName !== '' && !validTeamNames.includes(teamName); // Skip rows with ranking values as team names
+      return teamName && teamName !== '';
     })
     .map((row) => {
       const teamName = row[' - Team'];
@@ -94,16 +86,7 @@ const mapSpreadsheetDataToMetrics = (
         if (fieldName) {
           // Handle fields that might be strings like "NA" or null/undefined
           if (value === 'NA' || value === null || value === undefined) {
-            // For numeric fields, set to 0; for text fields, set to empty string
-            if (
-              fieldName.includes('Percentage') ||
-              fieldName.includes('numberOf') ||
-              fieldName === 'overallCompliance'
-            ) {
-              (document as Record<string, unknown>)[fieldName] = 0;
-            } else {
-              (document as Record<string, unknown>)[fieldName] = '';
-            }
+            (document as Record<string, unknown>)[fieldName] = null;
           } else {
             (document as Record<string, unknown>)[fieldName] = value;
           }
@@ -142,18 +125,13 @@ export const exportPublicationComplianceData = async (
     last12MonthsData.slice(0, 3),
   );
 
-  const validTeamNames = [
-    'OUTSTANDING',
-    'ADEQUATE',
-    'NEEDS IMPROVEMENT',
-    'LIMITED DATA',
-  ];
   const allTimeTeamNames = allTimeData
     .map((row) => row[' - Team'])
-    .filter((teamName) => teamName && !validTeamNames.includes(teamName));
+    .filter((teamName) => teamName && teamName !== '');
   const last12MonthsTeamNames = last12MonthsData
     .map((row) => row[' - Team'])
-    .filter((teamName) => teamName && !validTeamNames.includes(teamName));
+    .filter((teamName) => teamName && teamName !== '');
+
   console.log(
     'Sample team names from all-time data:',
     allTimeTeamNames.slice(0, 5),

@@ -38,10 +38,17 @@ const PreprintComplianceContent: FC<PreprintComplianceProps> = ({ tags }) => {
   );
 };
 
-const PreprintCompliance: FC<PreprintComplianceProps> = ({ tags }) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <PreprintComplianceContent tags={tags} />
-  </Suspense>
-);
+const PreprintCompliance: FC<PreprintComplianceProps> = ({ tags }) => {
+  const { timeRange } = useAnalytics();
+  const { currentPage } = usePaginationParams();
+  return (
+    <Suspense fallback={<LoadingContentBodyTable />}>
+      <PreprintComplianceContent
+        key={`${tags.join(',')}-${timeRange}-${currentPage}`}
+        tags={tags}
+      />
+    </Suspense>
+  );
+};
 
 export default PreprintCompliance;

@@ -1,9 +1,4 @@
-import {
-  Button,
-  Headline4,
-  Paragraph,
-  pixels,
-} from '@asap-hub/react-components';
+import { Button, pixels, FormCard } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import UserPosition from './UserPosition';
@@ -11,9 +6,6 @@ import { addIcon } from '../icons';
 import { mobileQuery } from '../layout';
 
 const { rem } = pixels;
-const containerStyles = css({
-  paddingBottom: rem(18),
-});
 
 const buttonStyles = css({
   width: 'fit-content',
@@ -56,13 +48,11 @@ const UserPositions: React.FC<UserPositionsProps> = ({
     onChange(positions.filter((_, idx) => idx !== index));
   };
   return (
-    <div css={containerStyles}>
-      <header>
-        <Headline4 styleAsHeading={3}>Positions</Headline4>
-        <Paragraph accent="lead">
-          Share your institutional positions (up to three)
-        </Paragraph>
-      </header>
+    <FormCard
+      borderless
+      title="Positions"
+      description="Share your institutional positions (up to three)"
+    >
       {positions.map((position, index) => (
         <div css={positionsContainer} key={`position-${index}`}>
           <UserPosition
@@ -90,7 +80,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
           </Button>
         </div>
       )}
-    </div>
+    </FormCard>
   );
 };
 

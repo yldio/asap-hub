@@ -4,6 +4,7 @@ import {
   LabeledTextField,
   LabeledTypeahead,
   Subtitle,
+  FormCard,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
@@ -56,35 +57,37 @@ const UserPosition: React.FC<UserPositionProps> = ({
           </div>
         )}
       </div>
-      <LabeledTypeahead
-        title="Institution"
-        subtitle={required}
-        required
-        getValidationMessage={() => 'Please add your institution'}
-        maxLength={44}
-        onChange={onChangeValue('institution')}
-        value={institution}
-        enabled={!isSaving}
-        loadOptions={loadInstitutionOptions}
-      />
-      <LabeledTextField
-        title="Department"
-        subtitle={required}
-        enabled={!isSaving}
-        onChange={onChangeValue('department')}
-        value={department}
-        required
-        getValidationMessage={() => 'Please add your department'}
-      />
-      <LabeledTextField
-        title="Role"
-        subtitle={required}
-        enabled={!isSaving}
-        onChange={onChangeValue('role')}
-        value={role}
-        required
-        getValidationMessage={() => 'Please add your role'}
-      />
+      <FormCard borderless>
+        <LabeledTypeahead
+          title="Institution"
+          subtitle={required}
+          required
+          getValidationMessage={() => 'Please add your institution'}
+          maxLength={44}
+          onChange={onChangeValue('institution')}
+          value={institution}
+          enabled={!isSaving}
+          loadOptions={loadInstitutionOptions}
+        />
+        <LabeledTextField
+          title="Department"
+          subtitle={required}
+          enabled={!isSaving}
+          onChange={onChangeValue('department')}
+          value={department}
+          required
+          getValidationMessage={() => 'Please add your department'}
+        />
+        <LabeledTextField
+          title="Role"
+          subtitle={required}
+          enabled={!isSaving}
+          onChange={onChangeValue('role')}
+          value={role}
+          required
+          getValidationMessage={() => 'Please add your role'}
+        />
+      </FormCard>
     </>
   );
 };

@@ -1,34 +1,23 @@
 import { gp2 } from '@asap-hub/model';
 import {
-  Headline3,
   Headline4,
   LabeledTextField,
   lead,
-  pixels,
   Paragraph,
   Subtitle,
+  FormCard,
 } from '@asap-hub/react-components';
 import { urlExpression, USER_SOCIAL_NOT_URL } from '@asap-hub/validation';
 import { css, Interpolation, Theme } from '@emotion/react';
 import { ComponentProps, FunctionComponent } from 'react';
 import { socialIconsMap } from '../utils';
 
-const { rem } = pixels;
 export const baseUrls = {
   orcid: 'https://orcid.org/',
   researcherId: 'https://researcherid.com/rid/',
 };
 
-const headerStyles = css({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-});
-
-const sectionStyles = css({
-  marginTop: rem(36),
-});
+const sectionStyles = css({});
 
 const iconStyles = css({
   width: 24,
@@ -159,11 +148,7 @@ const UserExternalProfilesForm: React.FC<UserExternalProfilesFormProps> = ({
     onChange({ ...newSocial, [property]: value } as gp2.UserSocial);
 
   return (
-    <>
-      <div css={headerStyles}>
-        <Headline3>External Profiles</Headline3>
-      </div>
-
+    <FormCard borderless title="External Profiles">
       <>
         <header css={sectionStyles}>
           <Subtitle styleAsHeading={4}>Research Networks</Subtitle>
@@ -209,7 +194,7 @@ const UserExternalProfilesForm: React.FC<UserExternalProfilesFormProps> = ({
           />
         ))}
       </>
-    </>
+    </FormCard>
   );
 };
 

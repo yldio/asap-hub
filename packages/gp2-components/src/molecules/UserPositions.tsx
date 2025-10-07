@@ -13,6 +13,7 @@ const buttonStyles = css({
   [mobileQuery]: {
     width: '100%',
   },
+  marginTop: rem(32),
 });
 const positionsContainer = css({
   display: 'flex',
@@ -48,22 +49,24 @@ const UserPositions: React.FC<UserPositionsProps> = ({
     onChange(positions.filter((_, idx) => idx !== index));
   };
   return (
-    <FormSection
-      title="Positions"
-      description="Share your institutional positions (up to three)"
-    >
-      {positions.map((position, index) => (
-        <div css={positionsContainer} key={`position-${index}`}>
-          <UserPosition
-            onRemove={remove(index)}
-            onChange={update(index)}
-            isSaving={isSaving}
-            loadInstitutionOptions={loadInstitutionOptions}
-            position={position}
-            index={index}
-          />
-        </div>
-      ))}
+    <div>
+      <FormSection
+        title="Positions"
+        description="Share your institutional positions (up to three)"
+      >
+        {positions.map((position, index) => (
+          <div css={positionsContainer} key={`position-${index}`}>
+            <UserPosition
+              onRemove={remove(index)}
+              onChange={update(index)}
+              isSaving={isSaving}
+              loadInstitutionOptions={loadInstitutionOptions}
+              position={position}
+              index={index}
+            />
+          </div>
+        ))}
+      </FormSection>
       {positions.length < 3 && (
         <div css={buttonStyles}>
           <Button onClick={add} enabled={!isSaving} fullWidth small>
@@ -79,7 +82,7 @@ const UserPositions: React.FC<UserPositionsProps> = ({
           </Button>
         </div>
       )}
-    </FormSection>
+    </div>
   );
 };
 

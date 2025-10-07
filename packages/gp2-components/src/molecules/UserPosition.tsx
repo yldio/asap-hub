@@ -3,7 +3,6 @@ import {
   Button,
   LabeledTextField,
   LabeledTypeahead,
-  Subtitle,
   FormSection,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
@@ -12,12 +11,6 @@ import binIcon from '../icons/bin-icon';
 
 const required = '(required)';
 
-const headerStyles = css({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-});
 const buttonStyles = css({ margin: 0 });
 
 type UserPositionProps = {
@@ -47,17 +40,18 @@ const UserPosition: React.FC<UserPositionProps> = ({
   const prefix = prefixes[index];
   return (
     <>
-      <div css={headerStyles}>
-        <Subtitle styleAsHeading={4}>{prefix} Position</Subtitle>
-        {index !== 0 && (
-          <div css={buttonStyles}>
-            <Button onClick={onRemove} small>
-              <span css={css({ display: 'inline-flex' })}>{binIcon}</span>
-            </Button>
-          </div>
-        )}
-      </div>
-      <FormSection>
+      <FormSection
+        secondaryTitle={`${prefix} Position`}
+        headerDecorator={
+          index !== 0 ? (
+            <div css={buttonStyles}>
+              <Button onClick={onRemove} small>
+                <span css={css({ display: 'inline-flex' })}>{binIcon}</span>
+              </Button>
+            </div>
+          ) : null
+        }
+      >
         <LabeledTypeahead
           title="Institution"
           subtitle={required}

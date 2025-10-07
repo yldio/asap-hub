@@ -2,25 +2,17 @@ import { gp2 } from '@asap-hub/model';
 import {
   Button,
   EditModal,
-  Headline3,
   LabeledDropdown,
   LabeledTextArea,
   LabeledTextField,
   Link,
-  Paragraph,
   pixels,
   utils,
 } from '@asap-hub/react-components';
 import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import {
-  footerStyles,
-  formContainer,
-  mobileQuery,
-  modalStyles,
-  padding24Styles,
-} from '../layout';
+import { footerStyles, mobileQuery, padding24Styles } from '../layout';
 
 const { rem } = pixels;
 const { noop } = utils;
@@ -109,57 +101,53 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
       title={modalTitle}
       backHref={backHref}
       dirty={isDirty()}
-      noHeader
       onSave={noop}
+      description={modalDescription}
+      showHeadingSave={false}
     >
       {({ isSaving }, asyncFunctionWrapper) => (
-        <div css={modalStyles}>
-          <header css={padding24Styles}>
-            <Headline3>{modalTitle}</Headline3>
-            <Paragraph accent="lead">{modalDescription}</Paragraph>
-          </header>
-          <div css={[formContainer, padding24Styles]}>
-            <LabeledDropdown
-              title="Resource Type"
+        <>
+          <LabeledDropdown
+            title="Resource Type"
+            subtitle="(required)"
+            options={gp2.resourceTypes.map((value) => ({
+              value,
+              label: value,
+            }))}
+            value={newType}
+            required
+            getValidationMessage={() => 'Please enter a valid type'}
+            onChange={setNewType}
+            enabled={!isSaving}
+          />
+          {newType === 'Link' && (
+            <LabeledTextField
+              title="URL"
               subtitle="(required)"
-              options={gp2.resourceTypes.map((value) => ({
-                value,
-                label: value,
-              }))}
-              value={newType}
+              value={newExternalLink}
+              onChange={setNewExternalLink}
+              getValidationMessage={() => 'Please enter a valid link'}
               required
-              getValidationMessage={() => 'Please enter a valid type'}
-              onChange={setNewType}
+              pattern={urlExpression}
               enabled={!isSaving}
             />
-            {newType === 'Link' && (
-              <LabeledTextField
-                title="URL"
-                subtitle="(required)"
-                value={newExternalLink}
-                onChange={setNewExternalLink}
-                getValidationMessage={() => 'Please enter a valid link'}
-                required
-                pattern={urlExpression}
-                enabled={!isSaving}
-              />
-            )}
-            <LabeledTextField
-              title="Title"
-              subtitle="(required)"
-              required
-              value={newTitle}
-              getValidationMessage={() => 'Please enter a title'}
-              onChange={setNewTitle}
-              enabled={newType !== '' && !isSaving}
-            />
-            <LabeledTextArea
-              title="Description"
-              value={newDescription}
-              onChange={setNewDescription}
-              enabled={newType !== '' && !isSaving}
-            />
-          </div>
+          )}
+          <LabeledTextField
+            title="Title"
+            subtitle="(required)"
+            required
+            value={newTitle}
+            getValidationMessage={() => 'Please enter a title'}
+            onChange={setNewTitle}
+            enabled={newType !== '' && !isSaving}
+          />
+          <LabeledTextArea
+            title="Description"
+            value={newDescription}
+            onChange={setNewDescription}
+            enabled={newType !== '' && !isSaving}
+          />
+
           <footer css={[footerStyles, padding24Styles]}>
             <div>
               <Link href={backHref} buttonStyle noMargin>
@@ -182,7 +170,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
               </Button>
             </div>
           </footer>
-        </div>
+        </>
       )}
     </EditModal>
   );

@@ -1,41 +1,31 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
 import { Prompt } from 'react-router-dom';
-
-import { paddingStyles } from '../card';
-import { Modal, ModalEditHeader } from '../molecules';
+import { FormSection, Modal, ModalEditHeaderDecorator } from '../molecules';
 import { rem } from '../pixels';
 import { usePushFromHere } from '../routing';
-import { noop } from '../utils';
 import Toast from './Toast';
+import { css } from '@emotion/react';
 
-const styles = css({
-  boxSizing: 'border-box',
-  height: '100%',
-  display: 'grid',
-  gridTemplateRows: 'max-content 1fr',
-  overflow: 'auto',
-});
-const bodyStyles = css(paddingStyles, {
-  paddingTop: rem(12),
-
-  overflowY: 'auto',
+const contentStyles = css({
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 // Todo: Refactor to use <Form> component.
 
 type EditModalProps = Pick<
-  ComponentProps<typeof ModalEditHeader>,
-  'title' | 'backHref' | 'onSave'
+  ComponentProps<typeof ModalEditHeaderDecorator>,
+  'backHref' | 'onSave'
 > & {
+  title: string;
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   children: (
     state: { isSaving: boolean },
     asyncFunctionWrapper: (cb: () => void | Promise<void>) => void,
   ) => ReactNode;
-  noHeader?: boolean;
+  description?: string | ReactNode;
+  showHeadingSave?: boolean;
 };
 const EditModal: React.FC<EditModalProps> = ({
   dirty,
@@ -43,8 +33,9 @@ const EditModal: React.FC<EditModalProps> = ({
   title,
   backHref,
   validate = () => true,
-  onSave = noop,
-  noHeader = false,
+  onSave,
+  showHeadingSave = false,
+  description,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const historyPush = usePushFromHere();
@@ -80,6 +71,7 @@ const EditModal: React.FC<EditModalProps> = ({
     status === 'isSaving' ||
     status === 'hasError' ||
     (status === 'initial' && dirty);
+
   return (
     <Modal padding={false}>
       <Prompt
@@ -91,26 +83,24 @@ const EditModal: React.FC<EditModalProps> = ({
           There was an error and we were unable to save your changes
         </Toast>
       )}
-      <form
-        ref={formRef}
-        css={({ components }) => [styles, components?.EditModal?.styles]}
-      >
-        {!noHeader && (
-          <ModalEditHeader
-            title={title}
-            backHref={backHref}
-            saveEnabled={status !== 'isSaving'}
-            onSave={() => asyncFunctionWrapper(onSave)}
-          />
-        )}
-        <main
-          css={({ components }) => [
-            bodyStyles,
-            components?.EditModal?.bodyStyles,
-          ]}
+      <form ref={formRef} css={contentStyles}>
+        <FormSection
+          title={title}
+          description={description}
+          headerDecorator={
+            <ModalEditHeaderDecorator
+              saveEnabled={status !== 'isSaving'}
+              onSave={
+                showHeadingSave && onSave
+                  ? () => asyncFunctionWrapper(onSave)
+                  : undefined
+              }
+              backHref={backHref}
+            />
+          }
         >
           {children({ isSaving: status === 'isSaving' }, asyncFunctionWrapper)}
-        </main>
+        </FormSection>
       </form>
     </Modal>
   );

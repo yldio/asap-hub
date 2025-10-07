@@ -1,39 +1,15 @@
 import { gp2 } from '@asap-hub/model';
-import {
-  Button,
-  EditModal,
-  Headline3,
-  Link,
-  noop,
-  Paragraph,
-  pixels,
-} from '@asap-hub/react-components';
+import { Button, EditModal, Link, noop } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
 import { ReactNode } from 'react';
-import {
-  footerStyles,
-  formContainer,
-  mobileQuery,
-  modalStyles,
-  padding24Styles,
-} from '../layout';
-
-const { rem } = pixels;
+import { footerStyles, mobileQuery, padding24Styles } from '../layout';
 
 const buttonStyles = css({
   width: 'fit-content',
   [mobileQuery]: {
     width: '100%',
   },
-});
-
-const headerStyles = css({
-  padding: `${rem(24)} ${rem(24)} ${rem(48)}`,
-});
-
-const contentStyles = css({
-  padding: `0 ${rem(24)}`,
 });
 
 type EditUserModalProps = Partial<gp2.UserResponse> & {
@@ -58,28 +34,18 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   dirty,
   onSave = noop,
   buttonText = 'Save',
-  stickyTitle = true,
 }) => (
   <EditModal
     title={title}
+    description={description}
     backHref={backHref}
     dirty={dirty}
-    noHeader
     onSave={onSave}
+    showHeadingSave={false}
   >
     {({ isSaving }, asyncWrapper) => (
-      <div css={[modalStyles, stickyTitle ? {} : formContainer]}>
-        <header css={headerStyles}>
-          <Headline3>{title}</Headline3>
-          <Paragraph noMargin accent="lead">
-            {description}
-          </Paragraph>
-        </header>
-        {children ? (
-          <div css={[contentStyles, stickyTitle ? formContainer : {}]}>
-            {children({ isSaving }, asyncWrapper)}
-          </div>
-        ) : null}
+      <>
+        {children ? children({ isSaving }, asyncWrapper) : null}
         <footer css={[footerStyles, padding24Styles]}>
           <div css={buttonStyles}>
             <Link href={backHref} buttonStyle fullWidth noMargin>
@@ -98,7 +64,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
             </Button>
           </div>
         </footer>
-      </div>
+      </>
     )}
   </EditModal>
 );

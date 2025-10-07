@@ -93,7 +93,7 @@ export const footerStyles = css({
 });
 
 export const padding24Styles = css({
-  padding: rem(24),
+  paddingTop: rem(24),
 });
 
 export const formContainer = css({

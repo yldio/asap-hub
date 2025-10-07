@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
 import { Prompt } from 'react-router-dom';
-import { FormCard, Modal, ModalEditDefaultDecorator } from '../molecules';
+import { FormCard, Modal, ModalEditHeaderDecorator } from '../molecules';
 import { rem } from '../pixels';
 import { usePushFromHere } from '../routing';
 import Toast from './Toast';
@@ -14,7 +14,7 @@ const contentStyles = css({
 // Todo: Refactor to use <Form> component.
 
 type EditModalProps = Pick<
-  ComponentProps<typeof ModalEditDefaultDecorator>,
+  ComponentProps<typeof ModalEditHeaderDecorator>,
   'backHref' | 'onSave'
 > & {
   title: string;

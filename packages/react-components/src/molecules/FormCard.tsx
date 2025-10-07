@@ -4,7 +4,7 @@ import { rem } from '../pixels';
 import LabeledFieldGroup from './LabeledFieldGroup';
 
 export type FormCardProps = {
-  title: string;
+  title?: string;
   description?: string | React.ReactNode;
   borderless?: boolean;
   headerDecorator?: React.ReactNode;
@@ -34,6 +34,11 @@ const descriptionStyles = css({
   paddingBottom: 0,
 });
 
+const gapStyle = css({
+  height: 0,
+  marginTop: rem(32),
+});
+
 const FormCard: React.FC<FormCardProps> = ({
   children,
   title,
@@ -61,7 +66,16 @@ const FormCard: React.FC<FormCardProps> = ({
         </Paragraph>
       </div>
     )}
-    <LabeledFieldGroup>{children}</LabeledFieldGroup>
+    {title || description ? (
+      <>
+        <div css={gapStyle}>&nbsp;</div>
+        <LabeledFieldGroup>{children}</LabeledFieldGroup>
+      </>
+    ) : (
+      <>
+        <LabeledFieldGroup>{children}</LabeledFieldGroup>
+      </>
+    )}
   </Card>
 );
 

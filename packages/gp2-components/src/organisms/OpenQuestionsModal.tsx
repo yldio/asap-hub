@@ -8,20 +8,6 @@ import EditUserModal from './EditUserModal';
 
 const { rem } = pixels;
 
-const containerStyles = css({
-  [mobileQuery]: {
-    display: 'unset',
-  },
-  display: 'flex',
-  paddingBottom: rem(8),
-  flexDirection: 'column',
-});
-
-const rowStyles = css({
-  marginTop: rem(36),
-  marginBottom: rem(12),
-});
-
 const headerStyles = css({
   display: 'flex',
   flexDirection: 'row',
@@ -83,9 +69,9 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
       dirty={checkDirty()}
     >
       {({ isSaving }) => (
-        <div css={containerStyles}>
+        <>
           {newQuestions.map((question, index) => (
-            <div css={rowStyles} key={`question-${index}`}>
+            <div key={`question-${index}`}>
               <div css={headerStyles}>
                 <p>
                   <strong>Question {index + 1}</strong> {optional}
@@ -126,7 +112,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
               </Button>
             </div>
           ) : undefined}
-        </div>
+        </>
       )}
     </EditUserModal>
   );

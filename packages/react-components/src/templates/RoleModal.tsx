@@ -1,8 +1,6 @@
 import { useState, Fragment } from 'react';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
-
 import { noop } from '../utils';
-import { Paragraph } from '../atoms';
 import {
   LabeledTextField,
   LabeledTextArea,
@@ -55,41 +53,35 @@ const RoleModal: React.FC<RoleModalProps> = ({
           reachOut: newReachOut.trim(),
         })
       }
+      description={`Tell the network what role you play in your team and your main research goals by completing this part of your profile. (Note: if you need to change any locked fields, please contact ASAP)`}
     >
       {({ isSaving }) => (
         <>
-          <Paragraph accent="lead">
-            Tell the network what role you play in your team and your main
-            research goals by completing this part of your profile. (Note: if
-            you need to change any locked fields, please contact ASAP)
-          </Paragraph>
-          <div>
-            {teams.map(({ displayName, role: teamRole, id }) => (
-              <Fragment key={id}>
-                <LabeledTextField
-                  key={`team-${id}`}
-                  title="Team"
-                  value={displayName ?? ''}
-                  enabled={false}
-                />
-                <LabeledDropdown
-                  key={`team${id}-role`}
-                  title="Role"
-                  enabled={false}
-                  value={teamRole}
-                  options={[{ label: teamRole, value: teamRole }]}
-                />
-              </Fragment>
-            ))}
-            {labs.map(({ name, id }) => (
+          {teams.map(({ displayName, role: teamRole, id }) => (
+            <Fragment key={id}>
               <LabeledTextField
-                key={`lab-${id}`}
-                title="Lab"
-                value={name}
+                key={`team-${id}`}
+                title="Team"
+                value={displayName ?? ''}
                 enabled={false}
               />
-            ))}
-          </div>
+              <LabeledDropdown
+                key={`team${id}-role`}
+                title="Role"
+                enabled={false}
+                value={teamRole}
+                options={[{ label: teamRole, value: teamRole }]}
+              />
+            </Fragment>
+          ))}
+          {labs.map(({ name, id }) => (
+            <LabeledTextField
+              key={`lab-${id}`}
+              title="Lab"
+              value={name}
+              enabled={false}
+            />
+          ))}
           {role !== 'Staff' && (
             <LabeledTextArea
               required

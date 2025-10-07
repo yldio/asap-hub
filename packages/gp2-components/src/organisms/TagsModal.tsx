@@ -37,7 +37,7 @@ const TagsModal: React.FC<TagsModalProps> = ({
       dirty={checkDirty()}
     >
       {({ isSaving }) => (
-        <div css={{ paddingBottom: rem(162) }}>
+        <>
           <LabeledMultiSelect
             title="Tags"
             subtitle="(required)"
@@ -76,7 +76,9 @@ const TagsModal: React.FC<TagsModalProps> = ({
             maxMenuHeight={160}
             getValidationMessage={() => 'Please add your tags'}
           />
-        </div>
+          {/* Give extra space to the options rendered above */}
+          <div css={{ paddingBottom: rem(162) }} />
+        </>
       )}
     </EditUserModal>
   );

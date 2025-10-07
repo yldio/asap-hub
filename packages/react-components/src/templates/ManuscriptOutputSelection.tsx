@@ -42,11 +42,6 @@ const optionListStyles = css({
   },
 });
 
-const formCardStyles = css({
-  paddingTop: rem(18),
-  paddingBottom: rem(12),
-});
-
 const manuscriptImportStyles = css({
   marginTop: rem(32),
 });
@@ -307,10 +302,7 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
   return (
     <main css={mainStyles}>
       <div css={contentStyles}>
-        <FormCard
-          title="How would you like to create your output?"
-          overrideStyles={formCardStyles}
-        >
+        <FormCard title="How would you like to create your output?">
           <LabeledRadioButtonGroup<'manually' | 'import' | ''>
             title="Select the type of output you want to create:"
             subtitle="(required)"

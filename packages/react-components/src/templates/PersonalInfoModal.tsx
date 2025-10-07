@@ -92,7 +92,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
       }
     >
       {({ isSaving }) => (
-        <div>
+        <>
           <LabeledTextField
             title="First name"
             subtitle="(required)"
@@ -215,7 +215,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             value={newCity}
             enabled={!isSaving}
           />
-        </div>
+        </>
       )}
     </EditUserModal>
   );

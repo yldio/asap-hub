@@ -49,7 +49,7 @@ export { default as Loading } from './Loading';
 export { default as MembersList } from './MembersList';
 export { default as MenuButton } from './MenuButton';
 export { default as Modal } from './Modal';
-export { default as ModalEditHeader } from './ModalEditHeader';
+export { default as ModalEditDefaultDecorator } from './ModalEditDefaultDecorator';
 export { default as OrcidSigninButton } from './OrcidSigninButton';
 export { default as OSChampionTableRow } from './OSChampionTableRow';
 export { default as PageControls } from './PageControls';

@@ -21,20 +21,22 @@ const sectionStyles = css({
   padding: 0,
 });
 
-const descriptionStyles = css({
+const descriptionWithTitleStyles = css({
   paddingTop: rem(24),
-  paddingBottom: 0,
 });
 
-const withHeaderStyle = css({
-  height: 0,
-  marginTop: rem(32),
+const descriptionBaseStyles = css({
+  paddingBottom: 0,
 });
 
 const sectionChildrenWrapStyle = css({
   display: 'flex',
   flexFlow: 'column',
   gap: rem(48),
+});
+
+const sectionChildrenMarginWhenHasHeaderWrapStyle = css({
+  marginTop: rem(32),
 });
 
 /**
@@ -58,33 +60,53 @@ const FormSection: React.FC<FormSectionProps> = ({
   secondaryTitle,
   description,
   headerDecorator,
-}) => (
-  <section aria-label={title} css={[themes.light, sectionStyles]}>
-    {(!!title || !!secondaryTitle || !!headerDecorator) && (
-      <div role="presentation" css={[titleStyles]}>
-        <div
-          style={{ flex: 1, display: 'flex', flexFlow: 'column', gap: rem(24) }}
-        >
-          <Headline3 noMargin>{title}</Headline3>
-          <Subtitle noMargin styleAsHeading={4}>
-            {secondaryTitle}
-          </Subtitle>
+}) => {
+  const hasHeaderWrap = !!title || !!secondaryTitle || !!headerDecorator;
+  return (
+    <section aria-label={title} css={[themes.light, sectionStyles]}>
+      {hasHeaderWrap && (
+        <div role="presentation" css={[titleStyles]}>
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexFlow: 'column',
+              gap: rem(12),
+            }}
+          >
+            {!!title && <Headline3 noMargin>{title}</Headline3>}
+            {!!secondaryTitle && (
+              <Subtitle noMargin styleAsHeading={4}>
+                {secondaryTitle}
+              </Subtitle>
+            )}
+          </div>
+          <div>{headerDecorator}</div>
         </div>
-        <div>{headerDecorator}</div>
+      )}
+      {!!description && (
+        <div
+          css={css([
+            descriptionBaseStyles,
+            hasHeaderWrap && descriptionWithTitleStyles,
+          ])}
+        >
+          <Paragraph noMargin accent="lead">
+            {description}
+          </Paragraph>
+        </div>
+      )}
+      <div
+        css={css([
+          sectionChildrenWrapStyle,
+          (hasHeaderWrap || !!description) &&
+            sectionChildrenMarginWhenHasHeaderWrapStyle,
+        ])}
+      >
+        {children}
       </div>
-    )}
-    {!!description && (
-      <div css={[descriptionStyles]}>
-        <Paragraph noMargin accent="lead">
-          {description}
-        </Paragraph>
-      </div>
-    )}
-    {(!!title || !!secondaryTitle || !!headerDecorator || !!description) && (
-      <div css={withHeaderStyle} />
-    )}
-    <div css={sectionChildrenWrapStyle}>{children}</div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default FormSection;

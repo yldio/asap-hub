@@ -42,7 +42,7 @@ export const WithoutTitleButWithDescription = () => (
 export const WithHeaderDecoratorOnly = () => (
   <FormSection
     headerDecorator={
-      <Link small buttonStyle href={'#'}>
+      <Link small buttonStyle noMargin href={'#'}>
         {crossIcon}
       </Link>
     }
@@ -56,7 +56,7 @@ export const WithTitleAndHeaderDecorator = () => (
   <FormSection
     title={text('Title', 'Account Settings')}
     headerDecorator={
-      <Link small buttonStyle href={'#'}>
+      <Link small buttonStyle noMargin href={'#'}>
         {crossIcon}
       </Link>
     }
@@ -71,12 +71,56 @@ export const WithHeaderDecorator = () => (
     title={text('Title', 'Account Settings')}
     description="Configure your account preferences."
     headerDecorator={
-      <Link small buttonStyle href={'#'}>
+      <Link small buttonStyle noMargin href={'#'}>
         {crossIcon}
       </Link>
     }
   >
     <LabeledTextField title="Username" value="" onChange={() => {}} />
     <LabeledTextField title="Display Name" value="" onChange={() => {}} />
+  </FormSection>
+);
+
+export const WithSecondaryTitleOnly = () => (
+  <FormSection secondaryTitle="Additional Information">
+    <LabeledTextField title="Field 1" value="" onChange={() => {}} />
+    <LabeledTextField title="Field 2" value="" onChange={() => {}} />
+  </FormSection>
+);
+
+export const WithTitleAndSecondaryTitle = () => (
+  <FormSection
+    title="Personal Details"
+    secondaryTitle="Please provide accurate information"
+  >
+    <LabeledTextField title="First Name" value="" onChange={() => {}} />
+    <LabeledTextField title="Last Name" value="" onChange={() => {}} />
+  </FormSection>
+);
+
+export const WithSecondaryTitleAndDescription = () => (
+  <FormSection
+    secondaryTitle="Contact Information"
+    description="We'll use this information to reach out to you."
+  >
+    <LabeledTextField title="Email" value="" onChange={() => {}} />
+    <LabeledTextField title="Phone" value="" onChange={() => {}} />
+  </FormSection>
+);
+
+export const WithAllProps = () => (
+  <FormSection
+    title="Profile Settings"
+    secondaryTitle="Complete your profile information"
+    description="All fields are required to complete your registration."
+    headerDecorator={
+      <Link small buttonStyle noMargin href={'#'}>
+        {crossIcon}
+      </Link>
+    }
+  >
+    <LabeledTextField title="Username" value="" onChange={() => {}} />
+    <LabeledTextField title="Email" value="" onChange={() => {}} />
+    <LabeledTextField title="Bio" value="" onChange={() => {}} />
   </FormSection>
 );

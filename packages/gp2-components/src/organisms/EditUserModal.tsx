@@ -60,13 +60,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   buttonText = 'Save',
   stickyTitle = true,
 }) => (
-  <EditModal
-    title={title}
-    backHref={backHref}
-    dirty={dirty}
-    noHeader
-    onSave={onSave}
-  >
+  <EditModal title={title} backHref={backHref} dirty={dirty} onSave={onSave}>
     {({ isSaving }, asyncWrapper) => (
       <div css={[modalStyles, stickyTitle ? {} : formContainer]}>
         <header css={headerStyles}>

@@ -4,7 +4,6 @@ import {
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
-import { css } from '@emotion/react';
 
 import { LabeledMultiSelect, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
@@ -21,10 +20,6 @@ type ExpertiseAndResourcesModalProps = Pick<
   backHref: string;
   suggestions: ResearchTagDataObject[];
 };
-const fieldsContainerStyles = css({
-  display: 'grid',
-  rowGap: rem(14),
-});
 
 const MINIMUM_EXPERTISE_AND_RESOURCES = 5;
 const validateExpertiseAndResources = (tags: ResearchTagDataObject[]) =>
@@ -70,63 +65,62 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
     >
       {({ isSaving }) => (
         <>
-          <div css={fieldsContainerStyles}>
-            <LabeledTextArea
-              title="Expertise and Resources"
-              subtitle="(optional)"
-              tip="Summarize your expertise and resources in one to two sentences"
-              placeholder="Example: Randy has years of experience in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretory pathway."
-              maxLength={200}
+          <LabeledTextArea
+            title="Expertise and Resources"
+            subtitle="(optional)"
+            tip="Summarize your expertise and resources in one to two sentences"
+            placeholder="Example: Randy has years of experience in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretory pathway."
+            maxLength={200}
+            enabled={!isSaving}
+            onChange={(newValue) =>
+              setExpertiseAndResourceDescription(newValue)
+            }
+            value={newExpertiseAndResourceDescription}
+          />
+
+          <div style={{ display: 'flex', flexFlow: 'column', gap: rem(16) }}>
+            <LabeledMultiSelect
+              title="Tags"
+              subtitle="(required)"
+              description="Select 5 to 10 keywords that best apply to your work."
+              placeholder="Start typing… (E.g. Cell Biology)"
+              values={newTags.map((tag) => ({
+                label: tag.name,
+                value: tag.id,
+              }))}
               enabled={!isSaving}
-              onChange={(newValue) =>
-                setExpertiseAndResourceDescription(newValue)
+              onChange={(newValues) => {
+                setNewTags(
+                  newValues.map(({ value, label }) => ({
+                    name: label,
+                    id: value,
+                  })),
+                );
+                validateExpertiseAndResources(
+                  newValues.map(({ value, label }) => ({
+                    name: label,
+                    id: value,
+                  })),
+                )
+                  ? setExpertiseAndResourcesCustomValidationMessage('')
+                  : setExpertiseAndResourcesCustomValidationMessage(
+                      `Please add a minimum of ${MINIMUM_EXPERTISE_AND_RESOURCES} tags`,
+                    );
+              }}
+              suggestions={suggestions.map((suggestion) => ({
+                label: suggestion.name,
+                value: suggestion.id,
+              }))}
+              noOptionsMessage={({ inputValue }) =>
+                `Sorry, No current tags match "${inputValue}"`
               }
-              value={newExpertiseAndResourceDescription}
+              customValidationMessage={
+                expertiseAndResourcesCustomValidationMessage
+              }
             />
-            <div>
-              <LabeledMultiSelect
-                title="Tags"
-                subtitle="(required)"
-                description="Select 5 to 10 keywords that best apply to your work."
-                placeholder="Start typing… (E.g. Cell Biology)"
-                values={newTags.map((tag) => ({
-                  label: tag.name,
-                  value: tag.id,
-                }))}
-                enabled={!isSaving}
-                onChange={(newValues) => {
-                  setNewTags(
-                    newValues.map(({ value, label }) => ({
-                      name: label,
-                      id: value,
-                    })),
-                  );
-                  validateExpertiseAndResources(
-                    newValues.map(({ value, label }) => ({
-                      name: label,
-                      id: value,
-                    })),
-                  )
-                    ? setExpertiseAndResourcesCustomValidationMessage('')
-                    : setExpertiseAndResourcesCustomValidationMessage(
-                        `Please add a minimum of ${MINIMUM_EXPERTISE_AND_RESOURCES} tags`,
-                      );
-                }}
-                suggestions={suggestions.map((suggestion) => ({
-                  label: suggestion.name,
-                  value: suggestion.id,
-                }))}
-                noOptionsMessage={({ inputValue }) =>
-                  `Sorry, No current tags match "${inputValue}"`
-                }
-                customValidationMessage={
-                  expertiseAndResourcesCustomValidationMessage
-                }
-              />
-              <Link href={mailToSupport({ subject: 'New tag' })}>
-                Ask ASAP to add a new tag
-              </Link>
-            </div>
+            <Link href={mailToSupport({ subject: 'New tag' })}>
+              Ask ASAP to add a new tag
+            </Link>
           </div>
         </>
       )}

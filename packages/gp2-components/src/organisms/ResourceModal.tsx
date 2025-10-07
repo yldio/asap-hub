@@ -109,7 +109,6 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
       title={modalTitle}
       backHref={backHref}
       dirty={isDirty()}
-      noHeader
       onSave={noop}
     >
       {({ isSaving }, asyncFunctionWrapper) => (

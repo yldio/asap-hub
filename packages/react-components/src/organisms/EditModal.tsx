@@ -14,7 +14,7 @@ const contentStyles = css({
 // Todo: Refactor to use <Form> component.
 
 type EditModalProps = Pick<
-  ComponentProps<typeof ModalEditHeaderDecorator>,
+  ComponentProps<typeof ModalEditDefaultDecorator>,
   'backHref' | 'onSave'
 > & {
   title: string;

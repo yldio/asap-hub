@@ -52,12 +52,10 @@ const OSChampionContent: React.FC<OSChampionProps> = ({
   );
 };
 
-const OSChampion: React.FC<OSChampionProps> = ({ sort, setSort, tags }) => {
-  return (
-    <Suspense fallback={<LoadingContentBodyTable />}>
-      <OSChampionContent sort={sort} setSort={setSort} tags={tags} />
-    </Suspense>
-  );
-};
+const OSChampion: React.FC<OSChampionProps> = ({ sort, setSort, tags }) => (
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <OSChampionContent sort={sort} setSort={setSort} tags={tags} />
+  </Suspense>
+);
 
 export default OSChampion;

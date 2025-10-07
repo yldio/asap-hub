@@ -1,9 +1,10 @@
 import { css } from '@emotion/react';
-import { Headline3, Paragraph } from '../atoms';
+import { Headline3, Subtitle, Paragraph } from '../atoms';
 import { rem } from '../pixels';
 import { themes } from '../theme';
 export type FormSectionProps = {
   title?: string;
+  secondaryTitle?: string;
   description?: string | React.ReactNode;
   headerDecorator?: React.ReactNode;
 };
@@ -54,14 +55,20 @@ const sectionChildrenWrapStyle = css({
 const FormSection: React.FC<FormSectionProps> = ({
   children,
   title,
+  secondaryTitle,
   description,
   headerDecorator,
 }) => (
   <section aria-label={title} css={[themes.light, sectionStyles]}>
-    {(!!title || !!headerDecorator) && (
+    {(!!title || !!secondaryTitle || !!headerDecorator) && (
       <div role="presentation" css={[titleStyles]}>
-        <div style={{ flex: 1 }}>
+        <div
+          style={{ flex: 1, display: 'flex', flexFlow: 'column', gap: rem(24) }}
+        >
           <Headline3 noMargin>{title}</Headline3>
+          <Subtitle noMargin styleAsHeading={4}>
+            {secondaryTitle}
+          </Subtitle>
         </div>
         <div>{headerDecorator}</div>
       </div>
@@ -73,7 +80,7 @@ const FormSection: React.FC<FormSectionProps> = ({
         </Paragraph>
       </div>
     )}
-    {(!!title || !!headerDecorator || !!description) && (
+    {(!!title || !!secondaryTitle || !!headerDecorator || !!description) && (
       <div css={withHeaderStyle} />
     )}
     <div css={sectionChildrenWrapStyle}>{children}</div>

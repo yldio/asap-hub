@@ -27,7 +27,7 @@ const ModalEditHeaderDecorator: React.FC<ModalEditHeaderDecoratorProps> = ({
         Save
       </Button>
     )}
-    <Link small buttonStyle href={backHref}>
+    <Link small buttonStyle noMargin href={backHref}>
       {crossIcon}
     </Link>
   </div>

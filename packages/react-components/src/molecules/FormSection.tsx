@@ -74,7 +74,7 @@ const FormSection: React.FC<FormSectionProps> = ({
       </div>
     )}
     {(!!title || !!headerDecorator || !!description) && (
-      <div css={withHeaderStyle}>&nbsp;</div>
+      <div css={withHeaderStyle} />
     )}
     <div css={sectionChildrenWrapStyle}>{children}</div>
   </section>

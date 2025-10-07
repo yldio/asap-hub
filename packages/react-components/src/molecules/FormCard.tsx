@@ -26,6 +26,7 @@ const cardStylesBorderless = css({
   border: 'none',
   borderRadius: 0,
   boxShadow: 'none',
+  padding: 0,
 });
 
 const descriptionStyles = css({

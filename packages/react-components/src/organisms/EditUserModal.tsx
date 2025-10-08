@@ -5,6 +5,7 @@ import { rem, tabletScreen } from '../pixels';
 import { noop } from '../utils';
 import { Button, Link } from '../atoms';
 import EditModal from './EditModal';
+import { FormSection } from '../molecules';
 
 const mobileQuery = `@media (max-width: ${tabletScreen.width - 1}px)`;
 const buttonStyles = css({
@@ -15,7 +16,7 @@ const buttonStyles = css({
 });
 
 const footerStyles = css({
-  marginTop: rem(-16),
+  marginTop: rem(32),
   display: 'flex',
   gap: rem(24),
   justifyContent: 'flex-end',
@@ -59,7 +60,9 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   >
     {({ isSaving }, asyncWrapper) => (
       <>
-        {children ? children({ isSaving }, asyncWrapper) : null}
+        <FormSection>
+          {children ? children({ isSaving }, asyncWrapper) : null}
+        </FormSection>
         <footer css={[footerStyles]}>
           <div css={buttonStyles}>
             <Link href={backHref} buttonStyle fullWidth noMargin>

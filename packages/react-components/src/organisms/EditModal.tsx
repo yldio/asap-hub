@@ -98,9 +98,8 @@ const EditModal: React.FC<EditModalProps> = ({
               backHref={backHref}
             />
           }
-        >
-          {children({ isSaving: status === 'isSaving' }, asyncFunctionWrapper)}
-        </FormSection>
+        />
+        {children({ isSaving: status === 'isSaving' }, asyncFunctionWrapper)}
       </form>
     </Modal>
   );

@@ -5,7 +5,7 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 
-import { LabeledMultiSelect, LabeledTextArea } from '../molecules';
+import { FormSection, LabeledMultiSelect, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
 import { Link } from '../atoms';
 import { EditUserModal } from '../organisms';
@@ -64,7 +64,7 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
       }
     >
       {({ isSaving }) => (
-        <>
+        <FormSection>
           <LabeledTextArea
             title="Expertise and Resources"
             subtitle="(optional)"
@@ -122,7 +122,9 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
               Ask ASAP to add a new tag
             </Link>
           </div>
-        </>
+          {/* Give extra space to the options rendered above */}
+          <div css={{ paddingBottom: rem(48) }} />
+        </FormSection>
       )}
     </EditUserModal>
   );

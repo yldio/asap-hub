@@ -8,6 +8,7 @@ import {
   Link,
   pixels,
   utils,
+  FormSection,
 } from '@asap-hub/react-components';
 import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -107,47 +108,48 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
     >
       {({ isSaving }, asyncFunctionWrapper) => (
         <>
-          <LabeledDropdown
-            title="Resource Type"
-            subtitle="(required)"
-            options={gp2.resourceTypes.map((value) => ({
-              value,
-              label: value,
-            }))}
-            value={newType}
-            required
-            getValidationMessage={() => 'Please enter a valid type'}
-            onChange={setNewType}
-            enabled={!isSaving}
-          />
-          {newType === 'Link' && (
-            <LabeledTextField
-              title="URL"
+          <FormSection>
+            <LabeledDropdown
+              title="Resource Type"
               subtitle="(required)"
-              value={newExternalLink}
-              onChange={setNewExternalLink}
-              getValidationMessage={() => 'Please enter a valid link'}
+              options={gp2.resourceTypes.map((value) => ({
+                value,
+                label: value,
+              }))}
+              value={newType}
               required
-              pattern={urlExpression}
+              getValidationMessage={() => 'Please enter a valid type'}
+              onChange={setNewType}
               enabled={!isSaving}
             />
-          )}
-          <LabeledTextField
-            title="Title"
-            subtitle="(required)"
-            required
-            value={newTitle}
-            getValidationMessage={() => 'Please enter a title'}
-            onChange={setNewTitle}
-            enabled={newType !== '' && !isSaving}
-          />
-          <LabeledTextArea
-            title="Description"
-            value={newDescription}
-            onChange={setNewDescription}
-            enabled={newType !== '' && !isSaving}
-          />
-
+            {newType === 'Link' && (
+              <LabeledTextField
+                title="URL"
+                subtitle="(required)"
+                value={newExternalLink}
+                onChange={setNewExternalLink}
+                getValidationMessage={() => 'Please enter a valid link'}
+                required
+                pattern={urlExpression}
+                enabled={!isSaving}
+              />
+            )}
+            <LabeledTextField
+              title="Title"
+              subtitle="(required)"
+              required
+              value={newTitle}
+              getValidationMessage={() => 'Please enter a title'}
+              onChange={setNewTitle}
+              enabled={newType !== '' && !isSaving}
+            />
+            <LabeledTextArea
+              title="Description"
+              value={newDescription}
+              onChange={setNewDescription}
+              enabled={newType !== '' && !isSaving}
+            />
+          </FormSection>
           <footer css={[footerStyles, padding24Styles]}>
             <div>
               <Link href={backHref} buttonStyle noMargin>

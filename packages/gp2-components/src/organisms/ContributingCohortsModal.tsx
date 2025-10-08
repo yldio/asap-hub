@@ -109,11 +109,11 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
             <Fragment key={`cohort-${index}`}>
               <FormSection
                 secondaryTitle={`#${index + 1} Cohort Study`}
-                headerDecorator={() => (
-                  <Button onClick={onRemove(index)} small>
+                headerDecorator={
+                  <Button onClick={onRemove(index)} small noMargin>
                     <span css={css({ display: 'inline-flex' })}>{binIcon}</span>
                   </Button>
-                )}
+                }
               >
                 <LabeledDropdown
                   title="Name"

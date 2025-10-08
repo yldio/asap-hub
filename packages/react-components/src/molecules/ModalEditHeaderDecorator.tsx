@@ -23,7 +23,7 @@ const ModalEditHeaderDecorator: React.FC<ModalEditHeaderDecoratorProps> = ({
 }) => (
   <div css={wrapStyles}>
     {onSave && (
-      <Button primary small onClick={onSave} enabled={saveEnabled}>
+      <Button primary small noMargin onClick={onSave} enabled={saveEnabled}>
         Save
       </Button>
     )}

@@ -7,23 +7,20 @@ import {
   TimeRangeOption,
   timeRangeOptions,
 } from '@asap-hub/model';
-import { Button, Headline3 } from '../atoms';
+import { Button } from '../atoms';
 import { paddingStyles } from '../card';
 import { crossIcon, uploadIcon } from '../icons';
-import { LabeledCheckboxGroup, LabeledDropdown, Modal } from '../molecules';
+import {
+  FormSection,
+  LabeledCheckboxGroup,
+  LabeledDropdown,
+  Modal,
+} from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 import { Title, Option } from './CheckboxGroup';
 
-const headerStyles = css(paddingStyles, {
-  paddingBottom: 0,
-  display: 'flex',
-  flexDirection: 'row-reverse',
-  justifyContent: 'space-between',
-});
-
-const controlsContainerStyles = css({
-  display: 'flex',
-  alignItems: 'flex-start',
+const contentStyles = css({
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
@@ -160,91 +157,94 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
   const isDisabled = isSubmitting || isDownloading;
   return (
     <Modal padding={false}>
-      <header css={headerStyles}>
-        <div css={controlsContainerStyles}>
-          <Button small onClick={onDismiss}>
-            {crossIcon}
-          </Button>
-        </div>
-        <Headline3>Export XLSX</Headline3>
-      </header>
-      <div css={[paddingStyles, { paddingTop: 0 }]}>
-        <form
-          css={css({ display: 'flex', flexDirection: 'column', gap: rem(18) })}
-        >
-          <Controller
-            name="timeRange"
-            control={control}
-            rules={{
-              required: 'Please select an option.',
-            }}
-            render={({ field: { value, onChange } }) => (
-              <LabeledDropdown
-                name="Time Range"
-                title="Select data range"
-                subtitle="(required)"
-                options={dataRange}
-                required
-                enabled={!isDisabled}
-                placeholder="Choose a data range"
-                value={value ?? ''}
-                onChange={onChange}
+      <>
+        <form css={contentStyles}>
+          <FormSection
+            title="Export XLSX"
+            headerDecorator={
+              <Button small noMargin onClick={onDismiss}>
+                {crossIcon}
+              </Button>
+            }
+          >
+            <FormSection>
+              <Controller
+                name="timeRange"
+                control={control}
+                rules={{
+                  required: 'Please select an option.',
+                }}
+                render={({ field: { value, onChange } }) => (
+                  <LabeledDropdown
+                    name="Time Range"
+                    title="Select data range"
+                    subtitle="(required)"
+                    options={dataRange}
+                    required
+                    enabled={!isDisabled}
+                    placeholder="Choose a data range"
+                    value={value ?? ''}
+                    onChange={onChange}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="metrics"
-            control={control}
-            rules={{
-              required: 'Please select an option.',
-            }}
-            render={({ field: { value }, fieldState: { error } }) => (
-              <LabeledCheckboxGroup
-                title="Select metrics to export"
-                subtitle="(required)"
-                description="You need to select at least one metric."
-                onChange={(newValue) =>
-                  handleMetricsSelection(newValue as MetricExportKeys)
-                }
-                values={value}
-                validationMessage={error?.message ?? ''}
-                options={optionsToExport.map((item) => {
-                  if ('title' in item) {
-                    return {
-                      title: item.title,
-                      info: item.info,
-                    };
-                  }
+              <Controller
+                name="metrics"
+                control={control}
+                rules={{
+                  required: 'Please select an option.',
+                }}
+                render={({ field: { value }, fieldState: { error } }) => (
+                  <LabeledCheckboxGroup
+                    title="Select metrics to export"
+                    subtitle="(required)"
+                    description="You need to select at least one metric."
+                    onChange={(newValue) =>
+                      handleMetricsSelection(newValue as MetricExportKeys)
+                    }
+                    values={value}
+                    validationMessage={error?.message ?? ''}
+                    options={optionsToExport.map((item) => {
+                      if ('title' in item) {
+                        return {
+                          title: item.title,
+                          info: item.info,
+                        };
+                      }
 
-                  return {
-                    value: item?.value,
-                    label: item.label,
-                    enabled: !isDisabled,
-                  };
-                })}
+                      return {
+                        value: item?.value,
+                        label: item.label,
+                        enabled: !isDisabled,
+                      };
+                    })}
+                  />
+                )}
               />
-            )}
-          />
+            </FormSection>
+          </FormSection>
         </form>
-        <div css={buttonContainerStyles}>
-          <div css={dismissButtonStyles}>
-            <Button enabled onClick={onDismiss}>
-              Cancel
-            </Button>
-          </div>
-          <div css={confirmButtonStyles}>
-            <Button
-              noMargin
-              primary
-              enabled={isExportEnabled && !isDisabled}
-              onClick={handleExport}
-              overrideStyles={css({ height: 'fit-content' })}
-            >
-              {uploadIcon} {isDownloading ? 'Exporting...' : 'Export XLSX'}
-            </Button>
+        <div css={[paddingStyles, { paddingTop: 0 }]}>
+          <div css={buttonContainerStyles}>
+            <div css={dismissButtonStyles}>
+              <Button enabled onClick={onDismiss}>
+                Cancel
+              </Button>
+            </div>
+            <div css={confirmButtonStyles}>
+              <Button
+                noMargin
+                primary
+                enabled={isExportEnabled && !isDisabled}
+                onClick={handleExport}
+                overrideStyles={css({ height: 'fit-content' })}
+              >
+                {uploadIcon} {isDownloading ? 'Exporting...' : 'Export XLSX'}
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     </Modal>
   );
 };

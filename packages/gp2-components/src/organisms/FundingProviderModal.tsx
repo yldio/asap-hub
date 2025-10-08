@@ -1,5 +1,5 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { LabeledTextArea } from '@asap-hub/react-components';
+import { FormSection, LabeledTextArea } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
 import EditUserModal from './EditUserModal';
 
@@ -34,17 +34,19 @@ const FundingProviderModal: React.FC<FundingProviderModalProps> = ({
       dirty={checkDirty()}
     >
       {({ isSaving }) => (
-        <LabeledTextArea
-          title={'Funding Names'}
-          subtitle={'(optional)'}
-          maxLength={1000}
-          value={newFundingProvider}
-          onChange={setNewFundingProvider}
-          enabled={!isSaving}
-          placeholder={
-            'Example: University of Plymouth, University Hospitals Plymouth NHS Trust and National Institute of Health Research...'
-          }
-        />
+        <FormSection>
+          <LabeledTextArea
+            title={'Funding Names'}
+            subtitle={'(optional)'}
+            maxLength={1000}
+            value={newFundingProvider}
+            onChange={setNewFundingProvider}
+            enabled={!isSaving}
+            placeholder={
+              'Example: University of Plymouth, University Hospitals Plymouth NHS Trust and National Institute of Health Research...'
+            }
+          />
+        </FormSection>
       )}
     </EditUserModal>
   );

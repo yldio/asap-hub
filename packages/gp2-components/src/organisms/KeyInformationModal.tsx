@@ -3,6 +3,7 @@ import {
   LabeledDropdown,
   LabeledMultiSelect,
   LabeledTextField,
+  FormSection,
 } from '@asap-hub/react-components';
 import { ComponentProps, useMemo, useState } from 'react';
 import { ContactSupport, UserPositions } from '../molecules';
@@ -164,116 +165,118 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
     >
       {({ isSaving }) => (
         <>
-          <LabeledTextField
-            title="First Name"
-            subtitle={required}
-            required
-            enabled={!isSaving}
-            value={newFirstName}
-            onChange={setNewFirstName}
-            maxLength={50}
-          />
-          <LabeledTextField
-            title="Middle Name(s)"
-            subtitle={optional}
-            enabled={!isSaving}
-            value={newMiddleName}
-            onChange={setNewMiddleName}
-            maxLength={50}
-            hint="It will be shown as initials."
-          />
-          <LabeledTextField
-            title="Last Name"
-            subtitle={required}
-            required
-            enabled={!isSaving}
-            value={newLastName}
-            onChange={setNewLastName}
-            maxLength={50}
-          />
-          <LabeledTextField
-            title="Nickname"
-            subtitle={optional}
-            enabled={!isSaving}
-            value={newNickname}
-            onChange={setNewNickname}
-            maxLength={50}
-            hint="It will be displayed in parentheses after your first name."
-          />
-          <LabeledMultiSelect
-            title="Degree"
-            subtitle={required}
-            enabled={!isSaving}
-            required
-            values={getValues(newDegrees)}
-            onChange={onChangeSelect(setNewDegrees)}
-            suggestions={getValues([...gp2.userDegrees])}
-            placeholder="Start typing to choose your highest clinical and/or academic degrees"
-          />
-          <LabeledDropdown
-            title="GP2 Role"
-            description={<ContactSupport />}
-            options={getValues([...gp2.userRoles])}
-            value={newRole}
-            required
-            onChange={setNewRole}
-            enabled={false}
-          />
-          <LabeledDropdown
-            title="Region"
-            subtitle={required}
-            description="Select the region you are based in."
-            options={getValues([...gp2.userRegions])}
-            value={newRegion}
-            required
-            onChange={setNewRegion}
-            enabled={!isSaving}
-            placeholder={'Start typing to choose your region'}
-          />
-          <LabeledDropdown
-            title="Location"
-            subtitle={required}
-            description="Select the location you are based in."
-            options={getValues(locationSuggestions)}
-            value={newCountry}
-            required
-            onChange={setNewCountry}
-            enabled={!isSaving}
-            placeholder={'Start typing to choose your location'}
-          />
-          <LabeledTextField
-            title="State/Province"
-            subtitle={required}
-            customValidationMessage={
-              newStateOrProvince?.trim() === ''
-                ? 'Please add your state/province'
-                : ''
-            }
-            enabled={!isSaving}
-            value={newStateOrProvince || ''}
-            onChange={setNewStateOrProvince}
-          />
-          <LabeledTextField
-            title="City"
-            subtitle={required}
-            enabled={!isSaving}
-            value={newCity || ''}
-            required
-            getValidationMessage={() => 'Please add your city'}
-            onChange={setNewCity}
-          />
-          <UserPositions
-            onChange={setPositions}
-            isSaving={isSaving}
-            loadInstitutionOptions={loadInstitutionOptions}
-            positions={newPositions}
-          />
-          <UserExternalProfilesForm
-            onChange={setNewSocial}
-            newSocial={newSocial}
-            social={social}
-            isSaving={isSaving}
-          />
+          <FormSection>
+            <LabeledTextField
+              title="First Name"
+              subtitle={required}
+              required
+              enabled={!isSaving}
+              value={newFirstName}
+              onChange={setNewFirstName}
+              maxLength={50}
+            />
+            <LabeledTextField
+              title="Middle Name(s)"
+              subtitle={optional}
+              enabled={!isSaving}
+              value={newMiddleName}
+              onChange={setNewMiddleName}
+              maxLength={50}
+              hint="It will be shown as initials."
+            />
+            <LabeledTextField
+              title="Last Name"
+              subtitle={required}
+              required
+              enabled={!isSaving}
+              value={newLastName}
+              onChange={setNewLastName}
+              maxLength={50}
+            />
+            <LabeledTextField
+              title="Nickname"
+              subtitle={optional}
+              enabled={!isSaving}
+              value={newNickname}
+              onChange={setNewNickname}
+              maxLength={50}
+              hint="It will be displayed in parentheses after your first name."
+            />
+            <LabeledMultiSelect
+              title="Degree"
+              subtitle={required}
+              enabled={!isSaving}
+              required
+              values={getValues(newDegrees)}
+              onChange={onChangeSelect(setNewDegrees)}
+              suggestions={getValues([...gp2.userDegrees])}
+              placeholder="Start typing to choose your highest clinical and/or academic degrees"
+            />
+            <LabeledDropdown
+              title="GP2 Role"
+              description={<ContactSupport />}
+              options={getValues([...gp2.userRoles])}
+              value={newRole}
+              required
+              onChange={setNewRole}
+              enabled={false}
+            />
+            <LabeledDropdown
+              title="Region"
+              subtitle={required}
+              description="Select the region you are based in."
+              options={getValues([...gp2.userRegions])}
+              value={newRegion}
+              required
+              onChange={setNewRegion}
+              enabled={!isSaving}
+              placeholder={'Start typing to choose your region'}
+            />
+            <LabeledDropdown
+              title="Location"
+              subtitle={required}
+              description="Select the location you are based in."
+              options={getValues(locationSuggestions)}
+              value={newCountry}
+              required
+              onChange={setNewCountry}
+              enabled={!isSaving}
+              placeholder={'Start typing to choose your location'}
+            />
+            <LabeledTextField
+              title="State/Province"
+              subtitle={required}
+              customValidationMessage={
+                newStateOrProvince?.trim() === ''
+                  ? 'Please add your state/province'
+                  : ''
+              }
+              enabled={!isSaving}
+              value={newStateOrProvince || ''}
+              onChange={setNewStateOrProvince}
+            />
+            <LabeledTextField
+              title="City"
+              subtitle={required}
+              enabled={!isSaving}
+              value={newCity || ''}
+              required
+              getValidationMessage={() => 'Please add your city'}
+              onChange={setNewCity}
+            />
+            <UserPositions
+              onChange={setPositions}
+              isSaving={isSaving}
+              loadInstitutionOptions={loadInstitutionOptions}
+              positions={newPositions}
+            />
+            <UserExternalProfilesForm
+              onChange={setNewSocial}
+              newSocial={newSocial}
+              social={social}
+              isSaving={isSaving}
+            />
+          </FormSection>
         </>
       )}
     </EditUserModal>

@@ -3,15 +3,14 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Button, Headline3 } from '../atoms';
-import { LabeledTextEditor, LabeledTextField, Modal } from '../molecules';
+import { Button } from '../atoms';
+import {
+  FormSection,
+  LabeledTextEditor,
+  LabeledTextField,
+  Modal,
+} from '../molecules';
 import { mobileScreen, rem } from '../pixels';
-
-const headerStyles = css({
-  padding: `${rem(32)} ${rem(24)} 0px ${rem(24)}`,
-  marginBottom: rem(12),
-  display: 'flex',
-});
 
 const buttonMediaQuery = `@media (min-width: ${mobileScreen.max + 50}px)`;
 
@@ -50,11 +49,15 @@ const buttonOverrideStyles = css({
   padding: `${rem(15)} ${rem(33)}}`,
 });
 
+const contentStyles = css({
+  padding: `${rem(32)} ${rem(24)}`,
+});
+
 const footerStyles = (isCancelling: boolean) =>
   css({
     display: 'flex',
     flexDirection: 'column',
-    paddingTop: rem(15),
+    marginTop: rem(32),
     gap: `${isCancelling ? rem(24) : 0}`,
     [buttonMediaQuery]: {
       flexDirection: 'row',
@@ -111,34 +114,51 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Modal padding={false}>
-        <header css={headerStyles}>
-          <Headline3 noMargin>{modalTitle}</Headline3>
-        </header>
-        <div
-          css={{
-            padding: `0px ${rem(24)} ${rem(32)} ${rem(24)}`,
-          }}
-        >
-          {type === 'start' && (
+        <div css={contentStyles}>
+          <FormSection title={modalTitle}>
+            {type === 'start' && (
+              <Controller
+                name="title"
+                control={control}
+                rules={{
+                  required: true,
+                  maxLength: {
+                    value: 100,
+                    message: 'Title cannot exceed 100 characters.',
+                  },
+                }}
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <LabeledTextField
+                    overrideStyles={css({
+                      paddingBottom: rem(20),
+                    })}
+                    title="Title"
+                    subtitle="(required)"
+                    onChange={onChange}
+                    customValidationMessage={error?.message}
+                    required
+                    value={value || ''}
+                    enabled={!(isSubmitting || isCancelling)}
+                  />
+                )}
+              />
+            )}
+
             <Controller
-              name="title"
+              name="text"
               control={control}
               rules={{
                 required: true,
-                maxLength: {
-                  value: 100,
-                  message: 'Title cannot exceed 100 characters.',
-                },
               }}
               render={({
                 field: { value, onChange },
                 fieldState: { error },
               }) => (
-                <LabeledTextField
-                  overrideStyles={css({
-                    paddingBottom: rem(20),
-                  })}
-                  title="Title"
+                <LabeledTextEditor
+                  title="Please write your message below."
                   subtitle="(required)"
                   onChange={onChange}
                   customValidationMessage={error?.message}
@@ -148,27 +168,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
                 />
               )}
             />
-          )}
-
-          <Controller
-            name="text"
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <LabeledTextEditor
-                title="Please write your message below."
-                subtitle="(required)"
-                onChange={onChange}
-                customValidationMessage={error?.message}
-                required
-                value={value || ''}
-                enabled={!(isSubmitting || isCancelling)}
-              />
-            )}
-          />
-
+          </FormSection>
           <div css={footerStyles(isCancelling)}>
             <div css={cancelTextStyles}>
               {isCancelling && (

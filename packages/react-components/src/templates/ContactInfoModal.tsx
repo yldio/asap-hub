@@ -101,7 +101,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
       }
     >
       {({ isSaving }) => (
-        <>
+        <FormSection>
           <LabeledTextField
             type="email"
             value={newEmail}
@@ -230,7 +230,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               placeholder="https://scholar.google.com/citations?user=profileID"
             />
           </FormSection>
-        </>
+        </FormSection>
       )}
     </EditUserModal>
   );

@@ -7,9 +7,10 @@ import {
 import {
   CaptionCard,
   CaptionItem,
+  LoadingContentBodyTable,
   RepresentationOfPresentersTable,
 } from '@asap-hub/react-components';
-import { useState } from 'react';
+import { FC, Suspense, useState } from 'react';
 
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsEngagement, useEngagementPerformance } from './state';
@@ -19,10 +20,9 @@ interface RepresentationOfPresentersProps {
   timeRange: TimeRangeOption;
 }
 
-const RepresentationOfPresenters: React.FC<RepresentationOfPresentersProps> = ({
-  tags,
-  timeRange,
-}) => {
+const RepresentationOfPresentersContent: FC<
+  RepresentationOfPresentersProps
+> = ({ tags, timeRange }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const [sort, setSort] = useState<SortEngagement>('team_asc');
@@ -76,5 +76,14 @@ const RepresentationOfPresenters: React.FC<RepresentationOfPresentersProps> = ({
     </>
   );
 };
+
+const RepresentationOfPresenters: FC<RepresentationOfPresentersProps> = ({
+  tags,
+  timeRange,
+}) => (
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <RepresentationOfPresentersContent tags={tags} timeRange={timeRange} />
+  </Suspense>
+);
 
 export default RepresentationOfPresenters;

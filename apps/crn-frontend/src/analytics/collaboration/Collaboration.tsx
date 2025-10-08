@@ -27,6 +27,7 @@ import {
   useSearch,
 } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { TEAM_PERFORMANCE_INITIAL_DATA } from '../utils/constants';
 import { getAlgoliaIndexName } from '../utils/state';
 import {
   getTeamCollaboration,
@@ -41,8 +42,8 @@ import {
 } from './export';
 import SharingPreliminaryFindings from './SharingPrelimFindings';
 import {
-  useTeamCollaborationPerformance,
-  useUserCollaborationPerformance,
+  useTeamCollaborationPerformanceValue,
+  useUserCollaborationPerformanceValue,
 } from './state';
 import TeamCollaboration from './TeamCollaboration';
 import UserCollaboration from './UserCollaboration';
@@ -119,12 +120,12 @@ const Collaboration = () => {
     getAlgoliaIndexName(teamSort, 'team-collaboration'),
   ).client;
 
-  const userPerformance = useUserCollaborationPerformance({
+  const userPerformance = useUserCollaborationPerformanceValue({
     timeRange,
     documentCategory,
   });
 
-  const teamPerformance = useTeamCollaborationPerformance({
+  const teamPerformance = useTeamCollaborationPerformanceValue({
     timeRange,
     outputType,
   });
@@ -163,7 +164,28 @@ const Collaboration = () => {
             timeRange,
             ...paginationParams,
           }),
-        userCollaborationToCSV(type, userPerformance, documentCategory),
+        userCollaborationToCSV(
+          type,
+          userPerformance ?? {
+            withinTeam: {
+              belowAverageMin: 0,
+              belowAverageMax: 0,
+              averageMin: 0,
+              averageMax: 0,
+              aboveAverageMin: 0,
+              aboveAverageMax: 0,
+            },
+            acrossTeam: {
+              belowAverageMin: 0,
+              belowAverageMax: 0,
+              averageMin: 0,
+              averageMax: 0,
+              aboveAverageMin: 0,
+              aboveAverageMax: 0,
+            },
+          },
+          documentCategory,
+        ),
       );
     }
 
@@ -183,8 +205,14 @@ const Collaboration = () => {
           ...paginationParams,
         }),
       type === 'within-team'
-        ? teamCollaborationWithinTeamToCSV(teamPerformance, outputType)
-        : teamCollaborationAcrossTeamToCSV(teamPerformance, outputType),
+        ? teamCollaborationWithinTeamToCSV(
+            teamPerformance ?? TEAM_PERFORMANCE_INITIAL_DATA,
+            outputType,
+          )
+        : teamCollaborationAcrossTeamToCSV(
+            teamPerformance ?? TEAM_PERFORMANCE_INITIAL_DATA,
+            outputType,
+          ),
     );
   };
 

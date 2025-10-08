@@ -22,7 +22,7 @@ import { getEngagement, getMeetingRepAttendance } from './api';
 import { engagementToCSV, meetingRepAttendanceToCSV } from './export';
 import MeetingRepAttendance from './MeetingRepAttendance';
 import RepresentationOfPresenters from './RepresentationOfPresenters';
-import { useEngagementPerformance } from './state';
+import { useEngagementPerformanceValue } from './state';
 
 const Engagement = () => {
   const { currentPage } = usePaginationParams();
@@ -44,7 +44,7 @@ const Engagement = () => {
 
   const isMeetingRepAttendanceEnabled = isEnabled('ANALYTICS_PHASE_TWO');
 
-  const performance = useEngagementPerformance({ timeRange });
+  const performance = useEngagementPerformanceValue({ timeRange });
   const { client } = useAnalyticsAlgolia();
   const attendanceClient =
     useAnalyticsOpensearch<MeetingRepAttendanceResponse>('attendance');
@@ -79,7 +79,42 @@ const Engagement = () => {
           tags,
           ...paginationParams,
         }),
-      engagementToCSV(performance),
+      engagementToCSV(
+        performance ?? {
+          events: {
+            belowAverageMin: 0,
+            belowAverageMax: 0,
+            averageMin: 0,
+            averageMax: 0,
+            aboveAverageMin: 0,
+            aboveAverageMax: 0,
+          },
+          totalSpeakers: {
+            belowAverageMin: 0,
+            belowAverageMax: 0,
+            averageMin: 0,
+            averageMax: 0,
+            aboveAverageMin: 0,
+            aboveAverageMax: 0,
+          },
+          uniqueAllRoles: {
+            belowAverageMin: 0,
+            belowAverageMax: 0,
+            averageMin: 0,
+            averageMax: 0,
+            aboveAverageMin: 0,
+            aboveAverageMax: 0,
+          },
+          uniqueKeyPersonnel: {
+            belowAverageMin: 0,
+            belowAverageMax: 0,
+            averageMin: 0,
+            averageMax: 0,
+            aboveAverageMin: 0,
+            aboveAverageMax: 0,
+          },
+        },
+      ),
     );
   };
 

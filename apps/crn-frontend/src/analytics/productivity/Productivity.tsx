@@ -4,6 +4,8 @@ import {
   SortUserProductivity,
   TeamProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,
+  UserProductivityPerformance,
+  TeamProductivityPerformance,
 } from '@asap-hub/model';
 import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
@@ -16,8 +18,8 @@ import { getAlgoliaIndexName } from '../utils/state';
 import { getTeamProductivity, getUserProductivity } from './api';
 import { teamProductivityToCSV, userProductivityToCSV } from './export';
 import {
-  useTeamProductivityPerformance,
-  useUserProductivityPerformance,
+  useTeamProductivityPerformanceValue,
+  useUserProductivityPerformanceValue,
 } from './state';
 
 import TeamProductivity from './TeamProductivity';
@@ -46,21 +48,43 @@ const Productivity = () => {
   const userClient = useAnalyticsAlgolia(
     getAlgoliaIndexName(userSort, 'user-productivity'),
   ).client;
-  const userPerformance = useUserProductivityPerformance({
-    timeRange,
-    documentCategory,
-  });
-
   const teamClient = useAnalyticsAlgolia(
     getAlgoliaIndexName(teamSort, 'team-productivity'),
   ).client;
 
-  const teamPerformance = useTeamProductivityPerformance({
+  const emptyPerformanceMetrics = {
+    belowAverageMin: 0,
+    belowAverageMax: 0,
+    averageMin: 0,
+    averageMax: 0,
+    aboveAverageMin: 0,
+    aboveAverageMax: 0,
+  };
+
+  const defaultUserPerformance: UserProductivityPerformance = {
+    asapOutput: emptyPerformanceMetrics,
+    asapPublicOutput: emptyPerformanceMetrics,
+    ratio: emptyPerformanceMetrics,
+  };
+
+  const defaultTeamPerformance: TeamProductivityPerformance = {
+    article: emptyPerformanceMetrics,
+    bioinformatics: emptyPerformanceMetrics,
+    dataset: emptyPerformanceMetrics,
+    labMaterial: emptyPerformanceMetrics,
+    protocol: emptyPerformanceMetrics,
+  };
+
+  const userPerformanceValue = useUserProductivityPerformanceValue({
+    timeRange,
+    documentCategory,
+  });
+  const teamPerformanceValue = useTeamProductivityPerformanceValue({
     timeRange,
     outputType,
   });
 
-  const exportResults = () => {
+  const exportResults = async () => {
     if (metric === 'user') {
       return resultsToStream<UserProductivityAlgoliaResponse>(
         createCsvFileStream(
@@ -77,7 +101,7 @@ const Productivity = () => {
             tags,
             ...paginationParams,
           }),
-        userProductivityToCSV(userPerformance),
+        userProductivityToCSV(userPerformanceValue ?? defaultUserPerformance),
       );
     }
 
@@ -96,7 +120,7 @@ const Productivity = () => {
           tags,
           ...paginationParams,
         }),
-      teamProductivityToCSV(teamPerformance),
+      teamProductivityToCSV(teamPerformanceValue ?? defaultTeamPerformance),
     );
   };
 

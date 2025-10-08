@@ -14,6 +14,7 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
+  useRecoilValueLoadable,
 } from 'recoil';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import {
@@ -119,6 +120,15 @@ export const useUserProductivityPerformance =
     getUserProductivityPerformance,
   );
 
+export const useUserProductivityPerformanceValue = (
+  options: Parameters<typeof getUserProductivityPerformance>[1],
+) => {
+  const loadable = useRecoilValueLoadable(
+    userProductivityPerformanceState(options),
+  );
+  return loadable.state === 'hasValue' ? loadable.contents : undefined;
+};
+
 export const teamProductivityPerformanceState =
   makePerformanceState<TeamProductivityPerformance>(
     'analyticsTeamProductivityPerformance',
@@ -129,6 +139,15 @@ export const useTeamProductivityPerformance =
     teamProductivityPerformanceState,
     getTeamProductivityPerformance,
   );
+
+export const useTeamProductivityPerformanceValue = (
+  options: Parameters<typeof getTeamProductivityPerformance>[1],
+) => {
+  const loadable = useRecoilValueLoadable(
+    teamProductivityPerformanceState(options),
+  );
+  return loadable.state === 'hasValue' ? loadable.contents : undefined;
+};
 
 const analyticsTeamProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,

@@ -3,8 +3,11 @@ import {
   OSChampionSortingDirection,
   SortOSChampion,
 } from '@asap-hub/model';
-import { OSChampionTable } from '@asap-hub/react-components';
-import { Dispatch, SetStateAction, useState } from 'react';
+import {
+  LoadingContentBodyTable,
+  OSChampionTable,
+} from '@asap-hub/react-components';
+import { Dispatch, SetStateAction, Suspense, useState } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsOSChampion } from './state';
 
@@ -14,7 +17,11 @@ interface OSChampionProps {
   tags: string[];
 }
 
-const OSChampion: React.FC<OSChampionProps> = ({ sort, setSort, tags }) => {
+const OSChampionContent: React.FC<OSChampionProps> = ({
+  sort,
+  setSort,
+  tags,
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange } = useAnalytics();
 
@@ -44,5 +51,11 @@ const OSChampion: React.FC<OSChampionProps> = ({ sort, setSort, tags }) => {
     />
   );
 };
+
+const OSChampion: React.FC<OSChampionProps> = ({ sort, setSort, tags }) => (
+  <Suspense fallback={<LoadingContentBodyTable />}>
+    <OSChampionContent sort={sort} setSort={setSort} tags={tags} />
+  </Suspense>
+);
 
 export default OSChampion;

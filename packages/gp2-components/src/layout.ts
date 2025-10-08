@@ -81,8 +81,9 @@ export const modalStyles = css({
 });
 
 export const footerStyles = css({
-  display: 'inline-flex',
+  display: 'flex',
   gap: rem(24),
+  marginTop: rem(32),
   justifyContent: 'space-between',
   [mobileQuery]: {
     display: 'flex',

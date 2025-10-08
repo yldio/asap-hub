@@ -1,4 +1,5 @@
 import { useState, Fragment } from 'react';
+import { css } from '@emotion/react';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 import { noop } from '../utils';
 import {
@@ -7,6 +8,8 @@ import {
   LabeledDropdown,
 } from '../molecules';
 import { EditUserModal } from '../organisms';
+import { rem } from '../pixels';
+import { colors } from '..';
 
 type RoleModalProps = Pick<
   UserResponse,
@@ -21,6 +24,12 @@ type RoleModalProps = Pick<
   onSave?: (data: UserPatchRequest) => Promise<void>;
   backHref: string;
 };
+
+const thinLineStyles = css({
+  width: '100%',
+  height: '1px',
+  borderTop: `1px solid ${colors.steel.rgb}`,
+});
 
 const RoleModal: React.FC<RoleModalProps> = ({
   teams,
@@ -57,21 +66,26 @@ const RoleModal: React.FC<RoleModalProps> = ({
     >
       {({ isSaving }) => (
         <>
-          {teams.map(({ displayName, role: teamRole, id }) => (
+          {teams.map(({ displayName, role: teamRole, id }, index) => (
             <Fragment key={id}>
-              <LabeledTextField
-                key={`team-${id}`}
-                title="Team"
-                value={displayName ?? ''}
-                enabled={false}
-              />
-              <LabeledDropdown
-                key={`team${id}-role`}
-                title="Role"
-                enabled={false}
-                value={teamRole}
-                options={[{ label: teamRole, value: teamRole }]}
-              />
+              <div
+                style={{ display: 'flex', flexFlow: 'column', gap: rem(24) }}
+              >
+                <LabeledTextField
+                  key={`team-${id}`}
+                  title="Team"
+                  value={displayName ?? ''}
+                  enabled={false}
+                />
+                <LabeledDropdown
+                  key={`team${id}-role`}
+                  title="Role"
+                  enabled={false}
+                  value={teamRole}
+                  options={[{ label: teamRole, value: teamRole }]}
+                />
+              </div>
+              {teams.length > 1 && <div css={thinLineStyles} />}
             </Fragment>
           ))}
           {labs.map(({ name, id }) => (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { LabeledTextArea } from '../molecules';
+import { FormSection, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
 import { EditUserModal } from '../organisms';
 
@@ -26,18 +26,20 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
       onSave={() => onSave(newBiography)}
     >
       {({ isSaving }) => (
-        <LabeledTextArea
-          value={newBiography}
-          onChange={setNewBiography}
-          enabled={!isSaving}
-          required
-          maxLength={1000}
-          title="Biography Details"
-          subtitle="(required)"
-          tip="Summarize your background and highlight any past achievements. Tip: refer to yourself in the third person."
-          placeholder="Example: Randy is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof."
-          getValidationMessage={() => 'Please add your biography'}
-        />
+        <FormSection>
+          <LabeledTextArea
+            value={newBiography}
+            onChange={setNewBiography}
+            enabled={!isSaving}
+            required
+            maxLength={1000}
+            title="Biography Details"
+            subtitle="(required)"
+            tip="Summarize your background and highlight any past achievements. Tip: refer to yourself in the third person."
+            placeholder="Example: Randy is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof."
+            getValidationMessage={() => 'Please add your biography'}
+          />
+        </FormSection>
       )}
     </EditUserModal>
   );

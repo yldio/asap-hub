@@ -92,7 +92,6 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
                   value={question}
                   onChange={onChangeValue(index)}
                   maxLength={250}
-                  getValidationMessage={() => 'Please enter a question'}
                   placeholder={
                     'Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?'
                   }

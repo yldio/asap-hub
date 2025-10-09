@@ -22,27 +22,33 @@ export const publicationComplianceToCSV = (
 ) => ({
   'Team Name': data.teamName,
   'Team Status': data.isTeamInactive ? 'Inactive' : 'Active',
-  Publication: formatPercentage(data.overallCompliance ?? null),
-  'Publication Ranking': getPerformanceRanking(
+  '# Publications': data.numberOfPublications,
+  'Publications %': formatPercentage(data.overallCompliance ?? null),
+  'Publications Ranking': getPerformanceRanking(
     data.overallCompliance ?? null,
     data.overallCompliance === null,
   ),
-  Datasets: formatPercentage(data.datasetsPercentage ?? null),
+  '# Outputs': data.numberOfOutputs,
+  '# Datasets': data.numberOfDatasets,
+  'Datasets %': formatPercentage(data.datasetsPercentage ?? null),
   'Datasets Ranking': getPerformanceRanking(
     data.datasetsPercentage ?? null,
     data.datasetsRanking === 'LIMITED DATA',
   ),
-  Protocols: formatPercentage(data.protocolsPercentage ?? null),
+  '# Protocols': data.numberOfProtocols,
+  'Protocols %': formatPercentage(data.protocolsPercentage ?? null),
   'Protocols Ranking': getPerformanceRanking(
     data.protocolsPercentage ?? null,
     data.protocolsRanking === 'LIMITED DATA',
   ),
-  Code: formatPercentage(data.codePercentage ?? null),
+  '# Code': data.numberOfCode,
+  'Code %': formatPercentage(data.codePercentage ?? null),
   'Code Ranking': getPerformanceRanking(
     data.codePercentage ?? null,
     data.codeRanking === 'LIMITED DATA',
   ),
-  'Lab Materials': formatPercentage(data.labMaterialsPercentage ?? null),
+  '# Lab Materials': data.numberOfLabMaterials,
+  'Lab Materials %': formatPercentage(data.labMaterialsPercentage ?? null),
   'Lab Materials Ranking': getPerformanceRanking(
     data.labMaterialsPercentage ?? null,
     data.labMaterialsRanking === 'LIMITED DATA',

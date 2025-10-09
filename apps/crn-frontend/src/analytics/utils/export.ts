@@ -276,3 +276,6 @@ export const getPerformanceRanking = (
   }
   return 'Needs Improvement';
 };
+
+export const formatPercentage = (percentage: number | null) =>
+  percentage === null ? 'N/A' : `${percentage}%`;

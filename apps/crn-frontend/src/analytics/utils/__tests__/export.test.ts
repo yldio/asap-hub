@@ -23,6 +23,7 @@ import {
   downloadAnalyticsXLSX,
   getAllData,
   getPerformanceRanking,
+  formatPercentage,
 } from '../export';
 
 jest.mock('xlsx', () => ({
@@ -564,4 +565,14 @@ describe('getPerformanceRanking', () => {
       expect(getPerformanceRanking(percentage, isLimitedData)).toBe(expected);
     },
   );
+});
+
+describe('formatPercentage', () => {
+  it.each`
+    percentage | result
+    ${null}    | ${'N/A'}
+    ${95}      | ${'95%'}
+  `('exports correct format for $percentage%', ({ percentage, result }) => {
+    expect(formatPercentage(percentage)).toEqual(result);
+  });
 });

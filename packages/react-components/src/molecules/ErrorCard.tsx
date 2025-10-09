@@ -3,15 +3,15 @@ import { serializeError } from 'serialize-error';
 
 import { Card, Anchor, Button } from '../atoms';
 import { errorIcon } from '../icons';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { mailToSupport } from '../mail';
 
 const styles = css({
   boxSizing: 'border-box',
   maxHeight: '100%',
-  padding: `${24 / perRem}em`,
+  padding: rem(24),
   display: 'grid',
-  gridColumnGap: `${12 / perRem}em`,
+  gridColumnGap: rem(12),
   gridTemplateColumns: 'min-content auto',
 });
 

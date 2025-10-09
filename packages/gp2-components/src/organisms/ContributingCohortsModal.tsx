@@ -3,47 +3,33 @@ import {
   Button,
   LabeledDropdown,
   pixels,
-  Subtitle,
+  FormSection,
+  colors,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useState, Fragment } from 'react';
 import { addIcon, binIcon } from '../icons';
 import { mobileQuery } from '../layout';
-import colors from '../templates/colors';
 import EditUserModal from './EditUserModal';
 
 const { rem } = pixels;
-const containerStyles = css({
-  [mobileQuery]: {
-    display: 'unset',
-  },
-  display: 'flex',
-  paddingBottom: rem(8),
-  flexDirection: 'column',
-});
-const rowStyles = css({
-  borderBottom: `1px solid ${colors.neutral500.rgb}`,
-  marginBottom: rem(12),
-  padding: `${rem(16)} 0`,
-  ':last-child': {
-    borderBottom: 'none',
-    marginBottom: 0,
-    paddingBottom: 0,
-  },
-});
-const headerStyles = css({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-});
-const buttonStyles = css({ margin: 0 });
+
 const addButtonStyles = css({
+  marginTop: rem(32),
   width: 'fit-content',
   [mobileQuery]: {
     width: '100%',
   },
 });
+
+const thinLineStyles = css({
+  width: '100%',
+  height: '1px',
+  marginTop: rem(48),
+  marginBottom: rem(48),
+  borderTop: `1px solid ${colors.steel.rgb}`,
+});
+
 const required = '(required)';
 const getValues = <T extends string>(selected: T[]) =>
   selected.map((item) => ({ label: item, value: item }));
@@ -119,67 +105,62 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
     >
       {({ isSaving }) => (
         <>
-          <div css={[containerStyles]}>
-            <div css={{ paddingBottom: '0' }}>
-              {newCohorts.map(({ contributingCohortId, role }, index) => (
-                <div css={[rowStyles]} key={`cohort-${index}`}>
-                  <div css={headerStyles}>
-                    <Subtitle styleAsHeading={4}>
-                      #{index + 1} Cohort Study
-                    </Subtitle>
-                    <div css={buttonStyles}>
-                      <Button onClick={onRemove(index)} small>
-                        <span css={css({ display: 'inline-flex' })}>
-                          {binIcon}
-                        </span>
-                      </Button>
-                    </div>
-                  </div>
-                  <LabeledDropdown
-                    title="Name"
-                    subtitle={required}
-                    getValidationMessage={() => 'Please add the cohort name'}
-                    enabled={!isSaving}
-                    value={contributingCohortId || ''}
-                    onChange={onChangeValue(index, 'contributingCohortId')}
-                    required
-                    options={cohortOptions.map(({ id, name }) => ({
-                      label: name,
-                      value: id,
-                    }))}
-                    placeholder={'Type a cohort study name...'}
-                  />
-                  <LabeledDropdown
-                    title="Role"
-                    subtitle={required}
-                    options={getValues([...gp2.userContributingCohortRole])}
-                    enabled={!isSaving}
-                    getValidationMessage={() => 'Please add the role'}
-                    value={role || ''}
-                    onChange={onChangeValue(index, 'role')}
-                    required
-                    placeholder={'Select a role...'}
-                  />
-                </div>
-              ))}
+          {newCohorts.map(({ contributingCohortId, role }, index, arr) => (
+            <Fragment key={`cohort-${index}`}>
+              <FormSection
+                secondaryTitle={`#${index + 1} Cohort Study`}
+                headerDecorator={
+                  <Button onClick={onRemove(index)} small noMargin>
+                    <span css={css({ display: 'inline-flex' })}>{binIcon}</span>
+                  </Button>
+                }
+              >
+                <LabeledDropdown
+                  title="Name"
+                  subtitle={required}
+                  getValidationMessage={() => 'Please add the cohort name'}
+                  enabled={!isSaving}
+                  value={contributingCohortId || ''}
+                  onChange={onChangeValue(index, 'contributingCohortId')}
+                  required
+                  options={cohortOptions.map(({ id, name }) => ({
+                    label: name,
+                    value: id,
+                  }))}
+                  placeholder={'Type a cohort study name...'}
+                />
+                <LabeledDropdown
+                  title="Role"
+                  subtitle={required}
+                  options={getValues([...gp2.userContributingCohortRole])}
+                  enabled={!isSaving}
+                  getValidationMessage={() => 'Please add the role'}
+                  value={role || ''}
+                  onChange={onChangeValue(index, 'role')}
+                  required
+                  placeholder={'Select a role...'}
+                />
+              </FormSection>
+              {index !== arr.length - 1 && <div css={thinLineStyles} />}
+            </Fragment>
+          ))}
+
+          {newCohorts.length < 10 ? (
+            <div css={addButtonStyles}>
+              <Button noMargin onClick={onAdd} enabled={!isSaving} small>
+                <span
+                  css={{
+                    display: 'inline-flex',
+                    gap: rem(8),
+                    margin: `0 ${rem(3)}`,
+                  }}
+                >
+                  Add {newCohorts.length > 0 ? 'Another' : 'Cohort'} Study{' '}
+                  {addIcon}
+                </span>
+              </Button>
             </div>
-            {newCohorts.length < 10 ? (
-              <div css={addButtonStyles}>
-                <Button onClick={onAdd} enabled={!isSaving} small>
-                  <span
-                    css={{
-                      display: 'inline-flex',
-                      gap: rem(8),
-                      margin: `0 ${rem(3)}`,
-                    }}
-                  >
-                    Add {newCohorts.length > 0 ? 'Another' : 'Cohort'} Study{' '}
-                    {addIcon}
-                  </span>
-                </Button>
-              </div>
-            ) : undefined}
-          </div>
+          ) : undefined}
         </>
       )}
     </EditUserModal>

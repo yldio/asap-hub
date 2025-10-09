@@ -6,18 +6,18 @@ import { useState } from 'react';
 
 import { Button, Card, Headline2, Link, Paragraph, Pill } from '../atoms';
 import { charcoal, lead, steel } from '../colors';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 
 const container = css({
   display: 'grid',
-  padding: `${32 / perRem}em ${24 / perRem}em`,
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const descriptionStyles = css({
-  marginTop: `${24 / perRem}em`,
-  marginBottom: `${12 / perRem}em`,
+  marginTop: rem(24),
+  marginBottom: rem(12),
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    marginBottom: `${32 / perRem}em`,
+    marginBottom: rem(32),
   },
 });
 
@@ -25,21 +25,21 @@ const gridTitleStyles = css({
   display: 'none',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     display: 'inherit',
-    paddingBottom: `${16 / perRem}em`,
+    paddingBottom: rem(16),
   },
 });
 
 const rowTitleStyles = css({
-  paddingTop: `${32 / perRem}em`,
-  paddingBottom: `${16 / perRem}em`,
+  paddingTop: rem(32),
+  paddingBottom: rem(16),
   ':first-of-type': { paddingTop: 0 },
   [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
 
 const rowStyles = css({
   display: 'grid',
-  paddingTop: `${20 / perRem}em`,
-  paddingBottom: `${20 / perRem}em`,
+  paddingTop: rem(20),
+  paddingBottom: rem(20),
   borderBottom: `1px solid ${steel.rgb}`,
   ':last-child': {
     borderBottom: 'none',
@@ -48,16 +48,16 @@ const rowStyles = css({
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '1fr 1.2fr 0.8fr',
-    columnGap: `${15 / perRem}em`,
-    paddingTop: `${0 / perRem}em`,
-    paddingBottom: `${16 / perRem}em`,
+    columnGap: rem(15),
+    paddingTop: rem(0),
+    paddingBottom: rem(16),
     borderBottom: 'none',
   },
 });
 
 const rowDivider = css({
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    paddingTop: `${16 / perRem}em`,
+    paddingTop: rem(16),
     borderBottom: `1px solid ${steel.rgb}`,
   },
 });
@@ -68,16 +68,16 @@ const paragraphStyle = css({
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'row',
-  gap: `${6 / perRem}em`,
+  gap: rem(6),
   color: lead.rgb,
 });
 
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  marginTop: `${32 / perRem}em`,
-  paddingTop: `${16 / perRem}em`,
-  paddingBottom: `${16 / perRem}em`,
+  marginTop: rem(32),
+  paddingTop: rem(16),
+  paddingBottom: rem(16),
   borderTop: `1px solid ${steel.rgb}`,
 });
 
@@ -86,8 +86,8 @@ const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 const iconStyles = css({
   verticalAlign: 'middle',
   display: 'inline-block',
-  height: `${24 / perRem}em`,
-  marginRight: `${9 / perRem}em`,
+  height: rem(24),
+  marginRight: rem(9),
 });
 
 type RelatedResearchCardProp<

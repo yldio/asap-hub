@@ -5,10 +5,10 @@ import { css } from '@emotion/react';
 import { Display } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { RichText } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const styles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)}`,
 });
 
 type ContentPageProps = Pick<PageResponse, 'text' | 'title'>;

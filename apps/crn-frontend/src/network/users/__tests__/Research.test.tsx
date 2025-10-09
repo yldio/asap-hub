@@ -164,7 +164,10 @@ describe('UserDetail', () => {
       userEvent.type(screen.getByDisplayValue('Expertise Description'), ' 2');
       expect(screen.getByDisplayValue('Expertise Description 2')).toBeVisible();
       tags.forEach((expertise) => {
-        userEvent.type(screen.getByLabelText(/tags/i), expertise);
+        userEvent.type(
+          screen.getByLabelText(/tags\s*\(required\)/i),
+          expertise,
+        );
         userEvent.tab();
       });
 

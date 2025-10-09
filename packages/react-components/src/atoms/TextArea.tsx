@@ -5,7 +5,7 @@ import { css } from '@emotion/react';
 import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import { ember, rose, fern, tin, lead, silver } from '../colors';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 
 const containerStyles = css({
   flexBasis: '100%',
@@ -20,9 +20,9 @@ const textareaStyles = css({
   resize: 'vertical',
 
   boxSizing: 'border-box',
-  height: `${318 / perRem}em`,
+  height: rem(318),
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    height: `${150 / perRem}em`,
+    height: rem(150),
   },
 
   '::placeholder': {
@@ -52,12 +52,18 @@ const invalidStyles = css({
 const limitStyles = css({
   textAlign: 'right',
   fontWeight: 'bold',
+  paddingTop: rem(16),
+  flex: 1,
 });
 
-const limitAndExtrasStyles = css({
+const validationContainerStyles = css({
   display: 'flex',
+  alignItems: 'center',
   justifyContent: 'space-between',
-  paddingTop: `${16 / perRem}em`,
+});
+
+const extrasStyles = css({
+  paddingTop: rem(16),
 });
 
 type TextAreaProps = {
@@ -125,25 +131,25 @@ const TextArea: React.FC<TextAreaProps> = ({
         ]}
         {...(onBlur ? { onBlur } : {})}
       />
-      <div>
-        <div css={validationMessageStyles}>
+      <div css={validationContainerStyles}>
+        <div css={[validationMessageStyles, css({ flex: 3 })]}>
           {validationMessage || (reachedMaxLength && 'Character count reached')}
         </div>
-        <div css={limitAndExtrasStyles}>
-          <div>{extras}</div>
-          {maxLength !== undefined && (
-            <div
-              css={({ colors: { primary500 = fern } = {} }) => [
-                validationMessageStyles,
-                limitStyles,
-                { color: reachedMaxLength ? ember.rgb : primary500.rgba },
-              ]}
-            >
-              {value.length}/{maxLength}
-            </div>
-          )}
-        </div>
+
+        {maxLength !== undefined && (
+          <div
+            css={({ colors: { primary500 = fern } = {} }) => [
+              validationMessageStyles,
+              limitStyles,
+              { color: reachedMaxLength ? ember.rgb : primary500.rgba },
+            ]}
+          >
+            {value.length}/{maxLength}
+          </div>
+        )}
       </div>
+
+      {extras && <div css={extrasStyles}>{extras}</div>}
     </div>
   );
 };

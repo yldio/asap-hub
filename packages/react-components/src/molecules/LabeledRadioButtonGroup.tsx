@@ -5,7 +5,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { Option } from '../select';
 import { noop } from '../utils';
 import { LabeledRadioButton } from '.';
-import { mobileScreen, perRem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 import { validationMessageStyles } from '../form';
 import { lead } from '../colors';
 
@@ -23,12 +23,12 @@ export type LabeledRadioButtonGroupProps<V extends string> = {
 } & Pick<ComponentProps<typeof LabeledRadioButton>, 'tooltipText'>;
 
 const optionListStyles = css({
-  marginTop: `${16 / perRem}em`,
+  marginTop: rem(16),
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr',
+  rowGap: rem(16),
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     gridTemplateColumns: '1fr',
-    rowGap: `${16 / perRem}em`,
   },
 });
 
@@ -40,7 +40,7 @@ const containerStyles = css({
 });
 
 const subtitleStyles = css({
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
 });
 
 const descriptionStyles = css({

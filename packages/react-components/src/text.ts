@@ -2,11 +2,12 @@ import { isValidElement } from 'react';
 import { CSSObject } from '@emotion/react';
 
 import {
-  perRem,
+  rem,
   vminLinearCalc,
   mobileScreen,
   largeDesktopScreen,
   lineHeight,
+  perRem,
 } from './pixels';
 
 export type TextChild = React.ReactText | boolean | null | undefined;
@@ -72,11 +73,12 @@ export const fontStyles = {
   WebkitFontSmoothing: 'antialiased',
   MozOsxFontSmoothing: 'auto',
 
+  // This value must be declared in pixels so that the rest of the UI inherits its base value from it
   fontSize: `${perRem}px`,
-  lineHeight: `${lineHeight / perRem}em`,
+  lineHeight: rem(lineHeight),
 } as const;
 export const captionStyles = {
-  fontSize: `${14 / perRem}em`,
+  fontSize: rem(14),
 };
 export const layoutStyles = {
   marginTop: '12px',

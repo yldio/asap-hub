@@ -112,9 +112,11 @@ describe('ContributingCohortsModal', () => {
     ).toBeVisible();
 
     const removeButton = within(
-      screen.getByRole('heading', {
-        name: /#2 Cohort Study/i,
-      }).parentElement as HTMLElement,
+      screen
+        .getByRole('heading', {
+          name: /#2 Cohort Study/i,
+        })
+        .closest('section') as HTMLElement,
     ).getByRole('button', {
       name: /delete/i,
     });

@@ -9,17 +9,17 @@ import {
 import { CtaCard } from '../molecules';
 
 import { createMailTo } from '../mail';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
+  gridRowGap: rem(36),
 });
 
 const membersSectionStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: `${36 / perRem}em`,
+  gap: rem(36),
 });
 
 type InterestGroupProfileAboutProps = Pick<

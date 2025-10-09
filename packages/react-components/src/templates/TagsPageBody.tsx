@@ -24,7 +24,7 @@ import {
   TutorialCard,
   WorkingGroupCard,
 } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { eventMapper } from '..';
 
 const wrapperStyle = css({
@@ -33,8 +33,8 @@ const wrapperStyle = css({
 
 const iconStyles = css({
   svg: {
-    width: `${48 / perRem}em`,
-    height: `${48 / perRem}em`,
+    width: rem(48),
+    height: rem(48),
     fill: charcoal.rgb,
   },
 });

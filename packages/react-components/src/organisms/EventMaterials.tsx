@@ -7,7 +7,7 @@ import {
 import { addHours, parseISO } from 'date-fns';
 
 import { RichTextCard, AdditionalMaterials } from '.';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import {
   EventMaterialComingSoon,
   EventMaterialUnavailable,
@@ -17,7 +17,7 @@ import { useDateHasPassed } from '../date';
 
 const cardsStyles = css({
   display: 'grid',
-  rowGap: `${36 / perRem}em`,
+  rowGap: rem(36),
 });
 
 type EventMaterialsProps = Pick<

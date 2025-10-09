@@ -8,15 +8,15 @@ export type WorkingGroupsNetworkProps = {
   role: gp2.WorkingGroupNetworkRole;
 };
 
-const { perRem } = pixels;
+const { rem } = pixels;
 const styles = css({
-  marginTop: `${48 / perRem}em`,
+  marginTop: rem(48),
 });
 
 const container = css({
-  marginTop: `${24 / perRem}em`,
+  marginTop: rem(24),
   '& > *': {
-    marginBottom: `${32 / perRem}em`,
+    marginBottom: rem(32),
   },
 });
 const WorkingGroupNetwork: React.FC<WorkingGroupsNetworkProps> = ({

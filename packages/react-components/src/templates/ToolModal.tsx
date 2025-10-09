@@ -1,18 +1,11 @@
 import { useState } from 'react';
 import { TeamTool } from '@asap-hub/model';
 import { TEAM_TOOL_URL } from '@asap-hub/validation';
-import { css } from '@emotion/react';
 
-import { LabeledTextField } from '../molecules';
+import { FormSection, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
-import { perRem } from '../pixels';
 import { EditModal } from '../organisms';
 import { GlobeIcon } from '../icons';
-
-const fieldsContainer = css({
-  display: 'grid',
-  rowGap: `${12 / perRem}em`,
-});
 
 type ToolModalProps = Partial<TeamTool> & {
   onSave?: (data: TeamTool) => Promise<void>;
@@ -39,6 +32,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
         newUrl !== url || newDescription !== description || newName !== name
       }
       backHref={backHref}
+      showHeadingSave
       onSave={() =>
         onSave({
           name: newName,
@@ -48,7 +42,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
       }
     >
       {({ isSaving }) => (
-        <div css={fieldsContainer}>
+        <FormSection>
           <LabeledTextField
             title="Add URL"
             subtitle="(Required)"
@@ -81,7 +75,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
             onChange={setNewDescription}
             enabled={!isSaving}
           />
-        </div>
+        </FormSection>
       )}
     </EditModal>
   );

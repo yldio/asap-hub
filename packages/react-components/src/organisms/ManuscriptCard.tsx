@@ -30,7 +30,7 @@ import {
   Subtitle,
   Tooltip,
 } from '..';
-import { mobileScreen, perRem, rem, smallDesktopScreen } from '../pixels';
+import { mobileScreen, rem, smallDesktopScreen } from '../pixels';
 import { getReviewerStatusType } from '../utils';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 import DiscussionCard from './DiscussionCard';
@@ -90,9 +90,9 @@ const toastStyles = css({
 
 const iconStyles = css({
   display: 'inline-block',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
-  paddingRight: `${12 / perRem}em`,
+  width: rem(24),
+  height: rem(24),
+  paddingRight: rem(12),
   marginTop: rem(2),
 });
 

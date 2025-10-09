@@ -2,13 +2,13 @@ import { css } from '@emotion/react';
 
 import { BannerCard } from '../molecules';
 import { Display, Paragraph, Link } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { contentSidePaddingWithoutNavigation } from '../layout';
 
 const styles = css({
   height: '100%',
-  padding: `${24 / perRem}em ${contentSidePaddingWithoutNavigation()}`,
-  maxWidth: `${480 / perRem}em`,
+  padding: `${rem(24)} ${contentSidePaddingWithoutNavigation()}`,
+  maxWidth: rem(480),
 
   display: 'grid',
   alignItems: 'center',

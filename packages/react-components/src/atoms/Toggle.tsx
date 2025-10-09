@@ -1,14 +1,14 @@
 import { css } from '@emotion/react';
-import { lineHeight, perRem } from '../pixels';
+import { lineHeight, rem } from '../pixels';
 import { steel, paper, tin, charcoal, lead, silver } from '../colors';
 import { noop } from '../utils';
 
 const styles = css({
   display: 'grid',
   gridTemplateColumns: '1fr 20px 1fr',
-  height: `${54 / perRem}em`,
+  height: rem(54),
 
-  minWidth: `${240 / perRem}em`,
+  minWidth: rem(240),
   borderRadius: '27px',
   backgroundColor: silver.rgb,
   color: tin.rgb,
@@ -27,9 +27,9 @@ const buttonStyle = css({
 
 const iconStyles = css({
   display: 'inline-block',
-  width: `${lineHeight / perRem}em`,
-  height: `${lineHeight / perRem}em`,
-  paddingRight: `${6 / perRem}em`,
+  width: rem(lineHeight),
+  height: rem(lineHeight),
+  paddingRight: rem(6),
 });
 const activeStyles = css({
   backgroundColor: paper.rgb,

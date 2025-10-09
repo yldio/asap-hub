@@ -2,12 +2,12 @@ import { ReactNode } from 'react';
 import { css } from '@emotion/react';
 
 import { Card } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { headlineStyles } from '../text';
 import { lead } from '../colors';
 
 const containerStyles = css({
-  padding: `${15 / perRem}em ${18 / perRem}em`,
+  padding: `${rem(15)} ${rem(18)}`,
   color: lead.rgb,
 });
 

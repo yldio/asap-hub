@@ -6,14 +6,14 @@ import {
   largeDesktopScreen,
   vminLinearCalc,
   tabletScreen,
-  perRem,
+  rem,
 } from '../pixels';
 import { BannerCard } from '../molecules';
 
 const layoutStyles = css({
   flexGrow: 1,
   alignSelf: 'stretch',
-  padding: `${24 / perRem}em ${contentSidePaddingWithoutNavigation()}`,
+  padding: `${rem(24)} ${contentSidePaddingWithoutNavigation()}`,
 
   display: 'grid',
   justifyContent: 'center',

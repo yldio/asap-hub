@@ -3,14 +3,14 @@ import { ComponentProps } from 'react';
 import {
   largeDesktopScreen,
   mobileScreen,
-  perRem,
+  rem,
   tabletScreen,
   vminLinearCalc,
 } from '../pixels';
 import ResearchOutputsSearch from './ResearchOutputsSearch';
 
 const styles = css({
-  padding: `${0 / perRem}em calc(${36 / perRem}em + ${vminLinearCalc(
+  padding: `${rem(0)} calc(${rem(36)} + ${vminLinearCalc(
     mobileScreen,
     24,
     largeDesktopScreen,

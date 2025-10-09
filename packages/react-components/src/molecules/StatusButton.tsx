@@ -16,7 +16,7 @@ import {
   infoCircleYellowIcon,
 } from '..';
 
-import { perRem, mobileScreen, formTargetWidth } from '../pixels';
+import { rem, mobileScreen, formTargetWidth } from '../pixels';
 
 import {
   paper,
@@ -44,7 +44,7 @@ const containerStyles = css({
 const menuWrapperStyles = css({
   position: 'relative',
   display: 'flex',
-  maxWidth: `${formTargetWidth / perRem}em`,
+  maxWidth: rem(formTargetWidth),
 });
 
 const menuContainerStyles = css({
@@ -52,14 +52,14 @@ const menuContainerStyles = css({
   display: 'none',
   overflow: 'hidden',
   zIndex: 1,
-  width: `${250 / perRem}em`,
-  top: `${8 / perRem}em`,
+  width: rem(250),
+  top: rem(8),
   left: 0,
   backgroundColor: paper.rgb,
   border: `1px solid ${steel.rgb}`,
   boxShadow: `0 2px 6px 0 ${colorWithTransparency(tin, 0.34).rgba}`,
   flexDirection: 'column',
-  padding: `${6 / perRem}em 0`,
+  padding: `${rem(6)} 0`,
 });
 
 const showMenuStyles = css({
@@ -87,14 +87,14 @@ export const itemContentStyles = (type: StatusType = 'default') =>
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'start',
-    columnGap: `${15 / perRem}rem`,
-    padding: `${4 / perRem}rem ${14 / perRem}rem`,
+    columnGap: rem(15),
+    padding: `${rem(4)} ${rem(14)}`,
     fontWeight: 'normal',
     fontSize: '14px',
-    margin: `${8 / perRem}em ${16 / perRem}em !important`,
+    margin: `${rem(8)} ${rem(16)} !important`,
     backgroundColor: info100.rgba,
     color: info500.rgba,
-    borderRadius: `${24 / perRem}em`,
+    borderRadius: rem(24),
     alignSelf: 'initial',
     maxWidth: 'fit-content',
     ...(type === 'warning' || type === 'final'
@@ -102,10 +102,8 @@ export const itemContentStyles = (type: StatusType = 'default') =>
           color: type === 'warning' ? warning500.rgba : success500.rgba,
           backgroundColor:
             type === 'warning' ? warning100.rgba : success100.rgba,
-          columnGap: `${6 / perRem}rem`,
-          padding: `${4 / perRem}rem ${16 / perRem}rem ${4 / perRem}rem ${
-            8 / perRem
-          }rem`,
+          columnGap: rem(6),
+          padding: `${rem(4)} ${rem(16)} ${rem(4)} ${rem(8)}`,
         }
       : {}),
   });
@@ -134,7 +132,7 @@ export const statusButtonStyles = (
   noWrap: boolean = true,
 ) =>
   css({
-    borderRadius: `${24 / perRem}em`,
+    borderRadius: rem(24),
     fontWeight: 400,
     border: 'none',
     background: info100.rgba,
@@ -158,18 +156,18 @@ export const statusButtonStyles = (
           }
         : {}),
     },
-    paddingLeft: `${16 / perRem}em`,
-    paddingRight: `${8 / perRem}em !important`,
+    paddingLeft: rem(16),
+    paddingRight: `${rem(8)} !important`,
     ...(noWrap ? { textWrap: 'nowrap' } : {}),
     maxWidth: 'fit-content',
     display: 'flex',
     alignItems: 'center',
-    gap: `${8 / perRem}em`,
+    gap: rem(8),
   });
 
 export const statusTagStyles = (type: StatusType, noWrap: boolean = true) =>
   css({
-    borderRadius: `${24 / perRem}em`,
+    borderRadius: rem(24),
     fontWeight: 400,
     border: 'none',
     background: info100.rgba,
@@ -185,13 +183,13 @@ export const statusTagStyles = (type: StatusType, noWrap: boolean = true) =>
             color: success500.rgba,
           }
         : {}),
-    paddingLeft: `${16 / perRem}em`,
-    paddingRight: `${16 / perRem}em`,
+    paddingLeft: rem(16),
+    paddingRight: rem(16),
     ...(noWrap ? { textWrap: 'nowrap' } : {}),
     maxWidth: 'fit-content',
     display: 'flex',
     alignItems: 'center',
-    gap: `${8 / perRem}em`,
+    gap: rem(8),
   });
 
 const itemStyles = css({

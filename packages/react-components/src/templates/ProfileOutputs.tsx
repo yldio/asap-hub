@@ -3,11 +3,11 @@ import React, { ComponentProps } from 'react';
 import { SharedResearchList } from '.';
 import { LinkConditional } from '../atoms';
 import { createMailTo } from '../mail';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import NoOutputsPage from './NoOutputsPage';
 
 const containerStyles = css({
-  padding: `${36 / perRem}em 0`,
+  padding: `${rem(36)} 0`,
 });
 
 export type ProfileOutputsProps = Omit<

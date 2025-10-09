@@ -13,11 +13,10 @@ import {
   successLargeIcon,
 } from '../icons';
 import {
-  perRem,
+  rem,
   vminLinearCalcClamped,
   mobileScreen,
   largeDesktopScreen,
-  rem,
 } from '../pixels';
 import {
   rose,
@@ -60,7 +59,7 @@ const styles = css({
     largeDesktopScreen,
     6,
     'px',
-  )} ${SIDE_PADDING / perRem}em`,
+  )} ${rem(SIDE_PADDING)}`,
   position: 'relative',
 });
 
@@ -75,7 +74,7 @@ const crossPlaceholderStyles = css(iconStyles, {
   paddingTop: 0,
   paddingBottom: 0,
 
-  marginLeft: `${12 / perRem}em`,
+  marginLeft: rem(12),
 });
 
 const wrapStyles = css({

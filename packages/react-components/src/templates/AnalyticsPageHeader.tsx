@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { analytics } from '@asap-hub/routing';
 import { useFlags } from '@asap-hub/react-context';
 import { Button, Display, Paragraph, TabLink } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { paper, steel } from '../colors';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import TabNav from '../molecules/TabNav';
@@ -28,7 +28,7 @@ const visualHeaderStyles = css({
 });
 
 const textStyles = css({
-  maxWidth: `${610 / perRem}em`,
+  maxWidth: rem(610),
 });
 
 type AnalyticsPageHeaderProps = {

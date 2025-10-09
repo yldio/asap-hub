@@ -3,7 +3,7 @@ import { ComponentProps } from 'react';
 import { NewsFrequency, newsFrequency } from '@asap-hub/model';
 
 import { Display, Paragraph } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { SearchAndFilter } from '../organisms';
@@ -13,16 +13,14 @@ const containerStyles = css({
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
   marginBottom: '2px',
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-    48 / perRem
-  }em `,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} ${rem(48)}`,
 });
 
 const textStyles = css({
-  maxWidth: `${610 / perRem}em`,
+  maxWidth: rem(610),
 });
 const controlsStyles = css({
-  padding: `${30 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  padding: `${rem(30)} ${contentSidePaddingWithNavigation(8)} 0`,
 });
 
 const newsFilters = [

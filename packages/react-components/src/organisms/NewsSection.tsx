@@ -1,15 +1,15 @@
 import { NewsResponse, NewsType, TutorialsResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Headline2, Paragraph } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 import NewsCard from './NewsCard';
 
 const styles = css({
   display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
+  gridRowGap: rem(36),
 
-  marginTop: `${24 / perRem}em`,
+  marginTop: rem(24),
 });
 
 type NewsSectionProps = {

@@ -5,6 +5,7 @@ import {
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { enable } from '@asap-hub/flags';
 import { analytics } from '@asap-hub/routing';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
@@ -30,6 +31,16 @@ jest.mock('../../../hooks', () => ({
   useAnalytics: () => ({ timeRange: 'all' }),
 }));
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
+
 jest.useFakeTimers();
 
 mockConsoleError();
@@ -48,6 +59,10 @@ const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
 
 const mockUseAnalyticsOpensearch =
   useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
+
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -139,6 +154,29 @@ describe('OpenScience', () => {
         'Percent compliance by research output type for each team.',
       ),
     ).toBeInTheDocument();
+  });
+
+  it('exports analytics for preprint-compliance metric', async () => {
+    await renderPage(
+      analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
+    );
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/open_science_preprint-compliance_\d+\.csv/),
+      expect.anything(),
+    );
+  });
+
+  it('exports analytics for publication-compliance metric', async () => {
+    await renderPage(
+      analytics({}).openScience({}).metric({ metric: 'publication-compliance' })
+        .$,
+    );
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/open_science_publication-compliance_\d+\.csv/),
+      expect.anything(),
+    );
   });
 
   it('renders metric dropdown with correct options', async () => {

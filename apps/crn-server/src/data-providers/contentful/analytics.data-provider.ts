@@ -367,24 +367,30 @@ const getUserProductivityItems = (
       publicOutputs: 0,
     };
 
+    // Clean the name fields - remove any user IDs that might be in firstName/lastName
+    const cleanFirstName =
+      user.firstName && !user.firstName.includes('-') ? user.firstName : '';
+    const cleanLastName =
+      user.lastName && !user.lastName.includes('-') ? user.lastName : '';
+
+    const displayName = parseUserDisplayName(
+      cleanFirstName,
+      cleanLastName,
+      undefined,
+      user.nickname ?? '',
+    );
+
     return {
       id: user.sys.id,
-      name: parseUserDisplayName(
-        user.firstName ?? '',
-        user.lastName ?? '',
-        undefined,
-        user.nickname ?? '',
-      ),
+      name: displayName || user.sys.id, // Use ID as fallback if no name
       isAlumni: !!user.alumniSinceDate,
       teams,
       asapOutput: userOutputsCount.outputs,
       asapPublicOutput: userOutputsCount.publicOutputs,
       ratio:
         userOutputsCount.outputs > 0
-          ? (userOutputsCount.publicOutputs / userOutputsCount.outputs).toFixed(
-              2,
-            )
-          : '0.00',
+          ? userOutputsCount.publicOutputs / userOutputsCount.outputs
+          : 0,
     };
   });
 

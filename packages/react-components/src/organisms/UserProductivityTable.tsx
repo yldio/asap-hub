@@ -373,8 +373,7 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
               </p>
               <span css={[titleStyles, rowTitleStyles]}>Ratio</span>
               <p css={rowValueStyles}>
-                {row.ratio}{' '}
-                {getPerformanceIcon(parseFloat(row.ratio), performance.ratio)}
+                {row.ratio} {getPerformanceIcon(row.ratio, performance.ratio)}
               </p>
             </div>
           ))}

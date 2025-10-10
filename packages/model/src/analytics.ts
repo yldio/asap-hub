@@ -306,7 +306,7 @@ export type UserProductivityDataObject = {
   teams: UserProductivityTeam[];
   asapOutput: number;
   asapPublicOutput: number;
-  ratio: string;
+  ratio: number;
 };
 
 export const teamOutputDocumentTypes = [

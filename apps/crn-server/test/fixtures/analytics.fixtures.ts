@@ -206,7 +206,7 @@ export const getUserProductivityDataObject =
     ],
     asapOutput: 4,
     asapPublicOutput: 2,
-    ratio: '0.50',
+    ratio: 0.5,
   });
 
 export const getResearchOutputUserProductivity = (): NonNullable<

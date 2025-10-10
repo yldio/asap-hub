@@ -41,7 +41,7 @@ describe('UserProductivityTable', () => {
     teams: [userTeam],
     asapOutput: 1,
     asapPublicOutput: 2,
-    ratio: '0.10',
+    ratio: 0.1,
   };
 
   it('renders data', () => {

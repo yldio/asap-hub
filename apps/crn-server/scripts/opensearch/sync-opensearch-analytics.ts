@@ -1,4 +1,4 @@
-import { ListResponse, timeRanges } from '@asap-hub/model';
+import { ListResponse, timeRanges, documentCategories } from '@asap-hub/model';
 import { indexOpensearchData } from '@asap-hub/server-common';
 
 import {
@@ -98,6 +98,48 @@ export const exportAnalyticsData = async <T extends Metrics>(
             0,
           ),
           items: attendanceRecords.flatMap((records) => records.items),
+        } as ListResponse<MetricObject<T>>;
+
+      case 'user-productivity':
+        const userProductivityRecords = await Promise.all(
+          timeRanges.map((timeRange) =>
+            Promise.all(
+              documentCategories.map(
+                (documentCategory) =>
+                  analyticsController.fetchUserProductivity({
+                    ...options,
+                    filter: { timeRange, documentCategory },
+                  }) as Promise<ListResponse<MetricObject<T>>>,
+              ),
+            ),
+          ),
+        );
+
+        // Flatten and enrich the data with metadata, keeping all fields
+        const enrichedUserProductivityItems = userProductivityRecords.flatMap(
+          (timeRangeRecords, timeRangeIndex) =>
+            timeRangeRecords.flatMap(
+              (documentCategoryRecords, documentCategoryIndex) =>
+                documentCategoryRecords.items.map((item) => ({
+                  ...item,
+                  timeRange: timeRanges[timeRangeIndex],
+                  documentCategory: documentCategories[documentCategoryIndex],
+                })),
+            ),
+        );
+
+        return {
+          total: userProductivityRecords.reduce(
+            (sum, timeRangeRecords) =>
+              sum +
+              timeRangeRecords.reduce(
+                (timeRangeSum, documentCategoryRecords) =>
+                  timeRangeSum + documentCategoryRecords.total,
+                0,
+              ),
+            0,
+          ),
+          items: enrichedUserProductivityItems,
         } as ListResponse<MetricObject<T>>;
 
       default:

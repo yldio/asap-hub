@@ -62,7 +62,6 @@ type SharedResearchOutputButtonsProps = {
   isInReview: boolean;
   checkForNewerManuscriptVersion: () => void;
   hasRelatedManuscript?: boolean;
-  isManuscriptOutputFlagEnabled: boolean;
   canDuplicate?: boolean;
 };
 
@@ -79,7 +78,6 @@ const SharedResearchOutputButtons: React.FC<
   isInReview,
   checkForNewerManuscriptVersion,
   hasRelatedManuscript = false,
-  isManuscriptOutputFlagEnabled,
   canDuplicate,
 }) => {
   const {
@@ -129,21 +127,18 @@ const SharedResearchOutputButtons: React.FC<
           </Button>
         </div>
       )}
-      {isManuscriptOutputFlagEnabled &&
-        canVersionResearchOutput &&
-        published &&
-        hasRelatedManuscript && (
-          <div css={leftButtons}>
-            <Button
-              noMargin
-              small
-              primary
-              onClick={checkForNewerManuscriptVersion}
-            >
-              <VersionIcon /> Import Manuscript Version
-            </Button>
-          </div>
-        )}
+      {canVersionResearchOutput && published && hasRelatedManuscript && (
+        <div css={leftButtons}>
+          <Button
+            noMargin
+            small
+            primary
+            onClick={checkForNewerManuscriptVersion}
+          >
+            <VersionIcon /> Import Manuscript Version
+          </Button>
+        </div>
+      )}
       {canVersionResearchOutput && published && !hasRelatedManuscript && (
         <div css={leftButtons}>
           <Link

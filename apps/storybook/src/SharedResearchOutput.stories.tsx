@@ -98,7 +98,6 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   },
   isInReview: false,
   checkForNewVersion: () => Promise.resolve(false),
-  isManuscriptOutputFlagEnabled: false,
 });
 
 export const Normal = () => (

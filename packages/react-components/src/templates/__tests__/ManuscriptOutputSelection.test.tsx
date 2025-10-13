@@ -47,7 +47,7 @@ describe('ManuscriptOutputSelection', () => {
       screen.getByText('Select the type of output you want to create:'),
     ).toBeInTheDocument();
     expect(screen.getByText('Create manually')).toBeInTheDocument();
-    expect(screen.getByText('Import from manuscript')).toBeInTheDocument();
+    expect(screen.getByText('Import from compliance')).toBeInTheDocument();
   });
 
   it('handles radio button selection', async () => {

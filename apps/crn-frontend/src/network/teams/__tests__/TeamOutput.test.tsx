@@ -7,8 +7,6 @@ import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { disable, enable } from '@asap-hub/flags';
-import type { Flag } from '@asap-hub/flags';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ManuscriptLifecycle,
@@ -196,7 +194,6 @@ interface RenderPageOptions {
 }
 
 beforeEach(() => {
-  disable('MANUSCRIPT_OUTPUTS' as Flag);
   mockGetImpacts.mockResolvedValue({
     total: 0,
     items: [],
@@ -778,9 +775,7 @@ it('hides changelog input when editing a research output with no version history
 });
 
 describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
-  beforeEach(() => {
-    enable('MANUSCRIPT_OUTPUTS' as Flag);
-  });
+  const manuscriptImportLabelText = 'Import from compliance';
 
   describe('preprint automatically created', () => {
     beforeEach(() => {
@@ -852,10 +847,10 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
       expect(
-        screen.getByLabelText('Import from manuscript'),
+        screen.getByLabelText(manuscriptImportLabelText),
       ).toBeInTheDocument();
 
-      userEvent.click(screen.getByLabelText('Import from manuscript'));
+      userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
       userEvent.type(input, 'Error');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
@@ -889,7 +884,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-      userEvent.click(screen.getByLabelText('Import from manuscript'));
+      userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
       userEvent.type(input, 'Version One');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
@@ -950,7 +945,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-      userEvent.click(screen.getByLabelText('Import from manuscript'));
+      userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
       await userEvent.type(input, 'Version One');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
@@ -974,7 +969,9 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       screen.getByText('How would you like to create your output?'),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Create manually')).toBeInTheDocument();
-    expect(screen.getByLabelText('Import from manuscript')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(manuscriptImportLabelText),
+    ).toBeInTheDocument();
 
     expect(
       screen.queryByRole('heading', { name: 'What are you sharing?' }),
@@ -1078,7 +1075,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       teamId: '42',
       outputDocumentType: 'article',
     });
-    userEvent.click(screen.getByLabelText('Import from manuscript'));
+    userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
 
     expect(screen.getByRole('button', { name: /Import/i })).toBeInTheDocument();
     expect(
@@ -1091,7 +1088,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       teamId: '42',
       outputDocumentType: 'article',
     });
-    userEvent.click(screen.getByLabelText('Import from manuscript'));
+    userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
 
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'Version One');
@@ -1161,7 +1158,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-    userEvent.click(screen.getByLabelText('Import from manuscript'));
+    userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'Version');
     const option = await screen.findByText('Version One');
@@ -1307,7 +1304,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     await renderPage({ teamId, outputDocumentType, history });
 
-    userEvent.click(screen.getByLabelText('Import from manuscript'));
+    userEvent.click(screen.getByLabelText('Import from compliance'));
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'Version');
     const option = await screen.findByText('Version One');
@@ -1335,26 +1332,6 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       screen.getByRole('heading', { name: 'What are you sharing?' }),
     ).toBeInTheDocument();
   });
-});
-
-it('bypasses manuscript output selection when MANUSCRIPT_OUTPUTS flag is disabled', async () => {
-  disable('MANUSCRIPT_OUTPUTS' as Flag);
-  await renderPage({
-    teamId: '42',
-    outputDocumentType: 'article',
-  });
-
-  expect(
-    screen.queryByText('How would you like to create your output?'),
-  ).not.toBeInTheDocument();
-  expect(screen.queryByLabelText('Create manually')).not.toBeInTheDocument();
-  expect(
-    screen.queryByLabelText('Import from manuscript'),
-  ).not.toBeInTheDocument();
-
-  expect(
-    screen.getByRole('heading', { name: 'What are you sharing?' }),
-  ).toBeInTheDocument();
 });
 
 async function renderPage({

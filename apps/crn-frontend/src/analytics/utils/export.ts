@@ -1,9 +1,14 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
+  LimitedTimeRangeOption,
   ListResponse,
   MetricExportKeys,
   metricsSheetName,
+  PreprintComplianceOpensearchResponse,
+  PreprintComplianceResponse,
+  PublicationComplianceOpensearchResponse,
+  PublicationComplianceResponse,
   TimeRangeOption,
 } from '@asap-hub/model';
 import { format } from 'date-fns';
@@ -33,6 +38,15 @@ import {
   teamProductivityToCSV,
   userProductivityToCSV,
 } from '../productivity/export';
+import {
+  preprintComplianceToCSV,
+  publicationComplianceToCSV,
+} from '../open-science/export';
+import { OpensearchClient } from './opensearch';
+import {
+  getPreprintCompliance,
+  getPublicationCompliance,
+} from '../open-science/api';
 
 export const getAllData = async <T>(
   getResults: ({
@@ -66,7 +80,15 @@ export const getAllData = async <T>(
 };
 
 export const downloadAnalyticsXLSX =
-  (client: AlgoliaClient<'analytics'>) =>
+  ({
+    algoliaClient,
+    publicationClient,
+    preprintClient,
+  }: {
+    algoliaClient: AlgoliaClient<'analytics'>;
+    publicationClient: OpensearchClient<PublicationComplianceOpensearchResponse>;
+    preprintClient: OpensearchClient<PreprintComplianceOpensearchResponse>;
+  }) =>
   async (timeRange: TimeRangeOption, metrics: Set<MetricExportKeys>) => {
     const workbook = XLSX.utils.book_new();
 
@@ -99,12 +121,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'user-productivity',
           () =>
-            getUserProductivityPerformance(client, {
+            getUserProductivityPerformance(algoliaClient, {
               timeRange,
               documentCategory: 'all',
             }),
           (paginationParams) =>
-            getUserProductivity(client, {
+            getUserProductivity(algoliaClient, {
               timeRange,
               documentCategory,
               sort,
@@ -117,12 +139,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-productivity',
           () =>
-            getTeamProductivityPerformance(client, {
+            getTeamProductivityPerformance(algoliaClient, {
               timeRange,
               outputType: 'all',
             }),
           (paginationParams) =>
-            getTeamProductivity(client, {
+            getTeamProductivity(algoliaClient, {
               timeRange,
               outputType: 'all',
               sort: 'team_asc',
@@ -135,12 +157,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'user-collaboration-within',
           () =>
-            getUserCollaborationPerformance(client, {
+            getUserCollaborationPerformance(algoliaClient, {
               timeRange,
               documentCategory: 'all',
             }),
           (paginationParams) =>
-            getUserCollaboration(client, {
+            getUserCollaboration(algoliaClient, {
               timeRange,
               documentCategory,
               sort,
@@ -158,12 +180,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'user-collaboration-across',
           () =>
-            getUserCollaborationPerformance(client, {
+            getUserCollaborationPerformance(algoliaClient, {
               timeRange,
               documentCategory: 'all',
             }),
           (paginationParams) =>
-            getUserCollaboration(client, {
+            getUserCollaboration(algoliaClient, {
               timeRange,
               documentCategory,
               sort,
@@ -181,12 +203,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-collaboration-within',
           () =>
-            getTeamCollaborationPerformance(client, {
+            getTeamCollaborationPerformance(algoliaClient, {
               timeRange,
               outputType: 'all',
             }),
           (paginationParams) =>
-            getTeamCollaboration(client, {
+            getTeamCollaboration(algoliaClient, {
               timeRange,
               outputType,
               sort,
@@ -200,12 +222,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-collaboration-across',
           () =>
-            getTeamCollaborationPerformance(client, {
+            getTeamCollaborationPerformance(algoliaClient, {
               timeRange,
               outputType: 'all',
             }),
           (paginationParams) =>
-            getTeamCollaboration(client, {
+            getTeamCollaboration(algoliaClient, {
               timeRange,
               outputType,
               sort,
@@ -220,7 +242,7 @@ export const downloadAnalyticsXLSX =
           'wg-leadership',
           async () => undefined,
           (paginationParams) =>
-            getAnalyticsLeadership(client, {
+            getAnalyticsLeadership(algoliaClient, {
               tags,
               ...paginationParams,
             }),
@@ -231,7 +253,7 @@ export const downloadAnalyticsXLSX =
           'ig-leadership',
           async () => undefined,
           (paginationParams) =>
-            getAnalyticsLeadership(client, {
+            getAnalyticsLeadership(algoliaClient, {
               tags,
               ...paginationParams,
             }),
@@ -241,13 +263,84 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'engagement',
           () =>
-            getEngagementPerformance(client, {
+            getEngagementPerformance(algoliaClient, {
               timeRange,
             }),
           (paginationParams) =>
-            getEngagement(client, { tags: [], timeRange, ...paginationParams }),
+            getEngagement(algoliaClient, {
+              tags: [],
+              timeRange,
+              ...paginationParams,
+            }),
           (performance) => engagementToCSV(performance),
         ),
+      'publication-compliance': () => {
+        return processMetric<
+          PublicationComplianceResponse,
+          PublicationComplianceResponse
+        >(
+          'publication-compliance',
+          async () => undefined,
+          (paginationParams) =>
+            getPublicationCompliance(publicationClient, {
+              tags,
+              timeRange: timeRange,
+              ...paginationParams,
+              sort: 'team_asc',
+            }),
+          () => (pubComplianceData) =>
+            publicationComplianceToCSV({
+              teamId: pubComplianceData.teamId,
+              timeRange: timeRange as LimitedTimeRangeOption,
+              codePercentage: pubComplianceData.codePercentage,
+              codeRanking: pubComplianceData.codeRanking,
+              datasetsPercentage: pubComplianceData.datasetsPercentage,
+              datasetsRanking: pubComplianceData.datasetsRanking,
+              isTeamInactive: pubComplianceData.isTeamInactive,
+              labMaterialsPercentage: pubComplianceData.labMaterialsPercentage,
+              labMaterialsRanking: pubComplianceData.labMaterialsRanking,
+              numberOfCode: pubComplianceData.numberOfCode,
+              numberOfDatasets: pubComplianceData.numberOfDatasets,
+              numberOfLabMaterials: pubComplianceData.numberOfLabMaterials,
+              numberOfOutputs: pubComplianceData.numberOfOutputs,
+              numberOfProtocols: pubComplianceData.numberOfProtocols,
+              numberOfPublications: pubComplianceData.numberOfPublications,
+              overallCompliance: pubComplianceData.overallCompliance,
+              protocolsPercentage: pubComplianceData.protocolsPercentage,
+              protocolsRanking: pubComplianceData.protocolsRanking,
+              ranking: pubComplianceData.ranking,
+              teamName: pubComplianceData.teamName,
+            }),
+        );
+      },
+      'preprint-compliance': () => {
+        return processMetric<
+          PreprintComplianceResponse,
+          PreprintComplianceResponse
+        >(
+          'preprint-compliance',
+          async () => undefined,
+          (paginationParams) =>
+            getPreprintCompliance(preprintClient, {
+              tags,
+              timeRange: timeRange,
+              ...paginationParams,
+              sort: 'team_asc',
+            }),
+          () => (preprintComplianceData) =>
+            preprintComplianceToCSV({
+              timeRange: timeRange as LimitedTimeRangeOption,
+              isTeamInactive: preprintComplianceData.isTeamInactive,
+              numberOfPreprints: preprintComplianceData.numberOfPreprints,
+              numberOfPublications: preprintComplianceData.numberOfPublications,
+              postedPriorPercentage:
+                preprintComplianceData.postedPriorPercentage,
+              ranking: preprintComplianceData.ranking,
+              teamId: preprintComplianceData.teamId,
+              teamName: preprintComplianceData.teamName,
+            }),
+        );
+      },
     };
 
     for (const metric of metrics) {

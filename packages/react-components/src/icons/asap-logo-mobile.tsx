@@ -209,10 +209,10 @@ const asapLogoMobile = (
       </linearGradient>
       <linearGradient
         id="paint12_linear_23048_20010"
-        x1="-nan"
-        y1="-nan"
-        x2="-nan"
-        y2="-nan"
+        x1="0"
+        y1="0"
+        x2="0"
+        y2="0"
         gradientUnits="userSpaceOnUse"
       >
         <stop offset={0.01} stopColor="#8C4F9E" />

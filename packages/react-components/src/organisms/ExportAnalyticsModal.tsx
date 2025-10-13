@@ -6,6 +6,7 @@ import {
   MetricExportKeys,
   TimeRangeOption,
   timeRangeOptions,
+  availableMetricsExportsByTimeRange,
 } from '@asap-hub/model';
 import { Button, Headline3 } from '../atoms';
 import { paddingStyles } from '../card';
@@ -61,7 +62,7 @@ const dismissButtonStyles = css({
   },
 });
 
-const optionsToExport: ReadonlyArray<Option<string> | Title> = [
+const optionsToExport: ReadonlyArray<Option<MetricExportKeys> | Title> = [
   { title: 'RESOURCE & DATA SHARING' },
   { label: metricsExportMap['user-productivity'], value: 'user-productivity' },
   { label: metricsExportMap['team-productivity'], value: 'team-productivity' },
@@ -157,7 +158,8 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
     onDismiss();
   };
 
-  const isDisabled = isSubmitting || isDownloading;
+  const isProcessing = isSubmitting || isDownloading;
+
   return (
     <Modal padding={false}>
       <header css={headerStyles}>
@@ -185,7 +187,7 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
                 subtitle="(required)"
                 options={dataRange}
                 required
-                enabled={!isDisabled}
+                enabled={!isProcessing}
                 placeholder="Choose a data range"
                 value={value ?? ''}
                 onChange={onChange}
@@ -217,9 +219,13 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
                   }
 
                   return {
-                    value: item?.value,
+                    value: item.value,
                     label: item.label,
-                    enabled: !isDisabled,
+                    enabled:
+                      !isProcessing &&
+                      availableMetricsExportsByTimeRange[
+                        getValues('timeRange')
+                      ]?.[item.value] === true,
                   };
                 })}
               />
@@ -236,7 +242,7 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
             <Button
               noMargin
               primary
-              enabled={isExportEnabled && !isDisabled}
+              enabled={isExportEnabled && !isProcessing}
               onClick={handleExport}
               overrideStyles={css({ height: 'fit-content' })}
             >

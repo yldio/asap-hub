@@ -162,6 +162,67 @@ export const outputTypes = ['public', 'all'] as const;
 
 export type TimeRangeOption = (typeof timeRanges)[number];
 
+export const availableMetricsExportsByTimeRange: Record<
+  TimeRangeOption,
+  Record<MetricExportKeys, boolean>
+> = {
+  '30d': {
+    'user-productivity': true,
+    'team-productivity': true,
+    'user-collaboration-within': true,
+    'user-collaboration-across': true,
+    'team-collaboration-within': true,
+    'team-collaboration-across': true,
+    'wg-leadership': false,
+    'ig-leadership': false,
+    engagement: true,
+  },
+  '90d': {
+    'user-productivity': true,
+    'team-productivity': true,
+    'user-collaboration-within': true,
+    'user-collaboration-across': true,
+    'team-collaboration-within': true,
+    'team-collaboration-across': true,
+    'wg-leadership': false,
+    'ig-leadership': false,
+    engagement: true,
+  },
+  'current-year': {
+    'user-productivity': true,
+    'team-productivity': true,
+    'user-collaboration-within': true,
+    'user-collaboration-across': true,
+    'team-collaboration-within': true,
+    'team-collaboration-across': true,
+    'wg-leadership': false,
+    'ig-leadership': false,
+    engagement: true,
+  },
+  'last-year': {
+    'user-productivity': true,
+    'team-productivity': true,
+    'user-collaboration-within': true,
+    'user-collaboration-across': true,
+    'team-collaboration-within': true,
+    'team-collaboration-across': true,
+    'wg-leadership': false,
+    'ig-leadership': false,
+    engagement: true,
+  },
+  all: {
+    'user-productivity': true,
+    'team-productivity': true,
+    'user-collaboration-within': true,
+    'user-collaboration-across': true,
+    'team-collaboration-within': true,
+    'team-collaboration-across': true,
+    'wg-leadership': true,
+    'ig-leadership': true,
+    engagement: true,
+  },
+} as const;
+
 export type LimitedTimeRangeOption = Extract<
   TimeRangeOption,
   'all' | 'last-year'
@@ -173,7 +234,7 @@ export const timeRangeOptions: Record<TimeRangeOption, string> = {
   'current-year': 'This year (Jan-Today)',
   'last-year': 'Last 12 months',
   all: 'Since Hub Launch (2020)',
-};
+} as const;
 
 export const limitedTimeRangeOptions: Record<LimitedTimeRangeOption, string> = {
   'last-year': timeRangeOptions['last-year'],

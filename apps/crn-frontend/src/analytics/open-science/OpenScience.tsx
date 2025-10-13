@@ -48,7 +48,7 @@ const OpenScience: FC<Record<string, never>> = () => {
       'publication-compliance',
     );
 
-  const exportResults = () => {
+  const exportResults = useCallback(() => {
     if (isPreprintCompliancePage) {
       return resultsToStream<PreprintComplianceResponse>(
         createCsvFileStream(
@@ -83,7 +83,14 @@ const OpenScience: FC<Record<string, never>> = () => {
         }),
       publicationComplianceToCSV,
     );
-  };
+  }, [
+    metric,
+    isPreprintCompliancePage,
+    preprintClient.client,
+    publicationClient.client,
+    tags,
+    timeRange,
+  ]);
 
   const tagClient = isPreprintCompliancePage
     ? preprintClient.client

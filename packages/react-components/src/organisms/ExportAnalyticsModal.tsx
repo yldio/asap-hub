@@ -6,6 +6,7 @@ import {
   MetricExportKeys,
   TimeRangeOption,
   timeRangeOptions,
+  warningMessageByTimeRange,
 } from '@asap-hub/model';
 import { Button } from '../atoms';
 import { paddingStyles } from '../card';
@@ -18,6 +19,8 @@ import {
 } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 import { Title, Option } from './CheckboxGroup';
+import Toast from './Toast';
+import { useFlags } from '@asap-hub/react-context';
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -58,39 +61,128 @@ const dismissButtonStyles = css({
   },
 });
 
-const optionsToExport: ReadonlyArray<Option<string> | Title> = [
-  { title: 'RESOURCE & DATA SHARING' },
-  { label: metricsExportMap['user-productivity'], value: 'user-productivity' },
-  { label: metricsExportMap['team-productivity'], value: 'team-productivity' },
+const alwaysVisible = (currentTimeRange: TimeRangeOption) =>
+  (
+    [
+      '30d',
+      '90d',
+      'current-year',
+      'last-year',
+      'all',
+    ] satisfies readonly TimeRangeOption[]
+  ).includes(currentTimeRange);
 
-  { title: 'COLLABORATION' },
+const whenLastYearOrSinceLaunch = (currentTimeRange: TimeRangeOption) =>
+  currentTimeRange === 'last-year' || currentTimeRange === 'all';
+
+const whenSinceLaunch = (currentTimeRange: TimeRangeOption) =>
+  currentTimeRange === 'all';
+
+const optionsToExport: ReadonlyArray<
+  (Option<MetricExportKeys> | Title) & {
+    isVisible: (currentTimeRange: TimeRangeOption) => boolean;
+    /** @deprecated remove once ANALYTICS_PHASE_TWO is completed */
+    requiresFeatureFlag?: boolean;
+  }
+> = [
+  {
+    title: 'RESOURCE & DATA SHARING',
+    isVisible: alwaysVisible,
+  },
+  {
+    label: metricsExportMap['user-productivity'],
+    value: 'user-productivity',
+    isVisible: alwaysVisible,
+  },
+  {
+    label: metricsExportMap['team-productivity'],
+    value: 'team-productivity',
+    isVisible: alwaysVisible,
+  },
+  {
+    title: 'COLLABORATION',
+    isVisible: alwaysVisible,
+  },
   {
     label: metricsExportMap['user-collaboration-within'],
     value: 'user-collaboration-within',
+    isVisible: alwaysVisible,
   },
   {
     label: metricsExportMap['user-collaboration-across'],
     value: 'user-collaboration-across',
+    isVisible: alwaysVisible,
   },
   {
     label: metricsExportMap['team-collaboration-within'],
     value: 'team-collaboration-within',
+    isVisible: alwaysVisible,
   },
   {
     label: metricsExportMap['team-collaboration-across'],
     value: 'team-collaboration-across',
+    isVisible: alwaysVisible,
   },
-
+  {
+    label: metricsExportMap['preliminary-data-sharing'],
+    value: 'preliminary-data-sharing',
+    isVisible: whenLastYearOrSinceLaunch,
+  },
   {
     title: 'LEADERSHIP & MEMBERSHIP',
     info: 'Leadership & Membership metrics can only be exported with their current status.',
+    isVisible: whenSinceLaunch,
   },
-  { label: metricsExportMap['wg-leadership'], value: 'wg-leadership' },
-  { label: metricsExportMap['ig-leadership'], value: 'ig-leadership' },
+  {
+    label: metricsExportMap['wg-leadership'],
+    value: 'wg-leadership',
+    isVisible: whenSinceLaunch,
+  },
+  {
+    label: metricsExportMap['ig-leadership'],
+    value: 'ig-leadership',
+    isVisible: whenSinceLaunch,
+  },
+  {
+    label: metricsExportMap['os-champion'],
+    value: 'os-champion',
+    isVisible: whenSinceLaunch,
+    requiresFeatureFlag: true,
+  },
+  {
+    title: 'ENGAGEMENT',
+    isVisible: alwaysVisible,
+  },
+  {
+    label: metricsExportMap.engagement,
+    value: 'engagement',
+    isVisible: alwaysVisible,
+  },
+  {
+    label: metricsExportMap['attendance'],
+    value: 'attendance',
+    isVisible: whenLastYearOrSinceLaunch,
+  },
 
-  { title: 'ENGAGEMENT' },
-  { label: metricsExportMap.engagement, value: 'engagement' },
+  {
+    title: 'OPEN SCIENCE',
+    isVisible: whenLastYearOrSinceLaunch,
+    requiresFeatureFlag: true,
+  },
+  {
+    label: metricsExportMap['preprint-compliance'],
+    value: 'preprint-compliance',
+    isVisible: whenLastYearOrSinceLaunch,
+    requiresFeatureFlag: true,
+  },
+  {
+    label: metricsExportMap['publication-compliance'],
+    value: 'publication-compliance',
+    isVisible: whenLastYearOrSinceLaunch,
+    requiresFeatureFlag: true,
+  },
 ];
+
 export type ExportAnalyticsModalData = {
   timeRange: TimeRangeOption;
   metrics: Set<MetricExportKeys>;
@@ -108,6 +200,8 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
   onDownload,
 }) => {
   const [isDownloading, setIsDownloading] = useState(false);
+  const { isEnabled } = useFlags();
+
   const methods = useForm<ExportAnalyticsModalData>({
     mode: 'onBlur',
     defaultValues: {
@@ -154,9 +248,10 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
     onDismiss();
   };
 
-  const isDisabled = isSubmitting || isDownloading;
+  const isProcessing = isSubmitting || isDownloading;
+
   return (
-    <Modal padding={false}>
+    <Modal padding={false} overrideModalStyles={css({ width: '100%' })}>
       <>
         <form css={contentStyles}>
           <FormSection
@@ -168,26 +263,33 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
             }
           >
             <FormSection>
-              <Controller
-                name="timeRange"
-                control={control}
-                rules={{
-                  required: 'Please select an option.',
-                }}
-                render={({ field: { value, onChange } }) => (
-                  <LabeledDropdown
-                    name="Time Range"
-                    title="Select data range"
-                    subtitle="(required)"
-                    options={dataRange}
-                    required
-                    enabled={!isDisabled}
-                    placeholder="Choose a data range"
-                    value={value ?? ''}
-                    onChange={onChange}
-                  />
+              <div css={css({ display: 'flex', flexFlow: 'column', gap: 16 })}>
+                <Controller
+                  name="timeRange"
+                  control={control}
+                  rules={{
+                    required: 'Please select an option.',
+                  }}
+                  render={({ field: { value, onChange } }) => (
+                    <LabeledDropdown
+                      name="Time Range"
+                      title="Select data range"
+                      subtitle="(required)"
+                      options={dataRange}
+                      required
+                      enabled={!isProcessing}
+                      placeholder="Choose a data range"
+                      value={value ?? ''}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+                {warningMessageByTimeRange[getValues('timeRange')] && (
+                  <Toast accent="warning" rounded>
+                    {warningMessageByTimeRange[getValues('timeRange')]}
+                  </Toast>
                 )}
-              />
+              </div>
               <Controller
                 name="metrics"
                 control={control}
@@ -204,20 +306,31 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
                     }
                     values={value}
                     validationMessage={error?.message ?? ''}
-                    options={optionsToExport.map((item) => {
-                      if ('title' in item) {
-                        return {
-                          title: item.title,
-                          info: item.info,
-                        };
-                      }
+                    options={optionsToExport
+                      .filter((item) =>
+                        item.requiresFeatureFlag
+                          ? isEnabled('ANALYTICS_PHASE_TWO')
+                          : true,
+                      )
+                      .filter((item) =>
+                        !!getValues('timeRange')
+                          ? item.isVisible(getValues('timeRange'))
+                          : true,
+                      )
+                      .map((item) => {
+                        if ('title' in item) {
+                          return {
+                            title: item.title,
+                            info: item.info,
+                          };
+                        }
 
-                      return {
-                        value: item?.value,
-                        label: item.label,
-                        enabled: !isDisabled,
-                      };
-                    })}
+                        return {
+                          value: item.value,
+                          label: item.label,
+                          enabled: !isProcessing && !!getValues('timeRange'),
+                        };
+                      })}
                   />
                 )}
               />
@@ -235,7 +348,7 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
               <Button
                 noMargin
                 primary
-                enabled={isExportEnabled && !isDisabled}
+                enabled={isExportEnabled && !isProcessing}
                 onClick={handleExport}
                 overrideStyles={css({ height: 'fit-content' })}
               >

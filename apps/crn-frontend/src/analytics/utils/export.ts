@@ -1,9 +1,15 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
+  LimitedTimeRangeOption,
   ListResponse,
+  MeetingRepAttendanceResponse,
   MetricExportKeys,
   metricsSheetName,
+  OSChampionOpensearchResponse,
+  PreliminaryDataSharingDataObject,
+  PreprintComplianceResponse,
+  PublicationComplianceResponse,
   TimeRangeOption,
 } from '@asap-hub/model';
 import { format } from 'date-fns';
@@ -15,14 +21,18 @@ import {
   getUserCollaborationPerformance,
 } from '../collaboration/api';
 import {
+  preliminaryDataSharingToCSV,
   teamCollaborationAcrossTeamToCSV,
   teamCollaborationWithinTeamToCSV,
   userCollaborationToCSV,
 } from '../collaboration/export';
 import { getEngagement, getEngagementPerformance } from '../engagement/api';
-import { engagementToCSV } from '../engagement/export';
+import {
+  engagementToCSV,
+  meetingRepAttendanceToCSV,
+} from '../engagement/export';
 import { getAnalyticsLeadership } from '../leadership/api';
-import { leadershipToCSV } from '../leadership/export';
+import { leadershipToCSV, osChampionToCSV } from '../leadership/export';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -33,6 +43,11 @@ import {
   teamProductivityToCSV,
   userProductivityToCSV,
 } from '../productivity/export';
+import {
+  preprintComplianceToCSV,
+  publicationComplianceToCSV,
+} from '../open-science/export';
+import { OpensearchMetricsFacade } from 'src/hooks';
 
 export const getAllData = async <T>(
   getResults: ({
@@ -41,7 +56,7 @@ export const getAllData = async <T>(
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Promise<
     ListResponse<T> | undefined
   >,
-  transform: (result: T) => Record<string, unknown>,
+  transform: (result: T) => Record<string, unknown> | Record<string, unknown>[],
 ) => {
   let allData: unknown[] = [];
   let morePages = true;
@@ -54,7 +69,7 @@ export const getAllData = async <T>(
     });
     if (data) {
       const nbPages = data.total / 50;
-      allData = allData.concat(data.items.map(transform));
+      allData = allData.concat(...data.items.map(transform));
       currentPage += 1;
       morePages = currentPage <= nbPages;
     } else {
@@ -66,7 +81,13 @@ export const getAllData = async <T>(
 };
 
 export const downloadAnalyticsXLSX =
-  (client: AlgoliaClient<'analytics'>) =>
+  ({
+    algoliaClient,
+    opensearchMetrics,
+  }: {
+    algoliaClient: AlgoliaClient<'analytics'>;
+    opensearchMetrics: OpensearchMetricsFacade;
+  }) =>
   async (timeRange: TimeRangeOption, metrics: Set<MetricExportKeys>) => {
     const workbook = XLSX.utils.book_new();
 
@@ -81,7 +102,9 @@ export const downloadAnalyticsXLSX =
       fetchAllData: (
         paginationParams: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
       ) => Promise<ListResponse<V> | undefined>,
-      transform: (performance: T) => (result: V) => Record<string, unknown>,
+      transform: (
+        performance: T,
+      ) => (result: V) => Record<string, unknown> | Record<string, unknown>[],
     ) => {
       const performance = await fetchPerformance();
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -99,12 +122,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'user-productivity',
           () =>
-            getUserProductivityPerformance(client, {
+            getUserProductivityPerformance(algoliaClient, {
               timeRange,
               documentCategory: 'all',
             }),
           (paginationParams) =>
-            getUserProductivity(client, {
+            getUserProductivity(algoliaClient, {
               timeRange,
               documentCategory,
               sort,
@@ -117,12 +140,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-productivity',
           () =>
-            getTeamProductivityPerformance(client, {
+            getTeamProductivityPerformance(algoliaClient, {
               timeRange,
               outputType: 'all',
             }),
           (paginationParams) =>
-            getTeamProductivity(client, {
+            getTeamProductivity(algoliaClient, {
               timeRange,
               outputType: 'all',
               sort: 'team_asc',
@@ -135,12 +158,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'user-collaboration-within',
           () =>
-            getUserCollaborationPerformance(client, {
+            getUserCollaborationPerformance(algoliaClient, {
               timeRange,
               documentCategory: 'all',
             }),
           (paginationParams) =>
-            getUserCollaboration(client, {
+            getUserCollaboration(algoliaClient, {
               timeRange,
               documentCategory,
               sort,
@@ -158,12 +181,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'user-collaboration-across',
           () =>
-            getUserCollaborationPerformance(client, {
+            getUserCollaborationPerformance(algoliaClient, {
               timeRange,
               documentCategory: 'all',
             }),
           (paginationParams) =>
-            getUserCollaboration(client, {
+            getUserCollaboration(algoliaClient, {
               timeRange,
               documentCategory,
               sort,
@@ -181,12 +204,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-collaboration-within',
           () =>
-            getTeamCollaborationPerformance(client, {
+            getTeamCollaborationPerformance(algoliaClient, {
               timeRange,
               outputType: 'all',
             }),
           (paginationParams) =>
-            getTeamCollaboration(client, {
+            getTeamCollaboration(algoliaClient, {
               timeRange,
               outputType,
               sort,
@@ -200,12 +223,12 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-collaboration-across',
           () =>
-            getTeamCollaborationPerformance(client, {
+            getTeamCollaborationPerformance(algoliaClient, {
               timeRange,
               outputType: 'all',
             }),
           (paginationParams) =>
-            getTeamCollaboration(client, {
+            getTeamCollaboration(algoliaClient, {
               timeRange,
               outputType,
               sort,
@@ -220,7 +243,7 @@ export const downloadAnalyticsXLSX =
           'wg-leadership',
           async () => undefined,
           (paginationParams) =>
-            getAnalyticsLeadership(client, {
+            getAnalyticsLeadership(algoliaClient, {
               tags,
               ...paginationParams,
             }),
@@ -231,7 +254,7 @@ export const downloadAnalyticsXLSX =
           'ig-leadership',
           async () => undefined,
           (paginationParams) =>
-            getAnalyticsLeadership(client, {
+            getAnalyticsLeadership(algoliaClient, {
               tags,
               ...paginationParams,
             }),
@@ -241,13 +264,101 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'engagement',
           () =>
-            getEngagementPerformance(client, {
+            getEngagementPerformance(algoliaClient, {
               timeRange,
             }),
           (paginationParams) =>
-            getEngagement(client, { tags: [], timeRange, ...paginationParams }),
+            getEngagement(algoliaClient, {
+              tags: [],
+              timeRange,
+              ...paginationParams,
+            }),
           (performance) => engagementToCSV(performance),
         ),
+      'publication-compliance': () => {
+        return processMetric<
+          PublicationComplianceResponse,
+          PublicationComplianceResponse
+        >(
+          'publication-compliance',
+          async () => undefined,
+          (paginationParams) =>
+            opensearchMetrics.getPublicationCompliance({
+              timeRange: timeRange,
+              tags,
+              ...paginationParams,
+              sort: 'team_asc',
+            }),
+          () => publicationComplianceToCSV,
+        );
+      },
+      'preprint-compliance': () => {
+        return processMetric<
+          PreprintComplianceResponse,
+          PreprintComplianceResponse
+        >(
+          'preprint-compliance',
+          async () => undefined,
+          (paginationParams) =>
+            opensearchMetrics.getPreprintCompliance({
+              tags,
+              timeRange: timeRange,
+              ...paginationParams,
+              sort: 'team_asc',
+            }),
+          () => preprintComplianceToCSV,
+        );
+      },
+      'preliminary-data-sharing': () => {
+        return processMetric<
+          PreliminaryDataSharingDataObject,
+          PreliminaryDataSharingDataObject
+        >(
+          'preliminary-data-sharing',
+          async () => undefined,
+          (paginationParams) =>
+            opensearchMetrics.getPreliminaryDataSharing({
+              tags,
+              timeRange: timeRange as LimitedTimeRangeOption,
+              ...paginationParams,
+            }),
+          () => preliminaryDataSharingToCSV,
+        );
+      },
+      attendance: () => {
+        return processMetric<
+          MeetingRepAttendanceResponse,
+          MeetingRepAttendanceResponse
+        >(
+          'attendance',
+          async () => undefined,
+          (paginationParams) =>
+            opensearchMetrics.getMeetingRepAttendance({
+              tags,
+              timeRange: timeRange as LimitedTimeRangeOption,
+              ...paginationParams,
+              sort: 'team_asc',
+            }),
+          () => meetingRepAttendanceToCSV,
+        );
+      },
+      'os-champion': () => {
+        return processMetric<
+          OSChampionOpensearchResponse,
+          OSChampionOpensearchResponse
+        >(
+          'os-champion',
+          async () => undefined,
+          (paginationParams) =>
+            opensearchMetrics.getAnalyticsOSChampion({
+              tags,
+              timeRange: timeRange,
+              ...paginationParams,
+              sort: 'team_asc',
+            }),
+          () => osChampionToCSV,
+        );
+      },
     };
 
     for (const metric of metrics) {

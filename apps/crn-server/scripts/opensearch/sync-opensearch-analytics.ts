@@ -101,45 +101,48 @@ export const exportAnalyticsData = async <T extends Metrics>(
         } as ListResponse<MetricObject<T>>;
 
       case 'user-productivity':
-        const userProductivityRecords = await Promise.all(
-          timeRanges.map((timeRange) =>
-            Promise.all(
-              documentCategories.map(
-                (documentCategory) =>
-                  analyticsController.fetchUserProductivity({
-                    ...options,
-                    filter: { timeRange, documentCategory },
-                  }) as Promise<ListResponse<MetricObject<T>>>,
-              ),
-            ),
-          ),
-        );
+        // Fetch all pages for each timeRange/documentCategory combination
+        const allUserProductivityItems: MetricObject<T>[] = [];
 
-        // Flatten and enrich the data with metadata, keeping all fields
-        const enrichedUserProductivityItems = userProductivityRecords.flatMap(
-          (timeRangeRecords, timeRangeIndex) =>
-            timeRangeRecords.flatMap(
-              (documentCategoryRecords, documentCategoryIndex) =>
-                documentCategoryRecords.items.map((item) => ({
-                  ...item,
-                  timeRange: timeRanges[timeRangeIndex],
-                  documentCategory: documentCategories[documentCategoryIndex],
-                })),
-            ),
-        );
+        /* eslint-disable no-await-in-loop */
+        for (const timeRange of timeRanges) {
+          for (const documentCategory of documentCategories) {
+            let userPage = 1;
+            let userTotal = 0;
+            let userRecordCount = 0;
+
+            do {
+              const userProductivityResponse =
+                (await analyticsController.fetchUserProductivity({
+                  take: PAGE_SIZE,
+                  skip: (userPage - 1) * PAGE_SIZE,
+                  filter: { timeRange, documentCategory },
+                })) as ListResponse<MetricObject<T>>;
+
+              if (userProductivityResponse) {
+                userTotal = userProductivityResponse.total;
+                userPage++;
+                userRecordCount += userProductivityResponse.items.length;
+
+                // Enrich items with metadata
+                const enrichedItems = userProductivityResponse.items.map(
+                  (item) => ({
+                    ...item,
+                    timeRange,
+                    documentCategory,
+                  }),
+                );
+
+                allUserProductivityItems.push(...enrichedItems);
+              }
+            } while (userTotal > userRecordCount);
+          }
+        }
+        /* eslint-enable no-await-in-loop */
 
         return {
-          total: userProductivityRecords.reduce(
-            (sum, timeRangeRecords) =>
-              sum +
-              timeRangeRecords.reduce(
-                (timeRangeSum, documentCategoryRecords) =>
-                  timeRangeSum + documentCategoryRecords.total,
-                0,
-              ),
-            0,
-          ),
-          items: enrichedUserProductivityItems,
+          total: allUserProductivityItems.length,
+          items: allUserProductivityItems,
         } as ListResponse<MetricObject<T>>;
 
       default:

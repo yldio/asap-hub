@@ -16,6 +16,7 @@ interface IndexConfig<T> {
     documents: T[];
     mapping: OpensearchMapping['mappings'];
   }>;
+  batchSize?: number; // Number of documents to index per batch (default: 1000)
 }
 
 export const getClient = async (
@@ -50,6 +51,7 @@ export const indexOpensearchData = async <T>({
   opensearchPassword,
   indexAlias,
   getData,
+  batchSize = 5000,
 }: IndexConfig<T>) => {
   const client = await getClient(
     awsRegion,
@@ -96,25 +98,61 @@ export const indexOpensearchData = async <T>({
     },
   });
 
-  const bulkBody = documents.flatMap((doc) => [
-    {
-      index: { _index: newIndexName },
-    },
-    doc as Record<string, unknown>,
-  ]);
+  // Index documents in batches
+  if (documents.length > 0) {
+    console.log(
+      `Indexing ${documents.length} documents in batches of ${batchSize}`,
+    );
+    let totalIndexed = 0;
+    let totalErrors = 0;
 
-  if (bulkBody.length > 0) {
-    const bulkResponse = await client.bulk({ body: bulkBody });
-    if (bulkResponse.body.errors) {
-      console.error('Some documents had indexing errors:');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      bulkResponse.body.items.forEach((item: any, index: number) => {
-        if (item.index?.error) {
-          console.error(`  Document ${index}: ${item.index.error.reason}`);
-        }
-      });
+    /* eslint-disable no-await-in-loop */
+    for (let i = 0; i < documents.length; i += batchSize) {
+      const batch = documents.slice(i, i + batchSize);
+      const batchNumber = Math.floor(i / batchSize) + 1;
+      const totalBatches = Math.ceil(documents.length / batchSize);
+
+      console.log(
+        `Processing batch ${batchNumber}/${totalBatches} (${batch.length} documents)`,
+      );
+
+      const bulkBody = batch.flatMap((doc) => [
+        {
+          index: { _index: newIndexName },
+        },
+        doc as Record<string, unknown>,
+      ]);
+
+      const bulkResponse = await client.bulk({ body: bulkBody });
+
+      if (bulkResponse.body.errors) {
+        console.error(`Batch ${batchNumber} had indexing errors:`);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        bulkResponse.body.items.forEach((item: any, index: number) => {
+          if (item.index?.error) {
+            totalErrors += 1;
+            console.error(
+              `  Document ${i + index}: ${item.index.error.reason}`,
+            );
+          }
+        });
+      }
+
+      totalIndexed += batch.length;
+      console.log(
+        `Batch ${batchNumber}/${totalBatches} completed. Progress: ${totalIndexed}/${documents.length}`,
+      );
+    }
+    /* eslint-enable no-await-in-loop */
+
+    if (totalErrors > 0) {
+      console.error(
+        `Completed with ${totalErrors} errors. Successfully indexed ${
+          totalIndexed - totalErrors
+        }/${documents.length} documents`,
+      );
     } else {
-      console.log(`Successfully indexed ${documents.length} documents`);
+      console.log(`Successfully indexed all ${totalIndexed} documents`);
     }
   }
 

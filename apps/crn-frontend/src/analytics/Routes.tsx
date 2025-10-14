@@ -12,6 +12,9 @@ import { useAnalyticsOpensearch } from '../hooks/opensearch';
 
 import { downloadAnalyticsXLSX } from './utils/export';
 import {
+  MeetingRepAttendanceResponse,
+  OSChampionOpensearchResponse,
+  PreliminaryDataSharingDataObject,
   PreprintComplianceOpensearchResponse,
   PublicationComplianceOpensearchResponse,
 } from '@asap-hub/model';
@@ -61,6 +64,17 @@ const Routes = () => {
       'preprint-compliance',
     );
 
+  const osChampionClient =
+    useAnalyticsOpensearch<OSChampionOpensearchResponse>('os-champion');
+
+  const attendanceClient =
+    useAnalyticsOpensearch<MeetingRepAttendanceResponse>('attendance');
+
+  const preliminaryShareClient =
+    useAnalyticsOpensearch<PreliminaryDataSharingDataObject>(
+      'preliminary-data-sharing',
+    );
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleExportAnalytics = () => setIsModalOpen(true);
 
@@ -68,6 +82,9 @@ const Routes = () => {
     algoliaClient: client,
     publicationClient: publicationClient.client,
     preprintClient: preprintClient.client,
+    osChampionClient: osChampionClient.client,
+    attendanceClient: attendanceClient.client,
+    preliminaryShareClient: preliminaryShareClient.client,
   });
 
   return (

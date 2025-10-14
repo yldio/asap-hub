@@ -86,9 +86,7 @@ export const ErrorWithoutClose = () => (
 );
 
 export const InfoWithoutClose = () => (
-  <Toast accent="info">
-    This informational message will remain visible.
-  </Toast>
+  <Toast accent="info">This informational message will remain visible.</Toast>
 );
 
 export const WarningWithoutClose = () => (

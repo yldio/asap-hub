@@ -113,6 +113,19 @@ export const timeRanges = [
   'all',
 ] as const;
 
+export type TimeRangeOption = (typeof timeRanges)[number];
+
+export const warningMessageByTimeRange: Record<
+  TimeRangeOption,
+  string | undefined
+> = {
+  '30d': `Some metrics were removed because they can only be downloaded as 'Last 12 months' or 'Since Hub launch.'`,
+  '90d': `Some metrics were removed because they can only be downloaded as 'Last 12 months' or 'Since Hub launch.'`,
+  'current-year': `Some metrics were removed because they can only be downloaded as 'Last 12 months' or 'Since Hub launch.'`,
+  'last-year': `Some metrics were removed because they can only be downloaded as 'Since Hub launch.'`,
+  all: undefined,
+} as const;
+
 export type MetricExportKeys =
   | 'user-productivity'
   | 'team-productivity'
@@ -124,6 +137,9 @@ export type MetricExportKeys =
   | 'ig-leadership'
   | 'engagement'
   | 'preprint-compliance'
+  | 'os-champion'
+  | 'preliminary-data-sharing'
+  | 'attendance'
   | 'publication-compliance';
 
 export const metricsExportMap: Record<MetricExportKeys, string> = {
@@ -138,6 +154,9 @@ export const metricsExportMap: Record<MetricExportKeys, string> = {
   engagement: 'Speaker Diversity',
   'preprint-compliance': 'Preprint Compliance',
   'publication-compliance': 'Publication Compliance',
+  'os-champion': 'Open Science Championship',
+  'preliminary-data-sharing': 'Share Preliminary Findings',
+  attendance: 'Meeting Rep Attendance',
 };
 
 // Sheet names cannot exceed 31 chars
@@ -153,6 +172,9 @@ export const metricsSheetName: Record<MetricExportKeys, string> = {
   engagement: 'Speaker Diversity',
   'preprint-compliance': 'Preprint Compliance',
   'publication-compliance': 'Publication Compliance',
+  'os-champion': 'Open Science Championship',
+  'preliminary-data-sharing': 'Share Preliminary Findings',
+  attendance: 'Meeting Rep Attendance',
 };
 
 export const documentCategories = [
@@ -165,79 +187,6 @@ export const documentCategories = [
 ] as const;
 
 export const outputTypes = ['public', 'all'] as const;
-
-export type TimeRangeOption = (typeof timeRanges)[number];
-
-export const availableMetricsExportsByTimeRange: Record<
-  TimeRangeOption,
-  Record<MetricExportKeys, boolean>
-> = {
-  '30d': {
-    'user-productivity': true,
-    'team-productivity': true,
-    'user-collaboration-within': true,
-    'user-collaboration-across': true,
-    'team-collaboration-within': true,
-    'team-collaboration-across': true,
-    'wg-leadership': false,
-    'ig-leadership': false,
-    engagement: true,
-    'preprint-compliance': false,
-    'publication-compliance': false,
-  },
-  '90d': {
-    'user-productivity': true,
-    'team-productivity': true,
-    'user-collaboration-within': true,
-    'user-collaboration-across': true,
-    'team-collaboration-within': true,
-    'team-collaboration-across': true,
-    'wg-leadership': false,
-    'ig-leadership': false,
-    engagement: true,
-    'preprint-compliance': false,
-    'publication-compliance': false,
-  },
-  'current-year': {
-    'user-productivity': true,
-    'team-productivity': true,
-    'user-collaboration-within': true,
-    'user-collaboration-across': true,
-    'team-collaboration-within': true,
-    'team-collaboration-across': true,
-    'wg-leadership': false,
-    'ig-leadership': false,
-    engagement: true,
-    'preprint-compliance': false,
-    'publication-compliance': false,
-  },
-  'last-year': {
-    'user-productivity': true,
-    'team-productivity': true,
-    'user-collaboration-within': true,
-    'user-collaboration-across': true,
-    'team-collaboration-within': true,
-    'team-collaboration-across': true,
-    'wg-leadership': false,
-    'ig-leadership': false,
-    engagement: true,
-    'preprint-compliance': true,
-    'publication-compliance': true,
-  },
-  all: {
-    'user-productivity': true,
-    'team-productivity': true,
-    'user-collaboration-within': true,
-    'user-collaboration-across': true,
-    'team-collaboration-within': true,
-    'team-collaboration-across': true,
-    'wg-leadership': true,
-    'ig-leadership': true,
-    engagement: true,
-    'preprint-compliance': true,
-    'publication-compliance': true,
-  },
-} as const;
 
 export type LimitedTimeRangeOption = Extract<
   TimeRangeOption,

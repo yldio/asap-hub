@@ -308,91 +308,93 @@ const getUserProductivityItems = (
   usersCollection: FetchUserProductivityQuery['usersCollection'],
   filter?: FilterAnalyticsOptions,
 ): UserProductivityDataObject[] =>
-  cleanArray(usersCollection?.items).map((user) => {
-    const teams =
-      user.teamsCollection?.items
-        .map((teamItem) => {
-          if (teamItem?.role && teamItem?.team?.displayName) {
-            return {
-              team: teamItem.team.displayName,
-              id: teamItem.team.sys.id,
-              role: teamItem.role as TeamRole,
-              isTeamInactive: !!teamItem.team.inactiveSince,
-              isUserInactiveOnTeam: !!teamItem.inactiveSinceDate,
-            };
-          }
-
-          return null;
-        })
-        .filter(
-          (
-            userProductivityItem: UserProductivityTeam | null,
-          ): userProductivityItem is UserProductivityTeam =>
-            userProductivityItem !== null,
-        ) || [];
-
-    const userOutputsCount = user.linkedFrom?.researchOutputsCollection?.items
-      .filter(isAsapFundedResearchOutput)
-      .filter(getFilterOutputByRange(filter?.timeRange))
-      .filter(getFilterOutputByDocumentCategory(filter?.documentCategory))
-      .reduce(
-        (outputsCount, outputItem) => {
-          const isAuthor = outputItem?.authorsCollection?.items.some(
-            (author) =>
-              author?.__typename === 'Users' && author.sys.id === user.sys.id,
-          );
-
-          if (isAuthor) {
-            if (outputItem?.sharingStatus === 'Public') {
+  cleanArray(usersCollection?.items)
+    .filter((user) => user.onboarded && user.role !== 'Hidden') // Only include onboarded users who are not Hidden
+    .map((user) => {
+      const teams =
+        user.teamsCollection?.items
+          .map((teamItem) => {
+            if (teamItem?.role && teamItem?.team?.displayName) {
               return {
-                outputs: outputsCount.outputs + 1,
-                publicOutputs: outputsCount.publicOutputs + 1,
+                team: teamItem.team.displayName,
+                id: teamItem.team.sys.id,
+                role: teamItem.role as TeamRole,
+                isTeamInactive: !!teamItem.team.inactiveSince,
+                isUserInactiveOnTeam: !!teamItem.inactiveSinceDate,
               };
             }
 
-            return {
-              ...outputsCount,
-              outputs: outputsCount.outputs + 1,
-            };
-          }
+            return null;
+          })
+          .filter(
+            (
+              userProductivityItem: UserProductivityTeam | null,
+            ): userProductivityItem is UserProductivityTeam =>
+              userProductivityItem !== null,
+          ) || [];
 
-          return outputsCount;
-        },
-        {
-          outputs: 0,
-          publicOutputs: 0,
-        },
-      ) || {
-      outputs: 0,
-      publicOutputs: 0,
-    };
+      const userOutputsCount = user.linkedFrom?.researchOutputsCollection?.items
+        .filter(isAsapFundedResearchOutput)
+        .filter(getFilterOutputByRange(filter?.timeRange))
+        .filter(getFilterOutputByDocumentCategory(filter?.documentCategory))
+        .reduce(
+          (outputsCount, outputItem) => {
+            const isAuthor = outputItem?.authorsCollection?.items.some(
+              (author) =>
+                author?.__typename === 'Users' && author.sys.id === user.sys.id,
+            );
 
-    // Clean the name fields - remove any user IDs that might be in firstName/lastName
-    const cleanFirstName =
-      user.firstName && !user.firstName.includes('-') ? user.firstName : '';
-    const cleanLastName =
-      user.lastName && !user.lastName.includes('-') ? user.lastName : '';
+            if (isAuthor) {
+              if (outputItem?.sharingStatus === 'Public') {
+                return {
+                  outputs: outputsCount.outputs + 1,
+                  publicOutputs: outputsCount.publicOutputs + 1,
+                };
+              }
 
-    const displayName = parseUserDisplayName(
-      cleanFirstName,
-      cleanLastName,
-      undefined,
-      user.nickname ?? '',
-    );
+              return {
+                ...outputsCount,
+                outputs: outputsCount.outputs + 1,
+              };
+            }
 
-    return {
-      id: user.sys.id,
-      name: displayName || user.sys.id, // Use ID as fallback if no name
-      isAlumni: !!user.alumniSinceDate,
-      teams,
-      asapOutput: userOutputsCount.outputs,
-      asapPublicOutput: userOutputsCount.publicOutputs,
-      ratio:
-        userOutputsCount.outputs > 0
-          ? userOutputsCount.publicOutputs / userOutputsCount.outputs
-          : 0,
-    };
-  });
+            return outputsCount;
+          },
+          {
+            outputs: 0,
+            publicOutputs: 0,
+          },
+        ) || {
+        outputs: 0,
+        publicOutputs: 0,
+      };
+
+      // Clean the name fields - remove any user IDs that might be in firstName/lastName
+      const cleanFirstName =
+        user.firstName && !user.firstName.includes('-') ? user.firstName : '';
+      const cleanLastName =
+        user.lastName && !user.lastName.includes('-') ? user.lastName : '';
+
+      const displayName = parseUserDisplayName(
+        cleanFirstName,
+        cleanLastName,
+        undefined,
+        user.nickname ?? '',
+      );
+
+      return {
+        id: user.sys.id,
+        name: displayName || user.sys.id, // Use ID as fallback if no name
+        isAlumni: !!user.alumniSinceDate,
+        teams,
+        asapOutput: userOutputsCount.outputs,
+        asapPublicOutput: userOutputsCount.publicOutputs,
+        ratio:
+          userOutputsCount.outputs > 0
+            ? userOutputsCount.publicOutputs / userOutputsCount.outputs
+            : 0,
+      };
+    });
 
 const getTeamProductivityItems = (
   teamsCollection: FetchTeamProductivityQuery['teamsCollection'],

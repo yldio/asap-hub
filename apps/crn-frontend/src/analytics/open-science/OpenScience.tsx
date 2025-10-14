@@ -1,8 +1,16 @@
 import { FC, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { format } from 'date-fns';
+import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import { analytics } from '@asap-hub/routing';
 import { AnalyticsOpenSciencePageBody } from '@asap-hub/react-components';
-import { OSChampionOpensearchResponse } from '@asap-hub/model';
+import {
+  LimitedTimeRangeOption,
+  PreprintComplianceOpensearchResponse,
+  PreprintComplianceResponse,
+  PublicationComplianceOpensearchResponse,
+  PublicationComplianceResponse,
+} from '@asap-hub/model';
 import PreprintCompliance from './PreprintCompliance';
 import PublicationCompliance from './PublicationCompliance';
 import {
@@ -11,6 +19,8 @@ import {
   useAnalyticsOpensearch,
   usePaginationParams,
 } from '../../hooks';
+import { getPreprintCompliance, getPublicationCompliance } from './api';
+import { preprintComplianceToCSV, publicationComplianceToCSV } from './export';
 
 type MetricOption = 'preprint-compliance' | 'publication-compliance';
 
@@ -21,6 +31,7 @@ const OpenScience: FC<Record<string, never>> = () => {
   }>();
 
   const { currentPage } = usePaginationParams();
+  const isPreprintCompliancePage = metric === 'preprint-compliance';
 
   const setMetric = (newMetric: MetricOption) => {
     history.push(analytics({}).openScience({}).metric({ metric: newMetric }).$);
@@ -28,20 +39,68 @@ const OpenScience: FC<Record<string, never>> = () => {
 
   const { timeRange } = useAnalytics();
   const { tags, setTags } = useSearch();
-  const osClient = useAnalyticsOpensearch<OSChampionOpensearchResponse>(metric);
+  const preprintClient =
+    useAnalyticsOpensearch<PreprintComplianceOpensearchResponse>(
+      'preprint-compliance',
+    );
+  const publicationClient =
+    useAnalyticsOpensearch<PublicationComplianceOpensearchResponse>(
+      'publication-compliance',
+    );
 
-  // TODO: Implement export functionality for Open Science metrics
-  const exportResults = () => Promise.resolve();
+  const exportResults = useCallback(() => {
+    if (isPreprintCompliancePage) {
+      return resultsToStream<PreprintComplianceResponse>(
+        createCsvFileStream(
+          `open_science_${metric}_${format(new Date(), 'MMddyy')}.csv`,
+          {
+            header: true,
+          },
+        ),
+        (paginationParams) =>
+          getPreprintCompliance(preprintClient.client, {
+            tags,
+            timeRange: timeRange as LimitedTimeRangeOption,
+            ...paginationParams,
+            sort: 'team_asc',
+          }),
+        preprintComplianceToCSV,
+      );
+    }
+    return resultsToStream<PublicationComplianceResponse>(
+      createCsvFileStream(
+        `open_science_${metric}_${format(new Date(), 'MMddyy')}.csv`,
+        {
+          header: true,
+        },
+      ),
+      (paginationParams) =>
+        getPublicationCompliance(publicationClient.client, {
+          tags,
+          timeRange: timeRange as LimitedTimeRangeOption,
+          ...paginationParams,
+          sort: 'team_asc',
+        }),
+      publicationComplianceToCSV,
+    );
+  }, [
+    metric,
+    isPreprintCompliancePage,
+    preprintClient.client,
+    publicationClient.client,
+    tags,
+    timeRange,
+  ]);
 
+  const tagClient = isPreprintCompliancePage
+    ? preprintClient.client
+    : publicationClient.client;
   const loadTags = useCallback(
     async (tagQuery: string) => {
-      const response = await osClient.client.getTagSuggestions(
-        tagQuery,
-        'teams',
-      );
+      const response = await tagClient.getTagSuggestions(tagQuery, 'teams');
       return response.map((value) => ({ label: value, value }));
     },
-    [osClient.client],
+    [tagClient],
   );
 
   return (
@@ -55,7 +114,7 @@ const OpenScience: FC<Record<string, never>> = () => {
       exportResults={exportResults}
       timeRange={timeRange}
     >
-      {metric === 'preprint-compliance' ? (
+      {isPreprintCompliancePage ? (
         <PreprintCompliance
           key={`preprint-compliance-${tags.join(
             ',',

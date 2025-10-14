@@ -206,7 +206,7 @@ describe('indexOpensearchData', () => {
       });
 
       expect(console.log).toHaveBeenCalledWith(
-        `Successfully indexed ${mockDocuments.length} documents`,
+        `Successfully indexed all ${mockDocuments.length} documents`,
       );
     });
 
@@ -232,13 +232,59 @@ describe('indexOpensearchData', () => {
       });
 
       expect(console.error).toHaveBeenCalledWith(
-        'Some documents had indexing errors:',
+        'Batch 1 had indexing errors:',
       );
       expect(console.error).toHaveBeenCalledWith(
         '  Document 0: Document 0 error',
       );
       expect(console.error).toHaveBeenCalledWith(
         '  Document 1: Document 1 error',
+      );
+    });
+
+    test('should process documents in batches when batch size is specified', async () => {
+      const largeDocumentSet = Array.from({ length: 2500 }, (_, i) => ({
+        id: `${i + 1}`,
+        title: `Document ${i + 1}`,
+      }));
+
+      mockClient.bulk.mockResolvedValue({
+        body: {
+          items: largeDocumentSet.map(() => ({
+            index: { _index: 'test-index-1234567890' },
+          })),
+        },
+      } as any);
+
+      await indexOpensearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
+        opensearchUsername: 'testuser',
+        opensearchPassword: 'testpass',
+        indexAlias: mockIndexAlias,
+        batchSize: 1000,
+        getData: jest.fn().mockResolvedValue({
+          documents: largeDocumentSet,
+          mapping: mockMapping,
+        }),
+      });
+
+      // Should be called 3 times: 1000 + 1000 + 500
+      expect(mockClient.bulk).toHaveBeenCalledTimes(3);
+      expect(console.log).toHaveBeenCalledWith(
+        'Indexing 2500 documents in batches of 1000',
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        'Processing batch 1/3 (1000 documents)',
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        'Processing batch 2/3 (1000 documents)',
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        'Processing batch 3/3 (500 documents)',
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        'Successfully indexed all 2500 documents',
       );
     });
   });

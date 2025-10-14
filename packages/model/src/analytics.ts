@@ -122,7 +122,9 @@ export type MetricExportKeys =
   | 'team-collaboration-across'
   | 'wg-leadership'
   | 'ig-leadership'
-  | 'engagement';
+  | 'engagement'
+  | 'preprint-compliance'
+  | 'publication-compliance';
 
 export const metricsExportMap: Record<MetricExportKeys, string> = {
   'user-productivity': 'User Productivity',
@@ -134,6 +136,8 @@ export const metricsExportMap: Record<MetricExportKeys, string> = {
   'wg-leadership': 'Working Groups',
   'ig-leadership': 'Interest Groups',
   engagement: 'Speaker Diversity',
+  'preprint-compliance': 'Preprint Compliance',
+  'publication-compliance': 'Publication Compliance',
 };
 
 // Sheet names cannot exceed 31 chars
@@ -147,6 +151,8 @@ export const metricsSheetName: Record<MetricExportKeys, string> = {
   'wg-leadership': 'Working Groups',
   'ig-leadership': 'Interest Groups',
   engagement: 'Speaker Diversity',
+  'preprint-compliance': 'Preprint Compliance',
+  'publication-compliance': 'Publication Compliance',
 };
 
 export const documentCategories = [
@@ -176,6 +182,8 @@ export const availableMetricsExportsByTimeRange: Record<
     'wg-leadership': false,
     'ig-leadership': false,
     engagement: true,
+    'preprint-compliance': false,
+    'publication-compliance': false,
   },
   '90d': {
     'user-productivity': true,
@@ -187,6 +195,8 @@ export const availableMetricsExportsByTimeRange: Record<
     'wg-leadership': false,
     'ig-leadership': false,
     engagement: true,
+    'preprint-compliance': false,
+    'publication-compliance': false,
   },
   'current-year': {
     'user-productivity': true,
@@ -198,6 +208,8 @@ export const availableMetricsExportsByTimeRange: Record<
     'wg-leadership': false,
     'ig-leadership': false,
     engagement: true,
+    'preprint-compliance': false,
+    'publication-compliance': false,
   },
   'last-year': {
     'user-productivity': true,
@@ -209,6 +221,8 @@ export const availableMetricsExportsByTimeRange: Record<
     'wg-leadership': false,
     'ig-leadership': false,
     engagement: true,
+    'preprint-compliance': true,
+    'publication-compliance': true,
   },
   all: {
     'user-productivity': true,
@@ -220,6 +234,8 @@ export const availableMetricsExportsByTimeRange: Record<
     'wg-leadership': true,
     'ig-leadership': true,
     engagement: true,
+    'preprint-compliance': true,
+    'publication-compliance': true,
   },
 } as const;
 

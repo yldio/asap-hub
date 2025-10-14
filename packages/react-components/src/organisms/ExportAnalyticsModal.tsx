@@ -94,6 +94,16 @@ const optionsToExport: ReadonlyArray<Option<MetricExportKeys> | Title> = [
 
   { title: 'ENGAGEMENT' },
   { label: metricsExportMap.engagement, value: 'engagement' },
+
+  { title: 'OPEN SCIENCE' },
+  {
+    label: metricsExportMap['preprint-compliance'],
+    value: 'preprint-compliance',
+  },
+  {
+    label: metricsExportMap['publication-compliance'],
+    value: 'publication-compliance',
+  },
 ];
 export type ExportAnalyticsModalData = {
   timeRange: TimeRangeOption;

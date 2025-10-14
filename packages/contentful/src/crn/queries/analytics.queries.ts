@@ -105,6 +105,8 @@ export const FETCH_USER_PRODUCTIVITY = gql`
         firstName
         lastName
         nickname
+        onboarded
+        role
         alumniSinceDate
         teamsCollection(limit: 20) {
           items {

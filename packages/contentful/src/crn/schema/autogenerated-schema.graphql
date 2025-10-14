@@ -4,7 +4,7 @@ schema {
 
 directive @contentSourceMaps on QUERY
 
-directive @contentfulSchemaMetadata(contentTypePublishedCounters: JSON) on SCHEMA
+directive @contentfulSchemaMetadata(contentTypePublishedVersions: JSON) on SCHEMA
 
 directive @delegatedResourceLink(contentTypeId: String, field: JSON) on FIELD_DEFINITION | OBJECT
 

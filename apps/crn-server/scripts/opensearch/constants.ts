@@ -1,7 +1,7 @@
 import { OpensearchMetricConfig } from '@asap-hub/server-common';
 import { Metrics } from './types';
 
-export const PAGE_SIZE = 100;
+export const PAGE_SIZE = 45;
 export const PREPRINT_COMPLIANCE_SHEET_NAME = 'Preprint Compliance';
 export const PUBLICATION_COMPLIANCE_ALL_TIME_SHEET_NAME =
   'Publication Compliance_All Time';

@@ -335,6 +335,14 @@ export type UserProductivityDataObject = {
   ratio: number;
 };
 
+export type UserProductivityPerformanceDataObject = {
+  asapOutput: PerformanceMetrics;
+  asapPublicOutput: PerformanceMetrics;
+  ratio: PerformanceMetrics;
+  timeRange: string;
+  documentCategory: string;
+};
+
 export const teamOutputDocumentTypes = [
   'Article',
   'Bioinformatics',

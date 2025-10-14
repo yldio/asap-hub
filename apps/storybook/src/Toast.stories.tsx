@@ -1,12 +1,11 @@
 import { noop, Toast } from '@asap-hub/react-components';
 
 import { boolean, text } from './knobs';
-import { NoPaddingDecorator } from './layout';
 
 export default {
   title: 'Organisms / Toast',
   component: Toast,
-  decorators: [NoPaddingDecorator],
+  decorators: [],
 };
 
 export const Normal = () => (

@@ -102,42 +102,55 @@ const accentIcons: Record<ToastAccents, EmotionJSX.Element> = {
 const accentStyles: Record<ToastAccents, CSSObject> = {
   error: {
     backgroundColor: rose.rgb,
+    borderColor: ember.rgb,
     color: ember.rgb,
     svg: { stroke: ember.rgb },
   },
   info: {
     backgroundColor: info100.rgb,
+    borderColor: info900.rgb,
     color: info900.rgb,
     svg: { stroke: info500.rgb },
   },
   warning: {
     backgroundColor: apricot.rgb,
+    borderColor: warning900.rgb,
     color: warning900.rgb,
     svg: { stroke: warning500.rgb },
   },
   success: {
     backgroundColor: success100.rgb,
+    borderColor: success900.rgb,
     color: success900.rgb,
     svg: { stroke: success500.rgb },
   },
   successLarge: {
     backgroundColor: success100.rgb,
+    borderColor: success900.rgb,
     color: success900.rgb,
     svg: { stroke: success500.rgb },
   },
 };
 
+const roundedStyles = css({
+  borderWidth: 1,
+  borderRadius: 8,
+  borderStyle: 'solid',
+});
+
 interface ToastProps {
   children: ReactNode;
   onClose?: () => void;
   accent?: ToastAccents;
+  rounded?: boolean;
 }
 const Toast: React.FC<ToastProps> = ({
   children,
   onClose,
   accent = 'error',
+  rounded,
 }) => (
-  <section css={[styles, accentStyles[accent]]}>
+  <section css={[styles, accentStyles[accent], rounded && roundedStyles]}>
     {onClose && (
       <button
         aria-label="Close"

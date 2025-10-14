@@ -8,13 +8,9 @@ import { useFlags } from '@asap-hub/react-context';
 import { lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../hooks/algolia';
-import { useAnalyticsOpensearch } from '../hooks/opensearch';
+import { useOpensearchMetrics } from '../hooks/opensearch';
 
 import { downloadAnalyticsXLSX } from './utils/export';
-import {
-  PreprintComplianceOpensearchResponse,
-  PublicationComplianceOpensearchResponse,
-} from '@asap-hub/model';
 
 const loadProductivity = () =>
   import(/* webpackChunkName: "productivity" */ './productivity/Productivity');
@@ -51,23 +47,14 @@ const Routes = () => {
 
   const { client } = useAnalyticsAlgolia();
 
-  const publicationClient =
-    useAnalyticsOpensearch<PublicationComplianceOpensearchResponse>(
-      'publication-compliance',
-    );
-
-  const preprintClient =
-    useAnalyticsOpensearch<PreprintComplianceOpensearchResponse>(
-      'preprint-compliance',
-    );
+  const opensearchMetrics = useOpensearchMetrics();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleExportAnalytics = () => setIsModalOpen(true);
 
   const handleDownload = downloadAnalyticsXLSX({
     algoliaClient: client,
-    publicationClient: publicationClient.client,
-    preprintClient: preprintClient.client,
+    opensearchMetrics,
   });
 
   return (

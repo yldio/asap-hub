@@ -3,11 +3,12 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   LimitedTimeRangeOption,
   ListResponse,
+  MeetingRepAttendanceResponse,
   MetricExportKeys,
   metricsSheetName,
-  PreprintComplianceOpensearchResponse,
+  OSChampionOpensearchResponse,
+  PreliminaryDataSharingDataObject,
   PreprintComplianceResponse,
-  PublicationComplianceOpensearchResponse,
   PublicationComplianceResponse,
   TimeRangeOption,
 } from '@asap-hub/model';
@@ -20,14 +21,18 @@ import {
   getUserCollaborationPerformance,
 } from '../collaboration/api';
 import {
+  preliminaryDataSharingToCSV,
   teamCollaborationAcrossTeamToCSV,
   teamCollaborationWithinTeamToCSV,
   userCollaborationToCSV,
 } from '../collaboration/export';
 import { getEngagement, getEngagementPerformance } from '../engagement/api';
-import { engagementToCSV } from '../engagement/export';
+import {
+  engagementToCSV,
+  meetingRepAttendanceToCSV,
+} from '../engagement/export';
 import { getAnalyticsLeadership } from '../leadership/api';
-import { leadershipToCSV } from '../leadership/export';
+import { leadershipToCSV, osChampionToCSV } from '../leadership/export';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -42,11 +47,7 @@ import {
   preprintComplianceToCSV,
   publicationComplianceToCSV,
 } from '../open-science/export';
-import { OpensearchClient } from './opensearch';
-import {
-  getPreprintCompliance,
-  getPublicationCompliance,
-} from '../open-science/api';
+import { OpensearchMetricsFacade } from 'src/hooks';
 
 export const getAllData = async <T>(
   getResults: ({
@@ -55,7 +56,7 @@ export const getAllData = async <T>(
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Promise<
     ListResponse<T> | undefined
   >,
-  transform: (result: T) => Record<string, unknown>,
+  transform: (result: T) => Record<string, unknown> | Record<string, unknown>[],
 ) => {
   let allData: unknown[] = [];
   let morePages = true;
@@ -68,7 +69,7 @@ export const getAllData = async <T>(
     });
     if (data) {
       const nbPages = data.total / 50;
-      allData = allData.concat(data.items.map(transform));
+      allData = allData.concat(...data.items.map(transform));
       currentPage += 1;
       morePages = currentPage <= nbPages;
     } else {
@@ -82,12 +83,10 @@ export const getAllData = async <T>(
 export const downloadAnalyticsXLSX =
   ({
     algoliaClient,
-    publicationClient,
-    preprintClient,
+    opensearchMetrics,
   }: {
     algoliaClient: AlgoliaClient<'analytics'>;
-    publicationClient: OpensearchClient<PublicationComplianceOpensearchResponse>;
-    preprintClient: OpensearchClient<PreprintComplianceOpensearchResponse>;
+    opensearchMetrics: OpensearchMetricsFacade;
   }) =>
   async (timeRange: TimeRangeOption, metrics: Set<MetricExportKeys>) => {
     const workbook = XLSX.utils.book_new();
@@ -103,7 +102,9 @@ export const downloadAnalyticsXLSX =
       fetchAllData: (
         paginationParams: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
       ) => Promise<ListResponse<V> | undefined>,
-      transform: (performance: T) => (result: V) => Record<string, unknown>,
+      transform: (
+        performance: T,
+      ) => (result: V) => Record<string, unknown> | Record<string, unknown>[],
     ) => {
       const performance = await fetchPerformance();
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -282,35 +283,13 @@ export const downloadAnalyticsXLSX =
           'publication-compliance',
           async () => undefined,
           (paginationParams) =>
-            getPublicationCompliance(publicationClient, {
-              tags,
+            opensearchMetrics.getPublicationCompliance({
               timeRange: timeRange,
+              tags,
               ...paginationParams,
               sort: 'team_asc',
             }),
-          () => (pubComplianceData) =>
-            publicationComplianceToCSV({
-              teamId: pubComplianceData.teamId,
-              timeRange: timeRange as LimitedTimeRangeOption,
-              codePercentage: pubComplianceData.codePercentage,
-              codeRanking: pubComplianceData.codeRanking,
-              datasetsPercentage: pubComplianceData.datasetsPercentage,
-              datasetsRanking: pubComplianceData.datasetsRanking,
-              isTeamInactive: pubComplianceData.isTeamInactive,
-              labMaterialsPercentage: pubComplianceData.labMaterialsPercentage,
-              labMaterialsRanking: pubComplianceData.labMaterialsRanking,
-              numberOfCode: pubComplianceData.numberOfCode,
-              numberOfDatasets: pubComplianceData.numberOfDatasets,
-              numberOfLabMaterials: pubComplianceData.numberOfLabMaterials,
-              numberOfOutputs: pubComplianceData.numberOfOutputs,
-              numberOfProtocols: pubComplianceData.numberOfProtocols,
-              numberOfPublications: pubComplianceData.numberOfPublications,
-              overallCompliance: pubComplianceData.overallCompliance,
-              protocolsPercentage: pubComplianceData.protocolsPercentage,
-              protocolsRanking: pubComplianceData.protocolsRanking,
-              ranking: pubComplianceData.ranking,
-              teamName: pubComplianceData.teamName,
-            }),
+          () => publicationComplianceToCSV,
         );
       },
       'preprint-compliance': () => {
@@ -321,24 +300,63 @@ export const downloadAnalyticsXLSX =
           'preprint-compliance',
           async () => undefined,
           (paginationParams) =>
-            getPreprintCompliance(preprintClient, {
+            opensearchMetrics.getPreprintCompliance({
               tags,
               timeRange: timeRange,
               ...paginationParams,
               sort: 'team_asc',
             }),
-          () => (preprintComplianceData) =>
-            preprintComplianceToCSV({
+          () => preprintComplianceToCSV,
+        );
+      },
+      'preliminary-data-sharing': () => {
+        return processMetric<
+          PreliminaryDataSharingDataObject,
+          PreliminaryDataSharingDataObject
+        >(
+          'preliminary-data-sharing',
+          async () => undefined,
+          (paginationParams) =>
+            opensearchMetrics.getPreliminaryDataSharing({
+              tags,
               timeRange: timeRange as LimitedTimeRangeOption,
-              isTeamInactive: preprintComplianceData.isTeamInactive,
-              numberOfPreprints: preprintComplianceData.numberOfPreprints,
-              numberOfPublications: preprintComplianceData.numberOfPublications,
-              postedPriorPercentage:
-                preprintComplianceData.postedPriorPercentage,
-              ranking: preprintComplianceData.ranking,
-              teamId: preprintComplianceData.teamId,
-              teamName: preprintComplianceData.teamName,
+              ...paginationParams,
             }),
+          () => preliminaryDataSharingToCSV,
+        );
+      },
+      attendance: () => {
+        return processMetric<
+          MeetingRepAttendanceResponse,
+          MeetingRepAttendanceResponse
+        >(
+          'attendance',
+          async () => undefined,
+          (paginationParams) =>
+            opensearchMetrics.getMeetingRepAttendance({
+              tags,
+              timeRange: timeRange as LimitedTimeRangeOption,
+              ...paginationParams,
+              sort: 'team_asc',
+            }),
+          () => meetingRepAttendanceToCSV,
+        );
+      },
+      'os-champion': () => {
+        return processMetric<
+          OSChampionOpensearchResponse,
+          OSChampionOpensearchResponse
+        >(
+          'os-champion',
+          async () => undefined,
+          (paginationParams) =>
+            opensearchMetrics.getAnalyticsOSChampion({
+              tags,
+              timeRange: timeRange,
+              ...paginationParams,
+              sort: 'team_asc',
+            }),
+          () => osChampionToCSV,
         );
       },
     };

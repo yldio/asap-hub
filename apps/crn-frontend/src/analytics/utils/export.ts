@@ -14,6 +14,7 @@ import {
 } from '@asap-hub/model';
 import { format } from 'date-fns';
 import * as XLSX from 'xlsx';
+import { OpensearchMetricsFacade } from '../../hooks/opensearch';
 import {
   getTeamCollaboration,
   getTeamCollaborationPerformance,
@@ -34,6 +35,10 @@ import {
 import { getAnalyticsLeadership } from '../leadership/api';
 import { leadershipToCSV, osChampionToCSV } from '../leadership/export';
 import {
+  preprintComplianceToCSV,
+  publicationComplianceToCSV,
+} from '../open-science/export';
+import {
   getTeamProductivity,
   getTeamProductivityPerformance,
   getUserProductivity,
@@ -43,11 +48,6 @@ import {
   teamProductivityToCSV,
   userProductivityToCSV,
 } from '../productivity/export';
-import {
-  preprintComplianceToCSV,
-  publicationComplianceToCSV,
-} from '../open-science/export';
-import { OpensearchMetricsFacade } from 'src/hooks';
 
 export const getAllData = async <T>(
   getResults: ({
@@ -275,8 +275,8 @@ export const downloadAnalyticsXLSX =
             }),
           (performance) => engagementToCSV(performance),
         ),
-      'publication-compliance': () => {
-        return processMetric<
+      'publication-compliance': () =>
+        processMetric<
           PublicationComplianceResponse,
           PublicationComplianceResponse
         >(
@@ -284,33 +284,28 @@ export const downloadAnalyticsXLSX =
           async () => undefined,
           (paginationParams) =>
             opensearchMetrics.getPublicationCompliance({
-              timeRange: timeRange,
+              timeRange,
               tags,
               ...paginationParams,
               sort: 'team_asc',
             }),
           () => publicationComplianceToCSV,
-        );
-      },
-      'preprint-compliance': () => {
-        return processMetric<
-          PreprintComplianceResponse,
-          PreprintComplianceResponse
-        >(
+        ),
+      'preprint-compliance': () =>
+        processMetric<PreprintComplianceResponse, PreprintComplianceResponse>(
           'preprint-compliance',
           async () => undefined,
           (paginationParams) =>
             opensearchMetrics.getPreprintCompliance({
               tags,
-              timeRange: timeRange,
+              timeRange,
               ...paginationParams,
               sort: 'team_asc',
             }),
           () => preprintComplianceToCSV,
-        );
-      },
-      'preliminary-data-sharing': () => {
-        return processMetric<
+        ),
+      'preliminary-data-sharing': () =>
+        processMetric<
           PreliminaryDataSharingDataObject,
           PreliminaryDataSharingDataObject
         >(
@@ -323,10 +318,9 @@ export const downloadAnalyticsXLSX =
               ...paginationParams,
             }),
           () => preliminaryDataSharingToCSV,
-        );
-      },
-      attendance: () => {
-        return processMetric<
+        ),
+      attendance: () =>
+        processMetric<
           MeetingRepAttendanceResponse,
           MeetingRepAttendanceResponse
         >(
@@ -340,10 +334,9 @@ export const downloadAnalyticsXLSX =
               sort: 'team_asc',
             }),
           () => meetingRepAttendanceToCSV,
-        );
-      },
-      'os-champion': () => {
-        return processMetric<
+        ),
+      'os-champion': () =>
+        processMetric<
           OSChampionOpensearchResponse,
           OSChampionOpensearchResponse
         >(
@@ -352,13 +345,12 @@ export const downloadAnalyticsXLSX =
           (paginationParams) =>
             opensearchMetrics.getAnalyticsOSChampion({
               tags,
-              timeRange: timeRange,
+              timeRange,
               ...paginationParams,
               sort: 'team_asc',
             }),
           () => osChampionToCSV,
-        );
-      },
+        ),
     };
 
     for (const metric of metrics) {

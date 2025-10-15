@@ -118,9 +118,15 @@ it("should call setIsOnboardable if it's set", async () => {
 it('renders the Analytics route when user has Staff role', async () => {
   const { findAllByText } = render(
     <RecoilRoot>
-      <MemoryRouter initialEntries={['/analytics']}>
-        <AuthenticatedApp />
-      </MemoryRouter>
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <MemoryRouter initialEntries={['/analytics']}>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </MemoryRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>
     </RecoilRoot>,
   );
 
@@ -131,9 +137,15 @@ it('renders the Analytics route when user has Staff role', async () => {
 it('renders the application layout correctly', async () => {
   const { getByText, findAllByText, getByTestId } = render(
     <RecoilRoot>
-      <MemoryRouter>
-        <AuthenticatedApp />
-      </MemoryRouter>
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <MemoryRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </MemoryRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>
     </RecoilRoot>,
   );
   const menu = getByText('Menu');

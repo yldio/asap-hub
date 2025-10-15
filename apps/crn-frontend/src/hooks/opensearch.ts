@@ -1,6 +1,3 @@
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
-import { OpensearchClient } from '../analytics/utils/opensearch';
 import {
   MeetingRepAttendanceResponse,
   OSChampionOpensearchResponse,
@@ -8,13 +5,16 @@ import {
   PreprintComplianceOpensearchResponse,
   PublicationComplianceOpensearchResponse,
 } from '@asap-hub/model';
+import { useRecoilValue } from 'recoil';
+import { getPreliminaryDataSharing } from '../analytics/collaboration/api';
+import { getMeetingRepAttendance } from '../analytics/engagement/api';
+import { getAnalyticsOSChampion } from '../analytics/leadership/api';
 import {
   getPublicationCompliance,
   getPreprintCompliance,
 } from '../analytics/open-science/api';
-import { getAnalyticsOSChampion } from '../analytics/leadership/api';
-import { getMeetingRepAttendance } from '../analytics/engagement/api';
-import { getPreliminaryDataSharing } from '../analytics/collaboration/api';
+import { OpensearchClient } from '../analytics/utils/opensearch';
+import { authorizationState } from '../auth/state';
 
 export const useAnalyticsOpensearch = <T>(index: string) => {
   const authorization = useRecoilValue(authorizationState);
@@ -41,7 +41,7 @@ export const useOpensearchMetrics = () => {
   const authorization = useRecoilValue(authorizationState);
 
   return {
-    getPublicationCompliance: function (
+    getPublicationCompliance(
       paginationParams: Parameters<typeof getPublicationCompliance>[1],
     ) {
       const client =
@@ -52,7 +52,7 @@ export const useOpensearchMetrics = () => {
       return getPublicationCompliance(client, paginationParams);
     },
 
-    getPreprintCompliance: function (
+    getPreprintCompliance(
       paginationParams: Parameters<typeof getPreprintCompliance>[1],
     ) {
       const client = new OpensearchClient<PreprintComplianceOpensearchResponse>(
@@ -62,7 +62,7 @@ export const useOpensearchMetrics = () => {
       return getPreprintCompliance(client, paginationParams);
     },
 
-    getAnalyticsOSChampion: function (
+    getAnalyticsOSChampion(
       paginationParams: Parameters<typeof getAnalyticsOSChampion>[1],
     ) {
       const client = new OpensearchClient<OSChampionOpensearchResponse>(
@@ -72,7 +72,7 @@ export const useOpensearchMetrics = () => {
       return getAnalyticsOSChampion(client, paginationParams);
     },
 
-    getMeetingRepAttendance: function (
+    getMeetingRepAttendance(
       paginationParams: Parameters<typeof getMeetingRepAttendance>[1],
     ) {
       const client = new OpensearchClient<MeetingRepAttendanceResponse>(
@@ -82,7 +82,7 @@ export const useOpensearchMetrics = () => {
       return getMeetingRepAttendance(client, paginationParams);
     },
 
-    getPreliminaryDataSharing: function (
+    getPreliminaryDataSharing(
       paginationParams: Parameters<typeof getPreliminaryDataSharing>[1],
     ) {
       const client = new OpensearchClient<PreliminaryDataSharingDataObject>(

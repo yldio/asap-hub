@@ -1,6 +1,4 @@
 import { css } from '@emotion/react';
-import { useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import {
   metricsExportMap,
   MetricExportKeys,
@@ -8,6 +6,9 @@ import {
   timeRangeOptions,
   warningMessageByTimeRange,
 } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
+import { useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Button } from '../atoms';
 import { paddingStyles } from '../card';
 import { crossIcon, uploadIcon } from '../icons';
@@ -20,7 +21,6 @@ import {
 import { mobileScreen, rem } from '../pixels';
 import { Title, Option } from './CheckboxGroup';
 import Toast from './Toast';
-import { useFlags } from '@asap-hub/react-context';
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -159,7 +159,7 @@ const optionsToExport: ReadonlyArray<
     isVisible: alwaysVisible,
   },
   {
-    label: metricsExportMap['attendance'],
+    label: metricsExportMap.attendance,
     value: 'attendance',
     isVisible: whenLastYearOrSinceLaunch,
   },
@@ -313,7 +313,7 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
                           : true,
                       )
                       .filter((item) =>
-                        !!getValues('timeRange')
+                        getValues('timeRange')
                           ? item.isVisible(getValues('timeRange'))
                           : true,
                       )

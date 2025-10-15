@@ -17,7 +17,7 @@ it('renders the title', () => {
       <RoleModal {...props} />
     </StaticRouter>,
   );
-  expect(getByText('Role', { selector: 'h3' })).toBeVisible();
+  expect(getByText('Roles', { selector: 'h3' })).toBeVisible();
 });
 
 it('renders teams and lan names into inputs', async () => {

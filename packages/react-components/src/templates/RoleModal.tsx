@@ -49,7 +49,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
   const [newReachOut, setNewReachOut] = useState(reachOut);
   return (
     <EditUserModal
-      title="Role"
+      title="Roles"
       dirty={
         newResearchInterests !== researchInterests ||
         newResponsibilities !== responsibilities

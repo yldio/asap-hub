@@ -8,16 +8,13 @@ import {
   metricsSheetName,
   OSChampionOpensearchResponse,
   PreliminaryDataSharingDataObject,
-  PreprintComplianceOpensearchResponse,
   PreprintComplianceResponse,
-  PublicationComplianceOpensearchResponse,
   PublicationComplianceResponse,
   TimeRangeOption,
 } from '@asap-hub/model';
 import { format } from 'date-fns';
 import * as XLSX from 'xlsx';
 import {
-  getPreliminaryDataSharing,
   getTeamCollaboration,
   getTeamCollaborationPerformance,
   getUserCollaboration,
@@ -29,19 +26,12 @@ import {
   teamCollaborationWithinTeamToCSV,
   userCollaborationToCSV,
 } from '../collaboration/export';
-import {
-  getEngagement,
-  getEngagementPerformance,
-  getMeetingRepAttendance,
-} from '../engagement/api';
+import { getEngagement, getEngagementPerformance } from '../engagement/api';
 import {
   engagementToCSV,
   meetingRepAttendanceToCSV,
 } from '../engagement/export';
-import {
-  getAnalyticsLeadership,
-  getAnalyticsOSChampion,
-} from '../leadership/api';
+import { getAnalyticsLeadership } from '../leadership/api';
 import { leadershipToCSV, osChampionToCSV } from '../leadership/export';
 import {
   getTeamProductivity,
@@ -57,11 +47,7 @@ import {
   preprintComplianceToCSV,
   publicationComplianceToCSV,
 } from '../open-science/export';
-import { OpensearchClient } from './opensearch';
-import {
-  getPreprintCompliance,
-  getPublicationCompliance,
-} from '../open-science/api';
+import { OpensearchMetricsFacade } from 'src/hooks';
 
 export const getAllData = async <T>(
   getResults: ({
@@ -97,18 +83,10 @@ export const getAllData = async <T>(
 export const downloadAnalyticsXLSX =
   ({
     algoliaClient,
-    publicationClient,
-    preprintClient,
-    osChampionClient,
-    attendanceClient,
-    preliminaryShareClient,
+    opensearchMetrics,
   }: {
     algoliaClient: AlgoliaClient<'analytics'>;
-    publicationClient: OpensearchClient<PublicationComplianceOpensearchResponse>;
-    preprintClient: OpensearchClient<PreprintComplianceOpensearchResponse>;
-    osChampionClient: OpensearchClient<OSChampionOpensearchResponse>;
-    attendanceClient: OpensearchClient<MeetingRepAttendanceResponse>;
-    preliminaryShareClient: OpensearchClient<PreliminaryDataSharingDataObject>;
+    opensearchMetrics: OpensearchMetricsFacade;
   }) =>
   async (timeRange: TimeRangeOption, metrics: Set<MetricExportKeys>) => {
     const workbook = XLSX.utils.book_new();
@@ -305,9 +283,9 @@ export const downloadAnalyticsXLSX =
           'publication-compliance',
           async () => undefined,
           (paginationParams) =>
-            getPublicationCompliance(publicationClient, {
-              tags,
+            opensearchMetrics.getPublicationCompliance({
               timeRange: timeRange,
+              tags,
               ...paginationParams,
               sort: 'team_asc',
             }),
@@ -322,7 +300,7 @@ export const downloadAnalyticsXLSX =
           'preprint-compliance',
           async () => undefined,
           (paginationParams) =>
-            getPreprintCompliance(preprintClient, {
+            opensearchMetrics.getPreprintCompliance({
               tags,
               timeRange: timeRange,
               ...paginationParams,
@@ -339,7 +317,7 @@ export const downloadAnalyticsXLSX =
           'preliminary-data-sharing',
           async () => undefined,
           (paginationParams) =>
-            getPreliminaryDataSharing(preliminaryShareClient, {
+            opensearchMetrics.getPreliminaryDataSharing({
               tags,
               timeRange: timeRange as LimitedTimeRangeOption,
               ...paginationParams,
@@ -355,7 +333,7 @@ export const downloadAnalyticsXLSX =
           'attendance',
           async () => undefined,
           (paginationParams) =>
-            getMeetingRepAttendance(attendanceClient, {
+            opensearchMetrics.getMeetingRepAttendance({
               tags,
               timeRange: timeRange as LimitedTimeRangeOption,
               ...paginationParams,
@@ -372,7 +350,7 @@ export const downloadAnalyticsXLSX =
           'os-champion',
           async () => undefined,
           (paginationParams) =>
-            getAnalyticsOSChampion(osChampionClient, {
+            opensearchMetrics.getAnalyticsOSChampion({
               tags,
               timeRange: timeRange,
               ...paginationParams,

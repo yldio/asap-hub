@@ -1,7 +1,6 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'COMPLIANCE_NOTIFICATION_LIST'
-  | 'MANUSCRIPT_OUTPUTS'
   | 'ANALYTICS_PHASE_TWO';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
@@ -9,7 +8,6 @@ let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   ANALYTICS_PHASE_TWO: false,
-  MANUSCRIPT_OUTPUTS: false,
   COMPLIANCE_NOTIFICATION_LIST: '',
 };
 

@@ -1,4 +1,3 @@
-import { Flag, isEnabled } from '@asap-hub/flags';
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
   ManuscriptVersionResponse,
@@ -218,11 +217,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     ]);
   }
 
-  const isManuscriptOutputFlagEnabled = isEnabled('MANUSCRIPT_OUTPUTS' as Flag);
-
   const [showManuscriptOutputFlow, setShowManuscriptOutputFlow] = useState(
     !isManuscriptVersion &&
-      isManuscriptOutputFlagEnabled &&
       !isDuplicate &&
       documentType === 'Article' &&
       !updatedOutput?.id,

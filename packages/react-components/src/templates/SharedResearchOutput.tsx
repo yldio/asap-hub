@@ -70,7 +70,6 @@ type SharedResearchOutputProps = Pick<
     ) => Promise<ResearchOutputResponse | void>;
     onPublish?: () => Promise<ResearchOutputResponse | void>;
     checkForNewVersion: () => Promise<boolean>;
-    isManuscriptOutputFlagEnabled: boolean;
   };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
@@ -95,7 +94,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   onPublish,
   relatedManuscript,
   checkForNewVersion,
-  isManuscriptOutputFlagEnabled,
   ...props
 }) => {
   const history = useHistory();
@@ -196,7 +194,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             displayPublishModal={displayPublishModal}
             setDisplayPublishModal={setDisplayPublishModal}
             hasRelatedManuscript={!!relatedManuscriptVersion}
-            isManuscriptOutputFlagEnabled={isManuscriptOutputFlagEnabled}
             canDuplicate={
               Boolean(props.workingGroups && props.workingGroups[0]?.id) ||
               !relatedManuscriptVersion

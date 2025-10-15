@@ -316,7 +316,7 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
             subtitle="(required)"
             options={[
               { value: 'manually', label: 'Create manually' },
-              { value: 'import', label: 'Import from manuscript' },
+              { value: 'import', label: 'Import from compliance' },
             ]}
             value={manuscriptOutputSelection ?? ''}
             onChange={onChangeManuscriptOutputSelection}

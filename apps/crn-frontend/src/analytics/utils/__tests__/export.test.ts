@@ -25,6 +25,7 @@ import {
   getPerformanceRanking,
   formatPercentage,
 } from '../export';
+import { OpensearchMetricsFacade } from '../../../hooks/opensearch';
 
 jest.mock('xlsx', () => ({
   utils: {
@@ -94,8 +95,20 @@ describe('downloadAnalyticsXLSX', () => {
     search,
   } as unknown as AlgoliaSearchClient<'analytics'>;
 
+  const mockOpensearchMetrics: jest.Mocked<OpensearchMetricsFacade> = {
+    getPublicationCompliance: jest.fn(),
+    getPreprintCompliance: jest.fn(),
+    getAnalyticsOSChampion: jest.fn(),
+    getMeetingRepAttendance: jest.fn(),
+    getPreliminaryDataSharing: jest.fn(),
+  };
+
   beforeEach(() => {
     search.mockReset();
+    // Reset all OpenSearch metric mocks
+    Object.values(mockOpensearchMetrics).forEach((mock) => mock.mockReset());
+    // Reset XLSX mocks
+    jest.clearAllMocks();
     when(algoliaSearchClient.search)
       .calledWith(['user-productivity'], '', expect.anything())
       .mockResolvedValue(
@@ -282,7 +295,10 @@ describe('downloadAnalyticsXLSX', () => {
   });
 
   it('should create a new workbook and process the selected metrics', async () => {
-    await downloadAnalyticsXLSX(algoliaSearchClient)(
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+    })(
       'current-year',
       new Set([
         'user-productivity',
@@ -543,6 +559,337 @@ describe('downloadAnalyticsXLSX', () => {
       'workbook',
       expect.stringContaining('crn-analytics-current-year'),
     );
+  });
+
+  it('should process OpenSearch metrics correctly', async () => {
+    // Mock OpenSearch metric responses
+    mockOpensearchMetrics.getPublicationCompliance.mockResolvedValue({
+      items: [
+        {
+          objectID: 'pub-comp-1',
+          teamId: 'team-alpha',
+          teamName: 'Team Alpha',
+          isTeamInactive: false,
+          numberOfPublications: 10,
+          overallCompliance: 85,
+          ranking: 'ADEQUATE',
+          numberOfOutputs: 50,
+          numberOfDatasets: 20,
+          datasetsPercentage: 90,
+          datasetsRanking: 'OUTSTANDING',
+          numberOfProtocols: 10,
+          protocolsPercentage: 80,
+          protocolsRanking: 'ADEQUATE',
+          numberOfCode: 5,
+          codePercentage: 75,
+          codeRanking: 'ADEQUATE',
+          numberOfLabMaterials: 15,
+          labMaterialsPercentage: 95,
+          labMaterialsRanking: 'OUTSTANDING',
+          timeRange: 'all',
+        },
+      ],
+      total: 1,
+    });
+
+    mockOpensearchMetrics.getPreprintCompliance.mockResolvedValue({
+      items: [
+        {
+          objectID: 'preprint-comp-1',
+          teamId: 'team-beta',
+          teamName: 'Team Beta',
+          isTeamInactive: false,
+          numberOfPreprints: 5,
+          numberOfPublications: 10,
+          postedPriorPercentage: 60,
+          ranking: 'NEEDS IMPROVEMENT',
+          timeRange: 'all',
+        },
+      ],
+      total: 1,
+    });
+
+    mockOpensearchMetrics.getPreliminaryDataSharing.mockResolvedValue({
+      items: [
+        {
+          teamId: 'team-1',
+          teamName: 'Team Gamma',
+          isTeamInactive: false,
+          limitedData: false,
+          percentShared: 75,
+          timeRange: 'last-year',
+        },
+      ],
+      total: 1,
+    });
+
+    mockOpensearchMetrics.getMeetingRepAttendance.mockResolvedValue({
+      items: [
+        {
+          teamId: 'team-2',
+          teamName: 'Team Delta',
+          isTeamInactive: false,
+          attendancePercentage: 88,
+          limitedData: false,
+          timeRange: 'all',
+        },
+      ],
+      total: 1,
+    });
+
+    mockOpensearchMetrics.getAnalyticsOSChampion.mockResolvedValue({
+      items: [
+        {
+          objectID: 'os-champ-1',
+          teamId: 'team-3',
+          teamName: 'Team Epsilon',
+          isTeamInactive: false,
+          teamAwardsCount: 3,
+          timeRange: 'all',
+          users: [
+            {
+              id: 'user-1',
+              name: 'John Doe',
+              awardsCount: 2,
+            },
+            {
+              id: 'user-2',
+              name: 'Jane Smith',
+              awardsCount: 1,
+            },
+          ],
+        },
+      ],
+      total: 1,
+    });
+
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+    })(
+      'all',
+      new Set([
+        'publication-compliance',
+        'preprint-compliance',
+        'preliminary-data-sharing',
+        'attendance',
+        'os-champion',
+      ]) as Set<MetricExportKeys>,
+    );
+
+    expect(XLSX.utils.book_new).toHaveBeenCalled();
+
+    // Verify each OpenSearch metric was called with correct parameters
+    expect(mockOpensearchMetrics.getPublicationCompliance).toHaveBeenCalledWith(
+      {
+        timeRange: 'all',
+        tags: [],
+        currentPage: 0,
+        pageSize: 50,
+        sort: 'team_asc',
+      },
+    );
+
+    expect(mockOpensearchMetrics.getPreprintCompliance).toHaveBeenCalledWith({
+      tags: [],
+      timeRange: 'all',
+      currentPage: 0,
+      pageSize: 50,
+      sort: 'team_asc',
+    });
+
+    expect(
+      mockOpensearchMetrics.getPreliminaryDataSharing,
+    ).toHaveBeenCalledWith({
+      tags: [],
+      timeRange: 'all',
+      currentPage: 0,
+      pageSize: 50,
+    });
+
+    expect(mockOpensearchMetrics.getMeetingRepAttendance).toHaveBeenCalledWith({
+      tags: [],
+      timeRange: 'all',
+      currentPage: 0,
+      pageSize: 50,
+      sort: 'team_asc',
+    });
+
+    expect(mockOpensearchMetrics.getAnalyticsOSChampion).toHaveBeenCalledWith({
+      tags: [],
+      timeRange: 'all',
+      currentPage: 0,
+      pageSize: 50,
+      sort: 'team_asc',
+    });
+
+    // Verify that worksheets were created with correct data transformation
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([
+      {
+        'Team Name': 'Team Alpha',
+        'Team Status': 'Active',
+        '# Publications': 10,
+        'Publications %': '85%',
+        'Publications Ranking': 'Adequate',
+        '# Outputs': 50,
+        '# Datasets': 20,
+        'Datasets %': '90%',
+        'Datasets Ranking': 'Outstanding',
+        '# Protocols': 10,
+        'Protocols %': '80%',
+        'Protocols Ranking': 'Adequate',
+        '# Code': 5,
+        'Code %': '75%',
+        'Code Ranking': 'Needs Improvement',
+        '# Lab Materials': 15,
+        'Lab Materials %': '95%',
+        'Lab Materials Ranking': 'Outstanding',
+      },
+    ]);
+
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([
+      {
+        'Team Name': 'Team Beta',
+        'Team Status': 'Active',
+        'Number of Preprints': 5,
+        'Posted Prior to Journal Submission': '60%',
+        Ranking: 'Needs Improvement',
+      },
+    ]);
+
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([
+      {
+        'Team Name': 'Team Gamma',
+        'Team Status': 'Active',
+        'Percent Shared': '75%',
+        Ranking: 'Needs Improvement',
+      },
+    ]);
+
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([
+      {
+        'Team Name': 'Team Delta',
+        'Team Status': 'Active',
+        Attendance: '88%',
+        Ranking: 'Adequate',
+      },
+    ]);
+
+    // OS Champion creates multiple rows for users
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([
+      {
+        'Team Name': 'Team Epsilon',
+        'Team Status': 'Active',
+        'User Name': 'John Doe',
+        'No.of Awards': '2',
+      },
+      {
+        'Team Name': 'Team Epsilon',
+        'Team Status': 'Active',
+        'User Name': 'Jane Smith',
+        'No.of Awards': '1',
+      },
+    ]);
+
+    // Verify correct sheet names were used
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Publication Compliance',
+    );
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Preprint Compliance',
+    );
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Share Preliminary Findings',
+    );
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Meeting Rep Attendance',
+    );
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Open Science Championship',
+    );
+
+    expect(XLSX.writeFile).toHaveBeenCalledWith(
+      'workbook',
+      expect.stringContaining('crn-analytics-all'),
+    );
+  });
+
+  it('should handle empty OpenSearch responses gracefully', async () => {
+    // Mock empty responses
+    mockOpensearchMetrics.getPublicationCompliance.mockResolvedValue({
+      items: [],
+      total: 0,
+    });
+
+    mockOpensearchMetrics.getPreprintCompliance.mockResolvedValue({
+      items: [],
+      total: 0,
+    });
+
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+    })(
+      'last-year',
+      new Set([
+        'publication-compliance',
+        'preprint-compliance',
+      ]) as Set<MetricExportKeys>,
+    );
+
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([]);
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledTimes(2);
+  });
+
+  it('should handle limited time range for preliminary-data-sharing and attendance', async () => {
+    mockOpensearchMetrics.getPreliminaryDataSharing.mockResolvedValue({
+      items: [],
+      total: 0,
+    });
+
+    mockOpensearchMetrics.getMeetingRepAttendance.mockResolvedValue({
+      items: [],
+      total: 0,
+    });
+
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+    })(
+      'last-year',
+      new Set([
+        'preliminary-data-sharing',
+        'attendance',
+      ]) as Set<MetricExportKeys>,
+    );
+
+    // These metrics support limited time ranges
+    expect(
+      mockOpensearchMetrics.getPreliminaryDataSharing,
+    ).toHaveBeenCalledWith({
+      tags: [],
+      timeRange: 'last-year',
+      currentPage: 0,
+      pageSize: 50,
+    });
+
+    expect(mockOpensearchMetrics.getMeetingRepAttendance).toHaveBeenCalledWith({
+      tags: [],
+      timeRange: 'last-year',
+      currentPage: 0,
+      pageSize: 50,
+      sort: 'team_asc',
+    });
   });
 });
 

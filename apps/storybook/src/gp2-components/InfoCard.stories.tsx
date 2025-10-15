@@ -1,5 +1,5 @@
-import { InfoCard } from '@asap-hub/gp2-components';
 import {
+  InfoCard,
   userIcon,
   usersIcon,
   projectIcon,

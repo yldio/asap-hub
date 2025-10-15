@@ -253,7 +253,9 @@ describe('ExportAnalyticsModal', () => {
             screen.queryByRole('checkbox', { name: /Interest Groups/i }),
           ).not.toBeInTheDocument();
           expect(
-            screen.queryByRole('checkbox', { name: /Open Science Championship/i }),
+            screen.queryByRole('checkbox', {
+              name: /Open Science Championship/i,
+            }),
           ).not.toBeInTheDocument();
         });
 

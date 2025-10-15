@@ -9,7 +9,7 @@ import { paper, steel, colorWithTransparency, tin } from '../colors';
 import { filterIcon } from '../icons';
 import {
   tabletScreen,
-  perRem,
+  rem,
   vminLinearCalc,
   mobileScreen,
   largeDesktopScreen,
@@ -27,9 +27,9 @@ const buttonTextStyles = css({
 
 const dropdownContainer = css({
   position: 'absolute',
-  width: `${296 / perRem}em`,
-  right: `-${6 / perRem}em`,
-  top: `-${6 / perRem}em`,
+  width: rem(296),
+  right: rem(-6),
+  top: rem(-6),
 
   backgroundColor: paper.rgb,
   border: `1px solid ${steel.rgb}`,
@@ -39,7 +39,7 @@ const dropdownContainer = css({
   flexDirection: 'column',
 
   boxSizing: 'border-box',
-  padding: `${6 / perRem}em ${18 / perRem}em ${vminLinearCalc(
+  padding: `${rem(6)} ${rem(18)} ${vminLinearCalc(
     mobileScreen,
     6,
     largeDesktopScreen,

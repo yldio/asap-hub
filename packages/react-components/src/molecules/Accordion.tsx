@@ -2,7 +2,7 @@
 import { FC, ReactNode, useState } from 'react';
 import { css } from '@emotion/react';
 import { Headline5, Link, Paragraph } from '..';
-import { lineHeight, perRem, tabletScreen } from '../pixels';
+import { lineHeight, rem, tabletScreen } from '../pixels';
 import { chevronDownIcon, ExternalLinkIcon, infoInfoIcon } from '../icons';
 import { isInternalLink } from '../utils';
 import {
@@ -15,7 +15,7 @@ import {
 } from '../colors';
 
 const containerStyles = css({
-  padding: `0 ${9 / perRem}em`,
+  padding: `0 ${rem(9)}`,
 });
 
 const itemStyles = css({
@@ -23,21 +23,21 @@ const itemStyles = css({
   '~ div:last-of-type': {
     borderBottom: 'none',
   },
-  padding: `${12 / perRem}em 0`,
-  margin: `0 ${9 / perRem}em`,
+  padding: `${rem(12)} 0`,
+  margin: `0 ${rem(9)}`,
 });
 
 const headerStyles = css({
   display: 'grid',
   width: '100%',
-  gridColumnGap: `${15 / perRem}em`,
+  gridColumnGap: rem(15),
   gridTemplateColumns: 'min-content 1fr min-content',
-  padding: `0 ${15 / perRem}em`,
+  padding: `0 ${rem(15)}`,
 });
 
 const iconStyles = css({
-  width: `${lineHeight / perRem}em`,
-  height: `${lineHeight / perRem}em`,
+  width: rem(lineHeight),
+  height: rem(lineHeight),
   alignSelf: 'center',
   svg: {
     transition: '250ms',
@@ -51,7 +51,7 @@ const iconOpenStyles = css({
 });
 
 const bodyStyles = css({
-  padding: `0 ${54 / perRem}em ${15 / perRem}em`,
+  padding: `0 ${rem(54)} ${rem(15)}`,
   color: neutral900.rgb,
 });
 
@@ -75,22 +75,22 @@ const buttonStyles = css({
   cursor: 'pointer',
   ':hover': {
     background: silver.rgb,
-    borderRadius: `${4 / perRem}em`,
+    borderRadius: rem(4),
   },
 });
 
 const infoItem = css({
-  padding: `${15 / perRem}em ${9 / perRem}em ${9 / perRem}em ${24 / perRem}em `,
+  padding: `${rem(15)} ${rem(9)} ${rem(9)} ${rem(24)}`,
   display: 'grid',
-  gridColumnGap: `${15 / perRem}em`,
+  gridColumnGap: rem(15),
   gridTemplateColumns: 'min-content 1fr auto',
   color: info500.rgb,
   background: info100.rgb,
   alignItems: 'center',
   alignContent: 'center',
-  rowGap: `${9 / perRem}em`,
+  rowGap: rem(9),
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    paddingTop: `${9 / perRem}em`,
+    paddingTop: rem(9),
   },
 });
 

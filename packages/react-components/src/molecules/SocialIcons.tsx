@@ -14,20 +14,20 @@ import {
   GoogleScholarIcon,
   GlobeIcon,
 } from '../icons';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { tin } from '../colors';
 
 const ROW_GAP = 12;
 const socialContainerStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
-  paddingRight: `-${ROW_GAP / perRem}em`,
-  paddingTop: `${15 / perRem}em`,
-  paddingBottom: `${17 / perRem}em`,
+  paddingRight: `-${rem(ROW_GAP)}`,
+  paddingTop: rem(15),
+  paddingBottom: rem(17),
 });
 
 const iconStyles = css({
-  paddingRight: `${ROW_GAP / perRem}em`,
+  paddingRight: rem(ROW_GAP),
   svg: {
     width: '28px',
     height: '28px',

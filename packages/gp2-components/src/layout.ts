@@ -81,8 +81,9 @@ export const modalStyles = css({
 });
 
 export const footerStyles = css({
-  display: 'inline-flex',
+  display: 'flex',
   gap: rem(24),
+  marginTop: rem(32),
   justifyContent: 'space-between',
   [mobileQuery]: {
     display: 'flex',
@@ -93,7 +94,7 @@ export const footerStyles = css({
 });
 
 export const padding24Styles = css({
-  padding: rem(24),
+  paddingTop: rem(24),
 });
 
 export const formContainer = css({

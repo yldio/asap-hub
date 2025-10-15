@@ -409,18 +409,22 @@ describe('KeyInformationModal', () => {
     renderKeyInformation();
     const addButton = getAddButton();
     userEvent.click(addButton);
-    const secondary = screen.getByRole('heading', {
-      name: /Secondary Position/i,
-    }).parentElement?.parentElement as HTMLElement;
+    const secondary = screen
+      .getByRole('heading', {
+        name: /Secondary Position/i,
+      })
+      .closest('section') as HTMLElement;
     expect(
       within(secondary).getByRole('textbox', {
         name: /Institution/i,
       }),
     ).toBeVisible();
     userEvent.click(addButton);
-    const tertiary = screen.getByRole('heading', {
-      name: /Tertiary Position/i,
-    }).parentElement?.parentElement as HTMLElement;
+    const tertiary = screen
+      .getByRole('heading', {
+        name: /Tertiary Position/i,
+      })
+      .closest('section') as HTMLElement;
     expect(
       within(tertiary).getByRole('textbox', {
         name: /Institution/i,
@@ -465,9 +469,11 @@ describe('KeyInformationModal', () => {
     });
     userEvent.click(getAddButton());
 
-    const tertiary = screen.getByRole('heading', {
-      name: /Tertiary Position/i,
-    }).parentElement?.parentElement as HTMLElement;
+    const tertiary = screen
+      .getByRole('heading', {
+        name: /Tertiary Position/i,
+      })
+      .closest('section') as HTMLElement;
 
     userEvent.click(
       within(tertiary).getByRole('textbox', { name: /Institution/i }),

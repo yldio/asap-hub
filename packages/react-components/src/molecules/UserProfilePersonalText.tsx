@@ -6,7 +6,7 @@ import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Link, Ellipsis, Anchor, Subtitle } from '../atoms';
 import { alumniBadgeIcon, locationIcon } from '../icons';
-import { perRem, lineHeight } from '../pixels';
+import { rem, lineHeight } from '../pixels';
 import { lead, tin } from '../colors';
 import {
   formatUserLocation,
@@ -19,7 +19,7 @@ import { styles, getLinkColors } from '../atoms/Link';
 const MAX_TEAMS = 2;
 
 const locationStyles = css({
-  padding: `${6 / perRem}em 0 ${24 / perRem}em`,
+  padding: `${rem(6)} 0 ${rem(24)}`,
   display: 'flex',
   alignItems: 'center',
   color: lead.rgb,
@@ -27,24 +27,24 @@ const locationStyles = css({
 
 const iconStyles = css({
   display: 'inline-block',
-  width: `${lineHeight / perRem}em`,
-  height: `${lineHeight / perRem}em`,
-  paddingRight: `${6 / perRem}em`,
+  width: rem(lineHeight),
+  height: rem(lineHeight),
+  paddingRight: rem(6),
 });
 
 const paragraphStyles = css({
   marginTop: 0,
-  marginBottom: `${18 / perRem}em`,
+  marginBottom: rem(18),
   color: lead.rgb,
 });
 
 const badgeStyles = css({
-  lineHeight: `${8 / perRem}em`,
-  marginLeft: `${8 / perRem}em`,
+  lineHeight: rem(8),
+  marginLeft: rem(8),
 });
 
 const tagsContainerStyles = css({
-  paddingBottom: `${12 / perRem}em`,
+  paddingBottom: rem(12),
 });
 
 type UserProfilePersonalTextProps = Pick<
@@ -133,7 +133,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
             css={css({
               display: 'flex',
               alignItems: 'center',
-              marginTop: `${16 / perRem}em`,
+              marginTop: rem(16),
             })}
           >
             <Subtitle noMargin>Former Roles</Subtitle>

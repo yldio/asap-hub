@@ -5,16 +5,8 @@ import { Button, Label, Paragraph, Tag } from '../atoms';
 import { lead } from '../colors';
 import { validationMessageStyles } from '../form';
 import { plusIcon } from '../icons';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import loading from '../lotties/loading.json';
-
-const containerStyles = css({
-  paddingBottom: `${18 / perRem}em`,
-});
-
-const buttonContainerStyles = css({
-  display: 'block',
-});
 
 const descriptionStyles = css({
   color: lead.rgb,
@@ -24,29 +16,38 @@ const hintStyles = css({
   ':empty': {
     display: 'none',
   },
-  paddingTop: `${6 / perRem}em`,
+  paddingTop: rem(6),
 
   color: lead.rgb,
 });
 
 const subtitleStyles = css({
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: rem(6),
 });
 
 const iconStyles = css({
   display: 'flex',
-  marginRight: `${8 / perRem}em`,
+  marginRight: rem(8),
 });
 
 const uploadedButtonTagStyles = css({
-  display: 'inline-block',
-  paddingBottom: `${15 / perRem}em`,
+  display: 'flex',
 });
 
 const fileSelectionContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
+  gap: rem(16),
+});
+
+const currentFilesContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(8),
+  ':empty': {
+    display: 'none',
+  },
 });
 
 type FileUploadResponse = { id: string; url: string; filename: string };
@@ -102,7 +103,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   const canUploadFile = !currentFiles || currentFiles.length < maxFiles;
 
   return (
-    <div css={containerStyles}>
+    <div>
       <input
         onChange={handleFileChange}
         multiple={maxFiles > 1}
@@ -118,53 +119,54 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
           <>
             <div style={{ width: '100%' }} />
             <div css={fileSelectionContainerStyles}>
-              {currentFiles &&
-                currentFiles.map((file) => (
-                  <div css={uploadedButtonTagStyles} key={file.id}>
-                    <Tag
-                      onRemove={() => handleRemove(file.id)}
-                      enabled={tagEnabled}
-                    >
-                      {file.filename}
-                    </Tag>
-                  </div>
-                ))}
-              <div css={buttonContainerStyles}>
-                <Button
-                  submit={false}
-                  primary
-                  small
-                  enabled={!!enabled && canUploadFile}
-                  noMargin
-                  id={id}
-                  preventDefault={false}
-                  onClick={() => canUploadFile && fileInputRef.current?.click()}
-                >
-                  {isSubmitting ? (
-                    <Lottie
-                      options={{
-                        loop: true,
-                        autoplay: true,
-                        animationData: loading,
-                        rendererSettings: {
-                          preserveAspectRatio: 'xMidYMid slice',
-                        },
-                      }}
-                      height={24}
-                      width={24}
-                      style={{ marginRight: '8px' }}
-                    />
-                  ) : (
-                    <div css={iconStyles}>{plusIcon}</div>
-                  )}
-                  Add File
-                </Button>
-              </div>
+              {currentFiles && (
+                <div css={currentFilesContainerStyles}>
+                  {currentFiles.map((file) => (
+                    <div css={uploadedButtonTagStyles} key={file.id}>
+                      <Tag
+                        onRemove={() => handleRemove(file.id)}
+                        enabled={tagEnabled}
+                      >
+                        {file.filename}
+                      </Tag>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <Button
+                submit={false}
+                primary
+                small
+                enabled={!!enabled && canUploadFile}
+                noMargin
+                id={id}
+                preventDefault={false}
+                onClick={() => canUploadFile && fileInputRef.current?.click()}
+              >
+                {isSubmitting ? (
+                  <Lottie
+                    options={{
+                      loop: true,
+                      autoplay: true,
+                      animationData: loading,
+                      rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice',
+                      },
+                    }}
+                    height={24}
+                    width={24}
+                    style={{ marginRight: '8px' }}
+                  />
+                ) : (
+                  <div css={iconStyles}>{plusIcon}</div>
+                )}
+                Add File
+              </Button>
             </div>
           </>
         )}
       >
-        <Paragraph>
+        <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>
           <br />

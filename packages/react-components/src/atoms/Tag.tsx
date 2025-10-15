@@ -1,7 +1,7 @@
 import { css, Theme } from '@emotion/react';
 import { steel, mint, tin, neutral900, pine, charcoal } from '../colors';
 import { crossSmallIcon } from '../icons';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import Ellipsis from './Ellipsis';
 
 const borderWidth = 1;
@@ -13,7 +13,7 @@ const containerStyles = css({
 });
 
 const styles = css({
-  padding: `${5 / perRem}em ${15 / perRem}em ${5 / perRem}em`,
+  padding: `${rem(5)} ${rem(15)} ${rem(5)}`,
 
   display: 'flex',
   justifyContent: 'center',
@@ -22,7 +22,7 @@ const styles = css({
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderColor: steel.rgb,
-  borderRadius: `${18 / perRem}em`,
+  borderRadius: rem(18),
 });
 
 const highlightStyles = css({
@@ -48,7 +48,7 @@ const disabledStyles = css({
 
 const iconStyles = css({
   display: 'flex',
-  marginLeft: `${8 / perRem}em`,
+  marginLeft: rem(8),
   padding: 0,
   border: 'none',
   backgroundColor: 'unset',

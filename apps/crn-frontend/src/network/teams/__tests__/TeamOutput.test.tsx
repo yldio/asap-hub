@@ -40,14 +40,6 @@ import { getImpacts } from '../../../shared-api/impact';
 import { refreshTeamState, usePostPreprintResearchOutput } from '../state';
 import TeamOutput from '../TeamOutput';
 
-jest.mock(
-  'react-lottie',
-  () =>
-    function MockLottie() {
-      return <div>Loading...</div>;
-    },
-);
-
 jest.setTimeout(60000);
 jest.mock('../api');
 jest.mock('../../users/api');

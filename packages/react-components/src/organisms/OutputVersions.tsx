@@ -3,7 +3,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { useState } from 'react';
 
 import { Button, Card, Headline2, Link, Paragraph, Pill } from '../atoms';
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import {
   charcoal,
   fern,
@@ -21,14 +21,14 @@ import { ThemeVariant } from '../theme';
 
 const container = css({
   display: 'grid',
-  padding: `${32 / perRem}em ${24 / perRem}em`,
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const descriptionStyles = css({
-  marginTop: `${24 / perRem}em`,
-  marginBottom: `${12 / perRem}em`,
+  marginTop: rem(24),
+  marginBottom: rem(12),
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    marginBottom: `${32 / perRem}em`,
+    marginBottom: rem(32),
   },
   color: lead.rgb,
 });
@@ -37,21 +37,21 @@ const gridTitleStyles = css({
   display: 'none',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     display: 'inherit',
-    paddingBottom: `${16 / perRem}em`,
+    paddingBottom: rem(16),
   },
 });
 
 const rowTitleStyles = css({
-  paddingTop: `${32 / perRem}em`,
-  paddingBottom: `${16 / perRem}em`,
+  paddingTop: rem(32),
+  paddingBottom: rem(16),
   ':first-of-type': { paddingTop: 0 },
   [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
 
 const rowStyles = css({
   display: 'grid',
-  paddingTop: `${20 / perRem}em`,
-  paddingBottom: `${20 / perRem}em`,
+  paddingTop: rem(20),
+  paddingBottom: rem(20),
   borderBottom: `1px solid ${steel.rgb}`,
   ':last-child': {
     borderBottom: 'none',
@@ -60,9 +60,9 @@ const rowStyles = css({
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '0.2fr 0.5fr 1fr 1fr 1fr',
-    columnGap: `${15 / perRem}em`,
-    paddingTop: `${0 / perRem}em`,
-    paddingBottom: `${16 / perRem}em`,
+    columnGap: rem(15),
+    paddingTop: rem(0),
+    paddingBottom: rem(16),
     borderBottom: 'none',
   },
 });
@@ -73,16 +73,16 @@ const paragraphStyle = css({
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'row',
-  gap: `${6 / perRem}em`,
+  gap: rem(6),
   color: lead.rgb,
 });
 
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  marginTop: `${32 / perRem}em`,
-  paddingTop: `${16 / perRem}em`,
-  paddingBottom: `${16 / perRem}em`,
+  marginTop: rem(32),
+  paddingTop: rem(16),
+  paddingBottom: rem(16),
   borderTop: `1px solid ${steel.rgb}`,
 });
 
@@ -97,13 +97,13 @@ export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
 };
 
 const mainStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} 0`,
   display: 'grid',
   justifyContent: 'center',
 });
 
 const createVersionWrapperStyles = css({
-  maxWidth: `${800 / perRem}em`,
+  maxWidth: rem(800),
 });
 
 const createVersionCardStyles = css({

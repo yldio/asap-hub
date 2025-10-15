@@ -1,10 +1,14 @@
 import { gp2 } from '@asap-hub/model';
-import { LabeledMultiSelect, pixels } from '@asap-hub/react-components';
+import {
+  FormSection,
+  LabeledMultiSelect,
+  pixels,
+} from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
 import { ContactSupport } from '../molecules';
 import EditUserModal from './EditUserModal';
 
-const { perRem } = pixels;
+const { rem } = pixels;
 
 type TagsModalProps = Pick<gp2.UserResponse, 'tags'> &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
@@ -37,7 +41,7 @@ const TagsModal: React.FC<TagsModalProps> = ({
       dirty={checkDirty()}
     >
       {({ isSaving }) => (
-        <div css={{ paddingBottom: `${162 / perRem}em` }}>
+        <FormSection>
           <LabeledMultiSelect
             title="Tags"
             subtitle="(required)"
@@ -76,7 +80,9 @@ const TagsModal: React.FC<TagsModalProps> = ({
             maxMenuHeight={160}
             getValidationMessage={() => 'Please add your tags'}
           />
-        </div>
+          {/* Give extra space to the options rendered above */}
+          <div css={{ paddingBottom: rem(96) }} />
+        </FormSection>
       )}
     </EditUserModal>
   );

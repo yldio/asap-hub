@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { TutorialsResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Divider, Paragraph } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { TagList } from '../molecules';
 import {
@@ -20,12 +20,12 @@ const containerStyles = css({
 });
 
 const tagsContainer = css({
-  margin: `${12 / perRem}em 0 ${12 / perRem}em 0`,
+  margin: `${rem(12)} 0 ${rem(12)} 0`,
 });
 
 const cardsStyles = css({
   display: 'grid',
-  rowGap: `${36 / perRem}em`,
+  rowGap: rem(36),
 });
 
 type TutorialDetailsPageProps = Pick<
@@ -55,7 +55,7 @@ const TutorialDetailsPage: React.FC<TutorialDetailsPageProps> = ({
         {(text || !!tags.length) && (
           <Card>
             {text && (
-              <div css={{ paddingBottom: `${12 / perRem}em` }}>
+              <div css={{ paddingBottom: rem(12) }}>
                 <Headline2>Description</Headline2>
                 <RichText text={text} />
               </div>

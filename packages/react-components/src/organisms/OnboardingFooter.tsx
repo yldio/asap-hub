@@ -4,12 +4,12 @@ import { successIcon } from '../icons';
 import { Link, Headline2, Paragraph } from '../atoms';
 import { paper, steel } from '../colors';
 
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { irisCeruleanGradientStyles } from '../appearance';
 
 const footerStyles = css({
   borderTop: `1px solid ${steel.rgb}`,
-  padding: `${6 / perRem}em ${24 / perRem}em`,
+  padding: `${rem(6)} ${rem(24)}`,
   display: 'flex',
   position: 'fixed',
   left: '0px',
@@ -20,15 +20,15 @@ const footerStyles = css({
 const containerStyles = css({
   display: 'grid',
   width: '100%',
-  columnGap: `${36 / perRem}em`,
+  columnGap: rem(36),
   grid: `
     "title  " max-content
-    "button " ${18 / perRem}em
+    "button " ${rem(18)}
     "button " max-content / 1fr `,
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     grid: `
     "title    button" max-content
-    "subtitle button" ${24 / perRem}em
+    "subtitle button" ${rem(24)}
     ".        button" max-content  / 1fr 270px`,
   },
 });
@@ -49,11 +49,11 @@ const subtitleStyles = css({
 const buttonStyles = css({
   gridArea: 'button',
   display: 'flex',
-  maxHeight: `${90 / perRem}em`,
+  maxHeight: rem(90),
 });
 
 const iconStyles = css({
-  marginRight: `${12 / perRem}em`,
+  marginRight: rem(12),
   display: 'flex',
   alignSelf: 'center',
 });

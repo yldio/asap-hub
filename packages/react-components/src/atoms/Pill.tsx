@@ -2,7 +2,7 @@
 import { css, CSSObject } from '@emotion/react';
 import { Ellipsis } from '.';
 import * as colors from '../colors';
-import { lineHeight, perRem } from '../pixels';
+import { lineHeight, rem } from '../pixels';
 
 const borderWidth = 1;
 const styles = css({
@@ -11,15 +11,15 @@ const styles = css({
   width: 'fit-content',
   boxSizing: 'border-box',
   height: lineHeight,
-  margin: `${12 / perRem}em 0`,
-  padding: `0 ${8 / perRem}em`,
+  margin: `${rem(12)} 0`,
+  padding: `0 ${rem(8)}`,
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
-  borderRadius: `${6 / perRem}em`,
+  borderRadius: rem(6),
 });
 
 const modernStyles = css({
-  borderRadius: `${24 / perRem}em`,
+  borderRadius: rem(24),
   height: 'fit-content',
   margin: 0,
 });

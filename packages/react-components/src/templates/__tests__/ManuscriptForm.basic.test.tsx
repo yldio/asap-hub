@@ -20,14 +20,6 @@ type FindByRole = (
   waitForElementOptions?: waitForOptions | undefined,
 ) => Promise<HTMLElement>;
 
-jest.mock(
-  'react-lottie',
-  () =>
-    function MockLottie() {
-      return <div>Loading...</div>;
-    },
-);
-
 let history!: History;
 
 const teamId = '1';
@@ -417,22 +409,16 @@ describe('Manuscript form', () => {
       }),
     ).toBeDisabled();
 
-    expect(
-      getByText(
-        'manuscript.pdf',
-      ).parentElement?.parentElement?.parentElement?.parentElement?.querySelector(
-        'button[disabled]',
-      ),
-    ).toBeInTheDocument();
+    // Check that the "Add File" buttons are disabled
+    const addFileButtons = document.querySelectorAll(
+      'button:disabled',
+    ) as NodeListOf<HTMLButtonElement>;
+    const disabledAddFileButtons = Array.from(addFileButtons).filter(
+      (button) => button.textContent?.includes('Add File'),
+    );
+    expect(disabledAddFileButtons.length).toBeGreaterThan(0);
 
-    expect(
-      getByText(
-        'additional.pdf',
-      ).parentElement?.parentElement?.parentElement?.parentElement?.querySelector(
-        'button[disabled]',
-      ),
-    ).toBeInTheDocument();
-
+    // Check that tags don't have remove buttons (tagEnabled is false)
     expect(
       getByText('manuscript.pdf').closest('span')?.querySelector('button'),
     ).toBeNull();

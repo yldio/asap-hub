@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import { BasicCalendarResponse } from '@asap-hub/model';
 
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { GoogleCalendar } from '../organisms';
 
 const containerStyles = css({
   display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
+  gridRowGap: rem(36),
 });
 
 type EventsCalendarPageProps = {

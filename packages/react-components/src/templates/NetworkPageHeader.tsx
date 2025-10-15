@@ -9,7 +9,7 @@ import {
 import { network } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { paper, steel } from '../colors';
 import {
   networkPageLayoutPaddingStyle,
@@ -33,7 +33,7 @@ const visualHeaderStyles = css({
 });
 
 const textStyles = css({
-  maxWidth: `${610 / perRem}em`,
+  maxWidth: rem(610),
 });
 
 const controlsStyles = css({

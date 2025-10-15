@@ -1,24 +1,24 @@
 import { css } from '@emotion/react';
 
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { fern, lead, paper, pine, steel } from '../colors';
 import { noop } from '../utils';
 
 const styles = css({
   boxSizing: 'border-box',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
-  marginRight: `${12 / perRem}em`,
+  width: rem(24),
+  height: rem(24),
+  marginRight: rem(12),
 
   appearance: 'none',
   outline: 'none',
   // outer ring
   borderRadius: '12px',
   borderStyle: 'solid',
-  borderWidth: `${1 / perRem}em`,
+  borderWidth: rem(1),
   borderColor: steel.rgb,
   // inner circle
-  padding: `${6 / perRem}em`,
+  padding: rem(6),
   backgroundClip: 'content-box',
   backgroundColor: paper.rgb,
 

@@ -3,7 +3,7 @@ import { urlExpression, USER_SOCIAL_RESEARCHER_ID } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { FunctionComponent, useState } from 'react';
 
-import { Headline4, Link } from '../atoms';
+import { Link } from '../atoms';
 import { charcoal, lead } from '../colors';
 import {
   GithubIcon,
@@ -16,9 +16,8 @@ import {
   XIcon,
 } from '../icons';
 import { mailToSupport } from '../mail';
-import { LabeledTextField } from '../molecules';
+import { FormSection, LabeledTextField } from '../molecules';
 import { EditUserModal } from '../organisms';
-import { rem } from '../pixels';
 import { formatUserSocial, noop } from '../utils';
 
 const iconStyles = css({
@@ -27,8 +26,6 @@ const iconStyles = css({
   textAlign: 'center',
   alignItems: 'center',
 });
-
-const socialsHeadlineStyles = css({ padding: `${rem(34)} 0 ${rem(8)}` });
 
 const iconCSS = css({
   '& > svg > path:first-of-type': { fill: 'transparent' },
@@ -104,7 +101,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
       }
     >
       {({ isSaving }) => (
-        <div>
+        <FormSection>
           <LabeledTextField
             type="email"
             value={newEmail}
@@ -148,92 +145,92 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             labelIndicator={<GlobeIcon />}
             placeholder="https://example.com"
           />
-          <div css={socialsHeadlineStyles}>
-            <Headline4 styleAsHeading={3}>Social Networks</Headline4>
-          </div>
-          <LabeledTextField
-            hint={
-              <>
-                To change your ORCID please{' '}
-                <Link
-                  href={mailToSupport({
-                    subject: `Orcid change for "${orcid}"`,
-                  })}
-                >
-                  contact ASAP
-                </Link>
-              </>
-            }
-            title="ORCID"
-            onChange={setNewOrcid}
-            value={newOrcid}
-            enabled={false}
-            labelIndicator={wrapIcon(OrcidSocialIcon)}
-            placeholder="0000-0000-0000-0000"
-          />
-          <LabeledTextField
-            title="Researcher ID"
-            subtitle="(optional)"
-            description="Type your Researcher ID."
-            pattern={USER_SOCIAL_RESEARCHER_ID.source}
-            getValidationMessage={() => 'Please enter a valid Researcher ID'}
-            onChange={setNewResearcherId}
-            value={newResearcherId}
-            enabled={!isSaving}
-            labelIndicator={wrapIcon(ResearcherIdIcon, true)}
-            placeholder="0-0000-0000"
-          />
-          <LabeledTextField
-            title="X"
-            subtitle="(optional)"
-            description="Type your X (formerly Twitter) profile URL."
-            onChange={setNewTwitter}
-            value={newTwitter}
-            enabled={!isSaving}
-            labelIndicator={wrapIcon(XIcon)}
-            placeholder="https://twitter.com/yourprofilename"
-          />
-          <LabeledTextField
-            title="Github"
-            subtitle="(optional)"
-            description="Type your Github profile URL."
-            onChange={setNewGithub}
-            value={newGithub}
-            enabled={!isSaving}
-            labelIndicator={wrapIcon(GithubIcon, true)}
-            placeholder="https://github.com/yourprofilename"
-          />
-          <LabeledTextField
-            title="LinkedIn"
-            subtitle="(optional)"
-            description="Type your LinkedIn profile URL."
-            onChange={setNewLinkedIn}
-            value={newLinkedIn}
-            enabled={!isSaving}
-            labelIndicator={wrapIcon(LinkedInIcon, true)}
-            placeholder="https://www.linkedin.com/in/yourprofilename"
-          />
-          <LabeledTextField
-            title="Research Gate"
-            subtitle="(optional)"
-            description="Type your Research Gate profile URL."
-            onChange={setNewResearchGate}
-            value={newResearchGate}
-            enabled={!isSaving}
-            labelIndicator={wrapIcon(ResearchGateIcon, true)}
-            placeholder="https://www.researchgate.net/profile/profileID"
-          />
-          <LabeledTextField
-            title="Google Scholar"
-            subtitle="(optional)"
-            description="Type your Google Scholar profile URL."
-            onChange={setNewGoogleScholar}
-            value={newGoogleScholar}
-            enabled={!isSaving}
-            labelIndicator={wrapIcon(GoogleScholarIcon, true)}
-            placeholder="https://scholar.google.com/citations?user=profileID"
-          />
-        </div>
+
+          <FormSection title="Social Networks">
+            <LabeledTextField
+              hint={
+                <>
+                  To change your ORCID please{' '}
+                  <Link
+                    href={mailToSupport({
+                      subject: `Orcid change for "${orcid}"`,
+                    })}
+                  >
+                    contact ASAP
+                  </Link>
+                </>
+              }
+              title="ORCID"
+              onChange={setNewOrcid}
+              value={newOrcid}
+              enabled={false}
+              labelIndicator={wrapIcon(OrcidSocialIcon)}
+              placeholder="0000-0000-0000-0000"
+            />
+            <LabeledTextField
+              title="Researcher ID"
+              subtitle="(optional)"
+              description="Type your Researcher ID."
+              pattern={USER_SOCIAL_RESEARCHER_ID.source}
+              getValidationMessage={() => 'Please enter a valid Researcher ID'}
+              onChange={setNewResearcherId}
+              value={newResearcherId}
+              enabled={!isSaving}
+              labelIndicator={wrapIcon(ResearcherIdIcon, true)}
+              placeholder="0-0000-0000"
+            />
+            <LabeledTextField
+              title="X"
+              subtitle="(optional)"
+              description="Type your X (formerly Twitter) profile URL."
+              onChange={setNewTwitter}
+              value={newTwitter}
+              enabled={!isSaving}
+              labelIndicator={wrapIcon(XIcon)}
+              placeholder="https://twitter.com/yourprofilename"
+            />
+            <LabeledTextField
+              title="Github"
+              subtitle="(optional)"
+              description="Type your Github profile URL."
+              onChange={setNewGithub}
+              value={newGithub}
+              enabled={!isSaving}
+              labelIndicator={wrapIcon(GithubIcon, true)}
+              placeholder="https://github.com/yourprofilename"
+            />
+            <LabeledTextField
+              title="LinkedIn"
+              subtitle="(optional)"
+              description="Type your LinkedIn profile URL."
+              onChange={setNewLinkedIn}
+              value={newLinkedIn}
+              enabled={!isSaving}
+              labelIndicator={wrapIcon(LinkedInIcon, true)}
+              placeholder="https://www.linkedin.com/in/yourprofilename"
+            />
+            <LabeledTextField
+              title="Research Gate"
+              subtitle="(optional)"
+              description="Type your Research Gate profile URL."
+              onChange={setNewResearchGate}
+              value={newResearchGate}
+              enabled={!isSaving}
+              labelIndicator={wrapIcon(ResearchGateIcon, true)}
+              placeholder="https://www.researchgate.net/profile/profileID"
+            />
+            <LabeledTextField
+              title="Google Scholar"
+              subtitle="(optional)"
+              description="Type your Google Scholar profile URL."
+              onChange={setNewGoogleScholar}
+              value={newGoogleScholar}
+              enabled={!isSaving}
+              labelIndicator={wrapIcon(GoogleScholarIcon, true)}
+              placeholder="https://scholar.google.com/citations?user=profileID"
+            />
+          </FormSection>
+        </FormSection>
       )}
     </EditUserModal>
   );

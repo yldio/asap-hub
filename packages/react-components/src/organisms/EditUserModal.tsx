@@ -1,13 +1,11 @@
 import { UserResponse } from '@asap-hub/model';
-
 import { css } from '@emotion/react';
 import { ReactNode } from 'react';
-
 import { rem, tabletScreen } from '../pixels';
 import { noop } from '../utils';
-import { Button, Paragraph, Headline3, Link } from '../atoms';
+import { Button, Link } from '../atoms';
 import EditModal from './EditModal';
-import { crossIcon } from '../icons';
+import { FormSection } from '../molecules';
 
 const mobileQuery = `@media (max-width: ${tabletScreen.width - 1}px)`;
 const buttonStyles = css({
@@ -17,19 +15,9 @@ const buttonStyles = css({
   },
 });
 
-const titleStyles = css({
-  display: 'flex',
-  justifyContent: 'space-between',
-  marginTop: rem(12),
-});
-
-const descriptionStyles = css({
-  padding: `0 0 ${rem(24)}`,
-});
-
 const footerStyles = css({
+  marginTop: rem(32),
   display: 'flex',
-  padding: `${rem(33)} 0 ${rem(12)}`,
   gap: rem(24),
   justifyContent: 'flex-end',
   [mobileQuery]: {
@@ -64,30 +52,17 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
 }) => (
   <EditModal
     title={title}
+    description={description}
     backHref={backHref}
     dirty={dirty}
-    noHeader
     onSave={onSave}
     validate={validate}
   >
     {({ isSaving }, asyncWrapper) => (
-      <div>
-        <header>
-          <div css={titleStyles}>
-            <Headline3>{title}</Headline3>
-            <div>
-              <Link small buttonStyle href={backHref}>
-                {crossIcon}
-              </Link>
-            </div>
-          </div>
-          {description && (
-            <Paragraph accent="lead" styles={descriptionStyles}>
-              {description}
-            </Paragraph>
-          )}
-        </header>
-        {children ? <div>{children({ isSaving }, asyncWrapper)}</div> : null}
+      <>
+        <FormSection>
+          {children ? children({ isSaving }, asyncWrapper) : null}
+        </FormSection>
         <footer css={[footerStyles]}>
           <div css={buttonStyles}>
             <Link href={backHref} buttonStyle fullWidth noMargin>
@@ -106,7 +81,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
             </Button>
           </div>
         </footer>
-      </div>
+      </>
     )}
   </EditModal>
 );

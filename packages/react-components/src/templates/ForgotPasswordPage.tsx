@@ -9,7 +9,7 @@ import {
   mobileScreen,
   largeDesktopScreen,
   formTargetWidth,
-  perRem,
+  rem,
 } from '../pixels';
 import { contentSidePaddingWithoutNavigation } from '../layout';
 import { lead } from '../colors';
@@ -41,11 +41,11 @@ const styles = css({
 });
 
 const textStyles = css({
-  maxWidth: `${640 / perRem}em`,
+  maxWidth: rem(640),
 });
 
 const formStyles = css({
-  width: `${formTargetWidth / perRem}em`,
+  width: rem(formTargetWidth),
   maxWidth: '100%',
   display: 'grid',
   justifySelf: 'center',

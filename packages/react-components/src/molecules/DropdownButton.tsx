@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { css, Theme } from '@emotion/react';
 import { Anchor, Button } from '../atoms';
-import { perRem, mobileScreen, formTargetWidth } from '../pixels';
+import { rem, mobileScreen, formTargetWidth } from '../pixels';
 
 import {
   paper,
@@ -34,7 +34,7 @@ const containerStyles = css({
 const menuWrapperStyles = css({
   position: 'relative',
   display: 'flex',
-  maxWidth: `${formTargetWidth / perRem}em`,
+  maxWidth: rem(formTargetWidth),
 });
 
 const menuContainerStyles = (customMenuWidth?: number) =>
@@ -43,7 +43,7 @@ const menuContainerStyles = (customMenuWidth?: number) =>
     display: 'none',
     overflow: 'hidden',
     zIndex: 1,
-    minWidth: `${300 / perRem}em`,
+    minWidth: rem(300),
 
     width: '100%',
     top: 0,
@@ -54,11 +54,11 @@ const menuContainerStyles = (customMenuWidth?: number) =>
 
     flexDirection: 'column',
 
-    padding: `${6 / perRem}em 0`,
+    padding: `${rem(6)} 0`,
     ...(customMenuWidth
       ? {
-          minWidth: `${customMenuWidth / perRem}em`,
-          width: `${customMenuWidth / perRem}em`,
+          minWidth: rem(customMenuWidth),
+          width: rem(customMenuWidth),
         }
       : {}),
   });
@@ -83,8 +83,8 @@ const listStyles = css({
 
 const itemContentStyles = css({
   display: 'flex',
-  columnGap: `${15 / perRem}rem`,
-  padding: `${12 / perRem}rem ${16 / perRem}rem`,
+  columnGap: `${rem(15)}`,
+  padding: `${rem(12)} ${rem(16)}`,
   fontWeight: 'normal',
 });
 
@@ -171,7 +171,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
   const trimmedListStyles = dropdownHeight
     ? css({
         overflowY: 'auto',
-        maxHeight: `${dropdownHeight / perRem}em`,
+        maxHeight: rem(dropdownHeight),
       })
     : null;
 

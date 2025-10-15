@@ -30,7 +30,7 @@ import DropdownButton, {
   ItemType,
   ItemData,
 } from '../molecules/DropdownButton';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const ITEM_HEIGHT = 48;
 const DROPDOWN_TOP_PADDING = 5;
@@ -38,7 +38,7 @@ const NUM_ITEMS_TO_SHOW = 8.5;
 
 const iconStyles = css({
   display: 'flex',
-  marginRight: `${8 / perRem}em`,
+  marginRight: rem(8),
 });
 
 export type Association =
@@ -64,8 +64,8 @@ const itemStyles = css({
   display: 'grid',
   width: '100%',
   gridTemplateColumns: 'min-content 1fr min-content',
-  gridGap: `${12 / perRem}em`,
-  fontSize: `${17 / perRem}em`,
+  gridGap: rem(12),
+  fontSize: rem(17),
   lineHeight: `${24 / 17}em`,
   textAlign: 'left',
   textWrap: 'wrap',

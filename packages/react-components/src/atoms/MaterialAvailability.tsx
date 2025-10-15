@@ -2,13 +2,13 @@ import { eventMaterialTypes } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { charcoal, tin } from '../colors';
 import { crossSmallIcon, tickSmallIcon } from '../icons';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 const baseStyles = css({
   display: 'grid',
   gridAutoFlow: 'column',
   gridTemplateColumns: 'min-content',
-  columnGap: `${3 / perRem}em`,
+  columnGap: rem(3),
 });
 
 const availableStyles = css({

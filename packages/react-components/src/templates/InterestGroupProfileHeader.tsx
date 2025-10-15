@@ -5,7 +5,7 @@ import { network } from '@asap-hub/routing';
 import { InterestGroupResponse, InterestGroupTools } from '@asap-hub/model';
 
 import { paper, lead, steel } from '../colors';
-import { mobileScreen, perRem, tabletScreen } from '../pixels';
+import { mobileScreen, rem, tabletScreen } from '../pixels';
 import {
   contentSidePaddingWithNavigation,
   networkPageLayoutPaddingStyle,
@@ -44,7 +44,7 @@ const controlsStyles = css({
 const titleStyle = css({
   display: 'flex',
   flexFlow: 'row',
-  gap: `${15 / perRem}em`,
+  gap: rem(15),
   alignItems: 'center',
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     flexFlow: 'column',
@@ -56,8 +56,8 @@ const titleStyle = css({
 const contactStyles = css({
   display: 'flex',
   flexFlow: 'row',
-  gap: `${8 / perRem}em`,
-  margin: `${12 / perRem}em 0`,
+  gap: rem(8),
+  margin: `${rem(12)} 0`,
 });
 
 const buttonStyles = css({
@@ -69,7 +69,7 @@ const buttonStyles = css({
 
 const toolsStyles = css({
   display: 'flex',
-  gap: `${12 / perRem}em`,
+  gap: rem(12),
   [`@media (max-width: ${mobileScreen.max - 1}px)`]: {
     flexFlow: 'column',
     gap: 0,
@@ -160,9 +160,9 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
               <div css={{ display: 'flex' }}>
                 <div
                   css={{
-                    paddingRight: `${15 / perRem}em`,
-                    paddingTop: `${20 / perRem}em`,
-                    marginLeft: `${4 / perRem}em`,
+                    paddingRight: rem(15),
+                    paddingTop: rem(20),
+                    marginLeft: rem(4),
                     display: 'grid',
                   }}
                 >
@@ -171,8 +171,8 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
                 <div
                   css={{
                     flexGrow: 1,
-                    paddingRight: `${30 / perRem}em`,
-                    paddingTop: `${20 / perRem}em`,
+                    paddingRight: rem(30),
+                    paddingTop: rem(20),
                   }}
                 >
                   <Link href={groupTeamsHref}>
@@ -184,8 +184,8 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
           </div>
           <div
             css={{
-              paddingTop: `${20 / (13.6 / perRem) / perRem}em`,
-              fontSize: `${13.6 / perRem}em`,
+              paddingTop: `${20 / 13.6}em`,
+              fontSize: rem(13.6),
               color: lead.rgb,
             }}
           >

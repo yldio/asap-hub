@@ -1,32 +1,25 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { Button, pixels, TextArea } from '@asap-hub/react-components';
+import {
+  FormSection,
+  Button,
+  pixels,
+  TextArea,
+  colors,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useState, Fragment } from 'react';
 import { addIcon, binIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import EditUserModal from './EditUserModal';
 
 const { rem } = pixels;
 
-const containerStyles = css({
-  [mobileQuery]: {
-    display: 'unset',
-  },
-  display: 'flex',
-  paddingBottom: rem(8),
-  flexDirection: 'column',
-});
-
-const rowStyles = css({
-  marginTop: rem(36),
-  marginBottom: rem(12),
-});
-
-const headerStyles = css({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+const thinLineStyles = css({
+  width: '100%',
+  height: '1px',
+  marginTop: rem(48),
+  marginBottom: rem(48),
+  borderTop: `1px solid ${colors.steel.rgb}`,
 });
 
 const addButtonStyles = css({
@@ -83,30 +76,29 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
       dirty={checkDirty()}
     >
       {({ isSaving }) => (
-        <div css={containerStyles}>
-          {newQuestions.map((question, index) => (
-            <div css={rowStyles} key={`question-${index}`}>
-              <div css={headerStyles}>
-                <p>
-                  <strong>Question {index + 1}</strong> {optional}
-                </p>
-                <div css={{ margin: 0 }}>
+        <>
+          {newQuestions.map((question, index, arr) => (
+            <Fragment key={`question-${index}`}>
+              <FormSection
+                secondaryTitle={`Question ${index + 1} ${optional}`}
+                headerDecorator={
                   <Button onClick={onRemove(index)} small>
                     <span css={{ display: 'inline-flex' }}>{binIcon}</span>
                   </Button>
-                </div>
-              </div>
-              <TextArea
-                enabled={!isSaving}
-                value={question}
-                onChange={onChangeValue(index)}
-                maxLength={250}
-                getValidationMessage={() => 'Please enter a question'}
-                placeholder={
-                  'Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?'
                 }
-              />
-            </div>
+              >
+                <TextArea
+                  enabled={!isSaving}
+                  value={question}
+                  onChange={onChangeValue(index)}
+                  maxLength={250}
+                  placeholder={
+                    'Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?'
+                  }
+                />
+              </FormSection>
+              {index !== arr.length - 1 && <div css={thinLineStyles} />}
+            </Fragment>
           ))}
           {newQuestions.length < 5 ? (
             <div css={addButtonStyles}>
@@ -126,7 +118,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
               </Button>
             </div>
           ) : undefined}
-        </div>
+        </>
       )}
     </EditUserModal>
   );

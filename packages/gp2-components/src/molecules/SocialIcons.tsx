@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { Link, pixels, colors } from '@asap-hub/react-components';
 import { socialIconsMap } from '../utils';
 
-const { perRem } = pixels;
+const { rem } = pixels;
 const { tin, lead } = colors;
 
 const ROW_GAP = 12;
@@ -11,13 +11,13 @@ const ROW_GAP = 12;
 const socialContainerStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
-  paddingRight: `-${ROW_GAP / perRem}em`,
-  paddingTop: `${15 / perRem}em`,
-  paddingBottom: `${17 / perRem}em`,
+  paddingRight: `-${rem(ROW_GAP)}`,
+  paddingTop: rem(15),
+  paddingBottom: rem(17),
 });
 
 const iconStyles = css({
-  paddingRight: `${ROW_GAP / perRem}em`,
+  paddingRight: rem(ROW_GAP),
   svg: {
     width: '24px',
     height: '24px',

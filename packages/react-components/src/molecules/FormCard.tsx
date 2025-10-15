@@ -1,43 +1,37 @@
-import { css, SerializedStyles } from '@emotion/react';
-import { Card, Headline3, Paragraph } from '../atoms';
-import { paddingStyles } from '../card';
-import { perRem } from '../pixels';
+import { css } from '@emotion/react';
+import { Card } from '../atoms';
+import { rem } from '../pixels';
+import FormSection from './FormSection';
 
 export type FormCardProps = {
-  title: string;
+  title?: string;
   description?: string | React.ReactNode;
-  overrideStyles?: SerializedStyles;
+  headerDecorator?: React.ReactNode;
 };
 
 const cardStyles = css({
-  paddingTop: `${14 / perRem}em`,
-});
-
-const descriptionStyles = css({
-  paddingTop: 0,
-  paddingBottom: 0,
-  'p:first-of-type': {
-    marginTop: 0,
-    marginBottom: `${10 / perRem}em`,
-  },
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const FormCard: React.FC<FormCardProps> = ({
   children,
   title,
   description,
-  overrideStyles,
+  headerDecorator,
 }) => (
-  <Card padding={false} overrideStyles={cardStyles} title={title}>
-    <div role="presentation" css={[paddingStyles, overrideStyles]}>
-      <Headline3 noMargin>{title}</Headline3>
-    </div>
-    {!!description && (
-      <div css={[paddingStyles, descriptionStyles]}>
-        <Paragraph accent="lead">{description}</Paragraph>
-      </div>
-    )}
-    <div css={[paddingStyles]}>{children}</div>
+  <Card
+    padding={false}
+    stroke={false}
+    shadow={true}
+    overrideStyles={css([cardStyles])}
+  >
+    <FormSection
+      title={title}
+      headerDecorator={headerDecorator}
+      description={description}
+    >
+      {children}
+    </FormSection>
   </Card>
 );
 

@@ -12,7 +12,7 @@ import githubSanitizationSchema from 'hast-util-sanitize/lib/github';
 
 import { parseComponents, parseTagNames } from '../utils/parsing';
 import { Headline2 } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { charcoal, lead } from '../colors';
 
 interface RichTextProps {
@@ -36,7 +36,7 @@ const styles = css({
     padding: 0,
   },
   '.toc-level-2': {
-    paddingLeft: `${18 / perRem}em`,
+    paddingLeft: rem(18),
   },
   'p > strong, b, h4, h5, h6': {
     color: charcoal.rgb,

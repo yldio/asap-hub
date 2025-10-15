@@ -3,7 +3,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
 import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
 import { alumniBadgeIcon } from '../icons';
@@ -16,13 +16,13 @@ const containerStyles = css({
   padding: 0,
   display: 'grid',
 
-  gridTemplateColumns: `${48 / perRem}em 1fr`,
-  gridColumnGap: `${18 / perRem}em`,
+  gridTemplateColumns: `${rem(48)} 1fr`,
+  gridColumnGap: rem(18),
   gridAutoFlow: 'row dense',
 });
 const multiColumnContainerStyles = css({
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: `${48 / perRem}em 1fr ${48 / perRem}em 1fr`,
+    gridTemplateColumns: `${rem(48)} 1fr ${rem(48)} 1fr`,
   },
 });
 
@@ -36,8 +36,8 @@ const nameStyles = css({
 });
 
 const badgeStyles = css({
-  lineHeight: `${8 / perRem}em`,
-  marginLeft: `${8 / perRem}em`,
+  lineHeight: rem(8),
+  marginLeft: rem(8),
 });
 
 const addToColumnStyles = css({
@@ -52,11 +52,11 @@ const multiColumnAddToColumnStyles = css({
 });
 const textStyles = css({
   color: lead.rgb,
-  minHeight: `${24 / perRem}em`,
+  minHeight: rem(24),
 });
 
 const labStyles = css({
-  padding: `0 0 ${24 / perRem}em`,
+  padding: `0 0 ${rem(24)}`,
 });
 
 interface MembersListProps {

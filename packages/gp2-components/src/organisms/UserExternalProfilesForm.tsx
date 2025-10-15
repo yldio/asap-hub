@@ -1,34 +1,18 @@
 import { gp2 } from '@asap-hub/model';
 import {
-  Headline3,
-  Headline4,
   LabeledTextField,
   lead,
-  pixels,
-  Paragraph,
-  Subtitle,
+  FormSection,
 } from '@asap-hub/react-components';
 import { urlExpression, USER_SOCIAL_NOT_URL } from '@asap-hub/validation';
 import { css, Interpolation, Theme } from '@emotion/react';
 import { ComponentProps, FunctionComponent } from 'react';
 import { socialIconsMap } from '../utils';
 
-const { rem } = pixels;
 export const baseUrls = {
   orcid: 'https://orcid.org/',
   researcherId: 'https://researcherid.com/rid/',
 };
-
-const headerStyles = css({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-});
-
-const sectionStyles = css({
-  marginTop: rem(36),
-});
 
 const iconStyles = css({
   width: 24,
@@ -160,39 +144,33 @@ const UserExternalProfilesForm: React.FC<UserExternalProfilesFormProps> = ({
 
   return (
     <>
-      <div css={headerStyles}>
-        <Headline3>External Profiles</Headline3>
-      </div>
-
-      <>
-        <header css={sectionStyles}>
-          <Subtitle styleAsHeading={4}>Research Networks</Subtitle>
-          <Paragraph accent="lead">
-            Share external profiles that are relevant to your work.
-          </Paragraph>
-        </header>
-        {researchNetworks.map(({ key, Icon, iconCSS, ...props }) => (
-          <LabeledTextField
-            key={key}
-            subtitle="(optional)"
-            labelIndicator={
-              <span css={[iconStyles, iconCSS]}>
-                <Icon color={lead.hex} />
-              </span>
-            }
-            enabled={!isSaving}
-            value={newSocial?.[key] ?? (social?.[key] || '')}
-            onChange={onChangeValue(key)}
-            {...props}
-          />
-        ))}
-
-        <header css={sectionStyles}>
-          <Headline4 styleAsHeading={4}>Social Networks</Headline4>
-          <Paragraph accent="lead">
-            Share external profiles that are relevant to your profession.
-          </Paragraph>
-        </header>
+      <FormSection
+        title="External Profiles"
+        secondaryTitle="Research Networks"
+        description="Share external profiles that are relevant to your work."
+      >
+        <>
+          {researchNetworks.map(({ key, Icon, iconCSS, ...props }) => (
+            <LabeledTextField
+              key={key}
+              subtitle="(optional)"
+              labelIndicator={
+                <span css={[iconStyles, iconCSS]}>
+                  <Icon color={lead.hex} />
+                </span>
+              }
+              enabled={!isSaving}
+              value={newSocial?.[key] ?? (social?.[key] || '')}
+              onChange={onChangeValue(key)}
+              {...props}
+            />
+          ))}
+        </>
+      </FormSection>
+      <FormSection
+        secondaryTitle="Social Networks"
+        description="Share external profiles that are relevant to your profession."
+      >
         {socialNetworks.map(({ key, Icon, iconCSS, ...props }) => (
           <LabeledTextField
             key={key}
@@ -208,7 +186,7 @@ const UserExternalProfilesForm: React.FC<UserExternalProfilesFormProps> = ({
             {...props}
           />
         ))}
-      </>
+      </FormSection>
     </>
   );
 };

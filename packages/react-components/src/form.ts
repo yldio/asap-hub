@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react';
 import { ember, fern, steel } from './colors';
-import { lineHeight, perRem } from './pixels';
+import { lineHeight, rem } from './pixels';
 import { themes } from './theme';
 
 export const borderWidth = 1;
@@ -26,17 +26,17 @@ export const styles = {
   ...themes.light,
   boxSizing: 'border-box',
   width: '100%',
-  paddingLeft: `${paddingLeftRight / perRem}em`,
-  paddingRight: `${paddingLeftRight / perRem}em`,
-  paddingTop: `${textPaddingTop / perRem}em`,
-  paddingBottom: `${textPaddingBottom / perRem}em`,
+  paddingLeft: rem(paddingLeftRight),
+  paddingRight: rem(paddingLeftRight),
+  paddingTop: rem(textPaddingTop),
+  paddingBottom: rem(textPaddingBottom),
 
-  lineHeight: `${lineHeight / perRem}em`,
+  lineHeight: rem(lineHeight),
 
   outline: 'none',
 
   borderStyle: 'solid',
-  borderWidth: `${borderWidth / perRem}em`,
+  borderWidth: rem(borderWidth),
   borderColor: steel.rgb,
   ':focus': {
     borderColor: fern.rgb,
@@ -48,10 +48,7 @@ export const validationMessageStyles = {
     display: 'none',
   },
   whiteSpace: 'pre-wrap',
-
-  paddingTop: `${6 / perRem}em`,
-  paddingBottom: `${6 / perRem}em`,
-
+  paddingTop: rem(16),
   color: ember.rgb,
   borderColor: ember.rgb,
 } as const;

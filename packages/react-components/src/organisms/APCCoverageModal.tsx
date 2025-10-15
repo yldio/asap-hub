@@ -11,7 +11,7 @@ import { Button, Headline3 } from '../atoms';
 import { paddingStyles } from '../card';
 import { crossIcon, MoneyIcon } from '../icons';
 import { Modal } from '../molecules';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { mobileScreen, rem } from '../pixels';
 
 const headerStyles = css(paddingStyles, {
   paddingBottom: 0,
@@ -29,7 +29,7 @@ const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
 
 const buttonContainerStyles = css({
   display: 'grid',
-  columnGap: `${30 / perRem}em`,
+  columnGap: rem(30),
   gridTemplateRows: 'max-content 12px max-content',
   [buttonMediaQuery]: {
     gridTemplateColumns: 'max-content max-content',
@@ -251,7 +251,6 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                         onChange={onChange}
                         onBlur={onBlur}
                         enabled={!isSubmitting}
-                        noPadding
                       />
                     </div>
                   )}
@@ -322,7 +321,6 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                           onChange={onChange}
                           onBlur={onBlur}
                           enabled={!isSubmitting}
-                          noPadding
                         />
                       </div>
                     )}
@@ -347,7 +345,6 @@ const APCCoverageModal: React.FC<APCCoverageModalProps> = ({
                         onChange={onChange}
                         onBlur={onBlur}
                         enabled={!isSubmitting}
-                        noPadding
                       />
                     )}
                   />

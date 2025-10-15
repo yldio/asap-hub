@@ -3,7 +3,7 @@ import { NewsResponse, NewsType, TutorialsResponse } from '@asap-hub/model';
 
 import { Pill, Display, Card, Caption, Headline3, Paragraph } from '../atoms';
 import { RichText } from '../organisms';
-import { perRem, rem } from '../pixels';
+import { rem } from '../pixels';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { formatDate } from '../date';
 import { ExternalLink, TagList } from '../molecules';
@@ -16,17 +16,17 @@ const containerStyles = css({
 });
 
 const descriptionStyles = css({
-  marginTop: `${12 / perRem}em`,
-  marginBottom: `${24 / perRem}em`,
+  marginTop: rem(12),
+  marginBottom: rem(24),
 });
 
 const footerContainer = css({
-  marginTop: `${30 / perRem}em`,
+  marginTop: rem(30),
 });
 
 const richTextContainer = css({
-  marginTop: `${12 / perRem}em`,
-  marginBottom: `${24 / perRem}em`,
+  marginTop: rem(12),
+  marginBottom: rem(24),
 });
 
 type NewsDetailsPageProps = (

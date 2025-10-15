@@ -96,9 +96,11 @@ describe('UserPositions', () => {
         .fn()
         .mockResolvedValue([position.institution]),
     });
-    const secondary = screen.getByRole('heading', {
-      name: /Secondary Position/i,
-    }).parentElement?.parentElement as HTMLElement;
+    const secondary = screen
+      .getByRole('heading', {
+        name: /Secondary Position/i,
+      })
+      .closest('section') as HTMLElement;
 
     userEvent.click(
       within(secondary).getByRole('textbox', {
@@ -125,9 +127,11 @@ describe('UserPositions', () => {
       positions,
       onChange,
     });
-    const secondary = screen.getByRole('heading', {
-      name: /Secondary Position/i,
-    }).parentElement?.parentElement as HTMLElement;
+    const secondary = screen
+      .getByRole('heading', {
+        name: /Secondary Position/i,
+      })
+      .closest('section') as HTMLElement;
     userEvent.type(
       within(secondary).getByRole('textbox', { name: /Department/i }),
       position.department,
@@ -150,9 +154,11 @@ describe('UserPositions', () => {
       positions,
       onChange,
     });
-    const secondary = screen.getByRole('heading', {
-      name: /Secondary Position/i,
-    }).parentElement?.parentElement as HTMLElement;
+    const secondary = screen
+      .getByRole('heading', {
+        name: /Secondary Position/i,
+      })
+      .closest('section') as HTMLElement;
     userEvent.type(
       within(secondary).getByRole('textbox', { name: /Role/i }),
       position.role,

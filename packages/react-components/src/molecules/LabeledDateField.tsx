@@ -4,7 +4,7 @@ import { ComponentProps } from 'react';
 
 import { Label, Paragraph, TextField } from '../atoms';
 import { lead } from '../colors';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { noop } from '../utils';
 
 type LabeledDateFieldProps = {
@@ -22,7 +22,7 @@ type LabeledDateFieldProps = {
 >;
 
 const subtitleStyles = css({
-  paddingLeft: `${6 / perRem}em`,
+  paddingLeft: `${rem(6)}`,
 });
 
 const descriptionStyles = css({
@@ -50,7 +50,7 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
   onChange = noop,
   ...dateFieldProps
 }) => (
-  <div css={{ paddingBottom: `${18 / perRem}em` }}>
+  <div>
     <Label
       forContent={(id) => (
         <TextField
@@ -63,7 +63,7 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
         />
       )}
     >
-      <Paragraph>
+      <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span> <br />
         <span css={descriptionStyles}>{description}</span>

@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { CRNTagSearchEntities } from '@asap-hub/algolia';
 
 import { Display, MultiSelect, Paragraph } from '../atoms';
-import { perRem, rem } from '../pixels';
+import { rem } from '../pixels';
 import { paper, steel } from '../colors';
 import {
   contentSidePaddingWithNavigation,
@@ -14,12 +14,12 @@ import { searchIcon } from '../icons';
 import { noop } from '../utils';
 
 const visualHeaderStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)}`,
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 const textStyles = css({
-  maxWidth: `${610 / perRem}em`,
+  maxWidth: rem(610),
 });
 
 const controlsStyles = css({

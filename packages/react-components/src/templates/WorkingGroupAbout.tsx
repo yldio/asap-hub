@@ -5,7 +5,7 @@ import { charcoal } from '../colors';
 import { createMailTo } from '../mail';
 import { Collapsible, CtaContactSection, TagList } from '../molecules';
 import { DeliverablesCard, WorkingGroupMembers, RichText } from '../organisms';
-import { perRem, smallDesktopScreen } from '../pixels';
+import { rem, smallDesktopScreen } from '../pixels';
 
 type WorkingGroupAboutProps = {
   readonly showCollaborationCard: boolean;
@@ -23,19 +23,19 @@ type WorkingGroupAboutProps = {
 const containerStyles = css({
   display: 'flex',
   flexFlow: 'column',
-  gap: `${33 / perRem}em`,
+  gap: rem(33),
 });
 
 const tagListStyle = css({
-  marginTop: `${12 / perRem}em`,
-  marginBottom: `${24 / perRem}em`,
+  marginTop: rem(12),
+  marginBottom: rem(24),
 });
 
 const getInTouchStyles = css({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  gap: `${24 / perRem}em`,
+  gap: rem(24),
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
     flexDirection: 'row',
   },

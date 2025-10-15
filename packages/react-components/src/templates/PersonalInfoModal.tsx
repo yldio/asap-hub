@@ -1,6 +1,7 @@
 import { UserDegree, UserPatchRequest } from '@asap-hub/model';
 import { useState } from 'react';
 import {
+  FormSection,
   LabeledDropdown,
   LabeledTextField,
   LabeledTypeahead,
@@ -92,7 +93,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
       }
     >
       {({ isSaving }) => (
-        <div>
+        <FormSection>
           <LabeledTextField
             title="First name"
             subtitle="(required)"
@@ -215,7 +216,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             value={newCity}
             enabled={!isSaving}
           />
-        </div>
+        </FormSection>
       )}
     </EditUserModal>
   );

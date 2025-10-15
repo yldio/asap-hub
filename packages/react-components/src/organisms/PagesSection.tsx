@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { PageResponse } from '@asap-hub/model';
 
 import PageCard from './PageCard';
-import { perRem, smallDesktopScreen } from '../pixels';
+import { rem, smallDesktopScreen } from '../pixels';
 import { Headline2 } from '../atoms';
 
 type PagesProps = {
@@ -12,9 +12,9 @@ type PagesProps = {
 
 const gridContainerStyles = css({
   display: 'grid',
-  gridGap: `${36 / perRem}em`,
+  gridGap: rem(36),
   gridTemplateColumns: '1fr 1fr',
-  marginTop: `${24 / perRem}em`,
+  marginTop: rem(24),
 
   [`@media (max-width: ${smallDesktopScreen.min}px)`]: {
     gridTemplateColumns: '1fr',

@@ -1,10 +1,12 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { LabeledMultiSelect, Modal } from '@asap-hub/react-components';
+import {
+  LabeledMultiSelect,
+  Modal,
+  FormCard,
+} from '@asap-hub/react-components';
 
 import { useState } from 'react';
-import { formContainer, modalStyles, padding24Styles } from '../layout';
 import FilterModalFooter from '../molecules/FilterModalFooter';
-import FilterModalHeader from '../molecules/FilterModalHeader';
 
 const { userRegions } = gp2Model;
 
@@ -75,11 +77,19 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
     selectedExpertise.length +
     selectedProjects.length +
     selectedWorkingGroups.length;
+
+  const ModalDescription = () => (
+    <>
+      Apply filters to narrow down your search results. You currently have{' '}
+      <strong>{numberOfFilter}</strong> filter{numberOfFilter === 1 ? '' : 's'}{' '}
+      selected.
+    </>
+  );
+
   return (
     <Modal padding={false}>
-      <div css={modalStyles}>
-        <FilterModalHeader numberOfFilter={numberOfFilter} />
-        <div css={[formContainer, padding24Styles]}>
+      <>
+        <FormCard title="Filters" description={<ModalDescription />}>
           <LabeledMultiSelect
             title={'Expertise / Interests'}
             placeholder="Start typing…"
@@ -124,20 +134,20 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
               setSelectedProjects([...newValues]);
             }}
           />
-        </div>
-        <FilterModalFooter
-          onApply={() => {
-            onApplyClick({
-              regions: selectedRegions,
-              tags: selectedExpertise.map(({ value }) => value),
-              projects: selectedProjects.map(({ value }) => value),
-              workingGroups: selectedWorkingGroups.map(({ value }) => value),
-            });
-          }}
-          onClose={onBackClick}
-          onReset={resetFilters}
-        />
-      </div>
+          <FilterModalFooter
+            onApply={() => {
+              onApplyClick({
+                regions: selectedRegions,
+                tags: selectedExpertise.map(({ value }) => value),
+                projects: selectedProjects.map(({ value }) => value),
+                workingGroups: selectedWorkingGroups.map(({ value }) => value),
+              });
+            }}
+            onClose={onBackClick}
+            onReset={resetFilters}
+          />
+        </FormCard>
+      </>
     </Modal>
   );
 };

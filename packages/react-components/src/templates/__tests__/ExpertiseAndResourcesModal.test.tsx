@@ -64,7 +64,7 @@ it('triggers the save function', async () => {
     'example description',
   );
 
-  userEvent.type(getByLabelText(/tags/i), '5');
+  userEvent.type(getByLabelText(/tags\s*\(required\)/i), '5');
   userEvent.tab();
 
   userEvent.click(getByText('Save'));
@@ -110,7 +110,7 @@ describe('tags selection', () => {
       <ExpertiseAndResourcesModal {...props} suggestions={mapTags(['abc'])} />,
     );
 
-    userEvent.type(getByLabelText(/tags/i), 'def');
+    userEvent.type(getByLabelText(/tags\s*\(required\)/i), 'def');
     expect(getByText('Sorry, No current tags match "def"')).toBeVisible();
   });
 
@@ -123,7 +123,7 @@ describe('tags selection', () => {
         onSave={handleSave}
       />,
     );
-    const input = getByLabelText(/tags/i);
+    const input = getByLabelText(/tags\s*\(required\)/i);
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).not.toEqual(
       ember.rgb,
     );
@@ -145,7 +145,7 @@ describe('tags selection', () => {
       />,
     );
 
-    const input = getByLabelText(/tags/i);
+    const input = getByLabelText(/tags\s*\(required\)/i);
     userEvent.click(input);
     userEvent.type(input, '4');
     userEvent.type(input, `{enter}`);

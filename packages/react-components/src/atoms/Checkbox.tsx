@@ -1,7 +1,7 @@
 import { css, Theme } from '@emotion/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { fern, lead, pine, steel } from '../colors';
 import { noop } from '../utils';
 import { tickIcon } from '../icons';
@@ -13,17 +13,17 @@ const checkboxStyles = ({
   css({
     flexShrink: 0,
     boxSizing: 'border-box',
-    width: `${24 / perRem}em`,
-    height: `${24 / perRem}em`,
-    marginRight: `${12 / perRem}em`,
-    marginTop: `${12 / perRem}em`,
-    marginBottom: `${12 / perRem}em`,
+    width: rem(24),
+    height: rem(24),
+    marginRight: rem(12),
+    marginTop: rem(12),
+    marginBottom: rem(12),
 
     appearance: 'none',
     outline: 'none',
     borderRadius: 0,
     borderStyle: 'solid',
-    borderWidth: `${1 / perRem}em`,
+    borderWidth: rem(1),
     borderColor: steel.rgb,
 
     ':enabled:hover, :enabled:focus': {
@@ -39,7 +39,7 @@ const checkboxStyles = ({
         )})`,
         display: 'flex',
         justifyContent: 'center',
-        lineHeight: `${24 / perRem}em`,
+        lineHeight: rem(24),
       },
 
       ':disabled': {

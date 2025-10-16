@@ -25,6 +25,7 @@
     "@asap-hub/errors": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/model": "workspace:*",
+    "@asap-hub/server-common": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
     "@hapi/boom": "9.1.4",
     "@types/yargs": "17.0.5",

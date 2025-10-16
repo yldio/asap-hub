@@ -26,6 +26,7 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
+  teams.changeFieldControl('teamDescription', 'builtin', 'multipleLine', {});
   teams.moveField('teamType').afterField('teamId');
   teams.moveField('teamDescription').afterField('teamType');
 };

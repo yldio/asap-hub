@@ -28,6 +28,7 @@ import {
   TeamRole,
   TeamSupplementGrant,
   TeamTool,
+  TeamType,
   TeamUpdateDataObject,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
@@ -263,7 +264,7 @@ export const parseContentfulGraphQlTeamListItem = (
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
     projectTitle: item.projectTitle ?? '',
-    type: item.type ?? '',
+    teamType: (item.teamType as TeamType) ?? 'Discovery Team',
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     memberCount: numberOfMembers,
     labCount: labIds.size,
@@ -550,7 +551,7 @@ export const parseContentfulGraphQlTeam = (
     id: item.sys.id ?? '',
     grantId: item.grantId ?? undefined,
     teamId: item.teamId ?? undefined,
-    type: item.type ?? '',
+    teamType: (item.teamType as TeamType) ?? 'Discovery Team',
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
     projectTitle: item.projectTitle ?? '',

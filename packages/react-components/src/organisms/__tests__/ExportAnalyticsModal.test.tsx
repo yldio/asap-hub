@@ -2,8 +2,15 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { useFlags } from '@asap-hub/react-context';
 
 import ExportAnalyticsModal from '../ExportAnalyticsModal';
+
+jest.mock('@asap-hub/react-context', () => ({
+  useFlags: jest.fn(),
+}));
+
+const mockUseFlags = useFlags as jest.MockedFunction<typeof useFlags>;
 
 const renderModal = (children: ReactNode) =>
   render(<MemoryRouter>{children}</MemoryRouter>);
@@ -14,12 +21,25 @@ describe('ExportAnalyticsModal', () => {
     onDownload: jest.fn(),
   };
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Default: feature flag disabled
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest.fn().mockReturnValue(false),
+      enable: jest.fn(),
+      disable: jest.fn(),
+      reset: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+    });
+  });
+
   it('renders title, data range and metrics to export', () => {
     const { container } = renderModal(
       <ExportAnalyticsModal {...defaultProps} />,
     );
 
-    expect(container).toHaveTextContent(/Export XLSX/i);
+    expect(container).toHaveTextContent(/Download Multiple XLSX/i);
     expect(container).toHaveTextContent(/Select data range/i);
     expect(container).toHaveTextContent(/Select metrics to export/i);
   });
@@ -64,7 +84,7 @@ describe('ExportAnalyticsModal', () => {
       screen.getByRole('checkbox', { name: /Team Productivity/i }),
     );
 
-    const exportButton = screen.getByRole('button', { name: /export/i });
+    const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
     userEvent.click(exportButton);
     await waitFor(() => {
       expect(onDownload).toHaveBeenCalledWith(
@@ -79,7 +99,7 @@ describe('ExportAnalyticsModal', () => {
   it('the export button becomes enabled when user selects time range and at least one metric to export', async () => {
     renderModal(<ExportAnalyticsModal {...defaultProps} />);
 
-    const exportButton = screen.getByRole('button', { name: /export/i });
+    const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
     expect(exportButton).toBeDisabled();
 
     userEvent.click(screen.getByText(/Choose a data range/i));
@@ -98,7 +118,7 @@ describe('ExportAnalyticsModal', () => {
     renderModal(
       <ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />,
     );
-    const exportButton = screen.getByRole('button', { name: /export/i });
+    const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
 
     userEvent.click(screen.getByText(/Choose a data range/i));
     userEvent.click(screen.getByText(/This year/i));
@@ -140,7 +160,7 @@ describe('ExportAnalyticsModal', () => {
       screen.getByRole('checkbox', { name: /Speaker Diversity/i }),
     );
 
-    const exportButton = screen.getByRole('button', { name: /export/i });
+    const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
     userEvent.click(exportButton);
     await waitFor(() => {
       expect(onDownload).toHaveBeenCalledWith(
@@ -167,7 +187,7 @@ describe('ExportAnalyticsModal', () => {
     userEvent.click(
       screen.getByRole('checkbox', { name: /Team Productivity/i }),
     );
-    const exportButton = screen.getByRole('button', { name: /export/i });
+    const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
     userEvent.click(exportButton);
 
     expect(exportButton).toHaveTextContent('Exporting...');
@@ -179,7 +199,7 @@ describe('ExportAnalyticsModal', () => {
     ).toBeDisabled();
 
     await waitFor(() => {
-      expect(exportButton).toHaveTextContent('Export XLSX');
+      expect(exportButton).toHaveTextContent('Download XLSX');
       expect(exportButton).toBeEnabled();
     });
   });
@@ -285,118 +305,297 @@ describe('ExportAnalyticsModal', () => {
     );
 
     describe('when time range is "Last 12 months"', () => {
-      beforeEach(() => {
-        renderModal(<ExportAnalyticsModal {...defaultProps} />);
-        userEvent.click(screen.getByText(/Choose a data range/i));
-        userEvent.click(screen.getByText(/Last 12 months/i));
+      describe('without ANALYTICS_PHASE_TWO feature flag', () => {
+        beforeEach(() => {
+          mockUseFlags.mockReturnValue({
+            isEnabled: jest.fn().mockReturnValue(false),
+            enable: jest.fn(),
+            disable: jest.fn(),
+            reset: jest.fn(),
+            setCurrentOverrides: jest.fn(),
+            setEnvironment: jest.fn(),
+          });
+          renderModal(<ExportAnalyticsModal {...defaultProps} />);
+          userEvent.click(screen.getByText(/Choose a data range/i));
+          userEvent.click(screen.getByText(/Last 12 months/i));
+        });
+
+        it('shows RESOURCE & DATA SHARING section with all options', () => {
+          expect(
+            screen.getByText('RESOURCE & DATA SHARING'),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /User Productivity/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Team Productivity/i }),
+          ).toBeInTheDocument();
+        });
+
+        it('does not show Share Preliminary Findings option', () => {
+          expect(screen.getByText('COLLABORATION')).toBeInTheDocument();
+          expect(
+            screen.queryByRole('checkbox', {
+              name: /Share Preliminary Findings/i,
+            }),
+          ).not.toBeInTheDocument();
+        });
+
+        it('does not show LEADERSHIP & MEMBERSHIP section', () => {
+          expect(
+            screen.queryByText('LEADERSHIP & MEMBERSHIP'),
+          ).not.toBeInTheDocument();
+        });
+
+        it('shows ENGAGEMENT section without Meeting Rep Attendance', () => {
+          expect(screen.getByText('ENGAGEMENT')).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Speaker Diversity/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.queryByRole('checkbox', { name: /Meeting Rep Attendance/i }),
+          ).not.toBeInTheDocument();
+        });
+
+        it('does not show OPEN SCIENCE section', () => {
+          expect(screen.queryByText('OPEN SCIENCE')).not.toBeInTheDocument();
+          expect(
+            screen.queryByRole('checkbox', { name: /Preprint Compliance/i }),
+          ).not.toBeInTheDocument();
+          expect(
+            screen.queryByRole('checkbox', { name: /Publication Compliance/i }),
+          ).not.toBeInTheDocument();
+        });
       });
 
-      it('shows RESOURCE & DATA SHARING section with all options', () => {
-        expect(screen.getByText('RESOURCE & DATA SHARING')).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /User Productivity/i }),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /Team Productivity/i }),
-        ).toBeInTheDocument();
-      });
+      describe('with ANALYTICS_PHASE_TWO feature flag', () => {
+        beforeEach(() => {
+          mockUseFlags.mockReturnValue({
+            isEnabled: jest.fn().mockReturnValue(true),
+            enable: jest.fn(),
+            disable: jest.fn(),
+            reset: jest.fn(),
+            setCurrentOverrides: jest.fn(),
+            setEnvironment: jest.fn(),
+          });
+          renderModal(<ExportAnalyticsModal {...defaultProps} />);
+          userEvent.click(screen.getByText(/Choose a data range/i));
+          userEvent.click(screen.getByText(/Last 12 months/i));
+        });
 
-      it('shows COLLABORATION section with Share Preliminary Findings', () => {
-        expect(screen.getByText('COLLABORATION')).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /Share Preliminary Findings/i }),
-        ).toBeInTheDocument();
-      });
+        it('shows RESOURCE & DATA SHARING section with all options', () => {
+          expect(
+            screen.getByText('RESOURCE & DATA SHARING'),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /User Productivity/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Team Productivity/i }),
+          ).toBeInTheDocument();
+        });
 
-      it('does not show LEADERSHIP & MEMBERSHIP section', () => {
-        expect(
-          screen.queryByText('LEADERSHIP & MEMBERSHIP'),
-        ).not.toBeInTheDocument();
-      });
+        it('shows COLLABORATION section with Share Preliminary Findings', () => {
+          expect(screen.getByText('COLLABORATION')).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', {
+              name: /Share Preliminary Findings/i,
+            }),
+          ).toBeInTheDocument();
+        });
 
-      it('shows ENGAGEMENT section with Meeting Rep Attendance', () => {
-        expect(screen.getByText('ENGAGEMENT')).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /Speaker Diversity/i }),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /Meeting Rep Attendance/i }),
-        ).toBeInTheDocument();
-      });
+        it('does not show LEADERSHIP & MEMBERSHIP section', () => {
+          expect(
+            screen.queryByText('LEADERSHIP & MEMBERSHIP'),
+          ).not.toBeInTheDocument();
+        });
 
-      it('shows OPEN SCIENCE section with compliance options', () => {
-        expect(screen.getByText('OPEN SCIENCE')).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /Preprint Compliance/i }),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /Publication Compliance/i }),
-        ).toBeInTheDocument();
+        it('shows ENGAGEMENT section with Meeting Rep Attendance', () => {
+          expect(screen.getByText('ENGAGEMENT')).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Speaker Diversity/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Meeting Rep Attendance/i }),
+          ).toBeInTheDocument();
+        });
+
+        it('shows OPEN SCIENCE section with compliance options', () => {
+          expect(screen.getByText('OPEN SCIENCE')).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Preprint Compliance/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Publication Compliance/i }),
+          ).toBeInTheDocument();
+        });
       });
     });
 
     describe('when time range is "Since Hub Launch"', () => {
-      beforeEach(() => {
-        renderModal(<ExportAnalyticsModal {...defaultProps} />);
-        userEvent.click(screen.getByText(/Choose a data range/i));
-        userEvent.click(screen.getByText(/Since Hub Launch/i));
+      describe('without ANALYTICS_PHASE_TWO feature flag', () => {
+        beforeEach(() => {
+          mockUseFlags.mockReturnValue({
+            isEnabled: jest.fn().mockReturnValue(false),
+            enable: jest.fn(),
+            disable: jest.fn(),
+            reset: jest.fn(),
+            setCurrentOverrides: jest.fn(),
+            setEnvironment: jest.fn(),
+          });
+          renderModal(<ExportAnalyticsModal {...defaultProps} />);
+          userEvent.click(screen.getByText(/Choose a data range/i));
+          userEvent.click(screen.getByText(/Since Hub Launch/i));
+        });
+
+        it('shows some sections but not OPEN SCIENCE', () => {
+          expect(
+            screen.getByText('RESOURCE & DATA SHARING'),
+          ).toBeInTheDocument();
+          expect(screen.getByText('COLLABORATION')).toBeInTheDocument();
+          expect(
+            screen.getByText('LEADERSHIP & MEMBERSHIP'),
+          ).toBeInTheDocument();
+          expect(screen.getByText('ENGAGEMENT')).toBeInTheDocument();
+          expect(screen.queryByText('OPEN SCIENCE')).not.toBeInTheDocument();
+        });
+
+        it('shows LEADERSHIP & MEMBERSHIP with info text', () => {
+          expect(
+            screen.getByText(
+              'Leadership & Membership metrics can only be exported with their current status.',
+            ),
+          ).toBeInTheDocument();
+        });
+
+        it('shows basic LEADERSHIP & MEMBERSHIP options without Open Science Championship', () => {
+          expect(
+            screen.getByRole('checkbox', { name: /Working Groups/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Interest Groups/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.queryByRole('checkbox', {
+              name: /Open Science Championship/i,
+            }),
+          ).not.toBeInTheDocument();
+        });
+
+        it('does not show Preliminary Data Sharing option', () => {
+          expect(
+            screen.queryByRole('checkbox', {
+              name: /Share Preliminary Findings/i,
+            }),
+          ).not.toBeInTheDocument();
+        });
+
+        it('shows ENGAGEMENT section without Meeting Rep Attendance', () => {
+          expect(
+            screen.getByRole('checkbox', { name: /Speaker Diversity/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.queryByRole('checkbox', { name: /Meeting Rep Attendance/i }),
+          ).not.toBeInTheDocument();
+        });
+
+        it('does not show OPEN SCIENCE options', () => {
+          expect(
+            screen.queryByRole('checkbox', { name: /Preprint Compliance/i }),
+          ).not.toBeInTheDocument();
+          expect(
+            screen.queryByRole('checkbox', { name: /Publication Compliance/i }),
+          ).not.toBeInTheDocument();
+        });
       });
 
-      it('shows all sections including LEADERSHIP & MEMBERSHIP', () => {
-        expect(screen.getByText('RESOURCE & DATA SHARING')).toBeInTheDocument();
-        expect(screen.getByText('COLLABORATION')).toBeInTheDocument();
-        expect(screen.getByText('LEADERSHIP & MEMBERSHIP')).toBeInTheDocument();
-        expect(screen.getByText('ENGAGEMENT')).toBeInTheDocument();
-        expect(screen.getByText('OPEN SCIENCE')).toBeInTheDocument();
-      });
+      describe('with ANALYTICS_PHASE_TWO feature flag', () => {
+        beforeEach(() => {
+          mockUseFlags.mockReturnValue({
+            isEnabled: jest.fn().mockReturnValue(true),
+            enable: jest.fn(),
+            disable: jest.fn(),
+            reset: jest.fn(),
+            setCurrentOverrides: jest.fn(),
+            setEnvironment: jest.fn(),
+          });
+          renderModal(<ExportAnalyticsModal {...defaultProps} />);
+          userEvent.click(screen.getByText(/Choose a data range/i));
+          userEvent.click(screen.getByText(/Since Hub Launch/i));
+        });
 
-      it('shows LEADERSHIP & MEMBERSHIP with info text', () => {
-        expect(
-          screen.getByText(
-            'Leadership & Membership metrics can only be exported with their current status.',
-          ),
-        ).toBeInTheDocument();
-      });
+        it('shows all sections including LEADERSHIP & MEMBERSHIP', () => {
+          expect(
+            screen.getByText('RESOURCE & DATA SHARING'),
+          ).toBeInTheDocument();
+          expect(screen.getByText('COLLABORATION')).toBeInTheDocument();
+          expect(
+            screen.getByText('LEADERSHIP & MEMBERSHIP'),
+          ).toBeInTheDocument();
+          expect(screen.getByText('ENGAGEMENT')).toBeInTheDocument();
+          expect(screen.getByText('OPEN SCIENCE')).toBeInTheDocument();
+        });
 
-      it('shows all LEADERSHIP & MEMBERSHIP options', () => {
-        expect(
-          screen.getByRole('checkbox', { name: /Working Groups/i }),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /Interest Groups/i }),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /Open Science Championship/i }),
-        ).toBeInTheDocument();
-      });
+        it('shows LEADERSHIP & MEMBERSHIP with info text', () => {
+          expect(
+            screen.getByText(
+              'Leadership & Membership metrics can only be exported with their current status.',
+            ),
+          ).toBeInTheDocument();
+        });
 
-      it('shows Preliminary Data Sharing option', () => {
-        expect(
-          screen.getByRole('checkbox', { name: /Share Preliminary Findings/i }),
-        ).toBeInTheDocument();
-      });
+        it('shows all LEADERSHIP & MEMBERSHIP options', () => {
+          expect(
+            screen.getByRole('checkbox', { name: /Working Groups/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Interest Groups/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', {
+              name: /Open Science Championship/i,
+            }),
+          ).toBeInTheDocument();
+        });
 
-      it('shows all ENGAGEMENT options', () => {
-        expect(
-          screen.getByRole('checkbox', { name: /Speaker Diversity/i }),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /Meeting Rep Attendance/i }),
-        ).toBeInTheDocument();
-      });
+        it('shows Preliminary Data Sharing option', () => {
+          expect(
+            screen.getByRole('checkbox', {
+              name: /Share Preliminary Findings/i,
+            }),
+          ).toBeInTheDocument();
+        });
 
-      it('shows all OPEN SCIENCE options', () => {
-        expect(
-          screen.getByRole('checkbox', { name: /Preprint Compliance/i }),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByRole('checkbox', { name: /Publication Compliance/i }),
-        ).toBeInTheDocument();
+        it('shows all ENGAGEMENT options', () => {
+          expect(
+            screen.getByRole('checkbox', { name: /Speaker Diversity/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Meeting Rep Attendance/i }),
+          ).toBeInTheDocument();
+        });
+
+        it('shows all OPEN SCIENCE options', () => {
+          expect(
+            screen.getByRole('checkbox', { name: /Preprint Compliance/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByRole('checkbox', { name: /Publication Compliance/i }),
+          ).toBeInTheDocument();
+        });
       });
     });
 
     describe('when no time range is selected', () => {
-      it('shows all sections and options by default', () => {
+      it('shows all sections and options by default with feature flag enabled', () => {
+        mockUseFlags.mockReturnValue({
+          isEnabled: jest.fn().mockReturnValue(true),
+          enable: jest.fn(),
+          disable: jest.fn(),
+          reset: jest.fn(),
+          setCurrentOverrides: jest.fn(),
+          setEnvironment: jest.fn(),
+        });
         renderModal(<ExportAnalyticsModal {...defaultProps} />);
 
         expect(screen.getByText('RESOURCE & DATA SHARING')).toBeInTheDocument();
@@ -407,6 +606,14 @@ describe('ExportAnalyticsModal', () => {
       });
 
       it('disables all checkbox options until time range is selected', () => {
+        mockUseFlags.mockReturnValue({
+          isEnabled: jest.fn().mockReturnValue(true),
+          enable: jest.fn(),
+          disable: jest.fn(),
+          reset: jest.fn(),
+          setCurrentOverrides: jest.fn(),
+          setEnvironment: jest.fn(),
+        });
         renderModal(<ExportAnalyticsModal {...defaultProps} />);
 
         expect(

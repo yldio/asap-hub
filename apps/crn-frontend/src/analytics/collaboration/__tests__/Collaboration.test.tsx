@@ -14,7 +14,6 @@ import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
   PreliminaryDataSharingDataObject,
-  SortTeamCollaboration,
   SortUserCollaboration,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
@@ -38,6 +37,7 @@ import {
   getUserCollaborationPerformance,
   getPreliminaryDataSharing,
 } from '../api';
+import { useTeamCollaborationQuery } from '../hooks/use-team-collaboration-query';
 import Collaboration from '../Collaboration';
 import { useAnalyticsSharingPrelimFindings } from '../state';
 
@@ -57,6 +57,9 @@ jest.mock('../../../hooks/algolia', () => ({
 
 jest.mock('../../../hooks/opensearch', () => ({
   useAnalyticsOpensearch: jest.fn(),
+}));
+jest.mock('../hooks/use-team-collaboration-query', () => ({
+  useTeamCollaborationQuery: jest.fn(),
 }));
 mockConsoleError();
 
@@ -105,6 +108,10 @@ const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
 >;
 const mockUseAnalyticsOpensearch =
   useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
+const mockUseTeamCollaborationQuery =
+  useTeamCollaborationQuery as jest.MockedFunction<
+    typeof useTeamCollaborationQuery
+  >;
 
 const userData: ListUserCollaborationAlgoliaResponse = {
   total: 2,
@@ -244,6 +251,12 @@ beforeEach(() => {
 
   mockGetUserCollaboration.mockResolvedValue(userData);
   mockGetTeamCollaboration.mockResolvedValue(teamData);
+  mockUseTeamCollaborationQuery.mockReturnValue({
+    data: teamData,
+    isLoading: false,
+    isError: false,
+    error: null,
+  } as unknown as ReturnType<typeof useTeamCollaborationQuery>);
 });
 
 describe('user collaboration', () => {
@@ -365,37 +378,40 @@ describe('team collaboration', () => {
   });
 
   it('renders data for different output types', async () => {
-    const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration> =
-      {
-        pageSize: 10,
-        currentPage: 0,
-        timeRange: 'all',
-        outputType: 'all',
-        sort: 'team_asc',
-        tags: [],
-      };
-
-    when(mockGetTeamCollaboration)
-      .calledWith(expect.anything(), {
-        ...defaultTeamOptions,
-        outputType: 'public',
-      })
-      .mockResolvedValue({
-        items: [
-          {
-            ...teamData.items[0]!,
-            objectID: '1-team-collaboration-all-public',
-            outputsCoProducedWithin: {
-              Article: 50,
-              Bioinformatics: 0,
-              Dataset: 0,
-              'Lab Material': 0,
-              Protocol: 1,
-            },
+    const publicTeamData = {
+      items: [
+        {
+          ...teamData.items[0]!,
+          objectID: '1-team-collaboration-all-public',
+          outputsCoProducedWithin: {
+            Article: 50,
+            Bioinformatics: 0,
+            Dataset: 0,
+            'Lab Material': 0,
+            Protocol: 1,
           },
-        ],
-        total: 1,
-      });
+        },
+      ],
+      total: 1,
+    };
+
+    // Mock the hook to return different data based on the outputType parameter
+    mockUseTeamCollaborationQuery.mockImplementation((options) => {
+      if (options.outputType === 'public') {
+        return {
+          data: publicTeamData,
+          isLoading: false,
+          isError: false,
+          error: null,
+        } as unknown as ReturnType<typeof useTeamCollaborationQuery>;
+      }
+      return {
+        data: teamData,
+        isLoading: false,
+        isError: false,
+        error: null,
+      } as unknown as ReturnType<typeof useTeamCollaborationQuery>;
+    });
     await renderPage('team', 'within-team');
 
     expect(screen.getByText('100')).toBeVisible();
@@ -414,18 +430,22 @@ describe('team collaboration', () => {
     expect(screen.queryByText('100')).not.toBeInTheDocument();
   });
 
-  it('calls algolia client with the right index name', async () => {
+  it('calls team collaboration query with the right parameters', async () => {
     const { getByTitle } = await renderPage('team', 'within-team');
 
     await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
-        expect.not.stringContaining('team_desc'),
+      expect(mockUseTeamCollaborationQuery).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: 'team_asc',
+        }),
       );
     });
     userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
     await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
-        expect.stringContaining('team_desc'),
+      expect(mockUseTeamCollaborationQuery).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: 'team_desc',
+        }),
       );
     });
   });

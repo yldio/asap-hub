@@ -30,6 +30,7 @@ import {
   SENTRY_DSN,
 } from './config';
 import history from './history';
+import { AppQueryClientProvider } from './analytics/collaboration/providers/query-client.provider';
 
 init({
   dsn: SENTRY_DSN,
@@ -102,84 +103,86 @@ const App: FC<Record<string, never>> = () => {
   }, [setCurrentOverrides, setEnvironment, isEnabled]);
 
   return (
-    <LogoProvider appName="CRN">
-      <Frame title="ASAP Hub">
-        <GoogleTagManager
-          containerId={GTM_CONTAINER_ID}
-          disabledTracking={!cookieData?.preferences.analytics}
-        />
+    <AppQueryClientProvider>
+      <LogoProvider appName="CRN">
+        <Frame title="ASAP Hub">
+          <GoogleTagManager
+            containerId={GTM_CONTAINER_ID}
+            disabledTracking={!cookieData?.preferences.analytics}
+          />
 
-        <AuthProvider>
-          <SentryAuth0 />
-          <Router history={history}>
-            <LastLocationProvider>
-              <Frame title={null}>
-                <Switch>
-                  <Route path={welcome.template}>
-                    <UtilityBar>
-                      <ToastStack>
-                        <Welcome />
-                      </ToastStack>
-                    </UtilityBar>
-                  </Route>
-                  <Route path={logout.template}>
-                    <Frame title="Logout">
-                      <Logout />
-                    </Frame>
-                  </Route>
-                  <Route exact path={staticPages({}).terms.template}>
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="terms-and-conditions" />
+          <AuthProvider>
+            <SentryAuth0 />
+            <Router history={history}>
+              <LastLocationProvider>
+                <Frame title={null}>
+                  <Switch>
+                    <Route path={welcome.template}>
+                      <UtilityBar>
+                        <ToastStack>
+                          <Welcome />
+                        </ToastStack>
+                      </UtilityBar>
+                    </Route>
+                    <Route path={logout.template}>
+                      <Frame title="Logout">
+                        <Logout />
                       </Frame>
-                    </BasicLayout>
-                  </Route>
-                  <Route exact path={staticPages({}).privacyPolicy.template}>
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="privacy-policy" />
-                      </Frame>
-                    </BasicLayout>
-                  </Route>
-                  <Route>
-                    <CheckAuth>
-                      {({ isAuthenticated }) =>
-                        !isAuthenticated ? (
-                          <Frame title={null}>
-                            <Signin />
-                          </Frame>
-                        ) : (
-                          <Frame title={null} fallback={<LoadingLayout />}>
-                            <AuthenticatedApp
-                              setIsOnboardable={setIsOnboardable}
-                            />
-                          </Frame>
-                        )
-                      }
-                    </CheckAuth>
-                  </Route>
-                </Switch>
-              </Frame>
-            </LastLocationProvider>
-          </Router>
-        </AuthProvider>
-      </Frame>
-      <CookiesModal
-        cookieData={cookieData}
-        onSaveCookiePreferences={onSaveCookiePreferences}
-        toggleCookieModal={toggleCookieModal}
-        showCookieModal={showCookieModal}
-        customStyles={[
-          {
-            '& .cookie-button': {
-              position: 'fixed',
-              left: '1em',
-              bottom: isOnboardable ? '7em' : '1em',
+                    </Route>
+                    <Route exact path={staticPages({}).terms.template}>
+                      <BasicLayout>
+                        <Frame title={null}>
+                          <Content pageId="terms-and-conditions" />
+                        </Frame>
+                      </BasicLayout>
+                    </Route>
+                    <Route exact path={staticPages({}).privacyPolicy.template}>
+                      <BasicLayout>
+                        <Frame title={null}>
+                          <Content pageId="privacy-policy" />
+                        </Frame>
+                      </BasicLayout>
+                    </Route>
+                    <Route>
+                      <CheckAuth>
+                        {({ isAuthenticated }) =>
+                          !isAuthenticated ? (
+                            <Frame title={null}>
+                              <Signin />
+                            </Frame>
+                          ) : (
+                            <Frame title={null} fallback={<LoadingLayout />}>
+                              <AuthenticatedApp
+                                setIsOnboardable={setIsOnboardable}
+                              />
+                            </Frame>
+                          )
+                        }
+                      </CheckAuth>
+                    </Route>
+                  </Switch>
+                </Frame>
+              </LastLocationProvider>
+            </Router>
+          </AuthProvider>
+        </Frame>
+        <CookiesModal
+          cookieData={cookieData}
+          onSaveCookiePreferences={onSaveCookiePreferences}
+          toggleCookieModal={toggleCookieModal}
+          showCookieModal={showCookieModal}
+          customStyles={[
+            {
+              '& .cookie-button': {
+                position: 'fixed',
+                left: '1em',
+                bottom: isOnboardable ? '7em' : '1em',
+              },
             },
-          },
-        ]}
-      />
-    </LogoProvider>
+          ]}
+        />
+      </LogoProvider>
+    </AppQueryClientProvider>
   );
 };
 

@@ -8,6 +8,7 @@ import { useFlags } from '@asap-hub/react-context';
 import { lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../hooks/algolia';
+import { useOpensearchMetrics } from '../hooks/opensearch';
 
 import { downloadAnalyticsXLSX } from './utils/export';
 
@@ -46,10 +47,15 @@ const Routes = () => {
 
   const { client } = useAnalyticsAlgolia();
 
+  const opensearchMetrics = useOpensearchMetrics();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleExportAnalytics = () => setIsModalOpen(true);
 
-  const handleDownload = downloadAnalyticsXLSX(client);
+  const handleDownload = downloadAnalyticsXLSX({
+    algoliaClient: client,
+    opensearchMetrics,
+  });
 
   return (
     <>

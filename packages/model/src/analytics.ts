@@ -113,6 +113,19 @@ export const timeRanges = [
   'all',
 ] as const;
 
+export type TimeRangeOption = (typeof timeRanges)[number];
+
+export const warningMessageByTimeRange: Record<
+  TimeRangeOption,
+  string | undefined
+> = {
+  '30d': `Some metrics were removed because they can only be downloaded as 'Last 12 months' or 'Since Hub launch.'`,
+  '90d': `Some metrics were removed because they can only be downloaded as 'Last 12 months' or 'Since Hub launch.'`,
+  'current-year': `Some metrics were removed because they can only be downloaded as 'Last 12 months' or 'Since Hub launch.'`,
+  'last-year': `Some metrics were removed because they can only be downloaded as 'Since Hub launch.'`,
+  all: undefined,
+} as const;
+
 export type MetricExportKeys =
   | 'user-productivity'
   | 'team-productivity'
@@ -122,7 +135,12 @@ export type MetricExportKeys =
   | 'team-collaboration-across'
   | 'wg-leadership'
   | 'ig-leadership'
-  | 'engagement';
+  | 'engagement'
+  | 'preprint-compliance'
+  | 'os-champion'
+  | 'preliminary-data-sharing'
+  | 'attendance'
+  | 'publication-compliance';
 
 export const metricsExportMap: Record<MetricExportKeys, string> = {
   'user-productivity': 'User Productivity',
@@ -134,6 +152,11 @@ export const metricsExportMap: Record<MetricExportKeys, string> = {
   'wg-leadership': 'Working Groups',
   'ig-leadership': 'Interest Groups',
   engagement: 'Speaker Diversity',
+  'preprint-compliance': 'Preprint Compliance',
+  'publication-compliance': 'Publication Compliance',
+  'os-champion': 'Open Science Championship',
+  'preliminary-data-sharing': 'Share Preliminary Findings',
+  attendance: 'Meeting Rep Attendance',
 };
 
 // Sheet names cannot exceed 31 chars
@@ -147,6 +170,11 @@ export const metricsSheetName: Record<MetricExportKeys, string> = {
   'wg-leadership': 'Working Groups',
   'ig-leadership': 'Interest Groups',
   engagement: 'Speaker Diversity',
+  'preprint-compliance': 'Preprint Compliance',
+  'publication-compliance': 'Publication Compliance',
+  'os-champion': 'Open Science Championship',
+  'preliminary-data-sharing': 'Share Preliminary Findings',
+  attendance: 'Meeting Rep Attendance',
 };
 
 export const documentCategories = [
@@ -160,8 +188,6 @@ export const documentCategories = [
 
 export const outputTypes = ['public', 'all'] as const;
 
-export type TimeRangeOption = (typeof timeRanges)[number];
-
 export type LimitedTimeRangeOption = Extract<
   TimeRangeOption,
   'all' | 'last-year'
@@ -173,7 +199,7 @@ export const timeRangeOptions: Record<TimeRangeOption, string> = {
   'current-year': 'This year (Jan-Today)',
   'last-year': 'Last 12 months',
   all: 'Since Hub Launch (2020)',
-};
+} as const;
 
 export const limitedTimeRangeOptions: Record<LimitedTimeRangeOption, string> = {
   'last-year': timeRangeOptions['last-year'],

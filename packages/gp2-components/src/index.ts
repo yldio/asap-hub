@@ -16,6 +16,7 @@ export {
   UserCardInfo,
   UserMenu,
   UserRegion,
+  InfoCard,
 } from './molecules';
 export {
   BiographyModal,

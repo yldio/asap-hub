@@ -15,6 +15,7 @@
     "algolia:remove-records": "ts-node --transpile-only src/cli.ts algolia:remove-records",
     "algolia:set-settings": "ts-node --transpile-only src/cli.ts algolia:set-settings",
     "algolia:set-analytics-settings": "ts-node --transpile-only src/cli.ts algolia:set-analytics-settings",
+    "opensearch:process-performance": "ts-node --transpile-only src/cli.ts opensearch:process-performance",
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
     "typecheck": "tsc"

@@ -281,6 +281,7 @@ __metadata:
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
+    "@asap-hub/server-common": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@babel/core": 7.23.7
     "@babel/plugin-transform-modules-commonjs": 7.23.3

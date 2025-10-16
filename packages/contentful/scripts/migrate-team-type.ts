@@ -62,7 +62,7 @@ const migrateTeamType = async () => {
         const updatedTeam = await teamEntry.patch([
           {
             op: 'add',
-            path: '/fields/type',
+            path: '/fields/teamType',
             value: { 'en-US': teamType },
           },
         ]);

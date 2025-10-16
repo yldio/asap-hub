@@ -27,7 +27,7 @@ const listTeamResponseItem: Omit<TeamResponse, 'id'> = {
   displayName: 'Abu-Remaileh, M',
   teamId: 'AR1',
   grantId: '000123',
-  type: 'Discovery',
+  type: 'Discovery Team',
   projectTitle:
     'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
   tags: [],

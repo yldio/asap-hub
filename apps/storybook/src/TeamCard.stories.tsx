@@ -22,7 +22,7 @@ const teamCardProps = () => {
     displayName: text('Display Name', 'Barnes, A.'),
     projectTitle:
       'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
-    type: 'Discovery',
+    type: 'Discovery Team',
     tags: [
       ...Array(numberOfExpertiseAndResources).fill(
         expertiseAndResource,

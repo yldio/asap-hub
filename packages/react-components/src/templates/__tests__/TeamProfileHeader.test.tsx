@@ -11,7 +11,7 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   id: '42',
   teamId: 'TI1',
   grantId: '000123',
-  type: 'Discovery',
+  type: 'Discovery Team',
   displayName: 'John, D',
   projectTitle: 'Unknown',
   members: [],

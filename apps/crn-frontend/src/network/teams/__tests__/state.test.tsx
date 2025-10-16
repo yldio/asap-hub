@@ -92,7 +92,7 @@ describe('team selectors', () => {
     const mockTeam = {
       id: 'id-0',
       teamId,
-      type: 'Discovery',
+      type: 'Discovery Team',
       tags: [],
       members: [],
       lastModifiedDate: '2021-09-01T00:00:00Z',

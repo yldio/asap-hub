@@ -56,8 +56,8 @@ const migrateTeamType = async () => {
 
       try {
         const teamType = RESOURCE_TEAMS.includes(teamName)
-          ? 'Resource'
-          : 'Discovery';
+          ? 'Resource Team'
+          : 'Discovery Team';
         console.log(`Team ${teamName} has type ${teamType}`);
         const updatedTeam = await teamEntry.patch([
           {

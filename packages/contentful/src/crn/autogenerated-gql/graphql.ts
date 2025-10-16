@@ -10384,6 +10384,7 @@ export type Teams = Entry &
     researchTheme?: Maybe<ResearchTheme>;
     supplementGrant?: Maybe<SupplementGrant>;
     sys: Sys;
+    teamDescription?: Maybe<Scalars['String']>;
     teamId?: Maybe<Scalars['String']>;
     teamType?: Maybe<Scalars['String']>;
     toolsCollection?: Maybe<TeamsToolsCollection>;
@@ -10453,6 +10454,11 @@ export type TeamsSupplementGrantArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<SupplementGrantFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsTeamDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
@@ -10539,6 +10545,13 @@ export type TeamsFilter = {
   supplementGrant?: InputMaybe<CfSupplementGrantNestedFilter>;
   supplementGrant_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
+  teamDescription?: InputMaybe<Scalars['String']>;
+  teamDescription_contains?: InputMaybe<Scalars['String']>;
+  teamDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  teamDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  teamDescription_not?: InputMaybe<Scalars['String']>;
+  teamDescription_not_contains?: InputMaybe<Scalars['String']>;
+  teamDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   teamId?: InputMaybe<Scalars['String']>;
   teamId_contains?: InputMaybe<Scalars['String']>;
   teamId_exists?: InputMaybe<Scalars['Boolean']>;
@@ -14752,6 +14765,13 @@ export type CfTeamsNestedFilter = {
   researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   supplementGrant_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
+  teamDescription?: InputMaybe<Scalars['String']>;
+  teamDescription_contains?: InputMaybe<Scalars['String']>;
+  teamDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  teamDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  teamDescription_not?: InputMaybe<Scalars['String']>;
+  teamDescription_not_contains?: InputMaybe<Scalars['String']>;
+  teamDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   teamId?: InputMaybe<Scalars['String']>;
   teamId_contains?: InputMaybe<Scalars['String']>;
   teamId_exists?: InputMaybe<Scalars['Boolean']>;

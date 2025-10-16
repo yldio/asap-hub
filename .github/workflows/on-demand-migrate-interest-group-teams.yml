@@ -16,7 +16,7 @@ on:
         description: Choose the Contentful environment to migrate team types
 
 jobs:
-  migrate_team_type:
+  migrate_team_types:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -34,7 +34,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Run Team Types Migration
         run: |
-          yarn workspace @asap-hub/contentful migrate-team-type
+          yarn workspace @asap-hub/contentful migrate-team-types
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
@@ -42,7 +42,7 @@ jobs:
 
   notify_failure:
     runs-on: ubuntu-latest
-    needs: [migrate_team_type]
+    needs: [migrate_team_types]
     if: ${{ failure() && inputs.environment-name=='Production' }}
     steps:
       - name: Checkout

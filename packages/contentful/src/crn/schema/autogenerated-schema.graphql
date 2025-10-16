@@ -6995,6 +6995,7 @@ type Teams implements Entry & _Node {
   researchTheme(locale: String, preview: Boolean, where: ResearchThemeFilter): ResearchTheme
   supplementGrant(locale: String, preview: Boolean, where: SupplementGrantFilter): SupplementGrant
   sys: Sys!
+  teamDescription(locale: String): String
   teamId(locale: String): String
   teamType(locale: String): String
   toolsCollection(limit: Int = 100, locale: String, order: [TeamsToolsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): TeamsToolsCollection
@@ -7064,6 +7065,13 @@ input TeamsFilter {
   supplementGrant: cfSupplementGrantNestedFilter
   supplementGrant_exists: Boolean
   sys: SysFilter
+  teamDescription: String
+  teamDescription_contains: String
+  teamDescription_exists: Boolean
+  teamDescription_in: [String]
+  teamDescription_not: String
+  teamDescription_not_contains: String
+  teamDescription_not_in: [String]
   teamId: String
   teamId_contains: String
   teamId_exists: Boolean
@@ -10359,6 +10367,13 @@ input cfTeamsNestedFilter {
   researchTheme_exists: Boolean
   supplementGrant_exists: Boolean
   sys: SysFilter
+  teamDescription: String
+  teamDescription_contains: String
+  teamDescription_exists: Boolean
+  teamDescription_in: [String]
+  teamDescription_not: String
+  teamDescription_not_contains: String
+  teamDescription_not_in: [String]
   teamId: String
   teamId_contains: String
   teamId_exists: Boolean

@@ -17,6 +17,7 @@ import {
   setAlgoliaSettings,
   processPerformance,
 } from './scripts/algolia';
+import { processPerformance as processOpensearchPerformance } from './scripts/opensearch';
 
 const stringType = 'string' as const;
 const trueType = true as const;
@@ -111,6 +112,14 @@ interface SetSettingsArguments extends BaseArguments {
 }
 interface SetAnalyticsSettings extends BaseArguments {
   index: string;
+}
+
+interface ProcessOpensearchPerformanceArguments {
+  awsRegion: string;
+  environment: string;
+  opensearchUsername: string;
+  opensearchPassword: string;
+  metric: 'all' | 'user-productivity';
 }
 
 // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-floating-promises
@@ -258,6 +267,56 @@ yargs(hideBin(process.argv))
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
         indexName: index,
+      }),
+  })
+  .command<ProcessOpensearchPerformanceArguments>({
+    command: 'opensearch:process-performance',
+    describe: 'process analytics performance for OpenSearch',
+    builder: (cli) =>
+      cli
+        .option('awsRegion', {
+          alias: 'r',
+          type: stringType,
+          description: 'AWS Region',
+          demandOption: trueType,
+        })
+        .option('environment', {
+          alias: 'e',
+          type: stringType,
+          description: 'Environment (dev, staging, production)',
+          demandOption: trueType,
+        })
+        .option('opensearchUsername', {
+          alias: 'u',
+          type: stringType,
+          description: 'OpenSearch username',
+          demandOption: trueType,
+        })
+        .option('opensearchPassword', {
+          alias: 'p',
+          type: stringType,
+          description: 'OpenSearch password',
+          demandOption: trueType,
+        })
+        .option('metric', {
+          alias: 'm',
+          description: 'Performance Metric',
+          choices: ['all', 'user-productivity'] as const,
+          default: 'all' as const,
+        }),
+    handler: async ({
+      awsRegion,
+      environment,
+      opensearchUsername,
+      opensearchPassword,
+      metric,
+    }) =>
+      processOpensearchPerformance({
+        awsRegion,
+        environment,
+        opensearchUsername,
+        opensearchPassword,
+        metric,
       }),
   })
   .demandCommand(1)

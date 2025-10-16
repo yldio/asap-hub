@@ -12,7 +12,7 @@ export type InterestGroupTools = {
 
 export type InterestGroupTeam = Omit<
   TeamListItemResponse,
-  'memberCount' | 'labCount'
+  'memberCount' | 'labCount' | 'type'
 > & {
   endDate?: string;
 };

@@ -18,9 +18,10 @@ const RESOURCE_TEAMS = [
   'iNDI-PD',
   'PPMI',
   'PFF Support & Characterization',
+  'Training & Development',
 ];
 
-const LIMIT = 1000;
+const LIMIT = 100;
 const queryOptions: QueryOptions = {
   content_type: 'teams',
   select: 'fields.displayName',

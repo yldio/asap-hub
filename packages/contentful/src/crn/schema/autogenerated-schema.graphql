@@ -2327,6 +2327,8 @@ enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   sys_publishedVersion_DESC
   teamId_ASC
   teamId_DESC
+  type_ASC
+  type_DESC
 }
 
 enum ExternalToolsOrder {
@@ -4176,6 +4178,8 @@ enum ManuscriptVersionsTeamsCollectionOrder {
   sys_publishedVersion_DESC
   teamId_ASC
   teamId_DESC
+  type_ASC
+  type_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts)"""
@@ -4506,6 +4510,8 @@ enum ManuscriptsTeamsCollectionOrder {
   sys_publishedVersion_DESC
   teamId_ASC
   teamId_DESC
+  type_ASC
+  type_DESC
 }
 
 type ManuscriptsVersionsCollection {
@@ -5953,6 +5959,8 @@ enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
   sys_publishedVersion_DESC
   teamId_ASC
   teamId_DESC
+  type_ASC
+  type_DESC
 }
 
 type ResearchOutputsMethodsCollection {
@@ -6178,6 +6186,8 @@ enum ResearchOutputsTeamsCollectionOrder {
   sys_publishedVersion_DESC
   teamId_ASC
   teamId_DESC
+  type_ASC
+  type_DESC
 }
 
 type ResearchOutputsVersionsCollection {
@@ -6422,6 +6432,8 @@ enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
   sys_publishedVersion_DESC
   teamId_ASC
   teamId_DESC
+  type_ASC
+  type_DESC
 }
 
 enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
@@ -6618,6 +6630,8 @@ enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
   sys_publishedVersion_DESC
   teamId_ASC
   teamId_DESC
+  type_ASC
+  type_DESC
 }
 
 enum ResearchThemeOrder {
@@ -6727,6 +6741,8 @@ enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
   sys_publishedVersion_DESC
   teamId_ASC
   teamId_DESC
+  type_ASC
+  type_DESC
 }
 
 enum SupplementGrantOrder {
@@ -6981,6 +6997,7 @@ type Teams implements Entry & _Node {
   sys: Sys!
   teamId(locale: String): String
   toolsCollection(limit: Int = 100, locale: String, order: [TeamsToolsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): TeamsToolsCollection
+  type(locale: String): String
 }
 
 type TeamsCollection {
@@ -7056,6 +7073,13 @@ input TeamsFilter {
   teamId_not_in: [String]
   tools: cfExternalToolsNestedFilter
   toolsCollection_exists: Boolean
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
 }
 
 type TeamsLinkingCollections {
@@ -7337,6 +7361,8 @@ enum TeamsOrder {
   sys_publishedVersion_DESC
   teamId_ASC
   teamId_DESC
+  type_ASC
+  type_DESC
 }
 
 type TeamsResearchTagsCollection {
@@ -7760,6 +7786,8 @@ enum TutorialsTeamsCollectionOrder {
   sys_publishedVersion_DESC
   teamId_ASC
   teamId_DESC
+  type_ASC
+  type_DESC
 }
 
 type TutorialsText {
@@ -10339,6 +10367,13 @@ input cfTeamsNestedFilter {
   teamId_not_contains: String
   teamId_not_in: [String]
   toolsCollection_exists: Boolean
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
 }
 
 input cfTutorialsNestedFilter {

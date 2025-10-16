@@ -317,6 +317,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
 export const getTeamDataObject = (): TeamDataObject => ({
   id: 'team-id-0',
   displayName: 'Team A',
+  type: 'Discovery',
   lastModifiedDate: '2020-11-26T11:56:04.000Z',
   labCount: 2,
   tags: [
@@ -502,6 +503,7 @@ export const getUnsortedManuscripts = (teamId: string) => ({
 export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
   id: 'team-id-0',
   displayName: 'Team A',
+  type: 'Discovery',
   labCount: 2,
   tags: [],
   memberCount: 1,

@@ -10,6 +10,7 @@ const boilerplateProps: Omit<
   teamId: 'TI1',
   grantId: '000123',
   projectTitle: 'Unknown',
+  type: 'Discovery',
   displayName: 'Doe, J',
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   members: [],

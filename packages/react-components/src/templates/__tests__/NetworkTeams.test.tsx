@@ -7,7 +7,7 @@ const team: ComponentProps<typeof NetworkTeams>['teams'][0] = {
   id: '42',
   displayName: 'Unknown',
   projectTitle: 'Unknown Project Title',
-  type: 'Discovery Team',
+  teamType: 'Discovery Team',
   memberCount: 2,
   tags: [],
   labCount: 0,

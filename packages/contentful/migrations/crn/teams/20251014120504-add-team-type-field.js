@@ -16,10 +16,22 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
-  teams.moveField('teamType').afterField('displayName');
+  teams
+    .createField('teamDescription')
+    .name('Team Description')
+    .type('Text')
+    .localized(false)
+    .required(false)
+    .validations([])
+    .disabled(false)
+    .omitted(false);
+
+  teams.moveField('teamType').afterField('teamId');
+  teams.moveField('teamDescription').afterField('teamType');
 };
 
 module.exports.down = (migration) => {
   const teams = migration.editContentType('teams');
   teams.deleteField('teamType');
+  teams.deleteField('teamDescription');
 };

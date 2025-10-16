@@ -33,7 +33,7 @@ export const indexTeamHandler =
           projectTitle,
           labCount,
           tags,
-          type,
+          teamType,
         } = team;
         await algoliaClient.save({
           data: {
@@ -43,7 +43,7 @@ export const indexTeamHandler =
             projectTitle,
             labCount,
             tags,
-            type,
+            teamType,
             memberCount: team.members.length,
             _tags: team.tags.map(({ name }) => name),
           },

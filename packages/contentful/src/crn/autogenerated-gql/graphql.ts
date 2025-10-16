@@ -3187,8 +3187,8 @@ export enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TeamIdAsc = 'teamId_ASC',
   TeamIdDesc = 'teamId_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
 }
 
 export enum ExternalToolsOrder {
@@ -5813,8 +5813,8 @@ export enum ManuscriptVersionsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TeamIdAsc = 'teamId_ASC',
   TeamIdDesc = 'teamId_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
@@ -6301,8 +6301,8 @@ export enum ManuscriptsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TeamIdAsc = 'teamId_ASC',
   TeamIdDesc = 'teamId_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
 }
 
 export type ManuscriptsVersionsCollection = {
@@ -9105,8 +9105,8 @@ export enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TeamIdAsc = 'teamId_ASC',
   TeamIdDesc = 'teamId_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
 }
 
 export type ResearchOutputsMethodsCollection = {
@@ -9332,8 +9332,8 @@ export enum ResearchOutputsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TeamIdAsc = 'teamId_ASC',
   TeamIdDesc = 'teamId_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
 }
 
 export type ResearchOutputsVersionsCollection = {
@@ -9692,8 +9692,8 @@ export enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TeamIdAsc = 'teamId_ASC',
   TeamIdDesc = 'teamId_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
 }
 
 export enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
@@ -9918,8 +9918,8 @@ export enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TeamIdAsc = 'teamId_ASC',
   TeamIdDesc = 'teamId_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
 }
 
 export enum ResearchThemeOrder {
@@ -10079,8 +10079,8 @@ export enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TeamIdAsc = 'teamId_ASC',
   TeamIdDesc = 'teamId_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
 }
 
 export enum SupplementGrantOrder {
@@ -10385,8 +10385,8 @@ export type Teams = Entry &
     supplementGrant?: Maybe<SupplementGrant>;
     sys: Sys;
     teamId?: Maybe<Scalars['String']>;
+    teamType?: Maybe<Scalars['String']>;
     toolsCollection?: Maybe<TeamsToolsCollection>;
-    type?: Maybe<Scalars['String']>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
@@ -10461,6 +10461,11 @@ export type TeamsTeamIdArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsTeamTypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
 export type TeamsToolsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -10468,11 +10473,6 @@ export type TeamsToolsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ExternalToolsFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsTypeArgs = {
-  locale?: InputMaybe<Scalars['String']>;
 };
 
 export type TeamsCollection = {
@@ -10546,15 +10546,15 @@ export type TeamsFilter = {
   teamId_not?: InputMaybe<Scalars['String']>;
   teamId_not_contains?: InputMaybe<Scalars['String']>;
   teamId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  teamType?: InputMaybe<Scalars['String']>;
+  teamType_contains?: InputMaybe<Scalars['String']>;
+  teamType_exists?: InputMaybe<Scalars['Boolean']>;
+  teamType_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  teamType_not?: InputMaybe<Scalars['String']>;
+  teamType_not_contains?: InputMaybe<Scalars['String']>;
+  teamType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   tools?: InputMaybe<CfExternalToolsNestedFilter>;
   toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  type?: InputMaybe<Scalars['String']>;
-  type_contains?: InputMaybe<Scalars['String']>;
-  type_exists?: InputMaybe<Scalars['Boolean']>;
-  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  type_not?: InputMaybe<Scalars['String']>;
-  type_not_contains?: InputMaybe<Scalars['String']>;
-  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type TeamsLinkingCollections = {
@@ -10945,8 +10945,8 @@ export enum TeamsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TeamIdAsc = 'teamId_ASC',
   TeamIdDesc = 'teamId_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
 }
 
 export type TeamsResearchTagsCollection = {
@@ -11505,8 +11505,8 @@ export enum TutorialsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TeamIdAsc = 'teamId_ASC',
   TeamIdDesc = 'teamId_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
 }
 
 export type TutorialsText = {
@@ -14759,14 +14759,14 @@ export type CfTeamsNestedFilter = {
   teamId_not?: InputMaybe<Scalars['String']>;
   teamId_not_contains?: InputMaybe<Scalars['String']>;
   teamId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  teamType?: InputMaybe<Scalars['String']>;
+  teamType_contains?: InputMaybe<Scalars['String']>;
+  teamType_exists?: InputMaybe<Scalars['Boolean']>;
+  teamType_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  teamType_not?: InputMaybe<Scalars['String']>;
+  teamType_not_contains?: InputMaybe<Scalars['String']>;
+  teamType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  type?: InputMaybe<Scalars['String']>;
-  type_contains?: InputMaybe<Scalars['String']>;
-  type_exists?: InputMaybe<Scalars['Boolean']>;
-  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  type_not?: InputMaybe<Scalars['String']>;
-  type_not_contains?: InputMaybe<Scalars['String']>;
-  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CfTutorialsNestedFilter = {
@@ -24266,7 +24266,7 @@ export type FetchTeamByIdQuery = {
       | 'displayName'
       | 'teamId'
       | 'grantId'
-      | 'type'
+      | 'teamType'
       | 'inactiveSince'
       | 'projectSummary'
       | 'projectTitle'
@@ -24655,7 +24655,7 @@ export type FetchTeamsQuery = {
         Maybe<
           Pick<
             Teams,
-            'displayName' | 'inactiveSince' | 'projectTitle' | 'type'
+            'displayName' | 'inactiveSince' | 'projectTitle' | 'teamType'
           > & {
             sys: Pick<Sys, 'id'>;
             researchTagsCollection?: Maybe<{
@@ -47030,7 +47030,7 @@ export const FetchTeamByIdDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'teamId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'grantId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'teamType' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'inactiveSince' },
@@ -47685,7 +47685,10 @@ export const FetchTeamsDocument = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'projectTitle' },
                       },
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teamType' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'researchTagsCollection' },

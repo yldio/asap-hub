@@ -12,7 +12,7 @@ import {
   OpenScienceIcon,
   ProductivityIcon,
   TeamIcon,
-  uploadIcon,
+  downloadIcon,
 } from '../icons';
 
 const containerStyles = css({
@@ -58,7 +58,7 @@ const AnalyticsPageHeader: React.FC<AnalyticsPageHeaderProps> = ({
               small
               overrideStyles={css({ whiteSpace: 'nowrap' })}
             >
-              {uploadIcon} Multiple XLSX
+              {downloadIcon} Multiple XLSX
             </Button>
           </div>
         </div>

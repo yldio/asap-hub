@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '../atoms';
 import { paddingStyles } from '../card';
-import { crossIcon, uploadIcon } from '../icons';
+import { crossIcon, downloadIcon } from '../icons';
 import {
   FormSection,
   LabeledCheckboxGroup,
@@ -21,6 +21,7 @@ import {
 import { mobileScreen, rem } from '../pixels';
 import { Title, Option } from './CheckboxGroup';
 import Toast from './Toast';
+import { colors } from '..';
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -127,6 +128,7 @@ const optionsToExport: ReadonlyArray<
     label: metricsExportMap['preliminary-data-sharing'],
     value: 'preliminary-data-sharing',
     isVisible: whenLastYearOrSinceLaunch,
+    requiresFeatureFlag: true,
   },
   {
     title: 'LEADERSHIP & MEMBERSHIP',
@@ -162,6 +164,7 @@ const optionsToExport: ReadonlyArray<
     label: metricsExportMap.attendance,
     value: 'attendance',
     isVisible: whenLastYearOrSinceLaunch,
+    requiresFeatureFlag: true,
   },
 
   {
@@ -255,7 +258,7 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
       <>
         <form css={contentStyles}>
           <FormSection
-            title="Export XLSX"
+            title="Download Multiple XLSX"
             headerDecorator={
               <Button small noMargin onClick={onDismiss}>
                 {crossIcon}
@@ -350,9 +353,20 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
                 primary
                 enabled={isExportEnabled && !isProcessing}
                 onClick={handleExport}
-                overrideStyles={css({ height: 'fit-content' })}
+                overrideStyles={css({
+                  height: 'fit-content',
+                  svg:
+                    isExportEnabled && !isProcessing
+                      ? {}
+                      : {
+                          path: {
+                            fill: colors.neutral900.rgb,
+                          },
+                        },
+                })}
               >
-                {uploadIcon} {isDownloading ? 'Exporting...' : 'Export XLSX'}
+                {downloadIcon}{' '}
+                {isDownloading ? 'Exporting...' : 'Download XLSX'}
               </Button>
             </div>
           </div>

@@ -101,7 +101,7 @@ export type TeamCreateDataObject = {
   tools?: TeamTool[];
   teamId: string;
   grantId: string;
-  type: TeamType;
+  teamType: TeamType;
 };
 
 export type TeamResponse = Omit<TeamDataObject, 'researchTheme'>;

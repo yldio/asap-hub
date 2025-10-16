@@ -15,7 +15,7 @@ export const teamRole = [
   'Trainee',
 ] as const;
 
-const teamType = ['Discovery', 'Resource'];
+const teamType = ['Discovery Team', 'Resource Team'];
 
 export type TeamRole = (typeof teamRole)[number];
 

@@ -18,7 +18,7 @@ const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
       displayName: `Barnes, A. ${i + 1}`,
       projectTitle:
         'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
-      type: 'Discovery',
+      type: 'Discovery Team',
       labCount: number('Lab count', 15),
       memberCount: 2,
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),

@@ -8,7 +8,7 @@ const teamCardProps: ComponentProps<typeof TeamCard> = {
   displayName: 'A Barnes',
   projectTitle:
     'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
-  type: 'Discovery',
+  type: 'Discovery Team',
   tags: [
     { id: '1', name: 'Neurological Diseases' },
     { id: '1', name: 'Clinical Neurology' },

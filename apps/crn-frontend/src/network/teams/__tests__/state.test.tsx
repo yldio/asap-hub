@@ -47,10 +47,12 @@ jest.mock('../api', () => ({
 jest.mock('../../../shared-api/files');
 
 const teamId = 'team-id-0';
+const teamType = 'Discovery';
 
 const teamMock = {
   id: 'id-0',
   teamId: 'team-id-0',
+  type: teamType,
   tags: [{ id: 'tag-1', name: 'Research' }],
   members: [],
   lastModifiedDate: '2021-09-01T00:00:00Z',
@@ -90,6 +92,7 @@ describe('team selectors', () => {
     const mockTeam = {
       id: 'id-0',
       teamId,
+      type: 'Discovery',
       tags: [],
       members: [],
       lastModifiedDate: '2021-09-01T00:00:00Z',
@@ -389,6 +392,7 @@ const manuscriptId2 = 'manuscript-id-1';
 const mockTeam = {
   id: 'id-0',
   teamId,
+  type: teamType,
   manuscripts: [
     {
       id: manuscriptId,

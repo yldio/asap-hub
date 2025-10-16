@@ -13,6 +13,7 @@ export const FETCH_TEAM_BY_ID = gql`
       displayName
       teamId
       grantId
+      type
       inactiveSince
       projectSummary
       projectTitle
@@ -120,6 +121,7 @@ export const FETCH_TEAMS = gql`
         displayName
         inactiveSince
         projectTitle
+        type
         researchTagsCollection(limit: 20) {
           items {
             sys {

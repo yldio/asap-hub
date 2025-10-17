@@ -75,7 +75,7 @@ export const contentfulHandlerFactory =
   ) => Promise<APIGatewayProxyResult>) =>
   async (request) => {
     validateContentfulRequest(request, webhookAuthenticationToken);
-    logger.debug(`request: ${JSON.stringify(request)}`);
+    logger.info(`request: ${JSON.stringify(request)}`);
     const detailType = getDetailTypeFromRequest(request);
     const detail = getDetailFromRequest(request);
     const action = getActionFromRequest(request);
@@ -96,12 +96,17 @@ export const contentfulHandlerFactory =
         MessageBody: JSON.stringify(detail),
       });
       await sqs.send(command);
-      logger.debug(
+      logger.info(
         `Event added to queue ${contentfulPollerQueueUrl} detail Type: ${detailType} detail: ${JSON.stringify(
           detail,
         )}`,
       );
 
+      logger.debug(
+        `Event added to queue ${contentfulPollerQueueUrl} detail Type: ${detailType} detail: ${JSON.stringify(
+          detail,
+        )}`,
+      );
       return {
         statusCode: 200,
         body: 'Success',

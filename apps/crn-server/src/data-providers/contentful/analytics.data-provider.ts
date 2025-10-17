@@ -369,22 +369,16 @@ const getUserProductivityItems = (
         publicOutputs: 0,
       };
 
-      // Clean the name fields - remove any user IDs that might be in firstName/lastName
-      const cleanFirstName =
-        user.firstName && !user.firstName.includes('-') ? user.firstName : '';
-      const cleanLastName =
-        user.lastName && !user.lastName.includes('-') ? user.lastName : '';
-
       const displayName = parseUserDisplayName(
-        cleanFirstName,
-        cleanLastName,
+        user.firstName ?? '',
+        user.lastName ?? '',
         undefined,
         user.nickname ?? '',
       );
 
       return {
         id: user.sys.id,
-        name: displayName || user.sys.id, // Use ID as fallback if no name
+        name: displayName,
         isAlumni: !!user.alumniSinceDate,
         teams,
         asapOutput: userOutputsCount.outputs,

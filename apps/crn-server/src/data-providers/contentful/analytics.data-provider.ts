@@ -385,7 +385,11 @@ const getUserProductivityItems = (
         asapPublicOutput: userOutputsCount.publicOutputs,
         ratio:
           userOutputsCount.outputs > 0
-            ? userOutputsCount.publicOutputs / userOutputsCount.outputs
+            ? parseFloat(
+                (
+                  userOutputsCount.publicOutputs / userOutputsCount.outputs
+                ).toFixed(2),
+              )
             : 0,
       };
     });

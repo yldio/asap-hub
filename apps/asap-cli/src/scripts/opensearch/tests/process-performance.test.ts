@@ -248,60 +248,6 @@ describe('processUserProductivityPerformance', () => {
     );
   });
 
-  it('should round ratio metrics to 2 decimal places', async () => {
-    const mockScrollId = 'scroll-id-123';
-    const mockHits = [
-      {
-        _source: {
-          asapOutput: 5,
-          asapPublicOutput: 3,
-          ratio: 0.6458451, // Should be rounded to 0.65
-        },
-      },
-    ];
-
-    mockClient = {
-      search: jest.fn().mockResolvedValue({
-        body: {
-          _scroll_id: mockScrollId,
-          hits: { hits: mockHits },
-        },
-      }),
-      scroll: jest.fn().mockResolvedValue({
-        body: {
-          _scroll_id: mockScrollId,
-          hits: { hits: [] },
-        },
-      }),
-      clearScroll: jest.fn().mockResolvedValue({}),
-    };
-
-    await processUserProductivityPerformance(
-      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
-    );
-
-    const ratioMetricsCalls = mockGetPerformanceMetrics.mock.calls.filter(
-      (call) => call[1] === false, // ratio metrics use isInteger: false
-    );
-
-    expect(ratioMetricsCalls.length).toBeGreaterThan(0);
-
-    // Verify that ratio metrics are processed as numbers
-    ratioMetricsCalls.forEach((call) => {
-      const metrics = call[0];
-      expect(metrics).toEqual(expect.arrayContaining([expect.any(Number)]));
-    });
-
-    // Check that the specific ratio value (0.6458451) is rounded to 2 decimal places (0.65)
-    const allRatioValues = ratioMetricsCalls.flatMap((call) => call[0]);
-    const ratioValue = allRatioValues.find(
-      (value) => typeof value === 'number' && value > 0.6 && value < 0.7,
-    );
-
-    expect(ratioValue).toBeDefined();
-    expect(ratioValue).toEqual(0.65); // Should be 0.65 with 2 decimal places
-  });
-
   it('should log and continue when clearScroll fails', async () => {
     const mockScrollId = 'scroll-id-123';
     const clearScrollError = new Error('Failed to clear scroll');

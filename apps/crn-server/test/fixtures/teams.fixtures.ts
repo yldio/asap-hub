@@ -14,6 +14,7 @@ import {
   PublicTeamResponse,
   TeamDataObject,
   TeamEvent,
+  TeamMembershipEvent,
   TeamListItemDataObject,
   TeamListItemResponse,
   TeamResponse,
@@ -704,3 +705,99 @@ export const getTeamUnpublishContentfulWebhookPayload =
       deletedAt: '2023-03-23T08:54:29.958Z',
     },
   });
+
+// TeamMembership Event Fixtures
+export type TeamMembershipEventGenerator = (
+  membershipId: string,
+  teamId: string,
+) => EventBridgeEvent<TeamMembershipEvent, any>;
+
+export const getTeamMembershipContentfulWebhookDetail = (
+  membershipId: string,
+  teamId: string,
+): WebhookDetail<ContentfulWebhookPayload<'teamMembership'>> => ({
+  resourceId: membershipId,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: membershipId,
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'crn-3046',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'teamMembership',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    revision: 1,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {
+    team: {
+      'en-US': {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: teamId,
+        },
+      },
+    },
+    role: {
+      'en-US': 'Data Manager',
+    },
+  },
+});
+
+export const getTeamMembershipEvent = (
+  membershipId: string,
+  teamId: string,
+  eventType: TeamMembershipEvent,
+): EventBridgeEvent<
+  TeamMembershipEvent,
+  WebhookDetail<ContentfulWebhookPayload<'teamMembership'>>
+> =>
+  createEventBridgeEventMock(
+    getTeamMembershipContentfulWebhookDetail(membershipId, teamId),
+    eventType,
+    membershipId,
+  );
+
+export const getTeamMembershipPublishedEvent: TeamMembershipEventGenerator = (
+  membershipId: string,
+  teamId: string,
+) => getTeamMembershipEvent(membershipId, teamId, 'TeamMembershipPublished');
+
+export const getTeamMembershipUnpublishedEvent: TeamMembershipEventGenerator = (
+  membershipId: string,
+  teamId: string,
+) => getTeamMembershipEvent(membershipId, teamId, 'TeamMembershipUnpublished');

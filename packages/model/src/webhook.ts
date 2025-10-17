@@ -13,6 +13,7 @@ export type CalendarEvent = `Calendars${EntityEventAction}`;
 export type UserEvent = `Users${EntityEventAction}`;
 export type NewsEvent = `News${EntityEventAction}`;
 export type TutorialEvent = `Tutorials${EntityEventAction}`;
+export type TeamMembershipEvent = `TeamMembership${EntityEventAction}`;
 
 export type WebhookDetailType =
   | CalendarEvent
@@ -27,7 +28,8 @@ export type WebhookDetailType =
   | TeamEvent
   | UserEvent
   | WorkingGroupEvent
-  | TutorialEvent;
+  | TutorialEvent
+  | TeamMembershipEvent;
 
 export type WebhookDetail<T extends object = object> = {
   resourceId: string;

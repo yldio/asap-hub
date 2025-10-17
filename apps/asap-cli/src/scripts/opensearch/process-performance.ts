@@ -54,7 +54,7 @@ const mapHitToDocument = (
 ): UserProductivityDocument => ({
   asapOutput: hit._source?.asapOutput ?? 0,
   asapPublicOutput: hit._source?.asapPublicOutput ?? 0,
-  ratio: parseFloat(hit._source?.ratio?.toFixed(2) ?? '0'),
+  ratio: hit._source?.ratio ?? 0,
   timeRange: hit._source?.timeRange ?? '',
   documentCategory: hit._source?.documentCategory ?? '',
 });

@@ -212,7 +212,7 @@ describe('processUserProductivityPerformance', () => {
       },
       {
         _source: {
-          ratio: '0.75', // String ratio
+          ratio: 0.75,
           timeRange: 'last-30-days',
           documentCategory: 'protocol',
         },
@@ -248,14 +248,14 @@ describe('processUserProductivityPerformance', () => {
     );
   });
 
-  it('should handle ratio as string and convert to number', async () => {
+  it('should round ratio metrics to 2 decimal places', async () => {
     const mockScrollId = 'scroll-id-123';
     const mockHits = [
       {
         _source: {
           asapOutput: 5,
           asapPublicOutput: 3,
-          ratio: '0.6', // String ratio
+          ratio: 0.6458451, // Should be rounded to 0.65
         },
       },
     ];
@@ -280,14 +280,26 @@ describe('processUserProductivityPerformance', () => {
       mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
     );
 
-    // Verify ratio metrics were called with parsed float values
     const ratioMetricsCalls = mockGetPerformanceMetrics.mock.calls.filter(
       (call) => call[1] === false, // ratio metrics use isInteger: false
     );
 
+    expect(ratioMetricsCalls.length).toBeGreaterThan(0);
+
+    // Verify that ratio metrics are processed as numbers
     ratioMetricsCalls.forEach((call) => {
-      expect(call[0]).toEqual(expect.arrayContaining([expect.any(Number)]));
+      const metrics = call[0];
+      expect(metrics).toEqual(expect.arrayContaining([expect.any(Number)]));
     });
+
+    // Check that the specific ratio value (0.6458451) is rounded to 2 decimal places (0.65)
+    const allRatioValues = ratioMetricsCalls.flatMap((call) => call[0]);
+    const ratioValue = allRatioValues.find(
+      (value) => typeof value === 'number' && value > 0.6 && value < 0.7,
+    );
+
+    expect(ratioValue).toBeDefined();
+    expect(ratioValue).toEqual(0.65); // Should be 0.65 with 2 decimal places
   });
 
   it('should log and continue when clearScroll fails', async () => {

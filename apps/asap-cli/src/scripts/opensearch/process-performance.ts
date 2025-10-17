@@ -20,7 +20,7 @@ interface UserProductivityHit {
   _source?: {
     asapOutput?: number;
     asapPublicOutput?: number;
-    ratio?: number | string;
+    ratio?: number;
     timeRange?: string;
     documentCategory?: string;
   };
@@ -54,10 +54,7 @@ const mapHitToDocument = (
 ): UserProductivityDocument => ({
   asapOutput: hit._source?.asapOutput ?? 0,
   asapPublicOutput: hit._source?.asapPublicOutput ?? 0,
-  ratio:
-    typeof hit._source?.ratio === 'string'
-      ? parseFloat(hit._source.ratio)
-      : hit._source?.ratio ?? 0,
+  ratio: parseFloat(hit._source?.ratio?.toFixed(2) ?? '0'),
   timeRange: hit._source?.timeRange ?? '',
   documentCategory: hit._source?.documentCategory ?? '',
 });

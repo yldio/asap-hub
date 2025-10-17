@@ -10,7 +10,6 @@ import { useFlags } from '@asap-hub/react-context';
 import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '../atoms';
-import { paddingStyles } from '../card';
 import { crossIcon, downloadIcon } from '../icons';
 import {
   FormSection,
@@ -25,6 +24,9 @@ import { colors } from '..';
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
+  display: 'flex',
+  flexFlow: 'column',
+  gap: 32,
 });
 
 const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
@@ -265,85 +267,84 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
               </Button>
             }
           >
-            <FormSection>
-              <div css={css({ display: 'flex', flexFlow: 'column', gap: 16 })}>
-                <Controller
-                  name="timeRange"
-                  control={control}
-                  rules={{
-                    required: 'Please select an option.',
-                  }}
-                  render={({ field: { value, onChange } }) => (
-                    <LabeledDropdown
-                      name="Time Range"
-                      title="Select data range"
-                      subtitle="(required)"
-                      options={dataRange}
-                      required
-                      enabled={!isProcessing}
-                      placeholder="Choose a data range"
-                      value={value ?? ''}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-                {warningMessageByTimeRange[getValues('timeRange')] && (
-                  <Toast accent="warning" rounded>
-                    {warningMessageByTimeRange[getValues('timeRange')]}
-                  </Toast>
-                )}
-              </div>
+            <div css={css({ display: 'flex', flexFlow: 'column', gap: 16 })}>
               <Controller
-                name="metrics"
+                name="timeRange"
                 control={control}
                 rules={{
                   required: 'Please select an option.',
                 }}
-                render={({ field: { value }, fieldState: { error } }) => (
-                  <LabeledCheckboxGroup
-                    title="Select metrics to export"
+                render={({ field: { value, onChange } }) => (
+                  <LabeledDropdown
+                    name="Time Range"
+                    title="Select data range"
                     subtitle="(required)"
-                    description="You need to select at least one metric."
-                    onChange={(newValue) =>
-                      handleMetricsSelection(newValue as MetricExportKeys)
-                    }
-                    values={value}
-                    validationMessage={error?.message ?? ''}
-                    options={optionsToExport
-                      .filter((item) =>
-                        item.requiresFeatureFlag
-                          ? isEnabled('ANALYTICS_PHASE_TWO')
-                          : true,
-                      )
-                      .filter((item) =>
-                        getValues('timeRange')
-                          ? item.isVisible(getValues('timeRange'))
-                          : true,
-                      )
-                      .map((item) => {
-                        if ('title' in item) {
-                          return {
-                            title: item.title,
-                            info: item.info,
-                          };
-                        }
-
-                        return {
-                          value: item.value,
-                          label: item.label,
-                          enabled: !isProcessing && !!getValues('timeRange'),
-                        };
-                      })}
+                    description="Select the type that matches your output the best to unlock metrics."
+                    options={dataRange}
+                    required
+                    enabled={!isProcessing}
+                    placeholder="Choose a data range"
+                    value={value ?? ''}
+                    onChange={onChange}
                   />
                 )}
               />
-            </FormSection>
+              {warningMessageByTimeRange[getValues('timeRange')] && (
+                <Toast accent="warning" rounded>
+                  {warningMessageByTimeRange[getValues('timeRange')]}
+                </Toast>
+              )}
+            </div>
           </FormSection>
-        </form>
-        <div css={[paddingStyles, { paddingTop: 0 }]}>
+          <FormSection>
+            <Controller
+              name="metrics"
+              control={control}
+              rules={{
+                required: 'Please select an option.',
+              }}
+              render={({ field: { value }, fieldState: { error } }) => (
+                <LabeledCheckboxGroup
+                  title="Select metrics to download"
+                  subtitle="(required)"
+                  description="You need to select at least one metric."
+                  onChange={(newValue) =>
+                    handleMetricsSelection(newValue as MetricExportKeys)
+                  }
+                  values={value}
+                  validationMessage={error?.message ?? ''}
+                  options={optionsToExport
+                    .filter((item) =>
+                      item.requiresFeatureFlag
+                        ? isEnabled('ANALYTICS_PHASE_TWO')
+                        : true,
+                    )
+                    .filter((item) =>
+                      getValues('timeRange')
+                        ? item.isVisible(getValues('timeRange'))
+                        : true,
+                    )
+                    .map((item) => {
+                      if ('title' in item) {
+                        return {
+                          title: item.title,
+                          info: item.info,
+                        };
+                      }
+
+                      return {
+                        value: item.value,
+                        label: item.label,
+                        enabled: !isProcessing && !!getValues('timeRange'),
+                      };
+                    })}
+                />
+              )}
+            />
+          </FormSection>
           <div css={buttonContainerStyles}>
             <div css={dismissButtonStyles}>
-              <Button enabled onClick={onDismiss}>
+              <Button enabled onClick={onDismiss} noMargin>
                 Cancel
               </Button>
             </div>
@@ -370,7 +371,7 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
               </Button>
             </div>
           </div>
-        </div>
+        </form>
       </>
     </Modal>
   );

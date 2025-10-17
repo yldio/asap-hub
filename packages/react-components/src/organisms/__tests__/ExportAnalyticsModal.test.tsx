@@ -41,7 +41,7 @@ describe('ExportAnalyticsModal', () => {
 
     expect(container).toHaveTextContent(/Download Multiple XLSX/i);
     expect(container).toHaveTextContent(/Select data range/i);
-    expect(container).toHaveTextContent(/Select metrics to export/i);
+    expect(container).toHaveTextContent(/Select metrics to download/i);
   });
 
   it('calls onDismiss when user clicks on "Cancel" button', () => {

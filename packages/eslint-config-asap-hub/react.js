@@ -4,6 +4,7 @@ module.exports = {
   extends: [
     '@asap-hub/eslint-config-asap-hub',
     'eslint-config-react-app',
+    'plugin:react-hooks/recommended',
     'eslint-config-prettier',
   ],
   plugins: ['prettier'],

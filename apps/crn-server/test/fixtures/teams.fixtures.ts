@@ -67,6 +67,7 @@ export const getContentfulGraphqlTeamById = (
   projectSummary: null,
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  teamType: 'Discovery Team',
   researchTagsCollection: {
     items: [{ sys: { id: 'tag-1' }, name: 'Animal resources 1' }],
   },
@@ -110,6 +111,7 @@ export const getContentfulGraphqlTeam = (): NonNullable<
   inactiveSince: null,
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  teamType: 'Discovery Team',
   researchTagsCollection: {
     items: [],
   },
@@ -316,6 +318,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
 export const getTeamDataObject = (): TeamDataObject => ({
   id: 'team-id-0',
   displayName: 'Team A',
+  teamType: 'Discovery Team',
   lastModifiedDate: '2020-11-26T11:56:04.000Z',
   labCount: 2,
   tags: [
@@ -501,6 +504,7 @@ export const getUnsortedManuscripts = (teamId: string) => ({
 export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
   id: 'team-id-0',
   displayName: 'Team A',
+  teamType: 'Discovery Team',
   labCount: 2,
   tags: [],
   memberCount: 1,

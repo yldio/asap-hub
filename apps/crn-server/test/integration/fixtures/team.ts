@@ -12,6 +12,7 @@ export const getTeamFixture = (
     projectTitle: 'Project title',
     teamId: 'team-id',
     grantId: 'grant-id',
+    teamType: 'Discovery Team',
     ...props,
   };
 };

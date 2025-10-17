@@ -1,4 +1,4 @@
-name: Migrate interest group teams
+name: Migrate team types
 on:
   workflow_dispatch:
     inputs:
@@ -13,10 +13,10 @@ on:
       contentful-env:
         required: true
         type: string
-        description: Choose the Contentful environment to migrate interest group teams
+        description: Choose the Contentful environment to migrate team types
 
 jobs:
-  migrate_interest_group_teams:
+  migrate_team_types:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -32,9 +32,9 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Run Interest Group Teams Migration
+      - name: Run Team Types Migration
         run: |
-          yarn workspace @asap-hub/contentful migrate-interest-group-teams
+          yarn workspace @asap-hub/contentful migrate-team-types
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
@@ -42,13 +42,13 @@ jobs:
 
   notify_failure:
     runs-on: ubuntu-latest
-    needs: [migrate_interest_group_teams]
+    needs: [migrate_team_types]
     if: ${{ failure() && inputs.environment-name=='Production' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - uses: ./.github/actions/slack/
         with:
-          message: Migrate interest group teams failed
+          message: Team types migration failed
           webhook: ${{ secrets.SLACK_WEBHOOK }}
           status: failure

@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { NetworkTeams } from '@asap-hub/react-components';
+import { TeamType } from '@asap-hub/model';
 
 import { number } from './knobs';
 
@@ -18,6 +19,7 @@ const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
       displayName: `Barnes, A. ${i + 1}`,
       projectTitle:
         'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
+      teamType: 'Discovery Team' as TeamType,
       labCount: number('Lab count', 15),
       memberCount: 2,
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),

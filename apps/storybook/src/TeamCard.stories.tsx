@@ -1,3 +1,4 @@
+import { TeamType } from '@asap-hub/model';
 import { TeamCard } from '@asap-hub/react-components';
 
 import { number, text } from './knobs';
@@ -22,7 +23,7 @@ const teamCardProps = () => {
     displayName: text('Display Name', 'Barnes, A.'),
     projectTitle:
       'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
-
+    teamType: 'Discovery Team' as TeamType,
     tags: [
       ...Array(numberOfExpertiseAndResources).fill(
         expertiseAndResource,

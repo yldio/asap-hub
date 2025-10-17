@@ -58,6 +58,7 @@ const userFilters: ReadonlyArray<
   { label: 'Lead PI', value: 'Lead PI (Core Leadership)' },
   { label: 'Co-PI', value: 'Co-PI (Core Leadership)' },
   { label: 'Project Manager', value: 'Project Manager' },
+  { label: 'Data Manager', value: 'Data Manager' },
   { label: 'Collaborating PI', value: 'Collaborating PI' },
   { label: 'Key Personnel', value: 'Key Personnel' },
   { label: 'ASAP Staff', value: 'ASAP Staff' },

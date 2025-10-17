@@ -162,7 +162,7 @@ export const userProductivityResponse: UserProductivityAlgoliaResponse = {
   ],
   asapOutput: 1,
   asapPublicOutput: 2,
-  ratio: '0.50',
+  ratio: 0.5,
 };
 
 export const userProductivityPerformance: UserProductivityPerformance = {

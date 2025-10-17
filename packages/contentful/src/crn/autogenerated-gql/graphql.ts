@@ -10964,6 +10964,13 @@ export enum TeamsToolsCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
+export type TimelineFilterInput = {
+  /** Preview content starting from a given release date */
+  release_lte?: InputMaybe<Scalars['String']>;
+  /** Preview content starting from a given timestamp */
+  timestamp_lte?: InputMaybe<Scalars['DateTime']>;
+};
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
 export type Tutorials = Entry &
   _Node & {
@@ -15448,7 +15455,12 @@ export type FetchUserProductivityQuery = {
         Maybe<
           Pick<
             Users,
-            'firstName' | 'lastName' | 'nickname' | 'alumniSinceDate'
+            | 'firstName'
+            | 'lastName'
+            | 'nickname'
+            | 'onboarded'
+            | 'role'
+            | 'alumniSinceDate'
           > & {
             sys: Pick<Sys, 'id'>;
             teamsCollection?: Maybe<{
@@ -36019,6 +36031,11 @@ export const FetchUserProductivityDocument = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'nickname' },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'onboarded' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'alumniSinceDate' },

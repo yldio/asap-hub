@@ -86,6 +86,15 @@ jobs:
           OPENSEARCH_ANALYTICS_SPREADSHEET_URL: ${{ steps.setup.outputs.opensearch-analytics-spreadsheet-url }}
           GOOGLE_API_CREDENTIALS_SECRET_ID: google-api-credentials-${{ steps.env-alias.outputs.env-alias }}
           ENVIRONMENT: ${{ inputs.environment-name }}
+      - name: Process Performance
+        if: ${{ inputs.metric == 'all' || inputs.metric == 'user-productivity' }}
+        run: yarn opensearch:process-performance --awsRegion "$AWS_REGION" --environment "$ENVIRONMENT" --opensearchUsername "$OPENSEARCH_USERNAME" --opensearchPassword "$OPENSEARCH_PASSWORD" --metric $METRIC
+        env:
+          AWS_REGION: ${{ steps.setup.outputs.aws-default-region }}
+          ENVIRONMENT: ${{ inputs.environment-name }}
+          OPENSEARCH_USERNAME: ${{ secrets.AWS_OS_USERNAME }}
+          OPENSEARCH_PASSWORD: ${{ secrets.AWS_OS_PASSWORD }}
+          METRIC: ${{ inputs.metric }}
 
   notify_failure:
     runs-on: ubuntu-latest

@@ -327,7 +327,7 @@ describe('downloadAnalyticsXLSX', () => {
         ASAPOutputValue: 1,
         ASAPPublicOutputAverage: 'Average',
         ASAPPublicOutputValue: 2,
-        ratio: '0.50',
+        ratio: 0.5,
       },
     ]);
     expect(XLSX.utils.book_append_sheet).toHaveBeenNthCalledWith(

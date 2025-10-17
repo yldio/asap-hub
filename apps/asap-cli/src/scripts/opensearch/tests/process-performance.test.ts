@@ -24,21 +24,17 @@ const mockGetPerformanceMetrics = getPerformanceMetrics as jest.MockedFunction<
 
 type MockClient = {
   search: jest.Mock;
-  scroll: jest.Mock;
-  clearScroll: jest.Mock;
 } & Partial<Awaited<ReturnType<typeof getClient>>>;
 
 describe('processUserProductivityPerformance', () => {
   let mockClient: MockClient;
   let consoleInfoSpy: jest.SpyInstance;
   let consoleErrorSpy: jest.SpyInstance;
-  let consoleWarnSpy: jest.SpyInstance;
 
   beforeEach(() => {
     jest.clearAllMocks();
     consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation();
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
 
     const mockPerformanceMetrics: PerformanceMetrics = {
       belowAverageMin: 0,
@@ -55,11 +51,9 @@ describe('processUserProductivityPerformance', () => {
   afterEach(() => {
     consoleInfoSpy.mockRestore();
     consoleErrorSpy.mockRestore();
-    consoleWarnSpy.mockRestore();
   });
 
   it('should process user productivity performance for all time ranges and document categories', async () => {
-    const mockScrollId = 'scroll-id-123';
     const mockHits = [
       {
         _source: {
@@ -84,17 +78,9 @@ describe('processUserProductivityPerformance', () => {
     mockClient = {
       search: jest.fn().mockResolvedValue({
         body: {
-          _scroll_id: mockScrollId,
           hits: { hits: mockHits },
         },
       }),
-      scroll: jest.fn().mockResolvedValue({
-        body: {
-          _scroll_id: mockScrollId,
-          hits: { hits: [] },
-        },
-      }),
-      clearScroll: jest.fn().mockResolvedValue({}),
     };
 
     const results = await processUserProductivityPerformance(
@@ -128,76 +114,7 @@ describe('processUserProductivityPerformance', () => {
     );
   });
 
-  it('should handle scroll pagination correctly', async () => {
-    const mockScrollId1 = 'scroll-id-1';
-    const mockScrollId2 = 'scroll-id-2';
-
-    const firstBatch = [
-      {
-        _source: {
-          asapOutput: 1,
-          asapPublicOutput: 0,
-          ratio: 0,
-          timeRange: 'all',
-          documentCategory: 'article',
-        },
-      },
-    ];
-
-    const secondBatch = [
-      {
-        _source: {
-          asapOutput: 2,
-          asapPublicOutput: 1,
-          ratio: 0.5,
-          timeRange: 'all',
-          documentCategory: 'article',
-        },
-      },
-    ];
-
-    mockClient = {
-      search: jest.fn().mockResolvedValue({
-        body: {
-          _scroll_id: mockScrollId1,
-          hits: { hits: firstBatch },
-        },
-      }),
-      scroll: jest
-        .fn()
-        .mockResolvedValueOnce({
-          body: {
-            _scroll_id: mockScrollId2,
-            hits: { hits: secondBatch },
-          },
-        })
-        .mockResolvedValue({
-          body: {
-            _scroll_id: mockScrollId2,
-            hits: { hits: [] },
-          },
-        }),
-      clearScroll: jest.fn().mockResolvedValue({}),
-    };
-
-    const results = await processUserProductivityPerformance(
-      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
-    );
-
-    expect(results).toHaveLength(30);
-
-    // Verify scroll was called
-    expect(mockClient.scroll).toHaveBeenCalled();
-
-    // Verify clearScroll was called for each combination
-    expect(mockClient.clearScroll).toHaveBeenCalledTimes(30);
-    expect(mockClient.clearScroll).toHaveBeenCalledWith({
-      scroll_id: expect.any(String),
-    });
-  });
-
   it('should handle documents with missing fields gracefully', async () => {
-    const mockScrollId = 'scroll-id-123';
     const mockHits = [
       {
         _source: {
@@ -222,17 +139,9 @@ describe('processUserProductivityPerformance', () => {
     mockClient = {
       search: jest.fn().mockResolvedValue({
         body: {
-          _scroll_id: mockScrollId,
           hits: { hits: mockHits },
         },
       }),
-      scroll: jest.fn().mockResolvedValue({
-        body: {
-          _scroll_id: mockScrollId,
-          hits: { hits: [] },
-        },
-      }),
-      clearScroll: jest.fn().mockResolvedValue({}),
     };
 
     const results = await processUserProductivityPerformance(
@@ -248,49 +157,11 @@ describe('processUserProductivityPerformance', () => {
     );
   });
 
-  it('should log and continue when clearScroll fails', async () => {
-    const mockScrollId = 'scroll-id-123';
-    const clearScrollError = new Error('Failed to clear scroll');
-
-    mockClient = {
-      search: jest.fn().mockResolvedValue({
-        body: {
-          _scroll_id: mockScrollId,
-          hits: { hits: [] },
-        },
-      }),
-      scroll: jest.fn().mockResolvedValue({
-        body: {
-          _scroll_id: mockScrollId,
-          hits: { hits: [] },
-        },
-      }),
-      clearScroll: jest.fn().mockRejectedValue(clearScrollError),
-    };
-
-    // Should not throw even though clearScroll fails
-    await expect(
-      processUserProductivityPerformance(
-        mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
-      ),
-    ).resolves.toBeDefined();
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      'Failed to clear scroll context',
-      expect.objectContaining({
-        error: clearScrollError,
-        scrollId: mockScrollId,
-      }),
-    );
-  });
-
   it('should log error and exclude failed combinations', async () => {
     const searchError = new Error('Search failed');
 
     mockClient = {
       search: jest.fn().mockRejectedValue(searchError),
-      scroll: jest.fn(),
-      clearScroll: jest.fn(),
     };
 
     const results = await processUserProductivityPerformance(
@@ -310,22 +181,12 @@ describe('processUserProductivityPerformance', () => {
   });
 
   it('should handle empty hits array', async () => {
-    const mockScrollId = 'scroll-id-123';
-
     mockClient = {
       search: jest.fn().mockResolvedValue({
         body: {
-          _scroll_id: mockScrollId,
           hits: { hits: [] },
         },
       }),
-      scroll: jest.fn().mockResolvedValue({
-        body: {
-          _scroll_id: mockScrollId,
-          hits: { hits: [] },
-        },
-      }),
-      clearScroll: jest.fn().mockResolvedValue({}),
     };
 
     const results = await processUserProductivityPerformance(
@@ -340,22 +201,12 @@ describe('processUserProductivityPerformance', () => {
   });
 
   it('should process metrics concurrently for all combinations', async () => {
-    const mockScrollId = 'scroll-id-123';
-
     mockClient = {
       search: jest.fn().mockResolvedValue({
         body: {
-          _scroll_id: mockScrollId,
           hits: { hits: [] },
         },
       }),
-      scroll: jest.fn().mockResolvedValue({
-        body: {
-          _scroll_id: mockScrollId,
-          hits: { hits: [] },
-        },
-      }),
-      clearScroll: jest.fn().mockResolvedValue({}),
     };
 
     await processUserProductivityPerformance(
@@ -399,17 +250,9 @@ describe('processPerformance', () => {
     const mockClient = {
       search: jest.fn().mockResolvedValue({
         body: {
-          _scroll_id: 'scroll-id',
           hits: { hits: [] },
         },
       }),
-      scroll: jest.fn().mockResolvedValue({
-        body: {
-          _scroll_id: 'scroll-id',
-          hits: { hits: [] },
-        },
-      }),
-      clearScroll: jest.fn().mockResolvedValue({}),
     };
 
     mockGetClient.mockResolvedValue(

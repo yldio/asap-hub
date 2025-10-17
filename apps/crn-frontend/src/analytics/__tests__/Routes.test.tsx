@@ -170,13 +170,13 @@ describe('Analytics page', () => {
 
     expect(screen.queryByText(/Select data range/i)).not.toBeInTheDocument();
     expect(
-      screen.queryByText(/Select metrics to export/i),
+      screen.queryByText(/Select metrics to download/i),
     ).not.toBeInTheDocument();
 
     userEvent.click(screen.getByRole('button', { name: /Multiple XLSX/i }));
 
     expect(screen.getByText(/Select data range/i)).toBeVisible();
-    expect(screen.getByText(/Select metrics to export/i)).toBeVisible();
+    expect(screen.getByText(/Select metrics to download/i)).toBeVisible();
   });
 
   it('user can dismiss export modal when they click on cancel button', async () => {
@@ -187,13 +187,13 @@ describe('Analytics page', () => {
     userEvent.click(screen.getByRole('button', { name: /Multiple XLSX/i }));
 
     expect(screen.getByText(/Select data range/i)).toBeVisible();
-    expect(screen.getByText(/Select metrics to export/i)).toBeVisible();
+    expect(screen.getByText(/Select metrics to download/i)).toBeVisible();
 
     userEvent.click(screen.getByRole('button', { name: /Cancel/i }));
 
     expect(screen.queryByText(/Select data range/i)).not.toBeInTheDocument();
     expect(
-      screen.queryByText(/Select metrics to export/i),
+      screen.queryByText(/Select metrics to download/i),
     ).not.toBeInTheDocument();
   });
 

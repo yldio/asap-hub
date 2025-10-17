@@ -1,4 +1,4 @@
-/* eslint-disable no-console, no-await-in-loop, no-underscore-dangle */
+/* eslint-disable no-console, no-underscore-dangle */
 import {
   PerformanceMetrics,
   timeRanges,
@@ -42,9 +42,8 @@ export interface ProcessPerformanceOptions {
   metric: 'all' | 'user-productivity';
 }
 
-const SCROLL_TIMEOUT = '5m';
-const PAGE_SIZE = 5000;
 const INDEX_NAME = 'user-productivity';
+const MAX_RESULTS = 10000;
 
 /**
  * Maps a search hit to a UserProductivityDocument
@@ -60,68 +59,28 @@ const mapHitToDocument = (
 });
 
 /**
- * Safely clears the scroll context
- */
-const clearScroll = async (
-  client: Awaited<ReturnType<typeof getClient>>,
-  scrollId: string,
-): Promise<void> => {
-  try {
-    await client.clearScroll({ scroll_id: scrollId });
-  } catch (error) {
-    console.warn('Failed to clear scroll context', { error, scrollId });
-  }
-};
-
-/**
- * Retrieves all documents for a given time range and document category using scroll API
+ * Retrieves all documents for a given time range and document category
  */
 const getAllDocuments = async (
   client: Awaited<ReturnType<typeof getClient>>,
   timeRange: string,
   documentCategory: string,
 ): Promise<UserProductivityDocument[]> => {
-  const documents: UserProductivityDocument[] = [];
-
   try {
-    // Initial search with scroll
-    let response = await client.search({
+    const response = await client.search({
       index: INDEX_NAME,
-      scroll: SCROLL_TIMEOUT,
       body: {
         query: {
           bool: {
             must: [{ term: { timeRange } }, { term: { documentCategory } }],
           },
         },
-        size: PAGE_SIZE,
+        size: MAX_RESULTS,
       },
     });
 
-    let scrollId = response.body._scroll_id;
-    let hits = response.body.hits?.hits || [];
-
-    // Process first batch
-    documents.push(...hits.map(mapHitToDocument));
-
-    // Continue scrolling while there are more results
-    while (hits.length > 0) {
-      response = await client.scroll({
-        scroll_id: scrollId,
-        scroll: SCROLL_TIMEOUT,
-      });
-
-      scrollId = response.body._scroll_id;
-      hits = response.body.hits?.hits || [];
-
-      if (hits.length > 0) {
-        documents.push(...hits.map(mapHitToDocument));
-      }
-    }
-
-    await clearScroll(client, scrollId ?? '');
-
-    return documents;
+    const hits = response.body.hits?.hits || [];
+    return hits.map(mapHitToDocument);
   } catch (error) {
     console.error('Failed to retrieve documents', {
       error,

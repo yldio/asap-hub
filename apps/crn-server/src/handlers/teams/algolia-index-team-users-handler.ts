@@ -77,7 +77,7 @@ export const indexTeamUsersHandler = (
     }: LoopOverCustomCollectionFetchOptions): Promise<ListUserResponse> =>
       userController.fetch({
         filter: {
-          teamId: teamId,
+          teamId,
         },
         skip,
         take,

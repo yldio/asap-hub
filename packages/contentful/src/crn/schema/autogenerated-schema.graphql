@@ -4,6 +4,8 @@ schema {
 
 directive @contentSourceMaps on QUERY
 
+directive @contentfulSchemaMetadata(contentTypePublishedCounters: JSON) on SCHEMA
+
 directive @delegatedResourceLink(contentTypeId: String, field: JSON) on FIELD_DEFINITION | OBJECT
 
 directive @enumMapper(value: JSON) on ENUM_VALUE
@@ -14,6 +16,8 @@ directive @fieldResolver(data: JSON, kind: String) on FIELD_DEFINITION
 
 "Indicates exactly one field must be supplied and this field must not be `null`."
 directive @oneOf on INPUT_OBJECT
+
+directive @timeline(where: TimelineFilterInput!) on QUERY
 
 directive @typeIdentifier(contentTypeId: String) on OBJECT
 
@@ -7379,6 +7383,13 @@ enum TeamsToolsCollectionOrder {
   sys_publishedVersion_DESC
   url_ASC
   url_DESC
+}
+
+input TimelineFilterInput {
+  """Preview content starting from a given release date"""
+  release_lte: String
+  """Preview content starting from a given timestamp"""
+  timestamp_lte: DateTime
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials)"""

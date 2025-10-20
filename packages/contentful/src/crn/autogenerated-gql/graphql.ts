@@ -10964,6 +10964,13 @@ export enum TeamsToolsCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
+export type TimelineFilterInput = {
+  /** Preview content starting from a given release date */
+  release_lte?: InputMaybe<Scalars['String']>;
+  /** Preview content starting from a given timestamp */
+  timestamp_lte?: InputMaybe<Scalars['DateTime']>;
+};
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
 export type Tutorials = Entry &
   _Node & {
@@ -25858,6 +25865,79 @@ export type FetchUsersByTeamIdQueryVariables = Exact<{
 }>;
 
 export type FetchUsersByTeamIdQuery = {
+  teamMembershipCollection?: Maybe<
+    Pick<TeamMembershipCollection, 'total'> & {
+      items: Array<
+        Maybe<{
+          linkedFrom?: Maybe<{
+            usersCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<
+                    Users,
+                    | 'alumniSinceDate'
+                    | 'city'
+                    | 'stateOrProvince'
+                    | 'country'
+                    | 'createdDate'
+                    | 'degree'
+                    | 'email'
+                    | 'firstName'
+                    | 'institution'
+                    | 'jobTitle'
+                    | 'lastName'
+                    | 'middleName'
+                    | 'nickname'
+                    | 'onboarded'
+                    | 'dismissedGettingStarted'
+                    | 'role'
+                    | 'openScienceTeamMember'
+                  > & {
+                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                    sys: Pick<Sys, 'id'>;
+                    labsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+                      >;
+                    }>;
+                    researchTagsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }
+                        >
+                      >;
+                    }>;
+                    teamsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<TeamMembership, 'role'> & {
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }
+                        >
+                      >;
+                    }>;
+                  }
+                >
+              >;
+            }>;
+          }>;
+        }>
+      >;
+    }
+  >;
+};
+
+export type FetchUsersByTeamMembershipIdQueryVariables = Exact<{
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchUsersByTeamMembershipIdQuery = {
   teamMembershipCollection?: Maybe<
     Pick<TeamMembershipCollection, 'total'> & {
       items: Array<
@@ -49667,6 +49747,155 @@ export const FetchUsersByTeamIdDocument = {
 } as unknown as DocumentNode<
   FetchUsersByTeamIdQuery,
   FetchUsersByTeamIdQueryVariables
+>;
+export const FetchUsersByTeamMembershipIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchUsersByTeamMembershipId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teamMembershipCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'sys' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'id' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'linkedFrom' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'usersCollection' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '1' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'FragmentSpread',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'UserListItemContent',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...UserListItemContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchUsersByTeamMembershipIdQuery,
+  FetchUsersByTeamMembershipIdQueryVariables
 >;
 export const FetchUsersByLabIdDocument = {
   kind: 'Document',

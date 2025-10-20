@@ -433,6 +433,28 @@ export const FETCH_USERS_BY_TEAM_ID = gql`
   ${userListItemContentQueryFragment}
 `;
 
+export const FETCH_USERS_BY_TEAM_MEMBERSHIP_ID = gql`
+  query FetchUsersByTeamMembershipId($id: String!, $limit: Int, $skip: Int) {
+    teamMembershipCollection(
+      limit: $limit
+      skip: $skip
+      where: { sys: { id: $id } }
+    ) {
+      total
+      items {
+        linkedFrom {
+          usersCollection(limit: 1) {
+            items {
+              ...UserListItemContent
+            }
+          }
+        }
+      }
+    }
+  }
+  ${userListItemContentQueryFragment}
+`;
+
 export const FETCH_USERS_BY_LAB_ID = gql`
   query FetchUsersByLabId($id: String!, $limit: Int, $skip: Int) {
     labs(id: $id) {

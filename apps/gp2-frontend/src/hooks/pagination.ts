@@ -42,7 +42,9 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
     return `${newParams.length ? '?' : history.location.pathname}${newParams}`;
   };
 
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
+    // GP2-specific: Reset to last valid page when current page exceeds bounds
     if (numberOfItems && currentPage > lastAllowedPage)
       history.replace({
         search: renderPageHref(lastAllowedPage),

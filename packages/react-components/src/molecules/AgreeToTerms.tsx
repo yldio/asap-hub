@@ -15,7 +15,7 @@ const AgreeToTerms: React.FC<AgreeToTermsProps> = ({ appOrigin }) => (
     <Link
       href={new URL(staticPages({}).privacyPolicy({}).$, appOrigin).toString()}
     >
-      Privacy Policy
+      Privacy Notice
     </Link>
     .
   </Paragraph>

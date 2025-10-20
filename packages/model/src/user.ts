@@ -266,6 +266,7 @@ export type FetchUsersFilter =
       labId?: never;
       role?: never;
       teamId?: never;
+      teamMembershipId?: never;
       code?: string;
       hidden?: boolean;
       onboarded?: boolean;
@@ -276,6 +277,7 @@ export type FetchUsersFilter =
       labId?: string;
       role?: never;
       teamId?: never;
+      teamMembershipId?: never;
       code?: never;
       hidden?: never;
       onboarded?: never;
@@ -286,6 +288,18 @@ export type FetchUsersFilter =
       labId?: never;
       role?: string[];
       teamId?: string;
+      teamMembershipId?: never;
+      code?: never;
+      hidden?: never;
+      onboarded?: never;
+      orcid?: never;
+      orcidLastSyncDate?: string;
+    }
+  | {
+      labId?: never;
+      role?: never;
+      teamId?: never;
+      teamMembershipId?: string;
       code?: never;
       hidden?: never;
       onboarded?: never;

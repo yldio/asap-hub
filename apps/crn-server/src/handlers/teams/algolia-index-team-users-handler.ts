@@ -3,11 +3,7 @@ import {
   algoliaSearchClientFactory,
   Payload,
 } from '@asap-hub/algolia';
-import {
-  ListUserResponse,
-  TeamEvent,
-  TeamMembershipEvent,
-} from '@asap-hub/model';
+import { ListUserResponse, TeamEvent } from '@asap-hub/model';
 import {
   createProcessingFunction,
   loopOverCustomCollection,
@@ -26,28 +22,10 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamPayload } from '../event-bus';
 
-type TeamMembershipPayload = {
-  resourceId: string;
-  fields: {
-    team: {
-      'en-US': {
-        sys: {
-          id: string;
-        };
-      };
-    };
-  };
-};
-
 export const indexTeamUsersHandler = (
   userController: UserController,
   algoliaClient: AlgoliaClient<'crn'>,
-): ((
-  event: EventBridgeEvent<
-    TeamEvent | TeamMembershipEvent,
-    TeamPayload | TeamMembershipPayload
-  >,
-) => Promise<void>) => {
+): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) => {
   const processingFunction = createProcessingFunction<Payload, 'user'>(
     algoliaClient,
     'user',
@@ -57,27 +35,13 @@ export const indexTeamUsersHandler = (
   return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    // Extract team ID based on event type
-    let teamId: string;
-
-    if (event['detail-type'].startsWith('TeamMembership')) {
-      // For TeamMembership events, extract team ID from the membership data
-      const membershipPayload = event.detail as TeamMembershipPayload;
-      teamId = membershipPayload.fields.team['en-US'].sys.id;
-      logger.debug(`TeamMembership event - extracted team ID: ${teamId}`);
-    } else {
-      // For Team events, use the resourceId directly
-      teamId = event.detail.resourceId;
-      logger.debug(`Team event - using team ID: ${teamId}`);
-    }
-
     const fetchFunction = ({
       skip,
       take,
     }: LoopOverCustomCollectionFetchOptions): Promise<ListUserResponse> =>
       userController.fetch({
         filter: {
-          teamId,
+          teamId: event.detail.resourceId,
         },
         skip,
         take,
@@ -100,6 +64,6 @@ const rawHandler = indexTeamUsersHandler(
 export const handler = sentryWrapper(rawHandler);
 
 export type UserIndexEventBridgeEvent = EventBridgeEvent<
-  TeamEvent | TeamMembershipEvent,
-  TeamPayload | TeamMembershipPayload
+  TeamEvent,
+  TeamPayload
 >;

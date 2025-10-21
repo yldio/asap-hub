@@ -15,9 +15,13 @@ export const teamRole = [
   'Trainee',
 ] as const;
 
+const teamType = ['Discovery Team', 'Resource Team'] as const;
+
 export type TeamRole = (typeof teamRole)[number];
 
 export type TeamTool = { name: string; description?: string; url: string };
+
+export type TeamType = (typeof teamType)[number];
 
 export interface TeamCreateRequest {
   displayName: string;
@@ -74,6 +78,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   id: string;
   teamId?: string;
   grantId?: string;
+  teamType: TeamType;
   tags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   members: TeamMember[];
   lastModifiedDate: string;
@@ -97,6 +102,7 @@ export type TeamCreateDataObject = {
   tools?: TeamTool[];
   teamId: string;
   grantId: string;
+  teamType: TeamType;
 };
 
 export type TeamResponse = Omit<TeamDataObject, 'researchTheme'>;
@@ -105,7 +111,13 @@ export type FetchTeamsOptions = FetchOptions;
 
 export type TeamListItemDataObject = Pick<
   TeamDataObject,
-  'id' | 'displayName' | 'inactiveSince' | 'projectTitle' | 'tags' | 'labCount'
+  | 'id'
+  | 'displayName'
+  | 'inactiveSince'
+  | 'projectTitle'
+  | 'teamType'
+  | 'tags'
+  | 'labCount'
 > & { memberCount: number };
 
 export type ListTeamDataObject = ListResponse<TeamListItemDataObject>;

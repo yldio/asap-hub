@@ -4,7 +4,6 @@ import {
   documentCategories,
   EngagementResponse,
   FilterAnalyticsOptions,
-  ListResponse,
   Metric,
   outputTypes,
   TeamCollaborationResponse,
@@ -16,7 +15,6 @@ import {
   UserProductivityTeam,
 } from '@asap-hub/model';
 import { promises as fs } from 'fs';
-import { FileHandle } from 'fs/promises';
 
 import AnalyticsController from '../src/controllers/analytics.controller';
 import { getAnalyticsDataProvider } from '../src/dependencies/analytics.dependencies';
@@ -27,88 +25,91 @@ export const exportAnalyticsData = async (
   metric: Metric,
   filename?: string,
 ): Promise<void> => {
+  console.log(`Starting export for metric: ${metric}`);
   const file = await fs.open(filename || `${metric}.json`, 'w');
 
-  await file.write('[\n');
-  metric === 'team-leadership'
-    ? await exportData(metric, file)
-    : await exportDataWithFilters(metric, file);
+  try {
+    await file.write('[\n');
 
-  await file.write(']');
-};
+    const allData = await fetchAllDataWithFilters(metric);
 
-const exportDataWithFilters = async (
-  metric: Metric,
-  file: FileHandle,
-): Promise<void> => {
-  switch (metric) {
-    case 'user-productivity':
-    case 'user-collaboration':
-      for (let i = 0; i < timeRanges.length; i += 1) {
-        for (let j = 0; j < documentCategories.length; j += 1) {
-          await exportData(metric, file, {
-            timeRange: timeRanges[i],
-            documentCategory: documentCategories[j],
-          });
-          if (j != documentCategories.length - 1) {
-            await file.write(',');
-          }
-        }
-        if (i != timeRanges.length - 1) {
-          await file.write(',');
-        }
-      }
-      break;
+    const jsonData = allData
+      .map((item) => JSON.stringify(item, null, 2))
+      .join(',\n');
 
-    case 'team-productivity':
-    case 'team-collaboration':
-      for (let i = 0; i < timeRanges.length; i += 1) {
-        for (let j = 0; j < outputTypes.length; j += 1) {
-          await exportData(metric, file, {
-            timeRange: timeRanges[i],
-            outputType: outputTypes[j],
-          });
-          if (j != outputTypes.length - 1) {
-            await file.write(',');
-          }
-        }
-        if (i != timeRanges.length - 1) {
-          await file.write(',');
-        }
-      }
+    await file.write(jsonData);
+    await file.write('\n]');
 
-      break;
-
-    case 'engagement':
-    default:
-      for (let i = 0; i < timeRanges.length; i += 1) {
-        await exportData(metric, file, { timeRange: timeRanges[i] });
-        if (i != timeRanges.length - 1) {
-          await file.write(',');
-        }
-      }
-      break;
+    console.log(
+      `Finished exporting ${allData.length} records for metric: ${metric}`,
+    );
+  } finally {
+    await file.close();
   }
 };
 
-const exportData = async (
+const getFilterCombinations = (metric: Metric): FilterAnalyticsOptions[] => {
+  switch (metric) {
+    case 'team-leadership':
+      return [{}];
+
+    case 'user-productivity':
+    case 'user-collaboration':
+      return timeRanges.flatMap((timeRange) =>
+        documentCategories.map((documentCategory) => ({
+          timeRange,
+          documentCategory,
+        })),
+      );
+
+    case 'team-productivity':
+    case 'team-collaboration':
+      return timeRanges.flatMap((timeRange) =>
+        outputTypes.map((outputType) => ({
+          timeRange,
+          outputType,
+        })),
+      );
+
+    case 'engagement':
+    default:
+      return timeRanges.map((timeRange) => ({ timeRange }));
+  }
+};
+
+const fetchAllDataWithFilters = async (
   metric: Metric,
-  file: FileHandle,
+): Promise<
+  EntityResponses['analytics'][keyof EntityResponses['analytics']][]
+> => {
+  const filterCombinations = getFilterCombinations(metric);
+
+  const results = await Promise.all(
+    filterCombinations.map((filter) => fetchAllData(metric, filter)),
+  );
+
+  return results.flat();
+};
+
+const fetchAllData = async (
+  metric: Metric,
   filter?: FilterAnalyticsOptions,
-): Promise<void> => {
+): Promise<
+  EntityResponses['analytics'][keyof EntityResponses['analytics']][]
+> => {
   const analyticsController = new AnalyticsController(
     getAnalyticsDataProvider(),
   );
 
-  let recordCount = 0;
-  let total = 0;
-  let records: ListResponse<AnalyticsData> | null = null;
+  const allRecords: EntityResponses['analytics'][keyof EntityResponses['analytics']][] =
+    [];
   let page = 1;
+  let total = 0;
 
-  const fetchRecords = async () => {
+  const fetchRecords = async (currentPage: number) => {
     const options = {
       take: PAGE_SIZE,
-      skip: (page - 1) * PAGE_SIZE,
+      skip: (currentPage - 1) * PAGE_SIZE,
       filter: {
         timeRange: filter?.timeRange,
         documentCategory: filter?.documentCategory,
@@ -132,35 +133,52 @@ const exportData = async (
     }
   };
 
-  do {
-    records = await fetchRecords();
+  const firstPage = await fetchRecords(page);
+  if (!firstPage) return allRecords;
 
-    if (records) {
-      total = records.total;
+  total = firstPage.total;
+  allRecords.push(
+    ...firstPage.items.map((record) =>
+      transformRecords(record, metric, {
+        timeRange: filter?.timeRange,
+        documentCategory: filter?.documentCategory,
+        outputType: filter?.outputType,
+      }),
+    ),
+  );
 
-      if (page != 1) {
-        await file.write(',\n');
-      }
+  const totalPages = Math.ceil(total / PAGE_SIZE);
 
-      await file.write(
-        JSON.stringify(
-          records.items.map((record) =>
-            transformRecords(record, metric, {
-              timeRange: filter?.timeRange,
-              documentCategory: filter?.documentCategory,
-              outputType: filter?.outputType,
-            }),
-          ),
-          null,
-          2,
-        ).slice(1, -1),
+  if (totalPages > 1) {
+    const remainingPages = Array.from(
+      { length: totalPages - 1 },
+      (_, i) => i + 2,
+    );
+
+    const BATCH_SIZE = 5;
+    for (let i = 0; i < remainingPages.length; i += BATCH_SIZE) {
+      const batch = remainingPages.slice(i, i + BATCH_SIZE);
+      const results = await Promise.all(
+        batch.map((pageNum) => fetchRecords(pageNum)),
       );
 
-      page++;
-      recordCount += records.items.length;
+      results.forEach((result) => {
+        if (result) {
+          allRecords.push(
+            ...result.items.map((record) =>
+              transformRecords(record, metric, {
+                timeRange: filter?.timeRange,
+                documentCategory: filter?.documentCategory,
+                outputType: filter?.outputType,
+              }),
+            ),
+          );
+        }
+      });
     }
-  } while (total > recordCount);
-  console.log(`Finished exporting ${recordCount} records`);
+  }
+
+  return allRecords;
 };
 
 const transformRecords = (
@@ -203,6 +221,7 @@ const formatTags = (
     return name ? [name].concat(teamNames) : teamNames;
   return name ? [name] : [];
 };
+
 const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
   let teamNames = [];
   switch (type) {

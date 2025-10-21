@@ -680,6 +680,8 @@ const serverlessConfig: AWS = {
               'detail-type': [
                 'UsersPublished',
                 'UsersUnpublished',
+                'TeamMembershipPublished',
+                'TeamMembershipUnpublished',
               ] satisfies WebhookDetailType[],
             },
           },

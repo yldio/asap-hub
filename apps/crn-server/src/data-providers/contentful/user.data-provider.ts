@@ -30,12 +30,15 @@ import {
   FetchUsersByLabIdQueryVariables,
   FetchUsersByTeamIdQuery,
   FetchUsersByTeamIdQueryVariables,
+  FetchUsersByTeamMembershipIdQuery,
+  FetchUsersByTeamMembershipIdQueryVariables,
   FetchUsersQuery,
   FetchUsersQueryVariables,
   FETCH_PUBLIC_USERS,
   FETCH_USERS,
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
+  FETCH_USERS_BY_TEAM_MEMBERSHIP_ID,
   FETCH_USER_BY_ID,
   getLinkEntities,
   GraphQLClient,
@@ -224,6 +227,26 @@ export class UserContentfulDataProvider implements UserDataProvider {
         limit: take,
         skip,
         id: options.filter.teamId,
+      });
+      const users =
+        teamMembershipCollection?.items
+          ?.map((item) => item?.linkedFrom?.usersCollection?.items[0])
+          .filter((item) => !!item) || [];
+
+      return {
+        total: users.length,
+        items: users,
+      };
+    }
+
+    if (options.filter?.teamMembershipId) {
+      const { teamMembershipCollection } = await this.contentfulClient.request<
+        FetchUsersByTeamMembershipIdQuery,
+        FetchUsersByTeamMembershipIdQueryVariables
+      >(FETCH_USERS_BY_TEAM_MEMBERSHIP_ID, {
+        limit: take,
+        skip,
+        id: options.filter.teamMembershipId,
       });
       const users =
         teamMembershipCollection?.items

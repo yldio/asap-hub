@@ -6,8 +6,9 @@ import { ResearchTagDataObject } from './research-tag';
 export const teamRole = [
   'Lead PI (Core Leadership)',
   'Co-PI (Core Leadership)',
-  'Collaborating PI',
   'Project Manager',
+  'Data Manager',
+  'Collaborating PI',
   'Key Personnel',
   'Scientific Advisory Board',
   'ASAP Staff',

@@ -42,6 +42,7 @@ export const contentfulPollerHandlerFactory = (
 
   return async (sqsEvent) => {
     try {
+      logger.info(`sqsEvent: ${JSON.stringify(sqsEvent)}`);
       logger.debug(`sqsEvent: ${JSON.stringify(sqsEvent)}`);
       const record = sqsEvent.Records[0];
       if (!(record && sqsEvent.Records.length === 1)) {
@@ -84,6 +85,11 @@ export const contentfulPollerHandlerFactory = (
           },
         ],
       });
+      logger.info(
+        `Event added to ${
+          config.eventBus
+        } detail Type: ${detailType} detail: ${JSON.stringify(detail)}`,
+      );
       logger.debug(
         `Event added to ${
           config.eventBus

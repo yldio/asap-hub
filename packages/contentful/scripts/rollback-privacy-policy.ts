@@ -17,23 +17,15 @@ const queryOptions: QueryOptions = {
   limit: 1,
 };
 
-function rollbackPreservingCase(match: string): string {
-  if (match === match.toLowerCase()) {
-    return 'privacy policy';
-  }
-  return 'Privacy Policy';
-}
-
 function transformRichText(richText: any): any {
   if (!richText || !richText.nodeType) {
     return richText;
   }
 
   const textString = JSON.stringify(richText);
-  const updatedTextString = textString.replace(
-    /privacy notice/gi,
-    rollbackPreservingCase,
-  );
+  const updatedTextString = textString.replace(/notice/gi, (match: string) => {
+    return match.toLowerCase() === match ? 'policy' : 'Policy';
+  });
   return JSON.parse(updatedTextString);
 }
 

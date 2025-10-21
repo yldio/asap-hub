@@ -4,6 +4,7 @@ import {
   toUserListItem,
   UserEvent,
   TeamMembershipEvent,
+  UserResponse,
 } from '@asap-hub/model';
 import { EventBridgeHandler, UserPayload } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
@@ -23,92 +24,127 @@ type TeamMembershipPayload = {
   fields: {
     team: {
       'en-US': {
-        sys: {
-          id: string;
-        };
+        sys: { id: string };
       };
     };
   };
 };
 
+type IndexUserEvent = UserEvent | TeamMembershipEvent;
+type IndexUserPayload = UserPayload | TeamMembershipPayload;
+
+const isTeamMembershipEvent = (type: string): type is TeamMembershipEvent =>
+  type.startsWith('TeamMembership');
+
+const isNotFoundError = (e: unknown): boolean =>
+  (isBoom(e) && e.output.statusCode === 404) || e instanceof NotFoundError;
+
+const shouldIndexUser = (
+  user: Pick<UserResponse, 'onboarded' | 'role'>,
+): boolean => Boolean(user.onboarded) && user.role !== 'Hidden';
+
+async function fetchUserFromTeamMembership(
+  userController: UserController,
+  membershipId: string,
+): Promise<UserResponse> {
+  const userList = await userController.fetch({
+    filter: { teamMembershipId: membershipId },
+    take: 1,
+    skip: 0,
+  });
+
+  const first = userList.items[0];
+  if (!first) {
+    throw new NotFoundError(
+      undefined,
+      `user with teamMembershipId ${membershipId} not found`,
+    );
+  }
+
+  logger.debug(
+    { membershipId, userId: first.id, detailType: 'TeamMembership' },
+    'Resolved user from TeamMembership',
+  );
+
+  return userController.fetchById(first.id);
+}
+
+async function fetchUserFromEvent(
+  userController: UserController,
+  detailType: string,
+  payload: IndexUserPayload | TeamMembershipPayload,
+): Promise<UserResponse> {
+  if (isTeamMembershipEvent(detailType)) {
+    return fetchUserFromTeamMembership(userController, payload.resourceId);
+  }
+
+  const user = await userController.fetchById(payload.resourceId);
+  logger.debug({ userId: user.id, detailType }, 'Fetched user by resourceId');
+  return user;
+}
+
+async function syncUserToAlgolia(
+  algolia: AlgoliaClient<'crn'>,
+  user: UserResponse,
+): Promise<void> {
+  if (shouldIndexUser(user)) {
+    await algolia.save({ data: toUserListItem(user), type: 'user' });
+    logger.debug({ userId: user.id }, 'User indexed');
+  } else {
+    await algolia.remove(user.id);
+    logger.debug({ userId: user.id }, 'User removed (not indexable)');
+  }
+}
+
+async function handleNotFoundError(
+  algolia: AlgoliaClient<'crn'>,
+  detailType: string,
+  resourceId: string,
+): Promise<void> {
+  if (isTeamMembershipEvent(detailType)) {
+    throw new NotFoundError(
+      undefined,
+      'Cannot handle TeamMembership event for missing user',
+    );
+  }
+  await algolia.remove(resourceId);
+  logger.debug(
+    { userId: resourceId, detailType },
+    'User removed (not found on fetchById)',
+  );
+}
+
 /* istanbul ignore next */
-export const indexUserHandler =
-  (
-    userController: UserController,
-    algoliaClient: AlgoliaClient<'crn'>,
-  ): EventBridgeHandler<
-    UserEvent | TeamMembershipEvent,
-    UserPayload | TeamMembershipPayload
-  > =>
-  async (event) => {
-    logger.debug(`Event ${event['detail-type']}`);
+export const indexUserHandler = (
+  userController: UserController,
+  algoliaClient: AlgoliaClient<'crn'>,
+): EventBridgeHandler<IndexUserEvent, IndexUserPayload> => {
+  return async (event) => {
+    const detailType = event['detail-type'];
+    logger.debug({ detailType }, 'Received event');
 
     try {
-      let user;
-      let userId: string;
-
-      if (event['detail-type'].startsWith('TeamMembership')) {
-        // For TeamMembership events, get the user via teamMembershipId filter
-        const membershipPayload = event.detail as TeamMembershipPayload;
-        const userList = await userController.fetch({
-          filter: { teamMembershipId: membershipPayload.resourceId },
-          take: 1,
-          skip: 0,
-        });
-
-        if (userList.items.length === 0 || !userList.items[0]) {
-          throw new NotFoundError(
-            undefined,
-            `user with teamMembershipId ${membershipPayload.resourceId} not found`,
-          );
-        }
-
-        const userListItem = userList.items[0];
-        userId = userListItem.id;
-        logger.debug(
-          `Fetched user ${userId} from teamMembership ${membershipPayload.resourceId}`,
+      const user = await fetchUserFromEvent(
+        userController,
+        detailType,
+        event.detail,
+      );
+      await syncUserToAlgolia(algoliaClient, user);
+    } catch (error) {
+      if (isNotFoundError(error)) {
+        await handleNotFoundError(
+          algoliaClient,
+          detailType,
+          (event.detail as { resourceId: string }).resourceId,
         );
-
-        // Convert UserListItemDataObject to UserResponse by fetching full user details
-        user = await userController.fetchById(userId);
-      } else {
-        // For User events, use the resourceId directly
-        user = await userController.fetchById(event.detail.resourceId);
-        userId = user.id;
-        logger.debug(`Fetched user ${userId}`);
-      }
-
-      if (user.onboarded && user.role !== 'Hidden') {
-        await algoliaClient.save({
-          data: toUserListItem(user),
-          type: 'user',
-        });
-
-        logger.debug(`User saved ${userId}`);
-      } else {
-        await algoliaClient.remove(userId);
-
-        logger.debug(`User removed ${userId}`);
-      }
-    } catch (e) {
-      if (
-        (isBoom(e) && e.output.statusCode === 404) ||
-        e instanceof NotFoundError
-      ) {
-        // For TeamMembership events, we can't remove by membership ID, so we skip removal
-        if (!event['detail-type'].startsWith('TeamMembership')) {
-          await algoliaClient.remove(event.detail.resourceId);
-          logger.debug(`User removed ${event.detail.resourceId}`);
-        }
         return;
       }
-
-      logger.error(e, 'Error saving user to Algolia');
-      throw e;
+      logger.error(error, 'Error saving user to Algolia');
+      throw error;
     }
   };
+};
 
-/* istanbul ignore next */
 export const handler = sentryWrapper(
   indexUserHandler(
     new UserController(

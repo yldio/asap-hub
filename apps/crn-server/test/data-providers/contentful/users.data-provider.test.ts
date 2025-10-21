@@ -5,6 +5,7 @@ import {
   FETCH_USERS,
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
+  FETCH_USERS_BY_TEAM_MEMBERSHIP_ID,
   patchAndPublish,
   patchAndPublishConflict,
 } from '@asap-hub/contentful';
@@ -632,6 +633,146 @@ describe('User data provider', () => {
       });
     });
 
+    describe('fetch by team membership', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+
+      test('should return empty result when teamMembershipCollection is null', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamMembershipCollection: null,
+        });
+
+        const result = await userDataProvider.fetch({
+          filter: { teamMembershipId: 'membership-123' },
+        });
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test('should return empty result when teamMembershipCollection items is null', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamMembershipCollection: {
+            items: null,
+          },
+        });
+
+        const result = await userDataProvider.fetch({
+          filter: { teamMembershipId: 'membership-123' },
+        });
+
+        expect(result).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+
+      test('should return the user linked to the team membership', async () => {
+        const contentfulGraphqlUser = getContentfulGraphqlUser();
+        const teamMembershipByIdGraphqlResponse = {
+          teamMembershipCollection: {
+            items: [
+              {
+                linkedFrom: {
+                  usersCollection: {
+                    items: [contentfulGraphqlUser],
+                  },
+                },
+              },
+            ],
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          teamMembershipByIdGraphqlResponse,
+        );
+
+        const result = await userDataProvider.fetch({
+          filter: { teamMembershipId: 'membership-123' },
+        });
+
+        const userResponse = getUserListItemDataObject();
+        userResponse.avatarUrl = undefined;
+        expect(result).toEqual({
+          total: 1,
+          items: [userResponse],
+        });
+      });
+
+      test('should filter out team memberships not linked to a user', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamMembershipCollection: {
+            items: [
+              {
+                linkedFrom: {
+                  usersCollection: {
+                    items: [
+                      { ...getContentfulGraphqlUser(), firstName: 'Alice' },
+                    ],
+                  },
+                },
+              },
+              {
+                linkedFrom: {
+                  usersCollection: {
+                    items: [],
+                  },
+                },
+              },
+              {
+                linkedFrom: {
+                  usersCollection: {
+                    items: [
+                      { ...getContentfulGraphqlUser(), firstName: 'Bob' },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        const result = await userDataProvider.fetch({
+          filter: { teamMembershipId: 'membership-123' },
+        });
+
+        expect(result!.total).toEqual(2);
+        expect(result!.items.map((item) => item.firstName)).toEqual([
+          'Alice',
+          'Bob',
+        ]);
+      });
+
+      test('should filter out null team membership items', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamMembershipCollection: {
+            items: [
+              null,
+              {
+                linkedFrom: {
+                  usersCollection: {
+                    items: [
+                      { ...getContentfulGraphqlUser(), firstName: 'Charlie' },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        const result = await userDataProvider.fetch({
+          filter: { teamMembershipId: 'membership-123' },
+        });
+
+        expect(result!.total).toEqual(1);
+        expect(result!.items[0]!.firstName).toEqual('Charlie');
+      });
+    });
+
     describe('query parameters', () => {
       beforeEach(() => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
@@ -727,6 +868,16 @@ describe('User data provider', () => {
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
           FETCH_USERS_BY_TEAM_ID,
           expect.objectContaining({ id: '1234567' }),
+        );
+      });
+
+      test('should support filtering by teamMembershipId', async () => {
+        await userDataProvider.fetch({
+          filter: { teamMembershipId: 'membership-123' },
+        });
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_USERS_BY_TEAM_MEMBERSHIP_ID,
+          expect.objectContaining({ id: 'membership-123' }),
         );
       });
 

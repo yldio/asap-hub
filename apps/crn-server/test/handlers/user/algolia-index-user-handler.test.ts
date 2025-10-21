@@ -6,6 +6,11 @@ import {
   getUserListItemResponse,
   getUserResponse,
 } from '../../fixtures/users.fixtures';
+import {
+  getTeamMembershipPublishedEvent,
+  getTeamMembershipUnpublishedEvent,
+  TeamMembershipEventGenerator,
+} from '../../fixtures/teams.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 
@@ -18,6 +23,12 @@ describe('User index handler', () => {
   );
 
   afterEach(() => jest.clearAllMocks());
+
+  const possibleTeamMembershipEvents: [string, TeamMembershipEventGenerator][] =
+    [
+      ['published', getTeamMembershipPublishedEvent],
+      ['unpublished', getTeamMembershipUnpublishedEvent],
+    ];
 
   test('Should fetch the user and create a record in Algolia when the user is published', async () => {
     const event = publishedEvent();
@@ -141,6 +152,130 @@ describe('User index handler', () => {
     await expect(indexHandler(unpublishedEvent())).rejects.toThrow(
       algoliaError,
     );
+  });
+
+  // TeamMembership event tests
+  test('Should throw an error and do not trigger algolia when the team membership request fails with another error code', async () => {
+    userControllerMock.fetch.mockRejectedValue(Boom.badData());
+
+    await expect(
+      indexHandler(
+        getTeamMembershipPublishedEvent('membership-123', 'team-456'),
+      ),
+    ).rejects.toThrow(Boom.badData());
+    expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
+  });
+
+  test.each(possibleTeamMembershipEvents)(
+    'Should index user when team membership event %s occurs',
+    async (name, eventA) => {
+      const userResponse = getUserResponse();
+      const membershipId = 'membership-123';
+      const teamId = 'team-456';
+
+      const event = eventA(membershipId, teamId);
+      userControllerMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [getUserListItemResponse()],
+      });
+      userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+      await indexHandler(event);
+
+      // Verify that the handler uses teamMembershipId filter
+      expect(userControllerMock.fetch).toHaveBeenCalledWith({
+        filter: { teamMembershipId: membershipId },
+        take: 1,
+        skip: 0,
+      });
+      expect(userControllerMock.fetchById).toHaveBeenCalledWith(
+        userResponse.id,
+      );
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          id: userResponse.id,
+        }),
+        type: 'user',
+      });
+    },
+  );
+
+  test('Should extract user ID correctly from TeamMembershipPublished event', async () => {
+    const userResponse = getUserResponse();
+    const membershipId = 'membership-abc123';
+    const teamId = 'team-xyz789';
+
+    const event = getTeamMembershipPublishedEvent(membershipId, teamId);
+    userControllerMock.fetch.mockResolvedValueOnce({
+      total: 1,
+      items: [getUserListItemResponse()],
+    });
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+    await indexHandler(event);
+
+    // Verify the handler correctly uses teamMembershipId filter
+    expect(userControllerMock.fetch).toHaveBeenCalledWith({
+      filter: { teamMembershipId: membershipId },
+      take: 1,
+      skip: 0,
+    });
+    expect(userControllerMock.fetchById).toHaveBeenCalledWith(userResponse.id);
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        id: userResponse.id,
+      }),
+      type: 'user',
+    });
+  });
+
+  test('Should extract user ID correctly from TeamMembershipUnpublished event', async () => {
+    const userResponse = getUserResponse();
+    const membershipId = 'membership-def456';
+    const teamId = 'team-uvw012';
+
+    const event = getTeamMembershipUnpublishedEvent(membershipId, teamId);
+    userControllerMock.fetch.mockResolvedValueOnce({
+      total: 1,
+      items: [getUserListItemResponse()],
+    });
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+    await indexHandler(event);
+
+    // Verify the handler correctly uses teamMembershipId filter
+    expect(userControllerMock.fetch).toHaveBeenCalledWith({
+      filter: { teamMembershipId: membershipId },
+      take: 1,
+      skip: 0,
+    });
+    expect(userControllerMock.fetchById).toHaveBeenCalledWith(userResponse.id);
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        id: userResponse.id,
+      }),
+      type: 'user',
+    });
+  });
+
+  test('Should handle TeamMembership event when no user is found', async () => {
+    const membershipId = 'membership-123';
+    const teamId = 'team-456';
+
+    const event = getTeamMembershipPublishedEvent(membershipId, teamId);
+    userControllerMock.fetch.mockResolvedValueOnce({
+      total: 0,
+      items: [],
+    });
+
+    await expect(indexHandler(event)).rejects.toThrow(NotFoundError);
+    expect(userControllerMock.fetch).toHaveBeenCalledWith({
+      filter: { teamMembershipId: membershipId },
+      take: 1,
+      skip: 0,
+    });
+    expect(userControllerMock.fetchById).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
   });
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {

@@ -839,7 +839,7 @@ __metadata:
     contentful: ^10.1.8
     contentful-cli: 1.19.1
     contentful-management: 10.46.4
-    contentful-migrate: "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212"
+    contentful-migrate: "deluan/contentful-migrate#db706467b31b264cd6ee1e48e3d61923d3ae85c0"
     csv-parse: 4.16.3
     graphql: 15.8.0
     graphql-request: 6.1.0
@@ -9969,6 +9969,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.24.8":
+  version: 7.28.4
+  resolution: "@babel/runtime@npm:7.28.4"
+  checksum: 934b0a0460f7d06637d93fcd1a44ac49adc33518d17253b5a0b55ff4cb90a45d8fe78bf034b448911dbec7aff2a90b918697559f78d21c99ff8dbadae9565b55
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.12.13":
   version: 7.12.13
   resolution: "@babel/template@npm:7.12.13"
@@ -11392,6 +11399,13 @@ __metadata:
   version: 16.1.0
   resolution: "@contentful/rich-text-types@npm:16.1.0"
   checksum: 191927b41b63b4b3fb4d53edfff37ea67fd01fae538aa29c5ee2ee7d7b8060fe10eac082ed3a2ff63b2b24b5e4d4e4ad88479d8edd61f32ad218edf915fc07f4
+  languageName: node
+  linkType: hard
+
+"@contentful/rich-text-types@npm:^16.6.1":
+  version: 16.8.5
+  resolution: "@contentful/rich-text-types@npm:16.8.5"
+  checksum: 60f8bd00ccd87d5d2199b5c2e93aa3638b291e66bd69d4bca3fc85e3f820e96c5ab6b8d9362678424aff06f83e41dfef76c4e49a12bf766d915a9a493cd24dbb
   languageName: node
   linkType: hard
 
@@ -13691,6 +13705,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hapi/hoek@npm:^11.0.4":
+  version: 11.0.7
+  resolution: "@hapi/hoek@npm:11.0.7"
+  checksum: 3da5546649c0fa2bb264ce4b2aea8dc13d6fbdd9179bba553c90ab8fb7bd56413d2237d60c0b97c1e747216597eeb13694a947325bfff62ae3725209ec8bb8c6
+  languageName: node
+  linkType: hard
+
 "@hapi/hoek@npm:^9.0.4":
   version: 9.3.0
   resolution: "@hapi/hoek@npm:9.3.0"
@@ -15853,6 +15874,13 @@ __metadata:
 "@rollup/rollup-linux-x64-gnu@npm:4.21.3":
   version: 4.21.3
   resolution: "@rollup/rollup-linux-x64-gnu@npm:4.21.3"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-linux-x64-gnu@npm:^4.18.0":
+  version: 4.52.5
+  resolution: "@rollup/rollup-linux-x64-gnu@npm:4.52.5"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
@@ -24182,6 +24210,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"async-function@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "async-function@npm:1.0.0"
+  checksum: 9102e246d1ed9b37ac36f57f0a6ca55226876553251a31fc80677e71471f463a54c872dc78d5d7f80740c8ba624395cccbe8b60f7b690c4418f487d8e9fd1106
+  languageName: node
+  linkType: hard
+
+"async-generator-function@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "async-generator-function@npm:1.0.0"
+  checksum: 74a71a4a2dd7afd06ebb612f6d612c7f4766a351bedffde466023bf6dae629e46b0d2cd38786239e0fbf245de0c7df76035465e16d1213774a0efb22fec0d713
+  languageName: node
+  linkType: hard
+
 "async-retry@npm:1.3.3":
   version: 1.3.3
   resolution: "async-retry@npm:1.3.3"
@@ -24518,6 +24560,17 @@ __metadata:
     follow-redirects: ^1.14.9
     form-data: ^4.0.0
   checksum: 38cb7540465fe8c4102850c4368053c21683af85c5fdf0ea619f9628abbcb59415d1e22ebc8a6390d2bbc9b58a9806c874f139767389c862ec9b772235f06854
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.12.2":
+  version: 1.12.2
+  resolution: "axios@npm:1.12.2"
+  dependencies:
+    follow-redirects: ^1.15.6
+    form-data: ^4.0.4
+    proxy-from-env: ^1.1.0
+  checksum: f0331594fe053a4bbff04104edb073973a3aabfad2e56b0aa18de82428aa63f6f0839ca3d837258ec739cb4528014121793b1649a21e5115ffb2bf8237eadca3
   languageName: node
   linkType: hard
 
@@ -25824,6 +25877,16 @@ __metadata:
     get-intrinsic: ^1.2.4
     set-function-length: ^1.2.1
   checksum: 295c0c62b90dd6522e6db3b0ab1ce26bdf9e7404215bda13cfee25b626b5ff1a7761324d58d38b1ef1607fc65aca2d06e44d2e18d0dfc6c14b465b00d8660029
+  languageName: node
+  linkType: hard
+
+"call-bound@npm:^1.0.2":
+  version: 1.0.4
+  resolution: "call-bound@npm:1.0.4"
+  dependencies:
+    call-bind-apply-helpers: ^1.0.2
+    get-intrinsic: ^1.3.0
+  checksum: 2f6399488d1c272f56306ca60ff696575e2b7f31daf23bc11574798c84d9f2759dceb0cb1f471a85b77f28962a7ac6411f51d283ea2e45319009a19b6ccab3b2
   languageName: node
   linkType: hard
 
@@ -27358,6 +27421,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"contentful-management@npm:^11.48.1":
+  version: 11.60.4
+  resolution: "contentful-management@npm:11.60.4"
+  dependencies:
+    "@contentful/rich-text-types": ^16.6.1
+    axios: ^1.12.2
+    contentful-sdk-core: ^9.0.1
+    fast-copy: ^3.0.0
+    globals: ^15.15.0
+  checksum: 0013e18c95cc0993feabc5a0b543131b369016da3709049db42302f4a313578c607ea642d378bcacd149df95e368084bba6ee4bbc7d3e15981ef71abca0a1a95
+  languageName: node
+  linkType: hard
+
 "contentful-management@npm:^7.11.0, contentful-management@npm:^7.45.5, contentful-management@npm:^7.51.5":
   version: 7.54.2
   resolution: "contentful-management@npm:7.54.2"
@@ -27372,13 +27448,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-migrate@deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212":
+"contentful-migrate@deluan/contentful-migrate#db706467b31b264cd6ee1e48e3d61923d3ae85c0":
   version: 0.17.0
-  resolution: "contentful-migrate@https://github.com/deluan/contentful-migrate.git#commit=37b9b898599b9ba48644534d3f340b4c169df212"
+  resolution: "contentful-migrate@https://github.com/deluan/contentful-migrate.git#commit=db706467b31b264cd6ee1e48e3d61923d3ae85c0"
   dependencies:
     chalk: ^3.0.0
     contentful-management: ^7.11.0
-    contentful-migration: ^4.12.6
+    contentful-migration: ^4.5.0
     dateformat: ^3.0.3
     eslint: ^6.8.0
     eslint-config-standard: ^14.1.0
@@ -27396,7 +27472,7 @@ __metadata:
     yargs: ^15.3.0
   bin:
     ctf-migrate: ./bin/ctf-migrate
-  checksum: 56bd928113b77c49218c4bc11770fd72a367419d25ea4d47ab786edb1aa16ea2591f1a8974971693e980453cc5456647dd411d81ab628e0b893bfb3523d87c6f
+  checksum: b7f985c0f2db7835945762703930360493e86f4acfe9fd8cfa1ec0d6739c0bfb43b5dcabda0537cb43d47866ed0c95accd485be39514c618146270082e616976
   languageName: node
   linkType: hard
 
@@ -27426,29 +27502,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-migration@npm:^4.12.6":
-  version: 4.12.9
-  resolution: "contentful-migration@npm:4.12.9"
+"contentful-migration@npm:^4.5.0":
+  version: 4.31.5
+  resolution: "contentful-migration@npm:4.31.5"
   dependencies:
-    "@hapi/hoek": ^10.0.1
-    axios: ^0.21.0
+    "@hapi/hoek": ^11.0.4
+    axios: ^1.12.2
     bluebird: ^3.7.2
     callsites: ^3.1.0
     cardinal: ^2.1.1
     chalk: ^4.0.0
-    contentful-management: ^7.51.5
-    didyoumean2: ^5.0.0
+    contentful-management: ^11.48.1
+    didyoumean2: ^7.0.4
     https-proxy-agent: ^5.0.0
     inquirer: ^8.1.2
     joi: ^17.4.0
     kind-of: ^6.0.3
     listr2: ^3.13.5
     lodash: ^4.17.15
-    uuid: ^8.3.2
+    p-throttle: ^4.1.1
+    uuid: ^10.0.0
     yargs: ^15.3.1
   bin:
     contentful-migration: bin/contentful-migration
-  checksum: 60f333c342b147a53d3c239a9e8222c54ffca47db1fe629f7e49fd0be0af5dfd877a58cb989a10168b895d56a8cc5317fc1389523b14b46af7c732183105ee6f
+  checksum: 56daff6bc7517d8c26d4e30287e757c7db73ff554bd8ff2c9150a17c007b822ae6fb9984b98c8416cf6fecef9a893dbb5c62075f9f01c81dc1e2aedb4e74d2da
   languageName: node
   linkType: hard
 
@@ -27518,6 +27595,23 @@ __metadata:
     lodash.isstring: ^4.0.1
     p-throttle: ^4.1.1
   checksum: a66e65649d6bc9eb1c1b7ccd7bff3ead7f63535250a4d6bc5262fdd4b43f055fe53c0e2824f0ee4f6200adfc3911edd87b0c0b1b9bb3e993430955a4431175c3
+  languageName: node
+  linkType: hard
+
+"contentful-sdk-core@npm:^9.0.1":
+  version: 9.2.1
+  resolution: "contentful-sdk-core@npm:9.2.1"
+  dependencies:
+    "@rollup/rollup-linux-x64-gnu": ^4.18.0
+    fast-copy: ^3.0.2
+    lodash: ^4.17.21
+    p-throttle: ^6.1.0
+    process: ^0.11.10
+    qs: ^6.12.3
+  dependenciesMeta:
+    "@rollup/rollup-linux-x64-gnu":
+      optional: true
+  checksum: f2723acdcd46a45011fbcea4139a622355f562ddebcb3932db3be168a10653eeb4f410e0f27146b8eb9ca7456732cf62bca9e1884ec4483465922c126443bc79
   languageName: node
   linkType: hard
 
@@ -29034,6 +29128,17 @@ __metadata:
     fastest-levenshtein: ^1.0.12
     lodash.deburr: ^4.1.0
   checksum: 99935a1433d31595d7f7f7f2e12c582ee634a07913856b2f7fb85923b30e3cbb24e37bea8bbe3da6ec42ad030fdc8cd2e07cca326de517730f07dfea8e05a025
+  languageName: node
+  linkType: hard
+
+"didyoumean2@npm:^7.0.4":
+  version: 7.0.4
+  resolution: "didyoumean2@npm:7.0.4"
+  dependencies:
+    "@babel/runtime": ^7.24.8
+    fastest-levenshtein: ^1.0.16
+    lodash.deburr: ^4.1.0
+  checksum: d77f04596eba0096977f4ec25f9786f2b6032760b478decce5700c16fa029fa4916fcc796c054747ae11f0a8a4899f6d5988c4f489cfaba060442601c04a4d4d
   languageName: node
   linkType: hard
 
@@ -31806,6 +31911,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-copy@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "fast-copy@npm:3.0.2"
+  checksum: 47f584bcede08ab3198559d3e0e093a547d567715b86be2198da6e3366c3c73eed550d97b86f9fb90dae179982b89c15d68187def960f522cdce14bacdfc6184
+  languageName: node
+  linkType: hard
+
 "fast-decode-uri-component@npm:^1.0.1":
   version: 1.0.1
   resolution: "fast-decode-uri-component@npm:1.0.1"
@@ -32655,7 +32767,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:4.0.4":
+"form-data@npm:4.0.4, form-data@npm:^4.0.4":
   version: 4.0.4
   resolution: "form-data@npm:4.0.4"
   dependencies:
@@ -33132,6 +33244,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"generator-function@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "generator-function@npm:2.0.1"
+  checksum: 3bf87f7b0230de5d74529677e6c3ceb3b7b5d9618b5a22d92b45ce3876defbaf5a77791b25a61b0fa7d13f95675b5ff67a7769f3b9af33f096e34653519e873d
+  languageName: node
+  linkType: hard
+
 "generic-names@npm:^4.0.0":
   version: 4.0.0
   resolution: "generic-names@npm:4.0.0"
@@ -33229,6 +33348,27 @@ __metadata:
     has-symbols: ^1.0.3
     hasown: ^2.0.0
   checksum: 414e3cdf2c203d1b9d7d33111df746a4512a1aa622770b361dadddf8ed0b5aeb26c560f49ca077e24bfafb0acb55ca908d1f709216ccba33ffc548ec8a79a951
+  languageName: node
+  linkType: hard
+
+"get-intrinsic@npm:^1.2.5, get-intrinsic@npm:^1.3.0":
+  version: 1.3.1
+  resolution: "get-intrinsic@npm:1.3.1"
+  dependencies:
+    async-function: ^1.0.0
+    async-generator-function: ^1.0.0
+    call-bind-apply-helpers: ^1.0.2
+    es-define-property: ^1.0.1
+    es-errors: ^1.3.0
+    es-object-atoms: ^1.1.1
+    function-bind: ^1.1.2
+    generator-function: ^2.0.0
+    get-proto: ^1.0.1
+    gopd: ^1.2.0
+    has-symbols: ^1.1.0
+    hasown: ^2.0.2
+    math-intrinsics: ^1.1.0
+  checksum: c02b3b6a445f9cd53e14896303794ac60f9751f58a69099127248abdb0251957174c6524245fc68579dc8e6a35161d3d94c93e665f808274716f4248b269436a
   languageName: node
   linkType: hard
 
@@ -33579,6 +33719,13 @@ __metadata:
   dependencies:
     type-fest: ^0.20.2
   checksum: 56066ef058f6867c04ff203b8a44c15b038346a62efbc3060052a1016be9f56f4cf0b2cd45b74b22b81e521a889fc7786c73691b0549c2f3a6e825b3d394f43c
+  languageName: node
+  linkType: hard
+
+"globals@npm:^15.15.0":
+  version: 15.15.0
+  resolution: "globals@npm:15.15.0"
+  checksum: a2a92199a112db00562a2f85eeef2a7e3943e171f7f7d9b17dfa9231e35fd612588f3c199d1509ab1757273467e413b08c80424cf6e399e96acdaf93deb3ee88
   languageName: node
   linkType: hard
 
@@ -41143,6 +41290,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"object-inspect@npm:^1.13.3":
+  version: 1.13.4
+  resolution: "object-inspect@npm:1.13.4"
+  checksum: 582810c6a8d2ef988ea0a39e69e115a138dad8f42dd445383b394877e5816eb4268489f316a6f74ee9c4e0a984b3eab1028e3e79d62b1ed67c726661d55c7a8b
+  languageName: node
+  linkType: hard
+
 "object-inspect@npm:^1.7.0":
   version: 1.7.0
   resolution: "object-inspect@npm:1.7.0"
@@ -41846,6 +42000,13 @@ __metadata:
   version: 4.1.1
   resolution: "p-throttle@npm:4.1.1"
   checksum: fe8709f3c3b1da7c033479375c2c302e80c1a5d86449013afa7cd46d1dc210bc824a7e4a9d088e66d31987d00878c2b5491bb2fe76246d4d2fc9a1636f5f8298
+  languageName: node
+  linkType: hard
+
+"p-throttle@npm:^6.1.0":
+  version: 6.2.0
+  resolution: "p-throttle@npm:6.2.0"
+  checksum: 112e08603f2407c6be093342174af0f8ba2e314ef91f179d684147b2f990e13fbf9198d87af1a62545939d75a1e3b3b4575ea393f68ae03b6c4030c9d13063da
   languageName: node
   linkType: hard
 
@@ -44174,6 +44335,15 @@ __metadata:
   dependencies:
     side-channel: "npm:^1.0.4"
   checksum: b3873189a11bcf48445864b3ba66f7a76db0d9d874955d197779f561addfa604884f7b107971526ce1eca02c99bf7d1e47f28a3e7e6e29204d798fb279164226
+  languageName: node
+  linkType: hard
+
+"qs@npm:^6.12.3":
+  version: 6.14.0
+  resolution: "qs@npm:6.14.0"
+  dependencies:
+    side-channel: ^1.1.0
+  checksum: 189b52ad4e9a0da1a16aff4c58b2a554a8dad9bd7e287c7da7446059b49ca2e33a49e570480e8be406b87fccebf134f51c373cbce36c8c83859efa0c9b71d635
   languageName: node
   linkType: hard
 
@@ -47236,6 +47406,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"side-channel-list@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "side-channel-list@npm:1.0.0"
+  dependencies:
+    es-errors: ^1.3.0
+    object-inspect: ^1.13.3
+  checksum: 603b928997abd21c5a5f02ae6b9cc36b72e3176ad6827fab0417ead74580cc4fb4d5c7d0a8a2ff4ead34d0f9e35701ed7a41853dac8a6d1a664fcce1a044f86f
+  languageName: node
+  linkType: hard
+
+"side-channel-map@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "side-channel-map@npm:1.0.1"
+  dependencies:
+    call-bound: ^1.0.2
+    es-errors: ^1.3.0
+    get-intrinsic: ^1.2.5
+    object-inspect: ^1.13.3
+  checksum: 42501371cdf71f4ccbbc9c9e2eb00aaaab80a4c1c429d5e8da713fd4d39ef3b8d4a4b37ed4f275798a65260a551a7131fd87fe67e922dba4ac18586d6aab8b06
+  languageName: node
+  linkType: hard
+
+"side-channel-weakmap@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "side-channel-weakmap@npm:1.0.2"
+  dependencies:
+    call-bound: ^1.0.2
+    es-errors: ^1.3.0
+    get-intrinsic: ^1.2.5
+    object-inspect: ^1.13.3
+    side-channel-map: ^1.0.1
+  checksum: a815c89bc78c5723c714ea1a77c938377ea710af20d4fb886d362b0d1f8ac73a17816a5f6640f354017d7e292a43da9c5e876c22145bac00b76cfb3468001736
+  languageName: node
+  linkType: hard
+
 "side-channel@npm:^1.0.4":
   version: 1.0.4
   resolution: "side-channel@npm:1.0.4"
@@ -47256,6 +47461,19 @@ __metadata:
     get-intrinsic: ^1.2.4
     object-inspect: ^1.13.1
   checksum: bfc1afc1827d712271453e91b7cd3878ac0efd767495fd4e594c4c2afaa7963b7b510e249572bfd54b0527e66e4a12b61b80c061389e129755f34c493aad9b97
+  languageName: node
+  linkType: hard
+
+"side-channel@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "side-channel@npm:1.1.0"
+  dependencies:
+    es-errors: ^1.3.0
+    object-inspect: ^1.13.3
+    side-channel-list: ^1.0.0
+    side-channel-map: ^1.0.1
+    side-channel-weakmap: ^1.0.2
+  checksum: bf73d6d6682034603eb8e99c63b50155017ed78a522d27c2acec0388a792c3ede3238b878b953a08157093b85d05797217d270b7666ba1f111345fbe933380ff
   languageName: node
   linkType: hard
 
@@ -50822,6 +51040,15 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "uuid@npm:10.0.0"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 4b81611ade2885d2313ddd8dc865d93d8dccc13ddf901745edca8f86d99bc46d7a330d678e7532e7ebf93ce616679fb19b2e3568873ac0c14c999032acb25869
   languageName: node
   linkType: hard
 

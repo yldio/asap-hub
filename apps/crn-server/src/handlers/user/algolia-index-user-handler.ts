@@ -115,11 +115,12 @@ async function handleNotFoundError(
 }
 
 /* istanbul ignore next */
-export const indexUserHandler = (
-  userController: UserController,
-  algoliaClient: AlgoliaClient<'crn'>,
-): EventBridgeHandler<IndexUserEvent, IndexUserPayload> => {
-  return async (event) => {
+export const indexUserHandler =
+  (
+    userController: UserController,
+    algoliaClient: AlgoliaClient<'crn'>,
+  ): EventBridgeHandler<IndexUserEvent, IndexUserPayload> =>
+  async (event) => {
     const detailType = event['detail-type'];
     logger.debug({ detailType }, 'Received event');
 
@@ -143,7 +144,6 @@ export const indexUserHandler = (
       throw error;
     }
   };
-};
 
 export const handler = sentryWrapper(
   indexUserHandler(

@@ -437,4 +437,34 @@ describe('Engagement', () => {
       expect(result.error).toEqual(error);
     });
   });
+
+  describe('loadTags function', () => {
+    describe('when ANALYTICS_PHASE_TWO flag is enabled', () => {
+      beforeEach(() => {
+        enable('ANALYTICS_PHASE_TWO' as Flag);
+      });
+
+      it('calls attendanceClient.getTagSuggestions and maps response correctly for attendance page', async () => {
+        const mockTagSuggestions = ['team1', 'team2', 'team3'];
+        mockGetTagSuggestions.mockResolvedValue(mockTagSuggestions);
+
+        await renderPage(
+          analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
+        );
+
+        const searchContainer = screen.getByRole('search') as HTMLElement;
+        const searchBox = within(searchContainer).getByRole(
+          'textbox',
+        ) as HTMLInputElement;
+
+        userEvent.type(searchBox, 'test');
+
+        await waitFor(() => {
+          expect(mockGetTagSuggestions).toHaveBeenCalledWith('test', 'teams');
+        });
+
+        expect(mockGetTagSuggestions).toHaveBeenCalledTimes(1);
+      });
+    });
+  });
 });

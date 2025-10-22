@@ -107,7 +107,7 @@ export const useAnalyticsUserProductivity = (
   if (userProductivity instanceof Error) {
     throw userProductivity;
   }
-  return { ...userProductivity };
+  return userProductivity;
 };
 
 export const userProductivityPerformanceState =
@@ -227,5 +227,5 @@ export const useAnalyticsTeamProductivity = (
   if (teamProductivity instanceof Error) {
     throw teamProductivity;
   }
-  return { ...teamProductivity };
+  return teamProductivity;
 };

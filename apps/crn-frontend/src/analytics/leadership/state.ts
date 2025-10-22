@@ -180,7 +180,5 @@ export const useAnalyticsOSChampion = (options: OSOptions) => {
     throw osChampion;
   }
 
-  return {
-    ...osChampion,
-  };
+  return osChampion;
 };

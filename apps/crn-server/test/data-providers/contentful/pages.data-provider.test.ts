@@ -35,10 +35,10 @@ describe('Pages Contentful Data Provider', () => {
         items: [
           {
             id: 'some-id',
-            path: '/privacy-notice',
+            path: '/privacy-policy',
             shortText: 'short text',
-            text: '<h1>Privacy Notice</h1>',
-            title: 'Privacy Notice',
+            text: '<h1>Privacy Policy</h1>',
+            title: 'Privacy Policy',
             link: 'link',
             linkText: 'linkText',
           },
@@ -84,12 +84,12 @@ describe('Pages Contentful Data Provider', () => {
         getContentfulPagesGraphqlResponse(),
       );
 
-      await pageDataProvider.fetch({ filter: { path: '/privacy-notice' } });
+      await pageDataProvider.fetch({ filter: { path: '/privacy-policy' } });
 
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         {
-          where: { path: '/privacy-notice' },
+          where: { path: '/privacy-policy' },
         },
       );
     });

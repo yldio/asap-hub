@@ -137,7 +137,7 @@ const App: FC<Record<string, never>> = () => {
                   <Route exact path={staticPages({}).privacyPolicy.template}>
                     <BasicLayout>
                       <Frame title={null}>
-                        <Content pageId="privacy-notice" />
+                        <Content pageId="privacy-policy" />
                       </Frame>
                     </BasicLayout>
                   </Route>

@@ -68,7 +68,7 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, appOrigin }) => (
             appOrigin,
           ).toString()}
         >
-          Privacy Notice
+          Privacy policy
         </Link>
         <Link href={new URL(staticPages({}).terms({}).$, appOrigin).toString()}>
           Terms and conditions

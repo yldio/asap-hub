@@ -7,10 +7,10 @@ describe('Page controller', () => {
   const pageController = new Pages(pageDataProviderMock);
   const mockPage = {
     id: 'some-id',
-    path: '/privacy-notice',
-    text: '<h1>Privacy Notice</h1>',
+    path: '/privacy-policy',
+    text: '<h1>Privacy Policy</h1>',
     shortText: 'short text',
-    title: 'Privacy Notice',
+    title: 'Privacy Policy',
     link: 'link',
     linkText: 'linkText',
   };

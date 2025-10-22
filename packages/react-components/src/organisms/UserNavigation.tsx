@@ -123,7 +123,7 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
         <Anchor href={staticPages({}).terms({}).$}>Terms of Use</Anchor>
         {'  ·  '}
         <Anchor href={staticPages({}).privacyPolicy({}).$}>
-          Privacy Notice
+          Privacy Policy
         </Anchor>
         {'  ·  '}
         <Anchor href={aboutHref}>About ASAP</Anchor>

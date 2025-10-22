@@ -18,7 +18,7 @@ const defaultValues = {
       <Paragraph accent="lead">
         By proceeding you are agreeing to our{' '}
         <Link href="/terms-and-conditions">Terms and Conditions</Link> and{' '}
-        <Link href="/privacy-notice">Privacy Notice</Link>.
+        <Link href="/privacy-policy">Privacy Policy</Link>.
       </Paragraph>
     ),
   },
@@ -31,7 +31,7 @@ const defaultValues = {
       <Paragraph accent="lead">
         By signing in you are agreeing to our{' '}
         <Link href="/terms-and-conditions">Terms and Conditions</Link> and{' '}
-        <Link href="/privacy-notice">Privacy Notice</Link>.
+        <Link href="/privacy-policy">Privacy Policy</Link>.
       </Paragraph>
     ),
   },

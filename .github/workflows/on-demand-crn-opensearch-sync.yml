@@ -13,7 +13,6 @@ on:
           - attendance
           - preprint-compliance
           - publication-compliance
-          - user-productivity
           - all
       environment-name:
         required: true

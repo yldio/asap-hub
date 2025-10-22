@@ -332,15 +332,7 @@ export type UserProductivityDataObject = {
   teams: UserProductivityTeam[];
   asapOutput: number;
   asapPublicOutput: number;
-  ratio: number;
-};
-
-export type UserProductivityPerformanceDataObject = {
-  asapOutput: PerformanceMetrics;
-  asapPublicOutput: PerformanceMetrics;
-  ratio: PerformanceMetrics;
-  timeRange: string;
-  documentCategory: string;
+  ratio: string;
 };
 
 export const teamOutputDocumentTypes = [

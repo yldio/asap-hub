@@ -144,7 +144,7 @@ const userProductivityResponse: UserProductivityAlgoliaResponse = {
   ],
   asapOutput: 200,
   asapPublicOutput: 100,
-  ratio: 0.5,
+  ratio: '0.50',
 };
 
 const teamProductivityResponse: TeamProductivityAlgoliaResponse = {

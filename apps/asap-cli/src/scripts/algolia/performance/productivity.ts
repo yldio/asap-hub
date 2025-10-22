@@ -17,7 +17,7 @@ import {
 type UserProductivityHit = Hit & {
   asapOutput: number;
   asapPublicOutput: number;
-  ratio: number;
+  ratio: string;
 };
 
 type TeamProductivityHit = Hit & {
@@ -51,7 +51,7 @@ export const processUserProductivityPerformance = async (
             return {
               ...metrics,
               ratio: getPerformanceMetrics(
-                userProductivityHits.map((hit) => hit.ratio),
+                userProductivityHits.map((hit) => parseFloat(hit.ratio)),
                 false,
               ),
             };

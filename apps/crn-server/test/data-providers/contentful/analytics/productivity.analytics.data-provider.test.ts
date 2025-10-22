@@ -112,7 +112,7 @@ describe('fetchUserProductivity', () => {
           id: 'user-id-1',
           isAlumni: true,
           name: 'Tom (Iron Man) Hardy',
-          ratio: 0.0,
+          ratio: '0.00',
           teams: [
             {
               isTeamInactive: false,
@@ -170,7 +170,7 @@ describe('fetchUserProductivity', () => {
           ...getUserProductivityDataObject(),
           asapOutput: 0,
           asapPublicOutput: 0,
-          ratio: 0.0,
+          ratio: '0.00',
         },
       ],
     });
@@ -227,7 +227,7 @@ describe('fetchUserProductivity', () => {
           ...getUserProductivityDataObject(),
           asapOutput: 2,
           asapPublicOutput: 1,
-          ratio: 0.5,
+          ratio: '0.50',
         },
       ],
       total: 1,

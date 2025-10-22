@@ -15515,7 +15515,12 @@ export type FetchUserProductivityQuery = {
         Maybe<
           Pick<
             Users,
-            'firstName' | 'lastName' | 'nickname' | 'alumniSinceDate'
+            | 'firstName'
+            | 'lastName'
+            | 'nickname'
+            | 'onboarded'
+            | 'role'
+            | 'alumniSinceDate'
           > & {
             sys: Pick<Sys, 'id'>;
             teamsCollection?: Maybe<{
@@ -36163,6 +36168,11 @@ export const FetchUserProductivityDocument = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'nickname' },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'onboarded' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'alumniSinceDate' },

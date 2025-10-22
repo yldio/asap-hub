@@ -23,6 +23,7 @@
     "algolia:remove-records": "yarn workspace @asap-hub/asap-cli algolia:remove-records",
     "algolia:set-settings": "yarn workspace @asap-hub/asap-cli algolia:set-settings",
     "algolia:set-analytics-settings": "yarn workspace @asap-hub/asap-cli algolia:set-analytics-settings",
+    "opensearch:process-performance": "yarn workspace @asap-hub/asap-cli opensearch:process-performance",
     "build": "yarn turbo build --filter='!@asap-hub/contentful-app-*'",
     "build:babel": "turbo build:babel",
     "build:frontend": "yarn turbo build --filter='!@asap-hub/contentful-app-*' --only",

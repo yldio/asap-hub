@@ -32,7 +32,7 @@ describe('userProductivityToCSV', () => {
       isAlumni: false,
       asapPublicOutput: 1,
       asapOutput: 2,
-      ratio: '0.5',
+      ratio: 0.5,
     };
     const performance: UserProductivityPerformance = {
       asapOutput: performanceMetric,
@@ -45,7 +45,7 @@ describe('userProductivityToCSV', () => {
       ASAPOutputValue: 2,
       ASAPPublicOutputAverage: 'Below',
       ASAPPublicOutputValue: 1,
-      ratio: '0.5',
+      ratio: 0.5,
       roleA: 'Trainee',
       roleB: '',
       status: 'Active',

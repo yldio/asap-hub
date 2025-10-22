@@ -1,4 +1,4 @@
-import { ListResponse, timeRanges } from '@asap-hub/model';
+import { ListResponse, timeRanges, documentCategories } from '@asap-hub/model';
 import { indexOpensearchData } from '@asap-hub/server-common';
 
 import {
@@ -98,6 +98,51 @@ export const exportAnalyticsData = async <T extends Metrics>(
             0,
           ),
           items: attendanceRecords.flatMap((records) => records.items),
+        } as ListResponse<MetricObject<T>>;
+
+      case 'user-productivity':
+        // Fetch all pages for each timeRange/documentCategory combination
+        const allUserProductivityItems: MetricObject<T>[] = [];
+
+        /* eslint-disable no-await-in-loop */
+        for (const timeRange of timeRanges) {
+          for (const documentCategory of documentCategories) {
+            let userPage = 1;
+            let userTotal = 0;
+            let userRecordCount = 0;
+
+            do {
+              const userProductivityResponse =
+                (await analyticsController.fetchUserProductivity({
+                  take: PAGE_SIZE,
+                  skip: (userPage - 1) * PAGE_SIZE,
+                  filter: { timeRange, documentCategory },
+                })) as ListResponse<MetricObject<T>>;
+
+              if (userProductivityResponse) {
+                userTotal = userProductivityResponse.total;
+                userPage++;
+                userRecordCount += userProductivityResponse.items.length;
+
+                // Enrich items with metadata
+                const enrichedItems = userProductivityResponse.items.map(
+                  (item) => ({
+                    ...item,
+                    timeRange,
+                    documentCategory,
+                  }),
+                );
+
+                allUserProductivityItems.push(...enrichedItems);
+              }
+            } while (userTotal > userRecordCount);
+          }
+        }
+        /* eslint-enable no-await-in-loop */
+
+        return {
+          total: allUserProductivityItems.length,
+          items: allUserProductivityItems,
         } as ListResponse<MetricObject<T>>;
 
       default:

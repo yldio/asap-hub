@@ -60,7 +60,7 @@ const userProductivity: ListUserProductivityAlgoliaResponse = {
       teams: [userTeam],
       asapOutput: 3,
       asapPublicOutput: 1,
-      ratio: '0.33',
+      ratio: 0.33,
     },
     {
       id: '2',
@@ -70,7 +70,7 @@ const userProductivity: ListUserProductivityAlgoliaResponse = {
       teams: [{ ...userTeam, role: 'Key Personnel' }],
       asapOutput: 4,
       asapPublicOutput: 1,
-      ratio: '0.25',
+      ratio: 0.25,
     },
   ],
 };

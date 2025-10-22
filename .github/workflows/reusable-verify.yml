@@ -45,7 +45,7 @@ jobs:
       - name: Test CRN
         run: API_URL=${{ steps.setup.outputs.crn-api-url }} yarn test:e2e
       - name: Test GP2
-        run: API_URL=${{ steps.setup.outputs.gp2-api-url }} yarn test:e2e
+        run: API_URL=${{ steps.setup.outputs.gp2-api-url }} yarn test:e2e:gp2
 
   test-e2e:
     runs-on: ubuntu-latest

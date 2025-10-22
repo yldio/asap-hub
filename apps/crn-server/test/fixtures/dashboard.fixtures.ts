@@ -35,12 +35,12 @@ export const getDashboardDataObject = (): DashboardDataObject => ({
   pages: [
     {
       id: 'some-id',
-      title: 'Privacy Policy',
-      path: '/privacy-policy',
+      title: 'Privacy Notice',
+      path: '/privacy-notice',
       shortText: 'short text',
       link: 'link',
       linkText: 'linkText',
-      text: '<h1>Privacy Policy</h1>',
+      text: '<h1>Privacy Notice</h1>',
     },
   ],
   announcements: [

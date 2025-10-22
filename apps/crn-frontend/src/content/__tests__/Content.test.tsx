@@ -17,7 +17,7 @@ const mockGetPageByPath = getPageByPath as jest.MockedFunction<
   typeof getPageByPath
 >;
 
-const renderPage = async (pageId: string = 'privacy-policy') => {
+const renderPage = async (pageId: string = 'privacy-notice') => {
   const result = render(
     <RecoilRoot>
       <Suspense fallback="loading">

@@ -42,15 +42,10 @@ module.exports.up = function (migration) {
     .disabled(false)
     .omitted(false);
 
-  projectMembership.changeFieldControl(
-    'memberName',
-    'builtin',
-    'entryLinkEditor',
-    {
-      showLinkEntityAction: true,
-      showCreateEntityAction: false,
-    },
-  );
+  projectMembership.changeFieldControl('member', 'builtin', 'entryLinkEditor', {
+    showLinkEntityAction: true,
+    showCreateEntityAction: false,
+  });
 };
 
 module.exports.down = (migration) => {

@@ -1,13 +1,13 @@
 module.exports.description = 'Add resource type model';
 
 module.exports.up = (migration) => {
-  const resourceType = migration
+  const resourceTypes = migration
     .createContentType('resourceType')
     .name('Resource Type')
     .description('')
     .displayField('name');
 
-  impact
+  resourceTypes
     .createField('name')
     .name('name')
     .type('Symbol')
@@ -21,7 +21,7 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
-  impact.changeFieldControl('name', 'builtin', 'singleLine', {});
+  resourceTypes.changeFieldControl('name', 'builtin', 'singleLine', {});
 };
 
 module.exports.down = (migration) => {

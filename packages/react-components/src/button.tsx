@@ -210,6 +210,9 @@ export const activePrimaryStyles = ({
     color: primary900.rgba,
     svg: {
       stroke: primary900.rgba,
+      path: {
+        fill: primary900.rgba,
+      },
     },
     ':hover, :focus': {
       backgroundColor: primary100.rgba,

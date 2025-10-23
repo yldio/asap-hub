@@ -3,6 +3,7 @@ import {
   about,
   discover,
   network,
+  projects,
   sharedResearch,
   news,
   events,
@@ -24,6 +25,7 @@ import {
   LibraryIcon,
   newsIcon,
   calendarIcon,
+  projectIcon,
 } from '../icons';
 
 const listStyles = css({
@@ -61,6 +63,15 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
           enabled={userOnboarded}
         >
           Network
+        </NavigationLink>
+      </li>
+      <li>
+        <NavigationLink
+          href={projects({}).$}
+          icon={projectIcon}
+          enabled={userOnboarded}
+        >
+          Projects
         </NavigationLink>
       </li>
       <li>

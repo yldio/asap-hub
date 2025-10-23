@@ -113,6 +113,7 @@ export { default as plusRectIcon } from './plus-rect';
 export { default as policyIcon } from './policy';
 export { default as previousPageIcon } from './previous-page';
 export { default as ProductivityIcon } from './productivity';
+export { default as projectIcon } from './project';
 export { default as protocol } from './protocol';
 export { default as protocolsIcon } from './protocols';
 export { default as replyIcon } from './reply';

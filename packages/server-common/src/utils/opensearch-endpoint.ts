@@ -16,8 +16,8 @@ export async function getOpensearchEndpoint({
 }): Promise<string> {
   const service = 'asap-hub';
   const domainName =
-    stage === 'production'
-      ? `${service}-${stage}-search`
+    stage.toLowerCase() === 'production'
+      ? `${service}-production-search`
       : `${service}-dev-search`;
 
   try {

@@ -49,16 +49,16 @@ const preview = {
             height: `${pixels.largeDesktopScreen.height}px`,
           },
         },
-      }
+      },
     },
   },
 
   initialGlobals: {
     viewport: {
       value: 'smallDesktop',
-      isRotated: false
-    }
-  }
+      isRotated: false,
+    },
+  },
 };
 
 export default preview;

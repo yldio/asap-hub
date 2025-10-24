@@ -10,10 +10,12 @@ module.exports.up = (migration) => {
   projects
     .createField('title')
     .name('Title')
-    .type('Symbol') // confirm if it could be longer than 256, current longest is 185 something
+    .type('Text')
     .localized(false)
     .required(true)
-    .validations([])
+    .validations([
+      { size: { max: 256 }, message: 'Title cannot exceed 256 characters.' },
+    ])
     .disabled(false)
     .omitted(false);
 
@@ -209,7 +211,7 @@ module.exports.up = (migration) => {
     .name('Contact Email')
     .type('Symbol')
     .localized(false)
-    .required(false)
+    .required(true)
     .validations([
       {
         regexp: {

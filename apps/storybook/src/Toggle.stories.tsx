@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 import { Toggle, UserIcon, TeamIcon } from '@asap-hub/react-components';
 
 import { boolean, text } from './knobs';

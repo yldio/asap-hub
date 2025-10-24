@@ -1,5 +1,5 @@
 import { Layout, UsersPageList } from '@asap-hub/gp2-components';
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 import { ComponentProps } from 'react';
 
 import { select, text } from '../knobs';

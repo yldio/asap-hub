@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 import { ReminderItem } from '@asap-hub/react-components';
 import type { ReminderEntity } from '@asap-hub/react-components';

@@ -4,7 +4,7 @@ import {
   ThemeVariant,
   OrcidIcon,
 } from '@asap-hub/react-components';
-import { StoryFn } from '@storybook/react';
+import { StoryFn } from '@storybook/react-vite';
 
 import { text, boolean } from './knobs';
 import { ThemeDecorator } from './theme';

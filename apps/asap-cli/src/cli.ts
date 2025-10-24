@@ -283,7 +283,8 @@ yargs(hideBin(process.argv))
         .option('environment', {
           alias: 'e',
           type: stringType,
-          description: 'Environment (dev, staging, production)',
+          description:
+            'Environment (dev, staging, production) - case sensitive',
           demandOption: trueType,
         })
         .option('opensearchUsername', {

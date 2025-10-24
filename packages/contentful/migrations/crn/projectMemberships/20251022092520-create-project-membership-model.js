@@ -33,9 +33,9 @@ module.exports.up = function (migration) {
         in: [
           'Contributor',
           'Investigator',
-          'Project_CoLead',
-          'Project_Lead',
-          'Project_Manager',
+          'Project CoLead',
+          'Project Lead',
+          'Project Manager',
         ],
       },
     ])

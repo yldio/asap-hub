@@ -245,7 +245,7 @@ module.exports.up = (migration) => {
     showLinkEntityAction: true,
     showCreateEntityAction: false,
   });
-  projects.changeFieldControl('attendance', 'app', '5ZNAQpIJ4hf2Yk7QTjCI2i', {
+  projects.changeFieldControl('members', 'app', '5ZNAQpIJ4hf2Yk7QTjCI2i', {
     entityName: 'projectMember',
     showUserEmail: false,
     showLinkEntityAction: false,

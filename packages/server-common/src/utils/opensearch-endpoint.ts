@@ -16,8 +16,8 @@ export async function getOpensearchEndpoint({
 }): Promise<string> {
   const service = 'asap-hub';
   const domainName =
-    stage === 'production'
-      ? `${service}-${stage}-search`
+    stage.toLowerCase() === 'production'
+      ? `${service}-production-search`
       : `${service}-dev-search`;
 
   try {
@@ -36,8 +36,9 @@ export async function getOpensearchEndpoint({
     const fullEndpoint = `https://${endpoint}`;
     return fullEndpoint;
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     throw new Error(
-      `Could not determine Opensearch endpoint for ${domainName}`,
+      `Could not determine Opensearch endpoint for ${domainName}: ${errorMessage}`,
     );
   }
 }

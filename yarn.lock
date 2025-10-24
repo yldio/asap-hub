@@ -10394,7 +10394,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chromatic-com/storybook@npm:^4.1.1":
+"@chromatic-com/storybook@npm:*, @chromatic-com/storybook@npm:^4.1.1":
   version: 4.1.1
   resolution: "@chromatic-com/storybook@npm:4.1.1"
   dependencies:
@@ -18969,7 +18969,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-docs@npm:^9.1.13":
+"@storybook/addon-docs@npm:*, @storybook/addon-docs@npm:^9.1.13":
   version: 9.1.14
   resolution: "@storybook/addon-docs@npm:9.1.14"
   dependencies:
@@ -18986,7 +18986,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-links@npm:^9.1.13":
+"@storybook/addon-links@npm:*, @storybook/addon-links@npm:^9.1.13":
   version: 9.1.14
   resolution: "@storybook/addon-links@npm:9.1.14"
   dependencies:
@@ -19001,7 +19001,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-onboarding@npm:^9.1.14":
+"@storybook/addon-onboarding@npm:*, @storybook/addon-onboarding@npm:^9.1.14":
   version: 9.1.14
   resolution: "@storybook/addon-onboarding@npm:9.1.14"
   peerDependencies:
@@ -19010,7 +19010,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/builder-vite@npm:9.1.14, @storybook/builder-vite@npm:^9.1.14":
+"@storybook/builder-vite@npm:*, @storybook/builder-vite@npm:9.1.14, @storybook/builder-vite@npm:^9.1.14":
   version: 9.1.14
   resolution: "@storybook/builder-vite@npm:9.1.14"
   dependencies:
@@ -19062,7 +19062,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/react-vite@npm:^9.1.14":
+"@storybook/react-vite@npm:*, @storybook/react-vite@npm:^9.1.14":
   version: 9.1.14
   resolution: "@storybook/react-vite@npm:9.1.14"
   dependencies:
@@ -19084,7 +19084,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/react@npm:9.1.14, @storybook/react@npm:^9.1.14":
+"@storybook/react@npm:*, @storybook/react@npm:9.1.14, @storybook/react@npm:^9.1.14":
   version: 9.1.14
   resolution: "@storybook/react@npm:9.1.14"
   dependencies:
@@ -29926,7 +29926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-storybook@npm:^9.1.13":
+"eslint-plugin-storybook@npm:*, eslint-plugin-storybook@npm:^9.1.13":
   version: 9.1.14
   resolution: "eslint-plugin-storybook@npm:9.1.14"
   dependencies:
@@ -46390,7 +46390,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"storybook-addon-designs@npm:6.3.1":
+"storybook-addon-designs@npm:*, storybook-addon-designs@npm:6.3.1":
   version: 6.3.1
   resolution: "storybook-addon-designs@npm:6.3.1"
   dependencies:

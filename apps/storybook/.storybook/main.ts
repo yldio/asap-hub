@@ -13,7 +13,7 @@ const config: StorybookConfig = {
 
   addons: [
     getAbsolutePath("@chromatic-com/storybook"),
-    getAbsolutePath("@storybook/addon-docs")
+    "@storybook/addon-docs"
   ],
 
   babel: async (options) => ({

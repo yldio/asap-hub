@@ -53,6 +53,7 @@ const OnboardedApp: FC<Record<string, never>> = () => {
 
   const user = useCurrentUserGP2();
 
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // order by the likelyhood of user navigating there
     // eslint-disable-next-line @typescript-eslint/no-floating-promises

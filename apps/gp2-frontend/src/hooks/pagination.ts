@@ -42,6 +42,7 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
     return `${newParams.length ? '?' : history.location.pathname}${newParams}`;
   };
 
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (numberOfItems && currentPage > lastAllowedPage)
       history.replace({

@@ -19,6 +19,8 @@ export const useGifReplay = (
 
 export const usePrevious = <T>(value: T): T | undefined => {
   const ref = useRef<T>();
+  // This hook must run on every render to keep the ref updated.
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     ref.current = value;
   });

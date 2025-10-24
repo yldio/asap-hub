@@ -1,14 +1,15 @@
 import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   ListTeamProductivityAlgoliaResponse,
-  ListUserProductivityAlgoliaResponse,
+  ListUserProductivityResponse,
   SortTeamProductivity,
   SortUserProductivity,
   TeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
-  UserProductivityAlgoliaResponse,
   UserProductivityPerformance,
+  UserProductivityResponse,
 } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import {
   atomFamily,
   DefaultValue,
@@ -17,8 +18,10 @@ import {
   useRecoilValueLoadable,
 } from 'recoil';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import {
   getAlgoliaIndexName,
+  makeFlagBasedPerformanceHook,
   makePerformanceHook,
   makePerformanceState,
 } from '../utils/state';
@@ -38,7 +41,7 @@ const analyticsUserProductivityIndexState = atomFamily<
 });
 
 export const analyticsUserProductivityListState = atomFamily<
-  UserProductivityAlgoliaResponse | undefined,
+  UserProductivityResponse | undefined,
   string
 >({
   key: 'analyticsUserProductivityList',
@@ -46,7 +49,7 @@ export const analyticsUserProductivityListState = atomFamily<
 });
 
 export const analyticsUserProductivityState = selectorFamily<
-  ListUserProductivityAlgoliaResponse | Error | undefined,
+  ListUserProductivityResponse | Error | undefined,
   AnalyticsSearchOptionsWithFiltering<SortUserProductivity>
 >({
   key: 'userProductivity',
@@ -55,7 +58,7 @@ export const analyticsUserProductivityState = selectorFamily<
     ({ get }) => {
       const index = get(analyticsUserProductivityIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const users: UserProductivityAlgoliaResponse[] = [];
+      const users: UserProductivityResponse[] = [];
       for (const id of index.ids) {
         const user = get(analyticsUserProductivityListState(id));
         if (user === undefined) return undefined;
@@ -65,7 +68,7 @@ export const analyticsUserProductivityState = selectorFamily<
     },
   set:
     (options) =>
-    ({ get, set, reset }, newUserProductivity) => {
+    ({ get: _get, set, reset }, newUserProductivity) => {
       if (
         newUserProductivity === undefined ||
         newUserProductivity instanceof DefaultValue
@@ -76,14 +79,14 @@ export const analyticsUserProductivityState = selectorFamily<
       } else {
         newUserProductivity?.items.forEach((userProductivity) =>
           set(
-            analyticsUserProductivityListState(userProductivity.objectID),
+            analyticsUserProductivityListState(userProductivity.id),
             userProductivity,
           ),
         );
         set(analyticsUserProductivityIndexState(options), {
           total: newUserProductivity.total,
           ids: newUserProductivity.items.map(
-            (userProductivity) => userProductivity.objectID,
+            (userProductivity) => userProductivity.id,
           ),
         });
       }
@@ -93,20 +96,34 @@ export const analyticsUserProductivityState = selectorFamily<
 export const useAnalyticsUserProductivity = (
   options: AnalyticsSearchOptionsWithFiltering<SortUserProductivity>,
 ) => {
+  const { isEnabled } = useFlags();
+
   const indexName = getAlgoliaIndexName(options.sort, 'user-productivity');
   const algoliaClient = useAnalyticsAlgolia(indexName).client;
+
+  // const opensearchMetrics = useOpensearchMetrics();
+  const opensearchClient =
+    useAnalyticsOpensearch<UserProductivityResponse>(
+      'user-productivity',
+    ).client;
 
   const [userProductivity, setUserProductivity] = useRecoilState(
     analyticsUserProductivityState(options),
   );
+
   if (userProductivity === undefined) {
-    throw getUserProductivity(algoliaClient, options)
+    throw getUserProductivity(
+      isEnabled('OPENSEARCH_METRICS') ? opensearchClient : algoliaClient,
+      options,
+    )
       .then(setUserProductivity)
       .catch(setUserProductivity);
   }
+
   if (userProductivity instanceof Error) {
     throw userProductivity;
   }
+
   return { ...userProductivity };
 };
 
@@ -114,10 +131,12 @@ export const userProductivityPerformanceState =
   makePerformanceState<UserProductivityPerformance>(
     'analyticsUserProductivityPerformance',
   );
+
 export const useUserProductivityPerformance =
-  makePerformanceHook<UserProductivityPerformance>(
+  makeFlagBasedPerformanceHook<UserProductivityPerformance>(
     userProductivityPerformanceState,
     getUserProductivityPerformance,
+    'user-productivity-performance',
   );
 
 export const useUserProductivityPerformanceValue = (
@@ -185,7 +204,7 @@ export const analyticsTeamProductivityState = selectorFamily<
     },
   set:
     (options) =>
-    ({ get, set, reset }, newTeamProductivity) => {
+    ({ get: _get, set, reset }, newTeamProductivity) => {
       if (
         newTeamProductivity === undefined ||
         newTeamProductivity instanceof DefaultValue

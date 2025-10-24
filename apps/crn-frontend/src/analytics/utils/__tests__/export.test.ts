@@ -96,6 +96,7 @@ describe('downloadAnalyticsXLSX', () => {
   } as unknown as AlgoliaSearchClient<'analytics'>;
 
   const mockOpensearchMetrics: jest.Mocked<OpensearchMetricsFacade> = {
+    getUserProductivity: jest.fn(),
     getPublicationCompliance: jest.fn(),
     getPreprintCompliance: jest.fn(),
     getAnalyticsOSChampion: jest.fn(),

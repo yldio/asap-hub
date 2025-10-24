@@ -1,5 +1,5 @@
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
-import { TimeRangeOption } from '@asap-hub/model';
+import { DocumentCategoryOption, TimeRangeOption } from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
 
 const DEFAULT_PAGE_NUMBER = 0;
@@ -58,20 +58,228 @@ interface TagSuggestionsResponse {
 
 type SearchScope = 'teams' | 'both';
 
-interface OpensearchSearchOptions {
-  currentPage?: number | null;
-  pageSize?: number | null;
-  timeRange?: TimeRangeOption;
+type OpensearchSearchOptions = {
+  currentPage: number;
+  pageSize: number;
+  timeRange: TimeRangeOption;
   searchTags: string[];
   searchScope: SearchScope;
-  fetchTags?: boolean;
+  documentCategory?: DocumentCategoryOption;
+  sort?: OpensearchSort[];
+};
+
+export interface OpensearchSort {
+  [id: string]: {
+    order: 'asc' | 'desc';
+    mode?: 'avg' | 'sum' | 'median' | 'min' | 'max';
+    nested?: {
+      path: string;
+    };
+    missing?: '_first' | '_last' | number | string;
+  };
 }
 
+export type OpensearchIndex =
+  | 'publication-compliance'
+  | 'preprint-compliance'
+  | 'os-champion'
+  | 'attendance'
+  | 'preliminary-data-sharing'
+  | 'user-productivity'
+  | 'user-productivity-performance';
+
+type ShouldClause =
+  | {
+      term: Record<string, string>;
+    }
+  | {
+      nested: {
+        path: string;
+        query: {
+          term: Record<string, string>;
+        };
+      };
+    };
+
+type SearchQuery = {
+  query: {
+    bool:
+      | {
+          must: { term: Record<string, unknown> }[];
+        }
+      | {
+          should: ShouldClause[];
+          minimum_should_match: number;
+          must?: { term: Record<string, unknown> }[];
+        };
+  };
+  sort?: Record<string, { order: 'asc' | 'desc' }>[];
+  from: number;
+  size: number;
+};
+
+const teamBasedRecordSearchQueryBuilder = (
+  options: OpensearchSearchOptions,
+): SearchQuery => {
+  const shouldClauses = options.searchTags.flatMap((term) => {
+    const clauses: ShouldClause[] = [
+      {
+        term: {
+          'teamName.keyword': term,
+        },
+      },
+    ];
+
+    if (options.searchScope === 'both') {
+      clauses.push({
+        nested: {
+          path: 'users',
+          query: {
+            term: {
+              'users.name.keyword': term,
+            },
+          },
+        },
+      });
+    }
+    return clauses;
+  });
+
+  const mustClauses: SearchQuery['query']['bool']['must'] = [];
+
+  mustClauses.push({
+    term: {
+      timeRange: options.timeRange,
+    },
+  });
+
+  if (options.documentCategory) {
+    mustClauses.push({
+      term: { documentCategory: options.documentCategory },
+    });
+  }
+
+  return {
+    from: options.currentPage * options.pageSize,
+    size: options.pageSize,
+    query: {
+      bool: {
+        ...(shouldClauses.length > 0
+          ? { should: shouldClauses, minimum_should_match: 1 }
+          : {}),
+        must: mustClauses,
+      },
+    },
+    sort: options.sort
+      ? options.sort
+      : [
+          // Provide a default sorting to keep existing behavior.
+          {
+            'teamName.keyword': {
+              order: 'asc',
+            },
+          },
+        ],
+  };
+};
+
+const userBasedRecordSearchQueryBuilder = (
+  options: OpensearchSearchOptions,
+): SearchQuery => {
+  const shouldClauses = options.searchTags.flatMap((term) => {
+    const clauses: ShouldClause[] = [
+      {
+        term: {
+          'name.keyword': term,
+        },
+      },
+    ];
+
+    if (options.searchScope === 'both') {
+      clauses.push({
+        nested: {
+          path: 'teams',
+          query: {
+            term: {
+              'teams.team.keyword': term,
+            },
+          },
+        },
+      });
+    }
+    return clauses;
+  });
+
+  const mustClauses: SearchQuery['query']['bool']['must'] = [];
+
+  mustClauses.push({
+    term: {
+      timeRange: options.timeRange,
+    },
+  });
+
+  if (options.documentCategory) {
+    mustClauses.push({
+      term: { documentCategory: options.documentCategory },
+    });
+  }
+
+  return Object.assign(
+    {
+      from: options.currentPage * options.pageSize,
+      size: options.pageSize,
+      query: {
+        bool: {
+          ...(shouldClauses.length > 0
+            ? { should: shouldClauses, minimum_should_match: 1 }
+            : {}),
+          must: mustClauses,
+        },
+      },
+    },
+    options.sort ? { sort: options.sort } : {},
+  );
+};
+
+const taglessSearchQueryBuilder = (
+  options: OpensearchSearchOptions,
+): SearchQuery => {
+  return {
+    from: options.currentPage * options.pageSize,
+    size: options.pageSize,
+    query: {
+      bool: {
+        must: [
+          ...(options.timeRange
+            ? [{ term: { timeRange: options.timeRange } }]
+            : []),
+          ...(options.documentCategory
+            ? [{ term: { documentCategory: options.documentCategory } }]
+            : []),
+        ],
+      },
+    },
+  };
+};
+
+const queryBuilderByIndex: Record<
+  OpensearchIndex,
+  (options: OpensearchSearchOptions) => SearchQuery
+> = {
+  attendance: teamBasedRecordSearchQueryBuilder,
+  'os-champion': teamBasedRecordSearchQueryBuilder,
+  'preliminary-data-sharing': teamBasedRecordSearchQueryBuilder,
+  'preprint-compliance': teamBasedRecordSearchQueryBuilder,
+  'publication-compliance': teamBasedRecordSearchQueryBuilder,
+  'user-productivity': userBasedRecordSearchQueryBuilder,
+  'user-productivity-performance': taglessSearchQueryBuilder,
+};
+
 export class OpensearchClient<T> {
-  private index: string;
+  private index: OpensearchIndex;
   private authorization: string;
 
-  constructor(index: string, authorization: string) {
+  constructor(index: OpensearchIndex, authorization: string) {
     this.index = index;
     this.authorization = authorization;
   }
@@ -103,17 +311,21 @@ export class OpensearchClient<T> {
     searchTags: string[],
     currentPage: number | null,
     pageSize: number | null,
-    timeRange?: TimeRangeOption,
+    timeRange: TimeRangeOption,
     searchScope: SearchScope = 'both',
+    documentCategory?: DocumentCategoryOption,
+    sort?: OpensearchSort[],
   ): Promise<SearchResult<T>> {
-    const query = buildOpensearchQuery({
-      searchTags,
-      currentPage,
-      pageSize,
+    const searchQuery = queryBuilderByIndex[this.index]({
+      pageSize: pageSize ?? DEFAULT_PAGE_SIZE,
+      currentPage: currentPage ?? DEFAULT_PAGE_NUMBER,
       searchScope,
-      timeRange,
+      documentCategory,
+      timeRange: timeRange,
+      searchTags,
+      sort,
     });
-    const response = await this.request<OpensearchHitsResponse<T>>(query);
+    const response = await this.request<OpensearchHitsResponse<T>>(searchQuery);
 
     const items = (response.hits?.hits || []).map((hit: OpensearchHit<T>) => ({
       // eslint-disable-next-line no-underscore-dangle
@@ -163,24 +375,34 @@ const generateDefaultQuery = (page: number, size: number) => ({
 });
 
 const generateDefaultQueryWithTimeRange = (
-  page: number,
-  size: number,
-  timeRange: TimeRangeOption,
-) => ({
-  query: {
-    bool: {
-      must: [
-        {
-          term: {
-            timeRange,
-          },
+  options: Required<
+    Pick<OpensearchSearchOptions, 'timeRange' | 'pageSize' | 'currentPage'>
+  > &
+    Pick<OpensearchSearchOptions, 'documentCategory' | 'sort'>,
+) =>
+  Object.assign(
+    {
+      query: {
+        bool: {
+          must: [
+            {
+              term: {
+                timeRange: options.timeRange,
+              },
+            },
+            options.documentCategory
+              ? {
+                  term: { documentCategory: options.documentCategory },
+                }
+              : null,
+          ].filter((termObj) => !!termObj),
         },
-      ],
+      },
+      size: options.pageSize,
+      from: options.currentPage * options.pageSize,
     },
-  },
-  size,
-  from: page * size,
-});
+    options.sort ? { sort: options.sort } : {},
+  );
 
 const buildAggregationQuery = (
   searchQuery: string,
@@ -351,30 +573,4 @@ const buildSearchQuery = (
       },
     ],
   };
-};
-
-const buildOpensearchQuery = (options: OpensearchSearchOptions) => {
-  const { currentPage, pageSize, searchTags, searchScope, timeRange } = options;
-
-  if (searchTags?.length === 0) {
-    if (timeRange) {
-      return generateDefaultQueryWithTimeRange(
-        currentPage || DEFAULT_PAGE_NUMBER,
-        pageSize || DEFAULT_PAGE_SIZE,
-        timeRange,
-      );
-    }
-    return generateDefaultQuery(
-      currentPage || DEFAULT_PAGE_NUMBER,
-      pageSize || DEFAULT_PAGE_SIZE,
-    );
-  }
-
-  return buildSearchQuery(
-    searchTags,
-    currentPage || DEFAULT_PAGE_NUMBER,
-    pageSize || DEFAULT_PAGE_SIZE,
-    searchScope,
-    timeRange,
-  );
 };

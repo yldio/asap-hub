@@ -65,7 +65,7 @@ export const getAllData = async <T>(
     // eslint-disable-next-line no-await-in-loop
     const data = await getResults({
       currentPage,
-      pageSize: 50,
+      pageSize: 200,
     });
     if (data) {
       const nbPages = data.total / 50;
@@ -84,9 +84,11 @@ export const downloadAnalyticsXLSX =
   ({
     algoliaClient,
     opensearchMetrics,
+    useOpensearchMetrics,
   }: {
     algoliaClient: AlgoliaClient<'analytics'>;
     opensearchMetrics: OpensearchMetricsFacade;
+    useOpensearchMetrics: boolean;
   }) =>
   async (timeRange: TimeRangeOption, metrics: Set<MetricExportKeys>) => {
     const workbook = XLSX.utils.book_new();
@@ -116,24 +118,37 @@ export const downloadAnalyticsXLSX =
         metricsSheetName[metricKey],
       );
     };
-
     const metricHandlers: Record<MetricExportKeys, () => Promise<void>> = {
       'user-productivity': () =>
         processMetric(
           'user-productivity',
           () =>
-            getUserProductivityPerformance(algoliaClient, {
-              timeRange,
-              documentCategory: 'all',
-            }),
-          (paginationParams) =>
-            getUserProductivity(algoliaClient, {
-              timeRange,
-              documentCategory,
-              sort,
-              tags,
-              ...paginationParams,
-            }),
+            useOpensearchMetrics
+              ? opensearchMetrics.getUserProductivityPerformance({
+                  timeRange,
+                  documentCategory: 'all',
+                })
+              : getUserProductivityPerformance(algoliaClient, {
+                  timeRange,
+                  documentCategory: 'all',
+                }),
+          (paginationParams) => {
+            return useOpensearchMetrics
+              ? opensearchMetrics.getUserProductivity({
+                  timeRange,
+                  documentCategory,
+                  sort,
+                  tags,
+                  ...paginationParams,
+                })
+              : getUserProductivity(algoliaClient, {
+                  timeRange,
+                  documentCategory,
+                  sort,
+                  tags,
+                  ...paginationParams,
+                });
+          },
           userProductivityToCSV,
         ),
       'team-productivity': () =>

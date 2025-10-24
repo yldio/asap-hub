@@ -1,4 +1,4 @@
-import { OpensearchClient } from '../opensearch';
+import { OpensearchClient, OpensearchIndex } from '../opensearch';
 
 const originalFetch = global.fetch;
 const mockFetch = jest.fn();
@@ -15,7 +15,7 @@ describe('OpensearchClient', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     global.fetch = mockFetch;
-    client = new OpensearchClient<MockData>('test-index', 'Bearer fake-token');
+    client = new OpensearchClient<MockData>('os-champion', 'Bearer fake-token');
   });
 
   afterEach(() => {

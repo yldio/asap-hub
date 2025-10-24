@@ -103,7 +103,7 @@ export const setAlgoliaAnalyticsSettings = async ({
       `${path}/${replicaNameSuffix}-schema.json`,
       'utf8',
     );
-    const replicaIndexSchema = JSON.parse(replicaIndexSchemaRaw);
+    const replicaIndexSchema = JSON.parse(replicaIndexSchemaRaw.toString());
     await replicaIndex.setSettings({
       ...replicaIndexSchema,
       attributesForFaceting: indexSchema.attributesForFaceting,

@@ -1,29 +1,21 @@
 import { StorybookConfig } from '@storybook/react-vite';
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 
-import { join, dirname } from 'path';
+const require = createRequire(import.meta.url);
 
-/**
- * This function is used to resolve the absolute path of a package.
- * It is needed in projects that use Yarn PnP or are set up within a monorepo.
- */
-function getAbsolutePath(value: string): any {
-  return dirname(require.resolve(join(value, 'package.json')));
-}
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
+
   core: {
-    builder: '@storybook/builder-vite', // 👈 The builder enabled here.
+    builder: getAbsolutePath("@storybook/builder-vite"), // 👈 The builder enabled here.
   },
 
   addons: [
-    getAbsolutePath('@storybook/addon-controls'),
-    getAbsolutePath('@storybook/addon-actions'),
-    getAbsolutePath('@storybook/addon-links'),
-    getAbsolutePath('@storybook/addon-viewport'),
-    getAbsolutePath('@storybook/addon-essentials'),
-    getAbsolutePath('@chromatic-com/storybook'),
-    getAbsolutePath('@storybook/addon-interactions'),
+    getAbsolutePath("@chromatic-com/storybook"),
+    getAbsolutePath("@storybook/addon-docs")
   ],
+
   babel: async (options) => ({
     ...options,
     presets: [
@@ -31,14 +23,20 @@ const config: StorybookConfig = {
       ['babel-preset-react-app', { runtime: 'automatic' }],
     ],
   }),
+
   framework: {
-    name: getAbsolutePath('@storybook/react-vite'),
+    name: getAbsolutePath("@storybook/react-vite"),
     options: {
       fastRefresh: true,
     },
-  },
-  docs: {
-    autodocs: 'tag',
-  },
+  }
 };
 export default config;
+
+// function value: string): any {
+//   return dirname(require.resolve(join(value, "package.json")));
+// }
+
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, "package.json")));
+}

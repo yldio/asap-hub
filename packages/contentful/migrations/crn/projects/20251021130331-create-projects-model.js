@@ -221,6 +221,7 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
+  projects.changeFieldControl('title', 'builtin', 'multipleLine', {});
   projects.changeFieldControl('originalGrant', 'builtin', 'multipleLine', {});
   projects.changeFieldControl('startDate', 'builtin', 'datePicker', {
     ampm: '24',

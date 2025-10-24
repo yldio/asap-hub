@@ -62,6 +62,11 @@ const MembershipCard = ({
         return `${data.fields.firstName?.['en-US']} ${data.fields.lastName?.['en-US']}`;
       case 'team':
         return data.fields.displayName?.['en-US'];
+      case 'projectMember':
+        const contentType = data?.sys?.contentType?.sys?.id;
+        return contentType === 'users'
+          ? `${data.fields.firstName?.['en-US']} ${data.fields.lastName?.['en-US']}`
+          : data.fields.displayName?.['en-US'];
       case 'lab':
       case 'contributingCohort':
         return data.fields.name?.['en-US'];
@@ -70,9 +75,14 @@ const MembershipCard = ({
     }
   };
 
+  const getEntryCardTitle = (entityName: string) =>
+    entityName === 'projectMember'
+      ? 'Project Member'
+      : capitalizeFirstLetter(entityName);
+
   return (
     <EntryCard
-      contentType={capitalizeFirstLetter(entityName)}
+      contentType={getEntryCardTitle(entityName)}
       actions={actions}
       onClick={onClick}
       status={status}

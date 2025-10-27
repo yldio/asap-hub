@@ -161,7 +161,7 @@ const AssociationList: FC<AssociationListProps> = ({
                 {displayName}
               </Link>
             )}
-            {inline && <span css={bulletStyles}>·</span>}
+            {inline && <span css={bulletStyles}>•</span>}
           </li>
         ))}
         {more && (

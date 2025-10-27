@@ -28,16 +28,12 @@ const listStyles = css({
 });
 const itemStyles = css({
   paddingBottom: rem(12),
-  '&:not(:last-of-type)': {
-    paddingRight: rem(24),
-  },
-
   overflow: 'hidden',
 });
 const userStyles = css({
   overflow: 'hidden',
   display: 'grid',
-  gridTemplateColumns: 'min-content 1fr min-content',
+  gridTemplateColumns: `min-content 1fr min-content min-content`,
   gridColumnGap: rem(9),
   alignItems: 'center',
 });
@@ -49,8 +45,13 @@ const nameStyles = css({
 const iconStyles = css({
   display: 'inline-flex',
 });
+const separatorStyles = css({
+  fontSize: rem(20),
+  color: lead.rgb,
+});
 
 interface UsersListProps {
+  separator?: string;
   users: ReadonlyArray<
     | (Pick<
         UserResponse,
@@ -69,6 +70,7 @@ interface UsersListProps {
 const UsersList: FC<UsersListProps> = ({
   users,
   max = Number.POSITIVE_INFINITY,
+  separator,
 }) => (
   <ul css={listStyles}>
     {users.slice(0, max).map((user, i) => {
@@ -94,6 +96,9 @@ const UsersList: FC<UsersListProps> = ({
               {user.alumniSinceDate && (
                 <span css={iconStyles}>{alumniBadgeIcon}</span>
               )}
+              {i < users.length - 1 && i < max - 1 && separator && (
+                <span css={separatorStyles}>{separator}</span>
+              )}
             </div>
           )}
         </li>
@@ -101,7 +106,7 @@ const UsersList: FC<UsersListProps> = ({
     })}
     {users.length > max && (
       <li>
-        <div css={userStyles}>
+        <div css={userStyles(false)}>
           <Avatar placeholder={`+${users.length - max}`} />
           <span css={nameStyles}>Authors</span>
         </div>

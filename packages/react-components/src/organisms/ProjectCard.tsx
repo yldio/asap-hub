@@ -156,7 +156,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
 
   return (
     <Card accent={getCardAccentByStatus(project.status)}>
-      <div css={cardStyles}>
+      <div css={cardStyles} data-testid="project-card-id">
         {/* Header with Pills */}
         <div css={headerStyles}>
           <Pill accent={getStatusPillAccent(project.status)}>

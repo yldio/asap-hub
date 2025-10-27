@@ -107,26 +107,24 @@ const TraineeProjects: FC<TraineeProjectsProps> = ({
   onChangeSearchQuery,
   filters,
   onChangeFilter,
-}) => {
-  return (
-    <ProjectsPage
-      page="Trainee"
-      searchQuery={searchQuery}
-      onChangeSearchQuery={onChangeSearchQuery}
-      filters={filters}
-      onChangeFilter={onChangeFilter}
-    >
-      <SearchFrame title="Trainee Projects">
-        <TraineeProjectsList
-          projects={mockTraineeProjects}
-          numberOfItems={mockTraineeProjects.length}
-          numberOfPages={1}
-          currentPageIndex={0}
-          renderPageHref={(pageIndex) => `#page-${pageIndex}`}
-        />
-      </SearchFrame>
-    </ProjectsPage>
-  );
-};
+}) => (
+  <ProjectsPage
+    page="Trainee"
+    searchQuery={searchQuery}
+    onChangeSearchQuery={onChangeSearchQuery}
+    filters={filters}
+    onChangeFilter={onChangeFilter}
+  >
+    <SearchFrame title="Trainee Projects">
+      <TraineeProjectsList
+        projects={mockTraineeProjects}
+        numberOfItems={mockTraineeProjects.length}
+        numberOfPages={1}
+        currentPageIndex={0}
+        renderPageHref={(pageIndex) => `#page-${pageIndex}`}
+      />
+    </SearchFrame>
+  </ProjectsPage>
+);
 
 export default TraineeProjects;

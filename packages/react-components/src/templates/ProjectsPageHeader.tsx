@@ -1,4 +1,4 @@
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import { projects } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';

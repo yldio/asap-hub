@@ -91,26 +91,24 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
   onChangeSearchQuery,
   filters,
   onChangeFilter,
-}) => {
-  return (
-    <ProjectsPage
-      page="Resource"
-      searchQuery={searchQuery}
-      onChangeSearchQuery={onChangeSearchQuery}
-      filters={filters}
-      onChangeFilter={onChangeFilter}
-    >
-      <SearchFrame title="Resource Projects">
-        <ResourceProjectsList
-          projects={mockResourceProjects}
-          numberOfItems={mockResourceProjects.length}
-          numberOfPages={1}
-          currentPageIndex={0}
-          renderPageHref={(pageIndex) => `#page-${pageIndex}`}
-        />
-      </SearchFrame>
-    </ProjectsPage>
-  );
-};
+}) => (
+  <ProjectsPage
+    page="Resource"
+    searchQuery={searchQuery}
+    onChangeSearchQuery={onChangeSearchQuery}
+    filters={filters}
+    onChangeFilter={onChangeFilter}
+  >
+    <SearchFrame title="Resource Projects">
+      <ResourceProjectsList
+        projects={mockResourceProjects}
+        numberOfItems={mockResourceProjects.length}
+        numberOfPages={1}
+        currentPageIndex={0}
+        renderPageHref={(pageIndex) => `#page-${pageIndex}`}
+      />
+    </SearchFrame>
+  </ProjectsPage>
+);
 
 export default ResourceProjects;

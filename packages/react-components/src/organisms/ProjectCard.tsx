@@ -10,7 +10,6 @@ import {
   DiscoveryTeamIcon,
   ResourceTeamIcon,
   ResourceMemberIcon,
-  UserIcon,
   MemberIcon,
 } from '../icons';
 import { fern, lead } from '../colors';
@@ -119,6 +118,8 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
         return 'Resource Project';
       case 'Trainee':
         return 'Trainee Project';
+      default:
+        return 'Discovery Project';
     }
   };
 
@@ -130,12 +131,12 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
         return 'success';
       case 'Closed':
         return 'warning';
+      default:
+        return 'info';
     }
   };
 
-  const getHref = () => {
-    return `/projects/${project.projectType}/${project.id}`;
-  };
+  const getHref = () => `/projects/${project.projectType}/${project.id}`;
 
   return (
     <Card>

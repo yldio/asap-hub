@@ -60,26 +60,24 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
   onChangeSearchQuery,
   filters,
   onChangeFilter,
-}) => {
-  return (
-    <ProjectsPage
-      page="Discovery"
-      searchQuery={searchQuery}
-      onChangeSearchQuery={onChangeSearchQuery}
-      filters={filters}
-      onChangeFilter={onChangeFilter}
-    >
-      <SearchFrame title="Discovery Projects">
-        <DiscoveryProjectsList
-          projects={mockDiscoveryProjects}
-          numberOfItems={mockDiscoveryProjects.length}
-          numberOfPages={1}
-          currentPageIndex={0}
-          renderPageHref={(pageIndex) => `#page-${pageIndex}`}
-        />
-      </SearchFrame>
-    </ProjectsPage>
-  );
-};
+}) => (
+  <ProjectsPage
+    page="Discovery"
+    searchQuery={searchQuery}
+    onChangeSearchQuery={onChangeSearchQuery}
+    filters={filters}
+    onChangeFilter={onChangeFilter}
+  >
+    <SearchFrame title="Discovery Projects">
+      <DiscoveryProjectsList
+        projects={mockDiscoveryProjects}
+        numberOfItems={mockDiscoveryProjects.length}
+        numberOfPages={1}
+        currentPageIndex={0}
+        renderPageHref={(pageIndex) => `#page-${pageIndex}`}
+      />
+    </SearchFrame>
+  </ProjectsPage>
+);
 
 export default DiscoveryProjects;

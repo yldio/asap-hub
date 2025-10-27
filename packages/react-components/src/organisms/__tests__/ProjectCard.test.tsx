@@ -1,7 +1,11 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
-import ProjectCard from '../ProjectCard';
+import ProjectCard, {
+  getProjectTypeLabel,
+  getStatusPillAccent,
+  getCardAccentByStatus,
+} from '../ProjectCard';
 
 const baseProjectProps = {
   id: 'project-1',
@@ -92,6 +96,50 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
     },
   ],
 };
+
+describe('Helper Functions', () => {
+  describe('getProjectTypeLabel', () => {
+    it('returns correct label for Discovery projects', () => {
+      expect(getProjectTypeLabel('Discovery')).toBe('Discovery Project');
+    });
+
+    it('returns correct label for Resource projects', () => {
+      expect(getProjectTypeLabel('Resource')).toBe('Resource Project');
+    });
+
+    it('returns correct label for Trainee projects', () => {
+      expect(getProjectTypeLabel('Trainee')).toBe('Trainee Project');
+    });
+  });
+
+  describe('getStatusPillAccent', () => {
+    it('returns info accent for Active status', () => {
+      expect(getStatusPillAccent('Active')).toBe('info');
+    });
+
+    it('returns success accent for Complete status', () => {
+      expect(getStatusPillAccent('Complete')).toBe('success');
+    });
+
+    it('returns warning accent for Closed status', () => {
+      expect(getStatusPillAccent('Closed')).toBe('warning');
+    });
+  });
+
+  describe('getCardAccentByStatus', () => {
+    it('returns default accent for Active status', () => {
+      expect(getCardAccentByStatus('Active')).toBe('default');
+    });
+
+    it('returns neutral200 accent for Complete status', () => {
+      expect(getCardAccentByStatus('Complete')).toBe('neutral200');
+    });
+
+    it('returns neutral200 accent for Closed status', () => {
+      expect(getCardAccentByStatus('Closed')).toBe('neutral200');
+    });
+  });
+});
 
 describe('ProjectCard - Discovery Project', () => {
   it('renders the project title as a heading', () => {
@@ -282,48 +330,62 @@ describe('ProjectCard - Trainee Project', () => {
   });
 });
 
+describe('ProjectCard - Card Background Colors', () => {
+  it('renders Active projects with default (white) background', () => {
+    const { container } = render(<ProjectCard {...discoveryProjectProps} />);
+    const card = container.querySelector('section');
+    const styles = window.getComputedStyle(card!);
+    // Default accent has no backgroundColor set, so it's transparent/white
+    expect(styles.backgroundColor).not.toContain('var(--neutral200)'); // neutral200
+  });
+
+  it('renders Complete projects with grey background', () => {
+    const { container } = render(
+      <ProjectCard {...discoveryProjectProps} status="Complete" />,
+    );
+    const card = container.querySelector('section');
+    expect(card).toHaveStyle({ backgroundColor: 'var(--neutral200)' }); // neutral200
+  });
+
+  it('renders Closed projects with grey background', () => {
+    const { container } = render(
+      <ProjectCard {...discoveryProjectProps} status="Closed" />,
+    );
+    const card = container.querySelector('section');
+    expect(card).toHaveStyle({ backgroundColor: 'var(--neutral200)' }); // neutral200
+  });
+});
+
 describe('ProjectCard - Common Features', () => {
-  it('links to the correct project detail page for Discovery', () => {
+  it('links to the correct project detail page for each project type', () => {
+    // Discovery
     render(<ProjectCard {...discoveryProjectProps} />);
-    const links = Array.from(
+    let links = Array.from(
       document.querySelectorAll('a'),
     ) as HTMLAnchorElement[];
-    const projectLink = links.find((link) =>
-      link.href.includes('/projects/Discovery/project-1'),
-    );
-    expect(projectLink).toBeDefined();
-  });
+    expect(
+      links.find((link) => link.href.includes('/projects/Discovery/project-1')),
+    ).toBeDefined();
 
-  it('links to the correct project detail page for Resource', () => {
+    // Resource
     render(<ProjectCard {...resourceProjectTeamBasedProps} />);
-    const links = Array.from(
-      document.querySelectorAll('a'),
-    ) as HTMLAnchorElement[];
-    const projectLink = links.find((link) =>
-      link.href.includes('/projects/Resource/project-1'),
-    );
-    expect(projectLink).toBeDefined();
-  });
+    links = Array.from(document.querySelectorAll('a')) as HTMLAnchorElement[];
+    expect(
+      links.find((link) => link.href.includes('/projects/Resource/project-1')),
+    ).toBeDefined();
 
-  it('links to the correct project detail page for Trainee', () => {
+    // Trainee
     render(<ProjectCard {...traineeProjectProps} />);
-    const links = Array.from(
-      document.querySelectorAll('a'),
-    ) as HTMLAnchorElement[];
-    const projectLink = links.find((link) =>
-      link.href.includes('/projects/Trainee/project-1'),
-    );
-    expect(projectLink).toBeDefined();
+    links = Array.from(document.querySelectorAll('a')) as HTMLAnchorElement[];
+    expect(
+      links.find((link) => link.href.includes('/projects/Trainee/project-1')),
+    ).toBeDefined();
   });
 
-  it('renders start and end dates', () => {
+  it('renders start and end dates and duration', () => {
     const { getByText } = render(<ProjectCard {...discoveryProjectProps} />);
     expect(getByText(/Jan 2023/)).toBeVisible();
     expect(getByText(/Dec 2025/)).toBeVisible();
-  });
-
-  it('renders duration', () => {
-    const { getByText } = render(<ProjectCard {...discoveryProjectProps} />);
     expect(getByText(/3 yrs/)).toBeVisible();
   });
 });

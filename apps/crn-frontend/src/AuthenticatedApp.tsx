@@ -41,7 +41,7 @@ const loadAbout = () =>
 const loadAnalytics = () =>
   import(/* webpackChunkName: "analytics" */ './analytics/Routes');
 const loadProjects = () =>
-  import(/* webpackChunkName: "projects" */ './projects/Routes');
+  import(/* webpackChunkName: "projects" */ './projects/Projects');
 
 const News = lazy(loadNews);
 const Network = lazy(loadNetwork);

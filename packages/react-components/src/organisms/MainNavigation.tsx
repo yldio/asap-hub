@@ -48,11 +48,13 @@ const listStyles = css({
 export interface MainNavigationProps {
   readonly userOnboarded: boolean;
   readonly canViewAnalytics?: boolean;
+  readonly canViewProjects?: boolean;
 }
 
 const MainNavigation: React.FC<MainNavigationProps> = ({
   userOnboarded,
   canViewAnalytics = false,
+  canViewProjects = false,
 }) => (
   <nav>
     <ul css={listStyles}>
@@ -65,15 +67,17 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
           Network
         </NavigationLink>
       </li>
-      <li>
-        <NavigationLink
-          href={projects({}).$}
-          icon={projectIcon}
-          enabled={userOnboarded}
-        >
-          Projects
-        </NavigationLink>
-      </li>
+      {canViewProjects && (
+        <li>
+          <NavigationLink
+            href={projects({}).$}
+            icon={projectIcon}
+            enabled={userOnboarded}
+          >
+            Projects
+          </NavigationLink>
+        </li>
+      )}
       <li>
         <NavigationLink
           href={sharedResearch({}).$}

@@ -6,6 +6,7 @@ import { RecoilRoot, useRecoilValue } from 'recoil';
 
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import userEvent from '@testing-library/user-event';
+import { enable, disable } from '@asap-hub/flags';
 import { authorizationState } from '../auth/state';
 import AuthenticatedApp from '../AuthenticatedApp';
 import Dashboard from '../dashboard/Dashboard';
@@ -178,4 +179,62 @@ it('renders the application layout correctly', async () => {
 
   expect(getByTestId('layout-article-testid')).toBeInTheDocument();
   expect(getByTestId('menu-header-testid')).toBeInTheDocument();
+});
+
+it('shows Projects in navigation when PROJECTS_MVP flag is enabled', async () => {
+  enable('PROJECTS_MVP');
+
+  const { getByText, findAllByText } = render(
+    <RecoilRoot>
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <MemoryRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </MemoryRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>
+    </RecoilRoot>,
+  );
+
+  const menu = getByText('Menu');
+  userEvent.click(menu);
+
+  await waitFor(() => {
+    expect(getByText('Projects')).toBeInTheDocument();
+  });
+
+  const projectsElements = await findAllByText('Projects');
+  expect(projectsElements.length).toBeGreaterThan(0);
+});
+
+it('hides Projects in navigation when PROJECTS_MVP flag is disabled', async () => {
+  disable('PROJECTS_MVP');
+
+  const { getByText, queryByText, getAllByText } = render(
+    <RecoilRoot>
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <MemoryRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </MemoryRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>
+    </RecoilRoot>,
+  );
+
+  const menu = getByText('Menu');
+  userEvent.click(menu);
+
+  await waitFor(() => {
+    expect(
+      getAllByText(/network/i, { selector: 'nav *' }).length,
+    ).toBeGreaterThan(0);
+  });
+
+  // Projects should not be in the navigation
+  expect(queryByText('Projects')).not.toBeInTheDocument();
 });

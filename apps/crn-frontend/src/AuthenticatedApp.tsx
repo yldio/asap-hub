@@ -1,6 +1,10 @@
 import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
-import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
+import {
+  useAuth0CRN,
+  useCurrentUserCRN,
+  useFlags,
+} from '@asap-hub/react-context';
 import {
   about,
   analytics,
@@ -83,7 +87,9 @@ const AuthenticatedApp: FC<{
 
   const user = useCurrentUserCRN();
   const tabRoute = useCurrentUserProfileTabRoute();
+  const { isEnabled } = useFlags();
   const canViewAnalytics = user?.role === 'Staff';
+  const canViewProjects = isEnabled('PROJECTS_MVP');
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
@@ -99,6 +105,7 @@ const AuthenticatedApp: FC<{
             userOnboarded={user.onboarded}
             onboardable={onboardable}
             canViewAnalytics={canViewAnalytics}
+            canViewProjects={canViewProjects}
             onboardModalHref={
               tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
             }
@@ -176,11 +183,13 @@ const AuthenticatedApp: FC<{
                     <SharedResearch />
                   </Frame>
                 </Route>
-                <Route path={projects.template}>
-                  <Frame title={null}>
-                    <Projects />
-                  </Frame>
-                </Route>
+                {canViewProjects && (
+                  <Route path={projects.template}>
+                    <Frame title={null}>
+                      <Projects />
+                    </Frame>
+                  </Route>
+                )}
                 <Route path={events.template}>
                   <Frame title={null}>
                     <Events />

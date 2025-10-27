@@ -1,11 +1,11 @@
 import { ComponentProps } from 'react';
 import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { projects } from '@asap-hub/routing';
 
 import ProjectsPageHeader from '../ProjectsPageHeader';
-import userEvent from '@testing-library/user-event';
 
 const props: ComponentProps<typeof ProjectsPageHeader> = {
   page: 'Discovery',

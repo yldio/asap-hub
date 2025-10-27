@@ -30,6 +30,7 @@ module.exports.up = function (migration) {
     .required(false)
     .validations([
       {
+        // using dummy roles since we are yet to receive roles from the client
         in: [
           'Contributor',
           'Investigator',

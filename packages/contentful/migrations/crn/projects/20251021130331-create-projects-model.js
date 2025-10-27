@@ -245,6 +245,8 @@ module.exports.up = (migration) => {
     showLinkEntityAction: true,
     showCreateEntityAction: false,
   });
+
+  // currently pointing to demo app but will be changed to actual app before merging
   projects.changeFieldControl('members', 'app', '5ZNAQpIJ4hf2Yk7QTjCI2i', {
     entityName: 'projectMember',
     showUserEmail: false,

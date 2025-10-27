@@ -30,7 +30,7 @@ const itemStyles = (isSeparator: boolean) =>
   css({
     paddingBottom: rem(12),
     '&:not(:last-of-type)': {
-      paddingRight: isSeparator ? rem(15) : 0,
+      paddingRight: isSeparator ? 0 : rem(15),
     },
     overflow: 'hidden',
   });

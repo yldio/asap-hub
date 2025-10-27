@@ -26,10 +26,14 @@ const listStyles = css({
 
   color: lead.rgb,
 });
-const itemStyles = css({
-  paddingBottom: rem(12),
-  overflow: 'hidden',
-});
+const itemStyles = (isSeparator: boolean) =>
+  css({
+    paddingBottom: rem(12),
+    '&:not(:last-of-type)': {
+      paddingRight: isSeparator ? rem(15) : 0,
+    },
+    overflow: 'hidden',
+  });
 const userStyles = css({
   overflow: 'hidden',
   display: 'grid',
@@ -79,7 +83,7 @@ const UsersList: FC<UsersListProps> = ({
         ? getPlaceholderAvatarUrl()
         : user.avatarUrl;
       return (
-        <li key={`author-${i}`} css={itemStyles}>
+        <li key={`author-${i}`} css={itemStyles(Boolean(separator))}>
           {externalUser ? (
             <div css={userStyles}>
               <Avatar {...user} imageUrl={imageUrl} />
@@ -106,7 +110,7 @@ const UsersList: FC<UsersListProps> = ({
     })}
     {users.length > max && (
       <li>
-        <div css={userStyles(false)}>
+        <div css={userStyles}>
           <Avatar placeholder={`+${users.length - max}`} />
           <span css={nameStyles}>Authors</span>
         </div>

@@ -99,45 +99,42 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
 
 describe('Helper Functions', () => {
   describe('getProjectTypeLabel', () => {
-    it('returns correct label for Discovery projects', () => {
-      expect(getProjectTypeLabel('Discovery')).toBe('Discovery Project');
-    });
-
-    it('returns correct label for Resource projects', () => {
-      expect(getProjectTypeLabel('Resource')).toBe('Resource Project');
-    });
-
-    it('returns correct label for Trainee projects', () => {
-      expect(getProjectTypeLabel('Trainee')).toBe('Trainee Project');
-    });
+    it.each([
+      { projectType: 'Discovery' as const, expected: 'Discovery Project' },
+      { projectType: 'Resource' as const, expected: 'Resource Project' },
+      { projectType: 'Trainee' as const, expected: 'Trainee Project' },
+    ])(
+      'returns "$expected" for $projectType projects',
+      ({ projectType, expected }) => {
+        expect(getProjectTypeLabel(projectType)).toBe(expected);
+      },
+    );
   });
 
   describe('getStatusPillAccent', () => {
-    it('returns info accent for Active status', () => {
-      expect(getStatusPillAccent('Active')).toBe('info');
-    });
-
-    it('returns success accent for Complete status', () => {
-      expect(getStatusPillAccent('Complete')).toBe('success');
-    });
-
-    it('returns warning accent for Closed status', () => {
-      expect(getStatusPillAccent('Closed')).toBe('warning');
-    });
+    it.each([
+      { status: 'Active' as const, expected: 'info' as const },
+      { status: 'Complete' as const, expected: 'success' as const },
+      { status: 'Closed' as const, expected: 'warning' as const },
+    ])(
+      'returns $expected accent for $status status',
+      ({ status, expected }) => {
+        expect(getStatusPillAccent(status)).toBe(expected);
+      },
+    );
   });
 
   describe('getCardAccentByStatus', () => {
-    it('returns default accent for Active status', () => {
-      expect(getCardAccentByStatus('Active')).toBe('default');
-    });
-
-    it('returns neutral200 accent for Complete status', () => {
-      expect(getCardAccentByStatus('Complete')).toBe('neutral200');
-    });
-
-    it('returns neutral200 accent for Closed status', () => {
-      expect(getCardAccentByStatus('Closed')).toBe('neutral200');
-    });
+    it.each([
+      { status: 'Active' as const, expected: 'default' as const },
+      { status: 'Complete' as const, expected: 'neutral200' as const },
+      { status: 'Closed' as const, expected: 'neutral200' as const },
+    ])(
+      'returns $expected accent for $status status',
+      ({ status, expected }) => {
+        expect(getCardAccentByStatus(status)).toBe(expected);
+      },
+    );
   });
 });
 
@@ -149,23 +146,15 @@ describe('ProjectCard - Discovery Project', () => {
     );
   });
 
-  it('renders the Active status pill with info accent', () => {
-    const { getByText } = render(<ProjectCard {...discoveryProjectProps} />);
-    expect(getByText('Active')).toBeVisible();
-  });
-
-  it('renders the Complete status pill with success accent', () => {
+  it.each([
+    { status: 'Active' as const },
+    { status: 'Complete' as const },
+    { status: 'Closed' as const },
+  ])('renders the $status status pill', ({ status }) => {
     const { getByText } = render(
-      <ProjectCard {...discoveryProjectProps} status="Complete" />,
+      <ProjectCard {...discoveryProjectProps} status={status} />,
     );
-    expect(getByText('Complete')).toBeVisible();
-  });
-
-  it('renders the Closed status pill with warning accent', () => {
-    const { getByText } = render(
-      <ProjectCard {...discoveryProjectProps} status="Closed" />,
-    );
-    expect(getByText('Closed')).toBeVisible();
+    expect(getByText(status)).toBeVisible();
   });
 
   it('renders the Discovery Project type pill', () => {

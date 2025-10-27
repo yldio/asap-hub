@@ -109,52 +109,60 @@ type TraineeProject = BaseProject & {
 
 type ProjectCardProps = DiscoveryProject | ResourceProject | TraineeProject;
 
+export const getProjectTypeLabel = (
+  projectType: 'Discovery' | 'Resource' | 'Trainee',
+): string => {
+  switch (projectType) {
+    case 'Discovery':
+      return 'Discovery Project';
+    case 'Resource':
+      return 'Resource Project';
+    case 'Trainee':
+      return 'Trainee Project';
+    default:
+      return 'Discovery Project';
+  }
+};
+
+export const getStatusPillAccent = (
+  status: 'Active' | 'Complete' | 'Closed',
+): 'info' | 'success' | 'warning' => {
+  switch (status) {
+    case 'Active':
+      return 'info';
+    case 'Complete':
+      return 'success';
+    case 'Closed':
+      return 'warning';
+    default:
+      return 'info';
+  }
+};
+
+export const getCardAccentByStatus = (
+  status: 'Active' | 'Complete' | 'Closed',
+): 'default' | 'neutral200' => {
+  switch (status) {
+    case 'Complete':
+    case 'Closed':
+      return 'neutral200';
+    default:
+      return 'default';
+  }
+};
+
 const ProjectCard: FC<ProjectCardProps> = (project) => {
-  const getProjectTypeLabel = () => {
-    switch (project.projectType) {
-      case 'Discovery':
-        return 'Discovery Project';
-      case 'Resource':
-        return 'Resource Project';
-      case 'Trainee':
-        return 'Trainee Project';
-      default:
-        return 'Discovery Project';
-    }
-  };
-
-  const getStatusAccent = () => {
-    switch (project.status) {
-      case 'Active':
-        return 'info';
-      case 'Complete':
-        return 'success';
-      case 'Closed':
-        return 'warning';
-      default:
-        return 'info';
-    }
-  };
-
-  const getCardAccent = () => {
-    switch (project.status) {
-      case 'Complete':
-      case 'Closed':
-        return 'neutral200';
-      default:
-        return 'default';
-    }
-  };
-
   const getHref = () => `/projects/${project.projectType}/${project.id}`;
 
   return (
-    <Card accent={getCardAccent()}>
+    <Card accent={getCardAccentByStatus(project.status)}>
       <div css={cardStyles}>
         {/* Header with Pills */}
         <div css={headerStyles}>
-          <Pill accent={getStatusAccent()}>{project.status}</Pill>
-          <Pill>{getProjectTypeLabel()}</Pill>
+          <Pill accent={getStatusPillAccent(project.status)}>
+            {project.status}
+          </Pill>
+          <Pill>{getProjectTypeLabel(project.projectType)}</Pill>
           {project.projectType === 'Discovery' && (
             <Pill>{project.researchTheme}</Pill>
           )}

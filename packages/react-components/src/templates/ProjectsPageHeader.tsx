@@ -10,7 +10,6 @@ import {
 } from '../layout';
 import { SearchAndFilter } from '../organisms';
 import { TabNav } from '../molecules';
-import { queryParamString } from '../routing';
 import { DiscoveryProjectIcon } from '../icons';
 import ResourceProjectIcon from '../icons/resource-project';
 import TraineeProjectIcon from '../icons/trainee-project';
@@ -77,31 +76,19 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
       </Paragraph>
       <TabNav>
         <TabLink
-          href={
-            projects.template +
-            projects({}).discoveryProjects.template +
-            queryParamString(searchQuery)
-          }
+          href={projects.template + projects({}).discoveryProjects.template}
           Icon={() => <DiscoveryProjectIcon />}
         >
           Discovery Projects
         </TabLink>
         <TabLink
-          href={
-            projects.template +
-            projects({}).resourceProjects.template +
-            queryParamString(searchQuery)
-          }
+          href={projects.template + projects({}).resourceProjects.template}
           Icon={() => <ResourceProjectIcon />}
         >
           Resource Projects
         </TabLink>
         <TabLink
-          href={
-            projects.template +
-            projects({}).traineeProjects.template +
-            queryParamString(searchQuery)
-          }
+          href={projects.template + projects({}).traineeProjects.template}
           Icon={() => <TraineeProjectIcon />}
         >
           Trainee Projects

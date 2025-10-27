@@ -109,6 +109,12 @@ describe('Helper Functions', () => {
         expect(getProjectTypeLabel(projectType)).toBe(expected);
       },
     );
+
+    it('returns default label for invalid project type', () => {
+      expect(
+        getProjectTypeLabel('Invalid' as 'Discovery' | 'Resource' | 'Trainee'),
+      ).toBe('Discovery Project');
+    });
   });
 
   describe('getStatusPillAccent', () => {
@@ -122,6 +128,12 @@ describe('Helper Functions', () => {
         expect(getStatusPillAccent(status)).toBe(expected);
       },
     );
+
+    it('returns default accent for invalid status', () => {
+      expect(
+        getStatusPillAccent('Invalid' as 'Active' | 'Complete' | 'Closed'),
+      ).toBe('info');
+    });
   });
 
   describe('getCardAccentByStatus', () => {
@@ -135,6 +147,12 @@ describe('Helper Functions', () => {
         expect(getCardAccentByStatus(status)).toBe(expected);
       },
     );
+
+    it('returns default accent for invalid status', () => {
+      expect(
+        getCardAccentByStatus('Invalid' as 'Active' | 'Complete' | 'Closed'),
+      ).toBe('default');
+    });
   });
 });
 
@@ -245,6 +263,16 @@ describe('ProjectCard - Resource Project (Team-based)', () => {
       />,
     );
     expect(queryByText(/Access Drive/i)).not.toBeInTheDocument();
+  });
+
+  it('renders team name as plain text when teamId is not provided', () => {
+    const { getByText } = render(
+      <ProjectCard {...resourceProjectTeamBasedProps} teamId={undefined} />,
+    );
+    const teamName = getByText('Anderson Resource Team');
+    expect(teamName).toBeVisible();
+    // Verify it's not wrapped in a link
+    expect(teamName.closest('a')).toBeNull();
   });
 });
 

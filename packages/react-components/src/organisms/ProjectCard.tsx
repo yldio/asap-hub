@@ -136,10 +136,20 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
     }
   };
 
+  const getCardAccent = () => {
+    switch (project.status) {
+      case 'Complete':
+      case 'Closed':
+        return 'neutral200';
+      default:
+        return 'default';
+    }
+  };
+
   const getHref = () => `/projects/${project.projectType}/${project.id}`;
 
   return (
-    <Card>
+    <Card accent={getCardAccent()}>
       <div css={cardStyles}>
         {/* Header with Pills */}
         <div css={headerStyles}>

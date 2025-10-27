@@ -1,6 +1,6 @@
 import { GlobalStyles, pixels } from '@asap-hub/react-components';
 import { withKnobs } from '@storybook/addon-knobs';
-import { Preview } from '@storybook/react';
+import { Preview } from '@storybook/react-vite';
 
 const preview = {
   decorators: [
@@ -11,6 +11,7 @@ const preview = {
       </>
     ),
   ],
+
   parameters: {
     controls: {
       matchers: {
@@ -19,7 +20,7 @@ const preview = {
       },
     },
     viewport: {
-      viewports: {
+      options: {
         mobile: {
           name: 'Mobile',
           styles: {
@@ -49,7 +50,13 @@ const preview = {
           },
         },
       },
-      defaultViewport: 'smallDesktop',
+    },
+  },
+
+  initialGlobals: {
+    viewport: {
+      value: 'smallDesktop',
+      isRotated: false,
     },
   },
 };

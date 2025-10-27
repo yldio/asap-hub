@@ -1,5 +1,5 @@
 import { SearchAndFilter } from '@asap-hub/react-components';
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 
 import { text } from './knobs';
 

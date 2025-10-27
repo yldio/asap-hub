@@ -247,7 +247,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
         {/* Tags */}
         {project.tags.length > 0 && (
           <div css={tagsContainerStyles}>
-            <TagList tags={project.tags} />
+            <TagList tags={project.tags} max={3} />
           </div>
         )}
       </div>

@@ -145,21 +145,6 @@ module.exports.up = (migration) => {
     .omitted(false);
 
   projects
-    .createField('supplementGrant')
-    .name('Supplement Grant')
-    .type('Link')
-    .localized(false)
-    .required(false)
-    .validations([
-      {
-        linkContentType: ['supplementGrant'],
-      },
-    ])
-    .disabled(false)
-    .omitted(false)
-    .linkType('Entry');
-
-  projects
     .createField('researchTags')
     .name('Tags')
     .type('Array')

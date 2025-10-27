@@ -11,6 +11,7 @@ export { default as logout } from './logout';
 export { default as network } from './network';
 export type { OutputDocumentTypeParameter } from './network';
 export { default as news } from './news';
+export { default as projects } from './projects';
 export { default as sharedResearch } from './shared-research';
 export { default as staticPages } from './static-pages';
 export { default as welcome } from './welcome';

@@ -62,6 +62,7 @@ export { default as PreprintComplianceTable } from './PreprintComplianceTable';
 export { default as ProfileCardList } from './ProfileCardList';
 export { default as PublicationComplianceTable } from './PublicationComplianceTable';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
+export { default as ProjectCard } from './ProjectCard';
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as DiscussionModal } from './DiscussionModal';
 export { default as RecentSharedOutputs } from './RecentSharedOutputs';

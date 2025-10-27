@@ -210,7 +210,7 @@ export const activePrimaryStyles = ({
     color: primary900.rgba,
     svg: {
       stroke: primary900.rgba,
-      path: {
+      '& > path': {
         fill: primary900.rgba,
       },
     },

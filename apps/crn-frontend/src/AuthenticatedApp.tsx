@@ -9,6 +9,7 @@ import {
   events,
   network,
   news,
+  projects,
   sharedResearch,
   tags,
 } from '@asap-hub/routing';
@@ -39,6 +40,8 @@ const loadAbout = () =>
 
 const loadAnalytics = () =>
   import(/* webpackChunkName: "analytics" */ './analytics/Routes');
+const loadProjects = () =>
+  import(/* webpackChunkName: "projects" */ './projects/Routes');
 
 const News = lazy(loadNews);
 const Network = lazy(loadNetwork);
@@ -49,6 +52,7 @@ const Events = lazy(loadEvents);
 const About = lazy(loadAbout);
 const Analytics = lazy(loadAnalytics);
 const Tags = lazy(loadTags);
+const Projects = lazy(loadProjects);
 
 const AuthenticatedApp: FC<{
   setIsOnboardable?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -69,6 +73,7 @@ const AuthenticatedApp: FC<{
       .then(loadNews)
       .then(loadNetwork)
       .then(loadSharedResearch)
+      .then(loadProjects)
       .then(loadDiscover)
       .then(loadAbout)
       .then(loadAnalytics)
@@ -169,6 +174,11 @@ const AuthenticatedApp: FC<{
                 <Route path={sharedResearch.template}>
                   <Frame title="Shared Research">
                     <SharedResearch />
+                  </Frame>
+                </Route>
+                <Route path={projects.template}>
+                  <Frame title={null}>
+                    <Projects />
                   </Frame>
                 </Route>
                 <Route path={events.template}>

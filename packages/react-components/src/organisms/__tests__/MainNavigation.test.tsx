@@ -15,6 +15,7 @@ it('renders the navigation items', () => {
     }),
   ).toEqual([
     expect.stringMatching(/network/i),
+    expect.stringMatching(/projects/i),
     expect.stringMatching(/research/i),
     expect.stringMatching(/calendar/i),
     expect.stringMatching(/news/i),

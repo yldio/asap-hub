@@ -50,6 +50,21 @@ module.exports.up = (migration) => {
     .omitted(false);
 
   projects
+    .createField('supplementGrant')
+    .name('Supplement Grant')
+    .type('Link')
+    .localized(false)
+    .required(false)
+    .validations([
+      {
+        linkContentType: ['supplementGrant'],
+      },
+    ])
+    .disabled(false)
+    .omitted(false)
+    .linkType('Entry');
+
+  projects
     .createField('projectType')
     .name('Project Type')
     .type('Symbol')
@@ -191,7 +206,7 @@ module.exports.up = (migration) => {
     .name('Members')
     .type('Array')
     .localized(false)
-    .required(false)
+    .required(true)
     .validations([])
     .disabled(false)
     .omitted(false)

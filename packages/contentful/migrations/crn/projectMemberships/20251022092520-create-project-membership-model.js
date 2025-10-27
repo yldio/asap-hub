@@ -5,7 +5,7 @@ module.exports.up = function (migration) {
     .createContentType('projectMembership')
     .name('Project Membership')
     .description('')
-    .displayField('projectMember');
+    .displayField('role');
 
   projectMembership
     .createField('projectMember')

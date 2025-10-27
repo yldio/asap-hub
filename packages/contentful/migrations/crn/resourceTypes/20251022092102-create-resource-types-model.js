@@ -9,7 +9,7 @@ module.exports.up = (migration) => {
 
   resourceTypes
     .createField('name')
-    .name('name')
+    .name('Name')
     .type('Symbol')
     .localized(false)
     .required(true)

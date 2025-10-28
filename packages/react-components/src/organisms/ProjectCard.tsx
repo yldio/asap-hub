@@ -56,6 +56,7 @@ const iconStyles = css({
   display: 'inline-flex',
   width: rem(24),
   height: rem(24),
+  flexShrink: 0, // Prevent icon from shrinking
   '& svg': {
     width: '100%',
     height: '100%',

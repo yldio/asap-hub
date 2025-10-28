@@ -224,7 +224,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
             <span css={iconStyles}>{clockIcon}</span>
             <span>
               {formatProjectDate(project.startDate)} -{' '}
-              {formatProjectDate(project.endDate)} • {project.duration}
+              {formatProjectDate(project.endDate)} • ({project.duration})
             </span>
           </div>
         </div>

@@ -23,7 +23,7 @@ const mockDiscoveryProjects = [
       'Mitochondrial Dysfunction',
     ],
     teamName: 'Discovery Team Alpha',
-    duration: '2 years',
+    duration: '2 yrs',
   },
   {
     id: '2',
@@ -36,7 +36,7 @@ const mockDiscoveryProjects = [
     tags: ['Neural Circuits', 'Electrophysiology', 'Neuroimaging'],
     teamName: 'Discovery Team Beta',
     inactiveSinceDate: '2026-06-01',
-    duration: '3 years',
+    duration: '3 yrs',
   },
   {
     id: '3',
@@ -48,7 +48,7 @@ const mockDiscoveryProjects = [
     endDate: '2024-02-28',
     tags: ['Mitochondria', 'Cell Biology', 'Animal Models'],
     teamName: 'Discovery Team Gamma',
-    duration: '2 years',
+    duration: '2 yrs',
   },
 ];
 

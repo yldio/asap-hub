@@ -8,6 +8,7 @@ const mockTraineeProjects = [
     id: '1',
     title: 'Early Detection Biomarkers in PD',
     status: 'Active' as const,
+    projectType: 'Trainee' as const,
     trainer: {
       id: '1',
       displayName: 'Dr. Sarah Wilson',
@@ -35,6 +36,7 @@ const mockTraineeProjects = [
     id: '2',
     title: 'Novel Therapeutic Approaches for PD',
     status: 'Complete' as const,
+    projectType: 'Trainee' as const,
     trainer: {
       id: '3',
       displayName: 'Dr. Robert Kim',
@@ -62,6 +64,7 @@ const mockTraineeProjects = [
     id: '3',
     title: 'Digital Health Tools for PD Monitoring',
     status: 'Closed' as const,
+    projectType: 'Trainee' as const,
     trainer: {
       id: '5',
       displayName: 'Dr. Amanda Foster',

@@ -1,5 +1,12 @@
 import { FC } from 'react';
 import { css } from '@emotion/react';
+import {
+  DiscoveryProject,
+  ResourceProject,
+  TraineeProject,
+  ProjectStatus,
+  ProjectType,
+} from '@asap-hub/model';
 
 import { Card, Pill, Link } from '../atoms';
 import { TagList, LinkHeadline, UsersList } from '../molecules';
@@ -64,56 +71,9 @@ const tagsContainerStyles = css({
   marginTop: rem(16),
 });
 
-type BaseProject = {
-  readonly id: string;
-  readonly title: string;
-  readonly status: 'Active' | 'Complete' | 'Closed';
-  readonly startDate: string;
-  readonly endDate: string;
-  readonly duration: string;
-  readonly tags: string[];
-};
-
-type DiscoveryProject = BaseProject & {
-  readonly projectType: 'Discovery';
-  readonly researchTheme: string;
-  readonly teamName: string;
-  readonly teamId?: string;
-  readonly inactiveSinceDate?: string;
-};
-
-type ProjectMember = {
-  readonly id: string;
-  readonly displayName: string;
-  readonly firstName?: string;
-  readonly lastName?: string;
-  readonly avatarUrl?: string;
-  readonly email?: string;
-  readonly alumniSinceDate?: string;
-  readonly href: string;
-};
-
-type ResourceProject = BaseProject & {
-  readonly projectType: 'Resource';
-  readonly resourceType: string;
-  readonly isTeamBased: boolean;
-  readonly teamName?: string;
-  readonly teamId?: string;
-  readonly members?: ReadonlyArray<ProjectMember>;
-  readonly googleDriveLink?: string;
-};
-
-type TraineeProject = BaseProject & {
-  readonly projectType: 'Trainee';
-  readonly trainer: ProjectMember;
-  readonly members: ReadonlyArray<ProjectMember>;
-};
-
 type ProjectCardProps = DiscoveryProject | ResourceProject | TraineeProject;
 
-export const getProjectTypeLabel = (
-  projectType: 'Discovery' | 'Resource' | 'Trainee',
-): string => {
+export const getProjectTypeLabel = (projectType: ProjectType): string => {
   switch (projectType) {
     case 'Discovery':
       return 'Discovery Project';
@@ -127,7 +87,7 @@ export const getProjectTypeLabel = (
 };
 
 export const getStatusPillAccent = (
-  status: 'Active' | 'Complete' | 'Closed',
+  status: ProjectStatus,
 ): 'info' | 'success' | 'warning' => {
   switch (status) {
     case 'Active':
@@ -142,7 +102,7 @@ export const getStatusPillAccent = (
 };
 
 export const getCardAccentByStatus = (
-  status: 'Active' | 'Complete' | 'Closed',
+  status: ProjectStatus,
 ): 'default' | 'neutral200' => {
   switch (status) {
     case 'Complete':

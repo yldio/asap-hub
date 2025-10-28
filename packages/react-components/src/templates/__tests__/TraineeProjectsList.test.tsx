@@ -8,6 +8,7 @@ const mockProjects: ComponentProps<typeof TraineeProjectsList>['projects'] = [
     id: '1',
     title: 'Test Trainee Project 1',
     status: 'Active',
+    projectType: 'Trainee' as const,
     trainer: {
       id: '1',
       displayName: 'Dr. Mentor One',
@@ -35,6 +36,7 @@ const mockProjects: ComponentProps<typeof TraineeProjectsList>['projects'] = [
     id: '2',
     title: 'Test Trainee Project 2',
     status: 'Complete',
+    projectType: 'Trainee' as const,
     trainer: {
       id: '3',
       displayName: 'Dr. Mentor Two',

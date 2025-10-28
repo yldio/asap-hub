@@ -26,9 +26,9 @@ const listStyles = css({
 
   color: lead.rgb,
 });
-const itemStyles = (isSeparator: boolean) =>
+const itemStyles = (isSeparator: boolean, noMargin: boolean) =>
   css({
-    paddingBottom: rem(12),
+    paddingBottom: noMargin ? 0 : rem(12),
     '&:not(:last-of-type)': {
       paddingRight: isSeparator ? 0 : rem(15),
     },
@@ -70,11 +70,13 @@ interface UsersListProps {
     | ExternalAuthorResponse
   >;
   max?: number;
+  noMargin?: boolean;
 }
 const UsersList: FC<UsersListProps> = ({
   users,
   max = Number.POSITIVE_INFINITY,
   separator,
+  noMargin = false,
 }) => (
   <ul css={listStyles}>
     {users.slice(0, max).map((user, i) => {
@@ -83,7 +85,7 @@ const UsersList: FC<UsersListProps> = ({
         ? getPlaceholderAvatarUrl()
         : user.avatarUrl;
       return (
-        <li key={`author-${i}`} css={itemStyles(Boolean(separator))}>
+        <li key={`author-${i}`} css={itemStyles(Boolean(separator), noMargin)}>
           {externalUser ? (
             <div css={userStyles}>
               <Avatar {...user} imageUrl={imageUrl} />

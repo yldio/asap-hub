@@ -25,17 +25,19 @@ import { fern, lead } from '../colors';
 import TrainerIcon from '../icons/trainer';
 
 const cardStyles = css({
-  padding: rem(0),
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const headerStyles = css({
   display: 'flex',
   gap: rem(12),
-  marginBottom: rem(16),
+  marginBottom: rem(15),
 });
 
 const titleStyles = css({
-  marginBottom: rem(16),
+  '& h3': {
+    lineHeight: rem(16),
+  },
 });
 
 const metadataContainerStyles = css({
@@ -43,6 +45,19 @@ const metadataContainerStyles = css({
   flexDirection: 'column',
   gap: rem(12),
   marginBottom: rem(16),
+});
+
+const metadataStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  marginTop: rem(15),
+  rowGap: rem(15),
+});
+
+const traineeMetadataWrapperStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: rem(15),
 });
 
 const metadataRowStyles = css({
@@ -70,7 +85,12 @@ const teamNameStyles = css({
 });
 
 const tagsContainerStyles = css({
-  marginTop: rem(16),
+  marginTop: rem(24),
+});
+
+const driveButtonStyles = css({
+  width: 'fit-content',
+  marginTop: rem(12),
 });
 
 type ProjectCardProps = DiscoveryProject | ResourceProject | TraineeProject;
@@ -119,40 +139,41 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
   const getHref = () => `/projects/${project.projectType}/${project.id}`;
 
   return (
-    <Card accent={getCardAccentByStatus(project.status)}>
+    <Card accent={getCardAccentByStatus(project.status)} padding={false}>
       <div css={cardStyles} data-testid="project-card-id">
         {/* Header with Pills */}
         <div css={headerStyles}>
-          <Pill accent={getStatusPillAccent(project.status)}>
+          <Pill accent={getStatusPillAccent(project.status)} noMargin>
             {project.status}
           </Pill>
-          <Pill>{getProjectTypeLabel(project.projectType)}</Pill>
+          <Pill noMargin>{getProjectTypeLabel(project.projectType)}</Pill>
           {project.projectType === 'Discovery' && (
-            <Pill>{project.researchTheme}</Pill>
+            <Pill noMargin>{project.researchTheme}</Pill>
           )}
           {project.projectType === 'Resource' && (
-            <Pill>{project.resourceType}</Pill>
+            <Pill noMargin>{project.resourceType}</Pill>
           )}
         </div>
 
         {/* Title */}
+
         <div css={titleStyles}>
-          <LinkHeadline level={3} styleAsHeading={4} href={getHref()}>
+          <LinkHeadline level={3} styleAsHeading={4} href={getHref()} noMargin>
             {project.title}
           </LinkHeadline>
         </div>
 
-        {/* Metadata Container */}
-        <div css={metadataContainerStyles}>
-          {/* Google Drive Link for Resource Projects */}
-          {project.projectType === 'Resource' && project.googleDriveLink && (
-            <div css={{ width: 'fit-content' }}>
-              <Link href={project.googleDriveLink} buttonStyle small>
-                {googleDriveIcon} Access Drive
-              </Link>
-            </div>
-          )}
+        {/* Google Drive Link for Resource Projects */}
+        {project.projectType === 'Resource' && project.googleDriveLink && (
+          <div css={driveButtonStyles}>
+            <Link href={project.googleDriveLink} buttonStyle small noMargin>
+              {googleDriveIcon} Access Drive
+            </Link>
+          </div>
+        )}
 
+        {/* Metadata Container */}
+        <div css={metadataStyles}>
           {/* Team Name for Discovery Projects */}
           {project.projectType === 'Discovery' && (
             <div css={metadataRowStyles}>
@@ -197,24 +218,24 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
                 <span css={iconStyles}>
                   <ResourceMemberIcon />
                 </span>
-                <UsersList users={project.members} separator="•" />
+                <UsersList users={project.members} separator="•" noMargin />
               </div>
             )}
 
           {/* Members for Trainee Projects */}
           {project.projectType === 'Trainee' && (
-            <div>
+            <div css={traineeMetadataWrapperStyles}>
               <div css={metadataRowStyles}>
                 <span css={iconStyles}>
                   <TrainerIcon />
                 </span>
-                <UsersList users={[project.trainer]} separator="•" />
+                <UsersList users={[project.trainer]} separator="•" noMargin />
               </div>
               <div css={metadataRowStyles}>
                 <span css={iconStyles}>
                   <MemberIcon />
                 </span>
-                <UsersList users={project.members} separator="•" />
+                <UsersList users={project.members} separator="•" noMargin />
               </div>
             </div>
           )}
@@ -232,7 +253,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
         {/* Tags */}
         {project.tags.length > 0 && (
           <div css={tagsContainerStyles}>
-            <TagList tags={project.tags} max={3} />
+            <TagList tags={project.tags} max={3} noMargin />
           </div>
         )}
       </div>

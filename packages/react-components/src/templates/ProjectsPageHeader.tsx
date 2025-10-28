@@ -3,7 +3,7 @@ import { projects } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { rem } from '../pixels';
-import { paper, steel } from '../colors';
+import { paper, steel, neutral900, neutral1000 } from '../colors';
 import {
   networkPageLayoutPaddingStyle,
   defaultPageLayoutPaddingStyle,
@@ -64,53 +64,71 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
   filters,
   onChangeFilter,
   showSearch = true,
-}) => (
-  <header>
-    <div css={visualHeaderStyles}>
-      <Display styleAsHeading={2}>Projects</Display>
-      <Paragraph accent="lead" styles={descriptionStyles}>
-        Projects are targeted efforts that translate recommendations into action
-        to advance the PD field. They address critical research needs, drive
-        discovery, or produce shared resources, often with dedicated funding and
-        support.
-      </Paragraph>
-      <TabNav>
-        <TabLink
-          href={projects.template + projects({}).discoveryProjects.template}
-          Icon={() => <DiscoveryProjectIcon />}
-        >
-          Discovery Projects
-        </TabLink>
-        <TabLink
-          href={projects.template + projects({}).resourceProjects.template}
-          Icon={() => <ResourceProjectIcon />}
-        >
-          Resource Projects
-        </TabLink>
-        <TabLink
-          href={projects.template + projects({}).traineeProjects.template}
-          Icon={() => <TraineeProjectIcon />}
-        >
-          Trainee Projects
-        </TabLink>
-      </TabNav>
-    </div>
-    {showSearch && (
-      <div css={controlsStyles}>
-        <Paragraph accent="lead" styles={projectTypeDescriptionStyles}>
-          {projectDescriptions[page]}
+}) => {
+  const isDiscoveryActive = page === 'Discovery';
+  const isResourceActive = page === 'Resource';
+  const isTraineeActive = page === 'Trainee';
+
+  return (
+    <header>
+      <div css={visualHeaderStyles}>
+        <Display styleAsHeading={2}>Projects</Display>
+        <Paragraph accent="lead" styles={descriptionStyles}>
+          Projects are targeted efforts that translate recommendations into
+          action to advance the PD field. They address critical research needs,
+          drive discovery, or produce shared resources, often with dedicated
+          funding and support.
         </Paragraph>
-        <SearchAndFilter
-          onChangeSearch={onChangeSearchQuery}
-          searchQuery={searchQuery}
-          onChangeFilter={onChangeFilter}
-          filters={filters}
-          filterOptions={[]}
-          searchPlaceholder="Enter project name, keyword, theme, …"
-        />
+        <TabNav>
+          <TabLink
+            href={projects.template + projects({}).discoveryProjects.template}
+            Icon={() => (
+              <DiscoveryProjectIcon
+                color={isDiscoveryActive ? neutral1000.rgb : neutral900.rgb}
+              />
+            )}
+          >
+            Discovery Projects
+          </TabLink>
+          <TabLink
+            href={projects.template + projects({}).resourceProjects.template}
+            Icon={() => (
+              <ResourceProjectIcon
+                color={isResourceActive ? neutral1000.rgb : neutral900.rgb}
+              />
+            )}
+          >
+            Resource Projects
+          </TabLink>
+          <TabLink
+            href={projects.template + projects({}).traineeProjects.template}
+            Icon={() => (
+              <TraineeProjectIcon
+                color={isTraineeActive ? neutral1000.rgb : neutral900.rgb}
+              />
+            )}
+          >
+            Trainee Projects
+          </TabLink>
+        </TabNav>
       </div>
-    )}
-  </header>
-);
+      {showSearch && (
+        <div css={controlsStyles}>
+          <Paragraph accent="lead" styles={projectTypeDescriptionStyles}>
+            {projectDescriptions[page]}
+          </Paragraph>
+          <SearchAndFilter
+            onChangeSearch={onChangeSearchQuery}
+            searchQuery={searchQuery}
+            onChangeFilter={onChangeFilter}
+            filters={filters}
+            filterOptions={[]}
+            searchPlaceholder="Enter project name, keyword, theme, …"
+          />
+        </div>
+      )}
+    </header>
+  );
+};
 
 export default ProjectsPageHeader;

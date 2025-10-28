@@ -110,6 +110,7 @@ export const neutral300 = color(237, 241, 243);
 export const neutral500 = color(12, 141, 195);
 export const neutral800 = color(146, 153, 158);
 export const neutral900 = color(77, 100, 107);
+export const neutral1000 = color(0, 32, 44);
 
 export const success100 = color(228, 245, 238);
 export const success500 = color(52, 162, 112);

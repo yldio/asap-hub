@@ -5,7 +5,7 @@ import { css, Theme } from '@emotion/react';
 
 import { layoutStyles } from '../text';
 import { rem } from '../pixels';
-import { fern, lead, charcoal } from '../colors';
+import { fern, neutral900, neutral1000 } from '../colors';
 import { useHasRouter } from '../routing';
 import IconProps from '../icons/props';
 
@@ -15,7 +15,7 @@ const styles = css({
   paddingTop: rem(24),
   paddingBottom: rem(16),
 
-  color: lead.rgb,
+  color: neutral900.rgb,
   textDecoration: 'none',
   whiteSpace: 'nowrap',
 });
@@ -24,7 +24,7 @@ const activeStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
     paddingBottom: rem(16),
     borderBottom: `solid ${rem(4)} ${primary500.rgba}`,
 
-    color: charcoal.rgb,
+    color: neutral1000.rgb,
     fontWeight: 'bold',
   });
 
@@ -43,7 +43,8 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
   const active =
     new URL(href, window.location.href).pathname === window.location.pathname;
 
-  const inner = (
+  // Create inner content with properly colored icon
+  const createInner = (isActive: boolean) => (
     <p
       css={({ components }) => [
         layoutStyles,
@@ -52,7 +53,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
     >
       {Icon && (
         <span css={iconStyles}>
-          <Icon color={active ? charcoal.rgb : lead.rgb} />
+          <Icon color={isActive ? neutral1000.rgb : neutral900.rgb} />
         </span>
       )}
       {children}
@@ -60,6 +61,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
   );
 
   if (useHasRouter()) {
+    // For React Router v5, use isActive to determine match
     return (
       <NavLink
         to={href}
@@ -70,7 +72,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
           { [`&.${activeClassName}`]: activeStyles(theme) },
         ]}
       >
-        {inner}
+        {createInner(active)}
       </NavLink>
     );
   }
@@ -84,7 +86,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
         active && activeStyles(theme),
       ]}
     >
-      {inner}
+      {createInner(active)}
     </a>
   );
 };

@@ -218,7 +218,7 @@ describe('ProjectCard - Discovery Project', () => {
 
   it('renders the duration with MMM YYYY date format', () => {
     const { getByText } = render(<ProjectCard {...discoveryProjectProps} />);
-    expect(getByText('Jan 2023 - Dec 2025 • 3 yrs')).toBeVisible();
+    expect(getByText('Jan 2023 - Dec 2025 • (3 yrs)')).toBeVisible();
   });
 
   it('renders tags', () => {

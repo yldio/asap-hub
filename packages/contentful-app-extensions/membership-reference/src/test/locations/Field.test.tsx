@@ -686,5 +686,129 @@ describe('Field component', () => {
         expect(await screen.findByText('Lead')).toBeInTheDocument();
       });
     });
+
+    describe('when entityName parameter equals projectMember', () => {
+      beforeEach(() => {
+        sdk = {
+          ...mockBaseSdk(),
+          parameters: {
+            instance: {
+              entityName: 'projectMember',
+            },
+          },
+        } as unknown as jest.Mocked<FieldExtensionSDK>;
+        (useSDK as jest.Mock).mockReturnValue(sdk);
+
+        (useEntity as jest.Mock).mockImplementation((_, id) => {
+          if (id === 'user-1') {
+            return {
+              data: {
+                fields: {
+                  firstName: {
+                    'en-US': 'Jane',
+                  },
+                  lastName: {
+                    'en-US': 'Doe',
+                  },
+                  email: {
+                    'en-US': 'jane@doe.com',
+                  },
+                },
+                sys: {
+                  contentType: {
+                    sys: {
+                      id: 'users',
+                    },
+                  },
+                },
+              },
+            };
+          }
+          if (id === 'team-1') {
+            return {
+              data: {
+                fields: {
+                  displayName: {
+                    'en-US': 'My Team',
+                  },
+                },
+                sys: {
+                  contentType: {
+                    sys: {
+                      id: 'teams',
+                    },
+                  },
+                },
+              },
+            };
+          }
+        });
+      });
+
+      it('loads user name if related entity is user', async () => {
+        const props = {
+          entity: {
+            fields: {
+              role: {
+                'en-US': 'Project Manager',
+              },
+              projectMember: {
+                'en-US': {
+                  sys: {
+                    id: 'user-1',
+                  },
+                },
+              },
+            },
+            sys: {
+              type: 'Entry',
+              publishedVersion: 1,
+              version: 1,
+            },
+          },
+          onEdit: jest.fn(),
+          onRemove: jest.fn(),
+        } as unknown as CustomEntityCardProps;
+
+        render(<CustomCard {...props} />);
+
+        await waitFor(() => {
+          expect(useEntity).toHaveBeenCalledWith('Entry', 'user-1');
+          expect(screen.getByText('Jane Doe')).toBeInTheDocument();
+          expect(screen.getByText('Project Manager')).toBeInTheDocument();
+          expect(screen.queryByText('jane@doe.com')).toBeNull();
+        });
+      });
+
+      it('loads team name if related entity is team', async () => {
+        const props = {
+          entity: {
+            fields: {
+              projectMember: {
+                'en-US': {
+                  sys: {
+                    id: 'team-1',
+                  },
+                },
+              },
+            },
+            sys: {
+              type: 'Entry',
+              publishedVersion: 1,
+              version: 1,
+            },
+          },
+          onEdit: jest.fn(),
+          onRemove: jest.fn(),
+        } as unknown as CustomEntityCardProps;
+
+        render(<CustomCard {...props} />);
+
+        await waitFor(() => {
+          expect(useEntity).toHaveBeenCalledWith('Entry', 'team-1');
+          expect(screen.getByText('My Team')).toBeInTheDocument();
+        });
+      });
+    });
   });
 });

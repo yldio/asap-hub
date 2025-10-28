@@ -40,13 +40,6 @@ const titleStyles = css({
   },
 });
 
-const metadataContainerStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: rem(12),
-  marginBottom: rem(16),
-});
-
 const metadataStyles = css({
   display: 'flex',
   flexDirection: 'column',

@@ -13,6 +13,7 @@ type DiscoveryProject = {
   readonly endDate: string;
   readonly duration: string;
   readonly tags: string[];
+  readonly inactiveSinceDate?: string;
 };
 
 type DiscoveryProjectsListProps = Omit<

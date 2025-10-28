@@ -11,6 +11,7 @@ import {
   ResourceTeamIcon,
   ResourceMemberIcon,
   MemberIcon,
+  InactiveBadgeIcon,
 } from '../icons';
 import { fern, lead } from '../colors';
 import TrainerIcon from '../icons/trainer';
@@ -78,6 +79,7 @@ type DiscoveryProject = BaseProject & {
   readonly researchTheme: string;
   readonly teamName: string;
   readonly teamId?: string;
+  readonly inactiveSinceDate?: string;
 };
 
 type ProjectMember = {
@@ -202,6 +204,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
               ) : (
                 <span css={teamNameStyles}>{project.teamName}</span>
               )}
+              {project.inactiveSinceDate && <InactiveBadgeIcon />}
             </div>
           )}
 

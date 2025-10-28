@@ -37,6 +37,7 @@ const mockDiscoveryProjects = [
     endDate: '2026-05-31',
     tags: ['Neural Circuits', 'Electrophysiology', 'Neuroimaging'],
     teamName: 'Discovery Team Beta',
+    inactiveSinceDate: '2026-06-01',
     duration: '3 years',
   },
   {

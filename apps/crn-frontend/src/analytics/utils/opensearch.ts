@@ -224,43 +224,39 @@ const userBasedRecordSearchQueryBuilder = (
     });
   }
 
-  return Object.assign(
-    {
-      from: options.currentPage * options.pageSize,
-      size: options.pageSize,
-      query: {
-        bool: {
-          ...(shouldClauses.length > 0
-            ? { should: shouldClauses, minimum_should_match: 1 }
-            : {}),
-          must: mustClauses,
-        },
-      },
-    },
-    options.sort ? { sort: options.sort } : {},
-  );
-};
-
-const taglessSearchQueryBuilder = (
-  options: OpensearchSearchOptions,
-): SearchQuery => {
   return {
     from: options.currentPage * options.pageSize,
     size: options.pageSize,
     query: {
       bool: {
-        must: [
-          ...(options.timeRange
-            ? [{ term: { timeRange: options.timeRange } }]
-            : []),
-          ...(options.documentCategory
-            ? [{ term: { documentCategory: options.documentCategory } }]
-            : []),
-        ],
+        ...(shouldClauses.length > 0
+          ? { should: shouldClauses, minimum_should_match: 1 }
+          : {}),
+        must: mustClauses,
       },
     },
+    ...(options.sort ? { sort: options.sort } : {}),
   };
 };
+
+const taglessSearchQueryBuilder = (
+  options: OpensearchSearchOptions,
+): SearchQuery => ({
+  from: options.currentPage * options.pageSize,
+  size: options.pageSize,
+  query: {
+    bool: {
+      must: [
+        ...(options.timeRange
+          ? [{ term: { timeRange: options.timeRange } }]
+          : []),
+        ...(options.documentCategory
+          ? [{ term: { documentCategory: options.documentCategory } }]
+          : []),
+      ],
+    },
+  },
+});
 
 const queryBuilderByIndex: Record<
   OpensearchIndex,
@@ -321,7 +317,7 @@ export class OpensearchClient<T> {
       currentPage: currentPage ?? DEFAULT_PAGE_NUMBER,
       searchScope,
       documentCategory,
-      timeRange: timeRange,
+      timeRange,
       searchTags,
       sort,
     });
@@ -365,44 +361,6 @@ export class OpensearchClient<T> {
     return [...(teams || []), ...(users || [])];
   }
 }
-
-const generateDefaultQuery = (page: number, size: number) => ({
-  query: {
-    match_all: {},
-  },
-  size,
-  from: page * size,
-});
-
-const generateDefaultQueryWithTimeRange = (
-  options: Required<
-    Pick<OpensearchSearchOptions, 'timeRange' | 'pageSize' | 'currentPage'>
-  > &
-    Pick<OpensearchSearchOptions, 'documentCategory' | 'sort'>,
-) =>
-  Object.assign(
-    {
-      query: {
-        bool: {
-          must: [
-            {
-              term: {
-                timeRange: options.timeRange,
-              },
-            },
-            options.documentCategory
-              ? {
-                  term: { documentCategory: options.documentCategory },
-                }
-              : null,
-          ].filter((termObj) => !!termObj),
-        },
-      },
-      size: options.pageSize,
-      from: options.currentPage * options.pageSize,
-    },
-    options.sort ? { sort: options.sort } : {},
-  );
 
 const buildAggregationQuery = (
   searchQuery: string,
@@ -511,66 +469,5 @@ const buildDefaultAggregationQuery = (
   return {
     size: 0,
     aggs,
-  };
-};
-
-const buildSearchQuery = (
-  tags: string[],
-  page: number,
-  size: number,
-  searchScope: SearchScope,
-  timeRange?: TimeRangeOption,
-) => {
-  const shouldClauses = tags.flatMap((term) => {
-    const clauses: Record<string, unknown>[] = [
-      {
-        term: {
-          'teamName.keyword': term,
-        },
-      },
-    ];
-
-    if (searchScope === 'both') {
-      clauses.push({
-        nested: {
-          path: 'users',
-          query: {
-            term: {
-              'users.name.keyword': term,
-            },
-          },
-        },
-      });
-    }
-    return clauses;
-  });
-
-  const mustClauses: Record<string, unknown>[] = [];
-
-  if (timeRange) {
-    mustClauses.push({
-      term: {
-        timeRange,
-      },
-    });
-  }
-
-  return {
-    from: page * size,
-    size,
-    query: {
-      bool: {
-        should: shouldClauses,
-        minimum_should_match: 1,
-        ...(mustClauses.length > 0 ? { must: mustClauses } : {}),
-      },
-    },
-    sort: [
-      {
-        'teamName.keyword': {
-          order: 'asc',
-        },
-      },
-    ],
   };
 };

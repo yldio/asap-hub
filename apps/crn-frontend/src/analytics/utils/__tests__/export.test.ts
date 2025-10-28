@@ -47,11 +47,11 @@ describe('getAllData', () => {
     const mockGetResults = jest
       .fn()
       .mockResolvedValueOnce({
-        total: 100,
+        total: 600,
         items: [{ id: 1 }, { id: 2 }, { id: 3 }],
       })
       .mockResolvedValueOnce({
-        total: 100,
+        total: 600,
         items: [{ id: 4 }, { id: 5 }, { id: 6 }],
       })
       .mockResolvedValueOnce(undefined);
@@ -97,6 +97,7 @@ describe('downloadAnalyticsXLSX', () => {
 
   const mockOpensearchMetrics: jest.Mocked<OpensearchMetricsFacade> = {
     getUserProductivity: jest.fn(),
+    getUserProductivityPerformance: jest.fn(),
     getPublicationCompliance: jest.fn(),
     getPreprintCompliance: jest.fn(),
     getAnalyticsOSChampion: jest.fn(),
@@ -299,6 +300,7 @@ describe('downloadAnalyticsXLSX', () => {
     await downloadAnalyticsXLSX({
       algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: false,
     })(
       'current-year',
       new Set([
@@ -667,6 +669,7 @@ describe('downloadAnalyticsXLSX', () => {
     await downloadAnalyticsXLSX({
       algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
     })(
       'all',
       new Set([
@@ -686,7 +689,7 @@ describe('downloadAnalyticsXLSX', () => {
         timeRange: 'all',
         tags: [],
         currentPage: 0,
-        pageSize: 50,
+        pageSize: 200,
         sort: 'team_asc',
       },
     );
@@ -695,7 +698,7 @@ describe('downloadAnalyticsXLSX', () => {
       tags: [],
       timeRange: 'all',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
       sort: 'team_asc',
     });
 
@@ -705,14 +708,14 @@ describe('downloadAnalyticsXLSX', () => {
       tags: [],
       timeRange: 'all',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
     });
 
     expect(mockOpensearchMetrics.getMeetingRepAttendance).toHaveBeenCalledWith({
       tags: [],
       timeRange: 'all',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
       sort: 'team_asc',
     });
 
@@ -720,7 +723,7 @@ describe('downloadAnalyticsXLSX', () => {
       tags: [],
       timeRange: 'all',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
       sort: 'team_asc',
     });
 
@@ -840,6 +843,7 @@ describe('downloadAnalyticsXLSX', () => {
     await downloadAnalyticsXLSX({
       algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
     })(
       'last-year',
       new Set([
@@ -866,6 +870,7 @@ describe('downloadAnalyticsXLSX', () => {
     await downloadAnalyticsXLSX({
       algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
     })(
       'last-year',
       new Set([
@@ -881,14 +886,14 @@ describe('downloadAnalyticsXLSX', () => {
       tags: [],
       timeRange: 'last-year',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
     });
 
     expect(mockOpensearchMetrics.getMeetingRepAttendance).toHaveBeenCalledWith({
       tags: [],
       timeRange: 'last-year',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
       sort: 'team_asc',
     });
   });

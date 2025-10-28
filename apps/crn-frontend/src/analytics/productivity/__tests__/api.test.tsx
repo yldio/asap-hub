@@ -75,7 +75,7 @@ describe('getUserProductivity', () => {
       createAlgoliaResponse<'analytics', 'user-productivity'>([
         {
           ...userProductivityResponse,
-          objectID: `${userProductivityResponse.id}-user-productivity-30d`,
+          objectID: undefined as unknown as string,
           __meta: { type: 'user-productivity', range: '30d' },
         },
       ]),
@@ -243,7 +243,7 @@ describe('getTeamProductivityPerformance', () => {
       createAlgoliaResponse<'analytics', 'team-productivity-performance'>([
         {
           ...performanceByDocumentType,
-          objectID: '12',
+          objectID: 'team-performance-1',
           __meta: { type: 'team-productivity-performance', range: '30d' },
         },
       ]),
@@ -295,7 +295,7 @@ describe('getUserProductivityPerformance', () => {
       createAlgoliaResponse<'analytics', 'user-productivity-performance'>([
         {
           ...userProductivityPerformance,
-          objectID: '1',
+          objectID: 'user-performance-1',
           __meta: {
             type: 'user-productivity-performance',
             range: '30d',

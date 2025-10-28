@@ -101,7 +101,6 @@ export const useAnalyticsUserProductivity = (
   const indexName = getAlgoliaIndexName(options.sort, 'user-productivity');
   const algoliaClient = useAnalyticsAlgolia(indexName).client;
 
-  // const opensearchMetrics = useOpensearchMetrics();
   const opensearchClient =
     useAnalyticsOpensearch<UserProductivityResponse>(
       'user-productivity',

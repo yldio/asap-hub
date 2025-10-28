@@ -199,12 +199,11 @@ export const getUserProductivity = (
       documentCategory,
       userProductivyOpensearchSort[sort],
     );
-  } else {
-    return getMetric<
-      SearchResult<UserProductivityResponse>,
-      SortUserProductivity
-    >(USER_PRODUCTIVITY)(client, options);
   }
+  return getMetric<
+    SearchResult<UserProductivityResponse>,
+    SortUserProductivity
+  >(USER_PRODUCTIVITY)(client, options);
 };
 
 export type ProductivityListOptions = Pick<
@@ -239,11 +238,10 @@ export const getUserProductivityPerformance = async (
       [],
     );
     return results.items[0] as UserProductivityPerformance | undefined;
-  } else {
-    return getPerformanceForMetric<UserProductivityPerformance>(
-      USER_PRODUCTIVITY_PERFORMANCE,
-    )(client, options);
   }
+  return getPerformanceForMetric<UserProductivityPerformance>(
+    USER_PRODUCTIVITY_PERFORMANCE,
+  )(client, options);
 };
 
 export const getTeamProductivityPerformance =

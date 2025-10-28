@@ -49,6 +49,8 @@ import {
   userProductivityToCSV,
 } from '../productivity/export';
 
+const PAGE_SIZE = 200;
+
 export const getAllData = async <T>(
   getResults: ({
     currentPage,
@@ -65,10 +67,10 @@ export const getAllData = async <T>(
     // eslint-disable-next-line no-await-in-loop
     const data = await getResults({
       currentPage,
-      pageSize: 200,
+      pageSize: PAGE_SIZE,
     });
     if (data) {
-      const nbPages = data.total / 50;
+      const nbPages = data.total / PAGE_SIZE;
       allData = allData.concat(...data.items.map(transform));
       currentPage += 1;
       morePages = currentPage <= nbPages;
@@ -84,11 +86,11 @@ export const downloadAnalyticsXLSX =
   ({
     algoliaClient,
     opensearchMetrics,
-    useOpensearchMetrics,
+    opensearchMetricsFlag,
   }: {
     algoliaClient: AlgoliaClient<'analytics'>;
     opensearchMetrics: OpensearchMetricsFacade;
-    useOpensearchMetrics: boolean;
+    opensearchMetricsFlag: boolean;
   }) =>
   async (timeRange: TimeRangeOption, metrics: Set<MetricExportKeys>) => {
     const workbook = XLSX.utils.book_new();
@@ -123,7 +125,7 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'user-productivity',
           () =>
-            useOpensearchMetrics
+            opensearchMetricsFlag
               ? opensearchMetrics.getUserProductivityPerformance({
                   timeRange,
                   documentCategory: 'all',
@@ -132,8 +134,8 @@ export const downloadAnalyticsXLSX =
                   timeRange,
                   documentCategory: 'all',
                 }),
-          (paginationParams) => {
-            return useOpensearchMetrics
+          (paginationParams) =>
+            opensearchMetricsFlag
               ? opensearchMetrics.getUserProductivity({
                   timeRange,
                   documentCategory,
@@ -147,8 +149,7 @@ export const downloadAnalyticsXLSX =
                   sort,
                   tags,
                   ...paginationParams,
-                });
-          },
+                }),
           userProductivityToCSV,
         ),
       'team-productivity': () =>

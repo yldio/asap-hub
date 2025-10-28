@@ -16,8 +16,8 @@ export const DiscoveryProjectActive = () => (
     researchTheme="Genetics"
     teamName="Martinez Lab"
     teamId="team-1"
-    startDate="Jan 2023"
-    endDate="Dec 2025"
+    startDate="2023-01-01"
+    endDate="2025-12-31"
     duration="3 yrs"
     tags={[
       'Genomics',
@@ -38,8 +38,8 @@ export const DiscoveryProjectComplete = () => (
     researchTheme="Biomarkers"
     teamName="Chen Discovery Team"
     teamId="team-2"
-    startDate="Mar 2021"
-    endDate="Feb 2024"
+    startDate="2021-03-01"
+    endDate="2024-02-28"
     duration="3 yrs"
     tags={['CSF Analysis', 'Imaging', 'Proteomics']}
   />
@@ -53,8 +53,8 @@ export const DiscoveryProjectClosed = () => (
     status="Closed"
     researchTheme="Environmental Factors"
     teamName="Roberts Lab"
-    startDate="Jun 2020"
-    endDate="May 2022"
+    startDate="2020-06-01"
+    endDate="2022-05-31"
     duration="2 yrs"
     tags={['Pesticides', 'Environmental toxins', 'Epidemiology']}
   />
@@ -72,8 +72,8 @@ export const ResourceProjectActiveTeamBased = () => (
     isTeamBased={true}
     teamName="Anderson Resource Team"
     teamId="team-3"
-    startDate="Sep 2022"
-    endDate="Aug 2026"
+    startDate="2022-09-01"
+    endDate="2026-08-31"
     duration="4 yrs"
     tags={['Tissue samples', 'DNA', 'RNA', 'Plasma']}
     googleDriveLink="https://drive.google.com/example"
@@ -122,8 +122,8 @@ export const ResourceProjectActiveMemberBased = () => (
         href: '/users/4',
       },
     ]}
-    startDate="Jan 2023"
-    endDate="Jun 2024"
+    startDate="2023-01-01"
+    endDate="2024-06-30"
     duration="18 mos"
     tags={['Bioinformatics', 'Open source', 'Python', 'R']}
     googleDriveLink="https://drive.google.com/example"
@@ -140,8 +140,8 @@ export const ResourceProjectComplete = () => (
     isTeamBased={true}
     teamName="Williams Clinical Team"
     teamId="team-4"
-    startDate="Apr 2021"
-    endDate="Mar 2023"
+    startDate="2021-04-01"
+    endDate="2023-03-31"
     duration="2 yrs"
     tags={['Clinical assessment', 'MDS-UPDRS', 'Standardization']}
   />
@@ -173,8 +173,8 @@ export const ResourceProjectClosed = () => (
         href: '/users/6',
       },
     ]}
-    startDate="Oct 2019"
-    endDate="Sep 2021"
+    startDate="2019-10-01"
+    endDate="2021-09-30"
     duration="2 yrs"
     tags={['MRI', 'Machine learning', 'Neuroimaging']}
   />
@@ -206,8 +206,8 @@ export const TraineeProjectActive = () => (
         href: '/users/8',
       },
     ]}
-    startDate="Jul 2023"
-    endDate="Jun 2025"
+    startDate="2023-07-01"
+    endDate="2025-06-30"
     duration="2 yrs"
     tags={['Cell biology', 'Protein aggregation', 'iPSC models']}
   />
@@ -245,8 +245,8 @@ export const TraineeProjectComplete = () => (
         href: '/users/11',
       },
     ]}
-    startDate="Jan 2022"
-    endDate="Dec 2023"
+    startDate="2022-01-01"
+    endDate="2023-12-31"
     duration="2 yrs"
     tags={['Neuroscience', 'Electrophysiology', 'Mitochondria']}
   />
@@ -276,8 +276,8 @@ export const TraineeProjectClosed = () => (
         href: '/users/13',
       },
     ]}
-    startDate="Sep 2020"
-    endDate="Aug 2021"
+    startDate="2020-09-01"
+    endDate="2021-08-31"
     duration="1 yr"
     tags={['Neuroinflammation', 'Microglia', 'Cytokines']}
   />

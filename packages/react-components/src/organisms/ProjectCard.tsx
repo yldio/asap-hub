@@ -11,6 +11,7 @@ import {
 import { Card, Pill, Link } from '../atoms';
 import { TagList, LinkHeadline, UsersList } from '../molecules';
 import { rem } from '../pixels';
+import { formatProjectDate } from '../date';
 import {
   clockIcon,
   googleDriveIcon,
@@ -222,7 +223,8 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
           <div css={metadataRowStyles}>
             <span css={iconStyles}>{clockIcon}</span>
             <span>
-              {project.startDate} - {project.endDate} • {project.duration}
+              {formatProjectDate(project.startDate)} -{' '}
+              {formatProjectDate(project.endDate)} • {project.duration}
             </span>
           </div>
         </div>

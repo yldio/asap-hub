@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { formatProjectDate } from '../../date';
 
 import ProjectCard, {
   getProjectTypeLabel,
@@ -9,8 +10,8 @@ import ProjectCard, {
 
 const baseProjectProps = {
   id: 'project-1',
-  startDate: 'Jan 2023',
-  endDate: 'Dec 2025',
+  startDate: '2023-01-15',
+  endDate: '2025-12-31',
   duration: '3 yrs',
   tags: ['Tag1', 'Tag2', 'Tag3'],
 };
@@ -96,6 +97,22 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
     },
   ],
 };
+
+describe('Date Formatting', () => {
+  describe('formatProjectDate', () => {
+    it.each([
+      { input: '2023-01-15', expected: 'Jan 2023' },
+      { input: '2025-12-31', expected: 'Dec 2025' },
+      { input: '2022-06-01', expected: 'Jun 2022' },
+    ])('formats $input to $expected', ({ input, expected }) => {
+      expect(formatProjectDate(input)).toBe(expected);
+    });
+
+    it('returns original string for invalid dates', () => {
+      expect(formatProjectDate('invalid-date')).toBe('invalid-date');
+    });
+  });
+});
 
 describe('Helper Functions', () => {
   describe('getProjectTypeLabel', () => {
@@ -199,7 +216,7 @@ describe('ProjectCard - Discovery Project', () => {
     expect(teamLink).toBeDefined();
   });
 
-  it('renders the duration', () => {
+  it('renders the duration with MMM YYYY date format', () => {
     const { getByText } = render(<ProjectCard {...discoveryProjectProps} />);
     expect(getByText('Jan 2023 - Dec 2025 • 3 yrs')).toBeVisible();
   });

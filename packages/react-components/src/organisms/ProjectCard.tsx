@@ -21,7 +21,7 @@ import {
   MemberIcon,
   InactiveBadgeIcon,
 } from '../icons';
-import { fern, lead } from '../colors';
+import { fern, lead, neutral800 } from '../colors';
 import TrainerIcon from '../icons/trainer';
 
 const cardStyles = css({
@@ -84,6 +84,10 @@ const tagsContainerStyles = css({
 const driveButtonStyles = css({
   width: 'fit-content',
   marginTop: rem(12),
+});
+
+const durationStyles = css({
+  color: neutral800.rgb,
 });
 
 type ProjectCardProps = DiscoveryProject | ResourceProject | TraineeProject;
@@ -238,7 +242,8 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
             <span css={iconStyles}>{clockIcon}</span>
             <span>
               {formatProjectDate(project.startDate)} -{' '}
-              {formatProjectDate(project.endDate)} • ({project.duration})
+              {formatProjectDate(project.endDate)} •{' '}
+              <span css={durationStyles}>({project.duration})</span>
             </span>
           </div>
         </div>

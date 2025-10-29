@@ -6,6 +6,11 @@ import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { projects } from '@asap-hub/routing';
 
 import ProjectsPageHeader from '../ProjectsPageHeader';
+import {
+  DiscoveryProjectIcon,
+  ResourceProjectIcon,
+  TraineeProjectIcon,
+} from '../../icons';
 
 const props: ComponentProps<typeof ProjectsPageHeader> = {
   page: 'Discovery',
@@ -189,5 +194,25 @@ describe('filter functionality', () => {
     );
     // Filters component should be rendered (verified by presence of Filter button)
     expect(getByRole('button', { name: /filter/i })).toBeInTheDocument();
+  });
+});
+
+describe('Tab Icons Default Colors', () => {
+  it('renders DiscoveryProjectIcon with default color', () => {
+    const { container } = render(<DiscoveryProjectIcon />);
+    const paths = container.querySelectorAll('path');
+    expect(paths[0]).toHaveAttribute('fill', '#00202C');
+  });
+
+  it('renders ResourceProjectIcon with default color', () => {
+    const { container } = render(<ResourceProjectIcon />);
+    const paths = container.querySelectorAll('path');
+    expect(paths[0]).toHaveAttribute('fill', '#00202C');
+  });
+
+  it('renders TraineeProjectIcon with default color', () => {
+    const { container } = render(<TraineeProjectIcon />);
+    const paths = container.querySelectorAll('path');
+    expect(paths[0]).toHaveAttribute('fill', '#00202C');
   });
 });

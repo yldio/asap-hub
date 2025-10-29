@@ -1,6 +1,4 @@
 import React from 'react';
-import { charcoal } from '../colors';
-
 interface DiscoveryProjectIconProps {
   readonly width?: number;
   readonly height?: number;
@@ -10,7 +8,7 @@ interface DiscoveryProjectIconProps {
 const DiscoveryProjectIcon: React.FC<DiscoveryProjectIconProps> = ({
   width = 24,
   height = 24,
-  color = charcoal.rgb,
+  color = '#00202C',
 }) => (
   <svg
     width={width}

@@ -10,9 +10,11 @@ import {
 } from '../layout';
 import { SearchAndFilter } from '../organisms';
 import { TabNav } from '../molecules';
-import { DiscoveryProjectIcon } from '../icons';
-import ResourceProjectIcon from '../icons/resource-project';
-import TraineeProjectIcon from '../icons/trainee-project';
+import {
+  DiscoveryProjectIcon,
+  ResourceProjectIcon,
+  TraineeProjectIcon,
+} from '../icons';
 
 const visualHeaderStyles = css({
   padding: `${defaultPageLayoutPaddingStyle} 0`,

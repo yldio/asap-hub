@@ -1,9 +1,0 @@
-name: 'Rebuild'
-description: 'Runs yarn rebuild'
-runs:
-  using: 'composite'
-  steps:
-    - name: Re-Build
-      shell: bash
-      run: |
-        yarn rebuild

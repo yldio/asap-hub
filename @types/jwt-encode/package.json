@@ -1,9 +1,0 @@
-{
-  "name": "@types/jwt-encode",
-  "private": true,
-  "version": "0.1.0",
-  "engines": {
-    "node": "20.x"
-  },
-  "types": "index.d.ts"
-}

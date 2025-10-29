@@ -1,13 +1,14 @@
 {
-  "name": "docs",
+  "name": "web",
   "version": "0.1.0",
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3001",
+    "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
+    "lint:fix": "eslint --fix --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {

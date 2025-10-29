@@ -1,19 +1,25 @@
 {
-  "name": "asap-hub",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "turbo",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yldio/asap-hub.git"
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.8",
+    "typescript": "5.9.2"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/yldio/asap-hub/issues"
+  "engines": {
+    "node": ">=18"
   },
-  "homepage": "https://github.com/yldio/asap-hub#readme"
+  "packageManager": "yarn@1.22.22",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

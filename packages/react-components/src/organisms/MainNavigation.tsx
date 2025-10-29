@@ -3,6 +3,7 @@ import {
   about,
   discover,
   network,
+  projects,
   sharedResearch,
   news,
   events,
@@ -24,6 +25,7 @@ import {
   LibraryIcon,
   newsIcon,
   calendarIcon,
+  ProjectIcon,
 } from '../icons';
 
 const listStyles = css({
@@ -46,11 +48,13 @@ const listStyles = css({
 export interface MainNavigationProps {
   readonly userOnboarded: boolean;
   readonly canViewAnalytics?: boolean;
+  readonly canViewProjects?: boolean;
 }
 
 const MainNavigation: React.FC<MainNavigationProps> = ({
   userOnboarded,
   canViewAnalytics = false,
+  canViewProjects = false,
 }) => (
   <nav>
     <ul css={listStyles}>
@@ -63,6 +67,17 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
           Network
         </NavigationLink>
       </li>
+      {canViewProjects && (
+        <li>
+          <NavigationLink
+            href={projects({}).$}
+            icon={<ProjectIcon />}
+            enabled={userOnboarded}
+          >
+            Projects
+          </NavigationLink>
+        </li>
+      )}
       <li>
         <NavigationLink
           href={sharedResearch({}).$}

@@ -1,6 +1,10 @@
 import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
-import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
+import {
+  useAuth0CRN,
+  useCurrentUserCRN,
+  useFlags,
+} from '@asap-hub/react-context';
 import {
   about,
   analytics,
@@ -9,6 +13,7 @@ import {
   events,
   network,
   news,
+  projects,
   sharedResearch,
   tags,
 } from '@asap-hub/routing';
@@ -39,6 +44,8 @@ const loadAbout = () =>
 
 const loadAnalytics = () =>
   import(/* webpackChunkName: "analytics" */ './analytics/Routes');
+const loadProjects = () =>
+  import(/* webpackChunkName: "projects" */ './projects/Projects');
 
 const News = lazy(loadNews);
 const Network = lazy(loadNetwork);
@@ -49,6 +56,7 @@ const Events = lazy(loadEvents);
 const About = lazy(loadAbout);
 const Analytics = lazy(loadAnalytics);
 const Tags = lazy(loadTags);
+const Projects = lazy(loadProjects);
 
 const AuthenticatedApp: FC<{
   setIsOnboardable?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -69,6 +77,7 @@ const AuthenticatedApp: FC<{
       .then(loadNews)
       .then(loadNetwork)
       .then(loadSharedResearch)
+      .then(loadProjects)
       .then(loadDiscover)
       .then(loadAbout)
       .then(loadAnalytics)
@@ -78,7 +87,9 @@ const AuthenticatedApp: FC<{
 
   const user = useCurrentUserCRN();
   const tabRoute = useCurrentUserProfileTabRoute();
+  const { isEnabled } = useFlags();
   const canViewAnalytics = user?.role === 'Staff';
+  const canViewProjects = isEnabled('PROJECTS_MVP');
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
@@ -94,6 +105,7 @@ const AuthenticatedApp: FC<{
             userOnboarded={user.onboarded}
             onboardable={onboardable}
             canViewAnalytics={canViewAnalytics}
+            canViewProjects={canViewProjects}
             onboardModalHref={
               tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
             }
@@ -171,6 +183,13 @@ const AuthenticatedApp: FC<{
                     <SharedResearch />
                   </Frame>
                 </Route>
+                {canViewProjects && (
+                  <Route path={projects.template}>
+                    <Frame title={null}>
+                      <Projects />
+                    </Frame>
+                  </Route>
+                )}
                 <Route path={events.template}>
                   <Frame title={null}>
                     <Events />

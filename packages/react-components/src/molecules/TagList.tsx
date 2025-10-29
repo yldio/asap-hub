@@ -71,6 +71,7 @@ interface TagListProps {
   min?: number;
   max?: number;
   centerContent?: boolean;
+  noMargin?: boolean;
 }
 
 const TagList: React.FC<TagListProps> = ({
@@ -79,6 +80,7 @@ const TagList: React.FC<TagListProps> = ({
   max = SAFARI_MAX_SAFE_INTEGER,
   enabled = true,
   centerContent = false,
+  noMargin = false,
 }) =>
   tags.length ? (
     <ul
@@ -86,6 +88,7 @@ const TagList: React.FC<TagListProps> = ({
         listStyles,
         { counterReset: `tags ${tags.length}` },
         centerContent && centerListStyles,
+        noMargin && { margin: 0 },
       ]}
     >
       {tags.map((tag, index) => (

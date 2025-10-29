@@ -58,8 +58,8 @@ const UserNavigation = lazy(
 
 export const styles = css({
   position: 'relative',
-  height: '100%',
   minHeight: '100vh',
+  maxHeight: '100vh',
   display: 'grid',
   grid: `
     "header     header  search-button"  max-content
@@ -226,6 +226,7 @@ const Layout: FC<LayoutProps> = ({
   onboardable,
   onboardModalHref,
   canViewAnalytics,
+  canViewProjects,
   ...userNavProps
 }) => {
   const [menuShown, setMenuShown] = useState(false);
@@ -292,6 +293,7 @@ const Layout: FC<LayoutProps> = ({
               <MainNavigation
                 userOnboarded={userNavProps.userOnboarded}
                 canViewAnalytics={canViewAnalytics}
+                canViewProjects={canViewProjects}
               />
             </Suspense>
           </div>

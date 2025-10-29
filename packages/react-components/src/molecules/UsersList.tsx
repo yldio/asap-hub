@@ -23,23 +23,29 @@ const listStyles = css({
   overflow: 'hidden',
   display: 'flex',
   flexWrap: 'wrap',
+  gap: `${rem(8)} ${rem(4)}`, // vertical gap, horizontal gap
 
   color: lead.rgb,
 });
-const itemStyles = css({
-  paddingBottom: rem(12),
-  '&:not(:last-of-type)': {
-    paddingRight: rem(24),
-  },
-
-  overflow: 'hidden',
-});
+const itemStyles = (isSeparator: boolean, noMargin: boolean) =>
+  css({
+    paddingBottom: noMargin ? 0 : rem(12),
+    '&:not(:last-of-type)': {
+      paddingRight: isSeparator ? 0 : rem(15),
+    },
+    overflow: 'hidden',
+  });
 const userStyles = css({
   overflow: 'hidden',
   display: 'grid',
-  gridTemplateColumns: 'min-content 1fr min-content',
-  gridColumnGap: rem(9),
+  gridTemplateColumns: `min-content 1fr min-content min-content`,
+  gridColumnGap: rem(8),
   alignItems: 'center',
+});
+const iconContainerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
 });
 const nameStyles = css({
   overflow: 'hidden',
@@ -49,8 +55,13 @@ const nameStyles = css({
 const iconStyles = css({
   display: 'inline-flex',
 });
+const separatorStyles = css({
+  fontSize: rem(20),
+  color: lead.rgb,
+});
 
 interface UsersListProps {
+  separator?: string;
   users: ReadonlyArray<
     | (Pick<
         UserResponse,
@@ -65,10 +76,13 @@ interface UsersListProps {
     | ExternalAuthorResponse
   >;
   max?: number;
+  noMargin?: boolean;
 }
 const UsersList: FC<UsersListProps> = ({
   users,
   max = Number.POSITIVE_INFINITY,
+  separator,
+  noMargin = false,
 }) => (
   <ul css={listStyles}>
     {users.slice(0, max).map((user, i) => {
@@ -77,7 +91,7 @@ const UsersList: FC<UsersListProps> = ({
         ? getPlaceholderAvatarUrl()
         : user.avatarUrl;
       return (
-        <li key={`author-${i}`} css={itemStyles}>
+        <li key={`author-${i}`} css={itemStyles(Boolean(separator), noMargin)}>
           {externalUser ? (
             <div css={userStyles}>
               <Avatar {...user} imageUrl={imageUrl} />
@@ -91,9 +105,14 @@ const UsersList: FC<UsersListProps> = ({
               <Link ellipsed href={user.href}>
                 <span css={nameStyles}>{user.displayName}</span>
               </Link>
-              {user.alumniSinceDate && (
-                <span css={iconStyles}>{alumniBadgeIcon}</span>
-              )}
+              <div css={iconContainerStyles}>
+                {user.alumniSinceDate && (
+                  <span css={iconStyles}>{alumniBadgeIcon}</span>
+                )}
+                {i < users.length - 1 && i < max - 1 && separator && (
+                  <span css={separatorStyles}>{separator}</span>
+                )}
+              </div>
             </div>
           )}
         </li>

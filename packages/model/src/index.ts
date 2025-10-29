@@ -24,6 +24,7 @@ export * from './lab';
 export * from './manuscript';
 export * from './news';
 export * from './page';
+export * from './project';
 export * from './reminder';
 export * from './research-output';
 export * from './research-tag';

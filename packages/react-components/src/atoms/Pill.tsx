@@ -97,6 +97,7 @@ type PillProps = {
   readonly accent?: AccentVariant;
   readonly numberOfLines?: number;
   readonly isLink?: boolean;
+  readonly noMargin?: boolean;
 };
 
 const Pill: React.FC<PillProps> = ({
@@ -105,6 +106,7 @@ const Pill: React.FC<PillProps> = ({
   accent = 'default',
   numberOfLines = 1,
   isLink = false,
+  noMargin = false,
 }) => (
   <span
     css={({ components }) => [
@@ -112,6 +114,7 @@ const Pill: React.FC<PillProps> = ({
       components?.Pill?.styles,
       accents(isLink)[accent],
       ...(accent === 'gray' || accent === 'blue' ? [modernStyles] : []),
+      noMargin ? { margin: 0 } : {},
     ]}
   >
     <Ellipsis numberOfLines={numberOfLines}>

@@ -1,4 +1,5 @@
 import React from 'react';
+
 interface DiscoveryProjectIconProps {
   readonly width?: number;
   readonly height?: number;

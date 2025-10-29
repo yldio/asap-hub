@@ -596,4 +596,114 @@ describe('getUserProductivityPerformance', () => {
       );
     },
   );
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<typeof userProductivityPerformance>;
+    let searchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient(
+        'user-productivity-performance',
+        'Bearer test-token',
+      );
+      searchSpy = jest.spyOn(opensearchClient, 'search').mockResolvedValue({
+        items: [userProductivityPerformance],
+        total: 1,
+      });
+    });
+
+    afterEach(() => {
+      searchSpy.mockRestore();
+    });
+
+    it('calls opensearch client with correct parameters', async () => {
+      await getUserProductivityPerformance(opensearchClient, {
+        timeRange: '30d',
+        documentCategory: 'all',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [], // tags
+        null, // currentPage
+        null, // pageSize
+        '30d', // timeRange
+        'teams', // searchScope
+        'all', // documentCategory
+        [], // sort
+      );
+    });
+
+    it('passes different time range to opensearch client', async () => {
+      await getUserProductivityPerformance(opensearchClient, {
+        timeRange: '90d',
+        documentCategory: 'all',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [],
+        null,
+        null,
+        '90d',
+        'teams',
+        'all',
+        [],
+      );
+    });
+
+    it('passes different document category to opensearch client', async () => {
+      await getUserProductivityPerformance(opensearchClient, {
+        timeRange: '30d',
+        documentCategory: 'article',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [],
+        null,
+        null,
+        '30d',
+        'teams',
+        'article',
+        [],
+      );
+    });
+
+    it('returns the first item from opensearch results', async () => {
+      const mockPerformance = {
+        ...userProductivityPerformance,
+        asapOutput: {
+          belowAverageMin: 0,
+          belowAverageMax: 3,
+          averageMin: 3,
+          averageMax: 8,
+          aboveAverageMin: 8,
+          aboveAverageMax: 20,
+        },
+      };
+      searchSpy.mockResolvedValue({
+        items: [mockPerformance],
+        total: 1,
+      });
+
+      const result = await getUserProductivityPerformance(opensearchClient, {
+        timeRange: '30d',
+        documentCategory: 'all',
+      });
+
+      expect(result).toEqual(mockPerformance);
+    });
+
+    it('returns undefined when opensearch returns empty items', async () => {
+      searchSpy.mockResolvedValue({
+        items: [],
+        total: 0,
+      });
+
+      const result = await getUserProductivityPerformance(opensearchClient, {
+        timeRange: '30d',
+        documentCategory: 'all',
+      });
+
+      expect(result).toBeUndefined();
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { ProjectsPage, ResourceProjectsList } from '@asap-hub/react-components';
 
@@ -85,29 +85,54 @@ type ResourceProjectsProps = {
   onChangeFilter?: (filter: string) => void;
 };
 
+// Helper Mock function to filter projects based on search query
+/* istanbul ignore next */
+const filterProjects = (
+  projects: typeof mockResourceProjects,
+  searchQuery: string,
+) => {
+  const query = searchQuery.toLowerCase();
+  return projects.filter((project) => {
+    // Search in title
+    if (project.title.toLowerCase().includes(query)) {
+      return true;
+    }
+
+    return false;
+  });
+};
+
 const ResourceProjects: FC<ResourceProjectsProps> = ({
   searchQuery,
   onChangeSearchQuery,
   filters,
   onChangeFilter,
-}) => (
-  <ProjectsPage
-    page="Resource"
-    searchQuery={searchQuery}
-    onChangeSearchQuery={onChangeSearchQuery}
-    filters={filters}
-    onChangeFilter={onChangeFilter}
-  >
-    <SearchFrame title="Resource Projects">
-      <ResourceProjectsList
-        projects={mockResourceProjects}
-        numberOfItems={mockResourceProjects.length}
-        numberOfPages={1}
-        currentPageIndex={0}
-        renderPageHref={(pageIndex) => `#page-${pageIndex}`}
-      />
-    </SearchFrame>
-  </ProjectsPage>
-);
+}) => {
+  // Filter projects based on search query
+  const filteredProjects = useMemo(
+    () => filterProjects(mockResourceProjects, searchQuery),
+    [searchQuery],
+  );
+
+  return (
+    <ProjectsPage
+      page="Resource"
+      searchQuery={searchQuery}
+      onChangeSearchQuery={onChangeSearchQuery}
+      filters={filters}
+      onChangeFilter={onChangeFilter}
+    >
+      <SearchFrame title="Resource Projects">
+        <ResourceProjectsList
+          projects={filteredProjects}
+          numberOfItems={filteredProjects.length}
+          numberOfPages={1}
+          currentPageIndex={0}
+          renderPageHref={(pageIndex) => `#page-${pageIndex}`}
+        />
+      </SearchFrame>
+    </ProjectsPage>
+  );
+};
 
 export default ResourceProjects;

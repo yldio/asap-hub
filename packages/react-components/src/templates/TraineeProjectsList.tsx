@@ -2,6 +2,7 @@ import { FC, ComponentProps } from 'react';
 import { TraineeProject } from '@asap-hub/model';
 
 import { ResultList, ProjectCard } from '../organisms';
+import { ProjectIcon } from '../icons';
 
 type TraineeProjectsListProps = Omit<
   ComponentProps<typeof ResultList>,
@@ -10,11 +11,19 @@ type TraineeProjectsListProps = Omit<
   readonly projects: ReadonlyArray<TraineeProject>;
 };
 
+// Placeholder export function - will be replaced with actual implementation
+/* istanbul ignore next */
+const exportResults = () => Promise.resolve();
+
 const TraineeProjectsList: FC<TraineeProjectsListProps> = ({
   projects,
   ...cardListProps
 }) => (
-  <ResultList {...cardListProps} exportResults={() => Promise.resolve()}>
+  <ResultList
+    icon={<ProjectIcon />}
+    {...cardListProps}
+    exportResults={exportResults}
+  >
     {projects.map((project) => (
       <ProjectCard key={project.id} {...project} />
     ))}

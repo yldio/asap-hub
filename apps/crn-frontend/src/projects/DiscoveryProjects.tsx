@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import {
   ProjectsPage,
@@ -59,29 +59,54 @@ type DiscoveryProjectsProps = {
   onChangeFilter?: (filter: string) => void;
 };
 
+// Helper function to filter projects based on search query
+/* istanbul ignore next */
+const filterProjects = (
+  projects: typeof mockDiscoveryProjects,
+  searchQuery: string,
+) => {
+  const query = searchQuery.toLowerCase();
+  return projects.filter((project) => {
+    // Search in title
+    if (project.title.toLowerCase().includes(query)) {
+      return true;
+    }
+
+    return false;
+  });
+};
+
 const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
   searchQuery,
   onChangeSearchQuery,
   filters,
   onChangeFilter,
-}) => (
-  <ProjectsPage
-    page="Discovery"
-    searchQuery={searchQuery}
-    onChangeSearchQuery={onChangeSearchQuery}
-    filters={filters}
-    onChangeFilter={onChangeFilter}
-  >
-    <SearchFrame title="Discovery Projects">
-      <DiscoveryProjectsList
-        projects={mockDiscoveryProjects}
-        numberOfItems={mockDiscoveryProjects.length}
-        numberOfPages={1}
-        currentPageIndex={0}
-        renderPageHref={(pageIndex) => `#page-${pageIndex}`}
-      />
-    </SearchFrame>
-  </ProjectsPage>
-);
+}) => {
+  // Filter projects based on search query
+  const filteredProjects = useMemo(
+    () => filterProjects(mockDiscoveryProjects, searchQuery),
+    [searchQuery],
+  );
+
+  return (
+    <ProjectsPage
+      page="Discovery"
+      searchQuery={searchQuery}
+      onChangeSearchQuery={onChangeSearchQuery}
+      filters={filters}
+      onChangeFilter={onChangeFilter}
+    >
+      <SearchFrame title="Discovery Projects">
+        <DiscoveryProjectsList
+          projects={filteredProjects}
+          numberOfItems={filteredProjects.length}
+          numberOfPages={1}
+          currentPageIndex={0}
+          renderPageHref={(pageIndex) => `#page-${pageIndex}`}
+        />
+      </SearchFrame>
+    </ProjectsPage>
+  );
+};
 
 export default DiscoveryProjects;

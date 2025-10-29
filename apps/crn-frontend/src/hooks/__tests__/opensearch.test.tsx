@@ -8,12 +8,14 @@ import * as openScienceApi from '../../analytics/open-science/api';
 import * as leadershipApi from '../../analytics/leadership/api';
 import * as engagementApi from '../../analytics/engagement/api';
 import * as collaborationApi from '../../analytics/collaboration/api';
+import * as productivityApi from '../../analytics/productivity/api';
 
 jest.mock('../../analytics/utils/opensearch');
 jest.mock('../../analytics/open-science/api');
 jest.mock('../../analytics/leadership/api');
 jest.mock('../../analytics/engagement/api');
 jest.mock('../../analytics/collaboration/api');
+jest.mock('../../analytics/productivity/api');
 
 const mockOpensearchClient = OpensearchClient as jest.MockedClass<
   typeof OpensearchClient
@@ -50,6 +52,8 @@ describe('useOpensearchMetrics', () => {
     expect(result.current).toHaveProperty('getAnalyticsOSChampion');
     expect(result.current).toHaveProperty('getMeetingRepAttendance');
     expect(result.current).toHaveProperty('getPreliminaryDataSharing');
+    expect(result.current).toHaveProperty('getUserProductivity');
+    expect(result.current).toHaveProperty('getUserProductivityPerformance');
   });
 
   describe('getPublicationCompliance', () => {
@@ -300,6 +304,134 @@ describe('useOpensearchMetrics', () => {
       );
 
       expect(mockGetPreliminaryDataSharing).toHaveBeenCalledWith(
+        expect.any(OpensearchClient),
+        paginationParams,
+      );
+    });
+  });
+
+  describe('getUserProductivity', () => {
+    it('creates OpensearchClient with correct index and calls API method', async () => {
+      const mockGetUserProductivity = jest
+        .spyOn(productivityApi, 'getUserProductivity')
+        .mockResolvedValue({
+          items: [
+            {
+              id: 'user-1',
+              name: 'John Doe',
+              isAlumni: false,
+              teams: [
+                {
+                  id: 'team-1',
+                  team: 'Team Alpha',
+                  role: 'Collaborating PI',
+                  isTeamInactive: false,
+                  isUserInactiveOnTeam: false,
+                },
+              ],
+              asapOutput: 10,
+              asapPublicOutput: 8,
+              ratio: 0.8,
+            },
+          ],
+          total: 1,
+        });
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useOpensearchMetrics(),
+        {
+          wrapper: ({ children }) => (
+            <RecoilRoot>
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </RecoilRoot>
+          ),
+        },
+      );
+      await waitForNextUpdate();
+
+      const paginationParams = {
+        tags: ['Team Alpha'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d' as const,
+        documentCategory: 'all' as const,
+        sort: 'user_asc' as const,
+      };
+
+      await result.current.getUserProductivity(paginationParams);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'user-productivity',
+        expect.any(String),
+      );
+
+      expect(mockGetUserProductivity).toHaveBeenCalledWith(
+        expect.any(OpensearchClient),
+        paginationParams,
+      );
+    });
+  });
+
+  describe('getUserProductivityPerformance', () => {
+    it('creates OpensearchClient with correct index and calls API method', async () => {
+      const mockGetUserProductivityPerformance = jest
+        .spyOn(productivityApi, 'getUserProductivityPerformance')
+        .mockResolvedValue({
+          asapOutput: {
+            belowAverageMin: 0,
+            belowAverageMax: 5,
+            averageMin: 5,
+            averageMax: 10,
+            aboveAverageMin: 10,
+            aboveAverageMax: 20,
+          },
+          asapPublicOutput: {
+            belowAverageMin: 0,
+            belowAverageMax: 3,
+            averageMin: 3,
+            averageMax: 7,
+            aboveAverageMin: 7,
+            aboveAverageMax: 15,
+          },
+          ratio: {
+            belowAverageMin: 0,
+            belowAverageMax: 0.5,
+            averageMin: 0.5,
+            averageMax: 0.75,
+            aboveAverageMin: 0.75,
+            aboveAverageMax: 1.0,
+          },
+        });
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useOpensearchMetrics(),
+        {
+          wrapper: ({ children }) => (
+            <RecoilRoot>
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </RecoilRoot>
+          ),
+        },
+      );
+      await waitForNextUpdate();
+
+      const paginationParams = {
+        timeRange: '90d' as const,
+        documentCategory: 'article' as const,
+      };
+
+      await result.current.getUserProductivityPerformance(paginationParams);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'user-productivity-performance',
+        expect.any(String),
+      );
+
+      expect(mockGetUserProductivityPerformance).toHaveBeenCalledWith(
         expect.any(OpensearchClient),
         paginationParams,
       );

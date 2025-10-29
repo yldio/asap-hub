@@ -1,4 +1,11 @@
-import { OpensearchClient, OpensearchIndex } from '../opensearch';
+import {
+  OpensearchClient,
+  OpensearchIndex,
+  buildNormalizedStringSort,
+  teamBasedRecordSearchQueryBuilder,
+  userBasedRecordSearchQueryBuilder,
+  taglessSearchQueryBuilder,
+} from '../opensearch';
 
 const originalFetch = global.fetch;
 const mockFetch = jest.fn();
@@ -495,6 +502,605 @@ describe('OpensearchClient', () => {
         { term: { timeRange: '30d' } },
         { term: { documentCategory: 'article' } },
       ]);
+    });
+  });
+
+  describe('buildNormalizedStringSort', () => {
+    it('builds script sort with ascending order', () => {
+      const result = buildNormalizedStringSort({
+        keyword: 'teamName.keyword',
+        order: 'asc',
+      });
+
+      expect(result).toEqual({
+        _script: {
+          type: 'string',
+          script: {
+            source: "doc['teamName.keyword'].value.toLowerCase()",
+            lang: 'painless',
+          },
+          order: 'asc',
+        },
+      });
+    });
+
+    it('builds script sort with descending order', () => {
+      const result = buildNormalizedStringSort({
+        keyword: 'name.keyword',
+        order: 'desc',
+      });
+
+      expect(result).toEqual({
+        _script: {
+          type: 'string',
+          script: {
+            source: "doc['name.keyword'].value.toLowerCase()",
+            lang: 'painless',
+          },
+          order: 'desc',
+        },
+      });
+    });
+
+    it('builds script sort with nested path', () => {
+      const result = buildNormalizedStringSort({
+        keyword: 'teams.team.keyword',
+        order: 'asc',
+        nested: { path: 'teams' },
+      });
+
+      expect(result).toEqual({
+        _script: {
+          type: 'string',
+          script: {
+            source: "doc['teams.team.keyword'].value.toLowerCase()",
+            lang: 'painless',
+          },
+          order: 'asc',
+          nested: { path: 'teams' },
+        },
+      });
+    });
+
+    it('builds script sort without nested path when not provided', () => {
+      const result = buildNormalizedStringSort({
+        keyword: 'title.keyword',
+        order: 'asc',
+      });
+
+      expect(result).not.toHaveProperty('_script.nested');
+    });
+
+    it('handles deeply nested field paths', () => {
+      const result = buildNormalizedStringSort({
+        keyword: 'user.profile.displayName.keyword',
+        order: 'asc',
+        nested: { path: 'user.profile' },
+      });
+
+      expect(result).toEqual({
+        _script: {
+          type: 'string',
+          script: {
+            source:
+              "doc['user.profile.displayName.keyword'].value.toLowerCase()",
+            lang: 'painless',
+          },
+          order: 'asc',
+          nested: { path: 'user.profile' },
+        },
+      });
+    });
+  });
+
+  describe('teamBasedRecordSearchQueryBuilder', () => {
+    it('builds query with empty searchTags array', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'both',
+      });
+
+      expect(result.query.bool).not.toHaveProperty('should');
+      expect(result.query.bool).not.toHaveProperty('minimum_should_match');
+      expect(result.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
+    });
+
+    it('builds query with single tag and scope="teams"', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: ['Team Alpha'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [{ term: { 'teamName.keyword': 'Team Alpha' } }],
+      );
+      expect(
+        'minimum_should_match' in result.query.bool &&
+          result.query.bool.minimum_should_match,
+      ).toBe(1);
+    });
+
+    it('builds query with single tag and scope="both"', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: ['Team Alpha'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'both',
+      });
+
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [
+          { term: { 'teamName.keyword': 'Team Alpha' } },
+          {
+            nested: {
+              path: 'users',
+              query: { term: { 'users.name.keyword': 'Team Alpha' } },
+            },
+          },
+        ],
+      );
+      expect(
+        'minimum_should_match' in result.query.bool &&
+          result.query.bool.minimum_should_match,
+      ).toBe(1);
+    });
+
+    it('builds query with multiple tags and scope="teams"', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: ['Team Alpha', 'Team Beta'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [
+          { term: { 'teamName.keyword': 'Team Alpha' } },
+          { term: { 'teamName.keyword': 'Team Beta' } },
+        ],
+      );
+      expect(
+        'should' in result.query.bool && result.query.bool.should,
+      ).toHaveLength(2);
+    });
+
+    it('builds query with multiple tags and scope="both"', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: ['Team Alpha', 'Team Beta'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'both',
+      });
+
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [
+          { term: { 'teamName.keyword': 'Team Alpha' } },
+          {
+            nested: {
+              path: 'users',
+              query: { term: { 'users.name.keyword': 'Team Alpha' } },
+            },
+          },
+          { term: { 'teamName.keyword': 'Team Beta' } },
+          {
+            nested: {
+              path: 'users',
+              query: { term: { 'users.name.keyword': 'Team Beta' } },
+            },
+          },
+        ],
+      );
+      expect(
+        'should' in result.query.bool && result.query.bool.should,
+      ).toHaveLength(4);
+    });
+
+    it('includes documentCategory in must clauses when provided', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+        documentCategory: 'article',
+      });
+
+      expect(result.query.bool.must).toEqual([
+        { term: { timeRange: '30d' } },
+        { term: { documentCategory: 'article' } },
+      ]);
+    });
+
+    it('excludes documentCategory from must clauses when undefined', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect(result.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
+    });
+
+    it('uses provided custom sort', () => {
+      const customSort = [{ ratio: { order: 'desc' as const } }];
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+        sort: customSort,
+      });
+
+      expect(result.sort).toEqual(customSort);
+    });
+
+    it('uses default sort when sort is undefined', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect(result.sort).toEqual([{ 'teamName.keyword': { order: 'asc' } }]);
+    });
+
+    it('calculates pagination correctly for page 0 size 10', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect(result.from).toBe(0);
+      expect(result.size).toBe(10);
+    });
+
+    it('calculates pagination correctly for page 2 size 20', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 2,
+        pageSize: 20,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect(result.from).toBe(40);
+      expect(result.size).toBe(20);
+    });
+
+    it('includes different timeRange values in must clause', () => {
+      const result = teamBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '90d',
+        searchScope: 'teams',
+      });
+
+      expect(result.query.bool.must).toContainEqual({
+        term: { timeRange: '90d' },
+      });
+    });
+  });
+
+  describe('userBasedRecordSearchQueryBuilder', () => {
+    it('builds query with empty searchTags array', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'both',
+      });
+
+      expect(result.query.bool).not.toHaveProperty('should');
+      expect(result.query.bool).not.toHaveProperty('minimum_should_match');
+      expect(result.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
+    });
+
+    it('builds query with single tag and scope="teams"', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: ['John Doe'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [{ term: { 'name.keyword': 'John Doe' } }],
+      );
+      expect(
+        'minimum_should_match' in result.query.bool &&
+          result.query.bool.minimum_should_match,
+      ).toBe(1);
+    });
+
+    it('builds query with single tag and scope="both"', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: ['John Doe'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'both',
+      });
+
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [
+          { term: { 'name.keyword': 'John Doe' } },
+          {
+            nested: {
+              path: 'teams',
+              query: { term: { 'teams.team.keyword': 'John Doe' } },
+            },
+          },
+        ],
+      );
+      expect(
+        'minimum_should_match' in result.query.bool &&
+          result.query.bool.minimum_should_match,
+      ).toBe(1);
+    });
+
+    it('builds query with multiple tags and scope="teams"', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: ['John Doe', 'Jane Smith'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [
+          { term: { 'name.keyword': 'John Doe' } },
+          { term: { 'name.keyword': 'Jane Smith' } },
+        ],
+      );
+      expect(
+        'should' in result.query.bool && result.query.bool.should,
+      ).toHaveLength(2);
+    });
+
+    it('builds query with multiple tags and scope="both"', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: ['John Doe', 'Jane Smith'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'both',
+      });
+
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [
+          { term: { 'name.keyword': 'John Doe' } },
+          {
+            nested: {
+              path: 'teams',
+              query: { term: { 'teams.team.keyword': 'John Doe' } },
+            },
+          },
+          { term: { 'name.keyword': 'Jane Smith' } },
+          {
+            nested: {
+              path: 'teams',
+              query: { term: { 'teams.team.keyword': 'Jane Smith' } },
+            },
+          },
+        ],
+      );
+      expect(
+        'should' in result.query.bool && result.query.bool.should,
+      ).toHaveLength(4);
+    });
+
+    it('includes documentCategory in must clauses when provided', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+        documentCategory: 'protocol',
+      });
+
+      expect(result.query.bool.must).toEqual([
+        { term: { timeRange: '30d' } },
+        { term: { documentCategory: 'protocol' } },
+      ]);
+    });
+
+    it('excludes documentCategory from must clauses when undefined', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect(result.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
+    });
+
+    it('includes sort property when custom sort is provided', () => {
+      const customSort = [{ asapOutput: { order: 'asc' as const } }];
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+        sort: customSort,
+      });
+
+      expect(result.sort).toEqual(customSort);
+    });
+
+    it('does not include sort property when sort is undefined', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect(result).not.toHaveProperty('sort');
+    });
+
+    it('calculates pagination correctly for page 0 size 10', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect(result.from).toBe(0);
+      expect(result.size).toBe(10);
+    });
+
+    it('calculates pagination correctly for page 1 size 15', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 1,
+        pageSize: 15,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect(result.from).toBe(15);
+      expect(result.size).toBe(15);
+    });
+
+    it('includes different timeRange values in must clause', () => {
+      const result = userBasedRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: 'last-year',
+        searchScope: 'teams',
+      });
+
+      expect(result.query.bool.must).toContainEqual({
+        term: { timeRange: 'last-year' },
+      });
+    });
+  });
+
+  describe('taglessSearchQueryBuilder', () => {
+    it('includes both timeRange and documentCategory when both provided', () => {
+      const result = taglessSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+        documentCategory: 'article',
+      });
+
+      expect(result.query.bool.must).toEqual([
+        { term: { timeRange: '30d' } },
+        { term: { documentCategory: 'article' } },
+      ]);
+    });
+
+    it('includes only timeRange when documentCategory is undefined', () => {
+      const result = taglessSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '90d',
+        searchScope: 'teams',
+      });
+
+      expect(result.query.bool.must).toEqual([{ term: { timeRange: '90d' } }]);
+    });
+
+    it('includes only documentCategory when timeRange is undefined', () => {
+      const result = taglessSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        timeRange: undefined as any,
+        searchScope: 'teams',
+        documentCategory: 'dataset',
+      });
+
+      expect(result.query.bool.must).toEqual([
+        { term: { documentCategory: 'dataset' } },
+      ]);
+    });
+
+    it('has empty must array when both timeRange and documentCategory are undefined', () => {
+      const result = taglessSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        timeRange: undefined as any,
+        searchScope: 'teams',
+      });
+
+      expect(result.query.bool.must).toEqual([]);
+    });
+
+    it('calculates pagination correctly', () => {
+      const result = taglessSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 3,
+        pageSize: 25,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect(result.from).toBe(75);
+      expect(result.size).toBe(25);
+    });
+
+    it('ignores searchTags parameter', () => {
+      const result = taglessSearchQueryBuilder({
+        searchTags: ['Team Alpha', 'User Beta'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+      });
+
+      expect(result.query.bool).not.toHaveProperty('should');
+      expect(JSON.stringify(result)).not.toContain('Team Alpha');
+      expect(JSON.stringify(result)).not.toContain('User Beta');
+    });
+
+    it('ignores sort parameter and does not include sort in response', () => {
+      const result = taglessSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'teams',
+        sort: [{ ratio: { order: 'desc' as const } }],
+      });
+
+      expect(result).not.toHaveProperty('sort');
     });
   });
 });

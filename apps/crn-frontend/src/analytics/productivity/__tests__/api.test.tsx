@@ -24,6 +24,7 @@ import {
   getUserProductivity,
   getUserProductivityPerformance,
 } from '../api';
+import { OpensearchClient } from '../../utils/opensearch';
 
 jest.mock('../../../config');
 
@@ -148,6 +149,261 @@ describe('getUserProductivity', () => {
         filters: `(__meta.range:"30d") AND (__meta.documentCategory:"article")`,
       }),
     );
+  });
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<typeof userProductivityResponse>;
+    let searchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient(
+        'user-productivity',
+        'Bearer test-token',
+      );
+      searchSpy = jest.spyOn(opensearchClient, 'search').mockResolvedValue({
+        items: [userProductivityResponse],
+        total: 1,
+      });
+    });
+
+    afterEach(() => {
+      searchSpy.mockRestore();
+    });
+
+    it('calls opensearch client with correct parameters', async () => {
+      await getUserProductivity(opensearchClient, defaultUserOptions);
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [], // tags
+        null, // currentPage
+        null, // pageSize
+        '30d', // timeRange
+        'teams', // searchScope
+        'all', // documentCategory
+        expect.any(Array), // sort
+      );
+    });
+
+    it('passes tags to opensearch client', async () => {
+      await getUserProductivity(opensearchClient, {
+        ...defaultUserOptions,
+        tags: ['Team Alpha', 'User Beta'],
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        ['Team Alpha', 'User Beta'],
+        null,
+        null,
+        '30d',
+        'teams',
+        'all',
+        expect.any(Array),
+      );
+    });
+
+    it('passes pagination parameters to opensearch client', async () => {
+      await getUserProductivity(opensearchClient, {
+        ...defaultUserOptions,
+        currentPage: 2,
+        pageSize: 20,
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [],
+        2,
+        20,
+        '30d',
+        'teams',
+        'all',
+        expect.any(Array),
+      );
+    });
+
+    it('passes time range to opensearch client', async () => {
+      await getUserProductivity(opensearchClient, {
+        ...defaultUserOptions,
+        timeRange: '90d',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [],
+        null,
+        null,
+        '90d',
+        'teams',
+        'all',
+        expect.any(Array),
+      );
+    });
+
+    it('passes document category to opensearch client', async () => {
+      await getUserProductivity(opensearchClient, {
+        ...defaultUserOptions,
+        documentCategory: 'article',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [],
+        null,
+        null,
+        '30d',
+        'teams',
+        'article',
+        expect.any(Array),
+      );
+    });
+
+    it('applies user_asc sort correctly', async () => {
+      await getUserProductivity(opensearchClient, {
+        ...defaultUserOptions,
+        sort: 'user_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [],
+        null,
+        null,
+        '30d',
+        'teams',
+        'all',
+        [
+          {
+            _script: {
+              type: 'string',
+              script: {
+                source: "doc['name.keyword'].value.toLowerCase()",
+                lang: 'painless',
+              },
+              order: 'asc',
+            },
+          },
+        ],
+      );
+    });
+
+    it('applies user_desc sort correctly', async () => {
+      await getUserProductivity(opensearchClient, {
+        ...defaultUserOptions,
+        sort: 'user_desc',
+      });
+
+      const sortArg = searchSpy.mock.calls[0][6];
+      // eslint-disable-next-line no-underscore-dangle
+      expect(sortArg[0]._script.order).toBe('desc');
+    });
+
+    it('applies team_asc sort with nested path', async () => {
+      await getUserProductivity(opensearchClient, {
+        ...defaultUserOptions,
+        sort: 'team_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [],
+        null,
+        null,
+        '30d',
+        'teams',
+        'all',
+        [
+          {
+            _script: {
+              type: 'string',
+              script: {
+                source: "doc['teams.team.keyword'].value.toLowerCase()",
+                lang: 'painless',
+              },
+              order: 'asc',
+              nested: { path: 'teams' },
+            },
+          },
+        ],
+      );
+    });
+
+    it('applies asap_output_asc sort correctly', async () => {
+      await getUserProductivity(opensearchClient, {
+        ...defaultUserOptions,
+        sort: 'asap_output_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [],
+        null,
+        null,
+        '30d',
+        'teams',
+        'all',
+        [
+          {
+            asapOutput: {
+              order: 'asc',
+            },
+          },
+        ],
+      );
+    });
+
+    it('applies ratio_desc sort correctly', async () => {
+      await getUserProductivity(opensearchClient, {
+        ...defaultUserOptions,
+        sort: 'ratio_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [],
+        null,
+        null,
+        '30d',
+        'teams',
+        'all',
+        [
+          {
+            ratio: { order: 'desc' },
+          },
+        ],
+      );
+    });
+
+    it('applies role_asc sort with nested path and missing value handling', async () => {
+      await getUserProductivity(opensearchClient, {
+        ...defaultUserOptions,
+        sort: 'role_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        [],
+        null,
+        null,
+        '30d',
+        'teams',
+        'all',
+        [
+          {
+            'teams.role': {
+              nested: { path: 'teams' },
+              order: 'asc',
+              missing: '_last',
+            },
+          },
+        ],
+      );
+    });
+
+    it('returns the result from opensearch client', async () => {
+      const mockResult = {
+        items: [userProductivityResponse],
+        total: 1,
+      };
+      searchSpy.mockResolvedValue(mockResult);
+
+      const result = await getUserProductivity(
+        opensearchClient,
+        defaultUserOptions,
+      );
+
+      expect(result).toEqual(mockResult);
+    });
   });
 });
 

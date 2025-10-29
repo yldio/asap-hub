@@ -559,4 +559,126 @@ describe('csv export', () => {
       expect.anything(),
     );
   });
+
+  it('exports user productivity analytics via OpenSearch when flag is enabled', async () => {
+    // Set up flag to enable OpenSearch metrics
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    // Mock OpenSearch metrics methods
+    const mockGetUserProductivityOS = jest.fn().mockResolvedValue({
+      items: [
+        {
+          id: 'user-1',
+          name: 'Alice OpenSearch',
+          isAlumni: false,
+          teams: [
+            {
+              id: 'team-1',
+              team: 'Team OpenSearch',
+              role: 'Lead PI (Core Leadership)',
+              isTeamInactive: false,
+              isUserInactiveOnTeam: false,
+            },
+          ],
+          asapOutput: 150,
+          asapPublicOutput: 100,
+          ratio: 0.67,
+        },
+      ],
+      total: 1,
+    });
+
+    const mockGetUserProductivityPerformanceOS = jest.fn().mockResolvedValue({
+      asapOutput: {
+        belowAverageMin: 0,
+        belowAverageMax: 50,
+        averageMin: 50,
+        averageMax: 100,
+        aboveAverageMin: 100,
+        aboveAverageMax: 200,
+      },
+      asapPublicOutput: {
+        belowAverageMin: 0,
+        belowAverageMax: 30,
+        averageMin: 30,
+        averageMax: 70,
+        aboveAverageMin: 70,
+        aboveAverageMax: 150,
+      },
+      ratio: {
+        belowAverageMin: 0,
+        belowAverageMax: 0.5,
+        averageMin: 0.5,
+        averageMax: 0.75,
+        aboveAverageMin: 0.75,
+        aboveAverageMax: 1.0,
+      },
+    });
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getUserProductivity: mockGetUserProductivityOS,
+      getUserProductivityPerformance: mockGetUserProductivityPerformanceOS,
+      getPublicationCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreprintCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsOSChampion: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreliminaryDataSharing: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+    });
+
+    // Render the page
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    // Wait for page to be fully rendered
+    await waitFor(() => {
+      expect(screen.getAllByText('User Productivity')).toHaveLength(2);
+    });
+
+    // Clear only the Algolia mock after initial render to isolate CSV export behavior
+    mockGetUserProductivity.mockClear();
+
+    // Click CSV export button
+    await act(async () => {
+      userEvent.click(screen.getByText(/csv/i));
+    });
+
+    // Verify createCsvFileStream was called with correct filename
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/productivity_user_\d+\.csv/),
+      expect.anything(),
+    );
+
+    // Verify OpenSearch getUserProductivity was called with correct parameters during CSV export
+    expect(mockGetUserProductivityOS).toHaveBeenCalledWith({
+      sort: 'user_asc',
+      timeRange: 'all',
+      documentCategory: 'all',
+      tags: [],
+      currentPage: expect.any(Number),
+      pageSize: 200,
+    });
+
+    // Verify Algolia getUserProductivity was NOT called during CSV export
+    expect(mockGetUserProductivity).not.toHaveBeenCalled();
+  });
 });

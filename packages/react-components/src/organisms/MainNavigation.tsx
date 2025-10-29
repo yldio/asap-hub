@@ -25,7 +25,7 @@ import {
   LibraryIcon,
   newsIcon,
   calendarIcon,
-  projectIcon,
+  ProjectIcon,
 } from '../icons';
 
 const listStyles = css({
@@ -71,7 +71,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
         <li>
           <NavigationLink
             href={projects({}).$}
-            icon={projectIcon}
+            icon={<ProjectIcon />}
             enabled={userOnboarded}
           >
             Projects

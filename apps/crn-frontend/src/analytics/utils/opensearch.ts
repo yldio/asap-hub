@@ -68,16 +68,50 @@ type OpensearchSearchOptions = {
   sort?: OpensearchSort[];
 };
 
-export interface OpensearchSort {
+type SortConfigOrder = 'asc' | 'desc';
+
+type SortConfigNested = {
+  path: string;
+};
+
+type OpensearchPropertySort = {
   [id: string]: {
-    order: 'asc' | 'desc';
+    order: SortConfigOrder;
     mode?: 'avg' | 'sum' | 'median' | 'min' | 'max';
-    nested?: {
-      path: string;
-    };
+    nested?: SortConfigNested;
     missing?: '_first' | '_last' | number | string;
   };
-}
+};
+
+type OpensearchScriptSort = {
+  _script: {
+    type: 'string';
+    script: {
+      source: string;
+      lang: 'painless';
+    };
+    order: SortConfigOrder;
+    nested?: SortConfigNested;
+  };
+};
+
+export type OpensearchSort = OpensearchScriptSort | OpensearchPropertySort;
+
+export const buildNormalizedStringSort = (options: {
+  keyword: `${string}.keyword`;
+  order: SortConfigOrder;
+  nested?: SortConfigNested;
+}): OpensearchScriptSort => ({
+  _script: {
+    type: 'string',
+    script: {
+      source: `doc['${options.keyword}'].value.toLowerCase()`,
+      lang: 'painless',
+    },
+    order: options.order,
+    ...(options.nested ? { nested: options.nested } : {}),
+  },
+});
 
 export type OpensearchIndex =
   | 'publication-compliance'
@@ -118,7 +152,7 @@ type SearchQuery = {
   size: number;
 };
 
-const teamBasedRecordSearchQueryBuilder = (
+export const teamBasedRecordSearchQueryBuilder = (
   options: OpensearchSearchOptions,
 ): SearchQuery => {
   const shouldClauses = options.searchTags.flatMap((term) => {
@@ -183,7 +217,7 @@ const teamBasedRecordSearchQueryBuilder = (
   };
 };
 
-const userBasedRecordSearchQueryBuilder = (
+export const userBasedRecordSearchQueryBuilder = (
   options: OpensearchSearchOptions,
 ): SearchQuery => {
   const shouldClauses = options.searchTags.flatMap((term) => {
@@ -239,7 +273,7 @@ const userBasedRecordSearchQueryBuilder = (
   };
 };
 
-const taglessSearchQueryBuilder = (
+export const taglessSearchQueryBuilder = (
   options: OpensearchSearchOptions,
 ): SearchQuery => ({
   from: options.currentPage * options.pageSize,

@@ -22,6 +22,7 @@ import {
   UserProductivityResponse,
 } from '@asap-hub/model';
 import {
+  buildNormalizedStringSort,
   OpensearchClient,
   OpensearchSort,
   SearchResult,
@@ -34,53 +35,34 @@ type OpensearchSortMap<T extends `${string}_asc` | `${string}_desc`> = Record<
 
 const userProductivyOpensearchSort: OpensearchSortMap<SortUserProductivity> = {
   user_asc: [
-    {
-      'name.keyword': {
-        order: 'asc',
-      },
-    },
+    buildNormalizedStringSort({
+      keyword: 'name.keyword',
+      order: 'asc',
+    }),
   ],
   user_desc: [
-    {
-      'name.keyword': {
-        order: 'desc',
-      },
-    },
+    buildNormalizedStringSort({
+      keyword: 'name.keyword',
+      order: 'desc',
+    }),
   ],
   team_asc: [
-    {
-      'teams.team.keyword': {
-        nested: { path: 'teams' },
-        order: 'asc',
-      },
-    },
-    {
-      'name.keyword': {
-        order: 'asc',
-      },
-    },
+    buildNormalizedStringSort({
+      keyword: 'teams.team.keyword',
+      order: 'asc',
+      nested: { path: 'teams' },
+    }),
   ],
   team_desc: [
-    {
-      'teams.team.keyword': {
-        nested: { path: 'teams' },
-        order: 'desc',
-      },
-    },
-    {
-      'name.keyword': {
-        order: 'asc',
-      },
-    },
+    buildNormalizedStringSort({
+      keyword: 'teams.team.keyword',
+      order: 'desc',
+      nested: { path: 'teams' },
+    }),
   ],
   asap_output_asc: [
     {
       asapOutput: {
-        order: 'asc',
-      },
-    },
-    {
-      'name.keyword': {
         order: 'asc',
       },
     },
@@ -91,20 +73,10 @@ const userProductivyOpensearchSort: OpensearchSortMap<SortUserProductivity> = {
         order: 'desc',
       },
     },
-    {
-      'name.keyword': {
-        order: 'asc',
-      },
-    },
   ],
   asap_public_output_asc: [
     {
       asapPublicOutput: {
-        order: 'asc',
-      },
-    },
-    {
-      'name.keyword': {
         order: 'asc',
       },
     },
@@ -115,30 +87,15 @@ const userProductivyOpensearchSort: OpensearchSortMap<SortUserProductivity> = {
         order: 'desc',
       },
     },
-    {
-      'name.keyword': {
-        order: 'asc',
-      },
-    },
   ],
   ratio_asc: [
     {
       ratio: { order: 'asc' },
     },
-    {
-      'name.keyword': {
-        order: 'asc',
-      },
-    },
   ],
   ratio_desc: [
     {
       ratio: { order: 'desc' },
-    },
-    {
-      'name.keyword': {
-        order: 'asc',
-      },
     },
   ],
   role_asc: [
@@ -146,17 +103,7 @@ const userProductivyOpensearchSort: OpensearchSortMap<SortUserProductivity> = {
       'teams.role': {
         nested: { path: 'teams' },
         order: 'asc',
-      },
-    },
-    {
-      'teams.team.keyword': {
-        nested: { path: 'teams' },
-        order: 'asc',
-      },
-    },
-    {
-      'name.keyword': {
-        order: 'asc',
+        missing: '_last',
       },
     },
   ],
@@ -165,17 +112,7 @@ const userProductivyOpensearchSort: OpensearchSortMap<SortUserProductivity> = {
       'teams.role': {
         nested: { path: 'teams' },
         order: 'desc',
-      },
-    },
-    {
-      'teams.team.keyword': {
-        nested: { path: 'teams' },
-        order: 'asc',
-      },
-    },
-    {
-      'name.keyword': {
-        order: 'asc',
+        missing: '_last',
       },
     },
   ],

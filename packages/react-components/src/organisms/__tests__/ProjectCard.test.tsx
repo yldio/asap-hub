@@ -61,6 +61,15 @@ const resourceProjectMemberBasedProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Chen',
       email: 'michael.c@example.com',
       href: '/users/2',
+      alumniSinceDate: '2022-10-27',
+    },
+    {
+      id: '3',
+      displayName: 'Dr. Emily Rodriguez',
+      firstName: 'Emily',
+      lastName: 'Rodriguez',
+      email: 'emily.r@example.com',
+      href: '/users/3',
     },
   ],
 };
@@ -218,7 +227,8 @@ describe('ProjectCard - Discovery Project', () => {
 
   it('renders the duration with MMM YYYY date format', () => {
     const { getByText } = render(<ProjectCard {...discoveryProjectProps} />);
-    expect(getByText('Jan 2023 - Dec 2025 • (3 yrs)')).toBeVisible();
+    expect(getByText('Jan 2023 - Dec 2025 •')).toBeVisible();
+    expect(getByText('(3 yrs)')).toBeVisible();
   });
 
   it('renders tags', () => {
@@ -316,6 +326,7 @@ describe('ProjectCard - Resource Project (Member-based)', () => {
     );
     expect(getByText('Dr. Sarah Johnson')).toBeVisible();
     expect(getByText('Dr. Michael Chen')).toBeVisible();
+    expect(getByText('Dr. Emily Rodriguez')).toBeVisible();
   });
 
   it('does not render team name for member-based projects', () => {
@@ -330,6 +341,14 @@ describe('ProjectCard - Resource Project (Member-based)', () => {
       <ProjectCard {...resourceProjectMemberBasedProps} members={[]} />,
     );
     expect(queryByText('Dr. Sarah Johnson')).not.toBeInTheDocument();
+  });
+
+  it('renders alumni badge for alumni members', () => {
+    const { getByTitle } = render(
+      <ProjectCard {...resourceProjectMemberBasedProps} />,
+    );
+    // Dr. Michael Chen should have alumni badge since he has alumniSinceDate
+    expect(getByTitle('Alumni Member')).toBeInTheDocument();
   });
 });
 

@@ -41,6 +41,7 @@ const mockResourceProjects = [
         lastName: 'Doe',
         email: 'john.doe@example.com',
         href: '/users/2',
+        alumniSinceDate: '2022-10-27',
       },
       {
         id: '3',

@@ -23,6 +23,7 @@ const listStyles = css({
   overflow: 'hidden',
   display: 'flex',
   flexWrap: 'wrap',
+  gap: `${rem(8)} ${rem(4)}`, // vertical gap, horizontal gap
 
   color: lead.rgb,
 });
@@ -38,8 +39,13 @@ const userStyles = css({
   overflow: 'hidden',
   display: 'grid',
   gridTemplateColumns: `min-content 1fr min-content min-content`,
-  gridColumnGap: rem(9),
+  gridColumnGap: rem(8),
   alignItems: 'center',
+});
+const iconContainerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
 });
 const nameStyles = css({
   overflow: 'hidden',
@@ -99,12 +105,14 @@ const UsersList: FC<UsersListProps> = ({
               <Link ellipsed href={user.href}>
                 <span css={nameStyles}>{user.displayName}</span>
               </Link>
-              {user.alumniSinceDate && (
-                <span css={iconStyles}>{alumniBadgeIcon}</span>
-              )}
-              {i < users.length - 1 && i < max - 1 && separator && (
-                <span css={separatorStyles}>{separator}</span>
-              )}
+              <div css={iconContainerStyles}>
+                {user.alumniSinceDate && (
+                  <span css={iconStyles}>{alumniBadgeIcon}</span>
+                )}
+                {i < users.length - 1 && i < max - 1 && separator && (
+                  <span css={separatorStyles}>{separator}</span>
+                )}
+              </div>
             </div>
           )}
         </li>

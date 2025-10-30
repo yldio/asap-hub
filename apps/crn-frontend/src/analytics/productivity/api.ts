@@ -132,7 +132,7 @@ export const getUserProductivity = (
       currentPage,
       pageSize,
       timeRange,
-      'teams',
+      'both',
       documentCategory,
       userProductivyOpensearchSort[sort],
     );
@@ -170,7 +170,7 @@ export const getUserProductivityPerformance = async (
       null,
       null,
       options.timeRange,
-      'teams',
+      'both',
       options.documentCategory,
       [],
     );

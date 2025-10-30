@@ -178,7 +178,7 @@ describe('getUserProductivity', () => {
         null, // currentPage
         null, // pageSize
         '30d', // timeRange
-        'teams', // searchScope
+        'both', // searchScope
         'all', // documentCategory
         expect.any(Array), // sort
       );
@@ -195,7 +195,7 @@ describe('getUserProductivity', () => {
         null,
         null,
         '30d',
-        'teams',
+        'both',
         'all',
         expect.any(Array),
       );
@@ -213,7 +213,7 @@ describe('getUserProductivity', () => {
         2,
         20,
         '30d',
-        'teams',
+        'both',
         'all',
         expect.any(Array),
       );
@@ -230,7 +230,7 @@ describe('getUserProductivity', () => {
         null,
         null,
         '90d',
-        'teams',
+        'both',
         'all',
         expect.any(Array),
       );
@@ -247,7 +247,7 @@ describe('getUserProductivity', () => {
         null,
         null,
         '30d',
-        'teams',
+        'both',
         'article',
         expect.any(Array),
       );
@@ -264,7 +264,7 @@ describe('getUserProductivity', () => {
         null,
         null,
         '30d',
-        'teams',
+        'both',
         'all',
         [
           {
@@ -303,7 +303,7 @@ describe('getUserProductivity', () => {
         null,
         null,
         '30d',
-        'teams',
+        'both',
         'all',
         [
           {
@@ -332,7 +332,7 @@ describe('getUserProductivity', () => {
         null,
         null,
         '30d',
-        'teams',
+        'both',
         'all',
         [
           {
@@ -355,7 +355,7 @@ describe('getUserProductivity', () => {
         null,
         null,
         '30d',
-        'teams',
+        'both',
         'all',
         [
           {
@@ -376,7 +376,7 @@ describe('getUserProductivity', () => {
         null,
         null,
         '30d',
-        'teams',
+        'both',
         'all',
         [
           {
@@ -627,7 +627,7 @@ describe('getUserProductivityPerformance', () => {
         null, // currentPage
         null, // pageSize
         '30d', // timeRange
-        'teams', // searchScope
+        'both', // searchScope
         'all', // documentCategory
         [], // sort
       );
@@ -644,7 +644,7 @@ describe('getUserProductivityPerformance', () => {
         null,
         null,
         '90d',
-        'teams',
+        'both',
         'all',
         [],
       );
@@ -661,7 +661,7 @@ describe('getUserProductivityPerformance', () => {
         null,
         null,
         '30d',
-        'teams',
+        'both',
         'article',
         [],
       );

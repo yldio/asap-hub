@@ -79,14 +79,16 @@ export const analyticsUserProductivityState = selectorFamily<
       } else {
         newUserProductivity?.items.forEach((userProductivity) =>
           set(
-            analyticsUserProductivityListState(userProductivity.id),
+            analyticsUserProductivityListState(
+              userProductivity.id + JSON.stringify(options), // Cache the original id plus the current sort/search/filter options
+            ),
             userProductivity,
           ),
         );
         set(analyticsUserProductivityIndexState(options), {
           total: newUserProductivity.total,
           ids: newUserProductivity.items.map(
-            (userProductivity) => userProductivity.id,
+            (userProductivity) => userProductivity.id + JSON.stringify(options),
           ),
         });
       }

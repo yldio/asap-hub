@@ -891,7 +891,7 @@ __metadata:
     react-dom: 17.0.2
     react-router-dom: 5.3.4
     typescript: 4.9.5
-    vite: 5.4.12
+    vite: 5.4.21
     webpack: 5.94.0
   languageName: unknown
   linkType: soft
@@ -974,7 +974,7 @@ __metadata:
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
-    vite: 5.4.12
+    vite: 5.4.21
     vite-bundle-visualizer: ^1.2.1
     webpack: 5.94.0
     xlsx: ^0.18.5
@@ -1328,7 +1328,7 @@ __metadata:
     react-router-dom: 5.3.4
     typescript: 4.9.5
     util: 0.12.5
-    vite: 5.4.12
+    vite: 5.4.21
     webpack: 5.94.0
   languageName: unknown
   linkType: soft
@@ -1464,7 +1464,7 @@ __metadata:
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
-    vite: 5.4.12
+    vite: 5.4.21
   languageName: unknown
   linkType: soft
 
@@ -1947,7 +1947,7 @@ __metadata:
     storybook: ^9.1.13
     storybook-addon-designs: 6.3.1
     typescript: 4.9.5
-    vite: 5.4.12
+    vite: 5.4.21
   languageName: unknown
   linkType: soft
 
@@ -49568,9 +49568,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.4.12":
-  version: 5.4.12
-  resolution: "vite@npm:5.4.12"
+"vite@npm:5.4.21":
+  version: 5.4.21
+  resolution: "vite@npm:5.4.21"
   dependencies:
     esbuild: ^0.21.3
     fsevents: ~2.3.3
@@ -49607,7 +49607,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 6b1a558fd6f5478149a805d173ce4129a102435426a95a99a12a7953d8afe7560dfe8df8e17ec9a1f0e2c74503bc406828b913ae7c2fc61f015633c82795fd64
+  checksum: 7177fa03cff6a382f225290c9889a0d0e944d17eab705bcba89b58558a6f7adfa1f47e469b88f42a044a0eb40c12a1bf68b3cb42abb5295d04f9d7d4dd320837
   languageName: node
   linkType: hard
 

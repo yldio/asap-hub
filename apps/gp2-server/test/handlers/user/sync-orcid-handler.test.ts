@@ -22,7 +22,8 @@ describe('POST /webhook/users/orcid', () => {
 
     expect(userControllerMock.syncOrcidProfile).toHaveBeenCalledWith(
       event.detail.resourceId,
-      undefined,
+      userResponse.email,
+      userResponse.orcid,
     );
   });
 

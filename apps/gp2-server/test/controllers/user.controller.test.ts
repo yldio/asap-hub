@@ -435,18 +435,22 @@ describe('Users controller', () => {
     const userId = 'userId';
     const orcid = '363-98-9330';
 
-    test('should successfully fetch and update user - with id', async () => {
-      const user = { ...getUserDataObject(), orcid };
+    test('should successfully fetch and update user - with explicit params', async () => {
+      const user = { ...getUserDataObject(), id: userId, orcid };
       userDataProviderMock.fetchById.mockResolvedValue(user);
 
       nock('https://pub.orcid.org')
         .get(`/v2.1/${orcid}/works`)
         .reply(200, orcidFixtures.orcidWorksResponse);
 
-      const result = await userController.syncOrcidProfile(userId);
+      const result = await userController.syncOrcidProfile(
+        userId,
+        user.email,
+        orcid,
+      );
 
       expect(userDataProviderMock.update).toHaveBeenCalled();
-      expect(result).toEqual({ ...getUserResponse(), orcid });
+      expect(result).toEqual({ ...getUserResponse(), id: userId, orcid });
       expect(userDataProviderMock.update).toHaveBeenCalledWith(
         user.id,
         expect.objectContaining({
@@ -457,19 +461,19 @@ describe('Users controller', () => {
       );
     });
 
-    test('successfully fetch and update user - with user', async () => {
-      const user = { ...getUserDataObject(), orcid };
+    test('successfully fetch and update user - with custom email', async () => {
+      const user = { ...getUserDataObject(), id: userId, orcid };
       userDataProviderMock.fetchById.mockResolvedValue(user);
 
       nock('https://pub.orcid.org')
         .get(`/v2.1/${orcid}/works`)
         .reply(200, orcidFixtures.orcidWorksResponse);
 
-      const result = await userController.syncOrcidProfile(userId, {
-        ...getUserResponse(),
-        email: 'cache-user-email',
+      const result = await userController.syncOrcidProfile(
+        userId,
+        'cache-user-email',
         orcid,
-      });
+      );
 
       expect(userDataProviderMock.update).toHaveBeenCalled();
       expect(userDataProviderMock.update).toHaveBeenCalledWith(
@@ -480,11 +484,11 @@ describe('Users controller', () => {
           orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
         }),
       );
-      expect(result).toEqual({ ...getUserResponse(), orcid });
+      expect(result).toEqual({ ...getUserResponse(), id: userId, orcid });
     });
 
     test('Should update user profile orcidLastSyncDate when ORCID returns 500', async () => {
-      const user = { ...getUserDataObject(), orcid };
+      const user = { ...getUserDataObject(), id: userId, orcid };
       userDataProviderMock.fetchById.mockResolvedValue(user);
 
       nock('https://pub.orcid.org')
@@ -492,22 +496,22 @@ describe('Users controller', () => {
         .times(3)
         .reply(502, orcidFixtures.orcidWorksResponse);
 
-      const result = await userController.syncOrcidProfile(userId, {
-        ...getUserResponse(),
-        email: user.email,
+      const result = await userController.syncOrcidProfile(
+        userId,
+        user.email,
         orcid,
-      });
+      );
 
       expect(userDataProviderMock.update).toHaveBeenCalled();
       expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
         email: user.email,
         orcidLastSyncDate: expect.any(String),
       });
-      expect(result).toEqual({ ...getUserResponse(), orcid });
+      expect(result).toEqual({ ...getUserResponse(), id: userId, orcid });
     });
 
     test('Should update user profile orcidLastSyncDate when last-modified-date is null', async () => {
-      const user = { ...getUserDataObject(), orcid };
+      const user = { ...getUserDataObject(), id: userId, orcid };
       userDataProviderMock.fetchById.mockResolvedValue(user);
 
       const orcidWorksResponse = {
@@ -519,7 +523,7 @@ describe('Users controller', () => {
         .get(`/v2.1/${orcid}/works`)
         .reply(200, orcidWorksResponse);
 
-      await userController.syncOrcidProfile(userId);
+      await userController.syncOrcidProfile(userId, user.email, orcid);
 
       expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
         email: user.email,
@@ -531,12 +535,16 @@ describe('Users controller', () => {
       userDataProviderMock.fetchById.mockResolvedValue(null);
 
       await expect(
-        userController.syncOrcidProfile('user-not-found'),
+        userController.syncOrcidProfile(
+          'user-not-found',
+          'test@test.com',
+          orcid,
+        ),
       ).rejects.toThrow(NotFoundError);
     });
 
     test('should convert the modified date to ISO before sending to data provider', async () => {
-      const user = { ...getUserDataObject(), orcid };
+      const user = { ...getUserDataObject(), id: userId, orcid };
       userDataProviderMock.fetchById.mockResolvedValue(user);
 
       const orcidWorksResponse = {
@@ -548,7 +556,7 @@ describe('Users controller', () => {
         .get(`/v2.1/${orcid}/works`)
         .reply(200, orcidWorksResponse);
 
-      await userController.syncOrcidProfile(userId);
+      await userController.syncOrcidProfile(userId, user.email, orcid);
 
       expect(userDataProviderMock.update).toHaveBeenCalledWith(
         user.id,

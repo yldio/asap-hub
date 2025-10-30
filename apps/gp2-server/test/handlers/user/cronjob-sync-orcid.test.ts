@@ -23,18 +23,20 @@ describe('Cronjob - Sync Users ORCID', () => {
       .reply(200, fixtures.orcidWorksResponse);
 
     const user = {
-      ...fetchUserResponseDataObject(),
       id: 'user-1',
+      email: 'test@example.com',
       orcid,
-      orcidLastSyncDate: '2020-01-01T00:00:00.000Z',
     };
 
-    mockDataProvider.fetch.mockResolvedValueOnce({
+    mockDataProvider.fetchForOrcidSync.mockResolvedValueOnce({
       total: 1,
       items: [user],
     });
 
-    mockDataProvider.fetchById.mockResolvedValueOnce(user);
+    mockDataProvider.fetchById.mockResolvedValueOnce({
+      ...fetchUserResponseDataObject(),
+      ...user,
+    });
 
     const { statusCode } = await unloggedHandler();
     expect(statusCode).toBe(200);

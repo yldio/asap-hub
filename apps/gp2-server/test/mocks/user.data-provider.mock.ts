@@ -5,4 +5,5 @@ export const userDataProviderMock: jest.Mocked<UserDataProvider> = {
   update: jest.fn(),
   fetch: jest.fn(),
   create: jest.fn(),
+  fetchForOrcidSync: jest.fn(),
 };

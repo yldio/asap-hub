@@ -1952,6 +1952,158 @@ describe('User data provider', () => {
       });
     });
   });
+
+  describe('fetchForOrcidSync', () => {
+    test('Should fetch users with minimal data for ORCID sync', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: {
+          total: 2,
+          items: [
+            {
+              sys: { id: 'user-1' },
+              email: 'user1@test.com',
+              orcid: '0000-0001-1111-1111',
+            },
+            {
+              sys: { id: 'user-2' },
+              email: 'user2@test.com',
+              orcid: '0000-0002-2222-2222',
+            },
+          ],
+        },
+      });
+
+      const result = await userDataProvider.fetchForOrcidSync({
+        take: 100,
+        filter: {
+          orcid: '-',
+          orcidLastSyncDate: '2024-01-01T00:00:00.000Z',
+        },
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS_FOR_ORCID_SYNC,
+        expect.objectContaining({
+          limit: 100,
+          skip: 0,
+          order: [gp2Contentful.UsersOrder.SysFirstPublishedAtDesc],
+          where: {
+            orcid_contains: '-',
+            orcidLastSyncDate_lt: '2024-01-01T00:00:00.000Z',
+            role_not: 'Hidden',
+          },
+        }),
+      );
+
+      expect(result).toEqual({
+        total: 2,
+        items: [
+          {
+            id: 'user-1',
+            email: 'user1@test.com',
+            orcid: '0000-0001-1111-1111',
+          },
+          {
+            id: 'user-2',
+            email: 'user2@test.com',
+            orcid: '0000-0002-2222-2222',
+          },
+        ],
+      });
+    });
+
+    test('Should handle null email and orcid fields', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: {
+          total: 1,
+          items: [
+            {
+              sys: { id: 'user-1' },
+              email: null,
+              orcid: null,
+            },
+          ],
+        },
+      });
+
+      const result = await userDataProvider.fetchForOrcidSync({
+        take: 10,
+        filter: { orcid: '-' },
+      });
+
+      expect(result).toEqual({
+        total: 1,
+        items: [{ id: 'user-1', email: '', orcid: '' }],
+      });
+    });
+
+    test('Should filter out null users', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: {
+          total: 3,
+          items: [
+            {
+              sys: { id: 'user-1' },
+              email: 'user1@test.com',
+              orcid: '0000-0001-1111-1111',
+            },
+            null,
+            {
+              sys: { id: 'user-2' },
+              email: 'user2@test.com',
+              orcid: '0000-0002-2222-2222',
+            },
+          ],
+        },
+      });
+
+      const result = await userDataProvider.fetchForOrcidSync({
+        take: 10,
+        filter: { orcid: '-' },
+      });
+
+      expect(result.items).toHaveLength(2);
+      expect(result.items).toEqual([
+        { id: 'user-1', email: 'user1@test.com', orcid: '0000-0001-1111-1111' },
+        { id: 'user-2', email: 'user2@test.com', orcid: '0000-0002-2222-2222' },
+      ]);
+    });
+
+    test('Should return empty result when usersCollection is null', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: null,
+      });
+
+      const result = await userDataProvider.fetchForOrcidSync({
+        take: 10,
+        filter: { orcid: '-' },
+      });
+
+      expect(result).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+
+    test('Should use default take and skip values', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: { total: 0, items: [] },
+      });
+
+      await userDataProvider.fetchForOrcidSync({
+        filter: { orcid: '-' },
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS_FOR_ORCID_SYNC,
+        expect.objectContaining({
+          limit: 8,
+          skip: 0,
+        }),
+      );
+    });
+  });
+
   describe('Create', () => {
     beforeEach(jest.resetAllMocks);
     test('Should throw when the POST request to contentful fails', async () => {

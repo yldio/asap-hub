@@ -598,10 +598,26 @@ export enum CalendarsOrder {
 }
 
 export type ContentfulMetadata = {
+  concepts: Array<Maybe<TaxonomyConcept>>;
   tags: Array<Maybe<ContentfulTag>>;
 };
 
+export type ContentfulMetadataConceptsDescendantsFilter = {
+  id_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ContentfulMetadataConceptsFilter = {
+  descendants?: InputMaybe<ContentfulMetadataConceptsDescendantsFilter>;
+  id_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type ContentfulMetadataFilter = {
+  concepts?: InputMaybe<ContentfulMetadataConceptsFilter>;
+  concepts_exists?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<ContentfulMetadataTagsFilter>;
   tags_exists?: InputMaybe<Scalars['Boolean']>;
 };
@@ -2032,7 +2048,7 @@ export enum ExternalUsersOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type Guide = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -2044,7 +2060,7 @@ export type Guide = Entry &
     title?: Maybe<Scalars['String']>;
   };
 
-/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type GuideDescriptionCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -2054,18 +2070,18 @@ export type GuideDescriptionCollectionArgs = {
   where?: InputMaybe<GuideDescriptionFilter>;
 };
 
-/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type GuideIconArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type GuideLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type GuideTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -2290,6 +2306,7 @@ export enum GuideOrder {
 }
 
 export enum ImageFormat {
+  /** AVIF image format. */
   Avif = 'AVIF',
   /** JPG image format. */
   Jpg = 'JPG',
@@ -2507,7 +2524,7 @@ export enum LatestStatsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
 export type Media = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -2517,12 +2534,12 @@ export type Media = Entry &
     url?: Maybe<Scalars['String']>;
   };
 
-/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
 export type MediaLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
 export type MediaUrlArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -2572,7 +2589,7 @@ export enum MediaOrder {
   UrlDesc = 'url_DESC',
 }
 
-/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
 export type Migration = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -2583,17 +2600,17 @@ export type Migration = Entry &
     sys: Sys;
   };
 
-/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
 export type MigrationContentTypeIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
-/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
 export type MigrationLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
 export type MigrationStateArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -2832,7 +2849,7 @@ export enum MilestonesOrder {
   TitleDesc = 'title_DESC',
 }
 
-/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type News = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -2849,32 +2866,32 @@ export type News = Entry &
     type?: Maybe<Scalars['String']>;
   };
 
-/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
-/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsLinkTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
-/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsPublishDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
-/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
-/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsTagsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -2884,18 +2901,18 @@ export type NewsTagsCollectionArgs = {
   where?: InputMaybe<TagsFilter>;
 };
 
-/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsThumbnailArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
-/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsTypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -4658,6 +4675,7 @@ export enum ProjectsTagsCollectionOrder {
 
 export type Query = {
   _node?: Maybe<_Node>;
+  _nodes: Array<Maybe<_Node>>;
   announcements?: Maybe<Announcements>;
   announcementsCollection?: Maybe<AnnouncementsCollection>;
   asset?: Maybe<Asset>;
@@ -4717,6 +4735,12 @@ export type Query = {
 
 export type Query_NodeArgs = {
   id: Scalars['ID'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type Query_NodesArgs = {
+  ids: Array<Scalars['ID']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
 };
@@ -5742,6 +5766,21 @@ export enum TagsOrder {
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
+
+/**
+ * Represents a taxonomy concept entity for finding and organizing content easily.
+ *         Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-concepts
+ */
+export type TaxonomyConcept = {
+  id?: Maybe<Scalars['String']>;
+};
+
+export type TimelineFilterInput = {
+  /** Preview content starting from a given release date */
+  release_lte?: InputMaybe<Scalars['String']>;
+  /** Preview content starting from a given timestamp */
+  timestamp_lte?: InputMaybe<Scalars['DateTime']>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type Users = Entry &
@@ -13005,6 +13044,23 @@ export type FetchUsersByTagIdsQuery = {
   >;
 };
 
+export type FetchUsersForOrcidSyncQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<Array<InputMaybe<UsersOrder>> | InputMaybe<UsersOrder>>;
+  where?: InputMaybe<UsersFilter>;
+}>;
+
+export type FetchUsersForOrcidSyncQuery = {
+  usersCollection?: Maybe<
+    Pick<UsersCollection, 'total'> & {
+      items: Array<
+        Maybe<Pick<Users, 'email' | 'orcid'> & { sys: Pick<Sys, 'id'> }>
+      >;
+    }
+  >;
+};
+
 export type WorkingGroupNetworkContentDataFragment = {
   supportCollection?: Maybe<
     Pick<WorkingGroupNetworkSupportCollection, 'total'> & {
@@ -16320,7 +16376,7 @@ export const UsersContentDataFragmentDoc = {
                     {
                       kind: 'Argument',
                       name: { kind: 'Name', value: 'limit' },
-                      value: { kind: 'IntValue', value: '10' },
+                      value: { kind: 'IntValue', value: '30' },
                     },
                   ],
                   selectionSet: {
@@ -16644,7 +16700,7 @@ export const UsersContentDataFragmentDoc = {
                                                     },
                                                     value: {
                                                       kind: 'IntValue',
-                                                      value: '25',
+                                                      value: '50',
                                                     },
                                                   },
                                                 ],
@@ -21445,6 +21501,132 @@ export const FetchUsersByTagIdsDocument = {
 } as unknown as DocumentNode<
   FetchUsersByTagIdsQuery,
   FetchUsersByTagIdsQueryVariables
+>;
+export const FetchUsersForOrcidSyncDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchUsersForOrcidSync' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UsersOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'UsersFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'usersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchUsersForOrcidSyncQuery,
+  FetchUsersForOrcidSyncQueryVariables
 >;
 export const FetchWorkingGroupNetworkDocument = {
   kind: 'Document',

@@ -147,6 +147,40 @@ export class UserContentfulDataProvider implements UserDataProvider {
     return usersCollection || { total: 0, items: [] };
   }
 
+  async fetchForOrcidSync(options: gp2Model.FetchUsersOptions) {
+    const { take = 8, skip = 0 } = options;
+    const where = generateFetchQueryFilter(options, []);
+    logger.debug(
+      `fetch users for ORCID sync where: ${JSON.stringify(
+        where,
+        undefined,
+        2,
+      )}`,
+    );
+
+    const { usersCollection } = await this.graphQLClient.request<
+      gp2Contentful.FetchUsersForOrcidSyncQuery,
+      gp2Contentful.FetchUsersForOrcidSyncQueryVariables
+    >(gp2Contentful.FETCH_USERS_FOR_ORCID_SYNC, {
+      limit: take,
+      skip,
+      where,
+      order: [gp2Contentful.UsersOrder.SysFirstPublishedAtDesc],
+    });
+
+    const items = usersCollection?.items || [];
+    return {
+      total: usersCollection?.total || 0,
+      items: items
+        .filter((user): user is NonNullable<typeof user> => user !== null)
+        .map((user) => ({
+          id: user.sys.id,
+          email: user.email || '',
+          orcid: user.orcid || '',
+        })),
+    };
+  }
+
   async create(data: gp2Model.UserCreateDataObject) {
     const fields = cleanUser(data);
     const environment = await this.getRestClient();

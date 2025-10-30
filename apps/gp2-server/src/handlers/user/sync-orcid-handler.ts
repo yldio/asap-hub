@@ -25,7 +25,11 @@ export const syncOrcidUserHandler =
       );
       return;
     }
-    await users.syncOrcidProfile(resourceId, undefined);
+    await users.syncOrcidProfile(
+      resourceId,
+      userResponse.email,
+      userResponse.orcid,
+    );
   };
 
 const contentfulGraphQLClient = getContentfulGraphQLClientFactory();

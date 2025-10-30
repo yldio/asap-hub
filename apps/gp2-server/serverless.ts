@@ -24,6 +24,9 @@ import assert from 'assert';
   assert.ok(process.env[env], `${env} not defined`);
 });
 
+// Optional environment variables
+const slackWebhook = process.env.SLACK_WEBHOOK || '';
+
 const stage = process.env.SLS_STAGE!;
 assert.ok(
   stage === 'dev' || stage === 'production' || !isNaN(Number.parseInt(stage)),
@@ -48,7 +51,6 @@ const contentfulSpaceId = process.env.CONTENTFUL_SPACE_ID!;
 const contentfulWebhookAuthenticationToken =
   process.env.CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const openaiApiKey = process.env.OPENAI_API_KEY!;
-const slackWebhook = process.env.SLACK_WEBHOOK!;
 
 if (stage === 'dev' || stage === 'production') {
   ['SENTRY_DSN_API', 'SENTRY_DSN_PUBLIC_API', 'SENTRY_DSN_HANDLERS'].forEach(
@@ -303,6 +305,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SLACK_WEBHOOK: slackWebhook,
+        ENVIRONMENT: '${env:SLS_STAGE}',
       },
     },
     apiHandler: {

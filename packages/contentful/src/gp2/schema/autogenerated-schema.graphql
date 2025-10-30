@@ -4,6 +4,21 @@ schema {
 
 directive @contentSourceMaps on QUERY
 
+directive @delegatedResourceLink(contentTypeId: String, field: JSON) on FIELD_DEFINITION | OBJECT
+
+directive @enumMapper(value: JSON) on ENUM_VALUE
+
+directive @featureFlag(featureName: String) on FIELD
+
+directive @fieldResolver(data: JSON, kind: String) on FIELD_DEFINITION
+
+"Indicates exactly one field must be supplied and this field must not be `null`."
+directive @oneOf on INPUT_OBJECT
+
+directive @timeline(where: TimelineFilterInput!) on QUERY
+
+directive @typeIdentifier(contentTypeId: String) on OBJECT
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements)"""
 type Announcements implements Entry & _Node {
   _id: ID!
@@ -385,10 +400,26 @@ enum CalendarsOrder {
 }
 
 type ContentfulMetadata {
+  concepts: [TaxonomyConcept]!
   tags: [ContentfulTag]!
 }
 
+input ContentfulMetadataConceptsDescendantsFilter {
+  id_contains_all: [String]
+  id_contains_none: [String]
+  id_contains_some: [String]
+}
+
+input ContentfulMetadataConceptsFilter {
+  descendants: ContentfulMetadataConceptsDescendantsFilter
+  id_contains_all: [String]
+  id_contains_none: [String]
+  id_contains_some: [String]
+}
+
 input ContentfulMetadataFilter {
+  concepts: ContentfulMetadataConceptsFilter
+  concepts_exists: Boolean
   tags: ContentfulMetadataTagsFilter
   tags_exists: Boolean
 }
@@ -1439,7 +1470,7 @@ enum ExternalUsersOrder {
   sys_publishedVersion_DESC
 }
 
-"""Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide)"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide)"""
 type Guide implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -1613,6 +1644,7 @@ enum GuideOrder {
 scalar HexColor
 
 enum ImageFormat {
+  """AVIF image format."""
   AVIF
   """JPG image format."""
   JPG
@@ -1795,7 +1827,7 @@ enum LatestStatsOrder {
   sys_publishedVersion_DESC
 }
 
-"""Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media)"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media)"""
 type Media implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -1842,7 +1874,7 @@ enum MediaOrder {
   url_DESC
 }
 
-"""Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration)"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration)"""
 type Migration implements Entry & _Node {
   _id: ID!
   contentTypeId(locale: String): String
@@ -2026,7 +2058,7 @@ enum MilestonesOrder {
   title_DESC
 }
 
-"""Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)"""
 type News implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -3325,6 +3357,7 @@ scalar Quality
 
 type Query {
   _node(id: ID!, locale: String, preview: Boolean): _Node
+  _nodes(ids: [ID!]!, locale: String, preview: Boolean): [_Node]!
   announcements(id: String!, locale: String, preview: Boolean): Announcements
   announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): AnnouncementsCollection
   asset(id: String!, locale: String, preview: Boolean): Asset
@@ -3857,6 +3890,21 @@ enum TagsOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+"""
+Represents a taxonomy concept entity for finding and organizing content easily.
+        Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-concepts
+"""
+type TaxonomyConcept {
+  id: String
+}
+
+input TimelineFilterInput {
+  """Preview content starting from a given release date"""
+  release_lte: String
+  """Preview content starting from a given timestamp"""
+  timestamp_lte: DateTime
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users)"""

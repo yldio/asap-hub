@@ -227,3 +227,23 @@ export const FETCH_USERS_BY_TAG_IDS = gql`
     }
   }
 `;
+
+export const FETCH_USERS_FOR_ORCID_SYNC = gql`
+  query FetchUsersForOrcidSync(
+    $limit: Int
+    $skip: Int
+    $order: [UsersOrder]
+    $where: UsersFilter
+  ) {
+    usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
+      total
+      items {
+        sys {
+          id
+        }
+        email
+        orcid
+      }
+    }
+  }
+`;

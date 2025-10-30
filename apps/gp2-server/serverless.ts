@@ -24,6 +24,9 @@ import assert from 'assert';
   assert.ok(process.env[env], `${env} not defined`);
 });
 
+// Optional environment variables
+const slackWebhook = process.env.SLACK_WEBHOOK || '';
+
 const stage = process.env.SLS_STAGE!;
 assert.ok(
   stage === 'dev' || stage === 'production' || !isNaN(Number.parseInt(stage)),
@@ -253,6 +256,8 @@ const serverlessConfig: AWS = {
       bundle: true,
       concurrency: 8,
     },
+    apiGateway5xxTopic:
+      '${self:service}-${self:provider.stage}-topic-api-gateway-5xx',
     s3Sync: [
       {
         bucketName: '${self:service}-${self:provider.stage}-gp2-frontend',
@@ -286,6 +291,21 @@ const serverlessConfig: AWS = {
       environment: {
         APP_ORIGIN: appUrl,
         SENTRY_DSN: sentryDsnPublicApi,
+      },
+    },
+    sendSlackAlert: {
+      handler: './src/handlers/send-slack-alert.handler',
+      events: [
+        {
+          sns: {
+            arn: { Ref: 'TopicCloudwatchAlarm' },
+            topicName: '${self:custom.apiGateway5xxTopic}',
+          },
+        },
+      ],
+      environment: {
+        SLACK_WEBHOOK: slackWebhook,
+        ENVIRONMENT: '${env:SLS_STAGE}',
       },
     },
     apiHandler: {
@@ -1622,6 +1642,41 @@ const serverlessConfig: AWS = {
           QueueName:
             '${self:service}-${self:provider.stage}-invite-user-queue-dlq',
           MessageRetentionPeriod: 1209600, // 14 days
+        },
+      },
+      ApiGatewayAlarm5xx: {
+        Type: 'AWS::CloudWatch::Alarm',
+        Properties: {
+          AlarmDescription: '5xx errors detected at API Gateway',
+          Namespace: 'AWS/ApiGateway',
+          MetricName: '5xx',
+          Statistic: 'Sum',
+          Threshold: 0,
+          ComparisonOperator: 'GreaterThanThreshold',
+          EvaluationPeriods: 1,
+          Period: 60,
+          AlarmActions: [{ Ref: 'TopicCloudwatchAlarm' }],
+          TreatMissingData: 'notBreaching',
+          Dimensions: [
+            {
+              Name: 'ApiId',
+              Value: {
+                Ref: 'HttpApi',
+              },
+            },
+            {
+              Name: 'Stage',
+              Value: {
+                Ref: 'HttpApiStage',
+              },
+            },
+          ],
+        },
+      },
+      TopicCloudwatchAlarm: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: '${self:custom.apiGateway5xxTopic}',
         },
       },
     },

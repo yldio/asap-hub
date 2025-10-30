@@ -105,25 +105,27 @@ export default class UserController {
     });
   }
 
+  async fetchForOrcidSync(options: gp2.FetchUsersOptions) {
+    return this.userDataProvider.fetchForOrcidSync({
+      ...options,
+      filter: {
+        ...options.filter,
+        onlyOnboarded: options.filter?.onlyOnboarded ?? true,
+      },
+    });
+  }
+
   async syncOrcidProfile(
     id: string,
-    cachedUser: gp2.UserResponse | undefined = undefined,
+    email: string,
+    orcid: string,
   ): Promise<gp2.UserResponse> {
-    let fetchedUser;
-    if (!cachedUser) {
-      fetchedUser = await this.fetchById(id);
-    }
-
-    const user = cachedUser || (fetchedUser as gp2.UserResponse);
-    logger.debug(user.orcid, 'ORCID');
-    const [error, res] = await Intercept(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      fetchOrcidProfile(user!.orcid!),
-    );
+    logger.debug(orcid, 'ORCID');
+    const [error, res] = await Intercept(fetchOrcidProfile(orcid));
     logger.debug(res, 'response');
     logger.debug(error, 'error');
     const updateToUser: gp2.UserUpdateDataObject = {
-      email: user.email,
+      email,
       orcidLastSyncDate: new Date().toISOString(),
     };
     if (!error && isValidOrcidResponse(res)) {
@@ -137,7 +139,7 @@ export default class UserController {
       logger.warn(error, 'Failed to sync ORCID profile');
     }
 
-    return this.update(user.id, updateToUser);
+    return this.update(id, updateToUser);
   }
 
   private async queryByCode(code: string) {

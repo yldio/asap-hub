@@ -19511,9 +19511,9 @@ __metadata:
   linkType: hard
 
 "@types/async@npm:^3":
-  version: 3.2.24
-  resolution: "@types/async@npm:3.2.24"
-  checksum: e52ee5e9b6e4354aba709551f1777080b16c07d91632ef2d3d6542ea838c84fae5a2811015327dd908ce7dc810daacc564ab99b9a5bc22e4f3f86819461e0970
+  version: 3.2.25
+  resolution: "@types/async@npm:3.2.25"
+  checksum: e129a3dbcec94af6fe8ad4e9ae283e283b5cccb87db9a674ee63e103a469050cf1bac51bacb62491f2d6f6bf53b7306efe5622bb1064dd2721c5107e4cd4710c
   languageName: node
   linkType: hard
 

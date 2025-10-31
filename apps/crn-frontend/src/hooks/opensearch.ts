@@ -4,8 +4,14 @@ import {
   PreliminaryDataSharingDataObject,
   PreprintComplianceOpensearchResponse,
   PublicationComplianceOpensearchResponse,
+  UserProductivityPerformanceDataObject,
+  UserProductivityResponse,
 } from '@asap-hub/model';
 import { useRecoilValue } from 'recoil';
+import {
+  getUserProductivity,
+  getUserProductivityPerformance,
+} from '../analytics/productivity/api';
 import { getPreliminaryDataSharing } from '../analytics/collaboration/api';
 import { getMeetingRepAttendance } from '../analytics/engagement/api';
 import { getAnalyticsOSChampion } from '../analytics/leadership/api';
@@ -13,10 +19,13 @@ import {
   getPublicationCompliance,
   getPreprintCompliance,
 } from '../analytics/open-science/api';
-import { OpensearchClient } from '../analytics/utils/opensearch';
+import {
+  OpensearchClient,
+  OpensearchIndex,
+} from '../analytics/utils/opensearch';
 import { authorizationState } from '../auth/state';
 
-export const useAnalyticsOpensearch = <T>(index: string) => {
+export const useAnalyticsOpensearch = <T>(index: OpensearchIndex) => {
   const authorization = useRecoilValue(authorizationState);
   const client = new OpensearchClient<T>(index, authorization);
   return {
@@ -30,6 +39,8 @@ export const opensearchMetrics = [
   'os-champion',
   'attendance',
   'preliminary-data-sharing',
+  'user-productivity',
+  'user-productivity-performance',
 ] as const;
 
 export type OpensearchMetric = (typeof opensearchMetrics)[number];
@@ -90,6 +101,27 @@ export const useOpensearchMetrics = () => {
         authorization,
       );
       return getPreliminaryDataSharing(client, paginationParams);
+    },
+
+    getUserProductivity(
+      paginationParams: Parameters<typeof getUserProductivity>[1],
+    ) {
+      const client = new OpensearchClient<UserProductivityResponse>(
+        'user-productivity',
+        authorization,
+      );
+      return getUserProductivity(client, paginationParams);
+    },
+
+    getUserProductivityPerformance(
+      paginationParams: Parameters<typeof getUserProductivityPerformance>[1],
+    ) {
+      const client =
+        new OpensearchClient<UserProductivityPerformanceDataObject>(
+          'user-productivity-performance',
+          authorization,
+        );
+      return getUserProductivityPerformance(client, paginationParams);
     },
   } as const;
 };

@@ -5,8 +5,8 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { userProductivityPerformance } from '@asap-hub/fixtures';
 import {
-  ListUserProductivityAlgoliaResponse,
-  UserProductivityAlgoliaResponse,
+  ListUserProductivityResponse,
+  UserProductivityResponse,
 } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
@@ -41,7 +41,7 @@ const mockGetUserProductivityPerformance =
 
 const mockSetSort = jest.fn();
 
-const userTeam: UserProductivityAlgoliaResponse['teams'][number] = {
+const userTeam: UserProductivityResponse['teams'][number] = {
   id: '1',
   team: 'Team A',
   isTeamInactive: false,
@@ -49,12 +49,11 @@ const userTeam: UserProductivityAlgoliaResponse['teams'][number] = {
   role: 'Collaborating PI',
 };
 
-const userProductivity: ListUserProductivityAlgoliaResponse = {
+const userProductivity: ListUserProductivityResponse = {
   total: 2,
   items: [
     {
       id: '1',
-      objectID: '1-user-productivity-30d',
       name: 'Ted Mosby',
       isAlumni: false,
       teams: [userTeam],
@@ -64,7 +63,6 @@ const userProductivity: ListUserProductivityAlgoliaResponse = {
     },
     {
       id: '2',
-      objectID: '2-user-productivity-30d',
       name: 'Robin Scherbatsky',
       isAlumni: false,
       teams: [{ ...userTeam, role: 'Key Personnel' }],

@@ -8,10 +8,10 @@ import {
   TeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
   UserCollaborationPerformance,
-  UserProductivityAlgoliaResponse,
   UserProductivityPerformance,
   PreliminaryDataSharingDataObject,
   ListPreliminaryDataSharingResponse,
+  UserProductivityResponse,
 } from '@asap-hub/model';
 
 export const teamLeadershipResponse: AnalyticsTeamLeadershipResponse = {
@@ -146,9 +146,8 @@ export const teamProductivityPerformance: TeamProductivityPerformance = {
   },
 };
 
-export const userProductivityResponse: UserProductivityAlgoliaResponse = {
+export const userProductivityResponse: UserProductivityResponse = {
   id: '1',
-  objectID: '1-user-productivity-30d',
   name: 'Test User',
   isAlumni: false,
   teams: [

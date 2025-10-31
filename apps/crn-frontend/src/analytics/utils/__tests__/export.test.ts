@@ -47,11 +47,11 @@ describe('getAllData', () => {
     const mockGetResults = jest
       .fn()
       .mockResolvedValueOnce({
-        total: 100,
+        total: 600,
         items: [{ id: 1 }, { id: 2 }, { id: 3 }],
       })
       .mockResolvedValueOnce({
-        total: 100,
+        total: 600,
         items: [{ id: 4 }, { id: 5 }, { id: 6 }],
       })
       .mockResolvedValueOnce(undefined);
@@ -96,6 +96,8 @@ describe('downloadAnalyticsXLSX', () => {
   } as unknown as AlgoliaSearchClient<'analytics'>;
 
   const mockOpensearchMetrics: jest.Mocked<OpensearchMetricsFacade> = {
+    getUserProductivity: jest.fn(),
+    getUserProductivityPerformance: jest.fn(),
     getPublicationCompliance: jest.fn(),
     getPreprintCompliance: jest.fn(),
     getAnalyticsOSChampion: jest.fn(),
@@ -298,6 +300,7 @@ describe('downloadAnalyticsXLSX', () => {
     await downloadAnalyticsXLSX({
       algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: false,
     })(
       'current-year',
       new Set([
@@ -666,6 +669,7 @@ describe('downloadAnalyticsXLSX', () => {
     await downloadAnalyticsXLSX({
       algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
     })(
       'all',
       new Set([
@@ -685,7 +689,7 @@ describe('downloadAnalyticsXLSX', () => {
         timeRange: 'all',
         tags: [],
         currentPage: 0,
-        pageSize: 50,
+        pageSize: 200,
         sort: 'team_asc',
       },
     );
@@ -694,7 +698,7 @@ describe('downloadAnalyticsXLSX', () => {
       tags: [],
       timeRange: 'all',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
       sort: 'team_asc',
     });
 
@@ -704,14 +708,14 @@ describe('downloadAnalyticsXLSX', () => {
       tags: [],
       timeRange: 'all',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
     });
 
     expect(mockOpensearchMetrics.getMeetingRepAttendance).toHaveBeenCalledWith({
       tags: [],
       timeRange: 'all',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
       sort: 'team_asc',
     });
 
@@ -719,7 +723,7 @@ describe('downloadAnalyticsXLSX', () => {
       tags: [],
       timeRange: 'all',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
       sort: 'team_asc',
     });
 
@@ -839,6 +843,7 @@ describe('downloadAnalyticsXLSX', () => {
     await downloadAnalyticsXLSX({
       algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
     })(
       'last-year',
       new Set([
@@ -865,6 +870,7 @@ describe('downloadAnalyticsXLSX', () => {
     await downloadAnalyticsXLSX({
       algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
     })(
       'last-year',
       new Set([
@@ -880,16 +886,124 @@ describe('downloadAnalyticsXLSX', () => {
       tags: [],
       timeRange: 'last-year',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
     });
 
     expect(mockOpensearchMetrics.getMeetingRepAttendance).toHaveBeenCalledWith({
       tags: [],
       timeRange: 'last-year',
       currentPage: 0,
-      pageSize: 50,
+      pageSize: 200,
       sort: 'team_asc',
     });
+  });
+
+  it('should process user-productivity with OpenSearch when flag is enabled', async () => {
+    // Mock OpenSearch user productivity performance response
+    mockOpensearchMetrics.getUserProductivityPerformance.mockResolvedValue({
+      asapOutput: {
+        belowAverageMin: 0,
+        belowAverageMax: 5,
+        averageMin: 5,
+        averageMax: 10,
+        aboveAverageMin: 10,
+        aboveAverageMax: 20,
+      },
+      asapPublicOutput: {
+        belowAverageMin: 0,
+        belowAverageMax: 3,
+        averageMin: 3,
+        averageMax: 7,
+        aboveAverageMin: 7,
+        aboveAverageMax: 15,
+      },
+      ratio: {
+        belowAverageMin: 0,
+        belowAverageMax: 0.5,
+        averageMin: 0.5,
+        averageMax: 0.75,
+        aboveAverageMin: 0.75,
+        aboveAverageMax: 1.0,
+      },
+    });
+
+    // Mock OpenSearch user productivity data response
+    mockOpensearchMetrics.getUserProductivity.mockResolvedValue({
+      items: [
+        {
+          id: 'user-1',
+          name: 'Alice Johnson',
+          isAlumni: false,
+          teams: [
+            {
+              id: 'team-1',
+              team: 'Team Alpha',
+              role: 'Lead PI (Core Leadership)',
+              isTeamInactive: false,
+              isUserInactiveOnTeam: false,
+            },
+          ],
+          asapOutput: 12,
+          asapPublicOutput: 9,
+          ratio: 0.75,
+        },
+      ],
+      total: 1,
+    });
+
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
+    })('90d', new Set(['user-productivity']) as Set<MetricExportKeys>);
+
+    // Verify getUserProductivityPerformance was called with correct parameters
+    expect(
+      mockOpensearchMetrics.getUserProductivityPerformance,
+    ).toHaveBeenCalledWith({
+      timeRange: '90d',
+      documentCategory: 'all',
+    });
+
+    // Verify getUserProductivity was called with correct parameters
+    expect(mockOpensearchMetrics.getUserProductivity).toHaveBeenCalledWith({
+      timeRange: '90d',
+      documentCategory: 'all',
+      sort: 'team_asc',
+      tags: [],
+      currentPage: 0,
+      pageSize: 200,
+    });
+
+    // Verify worksheet was created with transformed data
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([
+      {
+        user: 'Alice Johnson',
+        status: 'Active',
+        teamA: 'Team Alpha',
+        roleA: 'Lead PI (Core Leadership)',
+        teamB: '',
+        roleB: '',
+        ASAPOutputAverage: 'Above',
+        ASAPOutputValue: 12,
+        ASAPPublicOutputAverage: 'Above',
+        ASAPPublicOutputValue: 9,
+        ratio: 0.75,
+      },
+    ]);
+
+    // Verify worksheet was appended with correct sheet name
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'User Productivity',
+    );
+
+    // Verify workbook was written
+    expect(XLSX.writeFile).toHaveBeenCalledWith(
+      'workbook',
+      expect.stringContaining('crn-analytics-90d'),
+    );
   });
 });
 

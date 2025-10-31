@@ -55,6 +55,7 @@ const Routes = () => {
   const handleDownload = downloadAnalyticsXLSX({
     algoliaClient: client,
     opensearchMetrics,
+    opensearchMetricsFlag: isEnabled('OPENSEARCH_METRICS'),
   });
 
   return (

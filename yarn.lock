@@ -19473,12 +19473,12 @@ __metadata:
   linkType: hard
 
 "@types/apicache@npm:^1":
-  version: 1.6.6
-  resolution: "@types/apicache@npm:1.6.6"
+  version: 1.6.8
+  resolution: "@types/apicache@npm:1.6.8"
   dependencies:
     "@types/express": "*"
     "@types/redis": ^2.8.0
-  checksum: 7e6e9f94cf9d806a9d37094327f7f02001647a4c6a3efe1b19274fcbadb5843a8250def99d353a809890563ed99e485bc47b23e2bfd29c278ea0c12aeec5c44b
+  checksum: bdb813a24d36a6adaefe6b5d8b95d4fce76972c0245e34d8794605aa1b13104bdaeeaaaf5d0bc8166cb02a5ad1a9e7b56033a4a26103f7baae1e399d1844e2b6
   languageName: node
   linkType: hard
 

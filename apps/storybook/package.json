@@ -15,6 +15,7 @@
   "dependencies": {
     "@chakra-ui/react": "^3.28.0",
     "@emotion/react": "^11.14.0",
+    "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.3",
     "@storybook/addon-themes": "^10.0.2",
     "@tailwindcss/vite": "^4.1.16",

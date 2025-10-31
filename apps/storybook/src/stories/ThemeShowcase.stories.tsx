@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Box, Button, Heading, Text, Stack, HStack } from '@chakra-ui/react'
+import { Box, Button, Heading, Text, Stack, HStack, ChakraProvider } from '@chakra-ui/react'
+import { customSystem } from '@/lib/chakra-theme'
 
 const ThemeShowcase = () => {
   return (
@@ -61,11 +62,18 @@ const ThemeShowcase = () => {
 }
 
 const meta: Meta<typeof ThemeShowcase> = {
-  title: 'Theme/Showcase',
+  title: 'Chakra UI/Showcase',
   component: ThemeShowcase,
   parameters: {
     layout: 'fullscreen',
   },
+  decorators: [
+    (Story) => (
+      <ChakraProvider value={customSystem}>
+        <Story />
+      </ChakraProvider>
+    ),
+  ],
 }
 
 export default meta

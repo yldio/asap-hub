@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Button } from '@chakra-ui/react'
+import { Button, ChakraProvider } from '@chakra-ui/react'
+import { customSystem } from '../lib/chakra-theme'
 
 const meta: Meta<typeof Button> = {
   title: 'Chakra UI/Button',
@@ -7,7 +8,13 @@ const meta: Meta<typeof Button> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <ChakraProvider value={customSystem}>
+        <Story />
+      </ChakraProvider>
+    ),
+  ],
 }
 
 export default meta

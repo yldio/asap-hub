@@ -1,4 +1,5 @@
 import { pixels } from '@asap-hub/react-components';
+import { layoutContentStyles } from '../layout';
 
 const { rem } = pixels;
 
@@ -40,9 +41,7 @@ const components = {
     },
   },
   EventPage: {
-    containerStyles: {
-      padding: 0,
-    },
+    containerStyles: layoutContentStyles,
   },
   EditModal: {
     bodyStyles: {

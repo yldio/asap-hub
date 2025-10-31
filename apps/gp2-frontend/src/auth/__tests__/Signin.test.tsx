@@ -1,7 +1,8 @@
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { generateKeyPairSync } from 'crypto';
 import { createMemoryHistory, History } from 'history';
-import { JWK, JWT } from 'jose';
+import { sign } from 'jsonwebtoken';
 import { useEffect } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
 
@@ -44,6 +45,12 @@ beforeEach(() => {
   mockGetLocation.mockReturnValue(new URL('http://localhost/page?search#hash'));
 });
 
+const { privateKey } = generateKeyPairSync('rsa', {
+  modulusLength: 2048,
+  publicKeyEncoding: { type: 'spki', format: 'pem' },
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+});
+
 let nonce = '';
 beforeEach(() => {
   nonce = '';
@@ -58,13 +65,17 @@ beforeEach(() => {
     .post('/oauth/token')
     .reply(200, (_uri, _body, cb) =>
       cb(null, {
-        id_token: JWT.sign({ nonce }, JWK.generateSync('RSA'), {
-          algorithm: 'RS256',
-          subject: 'auth0|42',
-          audience: 'client_id',
-          issuer: 'https://auth.example.com/',
-          expiresIn: '24h',
-        }),
+        id_token: sign(
+          {
+            nonce,
+            sub: 'auth0|42',
+            aud: 'client_id',
+            iss: 'https://auth.example.com/',
+            exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
+          },
+          privateKey,
+          { algorithm: 'RS256' },
+        ),
       }),
     );
 });

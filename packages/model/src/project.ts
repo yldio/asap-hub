@@ -65,3 +65,9 @@ export type Milestone = {
   readonly link?: string;
 };
 
+// Grant information types
+export type GrantInfo = {
+  readonly title: string;
+  readonly description: string;
+  readonly proposalURL?: string;
+};

@@ -48,3 +48,20 @@ export type TraineeProject = BaseProject & {
 };
 
 export type Project = DiscoveryProject | ResourceProject | TraineeProject;
+
+// Milestone types
+export type MilestoneStatus =
+  | 'Complete'
+  | 'In Progress'
+  | 'Pending'
+  | 'Incomplete'
+  | 'Not Started';
+
+export type Milestone = {
+  readonly id: string;
+  readonly title: string;
+  readonly description: string;
+  readonly status: MilestoneStatus;
+  readonly link?: string;
+};
+

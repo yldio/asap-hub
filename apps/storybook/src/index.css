@@ -285,3 +285,5 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+@plugin "daisyui";

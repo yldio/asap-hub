@@ -55,6 +55,7 @@ export { default as OrcidSigninButton } from './OrcidSigninButton';
 export { default as OSChampionTableRow } from './OSChampionTableRow';
 export { default as PageControls } from './PageControls';
 export { default as PillList } from './PillList';
+export { default as ProjectDuration } from './ProjectDuration';
 export { default as ReminderItem } from './ReminderItem';
 export { default as SearchField } from './SearchField';
 export { default as SocialIcons } from './SocialIcons';

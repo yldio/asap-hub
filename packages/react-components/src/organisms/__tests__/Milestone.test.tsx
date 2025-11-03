@@ -1,6 +1,6 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Milestone as MilestoneType } from '@asap-hub/model';
+import { Milestone as MilestoneType, MilestoneStatus } from '@asap-hub/model';
 import Milestone, { getMilestoneStatusAccent } from '../Milestone';
 
 const mockMilestone: MilestoneType = {
@@ -178,6 +178,12 @@ describe('Milestone', () => {
 
     it('returns error for Not Started status', () => {
       expect(getMilestoneStatusAccent('Not Started')).toBe('error');
+    });
+
+    it('returns default for unknown status', () => {
+      expect(
+        getMilestoneStatusAccent('Unknown' as unknown as MilestoneStatus),
+      ).toBe('default');
     });
   });
 });

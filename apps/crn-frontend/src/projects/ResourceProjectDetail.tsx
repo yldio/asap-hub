@@ -79,6 +79,7 @@ const ResourceProjectDetail: FC<Record<string, never>> = () => {
   // TODO: Fetch project data from API using projectId
   const project = mockResourceProjectDetail;
 
+  // istanbul ignore next - will be covered when API integration is implemented
   if (!project) {
     return <NotFoundPage />;
   }

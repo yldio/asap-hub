@@ -120,29 +120,30 @@ type ProjectDetailHeaderProps = ProjectDetail & {
   readonly aboutHref: string;
 };
 
+export const getTeamIcon = (project: ProjectDetail) => {
+  if (project.projectType === 'Discovery') {
+    return <DiscoveryTeamIcon />;
+  }
+  if (project.projectType === 'Resource' && project.isTeamBased) {
+    return <ResourceTeamIcon />;
+  }
+  if (project.projectType === 'Resource' && !project.isTeamBased) {
+    return <ResourceMemberIcon />;
+  }
+  if (project.projectType === 'Trainee') {
+    return <TrainerIcon />;
+  }
+  return null;
+};
+
 const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
   const { pointOfContactEmail, aboutHref } = project;
-
-  const getTeamIcon = () => {
-    if (project.projectType === 'Discovery') {
-      return <DiscoveryTeamIcon />;
-    }
-    if (project.projectType === 'Resource' && project.isTeamBased) {
-      return <ResourceTeamIcon />;
-    }
-    if (project.projectType === 'Resource' && !project.isTeamBased) {
-      return <ResourceMemberIcon />;
-    }
-    if (project.projectType === 'Trainee') {
-      return <TrainerIcon />;
-    }
-    return null;
-  };
 
   const getMemberIcon = () => {
     if (project.projectType === 'Trainee') {
       return <MemberIcon />;
     }
+    // istanbul ignore next - only used for Trainee projects
     return null;
   };
 
@@ -237,7 +238,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
         {/* Team/Members Info */}
         {project.projectType === 'Discovery' && (
           <div css={metadataRowStyles}>
-            <span css={iconStyles}>{getTeamIcon()}</span>
+            <span css={iconStyles}>{getTeamIcon(project)}</span>
             {project.teamId ? (
               <Link href={`/teams/${project.teamId}`}>
                 <span css={teamLinkStyles}>{project.teamName}</span>
@@ -258,7 +259,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
           project.isTeamBased &&
           project.teamName && (
             <div css={metadataRowStyles}>
-              <span css={iconStyles}>{getTeamIcon()}</span>
+              <span css={iconStyles}>{getTeamIcon(project)}</span>
               {project.teamId ? (
                 <Link href={`/teams/${project.teamId}`}>
                   <span css={teamLinkStyles}>{project.teamName}</span>
@@ -281,7 +282,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
           !project.isTeamBased &&
           project.members && (
             <div css={metadataRowStyles}>
-              <span css={iconStyles}>{getTeamIcon()}</span>
+              <span css={iconStyles}>{getTeamIcon(project)}</span>
               <UsersList users={project.members} separator="•" noMargin />
             </div>
           )}
@@ -289,7 +290,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
         {project.projectType === 'Trainee' && (
           <>
             <div css={metadataRowStyles}>
-              <span css={iconStyles}>{getTeamIcon()}</span>
+              <span css={iconStyles}>{getTeamIcon(project)}</span>
               <UsersList users={[project.trainer]} separator="•" noMargin />
             </div>
             <div css={metadataRowStyles}>

@@ -28,10 +28,19 @@ const durationStyles = css({
   color: neutral800.rgb,
 });
 
-const calculateDuration = (startDate: string, endDate: string): string => {
+export const calculateDuration = (
+  startDate: string,
+  endDate: string,
+): string => {
   try {
     const start = new Date(startDate);
     const end = new Date(endDate);
+
+    // Check for invalid dates
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return 'Invalid Period';
+    }
+
     const totalMonths = differenceInMonths(end, start);
 
     if (totalMonths < 12) {
@@ -41,7 +50,8 @@ const calculateDuration = (startDate: string, endDate: string): string => {
     const years = Math.floor(totalMonths / 12);
     return years === 1 ? '1 yr' : `${years} yrs`;
   } catch {
-    return '';
+    // istanbul ignore next - defensive error handling, already checked for invalid dates above
+    return 'Invalid Period';
   }
 };
 

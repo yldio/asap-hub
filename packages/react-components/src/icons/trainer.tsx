@@ -18,6 +18,7 @@ const TrainerIcon: React.FC<TrainerIconProps> = ({
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Trainer Icon</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

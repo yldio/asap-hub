@@ -1,5 +1,45 @@
 import { render } from '@testing-library/react';
-import ProjectDuration from '../ProjectDuration';
+import ProjectDuration, { calculateDuration } from '../ProjectDuration';
+
+describe('calculateDuration', () => {
+  it('returns months when less than 12 months', () => {
+    expect(calculateDuration('2023-01-15', '2023-06-15')).toBe('5 mos');
+    expect(calculateDuration('2023-01-15', '2023-11-15')).toBe('10 mos');
+  });
+
+  it('returns "1 yr" for exactly 12 months', () => {
+    expect(calculateDuration('2023-01-15', '2024-01-15')).toBe('1 yr');
+  });
+
+  it('returns "yrs" (plural) for more than 12 months', () => {
+    expect(calculateDuration('2023-01-15', '2025-01-15')).toBe('2 yrs');
+    expect(calculateDuration('2020-01-15', '2025-01-15')).toBe('5 yrs');
+  });
+
+  it('returns "Invalid Period" for invalid start date', () => {
+    expect(calculateDuration('invalid-date', '2024-01-15')).toBe(
+      'Invalid Period',
+    );
+  });
+
+  it('returns "Invalid Period" for invalid end date', () => {
+    expect(calculateDuration('2023-01-15', 'invalid-date')).toBe(
+      'Invalid Period',
+    );
+  });
+
+  it('returns "Invalid Period" for both invalid dates', () => {
+    expect(calculateDuration('invalid', 'also-invalid')).toBe('Invalid Period');
+  });
+
+  it('returns "Invalid Period" for empty strings', () => {
+    expect(calculateDuration('', '')).toBe('Invalid Period');
+  });
+
+  it('handles edge case of 0 months', () => {
+    expect(calculateDuration('2023-01-15', '2023-01-20')).toBe('0 mos');
+  });
+});
 
 describe('ProjectDuration', () => {
   it('renders start and end dates', () => {
@@ -75,6 +115,7 @@ describe('ProjectDuration', () => {
     );
     // Component should still render without crashing
     expect(container).toBeInTheDocument();
+    expect(container).toHaveTextContent('Invalid Period');
   });
 
   it('renders the complete structure with dates and duration', () => {

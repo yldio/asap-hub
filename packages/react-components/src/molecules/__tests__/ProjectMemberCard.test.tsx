@@ -14,7 +14,7 @@ const mockMember: ProjectMember = {
 
 describe('ProjectMemberCard', () => {
   it('renders member name as a link', () => {
-    render(<ProjectMemberCard member={mockMember} showTeamInfo={false} />);
+    render(<ProjectMemberCard member={mockMember} />);
     const nameLink = screen.getByRole('link', { name: mockMember.displayName });
     expect(nameLink).toBeInTheDocument();
     expect(nameLink).toHaveAttribute('href', '#');

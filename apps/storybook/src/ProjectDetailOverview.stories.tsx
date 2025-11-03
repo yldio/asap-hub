@@ -7,14 +7,14 @@ export default {
 };
 
 const originalGrantData: GrantInfo = {
-  title: 'Understanding the Genetic Basis of Parkinson\'s Disease',
+  title: "Understanding the Genetic Basis of Parkinson's Disease",
   description:
-    'This comprehensive research project aims to identify novel genetic markers associated with Parkinson\'s disease through whole-genome sequencing of diverse patient populations. The study will analyze samples from over 5,000 participants across multiple demographic groups to understand disease progression patterns and potential therapeutic targets. Our multidisciplinary team will employ cutting-edge bioinformatics tools and collaborate with leading research institutions worldwide.',
+    "This comprehensive research project aims to identify novel genetic markers associated with Parkinson's disease through whole-genome sequencing of diverse patient populations. The study will analyze samples from over 5,000 participants across multiple demographic groups to understand disease progression patterns and potential therapeutic targets. Our multidisciplinary team will employ cutting-edge bioinformatics tools and collaborate with leading research institutions worldwide.",
   proposalURL: 'https://example.com/proposal-original.pdf',
 };
 
 const supplementGrantData: GrantInfo = {
-  title: 'Expanded Analysis of Parkinson\'s Disease Genetic Markers',
+  title: "Expanded Analysis of Parkinson's Disease Genetic Markers",
   description:
     'Building upon our initial findings, this supplement grant extends our research to include additional cohorts from underrepresented populations. We will conduct deep sequencing analysis on 2,000 new samples and perform functional validation of candidate genes identified in the original study. This expansion enables us to better understand genetic diversity in disease susceptibility and progression.',
   proposalURL: 'https://example.com/proposal-supplement.pdf',
@@ -80,14 +80,15 @@ export const RealWorldExample = () => (
     originalGrant={{
       title: 'Molecular Mechanisms of Alpha-Synuclein Aggregation in PD',
       description:
-        'Parkinson\'s disease (PD) is characterized by the accumulation of misfolded alpha-synuclein protein in dopaminergic neurons. This project investigates the molecular mechanisms underlying alpha-synuclein aggregation and its role in neurodegeneration. We will use advanced imaging techniques, biochemical assays, and patient-derived induced pluripotent stem cells (iPSCs) to understand how specific mutations affect protein folding and cellular toxicity. Expected outcomes include identification of therapeutic intervention points and development of novel biomarkers for early disease detection.',
+        "Parkinson's disease (PD) is characterized by the accumulation of misfolded alpha-synuclein protein in dopaminergic neurons. This project investigates the molecular mechanisms underlying alpha-synuclein aggregation and its role in neurodegeneration. We will use advanced imaging techniques, biochemical assays, and patient-derived induced pluripotent stem cells (iPSCs) to understand how specific mutations affect protein folding and cellular toxicity. Expected outcomes include identification of therapeutic intervention points and development of novel biomarkers for early disease detection.",
       proposalURL: 'https://example.com/proposals/alpha-synuclein-study.pdf',
     }}
     supplementGrant={{
       title: 'Extension: Cell-to-Cell Transmission of Alpha-Synuclein',
       description:
         'Recent evidence suggests that misfolded alpha-synuclein can spread between cells in a prion-like manner, contributing to disease progression. This supplement extends our original research to investigate the mechanisms of protein transmission and develop strategies to block this process. We will establish novel cellular models, conduct live-cell imaging studies, and test candidate therapeutic compounds that may prevent protein spreading.',
-      proposalURL: 'https://example.com/proposals/alpha-synuclein-extension.pdf',
+      proposalURL:
+        'https://example.com/proposals/alpha-synuclein-extension.pdf',
     }}
   />
 );
@@ -119,4 +120,3 @@ export const OriginalGrantOnlyHasProposal = () => (
     }}
   />
 );
-

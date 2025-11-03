@@ -91,4 +91,3 @@ describe('ProjectDuration', () => {
     expect(container).toHaveTextContent(/\)/);
   });
 });
-

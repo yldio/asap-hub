@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { steel } from '../colors';
 import { Card, Display, Link, Paragraph, TabButton } from '../atoms';
 import { TabNav } from '../molecules';
-import { mobileScreen, rem } from '../pixels';
+import { rem } from '../pixels';
 
 const tabsContainerStyles = css({
   display: 'flex',
@@ -14,13 +14,6 @@ const tabsContainerStyles = css({
 
 const tabContentStyles = css({
   paddingTop: rem(20),
-});
-
-const stretchOnMobile = css({
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
-    display: 'flex',
-    justifyContent: 'stretch',
-  },
 });
 
 const buttonContainerStyles = css({
@@ -115,4 +108,3 @@ const ProjectDetailOverview: React.FC<ProjectDetailOverviewProps> = ({
 };
 
 export default ProjectDetailOverview;
-

@@ -418,21 +418,27 @@ describe('ProjectCard - Common Features', () => {
       document.querySelectorAll('a'),
     ) as HTMLAnchorElement[];
     expect(
-      links.find((link) => link.href.includes('/projects/Discovery/project-1')),
+      links.find((link) =>
+        link.href.includes('/projects/discovery/project-1/about'),
+      ),
     ).toBeDefined();
 
     // Resource
     render(<ProjectCard {...resourceProjectTeamBasedProps} />);
     links = Array.from(document.querySelectorAll('a')) as HTMLAnchorElement[];
     expect(
-      links.find((link) => link.href.includes('/projects/Resource/project-1')),
+      links.find((link) =>
+        link.href.includes('/projects/resource/project-1/about'),
+      ),
     ).toBeDefined();
 
     // Trainee
     render(<ProjectCard {...traineeProjectProps} />);
     links = Array.from(document.querySelectorAll('a')) as HTMLAnchorElement[];
     expect(
-      links.find((link) => link.href.includes('/projects/Trainee/project-1')),
+      links.find((link) =>
+        link.href.includes('/projects/trainee/project-1/about'),
+      ),
     ).toBeDefined();
   });
 

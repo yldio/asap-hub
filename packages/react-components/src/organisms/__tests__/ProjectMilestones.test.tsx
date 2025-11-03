@@ -78,13 +78,17 @@ describe('ProjectMilestones', () => {
 
     expect(screen.queryByText('Third milestone')).not.toBeInTheDocument();
 
-    const viewMoreButton = screen.getByRole('button', { name: /Show More Milestones/i });
+    const viewMoreButton = screen.getByRole('button', {
+      name: /Show More Milestones/i,
+    });
     await userEvent.click(viewMoreButton);
 
     expect(screen.getByText('Third milestone')).toBeInTheDocument();
     expect(screen.getByText('Fourth milestone')).toBeInTheDocument();
     expect(screen.getByText('Fifth milestone')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Show Less Milestones/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Show Less Milestones/i }),
+    ).toBeInTheDocument();
   });
 
   it('uses default initialDisplayCount of 4', () => {

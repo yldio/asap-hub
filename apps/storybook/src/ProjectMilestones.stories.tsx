@@ -63,7 +63,6 @@ export const AllStatuses = () => (
   />
 );
 
-
 export const ShortDescriptions = () => (
   <ProjectMilestones
     milestones={[
@@ -146,4 +145,3 @@ export const RealWorldExample = () => (
     ]}
   />
 );
-

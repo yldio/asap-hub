@@ -78,3 +78,43 @@ export type GrantInfo = {
   readonly description: string;
   readonly proposalURL?: string;
 };
+
+// Team detail for funded teams section
+export type TeamDetail = {
+  readonly id?: string;
+  readonly name: string;
+  readonly type: string;
+  readonly researchTheme?: string;
+  readonly description: string;
+};
+
+// Extended project detail types
+export type DiscoveryProjectDetail = DiscoveryProject & {
+  readonly description: string;
+  readonly originalGrant: GrantInfo;
+  readonly supplementGrant?: GrantInfo;
+  readonly milestones?: ReadonlyArray<Milestone>;
+  readonly fundedTeam: TeamDetail;
+  readonly collaborators?: ReadonlyArray<ProjectMember>;
+};
+
+export type ResourceProjectDetail = ResourceProject & {
+  readonly description: string;
+  readonly originalGrant: GrantInfo;
+  readonly supplementGrant?: GrantInfo;
+  readonly milestones?: ReadonlyArray<Milestone>;
+  readonly fundedTeam?: TeamDetail;
+  readonly collaborators?: ReadonlyArray<ProjectMember>;
+};
+
+export type TraineeProjectDetail = TraineeProject & {
+  readonly description: string;
+  readonly originalGrant: GrantInfo;
+  readonly supplementGrant?: GrantInfo;
+  readonly milestones?: ReadonlyArray<Milestone>;
+};
+
+export type ProjectDetail =
+  | DiscoveryProjectDetail
+  | ResourceProjectDetail
+  | TraineeProjectDetail;

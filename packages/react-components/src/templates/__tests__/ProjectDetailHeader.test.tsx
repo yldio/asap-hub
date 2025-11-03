@@ -292,6 +292,7 @@ describe('ProjectDetailHeader', () => {
       expect(teamText).toBeNull();
     });
 
+    /* eslint-disable jest/no-commented-out-tests */
     // TODO: Add test for Share an Output dropdown button when it is implemented
     // it('renders Share an Output dropdown button', () => {
     //   render(
@@ -302,6 +303,7 @@ describe('ProjectDetailHeader', () => {
     //   );
     //   expect(screen.getByText('Share an Output')).toBeInTheDocument();
     // });
+    /* eslint-enable jest/no-commented-out-tests */
   });
 
   describe('Resource projects (team-based)', () => {
@@ -339,6 +341,7 @@ describe('ProjectDetailHeader', () => {
       );
     });
 
+    /* eslint-disable jest/no-commented-out-tests */
     // TODO: Add test for Share an Output dropdown button when it is implemented
     // it('does not render Share an Output button', () => {
     //   render(
@@ -349,6 +352,7 @@ describe('ProjectDetailHeader', () => {
     //   );
     //   expect(screen.queryByText('Share an Output')).not.toBeInTheDocument();
     // });
+    /* eslint-enable jest/no-commented-out-tests */
 
     it('renders team name for team-based resource projects', () => {
       render(
@@ -441,6 +445,7 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Emily Trainee')).toBeInTheDocument();
     });
 
+    /* eslint-disable jest/no-commented-out-tests */
     // TODO: Add test for Share an Output dropdown button when it is implemented
     // it('does not render Share an Output button', () => {
     //   render(
@@ -451,6 +456,7 @@ describe('ProjectDetailHeader', () => {
     //   );
     //   expect(screen.queryByText('Share an Output')).not.toBeInTheDocument();
     // });
+    /* eslint-enable jest/no-commented-out-tests */
   });
 
   describe('Duration display', () => {

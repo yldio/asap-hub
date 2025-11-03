@@ -367,13 +367,8 @@ export type TeamProductivityDataObject = {
 export type ListUserProductivityDataObject =
   ListResponse<UserProductivityDataObject>;
 export type UserProductivityResponse = UserProductivityDataObject;
-export type UserProductivityAlgoliaResponse = UserProductivityDataObject & {
-  objectID: string;
-};
 export type ListUserProductivityResponse =
   ListResponse<UserProductivityResponse>;
-export type ListUserProductivityAlgoliaResponse =
-  ListResponse<UserProductivityAlgoliaResponse>;
 
 export type ListTeamProductivityDataObject =
   ListResponse<TeamProductivityDataObject>;

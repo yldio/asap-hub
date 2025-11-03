@@ -49,6 +49,8 @@ import {
   userProductivityToCSV,
 } from '../productivity/export';
 
+const PAGE_SIZE = 200;
+
 export const getAllData = async <T>(
   getResults: ({
     currentPage,
@@ -65,10 +67,10 @@ export const getAllData = async <T>(
     // eslint-disable-next-line no-await-in-loop
     const data = await getResults({
       currentPage,
-      pageSize: 50,
+      pageSize: PAGE_SIZE,
     });
     if (data) {
-      const nbPages = data.total / 50;
+      const nbPages = data.total / PAGE_SIZE;
       allData = allData.concat(...data.items.map(transform));
       currentPage += 1;
       morePages = currentPage <= nbPages;
@@ -84,9 +86,11 @@ export const downloadAnalyticsXLSX =
   ({
     algoliaClient,
     opensearchMetrics,
+    opensearchMetricsFlag,
   }: {
     algoliaClient: AlgoliaClient<'analytics'>;
     opensearchMetrics: OpensearchMetricsFacade;
+    opensearchMetricsFlag: boolean;
   }) =>
   async (timeRange: TimeRangeOption, metrics: Set<MetricExportKeys>) => {
     const workbook = XLSX.utils.book_new();
@@ -116,24 +120,36 @@ export const downloadAnalyticsXLSX =
         metricsSheetName[metricKey],
       );
     };
-
     const metricHandlers: Record<MetricExportKeys, () => Promise<void>> = {
       'user-productivity': () =>
         processMetric(
           'user-productivity',
           () =>
-            getUserProductivityPerformance(algoliaClient, {
-              timeRange,
-              documentCategory: 'all',
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getUserProductivityPerformance({
+                  timeRange,
+                  documentCategory: 'all',
+                })
+              : getUserProductivityPerformance(algoliaClient, {
+                  timeRange,
+                  documentCategory: 'all',
+                }),
           (paginationParams) =>
-            getUserProductivity(algoliaClient, {
-              timeRange,
-              documentCategory,
-              sort,
-              tags,
-              ...paginationParams,
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getUserProductivity({
+                  timeRange,
+                  documentCategory,
+                  sort,
+                  tags,
+                  ...paginationParams,
+                })
+              : getUserProductivity(algoliaClient, {
+                  timeRange,
+                  documentCategory,
+                  sort,
+                  tags,
+                  ...paginationParams,
+                }),
           userProductivityToCSV,
         ),
       'team-productivity': () =>

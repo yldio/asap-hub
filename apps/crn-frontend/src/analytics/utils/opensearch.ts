@@ -1,5 +1,5 @@
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
-import { TimeRangeOption } from '@asap-hub/model';
+import { DocumentCategoryOption, TimeRangeOption } from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
 
 const DEFAULT_PAGE_NUMBER = 0;
@@ -58,20 +58,258 @@ interface TagSuggestionsResponse {
 
 type SearchScope = 'teams' | 'both';
 
-interface OpensearchSearchOptions {
-  currentPage?: number | null;
-  pageSize?: number | null;
-  timeRange?: TimeRangeOption;
+type OpensearchSearchOptions = {
+  currentPage: number;
+  pageSize: number;
+  timeRange: TimeRangeOption;
   searchTags: string[];
   searchScope: SearchScope;
-  fetchTags?: boolean;
-}
+  documentCategory?: DocumentCategoryOption;
+  sort?: OpensearchSort[];
+};
+
+type SortConfigOrder = 'asc' | 'desc';
+
+type SortConfigNested = {
+  path: string;
+};
+
+type OpensearchPropertySort = {
+  [id: string]: {
+    order: SortConfigOrder;
+    mode?: 'avg' | 'sum' | 'median' | 'min' | 'max';
+    nested?: SortConfigNested;
+    missing?: '_first' | '_last' | number | string;
+  };
+};
+
+type OpensearchScriptSort = {
+  _script: {
+    type: 'string';
+    script: {
+      source: string;
+      lang: 'painless';
+    };
+    order: SortConfigOrder;
+    nested?: SortConfigNested;
+  };
+};
+
+export type OpensearchSort = OpensearchScriptSort | OpensearchPropertySort;
+
+export const buildNormalizedStringSort = (options: {
+  keyword: `${string}.keyword`;
+  order: SortConfigOrder;
+  nested?: SortConfigNested;
+}): OpensearchScriptSort => ({
+  _script: {
+    type: 'string',
+    script: {
+      source: `doc['${options.keyword}'].value.toLowerCase()`,
+      lang: 'painless',
+    },
+    order: options.order,
+    ...(options.nested ? { nested: options.nested } : {}),
+  },
+});
+
+export type OpensearchIndex =
+  | 'publication-compliance'
+  | 'preprint-compliance'
+  | 'os-champion'
+  | 'attendance'
+  | 'preliminary-data-sharing'
+  | 'user-productivity'
+  | 'user-productivity-performance';
+
+type ShouldClause =
+  | {
+      term: Record<string, string>;
+    }
+  | {
+      nested: {
+        path: string;
+        query: {
+          term: Record<string, string>;
+        };
+      };
+    };
+
+type SearchQuery = {
+  query: {
+    bool:
+      | {
+          must: { term: Record<string, unknown> }[];
+        }
+      | {
+          should: ShouldClause[];
+          minimum_should_match: number;
+          must?: { term: Record<string, unknown> }[];
+        };
+  };
+  sort?: Record<string, { order: 'asc' | 'desc' }>[];
+  from: number;
+  size: number;
+};
+
+export const teamBasedRecordSearchQueryBuilder = (
+  options: OpensearchSearchOptions,
+): SearchQuery => {
+  const shouldClauses = options.searchTags.flatMap((term) => {
+    const clauses: ShouldClause[] = [
+      {
+        term: {
+          'teamName.keyword': term,
+        },
+      },
+    ];
+
+    if (options.searchScope === 'both') {
+      clauses.push({
+        nested: {
+          path: 'users',
+          query: {
+            term: {
+              'users.name.keyword': term,
+            },
+          },
+        },
+      });
+    }
+    return clauses;
+  });
+
+  const mustClauses: SearchQuery['query']['bool']['must'] = [];
+
+  mustClauses.push({
+    term: {
+      timeRange: options.timeRange,
+    },
+  });
+
+  if (options.documentCategory) {
+    mustClauses.push({
+      term: { documentCategory: options.documentCategory },
+    });
+  }
+
+  return {
+    from: options.currentPage * options.pageSize,
+    size: options.pageSize,
+    query: {
+      bool: {
+        ...(shouldClauses.length > 0
+          ? { should: shouldClauses, minimum_should_match: 1 }
+          : {}),
+        must: mustClauses,
+      },
+    },
+    sort: options.sort
+      ? options.sort
+      : [
+          // Provide a default sorting to keep existing behavior.
+          {
+            'teamName.keyword': {
+              order: 'asc',
+            },
+          },
+        ],
+  };
+};
+
+export const userBasedRecordSearchQueryBuilder = (
+  options: OpensearchSearchOptions,
+): SearchQuery => {
+  const shouldClauses = options.searchTags.flatMap((term) => {
+    const clauses: ShouldClause[] = [
+      {
+        term: {
+          'name.keyword': term,
+        },
+      },
+    ];
+
+    if (options.searchScope === 'both') {
+      clauses.push({
+        nested: {
+          path: 'teams',
+          query: {
+            term: {
+              'teams.team.keyword': term,
+            },
+          },
+        },
+      });
+    }
+    return clauses;
+  });
+
+  const mustClauses: SearchQuery['query']['bool']['must'] = [];
+
+  mustClauses.push({
+    term: {
+      timeRange: options.timeRange,
+    },
+  });
+
+  if (options.documentCategory) {
+    mustClauses.push({
+      term: { documentCategory: options.documentCategory },
+    });
+  }
+
+  return {
+    from: options.currentPage * options.pageSize,
+    size: options.pageSize,
+    query: {
+      bool: {
+        ...(shouldClauses.length > 0
+          ? { should: shouldClauses, minimum_should_match: 1 }
+          : {}),
+        must: mustClauses,
+      },
+    },
+    ...(options.sort ? { sort: options.sort } : {}),
+  };
+};
+
+export const taglessSearchQueryBuilder = (
+  options: OpensearchSearchOptions,
+): SearchQuery => ({
+  from: options.currentPage * options.pageSize,
+  size: options.pageSize,
+  query: {
+    bool: {
+      must: [
+        ...(options.timeRange
+          ? [{ term: { timeRange: options.timeRange } }]
+          : []),
+        ...(options.documentCategory
+          ? [{ term: { documentCategory: options.documentCategory } }]
+          : []),
+      ],
+    },
+  },
+});
+
+const queryBuilderByIndex: Record<
+  OpensearchIndex,
+  (options: OpensearchSearchOptions) => SearchQuery
+> = {
+  attendance: teamBasedRecordSearchQueryBuilder,
+  'os-champion': teamBasedRecordSearchQueryBuilder,
+  'preliminary-data-sharing': teamBasedRecordSearchQueryBuilder,
+  'preprint-compliance': teamBasedRecordSearchQueryBuilder,
+  'publication-compliance': teamBasedRecordSearchQueryBuilder,
+  'user-productivity': userBasedRecordSearchQueryBuilder,
+  'user-productivity-performance': taglessSearchQueryBuilder,
+};
 
 export class OpensearchClient<T> {
-  private index: string;
+  private index: OpensearchIndex;
   private authorization: string;
 
-  constructor(index: string, authorization: string) {
+  constructor(index: OpensearchIndex, authorization: string) {
     this.index = index;
     this.authorization = authorization;
   }
@@ -103,17 +341,21 @@ export class OpensearchClient<T> {
     searchTags: string[],
     currentPage: number | null,
     pageSize: number | null,
-    timeRange?: TimeRangeOption,
+    timeRange: TimeRangeOption,
     searchScope: SearchScope = 'both',
+    documentCategory?: DocumentCategoryOption,
+    sort?: OpensearchSort[],
   ): Promise<SearchResult<T>> {
-    const query = buildOpensearchQuery({
-      searchTags,
-      currentPage,
-      pageSize,
+    const searchQuery = queryBuilderByIndex[this.index]({
+      pageSize: pageSize ?? DEFAULT_PAGE_SIZE,
+      currentPage: currentPage ?? DEFAULT_PAGE_NUMBER,
       searchScope,
+      documentCategory,
       timeRange,
+      searchTags,
+      sort,
     });
-    const response = await this.request<OpensearchHitsResponse<T>>(query);
+    const response = await this.request<OpensearchHitsResponse<T>>(searchQuery);
 
     const items = (response.hits?.hits || []).map((hit: OpensearchHit<T>) => ({
       // eslint-disable-next-line no-underscore-dangle
@@ -153,34 +395,6 @@ export class OpensearchClient<T> {
     return [...(teams || []), ...(users || [])];
   }
 }
-
-const generateDefaultQuery = (page: number, size: number) => ({
-  query: {
-    match_all: {},
-  },
-  size,
-  from: page * size,
-});
-
-const generateDefaultQueryWithTimeRange = (
-  page: number,
-  size: number,
-  timeRange: TimeRangeOption,
-) => ({
-  query: {
-    bool: {
-      must: [
-        {
-          term: {
-            timeRange,
-          },
-        },
-      ],
-    },
-  },
-  size,
-  from: page * size,
-});
 
 const buildAggregationQuery = (
   searchQuery: string,
@@ -290,91 +504,4 @@ const buildDefaultAggregationQuery = (
     size: 0,
     aggs,
   };
-};
-
-const buildSearchQuery = (
-  tags: string[],
-  page: number,
-  size: number,
-  searchScope: SearchScope,
-  timeRange?: TimeRangeOption,
-) => {
-  const shouldClauses = tags.flatMap((term) => {
-    const clauses: Record<string, unknown>[] = [
-      {
-        term: {
-          'teamName.keyword': term,
-        },
-      },
-    ];
-
-    if (searchScope === 'both') {
-      clauses.push({
-        nested: {
-          path: 'users',
-          query: {
-            term: {
-              'users.name.keyword': term,
-            },
-          },
-        },
-      });
-    }
-    return clauses;
-  });
-
-  const mustClauses: Record<string, unknown>[] = [];
-
-  if (timeRange) {
-    mustClauses.push({
-      term: {
-        timeRange,
-      },
-    });
-  }
-
-  return {
-    from: page * size,
-    size,
-    query: {
-      bool: {
-        should: shouldClauses,
-        minimum_should_match: 1,
-        ...(mustClauses.length > 0 ? { must: mustClauses } : {}),
-      },
-    },
-    sort: [
-      {
-        'teamName.keyword': {
-          order: 'asc',
-        },
-      },
-    ],
-  };
-};
-
-const buildOpensearchQuery = (options: OpensearchSearchOptions) => {
-  const { currentPage, pageSize, searchTags, searchScope, timeRange } = options;
-
-  if (searchTags?.length === 0) {
-    if (timeRange) {
-      return generateDefaultQueryWithTimeRange(
-        currentPage || DEFAULT_PAGE_NUMBER,
-        pageSize || DEFAULT_PAGE_SIZE,
-        timeRange,
-      );
-    }
-    return generateDefaultQuery(
-      currentPage || DEFAULT_PAGE_NUMBER,
-      pageSize || DEFAULT_PAGE_SIZE,
-    );
-  }
-
-  return buildSearchQuery(
-    searchTags,
-    currentPage || DEFAULT_PAGE_NUMBER,
-    pageSize || DEFAULT_PAGE_SIZE,
-    searchScope,
-    timeRange,
-  );
 };

@@ -3,16 +3,22 @@ import {
   SortTeamProductivity,
   SortUserProductivity,
   TeamProductivityAlgoliaResponse,
-  UserProductivityAlgoliaResponse,
   UserProductivityPerformance,
   TeamProductivityPerformance,
+  UserProductivityResponse,
 } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
+import {
+  useAnalytics,
+  useOpensearchMetrics,
+  usePaginationParams,
+  useSearch,
+} from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAlgoliaIndexName } from '../utils/state';
 import { getTeamProductivity, getUserProductivity } from './api';
@@ -28,6 +34,7 @@ import UserProductivity from './UserProductivity';
 const Productivity = () => {
   const history = useHistory();
   const { currentPage } = usePaginationParams();
+  const { isEnabled } = useFlags();
 
   const { metric } = useParams<{ metric: 'user' | 'team' }>();
   const setMetric = (newMetric: 'user' | 'team') =>
@@ -38,6 +45,7 @@ const Productivity = () => {
   const { timeRange, documentCategory, outputType } = useAnalytics();
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
+  const opensearchMetrics = useOpensearchMetrics();
 
   const entityType =
     metric === 'user' ? 'user-productivity' : 'team-productivity';
@@ -86,7 +94,7 @@ const Productivity = () => {
 
   const exportResults = async () => {
     if (metric === 'user') {
-      return resultsToStream<UserProductivityAlgoliaResponse>(
+      return resultsToStream<UserProductivityResponse>(
         createCsvFileStream(
           `productivity_${metric}_${format(new Date(), 'MMddyy')}.csv`,
           {
@@ -94,14 +102,23 @@ const Productivity = () => {
           },
         ),
         (paginationParams) =>
-          getUserProductivity(userClient, {
-            sort: userSort,
-            timeRange,
-            documentCategory,
-            tags,
-            ...paginationParams,
-          }),
+          isEnabled('OPENSEARCH_METRICS')
+            ? opensearchMetrics.getUserProductivity({
+                sort: userSort,
+                timeRange,
+                documentCategory,
+                tags,
+                ...paginationParams,
+              })
+            : getUserProductivity(userClient, {
+                sort: userSort,
+                timeRange,
+                documentCategory,
+                tags,
+                ...paginationParams,
+              }),
         userProductivityToCSV(userPerformanceValue ?? defaultUserPerformance),
+        200,
       );
     }
 

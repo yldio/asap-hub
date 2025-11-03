@@ -9,10 +9,19 @@ const loadResourceProjects = () =>
   import(/* webpackChunkName: "Resource" */ './ResourceProjects');
 const loadTraineeProjects = () =>
   import(/* webpackChunkName: "Trainee" */ './TraineeProjects');
+const loadDiscoveryProjectDetail = () =>
+  import(/* webpackChunkName: "DiscoveryDetail" */ './DiscoveryProjectDetail');
+const loadResourceProjectDetail = () =>
+  import(/* webpackChunkName: "ResourceDetail" */ './ResourceProjectDetail');
+const loadTraineeProjectDetail = () =>
+  import(/* webpackChunkName: "TraineeDetail" */ './TraineeProjectDetail');
 
 const DiscoveryProjects = lazy(loadDiscoveryProjects);
 const ResourceProjects = lazy(loadResourceProjects);
 const TraineeProjects = lazy(loadTraineeProjects);
+const DiscoveryProjectDetail = lazy(loadDiscoveryProjectDetail);
+const ResourceProjectDetail = lazy(loadResourceProjectDetail);
+const TraineeProjectDetail = lazy(loadTraineeProjectDetail);
 
 const Projects: FC<Record<string, never>> = () => {
   useEffect(() => {
@@ -28,6 +37,18 @@ const Projects: FC<Record<string, never>> = () => {
 
   return (
     <Switch>
+      {/* Project Detail Routes - must come before list routes */}
+      <Route path={`${path}/discovery/:projectId`}>
+        <DiscoveryProjectDetail />
+      </Route>
+      <Route path={`${path}/resource/:projectId`}>
+        <ResourceProjectDetail />
+      </Route>
+      <Route path={`${path}/trainee/:projectId`}>
+        <TraineeProjectDetail />
+      </Route>
+
+      {/* Project List Routes */}
       <Route exact path={path + projects({}).discoveryProjects.template}>
         <DiscoveryProjects
           searchQuery={searchQuery}

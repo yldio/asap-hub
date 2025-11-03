@@ -140,4 +140,23 @@ describe('Projects Routes', () => {
       expect(searchBox.value).toEqual('biomarker');
     });
   });
+
+  it.each([
+    {
+      type: 'Discovery',
+      path: `${projects.template}/discovery/1/about`,
+    },
+    {
+      type: 'Resource',
+      path: `${projects.template}/resource/1/about`,
+    },
+    {
+      type: 'Trainee',
+      path: `${projects.template}/trainee/1/about`,
+    },
+  ])('renders $type project detail page', async ({ path }) => {
+    await renderProjectsPage(path);
+    // Check that we're on a detail page by looking for the Overview section
+    expect(await screen.findByText('Overview')).toBeVisible();
+  });
 });

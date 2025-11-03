@@ -1,8 +1,26 @@
-import { route } from 'typesafe-routes';
+import { route, stringParser } from 'typesafe-routes';
 
-const discoveryProjects = route('/discovery', {}, {});
-const resourceProjects = route('/resource', {}, {});
-const traineeProjects = route('/trainee', {}, {});
+const discoveryProject = (() => {
+  const about = route('/about', {}, {});
+
+  return route('/:projectId', { projectId: stringParser }, { about });
+})();
+
+const resourceProject = (() => {
+  const about = route('/about', {}, {});
+
+  return route('/:projectId', { projectId: stringParser }, { about });
+})();
+
+const traineeProject = (() => {
+  const about = route('/about', {}, {});
+
+  return route('/:projectId', { projectId: stringParser }, { about });
+})();
+
+const discoveryProjects = route('/discovery', {}, { discoveryProject });
+const resourceProjects = route('/resource', {}, { resourceProject });
+const traineeProjects = route('/trainee', {}, { traineeProject });
 
 export default route(
   '/projects',

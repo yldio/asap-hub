@@ -53,6 +53,7 @@ export { default as ProjectsPageHeader } from './ProjectsPageHeader';
 export { default as DiscoveryProjectsList } from './DiscoveryProjectsList';
 export { default as ResourceProjectsList } from './ResourceProjectsList';
 export { default as TraineeProjectsList } from './TraineeProjectsList';
+export { default as ProjectDetailHeader } from './ProjectDetailHeader';
 export { default as NewsPage } from './NewsPage';
 export { default as NewsPageBody } from './NewsPageBody';
 export { default as NewsPageHeader } from './NewsPageHeader';

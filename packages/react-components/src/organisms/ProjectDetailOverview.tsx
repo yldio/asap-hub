@@ -96,11 +96,13 @@ const ProjectDetailOverview: React.FC<ProjectDetailOverviewProps> = ({
             </div>
           </>
         ) : (
-          <ProjectDetailOverviewContent
-            title={originalGrant.title}
-            description={originalGrant.description}
-            proposalURL={originalGrant.proposalURL}
-          />
+          <div css={css({ marginTop: rem(24) })}>
+            <ProjectDetailOverviewContent
+              title={originalGrant.title}
+              description={originalGrant.description}
+              proposalURL={originalGrant.proposalURL}
+            />
+          </div>
         )}
       </div>
     </Card>

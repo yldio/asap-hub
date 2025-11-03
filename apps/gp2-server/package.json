@@ -79,7 +79,7 @@
     "@serverless/typescript": "3.38.0",
     "@types/apicache": "^1",
     "@types/apr-intercept": "workspace:*",
-    "@types/aws-lambda": "8.10.146",
+    "@types/aws-lambda": "8.10.157",
     "@types/cors": "2.8.17",
     "@types/express": "4.17.21",
     "@types/jest": "29.5.14",

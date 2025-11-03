@@ -2,8 +2,8 @@ import { ProjectMember, TeamDetail } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { Card, Headline3, Pill, TabButton } from '../atoms';
-import { lead, neutral1000, steel } from '../colors';
-import { TabNav, ProjectMembers } from '../molecules';
+import { lead, steel } from '../colors';
+import { TabNav, ProjectMembers, LinkHeadline } from '../molecules';
 import { rem } from '../pixels';
 
 const cardContentStyles = css({
@@ -30,13 +30,6 @@ const teamHeaderStyles = css({
   display: 'flex',
   gap: rem(12),
   flexWrap: 'wrap',
-});
-
-const teamNameStyles = css({
-  fontSize: rem(20),
-  fontWeight: 700,
-  color: neutral1000.rgb,
-  margin: 0,
 });
 
 const teamDescriptionStyles = css({
@@ -117,7 +110,9 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
                   <Pill noMargin>{fundedTeam.researchTheme}</Pill>
                 )}
               </div>
-              <h3 css={teamNameStyles}>{fundedTeam.name}</h3>
+              <LinkHeadline href={'#'} level={3} styleAsHeading={4} noMargin>
+                {fundedTeam.name}
+              </LinkHeadline>
               <p css={teamDescriptionStyles}>{fundedTeam.description}</p>
             </div>
           </div>

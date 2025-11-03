@@ -292,15 +292,16 @@ describe('ProjectDetailHeader', () => {
       expect(teamText).toBeNull();
     });
 
-    it('renders Share an Output dropdown button', () => {
-      render(
-        <ProjectDetailHeader
-          {...mockDiscoveryProject}
-          aboutHref="/projects/discovery/1/about"
-        />,
-      );
-      expect(screen.getByText('Share an Output')).toBeInTheDocument();
-    });
+    // TODO: Add test for Share an Output dropdown button when it is implemented
+    // it('renders Share an Output dropdown button', () => {
+    //   render(
+    //     <ProjectDetailHeader
+    //       {...mockDiscoveryProject}
+    //       aboutHref="/projects/discovery/1/about"
+    //     />,
+    //   );
+    //   expect(screen.getByText('Share an Output')).toBeInTheDocument();
+    // });
   });
 
   describe('Resource projects (team-based)', () => {
@@ -338,15 +339,16 @@ describe('ProjectDetailHeader', () => {
       );
     });
 
-    it('does not render Share an Output button', () => {
-      render(
-        <ProjectDetailHeader
-          {...mockResourceTeamProject}
-          aboutHref="/projects/resource/1/about"
-        />,
-      );
-      expect(screen.queryByText('Share an Output')).not.toBeInTheDocument();
-    });
+    // TODO: Add test for Share an Output dropdown button when it is implemented
+    // it('does not render Share an Output button', () => {
+    //   render(
+    //     <ProjectDetailHeader
+    //       {...mockResourceTeamProject}
+    //       aboutHref="/projects/resource/1/about"
+    //     />,
+    //   );
+    //   expect(screen.queryByText('Share an Output')).not.toBeInTheDocument();
+    // });
 
     it('renders team name for team-based resource projects', () => {
       render(
@@ -439,15 +441,16 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Emily Trainee')).toBeInTheDocument();
     });
 
-    it('does not render Share an Output button', () => {
-      render(
-        <ProjectDetailHeader
-          {...mockTraineeProject}
-          aboutHref="/projects/trainee/1/about"
-        />,
-      );
-      expect(screen.queryByText('Share an Output')).not.toBeInTheDocument();
-    });
+    // TODO: Add test for Share an Output dropdown button when it is implemented
+    // it('does not render Share an Output button', () => {
+    //   render(
+    //     <ProjectDetailHeader
+    //       {...mockTraineeProject}
+    //       aboutHref="/projects/trainee/1/about"
+    //     />,
+    //   );
+    //   expect(screen.queryByText('Share an Output')).not.toBeInTheDocument();
+    // });
   });
 
   describe('Duration display', () => {

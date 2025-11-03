@@ -8,12 +8,12 @@ import {
   ResourceTeamIcon,
   ResourceMemberIcon,
   MemberIcon,
-  plusIcon,
+  // plusIcon,
 } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import {
-  DropdownButton,
+  // DropdownButton,
   UsersList,
   TabNav,
   ProjectDuration,
@@ -84,6 +84,15 @@ const metadataRowStyles = css({
   gap: rem(8),
   fontSize: rem(17),
   color: lead.rgb,
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    flexDirection: 'column',
+    gap: rem(16),
+  },
+});
+const iconContainerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
 });
 
 const iconStyles = css({
@@ -108,12 +117,17 @@ const teamLinkStyles = css({
 
 const discoveryProjectDurationStyles = css({
   marginLeft: rem(16),
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    marginLeft: 0,
+    width: '100%',
+  },
 });
 
-const dropdownButtonStyling = css({
-  display: 'flex',
-  columnGap: rem(8),
-});
+// not used yet - will be included when sharing outputs is implemented
+// const dropdownButtonStyling = css({
+//   display: 'flex',
+//   columnGap: rem(8),
+// });
 
 type ProjectDetailHeaderProps = ProjectDetail & {
   readonly pointOfContactEmail?: string;
@@ -194,8 +208,8 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
             </div>
           )}
 
-          {/* Share Output button for Discovery projects */}
-          {project.projectType === 'Discovery' && (
+          {/* Share Output button for Discovery projects - not included yet */}
+          {/* {project.projectType === 'Discovery' && (
             <div css={css({ marginLeft: 'auto' })}>
               <DropdownButton
                 noMargin
@@ -221,7 +235,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
                 }}
               </DropdownButton>
             </div>
-          )}
+          )} */}
         </div>
       )}
 
@@ -238,14 +252,16 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
         {/* Team/Members Info */}
         {project.projectType === 'Discovery' && (
           <div css={metadataRowStyles}>
-            <span css={iconStyles}>{getTeamIcon(project)}</span>
-            {project.teamId ? (
-              <Link href={`/teams/${project.teamId}`}>
+            <div css={iconContainerStyles}>
+              <span css={iconStyles}>{getTeamIcon(project)}</span>
+              {project.teamId ? (
+                <Link href={`/teams/${project.teamId}`}>
+                  <span css={teamLinkStyles}>{project.teamName}</span>
+                </Link>
+              ) : (
                 <span css={teamLinkStyles}>{project.teamName}</span>
-              </Link>
-            ) : (
-              <span css={teamLinkStyles}>{project.teamName}</span>
-            )}
+              )}
+            </div>
             <div css={discoveryProjectDurationStyles}>
               <ProjectDuration
                 startDate={project.startDate}

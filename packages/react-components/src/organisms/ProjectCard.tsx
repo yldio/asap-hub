@@ -9,7 +9,12 @@ import {
 } from '@asap-hub/model';
 
 import { Card, Pill, Link } from '../atoms';
-import { TagList, LinkHeadline, UsersList, ProjectDuration } from '../molecules';
+import {
+  TagList,
+  LinkHeadline,
+  UsersList,
+  ProjectDuration,
+} from '../molecules';
 import { rem } from '../pixels';
 import {
   googleDriveIcon,
@@ -127,7 +132,8 @@ export const getCardAccentByStatus = (
 };
 
 const ProjectCard: FC<ProjectCardProps> = (project) => {
-  const getHref = () => `/projects/${project.projectType}/${project.id}`;
+  const getHref = () =>
+    `/projects/${project.projectType.toLowerCase()}/${project.id}/about`;
 
   return (
     <Card accent={getCardAccentByStatus(project.status)} padding={false}>

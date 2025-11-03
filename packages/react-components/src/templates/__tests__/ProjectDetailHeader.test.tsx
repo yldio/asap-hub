@@ -242,6 +242,32 @@ describe('ProjectDetailHeader', () => {
       );
       expect(screen.queryByText('Contact')).not.toBeInTheDocument();
     });
+
+    it('renders copy email button when point of contact email is provided', async () => {
+      // Mock clipboard API
+      const writeTextMock = jest.fn();
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: writeTextMock,
+        },
+      });
+
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          pointOfContactEmail="test@example.com"
+          aboutHref="/projects/discovery/1/about"
+        />,
+      );
+
+      // Find copy button by its tooltip text
+      const copyButton = screen.getByText('Copy Email').closest('button');
+      expect(copyButton).toBeInTheDocument();
+
+      // Click the button to trigger clipboard write
+      copyButton?.click();
+      expect(writeTextMock).toHaveBeenCalledWith('test@example.com');
+    });
   });
 
   describe('Discovery projects', () => {

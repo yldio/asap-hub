@@ -64,6 +64,7 @@ export { default as ProfileCardList } from './ProfileCardList';
 export { default as PublicationComplianceTable } from './PublicationComplianceTable';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
 export { default as ProjectCard } from './ProjectCard';
+export { default as ProjectContributors } from './ProjectContributors';
 export { default as ProjectDetailOverview } from './ProjectDetailOverview';
 export { default as ProjectMilestones } from './ProjectMilestones';
 export { default as QuestionsSection } from './QuestionsSection';

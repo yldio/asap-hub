@@ -70,22 +70,31 @@ export const TraineeWithTeamInfoAndBadge = () => (
 );
 
 export const SingleMember = () => (
-  <ProjectMembers members={[mockMembers[0]!]} showTeamInfo={false} />
+  <ProjectMembers
+    members={[mockMembers[0] as ProjectMember]}
+    showTeamInfo={false}
+  />
 );
 
 export const TwoMembers = () => (
-  <ProjectMembers members={mockMembers.slice(0, 2)} showTeamInfo={false} />
+  <ProjectMembers
+    members={mockMembers.slice(0, 2) as ProjectMember[]}
+    showTeamInfo={false}
+  />
 );
 
 // ProjectMemberCard (Individual) Stories
 export const IndividualMemberCard = () => (
-  <ProjectMemberCard member={mockMembers[0]!} showTeamInfo={false} />
+  <ProjectMemberCard
+    member={mockMembers[0] as ProjectMember}
+    showTeamInfo={false}
+  />
 );
 
 export const MemberCardWithTeam = () => (
   <ProjectMemberCard
     member={{
-      ...mockMembers[0]!,
+      ...(mockMembers[0] as ProjectMember),
       teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
     }}
     showTeamInfo={true}
@@ -95,7 +104,7 @@ export const MemberCardWithTeam = () => (
 export const MemberCardWithTeamAndBadge = () => (
   <ProjectMemberCard
     member={{
-      ...mockMembers[0]!,
+      ...(mockMembers[0] as ProjectMember),
       teams: [
         { id: 'team-1', displayName: 'Anderson Research Team' },
         { id: 'team-2', displayName: 'Team 2' },
@@ -112,7 +121,7 @@ export const MemberCardWithTeamAndBadge = () => (
 export const MemberCardWithoutRole = () => (
   <ProjectMemberCard
     member={{
-      ...mockMembers[0]!,
+      ...(mockMembers[0] as ProjectMember),
       role: undefined,
     }}
     showTeamInfo={false}
@@ -122,7 +131,7 @@ export const MemberCardWithoutRole = () => (
 export const MemberCardWithLongRole = () => (
   <ProjectMemberCard
     member={{
-      ...mockMembers[0]!,
+      ...(mockMembers[0] as ProjectMember),
       role: 'Senior Research Scientist and Laboratory Director',
       teams: [
         { id: 'team-1', displayName: 'Neuroscience Research Consortium' },

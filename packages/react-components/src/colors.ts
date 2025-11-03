@@ -107,7 +107,7 @@ export const information900 = color(0, 106, 146);
 
 export const neutral200 = color(246, 249, 251);
 export const neutral300 = color(237, 241, 243);
-export const neutral500 = color(12, 141, 195);
+export const neutral500 = color(223, 229, 234);
 export const neutral800 = color(146, 153, 158);
 export const neutral900 = color(77, 100, 107);
 export const neutral1000 = color(0, 32, 44);

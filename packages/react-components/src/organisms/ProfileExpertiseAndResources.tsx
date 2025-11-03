@@ -43,7 +43,7 @@ const ProfileExpertiseAndResources: React.FC<
         <>
           <div
             css={{
-              marginTop: rem(12),
+              marginTop: rem(24),
               marginBottom: rem(24),
             }}
           >

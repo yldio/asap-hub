@@ -9,11 +9,14 @@ import {
 } from '@asap-hub/model';
 
 import { Card, Pill, Link } from '../atoms';
-import { TagList, LinkHeadline, UsersList } from '../molecules';
-import { rem } from '../pixels';
-import { formatProjectDate } from '../date';
 import {
-  clockIcon,
+  TagList,
+  LinkHeadline,
+  UsersList,
+  ProjectDuration,
+} from '../molecules';
+import { rem } from '../pixels';
+import {
   googleDriveIcon,
   DiscoveryTeamIcon,
   ResourceTeamIcon,
@@ -21,7 +24,7 @@ import {
   MemberIcon,
   InactiveBadgeIcon,
 } from '../icons';
-import { fern, lead, neutral800 } from '../colors';
+import { fern, lead } from '../colors';
 import TrainerIcon from '../icons/trainer';
 
 const cardStyles = css({
@@ -86,10 +89,6 @@ const driveButtonStyles = css({
   marginTop: rem(12),
 });
 
-const durationStyles = css({
-  color: neutral800.rgb,
-});
-
 type ProjectCardProps = DiscoveryProject | ResourceProject | TraineeProject;
 
 export const getProjectTypeLabel = (projectType: ProjectType): string => {
@@ -133,7 +132,8 @@ export const getCardAccentByStatus = (
 };
 
 const ProjectCard: FC<ProjectCardProps> = (project) => {
-  const getHref = () => `/projects/${project.projectType}/${project.id}`;
+  const getHref = () =>
+    `/projects/${project.projectType.toLowerCase()}/${project.id}/about`;
 
   return (
     <Card accent={getCardAccentByStatus(project.status)} padding={false}>
@@ -238,14 +238,10 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
           )}
 
           {/* Duration */}
-          <div css={metadataRowStyles}>
-            <span css={iconStyles}>{clockIcon}</span>
-            <span>
-              {formatProjectDate(project.startDate)} -{' '}
-              {formatProjectDate(project.endDate)} •{' '}
-              <span css={durationStyles}>({project.duration})</span>
-            </span>
-          </div>
+          <ProjectDuration
+            startDate={project.startDate}
+            endDate={project.endDate}
+          />
         </div>
 
         {/* Tags */}

@@ -19,6 +19,7 @@ const ResourceTeamIcon: FC<ResourceTeamIconProps> = ({
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Resource Member Icon</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

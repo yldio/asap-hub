@@ -183,33 +183,30 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
       </div>
 
       {/* Action Buttons */}
-      {project.projectType !== 'Resource' && (
-        <div css={actionsContainerStyles}>
-          {pointOfContactEmail && (
-            <div css={contactButtonStyles}>
-              <span css={buttonStyles}>
-                <Link
-                  buttonStyle
-                  small
-                  primary
-                  href={createMailTo(pointOfContactEmail)}
-                  noMargin
-                >
-                  Contact
-                </Link>
-              </span>
-              <CopyButton
-                hoverTooltipText="Copy Email"
-                clickTooltipText="Email Copied"
-                onClick={() =>
-                  navigator.clipboard.writeText(pointOfContactEmail)
-                }
-              />
-            </div>
-          )}
+      <div css={actionsContainerStyles}>
+        {pointOfContactEmail && (
+          <div css={contactButtonStyles}>
+            <span css={buttonStyles}>
+              <Link
+                buttonStyle
+                small
+                primary
+                href={createMailTo(pointOfContactEmail)}
+                noMargin
+              >
+                Contact
+              </Link>
+            </span>
+            <CopyButton
+              hoverTooltipText="Copy Email"
+              clickTooltipText="Email Copied"
+              onClick={() => navigator.clipboard.writeText(pointOfContactEmail)}
+            />
+          </div>
+        )}
 
-          {/* Share Output button for Discovery projects - not included yet */}
-          {/* {project.projectType === 'Discovery' && (
+        {/* Share Output button for Discovery projects - not included yet */}
+        {/* {project.projectType === 'Discovery' && (
             <div css={css({ marginLeft: 'auto' })}>
               <DropdownButton
                 noMargin
@@ -236,8 +233,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
               </DropdownButton>
             </div>
           )} */}
-        </div>
-      )}
+      </div>
 
       {/* Access Drive for Resource projects */}
       {project.projectType === 'Resource' && project.googleDriveLink && (

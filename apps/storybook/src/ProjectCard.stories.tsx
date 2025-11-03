@@ -14,7 +14,7 @@ export const DiscoveryProjectActive = () => (
     title="Understanding Genetic Mechanisms in Parkinson's Disease"
     status="Active"
     researchTheme="Genetics"
-    teamName="Martinez Lab"
+    teamName="Alpha Team"
     teamId="team-1"
     startDate="2023-01-01"
     endDate="2025-12-31"

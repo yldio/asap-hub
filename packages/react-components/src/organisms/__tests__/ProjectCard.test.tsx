@@ -22,7 +22,7 @@ const discoveryProjectProps: ComponentProps<typeof ProjectCard> = {
   title: 'Understanding Genetic Mechanisms in PD',
   status: 'Active',
   researchTheme: 'Genetics',
-  teamName: 'Martinez Lab',
+  teamName: 'Alpha Team',
   teamId: 'team-1',
 };
 
@@ -213,7 +213,7 @@ describe('ProjectCard - Discovery Project', () => {
 
   it('renders the team name', () => {
     const { getByText } = render(<ProjectCard {...discoveryProjectProps} />);
-    expect(getByText('Martinez Lab')).toBeVisible();
+    expect(getByText('Alpha Team')).toBeVisible();
   });
 
   it('renders the team name as a link when teamId is provided', () => {

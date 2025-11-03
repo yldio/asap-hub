@@ -126,11 +126,11 @@ describe('ProjectDetailHeader', () => {
     ...baseProject,
     projectType: 'Discovery',
     researchTheme: 'Genetics',
-    teamName: 'Martinez Lab',
+    teamName: 'Alpha Team',
     teamId: 'team-1',
     fundedTeam: {
       id: 'team-1',
-      name: 'Martinez Lab',
+      name: 'Alpha Team',
       type: 'Discovery Team',
       description: 'Team description',
     },
@@ -272,7 +272,7 @@ describe('ProjectDetailHeader', () => {
           aboutHref="/projects/discovery/1/about"
         />,
       );
-      const teamLink = screen.getByText('Martinez Lab').closest('a');
+      const teamLink = screen.getByText('Alpha Team').closest('a');
       expect(teamLink).toHaveAttribute('href', '/teams/team-1');
     });
 
@@ -287,8 +287,8 @@ describe('ProjectDetailHeader', () => {
           aboutHref="/projects/discovery/1/about"
         />,
       );
-      expect(screen.getByText('Martinez Lab')).toBeInTheDocument();
-      const teamText = screen.getByText('Martinez Lab').closest('a');
+      expect(screen.getByText('Alpha Team')).toBeInTheDocument();
+      const teamText = screen.getByText('Alpha Team').closest('a');
       expect(teamText).toBeNull();
     });
 

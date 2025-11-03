@@ -42,26 +42,26 @@ describe('ProjectMemberCard', () => {
   it('does not show team info when showTeamInfo is false', () => {
     const memberWithTeam = {
       ...mockMember,
-      teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
+      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
     };
     render(<ProjectMemberCard member={memberWithTeam} showTeamInfo={false} />);
-    expect(screen.queryByText('Martinez Lab')).not.toBeInTheDocument();
+    expect(screen.queryByText('Alpha Team')).not.toBeInTheDocument();
   });
 
   it('shows team name when showTeamInfo is true and member has teams', () => {
     const memberWithTeam = {
       ...mockMember,
-      teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
+      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
     };
     render(<ProjectMemberCard member={memberWithTeam} showTeamInfo={true} />);
-    expect(screen.getByText('Martinez Lab')).toBeInTheDocument();
+    expect(screen.getByText('Alpha Team')).toBeInTheDocument();
   });
 
   it('shows additional teams badge when member has multiple teams', () => {
     const memberWithMultipleTeams = {
       ...mockMember,
       teams: [
-        { id: 'team-1', displayName: 'Martinez Lab' },
+        { id: 'team-1', displayName: 'Alpha Team' },
         { id: 'team-2', displayName: 'Genomics Lab' },
         { id: 'team-3', displayName: 'Neuroscience Team' },
         { id: 'team-4', displayName: 'PD Consortium' },
@@ -73,19 +73,19 @@ describe('ProjectMemberCard', () => {
         showTeamInfo={true}
       />,
     );
-    expect(screen.getByText('Martinez Lab')).toBeInTheDocument();
+    expect(screen.getByText('Alpha Team')).toBeInTheDocument();
     expect(screen.getByText('+3')).toBeInTheDocument();
   });
 
   it('does not show badge when member has only one team', () => {
     const memberWithOneTeam = {
       ...mockMember,
-      teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
+      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
     };
     render(
       <ProjectMemberCard member={memberWithOneTeam} showTeamInfo={true} />,
     );
-    expect(screen.getByText('Martinez Lab')).toBeInTheDocument();
+    expect(screen.getByText('Alpha Team')).toBeInTheDocument();
     expect(screen.queryByText(/\+\d+/)).not.toBeInTheDocument();
   });
 

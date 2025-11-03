@@ -37,7 +37,7 @@ const mockMembers: ProjectMember[] = [
 
 const membersWithSingleTeam: ProjectMember[] = mockMembers.map((m) => ({
   ...m,
-  teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
+  teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
 }));
 
 const membersWithMultipleTeams: ProjectMember[] = mockMembers.map((m, idx) => ({
@@ -45,13 +45,13 @@ const membersWithMultipleTeams: ProjectMember[] = mockMembers.map((m, idx) => ({
   teams:
     idx === 0
       ? [
-          { id: 'team-1', displayName: 'Martinez Lab' },
+          { id: 'team-1', displayName: 'Alpha Team' },
           { id: 'team-2', displayName: 'Genomics Lab' },
           { id: 'team-3', displayName: 'Neuroscience Team' },
           { id: 'team-4', displayName: 'PD Consortium' },
         ]
       : [
-          { id: 'team-1', displayName: 'Martinez Lab' },
+          { id: 'team-1', displayName: 'Alpha Team' },
           { id: 'team-5', displayName: 'Another Lab' },
         ],
 }));
@@ -95,7 +95,7 @@ export const MemberCardWithTeam = () => (
   <ProjectMemberCard
     member={{
       ...(mockMembers[0] as ProjectMember),
-      teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
+      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
     }}
     showTeamInfo={true}
   />
@@ -155,7 +155,7 @@ export const RealWorldExample = () => (
             role: 'Trainer - Principal Investigator',
             href: '/users/sarah-martinez',
             teams: [
-              { id: 'team-1', displayName: 'Martinez Lab' },
+              { id: 'team-1', displayName: 'Alpha Team' },
               { id: 'team-2', displayName: 'Neuroscience Research' },
               { id: 'team-3', displayName: 'PD Consortium' },
             ],
@@ -167,7 +167,7 @@ export const RealWorldExample = () => (
             lastName: 'Chen',
             role: 'Trainee - PhD Candidate',
             href: '/users/alex-chen',
-            teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
+            teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
           },
           {
             id: '3',
@@ -177,7 +177,7 @@ export const RealWorldExample = () => (
             role: 'Trainee - Postdoctoral Fellow',
             href: '/users/maria-garcia',
             teams: [
-              { id: 'team-1', displayName: 'Martinez Lab' },
+              { id: 'team-1', displayName: 'Alpha Team' },
               { id: 'team-4', displayName: 'Genomics Lab' },
             ],
           },

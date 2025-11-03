@@ -28,7 +28,7 @@ const mockTraineeProjectDetail: TraineeProjectDetailType = {
     href: '/network/users/trainer-1',
     avatarUrl: '',
     teams: [
-      { id: 'team-1', displayName: 'Martinez Lab' },
+      { id: 'team-1', displayName: 'Alpha Team' },
       { id: 'team-2', displayName: 'Neuroscience Research Group' },
       { id: 'team-3', displayName: 'PD Consortium' },
     ],
@@ -43,7 +43,7 @@ const mockTraineeProjectDetail: TraineeProjectDetailType = {
       href: '/network/users/trainee-1',
       avatarUrl: '',
       alumniSinceDate: '2024-01-01',
-      teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
+      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
     },
     {
       id: 'trainee-2',
@@ -54,7 +54,7 @@ const mockTraineeProjectDetail: TraineeProjectDetailType = {
       href: '/network/users/trainee-2',
       avatarUrl: '',
       teams: [
-        { id: 'team-1', displayName: 'Martinez Lab' },
+        { id: 'team-1', displayName: 'Alpha Team' },
         { id: 'team-4', displayName: 'Genomics Lab' },
       ],
     },

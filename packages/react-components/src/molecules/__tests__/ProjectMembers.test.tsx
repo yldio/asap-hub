@@ -47,19 +47,19 @@ describe('ProjectMembers', () => {
   it('does not show team info when showTeamInfo is false', () => {
     const membersWithTeams = mockMembers.map((m) => ({
       ...m,
-      teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
+      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
     }));
     render(<ProjectMembers members={membersWithTeams} showTeamInfo={false} />);
-    expect(screen.queryByText('Martinez Lab')).not.toBeInTheDocument();
+    expect(screen.queryByText('Alpha Team')).not.toBeInTheDocument();
   });
 
   it('shows team name for members when showTeamInfo is true', () => {
     const membersWithTeams = mockMembers.map((m) => ({
       ...m,
-      teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
+      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
     }));
     render(<ProjectMembers members={membersWithTeams} showTeamInfo={true} />);
-    const teamNames = screen.getAllByText('Martinez Lab');
+    const teamNames = screen.getAllByText('Alpha Team');
     expect(teamNames).toHaveLength(mockMembers.length);
   });
 
@@ -67,7 +67,7 @@ describe('ProjectMembers', () => {
     const membersWithMultipleTeams = mockMembers.map((m) => ({
       ...m,
       teams: [
-        { id: 'team-1', displayName: 'Martinez Lab' },
+        { id: 'team-1', displayName: 'Alpha Team' },
         { id: 'team-2', displayName: 'Team 2' },
         { id: 'team-3', displayName: 'Team 3' },
       ],
@@ -104,11 +104,11 @@ describe('ProjectMembers', () => {
   it('uses default showTeamInfo=false when prop is not provided', () => {
     const membersWithTeams = mockMembers.map((m) => ({
       ...m,
-      teams: [{ id: 'team-1', displayName: 'Martinez Lab' }],
+      teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
     }));
     // Don't pass showTeamInfo prop - should default to false
     render(<ProjectMembers members={membersWithTeams} />);
     // Team info should not be shown when using default value
-    expect(screen.queryByText('Martinez Lab')).not.toBeInTheDocument();
+    expect(screen.queryByText('Alpha Team')).not.toBeInTheDocument();
   });
 });

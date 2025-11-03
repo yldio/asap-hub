@@ -108,6 +108,8 @@ export {
   PageControls,
   PillList,
   ProjectDuration,
+  ProjectMemberCard,
+  ProjectMembers,
   ReminderItem,
   SearchField,
   StatusBadge,

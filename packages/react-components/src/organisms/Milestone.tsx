@@ -61,6 +61,7 @@ const statusContainerStyles = css({
   display: 'flex',
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
+  paddingBlock: rem(4),
 });
 
 export const getMilestoneStatusAccent = (

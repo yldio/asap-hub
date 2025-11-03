@@ -12,15 +12,22 @@ export type BaseProject = {
   readonly tags: string[];
 };
 
+export type ProjectMemberTeam = {
+  readonly id: string;
+  readonly displayName: string;
+};
+
 export type ProjectMember = {
   readonly id: string;
   readonly displayName: string;
   readonly firstName?: string;
   readonly lastName?: string;
   readonly avatarUrl?: string;
+  readonly role?: string;
   readonly email?: string;
   readonly alumniSinceDate?: string;
   readonly href: string;
+  readonly teams?: ReadonlyArray<ProjectMemberTeam>;
 };
 
 export type DiscoveryProject = BaseProject & {

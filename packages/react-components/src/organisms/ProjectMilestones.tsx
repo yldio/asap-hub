@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { Headline3, Card, Button } from '../atoms';
 import { rem } from '../pixels';
 import Milestone from './Milestone';
-import { lead } from '../colors';
+import { lead, neutral1000 } from '../colors';
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)} ${rem(16)} ${rem(24)}`,
@@ -25,7 +25,7 @@ const tableHeaderStyles = css({
 const headerLabelStyles = css({
   fontSize: rem(17),
   fontWeight: 'bold',
-  color: lead.rgb,
+  color: neutral1000.rgb,
 });
 
 const descriptionHeaderStyles = css({

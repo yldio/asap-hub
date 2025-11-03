@@ -84,10 +84,6 @@ const metadataRowStyles = css({
   gap: rem(8),
   fontSize: rem(17),
   color: lead.rgb,
-  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
-    flexDirection: 'column',
-    gap: rem(16),
-  },
 });
 const iconContainerStyles = css({
   display: 'flex',
@@ -120,6 +116,14 @@ const discoveryProjectDurationStyles = css({
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
     marginLeft: 0,
     width: '100%',
+  },
+});
+
+const discoveryDurationMediaStyles = css({
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    marginLeft: 0,
+    flexDirection: 'column',
+    gap: rem(16),
   },
 });
 
@@ -247,7 +251,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
       <div css={metadataStyles}>
         {/* Team/Members Info */}
         {project.projectType === 'Discovery' && (
-          <div css={metadataRowStyles}>
+          <div css={[metadataRowStyles, discoveryDurationMediaStyles]}>
             <div css={iconContainerStyles}>
               <span css={iconStyles}>{getTeamIcon(project)}</span>
               {project.teamId ? (

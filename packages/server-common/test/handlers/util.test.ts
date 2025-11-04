@@ -74,6 +74,24 @@ describe('utils', () => {
 
       await expect(processingFunction(users)).rejects.toThrow(algoliaError);
     });
+
+    test('Should log non-Error objects as JSON when saving fails', async () => {
+      const algoliaError = { statusCode: 403, message: 'Forbidden' };
+      const algoliaClient = getAlgoliaSearchClientMock();
+
+      const users = getListUserResponse();
+      algoliaClient.saveMany.mockRejectedValueOnce(algoliaError);
+      const processingFunction = createProcessingFunction(
+        algoliaClient,
+        'user',
+        logger,
+      );
+
+      await expect(processingFunction(users)).rejects.toEqual(algoliaError);
+      expect(logger.error).toHaveBeenCalledWith(
+        `The error details: ${JSON.stringify(algoliaError, null, 2)}`,
+      );
+    });
   });
   describe('userFilter', () => {
     test('returns true when the user is onboarded and not hidden', () => {

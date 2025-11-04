@@ -156,61 +156,91 @@ const AuthenticatedApp: FC<{
                     </Frame>
                   }
                 />
-                <Route path={`${discover.template}/*`} element={
-                  <Frame title="Guides & Tutorials">
-                    <Discover />
-                  </Frame>
-                } />
-                <Route path={`${about.template}/*`} element={
-                  <Frame title="About ASAP">
-                    <About />
-                  </Frame>
-                } />
+                <Route
+                  path={`${discover.template}/*`}
+                  element={
+                    <Frame title="Guides & Tutorials">
+                      <Discover />
+                    </Frame>
+                  }
+                />
+                <Route
+                  path={`${about.template}/*`}
+                  element={
+                    <Frame title="About ASAP">
+                      <About />
+                    </Frame>
+                  }
+                />
                 {canViewAnalytics && (
-                  <Route path={`${analytics.template}/*`} element={
-                    <Frame title="Analytics">
-                      <Analytics />
-                    </Frame>
-                  } />
+                  <Route
+                    path={`${analytics.template}/*`}
+                    element={
+                      <Frame title="Analytics">
+                        <Analytics />
+                      </Frame>
+                    }
+                  />
                 )}
-                <Route path={`${news.template}/*`} element={
-                  <Frame title="News">
-                    <News />
-                  </Frame>
-                } />
-                <Route path={`${network.template}/*`} element={
-                  <Frame title={null}>
-                    <Network />
-                  </Frame>
-                } />
-                <Route path={`${sharedResearch.template}/*`} element={
-                  <Frame title="Shared Research">
-                    <SharedResearch />
-                  </Frame>
-                } />
-                {canViewProjects && (
-                  <Route path={`${projects.template}/*`} element={
+                <Route
+                  path={`${news.template}/*`}
+                  element={
+                    <Frame title="News">
+                      <News />
+                    </Frame>
+                  }
+                />
+                <Route
+                  path={`${network.template}/*`}
+                  element={
                     <Frame title={null}>
-                      <Projects />
+                      <Network />
                     </Frame>
-                  } />
+                  }
+                />
+                <Route
+                  path={`${sharedResearch.template}/*`}
+                  element={
+                    <Frame title="Shared Research">
+                      <SharedResearch />
+                    </Frame>
+                  }
+                />
+                {canViewProjects && (
+                  <Route
+                    path={`${projects.template}/*`}
+                    element={
+                      <Frame title={null}>
+                        <Projects />
+                      </Frame>
+                    }
+                  />
                 )}
-                <Route path={`${events.template}/*`} element={
-                  <Frame title={null}>
-                    <Events />
-                  </Frame>
-                } />
-                <Route path={`${tags.template}/*`} element={
-                  <Frame title="Tags">
-                    <Tags />
-                  </Frame>
-                } />
+                <Route
+                  path={`${events.template}/*`}
+                  element={
+                    <Frame title={null}>
+                      <Events />
+                    </Frame>
+                  }
+                />
+                <Route
+                  path={`${tags.template}/*`}
+                  element={
+                    <Frame title="Tags">
+                      <Tags />
+                    </Frame>
+                  }
+                />
 
-                <Route path="*" element={
-                  <Frame title="Not Found">
-                    <NotFoundPage />
-                  </Frame>
-                } />
+                <Route
+                  path="*"
+                  element={
+                    <Frame title="Not Found">
+                      <NotFoundPage />
+                    </Frame>
+                  }
+                />
               </Routes>
             </CheckOnboarded>
           </Layout>

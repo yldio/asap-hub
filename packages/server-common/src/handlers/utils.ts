@@ -47,6 +47,9 @@ export const createProcessingFunction =
       logger.error('Error occurred during saveMany');
       if (err instanceof Error) {
         logger.error(`The error message: ${err.message}`);
+        logger.error(`The error stack: ${err.stack}`);
+      } else {
+        logger.error(`The error details: ${JSON.stringify(err, null, 2)}`);
       }
       throw err;
     }

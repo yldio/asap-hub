@@ -9,11 +9,17 @@ import {
 } from '@asap-hub/react-components';
 import { useFlags } from '@asap-hub/react-context';
 import { logout, staticPages, welcome } from '@asap-hub/routing';
-import { init, reactRouterV5Instrumentation } from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
+import * as Sentry from '@sentry/react';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Router, Switch } from 'react-router-dom';
-import { LastLocationProvider } from 'react-router-last-location';
+import {
+  Route,
+  Routes,
+  BrowserRouter,
+  useLocation,
+  useNavigationType,
+  createRoutesFromChildren,
+  matchRoutes,
+} from 'react-router-dom';
 
 import CheckAuth from './auth/CheckAuth';
 import Logout from './auth/Logout';
@@ -28,15 +34,17 @@ import {
   SENTRY_DSN,
 } from './config';
 import Frame from './Frame';
-import history from './history';
 
-init({
+Sentry.init({
   dsn: SENTRY_DSN,
   release: RELEASE,
   integrations: [
-    new Integrations.BrowserTracing({
-      // Can also use reactRouterV3Instrumentation or reactRouterV4Instrumentation
-      routingInstrumentation: reactRouterV5Instrumentation(history),
+    Sentry.reactRouterV6BrowserTracingIntegration({
+      useEffect,
+      useLocation,
+      useNavigationType,
+      createRoutesFromChildren,
+      matchRoutes,
     }),
   ],
   environment: ENVIRONMENT,
@@ -78,6 +86,8 @@ const loadWelcome = () =>
 const Content = lazy(loadContent);
 const Welcome = lazy(loadWelcome);
 
+const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
+
 const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides, setEnvironment, isEnabled } = useFlags();
 
@@ -109,37 +119,50 @@ const App: FC<Record<string, never>> = () => {
           />
           <AuthProvider>
             <SentryAuth0 />
-            <Router history={history}>
-              <LastLocationProvider>
-                <Frame title={null}>
-                  <Switch>
-                    <Route path={welcome.template}>
+            <BrowserRouter>
+              <Frame title={null}>
+                <SentryRoutes>
+                  <Route
+                    path={`${welcome.template}/*`}
+                    element={
                       <UtilityBar>
                         <ToastStack>
                           <Welcome />
                         </ToastStack>
                       </UtilityBar>
-                    </Route>
-                    <Route path={logout.template}>
+                    }
+                  />
+                  <Route
+                    path={logout.template}
+                    element={
                       <Frame title="Logout">
                         <Logout />
                       </Frame>
-                    </Route>
-                    <Route exact path={staticPages({}).terms.template}>
+                    }
+                  />
+                  <Route
+                    path={staticPages({}).terms.template}
+                    element={
                       <BasicLayout>
                         <Frame title={null}>
                           <Content pageId="terms-and-conditions" />
                         </Frame>
                       </BasicLayout>
-                    </Route>
-                    <Route exact path={staticPages({}).privacyPolicy.template}>
+                    }
+                  />
+                  <Route
+                    path={staticPages({}).privacyPolicy.template}
+                    element={
                       <BasicLayout>
                         <Frame title={null}>
                           <Content pageId="privacy-notice" />
                         </Frame>
                       </BasicLayout>
-                    </Route>
-                    <Route>
+                    }
+                  />
+                  <Route
+                    path="*"
+                    element={
                       <CheckAuth>
                         {({ isAuthenticated }) =>
                           !isAuthenticated ? (
@@ -153,11 +176,11 @@ const App: FC<Record<string, never>> = () => {
                           )
                         }
                       </CheckAuth>
-                    </Route>
-                  </Switch>
-                </Frame>
-              </LastLocationProvider>
-            </Router>
+                    }
+                  />
+                </SentryRoutes>
+              </Frame>
+            </BrowserRouter>
           </AuthProvider>
           <CookiesModal
             cookieData={cookieData}

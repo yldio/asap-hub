@@ -4,11 +4,10 @@ import {
   PasswordResetEmailSentPage,
 } from '@asap-hub/react-components';
 import {
-  useHistory,
-  Switch,
-  useRouteMatch,
+  useNavigate,
+  Routes,
   Route,
-  Redirect,
+  Navigate,
 } from 'react-router-dom';
 import {
   extractErrorMessage,
@@ -22,14 +21,12 @@ interface ForgotPasswordProps {
   readonly setEmail: (newEmail: string) => void;
 }
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
-  const history = useHistory();
-  const { path } = useRouteMatch();
-
+  const navigate = useNavigate();
   const [error, setError] = useState<WebAuthError | Error>();
 
   return (
-    <Switch>
-      <Route exact path={path}>
+    <Routes>
+      <Route index element={
         <ForgotPasswordPage
           email={email}
           onChangeEmail={(newEmail) => {
@@ -38,18 +35,18 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
           }}
           onSubmit={() => {
             sendPasswordResetLink(email)
-              .then(() => history.replace(`${path}/completed`))
+              .then(() => navigate('/forgot-password/completed', { replace: true }))
               .catch(setError);
           }}
           customValidationMessage={error && extractErrorMessage(error).text}
-          onGoBack={() => history.goBack()}
+          onGoBack={() => navigate(-1)}
         />
-      </Route>
-      <Route exact path={`${path}/completed`}>
+      } />
+      <Route path="completed" element={
         <PasswordResetEmailSentPage signInHref="/" />
-      </Route>
-      <Redirect to="/" />
-    </Switch>
+      } />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 };
 

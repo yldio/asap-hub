@@ -8,13 +8,14 @@ import {
   ResearchOutputSharingStatus,
 } from '@asap-hub/model';
 
-import { ResearchOutputFilter } from '../../utils/odata';
-
-export type FetchResearchOutputFilter = ResearchOutputFilter & {
+export type FetchResearchOutputFilter = {
+  documentType?: string | string[];
+  title?: string;
+  link?: string;
+  relatedManuscriptVersion?: string;
   status?: string;
   teamId?: string;
   workingGroupId?: string;
-  documentType?: string | string[];
   sharingStatus?: ResearchOutputSharingStatus;
   asapFunded?: 'Yes' | 'No' | 'Not Sure';
 };

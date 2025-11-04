@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
-import { Prompt } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { FormSection, Modal, ModalEditHeaderDecorator } from '../molecules';
 import { rem } from '../pixels';
@@ -67,17 +66,27 @@ const EditModal: React.FC<EditModalProps> = ({
     }
   };
 
-  const prompt =
+  const shouldWarn =
     status === 'isSaving' ||
     status === 'hasError' ||
     (status === 'initial' && dirty);
 
+  // Replace Prompt with beforeunload event for unsaved changes warning
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (shouldWarn) {
+        e.preventDefault();
+        e.returnValue = 'Are you sure you want to leave the dialog? Unsaved changes will be lost.';
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [shouldWarn]);
+
   return (
     <Modal padding={false}>
-      <Prompt
-        when={prompt}
-        message="Are you sure you want to leave the dialog? Unsaved changes will be lost."
-      />
       {status === 'hasError' && (
         <Toast>
           There was an error and we were unable to save your changes

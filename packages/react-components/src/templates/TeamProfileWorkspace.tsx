@@ -3,7 +3,7 @@ import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
@@ -153,7 +153,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   targetManuscriptId,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
   const user = useCurrentUserCRN();
 
   const {
@@ -180,7 +180,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   };
 
   const handleGoToManuscriptForm = () => {
-    history.push(manuscriptRoute);
+    navigate(manuscriptRoute);
   };
 
   return (

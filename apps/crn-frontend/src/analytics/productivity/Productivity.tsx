@@ -12,7 +12,7 @@ import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   useAnalytics,
   useOpensearchMetrics,
@@ -32,13 +32,13 @@ import TeamProductivity from './TeamProductivity';
 import UserProductivity from './UserProductivity';
 
 const Productivity = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { currentPage } = usePaginationParams();
   const { isEnabled } = useFlags();
 
   const { metric } = useParams<{ metric: 'user' | 'team' }>();
   const setMetric = (newMetric: 'user' | 'team') =>
-    history.push(
+    navigate(
       analytics({}).productivity({}).metric({ metric: newMetric }).$,
     );
 

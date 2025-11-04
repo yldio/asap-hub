@@ -402,13 +402,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -429,13 +429,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -455,13 +455,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -483,13 +483,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -510,13 +510,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -536,13 +536,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -563,13 +563,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -591,13 +591,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -619,13 +619,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -646,13 +646,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -673,13 +673,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -701,13 +701,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -727,13 +727,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -753,13 +753,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -781,13 +781,13 @@ __metadata:
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -853,8 +853,8 @@ __metadata:
     "@testing-library/user-event": 14.5.2
     "@types/jest": 29.5.14
     "@types/jsdom": 16.2.15
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     "@vitejs/plugin-react": ^4.2.0
     babel-preset-vite: ^1.1.0
     cross-env: 7.0.3
@@ -862,9 +862,9 @@ __metadata:
     jest-transform-css: ^6.0.1
     jsdom: 16.7.0
     path: "npm:path-browserify@1.0.1"
-    react: 19.0.0
+    react: 18.3.1
     react-app-polyfill: 3.0.0
-    react-dom: 19.0.0
+    react-dom: 18.3.1
     react-router-dom: 6.28.0
     typescript: 4.9.5
     vite: 5.4.21
@@ -904,10 +904,10 @@ __metadata:
     "@types/jsonwebtoken": 8.5.9
     "@types/nock": 11.1.0
     "@types/qs": 6.9.11
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     "@types/react-lottie": ^1
-    "@types/react-test-renderer": 19.0.0
+    "@types/react-test-renderer": 18.3.0
     "@types/streamsaver": 2.0.5
     "@types/uuid": 8.3.4
     "@vitejs/plugin-react": ^4.2.0
@@ -928,9 +928,9 @@ __metadata:
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.7
     qs: 6.11.2
-    react: 19.0.0
+    react: 18.3.1
     react-app-polyfill: 3.0.0
-    react-dom: 19.0.0
+    react-dom: 18.3.1
     react-error-boundary: 4.1.2
     react-hook-form: ^7.51.4
     react-lottie: ^1.2.10
@@ -965,15 +965,15 @@ __metadata:
     "@emotion/server": 11.11.0
     "@types/babel__core": 7.20.5
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     aws-sdk: 2.1524.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.34.0
     juice: 7.0.0
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     title-case: 3.0.3
     url-loader: 4.1.1
     webpack: 5.94.0
@@ -1225,17 +1225,17 @@ __metadata:
     "@types/jest": 29.5.14
     "@types/js-cookie": ^3
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
+    "@types/react": 18.3.12
     "@types/streamsaver": 2.0.5
     "@types/uuid": 8.3.4
     csv-stringify: 6.4.5
     date-fns: 2.30.0
     js-cookie: ^3.0.5
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-error-boundary: 4.1.2
     react-router-dom: 6.28.0
-    react-test-renderer: 19.0.0
+    react-test-renderer: 18.3.1
     react-titled: 1.1.1
     streamsaver: 2.0.6
     uuid: 8.3.2
@@ -1269,8 +1269,8 @@ __metadata:
     "@testing-library/user-event": 14.5.2
     "@types/jest": 29.5.14
     "@types/jsdom": 16.2.15
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     "@vitejs/plugin-react": ^4.2.0
     babel-preset-vite: ^1.1.0
     cross-env: 7.0.3
@@ -1278,9 +1278,9 @@ __metadata:
     jest-transform-css: ^6.0.1
     jsdom: 16.7.0
     path: "npm:path-browserify@1.0.1"
-    react: 19.0.0
+    react: 18.3.1
     react-app-polyfill: 3.0.0
-    react-dom: 19.0.0
+    react-dom: 18.3.1
     react-router-dom: 6.28.0
     typescript: 4.9.5
     util: 0.12.5
@@ -1316,10 +1316,10 @@ __metadata:
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/jest": 29.5.14
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     "@types/react-router-hash-link": 2.4.9
-    "@types/react-test-renderer": 19.0.0
+    "@types/react-test-renderer": 18.3.0
     "@types/uuid": 8.3.4
     core-js: 3.34.0
     date-fns: 2.30.0
@@ -1330,15 +1330,15 @@ __metadata:
     jest-playwright-preset: ^3.0.1
     playwright: ^1.40.0
     playwright-core: ^1.40.0
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-router-dom: 6.28.0
-    react-test-renderer: 19.0.0
+    react-test-renderer: 18.3.1
   peerDependencies:
     "@asap-hub/react-context": "workspace:*"
     "@emotion/react": ^11
-    react: ^19.0.0
-    react-dom: ^19.0.0
+    react: ^18.3.0
+    react-dom: ^18.3.0
     react-router-dom: 6.28.0
   languageName: unknown
   linkType: soft
@@ -1373,9 +1373,9 @@ __metadata:
     "@types/jest": 29.5.14
     "@types/jsonwebtoken": 8.5.9
     "@types/nock": 11.1.0
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
-    "@types/react-test-renderer": 19.0.0
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
+    "@types/react-test-renderer": 18.3.0
     "@types/streamsaver": 2.0.5
     "@types/uuid": 8.3.4
     "@vitejs/plugin-react": ^4.2.0
@@ -1392,9 +1392,9 @@ __metadata:
     nock: 13.4.0
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.7
-    react: 19.0.0
+    react: 18.3.1
     react-app-polyfill: 3.0.0
-    react-dom: 19.0.0
+    react-dom: 18.3.1
     react-error-boundary: 4.1.2
     react-router-dom: 6.28.0
     react-test-renderer: 19.0.0
@@ -1425,15 +1425,15 @@ __metadata:
     "@emotion/server": 11.11.0
     "@types/babel__core": 7.20.5
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     aws-sdk: 2.1524.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.34.0
     juice: 7.0.0
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     title-case: 3.0.3
     url-loader: 4.1.1
     webpack: 5.94.0
@@ -1640,12 +1640,12 @@ __metadata:
     "@types/hast-util-sanitize": "workspace:*"
     "@types/jest": 29.5.14
     "@types/ramda": 0.27.20
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
     "@types/react-lottie": ^1
     "@types/react-router-hash-link": 2.4.9
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
-    "@types/react-test-renderer": 19.0.0
+    "@types/react-test-renderer": 18.3.0
     "@types/rehype-slug": "workspace:*"
     "@types/unist": ^2.0.6
     "@types/uuid": 8.3.4
@@ -1659,15 +1659,15 @@ __metadata:
     ismounted: ^0.1.8
     lexical: 0.18.0
     ramda: 0.27.1
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-hook-form: ^7.51.4
     react-lottie: ^1.2.10
     react-router-dom: 6.28.0
     react-router-hash-link: 2.4.3
     react-select: 4.3.1
     react-sortable-hoc: 2.0.0
-    react-test-renderer: 19.0.0
+    react-test-renderer: 18.3.1
     regenerator-runtime: 0.14.1
     rehype-parse: 7.0.1
     rehype-react: 6.2.1
@@ -1686,8 +1686,8 @@ __metadata:
     uuid: 8.3.2
   peerDependencies:
     "@asap-hub/react-context": "*"
-    react: ^19.0.0
-    react-dom: ^19.0.0
+    react: ^18.3.0
+    react-dom: ^18.3.0
     react-router-dom: 6.28.0
   languageName: unknown
   linkType: soft
@@ -1708,13 +1708,13 @@ __metadata:
     "@testing-library/dom": 10.4.0
     "@testing-library/react": 16.1.0
     "@types/jest": 29.5.14
-    "@types/react": 19.0.1
+    "@types/react": 18.3.12
     core-js: 3.34.0
-    react: 19.0.0
-    react-dom: 19.0.0
-    react-test-renderer: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
+    react-test-renderer: 18.3.1
   peerDependencies:
-    react: ^19.0.0
+    react: ^18.3.0
   languageName: unknown
   linkType: soft
 
@@ -1860,15 +1860,15 @@ __metadata:
     "@storybook/builder-vite": ^9.1.14
     "@storybook/react": ^9.1.14
     "@storybook/react-vite": ^9.1.14
-    "@types/react": 19.0.1
+    "@types/react": 18.3.12
     babel-preset-react-app: 10.0.1
     babel-preset-vite: ^1.1.0
     core-js: 3.34.0
     date-fns: 2.30.0
     emotion: 10.0.27
     eslint-plugin-storybook: ^9.1.13
-    react: 19.0.0
-    react-dom: 19.0.0
+    react: 18.3.1
+    react-dom: 18.3.1
     react-router-dom: 6.28.0
     storybook: ^9.1.13
     storybook-addon-designs: 6.3.1
@@ -1887,10 +1887,10 @@ __metadata:
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.4
     "@types/node": 20.10.5
-    "@types/react": 19.0.1
-    "@types/react-dom": 19.0.2
-    react: 19.0.0
-    react-dom: 19.0.0
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
+    react: 18.3.1
+    react-dom: 18.3.1
   languageName: unknown
   linkType: soft
 
@@ -13716,12 +13716,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:19.0.2":
-  version: 19.0.2
-  resolution: "@types/react-dom@npm:19.0.2"
-  peerDependencies:
-    "@types/react": ^19.0.0
-  checksum: d2ae81ec0b8eee7a4bf31918796fdaa34e8db68f69682163bc212d759de76783e6ffcc02c02722dcf508429067148841e6da81414cc730ca2a28c9c2b350c880
+"@types/react-dom@npm:18.3.1":
+  version: 18.3.1
+  resolution: "@types/react-dom@npm:18.3.1"
+  dependencies:
+    "@types/react": "*"
+  checksum: ad28ecce3915d30dc76adc2a1373fda1745ba429cea290e16c6628df9a05fd80b6403c8e87d78b45e6c60e51df7a67add389ab62b90070fbfdc9bda8307d9953
   languageName: node
   linkType: hard
 
@@ -13799,12 +13799,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:19.0.0":
-  version: 19.0.0
-  resolution: "@types/react-test-renderer@npm:19.0.0"
+"@types/react-test-renderer@npm:18.3.0":
+  version: 18.3.0
+  resolution: "@types/react-test-renderer@npm:18.3.0"
   dependencies:
     "@types/react": "*"
-  checksum: a22c4401e3af216a8c2cded22702bb6f928e22af7fbcaca7e0cc28447ec34bea5a94c6d6de7ed5734c527a1b53868393e67b7b4815623802e29abb1d8d378d61
+  checksum: c53683990bd194cb68e3987bda79c78eff41517f7a747e92f3e54217c2ce3addd031b8a45bf631982c909cc2caeeb905372f322758e05bb76c03754a3f24426e
   languageName: node
   linkType: hard
 
@@ -13837,12 +13837,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:19.0.1":
-  version: 19.0.1
-  resolution: "@types/react@npm:19.0.1"
+"@types/react@npm:18.3.12":
+  version: 18.3.12
+  resolution: "@types/react@npm:18.3.12"
   dependencies:
+    "@types/prop-types": "*"
     csstype: ^3.0.2
-  checksum: e5e05cdf5fc53804e94548ca4e139102fffaab95d4c19be821d30d81dbab75ca3e30b72f2e2e750b90fcb535058cb694c4403402f14eb8a19a1282629c8222d8
+  checksum: 4ab1577a8c2105a5e316536f724117c90eee5f4bd5c137fc82a2253d8c1fd299dedaa07e8dfc95d6e2f04a4be3cb8b0e1b06098c6233ebd55c508d88099395b7
   languageName: node
   linkType: hard
 
@@ -15908,7 +15909,7 @@ __metadata:
     "@peculiar/webcrypto": 1.4.6
     "@testing-library/jest-dom": ^6.6.3
     "@types/jest": 29.5.14
-    "@types/react-test-renderer": 19.0.0
+    "@types/react-test-renderer": 18.3.0
     "@types/uuid": 8.3.4
     "@types/webpack": 4.41.40
     "@yarnpkg/pnpify": 3.1.8
@@ -15932,7 +15933,7 @@ __metadata:
     nock: 13.4.0
     node-fetch: 3.0.0-beta.9
     prettier: 3.1.1
-    react-test-renderer: 19.0.0
+    react-test-renderer: 18.3.1
     rimraf: 3.0.2
     ts-node: 10.9.2
     turbo: ^1.11.3
@@ -33322,14 +33323,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:19.0.0":
-  version: 19.0.0
-  resolution: "react-dom@npm:19.0.0"
+"react-dom@npm:18.3.1":
+  version: 18.3.1
+  resolution: "react-dom@npm:18.3.1"
   dependencies:
-    scheduler: ^0.25.0
+    loose-envify: ^1.1.0
+    scheduler: ^0.23.2
   peerDependencies:
-    react: ^19.0.0
-  checksum: 009cc6e575263a0d1906f9dd4aa6532d2d3d0d71e4c2b7777c8fe4de585fa06b5b77cdc2e0fbaa2f3a4a5e5d3305c189ba152153f358ee7da4d9d9ba5d3a8975
+    react: ^18.3.1
+  checksum: 298954ecd8f78288dcaece05e88b570014d8f6dce5db6f66e6ee91448debeb59dcd31561dddb354eee47e6c1bb234669459060deb238ed0213497146e555a0b9
   languageName: node
   linkType: hard
 
@@ -33429,6 +33431,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-is@npm:^16.12.0 || ^17.0.0 || ^18.0.0, react-is@npm:^18.0.0, react-is@npm:^18.3.1":
+  version: 18.3.1
+  resolution: "react-is@npm:18.3.1"
+  checksum: e20fe84c86ff172fc8d898251b7cc2c43645d108bf96d0b8edf39b98f9a2cae97b40520ee7ed8ee0085ccc94736c4886294456033304151c3f94978cec03df21
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.6.0, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -33440,13 +33449,6 @@ __metadata:
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
-  languageName: node
-  linkType: hard
-
-"react-is@npm:^18.0.0, react-is@npm:^18.3.1":
-  version: 18.3.1
-  resolution: "react-is@npm:18.3.1"
-  checksum: e20fe84c86ff172fc8d898251b7cc2c43645d108bf96d0b8edf39b98f9a2cae97b40520ee7ed8ee0085ccc94736c4886294456033304151c3f94978cec03df21
   languageName: node
   linkType: hard
 
@@ -33677,6 +33679,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-shallow-renderer@npm:^16.15.0":
+  version: 16.15.0
+  resolution: "react-shallow-renderer@npm:16.15.0"
+  dependencies:
+    object-assign: ^4.1.1
+    react-is: ^16.12.0 || ^17.0.0 || ^18.0.0
+  peerDependencies:
+    react: ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 6052c7e3e9627485120ebd8257f128aad8f56386fe8d42374b7743eac1be457c33506d153c7886b4e32923c0c352d402ab805ef9ca02dbcd8393b2bdeb6e5af8
+  languageName: node
+  linkType: hard
+
 "react-sortable-hoc@npm:2.0.0":
   version: 2.0.0
   resolution: "react-sortable-hoc@npm:2.0.0"
@@ -33689,6 +33703,19 @@ __metadata:
     react: ^16.3.0 || ^17.0.0
     react-dom: ^16.3.0 || ^17.0.0
   checksum: c4930856eb8e9be638220423d452ddaab834aa43ff76069eeb057c6a5f1d0538f9e43c17bedd34bfd2a66ff4aa1e289557821d792db73a42ebf061bd1c92a423
+  languageName: node
+  linkType: hard
+
+"react-test-renderer@npm:18.3.1":
+  version: 18.3.1
+  resolution: "react-test-renderer@npm:18.3.1"
+  dependencies:
+    react-is: ^18.3.1
+    react-shallow-renderer: ^16.15.0
+    scheduler: ^0.23.2
+  peerDependencies:
+    react: ^18.3.1
+  checksum: e8e58e738835fab3801afb63f6bfe0fcf6e68ea39619fae5bdf47feefc36b1e4acb48c9dd139c7533611466eff1dfce6ffdda4b317e06aee663dda7d91438f26
   languageName: node
   linkType: hard
 
@@ -33740,10 +33767,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:19.0.0":
-  version: 19.0.0
-  resolution: "react@npm:19.0.0"
-  checksum: 86de15d85b2465feb40297a90319c325cb07cf27191a361d47bcfe8c6126c973d660125aa67b8f4cbbe39f15a2f32efd0c814e98196d8e5b68c567ba40a399c6
+"react@npm:18.3.1":
+  version: 18.3.1
+  resolution: "react@npm:18.3.1"
+  dependencies:
+    loose-envify: ^1.1.0
+  checksum: a27bcfa8ff7c15a1e50244ad0d0c1cb2ad4375eeffefd266a64889beea6f6b64c4966c9b37d14ee32d6c9fcd5aa6ba183b6988167ab4d127d13e7cb5b386a376
   languageName: node
   linkType: hard
 
@@ -34977,6 +35006,15 @@ __metadata:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: c4b35cf967c8f0d3e65753252d0f260271f81a81e427241295c5a7b783abf4ea9e905f22f815ab66676f5313be0a25f47be582254db8f9241b259213e999b8fc
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.23.2":
+  version: 0.23.2
+  resolution: "scheduler@npm:0.23.2"
+  dependencies:
+    loose-envify: ^1.1.0
+  checksum: 3e82d1f419e240ef6219d794ff29c7ee415fbdc19e038f680a10c067108e06284f1847450a210b29bbaf97b9d8a97ced5f624c31c681248ac84c80d56ad5a2c4
   languageName: node
   linkType: hard
 

@@ -63,28 +63,28 @@ const OnboardedTabLink: React.FC<OnboardedTabLinkProps> = ({
       </p>
     </div>
   ) : (
-    <NavLink
-      to={href}
-      className={({ isActive }) => (isActive ? 'active-link' : '')}
-      css={[styles, mobileStyle, { [`&.active-link`]: activeStyles }]}
-    >
-      <p css={textStyles}>
-        <span
-          css={css({
-            display: 'none',
-            width: rem(24),
-            height: rem(24),
-            borderRadius: rem(12),
-            backgroundColor: colors.info500.rgb,
-            color: colors.neutral000.rgb,
-            textAlign: 'center',
-          })}
-        >
-          {index}
-        </span>
-        {onboardingCompletedIcon}
-        {children}
-      </p>
+    <NavLink to={href} end style={{ textDecoration: 'none', color: 'unset' }}>
+      {({ isActive }) => (
+        <div css={[styles, mobileStyle, isActive && activeStyles]}>
+          <p css={textStyles}>
+            <span
+              css={css({
+                display: 'none',
+                width: rem(24),
+                height: rem(24),
+                borderRadius: rem(12),
+                backgroundColor: colors.info500.rgb,
+                color: colors.neutral000.rgb,
+                textAlign: 'center',
+              })}
+            >
+              {index}
+            </span>
+            {onboardingCompletedIcon}
+            {children}
+          </p>
+        </div>
+      )}
     </NavLink>
   );
 

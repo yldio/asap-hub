@@ -46,7 +46,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
   // Create inner content with properly colored icon
   const createInner = (isActive: boolean) => (
     <p
-      css={({ components }) => [
+      css={({ components }: Theme) => [
         layoutStyles,
         components?.TabLink?.layoutStyles,
       ]}
@@ -61,18 +61,20 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
   );
 
   if (useHasRouter()) {
-    // For React Router v6, use className function with isActive
+    // For React Router v6, apply styles to NavLink itself to avoid default anchor styles
     return (
-      <NavLink
-        to={href}
-        className={({ isActive }) => isActive ? activeClassName : ''}
-        css={(theme) => [
-          styles,
-          theme.components?.TabLink?.styles,
-          { [`&.${activeClassName}`]: activeStyles(theme) },
-        ]}
-      >
-        {({ isActive }) => createInner(isActive)}
+      <NavLink to={href} end style={{ textDecoration: 'none', color: 'unset' }}>
+        {({ isActive }) => (
+          <div
+            css={(theme: Theme) => [
+              styles,
+              theme.components?.TabLink?.styles,
+              isActive && activeStyles(theme),
+            ]}
+          >
+            {createInner(isActive)}
+          </div>
+        )}
       </NavLink>
     );
   }
@@ -80,7 +82,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
   return (
     <a
       href={href}
-      css={(theme) => [
+      css={(theme: Theme) => [
         styles,
         theme.components?.TabLink?.styles,
         active && activeStyles(theme),

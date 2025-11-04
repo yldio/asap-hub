@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { projects } from '@asap-hub/routing';
 import { useSearch } from '../hooks';
 
@@ -42,50 +42,59 @@ const Projects: FC<Record<string, never>> = () => {
   } = useSearch();
 
   return (
-    <Switch>
+    <Routes>
       {/* Project Detail Routes - must come before list routes */}
-      <Route path={`${path}/discovery/:projectId`}>
-        <DiscoveryProjectDetail />
-      </Route>
-      <Route path={`${path}/resource/:projectId`}>
-        <ResourceProjectDetail />
-      </Route>
-      <Route path={`${path}/trainee/:projectId`}>
-        <TraineeProjectDetail />
-      </Route>
+      <Route path="discovery/:projectId" element={<DiscoveryProjectDetail />} />
+      <Route path="resource/:projectId" element={<ResourceProjectDetail />} />
+      <Route path="trainee/:projectId" element={<TraineeProjectDetail />} />
 
       {/* Project List Routes */}
-      <Route exact path={path + projects({}).discoveryProjects.template}>
-        <DiscoveryProjects
-          searchQuery={searchQuery}
-          debouncedSearchQuery={debouncedSearchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        />
-      </Route>
-      <Route exact path={path + projects({}).resourceProjects.template}>
-        <ResourceProjects
-          searchQuery={searchQuery}
-          debouncedSearchQuery={debouncedSearchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        />
-      </Route>
-      <Route exact path={path + projects({}).traineeProjects.template}>
-        <TraineeProjects
-          searchQuery={searchQuery}
-          debouncedSearchQuery={debouncedSearchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        />
-      </Route>
-      <Redirect
-        to={projects.template + projects({}).discoveryProjects.template}
+      <Route
+        path={projects({}).discoveryProjects.template}
+        element={
+          <DiscoveryProjects
+            searchQuery={searchQuery}
+            debouncedSearchQuery={debouncedSearchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          />
+        }
       />
-    </Switch>
+      <Route
+        path={projects({}).resourceProjects.template}
+        element={
+          <ResourceProjects
+            searchQuery={searchQuery}
+            debouncedSearchQuery={debouncedSearchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          />
+        }
+      />
+      <Route
+        path={projects({}).traineeProjects.template}
+        element={
+          <TraineeProjects
+            searchQuery={searchQuery}
+            debouncedSearchQuery={debouncedSearchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          />
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <Navigate
+            to={projects.template + projects({}).discoveryProjects.template}
+            replace
+          />
+        }
+      />
+    </Routes>
   );
 };
 

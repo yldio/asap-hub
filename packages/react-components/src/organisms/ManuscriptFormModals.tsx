@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Lottie from 'react-lottie';
 import { Button, crossIcon, Headline3, Modal, Paragraph } from '..';
 import { mobileScreen, rem } from '../pixels';
@@ -68,12 +68,12 @@ const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
   isEditMode = false,
   isSubmitting,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const clearModal = () => setModal(null);
 
   const handleCancelManuscriptSubmission = () => {
     clearModal();
-    history.goBack();
+    navigate(-1);
   };
 
   return modal ? (

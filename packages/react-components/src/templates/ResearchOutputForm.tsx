@@ -14,7 +14,7 @@ import { ResearchOutputPermissions } from '@asap-hub/react-context';
 import { network, sharedResearch } from '@asap-hub/routing';
 import equal from 'fast-deep-equal';
 import React, { ComponentProps, useEffect, useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
@@ -320,7 +320,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     getDecision(researchOutputData?.asapFunded),
   );
 
-  const isCreatingTeamArticle = useRouteMatch(
+  const isCreatingTeamArticle = !!useMatch(
     network({})
       .teams({})
       .team({
@@ -331,7 +331,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
       }).$,
   );
 
-  const isCreatingWorkingGroupArticle = useRouteMatch(
+  const isCreatingWorkingGroupArticle = !!useMatch(
     network({})
       .workingGroups({})
       .workingGroup({

@@ -37,7 +37,6 @@ This document provides an evaluation of CSS frameworks considered for the ARIA H
 ## Decision Factors
 
 ### UI Principles Alignment
-- Simple UI provides better user experience and reduces complexity
 - Easy user adoption is a priority
 - Framework decision depends on our specific UI principles and requirements
 
@@ -45,10 +44,12 @@ This document provides an evaluation of CSS frameworks considered for the ARIA H
 - UI element complexity is moderate
 - Need for rapid prototyping and consistency
 - Team familiarity and development velocity
+- Easy process to take componenets from ASAP-HUB
+- Not new framework overload if an ASAP developer needs to jump in
 
 ## Conclusion
 
-After considering the ARIA Hub project requirements, team capabilities, and user needs, **we will proceed with Chakra UI** as our UI framework.
+After considering the ARIA Hub project requirements, team capabilities, and user needs, **we prose to procees with Chakra UI** as our UI framework.
 
 ### Rationale
 

@@ -1,4 +1,4 @@
-import React, { Suspense, ComponentProps, PropsWithChildren } from 'react';
+import React, { Suspense, ComponentProps, ReactNode } from 'react';
 import { Titled } from 'react-titled';
 import {
   Loading,
@@ -10,14 +10,16 @@ import ErrorBoundary from './ErrorBoundary';
 
 type FrameProps = {
   title: string | null; // explicit null, omitting prop not allowed to make sure title is not forgotten when adding a page
+  children: ReactNode;
   fallback: ComponentProps<typeof Suspense>['fallback'];
-} & PropsWithChildren<{}>;
+};
 
 type FrameBoundaryProps = {
   title: string | null; // explicit null, omitting prop not allowed to make sure title is not forgotten when adding a page
+  children: ReactNode;
   boundaryProps?: Omit<ComponentProps<typeof ErrorBoundary>, 'children'>;
   fallback?: ComponentProps<typeof Suspense>['fallback'];
-} & PropsWithChildren;
+};
 
 const Frame = ({ fallback, children, title }: FrameProps) => (
   <Titled

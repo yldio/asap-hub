@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
+import { PropsWithChildren } from 'react';
 import { NavHashLink } from 'react-router-hash-link';
 import { activePrimaryStyles } from '../button';
 import { charcoal, lead, silver } from '../colors';
@@ -70,7 +71,7 @@ const squareBorderStyles = css({
 
 type NavigationLinkProps = NavigationProps & {
   readonly icon?: JSX.Element;
-};
+} & PropsWithChildren<{}>;
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   children,
@@ -89,7 +90,7 @@ interface NavigationProps {
   readonly enabled?: boolean;
   readonly squareBorder?: boolean;
 }
-export const Navigation: React.FC<NavigationProps> = ({
+export const Navigation: React.FC<NavigationProps & PropsWithChildren<{}>> = ({
   href,
   children,
   enabled = true,
@@ -100,19 +101,22 @@ export const Navigation: React.FC<NavigationProps> = ({
     return (
       <NavHashLink
         to={url}
-        className={({ isActive }) => (enabled && isActive) ? activeClassName : ''}
-        css={({ colors, components }) => [
-          styles,
-          squareBorder && squareBorderStyles,
-          {
-            [`&.${activeClassName}`]: activePrimaryStyles(colors),
-          },
-          !enabled && disableStyles,
-          components?.NavigationLink?.styles,
-        ]}
         smooth
+        style={{ textDecoration: 'none', color: 'unset' }}
       >
-        {children}
+        {({ isActive }: { isActive: boolean }) => (
+          <div
+            css={({ colors, components }: Theme) => [
+              styles,
+              squareBorder && squareBorderStyles,
+              enabled && isActive && activePrimaryStyles(colors),
+              !enabled && disableStyles,
+              components?.NavigationLink?.styles,
+            ]}
+          >
+            {children}
+          </div>
+        )}
       </NavHashLink>
     );
   }
@@ -122,7 +126,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   return (
     <a
       href={url}
-      css={({ colors, components }) => [
+      css={({ colors, components }: Theme) => [
         styles,
         squareBorder && squareBorderStyles,
         active && activePrimaryStyles(colors),

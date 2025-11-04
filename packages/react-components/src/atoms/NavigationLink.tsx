@@ -100,7 +100,7 @@ export const Navigation: React.FC<NavigationProps> = ({
     return (
       <NavHashLink
         to={url}
-        activeClassName={activeClassName}
+        className={({ isActive }) => (enabled && isActive) ? activeClassName : ''}
         css={({ colors, components }) => [
           styles,
           squareBorder && squareBorderStyles,
@@ -111,7 +111,6 @@ export const Navigation: React.FC<NavigationProps> = ({
           components?.NavigationLink?.styles,
         ]}
         smooth
-        isActive={(match) => enabled && !!match && match.url === url}
       >
         {children}
       </NavHashLink>

@@ -2,7 +2,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Card, Headline2, Link, Markdown } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../layout';
@@ -96,7 +96,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   checkForNewVersion,
   ...props
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { relatedManuscriptVersion } = props;
 
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -141,7 +141,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const checkForNewerManuscriptVersion = async () => {
     const hasNewerVersion = await checkForNewVersion();
     if (hasNewerVersion) {
-      history.push(
+      navigate(
         sharedResearch({})
           .researchOutput({ researchOutputId: id })
           .versionResearchOutput({}).$,

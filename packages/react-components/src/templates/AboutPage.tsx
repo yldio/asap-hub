@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import AboutPageHeader from './AboutPageHeader';
@@ -8,7 +8,8 @@ const mainStyles = css({
   padding: defaultPageLayoutPaddingStyle,
 });
 
-type AboutPageProps = ComponentProps<typeof AboutPageHeader>;
+type AboutPageProps = ComponentProps<typeof AboutPageHeader> &
+  PropsWithChildren<{}>;
 
 const About: React.FC<AboutPageProps> = ({ children }) => (
   <article>

@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from './pagination';
 
@@ -14,8 +14,9 @@ type Filter = {
   gp2.FetchNewsFilter;
 
 export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
-  const currentUrlParams = new URLSearchParams(useLocation().search);
-  const history = useHistory();
+  const location = useLocation();
+  const currentUrlParams = new URLSearchParams(location.search);
+  const navigate = useNavigate();
 
   const { resetPagination } = usePaginationParams();
 
@@ -28,10 +29,10 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
   );
 
   const replaceArrayParams = (paramName: string, values: string[]) => {
-    const newUrlParams = new URLSearchParams(history.location.search);
+    const newUrlParams = new URLSearchParams(location.search);
     newUrlParams.delete(paramName);
     values.forEach((v) => newUrlParams.append(paramName, v));
-    history.replace({ search: newUrlParams.toString() });
+    navigate({ search: newUrlParams.toString() } as never, { replace: true });
   };
 
   const tags = currentUrlParams.getAll('tag');
@@ -44,7 +45,7 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
 
   const toggleFilter = (filter: string, filterName: keyof Filter) => {
     resetPagination();
-    const newUrlParams = new URLSearchParams(history.location.search);
+    const newUrlParams = new URLSearchParams(location.search);
     newUrlParams.delete(filterName);
 
     const currentFilters = currentUrlParams.getAll(filterName);
@@ -53,17 +54,17 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
       ? currentFilters.splice(filterIndex, 1)
       : currentFilters.push(filter);
     currentFilters.forEach((f) => newUrlParams.append(filterName, f));
-    history.replace({ search: newUrlParams.toString() });
+    navigate({ search: newUrlParams.toString() } as never, { replace: true });
   };
 
   const changeLocation = (pathname: string) => {
-    history.push({ pathname, search: currentUrlParams.toString() });
+    navigate({ pathname, search: currentUrlParams.toString() } as never);
   };
 
   const updateFilters = (pathname: string, updatedFilters: Filter) => {
     resetPagination();
 
-    const newUrlParams = new URLSearchParams(history.location.search);
+    const newUrlParams = new URLSearchParams(location.search);
 
     filterNames.forEach((filterName) => {
       newUrlParams.delete(filterName);
@@ -73,18 +74,18 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
       });
     });
 
-    history.push({ pathname, search: newUrlParams.toString() });
+    navigate({ pathname, search: newUrlParams.toString() } as never);
   };
 
   const setSearchQuery = (newSearchQuery: string) => {
     resetPagination();
 
-    const newUrlParams = new URLSearchParams(history.location.search);
+    const newUrlParams = new URLSearchParams(location.search);
     newSearchQuery
       ? newUrlParams.set(searchQueryParam, newSearchQuery)
       : newUrlParams.delete(searchQueryParam);
 
-    history.replace({ search: newUrlParams.toString() });
+    navigate({ search: newUrlParams.toString() } as never, { replace: true });
   };
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 400);

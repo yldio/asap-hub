@@ -4,7 +4,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
 
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Frame from './Frame';
 import { useUserById } from './users/state';
 
@@ -49,8 +49,6 @@ const News = lazy(loadNews);
 const Tags = lazy(loadTags);
 
 const OnboardedApp: FC<Record<string, never>> = () => {
-  const { path } = useRouteMatch();
-
   const user = useCurrentUserGP2();
 
   // eslint-disable-next-line no-restricted-syntax
@@ -74,54 +72,54 @@ const OnboardedApp: FC<Record<string, never>> = () => {
   return (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     <Layout userId={user!.id} projects={projects} workingGroups={workingGroups}>
-      <Switch>
-        <Route exact path={path}>
+      <Routes>
+        <Route index element={
           <Frame title="Dashboard">
             <Dashboard />
           </Frame>
-        </Route>
-        <Route path={usersRoute.template}>
+        } />
+        <Route path={`${usersRoute.template}/*`} element={
           <Frame title="Users">
             <Users />
           </Frame>
-        </Route>
-        <Route path={workingGroupsRoute.template}>
+        } />
+        <Route path={`${workingGroupsRoute.template}/*`} element={
           <Frame title="Working Groups">
             <WorkingGroups />
           </Frame>
-        </Route>
-        <Route path={projectsRoute.template}>
+        } />
+        <Route path={`${projectsRoute.template}/*`} element={
           <Frame title="Projects">
             <Projects />
           </Frame>
-        </Route>
-        <Route path={eventsRoute.template}>
+        } />
+        <Route path={`${eventsRoute.template}/*`} element={
           <Frame title="Events">
             <Events />
           </Frame>
-        </Route>
-        <Route path={outputsRoute.template}>
+        } />
+        <Route path={`${outputsRoute.template}/*`} element={
           <Frame title="Outputs">
             <Outputs />
           </Frame>
-        </Route>
-        <Route path={newsRoute.template}>
+        } />
+        <Route path={`${newsRoute.template}/*`} element={
           <Frame title="News">
             <News />
           </Frame>
-        </Route>
-        <Route path={tagsRoute.template}>
+        } />
+        <Route path={`${tagsRoute.template}/*`} element={
           <Frame title="Tags">
             <Tags />
           </Frame>
-        </Route>
+        } />
 
-        <Route>
+        <Route path="*" element={
           <Frame title="Not Found">
             <NotFoundPage />
           </Frame>
-        </Route>
-      </Switch>
+        } />
+      </Routes>
     </Layout>
   );
 };

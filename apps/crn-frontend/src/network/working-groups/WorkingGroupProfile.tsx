@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useParams } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -61,7 +61,6 @@ type WorkingGroupProfileProps = {
   currentTime: Date;
 };
 const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
   const route = network({}).workingGroups({}).workingGroup;
   const [membersListElementId] = useState(`wg-members-${uuid()}`);
 
@@ -123,33 +122,34 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
       workingGroupId,
     });
     const paths = {
-      about: path + about.template,
-      calendar: path + calendar.template,
-      outputs: path + outputs.template,
-      past: path + past.template,
-      upcoming: path + upcoming.template,
-      draftOutputs: path + draftOutputs.template,
+      about: 'about',
+      calendar: 'calendar',
+      outputs: 'outputs',
+      past: 'past',
+      upcoming: 'upcoming',
+      draftOutputs: 'draft-outputs',
     };
     return (
       <ResearchOutputPermissionsContext.Provider
         value={{ canShareResearchOutput, canDuplicateResearchOutput }}
       >
-        <Switch>
+        <Routes>
           {canShareResearchOutput && (
-            <Route path={path + createOutput.template}>
+            <Route path="create-output/:outputDocumentType" element={
               <Frame title="Share Output">
                 <WorkingGroupOutput workingGroupId={workingGroupId} />
               </Frame>
-            </Route>
+            } />
           )}
           {canDuplicateResearchOutput && (
-            <Route path={path + duplicateOutput.template}>
+            <Route path="duplicate/:id" element={
               <Frame title="Duplicate Output">
                 <DuplicateOutput />
               </Frame>
-            </Route>
+            } />
           )}
-          <WorkingGroupPage
+          <Route path="*" element={
+            <WorkingGroupPage
             upcomingEventsCount={upcomingEventsResult?.total || 0}
             pastEventsCount={pastEventsResult?.total || 0}
             membersListElementId={membersListElementId}
@@ -195,8 +195,9 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
               paths={paths}
               type="working group"
             />
-          </WorkingGroupPage>
-        </Switch>
+            </WorkingGroupPage>
+          } />
+        </Routes>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

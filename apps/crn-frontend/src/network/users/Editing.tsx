@@ -1,4 +1,4 @@
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import {
   PersonalInfoModal,
   ContactInfoModal,
@@ -18,14 +18,13 @@ interface EditingProps {
 }
 
 const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
-  const { path } = useRouteMatch();
   const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);
 
   return (
-    <>
-      <Route exact path={path + route.editPersonalInfo.template}>
+    <Routes>
+      <Route path={route.editPersonalInfo.template} element={
         <Frame title="Edit Personal Information">
           <PersonalInfoModal
             {...user}
@@ -41,8 +40,8 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
             onSave={patchUser}
           />
         </Frame>
-      </Route>
-      <Route exact path={path + route.editContactInfo.template}>
+      } />
+      <Route path={route.editContactInfo.template} element={
         <Frame title="Edit Contact Information">
           <ContactInfoModal
             {...user}
@@ -52,8 +51,8 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
             onSave={patchUser}
           />
         </Frame>
-      </Route>
-      <Route exact path={path + route.editOnboarded.template}>
+      } />
+      <Route path={route.editOnboarded.template} element={
         <Frame title="Publish your profile">
           <ConfirmModal
             backHref={backHref}
@@ -66,8 +65,8 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
             onSave={() => patchUser({ onboarded: true })}
           />
         </Frame>
-      </Route>
-    </>
+      } />
+    </Routes>
   );
 };
 

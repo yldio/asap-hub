@@ -2,7 +2,7 @@ import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NetworkPage, Paragraph } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSearch } from '../hooks';
 import { useResearchThemes } from '../shared-state/shared-research';
 import InterestGroupProfile from './interest-groups/InterestGroupProfile';
@@ -57,7 +57,6 @@ const Network: FC<Record<string, never>> = () => {
       .then(loadWorkingGroupProfile);
   }, []);
 
-  const { path } = useRouteMatch();
   const {
     searchQuery,
     debouncedSearchQuery,
@@ -69,8 +68,8 @@ const Network: FC<Record<string, never>> = () => {
   const researchThemes = useResearchThemes();
   const [currentTime] = useState(new Date());
   return (
-    <Switch>
-      <Route exact path={path + network({}).users.template}>
+    <Routes>
+      <Route path="users" element={
         <NetworkPage
           page="users"
           searchQuery={searchQuery}
@@ -89,19 +88,16 @@ const Network: FC<Record<string, never>> = () => {
             <UserList filters={filters} searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>
-      </Route>
+      } />
       <Route
-        path={
-          path +
-          network({}).users.template +
-          network({}).users({}).user.template
+        path="users/:userId/*"
+        element={
+          <Frame title="User Profile">
+            <UserProfile currentTime={currentTime} />
+          </Frame>
         }
-      >
-        <Frame title="User Profile">
-          <UserProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Route exact path={path + network({}).discoveryTeams.template}>
+      />
+      <Route path="discovery-teams" element={
         <NetworkPage
           page="discovery-teams"
           searchQuery={searchQuery}
@@ -121,8 +117,8 @@ const Network: FC<Record<string, never>> = () => {
             <TeamList filters={filters} searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>
-      </Route>
-      <Route exact path={path + network({}).resourceTeams.template}>
+      } />
+      <Route path="resource-teams" element={
         <NetworkPage
           page="resource-teams"
           searchQuery={searchQuery}
@@ -141,19 +137,16 @@ const Network: FC<Record<string, never>> = () => {
             <TeamList filters={filters} searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>
-      </Route>
+      } />
       <Route
-        path={
-          path +
-          network({}).teams.template +
-          network({}).teams({}).team.template
+        path="teams/:teamId/*"
+        element={
+          <Frame title="Team Profile">
+            <TeamProfile currentTime={currentTime} />
+          </Frame>
         }
-      >
-        <Frame title="Team Profile">
-          <TeamProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Route exact path={path + network({}).interestGroups.template}>
+      />
+      <Route path="interest-groups" element={
         <NetworkPage
           page="interest-groups"
           searchQuery={searchQuery}
@@ -175,19 +168,16 @@ const Network: FC<Record<string, never>> = () => {
             />
           </SearchFrame>
         </NetworkPage>
-      </Route>
+      } />
       <Route
-        path={
-          path +
-          network({}).interestGroups.template +
-          network({}).interestGroups({}).interestGroup.template
+        path="interest-groups/:interestGroupId/*"
+        element={
+          <Frame title="Interest Group Profile">
+            <InterestGroupProfile currentTime={currentTime} />
+          </Frame>
         }
-      >
-        <Frame title="Interest Group Profile">
-          <InterestGroupProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Route exact path={path + network({}).workingGroups.template}>
+      />
+      <Route path="working-groups" element={
         <NetworkPage
           page="working-groups"
           searchQuery={searchQuery}
@@ -211,20 +201,17 @@ const Network: FC<Record<string, never>> = () => {
             />
           </SearchFrame>
         </NetworkPage>
-      </Route>
+      } />
       <Route
-        path={
-          path +
-          network({}).workingGroups.template +
-          network({}).workingGroups({}).workingGroup.template
+        path="working-groups/:workingGroupId/*"
+        element={
+          <Frame title="Working Group Profile">
+            <WorkingGroupProfile currentTime={currentTime} />
+          </Frame>
         }
-      >
-        <Frame title="Working Group Profile">
-          <WorkingGroupProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Redirect to={network({}).users({}).$} />
-    </Switch>
+      />
+      <Route index element={<Navigate to="users" replace />} />
+    </Routes>
   );
 };
 

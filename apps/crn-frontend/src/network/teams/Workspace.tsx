@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { useRouteMatch, Route, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import {
   NotFoundPage,
   TeamProfileWorkspace,
@@ -32,7 +32,6 @@ interface WorkspaceProps {
 }
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const route = network({}).teams({}).team({ teamId: team.id }).workspace({});
-  const { path } = useRouteMatch();
   const { setEligibilityReasons } = useEligibilityReason();
   const isComplianceReviewer = useIsComplianceReviewer();
 
@@ -108,60 +107,58 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
 
   return (
     <>
-      <Route path={path}>
-        <TeamProfileWorkspace
-          {...team}
-          isTeamMember={isTeamMember}
-          setEligibilityReasons={setEligibilityReasons}
-          tools={team.tools}
-          onUpdateManuscript={(
-            manuscriptId: string,
-            payload: ManuscriptPutRequest,
-          ) => updateManuscript(manuscriptId, payload)}
-          onDeleteTool={
-            deleting
-              ? undefined
-              : async (toolIndex) => {
-                  setDeleting(true);
-                  if (
-                    window.confirm(
-                      'Are you sure you want to delete this team tool from your team page? This cannot be undone.',
-                    )
-                  ) {
-                    await patchTeam({
-                      tools: team.tools.filter((_, i) => toolIndex !== i),
-                    }).catch(() => {
-                      toast('Something went wrong. Please try again.');
-                    });
-                  }
-                  setDeleting(false);
+      <TeamProfileWorkspace
+        {...team}
+        isTeamMember={isTeamMember}
+        setEligibilityReasons={setEligibilityReasons}
+        tools={team.tools}
+        onUpdateManuscript={(
+          manuscriptId: string,
+          payload: ManuscriptPutRequest,
+        ) => updateManuscript(manuscriptId, payload)}
+        onDeleteTool={
+          deleting
+            ? undefined
+            : async (toolIndex) => {
+                setDeleting(true);
+                if (
+                  window.confirm(
+                    'Are you sure you want to delete this team tool from your team page? This cannot be undone.',
+                  )
+                ) {
+                  await patchTeam({
+                    tools: team.tools.filter((_, i) => toolIndex !== i),
+                  }).catch(() => {
+                    toast('Something went wrong. Please try again.');
+                  });
                 }
-          }
-          isComplianceReviewer={isComplianceReviewer}
-          createDiscussion={handleCreateDiscussion}
-          useManuscriptById={useManuscriptById}
-          onReplyToDiscussion={handleReplytoDiscussion}
-          onMarkDiscussionAsRead={handleMarkDiscussionAsRead}
-          targetManuscriptId={targetManuscript.slice(1)}
+                setDeleting(false);
+              }
+        }
+        isComplianceReviewer={isComplianceReviewer}
+        createDiscussion={handleCreateDiscussion}
+        useManuscriptById={useManuscriptById}
+        onReplyToDiscussion={handleReplytoDiscussion}
+        onMarkDiscussionAsRead={handleMarkDiscussionAsRead}
+        targetManuscriptId={targetManuscript.slice(1)}
+      />
+      <Routes>
+        <Route path={route.tools.template} element={
+          <ToolModal
+            title="Add Link"
+            backHref={route.$}
+            onSave={(data: TeamTool) =>
+              patchTeam({
+                tools: [...(team.tools ?? []), data],
+              })
+            }
+          />
+        } />
+        <Route
+          path={`${route.tools.template}/${route.tools({}).tool.template}`}
+          element={<EditTool teamId={team.id} tools={team.tools} />}
         />
-      </Route>
-      <Route exact path={path + route.tools.template}>
-        <ToolModal
-          title="Add Link"
-          backHref={route.$}
-          onSave={(data: TeamTool) =>
-            patchTeam({
-              tools: [...(team.tools ?? []), data],
-            })
-          }
-        />
-      </Route>
-      <Route
-        exact
-        path={path + route.tools.template + route.tools({}).tool.template}
-      >
-        <EditTool teamId={team.id} tools={team.tools} />
-      </Route>
+      </Routes>
     </>
   );
 };

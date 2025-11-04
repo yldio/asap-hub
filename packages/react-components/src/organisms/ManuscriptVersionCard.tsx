@@ -7,7 +7,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   article,
   AssociationList,
@@ -189,7 +189,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   impact,
   openDiscussionTab,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [expanded, setExpanded] = useState(false);
 
@@ -227,7 +227,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
 
   const handleEditManuscript = () => {
     if (editManuscriptRoute) {
-      history.push(editManuscriptRoute);
+      navigate(editManuscriptRoute);
     }
   };
 

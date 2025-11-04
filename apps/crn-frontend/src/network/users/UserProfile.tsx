@@ -12,7 +12,7 @@ import {
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { useEvents } from '../../events/state';
 import {
@@ -44,7 +44,6 @@ type UserProfileProps = {
 
 const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const route = network({}).users({}).user;
-  const { path } = useRouteMatch();
   const { userId } = useRouteParams(route);
 
   const tabRoutes = route({ userId });
@@ -136,23 +135,23 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
           <UserProfilePage {...profilePageProps}>
             {
               <>
-                <Switch>
-                  <Route path={path + tabRoutes.research.template}>
+                <Routes>
+                  <Route path="research" element={
                     <Frame title="Research">
                       <Research user={user} />
                     </Frame>
-                  </Route>
-                  <Route path={path + tabRoutes.about.template}>
+                  } />
+                  <Route path="about" element={
                     <Frame title="About">
                       <About user={user} />
                     </Frame>
-                  </Route>
-                  <Route path={path + tabRoutes.outputs.template}>
+                  } />
+                  <Route path="outputs" element={
                     <Frame title="Outputs">
                       <Outputs userId={user?.id} />
                     </Frame>
-                  </Route>
-                  <Route path={path + tabRoutes.upcoming.template}>
+                  } />
+                  <Route path="upcoming" element={
                     <Frame title="Upcoming Events">
                       <EventsList
                         constraint={{ userId: user?.id }}
@@ -166,8 +165,8 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                         }
                       />
                     </Frame>
-                  </Route>
-                  <Route path={path + tabRoutes.past.template}>
+                  } />
+                  <Route path="past" element={
                     <Frame title="Past Events">
                       <EventsList
                         past
@@ -182,14 +181,14 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                         }
                       />
                     </Frame>
-                  </Route>
-                  <Redirect to={tabRoutes.research({}).$} />
-                </Switch>
-                {isOwnProfile && tabRoute && (
-                  <Route path={path + tabRoute.template}>
-                    <Editing user={user} backHref={tabRoute({}).$} />
-                  </Route>
-                )}
+                  } />
+                  {isOwnProfile && tabRoute && (
+                    <Route path="about/*" element={
+                      <Editing user={user} backHref={tabRoute({}).$} />
+                    } />
+                  )}
+                  <Route index element={<Navigate to="research" replace />} />
+                </Routes>
               </>
             }
           </UserProfilePage>

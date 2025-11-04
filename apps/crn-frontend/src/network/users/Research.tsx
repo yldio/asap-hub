@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
 import InterestGroupsCard from './interest-groups/InterestGroupsCard';
@@ -23,7 +23,6 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
   const researchTagsSuggestions = useResearchTags();
 
   const { id } = useCurrentUserCRN() ?? {};
-  const { path } = useRouteMatch();
   const route = network({}).users({}).user({ userId: user.id }).research({});
 
   const patchUser = usePatchUserById(user.id);
@@ -68,8 +67,8 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         isOwnProfile={id === user.id}
       />
       {id === user.id && (
-        <>
-          <Route path={path + route.editRole.template}>
+        <Routes>
+          <Route path={route.editRole.template} element={
             <Frame title="Edit Role">
               <RoleModal
                 {...commonModalProps}
@@ -82,13 +81,13 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
                 firstName={user.firstName}
               />
             </Frame>
-          </Route>
-          <Route path={path + route.editQuestions.template}>
+          } />
+          <Route path={route.editQuestions.template} element={
             <Frame title="Edit Open Questions">
               <OpenQuestionsModal {...user} {...commonModalProps} />
             </Frame>
-          </Route>
-          <Route path={path + route.editExpertiseAndResources.template}>
+          } />
+          <Route path={route.editExpertiseAndResources.template} element={
             <Frame title="Edit Expertise and Resources">
               <ExpertiseAndResourcesModal
                 {...user}
@@ -96,8 +95,8 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
                 suggestions={researchTagsSuggestions}
               />
             </Frame>
-          </Route>
-        </>
+          } />
+        </Routes>
       )}
     </>
   );

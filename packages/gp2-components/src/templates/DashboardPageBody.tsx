@@ -20,7 +20,7 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import GuideDescription from '../molecules/GuideDescription';
@@ -102,7 +102,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   recentOutputs,
   totalOutputs,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const latestNews = news.items[0];
   return (
     <>
@@ -194,9 +194,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <Button
               data-testid="view-upcoming-events"
               onClick={() =>
-                history.push({
-                  pathname: gp2Routes.events({}).upcoming({}).$,
-                })
+                navigate(gp2Routes.events({}).upcoming({}).$)
               }
             >
               View All
@@ -215,9 +213,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <Button
               data-testid="view-past-events"
               onClick={() =>
-                history.push({
-                  pathname: gp2Routes.events({}).past({}).$,
-                })
+                navigate(gp2Routes.events({}).past({}).$)
               }
             >
               View All
@@ -243,9 +239,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <Button
               data-testid="view-outputs"
               onClick={() =>
-                history.push({
-                  pathname: gp2Routes.outputs({}).$,
-                })
+                navigate(gp2Routes.outputs({}).$)
               }
             >
               View All
@@ -271,9 +265,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <Button
             data-testid="view-users"
             onClick={() =>
-              history.push({
-                pathname: gp2Routes.users({}).$,
-              })
+              navigate(gp2Routes.users({}).$)
             }
           >
             View All

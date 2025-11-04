@@ -1,7 +1,7 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
-import { Prompt, useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { usePushFromHere } from '@asap-hub/react-components';
 
 const styles = css({
@@ -37,7 +37,7 @@ const Form = <T extends void | Record<string, unknown>>({
   validate = () => true,
   serverErrors = [],
 }: FormProps<T>): React.ReactElement => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const pushFromHere = usePushFromHere();
   const [redirectOnSave, setRedirectOnSave] = useState<string>();
@@ -56,6 +56,25 @@ const Form = <T extends void | Record<string, unknown>>({
       formRef.current.reportValidity();
     }
   }, [serverErrors]);
+
+  // Replace Prompt with beforeunload event for unsaved changes warning
+  useEffect(() => {
+    const shouldWarn =
+      status === 'isSaving' ||
+      status === 'hasError' ||
+      (status === 'initial' && dirty);
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (shouldWarn) {
+        e.preventDefault();
+        e.returnValue = 'Are you sure you want to leave? Unsaved changes will be lost.';
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [status, dirty]);
 
   const getWrappedOnSave =
     (
@@ -100,28 +119,23 @@ const Form = <T extends void | Record<string, unknown>>({
 
   const onCancel = () => {
     setStatus('initial');
-    history.location.key ? history.goBack() : history.push('/');
+    // In React Router v6, location.key is always set, so we check history.length instead
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
   };
 
   return (
-    <>
-      <Prompt
-        when={
-          status === 'isSaving' ||
-          status === 'hasError' ||
-          (status === 'initial' && dirty)
-        }
-        message="Are you sure you want to leave? Unsaved changes will be lost."
-      />
-      <form ref={formRef} css={styles}>
-        {children({
-          onCancel,
-          isSaving: status === 'isSaving',
-          getWrappedOnSave,
-          setRedirectOnSave,
-        })}
-      </form>
-    </>
+    <form ref={formRef} css={styles}>
+      {children({
+        onCancel,
+        isSaving: status === 'isSaving',
+        getWrappedOnSave,
+        setRedirectOnSave,
+      })}
+    </form>
   );
 };
 export default Form;

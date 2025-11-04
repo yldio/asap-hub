@@ -2,7 +2,7 @@ import {
   CRNTagSearchEntities,
   CRNTagSearchEntitiesListArray,
 } from '@asap-hub/algolia';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
 
@@ -21,8 +21,7 @@ const options: { label: string; value: CRNTagSearchEntities }[] = [
   { label: 'Working Groups', value: 'working-group' },
 ];
 
-const Routes: React.FC<Record<string, never>> = () => {
-  const { path } = useRouteMatch();
+const RoutesComponent: React.FC<Record<string, never>> = () => {
   const { client } = useAlgolia();
   const { tags, setTags, filters, toggleFilter } = useSearch();
 
@@ -33,8 +32,8 @@ const Routes: React.FC<Record<string, never>> = () => {
     urlEntities.length > 0 ? urlEntities : CRNTagSearchEntitiesListArray;
 
   return (
-    <Switch>
-      <Route exact path={path}>
+    <Routes>
+      <Route index element={
         <TagsPage
           tags={tags}
           setTags={setTags}
@@ -57,10 +56,10 @@ const Routes: React.FC<Record<string, never>> = () => {
             <Tags entities={entities} />
           </Frame>
         </TagsPage>
-      </Route>
-      <Route component={NotFoundPage} />
-    </Switch>
+      } />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 };
 
-export default Routes;
+export default RoutesComponent;

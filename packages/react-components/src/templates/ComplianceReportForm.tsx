@@ -11,7 +11,7 @@ import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import React, { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Card, Paragraph } from '../atoms';
 import { GlobeIcon } from '../icons';
 import { defaultPageLayoutPaddingStyle } from '../layout';
@@ -142,7 +142,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   description,
   manuscriptId,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const methods = useForm<ComplianceReportFormData>({
     mode: 'onBlur',
@@ -213,7 +213,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
             onSave={
               complianceReportFormAction.includes('confirm')
                 ? () => handleSubmit(onSubmit)()
-                : () => history.goBack()
+                : () => navigate(-1)
             }
             onCancel={() => setComplianceReportFormAction('')}
           />

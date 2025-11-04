@@ -1,7 +1,7 @@
 import { WorkingGroupsPage } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Frame from '../Frame';
 
 const loadWorkingGroupList = () =>
@@ -15,50 +15,47 @@ const WorkingGroupList = lazy(loadWorkingGroupList);
 const WorkingGroupDetail = lazy(loadWorkingGroupDetail);
 
 const { workingGroups } = gp2;
-const Routes: React.FC<Record<string, never>> = () => {
+const RoutesComponent: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWorkingGroupList().then(loadWorkingGroupDetail);
   }, []);
-  const { path } = useRouteMatch();
 
   const [currentTime] = useState(new Date());
   return (
-    <Switch>
-      <Route exact path={path + gp2.workingGroups({}).operational.template}>
+    <Routes>
+      <Route path={gp2.workingGroups({}).operational.template} element={
         <WorkingGroupsPage>
           <Frame title="Working Groups">
             <WorkingGroupList role={'operational'} />
           </Frame>
         </WorkingGroupsPage>
-      </Route>
-      <Route exact path={path + gp2.workingGroups({}).support.template}>
+      } />
+      <Route path={gp2.workingGroups({}).support.template} element={
         <WorkingGroupsPage>
           <Frame title="Working Groups">
             <WorkingGroupList role={'support'} />
           </Frame>
         </WorkingGroupsPage>
-      </Route>
-      <Route exact path={path + gp2.workingGroups({}).complexDisease.template}>
+      } />
+      <Route path={gp2.workingGroups({}).complexDisease.template} element={
         <WorkingGroupsPage>
           <Frame title="Working Groups">
             <WorkingGroupList role={'complexDisease'} />
           </Frame>
         </WorkingGroupsPage>
-      </Route>
-      <Route exact path={path + gp2.workingGroups({}).monogenic.template}>
+      } />
+      <Route path={gp2.workingGroups({}).monogenic.template} element={
         <WorkingGroupsPage>
           <Frame title="Working Groups">
             <WorkingGroupList role={'monogenic'} />
           </Frame>
         </WorkingGroupsPage>
-      </Route>
-      <Route path={path + workingGroups({}).workingGroup.template}>
-        <WorkingGroupDetail currentTime={currentTime} />
-      </Route>
-      <Redirect to={path + gp2.workingGroups({}).operational.template} />
-    </Switch>
+      } />
+      <Route path={`${workingGroups({}).workingGroup.template}/*`} element={<WorkingGroupDetail currentTime={currentTime} />} />
+      <Route index element={<Navigate to={gp2.workingGroups({}).operational.template} replace />} />
+    </Routes>
   );
 };
 
-export default Routes;
+export default RoutesComponent;

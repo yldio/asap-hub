@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { EventsPage } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/routing';
@@ -19,36 +19,34 @@ const Events: FC<Record<string, never>> = () => {
     loadEventDirectory().then(loadEvent);
   }, []);
 
-  const { path } = useRouteMatch();
   const [currentTime] = useState(new Date());
 
   return (
-    <Switch>
-      <Route exact path={path + gp2.events({}).calendar.template}>
+    <Routes>
+      <Route path={gp2.events({}).calendar.template} element={
         <EventsPage>
           <Frame title="Subscribe to Calendars">
             <Calendars />
           </Frame>
         </EventsPage>
-      </Route>
-
-      <Route exact path={path + gp2.events({}).upcoming.template}>
+      } />
+      <Route path={gp2.events({}).upcoming.template} element={
         <EventsPage>
           <EventsDirectory currentTime={currentTime} paddingTop={32} />
         </EventsPage>
-      </Route>
-      <Route exact path={path + gp2.events({}).past.template}>
+      } />
+      <Route path={gp2.events({}).past.template} element={
         <EventsPage>
           <EventsDirectory past currentTime={currentTime} paddingTop={32} />
         </EventsPage>
-      </Route>
-      <Route path={path + gp2.events({}).event.template}>
+      } />
+      <Route path={gp2.events({}).event.template} element={
         <Frame title="Event">
           <Event />
         </Frame>
-      </Route>
-      <Redirect to={gp2.events({}).upcoming({}).$} />
-    </Switch>
+      } />
+      <Route index element={<Navigate to={gp2.events({}).upcoming({}).$} replace />} />
+    </Routes>
   );
 };
 

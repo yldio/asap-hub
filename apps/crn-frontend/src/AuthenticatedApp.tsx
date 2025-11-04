@@ -18,7 +18,7 @@ import {
   tags,
 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 
 import CheckOnboarded from './auth/CheckOnboarded';
@@ -139,74 +139,79 @@ const AuthenticatedApp: FC<{
             aboutHref="https://www.parkinsonsroadmap.org/"
           >
             <CheckOnboarded>
-              <Switch>
+              <Routes>
                 <Route
-                  exact
-                  path={[
-                    dashboard.template,
-                    dashboard({}).dismissGettingStarted({}).$,
-                  ]}
-                >
-                  <Frame title="Dashboard">
-                    <Dashboard />
-                  </Frame>
-                </Route>
-                <Route path={discover.template}>
+                  path={dashboard.template}
+                  element={
+                    <Frame title="Dashboard">
+                      <Dashboard />
+                    </Frame>
+                  }
+                />
+                <Route
+                  path={dashboard({}).dismissGettingStarted({}).$}
+                  element={
+                    <Frame title="Dashboard">
+                      <Dashboard />
+                    </Frame>
+                  }
+                />
+                <Route path={`${discover.template}/*`} element={
                   <Frame title="Guides & Tutorials">
                     <Discover />
                   </Frame>
-                </Route>
-                <Route path={about.template}>
+                } />
+                <Route path={`${about.template}/*`} element={
                   <Frame title="About ASAP">
                     <About />
                   </Frame>
-                </Route>
+                } />
                 {canViewAnalytics && (
-                  <Route path={analytics.template}>
+                  <Route path={`${analytics.template}/*`} element={
                     <Frame title="Analytics">
                       <Analytics />
                     </Frame>
-                  </Route>
+                  } />
                 )}
-                <Route path={news.template}>
+                <Route path={`${news.template}/*`} element={
                   <Frame title="News">
                     <News />
                   </Frame>
-                </Route>
-                <Route path={network.template}>
+                } />
+                <Route path={`${network.template}/*`} element={
                   <Frame title={null}>
                     <Network />
                   </Frame>
-                </Route>
-                <Route path={sharedResearch.template}>
+                } />
+                <Route path={`${sharedResearch.template}/*`} element={
                   <Frame title="Shared Research">
                     <SharedResearch />
                   </Frame>
-                </Route>
+                } />
                 {canViewProjects && (
-                  <Route path={projects.template}>
+                  <Route path={`${projects.template}/*`} element={
                     <Frame title={null}>
                       <Projects />
                     </Frame>
-                  </Route>
+                  } />
                 )}
-                <Route path={events.template}>
+                <Route path={`${events.template}/*`} element={
                   <Frame title={null}>
                     <Events />
                   </Frame>
-                </Route>
-                <Route path={tags.template}>
+                } />
+                <Route path={`${tags.template}/*`} element={
                   <Frame title="Tags">
                     <Tags />
                   </Frame>
-                </Route>
+                } />
 
-                <Route>
+                <Route path="*" element={
                   <Frame title="Not Found">
                     <NotFoundPage />
                   </Frame>
-                </Route>
-              </Switch>
+                } />
+              </Routes>
             </CheckOnboarded>
           </Layout>
         );

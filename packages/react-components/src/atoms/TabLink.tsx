@@ -63,18 +63,18 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
   );
 
   if (useHasRouter()) {
-    // For React Router v5, use isActive to determine match
+    // For React Router v6, use className function with isActive
     return (
       <NavLink
         to={href}
-        activeClassName={activeClassName}
+        className={({ isActive }) => isActive ? activeClassName : ''}
         css={(theme) => [
           styles,
           theme.components?.TabLink?.styles,
           { [`&.${activeClassName}`]: activeStyles(theme) },
         ]}
       >
-        {createInner(active)}
+        {({ isActive }) => createInner(isActive)}
       </NavLink>
     );
   }

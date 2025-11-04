@@ -6,7 +6,7 @@ import {
 import { analytics } from '@asap-hub/routing';
 import { useFlags } from '@asap-hub/react-context';
 import { lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../hooks/algolia';
 import { useOpensearchMetrics } from '../hooks/opensearch';
 
@@ -35,15 +35,13 @@ const CollaborationBody = lazy(loadCollaboration);
 const EngagementBody = lazy(loadEngagement);
 const OpenScienceBody = lazy(loadOpenScience);
 
-const Routes = () => {
+const AnalyticsRoutes = () => {
   const { isEnabled } = useFlags();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadLeadership().then(loadProductivity).then(loadCollaboration);
   }, []);
-
-  const { path } = useRouteMatch();
 
   const { client } = useAnalyticsAlgolia();
 
@@ -66,132 +64,126 @@ const Routes = () => {
           onDownload={handleDownload}
         />
       )}
-      <Switch>
-        <Route path={path + analytics({}).productivity.template}>
-          <Switch>
+      <Routes>
+        <Route path={`${analytics({}).productivity.template}/*`} element={
+          <Routes>
             <Route
-              exact
-              path={
-                path +
-                analytics({}).productivity.template +
-                analytics({}).productivity({}).metric.template
-              }
-            >
-              <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
-                <Frame title="Resource & Data Sharing">
-                  <ProductivityBody />
-                </Frame>
-              </AnalyticsPage>
-            </Route>
-            <Redirect
-              to={analytics({}).productivity({}).metric({ metric: 'user' }).$}
-            />
-          </Switch>
-        </Route>
-        <Route path={path + analytics({}).collaboration.template}>
-          <Switch>
-            <Route
-              exact
-              path={
-                path +
-                analytics({}).collaboration.template +
-                analytics({}).collaboration({}).collaborationPath.template
-              }
-            >
-              <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
-                <Frame title="Collaboration">
-                  <CollaborationBody />
-                </Frame>
-              </AnalyticsPage>
-            </Route>
-            <Redirect
-              to={
-                analytics({})
-                  .collaboration({})
-                  .collaborationPath({ metric: 'user', type: 'within-team' }).$
-              }
-            />
-          </Switch>
-        </Route>
-        <Route path={path + analytics({}).engagement.template}>
-          <Switch>
-            <Route
-              exact
-              path={
-                path +
-                analytics({}).engagement.template +
-                analytics({}).engagement({}).metric.template
-              }
-            >
-              <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
-                <Frame title="Engagement">
-                  <EngagementBody />
-                </Frame>
-              </AnalyticsPage>
-            </Route>
-            <Redirect
-              to={
-                analytics({}).engagement({}).metric({ metric: 'presenters' }).$
-              }
-            />
-          </Switch>
-        </Route>
-        <Route path={path + analytics({}).leadership.template}>
-          <Switch>
-            <Route
-              exact
-              path={
-                path +
-                analytics({}).leadership.template +
-                analytics({}).leadership({}).metric.template
-              }
-            >
-              <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
-                <Frame title="Leadership & Membership">
-                  <LeadershipBody />
-                </Frame>
-              </AnalyticsPage>
-            </Route>
-
-            <Redirect
-              to={
-                analytics({}).leadership({}).metric({ metric: 'working-group' })
-                  .$
-              }
-            />
-          </Switch>
-        </Route>
-        {isEnabled('ANALYTICS_PHASE_TWO') && (
-          <Route path={path + analytics({}).openScience.template}>
-            <Switch>
-              <Route
-                exact
-                path={
-                  path +
-                  analytics({}).openScience.template +
-                  analytics({}).openScience({}).metric.template
-                }
-              >
+              path={analytics({}).productivity({}).metric.template}
+              element={
                 <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
-                  <Frame title="Open Science">
-                    <OpenScienceBody />
+                  <Frame title="Resource & Data Sharing">
+                    <ProductivityBody />
                   </Frame>
                 </AnalyticsPage>
-              </Route>
-              <Redirect
+              }
+            />
+            <Route path="*" element={
+              <Navigate
+                to={analytics({}).productivity({}).metric({ metric: 'user' }).$}
+                replace
+              />
+            } />
+          </Routes>
+        } />
+        <Route path={`${analytics({}).collaboration.template}/*`} element={
+          <Routes>
+            <Route
+              path={analytics({}).collaboration({}).collaborationPath.template}
+              element={
+                <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                  <Frame title="Collaboration">
+                    <CollaborationBody />
+                  </Frame>
+                </AnalyticsPage>
+              }
+            />
+            <Route path="*" element={
+              <Navigate
                 to={
                   analytics({})
-                    .openScience({})
-                    .metric({ metric: 'preprint-compliance' }).$
+                    .collaboration({})
+                    .collaborationPath({ metric: 'user', type: 'within-team' }).$
+                }
+                replace
+              />
+            } />
+          </Routes>
+        } />
+        <Route path={`${analytics({}).engagement.template}/*`} element={
+          <Routes>
+            <Route
+              path={analytics({}).engagement({}).metric.template}
+              element={
+                <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                  <Frame title="Engagement">
+                    <EngagementBody />
+                  </Frame>
+                </AnalyticsPage>
+              }
+            />
+            <Route path="*" element={
+              <Navigate
+                to={
+                  analytics({}).engagement({}).metric({ metric: 'presenters' }).$
+                }
+                replace
+              />
+            } />
+          </Routes>
+        } />
+        <Route path={`${analytics({}).leadership.template}/*`} element={
+          <Routes>
+            <Route
+              path={analytics({}).leadership({}).metric.template}
+              element={
+                <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                  <Frame title="Leadership & Membership">
+                    <LeadershipBody />
+                  </Frame>
+                </AnalyticsPage>
+              }
+            />
+            <Route path="*" element={
+              <Navigate
+                to={
+                  analytics({}).leadership({}).metric({ metric: 'working-group' })
+                    .$
+                }
+                replace
+              />
+            } />
+          </Routes>
+        } />
+        {isEnabled('ANALYTICS_PHASE_TWO') && (
+          <Route path={`${analytics({}).openScience.template}/*`} element={
+            <Routes>
+              <Route
+                path={analytics({}).openScience({}).metric.template}
+                element={
+                  <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                    <Frame title="Open Science">
+                      <OpenScienceBody />
+                    </Frame>
+                  </AnalyticsPage>
                 }
               />
-            </Switch>
-          </Route>
+              <Route path="*" element={
+                <Navigate
+                  to={
+                    analytics({})
+                      .openScience({})
+                      .metric({ metric: 'preprint-compliance' }).$
+                  }
+                  replace
+                />
+              } />
+            </Routes>
+          } />
         )}
-        <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
-      </Switch>
+        <Route path="*" element={<Navigate to={analytics({}).productivity({ metric: 'user' }).$} replace />} />
+      </Routes>
     </>
   );
 };
 
-export default Routes;
+export default AnalyticsRoutes;

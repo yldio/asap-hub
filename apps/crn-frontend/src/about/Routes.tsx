@@ -15,13 +15,16 @@ const About: FC<Record<string, never>> = () => {
 
   return (
     <Routes>
-      <Route index element={
-        <AboutPage>
-          <Frame title="About ASAP">
-            <AboutBody />
-          </Frame>
-        </AboutPage>
-      } />
+      <Route
+        index
+        element={
+          <AboutPage>
+            <Frame title="About ASAP">
+              <AboutBody />
+            </Frame>
+          </AboutPage>
+        }
+      />
     </Routes>
   );
 };

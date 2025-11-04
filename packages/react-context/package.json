@@ -15,7 +15,7 @@
     "test:coverage": "WORKSPACE_PATH=packages/react-context; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
   },
   "peerDependencies": {
-    "react": "^19.0.0"
+    "react": "^18.3.0"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",
@@ -33,9 +33,9 @@
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.1.0",
     "@types/jest": "29.5.14",
-    "@types/react": "19.0.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-test-renderer": "19.0.0"
+    "@types/react": "18.3.12",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-test-renderer": "18.3.1"
   }
 }

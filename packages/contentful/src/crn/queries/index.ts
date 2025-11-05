@@ -15,6 +15,7 @@ export * from './manuscript.queries';
 export * from './manuscript-versions.queries';
 export * from './news.queries';
 export * from './pages.queries';
+export * from './projects.queries';
 export * from './reminders.queries';
 export * from './research-outputs.queries';
 export * from './research-tags.queries';

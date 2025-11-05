@@ -72,16 +72,19 @@ export function useValidation<T extends ValidationTarget>(
 } {
   const inputRef = useRef<T>(null);
   const [validationMessage, setValidationMessage] = useState('');
+
   useEffect(() => {
-    const input = inputRef.current!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    if (!skipValidation) {
-      input.setCustomValidity(customValidationMessage);
-      // Only update the validation message state if there's a custom message
-      // Don't call reportValidity() here - it will show errors immediately
-      // Validation display should only happen on blur, invalid events, or form submission
-      if (customValidationMessage) {
-        setValidationMessage(customValidationMessage);
-      }
+    const input = inputRef.current;
+    if (!input || skipValidation) return;
+
+    // Set the custom validity on the input element so browser knows about it
+    // But DON'T set the validationMessage state here - that would display it immediately
+    input.setCustomValidity(customValidationMessage);
+    // Only update the validation message state if there's a custom message
+    // Don't call reportValidity() here - it will show errors immediately
+    // Validation display should only happen on blur, invalid events, or form submission
+    if (customValidationMessage) {
+      setValidationMessage(customValidationMessage);
     }
 
     return () => {
@@ -93,6 +96,7 @@ export function useValidation<T extends ValidationTarget>(
     if (inputRef.current && !skipValidation) {
       const inputField = inputRef.current;
       const inputFieldValidity = inputField.validity.valid;
+      // Only NOW set the validation message state, which triggers display
       setValidationMessage(
         (getValidationMessage &&
           !inputFieldValidity &&

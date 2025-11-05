@@ -170,10 +170,18 @@ const ManuscriptAuthors = ({
               }
 
               if (validate) {
+                // Trigger React Hook Form validation first to ensure state is updated
+                // Then run custom validation
+                trigger(`versions.0.${fieldName}`).then(() => {
+                  validate();
+                });
+              }
+            }}
+            onBlur={() => {
+              if (validate) {
                 validate();
               }
             }}
-            onBlur={validate}
             values={authors || []}
             noOptionsMessage={({ inputValue }) =>
               `Sorry, no authors match ${inputValue}`

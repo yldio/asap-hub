@@ -1,5 +1,5 @@
 import { css, useTheme } from '@emotion/react';
-import { FC, useCallback, useEffect, useMemo, useRef, ReactNode } from 'react';
+import { FC, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
 import Select, {
   ControlProps,
   OptionTypeBase,
@@ -89,25 +89,16 @@ export default function Dropdown<V extends string>({
       getValidationMessage,
     );
 
-  const initialRender = useRef(true);
-  const checkValidation = useCallback(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
-    } else {
+  const [hasBlurred, setHasBlurred] = useState(false);
+  const previousValue = useRef(value);
+
+  // Only validate when value changes AFTER user has interacted (blurred)
+  useEffect(() => {
+    if (hasBlurred && previousValue.current !== value) {
       validate();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (required === false) {
-      checkValidation();
-    }
-  }, [required, checkValidation]);
-
-  useEffect(() => {
-    checkValidation();
-  }, [value, checkValidation]);
+    previousValue.current = value;
+  }, [value, hasBlurred, validate]);
 
   const validOptions = useMemo(
     () => options.filter((option) => option.value !== ''),
@@ -139,7 +130,8 @@ export default function Dropdown<V extends string>({
         tabSelectsValue={false}
         autoComplete={uuidV4()}
         onBlur={() => {
-          checkValidation();
+          setHasBlurred(true);
+          validate();
           onBlur();
         }}
         aria-label={name}

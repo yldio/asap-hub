@@ -275,17 +275,14 @@ const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
                       ? [
                           styles,
                           inputStyles,
-                          validationMessage && {
-                            borderColor: ember.rgb,
+                          (validationMessage || hasError) && {
+                            backgroundColor: rose.rgb,
+                            borderColor: `${ember.rgb}!important`,
                           },
                           colors?.primary500 && {
                             ':focus': {
                               borderColor: colors?.primary500.rgba,
                             },
-                          },
-                          hasError && {
-                            backgroundColor: rose.rgb,
-                            borderColor: `${ember.rgb}!important`,
                           },
                           !enabled && {
                             color: lead.rgb,
@@ -294,7 +291,10 @@ const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
                         ]
                       : [markdownStyles]
                   }
-                  onBlur={onBlur}
+                  onBlur={(e: React.FocusEvent) => {
+                    validationTargetProps.onBlur(e);
+                    onBlur?.();
+                  }}
                 />
               }
               placeholder={

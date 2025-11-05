@@ -24,36 +24,51 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
   const [currentTime] = useState(new Date());
   return (
     <Routes>
-      <Route path={gp2.workingGroups({}).operational.template} element={
-        <WorkingGroupsPage>
-          <Frame title="Working Groups">
-            <WorkingGroupList role={'operational'} />
-          </Frame>
-        </WorkingGroupsPage>
-      } />
-      <Route path={gp2.workingGroups({}).support.template} element={
-        <WorkingGroupsPage>
-          <Frame title="Working Groups">
-            <WorkingGroupList role={'support'} />
-          </Frame>
-        </WorkingGroupsPage>
-      } />
-      <Route path={gp2.workingGroups({}).complexDisease.template} element={
-        <WorkingGroupsPage>
-          <Frame title="Working Groups">
-            <WorkingGroupList role={'complexDisease'} />
-          </Frame>
-        </WorkingGroupsPage>
-      } />
-      <Route path={gp2.workingGroups({}).monogenic.template} element={
-        <WorkingGroupsPage>
-          <Frame title="Working Groups">
-            <WorkingGroupList role={'monogenic'} />
-          </Frame>
-        </WorkingGroupsPage>
-      } />
-      <Route path={`${workingGroups({}).workingGroup.template}/*`} element={<WorkingGroupDetail currentTime={currentTime} />} />
-      <Route index element={<Navigate to={gp2.workingGroups({}).operational.template} replace />} />
+      <Route
+        path="operational"
+        element={
+          <WorkingGroupsPage>
+            <Frame title="Working Groups">
+              <WorkingGroupList role={'operational'} />
+            </Frame>
+          </WorkingGroupsPage>
+        }
+      />
+      <Route
+        path="support"
+        element={
+          <WorkingGroupsPage>
+            <Frame title="Working Groups">
+              <WorkingGroupList role={'support'} />
+            </Frame>
+          </WorkingGroupsPage>
+        }
+      />
+      <Route
+        path="complex-disease"
+        element={
+          <WorkingGroupsPage>
+            <Frame title="Working Groups">
+              <WorkingGroupList role={'complexDisease'} />
+            </Frame>
+          </WorkingGroupsPage>
+        }
+      />
+      <Route
+        path="monogenic"
+        element={
+          <WorkingGroupsPage>
+            <Frame title="Working Groups">
+              <WorkingGroupList role={'monogenic'} />
+            </Frame>
+          </WorkingGroupsPage>
+        }
+      />
+      <Route
+        path=":workingGroupId/*"
+        element={<WorkingGroupDetail currentTime={currentTime} />}
+      />
+      <Route index element={<Navigate to="operational" replace />} />
     </Routes>
   );
 };

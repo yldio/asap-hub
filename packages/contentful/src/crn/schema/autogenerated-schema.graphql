@@ -4738,6 +4738,111 @@ enum MigrationOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones)"""
+type Milestones implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  externalLink(locale: String): String
+  linkedFrom(allowedLocales: [String]): MilestonesLinkingCollections
+  status(locale: String): String
+  sys: Sys!
+  title(locale: String): String
+}
+
+type MilestonesCollection {
+  items: [Milestones]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input MilestonesFilter {
+  AND: [MilestonesFilter]
+  OR: [MilestonesFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  externalLink: String
+  externalLink_contains: String
+  externalLink_exists: Boolean
+  externalLink_in: [String]
+  externalLink_not: String
+  externalLink_not_contains: String
+  externalLink_not_in: [String]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type MilestonesLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+}
+
+enum MilestonesLinkingCollectionsProjectsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  endDate_ASC
+  endDate_DESC
+  grantId_ASC
+  grantId_DESC
+  projectId_ASC
+  projectId_DESC
+  projectType_ASC
+  projectType_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum MilestonesOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)"""
 type News implements Entry & _Node {
   _id: ID!
@@ -5151,6 +5256,308 @@ enum PreliminaryDataSharingOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projectMembership)"""
+type ProjectMembership implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ProjectMembershipLinkingCollections
+  projectMember(locale: String, preview: Boolean): ProjectMembershipProjectMember
+  role(locale: String): String
+  sys: Sys!
+}
+
+type ProjectMembershipCollection {
+  items: [ProjectMembership]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ProjectMembershipFilter {
+  AND: [ProjectMembershipFilter]
+  OR: [ProjectMembershipFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  projectMember_exists: Boolean
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+}
+
+type ProjectMembershipLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ProjectMembershipLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+}
+
+enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  endDate_ASC
+  endDate_DESC
+  grantId_ASC
+  grantId_DESC
+  projectId_ASC
+  projectId_DESC
+  projectType_ASC
+  projectType_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum ProjectMembershipOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+union ProjectMembershipProjectMember = Teams | Users
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects)"""
+type Projects implements Entry & _Node {
+  _id: ID!
+  applicationNumber(locale: String): String
+  contactEmail(locale: String): String
+  contentfulMetadata: ContentfulMetadata!
+  endDate(locale: String): DateTime
+  grantId(locale: String): String
+  linkedFrom(allowedLocales: [String]): ProjectsLinkingCollections
+  membersCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectsMembersCollection
+  milestonesCollection(limit: Int = 100, locale: String, order: [ProjectsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): ProjectsMilestonesCollection
+  originalGrant(locale: String): String
+  projectId(locale: String): String
+  projectType(locale: String): String
+  proposal(locale: String, preview: Boolean, where: ResearchOutputsFilter): ResearchOutputs
+  researchTagsCollection(limit: Int = 100, locale: String, order: [ProjectsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ProjectsResearchTagsCollection
+  resourceType(locale: String, preview: Boolean, where: ResourceTypeFilter): ResourceType
+  startDate(locale: String): DateTime
+  status(locale: String): String
+  supplementGrant(locale: String, preview: Boolean, where: SupplementGrantFilter): SupplementGrant
+  sys: Sys!
+  title(locale: String): String
+}
+
+type ProjectsCollection {
+  items: [Projects]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ProjectsFilter {
+  AND: [ProjectsFilter]
+  OR: [ProjectsFilter]
+  applicationNumber: String
+  applicationNumber_contains: String
+  applicationNumber_exists: Boolean
+  applicationNumber_in: [String]
+  applicationNumber_not: String
+  applicationNumber_not_contains: String
+  applicationNumber_not_in: [String]
+  contactEmail: String
+  contactEmail_contains: String
+  contactEmail_exists: Boolean
+  contactEmail_in: [String]
+  contactEmail_not: String
+  contactEmail_not_contains: String
+  contactEmail_not_in: [String]
+  contentfulMetadata: ContentfulMetadataFilter
+  endDate: DateTime
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  grantId: String
+  grantId_contains: String
+  grantId_exists: Boolean
+  grantId_in: [String]
+  grantId_not: String
+  grantId_not_contains: String
+  grantId_not_in: [String]
+  members: cfProjectMembershipNestedFilter
+  membersCollection_exists: Boolean
+  milestones: cfMilestonesNestedFilter
+  milestonesCollection_exists: Boolean
+  originalGrant: String
+  originalGrant_contains: String
+  originalGrant_exists: Boolean
+  originalGrant_in: [String]
+  originalGrant_not: String
+  originalGrant_not_contains: String
+  originalGrant_not_in: [String]
+  projectId: String
+  projectId_contains: String
+  projectId_exists: Boolean
+  projectId_in: [String]
+  projectId_not: String
+  projectId_not_contains: String
+  projectId_not_in: [String]
+  projectType: String
+  projectType_contains: String
+  projectType_exists: Boolean
+  projectType_in: [String]
+  projectType_not: String
+  projectType_not_contains: String
+  projectType_not_in: [String]
+  proposal: cfResearchOutputsNestedFilter
+  proposal_exists: Boolean
+  researchTags: cfResearchTagsNestedFilter
+  researchTagsCollection_exists: Boolean
+  resourceType: cfResourceTypeNestedFilter
+  resourceType_exists: Boolean
+  startDate: DateTime
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  supplementGrant: cfSupplementGrantNestedFilter
+  supplementGrant_exists: Boolean
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type ProjectsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+type ProjectsMembersCollection {
+  items: [ProjectMembership]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ProjectsMembersCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type ProjectsMilestonesCollection {
+  items: [Milestones]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ProjectsMilestonesCollectionOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum ProjectsOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  endDate_ASC
+  endDate_DESC
+  grantId_ASC
+  grantId_DESC
+  projectId_ASC
+  projectId_DESC
+  projectType_ASC
+  projectType_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type ProjectsResearchTagsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ProjectsResearchTagsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """The 'Quality' type represents quality as whole numeric values between `1` and `100`."""
 scalar Quality
 
@@ -5216,12 +5623,18 @@ type Query {
   messagesCollection(limit: Int = 100, locale: String, order: [MessagesOrder], preview: Boolean, skip: Int = 0, where: MessagesFilter): MessagesCollection
   migration(id: String!, locale: String, preview: Boolean): Migration
   migrationCollection(limit: Int = 100, locale: String, order: [MigrationOrder], preview: Boolean, skip: Int = 0, where: MigrationFilter): MigrationCollection
+  milestones(id: String!, locale: String, preview: Boolean): Milestones
+  milestonesCollection(limit: Int = 100, locale: String, order: [MilestonesOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): MilestonesCollection
   news(id: String!, locale: String, preview: Boolean): News
   newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
   pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
   preliminaryDataSharing(id: String!, locale: String, preview: Boolean): PreliminaryDataSharing
   preliminaryDataSharingCollection(limit: Int = 100, locale: String, order: [PreliminaryDataSharingOrder], preview: Boolean, skip: Int = 0, where: PreliminaryDataSharingFilter): PreliminaryDataSharingCollection
+  projectMembership(id: String!, locale: String, preview: Boolean): ProjectMembership
+  projectMembershipCollection(limit: Int = 100, locale: String, order: [ProjectMembershipOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectMembershipCollection
+  projects(id: String!, locale: String, preview: Boolean): Projects
+  projectsCollection(limit: Int = 100, locale: String, order: [ProjectsOrder], preview: Boolean, skip: Int = 0, where: ProjectsFilter): ProjectsCollection
   researchOutputVersions(id: String!, locale: String, preview: Boolean): ResearchOutputVersions
   researchOutputVersionsCollection(limit: Int = 100, locale: String, order: [ResearchOutputVersionsOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputVersionsFilter): ResearchOutputVersionsCollection
   researchOutputs(id: String!, locale: String, preview: Boolean): ResearchOutputs
@@ -5230,6 +5643,8 @@ type Query {
   researchTagsCollection(limit: Int = 100, locale: String, order: [ResearchTagsOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchTagsCollection
   researchTheme(id: String!, locale: String, preview: Boolean): ResearchTheme
   researchThemeCollection(limit: Int = 100, locale: String, order: [ResearchThemeOrder], preview: Boolean, skip: Int = 0, where: ResearchThemeFilter): ResearchThemeCollection
+  resourceType(id: String!, locale: String, preview: Boolean): ResourceType
+  resourceTypeCollection(limit: Int = 100, locale: String, order: [ResourceTypeOrder], preview: Boolean, skip: Int = 0, where: ResourceTypeFilter): ResourceTypeCollection
   supplementGrant(id: String!, locale: String, preview: Boolean): SupplementGrant
   supplementGrantCollection(limit: Int = 100, locale: String, order: [SupplementGrantOrder], preview: Boolean, skip: Int = 0, where: SupplementGrantFilter): SupplementGrantCollection
   teamMembership(id: String!, locale: String, preview: Boolean): TeamMembership
@@ -5842,6 +6257,7 @@ enum ResearchOutputsLabsCollectionOrder {
 type ResearchOutputsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   supplementGrantCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsSupplementGrantCollectionOrder], preview: Boolean, skip: Int = 0): SupplementGrantCollection
   teamsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): TeamsCollection
@@ -5878,6 +6294,33 @@ enum ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder {
   title_DESC
   url_ASC
   url_DESC
+}
+
+enum ResearchOutputsLinkingCollectionsProjectsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  endDate_ASC
+  endDate_DESC
+  grantId_ASC
+  grantId_DESC
+  projectId_ASC
+  projectId_DESC
+  projectType_ASC
+  projectType_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -6272,6 +6715,7 @@ type ResearchTagsLinkingCollections {
   eventsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
   interestGroupsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
   newsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0): NewsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   teamsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): TeamsCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
@@ -6358,6 +6802,33 @@ enum ResearchTagsLinkingCollectionsNewsCollectionOrder {
   link_DESC
   publishDate_ASC
   publishDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum ResearchTagsLinkingCollectionsProjectsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  endDate_ASC
+  endDate_DESC
+  grantId_ASC
+  grantId_DESC
+  projectId_ASC
+  projectId_DESC
+  projectType_ASC
+  projectType_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -6656,6 +7127,81 @@ type ResourceSys {
   urn: String!
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/resourceType)"""
+type ResourceType implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ResourceTypeLinkingCollections
+  name(locale: String): String
+  sys: Sys!
+}
+
+type ResourceTypeCollection {
+  items: [ResourceType]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ResourceTypeFilter {
+  AND: [ResourceTypeFilter]
+  OR: [ResourceTypeFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+}
+
+type ResourceTypeLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ResourceTypeLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+}
+
+enum ResourceTypeLinkingCollectionsProjectsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  endDate_ASC
+  endDate_DESC
+  grantId_ASC
+  grantId_DESC
+  projectId_ASC
+  projectId_DESC
+  projectType_ASC
+  projectType_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum ResourceTypeOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/supplementGrant)"""
 type SupplementGrant implements Entry & _Node {
   _id: ID!
@@ -6719,7 +7265,35 @@ input SupplementGrantFilter {
 
 type SupplementGrantLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [SupplementGrantLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
   teamsCollection(limit: Int = 100, locale: String, order: [SupplementGrantLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): TeamsCollection
+}
+
+enum SupplementGrantLinkingCollectionsProjectsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  endDate_ASC
+  endDate_DESC
+  grantId_ASC
+  grantId_DESC
+  projectId_ASC
+  projectId_DESC
+  projectType_ASC
+  projectType_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
@@ -7099,6 +7673,7 @@ type TeamsLinkingCollections {
   manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
   preliminaryDataSharingCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsPreliminaryDataSharingCollectionOrder], preview: Boolean, skip: Int = 0): PreliminaryDataSharingCollection
+  projectMembershipCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsProjectMembershipCollectionOrder], preview: Boolean, skip: Int = 0): ProjectMembershipCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   teamMembershipCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsTeamMembershipCollectionOrder], preview: Boolean, skip: Int = 0): TeamMembershipCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
@@ -7249,6 +7824,19 @@ enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
 enum TeamsLinkingCollectionsPreliminaryDataSharingCollectionOrder {
   preliminaryDataShared_ASC
   preliminaryDataShared_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum TeamsLinkingCollectionsProjectMembershipCollectionOrder {
+  role_ASC
+  role_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -8226,6 +8814,7 @@ type UsersLinkingCollections {
   manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
   messagesCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsMessagesCollectionOrder], preview: Boolean, skip: Int = 0): MessagesCollection
+  projectMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCollectionOrder], preview: Boolean, skip: Int = 0): ProjectMembershipCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupLeadersCollection
@@ -8401,6 +8990,19 @@ enum UsersLinkingCollectionsManuscriptsCollectionOrder {
 }
 
 enum UsersLinkingCollectionsMessagesCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsProjectMembershipCollectionOrder {
+  role_ASC
+  role_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -9840,6 +10442,41 @@ input cfMessagesNestedFilter {
   text_not_in: [String]
 }
 
+input cfMilestonesNestedFilter {
+  AND: [cfMilestonesNestedFilter]
+  OR: [cfMilestonesNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  externalLink: String
+  externalLink_contains: String
+  externalLink_exists: Boolean
+  externalLink_in: [String]
+  externalLink_not: String
+  externalLink_not_contains: String
+  externalLink_not_in: [String]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
 input cfNewsNestedFilter {
   AND: [cfNewsNestedFilter]
   OR: [cfNewsNestedFilter]
@@ -9950,6 +10587,21 @@ input cfPreliminaryDataSharingNestedFilter {
   preliminaryDataShared_not: Boolean
   sys: SysFilter
   team_exists: Boolean
+}
+
+input cfProjectMembershipNestedFilter {
+  AND: [cfProjectMembershipNestedFilter]
+  OR: [cfProjectMembershipNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  projectMember_exists: Boolean
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
 }
 
 input cfResearchOutputVersionsNestedFilter {
@@ -10238,6 +10890,20 @@ input cfResearchTagsNestedFilter {
 input cfResearchThemeNestedFilter {
   AND: [cfResearchThemeNestedFilter]
   OR: [cfResearchThemeNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+}
+
+input cfResourceTypeNestedFilter {
+  AND: [cfResourceTypeNestedFilter]
+  OR: [cfResourceTypeNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
   name: String
   name_contains: String

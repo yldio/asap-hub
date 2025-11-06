@@ -1,5 +1,5 @@
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
-import { NetworkPage } from '@asap-hub/react-components';
+import { NetworkPage, Paragraph } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
@@ -92,15 +92,42 @@ const Network: FC<Record<string, never>> = () => {
           <UserProfile currentTime={currentTime} />
         </Frame>
       </Route>
-      <Route exact path={path + network({}).teams.template}>
+      <Route exact path={path + network({}).discoveryTeams.template}>
         <NetworkPage
-          page="teams"
+          page="discovery-teams"
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
           filters={filters}
           onChangeFilter={toggleFilter}
+          pageDescription={
+            <Paragraph noMargin accent="lead">
+              Discovery Teams conduct collaborative research projects focused on
+              advancing scientific understanding within a defined theme or area
+              of inquiry.
+            </Paragraph>
+          }
         >
-          <SearchFrame title="Teams">
+          <SearchFrame title="Discovery Teams">
+            <TeamList filters={filters} searchQuery={debouncedSearchQuery} />
+          </SearchFrame>
+        </NetworkPage>
+      </Route>
+      <Route exact path={path + network({}).resourceTeams.template}>
+        <NetworkPage
+          page="resource-teams"
+          searchQuery={searchQuery}
+          onChangeSearchQuery={setSearchQuery}
+          filters={filters}
+          onChangeFilter={toggleFilter}
+          pageDescription={
+            <Paragraph noMargin accent="lead">
+              Resource Teams support the development of tools, services, and
+              shared resources to enable the CRN and ultimately strengthen the
+              broader research community.
+            </Paragraph>
+          }
+        >
+          <SearchFrame title="Resource Teams">
             <TeamList filters={filters} searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>

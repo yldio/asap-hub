@@ -26856,6 +26856,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-spawn@npm:^7.0.6":
+  version: 7.0.6
+  resolution: "cross-spawn@npm:7.0.6"
+  dependencies:
+    path-key: ^3.1.0
+    shebang-command: ^2.0.0
+    which: ^2.0.1
+  checksum: 8d306efacaf6f3f60e0224c287664093fa9185680b2d195852ba9a863f85d02dcc737094c6e512175f8ee0161f9b87c73c6826034c2422e39de7d6569cf4503b
+  languageName: node
+  linkType: hard
+
 "crypto-js@npm:^4.2.0":
   version: 4.2.0
   resolution: "crypto-js@npm:4.2.0"
@@ -36010,17 +36021,17 @@ __metadata:
   linkType: hard
 
 "jest-transform-css@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "jest-transform-css@npm:6.0.1"
+  version: 6.0.3
+  resolution: "jest-transform-css@npm:6.0.3"
   dependencies:
     common-tags: 1.8.2
-    cross-spawn: 7.0.3
+    cross-spawn: ^7.0.6
     postcss-load-config: 4.0.1
     postcss-modules: 4.3.1
     style-inject: 0.3.0
   peerDependencies:
     postcss: ^8.4.12
-  checksum: a2ce6a38cde4d343b2f0459dd223e8ad509fc56c28d4b4a3d1a11a2dc9b28bf659131ca8d8108eba4c90a070467e51b98d1cf1bd9b0a8114e488e2fc07bab71b
+  checksum: 6db2e256e799eb598e32c8e562285c7d4b0fa68533b82763faa698cecdbc95aff48aafa3567364072efc7cf4c8e77475027235f9057b06f65367c8aeecdbecf5
   languageName: node
   linkType: hard
 

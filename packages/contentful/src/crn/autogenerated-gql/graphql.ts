@@ -6714,6 +6714,8 @@ export enum MilestonesLinkingCollectionsProjectsCollectionOrder {
   ContactEmailDesc = 'contactEmail_DESC',
   EndDateAsc = 'endDate_ASC',
   EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
   GrantIdAsc = 'grantId_ASC',
   GrantIdDesc = 'grantId_DESC',
   ProjectIdAsc = 'projectId_ASC',
@@ -7410,6 +7412,8 @@ export enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
   ContactEmailDesc = 'contactEmail_DESC',
   EndDateAsc = 'endDate_ASC',
   EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
   GrantIdAsc = 'grantId_ASC',
   GrantIdDesc = 'grantId_DESC',
   ProjectIdAsc = 'projectId_ASC',
@@ -7453,6 +7457,7 @@ export type Projects = Entry &
     contactEmail?: Maybe<Scalars['String']>;
     contentfulMetadata: ContentfulMetadata;
     endDate?: Maybe<Scalars['DateTime']>;
+    googleDriveLink?: Maybe<Scalars['String']>;
     grantId?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ProjectsLinkingCollections>;
     membersCollection?: Maybe<ProjectsMembersCollection>;
@@ -7482,6 +7487,11 @@ export type ProjectsContactEmailArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
 export type ProjectsEndDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsGoogleDriveLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -7610,6 +7620,13 @@ export type ProjectsFilter = {
   endDate_lte?: InputMaybe<Scalars['DateTime']>;
   endDate_not?: InputMaybe<Scalars['DateTime']>;
   endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  googleDriveLink?: InputMaybe<Scalars['String']>;
+  googleDriveLink_contains?: InputMaybe<Scalars['String']>;
+  googleDriveLink_exists?: InputMaybe<Scalars['Boolean']>;
+  googleDriveLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleDriveLink_not?: InputMaybe<Scalars['String']>;
+  googleDriveLink_not_contains?: InputMaybe<Scalars['String']>;
+  googleDriveLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   grantId?: InputMaybe<Scalars['String']>;
   grantId_contains?: InputMaybe<Scalars['String']>;
   grantId_exists?: InputMaybe<Scalars['Boolean']>;
@@ -7740,6 +7757,8 @@ export enum ProjectsOrder {
   ContactEmailDesc = 'contactEmail_DESC',
   EndDateAsc = 'endDate_ASC',
   EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
   GrantIdAsc = 'grantId_ASC',
   GrantIdDesc = 'grantId_DESC',
   ProjectIdAsc = 'projectId_ASC',
@@ -9712,6 +9731,8 @@ export enum ResearchOutputsLinkingCollectionsProjectsCollectionOrder {
   ContactEmailDesc = 'contactEmail_DESC',
   EndDateAsc = 'endDate_ASC',
   EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
   GrantIdAsc = 'grantId_ASC',
   GrantIdDesc = 'grantId_DESC',
   ProjectIdAsc = 'projectId_ASC',
@@ -10352,6 +10373,8 @@ export enum ResearchTagsLinkingCollectionsProjectsCollectionOrder {
   ContactEmailDesc = 'contactEmail_DESC',
   EndDateAsc = 'endDate_ASC',
   EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
   GrantIdAsc = 'grantId_ASC',
   GrantIdDesc = 'grantId_DESC',
   ProjectIdAsc = 'projectId_ASC',
@@ -10758,6 +10781,8 @@ export enum ResourceTypeLinkingCollectionsProjectsCollectionOrder {
   ContactEmailDesc = 'contactEmail_DESC',
   EndDateAsc = 'endDate_ASC',
   EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
   GrantIdAsc = 'grantId_ASC',
   GrantIdDesc = 'grantId_DESC',
   ProjectIdAsc = 'projectId_ASC',
@@ -10925,6 +10950,8 @@ export enum SupplementGrantLinkingCollectionsProjectsCollectionOrder {
   ContactEmailDesc = 'contactEmail_DESC',
   EndDateAsc = 'endDate_ASC',
   EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
   GrantIdAsc = 'grantId_ASC',
   GrantIdDesc = 'grantId_DESC',
   ProjectIdAsc = 'projectId_ASC',
@@ -24309,6 +24336,7 @@ export type ProjectsContentDataFragment = Pick<
   | 'endDate'
   | 'applicationNumber'
   | 'contactEmail'
+  | 'googleDriveLink'
 > & {
   sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
   supplementGrant?: Maybe<
@@ -24401,6 +24429,7 @@ export type FetchProjectsQuery = {
             | 'endDate'
             | 'applicationNumber'
             | 'contactEmail'
+            | 'googleDriveLink'
           > & {
             sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
             supplementGrant?: Maybe<
@@ -24497,6 +24526,7 @@ export type FetchProjectByIdQuery = {
       | 'endDate'
       | 'applicationNumber'
       | 'contactEmail'
+      | 'googleDriveLink'
     > & {
       sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
       supplementGrant?: Maybe<
@@ -33384,6 +33414,7 @@ export const ProjectsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'applicationNumber' } },
           { kind: 'Field', name: { kind: 'Name', value: 'contactEmail' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'googleDriveLink' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'supplementGrant' },

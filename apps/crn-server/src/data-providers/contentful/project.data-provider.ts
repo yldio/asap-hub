@@ -208,7 +208,7 @@ export function parseContentfulProject(
           isTeamBased: true,
           teamName: teamMember.displayName || '',
           teamId: teamMember.sys?.id,
-          googleDriveLink: undefined, // TODO: Add this field to Contentful
+          googleDriveLink: item.googleDriveLink,
         } as ResourceProject;
       }
 
@@ -222,7 +222,7 @@ export function parseContentfulProject(
         resourceType: item.resourceType?.name || '',
         isTeamBased: false,
         members: userMembers,
-        googleDriveLink: undefined, // TODO: Add this field to Contentful if needed
+        googleDriveLink: item.googleDriveLink,
       } as ResourceProject;
     }
 

@@ -19,6 +19,7 @@ export const projectsContentQueryFragment = gql`
     endDate
     applicationNumber
     contactEmail
+    googleDriveLink
     supplementGrant {
       sys {
         id

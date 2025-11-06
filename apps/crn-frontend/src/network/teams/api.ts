@@ -27,6 +27,7 @@ import {
   TeamResponse,
   ListManuscriptVersionResponse,
   ManuscriptVersionResponse,
+  TeamType,
 } from '@asap-hub/model';
 import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
 import { getPresignedUrl } from '../../shared-api/files';
@@ -54,16 +55,32 @@ export const getTeam = async (
   return resp.json();
 };
 
+export type GetTeamsListOptions = GetListOptions & {
+  teamType: TeamType | 'all';
+};
+
+const apiEndpointMapper: Record<TeamType | 'all', string> = {
+  'Resource Team': 'resource-teams',
+  'Discovery Team': 'discovery-teams',
+  all: 'teams',
+};
+
 export const getTeams = async (
-  options: GetListOptions,
+  options: GetTeamsListOptions,
   authorization: string,
 ): Promise<ListTeamResponse> => {
-  const resp = await fetch(createListApiUrl('teams', options).toString(), {
-    headers: {
-      authorization,
-      ...createSentryHeaders(),
+  const resp = await fetch(
+    createListApiUrl(
+      apiEndpointMapper[options.teamType ?? 'all'],
+      options,
+    ).toString(),
+    {
+      headers: {
+        authorization,
+        ...createSentryHeaders(),
+      },
     },
-  });
+  );
 
   if (!resp.ok) {
     throw new Error(

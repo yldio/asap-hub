@@ -149,6 +149,8 @@ const team = (() => {
   );
 })();
 const teams = route('/teams', {}, { team });
+const discoveryTeams = route('/discovery-teams', {}, {});
+const resourceTeams = route('/resource-teams', {}, {});
 
 const interestGroup = (() => {
   const about = route('/about', {}, {});
@@ -199,5 +201,12 @@ const workingGroups = route('/working-groups', {}, { workingGroup });
 export default route(
   '/network',
   {},
-  { users, teams, interestGroups, workingGroups },
+  {
+    users,
+    discoveryTeams,
+    resourceTeams,
+    teams,
+    interestGroups,
+    workingGroups,
+  },
 );

@@ -6605,6 +6605,154 @@ export enum MigrationOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type Milestones = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    description?: Maybe<Scalars['String']>;
+    externalLink?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<MilestonesLinkingCollections>;
+    status?: Maybe<Scalars['String']>;
+    sys: Sys;
+    title?: Maybe<Scalars['String']>;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesExternalLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type MilestonesCollection = {
+  items: Array<Maybe<Milestones>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type MilestonesFilter = {
+  AND?: InputMaybe<Array<InputMaybe<MilestonesFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<MilestonesFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink?: InputMaybe<Scalars['String']>;
+  externalLink_contains?: InputMaybe<Scalars['String']>;
+  externalLink_exists?: InputMaybe<Scalars['Boolean']>;
+  externalLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink_not?: InputMaybe<Scalars['String']>;
+  externalLink_not_contains?: InputMaybe<Scalars['String']>;
+  externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type MilestonesLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
+};
+
+export type MilestonesLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type MilestonesLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<MilestonesLinkingCollectionsProjectsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum MilestonesLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum MilestonesOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type News = Entry &
   _Node & {
@@ -7182,6 +7330,458 @@ export enum PreliminaryDataSharingOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projectMembership) */
+export type ProjectMembership = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<ProjectMembershipLinkingCollections>;
+    projectMember?: Maybe<ProjectMembershipProjectMember>;
+    role?: Maybe<Scalars['String']>;
+    sys: Sys;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projectMembership) */
+export type ProjectMembershipLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projectMembership) */
+export type ProjectMembershipProjectMemberArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projectMembership) */
+export type ProjectMembershipRoleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ProjectMembershipCollection = {
+  items: Array<Maybe<ProjectMembership>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ProjectMembershipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ProjectMembershipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ProjectMembershipFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  projectMember_exists?: InputMaybe<Scalars['Boolean']>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ProjectMembershipLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
+};
+
+export type ProjectMembershipLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ProjectMembershipLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ProjectMembershipLinkingCollectionsProjectsCollectionOrder>
+    >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ProjectMembershipOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type ProjectMembershipProjectMember = Teams | Users;
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type Projects = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    applicationNumber?: Maybe<Scalars['String']>;
+    contactEmail?: Maybe<Scalars['String']>;
+    contentfulMetadata: ContentfulMetadata;
+    endDate?: Maybe<Scalars['DateTime']>;
+    grantId?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<ProjectsLinkingCollections>;
+    membersCollection?: Maybe<ProjectsMembersCollection>;
+    milestonesCollection?: Maybe<ProjectsMilestonesCollection>;
+    originalGrant?: Maybe<Scalars['String']>;
+    projectId?: Maybe<Scalars['String']>;
+    projectType?: Maybe<Scalars['String']>;
+    proposal?: Maybe<ResearchOutputs>;
+    researchTagsCollection?: Maybe<ProjectsResearchTagsCollection>;
+    resourceType?: Maybe<ResourceType>;
+    startDate?: Maybe<Scalars['DateTime']>;
+    status?: Maybe<Scalars['String']>;
+    supplementGrant?: Maybe<SupplementGrant>;
+    sys: Sys;
+    title?: Maybe<Scalars['String']>;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsApplicationNumberArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsContactEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsEndDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsGrantIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsMembersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsMembersCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ProjectMembershipFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsMilestonesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsMilestonesCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MilestonesFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsOriginalGrantArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsProjectIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsProjectTypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsProposalArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchOutputsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsResearchTagsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsResearchTagsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsResourceTypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResourceTypeFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsStartDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsSupplementGrantArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<SupplementGrantFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ProjectsCollection = {
+  items: Array<Maybe<Projects>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ProjectsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ProjectsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ProjectsFilter>>>;
+  applicationNumber?: InputMaybe<Scalars['String']>;
+  applicationNumber_contains?: InputMaybe<Scalars['String']>;
+  applicationNumber_exists?: InputMaybe<Scalars['Boolean']>;
+  applicationNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  applicationNumber_not?: InputMaybe<Scalars['String']>;
+  applicationNumber_not_contains?: InputMaybe<Scalars['String']>;
+  applicationNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contactEmail?: InputMaybe<Scalars['String']>;
+  contactEmail_contains?: InputMaybe<Scalars['String']>;
+  contactEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  contactEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contactEmail_not?: InputMaybe<Scalars['String']>;
+  contactEmail_not_contains?: InputMaybe<Scalars['String']>;
+  contactEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  endDate_exists?: InputMaybe<Scalars['Boolean']>;
+  endDate_gt?: InputMaybe<Scalars['DateTime']>;
+  endDate_gte?: InputMaybe<Scalars['DateTime']>;
+  endDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endDate_lt?: InputMaybe<Scalars['DateTime']>;
+  endDate_lte?: InputMaybe<Scalars['DateTime']>;
+  endDate_not?: InputMaybe<Scalars['DateTime']>;
+  endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  grantId?: InputMaybe<Scalars['String']>;
+  grantId_contains?: InputMaybe<Scalars['String']>;
+  grantId_exists?: InputMaybe<Scalars['Boolean']>;
+  grantId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  grantId_not?: InputMaybe<Scalars['String']>;
+  grantId_not_contains?: InputMaybe<Scalars['String']>;
+  grantId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  members?: InputMaybe<CfProjectMembershipNestedFilter>;
+  membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  milestones?: InputMaybe<CfMilestonesNestedFilter>;
+  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  originalGrant?: InputMaybe<Scalars['String']>;
+  originalGrant_contains?: InputMaybe<Scalars['String']>;
+  originalGrant_exists?: InputMaybe<Scalars['Boolean']>;
+  originalGrant_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  originalGrant_not?: InputMaybe<Scalars['String']>;
+  originalGrant_not_contains?: InputMaybe<Scalars['String']>;
+  originalGrant_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectId?: InputMaybe<Scalars['String']>;
+  projectId_contains?: InputMaybe<Scalars['String']>;
+  projectId_exists?: InputMaybe<Scalars['Boolean']>;
+  projectId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectId_not?: InputMaybe<Scalars['String']>;
+  projectId_not_contains?: InputMaybe<Scalars['String']>;
+  projectId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectType?: InputMaybe<Scalars['String']>;
+  projectType_contains?: InputMaybe<Scalars['String']>;
+  projectType_exists?: InputMaybe<Scalars['Boolean']>;
+  projectType_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectType_not?: InputMaybe<Scalars['String']>;
+  projectType_not_contains?: InputMaybe<Scalars['String']>;
+  projectType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  proposal?: InputMaybe<CfResearchOutputsNestedFilter>;
+  proposal_exists?: InputMaybe<Scalars['Boolean']>;
+  researchTags?: InputMaybe<CfResearchTagsNestedFilter>;
+  researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceType?: InputMaybe<CfResourceTypeNestedFilter>;
+  resourceType_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
+  startDate_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate_gt?: InputMaybe<Scalars['DateTime']>;
+  startDate_gte?: InputMaybe<Scalars['DateTime']>;
+  startDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  startDate_lt?: InputMaybe<Scalars['DateTime']>;
+  startDate_lte?: InputMaybe<Scalars['DateTime']>;
+  startDate_not?: InputMaybe<Scalars['DateTime']>;
+  startDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  supplementGrant?: InputMaybe<CfSupplementGrantNestedFilter>;
+  supplementGrant_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ProjectsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ProjectsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ProjectsMembersCollection = {
+  items: Array<Maybe<ProjectMembership>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum ProjectsMembersCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type ProjectsMilestonesCollection = {
+  items: Array<Maybe<Milestones>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum ProjectsMilestonesCollectionOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum ProjectsOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type ProjectsResearchTagsCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum ProjectsResearchTagsCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type Query = {
   _node?: Maybe<_Node>;
   _nodes: Array<Maybe<_Node>>;
@@ -7244,12 +7844,18 @@ export type Query = {
   messagesCollection?: Maybe<MessagesCollection>;
   migration?: Maybe<Migration>;
   migrationCollection?: Maybe<MigrationCollection>;
+  milestones?: Maybe<Milestones>;
+  milestonesCollection?: Maybe<MilestonesCollection>;
   news?: Maybe<News>;
   newsCollection?: Maybe<NewsCollection>;
   pages?: Maybe<Pages>;
   pagesCollection?: Maybe<PagesCollection>;
   preliminaryDataSharing?: Maybe<PreliminaryDataSharing>;
   preliminaryDataSharingCollection?: Maybe<PreliminaryDataSharingCollection>;
+  projectMembership?: Maybe<ProjectMembership>;
+  projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
+  projects?: Maybe<Projects>;
+  projectsCollection?: Maybe<ProjectsCollection>;
   researchOutputVersions?: Maybe<ResearchOutputVersions>;
   researchOutputVersionsCollection?: Maybe<ResearchOutputVersionsCollection>;
   researchOutputs?: Maybe<ResearchOutputs>;
@@ -7258,6 +7864,8 @@ export type Query = {
   researchTagsCollection?: Maybe<ResearchTagsCollection>;
   researchTheme?: Maybe<ResearchTheme>;
   researchThemeCollection?: Maybe<ResearchThemeCollection>;
+  resourceType?: Maybe<ResourceType>;
+  resourceTypeCollection?: Maybe<ResourceTypeCollection>;
   supplementGrant?: Maybe<SupplementGrant>;
   supplementGrantCollection?: Maybe<SupplementGrantCollection>;
   teamMembership?: Maybe<TeamMembership>;
@@ -7734,6 +8342,21 @@ export type QueryMigrationCollectionArgs = {
   where?: InputMaybe<MigrationFilter>;
 };
 
+export type QueryMilestonesArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryMilestonesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<MilestonesOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MilestonesFilter>;
+};
+
 export type QueryNewsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -7777,6 +8400,36 @@ export type QueryPreliminaryDataSharingCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<PreliminaryDataSharingFilter>;
+};
+
+export type QueryProjectMembershipArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryProjectMembershipCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectMembershipOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ProjectMembershipFilter>;
+};
+
+export type QueryProjectsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ProjectsFilter>;
 };
 
 export type QueryResearchOutputVersionsArgs = {
@@ -7837,6 +8490,21 @@ export type QueryResearchThemeCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ResearchThemeFilter>;
+};
+
+export type QueryResourceTypeArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryResourceTypeCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ResourceTypeOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ResourceTypeFilter>;
 };
 
 export type QuerySupplementGrantArgs = {
@@ -8935,6 +9603,7 @@ export enum ResearchOutputsLabsCollectionOrder {
 export type ResearchOutputsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   supplementGrantCollection?: Maybe<SupplementGrantCollection>;
   teamsCollection?: Maybe<TeamsCollection>;
@@ -8954,6 +9623,16 @@ export type ResearchOutputsLinkingCollectionsManuscriptsCollectionArgs = {
     Array<
       InputMaybe<ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder>
     >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ResearchOutputsLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsLinkingCollectionsProjectsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -9024,6 +9703,33 @@ export enum ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder {
   TitleDesc = 'title_DESC',
   UrlAsc = 'url_ASC',
   UrlDesc = 'url_DESC',
+}
+
+export enum ResearchOutputsLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
 export enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -9439,6 +10145,7 @@ export type ResearchTagsLinkingCollections = {
   eventsCollection?: Maybe<EventsCollection>;
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
   newsCollection?: Maybe<NewsCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   teamsCollection?: Maybe<TeamsCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
@@ -9480,6 +10187,16 @@ export type ResearchTagsLinkingCollectionsNewsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<ResearchTagsLinkingCollectionsNewsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ResearchTagsLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchTagsLinkingCollectionsProjectsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -9618,6 +10335,33 @@ export enum ResearchTagsLinkingCollectionsNewsCollectionOrder {
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ResearchTagsLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -9944,6 +10688,109 @@ export type ResourceSys = {
   urn: Scalars['String'];
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/resourceType) */
+export type ResourceType = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<ResourceTypeLinkingCollections>;
+    name?: Maybe<Scalars['String']>;
+    sys: Sys;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/resourceType) */
+export type ResourceTypeLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/resourceType) */
+export type ResourceTypeNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ResourceTypeCollection = {
+  items: Array<Maybe<ResourceType>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ResourceTypeFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ResourceTypeFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ResourceTypeFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ResourceTypeLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
+};
+
+export type ResourceTypeLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ResourceTypeLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResourceTypeLinkingCollectionsProjectsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ResourceTypeLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ResourceTypeOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/supplementGrant) */
 export type SupplementGrant = Entry &
   _Node & {
@@ -10040,12 +10887,23 @@ export type SupplementGrantFilter = {
 
 export type SupplementGrantLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
   teamsCollection?: Maybe<TeamsCollection>;
 };
 
 export type SupplementGrantLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type SupplementGrantLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<SupplementGrantLinkingCollectionsProjectsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -10059,6 +10917,33 @@ export type SupplementGrantLinkingCollectionsTeamsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum SupplementGrantLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
@@ -10579,6 +11464,7 @@ export type TeamsLinkingCollections = {
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
   preliminaryDataSharingCollection?: Maybe<PreliminaryDataSharingCollection>;
+  projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   teamMembershipCollection?: Maybe<TeamMembershipCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
@@ -10658,6 +11544,16 @@ export type TeamsLinkingCollectionsPreliminaryDataSharingCollectionArgs = {
     Array<
       InputMaybe<TeamsLinkingCollectionsPreliminaryDataSharingCollectionOrder>
     >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type TeamsLinkingCollectionsProjectMembershipCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsProjectMembershipCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -10838,6 +11734,19 @@ export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
 export enum TeamsLinkingCollectionsPreliminaryDataSharingCollectionOrder {
   PreliminaryDataSharedAsc = 'preliminaryDataShared_ASC',
   PreliminaryDataSharedDesc = 'preliminaryDataShared_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum TeamsLinkingCollectionsProjectMembershipCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -12222,6 +13131,7 @@ export type UsersLinkingCollections = {
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
   messagesCollection?: Maybe<MessagesCollection>;
+  projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
@@ -12322,6 +13232,16 @@ export type UsersLinkingCollectionsMessagesCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<UsersLinkingCollectionsMessagesCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsProjectMembershipCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsProjectMembershipCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -12536,6 +13456,19 @@ export enum UsersLinkingCollectionsManuscriptsCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsMessagesCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum UsersLinkingCollectionsProjectMembershipCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -14236,6 +15169,41 @@ export type CfMessagesNestedFilter = {
   text_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type CfMilestonesNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfMilestonesNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfMilestonesNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink?: InputMaybe<Scalars['String']>;
+  externalLink_contains?: InputMaybe<Scalars['String']>;
+  externalLink_exists?: InputMaybe<Scalars['Boolean']>;
+  externalLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink_not?: InputMaybe<Scalars['String']>;
+  externalLink_not_contains?: InputMaybe<Scalars['String']>;
+  externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type CfNewsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfNewsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfNewsNestedFilter>>>;
@@ -14346,6 +15314,21 @@ export type CfPreliminaryDataSharingNestedFilter = {
   preliminaryDataShared_not?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
   team_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CfProjectMembershipNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfProjectMembershipNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfProjectMembershipNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  projectMember_exists?: InputMaybe<Scalars['Boolean']>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
 };
 
 export type CfResearchOutputVersionsNestedFilter = {
@@ -14636,6 +15619,20 @@ export type CfResearchTagsNestedFilter = {
 export type CfResearchThemeNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfResearchThemeNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfResearchThemeNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type CfResourceTypeNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfResourceTypeNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfResourceTypeNestedFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   name?: InputMaybe<Scalars['String']>;
   name_contains?: InputMaybe<Scalars['String']>;
@@ -16182,6 +17179,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Migration' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'Milestones' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'News' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -16189,6 +17189,12 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'PreliminaryDataSharing' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'ProjectMembership' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Projects' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'ResearchOutputVersions' } & {
@@ -16201,6 +17207,9 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'ResearchTheme' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'ResourceType' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'SupplementGrant' } & {
@@ -16355,6 +17364,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Migration' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'Milestones' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'News' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -16362,6 +17374,12 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'PreliminaryDataSharing' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'ProjectMembership' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Projects' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'ResearchOutputVersions' } & {
@@ -16374,6 +17392,9 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'ResearchTheme' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'ResourceType' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'SupplementGrant' } & {
@@ -16524,11 +17545,16 @@ export type FetchDiscoverQuery = {
                         })
                     | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'PreliminaryDataSharing' } & {
                         sys: Pick<Sys, 'id'>;
                       })
+                    | ({ __typename: 'ProjectMembership' } & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                    | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'ResearchOutputVersions' } & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -16539,6 +17565,9 @@ export type FetchDiscoverQuery = {
                         sys: Pick<Sys, 'id'>;
                       })
                     | ({ __typename: 'ResearchTheme' } & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                    | ({ __typename: 'ResourceType' } & {
                         sys: Pick<Sys, 'id'>;
                       })
                     | ({ __typename: 'SupplementGrant' } & {
@@ -16832,17 +17861,21 @@ export type EventsContentFragment = Pick<
                   })
               | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'PreliminaryDataSharing' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputVersions' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -16916,17 +17949,21 @@ export type EventsContentFragment = Pick<
                   })
               | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'PreliminaryDataSharing' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputVersions' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -17000,17 +18037,21 @@ export type EventsContentFragment = Pick<
                   })
               | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'PreliminaryDataSharing' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputVersions' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -17209,11 +18250,16 @@ export type FetchEventByIdQuery = {
                       })
                   | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'PreliminaryDataSharing' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'ProjectMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputVersions' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -17222,6 +18268,7 @@ export type FetchEventByIdQuery = {
                     })
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -17307,11 +18354,16 @@ export type FetchEventByIdQuery = {
                       })
                   | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'PreliminaryDataSharing' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'ProjectMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputVersions' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -17320,6 +18372,7 @@ export type FetchEventByIdQuery = {
                     })
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -17405,11 +18458,16 @@ export type FetchEventByIdQuery = {
                       })
                   | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'PreliminaryDataSharing' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'ProjectMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputVersions' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -17418,6 +18476,7 @@ export type FetchEventByIdQuery = {
                     })
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -17663,9 +18722,18 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'PreliminaryDataSharing' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchOutputVersions' } & {
@@ -17678,6 +18746,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchTheme' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'SupplementGrant' } & {
@@ -17801,9 +18872,18 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'PreliminaryDataSharing' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchOutputVersions' } & {
@@ -17816,6 +18896,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchTheme' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'SupplementGrant' } & {
@@ -17939,9 +19022,18 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'PreliminaryDataSharing' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchOutputVersions' } & {
@@ -17954,6 +19046,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchTheme' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'SupplementGrant' } & {
@@ -18241,6 +19336,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -18250,6 +19348,12 @@ export type FetchEventsByUserIdQuery = {
                                     | ({
                                         __typename: 'PreliminaryDataSharing';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({
                                         __typename: 'ResearchOutputVersions';
                                       } & { sys: Pick<Sys, 'id'> })
@@ -18260,6 +19364,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResearchTheme' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -18400,6 +19507,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -18409,6 +19519,12 @@ export type FetchEventsByUserIdQuery = {
                                     | ({
                                         __typename: 'PreliminaryDataSharing';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({
                                         __typename: 'ResearchOutputVersions';
                                       } & { sys: Pick<Sys, 'id'> })
@@ -18419,6 +19535,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResearchTheme' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -18559,6 +19678,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -18568,6 +19690,12 @@ export type FetchEventsByUserIdQuery = {
                                     | ({
                                         __typename: 'PreliminaryDataSharing';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({
                                         __typename: 'ResearchOutputVersions';
                                       } & { sys: Pick<Sys, 'id'> })
@@ -18578,6 +19706,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResearchTheme' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -18894,6 +20025,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -18903,6 +20037,12 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({
                                         __typename: 'PreliminaryDataSharing';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({
                                         __typename: 'ResearchOutputVersions';
                                       } & { sys: Pick<Sys, 'id'> })
@@ -18913,6 +20053,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResearchTheme' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -19053,6 +20196,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -19062,6 +20208,12 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({
                                         __typename: 'PreliminaryDataSharing';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({
                                         __typename: 'ResearchOutputVersions';
                                       } & { sys: Pick<Sys, 'id'> })
@@ -19072,6 +20224,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResearchTheme' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -19212,6 +20367,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -19221,6 +20379,12 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({
                                         __typename: 'PreliminaryDataSharing';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({
                                         __typename: 'ResearchOutputVersions';
                                       } & { sys: Pick<Sys, 'id'> })
@@ -19231,6 +20395,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResearchTheme' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -19547,6 +20714,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -19556,6 +20726,12 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({
                                         __typename: 'PreliminaryDataSharing';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({
                                         __typename: 'ResearchOutputVersions';
                                       } & { sys: Pick<Sys, 'id'> })
@@ -19566,6 +20742,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResearchTheme' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -19706,6 +20885,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -19715,6 +20897,12 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({
                                         __typename: 'PreliminaryDataSharing';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({
                                         __typename: 'ResearchOutputVersions';
                                       } & { sys: Pick<Sys, 'id'> })
@@ -19725,6 +20913,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResearchTheme' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -19865,6 +21056,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -19874,6 +21068,12 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({
                                         __typename: 'PreliminaryDataSharing';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({
                                         __typename: 'ResearchOutputVersions';
                                       } & { sys: Pick<Sys, 'id'> })
@@ -19884,6 +21084,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ResearchTheme' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResourceType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'SupplementGrant' } & {
@@ -21238,9 +22441,18 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                           | ({ __typename: 'Migration' } & {
                               sys: Pick<Sys, 'id'>;
                             })
+                          | ({ __typename: 'Milestones' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
                           | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                           | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                           | ({ __typename: 'PreliminaryDataSharing' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'ProjectMembership' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'Projects' } & {
                               sys: Pick<Sys, 'id'>;
                             })
                           | ({ __typename: 'ResearchOutputVersions' } & {
@@ -21253,6 +22465,9 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                               sys: Pick<Sys, 'id'>;
                             })
                           | ({ __typename: 'ResearchTheme' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                          | ({ __typename: 'ResourceType' } & {
                               sys: Pick<Sys, 'id'>;
                             })
                           | ({ __typename: 'SupplementGrant' } & {
@@ -22296,17 +23511,21 @@ export type NewsContentFragment = Pick<
                   })
               | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'PreliminaryDataSharing' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputVersions' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -22403,11 +23622,16 @@ export type FetchNewsByIdQuery = {
                       })
                   | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'PreliminaryDataSharing' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'ProjectMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputVersions' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -22416,6 +23640,7 @@ export type FetchNewsByIdQuery = {
                     })
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -22559,9 +23784,18 @@ export type FetchNewsQuery = {
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'PreliminaryDataSharing' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchOutputVersions' } & {
@@ -22574,6 +23808,9 @@ export type FetchNewsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchTheme' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'SupplementGrant' } & {
@@ -22676,17 +23913,21 @@ export type PageContentFragment = Pick<
                   })
               | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'PreliminaryDataSharing' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputVersions' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -22809,9 +24050,18 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'PreliminaryDataSharing' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchOutputVersions' } & {
@@ -22824,6 +24074,9 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchTheme' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'SupplementGrant' } & {
@@ -23448,17 +24701,21 @@ export type ResearchOutputsContentFragment = Pick<
                   })
               | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'PreliminaryDataSharing' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputVersions' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -23711,11 +24968,16 @@ export type FetchResearchOutputByIdQuery = {
                       })
                   | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'PreliminaryDataSharing' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'ProjectMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputVersions' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -23724,6 +24986,7 @@ export type FetchResearchOutputByIdQuery = {
                     })
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -24024,9 +25287,18 @@ export type FetchResearchOutputsQuery = {
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'PreliminaryDataSharing' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchOutputVersions' } & {
@@ -24039,6 +25311,9 @@ export type FetchResearchOutputsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchTheme' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'SupplementGrant' } & {
@@ -24847,17 +26122,21 @@ export type TutorialsContentFragment = Pick<
                   })
               | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'PreliminaryDataSharing' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputVersions' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -25003,11 +26282,16 @@ export type FetchTutorialByIdQuery = {
                       })
                   | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'PreliminaryDataSharing' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'ProjectMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputVersions' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -25016,6 +26300,7 @@ export type FetchTutorialByIdQuery = {
                     })
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -25208,9 +26493,18 @@ export type FetchTutorialsQuery = {
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'PreliminaryDataSharing' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchOutputVersions' } & {
@@ -25223,6 +26517,9 @@ export type FetchTutorialsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchTheme' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'SupplementGrant' } & {
@@ -26199,17 +27496,21 @@ export type WorkingGroupsContentFragment = Pick<
                   })
               | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'PreliminaryDataSharing' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputVersions' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'SupplementGrant' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
@@ -26390,11 +27691,16 @@ export type FetchWorkingGroupByIdQuery = {
                       })
                   | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'PreliminaryDataSharing' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'ProjectMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputVersions' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -26403,6 +27709,7 @@ export type FetchWorkingGroupByIdQuery = {
                     })
                   | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchTheme' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResourceType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'SupplementGrant' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -26627,9 +27934,18 @@ export type FetchWorkingGroupsQuery = {
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'PreliminaryDataSharing' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchOutputVersions' } & {
@@ -26642,6 +27958,9 @@ export type FetchWorkingGroupsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ResearchTheme' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ResourceType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'SupplementGrant' } & {

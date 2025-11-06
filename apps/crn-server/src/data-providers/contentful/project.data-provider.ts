@@ -201,6 +201,10 @@ export function parseContentfulProject(
 
       if (isTeamBased && team?.projectMember?.__typename === 'Teams') {
         const teamMember = team.projectMember;
+        const teamMembers = members
+          .filter((m) => m.projectMember?.__typename === 'Teams')
+          .map((m) => parseProjectTeamMember(m));
+
         return {
           ...baseProject,
           projectType: 'Resource',
@@ -208,7 +212,8 @@ export function parseContentfulProject(
           isTeamBased: true,
           teamName: teamMember.displayName || '',
           teamId: teamMember.sys?.id,
-          googleDriveLink: item.googleDriveLink,
+          googleDriveLink: item.googleDriveLink || undefined,
+          members: teamMembers,
         } as ResourceProject;
       }
 
@@ -222,7 +227,7 @@ export function parseContentfulProject(
         resourceType: item.resourceType?.name || '',
         isTeamBased: false,
         members: userMembers,
-        googleDriveLink: item.googleDriveLink,
+        googleDriveLink: item.googleDriveLink || undefined,
       } as ResourceProject;
     }
 
@@ -235,7 +240,7 @@ export function parseContentfulProject(
       const trainer =
         userMembers.find(
           (m) =>
-            m.role === 'Trainer' ||
+            m.role === 'Project CoLead' ||
             m.role === 'Project Lead' ||
             m.role === 'Project Manager',
         ) || userMembers[0];
@@ -275,7 +280,7 @@ function extractProjectType(contentfulType: string): ProjectType {
 
 // Parse project member from Contentful membership
 function parseProjectMember(membership: ProjectMembershipItem): ProjectMember {
-  const { projectMember } = membership;
+  const projectMember = membership.projectMember;
 
   if (!projectMember || projectMember.__typename !== 'Users') {
     throw new Error('Project member must be a user');
@@ -285,8 +290,9 @@ function parseProjectMember(membership: ProjectMembershipItem): ProjectMember {
     id: projectMember.sys.id,
     displayName: parseUserDisplayName(
       projectMember.firstName || '',
-      projectMember.nickname || '',
       projectMember.lastName || '',
+      undefined,
+      projectMember.nickname || '',
     ),
     firstName: projectMember.firstName || undefined,
     lastName: projectMember.lastName || undefined,
@@ -297,6 +303,22 @@ function parseProjectMember(membership: ProjectMembershipItem): ProjectMember {
     href: `/users/${projectMember.sys.id}`,
   };
 }
+
+const parseProjectTeamMember = (
+  membership: ProjectMembershipItem,
+): ProjectMember => {
+  const projectMember = membership.projectMember;
+
+  if (!projectMember || projectMember.__typename !== 'Teams') {
+    throw new Error('Project member must be a team');
+  }
+
+  return {
+    id: projectMember.sys.id,
+    displayName: projectMember.displayName || '',
+    href: `/teams/${projectMember.teamId ?? projectMember.sys.id}`,
+  };
+};
 
 // Calculate project duration
 function calculateDuration(startDate: string, endDate: string): string {

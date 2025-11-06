@@ -53,7 +53,9 @@
     "researchTheme",
     "teamName",
     "googleDriveLink",
-    "members.displayName"
+    "members.displayName",
+    "members.role",
+    "members.isTeam"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -83,7 +85,11 @@
     "teamId",
     "projectType",
     "resourceType",
-    "researchTheme"
+    "researchTheme",
+    "members.id",
+    "searchable(members.displayName)",
+    "members.isTeam",
+    "members.role"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

@@ -107,7 +107,13 @@ export type TeamCreateDataObject = {
 
 export type TeamResponse = Omit<TeamDataObject, 'researchTheme'>;
 
-export type FetchTeamsOptions = FetchOptions;
+export const teamStatus = ['Active', 'Inactive'] as const;
+
+export type TeamStatus = (typeof teamStatus)[number];
+
+export type FetchTeamsOptions = FetchOptions & {
+  teamType?: TeamType;
+};
 
 export type TeamListItemDataObject = Pick<
   TeamDataObject,

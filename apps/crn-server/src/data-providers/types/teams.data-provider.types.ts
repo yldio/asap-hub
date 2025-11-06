@@ -5,14 +5,13 @@ import {
   TeamCreateDataObject,
   TeamDataObject,
   TeamListItemDataObject,
+  TeamType,
   TeamUpdateDataObject,
 } from '@asap-hub/model';
 
-type TeamFilter = {
-  active?: boolean;
+export type FetchTeamsOptions = FetchOptions & {
+  teamType?: TeamType;
 };
-
-export type FetchTeamsOptions = FetchOptions<TeamFilter>;
 
 export type TeamDataProvider = DataProvider<
   TeamDataObject,

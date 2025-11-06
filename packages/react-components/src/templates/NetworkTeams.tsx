@@ -12,7 +12,7 @@ const NetworkTeams: FC<NetworkTeamsProps> = ({ teams, ...cardListProps }) => (
   <ResultList {...cardListProps}>
     {teams.map((team) => (
       <Fragment key={team.id}>
-        <TeamCard {...team} displayName={team.displayName} />
+        <TeamCard {...team} />
       </Fragment>
     ))}
   </ResultList>

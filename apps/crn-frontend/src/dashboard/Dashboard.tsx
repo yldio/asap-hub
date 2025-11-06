@@ -37,6 +37,14 @@ const Dashboard: FC<Record<string, never>> = () => {
     pageSize: CARD_VIEW_PAGE_SIZE,
     searchQuery: '',
     filters: new Set(),
+    teamType: 'Discovery Team',
+  });
+  usePrefetchTeams({
+    currentPage: 0,
+    pageSize: CARD_VIEW_PAGE_SIZE,
+    searchQuery: '',
+    filters: new Set(),
+    teamType: 'Resource Team',
   });
   usePrefetchCalendars();
   const patchUser = usePatchUserById(id);

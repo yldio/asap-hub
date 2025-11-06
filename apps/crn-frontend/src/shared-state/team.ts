@@ -6,7 +6,13 @@ export const useTeamSuggestions = () => {
   const authorization = useRecoilValue(authorizationState);
   return (searchQuery: string) =>
     getTeams(
-      { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
+      {
+        searchQuery,
+        filters: new Set(),
+        currentPage: null,
+        pageSize: null,
+        teamType: 'all',
+      },
       authorization,
     ).then(({ items }) =>
       items.map(({ id, displayName }) => ({

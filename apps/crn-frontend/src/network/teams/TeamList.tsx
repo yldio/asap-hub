@@ -1,10 +1,5 @@
 import { NetworkTeams } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
-
-import { useTeams } from './state';
-import { usePaginationParams, usePagination } from '../../hooks';
-import { usePrefetchInterestGroups } from '../interest-groups/state';
-import { usePrefetchWorkingGroups } from '../working-groups/state';
 import { useRouteMatch } from 'react-router-dom';
 import { TeamDataObject } from '@asap-hub/model';
 import {
@@ -13,6 +8,15 @@ import {
   colors,
 } from '@asap-hub/react-components';
 import { ReactElement } from 'react';
+
+import { usePrefetchTeams, useTeams } from './state';
+import {
+  usePaginationParams,
+  usePagination,
+  CARD_VIEW_PAGE_SIZE,
+} from '../../hooks';
+import { usePrefetchInterestGroups } from '../interest-groups/state';
+import { usePrefetchWorkingGroups } from '../working-groups/state';
 
 interface NetworkTeamListProps {
   filters: Set<string>;
@@ -39,11 +43,23 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
 
   const { currentPage, pageSize } = usePaginationParams();
 
+  if (!teamType) {
+    throw new Error(`Invalid route`);
+  }
+
   const result = useTeams({
     searchQuery,
     currentPage,
     pageSize,
     filters,
+    teamType,
+  });
+  usePrefetchTeams({
+    currentPage: 0,
+    pageSize: CARD_VIEW_PAGE_SIZE,
+    searchQuery: '',
+    filters: new Set(),
+    teamType: teamType === 'Resource Team' ? 'Discovery Team' : 'Resource Team',
   });
   usePrefetchInterestGroups({
     currentPage: 0,
@@ -63,9 +79,6 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
     pageSize,
   );
 
-  if (!teamType) {
-    throw new Error(`Invalid route`);
-  }
   return (
     <NetworkTeams
       teams={result.items}

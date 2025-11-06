@@ -38,13 +38,13 @@ export default class TeamController {
   }
 
   async fetch(options: FetchTeamsOptions): Promise<ListTeamResponse> {
-    const { take = 8, skip = 0, search, filter } = options;
+    const { take = 8, skip = 0, search, filter, teamType } = options;
 
     const { total, items } = await this.teamDataProvider.fetch({
       take,
       skip,
       search,
-      filter: filter?.length === 1 ? { active: filter[0] === 'Active' } : {},
+      filter: { ...filter, teamType },
     });
 
     return {

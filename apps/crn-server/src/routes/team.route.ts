@@ -3,10 +3,11 @@ import {
   ListInterestGroupResponse,
   ListTeamResponse,
   TeamResponse,
+  TeamType,
 } from '@asap-hub/model';
-import { validateFetchOptions } from '@asap-hub/server-common';
+import { validateTeamsFetchOptions } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
-import { Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import InterestGroupController from '../controllers/interest-group.controller';
 import TeamController from '../controllers/team.controller';
 import {
@@ -20,15 +21,33 @@ export const teamRouteFactory = (
 ): Router => {
   const teamRoutes = Router();
 
-  teamRoutes.get('/teams', async (req, res: Response<ListTeamResponse>) => {
-    const { query } = req;
+  const buildTeamRouteHandler =
+    ({ teamType }: { teamType?: TeamType }) =>
+    async (req: Request, res: Response<ListTeamResponse>) => {
+      const { query } = req;
 
-    const options = validateFetchOptions(query);
+      const options = validateTeamsFetchOptions(query);
 
-    const result = await teamController.fetch(options);
+      const result = await teamController.fetch({
+        ...options,
+        teamType,
+      });
 
-    res.json(result);
-  });
+      res.json(result);
+    };
+
+  /** @deprecated to be removed, no longer needed  */
+  teamRoutes.get('/teams', buildTeamRouteHandler({}));
+
+  teamRoutes.get(
+    '/discovery-teams',
+    buildTeamRouteHandler({ teamType: 'Discovery Team' }),
+  );
+
+  teamRoutes.get(
+    '/resource-teams',
+    buildTeamRouteHandler({ teamType: 'Resource Team' }),
+  );
 
   teamRoutes.get<{ teamId: string }>(
     '/teams/:teamId',

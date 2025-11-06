@@ -96,6 +96,31 @@ export type ManuscriptItem = NonNullable<
   >['items'][number]
 >;
 
+const getTeamStatusQuery = (filter: FetchTeamsOptions['filter']) => {
+  const statuses = filter?.teamStatus;
+
+  if (!statuses || statuses.length === 0) {
+    return {};
+  }
+
+  const hasActive = statuses.includes('Active');
+  const hasInactive = statuses.includes('Inactive');
+
+  if (hasActive && hasInactive) {
+    return {}; // retrieve all teams
+  }
+
+  if (hasActive) {
+    return { inactiveSince_exists: false };
+  }
+
+  if (hasInactive) {
+    return { inactiveSince_exists: true };
+  }
+
+  return {};
+};
+
 export class TeamContentfulDataProvider implements TeamDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
@@ -125,10 +150,8 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
         }
       : {};
 
-    const activeQuery =
-      typeof filter?.active === 'boolean'
-        ? { inactiveSince_exists: !filter?.active }
-        : {};
+    const teamStatusQuery = getTeamStatusQuery(filter);
+    const teamTypeQuery = filter?.teamType ? { teamType: filter.teamType } : {};
 
     const { teamsCollection } = await this.contentfulClient.request<
       FetchTeamsQuery,
@@ -139,7 +162,8 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       order: [TeamsOrder.DisplayNameAsc],
       where: {
         ...searchQuery,
-        ...activeQuery,
+        ...teamStatusQuery,
+        ...teamTypeQuery,
       },
     });
 

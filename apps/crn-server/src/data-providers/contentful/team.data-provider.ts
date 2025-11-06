@@ -96,6 +96,29 @@ export type ManuscriptItem = NonNullable<
   >['items'][number]
 >;
 
+const getTeamStatusQuery = (filter: FetchTeamsOptions['filter']) => {
+  if (!filter || filter.length === 0) {
+    return {};
+  }
+
+  const hasActive = filter.includes('Active');
+  const hasInactive = filter.includes('Inactive');
+
+  if (hasActive && hasInactive) {
+    return {}; // retrieve all teams
+  }
+
+  if (hasActive) {
+    return { inactiveSince_exists: false };
+  }
+
+  if (hasInactive) {
+    return { inactiveSince_exists: true };
+  }
+
+  return {};
+};
+
 export class TeamContentfulDataProvider implements TeamDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
@@ -106,7 +129,7 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
   }
 
   async fetch(options: FetchTeamsOptions): Promise<ListTeamDataObject> {
-    const { take = 8, skip = 0, search, filter } = options;
+    const { take = 8, skip = 0, search, filter, teamType } = options;
 
     const searchTerms = (search || '').split(' ').filter(Boolean);
     const searchQuery = searchTerms.length
@@ -125,10 +148,7 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
         }
       : {};
 
-    const activeQuery =
-      typeof filter?.active === 'boolean'
-        ? { inactiveSince_exists: !filter?.active }
-        : {};
+    const teamStatusQuery = getTeamStatusQuery(filter);
 
     const { teamsCollection } = await this.contentfulClient.request<
       FetchTeamsQuery,
@@ -139,7 +159,8 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       order: [TeamsOrder.DisplayNameAsc],
       where: {
         ...searchQuery,
-        ...activeQuery,
+        ...teamStatusQuery,
+        ...(teamType ? { teamType } : {}),
       },
     });
 

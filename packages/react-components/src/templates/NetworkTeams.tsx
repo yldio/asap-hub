@@ -1,8 +1,6 @@
 import { Fragment, FC, ComponentProps } from 'react';
 
 import { ResultList, TeamCard } from '../organisms';
-import { TeamIcon } from '../icons';
-import { charcoal } from '../colors';
 
 type NetworkTeamsProps = Omit<ComponentProps<typeof ResultList>, 'children'> & {
   readonly teams: ReadonlyArray<
@@ -11,10 +9,10 @@ type NetworkTeamsProps = Omit<ComponentProps<typeof ResultList>, 'children'> & {
 };
 
 const NetworkTeams: FC<NetworkTeamsProps> = ({ teams, ...cardListProps }) => (
-  <ResultList icon={<TeamIcon color={charcoal.rgb} />} {...cardListProps}>
+  <ResultList {...cardListProps}>
     {teams.map((team) => (
       <Fragment key={team.id}>
-        <TeamCard {...team} />
+        <TeamCard {...team} displayName={team.displayName} />
       </Fragment>
     ))}
   </ResultList>

@@ -19,10 +19,11 @@ import { SearchAndFilter } from '../organisms';
 import { Option, Title } from '../organisms/CheckboxGroup';
 import { TabNav } from '../molecules';
 import {
-  TeamIcon,
   UserIcon,
   InterestGroupsIcon,
   WorkingGroupsIcon,
+  DiscoveryTeamIcon,
+  ResourceTeamIcon,
 } from '../icons';
 import { queryParamString } from '../routing';
 
@@ -40,7 +41,12 @@ const controlsStyles = css({
   padding: `${networkPageLayoutPaddingStyle} 0`,
 });
 
-type Page = 'users' | 'interest-groups' | 'teams' | 'working-groups';
+type Page =
+  | 'users'
+  | 'interest-groups'
+  | 'discovery-teams'
+  | 'resource-teams'
+  | 'working-groups';
 
 type NetworkPageHeaderProps = {
   page: Page;
@@ -108,8 +114,12 @@ const getFilterOptionsAndPlaceholder = (page: Page) => {
         searchPlaceholder: 'Enter name, keyword, …',
       };
 
-    case 'teams':
-    default:
+    case 'resource-teams':
+      return {
+        filterOptions: teamFilters,
+        searchPlaceholder: 'Enter name, keyword, method, …',
+      };
+    case 'discovery-teams':
       return {
         filterOptions: teamFilters,
         searchPlaceholder: 'Enter name, keyword, method, …',
@@ -143,10 +153,18 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           People
         </TabLink>
         <TabLink
-          href={network({}).teams({}).$ + queryParamString(searchQuery)}
-          Icon={TeamIcon}
+          href={
+            network({}).discoveryTeams({}).$ + queryParamString(searchQuery)
+          }
+          Icon={DiscoveryTeamIcon}
         >
-          Teams
+          Discovery Teams
+        </TabLink>
+        <TabLink
+          href={network({}).resourceTeams({}).$ + queryParamString(searchQuery)}
+          Icon={ResourceTeamIcon}
+        >
+          Resource Teams
         </TabLink>
         <TabLink
           href={

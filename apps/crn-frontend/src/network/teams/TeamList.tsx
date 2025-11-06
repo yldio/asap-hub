@@ -1,7 +1,7 @@
 import { NetworkTeams } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 
-import { useTeams } from './state';
+import { usePrefetchTeams, useTeams } from './state';
 import { usePaginationParams, usePagination } from '../../hooks';
 import { usePrefetchInterestGroups } from '../interest-groups/state';
 import { usePrefetchWorkingGroups } from '../working-groups/state';
@@ -39,11 +39,16 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
 
   const { currentPage, pageSize } = usePaginationParams();
 
+  if (!teamType) {
+    throw new Error(`Invalid route`);
+  }
+
   const result = useTeams({
     searchQuery,
     currentPage,
     pageSize,
     filters,
+    teamType,
   });
   usePrefetchInterestGroups({
     currentPage: 0,
@@ -63,9 +68,6 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
     pageSize,
   );
 
-  if (!teamType) {
-    throw new Error(`Invalid route`);
-  }
   return (
     <NetworkTeams
       teams={result.items}

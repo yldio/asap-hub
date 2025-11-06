@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createListTeamResponse } from '@asap-hub/fixtures';
@@ -20,53 +20,134 @@ jest.mock('../../working-groups/api');
 
 const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
 
-const renderTeamList = async () => {
-  const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          teamsState({
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-            filters: new Set(),
-            searchQuery: '',
-          }),
-        );
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={['/teams']}>
-              <Route path="/teams" component={Teams} />
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
-  );
+describe.each([
+  ['discovery-teams', '/network/discovery-teams', 'Discovery Team'],
+  ['resource-teams', '/network/resource-teams', 'Resource Team'],
+] as const)('%s', (teamTypeName, route, teamType) => {
+  const renderTeamList = async () => {
+    const result = render(
+      <RecoilRoot
+        initializeState={({ reset }) => {
+          reset(
+            teamsState({
+              currentPage: 0,
+              pageSize: CARD_VIEW_PAGE_SIZE,
+              filters: new Set(),
+              searchQuery: '',
+              teamType,
+            }),
+          );
+        }}
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[route]}>
+                <Route path={route} component={Teams} />
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>,
+    );
 
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
-};
+    await waitFor(() =>
+      expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    return result;
+  };
 
-it('renders a list of teams information', async () => {
-  const response = createListTeamResponse(2);
+  it('renders a list of teams information', async () => {
+    const response = createListTeamResponse(2);
 
-  mockGetTeams.mockResolvedValue({
-    ...response,
-    items: response.items.map((item, index) => ({
-      ...item,
-      displayName: `Name Unknown ${index}`,
-      projectTitle: `Project Title Unknown ${index}`,
-    })),
+    mockGetTeams.mockResolvedValue({
+      ...response,
+      items: response.items.map((item, index) => ({
+        ...item,
+        displayName: `Name Unknown ${index}`,
+        projectTitle: `Project Title Unknown ${index}`,
+        teamType,
+      })),
+    });
+
+    const { container } = await renderTeamList();
+    expect(container.textContent).toContain('Name Unknown 0');
+    expect(container.textContent).toContain('Project Title Unknown 0');
+    expect(container.textContent).toContain('Name Unknown 1');
+    expect(container.textContent).toContain('Project Title Unknown 1');
   });
 
-  const { container } = await renderTeamList();
-  expect(container.textContent).toContain('Name Unknown 0');
-  expect(container.textContent).toContain('Project Title Unknown 0');
-  expect(container.textContent).toContain('Name Unknown 1');
-  expect(container.textContent).toContain('Project Title Unknown 1');
+  it('calls API with correct teamType parameter', async () => {
+    mockGetTeams.mockResolvedValue(createListTeamResponse(0));
+
+    await renderTeamList();
+
+    await waitFor(() => {
+      expect(mockGetTeams).toHaveBeenCalledWith(
+        expect.objectContaining({
+          teamType,
+        }),
+        expect.anything(),
+      );
+    });
+  });
+});
+
+it('throws error when route is invalid', async () => {
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
+  const ErrorBoundary = class extends React.Component<
+    { children: React.ReactNode },
+    { hasError: boolean; error?: Error }
+  > {
+    constructor(props: { children: React.ReactNode }) {
+      super(props);
+      this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error: Error) {
+      return { hasError: true, error };
+    }
+
+    render() {
+      if (this.state.hasError) {
+        return <div>Error: {this.state.error?.message}</div>;
+      }
+      return this.props.children;
+    }
+  };
+
+  const { getByText } = render(
+    <ErrorBoundary>
+      <RecoilRoot
+        initializeState={({ reset }) => {
+          reset(
+            teamsState({
+              currentPage: 0,
+              pageSize: CARD_VIEW_PAGE_SIZE,
+              filters: new Set(),
+              searchQuery: '',
+              teamType: 'all',
+            }),
+          );
+        }}
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={['/network/invalid-teams']}>
+                <Route path="/network/invalid-teams" component={Teams} />
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </ErrorBoundary>,
+  );
+
+  await waitFor(() => {
+    expect(getByText(/Error: Invalid route/i)).toBeInTheDocument();
+  });
+
+  spy.mockRestore();
 });

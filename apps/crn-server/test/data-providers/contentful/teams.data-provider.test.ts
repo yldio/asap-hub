@@ -139,9 +139,7 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetch({
           take: 8,
           skip: 5,
-          filter: {
-            active: true,
-          },
+          filter: ['Active'],
         });
 
         expect(result).toEqual({
@@ -168,9 +166,7 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetch({
           take: 8,
           skip: 5,
-          filter: {
-            active: false,
-          },
+          filter: ['Inactive'],
         });
 
         expect(result).toEqual({
@@ -185,6 +181,295 @@ describe('Teams data provider', () => {
             order: ['displayName_ASC'],
             skip: 5,
             where: { inactiveSince_exists: true },
+          }),
+        );
+      });
+
+      test('Should return all teams when both Active and Inactive filters are present', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          filter: ['Active', 'Inactive'],
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: {},
+          }),
+        );
+      });
+
+      test('Should return all teams when both Inactive and Active filters are present (order independence)', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          filter: ['Inactive', 'Active'],
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: {},
+          }),
+        );
+      });
+
+      test('Should return all teams when filter is an empty array', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          filter: [],
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: {},
+          }),
+        );
+      });
+
+      test('Should handle duplicate filter values correctly', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          filter: ['Active', 'Active', 'Inactive', 'Inactive'],
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: {},
+          }),
+        );
+      });
+
+      test('Should return all teams when filter contains invalid values', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          filter: ['Invalid', 'Unknown'] as unknown as 'Active'[],
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: {},
+          }),
+        );
+      });
+    });
+
+    describe('Team Type Filter', () => {
+      test('Should filter by Discovery Team when teamType is specified', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          teamType: 'Discovery Team',
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: { teamType: 'Discovery Team' },
+          }),
+        );
+      });
+
+      test('Should filter by Resource Team when teamType is specified', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          teamType: 'Resource Team',
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: { teamType: 'Resource Team' },
+          }),
+        );
+      });
+
+      test('Should not filter by teamType when teamType is undefined', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: {},
+          }),
+        );
+      });
+
+      test('Should combine teamType with Active filter', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          teamType: 'Discovery Team',
+          filter: ['Active'],
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: {
+              teamType: 'Discovery Team',
+              inactiveSince_exists: false,
+            },
+          }),
+        );
+      });
+
+      test('Should combine teamType with Inactive filter and search', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const search = 'test query';
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          teamType: 'Resource Team',
+          filter: ['Inactive'],
+          search,
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: {
+              OR: [
+                { displayName_contains: 'test' },
+                { displayName_contains: 'query' },
+                { projectTitle_contains: 'test' },
+                { projectTitle_contains: 'query' },
+                { researchTags: { name_contains: 'test' } },
+                { researchTags: { name_contains: 'query' } },
+              ],
+              inactiveSince_exists: true,
+              teamType: 'Resource Team',
+            },
           }),
         );
       });
@@ -235,9 +520,7 @@ describe('Teams data provider', () => {
           take: 8,
           skip: 5,
           search,
-          filter: {
-            active: false,
-          },
+          filter: ['Inactive'],
         });
 
         expect(result).toEqual({

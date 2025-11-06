@@ -13,7 +13,6 @@ import {
   createPartialManuscriptResponse,
   createTeamResponse,
 } from '@asap-hub/fixtures';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ComplianceReportPostRequest,
   DiscussionCreateRequest,
@@ -45,6 +44,7 @@ import {
   getManuscriptVersions,
   getTeam,
   getTeams,
+  GetTeamsListOptions,
   markDiscussionAsRead,
   patchTeam,
   resubmitManuscript,
@@ -63,11 +63,12 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-const options: GetListOptions = {
+const options: GetTeamsListOptions = {
   filters: new Set(),
   pageSize: CARD_VIEW_PAGE_SIZE,
   currentPage: 0,
   searchQuery: '',
+  teamType: 'all',
 };
 
 describe('getTeams', () => {

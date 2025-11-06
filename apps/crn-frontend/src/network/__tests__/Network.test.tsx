@@ -89,10 +89,13 @@ const renderNetworkPage = async (pathname: string, query = '') => {
   return container;
 };
 
-describe('when toggling from teams to users', () => {
+describe.each([
+  ['discovery teams', network({}).discoveryTeams({}).$],
+  ['resource teams', network({}).resourceTeams({}).$],
+] as const)('when toggling from %s to users', (teamType, teamPath) => {
   it('changes the placeholder', async () => {
     jest.spyOn(console, 'error').mockImplementation();
-    const container = await renderNetworkPage(network({}).teams({}).$);
+    const container = await renderNetworkPage(teamPath);
 
     expect(
       (screen.getByRole('searchbox') as HTMLInputElement).placeholder,
@@ -100,9 +103,10 @@ describe('when toggling from teams to users', () => {
 
     const peopleLink = screen.getByText(/people/i, { selector: 'nav a *' });
     userEvent.click(peopleLink);
-    await waitForElementToBeRemoved(
-      container.querySelectorAll('div[class*="animation"]')[0],
-    );
+    const animations = container.querySelectorAll('div[class*="animation"]');
+    if (animations.length > 0) {
+      await waitForElementToBeRemoved(animations[0]);
+    }
 
     expect(
       (screen.getByRole('searchbox') as HTMLInputElement).placeholder,
@@ -110,10 +114,7 @@ describe('when toggling from teams to users', () => {
   });
 
   it('preserves only the query text', async () => {
-    await renderNetworkPage(
-      network({}).teams({}).$,
-      '?searchQuery=test123&filter=123',
-    );
+    await renderNetworkPage(teamPath, '?searchQuery=test123&filter=123');
     const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
     expect(searchBox.value).toEqual('test123');
@@ -132,7 +133,10 @@ describe('when toggling from teams to users', () => {
   });
 });
 
-describe('when toggling from users to teams', () => {
+describe.each([
+  ['discovery teams', /discovery teams/i],
+  ['resource teams', /resource teams/i],
+] as const)('when toggling from users to %s', (teamType, linkPattern) => {
   it('changes the placeholder', async () => {
     jest.spyOn(console, 'error').mockImplementation();
     await renderNetworkPage(network({}).users({}).$);
@@ -141,7 +145,9 @@ describe('when toggling from users to teams', () => {
       (screen.getByRole('searchbox') as HTMLInputElement).placeholder,
     ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
 
-    const toggle = screen.getByText(/teams/i, { selector: 'nav a *' });
+    const toggle = screen.getByText(linkPattern, {
+      selector: 'nav a *',
+    });
     fireEvent.click(toggle);
 
     expect(
@@ -157,7 +163,9 @@ describe('when toggling from users to teams', () => {
 
     expect(searchBox.value).toEqual('test123');
 
-    const toggle = screen.getByText(/teams/i, { selector: 'nav a *' });
+    const toggle = screen.getByText(linkPattern, {
+      selector: 'nav a *',
+    });
     fireEvent.click(toggle);
     expect(searchBox.value).toEqual('test123');
     await waitFor(() => {
@@ -235,23 +243,51 @@ it('allows selection of working group filters', async () => {
   );
 });
 
-it('allows selection of teams filters', async () => {
-  await renderNetworkPage(network({}).teams({}).$);
+describe.each([
+  ['discovery team', network({}).discoveryTeams({}).$],
+  ['resource team', network({}).resourceTeams({}).$],
+] as const)('allows selection of %s filters', (teamTypeName, teamPath) => {
+  it(`allows selection of ${teamTypeName} filters`, async () => {
+    await renderNetworkPage(teamPath);
 
-  userEvent.click(screen.getByText('Filters'));
-  const checkbox = screen.getByLabelText('Active');
-  expect(checkbox).not.toBeChecked();
+    userEvent.click(screen.getByText('Filters'));
+    const checkbox = screen.getByLabelText('Active');
+    expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
-  expect(checkbox).toBeChecked();
-  await waitFor(() =>
-    expect(mockGetGroups).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        filters: new Set(['Active']),
-      }),
-      expect.anything(),
-    ),
+    userEvent.click(checkbox);
+    expect(checkbox).toBeChecked();
+    await waitFor(() =>
+      expect(mockGetTeams).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          filters: new Set(['Active']),
+        }),
+        expect.anything(),
+      ),
+    );
+  });
+});
+
+it('allows toggling between discovery teams and resource teams', async () => {
+  await renderNetworkPage(
+    network({}).discoveryTeams({}).$,
+    '?searchQuery=test123',
   );
+
+  const resourceTeamsLink = screen.getByText(/resource teams/i, {
+    selector: 'nav a *',
+  });
+  fireEvent.click(resourceTeamsLink);
+
+  const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
+  expect(searchBox.value).toEqual('test123');
+
+  await waitFor(() => {
+    const [[options] = []] = mockGetTeams.mock.calls.slice(-1);
+    expect(options).toMatchObject({
+      searchQuery: 'test123',
+      filters: new Set(),
+    });
+  });
 });
 
 it('reads filters from url', async () => {

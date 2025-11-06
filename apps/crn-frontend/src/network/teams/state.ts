@@ -33,7 +33,6 @@ import {
 } from 'recoil';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
-import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
 import { getPresignedUrl } from '../../shared-api/files';
 import { useSetResearchOutputItem } from '../../shared-research/state';

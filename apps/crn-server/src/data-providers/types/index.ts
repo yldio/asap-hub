@@ -13,6 +13,7 @@ export * from './manuscript.data-provider.types';
 export * from './manuscript-version.data-provider.types';
 export * from './news.data-provider.types';
 export * from './pages.data-provider.types';
+export * from './projects.data-provider.types';
 export * from './reminders.data-provider.types';
 export * from './research-output.data-provider.types';
 export * from './research-tags.data-provider.types';

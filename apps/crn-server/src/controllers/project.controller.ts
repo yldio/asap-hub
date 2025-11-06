@@ -45,4 +45,3 @@ export default class ProjectController {
     return project;
   }
 }
-

@@ -16,4 +16,3 @@ export const getProjectDataProvider = (): ProjectDataProvider => {
 
   return new ProjectContentfulDataProvider(contentfulGraphQLClient);
 };
-

@@ -12,4 +12,3 @@ export type ProjectDataProvider = DataProvider<
   ProjectDataObject,
   FetchProjectsOptions
 >;
-

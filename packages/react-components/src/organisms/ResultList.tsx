@@ -124,7 +124,7 @@ const ResultList: React.FC<ResultListProps> = ({
           </section>
         </div>
       ) : (
-        (noResultsComponent ?? (
+        noResultsComponent ?? (
           <main css={{ textAlign: 'center' }}>
             {icon && <span css={iconStyles}>{icon}</span>}
             <Headline3>No results have been found.</Headline3>
@@ -133,7 +133,7 @@ const ResultList: React.FC<ResultListProps> = ({
               search term.
             </Paragraph>
           </main>
-        ))
+        )
       )}
     </article>
   );

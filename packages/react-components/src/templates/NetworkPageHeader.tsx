@@ -126,6 +126,8 @@ const getFilterOptionsAndPlaceholder = (page: Page) => {
         filterOptions: teamFilters,
         searchPlaceholder: 'Enter name, keyword, method, …',
       };
+    default:
+      throw new Error('Invalid page');
   }
 };
 

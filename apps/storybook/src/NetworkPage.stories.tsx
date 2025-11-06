@@ -15,7 +15,8 @@ export const Normal = () => {
     'Active Tab',
     {
       Members: 'users',
-      Teams: 'teams',
+      'Resource Teams': 'resource-teams',
+      'Discovery Teams': 'discovery-teams',
       'Interest Groups': 'interest-groups',
       'Working Groups': 'working-groups',
     },
@@ -23,7 +24,8 @@ export const Normal = () => {
   );
   const routes = {
     users: network({}).users({}).$,
-    teams: network({}).teams({}).$,
+    'discovery-teams': network({}).discoveryTeams({}).$,
+    'resource-teams': network({}).resourceTeams({}).$,
     'interest-groups': network({}).interestGroups({}).$,
     'working-groups': network({}).workingGroups({}).$,
   };

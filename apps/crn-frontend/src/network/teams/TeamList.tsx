@@ -1,8 +1,8 @@
-import { NetworkTeams } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { useRouteMatch } from 'react-router-dom';
 import { TeamDataObject } from '@asap-hub/model';
 import {
+  NetworkTeams,
   DiscoveryTeamIcon,
   ResourceTeamIcon,
   colors,

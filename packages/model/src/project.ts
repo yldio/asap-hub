@@ -26,7 +26,7 @@ export type ProjectMember = {
   readonly role?: string;
   readonly email?: string;
   readonly alumniSinceDate?: string;
-  readonly href: string;
+  readonly href?: string;
   readonly teams?: ReadonlyArray<ProjectMemberTeam>;
 };
 

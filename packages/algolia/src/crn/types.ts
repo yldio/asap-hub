@@ -6,6 +6,7 @@ import {
   ManuscriptVersionResponse,
   NewsResponse,
   PartialManuscriptResponse,
+  ProjectResponse,
   ResearchOutputResponse,
   TeamListItemResponse,
   TutorialsResponse,
@@ -19,6 +20,7 @@ export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
 export const INTEREST_GROUP_ENTITY_TYPE = 'interest-group';
 export const LAB_ENTITY_TYPE = 'lab';
 export const NEWS_ENTITY_TYPE = 'news';
+export const PROJECT_ENTITY_TYPE = 'project';
 export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
 export const TEAM_ENTITY_TYPE = 'team';
 export const TUTORIAL_ENTITY_TYPE = 'tutorial';
@@ -47,6 +49,10 @@ export type Payload =
   | {
       data: NewsResponse;
       type: typeof NEWS_ENTITY_TYPE;
+    }
+  | {
+      data: ProjectResponse;
+      type: typeof PROJECT_ENTITY_TYPE;
     }
   | {
       data: ResearchOutputResponse;

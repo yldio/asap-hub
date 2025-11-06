@@ -34,6 +34,7 @@ import {
   EngagementPerformance,
   PartialManuscriptResponse,
   ManuscriptVersionResponse,
+  ProjectResponse,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
@@ -57,6 +58,7 @@ import {
   MANUSCRIPT_VERSION_ENTITY_TYPE,
   NEWS_ENTITY_TYPE as CRN_NEWS_ENTITY_TYPE,
   Payload,
+  PROJECT_ENTITY_TYPE as CRN_PROJECT_ENTITY_TYPE,
   RESEARCH_OUTPUT_ENTITY_TYPE,
   TEAM_ENTITY_TYPE,
   TUTORIAL_ENTITY_TYPE,
@@ -81,6 +83,7 @@ export type EntityData =
   | ExternalAuthorResponse
   | InterestGroupResponse
   | NewsResponse
+  | ProjectResponse
   | ResearchOutputResponse
   | TeamListItemResponse
   | TutorialsResponse
@@ -126,6 +129,10 @@ export type EntityResponses = {
     [MANUSCRIPT_ENTITY_TYPE]: WithMeta<
       PartialManuscriptResponse,
       typeof MANUSCRIPT_ENTITY_TYPE
+    >;
+    [CRN_PROJECT_ENTITY_TYPE]: WithMeta<
+      ProjectResponse,
+      typeof CRN_PROJECT_ENTITY_TYPE
     >;
     [MANUSCRIPT_VERSION_ENTITY_TYPE]: WithMeta<
       ManuscriptVersionResponse,
@@ -308,7 +315,7 @@ export type CRNEntities = keyof EntityResponses['crn'];
 // we don't show cards of these entities
 export type CRNTagSearchEntities = Exclude<
   CRNEntities,
-  'external-author' | 'manuscript' | 'manuscript-version'
+  'external-author' | 'manuscript' | 'manuscript-version' | 'project'
 >;
 
 export type CRNTagSearchEntitiesList = Array<CRNTagSearchEntities>;

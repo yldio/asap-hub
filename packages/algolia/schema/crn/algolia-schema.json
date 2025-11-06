@@ -47,7 +47,13 @@
     "publishingEntity",
     "manuscriptId",
     "teams",
-    "assignedUsers"
+    "assignedUsers",
+    "projectType",
+    "resourceType",
+    "researchTheme",
+    "teamName",
+    "googleDriveLink",
+    "members.displayName"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -74,7 +80,10 @@
     "openScienceTeamMember",
     "apcRequested",
     "apcCoverageRequestStatus",
-    "teamId"
+    "teamId",
+    "projectType",
+    "resourceType",
+    "researchTheme"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

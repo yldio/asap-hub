@@ -23,6 +23,7 @@ yargs(hideBin(process.argv))
             'manuscript',
             'manuscript-version',
             'news',
+            'project',
             'research-output',
             'team',
             'tutorial',
@@ -45,6 +46,7 @@ yargs(hideBin(process.argv))
           | 'manuscript'
           | 'manuscript-version'
           | 'news'
+          | 'project'
           | 'research-output'
           | 'team'
           | 'tutorial'

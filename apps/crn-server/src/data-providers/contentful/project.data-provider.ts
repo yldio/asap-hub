@@ -300,7 +300,6 @@ function parseProjectMember(membership: ProjectMembershipItem): ProjectMember {
     role: membership.role || undefined,
     email: projectMember.email || undefined,
     alumniSinceDate: projectMember.alumniSinceDate || undefined,
-    href: `/users/${projectMember.sys.id}`,
   };
 }
 
@@ -316,7 +315,6 @@ const parseProjectTeamMember = (
   return {
     id: projectMember.sys.id,
     displayName: projectMember.displayName || '',
-    href: `/teams/${projectMember.teamId ?? projectMember.sys.id}`,
   };
 };
 

@@ -1,4 +1,4 @@
-module.exports.description = 'Add proposal field to Projects';
+module.exports.description = 'Update projects model';
 
 module.exports.up = (migration) => {
   const projects = migration.editContentType('projects');
@@ -18,6 +18,8 @@ module.exports.up = (migration) => {
     .omitted(false)
     .linkType('Entry');
 
+  projects.editField('endDate').required(false);
+
   projects.changeFieldControl('proposal', 'builtin', 'entryLinkEditor', {
     showLinkEntityAction: true,
     showCreateEntityAction: false,
@@ -30,4 +32,5 @@ module.exports.down = (migration) => {
   const projects = migration.editContentType('projects');
 
   projects.deleteField('proposal');
+  projects.editField('endDate').required(true);
 };

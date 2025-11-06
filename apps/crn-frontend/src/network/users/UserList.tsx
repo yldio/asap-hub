@@ -1,7 +1,11 @@
 import { NetworkPeople } from '@asap-hub/react-components';
 
 import { useUsers } from './state';
-import { usePaginationParams, usePagination } from '../../hooks';
+import {
+  usePaginationParams,
+  usePagination,
+  CARD_VIEW_PAGE_SIZE,
+} from '../../hooks';
 import { usePrefetchTeams } from '../teams/state';
 import { usePrefetchInterestGroups } from '../interest-groups/state';
 import { usePrefetchWorkingGroups } from '../working-groups/state';
@@ -25,9 +29,17 @@ const UserList: React.FC<UserListProps> = ({
   });
   usePrefetchTeams({
     currentPage: 0,
-    pageSize,
-    searchQuery,
+    pageSize: CARD_VIEW_PAGE_SIZE,
+    searchQuery: '',
     filters: new Set(),
+    teamType: 'Discovery Team',
+  });
+  usePrefetchTeams({
+    currentPage: 0,
+    pageSize: CARD_VIEW_PAGE_SIZE,
+    searchQuery: '',
+    filters: new Set(),
+    teamType: 'Resource Team',
   });
   usePrefetchInterestGroups({
     currentPage: 0,

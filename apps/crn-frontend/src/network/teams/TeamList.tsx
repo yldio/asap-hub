@@ -1,19 +1,42 @@
 import { NetworkTeams } from '@asap-hub/react-components';
+import { network } from '@asap-hub/routing';
 
 import { useTeams } from './state';
 import { usePaginationParams, usePagination } from '../../hooks';
 import { usePrefetchInterestGroups } from '../interest-groups/state';
 import { usePrefetchWorkingGroups } from '../working-groups/state';
+import { useRouteMatch } from 'react-router-dom';
+import { TeamDataObject } from '@asap-hub/model';
+import {
+  DiscoveryTeamIcon,
+  ResourceTeamIcon,
+  colors,
+} from '@asap-hub/react-components';
+import { ReactElement } from 'react';
 
 interface NetworkTeamListProps {
   filters: Set<string>;
   searchQuery?: string;
 }
 
+const NoResultsIcon: Record<TeamDataObject['teamType'], ReactElement> = {
+  'Discovery Team': <DiscoveryTeamIcon color={colors.charcoal.rgb} />,
+  'Resource Team': <ResourceTeamIcon color={colors.charcoal.rgb} />,
+};
+
 const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
   filters,
   searchQuery = '',
 }) => {
+  const { path } = useRouteMatch();
+
+  const teamType: TeamDataObject['teamType'] | null =
+    path === network({}).discoveryTeams({}).$
+      ? 'Discovery Team'
+      : path === network({}).resourceTeams({}).$
+        ? 'Resource Team'
+        : null;
+
   const { currentPage, pageSize } = usePaginationParams();
 
   const result = useTeams({
@@ -40,9 +63,13 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
     pageSize,
   );
 
+  if (!teamType) {
+    throw new Error(`Invalid route`);
+  }
   return (
     <NetworkTeams
       teams={result.items}
+      icon={NoResultsIcon[teamType]}
       numberOfItems={result.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}

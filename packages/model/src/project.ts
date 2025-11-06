@@ -118,3 +118,29 @@ export type ProjectDetail =
   | DiscoveryProjectDetail
   | ResourceProjectDetail
   | TraineeProjectDetail;
+
+// Data Provider types
+export type ProjectDataObject = Project;
+export type DiscoveryProjectDataObject = DiscoveryProject;
+export type ResourceProjectDataObject = ResourceProject;
+export type TraineeProjectDataObject = TraineeProject;
+
+export type ProjectDetailDataObject = ProjectDetail;
+
+export type ListProjectDataObject = {
+  readonly total: number;
+  readonly items: ProjectDataObject[];
+};
+
+// Filter types
+export type FetchProjectsFilter = {
+  readonly projectType?: ProjectType | ProjectType[];
+  readonly status?: ProjectStatus | ProjectStatus[];
+  readonly tags?: string[];
+  readonly teamId?: string;
+  readonly search?: string;
+};
+
+// Response types
+export type ProjectResponse = Project;
+export type ListProjectResponse = ListProjectDataObject;

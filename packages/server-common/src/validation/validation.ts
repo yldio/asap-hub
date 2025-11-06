@@ -2,9 +2,7 @@ import {
   FetchAnalyticsOptions,
   FetchOptions,
   FetchPaginationOptions,
-  FetchTeamsOptions,
   gp2,
-  teamStatus,
 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv';
@@ -207,58 +205,6 @@ export const fetchAnalyticsOptionsValidationSchema: JSONSchemaType<FetchAnalytic
 
 export const validateFetchAnalyticsOptions = validateInput(
   fetchAnalyticsOptionsValidationSchema,
-  {
-    skipNull: true,
-    coerce: true,
-  },
-);
-
-export const fetchTeamsOptionsValidationSchema: JSONSchemaType<
-  Omit<FetchTeamsOptions, 'teamType'>
-> = {
-  type: 'object',
-  properties: {
-    take: { type: 'number', nullable: true },
-    skip: { type: 'number', nullable: true },
-    search: { type: 'string', nullable: true },
-    filter: {
-      type: 'object',
-      properties: {
-        // TODO: Placeholder, code isn't doing anything with this prop.
-        researchTheme: {
-          type: 'array',
-          items: {
-            type: 'string',
-            // enum: TeamResearchThemeEnum // TODO: Add enum after adding this property in Contentful
-          },
-          nullable: true,
-        },
-        // TODO: Placeholder, code isn't doing anything with this prop.
-        resourceType: {
-          type: 'array',
-          items: {
-            type: 'string',
-            // enum: TeamResourceTypeEnum // TODO: Add enum after adding this property in Contentful
-          },
-          nullable: true,
-        },
-        teamStatus: {
-          type: 'array',
-          items: {
-            type: 'string',
-            enum: teamStatus,
-          },
-          nullable: true,
-        },
-      },
-      nullable: true,
-    },
-  },
-  additionalProperties: false,
-};
-
-export const validateTeamsFetchOptions = validateInput(
-  fetchTeamsOptionsValidationSchema,
   {
     skipNull: true,
     coerce: true,

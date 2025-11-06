@@ -111,13 +111,7 @@ export const teamStatus = ['Active', 'Inactive'] as const;
 
 export type TeamStatus = (typeof teamStatus)[number];
 
-export type TeamFilter = {
-  teamStatus?: TeamStatus[];
-  researchTheme?: string[]; // TODO: Add proper type
-  resourceType?: string[]; // TODO: Add proper type
-};
-
-export type FetchTeamsOptions = FetchOptions<TeamFilter> & {
+export type FetchTeamsOptions = FetchOptions & {
   teamType?: TeamType;
 };
 

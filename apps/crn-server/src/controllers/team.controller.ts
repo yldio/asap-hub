@@ -44,7 +44,8 @@ export default class TeamController {
       take,
       skip,
       search,
-      filter: { ...filter, teamType },
+      filter,
+      teamType,
     });
 
     return {

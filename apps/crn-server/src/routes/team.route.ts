@@ -5,7 +5,7 @@ import {
   TeamResponse,
   TeamType,
 } from '@asap-hub/model';
-import { validateTeamsFetchOptions } from '@asap-hub/server-common';
+import { validateFetchOptions } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import { Request, Response, Router } from 'express';
 import InterestGroupController from '../controllers/interest-group.controller';
@@ -26,7 +26,7 @@ export const teamRouteFactory = (
     async (req: Request, res: Response<ListTeamResponse>) => {
       const { query } = req;
 
-      const options = validateTeamsFetchOptions(query);
+      const options = validateFetchOptions(query);
 
       const result = await teamController.fetch({
         ...options,
@@ -36,7 +36,6 @@ export const teamRouteFactory = (
       res.json(result);
     };
 
-  /** @deprecated to be removed, no longer needed  */
   teamRoutes.get('/teams', buildTeamRouteHandler({}));
 
   teamRoutes.get(

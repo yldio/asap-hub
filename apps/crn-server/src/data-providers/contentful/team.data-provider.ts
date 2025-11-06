@@ -97,14 +97,12 @@ export type ManuscriptItem = NonNullable<
 >;
 
 const getTeamStatusQuery = (filter: FetchTeamsOptions['filter']) => {
-  const statuses = filter?.teamStatus;
-
-  if (!statuses || statuses.length === 0) {
+  if (!filter || filter.length === 0) {
     return {};
   }
 
-  const hasActive = statuses.includes('Active');
-  const hasInactive = statuses.includes('Inactive');
+  const hasActive = filter.includes('Active');
+  const hasInactive = filter.includes('Inactive');
 
   if (hasActive && hasInactive) {
     return {}; // retrieve all teams
@@ -131,7 +129,7 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
   }
 
   async fetch(options: FetchTeamsOptions): Promise<ListTeamDataObject> {
-    const { take = 8, skip = 0, search, filter } = options;
+    const { take = 8, skip = 0, search, filter, teamType } = options;
 
     const searchTerms = (search || '').split(' ').filter(Boolean);
     const searchQuery = searchTerms.length
@@ -151,7 +149,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       : {};
 
     const teamStatusQuery = getTeamStatusQuery(filter);
-    const teamTypeQuery = filter?.teamType ? { teamType: filter.teamType } : {};
 
     const { teamsCollection } = await this.contentfulClient.request<
       FetchTeamsQuery,
@@ -163,7 +160,7 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       where: {
         ...searchQuery,
         ...teamStatusQuery,
-        ...teamTypeQuery,
+        ...(teamType ? { teamType } : {}),
       },
     });
 

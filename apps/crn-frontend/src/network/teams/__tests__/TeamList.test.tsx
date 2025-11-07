@@ -91,6 +91,26 @@ describe.each([
       );
     });
   });
+
+  it('prefetches the opposite team type', async () => {
+    mockGetTeams.mockResolvedValue(createListTeamResponse(0));
+
+    await renderTeamList();
+
+    const oppositeTeamType =
+      teamType === 'Resource Team' ? 'Discovery Team' : 'Resource Team';
+
+    await waitFor(() => {
+      expect(mockGetTeams).toHaveBeenCalledWith(
+        expect.objectContaining({
+          teamType: oppositeTeamType,
+          currentPage: 0,
+          searchQuery: '',
+        }),
+        expect.anything(),
+      );
+    });
+  });
 });
 
 it('throws error when route is invalid', async () => {

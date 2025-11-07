@@ -204,3 +204,19 @@ it('throws error for invalid page type', () => {
 
   spy.mockRestore();
 });
+
+it('renders page description when provided', () => {
+  const { getByText } = render(
+    <NetworkPageHeader
+      {...props}
+      pageDescription={<p>This is a custom page description</p>}
+    />,
+  );
+  expect(getByText('This is a custom page description')).toBeInTheDocument();
+});
+
+it('does not render page description when not provided', () => {
+  const { queryByText } = render(<NetworkPageHeader {...props} />);
+  // Should not find any custom description text
+  expect(queryByText(/custom page description/i)).not.toBeInTheDocument();
+});

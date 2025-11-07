@@ -34,4 +34,3 @@ module.exports.down = (migration) => {
   const projects = migration.editContentType('projects');
   projects.deleteField('googleDriveLink');
 };
-

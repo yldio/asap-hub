@@ -280,7 +280,7 @@ function extractProjectType(contentfulType: string): ProjectType {
 
 // Parse project member from Contentful membership
 function parseProjectMember(membership: ProjectMembershipItem): ProjectMember {
-  const projectMember = membership.projectMember;
+  const { projectMember } = membership;
 
   if (!projectMember || projectMember.__typename !== 'Users') {
     throw new Error('Project member must be a user');
@@ -306,7 +306,7 @@ function parseProjectMember(membership: ProjectMembershipItem): ProjectMember {
 const parseProjectTeamMember = (
   membership: ProjectMembershipItem,
 ): ProjectMember => {
-  const projectMember = membership.projectMember;
+  const { projectMember } = membership;
 
   if (!projectMember || projectMember.__typename !== 'Teams') {
     throw new Error('Project member must be a team');

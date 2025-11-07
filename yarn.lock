@@ -943,7 +943,7 @@ __metadata:
     jsonwebtoken: 9.0.1
     nock: 13.4.0
     path: "npm:path-browserify@1.0.1"
-    pirates: 4.0.6
+    pirates: 4.0.7
     qs: 6.11.2
     react: 17.0.2
     react-app-polyfill: 3.0.0
@@ -1436,7 +1436,7 @@ __metadata:
     jsonwebtoken: 9.0.1
     nock: 13.4.0
     path: "npm:path-browserify@1.0.1"
-    pirates: 4.0.6
+    pirates: 4.0.7
     react: 17.0.2
     react-app-polyfill: 3.0.0
     react-dom: 17.0.2
@@ -40944,7 +40944,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pirates@npm:4.0.6, pirates@npm:^4.0.1, pirates@npm:^4.0.6":
+"pirates@npm:4.0.7":
+  version: 4.0.7
+  resolution: "pirates@npm:4.0.7"
+  checksum: 3dcbaff13c8b5bc158416feb6dc9e49e3c6be5fddc1ea078a05a73ef6b85d79324bbb1ef59b954cdeff000dbf000c1d39f32dc69310c7b78fbada5171b583e40
+  languageName: node
+  linkType: hard
+
+"pirates@npm:^4.0.1, pirates@npm:^4.0.6":
   version: 4.0.6
   resolution: "pirates@npm:4.0.6"
   checksum: 46a65fefaf19c6f57460388a5af9ab81e3d7fd0e7bc44ca59d753cb5c4d0df97c6c6e583674869762101836d68675f027d60f841c105d72734df9dfca97cbcc6

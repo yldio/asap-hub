@@ -116,13 +116,6 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       items: cleanArray(projectsCollection.items).map(parseContentfulProject),
     };
   }
-  async create(): Promise<string> {
-    throw new Error('Method not implemented.');
-  }
-
-  async update(): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
 }
 
 // Helper function to normalize project type from Contentful format

@@ -2,9 +2,23 @@ import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { ProjectsPage, ResourceProjectsList } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../hooks';
-import { useProjects } from './state';
+import { useProjects, useProjectFacets } from './state';
 import { ProjectListOptions } from './api';
-import { isResourceProject } from './utils';
+import {
+  isResourceProject,
+  toResourceTypeFilters,
+  toStatusFilters,
+} from './utils';
+import {
+  FilterOption,
+  STATUS_FILTER_OPTIONS,
+  createResourceTypeFilterOptions,
+} from './filter-options';
+
+const resourceFacetRequest = {
+  projectType: 'Resource' as const,
+  facets: ['resourceType'] as const,
+};
 
 type ResourceProjectsProps = {
   searchQuery: string;
@@ -55,15 +69,51 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
   onChangeFilter,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
+  const resourceTypeFilters = useMemo(
+    () => toResourceTypeFilters(filters),
+    [filters],
+  );
+  const emptyFilters = useMemo(() => new Set<string>(), []);
+  const normalizedFilters = useMemo(
+    () => (filters ? new Set(filters) : undefined),
+    [filters],
+  );
+  const facetFilters = useMemo(
+    () =>
+      resourceTypeFilters.length
+        ? { resourceType: resourceTypeFilters as ReadonlyArray<string> }
+        : undefined,
+    [resourceTypeFilters],
+  );
   const listOptions = useMemo(
     () => ({
       projectType: 'Resource' as const,
       searchQuery: debouncedSearchQuery,
+      statusFilters,
       currentPage,
       pageSize,
-      filters: filters ?? new Set<string>(),
+      filters: normalizedFilters ?? emptyFilters,
+      facetFilters,
     }),
-    [currentPage, debouncedSearchQuery, pageSize, filters],
+    [
+      currentPage,
+      debouncedSearchQuery,
+      emptyFilters,
+      facetFilters,
+      normalizedFilters,
+      pageSize,
+      statusFilters,
+    ],
+  );
+  const facets = useProjectFacets(resourceFacetRequest);
+  const resourceFilterOptions: ReadonlyArray<FilterOption> = useMemo(
+    () => createResourceTypeFilterOptions(facets?.resourceType),
+    [facets],
+  );
+  const filterOptions = useMemo(
+    () => [...resourceFilterOptions, ...STATUS_FILTER_OPTIONS],
+    [resourceFilterOptions],
   );
 
   return (
@@ -73,6 +123,7 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
       onChangeSearchQuery={onChangeSearchQuery}
       filters={filters}
       onChangeFilter={onChangeFilter}
+      filterOptions={filterOptions}
     >
       <SearchFrame title="Resource Projects">
         <ResourceProjectsListContent

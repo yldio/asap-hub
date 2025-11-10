@@ -29,7 +29,7 @@ import {
 // Type guards for Contentful GraphQL responses
 export type ProjectItem = NonNullable<FetchProjectByIdQuery['projects']>;
 
-export type ProjectsCollectionItem = NonNullable<
+type ProjectsCollectionItem = NonNullable<
   NonNullable<FetchProjectsQuery['projectsCollection']>['items'][number]
 >;
 
@@ -116,7 +116,6 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       items: cleanArray(projectsCollection.items).map(parseContentfulProject),
     };
   }
-
   async create(): Promise<string> {
     throw new Error('Method not implemented.');
   }

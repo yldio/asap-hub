@@ -33,7 +33,13 @@ const Projects: FC<Record<string, never>> = () => {
   }, []);
 
   const { path } = useRouteMatch();
-  const { searchQuery, setSearchQuery, filters, toggleFilter } = useSearch();
+  const {
+    searchQuery,
+    debouncedSearchQuery,
+    setSearchQuery,
+    filters,
+    toggleFilter,
+  } = useSearch();
 
   return (
     <Switch>
@@ -52,6 +58,7 @@ const Projects: FC<Record<string, never>> = () => {
       <Route exact path={path + projects({}).discoveryProjects.template}>
         <DiscoveryProjects
           searchQuery={searchQuery}
+          debouncedSearchQuery={debouncedSearchQuery}
           onChangeSearchQuery={setSearchQuery}
           filters={filters}
           onChangeFilter={toggleFilter}
@@ -60,6 +67,7 @@ const Projects: FC<Record<string, never>> = () => {
       <Route exact path={path + projects({}).resourceProjects.template}>
         <ResourceProjects
           searchQuery={searchQuery}
+          debouncedSearchQuery={debouncedSearchQuery}
           onChangeSearchQuery={setSearchQuery}
           filters={filters}
           onChangeFilter={toggleFilter}
@@ -68,6 +76,7 @@ const Projects: FC<Record<string, never>> = () => {
       <Route exact path={path + projects({}).traineeProjects.template}>
         <TraineeProjects
           searchQuery={searchQuery}
+          debouncedSearchQuery={debouncedSearchQuery}
           onChangeSearchQuery={setSearchQuery}
           filters={filters}
           onChangeFilter={toggleFilter}

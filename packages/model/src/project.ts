@@ -129,7 +129,9 @@ export type TraineeProjectDataObject = TraineeProject;
 
 export type ProjectDetailDataObject = ProjectDetail;
 
-export type ListProjectDataObject = ListResponse<ProjectDataObject>;
+export type ListProjectDataObject = ListResponse<ProjectDataObject> & {
+  readonly facets?: Record<string, Record<string, number>>;
+};
 
 // Filter types
 export type FetchProjectsFilter = {

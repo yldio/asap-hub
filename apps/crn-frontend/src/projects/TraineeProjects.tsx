@@ -4,7 +4,8 @@ import { ProjectsPage, TraineeProjectsList } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
 import { ProjectListOptions } from './api';
-import { isTraineeProject } from './utils';
+import { isTraineeProject, toStatusFilters } from './utils';
+import { STATUS_FILTER_OPTIONS } from './filter-options';
 
 type TraineeProjectsProps = {
   searchQuery: string;
@@ -55,16 +56,29 @@ const TraineeProjects: FC<TraineeProjectsProps> = ({
   onChangeFilter,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
+  const emptyFilters = useMemo(() => new Set<string>(), []);
+  const normalizedFilters = useMemo(
+    () => (filters ? new Set(filters) : emptyFilters),
+    [emptyFilters, filters],
+  );
 
   const listOptions = useMemo(
     () => ({
       projectType: 'Trainee' as const,
       searchQuery: debouncedSearchQuery,
+      statusFilters,
       currentPage,
       pageSize,
-      filters: filters ?? new Set<string>(),
+      filters: normalizedFilters,
     }),
-    [currentPage, debouncedSearchQuery, pageSize, filters],
+    [
+      currentPage,
+      debouncedSearchQuery,
+      normalizedFilters,
+      pageSize,
+      statusFilters,
+    ],
   );
 
   return (
@@ -74,6 +88,7 @@ const TraineeProjects: FC<TraineeProjectsProps> = ({
       onChangeSearchQuery={onChangeSearchQuery}
       filters={filters}
       onChangeFilter={onChangeFilter}
+      filterOptions={STATUS_FILTER_OPTIONS}
     >
       <SearchFrame title="Trainee Projects">
         <TraineeProjectsListContent

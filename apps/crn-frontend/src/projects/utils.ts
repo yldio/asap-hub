@@ -3,6 +3,7 @@ import {
   DiscoveryProjectDetail,
   ProjectDetail,
   ProjectResponse,
+  ProjectStatus,
   ResourceProject,
   ResourceProjectDetail,
   TraineeProject,
@@ -77,3 +78,48 @@ export const toProjectDetail = (project: ProjectResponse): ProjectDetail =>
     Resource: toResourceProjectDetail(project as ResourceProject),
     Trainee: toTraineeProjectDetail(project as TraineeProject),
   })[project.projectType];
+
+export const PROJECT_STATUS_FILTER_PREFIX = 'status:';
+export const DISCOVERY_THEME_FILTER_PREFIX = 'theme:';
+export const RESOURCE_TYPE_FILTER_PREFIX = 'resource-type:';
+
+export const PROJECT_STATUSES: readonly ProjectStatus[] = [
+  'Active',
+  'Complete',
+  'Closed',
+];
+
+const extractPrefixedValues = (
+  filters: ReadonlySet<string> | undefined,
+  prefix: string,
+): string[] => {
+  if (!filters) {
+    return [];
+  }
+  const values: string[] = [];
+  filters.forEach((filter) => {
+    if (filter.startsWith(prefix)) {
+      values.push(filter.slice(prefix.length));
+    }
+  });
+  return values;
+};
+
+// Helper function to extract status filters from a set of filters
+export const toStatusFilters = (
+  filters: ReadonlySet<string> | undefined,
+): ProjectStatus[] =>
+  extractPrefixedValues(filters, PROJECT_STATUS_FILTER_PREFIX).filter(
+    (status): status is ProjectStatus =>
+      PROJECT_STATUSES.includes(status as ProjectStatus),
+  );
+
+// Helper function to extract discovery theme filters from a set of filters
+export const toDiscoveryThemeFilters = (
+  filters: ReadonlySet<string> | undefined,
+): string[] => extractPrefixedValues(filters, DISCOVERY_THEME_FILTER_PREFIX);
+
+// Helper function to extract resource type filters from a set of filters
+export const toResourceTypeFilters = (
+  filters: ReadonlySet<string> | undefined,
+): string[] => extractPrefixedValues(filters, RESOURCE_TYPE_FILTER_PREFIX);

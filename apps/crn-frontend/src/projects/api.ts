@@ -12,24 +12,60 @@ import {
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
+const escapeFacetValue = (value: string) => value.replace(/"/g, '\\"');
+
+const buildFacetExpressions = (
+  facetFilters?: ProjectListOptions['facetFilters'],
+) => {
+  if (!facetFilters) {
+    return [];
+  }
+
+  return Object.entries(facetFilters)
+    .map(([attribute, values]) => {
+      if (!values.length) {
+        return undefined;
+      }
+      const escapedValues = values.map(
+        (value) => `"${escapeFacetValue(value)}"`,
+      );
+      if (escapedValues.length === 1) {
+        return `${attribute}:${escapedValues[0]}`;
+      }
+      return `(${escapedValues
+        .map((value) => `${attribute}:${value}`)
+        .join(' OR ')})`;
+    })
+    .filter((expression): expression is string => Boolean(expression));
+};
+
 const buildFilters = ({
   projectType,
   statusFilters,
-}: Pick<ProjectListOptions, 'projectType' | 'statusFilters'>) => {
+  facetFilters,
+}: Pick<
+  ProjectListOptions,
+  'projectType' | 'statusFilters' | 'facetFilters'
+>) => {
   const filters: string[] = [`projectType:"${projectType}"`];
 
   if (statusFilters && statusFilters.length > 0) {
     filters.push(
-      statusFilters.map((status) => `status:"${status}"`).join(' OR '),
+      `(${statusFilters.map((status) => `status:"${status}"`).join(' OR ')})`,
     );
   }
+
+  filters.push(...buildFacetExpressions(facetFilters));
 
   return filters.join(' AND ');
 };
 
+export type ProjectFacetFilters = Record<string, ReadonlyArray<string>>;
+
 export type ProjectListOptions = GetListOptions & {
   projectType: ProjectType;
   statusFilters?: ProjectStatus[];
+  facetFilters?: ProjectFacetFilters;
 };
 
 export const getProjects = async (
@@ -41,9 +77,31 @@ export const getProjects = async (
       page: options.currentPage ?? 0,
       hitsPerPage: options.pageSize ?? 10,
       filters: buildFilters(options),
+      facets: ['status', 'researchTheme', 'resourceType'],
     })
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);
+    });
+
+type ProjectFacetRequest = {
+  projectType: ProjectType;
+  facets: ReadonlyArray<'researchTheme' | 'resourceType'>;
+};
+
+export const getProjectFacets = async (
+  client: AlgoliaClient<'crn'>,
+  { projectType, facets }: ProjectFacetRequest,
+): Promise<Record<string, Record<string, number>>> =>
+  client
+    .search(['project'], '', {
+      page: 0,
+      hitsPerPage: 0,
+      filters: `projectType:"${projectType}"`,
+      facets,
+    })
+    .then((response) => response.facets ?? {})
+    .catch((error: Error) => {
+      throw new Error(`Could not fetch project facets: ${error.message}`);
     });
 
 export const toListProjectResponse = (
@@ -53,6 +111,7 @@ export const toListProjectResponse = (
   items: response.hits,
   algoliaQueryId: response.queryID,
   algoliaIndexName: response.index,
+  facets: response.facets,
 });
 
 export const getProject = async (

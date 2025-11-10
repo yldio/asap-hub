@@ -5,9 +5,23 @@ import {
   DiscoveryProjectsList,
 } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../hooks';
-import { useProjects } from './state';
-import { isDiscoveryProject } from './utils';
+import { useProjects, useProjectFacets } from './state';
+import {
+  isDiscoveryProject,
+  toDiscoveryThemeFilters,
+  toStatusFilters,
+} from './utils';
 import { ProjectListOptions } from './api';
+import {
+  FilterOption,
+  STATUS_FILTER_OPTIONS,
+  createDiscoveryThemeFilterOptions,
+} from './filter-options';
+
+const discoveryFacetRequest = {
+  projectType: 'Discovery' as const,
+  facets: ['researchTheme'] as const,
+};
 
 type DiscoveryProjectsProps = {
   searchQuery: string;
@@ -58,16 +72,52 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
   onChangeFilter,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
+  const themeFilters = useMemo(
+    () => toDiscoveryThemeFilters(filters),
+    [filters],
+  );
+  const emptyFilters = useMemo(() => new Set<string>(), []);
+  const normalizedFilters = useMemo(
+    () => (filters ? new Set(filters) : undefined),
+    [filters],
+  );
+  const facetFilters = useMemo(
+    () =>
+      themeFilters.length
+        ? { researchTheme: themeFilters as ReadonlyArray<string> }
+        : undefined,
+    [themeFilters],
+  );
 
   const listOptions = useMemo(
     () => ({
       projectType: 'Discovery' as const,
       searchQuery: debouncedSearchQuery,
+      statusFilters,
       currentPage,
       pageSize,
-      filters: filters ?? new Set<string>(),
+      filters: normalizedFilters ?? emptyFilters,
+      facetFilters,
     }),
-    [currentPage, debouncedSearchQuery, pageSize, filters],
+    [
+      currentPage,
+      debouncedSearchQuery,
+      emptyFilters,
+      facetFilters,
+      normalizedFilters,
+      pageSize,
+      statusFilters,
+    ],
+  );
+  const facets = useProjectFacets(discoveryFacetRequest);
+  const themeFilterOptions: ReadonlyArray<FilterOption> = useMemo(
+    () => createDiscoveryThemeFilterOptions(facets?.researchTheme),
+    [facets],
+  );
+  const filterOptions = useMemo(
+    () => [...themeFilterOptions, ...STATUS_FILTER_OPTIONS],
+    [themeFilterOptions],
   );
 
   return (
@@ -77,6 +127,7 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
       onChangeSearchQuery={onChangeSearchQuery}
       filters={filters}
       onChangeFilter={onChangeFilter}
+      filterOptions={filterOptions}
     >
       <SearchFrame title="Discovery Projects">
         <DiscoveryProjectsListContent

@@ -13,8 +13,141 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-
+import type {
+  DiscoveryProject,
+  ResourceProject,
+  TraineeProject,
+  ProjectMember,
+} from '@asap-hub/model';
 import Projects from '../Projects';
+
+const mockDiscoveryProject: DiscoveryProject = {
+  id: '1',
+  title: 'Discovery Project 1',
+  status: 'Active',
+  startDate: '2024-01-01',
+  endDate: '2024-06-01',
+  duration: '5 mos',
+  tags: [],
+  projectType: 'Discovery',
+  researchTheme: 'Theme One',
+  teamName: 'Discovery Team',
+  teamId: 'team-1',
+  inactiveSinceDate: undefined,
+};
+
+const mockResourceMembers: ReadonlyArray<ProjectMember> = [
+  { id: 'resource-team-main', displayName: 'Resource Team' },
+  { id: 'resource-team-support', displayName: 'Resource Support' },
+];
+
+const mockResourceProject: ResourceProject = {
+  id: '2',
+  title: 'Resource Project 1',
+  status: 'Active',
+  startDate: '2023-01-01',
+  endDate: '2023-07-01',
+  duration: '6 mos',
+  tags: [],
+  projectType: 'Resource',
+  resourceType: 'Data Portal',
+  isTeamBased: true,
+  teamName: 'Resource Team',
+  teamId: 'team-2',
+  googleDriveLink: undefined,
+  members: mockResourceMembers,
+};
+
+const mockTraineeTrainer: ProjectMember = {
+  id: 'trainer-1',
+  displayName: 'Taylor Trainer',
+  firstName: 'Taylor',
+  lastName: 'Trainer',
+};
+
+const mockTraineeProjectMembers: ReadonlyArray<ProjectMember> = [
+  {
+    id: 'trainee-1',
+    displayName: 'Dana Trainee',
+    firstName: 'Dana',
+    lastName: 'Trainee',
+  },
+];
+
+const mockTraineeProject: TraineeProject = {
+  id: '3',
+  title: 'Trainee Project 1',
+  status: 'Active',
+  startDate: '2024-02-01',
+  endDate: '2025-02-01',
+  duration: '1 yr',
+  tags: [],
+  projectType: 'Trainee',
+  trainer: mockTraineeTrainer,
+  members: mockTraineeProjectMembers,
+};
+
+jest.mock('../state', () => {
+  const createMockListResponse = (
+    items: ReadonlyArray<DiscoveryProject | ResourceProject | TraineeProject>,
+  ) => ({
+    total: items.length,
+    items,
+    algoliaIndexName: 'projects-index',
+    algoliaQueryId: 'query-id',
+  });
+
+  const useProjects = jest.fn((options: { projectType: string }) => {
+    switch (options.projectType) {
+      case 'Discovery':
+        return createMockListResponse([mockDiscoveryProject]);
+      case 'Resource':
+        return createMockListResponse([mockResourceProject]);
+      case 'Trainee':
+        return createMockListResponse([mockTraineeProject]);
+      default:
+        return createMockListResponse([mockDiscoveryProject]);
+    }
+  });
+
+  const useProjectFacets = jest.fn((options: { projectType: string }) => {
+    if (options.projectType === 'Discovery') {
+      return {
+        researchTheme: {
+          'Theme One': 2,
+        },
+      };
+    }
+    if (options.projectType === 'Resource') {
+      return {
+        resourceType: {
+          'Data Portal': 1,
+        },
+      };
+    }
+    return {};
+  });
+
+  const useProjectById = jest.fn((id: string) => {
+    if (id === '1') {
+      return mockDiscoveryProject;
+    }
+    if (id === '2') {
+      return mockResourceProject;
+    }
+    if (id === '3') {
+      return mockTraineeProject;
+    }
+    return undefined;
+  });
+
+  return {
+    __esModule: true,
+    useProjects,
+    useProjectFacets,
+    useProjectById,
+  };
+});
 
 const renderProjectsPage = async (pathname: string, query = '') => {
   const { container } = render(

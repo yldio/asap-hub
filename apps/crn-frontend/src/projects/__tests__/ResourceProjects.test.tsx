@@ -3,11 +3,14 @@ import { MemoryRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 
 import ResourceProjects from '../ResourceProjects';
-import { useProjects } from '../state';
+import { useProjects, useProjectFacets } from '../state';
 
 jest.mock('../state');
 
 const mockUseProjects = useProjects as jest.MockedFunction<typeof useProjects>;
+const mockUseProjectFacets = useProjectFacets as jest.MockedFunction<
+  typeof useProjectFacets
+>;
 
 const props: ComponentProps<typeof ResourceProjects> = {
   searchQuery: '',
@@ -39,6 +42,9 @@ beforeEach(() => {
     ],
     algoliaIndexName: 'index',
     algoliaQueryId: 'query',
+  });
+  mockUseProjectFacets.mockReturnValue({
+    resourceType: { Database: 5 },
   });
 });
 

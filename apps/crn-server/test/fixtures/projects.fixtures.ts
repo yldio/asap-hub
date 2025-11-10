@@ -68,6 +68,49 @@ export const getDiscoveryProjectGraphqlItem = (): GraphQLProject => ({
   },
 });
 
+export const getDiscoveryProjectWithoutTeamGraphqlItem =
+  (): GraphQLProject => ({
+    sys: { id: 'discovery-no-team' },
+    title: 'Discovery Project No Team',
+    status: 'Active',
+    startDate: '2024-02-01',
+    endDate: '2024-05-01',
+    projectType: 'Discovery Project',
+    resourceType: null,
+    googleDriveLink: null,
+    membersCollection: {
+      total: 1,
+      items: [
+        {
+          sys: { id: 'membership-discovery-user-no-team' },
+          role: 'Researcher',
+          projectMember: {
+            __typename: 'Users',
+            sys: { id: 'user-no-team' },
+            firstName: 'Jordan',
+            nickname: '',
+            lastName: 'Casey',
+            email: 'jordan@example.com',
+            onboarded: true,
+            avatar: { url: null },
+            alumniSinceDate: undefined,
+          },
+        },
+      ],
+    },
+    researchTagsCollection: {
+      total: 1,
+      items: [
+        {
+          sys: { id: 'tag-c' },
+          name: 'Tag C',
+          category: null,
+          types: null,
+        },
+      ],
+    },
+  });
+
 export const getResourceTeamProjectGraphqlItem = (): GraphQLProject => ({
   sys: { id: 'resource-team-1' },
   title: 'Resource Project Team-Based',
@@ -253,6 +296,19 @@ export const getExpectedDiscoveryProject = (): DiscoveryProject => ({
   teamName: 'Discovery Team',
   teamId: 'team-1',
   inactiveSinceDate: '2025-01-01',
+});
+
+export const getExpectedDiscoveryProjectWithoutTeam = (): DiscoveryProject => ({
+  id: 'discovery-no-team',
+  title: 'Discovery Project No Team',
+  status: 'Active',
+  startDate: '2024-02-01',
+  endDate: '2024-05-01',
+  duration: '3 mos',
+  tags: ['Tag C'],
+  projectType: 'Discovery',
+  researchTheme: '',
+  teamName: '',
 });
 
 export const getExpectedResourceTeamProject = (): ResourceProject => ({

@@ -16,5 +16,6 @@
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
-  }
+  },
+  "ignoreDeps": ["@types/react", "@types/react-dom"]
 }

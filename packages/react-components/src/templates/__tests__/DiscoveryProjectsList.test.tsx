@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 
 import DiscoveryProjectsList from '../DiscoveryProjectsList';
@@ -40,18 +41,30 @@ const props: ComponentProps<typeof DiscoveryProjectsList> = {
 };
 
 it('renders all discovery projects', () => {
-  render(<DiscoveryProjectsList {...props} />);
+  render(
+    <MemoryRouter>
+      <DiscoveryProjectsList {...props} />
+    </MemoryRouter>,
+  );
   expect(screen.getByText('Test Discovery Project 1')).toBeVisible();
   expect(screen.getByText('Test Discovery Project 2')).toBeVisible();
 });
 
 it('renders the correct number of project cards', () => {
-  render(<DiscoveryProjectsList {...props} />);
+  render(
+    <MemoryRouter>
+      <DiscoveryProjectsList {...props} />
+    </MemoryRouter>,
+  );
   expect(screen.getAllByTestId('project-card-id')).toHaveLength(2);
 });
 
 it('renders Discovery Project type pill for each project', () => {
-  render(<DiscoveryProjectsList {...props} />);
+  render(
+    <MemoryRouter>
+      <DiscoveryProjectsList {...props} />
+    </MemoryRouter>,
+  );
   const pills = screen.getAllByText('Discovery Project');
   expect(pills).toHaveLength(2);
 });

@@ -1,3 +1,5 @@
+import { ListResponse } from './common';
+
 export type ProjectStatus = 'Active' | 'Complete' | 'Closed';
 
 export type ProjectType = 'Discovery' | 'Resource' | 'Trainee';
@@ -127,10 +129,7 @@ export type TraineeProjectDataObject = TraineeProject;
 
 export type ProjectDetailDataObject = ProjectDetail;
 
-export type ListProjectDataObject = {
-  readonly total: number;
-  readonly items: ProjectDataObject[];
-};
+export type ListProjectDataObject = ListResponse<ProjectDataObject>;
 
 // Filter types
 export type FetchProjectsFilter = {

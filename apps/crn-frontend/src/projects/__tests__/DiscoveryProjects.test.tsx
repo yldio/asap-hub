@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 
 import DiscoveryProjects from '../DiscoveryProjects';
+import { DISCOVERY_THEME_FILTER_PREFIX } from '../utils';
 import { useProjects, useProjectFacets } from '../state';
 
 jest.mock('../state');
@@ -21,6 +22,7 @@ const props: ComponentProps<typeof DiscoveryProjects> = {
 };
 
 beforeEach(() => {
+  jest.clearAllMocks();
   mockUseProjects.mockReturnValue({
     total: 1,
     items: [
@@ -59,4 +61,20 @@ it('renders the Discovery Projects page', () => {
   ).toBeVisible();
   expect(container.querySelector('section')).toBeInTheDocument();
   expect(screen.getByText('Discovery Team')).toBeVisible();
+});
+
+it('passes Algolia facet filters when the discovery theme filter is active', () => {
+  const themeValue = `${DISCOVERY_THEME_FILTER_PREFIX}Neuro`;
+
+  render(
+    <MemoryRouter>
+      <DiscoveryProjects {...props} filters={new Set([themeValue])} />
+    </MemoryRouter>,
+  );
+
+  expect(mockUseProjects).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      facetFilters: { researchTheme: ['Neuro'] },
+    }),
+  );
 });

@@ -1,8 +1,12 @@
 import { ProjectsOrder } from '@asap-hub/contentful';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
-import { ProjectContentfulDataProvider } from '../../../src/data-providers/contentful/project.data-provider';
+import {
+  ProjectContentfulDataProvider,
+  parseContentfulProject,
+} from '../../../src/data-providers/contentful/project.data-provider';
 import {
   getExpectedDiscoveryProject,
+  getExpectedDiscoveryProjectWithoutTeam,
   getExpectedProjectList,
   getExpectedResourceIndividualProject,
   getExpectedResourceTeamProject,
@@ -10,6 +14,8 @@ import {
   getProjectByIdGraphqlResponse,
   getProjectsGraphqlEmptyResponse,
   getProjectsGraphqlResponse,
+  getDiscoveryProjectWithoutTeamGraphqlItem,
+  getDiscoveryProjectGraphqlItem,
 } from '../../fixtures/projects.fixtures';
 
 describe('ProjectContentfulDataProvider', () => {
@@ -99,6 +105,19 @@ describe('ProjectContentfulDataProvider', () => {
         items: [],
       });
     });
+
+    it('falls back to default discovery project values when no team member exists', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        projectsCollection: {
+          total: 1,
+          items: [getDiscoveryProjectWithoutTeamGraphqlItem()],
+        },
+      } as never);
+
+      const result = await dataProvider.fetch({});
+
+      expect(result.items).toEqual([getExpectedDiscoveryProjectWithoutTeam()]);
+    });
   });
 
   describe('fetchById', () => {
@@ -144,5 +163,16 @@ describe('ProjectContentfulDataProvider', () => {
         getExpectedTraineeProject(),
       ]);
     });
+  });
+
+  it('throws when encountering an unknown project type', () => {
+    const invalidItem = {
+      ...getDiscoveryProjectGraphqlItem(),
+      projectType: 'Unexpected Project',
+    };
+
+    expect(() => parseContentfulProject(invalidItem as never)).toThrow(
+      'Unknown project type: Unexpected Project',
+    );
   });
 });

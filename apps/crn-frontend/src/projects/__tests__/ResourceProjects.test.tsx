@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 
 import ResourceProjects from '../ResourceProjects';
+import { RESOURCE_TYPE_FILTER_PREFIX } from '../utils';
 import { useProjects, useProjectFacets } from '../state';
 
 jest.mock('../state');
@@ -21,6 +22,7 @@ const props: ComponentProps<typeof ResourceProjects> = {
 };
 
 beforeEach(() => {
+  jest.clearAllMocks();
   mockUseProjects.mockReturnValue({
     total: 1,
     items: [
@@ -61,4 +63,20 @@ it('renders the Resource Projects page', () => {
   ).toBeVisible();
   expect(container.querySelector('section')).toBeInTheDocument();
   expect(screen.getByText('Resource Team')).toBeVisible();
+});
+
+it('passes Algolia facet filters when the resource type filter is active', () => {
+  const resourceValue = `${RESOURCE_TYPE_FILTER_PREFIX}Dataset`;
+
+  render(
+    <MemoryRouter>
+      <ResourceProjects {...props} filters={new Set([resourceValue])} />
+    </MemoryRouter>,
+  );
+
+  expect(mockUseProjects).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      facetFilters: { resourceType: ['Dataset'] },
+    }),
+  );
 });

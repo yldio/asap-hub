@@ -229,19 +229,14 @@ export function parseContentfulProject(
         .map((m) => parseProjectMember(m));
 
       // First member with "Trainer" or "Project Lead" role is the trainer
-      const trainer =
-        userMembers.find(
-          (m) =>
-            m.role === 'Project CoLead' ||
-            m.role === 'Project Lead' ||
-            m.role === 'Project Manager',
-        ) || userMembers[0];
+      const trainer = userMembers.find(
+        (m) =>
+          m.role === 'Project CoLead' ||
+          m.role === 'Project Lead' ||
+          m.role === 'Project Manager',
+      );
 
       const trainees = userMembers.filter((m) => m.id !== trainer?.id);
-
-      if (!trainer) {
-        throw new Error(`Trainee project ${item.sys.id} has no trainer`);
-      }
 
       return {
         ...baseProject,

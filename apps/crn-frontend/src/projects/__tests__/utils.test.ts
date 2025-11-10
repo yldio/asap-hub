@@ -3,6 +3,7 @@ import type {
   ResourceProject,
   TraineeProject,
 } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 
 import {
   DISCOVERY_THEME_FILTER_PREFIX,
@@ -112,12 +113,21 @@ describe('project utils', () => {
       const detail = toResourceProjectDetail(resourceIndividual);
       expect(detail.fundedTeam).toBeUndefined();
       expect(detail.members).toHaveLength(1);
+      expect(detail.members?.[0]?.href).toEqual(
+        network({}).users({}).user({ userId: 'member-1' }).$,
+      );
     });
 
     it('creates trainee project detail with trainer and members', () => {
       const detail = toTraineeProjectDetail(baseTrainee);
       expect(detail.trainer.displayName).toEqual('Taylor Trainer');
       expect(detail.members).toHaveLength(1);
+      expect(detail.trainer.href).toEqual(
+        network({}).users({}).user({ userId: 'trainer-1' }).$,
+      );
+      expect(detail.members?.[0]?.href).toEqual(
+        network({}).users({}).user({ userId: 'trainee-member' }).$,
+      );
     });
 
     it('maps project detail based on projectType', () => {

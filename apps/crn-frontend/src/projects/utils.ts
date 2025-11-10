@@ -9,6 +9,7 @@ import {
   TraineeProject,
   TraineeProjectDetail,
 } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 
 export const isDiscoveryProject = (
   project: ProjectResponse,
@@ -23,6 +24,20 @@ export const isTraineeProject = (
 ): project is TraineeProject => project.projectType === 'Trainee';
 
 const defaultGrant = { title: '', description: '' } as const;
+
+const addMemberHref = <T extends { id: string }>(
+  member: T | undefined,
+): (T & { href: string }) | undefined =>
+  member
+    ? {
+        ...member,
+        href: network({}).users({}).user({ userId: member.id }).$,
+      }
+    : undefined;
+
+const addHrefToMembers = <T extends { id: string }>(
+  members: ReadonlyArray<T> | undefined,
+) => members?.map((member) => addMemberHref(member) as T & { href: string });
 
 export const toDiscoveryProjectDetail = (
   project: DiscoveryProject,
@@ -59,7 +74,10 @@ export const toResourceProjectDetail = (
         description: '',
       }
     : undefined,
-  collaborators: project.isTeamBased ? [] : project.members,
+  collaborators: project.isTeamBased
+    ? []
+    : addHrefToMembers(project.members) ?? project.members,
+  members: addHrefToMembers(project.members) ?? project.members,
 });
 
 export const toTraineeProjectDetail = (
@@ -70,6 +88,8 @@ export const toTraineeProjectDetail = (
   originalGrant: defaultGrant,
   supplementGrant: undefined,
   milestones: [],
+  trainer: addMemberHref(project.trainer) ?? project.trainer,
+  members: addHrefToMembers(project.members) ?? project.members,
 });
 
 export const toProjectDetail = (project: ProjectResponse): ProjectDetail =>

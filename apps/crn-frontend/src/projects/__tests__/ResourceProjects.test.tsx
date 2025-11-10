@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
+import { render, screen } from '@testing-library/react';
+import { network } from '@asap-hub/routing';
 
 import ResourceProjects from '../ResourceProjects';
 import { RESOURCE_TYPE_FILTER_PREFIX } from '../utils';
@@ -63,6 +64,45 @@ it('renders the Resource Projects page', () => {
   ).toBeVisible();
   expect(container.querySelector('section')).toBeInTheDocument();
   expect(screen.getByText('Resource Team')).toBeVisible();
+});
+
+it('renders resource project members as links when the project is not team-based', () => {
+  mockUseProjects.mockReturnValueOnce({
+    total: 1,
+    items: [
+      {
+        id: 'resource-2',
+        title: 'Resource Individual Project',
+        status: 'Active',
+        projectType: 'Resource',
+        resourceType: 'Data Portal',
+        startDate: '2024-01-01',
+        endDate: '2024-12-01',
+        duration: '11 mos',
+        tags: [],
+        isTeamBased: false,
+        members: [
+          {
+            id: 'resource-member-1',
+            displayName: 'Pat Scientist',
+          },
+        ],
+      },
+    ],
+    algoliaIndexName: 'index',
+    algoliaQueryId: 'query',
+  });
+
+  render(
+    <MemoryRouter>
+      <ResourceProjects {...props} />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByRole('link', { name: 'Pat Scientist' })).toHaveAttribute(
+    'href',
+    network({}).users({}).user({ userId: 'resource-member-1' }).$,
+  );
 });
 
 it('passes Algolia facet filters when the resource type filter is active', () => {

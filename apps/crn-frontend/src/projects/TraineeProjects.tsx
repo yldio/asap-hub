@@ -1,6 +1,8 @@
 import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { ProjectsPage, TraineeProjectsList } from '@asap-hub/react-components';
+import type { ProjectMember, TraineeProject } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
 import { ProjectListOptions } from './api';
@@ -21,15 +23,29 @@ type TraineeProjectsListContentProps = {
   pageSize: number;
 };
 
+const withMemberHref = (member: ProjectMember) => ({
+  ...member,
+  href: network({}).users({}).user({ userId: member.id }).$,
+});
+
 const TraineeProjectsListContent: FC<TraineeProjectsListContentProps> = ({
   options,
   currentPage,
   pageSize,
 }) => {
   const result = useProjects(options);
-  const projects = useMemo(
+  const projects = useMemo<ReadonlyArray<TraineeProject>>(
     () => result.items.filter(isTraineeProject),
     [result.items],
+  );
+  const projectsWithMemberLinks = useMemo(
+    () =>
+      projects.map((project) => ({
+        ...project,
+        trainer: withMemberHref(project.trainer),
+        members: project.members.map(withMemberHref),
+      })),
+    [projects],
   );
   const { numberOfPages, renderPageHref } = usePagination(
     result.total,
@@ -38,7 +54,7 @@ const TraineeProjectsListContent: FC<TraineeProjectsListContentProps> = ({
 
   return (
     <TraineeProjectsList
-      projects={projects}
+      projects={projectsWithMemberLinks}
       numberOfItems={result.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}

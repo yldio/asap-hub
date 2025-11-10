@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
+import { render, screen } from '@testing-library/react';
+import { network } from '@asap-hub/routing';
 
 import TraineeProjects from '../TraineeProjects';
 import { useProjects } from '../state';
@@ -18,6 +19,7 @@ const props: ComponentProps<typeof TraineeProjects> = {
 };
 
 beforeEach(() => {
+  jest.clearAllMocks();
   mockUseProjects.mockReturnValue({
     total: 1,
     items: [
@@ -60,4 +62,49 @@ it('renders the Trainee Projects page', () => {
   ).toBeVisible();
   expect(container.querySelector('section')).toBeInTheDocument();
   expect(screen.getByText('Trainer One')).toBeVisible();
+});
+
+it('renders trainer and members as links', () => {
+  mockUseProjects.mockReturnValueOnce({
+    total: 1,
+    items: [
+      {
+        id: 'trainee-2',
+        title: 'Another Trainee Project',
+        status: 'Active',
+        projectType: 'Trainee',
+        startDate: '2024-03-01',
+        endDate: '2025-03-01',
+        duration: '1 yr',
+        tags: [],
+        trainer: {
+          id: 'trainer-2',
+          displayName: 'Taylor Trainer',
+        },
+        members: [
+          {
+            id: 'member-2',
+            displayName: 'Morgan Trainee',
+          },
+        ],
+      },
+    ],
+    algoliaIndexName: 'index',
+    algoliaQueryId: 'query',
+  });
+
+  render(
+    <MemoryRouter>
+      <TraineeProjects {...props} />
+    </MemoryRouter>,
+  );
+
+  expect(screen.getByRole('link', { name: 'Taylor Trainer' })).toHaveAttribute(
+    'href',
+    network({}).users({}).user({ userId: 'trainer-2' }).$,
+  );
+  expect(screen.getByRole('link', { name: 'Morgan Trainee' })).toHaveAttribute(
+    'href',
+    network({}).users({}).user({ userId: 'member-2' }).$,
+  );
 });

@@ -84,6 +84,8 @@ it('renders resource project members as links when the project is not team-based
         members: [
           {
             id: 'resource-member-1',
+            firstName: 'Pat',
+            lastName: 'Scientist',
             displayName: 'Pat Scientist',
           },
         ],

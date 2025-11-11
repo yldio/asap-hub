@@ -34,11 +34,15 @@ beforeEach(() => {
         tags: [],
         trainer: {
           id: 'trainer',
+          firstName: 'Trainer',
+          lastName: 'One',
           displayName: 'Trainer One',
         },
         members: [
           {
             id: 'member-1',
+            firstName: 'Member',
+            lastName: 'One',
             displayName: 'Member One',
           },
         ],
@@ -79,11 +83,15 @@ it('renders trainer and members as links', () => {
         tags: [],
         trainer: {
           id: 'trainer-2',
+          firstName: 'Taylor',
+          lastName: 'Trainer',
           displayName: 'Taylor Trainer',
         },
         members: [
           {
             id: 'member-2',
+            firstName: 'Morgan',
+            lastName: 'Trainee',
             displayName: 'Morgan Trainee',
           },
         ],

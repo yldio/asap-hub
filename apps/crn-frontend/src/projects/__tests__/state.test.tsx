@@ -1,12 +1,18 @@
 import { Suspense } from 'react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 import type { MutableSnapshot } from 'recoil';
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, useRecoilState } from 'recoil';
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import type { ListProjectResponse, ProjectResponse } from '@asap-hub/model';
 
 import type { ProjectListOptions } from '../api';
-import { projectsState, useProjectFacets, useProjects } from '../state';
+import {
+  projectsState,
+  useProjectById,
+  useProjectFacets,
+  useProjects,
+} from '../state';
+import { auth0State } from '../../auth/state';
 
 jest.mock('../../hooks/algolia', () => ({
   useAlgolia: jest.fn(),
@@ -25,6 +31,7 @@ const { useAlgolia } = jest.requireMock('../../hooks/algolia') as jest.Mocked<
 const {
   getProjects: mockGetProjects,
   getProjectFacets: mockGetProjectFacets,
+  getProject: mockGetProject,
   toListProjectResponse: mockToListProjectResponse,
 } = jest.requireMock('../api') as jest.Mocked<typeof import('../api')>;
 
@@ -96,6 +103,26 @@ describe('projects state hooks', () => {
       expect(mockToListProjectResponse).toHaveBeenCalledWith(algoliaResponse);
       expect(result.current).toEqual(listResponse);
     });
+
+    it('throws when Algolia search fails', async () => {
+      const rejection = new Error('Algolia failure');
+      mockGetProjects.mockRejectedValueOnce(rejection);
+
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useProjects(defaultOptions),
+        { wrapper: createWrapper() },
+      );
+
+      await waitForNextUpdate();
+
+      expect(result.error).toBe(rejection);
+
+      consoleErrorSpy.mockRestore();
+    });
   });
 
   describe('projectsState selector', () => {
@@ -109,6 +136,45 @@ describe('projects state hooks', () => {
       });
 
       expect(result.current).toEqual(listResponse);
+    });
+  });
+
+  describe('projectsState setter behaviour', () => {
+    it('clears cached projects when set to undefined', () => {
+      const { result } = renderHook(
+        () => useRecoilState(projectsState(defaultOptions)),
+        { wrapper: createWrapper() },
+      );
+
+      act(() => {
+        const [, setProjects] = result.current;
+        setProjects(listResponse);
+      });
+
+      expect(result.current[0]).toEqual(listResponse);
+
+      act(() => {
+        const [, setProjects] = result.current;
+        setProjects(undefined);
+      });
+
+      expect(result.current[0]).toBeUndefined();
+    });
+
+    it('stores errors when provided', () => {
+      const { result } = renderHook(
+        () => useRecoilState(projectsState(defaultOptions)),
+        { wrapper: createWrapper() },
+      );
+
+      const error = new Error('boom');
+
+      act(() => {
+        const [, setProjects] = result.current;
+        setProjects(error);
+      });
+
+      expect(result.current[0]).toBe(error);
     });
   });
 
@@ -133,6 +199,68 @@ describe('projects state hooks', () => {
         facetOptions,
       );
       expect(result.current).toEqual(facetsResponse);
+    });
+
+    it('throws when facet fetching fails', async () => {
+      const rejection = new Error('Facet failure');
+      mockGetProjectFacets.mockRejectedValueOnce(rejection);
+
+      const facetOptions = {
+        projectType: 'Resource' as const,
+        facets: ['resourceType'] as const,
+      };
+
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useProjectFacets(facetOptions),
+        { wrapper: createWrapper() },
+      );
+
+      await waitForNextUpdate();
+
+      expect(result.error).toBe(rejection);
+
+      consoleErrorSpy.mockRestore();
+    });
+  });
+
+  describe('useProjectById', () => {
+    it('requests project details with authorization token', async () => {
+      const project = {
+        id: 'project-99',
+        title: 'Project 99',
+        status: 'Active',
+        projectType: 'Discovery',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        researchTheme: '',
+        teamName: '',
+      } as ProjectResponse;
+      const getTokenSilently = jest.fn().mockResolvedValue('token-123');
+      mockGetProject.mockResolvedValueOnce(project);
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+      };
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useProjectById('project-99'),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      await waitForNextUpdate();
+
+      expect(getTokenSilently).toHaveBeenCalled();
+      expect(mockGetProject).toHaveBeenCalledWith(
+        'project-99',
+        'Bearer token-123',
+      );
+      expect(result.current).toEqual(project);
     });
   });
 });

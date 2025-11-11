@@ -133,6 +133,10 @@ const parseGraphQLManucriptVersion = (
   latestVersion: ManuscriptVersion | undefined,
 ): ManuscriptVersionResponse => {
   const team = manuscript?.teamsCollection?.items[0];
+  const project =
+    team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
+      ?.projectsCollection?.items[0];
+
   const manuscriptAuthors = cleanArray([
     ...(latestVersion?.firstAuthorsCollection?.items || []),
     ...(latestVersion?.correspondingAuthorCollection?.items || []),
@@ -155,8 +159,8 @@ const parseGraphQLManucriptVersion = (
             count: latestVersion.count,
             lifecycle: latestVersion.lifecycle,
           },
-          teamIdCode: team?.teamId || '',
-          grantId: team?.grantId || '',
+          teamIdCode: project?.projectId || '',
+          grantId: project?.grantId || '',
           manuscriptCount: manuscript?.count || 0,
         })
       : undefined,

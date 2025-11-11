@@ -5,8 +5,11 @@ import {
   FetchPublicTeamsQueryVariables,
   FetchTeamByIdQuery,
   FetchTeamByIdQueryVariables,
+  FetchTeamProjectByIdQuery,
+  FetchTeamProjectByIdQueryVariables,
   FetchTeamsQuery,
   FetchTeamsQueryVariables,
+  FETCH_PROJECT_BY_TEAM_ID,
   FETCH_PUBLIC_TEAMS,
   FETCH_TEAMS,
   FETCH_TEAM_BY_ID,
@@ -44,6 +47,22 @@ import { parseResearchTags } from './research-tag.data-provider';
 
 export type TeamByIdItem = NonNullable<
   NonNullable<FetchTeamByIdQuery['teams']>
+>;
+
+export type TeamProjectItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        NonNullable<
+          NonNullable<
+            NonNullable<
+              NonNullable<FetchTeamProjectByIdQuery['teams']>
+            >['linkedFrom']
+          >['projectMembershipCollection']
+        >['items'][number]
+      >['linkedFrom']
+    >['projectsCollection']
+  >['items'][number]
 >;
 
 export type MembershipTeamById = NonNullable<
@@ -217,11 +236,20 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       FetchTeamByIdQueryVariables
     >(FETCH_TEAM_BY_ID, { id, internalAPI });
 
-    if (!teams) {
+    const { teams: teamProjectData } = await this.contentfulClient.request<
+      FetchTeamProjectByIdQuery,
+      FetchTeamProjectByIdQueryVariables
+    >(FETCH_PROJECT_BY_TEAM_ID, { id });
+
+    const relatedProject =
+      teamProjectData?.linkedFrom?.projectMembershipCollection?.items[0]
+        ?.linkedFrom?.projectsCollection?.items[0];
+
+    if (!teams || !relatedProject) {
       return null;
     }
 
-    return parseContentfulGraphQlTeam(teams);
+    return parseContentfulGraphQlTeam(teams, relatedProject);
   }
 
   async update(id: string, update: TeamUpdateDataObject): Promise<void> {
@@ -280,13 +308,19 @@ export const parseContentfulGraphQlTeamListItem = (
     [0, new Set() as Set<string>],
   );
 
+  const relatedProject =
+    item.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
+      ?.projectsCollection?.items[0];
+
   return {
     id: item.sys.id ?? '',
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
-    projectTitle: item.projectTitle ?? '',
+    projectTitle: relatedProject?.title ?? '',
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
-    tags: parseResearchTags(item.researchTagsCollection?.items || []),
+    tags: parseResearchTags(
+      relatedProject?.researchTagsCollection?.items || [],
+    ),
     memberCount: numberOfMembers,
     labCount: labIds.size,
   };
@@ -380,8 +414,12 @@ export const parseContentfulGraphQlPublicTeamListItem = (
 const mapManuscripts = (
   manuscript: ManuscriptItem,
 ): TeamDataObject['manuscripts'][number] => {
-  const teamId = manuscript.teamsCollection?.items[0]?.teamId || '';
-  const grantId = manuscript.teamsCollection?.items[0]?.grantId || '';
+  const relatedProject =
+    manuscript.teamsCollection?.items[0]?.linkedFrom
+      ?.projectMembershipCollection?.items[0]?.linkedFrom?.projectsCollection
+      ?.items[0];
+  const teamId = relatedProject?.projectId || '';
+  const grantId = relatedProject?.grantId || '';
   const count = manuscript.count || 1;
   const impact = manuscript.impact
     ? {
@@ -417,6 +455,7 @@ const mapManuscripts = (
 
 export const parseContentfulGraphQlTeam = (
   item: TeamByIdItem,
+  relatedProjectData: TeamProjectItem,
 ): TeamDataObject => {
   const teamId = item.sys.id;
   const tools = (item.toolsCollection?.items || []).reduce(
@@ -514,10 +553,10 @@ export const parseContentfulGraphQlTeam = (
     ).length;
 
   const getSupplementGrant = (): TeamSupplementGrant | undefined => {
-    if (!item.supplementGrant) return undefined;
+    if (!relatedProjectData.supplementGrant) return undefined;
 
     const { title, description, proposal, startDate, endDate } =
-      item.supplementGrant;
+      relatedProjectData.supplementGrant;
 
     const hasGrantStarted = DateTime.now() >= DateTime.fromISO(startDate);
 
@@ -570,25 +609,29 @@ export const parseContentfulGraphQlTeam = (
 
   return {
     id: item.sys.id ?? '',
-    grantId: item.grantId ?? undefined,
-    teamId: item.teamId ?? undefined,
+    grantId: relatedProjectData.grantId ?? undefined,
+    teamId: relatedProjectData.projectId ?? undefined,
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
-    projectTitle: item.projectTitle ?? '',
+    projectTitle: relatedProjectData.title ?? '',
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
-    tags: parseResearchTags(item.researchTagsCollection?.items || []),
+    tags: parseResearchTags(
+      relatedProjectData.researchTagsCollection?.items || [],
+    ),
     tools,
     supplementGrant: getSupplementGrant(),
     ...parseManuscripts(),
-    projectSummary: item.projectSummary ?? undefined,
+    projectSummary: relatedProjectData.originalGrant ?? undefined,
     members: members.sort(sortMembers),
     labCount,
     pointOfContact: members.find(
       ({ role, alumniSinceDate, inactiveSinceDate }) =>
         role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
     ),
-    proposalURL: item.proposal ? item.proposal.sys.id : undefined,
+    proposalURL: relatedProjectData.proposal
+      ? relatedProjectData.proposal.sys.id
+      : undefined,
     researchTheme: item.researchTheme?.name ?? undefined,
   };
 };

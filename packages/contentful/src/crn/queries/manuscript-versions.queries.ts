@@ -129,8 +129,20 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
                 sys {
                   id
                 }
-                teamId
-                grantId
+                linkedFrom {
+                  projectMembershipCollection(limit: 1) {
+                    items {
+                      linkedFrom {
+                        projectsCollection(limit: 1) {
+                          items {
+                            projectId
+                            grantId
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
             impact {
@@ -194,8 +206,20 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
             sys {
               id
             }
-            teamId
-            grantId
+            linkedFrom {
+              projectMembershipCollection(limit: 1) {
+                items {
+                  linkedFrom {
+                    projectsCollection(limit: 1) {
+                      items {
+                        projectId
+                        grantId
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
         impact {

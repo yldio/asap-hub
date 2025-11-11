@@ -108,6 +108,9 @@ export class ManuscriptContentfulDataProvider
         .map((manuscript) => {
           const version = manuscript.versionsCollection?.items[0];
           const team = manuscript.teamsCollection?.items[0];
+          const project =
+            team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
+              ?.projectsCollection?.items[0];
           return {
             manuscriptId: getManuscriptVersionUID({
               version: {
@@ -115,8 +118,8 @@ export class ManuscriptContentfulDataProvider
                 count: version?.count,
                 lifecycle: version?.lifecycle,
               },
-              teamIdCode: team?.teamId || '',
-              grantId: team?.grantId || '',
+              teamIdCode: project?.projectId || '',
+              grantId: project?.grantId || '',
               manuscriptCount: manuscript.count || 0,
             }),
             title: manuscript.title || '',
@@ -527,9 +530,12 @@ const parseGraphQLManuscript = (
   manuscript: ManuscriptItem,
 ): ManuscriptDataObject => {
   const teamData = manuscript.teamsCollection?.items[0];
+  const projectData =
+    teamData?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
+      ?.projectsCollection?.items[0];
 
-  const teamId = teamData?.teamId || '';
-  const grantId = teamData?.grantId || '';
+  const teamId = projectData?.projectId || '';
+  const grantId = projectData?.grantId || '';
   const count = manuscript.count || 1;
   return {
     id: manuscript.sys.id,

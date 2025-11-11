@@ -107,6 +107,10 @@ export class EmailNotificationService {
     }
 
     const submittingTeam = manuscripts.teamsCollection?.items[0];
+    const project =
+      submittingTeam?.linkedFrom?.projectMembershipCollection?.items[0]
+        ?.linkedFrom?.projectsCollection?.items[0];
+
     const activeContributingTeams = cleanArray(
       versionData.teamsCollection?.items,
     ).filter((team) => !team.inactiveSince);
@@ -124,8 +128,8 @@ export class EmailNotificationService {
           count: versionData.count,
           lifecycle: versionData.lifecycle,
         },
-        teamIdCode: submittingTeam?.teamId || '',
-        grantId: submittingTeam?.grantId || '',
+        teamIdCode: project?.projectId || '',
+        grantId: project?.grantId || '',
         manuscriptCount: manuscripts.count || 0,
       }),
     };

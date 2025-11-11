@@ -332,8 +332,20 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
           sys {
             id
           }
-          teamId
-          grantId
+          linkedFrom {
+            projectMembershipCollection(limit: 1) {
+              items {
+                linkedFrom {
+                  projectsCollection(limit: 1) {
+                    items {
+                      projectId
+                      grantId
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -391,8 +403,20 @@ export const FETCH_MANUSCRIPTS = gql`
               id
             }
             displayName
-            teamId
-            grantId
+            linkedFrom {
+              projectMembershipCollection(limit: 1) {
+                items {
+                  linkedFrom {
+                    projectsCollection(limit: 1) {
+                      items {
+                        projectId
+                        grantId
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
         versionsCollection(limit: 1, order: sys_firstPublishedAt_DESC) {
@@ -426,8 +450,20 @@ export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
             id
           }
           displayName
-          teamId
-          grantId
+          linkedFrom {
+            projectMembershipCollection(limit: 1) {
+              items {
+                linkedFrom {
+                  projectsCollection(limit: 1) {
+                    items {
+                      projectId
+                      grantId
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
       assignedUsersCollection(limit: 30) {

@@ -1,21 +1,18 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 
-import { rem } from '../pixels';
 import EventsPageHeader from './EventsPageHeader';
-import { contentSidePaddingWithNavigation } from '../layout';
-
-const mainStyles = css({
-  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)}`,
-});
+import PageContraints from './PageConstraints';
 
 type EventsPageProps = ComponentProps<typeof EventsPageHeader>;
 
-const EventsPage: React.FC<EventsPageProps> = ({ children, ...props }) => (
-  <article>
-    <EventsPageHeader {...props} />
-    <main css={mainStyles}>{children}</main>
-  </article>
-);
+const EventsPage: React.FC<EventsPageProps> = ({ children, ...props }) => {
+  console.log(props);
+  return (
+    <article>
+      <EventsPageHeader {...props} />
+      <PageContraints>{children}</PageContraints>
+    </article>
+  );
+};
 
 export default EventsPage;

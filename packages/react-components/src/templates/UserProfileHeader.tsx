@@ -4,9 +4,8 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
 import { Avatar, Display, Link, TabLink, StateTag, CopyButton } from '../atoms';
-import { paper, tin } from '../colors';
+import { tin } from '../colors';
 import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
-import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
 import { Toast } from '../organisms';
@@ -18,21 +17,18 @@ import {
   vminLinearCalc,
 } from '../pixels';
 import { formatDateToTimezone } from '../date';
+import PageInfoContainer from './PageInfoContainer';
 
 const middleSizeQuery = '@media (min-width: 620px)';
 const bigSizeQuery = `@media (min-width: ${tabletScreen.width}px)`;
 
 const containerStyles = css({
-  backgroundColor: paper.rgb,
-  padding: `${rem(12)} ${contentSidePaddingWithNavigation(8)} 0`,
-
   display: 'grid',
   grid: `
     ".             edit-personal-info" ${rem(24)}
     "personal-info personal-info     " auto
     "contact       edit-contact-info " auto
     "social        social            " auto
-    "tab-nav       tab-nav           " auto
       / 1fr ${rem(36)}
   `,
   gridColumnGap: rem(12),
@@ -42,17 +38,14 @@ const containerStyles = css({
       ".             .             edit-personal-info" ${rem(24)}
       "personal-info personal-info personal-info     " auto
       "contact       social        edit-contact-info " auto
-      "tab-nav       tab-nav       tab-nav           " auto
         / max-content 1fr ${rem(36)}
     `,
   },
 
   [bigSizeQuery]: {
-    paddingTop: rem(36),
     grid: `
       "edit-personal-info personal-info personal-info ."
       "edit-contact-info  contact       social        ."
-      ".                  tab-nav       tab-nav       ."
         / ${rem(36)} max-content 1fr ${rem(36)}
     `,
     gridColumnGap: vminLinearCalc(
@@ -123,9 +116,6 @@ const socialIconStyles = css({
   gridArea: 'social',
 });
 
-const tabNavStyles = css({
-  gridArea: 'tab-nav',
-});
 const avatarContainer = css({
   display: 'grid',
   width: 90,
@@ -228,149 +218,155 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           .
         </Toast>
       )}
-      <header css={[containerStyles]}>
-        <section css={personalInfoStyles}>
-          <div>
-            <div css={nameHeaderStyles}>
-              <div css={{ display: 'flex' }}>
-                <Display styleAsHeading={2}>{fullDisplayName}</Display>
-                {degree ? (
-                  <Display styleAsHeading={2}>, {degree}</Display>
-                ) : isOwnProfile ? (
-                  <div css={{ color: tin.rgb }}>
-                    <Display styleAsHeading={2}>, Degree</Display>
+      <header>
+        <PageInfoContainer
+          nav={
+            <TabNav>
+              <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
+              <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
+              <TabLink href={tabRoutes.outputs({}).$}>
+                Shared Outputs
+                {sharedOutputsCount !== undefined && ` (${sharedOutputsCount})`}
+              </TabLink>
+              <TabLink href={tabRoutes.upcoming({}).$}>
+                Upcoming Events
+                {upcomingEventsCount !== undefined &&
+                  ` (${upcomingEventsCount})`}
+              </TabLink>
+
+              <TabLink href={tabRoutes.past({}).$}>
+                Past Events
+                {pastEventsCount !== undefined && ` (${pastEventsCount})`}
+              </TabLink>
+            </TabNav>
+          }
+        >
+          <div css={[containerStyles]}>
+            <section css={personalInfoStyles}>
+              <div>
+                <div css={nameHeaderStyles}>
+                  <div css={{ display: 'flex' }}>
+                    <Display styleAsHeading={2}>{fullDisplayName}</Display>
+                    {degree ? (
+                      <Display styleAsHeading={2}>, {degree}</Display>
+                    ) : isOwnProfile ? (
+                      <div css={{ color: tin.rgb }}>
+                        <Display styleAsHeading={2}>, Degree</Display>
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
+                  {alumniSinceDate && (
+                    <StateTag icon={alumniBadgeIcon} label="Alumni" />
+                  )}
+                </div>
+                <UserProfilePersonalText
+                  institution={institution}
+                  country={country}
+                  stateOrProvince={stateOrProvince}
+                  city={city}
+                  jobTitle={jobTitle}
+                  teams={teams}
+                  labs={labs}
+                  userActiveTeamsRoute={tabRoutes.research({}).$}
+                  isAlumni={!!alumniSinceDate}
+                />
               </div>
-              {alumniSinceDate && (
-                <StateTag icon={alumniBadgeIcon} label="Alumni" />
-              )}
-            </div>
-            <UserProfilePersonalText
-              institution={institution}
-              country={country}
-              stateOrProvince={stateOrProvince}
-              city={city}
-              jobTitle={jobTitle}
-              teams={teams}
-              labs={labs}
-              userActiveTeamsRoute={tabRoutes.research({}).$}
-              isAlumni={!!alumniSinceDate}
-            />
-          </div>
-          <div css={avatarContainer}>
-            <div css={imageContainer}>
-              <Avatar
-                imageUrl={avatarUrl}
-                firstName={firstName}
-                lastName={lastName}
-              />
-            </div>
-            {onImageSelect && (
-              <div css={editButtonContainer}>
-                <label>
-                  <Link
-                    buttonStyle
-                    small
-                    primary
-                    href={undefined}
-                    label="Edit Avatar"
-                    enabled={!avatarSaving}
-                  >
-                    {uploadIcon}
-                    <input
-                      disabled={avatarSaving}
-                      type="file"
-                      accept="image/x-png,image/jpeg"
-                      aria-label="Upload Avatar"
-                      onChange={(event) =>
-                        event.target.files?.length &&
-                        event.target.files[0] &&
-                        onImageSelect(event.target.files[0])
-                      }
-                      css={{ display: 'none' }}
-                    />
-                  </Link>
-                </label>
+              <div css={avatarContainer}>
+                <div css={imageContainer}>
+                  <Avatar
+                    imageUrl={avatarUrl}
+                    firstName={firstName}
+                    lastName={lastName}
+                  />
+                </div>
+                {onImageSelect && (
+                  <div css={editButtonContainer}>
+                    <label>
+                      <Link
+                        buttonStyle
+                        small
+                        primary
+                        href={undefined}
+                        label="Edit Avatar"
+                        enabled={!avatarSaving}
+                      >
+                        {uploadIcon}
+                        <input
+                          disabled={avatarSaving}
+                          type="file"
+                          accept="image/x-png,image/jpeg"
+                          aria-label="Upload Avatar"
+                          onChange={(event) =>
+                            event.target.files?.length &&
+                            event.target.files[0] &&
+                            onImageSelect(event.target.files[0])
+                          }
+                          css={{ display: 'none' }}
+                        />
+                      </Link>
+                    </label>
+                  </div>
+                )}
+              </div>
+            </section>
+            {editPersonalInfoHref && (
+              <div css={editPersonalInfoStyles}>
+                <Link
+                  buttonStyle
+                  small
+                  primary
+                  href={editPersonalInfoHref}
+                  label="Edit personal information"
+                >
+                  {editIcon}
+                </Link>
               </div>
             )}
-          </div>
-        </section>
-        {editPersonalInfoHref && (
-          <div css={editPersonalInfoStyles}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={editPersonalInfoHref}
-              label="Edit personal information"
+            <section
+              css={[
+                contactStyles,
+                editContactInfoHref ? null : contactNoEditStyles,
+              ]}
             >
-              {editIcon}
-            </Link>
-          </div>
-        )}
-        <section
-          css={[
-            contactStyles,
-            editContactInfoHref ? null : contactNoEditStyles,
-          ]}
-        >
-          <Link
-            small
-            buttonStyle
-            primary
-            href={createMailTo(contactEmail || email)}
-          >
-            Contact
-          </Link>
-          <div
-            css={{
-              margin: `${rem(12)} ${rem(8)}`,
-            }}
-          >
-            <CopyButton
-              hoverTooltipText="Copy Email"
-              clickTooltipText="Email Copied"
-              onClick={() => navigator.clipboard.writeText(email)}
-            />
-          </div>
-        </section>
+              <Link
+                small
+                buttonStyle
+                primary
+                href={createMailTo(contactEmail || email)}
+              >
+                Contact
+              </Link>
+              <div
+                css={{
+                  margin: `${rem(12)} ${rem(8)}`,
+                }}
+              >
+                <CopyButton
+                  hoverTooltipText="Copy Email"
+                  clickTooltipText="Email Copied"
+                  onClick={() => navigator.clipboard.writeText(email)}
+                />
+              </div>
+            </section>
 
-        {editContactInfoHref && (
-          <div css={editContactStyles}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={editContactInfoHref}
-              label="Edit contact information"
-            >
-              {editIcon}
-            </Link>
+            {editContactInfoHref && (
+              <div css={editContactStyles}>
+                <Link
+                  buttonStyle
+                  small
+                  primary
+                  href={editContactInfoHref}
+                  label="Edit contact information"
+                >
+                  {editIcon}
+                </Link>
+              </div>
+            )}
+            <div css={[socialIconStyles]}>
+              <SocialIcons {...social} />
+            </div>
           </div>
-        )}
-        <div css={[socialIconStyles]}>
-          <SocialIcons {...social} />
-        </div>
-        <div css={tabNavStyles}>
-          <TabNav>
-            <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
-            <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
-            <TabLink href={tabRoutes.outputs({}).$}>
-              Shared Outputs
-              {sharedOutputsCount !== undefined && ` (${sharedOutputsCount})`}
-            </TabLink>
-            <TabLink href={tabRoutes.upcoming({}).$}>
-              Upcoming Events
-              {upcomingEventsCount !== undefined && ` (${upcomingEventsCount})`}
-            </TabLink>
-
-            <TabLink href={tabRoutes.past({}).$}>
-              Past Events
-              {pastEventsCount !== undefined && ` (${pastEventsCount})`}
-            </TabLink>
-          </TabNav>
-        </div>
+        </PageInfoContainer>
       </header>
     </>
   );

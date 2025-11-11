@@ -8,7 +8,6 @@ import { rem } from '../pixels';
 const styles = css({
   display: 'grid',
   gridRowGap: rem(57),
-  paddingBottom: rem(24),
 });
 
 type TutorialsPageHeaderProps = {

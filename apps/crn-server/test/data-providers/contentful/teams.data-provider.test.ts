@@ -1787,6 +1787,10 @@ describe('Teams data provider', () => {
           contentfulGraphQLTeamProjectResponse,
         );
 
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLTeamProjectResponse,
+        });
+
         const result = await teamDataProvider.fetchById(id);
 
         expect(result!.proposalURL).toEqual('research-output-id');
@@ -1805,6 +1809,10 @@ describe('Teams data provider', () => {
           contentfulGraphQLResponse,
           contentfulGraphQLTeamProjectResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLTeamProjectResponse,
+        });
 
         const result = await teamDataProvider.fetchById(id);
 

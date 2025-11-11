@@ -230,7 +230,16 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       FetchTeamByIdQueryVariables
     >(FETCH_TEAM_BY_ID, { id, internalAPI });
 
-    if (!teams) {
+    const { teams: teamProjectData } = await this.contentfulClient.request<
+      FetchTeamProjectByIdQuery,
+      FetchTeamProjectByIdQueryVariables
+    >(FETCH_PROJECT_BY_TEAM_ID, { id });
+
+    const relatedProject =
+      teamProjectData?.linkedFrom?.projectMembershipCollection?.items[0]
+        ?.linkedFrom?.projectsCollection?.items[0];
+
+    if (!teams || !relatedProject) {
       return null;
     }
 

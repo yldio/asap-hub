@@ -171,9 +171,16 @@ describe('team collaboration', () => {
     jest.resetAllMocks();
   });
 
+  const graphqlTeam = getContentfulGraphqlTeam();
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
-      Teams: () => getContentfulGraphqlTeam(),
+      Teams: () => ({
+        ...graphqlTeam,
+        linkedFrom: {
+          ...graphqlTeam.linkedFrom,
+          projectMembershipCollection: null,
+        },
+      }),
       ResearchOutputs: () => getResearchOutputTeamCollaboration()[0],
     });
 

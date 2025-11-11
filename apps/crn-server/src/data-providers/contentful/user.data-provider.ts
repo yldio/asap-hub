@@ -722,6 +722,10 @@ export const parseTeamsCollection = (
         return userTeams;
       }
 
+      const project =
+        team.team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
+          ?.projectsCollection?.items[0];
+
       return [
         ...userTeams,
         {
@@ -730,7 +734,7 @@ export const parseTeamsCollection = (
           displayName: team.team?.displayName || '',
           id: team.team?.sys.id || '',
           teamInactiveSince: team.team?.inactiveSince || '',
-          proposal: team.team?.proposal ? team.team.proposal.sys.id : undefined,
+          proposal: project?.proposal ? project.proposal.sys.id : undefined,
         },
       ];
     },

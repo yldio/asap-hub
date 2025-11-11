@@ -34,15 +34,27 @@ export const interestGroupContentQueryFragment = gql`
           }
           displayName
           inactiveSince
-          researchTagsCollection(limit: 10) {
-            items {
-              sys {
-                id
+          linkedFrom {
+            projectMembershipCollection(limit: 1) {
+              items {
+                linkedFrom {
+                  projectsCollection(limit: 1) {
+                    items {
+                      researchTagsCollection(limit: 10) {
+                        items {
+                          sys {
+                            id
+                          }
+                          name
+                        }
+                      }
+                      title
+                    }
+                  }
+                }
               }
-              name
             }
           }
-          projectTitle
         }
         endDate
       }

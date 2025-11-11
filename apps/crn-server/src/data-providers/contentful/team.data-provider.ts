@@ -236,6 +236,10 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       FetchTeamByIdQueryVariables
     >(FETCH_TEAM_BY_ID, { id, internalAPI });
 
+    if (!teams) {
+      return null;
+    }
+
     const { teams: teamProjectData } = await this.contentfulClient.request<
       FetchTeamProjectByIdQuery,
       FetchTeamProjectByIdQueryVariables
@@ -244,10 +248,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
     const relatedProject =
       teamProjectData?.linkedFrom?.projectMembershipCollection?.items[0]
         ?.linkedFrom?.projectsCollection?.items[0];
-
-    if (!teams || !relatedProject) {
-      return null;
-    }
 
     return parseContentfulGraphQlTeam(teams, relatedProject);
   }
@@ -455,7 +455,7 @@ const mapManuscripts = (
 
 export const parseContentfulGraphQlTeam = (
   item: TeamByIdItem,
-  relatedProjectData: TeamProjectItem,
+  linkedProject?: TeamProjectItem | null,
 ): TeamDataObject => {
   const teamId = item.sys.id;
   const tools = (item.toolsCollection?.items || []).reduce(
@@ -553,10 +553,10 @@ export const parseContentfulGraphQlTeam = (
     ).length;
 
   const getSupplementGrant = (): TeamSupplementGrant | undefined => {
-    if (!relatedProjectData.supplementGrant) return undefined;
+    if (!linkedProject?.supplementGrant) return undefined;
 
     const { title, description, proposal, startDate, endDate } =
-      relatedProjectData.supplementGrant;
+      linkedProject.supplementGrant;
 
     const hasGrantStarted = DateTime.now() >= DateTime.fromISO(startDate);
 
@@ -609,28 +609,26 @@ export const parseContentfulGraphQlTeam = (
 
   return {
     id: item.sys.id ?? '',
-    grantId: relatedProjectData.grantId ?? undefined,
-    teamId: relatedProjectData.projectId ?? undefined,
+    grantId: linkedProject?.grantId ?? undefined,
+    teamId: linkedProject?.projectId ?? undefined,
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
-    projectTitle: relatedProjectData.title ?? '',
+    projectTitle: linkedProject?.title ?? '',
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
-    tags: parseResearchTags(
-      relatedProjectData.researchTagsCollection?.items || [],
-    ),
+    tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
     tools,
     supplementGrant: getSupplementGrant(),
     ...parseManuscripts(),
-    projectSummary: relatedProjectData.originalGrant ?? undefined,
+    projectSummary: linkedProject?.originalGrant ?? undefined,
     members: members.sort(sortMembers),
     labCount,
     pointOfContact: members.find(
       ({ role, alumniSinceDate, inactiveSinceDate }) =>
         role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
     ),
-    proposalURL: relatedProjectData.proposal
-      ? relatedProjectData.proposal.sys.id
+    proposalURL: linkedProject?.proposal
+      ? linkedProject.proposal.sys.id
       : undefined,
     researchTheme: item.researchTheme?.name ?? undefined,
   };

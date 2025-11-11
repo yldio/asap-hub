@@ -3,24 +3,14 @@ import { ComponentProps } from 'react';
 import { NewsFrequency, newsFrequency } from '@asap-hub/model';
 
 import { Display, Paragraph } from '../atoms';
-import { rem } from '../pixels';
-import { paper, steel } from '../colors';
-import { contentSidePaddingWithNavigation } from '../layout';
+import { rem, smallDesktopScreen } from '../pixels';
 import { SearchAndFilter } from '../organisms';
 import { Option } from '../organisms/CheckboxGroup';
-
-const containerStyles = css({
-  background: paper.rgb,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-  marginBottom: '2px',
-  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} ${rem(48)}`,
-});
+import PageInfoContainer from './PageInfoContainer';
+import PageContraints from './PageConstraints';
 
 const textStyles = css({
-  maxWidth: rem(610),
-});
-const controlsStyles = css({
-  padding: `${rem(30)} ${contentSidePaddingWithNavigation(8)} 0`,
+  maxWidth: rem(smallDesktopScreen.width),
 });
 
 const newsFilters = [
@@ -45,7 +35,7 @@ const NewsPageHeader: React.FC<NewsPageHeaderProps> = ({
   searchQuery,
 }) => (
   <header>
-    <div css={containerStyles}>
+    <PageInfoContainer>
       <Display styleAsHeading={2}>News</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
@@ -53,8 +43,8 @@ const NewsPageHeader: React.FC<NewsPageHeaderProps> = ({
           able to access news and newsletters
         </Paragraph>
       </div>
-    </div>
-    <div css={controlsStyles}>
+    </PageInfoContainer>
+    <PageContraints noPaddingBottom>
       <SearchAndFilter
         onChangeSearch={onChangeSearch}
         searchPlaceholder="Enter news title, keyword, ..."
@@ -63,7 +53,7 @@ const NewsPageHeader: React.FC<NewsPageHeaderProps> = ({
         filterOptions={newsFilters}
         filters={filters}
       />
-    </div>
+    </PageContraints>
   </header>
 );
 

@@ -12,7 +12,7 @@ const client = contentful.createClient({
   accessToken: contentfulManagementAccessToken,
 });
 
-const RESOURCE_PROJECT_TYPE_MAPPING: Record<string, string> = {
+const RESOURCE_PROJECT_RESOURCE_TYPE_MAPPING: Record<string, string> = {
   ASAP: 'Infrastructure',
   'CRN Cloud': 'Data',
   'Microbiome Analytics Core (MAC)': 'Data',
@@ -127,9 +127,9 @@ const migrateProjectData = async () => {
       `Migrating project data from team ${teamName} with id ${teamId}.`,
     );
 
-    const projectType = Object.keys(RESOURCE_PROJECT_TYPE_MAPPING).includes(
-      team.fields.teamType?.['en-US'],
-    )
+    const projectType = Object.keys(
+      RESOURCE_PROJECT_RESOURCE_TYPE_MAPPING,
+    ).includes(team.fields.teamType?.['en-US'])
       ? 'Resource Project'
       : 'Discovery Project';
 
@@ -147,7 +147,7 @@ const migrateProjectData = async () => {
         projectType,
         resourceType:
           projectType === 'Resource Project'
-            ? getResourceType(RESOURCE_PROJECT_TYPE_MAPPING[teamName])
+            ? getResourceType(RESOURCE_PROJECT_RESOURCE_TYPE_MAPPING[teamName])
             : undefined,
         originalGrant: team.fields.projectSummary?.['en-US'] ?? '',
         proposal: team.fields.proposal?.['en-US'] ?? undefined,

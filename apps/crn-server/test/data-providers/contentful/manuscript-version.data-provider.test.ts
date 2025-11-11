@@ -5,6 +5,7 @@ import { ManuscriptVersionContentfulDataProvider } from '../../../src/data-provi
 
 import {
   getContentfulManuscript,
+  getContentfulManuscriptProjectsCollection,
   getContentfulManuscriptsCollection,
   getContentfulManuscriptVersion,
   getManuscriptVersionDataObject,
@@ -42,6 +43,7 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       }),
       ManuscriptsVersionsCollection: () =>
         getContentfulManuscript().versionsCollection,
+      ProjectsCollection: () => getContentfulManuscriptProjectsCollection(),
     });
 
   const manuscriptVersionDataProviderMockGraphql =

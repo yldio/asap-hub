@@ -1,4 +1,4 @@
-import { FetchVersionsByManuscriptQuery } from '@asap-hub/contentful';
+import { FetchVersionsByManuscriptQuery, Projects } from '@asap-hub/contentful';
 import {
   ListManuscriptVersionResponse,
   ManuscriptVersionDataObject,
@@ -165,8 +165,24 @@ export const getContentfulManuscript = (
     items: [
       {
         sys: { id: 'team-id-1' },
-        grantId: '000282',
-        teamId: 'WH1',
+        linkedFrom: {
+          projectMembershipCollection: {
+            items: [
+              {
+                linkedFrom: {
+                  projectsCollection: {
+                    items: [
+                      {
+                        projectId: 'WH1',
+                        grantId: '000282',
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
       },
     ],
   },
@@ -180,3 +196,14 @@ export const getContentfulManuscriptsCollection =
     items: [getContentfulManuscript(), getContentfulManuscript(2)],
     total: 2,
   });
+
+export const getContentfulManuscriptProjectsCollection = (): {
+  items: Array<Pick<Projects, 'projectId' | 'grantId'>>;
+} => ({
+  items: [
+    {
+      projectId: 'WH1',
+      grantId: '000282',
+    },
+  ],
+});

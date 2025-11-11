@@ -108,6 +108,29 @@ describe('project routes', () => {
       expect(response.status).toBe(400);
       expect(projectControllerMock.fetch).not.toHaveBeenCalled();
     });
+
+    it('maps single and multiple filter values to expected shapes', async () => {
+      projectControllerMock.fetch.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+
+      await supertest(app)
+        .get('/projects')
+        .query({
+          projectType: 'Discovery',
+          status: ['Active', 'Closed'],
+        });
+
+      expect(projectControllerMock.fetch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          filter: {
+            projectType: 'Discovery',
+            status: ['Active', 'Closed'],
+          },
+        }),
+      );
+    });
   });
 
   describe('GET /project/:projectId', () => {

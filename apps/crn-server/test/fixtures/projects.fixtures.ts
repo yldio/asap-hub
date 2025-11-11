@@ -275,6 +275,74 @@ export const getProjectsGraphqlResponse = (): FetchProjectsQuery => ({
   },
 });
 
+export const getProjectsGraphqlResponseWithUnknownType =
+  (): FetchProjectsQuery => ({
+    projectsCollection: {
+      total: 1,
+      items: [
+        {
+          ...getDiscoveryProjectGraphqlItem(),
+          projectType: 'Unknown Project',
+        },
+      ],
+    },
+  });
+
+export const getProjectsGraphqlResponseWithInvalidMember =
+  (): FetchProjectsQuery => ({
+    projectsCollection: {
+      total: 1,
+      items: [
+        {
+          ...getDiscoveryProjectGraphqlItem(),
+          membersCollection: {
+            total: 1,
+            items: [
+              {
+                sys: { id: 'invalid-member' },
+                role: 'Lead',
+                projectMember: null,
+              },
+              null,
+            ],
+          },
+        },
+      ],
+    },
+  });
+
+export const getProjectsGraphqlResponseWithInvalidTeamMember =
+  (): FetchProjectsQuery => ({
+    projectsCollection: {
+      total: 1,
+      items: [
+        {
+          ...getResourceTeamProjectGraphqlItem(),
+          membersCollection: {
+            total: 1,
+            items: [
+              {
+                sys: { id: 'invalid-team-member' },
+                role: 'Lead',
+                projectMember: {
+                  __typename: 'Users',
+                  sys: { id: 'user-foo' },
+                  firstName: 'Pat',
+                  nickname: '',
+                  lastName: 'Foo',
+                  email: 'pat@example.com',
+                  onboarded: true,
+                  avatar: { url: null },
+                  alumniSinceDate: undefined,
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  });
+
 export const getProjectsGraphqlEmptyResponse = (): FetchProjectsQuery => ({
   projectsCollection: null,
 });

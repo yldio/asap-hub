@@ -68,6 +68,88 @@ describe('projects api', () => {
         'Could not search: Invalid key',
       );
     });
+
+    it('omits facet filters when none are provided', async () => {
+      mockAlgoliaClient.search.mockResolvedValueOnce({
+        nbHits: 0,
+        hits: [],
+        queryID: 'query-id',
+        index: 'projects-index',
+        facets: {},
+      } as never);
+
+      await getProjects(mockAlgoliaClient, {
+        projectType: 'Discovery',
+        currentPage: 0,
+        pageSize: 10,
+        filters: new Set<string>(),
+        searchQuery: '',
+      });
+
+      expect(mockAlgoliaClient.search).toHaveBeenCalledWith(
+        ['project'],
+        '',
+        expect.objectContaining({
+          filters: 'projectType:"Discovery"',
+        }),
+      );
+    });
+
+    it('skips empty facet values when provided', async () => {
+      mockAlgoliaClient.search.mockResolvedValueOnce({
+        nbHits: 0,
+        hits: [],
+        queryID: 'query-id',
+        index: 'projects-index',
+        facets: {},
+      } as never);
+
+      await getProjects(mockAlgoliaClient, {
+        projectType: 'Discovery',
+        currentPage: 0,
+        pageSize: 10,
+        filters: new Set<string>(),
+        searchQuery: '',
+        facetFilters: { researchTheme: [] },
+      });
+
+      expect(mockAlgoliaClient.search).toHaveBeenCalledWith(
+        ['project'],
+        '',
+        expect.objectContaining({
+          filters: 'projectType:"Discovery"',
+        }),
+      );
+    });
+
+    it('escapes facet filter values containing quotes', async () => {
+      mockAlgoliaClient.search.mockResolvedValueOnce({
+        nbHits: 0,
+        hits: [],
+        queryID: 'query-id',
+        index: 'projects-index',
+        facets: {},
+      } as never);
+
+      await getProjects(mockAlgoliaClient, {
+        projectType: 'Discovery',
+        currentPage: 0,
+        pageSize: 10,
+        filters: new Set<string>(),
+        searchQuery: '',
+        facetFilters: { researchTheme: ['Value "with quotes"'] },
+      });
+
+      expect(mockAlgoliaClient.search).toHaveBeenCalledWith(
+        ['project'],
+        '',
+        expect.objectContaining({
+          filters: expect.stringContaining(
+            'researchTheme:"Value \\"with quotes\\""',
+          ),
+        }),
+      );
+    });
   });
 
   describe('getProjectFacets', () => {
@@ -177,9 +259,32 @@ describe('projects api', () => {
         json: jest.fn().mockResolvedValue(errorBody),
       });
 
-      await expect(getProject('1', 'Bearer token')).rejects.toThrow(
-        BackendError,
-      );
+      const promise = getProject('1', 'Bearer token');
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: errorBody,
+        statusCode: 500,
+      });
+    });
+
+    it('throws BackendError when the response body cannot be parsed', async () => {
+      const json = jest.fn().mockRejectedValue(new Error('parse failure'));
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Server Error',
+        json,
+      });
+
+      const promise = getProject('1', 'Bearer token');
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: undefined,
+        statusCode: 500,
+      });
+      expect(json).toHaveBeenCalled();
     });
   });
 });

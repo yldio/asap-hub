@@ -119,32 +119,42 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 }
 
 // Helper function to normalize project type from Contentful format
-function normalizeProjectType(type: ProjectType): string {
-  return `${type} Project`;
-}
+const normalizeProjectType = (type: ProjectType): string => `${type} Project`;
 
 // Helper function to normalize status
-function normalizeStatus(status: ProjectStatus): string {
+const normalizeStatus = (status: ProjectStatus): string => {
   // Contentful uses "Completed" but our model uses "Complete"
   if (status === 'Complete') {
     return 'Completed';
   }
   return status;
-}
+};
 
 // Helper function to denormalize status from Contentful
-function denormalizeStatus(status: string): ProjectStatus {
+const denormalizeStatus = (status: string): ProjectStatus => {
   if (status === 'Completed') {
     return 'Complete';
   }
   return status as ProjectStatus;
-}
+};
 
 // Parse Contentful project to model format
-export function parseContentfulProject(
+export const parseContentfulProject = (
   item: ProjectItem | ProjectsCollectionItem,
-): ProjectDataObject {
-  const projectType = extractProjectType(item.projectType || '');
+): ProjectDataObject => {
+  const projectType = (() => {
+    const type = item.projectType || '';
+    if (type.includes('Discovery')) {
+      return 'Discovery' as ProjectType;
+    }
+    if (type.includes('Resource')) {
+      return 'Resource' as ProjectType;
+    }
+    if (type.includes('Trainee')) {
+      return 'Trainee' as ProjectType;
+    }
+    return undefined;
+  })();
   const status = denormalizeStatus(item.status || '');
   const tags = cleanArray(item.researchTagsCollection?.items || []).map(
     (tag) => tag.name || '',
@@ -229,14 +239,22 @@ export function parseContentfulProject(
         .map((m) => parseProjectMember(m));
 
       // First member with "Trainer" or "Project Lead" role is the trainer
-      const trainer = userMembers.find(
+      const trainerCandidate = userMembers.find(
         (m) =>
           m.role === 'Project CoLead' ||
           m.role === 'Project Lead' ||
           m.role === 'Project Manager',
       );
 
-      const trainees = userMembers.filter((m) => m.id !== trainer?.id);
+      const trainer =
+        trainerCandidate ??
+        userMembers[0] ??
+        ({
+          id: `trainer-unknown-${item.sys.id}`,
+          displayName: '',
+        } as ProjectMember);
+
+      const trainees = userMembers.filter((m) => m.id !== trainer.id);
 
       return {
         ...baseProject,
@@ -247,30 +265,21 @@ export function parseContentfulProject(
     }
 
     default:
-      throw new Error(`Unknown project type: ${projectType}`);
+      throw new Error(`Unknown project type: ${item.projectType}`);
   }
-}
-
-// Extract project type from Contentful format
-function extractProjectType(contentfulType: string): ProjectType {
-  if (contentfulType.includes('Discovery')) {
-    return 'Discovery';
-  }
-  if (contentfulType.includes('Resource')) {
-    return 'Resource';
-  }
-  if (contentfulType.includes('Trainee')) {
-    return 'Trainee';
-  }
-  throw new Error(`Unknown project type: ${contentfulType}`);
-}
+};
 
 // Parse project member from Contentful membership
-function parseProjectMember(membership: ProjectMembershipItem): ProjectMember {
+export const parseProjectMember = (
+  membership: ProjectMembershipItem,
+): ProjectMember => {
   const { projectMember } = membership;
 
   if (!projectMember || projectMember.__typename !== 'Users') {
-    throw new Error('Project member must be a user');
+    return {
+      id: `unknown-user-${membership.sys?.id ?? 'missing'}`,
+      displayName: '',
+    };
   }
 
   return {
@@ -288,15 +297,18 @@ function parseProjectMember(membership: ProjectMembershipItem): ProjectMember {
     email: projectMember.email || undefined,
     alumniSinceDate: projectMember.alumniSinceDate || undefined,
   };
-}
+};
 
-const parseProjectTeamMember = (
+export const parseProjectTeamMember = (
   membership: ProjectMembershipItem,
 ): ProjectMember => {
   const { projectMember } = membership;
 
   if (!projectMember || projectMember.__typename !== 'Teams') {
-    throw new Error('Project member must be a team');
+    return {
+      id: `unknown-team-${membership.sys?.id ?? 'missing'}`,
+      displayName: '',
+    };
   }
 
   return {
@@ -306,7 +318,7 @@ const parseProjectTeamMember = (
 };
 
 // Calculate project duration
-function calculateDuration(startDate: string, endDate: string): string {
+const calculateDuration = (startDate: string, endDate: string): string => {
   const start = DateTime.fromISO(startDate);
   const end = DateTime.fromISO(endDate);
 
@@ -324,4 +336,4 @@ function calculateDuration(startDate: string, endDate: string): string {
   }
 
   return `${months} mo${months > 1 ? 's' : ''}`;
-}
+};

@@ -138,6 +138,12 @@ describe('project utils', () => {
   });
 
   describe('filter helpers', () => {
+    it('returns empty arrays when filters are undefined', () => {
+      expect(toStatusFilters(undefined)).toEqual([]);
+      expect(toDiscoveryThemeFilters(undefined)).toEqual([]);
+      expect(toResourceTypeFilters(undefined)).toEqual([]);
+    });
+
     it('converts prefixed status filters', () => {
       const filters = new Set([
         `${PROJECT_STATUS_FILTER_PREFIX}Active`,

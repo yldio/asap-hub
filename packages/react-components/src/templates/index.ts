@@ -53,6 +53,8 @@ export { default as ProjectsPageHeader } from './ProjectsPageHeader';
 export { default as DiscoveryProjectsList } from './DiscoveryProjectsList';
 export { default as ResourceProjectsList } from './ResourceProjectsList';
 export { default as TraineeProjectsList } from './TraineeProjectsList';
+export { default as PageContraints } from './PageConstraints';
+export { default as PageInfoContainer } from './PageInfoContainer';
 export { default as ProjectDetailAbout } from './ProjectDetailAbout';
 export { default as ProjectDetailHeader } from './ProjectDetailHeader';
 export { default as ProjectDetailPage } from './ProjectDetailPage';

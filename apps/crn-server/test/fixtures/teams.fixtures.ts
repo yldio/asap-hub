@@ -5,6 +5,7 @@ import {
   FetchTeamsQuery as ContentfulFetchTeamsQuery,
   FetchTeamByIdQuery,
   FetchPublicTeamsQuery,
+  FetchTeamProjectByIdQuery,
 } from '@asap-hub/contentful';
 import { manuscriptAuthor } from '@asap-hub/fixtures';
 import {
@@ -21,6 +22,7 @@ import {
   WebhookDetail,
 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
+import type { TeamProjectItem } from '../../src/data-providers/contentful/team.data-provider';
 import { TeamPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
 import { getContentfulGraphqlManuscriptVersions } from './manuscript.fixtures';
@@ -51,6 +53,11 @@ export const getContentfulGraphql = (teamById = false, teamId?: string) => ({
   ManuscriptVersionsAdditionalAuthorsCollection: () =>
     getContentfulGraphqlManuscriptVersions(teamId).items[0]
       ?.additionalAuthorsCollection,
+  //ProjectMembershipCollection: () => ({ items: []}),
+  Projects: () => getContentfulGraphqlProjectsCollection().items[0],
+  ResearchTags: () =>
+    getContentfulGraphqlProjectsCollection().items[0]?.researchTagsCollection
+      ?.items[0],
 });
 
 export const getUsersTeamsCollection = () => ({
@@ -65,21 +72,21 @@ export const getContentfulGraphqlTeamById = (
   },
   displayName: 'Team A',
   inactiveSince: null,
-  projectSummary: null,
-  projectTitle:
-    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  //projectSummary: null,
+  // projectTitle:
+  //   'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   teamType: 'Discovery Team',
-  researchTagsCollection: {
-    items: [{ sys: { id: 'tag-1' }, name: 'Animal resources 1' }],
-  },
+  // researchTagsCollection: {
+  //   items: [{ sys: { id: 'tag-1' }, name: 'Animal resources 1' }],
+  // },
   toolsCollection: {
     items: [],
   },
-  proposal: {
-    sys: {
-      id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-    },
-  },
+  // proposal: {
+  //   sys: {
+  //     id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
+  //   },
+  // },
   linkedFrom: {
     manuscriptsCollection: getContentfulGraphqlManuscripts(teamId),
     teamMembershipCollection: {
@@ -102,6 +109,43 @@ export const getContentfulGraphqlTeamById = (
   },
 });
 
+export const getContentfulGraphqlTeamProjectById = (): NonNullable<
+  NonNullable<FetchTeamProjectByIdQuery['teams']>
+> => ({
+  linkedFrom: {
+    projectMembershipCollection: {
+      items: [
+        {
+          linkedFrom: {
+            projectsCollection: {
+              items: [
+                {
+                  title:
+                    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+                  projectId: '',
+                  grantId: '',
+                  originalGrant: '',
+                  proposal: {
+                    sys: {
+                      id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
+                    },
+                  },
+                  supplementGrant: {},
+                  researchTagsCollection: {
+                    items: [
+                      { sys: { id: 'tag-1' }, name: 'Animal resources 1' },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  },
+});
+
 export const getContentfulGraphqlTeam = (): NonNullable<
   NonNullable<ContentfulFetchTeamsQuery['teamsCollection']>['items'][number]
 > => ({
@@ -110,12 +154,12 @@ export const getContentfulGraphqlTeam = (): NonNullable<
   },
   displayName: 'Team A',
   inactiveSince: null,
-  projectTitle:
-    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  // projectTitle:
+  //   'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   teamType: 'Discovery Team',
-  researchTagsCollection: {
-    items: [],
-  },
+  // researchTagsCollection: {
+  //   items: [],
+  // },
   linkedFrom: {
     teamMembershipCollection: {
       items: [
@@ -134,6 +178,15 @@ export const getContentfulGraphqlTeam = (): NonNullable<
         },
       ],
     },
+    projectMembershipCollection: {
+      items: [
+        {
+          linkedFrom: {
+            projectsCollection: getContentfulGraphqlProjectsCollection(),
+          },
+        },
+      ],
+    },
   },
 });
 
@@ -145,9 +198,9 @@ export const getContentfulGraphqlPublicTeam = (): NonNullable<
   },
   displayName: 'Team A',
   inactiveSince: null,
-  projectTitle:
-    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-  projectSummary: undefined,
+  // projectTitle:
+  //   'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  // projectSummary: undefined,
   researchTheme: {
     name: 'PD Functional Genomics',
   },
@@ -276,8 +329,8 @@ export const getContentfulGraphqlManuscripts = (
         items: [
           {
             sys: { id: teamId || 'team-id-0' },
-            grantId: '000282',
-            teamId: 'WH1',
+            //grantId: '000282',
+            //teamId: 'WH1',
           },
         ],
       },
@@ -293,8 +346,8 @@ export const getContentfulGraphqlManuscripts = (
         items: [
           {
             sys: { id: teamId || 'team-id-0' },
-            grantId: '000282',
-            teamId: 'WH1',
+            //grantId: '000282',
+            //teamId: 'WH1',
           },
         ],
       },
@@ -310,6 +363,75 @@ export const getContentfulTeamsGraphqlResponse =
       items: [getContentfulGraphqlTeam()],
     },
   });
+
+export const getContentfulGraphqlProjectMembershipsCollection = (): {
+  total: number;
+  items: Array<TeamProjectItem>;
+} => ({
+  total: 1,
+  items: [
+    {
+      title:
+        'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+      projectId: 'WH1',
+      grantId: '000282',
+      originalGrant: '',
+      proposal: {
+        sys: {
+          id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
+        },
+      },
+      supplementGrant: {
+        title: 'Supplement Grant',
+        description: 'Supplement Grant description',
+        startDate: '',
+        endDate: '',
+        proposal: {
+          sys: {
+            id: '4cfb1b7b-bafe-4fca-b2ab-2347f84d98996',
+          },
+        },
+      },
+      // researchTagsCollection: {
+      //   items: [{ sys: { id: 'tag-1' }, name: 'Animal resources 1' }],
+      // },
+    },
+  ],
+});
+export const getContentfulGraphqlProjectsCollection = (): {
+  total: number;
+  items: Array<TeamProjectItem>;
+} => ({
+  total: 1,
+  items: [
+    {
+      title:
+        'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+      projectId: 'WH1',
+      grantId: '000282',
+      originalGrant: '',
+      proposal: {
+        sys: {
+          id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
+        },
+      },
+      supplementGrant: {
+        title: 'Supplement Grant',
+        description: 'Supplement Grant description',
+        startDate: '',
+        endDate: '',
+        proposal: {
+          sys: {
+            id: '4cfb1b7b-bafe-4fca-b2ab-2347f84d98996',
+          },
+        },
+      },
+      researchTagsCollection: {
+        items: [{ sys: { id: 'tag-1' }, name: 'Animal resources 1' }],
+      },
+    },
+  ],
+});
 
 export const getListTeamResponse = (): ListTeamResponse => ({
   total: 1,
@@ -507,7 +629,7 @@ export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
   displayName: 'Team A',
   teamType: 'Discovery Team',
   labCount: 2,
-  tags: [],
+  tags: [{ id: 'tag-1', name: 'Animal resources 1' }],
   memberCount: 1,
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',

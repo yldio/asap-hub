@@ -16,6 +16,7 @@ import {
   getUnsortedManuscripts,
   getContentfulGraphqlPublicTeam,
   getPublicTeamListItemDataObject,
+  getContentfulGraphqlTeamProjectById,
 } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -1108,6 +1109,10 @@ describe('Teams data provider', () => {
         teams: team,
       });
 
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        teams: getContentfulGraphqlTeamProjectById(),
+      });
+
       const result = await teamDataProvider.fetchById(teamId);
 
       expect(result?.manuscripts.map((m) => m.status)).toEqual([
@@ -1124,7 +1129,7 @@ describe('Teams data provider', () => {
       const contentfulGraphQLResponse = getContentfulTeamsGraphqlResponse();
       contentfulGraphQLResponse.teamsCollection = null;
 
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+      contentfulGraphqlClientMock.request.mockResolvedValue(
         contentfulGraphQLResponse,
       );
 
@@ -1182,6 +1187,10 @@ describe('Teams data provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           contentfulGraphQLResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
 
         const result = await teamDataProvider.fetchById(id);
 
@@ -1243,6 +1252,10 @@ describe('Teams data provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           contentfulGraphQLResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
 
         const result = await teamDataProvider.fetchById(id);
 
@@ -1319,6 +1332,10 @@ describe('Teams data provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           contentfulGraphQLResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
         const result = await teamDataProvider.fetchById('1');
         expect(result?.members).toEqual([
           expect.objectContaining({
@@ -1401,6 +1418,11 @@ describe('Teams data provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           contentfulGraphQLResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
+
         const result = await teamDataProvider.fetchById('1');
         expect(result?.members).toEqual([
           expect.objectContaining({ lastName: 'Anderson' }),
@@ -1420,6 +1442,10 @@ describe('Teams data provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           contentfulGraphQLResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
 
         const result = await teamDataProvider.fetchById(id);
 
@@ -1464,6 +1490,10 @@ describe('Teams data provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           contentfulGraphQLResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
 
         const result = await teamDataProvider.fetchById(id);
 
@@ -1526,6 +1556,10 @@ describe('Teams data provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           contentfulGraphQLResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
 
         const result = await teamDataProvider.fetchById(id);
 
@@ -1601,6 +1635,10 @@ describe('Teams data provider', () => {
           contentfulGraphQLResponse,
         );
 
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
+
         const result = await teamDataProvider.fetchById(id);
 
         expect(result!.pointOfContact).toEqual(
@@ -1638,6 +1676,10 @@ describe('Teams data provider', () => {
           contentfulGraphQLResponse,
         );
 
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
+
         const result = await teamDataProvider.fetchById(id);
 
         expect(result!.pointOfContact).toBeUndefined();
@@ -1668,6 +1710,10 @@ describe('Teams data provider', () => {
           contentfulGraphQLResponse,
         );
 
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
+
         const result = await teamDataProvider.fetchById(id);
 
         expect(result!.pointOfContact).toBeUndefined();
@@ -1695,15 +1741,23 @@ describe('Teams data provider', () => {
       test('should return supplementGrant when it exists and it has started', async () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
-        contentfulGraphQLResponse.supplementGrant = {
-          title: 'Grant Title',
-          description: 'Grant Description',
-          startDate,
-          endDate,
-        };
+        const contentfulGraphQLTeamProjectResponse =
+          getContentfulGraphqlTeamProjectById();
+
+        contentfulGraphQLTeamProjectResponse.linkedFrom!.projectMembershipCollection!.items[0]!.linkedFrom!.projectsCollection!.items[0]!.supplementGrant =
+          {
+            title: 'Grant Title',
+            description: 'Grant Description',
+            startDate,
+            endDate,
+          };
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           teams: contentfulGraphQLResponse,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLTeamProjectResponse,
         });
 
         const result = await teamDataProvider.fetchById(id);
@@ -1725,15 +1779,22 @@ describe('Teams data provider', () => {
 
         const id = 'some-id';
         const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
-        contentfulGraphQLResponse.supplementGrant = {
-          title: 'Grant Title',
-          description: 'Grant Description',
-          startDate,
-          endDate,
-        };
+        const contentfulGraphQLTeamProjectResponse =
+          getContentfulGraphqlTeamProjectById();
+        contentfulGraphQLTeamProjectResponse.linkedFrom!.projectMembershipCollection!.items[0]!.linkedFrom!.projectsCollection!.items[0]!.supplementGrant =
+          {
+            title: 'Grant Title',
+            description: 'Grant Description',
+            startDate,
+            endDate,
+          };
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           teams: contentfulGraphQLResponse,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLTeamProjectResponse,
         });
 
         const result = await teamDataProvider.fetchById(id);
@@ -1744,20 +1805,28 @@ describe('Teams data provider', () => {
       test('should return supplementGrant proposal when it exists', async () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
-        contentfulGraphQLResponse.supplementGrant = {
-          title: 'Grant Title',
-          description: 'Grant Description',
-          proposal: {
-            sys: {
-              id: 'proposal-id',
+        const contentfulGraphQLTeamProjectResponse =
+          getContentfulGraphqlTeamProjectById();
+
+        contentfulGraphQLTeamProjectResponse.linkedFrom!.projectMembershipCollection!.items[0]!.linkedFrom!.projectsCollection!.items[0]!.supplementGrant =
+          {
+            title: 'Grant Title',
+            description: 'Grant Description',
+            proposal: {
+              sys: {
+                id: 'proposal-id',
+              },
             },
-          },
-          startDate,
-          endDate,
-        };
+            startDate,
+            endDate,
+          };
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           teams: contentfulGraphQLResponse,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLTeamProjectResponse,
         });
 
         const result = await teamDataProvider.fetchById(id);
@@ -1774,13 +1843,21 @@ describe('Teams data provider', () => {
       test('should return supplementGrant as undefined when title is not set', async () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
-        contentfulGraphQLResponse.supplementGrant = {
-          title: null,
-          description: null,
-        };
+        const contentfulGraphQLTeamProjectResponse =
+          getContentfulGraphqlTeamProjectById();
+
+        contentfulGraphQLTeamProjectResponse.linkedFrom!.projectMembershipCollection!.items[0]!.linkedFrom!.projectsCollection!.items[0]!.supplementGrant =
+          {
+            title: null,
+            description: null,
+          };
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           teams: contentfulGraphQLResponse,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLTeamProjectResponse,
         });
 
         const result = await teamDataProvider.fetchById(id);
@@ -1793,19 +1870,25 @@ describe('Teams data provider', () => {
       test('should return proposalURL in team response when there is one', async () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
-          teams: {
-            ...getContentfulGraphqlTeamById(),
-            proposal: {
-              sys: {
-                id: 'research-output-id',
-              },
-            },
-          },
+          teams: getContentfulGraphqlTeamById(),
         };
+
+        const contentfulGraphQLTeamProjectResponse =
+          getContentfulGraphqlTeamProjectById();
+        contentfulGraphQLTeamProjectResponse.linkedFrom!.projectMembershipCollection!.items[0]!.linkedFrom!.projectsCollection!.items[0]!.proposal =
+          {
+            sys: {
+              id: 'research-output-id',
+            },
+          };
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           contentfulGraphQLResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLTeamProjectResponse,
+        });
 
         const result = await teamDataProvider.fetchById(id);
 
@@ -1815,15 +1898,21 @@ describe('Teams data provider', () => {
       test('should return proposalURL as undefined when there is not one', async () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
-          teams: {
-            ...getContentfulGraphqlTeamById(),
-            proposal: null,
-          },
+          teams: getContentfulGraphqlTeamById(),
         };
+
+        const contentfulGraphQLTeamProjectResponse =
+          getContentfulGraphqlTeamProjectById();
+        contentfulGraphQLTeamProjectResponse.linkedFrom!.projectMembershipCollection!.items[0]!.linkedFrom!.projectsCollection!.items[0]!.proposal =
+          null;
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           contentfulGraphQLResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLTeamProjectResponse,
+        });
 
         const result = await teamDataProvider.fetchById(id);
 
@@ -1856,6 +1945,10 @@ describe('Teams data provider', () => {
           contentfulGraphQLResponse,
         );
 
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
+
         const result = await teamDataProvider.fetchById(id);
 
         expect(result!.tools).toEqual(tools);
@@ -1885,6 +1978,10 @@ describe('Teams data provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           contentfulGraphQLResponse,
         );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: getContentfulGraphqlTeamProjectById(),
+        });
 
         const result = await teamDataProvider.fetchById(id);
 

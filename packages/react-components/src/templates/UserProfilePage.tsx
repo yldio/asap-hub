@@ -1,14 +1,7 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 
 import UserProfileHeader from './UserProfileHeader';
-import { steel } from '../colors';
-import { networkPageLayoutPaddingStyle } from '../layout';
-
-const contentStyles = css({
-  borderTop: `1px solid ${steel.rgb}`,
-  padding: networkPageLayoutPaddingStyle,
-});
+import PageContraints from './PageConstraints';
 
 type UserProfilePageProps = ComponentProps<typeof UserProfileHeader> & {
   children: React.ReactNode;
@@ -20,7 +13,7 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
 }) => (
   <article>
     <UserProfileHeader {...profile} />
-    <main css={contentStyles}>{children}</main>
+    <PageContraints as="main">{children}</PageContraints>
   </article>
 );
 

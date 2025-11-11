@@ -2,54 +2,43 @@ import { ReactNode } from 'react';
 import { css } from '@emotion/react';
 
 import { Link } from '../atoms';
-import {
-  rem,
-  tabletScreen,
-  vminLinearCalc,
-  mobileScreen,
-  largeDesktopScreen,
-} from '../pixels';
+import { rem, smallDesktopScreen } from '../pixels';
 import { editIcon } from '../icons';
 
-const styles = (numEntries: number) =>
-  css({
-    // compensate for cards having more bottom than top padding (see below)
-    paddingTop: rem(24),
-    paddingBottom: rem(12),
+const CARDS_GAP = 32;
 
-    display: 'grid',
-    gridTemplate: `
-    repeat(${numEntries}, [edit] minmax(${rem(12)}, auto) [card] auto)
-  / [card edit] auto
-  `,
+const containerStyles = css({
+  display: 'flex',
+  flexFlow: 'column',
+  gap: rem(CARDS_GAP),
 
-    [`@media (min-width: ${tabletScreen.width}px)`]: {
-      gridTemplate: `
-      repeat(${numEntries}, [card edit] auto)
-    / [none] ${rem(36)} [card] auto [edit] ${rem(36)}
-    `,
-      gridColumnGap: vminLinearCalc(
-        mobileScreen,
-        24,
-        largeDesktopScreen,
-        30,
-        'px',
-      ),
-    },
-  });
+  [`@media (max-width: ${smallDesktopScreen.width - 1}px)`]: {
+    marginTop: rem(CARDS_GAP), // Leave space for the first card's pencil button
+    gap: rem(CARDS_GAP * 3),
+  },
+});
+
 const cardStyles = css({
   ':empty': {
     display: 'none',
   },
-  // bottom only to separate from the pencil belonging to the next card
-  paddingBottom: rem(24),
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    // top to align with pencil on the side
-    paddingTop: rem(12),
-  },
 });
+
+const relativeAnchorStyles = css({
+  position: 'relative',
+});
+
 const editButtonStyles = css({
-  justifySelf: 'end',
+  position: 'absolute',
+  top: 0,
+  left: `calc(100% + ${rem(CARDS_GAP)})`,
+
+  [`@media (max-width: ${smallDesktopScreen.width - 1}px)`]: {
+    top: 'unset',
+    left: 'unset',
+    right: 0,
+    bottom: `calc(100% + ${rem(CARDS_GAP / 2)})`,
+  },
 });
 
 type CardData = {
@@ -60,39 +49,36 @@ type CardData = {
     enabled?: boolean;
   };
 };
+
 interface ProfileCardListProps {
   children: ReadonlyArray<CardData | boolean | null | undefined>;
 }
+
 const ProfileCardList: React.FC<ProfileCardListProps> = ({ children }) => (
-  <div css={styles(children.length)}>
+  <div css={containerStyles}>
     {children
       .filter(
         (child): child is CardData => !!child && typeof child === 'object',
       )
-      .flatMap(({ card, editLink }, index) => [
-        <div
-          key={`card-${index}`}
-          css={[cardStyles, { gridArea: `${index + 1} card / card` }]}
-        >
-          {card}
+      .map(({ card, editLink }, index) => [
+        <div css={relativeAnchorStyles} key={`card-${index}`}>
+          <div css={[cardStyles]}>{card}</div>
+          {editLink?.href !== undefined && (
+            <div key={`edit-${index}`} css={editButtonStyles}>
+              <Link
+                buttonStyle
+                small
+                primary
+                href={editLink.href}
+                label={editLink.label}
+                enabled={editLink.enabled}
+                noMargin
+              >
+                {editIcon}
+              </Link>
+            </div>
+          )}
         </div>,
-        editLink?.href !== undefined && (
-          <div
-            key={`edit-${index}`}
-            css={[editButtonStyles, { gridArea: `${index + 1} edit / edit` }]}
-          >
-            <Link
-              buttonStyle
-              small
-              primary
-              href={editLink.href}
-              label={editLink.label}
-              enabled={editLink.enabled}
-            >
-              {editIcon}
-            </Link>
-          </div>
-        ),
       ])}
   </div>
 );

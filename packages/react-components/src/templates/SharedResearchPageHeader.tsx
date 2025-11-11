@@ -1,34 +1,24 @@
 import { css } from '@emotion/react';
 
 import { Display, Paragraph } from '../atoms';
-import { mobileScreen, rem } from '../pixels';
-import { paper, steel } from '../colors';
-import { contentSidePaddingWithNavigation } from '../layout';
+import { mobileScreen, rem, smallDesktopScreen } from '../pixels';
 import { noop } from '../utils';
 import ResearchOutputsSearch from './ResearchOutputsSearch';
 import { SharedOutputDropdown } from '../organisms';
-
-const visualHeaderStyles = css({
-  marginBottom: rem(30),
-  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} ${rem(48)} `,
-  background: paper.rgb,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-});
-
-const controlsStyles = css({
-  padding: `0 ${contentSidePaddingWithNavigation(8)}`,
-});
+import PageInfoContainer from './PageInfoContainer';
+import PageContraints from './PageConstraints';
 
 const textStyles = css({
   display: 'grid',
   columnGap: rem(39),
   rowGap: rem(9),
   [`@media (min-width: ${mobileScreen.max}px)`]: {
-    gridTemplateColumns: `minmax(auto, ${rem(610)}) auto`,
+    gridTemplateColumns: `minmax(auto, ${smallDesktopScreen.width}px) auto`,
   },
 });
 
 const buttonStyles = css({
+  alignContent: 'center',
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     display: 'block',
     justifySelf: 'flex-end',
@@ -49,7 +39,7 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
   onChangeFilter = noop,
 }) => (
   <header>
-    <div css={visualHeaderStyles}>
+    <PageInfoContainer>
       <Display styleAsHeading={2}>Shared Research</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
@@ -62,15 +52,16 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
           <SharedOutputDropdown />
         </div>
       </div>
-    </div>
-    <div css={controlsStyles}>
+    </PageInfoContainer>
+
+    <PageContraints noPaddingBottom>
       <ResearchOutputsSearch
         onChangeSearch={onChangeSearch}
         searchQuery={searchQuery}
         onChangeFilter={onChangeFilter}
         filters={filters}
       />
-    </div>
+    </PageContraints>
   </header>
 );
 

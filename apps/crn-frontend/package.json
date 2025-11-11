@@ -82,7 +82,7 @@
     "jsonwebtoken": "9.0.1",
     "nock": "13.4.0",
     "pirates": "4.0.7",
-    "react-test-renderer": "19.0.0",
+    "react-test-renderer": "18.3.1",
     "typescript": "4.9.5",
     "vite-bundle-visualizer": "^1.2.1",
     "webpack": "5.94.0"

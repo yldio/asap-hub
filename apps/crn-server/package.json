@@ -92,7 +92,7 @@
     "parse-data-url": "3.0.0",
     "postmark": "^4.0.5",
     "pump": "3.0.3",
-    "react-router-dom": "5.3.4",
+    "react-router-dom": "6.28.0",
     "serverless-http": "2.7.0",
     "source-map-support": "0.5.21",
     "ts-node": "10.9.2",

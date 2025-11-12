@@ -53,7 +53,6 @@ export const getContentfulGraphql = (teamById = false, teamId?: string) => ({
   ManuscriptVersionsAdditionalAuthorsCollection: () =>
     getContentfulGraphqlManuscriptVersions(teamId).items[0]
       ?.additionalAuthorsCollection,
-  //ProjectMembershipCollection: () => ({ items: []}),
   Projects: () => getContentfulGraphqlProjectsCollection().items[0],
   ResearchTags: () =>
     getContentfulGraphqlProjectsCollection().items[0]?.researchTagsCollection
@@ -72,21 +71,10 @@ export const getContentfulGraphqlTeamById = (
   },
   displayName: 'Team A',
   inactiveSince: null,
-  //projectSummary: null,
-  // projectTitle:
-  //   'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   teamType: 'Discovery Team',
-  // researchTagsCollection: {
-  //   items: [{ sys: { id: 'tag-1' }, name: 'Animal resources 1' }],
-  // },
   toolsCollection: {
     items: [],
   },
-  // proposal: {
-  //   sys: {
-  //     id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-  //   },
-  // },
   linkedFrom: {
     manuscriptsCollection: getContentfulGraphqlManuscripts(teamId),
     teamMembershipCollection: {
@@ -154,12 +142,7 @@ export const getContentfulGraphqlTeam = (): NonNullable<
   },
   displayName: 'Team A',
   inactiveSince: null,
-  // projectTitle:
-  //   'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   teamType: 'Discovery Team',
-  // researchTagsCollection: {
-  //   items: [],
-  // },
   linkedFrom: {
     teamMembershipCollection: {
       items: [
@@ -198,9 +181,6 @@ export const getContentfulGraphqlPublicTeam = (): NonNullable<
   },
   displayName: 'Team A',
   inactiveSince: null,
-  // projectTitle:
-  //   'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-  // projectSummary: undefined,
   researchTheme: {
     name: 'PD Functional Genomics',
   },
@@ -329,8 +309,6 @@ export const getContentfulGraphqlManuscripts = (
         items: [
           {
             sys: { id: teamId || 'team-id-0' },
-            //grantId: '000282',
-            //teamId: 'WH1',
           },
         ],
       },
@@ -346,8 +324,6 @@ export const getContentfulGraphqlManuscripts = (
         items: [
           {
             sys: { id: teamId || 'team-id-0' },
-            //grantId: '000282',
-            //teamId: 'WH1',
           },
         ],
       },
@@ -392,9 +368,6 @@ export const getContentfulGraphqlProjectMembershipsCollection = (): {
           },
         },
       },
-      // researchTagsCollection: {
-      //   items: [{ sys: { id: 'tag-1' }, name: 'Animal resources 1' }],
-      // },
     },
   ],
 });

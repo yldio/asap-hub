@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { ReactNode } from 'react';
+import { useFlags } from '@asap-hub/react-context';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { rem } from '../pixels';
@@ -96,11 +97,25 @@ const teamFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
   { label: 'Inactive', value: 'Inactive' },
 ];
 
-const getFilterOptionsAndPlaceholder = (page: Page) => {
+const filterOutDataManager = (
+  filters: ReadonlyArray<
+    Option<TeamRole | Role | UserMembershipStatus> | Title
+  >,
+) =>
+  filters.filter(
+    (filter) => !('value' in filter) || filter.value !== 'Data Manager',
+  );
+
+const getFilterOptionsAndPlaceholder = (
+  page: Page,
+  dataManagerEnabled: boolean,
+) => {
   switch (page) {
     case 'users':
       return {
-        filterOptions: userFilters,
+        filterOptions: dataManagerEnabled
+          ? userFilters
+          : filterOutDataManager(userFilters),
         searchPlaceholder: 'Enter name, keyword, institution, …',
       };
 
@@ -141,65 +156,74 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   onChangeFilter,
   showSearch = true,
   pageDescription,
-}) => (
-  <header>
-    <div css={visualHeaderStyles}>
-      <Display styleAsHeading={2}>Network</Display>
-      <div css={textStyles}>
-        <Paragraph accent="lead">
-          Explore the ASAP Network and collaborate!
-        </Paragraph>
+}) => {
+  const { isEnabled } = useFlags();
+  const isDataManagerEnabled = isEnabled('DATA_MANAGER_ROLE_ENABLED');
+
+  return (
+    <header>
+      <div css={visualHeaderStyles}>
+        <Display styleAsHeading={2}>Network</Display>
+        <div css={textStyles}>
+          <Paragraph accent="lead">
+            Explore the ASAP Network and collaborate!
+          </Paragraph>
+        </div>
+        <TabNav>
+          <TabLink
+            href={network({}).users({}).$ + queryParamString(searchQuery)}
+            Icon={UserIcon}
+          >
+            People
+          </TabLink>
+          <TabLink
+            href={
+              network({}).discoveryTeams({}).$ + queryParamString(searchQuery)
+            }
+            Icon={DiscoveryTeamIcon}
+          >
+            Discovery Teams
+          </TabLink>
+          <TabLink
+            href={
+              network({}).resourceTeams({}).$ + queryParamString(searchQuery)
+            }
+            Icon={ResourceTeamIcon}
+          >
+            Resource Teams
+          </TabLink>
+          <TabLink
+            href={
+              network({}).interestGroups({}).$ + queryParamString(searchQuery)
+            }
+            Icon={InterestGroupsIcon}
+          >
+            Interest Groups
+          </TabLink>
+          <TabLink
+            href={
+              network({}).workingGroups({}).$ + queryParamString(searchQuery)
+            }
+            Icon={WorkingGroupsIcon}
+          >
+            Working Groups
+          </TabLink>
+        </TabNav>
       </div>
-      <TabNav>
-        <TabLink
-          href={network({}).users({}).$ + queryParamString(searchQuery)}
-          Icon={UserIcon}
-        >
-          People
-        </TabLink>
-        <TabLink
-          href={
-            network({}).discoveryTeams({}).$ + queryParamString(searchQuery)
-          }
-          Icon={DiscoveryTeamIcon}
-        >
-          Discovery Teams
-        </TabLink>
-        <TabLink
-          href={network({}).resourceTeams({}).$ + queryParamString(searchQuery)}
-          Icon={ResourceTeamIcon}
-        >
-          Resource Teams
-        </TabLink>
-        <TabLink
-          href={
-            network({}).interestGroups({}).$ + queryParamString(searchQuery)
-          }
-          Icon={InterestGroupsIcon}
-        >
-          Interest Groups
-        </TabLink>
-        <TabLink
-          href={network({}).workingGroups({}).$ + queryParamString(searchQuery)}
-          Icon={WorkingGroupsIcon}
-        >
-          Working Groups
-        </TabLink>
-      </TabNav>
-    </div>
-    {pageDescription && <div css={controlsStyles}>{pageDescription}</div>}
-    {showSearch && (
-      <div css={controlsStyles}>
-        <SearchAndFilter
-          onChangeSearch={onChangeSearchQuery}
-          searchQuery={searchQuery}
-          onChangeFilter={onChangeFilter}
-          filters={filters}
-          {...getFilterOptionsAndPlaceholder(page)}
-        />
-      </div>
-    )}
-  </header>
-);
+      {pageDescription && <div css={controlsStyles}>{pageDescription}</div>}
+      {showSearch && (
+        <div css={controlsStyles}>
+          <SearchAndFilter
+            onChangeSearch={onChangeSearchQuery}
+            searchQuery={searchQuery}
+            onChangeFilter={onChangeFilter}
+            filters={filters}
+            {...getFilterOptionsAndPlaceholder(page, isDataManagerEnabled)}
+          />
+        </div>
+      )}
+    </header>
+  );
+};
 
 export default NetworkPageHeader;

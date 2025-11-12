@@ -245,11 +245,11 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       FetchTeamProjectByIdQueryVariables
     >(FETCH_PROJECT_BY_TEAM_ID, { id });
 
-    const relatedProject =
+    const linkedProject =
       teamProjectData?.linkedFrom?.projectMembershipCollection?.items[0]
         ?.linkedFrom?.projectsCollection?.items[0];
 
-    return parseContentfulGraphQlTeam(teams, relatedProject);
+    return parseContentfulGraphQlTeam(teams, linkedProject);
   }
 
   async update(id: string, update: TeamUpdateDataObject): Promise<void> {
@@ -308,7 +308,7 @@ export const parseContentfulGraphQlTeamListItem = (
     [0, new Set() as Set<string>],
   );
 
-  const relatedProject =
+  const linkedProject =
     item.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
       ?.projectsCollection?.items[0];
 
@@ -316,11 +316,9 @@ export const parseContentfulGraphQlTeamListItem = (
     id: item.sys.id ?? '',
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
-    projectTitle: relatedProject?.title ?? '',
+    projectTitle: linkedProject?.title ?? '',
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
-    tags: parseResearchTags(
-      relatedProject?.researchTagsCollection?.items || [],
-    ),
+    tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
     memberCount: numberOfMembers,
     labCount: labIds.size,
   };
@@ -414,12 +412,12 @@ export const parseContentfulGraphQlPublicTeamListItem = (
 const mapManuscripts = (
   manuscript: ManuscriptItem,
 ): TeamDataObject['manuscripts'][number] => {
-  const relatedProject =
+  const linkedProject =
     manuscript.teamsCollection?.items[0]?.linkedFrom
       ?.projectMembershipCollection?.items[0]?.linkedFrom?.projectsCollection
       ?.items[0];
-  const teamId = relatedProject?.projectId || '';
-  const grantId = relatedProject?.grantId || '';
+  const teamId = linkedProject?.projectId || '';
+  const grantId = linkedProject?.grantId || '';
   const count = manuscript.count || 1;
   const impact = manuscript.impact
     ? {

@@ -8,6 +8,7 @@ const contentfulManagementAccessToken =
   process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
 const environmentId = process.env.CONTENTFUL_ENV_ID!;
 
+const isNotProdEnvironment = environmentId !== 'Production';
 const client = contentful.createClient({
   accessToken: contentfulManagementAccessToken,
 });
@@ -21,6 +22,21 @@ const RESOURCE_PROJECT_RESOURCE_TYPE_MAPPING: Record<string, string> = {
   PPMI: 'Infrastructure',
   'PFF Support & Characterization': 'Preclinical',
   'Training & Development': 'Infrastructure',
+};
+
+const DEFAULT_PROJECT_CONTACT_EMAIL_MAPPING: Record<string, string> = {
+  ASAP: 'grants@parkinsonsroadmap.org',
+  Rio: 'Don_rio@berkeley.edu',
+  Wood: 'n.wood@ucl.ac.uk',
+  'iNDI-PD': 'tools@michaeljfox.org',
+};
+
+const RESEARCH_THEME_PROJECT_START_DATE_MAPPING: Record<string, string> = {
+  'Circuitry and Brain-Body Interactions': new Date(
+    '2021-01-01T00:00:00Z',
+  ).toISOString(),
+  'Neuro-Immune Interactions': new Date('2020-10-01T00:00:00Z').toISOString(),
+  'PD Functional Genomics': new Date('2020-10-01T00:00:00Z').toISOString(),
 };
 
 const rateLimiter = new RateLimiter({
@@ -51,13 +67,10 @@ const fetchActivePmEmailForTeam = async (
     limit: 10,
   });
   const memberships = membershipsResponse.items.filter(
-    (membership) =>
-      !membership.fields.inactiveSinceDate?.['en-US'] ||
-      membership.fields.inactiveSinceDate['en-US'] > new Date().toISOString(),
+    (membership) => !membership.fields.inactiveSinceDate?.['en-US'],
   );
   if (!memberships.length) {
     console.log(`No PM memberships found for team ${teamId}`);
-    return 'deborah.attuah@yld.com'; // to test
   }
 
   for (const membership of memberships) {
@@ -73,13 +86,13 @@ const fetchActivePmEmailForTeam = async (
     const user = usersResponse.items[0];
     const email = user?.fields.email?.['en-US'];
     if (email) {
-      console.log(`✅ Found PM user ${email} for team ${teamId}`);
+      console.log(`Found PM user for team ${teamId}`);
       return email;
     }
   }
 
   console.log(`No active onboarded PM users found for team ${teamId}`);
-  return 'deborah.attuah@yld.com'; // to test
+  return isNotProdEnvironment && 'defaultcontact@gmail.com';
 };
 
 const fetchResourceTypes = async (environment: Environment) => {
@@ -92,10 +105,21 @@ const fetchResourceTypes = async (environment: Environment) => {
   return resourceTypes;
 };
 
+const fetchResearchThemes = async (environment: Environment) => {
+  const queryOptions: QueryOptions = {
+    content_type: 'researchTheme',
+    'sys.archivedAt[exists]': false,
+  };
+  await rateLimiter.removeTokens(1);
+  const researchThemes = (await environment.getEntries(queryOptions)).items;
+  return researchThemes;
+};
+
 const createProjectMembership = async (
   environment: Environment,
   teamId: string,
 ) => {
+  await rateLimiter.removeTokens(1);
   const projectMembershipEntry = await environment.createEntry(
     'projectMembership',
     {
@@ -114,11 +138,19 @@ const migrateProjectData = async () => {
 
   const teamEntries = await fetchTeams(environment);
   const resourceTypes = await fetchResourceTypes(environment);
+  const researchThemeEntries = await fetchResearchThemes(environment);
 
   const getResourceType = (resourceTypeName: string) =>
     resourceTypes.find(
       (resourceType) => resourceType.fields.name['en-US'] === resourceTypeName,
     );
+
+  const getProjectStartDate = (researchThemeId: string) => {
+    const researchThemeName = researchThemeEntries.find(
+      (researchThemeEntry) => researchThemeEntry.sys.id === researchThemeId,
+    )?.fields.name['en-US'];
+    return RESEARCH_THEME_PROJECT_START_DATE_MAPPING[researchThemeName];
+  };
 
   for (const team of teamEntries) {
     const teamName = team.fields.displayName?.['en-US'];
@@ -138,8 +170,17 @@ const migrateProjectData = async () => {
       teamId,
     );
 
+    const projectStartDate =
+      !isNotProdEnvironment && team.fields.researchTheme
+        ? getProjectStartDate(team.fields.researchTheme['en-US'].sys.id)
+        : new Date('2020-01-01T00:00:00Z').toISOString();
+
     try {
-      const contactEmail = await fetchActivePmEmailForTeam(environment, teamId);
+      const contactEmail = Object.keys(
+        DEFAULT_PROJECT_CONTACT_EMAIL_MAPPING,
+      ).includes(teamName)
+        ? DEFAULT_PROJECT_CONTACT_EMAIL_MAPPING[teamName]
+        : await fetchActivePmEmailForTeam(environment, teamId);
       const projectDetails = {
         title: team.fields.projectTitle?.['en-US'] ?? teamName,
         projectId: team.fields.teamId?.['en-US'] ?? '',
@@ -155,7 +196,7 @@ const migrateProjectData = async () => {
         researchTags: team.fields.researchTags?.['en-US'] ?? [],
         applicationNumber:
           team.fields.applicationNumber?.['en-US'] ?? undefined,
-        startDate: new Date().toISOString(),
+        startDate: projectStartDate,
         contactEmail: contactEmail ?? undefined,
         members: [createLink(projectMembershipId)],
       };

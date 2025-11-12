@@ -97,7 +97,6 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
     .interestGroups({})
     .interestGroup({ interestGroupId: id });
 
-  console.log({ searchQuery });
   return (
     <header>
       <PageInfoContainer

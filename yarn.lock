@@ -417,7 +417,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-auto-populate-date-field@workspace:packages/contentful-app-extensions/auto-populate-date-field"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
@@ -443,7 +443,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
@@ -470,7 +470,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-date-field-as-first-published-at@workspace:packages/contentful-app-extensions/date-field-as-first-published-at"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
@@ -496,7 +496,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-date-field-as-last-published-at@workspace:packages/contentful-app-extensions/date-field-as-last-published-at"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/field-editor-date": ^1.6.2
@@ -523,7 +523,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
@@ -550,7 +550,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-event-additional-materials@workspace:packages/contentful-app-extensions/event-additional-materials"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
@@ -576,7 +576,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-event-custom-validation@workspace:packages/contentful-app-extensions/event-custom-validation"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
@@ -603,7 +603,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-event-speakers-gp2@workspace:packages/contentful-app-extensions/event-speakers-gp2"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/field-editor-reference": ^5.9.0
@@ -631,7 +631,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-event-speakers-title@workspace:packages/contentful-app-extensions/event-speakers-title"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/field-editor-reference": ^5.9.0
@@ -659,7 +659,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-field-as-updated-at@workspace:packages/contentful-app-extensions/field-as-updated-at"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
@@ -686,7 +686,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-membership-custom-validation@workspace:packages/contentful-app-extensions/membership-custom-validation"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
@@ -713,7 +713,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-membership-reference@workspace:packages/contentful-app-extensions/membership-reference"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/field-editor-reference": ^5.9.0
@@ -741,7 +741,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-partial-last-updated@workspace:packages/contentful-app-extensions/partial-last-updated"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
@@ -767,7 +767,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-user-positions@workspace:packages/contentful-app-extensions/user-positions"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
@@ -793,7 +793,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-working-group-deliverables@workspace:packages/contentful-app-extensions/working-group-deliverables"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.23.1
+    "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/field-editor-reference": ^5.9.0
@@ -9722,12 +9722,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/app-sdk@npm:4.23.1":
-  version: 4.23.1
-  resolution: "@contentful/app-sdk@npm:4.23.1"
+"@contentful/app-sdk@npm:4.46.0":
+  version: 4.46.0
+  resolution: "@contentful/app-sdk@npm:4.46.0"
   dependencies:
-    contentful-management: ">=7.30.0"
-  checksum: 70a40ab362dcc1bfc17c8ddb5175e54f04619d02626b8bf2e98d31dc79ddd172c45748be2a415ffbe09df913158de900d630729bff82c2a9742798caa2de8fd9
+    contentful-management: ^11.60.2
+  checksum: 1ede8c8114fe7aa58fe427111eea9b3535a5cf009626bafa1f067aea85b70f7bc000517aacc79dc23c5241d11f42762757551add58d834daec8da3284c795304
   languageName: node
   linkType: hard
 
@@ -21451,6 +21451,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^1.12.2, axios@npm:^1.7.9":
+  version: 1.13.2
+  resolution: "axios@npm:1.13.2"
+  dependencies:
+    follow-redirects: ^1.15.6
+    form-data: ^4.0.4
+    proxy-from-env: ^1.1.0
+  checksum: 057d0204d5930e2969f0bccb9f0752745b1524a36994667833195e7e1a82f245d660752ba8517b2dbea17e9e4ed0479f10b80c5fe45edd0b5a0df645c0060386
+  languageName: node
+  linkType: hard
+
 "axios@npm:^1.4.0":
   version: 1.4.0
   resolution: "axios@npm:1.4.0"
@@ -21481,17 +21492,6 @@ __metadata:
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
   checksum: c47a43b79a058aa9e53a65bec9ade35c9f6e76a3999c795a79a2d205fb5f803fd4245497a0209a9727cbbe4f558791dd852ad2c168c5fc030259c11598ed8fd7
-  languageName: node
-  linkType: hard
-
-"axios@npm:^1.7.9":
-  version: 1.13.2
-  resolution: "axios@npm:1.13.2"
-  dependencies:
-    follow-redirects: ^1.15.6
-    form-data: ^4.0.4
-    proxy-from-env: ^1.1.0
-  checksum: 057d0204d5930e2969f0bccb9f0752745b1524a36994667833195e7e1a82f245d660752ba8517b2dbea17e9e4ed0479f10b80c5fe45edd0b5a0df645c0060386
   languageName: node
   linkType: hard
 
@@ -24308,6 +24308,19 @@ __metadata:
     fast-copy: ^2.1.1
     lodash.isplainobject: ^4.0.6
   checksum: b72f79948c2cb4f4cecef906221cfc413f2bed4fbcb55992a6c8963660a293942e6deda3903686906ce51aecdf59ef42d5bff8697d256f8a1f9479fc9e88e8c2
+  languageName: node
+  linkType: hard
+
+"contentful-management@npm:^11.60.2":
+  version: 11.63.0
+  resolution: "contentful-management@npm:11.63.0"
+  dependencies:
+    "@contentful/rich-text-types": ^16.6.1
+    axios: ^1.12.2
+    contentful-sdk-core: ^9.0.1
+    fast-copy: ^3.0.0
+    globals: ^15.15.0
+  checksum: 60e8480c1321234458798e7a01a57f309caba5bb44ef804902d74a9f9de9dc0115a2d0cb971b3f3c00f5b97b32bcd1530d0e1746ab98ad3ab78b5ec15dae3e37
   languageName: node
   linkType: hard
 
@@ -30433,6 +30446,13 @@ __metadata:
   dependencies:
     type-fest: ^0.20.2
   checksum: 56066ef058f6867c04ff203b8a44c15b038346a62efbc3060052a1016be9f56f4cf0b2cd45b74b22b81e521a889fc7786c73691b0549c2f3a6e825b3d394f43c
+  languageName: node
+  linkType: hard
+
+"globals@npm:^15.15.0":
+  version: 15.15.0
+  resolution: "globals@npm:15.15.0"
+  checksum: a2a92199a112db00562a2f85eeef2a7e3943e171f7f7d9b17dfa9231e35fd612588f3c199d1509ab1757273467e413b08c80424cf6e399e96acdaf93deb3ee88
   languageName: node
   linkType: hard
 

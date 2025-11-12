@@ -9,11 +9,12 @@ import { fern, neutral900, neutral1000 } from '../colors';
 import { useHasRouter } from '../routing';
 import IconProps from '../icons/props';
 
+const borderBottomWidth = 4;
+
 const activeClassName = 'active-link';
 const styles = css({
   display: 'inline-block',
-  paddingTop: rem(24),
-  paddingBottom: rem(16),
+  paddingBottom: rem(16 + borderBottomWidth),
 
   color: neutral900.rgb,
   textDecoration: 'none',
@@ -21,8 +22,8 @@ const styles = css({
 });
 const activeStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
   css({
-    paddingBottom: rem(16),
-    borderBottom: `solid ${rem(4)} ${primary500.rgba}`,
+    paddingBottom: rem(16 + borderBottomWidth),
+    borderBottom: `solid ${rem(borderBottomWidth)} ${primary500.rgba}`,
 
     color: neutral1000.rgb,
     fontWeight: 'bold',
@@ -48,6 +49,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
     <p
       css={({ components }) => [
         layoutStyles,
+        css({ margin: 0 }),
         components?.TabLink?.layoutStyles,
       ]}
     >

@@ -157,12 +157,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
             ...searchTerms.map((term) => ({
               displayName_contains: term,
             })),
-            ...searchTerms.map((term) => ({
-              projectTitle_contains: term,
-            })),
-            ...searchTerms.map((term) => ({
-              researchTags: { name_contains: term },
-            })),
           ],
         }
       : {};
@@ -316,6 +310,7 @@ export const parseContentfulGraphQlTeamListItem = (
     id: item.sys.id ?? '',
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
+    teamStatus: item.inactiveSince ? 'Inactive' : 'Active',
     projectTitle: linkedProject?.title ?? '',
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
     tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
@@ -612,6 +607,7 @@ export const parseContentfulGraphQlTeam = (
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
+    teamStatus: item.inactiveSince ? 'Inactive' : 'Active',
     projectTitle: linkedProject?.title ?? '',
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
     tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),

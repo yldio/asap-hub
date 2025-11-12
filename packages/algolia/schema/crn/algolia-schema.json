@@ -49,7 +49,8 @@
     "teams",
     "assignedUsers",
     "teamName",
-    "members.displayName"
+    "members.displayName",
+    "projectTitle"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -78,7 +79,9 @@
     "apcCoverageRequestStatus",
     "projectType",
     "resourceType",
-    "researchTheme"
+    "researchTheme",
+    "teamStatus",
+    "teamType"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

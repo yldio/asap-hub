@@ -11,6 +11,7 @@ import {
   createManuscriptVersionResponse,
   createMessage,
   createPartialManuscriptResponse,
+  createTeamListItemResponse,
   createTeamResponse,
 } from '@asap-hub/fixtures';
 import {
@@ -36,6 +37,7 @@ import {
   createManuscript,
   createPreprintResearchOutput,
   createResearchOutput,
+  getAlgoliaTeams,
   getDiscussion,
   getLabs,
   getManuscript,
@@ -99,6 +101,154 @@ describe('getTeams', () => {
       getTeams(options, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch team list. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('getAlgoliaTeams', () => {
+  type Search = () => Promise<ClientSearchResponse<'crn', 'team'>>;
+  const search: jest.MockedFunction<Search> = jest.fn();
+
+  const algoliaSearchClient = {
+    search,
+  } as unknown as AlgoliaSearchClient<'crn'>;
+
+  beforeEach(() => {
+    search.mockReset();
+
+    const teamResponse = createTeamListItemResponse();
+
+    search.mockResolvedValue(
+      createAlgoliaResponse<'crn', 'team'>([
+        {
+          ...teamResponse,
+          objectID: teamResponse.id,
+          __meta: { type: 'team' },
+        },
+      ]),
+    );
+  });
+
+  it('will not specify page and limits hits per page by default', async () => {
+    await getAlgoliaTeams(algoliaSearchClient, {
+      ...options,
+      pageSize: null,
+      currentPage: null,
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({
+        hitsPerPage: undefined,
+        page: undefined,
+      }),
+    );
+  });
+
+  it('will pass the search query to algolia', async () => {
+    await getAlgoliaTeams(algoliaSearchClient, {
+      ...options,
+      searchQuery: 'Hello World!',
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      'Hello World!',
+      expect.objectContaining({}),
+    );
+  });
+
+  it('can filter teams by a single team status', async () => {
+    await getAlgoliaTeams(algoliaSearchClient, {
+      ...options,
+      teamType: 'Discovery Team',
+      filters: new Set(['Active']),
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({
+        filters: '(teamType:"Discovery Team") AND (teamStatus:"Active")',
+      }),
+    );
+  });
+
+  it('can filter teams by multiple team statuses (OR)', async () => {
+    await getAlgoliaTeams(algoliaSearchClient, {
+      ...options,
+      teamType: 'Discovery Team',
+      filters: new Set(['Active', 'Inactive']),
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({
+        filters:
+          '(teamType:"Discovery Team") AND (teamStatus:"Active" OR teamStatus:"Inactive")',
+      }),
+    );
+  });
+
+  it.each`
+    teamType            | filter
+    ${'Discovery Team'} | ${'teamType:"Discovery Team"'}
+    ${'Resource Team'}  | ${'teamType:"Resource Team"'}
+    ${'all'}            | ${'teamType:"Discovery Team" OR teamType:"Resource Team"'}
+  `('can filter teams by team type $teamType', async ({ teamType, filter }) => {
+    await getAlgoliaTeams(algoliaSearchClient, {
+      ...options,
+      teamType,
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({
+        filters: filter,
+      }),
+    );
+  });
+
+  it('can filter teams by team type and status', async () => {
+    const teamType = 'Resource Team';
+    await getAlgoliaTeams(algoliaSearchClient, {
+      ...options,
+      teamType,
+      filters: new Set(['Inactive']),
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({
+        filters: `(teamType:"${teamType}") AND (teamStatus:"Inactive")`,
+      }),
+    );
+  });
+
+  it('returns successfully fetched teams', async () => {
+    const teams = createListTeamResponse(1);
+
+    const transformedTeams = {
+      ...teams,
+      items: teams.items.map((item) => ({
+        ...item,
+        objectID: '',
+        __meta: {
+          type: 'team' as const,
+        },
+      })),
+    };
+    search.mockResolvedValueOnce({
+      hits: transformedTeams.items,
+      nbHits: transformedTeams.total,
+      page: 0,
+      nbPages: 0,
+      hitsPerPage: 0,
+      processingTimeMS: 0,
+      exhaustiveNbHits: false,
+      query: '',
+      params: '',
+    });
+    expect(await getAlgoliaTeams(algoliaSearchClient, options)).toEqual(
+      transformedTeams,
     );
   });
 });

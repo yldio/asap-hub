@@ -34,6 +34,7 @@ export const indexTeamHandler =
           labCount,
           tags,
           teamType,
+          teamStatus,
         } = team;
         await algoliaClient.save({
           data: {
@@ -44,6 +45,7 @@ export const indexTeamHandler =
             labCount,
             tags,
             teamType,
+            teamStatus,
             memberCount: team.members.length,
             _tags: team.tags.map(({ name }) => name),
           },

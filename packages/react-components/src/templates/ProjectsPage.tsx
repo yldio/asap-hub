@@ -1,12 +1,7 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 
 import ProjectsPageHeader from './ProjectsPageHeader';
-import { networkPageLayoutPaddingStyle } from '../layout';
-
-const mainStyles = css({
-  padding: networkPageLayoutPaddingStyle,
-});
+import PageContraints from './PageConstraints';
 
 const ProjectsPage: React.FC<ComponentProps<typeof ProjectsPageHeader>> = ({
   children,
@@ -14,7 +9,7 @@ const ProjectsPage: React.FC<ComponentProps<typeof ProjectsPageHeader>> = ({
 }) => (
   <article>
     <ProjectsPageHeader {...props} />
-    <main css={mainStyles}>{children}</main>
+    <PageContraints as="main">{children}</PageContraints>
   </article>
 );
 

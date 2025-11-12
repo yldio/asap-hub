@@ -25,7 +25,7 @@ const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
 >;
 
-const renderEventsPage = async (pathname = events({}).$) => {
+const renderEventsPage = async (pathname = events({}).$, search?: string) => {
   const result = render(
     <Suspense fallback="loading">
       <RecoilRoot
@@ -36,7 +36,7 @@ const renderEventsPage = async (pathname = events({}).$) => {
       >
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname }]}>
+            <MemoryRouter initialEntries={[{ pathname, search }]}>
               <Route path={events.template}>
                 <Events />
               </Route>
@@ -70,9 +70,19 @@ describe('Events', () => {
     ${'after'}    | ${events({}).past({}).$}     | ${'past'}
     ${'before'}   | ${events({}).upcoming({}).$} | ${'upcoming'}
   `('the events $expected page', ({ eventProperty, route, expected }) => {
-    it('can search for events', async () => {
+    it('does not render search box without searchQuery parameter', async () => {
+      // Without searchQuery parameter, the search box should not render (prevents empty gap)
       await renderEventsPage(route);
-      userEvent.type(screen.getByRole('searchbox'), 'searchterm');
+      expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
+    });
+
+    it('can search for events', async () => {
+      // Add searchQuery parameter with a space to ensure search box is rendered
+      // (empty string is falsy and won't trigger the conditional render)
+      await renderEventsPage(route, '?searchQuery= ');
+      const searchBox = screen.getByRole('searchbox');
+      // Select all existing text and replace it with new text
+      userEvent.type(searchBox, '{selectall}searchterm');
       await waitFor(() =>
         expect(mockGetEventsFromAlgolia).toHaveBeenLastCalledWith(
           expect.anything(),

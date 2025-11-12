@@ -1,15 +1,8 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 
 import TeamProfileHeader from './TeamProfileHeader';
-import { steel } from '../colors';
-import { networkPageLayoutPaddingStyle } from '../layout';
 import { Toast } from '../organisms';
-
-const contentStyles = css({
-  borderTop: `1px solid ${steel.rgb}`,
-  padding: networkPageLayoutPaddingStyle,
-});
+import PageContraints from './PageConstraints';
 
 type TeamProfilePageProps = ComponentProps<typeof TeamProfileHeader>;
 
@@ -24,7 +17,7 @@ const TeamProfilePage: React.FC<TeamProfilePageProps> = ({
       </Toast>
     )}
     <TeamProfileHeader {...profile} />
-    <main css={contentStyles}>{children}</main>
+    <PageContraints as="main">{children}</PageContraints>
   </article>
 );
 

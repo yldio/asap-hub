@@ -37,7 +37,7 @@ const EventsEmbedList: React.FC<EventsEmbedListProps> = ({
   const hasEvents = events?.total;
 
   return (
-    <article>
+    <article style={{ display: 'flex', flexFlow: 'column', gap: 48 }}>
       {noEventsComponent && !hasEvents ? (
         noEventsComponent
       ) : (

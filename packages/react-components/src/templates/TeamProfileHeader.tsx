@@ -4,7 +4,7 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
 import { CopyButton, Display, Link, StateTag, TabLink } from '../atoms';
-import { lead, paper, pine } from '../colors';
+import { lead, pine } from '../colors';
 import {
   article,
   bioinformatics,
@@ -16,17 +16,11 @@ import {
   plusIcon,
   protocol,
 } from '../icons';
-import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { DropdownButton, UserAvatarList, TabNav } from '../molecules';
 import { mobileScreen, rem, tabletScreen } from '../pixels';
 import { getCounterString } from '../utils';
 import PageInfoContainer from './PageInfoContainer';
-
-const containerStyles = css({
-  backgroundColor: paper.rgb,
-  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} 0`,
-});
 
 const titleStyle = css({
   display: 'flex',

@@ -1,19 +1,14 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 
 import WorkingGroupPageHeader from './WorkingGroupPageHeader';
-import { networkPageLayoutPaddingStyle } from '../layout';
-
-const mainStyles = css({
-  padding: networkPageLayoutPaddingStyle,
-});
+import PageContraints from './PageConstraints';
 
 const WorkingGroupPage: React.FC<
   ComponentProps<typeof WorkingGroupPageHeader>
 > = ({ children, ...props }) => (
   <article>
     <WorkingGroupPageHeader {...props} />
-    <main css={mainStyles}>{children}</main>
+    <PageContraints as="main">{children}</PageContraints>
   </article>
 );
 

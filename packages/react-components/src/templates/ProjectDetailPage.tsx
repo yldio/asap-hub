@@ -1,14 +1,6 @@
 import { ProjectDetail } from '@asap-hub/model';
-import { css } from '@emotion/react';
 import ProjectDetailHeader from './ProjectDetailHeader';
-import { steel } from '../colors';
-import { networkPageLayoutPaddingStyle } from '../layout';
-
-const contentStyles = css({
-  borderTop: `1px solid ${steel.rgb}`,
-  padding: networkPageLayoutPaddingStyle,
-  backgroundColor: '#fff',
-});
+import PageContraints from './PageConstraints';
 
 type ProjectDetailPageProps = ProjectDetail & {
   readonly pointOfContactEmail?: string;
@@ -27,7 +19,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
       pointOfContactEmail={pointOfContactEmail}
       aboutHref={aboutHref}
     />
-    <main css={contentStyles}>{children}</main>
+    <PageContraints as="main">{children}</PageContraints>
   </article>
 );
 

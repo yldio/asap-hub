@@ -24,12 +24,7 @@ import {
   getStatusPillAccent,
 } from '../organisms/ProjectCard';
 import TrainerIcon from '../icons/trainer';
-
-const containerStyles = css({
-  backgroundColor: paper.rgb,
-  paddingInline: contentSidePaddingWithNavigation(8),
-  paddingTop: rem(40),
-});
+import PageInfoContainer from './PageInfoContainer';
 
 const headerStyles = css({
   display: 'flex',
@@ -166,51 +161,60 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
   };
 
   return (
-    <header css={containerStyles}>
-      {/* Status and Type Pills */}
-      <div css={headerStyles}>
-        <Pill accent={getStatusPillAccent(project.status)} noMargin>
-          {project.status}
-        </Pill>
-        <Pill noMargin>{getProjectTypeLabel(project.projectType)}</Pill>
-        {project.projectType === 'Discovery' && (
-          <Pill noMargin>{project.researchTheme}</Pill>
-        )}
-        {project.projectType === 'Resource' && (
-          <Pill noMargin>{project.resourceType}</Pill>
-        )}
-      </div>
+    <header>
+      <PageInfoContainer
+        nav={
+          <TabNav>
+            <TabLink href={aboutHref}>About</TabLink>
+          </TabNav>
+        }
+      >
+        {/* Status and Type Pills */}
+        <div css={headerStyles}>
+          <Pill accent={getStatusPillAccent(project.status)} noMargin>
+            {project.status}
+          </Pill>
+          <Pill noMargin>{getProjectTypeLabel(project.projectType)}</Pill>
+          {project.projectType === 'Discovery' && (
+            <Pill noMargin>{project.researchTheme}</Pill>
+          )}
+          {project.projectType === 'Resource' && (
+            <Pill noMargin>{project.resourceType}</Pill>
+          )}
+        </div>
 
-      {/* Title */}
-      <div css={titleStyles}>
-        <Display styleAsHeading={2}>{project.title}</Display>
-      </div>
+        {/* Title */}
+        <div css={titleStyles}>
+          <Display styleAsHeading={2}>{project.title}</Display>
+        </div>
 
-      {/* Action Buttons */}
-      <div css={actionsContainerStyles}>
-        {pointOfContactEmail && (
-          <div css={contactButtonStyles}>
-            <span css={buttonStyles}>
-              <Link
-                buttonStyle
-                small
-                primary
-                href={createMailTo(pointOfContactEmail)}
-                noMargin
-              >
-                Contact
-              </Link>
-            </span>
-            <CopyButton
-              hoverTooltipText="Copy Email"
-              clickTooltipText="Email Copied"
-              onClick={() => navigator.clipboard.writeText(pointOfContactEmail)}
-            />
-          </div>
-        )}
+        {/* Action Buttons */}
+        <div css={actionsContainerStyles}>
+          {pointOfContactEmail && (
+            <div css={contactButtonStyles}>
+              <span css={buttonStyles}>
+                <Link
+                  buttonStyle
+                  small
+                  primary
+                  href={createMailTo(pointOfContactEmail)}
+                  noMargin
+                >
+                  Contact
+                </Link>
+              </span>
+              <CopyButton
+                hoverTooltipText="Copy Email"
+                clickTooltipText="Email Copied"
+                onClick={() =>
+                  navigator.clipboard.writeText(pointOfContactEmail)
+                }
+              />
+            </div>
+          )}
 
-        {/* Share Output button for Discovery projects - not included yet */}
-        {/* {project.projectType === 'Discovery' && (
+          {/* Share Output button for Discovery projects - not included yet */}
+          {/* {project.projectType === 'Discovery' && (
             <div css={css({ marginLeft: 'auto' })}>
               <DropdownButton
                 noMargin
@@ -237,97 +241,95 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
               </DropdownButton>
             </div>
           )} */}
-      </div>
-
-      {/* Access Drive for Resource projects */}
-      {project.projectType === 'Resource' && project.googleDriveLink && (
-        <div css={driveButtonStyles}>
-          <Link href={project.googleDriveLink} buttonStyle small noMargin>
-            {googleDriveIcon} Access Drive
-          </Link>
         </div>
-      )}
-      {/* Metadata Section */}
-      <div css={metadataStyles}>
-        {/* Team/Members Info */}
-        {project.projectType === 'Discovery' && (
-          <div css={[metadataRowStyles, discoveryDurationMediaStyles]}>
-            <div css={iconContainerStyles}>
-              <span css={iconStyles}>{getTeamIcon(project)}</span>
-              {project.teamId ? (
-                <Link href={`/teams/${project.teamId}`}>
-                  <span css={teamLinkStyles}>{project.teamName}</span>
-                </Link>
-              ) : (
-                <span css={teamLinkStyles}>{project.teamName}</span>
-              )}
-            </div>
-            <div css={discoveryProjectDurationStyles}>
-              <ProjectDuration
-                startDate={project.startDate}
-                endDate={project.endDate}
-              />
-            </div>
+
+        {/* Access Drive for Resource projects */}
+        {project.projectType === 'Resource' && project.googleDriveLink && (
+          <div css={driveButtonStyles}>
+            <Link href={project.googleDriveLink} buttonStyle small noMargin>
+              {googleDriveIcon} Access Drive
+            </Link>
           </div>
         )}
-
-        {project.projectType === 'Resource' &&
-          project.isTeamBased &&
-          project.teamName && (
-            <div css={metadataRowStyles}>
-              <span css={iconStyles}>{getTeamIcon(project)}</span>
-              {project.teamId ? (
-                <Link href={`/teams/${project.teamId}`}>
+        {/* Metadata Section */}
+        <div css={metadataStyles}>
+          {/* Team/Members Info */}
+          {project.projectType === 'Discovery' && (
+            <div css={[metadataRowStyles, discoveryDurationMediaStyles]}>
+              <div css={iconContainerStyles}>
+                <span css={iconStyles}>{getTeamIcon(project)}</span>
+                {project.teamId ? (
+                  <Link href={`/teams/${project.teamId}`}>
+                    <span css={teamLinkStyles}>{project.teamName}</span>
+                  </Link>
+                ) : (
                   <span css={teamLinkStyles}>{project.teamName}</span>
-                </Link>
-              ) : (
-                <span css={teamLinkStyles}>{project.teamName}</span>
-              )}
-              {project.isTeamBased && (
-                <div css={discoveryProjectDurationStyles}>
-                  <ProjectDuration
-                    startDate={project.startDate}
-                    endDate={project.endDate}
-                  />
-                </div>
-              )}
+                )}
+              </div>
+              <div css={discoveryProjectDurationStyles}>
+                <ProjectDuration
+                  startDate={project.startDate}
+                  endDate={project.endDate}
+                />
+              </div>
             </div>
           )}
 
-        {project.projectType === 'Resource' &&
-          !project.isTeamBased &&
-          project.members && (
-            <div css={metadataRowStyles}>
-              <span css={iconStyles}>{getTeamIcon(project)}</span>
-              <UsersList users={project.members} separator="•" noMargin />
-            </div>
+          {project.projectType === 'Resource' &&
+            project.isTeamBased &&
+            project.teamName && (
+              <div css={metadataRowStyles}>
+                <span css={iconStyles}>{getTeamIcon(project)}</span>
+                {project.teamId ? (
+                  <Link href={`/teams/${project.teamId}`}>
+                    <span css={teamLinkStyles}>{project.teamName}</span>
+                  </Link>
+                ) : (
+                  <span css={teamLinkStyles}>{project.teamName}</span>
+                )}
+                {project.isTeamBased && (
+                  <div css={discoveryProjectDurationStyles}>
+                    <ProjectDuration
+                      startDate={project.startDate}
+                      endDate={project.endDate}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+          {project.projectType === 'Resource' &&
+            !project.isTeamBased &&
+            project.members && (
+              <div css={metadataRowStyles}>
+                <span css={iconStyles}>{getTeamIcon(project)}</span>
+                <UsersList users={project.members} separator="•" noMargin />
+              </div>
+            )}
+
+          {project.projectType === 'Trainee' && (
+            <>
+              <div css={metadataRowStyles}>
+                <span css={iconStyles}>{getTeamIcon(project)}</span>
+                <UsersList users={[project.trainer]} separator="•" noMargin />
+              </div>
+              <div css={metadataRowStyles}>
+                <span css={iconStyles}>{getMemberIcon()}</span>
+                <UsersList users={project.members} separator="•" noMargin />
+              </div>
+            </>
           )}
 
-        {project.projectType === 'Trainee' && (
-          <>
-            <div css={metadataRowStyles}>
-              <span css={iconStyles}>{getTeamIcon(project)}</span>
-              <UsersList users={[project.trainer]} separator="•" noMargin />
-            </div>
-            <div css={metadataRowStyles}>
-              <span css={iconStyles}>{getMemberIcon()}</span>
-              <UsersList users={project.members} separator="•" noMargin />
-            </div>
-          </>
-        )}
-
-        {/* Duration */}
-        {(project.projectType === 'Trainee' ||
-          (project.projectType === 'Resource' && !project.isTeamBased)) && (
-          <ProjectDuration
-            startDate={project.startDate}
-            endDate={project.endDate}
-          />
-        )}
-      </div>
-      <TabNav>
-        <TabLink href={aboutHref}>About</TabLink>
-      </TabNav>
+          {/* Duration */}
+          {(project.projectType === 'Trainee' ||
+            (project.projectType === 'Resource' && !project.isTeamBased)) && (
+            <ProjectDuration
+              startDate={project.startDate}
+              endDate={project.endDate}
+            />
+          )}
+        </div>
+      </PageInfoContainer>
     </header>
   );
 };

@@ -41,10 +41,6 @@ export const contentSidePaddingWithNavigation = (
 export const networkContentTopPadding = rem(48);
 export const defaultContentTopPadding = rem(36);
 
-export const networkPageLayoutPaddingStyle = `${networkContentTopPadding} ${contentSidePaddingWithNavigation(
-  8,
-)}`;
-
 export const defaultPageLayoutPaddingStyle = `${defaultContentTopPadding} ${contentSidePaddingWithNavigation(
   8,
 )}`;

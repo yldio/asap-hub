@@ -28,7 +28,9 @@ const iconStyles = css({
   paddingRight: rem(8),
 });
 
-const TeamCard: React.FC<TeamListItemResponse> = ({
+type TeamCardProps = Omit<TeamListItemResponse, 'teamStatus'>;
+
+const TeamCard: React.FC<TeamCardProps> = ({
   id,
   displayName,
   inactiveSince,

@@ -47,7 +47,8 @@
     "publishingEntity",
     "manuscriptId",
     "teams",
-    "assignedUsers"
+    "assignedUsers",
+    "projectTitle"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -74,7 +75,9 @@
     "openScienceTeamMember",
     "apcRequested",
     "apcCoverageRequestStatus",
-    "teamId"
+    "teamId",
+    "teamStatus",
+    "teamType"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

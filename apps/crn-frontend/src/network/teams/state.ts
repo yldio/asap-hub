@@ -48,7 +48,6 @@ import {
   getManuscriptVersions,
   getManuscriptVersionByManuscriptId,
   getTeam,
-  getTeams,
   ManuscriptsOptions,
   markDiscussionAsRead,
   patchTeam,
@@ -58,6 +57,7 @@ import {
   uploadManuscriptFile,
   uploadManuscriptFileViaPresignedUrl,
   GetTeamsListOptions,
+  getAlgoliaTeams,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -152,20 +152,23 @@ export const teamListState = atomFamily<
 });
 
 export const usePrefetchTeams = (options: GetTeamsListOptions) => {
-  const authorization = useRecoilValue(authorizationState);
+  const algoliaClient = useAlgolia();
+
   const [teams, setTeams] = useRecoilState(teamsState(options));
   useDeepCompareEffect(() => {
     if (teams === undefined) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      getTeams(options, authorization).then(setTeams).catch();
+      getAlgoliaTeams(algoliaClient.client, options).then(setTeams).catch();
     }
-  }, [options, authorization, teams, setTeams]);
+  }, [options, teams, setTeams]);
 };
 export const useTeams = (options: GetTeamsListOptions): ListTeamResponse => {
-  const authorization = useRecoilValue(authorizationState);
+  const algoliaClient = useAlgolia();
   const [teams, setTeams] = useRecoilState(teamsState(options));
   if (teams === undefined) {
-    throw getTeams(options, authorization).then(setTeams).catch(setTeams);
+    throw getAlgoliaTeams(algoliaClient.client, options)
+      .then(setTeams)
+      .catch(setTeams);
   }
   if (teams instanceof Error) {
     throw teams;

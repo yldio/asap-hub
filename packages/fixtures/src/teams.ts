@@ -28,6 +28,7 @@ const listTeamResponseItem: Omit<TeamResponse, 'id'> = {
   teamId: 'AR1',
   grantId: '000123',
   teamType: 'Discovery Team',
+  teamStatus: 'Active',
   projectTitle:
     'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
   tags: [],

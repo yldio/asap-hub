@@ -7,7 +7,7 @@ import { network } from '@asap-hub/routing';
 import NetworkPageHeader from '../NetworkPageHeader';
 
 const props: ComponentProps<typeof NetworkPageHeader> = {
-  page: 'teams',
+  page: 'discovery-teams',
 
   searchQuery: '',
 };
@@ -18,8 +18,17 @@ it('renders the header', () => {
 
 it('alters the search placeholder based on the tab', () => {
   const { getByRole, rerender } = render(
-    <MemoryRouter initialEntries={[network({}).teams({}).$]}>
-      <NetworkPageHeader {...props} page="teams" />
+    <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
+      <NetworkPageHeader {...props} page="discovery-teams" />
+    </MemoryRouter>,
+  );
+  expect(
+    (getByRole('searchbox') as HTMLInputElement).placeholder,
+  ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
+
+  rerender(
+    <MemoryRouter initialEntries={[network({}).resourceTeams({}).$]}>
+      <NetworkPageHeader {...props} page="resource-teams" />
     </MemoryRouter>,
   );
   expect(
@@ -54,13 +63,20 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter name, keyword, …"`);
 });
 
-it('shows the filter in all the tabs (teams, groups, working-groups and users)', () => {
+it('shows the filter in all the tabs (discovery-teams, resource-teams, groups, working-groups and users)', () => {
   const { getByText, queryByText, rerender } = render(
-    <MemoryRouter initialEntries={[network({}).teams({}).$]}>
-      <NetworkPageHeader {...props} page="teams" />
+    <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
+      <NetworkPageHeader {...props} page="discovery-teams" />
     </MemoryRouter>,
   );
   expect(queryByText(/filters/i)).toBeInTheDocument();
+
+  rerender(
+    <MemoryRouter initialEntries={[network({}).resourceTeams({}).$]}>
+      <NetworkPageHeader {...props} page="resource-teams" />
+    </MemoryRouter>,
+  );
+  expect(getByText(/filters/i)).toBeInTheDocument();
 
   rerender(
     <MemoryRouter initialEntries={[network({}).interestGroups({}).$]}>
@@ -86,13 +102,16 @@ it('shows the filter in all the tabs (teams, groups, working-groups and users)',
 
 it('highlights the current tab', () => {
   const { getByText, rerender } = render(
-    <StaticRouter key="teams" location={network({}).teams({}).$}>
-      <NetworkPageHeader {...props} page="teams" />
+    <StaticRouter
+      key="discovery-teams"
+      location={network({}).discoveryTeams({}).$}
+    >
+      <NetworkPageHeader {...props} page="discovery-teams" />
     </StaticRouter>,
   );
   expect(
     findParentWithStyle(
-      getByText(/teams/i, { selector: 'nav a *' }),
+      getByText(/discovery teams/i, { selector: 'nav a *' }),
       'fontWeight',
     )!.fontWeight,
   ).toBe('bold');
@@ -104,13 +123,34 @@ it('highlights the current tab', () => {
   ).not.toBe('bold');
 
   rerender(
+    <StaticRouter
+      key="resource-teams"
+      location={network({}).resourceTeams({}).$}
+    >
+      <NetworkPageHeader {...props} page="resource-teams" />
+    </StaticRouter>,
+  );
+  expect(
+    findParentWithStyle(
+      getByText(/resource teams/i, { selector: 'nav a *' }),
+      'fontWeight',
+    )!.fontWeight,
+  ).toBe('bold');
+  expect(
+    findParentWithStyle(
+      getByText(/discovery teams/i, { selector: 'nav a *' }),
+      'fontWeight',
+    )?.fontWeight,
+  ).not.toBe('bold');
+
+  rerender(
     <StaticRouter key="users" location={network({}).users({}).$}>
       <NetworkPageHeader {...props} page="users" />
     </StaticRouter>,
   );
   expect(
     findParentWithStyle(
-      getByText(/teams/i, { selector: 'nav a *' }),
+      getByText(/discovery teams/i, { selector: 'nav a *' }),
       'fontWeight',
     )?.fontWeight,
   ).not.toBe('bold');
@@ -148,4 +188,35 @@ it('does not render the search box based on props', () => {
     <NetworkPageHeader {...props} showSearch={false} />,
   );
   expect(queryByRole('searchbox')).not.toBeInTheDocument();
+});
+
+it('throws error for invalid page type', () => {
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
+  expect(() => {
+    render(
+      <NetworkPageHeader
+        {...props}
+        page={'invalid-page' as unknown as 'resource-teams'}
+      />,
+    );
+  }).toThrow('Invalid page');
+
+  spy.mockRestore();
+});
+
+it('renders page description when provided', () => {
+  const { getByText } = render(
+    <NetworkPageHeader
+      {...props}
+      pageDescription={<p>This is a custom page description</p>}
+    />,
+  );
+  expect(getByText('This is a custom page description')).toBeInTheDocument();
+});
+
+it('does not render page description when not provided', () => {
+  const { queryByText } = render(<NetworkPageHeader {...props} />);
+  // Should not find any custom description text
+  expect(queryByText(/custom page description/i)).not.toBeInTheDocument();
 });

@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import NetworkPage from '../NetworkPage';
 
 const props: ComponentProps<typeof NetworkPage> = {
-  page: 'teams',
+  page: 'discovery-teams',
   searchQuery: '',
 };
 it('renders the header', () => {

@@ -3,12 +3,7 @@ import { css } from '@emotion/react';
 
 import { ExportButton, ListControls, PageControls } from '../molecules';
 import { Headline3, Paragraph } from '../atoms';
-import {
-  rem,
-  vminLinearCalcClamped,
-  mobileScreen,
-  tabletScreen,
-} from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { charcoal } from '../colors';
 
 const headerStyles = css({
@@ -17,12 +12,7 @@ const headerStyles = css({
   columnGap: rem(12),
   justifyContent: 'space-between',
   alignItems: 'center',
-});
-
-const headerNoResultsStyles = css({
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    justifyContent: 'flex-end',
-  },
+  marginBottom: rem(32),
 });
 
 const resultsHeaderStyles = css({
@@ -50,25 +40,15 @@ const viewOptionsStyles = css({
 
 const mainStyles = css({
   justifySelf: 'stretch',
-  paddingTop: rem(18),
-  paddingBottom: rem(36),
-
-  display: 'grid',
-  gridRowGap: `${vminLinearCalcClamped(
-    mobileScreen,
-    24,
-    tabletScreen,
-    36,
-    'px',
-  )}`,
+  display: 'flex',
+  flexFlow: 'column',
+  gap: rem(32),
   boxSizing: 'border-box',
   maxWidth: '100%',
   overflow: 'hidden',
 });
 const pageControlsStyles = css({
   justifySelf: 'center',
-  paddingTop: rem(36),
-  paddingBottom: rem(36),
 });
 
 const iconStyles = css({
@@ -78,6 +58,12 @@ const iconStyles = css({
     width: rem(48),
     height: rem(48),
   },
+});
+
+const resultsPaginatorSeparationStyles = css({
+  display: 'flex',
+  flexFlow: 'column',
+  gap: rem(48),
 });
 
 type ResultListProps = ComponentProps<typeof PageControls> & {
@@ -110,10 +96,8 @@ const ResultList: React.FC<ResultListProps> = ({
   }, [algoliaIndexName, pageControlsProps.currentPageIndex]);
   return (
     <article data-insights-index={algoliaIndexName}>
-      <header
-        css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}
-      >
-        {numberOfItems > 0 && (
+      {numberOfItems > 0 && (
+        <header css={[headerStyles]}>
           <div css={exportResults && resultsHeaderStyles}>
             <strong>
               {numberOfItems} result{numberOfItems === 1 || 's'} found
@@ -130,15 +114,15 @@ const ResultList: React.FC<ResultListProps> = ({
               <ExportButton exportResults={exportResults} />
             </span>
           </div>
-        )}
-      </header>
+        </header>
+      )}
       {numberOfItems > 0 ? (
-        <>
+        <div css={resultsPaginatorSeparationStyles}>
           <main css={mainStyles}>{children}</main>
           <section css={pageControlsStyles}>
             <PageControls {...pageControlsProps} />
           </section>
-        </>
+        </div>
       ) : (
         noResultsComponent ?? (
           <main css={{ textAlign: 'center' }}>

@@ -45,22 +45,23 @@ describe('Team Controller', () => {
       await teamController.fetch({ search: 'some-search', skip: 13, take: 9 });
 
       expect(teamDataProviderMock.fetch).toBeCalledWith({
-        filter: {},
+        filter: undefined,
         search: 'some-search',
         skip: 13,
         take: 9,
+        teamType: undefined,
       });
     });
 
     test.each`
-      filter                    | filterValue
-      ${['Active']}             | ${{ filter: { active: true } }}
-      ${['Inactive']}           | ${{ filter: { active: false } }}
-      ${[]}                     | ${{}}
-      ${['Active', 'Inactive']} | ${{}}
+      filter                    | expectedFilter
+      ${['Active']}             | ${['Active']}
+      ${['Inactive']}           | ${['Inactive']}
+      ${[]}                     | ${[]}
+      ${['Active', 'Inactive']} | ${['Active', 'Inactive']}
     `(
       `Should call data provider with correct filter when filter is $filter`,
-      async ({ filter, filterValue }) => {
+      async ({ filter, expectedFilter }) => {
         teamDataProviderMock.fetch.mockResolvedValueOnce({
           total: 1,
           items: [getTeamDataObject()],
@@ -68,11 +69,72 @@ describe('Team Controller', () => {
 
         await teamController.fetch({ filter });
 
-        expect(teamDataProviderMock.fetch).toBeCalledWith(
-          expect.objectContaining(filterValue),
-        );
+        expect(teamDataProviderMock.fetch).toBeCalledWith({
+          filter: expectedFilter,
+          search: undefined,
+          skip: 0,
+          take: 8,
+          teamType: undefined,
+        });
       },
     );
+
+    test('Should pass teamType to data provider when provided', async () => {
+      teamDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [getTeamDataObject()],
+      });
+
+      await teamController.fetch({
+        teamType: 'Discovery Team',
+        search: 'test',
+      });
+
+      expect(teamDataProviderMock.fetch).toBeCalledWith({
+        filter: undefined,
+        search: 'test',
+        skip: 0,
+        take: 8,
+        teamType: 'Discovery Team',
+      });
+    });
+
+    test('Should pass Resource Team type to data provider', async () => {
+      teamDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [getTeamDataObject()],
+      });
+
+      await teamController.fetch({ teamType: 'Resource Team' });
+
+      expect(teamDataProviderMock.fetch).toBeCalledWith({
+        filter: undefined,
+        search: undefined,
+        skip: 0,
+        take: 8,
+        teamType: 'Resource Team',
+      });
+    });
+
+    test('Should pass both filter and teamType to data provider', async () => {
+      teamDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [getTeamDataObject()],
+      });
+
+      await teamController.fetch({
+        filter: ['Active'],
+        teamType: 'Resource Team',
+      });
+
+      expect(teamDataProviderMock.fetch).toBeCalledWith({
+        filter: ['Active'],
+        search: undefined,
+        skip: 0,
+        take: 8,
+        teamType: 'Resource Team',
+      });
+    });
   });
 
   describe('FetchPublicTeams method', () => {

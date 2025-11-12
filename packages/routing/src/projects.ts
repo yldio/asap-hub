@@ -21,9 +21,10 @@ const traineeProject = (() => {
 const discoveryProjects = route('/discovery', {}, { discoveryProject });
 const resourceProjects = route('/resource', {}, { resourceProject });
 const traineeProjects = route('/trainee', {}, { traineeProject });
-
-export default route(
+const projects = route(
   '/projects',
   {},
   { discoveryProjects, resourceProjects, traineeProjects },
 );
+
+export default projects;

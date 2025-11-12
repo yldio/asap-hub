@@ -1,5 +1,5 @@
 import { getOverrides } from '@asap-hub/flags';
-import { BackendError, GetListOptions } from '@asap-hub/frontend-utils';
+import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ComplianceReportPostRequest,
   DiscussionRequest,
@@ -33,7 +33,6 @@ import {
 } from 'recoil';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
-import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { useAlgolia } from '../../hooks/algolia';
 import { getPresignedUrl } from '../../shared-api/files';
 import { useSetResearchOutputItem } from '../../shared-research/state';
@@ -58,18 +57,19 @@ import {
   updateManuscript,
   uploadManuscriptFile,
   uploadManuscriptFileViaPresignedUrl,
+  GetTeamsListOptions,
 } from './api';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  GetListOptions
+  GetTeamsListOptions
 >({
   key: 'teamIndex',
   default: undefined,
 });
 export const teamsState = selectorFamily<
   ListTeamResponse | Error | undefined,
-  GetListOptions
+  GetTeamsListOptions
 >({
   key: 'teams',
   get:
@@ -151,14 +151,7 @@ export const teamListState = atomFamily<
   default: undefined,
 });
 
-export const usePrefetchTeams = (
-  options: GetListOptions = {
-    filters: new Set(),
-    searchQuery: '',
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    currentPage: 0,
-  },
-) => {
+export const usePrefetchTeams = (options: GetTeamsListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [teams, setTeams] = useRecoilState(teamsState(options));
   useDeepCompareEffect(() => {
@@ -168,7 +161,7 @@ export const usePrefetchTeams = (
     }
   }, [options, authorization, teams, setTeams]);
 };
-export const useTeams = (options: GetListOptions): ListTeamResponse => {
+export const useTeams = (options: GetTeamsListOptions): ListTeamResponse => {
   const authorization = useRecoilValue(authorizationState);
   const [teams, setTeams] = useRecoilState(teamsState(options));
   if (teams === undefined) {

@@ -7,6 +7,7 @@ import {
   inactiveUserMembershipStatus,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
+import { ReactNode } from 'react';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { rem } from '../pixels';
@@ -19,10 +20,11 @@ import { SearchAndFilter } from '../organisms';
 import { Option, Title } from '../organisms/CheckboxGroup';
 import { TabNav } from '../molecules';
 import {
-  TeamIcon,
   UserIcon,
   InterestGroupsIcon,
   WorkingGroupsIcon,
+  DiscoveryTeamIcon,
+  ResourceTeamIcon,
 } from '../icons';
 import { queryParamString } from '../routing';
 
@@ -40,7 +42,12 @@ const controlsStyles = css({
   padding: `${networkPageLayoutPaddingStyle} 0`,
 });
 
-type Page = 'users' | 'interest-groups' | 'teams' | 'working-groups';
+type Page =
+  | 'users'
+  | 'interest-groups'
+  | 'discovery-teams'
+  | 'resource-teams'
+  | 'working-groups';
 
 type NetworkPageHeaderProps = {
   page: Page;
@@ -49,6 +56,7 @@ type NetworkPageHeaderProps = {
   searchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   showSearch?: boolean;
+  pageDescription?: ReactNode;
 };
 
 const userFilters: ReadonlyArray<
@@ -108,12 +116,18 @@ const getFilterOptionsAndPlaceholder = (page: Page) => {
         searchPlaceholder: 'Enter name, keyword, …',
       };
 
-    case 'teams':
-    default:
+    case 'resource-teams':
       return {
         filterOptions: teamFilters,
         searchPlaceholder: 'Enter name, keyword, method, …',
       };
+    case 'discovery-teams':
+      return {
+        filterOptions: teamFilters,
+        searchPlaceholder: 'Enter name, keyword, method, …',
+      };
+    default:
+      throw new Error('Invalid page');
   }
 };
 
@@ -126,6 +140,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   filters,
   onChangeFilter,
   showSearch = true,
+  pageDescription,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
@@ -143,10 +158,18 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           People
         </TabLink>
         <TabLink
-          href={network({}).teams({}).$ + queryParamString(searchQuery)}
-          Icon={TeamIcon}
+          href={
+            network({}).discoveryTeams({}).$ + queryParamString(searchQuery)
+          }
+          Icon={DiscoveryTeamIcon}
         >
-          Teams
+          Discovery Teams
+        </TabLink>
+        <TabLink
+          href={network({}).resourceTeams({}).$ + queryParamString(searchQuery)}
+          Icon={ResourceTeamIcon}
+        >
+          Resource Teams
         </TabLink>
         <TabLink
           href={
@@ -164,6 +187,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         </TabLink>
       </TabNav>
     </div>
+    {pageDescription && <div css={controlsStyles}>{pageDescription}</div>}
     {showSearch && (
       <div css={controlsStyles}>
         <SearchAndFilter

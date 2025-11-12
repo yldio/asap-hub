@@ -463,10 +463,6 @@ describe('Teams data provider', () => {
               OR: [
                 { displayName_contains: 'test' },
                 { displayName_contains: 'query' },
-                { projectTitle_contains: 'test' },
-                { projectTitle_contains: 'query' },
-                { researchTags: { name_contains: 'test' } },
-                { researchTags: { name_contains: 'query' } },
               ],
               inactiveSince_exists: true,
               teamType: 'Resource Team',
@@ -501,10 +497,6 @@ describe('Teams data provider', () => {
               OR: [
                 { displayName_contains: 'Tony' },
                 { displayName_contains: 'Stark' },
-                { projectTitle_contains: 'Tony' },
-                { projectTitle_contains: 'Stark' },
-                { researchTags: { name_contains: 'Tony' } },
-                { researchTags: { name_contains: 'Stark' } },
               ],
             },
           }),
@@ -538,10 +530,6 @@ describe('Teams data provider', () => {
               OR: [
                 { displayName_contains: 'Tony' },
                 { displayName_contains: 'Stark' },
-                { projectTitle_contains: 'Tony' },
-                { projectTitle_contains: 'Stark' },
-                { researchTags: { name_contains: 'Tony' } },
-                { researchTags: { name_contains: 'Stark' } },
               ],
               inactiveSince_exists: true,
             },

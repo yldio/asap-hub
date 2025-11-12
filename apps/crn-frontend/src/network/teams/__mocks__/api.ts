@@ -20,6 +20,7 @@ import {
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   createResearchOutput as originalCreateResearchOutput,
+  GetTeamsListOptions,
   updateTeamResearchOutput as originalUpdateTeamResearchOutput,
 } from '../api';
 
@@ -42,6 +43,11 @@ export const patchTeam = jest.fn(
 
 export const getTeams = jest.fn(
   async ({ pageSize }: GetListOptions): Promise<ListTeamResponse> =>
+    createListTeamResponse(pageSize ?? 10),
+);
+
+export const getAlgoliaTeams = jest.fn(
+  async ({ pageSize }: GetTeamsListOptions): Promise<ListTeamResponse> =>
     createListTeamResponse(pageSize ?? 10),
 );
 

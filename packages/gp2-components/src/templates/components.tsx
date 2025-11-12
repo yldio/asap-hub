@@ -28,12 +28,8 @@ const components = {
     },
   },
   TabLink: {
-    styles: {
-      paddingTop: 0,
-    },
-    layoutStyles: {
-      margin: 0,
-    },
+    styles: {},
+    layoutStyles: {},
   },
   ExternalLink: {
     styles: {

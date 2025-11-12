@@ -3,7 +3,8 @@ export type Flag =
   | 'COMPLIANCE_NOTIFICATION_LIST'
   | 'ANALYTICS_PHASE_TWO'
   | 'PROJECTS_MVP'
-  | 'OPENSEARCH_METRICS';
+  | 'OPENSEARCH_METRICS'
+  | 'DATA_MANAGER_ROLE_ENABLED';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
 let overrides: Flags = {
@@ -13,6 +14,7 @@ let overrides: Flags = {
   COMPLIANCE_NOTIFICATION_LIST: '',
   PROJECTS_MVP: false,
   OPENSEARCH_METRICS: false,
+  DATA_MANAGER_ROLE_ENABLED: false,
 };
 
 const envDefaults: Record<string, boolean> = {

@@ -6,6 +6,17 @@ import { network } from '@asap-hub/routing';
 
 import NetworkPageHeader from '../NetworkPageHeader';
 
+const mockIsEnabled = jest.fn();
+
+jest.mock('@asap-hub/react-context', () => ({
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
+beforeEach(() => {
+  mockIsEnabled.mockReturnValue(true);
+  jest.spyOn(console, 'error').mockImplementation();
+});
+
 const props: ComponentProps<typeof NetworkPageHeader> = {
   page: 'discovery-teams',
 
@@ -219,4 +230,26 @@ it('does not render page description when not provided', () => {
   const { queryByText } = render(<NetworkPageHeader {...props} />);
   // Should not find any custom description text
   expect(queryByText(/custom page description/i)).not.toBeInTheDocument();
+});
+
+describe('Data Manager filter', () => {
+  it('removes the Data Manager filter when the flag is disabled', () => {
+    mockIsEnabled.mockReturnValueOnce(false);
+    const { queryByText } = render(
+      <MemoryRouter initialEntries={[network({}).users({}).$]}>
+        <NetworkPageHeader {...props} page="users" />
+      </MemoryRouter>,
+    );
+    expect(queryByText('Data Manager')).not.toBeInTheDocument();
+  });
+
+  it('shows the Data Manager filter when the flag is enabled', () => {
+    mockIsEnabled.mockReturnValueOnce(true);
+    const { getByText } = render(
+      <MemoryRouter initialEntries={[network({}).users({}).$]}>
+        <NetworkPageHeader {...props} page="users" />
+      </MemoryRouter>,
+    );
+    expect(getByText('Data Manager')).toBeInTheDocument();
+  });
 });

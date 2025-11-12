@@ -1,23 +1,16 @@
 import { ProjectDetail } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Display, Pill, Link, CopyButton, TabLink } from '../atoms';
-import { lead, paper } from '../colors';
+import { lead } from '../colors';
 import {
   googleDriveIcon,
   DiscoveryTeamIcon,
   ResourceTeamIcon,
   ResourceMemberIcon,
   MemberIcon,
-  // plusIcon,
 } from '../icons';
-import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
-import {
-  // DropdownButton,
-  UsersList,
-  TabNav,
-  ProjectDuration,
-} from '../molecules';
+import { UsersList, TabNav, ProjectDuration } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import {
   getProjectTypeLabel,

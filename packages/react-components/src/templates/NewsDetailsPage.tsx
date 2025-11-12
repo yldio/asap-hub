@@ -4,15 +4,14 @@ import { NewsResponse, NewsType, TutorialsResponse } from '@asap-hub/model';
 import { Pill, Display, Card, Caption, Headline3, Paragraph } from '../atoms';
 import { RichText } from '../organisms';
 import { rem } from '../pixels';
-import { defaultPageLayoutPaddingStyle } from '../layout';
 import { formatDate } from '../date';
 import { ExternalLink, TagList } from '../molecules';
+import { PageContraints } from '..';
 
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(32),
-  padding: defaultPageLayoutPaddingStyle,
 });
 
 const descriptionStyles = css({
@@ -64,32 +63,34 @@ const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   );
 
   return (
-    <div css={containerStyles}>
-      <Card>
-        <Pill>{type}</Pill>
-        <Display styleAsHeading={3}>{title}</Display>
-        {publishDateComponent}
-        <div css={richTextContainer}>
-          <RichText text={text} />
-        </div>
-        {attachmentComponent}
-        <div css={footerContainer}>{publishDateComponent}</div>
-      </Card>
-      {!!tags.length && (
+    <PageContraints>
+      <div css={containerStyles}>
         <Card>
-          <Headline3 noMargin>Tags</Headline3>
-          <div css={descriptionStyles}>
-            <Paragraph accent="lead">
-              Explore keywords related to skills, techniques, resources, and
-              tools.
-            </Paragraph>
+          <Pill>{type}</Pill>
+          <Display styleAsHeading={3}>{title}</Display>
+          {publishDateComponent}
+          <div css={richTextContainer}>
+            <RichText text={text} />
           </div>
-          <div>
-            <TagList tags={tags} />
-          </div>
+          {attachmentComponent}
+          <div css={footerContainer}>{publishDateComponent}</div>
         </Card>
-      )}
-    </div>
+        {!!tags.length && (
+          <Card>
+            <Headline3 noMargin>Tags</Headline3>
+            <div css={descriptionStyles}>
+              <Paragraph accent="lead">
+                Explore keywords related to skills, techniques, resources, and
+                tools.
+              </Paragraph>
+            </div>
+            <div>
+              <TagList tags={tags} />
+            </div>
+          </Card>
+        )}
+      </div>
+    </PageContraints>
   );
 };
 

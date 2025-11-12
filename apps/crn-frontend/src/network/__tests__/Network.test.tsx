@@ -20,7 +20,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import Network from '../Network';
-import { getTeams } from '../teams/api';
+import { getAlgoliaTeams } from '../teams/api';
 import { getInterestGroups } from '../interest-groups/api';
 import { useUsers } from '../users/state';
 import { getWorkingGroup, getWorkingGroups } from '../working-groups/api';
@@ -46,7 +46,9 @@ jest.mock('../working-groups/api');
 jest.mock('../../events/api');
 
 const mockUseUsers = useUsers as jest.MockedFunction<typeof useUsers>;
-const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
+const mockGetAlgoliaTeams = getAlgoliaTeams as jest.MockedFunction<
+  typeof getAlgoliaTeams
+>;
 const mockGetGroups = getInterestGroups as jest.MockedFunction<
   typeof getInterestGroups
 >;
@@ -169,11 +171,13 @@ describe.each([
     fireEvent.click(toggle);
     expect(searchBox.value).toEqual('test123');
     await waitFor(() => {
-      const [[options] = []] = mockGetTeams.mock.calls.slice(-1);
-      expect(options).toMatchObject({
-        searchQuery: 'test123',
-        filters: new Set(),
-      });
+      expect(mockGetAlgoliaTeams).toHaveBeenLastCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          searchQuery: 'test123',
+          filters: new Set(),
+        }),
+      );
     });
   });
 });
@@ -257,11 +261,11 @@ describe.each([
     userEvent.click(checkbox);
     expect(checkbox).toBeChecked();
     await waitFor(() =>
-      expect(mockGetTeams).toHaveBeenLastCalledWith(
+      expect(mockGetAlgoliaTeams).toHaveBeenLastCalledWith(
+        expect.anything(),
         expect.objectContaining({
           filters: new Set(['Active']),
         }),
-        expect.anything(),
       ),
     );
   });
@@ -282,11 +286,13 @@ it('allows toggling between discovery teams and resource teams', async () => {
   expect(searchBox.value).toEqual('test123');
 
   await waitFor(() => {
-    const [[options] = []] = mockGetTeams.mock.calls.slice(-1);
-    expect(options).toMatchObject({
-      searchQuery: 'test123',
-      filters: new Set(),
-    });
+    expect(mockGetAlgoliaTeams).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        searchQuery: 'test123',
+        filters: new Set(),
+      }),
+    );
   });
 });
 

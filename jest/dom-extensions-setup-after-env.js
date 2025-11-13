@@ -11,7 +11,7 @@ if (typeof document === 'object') {
   // allows you to do things like:
   // expect(element).toHaveTextContent(/react/i)
   // learn more: https://github.com/testing-library/jest-dom
-  require('@testing-library/jest-dom/extend-expect');
+  require('@testing-library/jest-dom');
 
   // emotion CSS matchers
   const { matchers } = require('@emotion/jest');

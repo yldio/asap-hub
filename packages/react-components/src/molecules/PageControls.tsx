@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { aperture, filter, uniqBy, sortWith, pipe, ascend } from 'ramda';
 import { css, Theme } from '@emotion/react';
 
 import {
@@ -90,6 +89,13 @@ const disabledTextStyles = css({
   },
 });
 
+// Helper function to create sliding windows over an array
+function* aperture<T>(n: number, arr: T[]): Generator<T[]> {
+  for (let i = 0; i <= arr.length - n; i++) {
+    yield arr.slice(i, i + n);
+  }
+}
+
 interface PageNumber {
   index: number;
   wideScreenOnly?: boolean;
@@ -177,22 +183,28 @@ const PageControls: React.FC<PageControlsProps> = ({
       ? []
       : [renderPageHref(currentPageIndex + 1), renderPageHref(lastPageIndex)];
 
-  const desiredPages: PageNumber[] = pipe(
-    () => [
-      { index: firstPageIndex },
-      { index: currentPageIndex - 1, wideScreenOnly: true },
-      { index: currentPageIndex },
-      { index: currentPageIndex + 1, wideScreenOnly: true },
-      { index: lastPageIndex },
-    ],
-    filter<PageNumber>(({ index }) => index >= 0 && index < numberOfPages),
-    sortWith([
-      ascend(({ index }) => index),
-      // sort wideScreenOnly to the back so that uniq does not lose mandatory pages
-      ascend(({ wideScreenOnly }) => (wideScreenOnly ? 1 : 0)),
-    ]),
-    uniqBy(({ index }) => index),
-  )();
+  const desiredPages: PageNumber[] = [
+    { index: firstPageIndex },
+    { index: currentPageIndex - 1, wideScreenOnly: true },
+    { index: currentPageIndex },
+    { index: currentPageIndex + 1, wideScreenOnly: true },
+    { index: lastPageIndex },
+  ]
+    .filter(({ index }) => index >= 0 && index < numberOfPages)
+    .sort((a, b) => {
+      // First sort by index
+      if (a.index !== b.index) {
+        return a.index - b.index;
+      }
+      // Then sort wideScreenOnly to the back so that uniq does not lose mandatory pages
+      const aWide = a.wideScreenOnly ? 1 : 0;
+      const bWide = b.wideScreenOnly ? 1 : 0;
+      return aWide - bWide;
+    })
+    .filter((page, index, arr) => {
+      // Remove duplicates by index, keeping the first occurrence
+      return index === arr.findIndex((p) => p.index === page.index);
+    });
 
   const shownPages = Array.from(
     makeFillersMandatory(Array.from(optimizeGaps(desiredPages)) || []),

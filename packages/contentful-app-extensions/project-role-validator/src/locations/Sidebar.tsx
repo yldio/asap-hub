@@ -23,16 +23,7 @@ const Sidebar = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  // Check if this is a Projects content type
-  const contentTypeId = sdk.contentType.sys.id;
-  const isProjectsContentType = contentTypeId === 'projects';
-
   const validateProject = useCallback(async () => {
-    // Only validate if this is a Projects content type
-    if (!isProjectsContentType) {
-      return;
-    }
-
     setIsLoading(true);
 
     try {
@@ -112,7 +103,7 @@ const Sidebar = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [sdk, isProjectsContentType]);
+  }, [sdk]);
 
   useEffect(() => {
     // Initial validation
@@ -132,7 +123,8 @@ const Sidebar = () => {
       unsubscribeType?.();
       unsubscribeMembers?.();
     };
-  }, [sdk, validateProject]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sdk]);
 
   const renderStatus = () => {
     if (isLoading) {
@@ -206,11 +198,6 @@ const Sidebar = () => {
       </Stack>
     );
   };
-
-  // Don't render anything if this is not a Projects content type
-  if (!isProjectsContentType) {
-    return null;
-  }
 
   return (
     <Stack flexDirection="column" spacing="spacingM" padding="spacingM">

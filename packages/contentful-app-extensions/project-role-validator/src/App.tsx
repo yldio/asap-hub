@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { locations } from '@contentful/app-sdk';
+import { locations, SidebarExtensionSDK } from '@contentful/app-sdk';
 import { useSDK } from '@contentful/react-apps-toolkit';
 import Sidebar from './locations/Sidebar';
 
@@ -8,10 +8,16 @@ const App = () => {
 
   const Component = useMemo(() => {
     if (sdk.location.is(locations.LOCATION_ENTRY_SIDEBAR)) {
-      return Sidebar;
+      // Only render the sidebar for Projects content type
+      const sidebarSdk = sdk as SidebarExtensionSDK;
+      const contentTypeId = sidebarSdk.contentType.sys.id;
+
+      if (contentTypeId === 'projects') {
+        return Sidebar;
+      }
     }
     return null;
-  }, [sdk.location]);
+  }, [sdk]);
 
   return Component ? <Component /> : null;
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { SidebarExtensionSDK } from '@contentful/app-sdk';
-import { useSDK, useAutoResizer } from '@contentful/react-apps-toolkit';
+import { useSDK } from '@contentful/react-apps-toolkit';
 import {
   Stack,
   Note,
@@ -13,7 +13,6 @@ import { validateMemberRole } from '../validation';
 
 const Sidebar = () => {
   const sdk = useSDK<SidebarExtensionSDK>();
-  useAutoResizer();
 
   const [validationResult, setValidationResult] = useState<ValidationResult>({
     isValid: true,
@@ -153,9 +152,10 @@ const Sidebar = () => {
 
     if (validationResult.isValid) {
       return (
-        <Note variant="positive" title="All Roles Valid ✓">
-          All {validationResult.memberCount} member
-          {validationResult.memberCount !== 1 ? 's have' : ' has'} valid roles
+        <Note variant="positive" title="Valid roles ✓">
+          {validationResult.memberCount} member
+          {validationResult.memberCount !== 1 ? 's have' : ' has'} valid role
+          {validationResult.memberCount !== 1 ? 's ' : ' '}
           for project type: <strong>{validationResult.projectType}</strong>
         </Note>
       );

@@ -3,11 +3,10 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import Sidebar from '../../locations/Sidebar';
 
-import { useSDK, useAutoResizer } from '@contentful/react-apps-toolkit';
+import { useSDK } from '@contentful/react-apps-toolkit';
 
 jest.mock('@contentful/react-apps-toolkit', () => ({
   useSDK: jest.fn(),
-  useAutoResizer: jest.fn(),
 }));
 
 describe('Sidebar component', () => {
@@ -36,13 +35,6 @@ describe('Sidebar component', () => {
     };
 
     (useSDK as jest.Mock).mockReturnValue(mockSdk);
-  });
-
-  it('enables automatic resizing', async () => {
-    render(<Sidebar />);
-    await waitFor(() => {
-      expect(useAutoResizer).toHaveBeenCalled();
-    });
   });
 
   it('renders warning when no project type is set', async () => {

@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 
 import InterestGroupProfileHeader from './InterestGroupProfileHeader';
 import { Toast } from '../organisms';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 type InterestGroupProfilePageProps = ComponentProps<
   typeof InterestGroupProfileHeader
@@ -19,7 +19,7 @@ const InterestGroupProfilePage: React.FC<InterestGroupProfilePageProps> = ({
       </Toast>
     )}
     <InterestGroupProfileHeader {...props} active={active} />
-    <PageContraints as="main">{children}</PageContraints>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 
 import TeamProfileHeader from './TeamProfileHeader';
 import { Toast } from '../organisms';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 type TeamProfilePageProps = ComponentProps<typeof TeamProfileHeader>;
 
@@ -17,7 +17,7 @@ const TeamProfilePage: React.FC<TeamProfilePageProps> = ({
       </Toast>
     )}
     <TeamProfileHeader {...profile} />
-    <PageContraints as="main">{children}</PageContraints>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

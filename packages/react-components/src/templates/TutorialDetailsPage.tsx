@@ -13,7 +13,7 @@ import {
   RelatedEventsCard,
   HelpSection,
 } from '../organisms';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const tagsContainer = css({
   margin: `${rem(12)} 0 ${rem(12)} 0`,
@@ -45,7 +45,7 @@ const TutorialDetailsPage: React.FC<TutorialDetailsPageProps> = ({
   ].some((info) => info != null);
 
   return (
-    <PageContraints>
+    <PageConstraints>
       <div css={cardsStyles}>
         <TutorialHeaderCard {...props} />
         {(text || !!tags.length) && (
@@ -85,7 +85,7 @@ const TutorialDetailsPage: React.FC<TutorialDetailsPageProps> = ({
         )}
         <HelpSection hideTechSupportText />
       </div>
-    </PageContraints>
+    </PageConstraints>
   );
 };
 export default TutorialDetailsPage;

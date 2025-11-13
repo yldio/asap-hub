@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 
 import { rem } from '../pixels';
 import { Display } from '../atoms';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const headerStyles = css({
   paddingBottom: rem(9),
@@ -13,14 +13,14 @@ type DashboardPageProps = {
 };
 
 const Dashboard: React.FC<DashboardPageProps> = ({ firstName, children }) => (
-  <PageContraints as="article">
+  <PageConstraints as="article">
     <div css={headerStyles}>
       <Display styleAsHeading={2}>{`Welcome to the Hub${
         firstName ? `, ${firstName}` : ''
       }!`}</Display>
     </div>
     {children}
-  </PageContraints>
+  </PageConstraints>
 );
 
 export default Dashboard;

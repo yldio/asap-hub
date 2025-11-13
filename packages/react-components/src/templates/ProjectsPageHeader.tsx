@@ -12,7 +12,7 @@ import {
   TraineeProjectIcon,
 } from '../icons';
 import PageInfoContainer from './PageInfoContainer';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const descriptionStyles = css({
   maxWidth: rem(smallDesktopScreen.width),
@@ -103,7 +103,7 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
         </div>
       </PageInfoContainer>
       {showSearch && (
-        <PageContraints noPaddingBottom>
+        <PageConstraints noPaddingBottom>
           <Paragraph accent="lead" styles={projectTypeDescriptionStyles}>
             {projectDescriptions[page]}
           </Paragraph>
@@ -115,7 +115,7 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
             filterOptions={[]}
             searchPlaceholder="Enter project name, keyword, theme, …"
           />
-        </PageContraints>
+        </PageConstraints>
       )}
     </header>
   );

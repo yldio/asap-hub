@@ -1,14 +1,14 @@
 import { ComponentProps } from 'react';
 
 import EventsPageHeader from './EventsPageHeader';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 type EventsPageProps = ComponentProps<typeof EventsPageHeader>;
 
 const EventsPage: React.FC<EventsPageProps> = ({ children, ...props }) => (
   <article>
     <EventsPageHeader {...props} />
-    <PageContraints>{children}</PageContraints>
+    <PageConstraints>{children}</PageConstraints>
   </article>
 );
 

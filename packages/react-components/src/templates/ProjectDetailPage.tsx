@@ -1,6 +1,6 @@
 import { ProjectDetail } from '@asap-hub/model';
 import ProjectDetailHeader from './ProjectDetailHeader';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 type ProjectDetailPageProps = ProjectDetail & {
   readonly pointOfContactEmail?: string;
@@ -19,7 +19,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
       pointOfContactEmail={pointOfContactEmail}
       aboutHref={aboutHref}
     />
-    <PageContraints as="main">{children}</PageContraints>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

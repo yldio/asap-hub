@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 
 import NetworkPageHeader from './NetworkPageHeader';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const NetworkPage: React.FC<ComponentProps<typeof NetworkPageHeader>> = ({
   children,
@@ -10,7 +10,7 @@ const NetworkPage: React.FC<ComponentProps<typeof NetworkPageHeader>> = ({
 }) => (
   <article>
     <NetworkPageHeader {...props} />
-    <PageContraints as="main">{children}</PageContraints>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 
 import SharedResearchPageHeader from './SharedResearchPageHeader';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 type SharedResearchPageProps = ComponentProps<typeof SharedResearchPageHeader>;
 const SharedResearchPage: React.FC<SharedResearchPageProps> = ({
@@ -18,7 +18,7 @@ const SharedResearchPage: React.FC<SharedResearchPageProps> = ({
       onChangeFilter={onChangeFilter}
       filters={filters}
     />
-    <PageContraints as="main">{children}</PageContraints>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

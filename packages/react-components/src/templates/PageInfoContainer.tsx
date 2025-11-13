@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { css } from '@emotion/react';
 
 import { paper, steel } from '../colors';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 import { rem } from '../pixels';
 
 type PageInfoContainerProps = {
@@ -23,14 +23,14 @@ const PageInfoContainer: React.FC<PageInfoContainerProps> = ({
   children,
   nav,
 }) => (
-  <PageContraints
+  <PageConstraints
     unconstrainedStyles={containerStyles}
     as="div"
     noPaddingBottom={!!nav}
   >
     {children}
     <div css={navContainerStyles}>{nav}</div>
-  </PageContraints>
+  </PageConstraints>
 );
 
 export default PageInfoContainer;

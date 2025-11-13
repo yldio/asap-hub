@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 
 import UserProfileHeader from './UserProfileHeader';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 type UserProfilePageProps = ComponentProps<typeof UserProfileHeader> & {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
 }) => (
   <article>
     <UserProfileHeader {...profile} />
-    <PageContraints as="main">{children}</PageContraints>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 
 import ProjectsPageHeader from './ProjectsPageHeader';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const ProjectsPage: React.FC<ComponentProps<typeof ProjectsPageHeader>> = ({
   children,
@@ -9,7 +9,7 @@ const ProjectsPage: React.FC<ComponentProps<typeof ProjectsPageHeader>> = ({
 }) => (
   <article>
     <ProjectsPageHeader {...props} />
-    <PageContraints as="main">{children}</PageContraints>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

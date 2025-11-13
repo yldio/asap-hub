@@ -1,4 +1,4 @@
-import { PageContraints as PageConstraints } from '@asap-hub/react-components';
+import { PageConstraints } from '@asap-hub/react-components';
 
 import { select } from './knobs';
 

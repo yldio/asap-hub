@@ -1,4 +1,10 @@
-import { UtilityBar, WelcomePage, mail } from '@asap-hub/react-components';
+import {
+  Link,
+  Paragraph,
+  UtilityBar,
+  WelcomePage,
+  mail,
+} from '@asap-hub/react-components';
 import { useAuth0GP2 } from '@asap-hub/react-context';
 import { useHistory, useLocation } from 'react-router-dom';
 import Frame from '../Frame';
@@ -17,12 +23,26 @@ const Signin: React.FC<Record<string, never>> = () => {
       title: 'Join the GP2 Hub',
       content: 'Activate your account and start exploring the GP2 Network.',
       buttonText: 'Activate account',
+      footer: () => (
+        <Paragraph accent="lead">
+          By proceeding you are agreeing to our{' '}
+          <Link href="/terms-and-conditions">Terms and Conditions</Link> and{' '}
+          <Link href="/privacy-notice">Privacy Notice</Link>.
+        </Paragraph>
+      ),
     },
     welcome: {
-      title: 'Welcome to the  GP2 Hub',
+      title: 'Welcome to the GP2 Hub',
       content:
         'A private, invite-only network where the GP2 community collaborates.',
       buttonText: 'Sign in',
+      footer: () => (
+        <Paragraph accent="lead">
+          By signing in you are agreeing to our{' '}
+          <Link href="/terms-and-conditions">Terms and Conditions</Link> and{' '}
+          <Link href="/privacy-notice">Privacy Notice</Link>.
+        </Paragraph>
+      ),
     },
   };
 

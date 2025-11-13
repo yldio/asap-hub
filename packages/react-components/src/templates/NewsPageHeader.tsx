@@ -7,7 +7,7 @@ import { rem, smallDesktopScreen } from '../pixels';
 import { SearchAndFilter } from '../organisms';
 import { Option } from '../organisms/CheckboxGroup';
 import PageInfoContainer from './PageInfoContainer';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const textStyles = css({
   maxWidth: rem(smallDesktopScreen.width),
@@ -44,7 +44,7 @@ const NewsPageHeader: React.FC<NewsPageHeaderProps> = ({
         </Paragraph>
       </div>
     </PageInfoContainer>
-    <PageContraints noPaddingBottom>
+    <PageConstraints noPaddingBottom>
       <SearchAndFilter
         onChangeSearch={onChangeSearch}
         searchPlaceholder="Enter news title, keyword, ..."
@@ -53,7 +53,7 @@ const NewsPageHeader: React.FC<NewsPageHeaderProps> = ({
         filterOptions={newsFilters}
         filters={filters}
       />
-    </PageContraints>
+    </PageConstraints>
   </header>
 );
 

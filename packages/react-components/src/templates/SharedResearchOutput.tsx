@@ -25,7 +25,7 @@ import {
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
 } from '../utils';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const cardsStyles = css({
   display: 'grid',
@@ -177,7 +177,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         associationName={associationName}
         isInReview={isInReview}
       />
-      <PageContraints>
+      <PageConstraints>
         {!isGrantDocument && (
           <SharedResearchOutputButtons
             id={id}
@@ -322,7 +322,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             </CtaCard>
           )}
         </div>
-      </PageContraints>
+      </PageConstraints>
     </div>
   );
 };

@@ -24,7 +24,7 @@ import {
 } from '../icons';
 import { queryParamString } from '../routing';
 import PageInfoContainer from './PageInfoContainer';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const textStyles = css({
   maxWidth: rem(610),
@@ -201,10 +201,10 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         </div>
       </PageInfoContainer>
       {pageDescription && (
-        <PageContraints noPaddingBottom>{pageDescription}</PageContraints>
+        <PageConstraints noPaddingBottom>{pageDescription}</PageConstraints>
       )}
       {showSearch && (
-        <PageContraints noPaddingBottom>
+        <PageConstraints noPaddingBottom>
           <SearchAndFilter
             onChangeSearch={onChangeSearchQuery}
             searchQuery={searchQuery}
@@ -212,7 +212,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
             filters={filters}
             {...getFilterOptionsAndPlaceholder(page, isDataManagerEnabled)}
           />
-        </PageContraints>
+        </PageConstraints>
       )}
     </header>
   );

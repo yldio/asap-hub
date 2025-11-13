@@ -21,8 +21,12 @@ const visualHeaderStyles = css({
 });
 =======
 import PageInfoContainer from './PageInfoContainer';
+<<<<<<< HEAD
 import PageContraints from './PageConstraints';
 >>>>>>> 8a8658f43 ([ASAP-1232] - Adapt project section's components to match new designs)
+=======
+import PageConstraints from './PageConstraints';
+>>>>>>> d90fec16c ([ASAP-1232] - Fix typo in `PageConstraints` component's name)
 
 const descriptionStyles = css({
   maxWidth: rem(smallDesktopScreen.width),
@@ -115,7 +119,7 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
         </div>
       </PageInfoContainer>
       {showSearch && (
-        <PageContraints noPaddingBottom>
+        <PageConstraints noPaddingBottom>
           <Paragraph accent="lead" styles={projectTypeDescriptionStyles}>
             {projectDescriptions[page]}
           </Paragraph>
@@ -127,7 +131,7 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
             filterOptions={filterOptions}
             searchPlaceholder="Enter project name, keyword, …"
           />
-        </PageContraints>
+        </PageConstraints>
       )}
     </header>
   );

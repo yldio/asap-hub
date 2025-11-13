@@ -7,7 +7,7 @@ import {
   SpeakerList,
   useDateHasPassed,
   considerEndedAfter,
-  PageContraints,
+  PageConstraints,
 } from '@asap-hub/react-components';
 import { events, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
@@ -27,7 +27,7 @@ const Event: React.FC = () => {
   if (event) {
     return (
       <Frame title={event.title}>
-        <PageContraints>
+        <PageConstraints>
           <EventPage
             {...event}
             hasFinished={hasFinished}
@@ -48,7 +48,7 @@ const Event: React.FC = () => {
           >
             {!!event.speakers.length && <SpeakerList {...event} />}
           </EventPage>
-        </PageContraints>
+        </PageConstraints>
       </Frame>
     );
   }

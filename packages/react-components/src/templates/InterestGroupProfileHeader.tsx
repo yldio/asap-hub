@@ -18,7 +18,7 @@ import { EventSearch } from '../organisms';
 import { queryParamString } from '../routing';
 import { createMailTo } from '../mail';
 import PageInfoContainer from './PageInfoContainer';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const belowHeadlineStyles = css({
   display: 'flex',
@@ -202,12 +202,12 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
         </div>
       </PageInfoContainer>
       {!!searchQuery && (
-        <PageContraints noPaddingBottom>
+        <PageConstraints noPaddingBottom>
           <EventSearch
             searchQuery={searchQuery}
             onChangeSearchQuery={onChangeSearchQuery}
           />
-        </PageContraints>
+        </PageConstraints>
       )}
     </header>
   );

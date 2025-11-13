@@ -289,7 +289,7 @@ export {
   NoOutputsPage,
   NotFoundPage,
   OpenQuestionsModal,
-  PageContraints,
+  PageConstraints,
   PageInfoContainer,
   PasswordResetEmailSentPage,
   PersonalInfoModal,

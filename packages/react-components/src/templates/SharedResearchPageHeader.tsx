@@ -6,7 +6,7 @@ import { noop } from '../utils';
 import ResearchOutputsSearch from './ResearchOutputsSearch';
 import { SharedOutputDropdown } from '../organisms';
 import PageInfoContainer from './PageInfoContainer';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const textStyles = css({
   display: 'grid',
@@ -54,14 +54,14 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
       </div>
     </PageInfoContainer>
 
-    <PageContraints noPaddingBottom>
+    <PageConstraints noPaddingBottom>
       <ResearchOutputsSearch
         onChangeSearch={onChangeSearch}
         searchQuery={searchQuery}
         onChangeFilter={onChangeFilter}
         filters={filters}
       />
-    </PageContraints>
+    </PageConstraints>
   </header>
 );
 

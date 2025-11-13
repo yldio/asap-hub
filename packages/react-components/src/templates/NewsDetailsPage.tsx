@@ -6,7 +6,7 @@ import { RichText } from '../organisms';
 import { rem } from '../pixels';
 import { formatDate } from '../date';
 import { ExternalLink, TagList } from '../molecules';
-import { PageContraints } from '..';
+import { PageConstraints } from '..';
 
 const containerStyles = css({
   display: 'flex',
@@ -63,7 +63,7 @@ const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   );
 
   return (
-    <PageContraints>
+    <PageConstraints>
       <div css={containerStyles}>
         <Card>
           <Pill>{type}</Pill>
@@ -90,7 +90,7 @@ const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
           </Card>
         )}
       </div>
-    </PageContraints>
+    </PageConstraints>
   );
 };
 

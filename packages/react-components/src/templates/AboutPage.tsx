@@ -1,14 +1,14 @@
 import { ComponentProps } from 'react';
 
 import AboutPageHeader from './AboutPageHeader';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 type AboutPageProps = ComponentProps<typeof AboutPageHeader>;
 
 const About: React.FC<AboutPageProps> = ({ children }) => (
   <article>
     <AboutPageHeader />
-    <PageContraints>{children}</PageContraints>
+    <PageConstraints>{children}</PageConstraints>
   </article>
 );
 

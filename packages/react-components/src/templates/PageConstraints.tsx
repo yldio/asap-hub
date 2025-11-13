@@ -49,7 +49,7 @@ type PageConstraintsProps = {
  * content sections behave uniformly across different screen sizes and
  * maintains visual consistency throughout the application.
  */
-const PageContraints: React.FC<PageConstraintsProps> = ({
+const PageConstraints: React.FC<PageConstraintsProps> = ({
   children,
   as: Component = 'div',
   noPaddingBottom,
@@ -68,4 +68,4 @@ const PageContraints: React.FC<PageConstraintsProps> = ({
   </Component>
 );
 
-export default PageContraints;
+export default PageConstraints;

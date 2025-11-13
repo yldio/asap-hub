@@ -1,14 +1,14 @@
 import { ComponentProps } from 'react';
 
 import WorkingGroupPageHeader from './WorkingGroupPageHeader';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 
 const WorkingGroupPage: React.FC<
   ComponentProps<typeof WorkingGroupPageHeader>
 > = ({ children, ...props }) => (
   <article>
     <WorkingGroupPageHeader {...props} />
-    <PageContraints as="main">{children}</PageContraints>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

@@ -6,7 +6,7 @@ import { TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
 import { rem, smallDesktopScreen } from '../pixels';
 import { queryParamString } from '../routing';
-import PageContraints from './PageConstraints';
+import PageConstraints from './PageConstraints';
 import PageInfoContainer from './PageInfoContainer';
 
 const textStyles = css({
@@ -47,12 +47,12 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
     </PageInfoContainer>
 
     {searchQuery ? (
-      <PageContraints noPaddingBottom>
+      <PageConstraints noPaddingBottom>
         <EventSearch
           searchQuery={searchQuery}
           onChangeSearchQuery={onChangeSearchQuery}
         />
-      </PageContraints>
+      </PageConstraints>
     ) : null}
   </header>
 );

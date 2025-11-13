@@ -2337,10 +2337,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:27.5.1"\
       ],\
       [\
-        "@jeysal/babel-plugin-ramda",\
-        "npm:2.0.1"\
-      ],\
-      [\
         "@joshwooding/vite-plugin-react-docgen-typescript",\
         "virtual:3afd19353c0c1fa548ed6007df0db588634106f2a94e8098f3bf51df583fb9b0e536dcbdf5883c8072d8568baad459adee81bb44c2b8762a170c8eb7e098bbb9#npm:0.6.1"\
       ],\
@@ -3350,7 +3346,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@testing-library/react",\
-        "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.1.0"\
+        "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.0"\
       ],\
       [\
         "@testing-library/user-event",\
@@ -3779,10 +3775,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "@types/qs",\
         "npm:6.9.11"\
-      ],\
-      [\
-        "@types/ramda",\
-        "npm:0.27.20"\
       ],\
       [\
         "@types/range-parser",\
@@ -9460,7 +9452,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "ramda",\
-        "npm:0.27.1"\
+        "npm:0.27.2"\
       ],\
       [\
         "randombytes",\
@@ -10771,10 +10763,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:10.9.2"\
       ],\
       [\
-        "ts-toolbelt",\
-        "npm:6.15.5"\
-      ],\
-      [\
         "ts.cryptojs256",\
         "npm:1.0.1"\
       ],\
@@ -11541,6 +11529,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/flags", "workspace:packages/flags"],\
+<<<<<<< HEAD
             ["@babel/cli", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.28.3"],\
             ["@babel/core", "npm:7.28.5"],\
             ["@babel/eslint-parser", "virtual:b8eca1899ef16d4b5ca0af75494c0c9ce6d87d2f2686ae642ba31aefc020e15e872422503391cf924a6eb32a2d2039338e6e8c15f75529194106095660179c06#npm:7.28.5"],\
@@ -11555,6 +11544,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.28.4"],\
             ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.14.2"],\
             ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],\
+=======
+            ["@babel/cli", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.4"],\
+            ["@babel/core", "npm:7.23.7"],\
+            ["@babel/eslint-parser", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.3"],\
+            ["@babel/node", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.22.19"],\
+            ["@babel/plugin-proposal-nullish-coalescing-operator", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.18.6"],\
+            ["@babel/plugin-proposal-optional-chaining", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.21.0"],\
+            ["@babel/plugin-transform-modules-commonjs", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.3"],\
+            ["@babel/plugin-transform-runtime", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.7"],\
+            ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.8"],\
+            ["@babel/preset-react", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.3"],\
+            ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.3"],\
+            ["@babel/runtime-corejs3", "npm:7.26.10"],\
+            ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.13.0"],\
+>>>>>>> bbd380eed (Remove ramda and upgrade testing-library/react and testing-library/jest-dom)
             ["@peculiar/webcrypto", "npm:1.4.6"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
             ["@types/jest", "npm:29.5.14"],\
@@ -12119,7 +12123,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.16"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12148,7 +12152,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/rich-text-html-renderer", "npm:16.6.10"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12176,7 +12180,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.16"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12206,7 +12210,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lingui/core", "npm:4.14.1"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12235,7 +12239,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/rich-text-react-renderer", "virtual:77e6bac8e632c8077ef2c10fa125f4ddd6d43ea4d5d86bc53a27b6054b7a9e449d60d5ce080d5b25057bf0cc2437555879d05c7148aed76aeff6fe689505c045#npm:15.22.11"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12263,7 +12267,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.16"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12292,7 +12296,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/rich-text-react-renderer", "virtual:77e6bac8e632c8077ef2c10fa125f4ddd6d43ea4d5d86bc53a27b6054b7a9e449d60d5ce080d5b25057bf0cc2437555879d05c7148aed76aeff6fe689505c045#npm:15.22.11"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12322,7 +12326,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.16"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12352,7 +12356,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.16"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12381,7 +12385,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/rich-text-html-renderer", "npm:16.6.10"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12410,7 +12414,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/rich-text-react-renderer", "virtual:77e6bac8e632c8077ef2c10fa125f4ddd6d43ea4d5d86bc53a27b6054b7a9e449d60d5ce080d5b25057bf0cc2437555879d05c7148aed76aeff6fe689505c045#npm:15.22.11"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12440,7 +12444,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.16"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12468,7 +12472,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.16"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12496,7 +12500,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.16"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12526,7 +12530,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.16"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/react", "npm:18.3.12"],\
@@ -12557,7 +12561,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.28.4"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/jsdom", "npm:16.2.15"],\
@@ -12609,7 +12613,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:8.55.0"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/file-saver", "npm:2.0.7"],\
             ["@types/jest", "npm:29.5.14"],\
@@ -12918,7 +12922,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["core-js", "npm:3.34.0"],\
             ["date-fns", "npm:2.30.0"],\
             ["jsonwebtoken", "npm:9.0.1"],\
-            ["ramda", "npm:0.27.1"],\
             ["uuid", "npm:8.3.2"]\
           ],\
           "linkType": "SOFT"\
@@ -12952,7 +12955,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.28.4"],\
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:8.55.0"],\
             ["@testing-library/dom", "npm:10.4.0"],\
-            ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.0"],\
             ["@types/asap-hub__model", null],\
             ["@types/asap-hub__react-components", null],\
             ["@types/core-js", null],\
@@ -13009,7 +13012,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.28.4"],\
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:8.55.0"],\
             ["@testing-library/dom", "npm:10.4.0"],\
-            ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/js-cookie", "npm:3.0.6"],\
             ["@types/node", "npm:20.10.5"],\
@@ -13048,7 +13051,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.28.4"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/jsdom", "npm:16.2.15"],\
@@ -13099,7 +13102,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/react", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.11.1"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
@@ -13160,7 +13163,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/react", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.11.1"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
@@ -13221,7 +13224,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/react", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.11.1"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
@@ -13283,7 +13286,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/react", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.11.1"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
@@ -13344,7 +13347,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/react", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:11.11.1"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
@@ -13397,7 +13400,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:8.55.0"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
@@ -13683,13 +13686,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lexical/utils", "npm:0.18.0"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/jest", "npm:29.5.14"],\
-            ["@types/ramda", "npm:0.27.20"],\
             ["@types/react", "npm:18.3.12"],\
             ["@types/react-dom", "npm:18.3.1"],\
             ["@types/react-lottie", "npm:1.2.10"],\
@@ -13709,7 +13711,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["ismounted", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.8"],\
             ["lexical", "npm:0.18.0"],\
-            ["ramda", "npm:0.27.1"],\
             ["react", "npm:18.3.1"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
             ["react-hook-form", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.66.0"],\
@@ -13779,13 +13780,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lexical/utils", "npm:0.18.0"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/jest", "npm:29.5.14"],\
-            ["@types/ramda", "npm:0.27.20"],\
             ["@types/react", "npm:18.3.12"],\
             ["@types/react-dom", "npm:18.3.1"],\
             ["@types/react-lottie", "npm:1.2.10"],\
@@ -13805,7 +13805,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["ismounted", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.8"],\
             ["lexical", "npm:0.18.0"],\
-            ["ramda", "npm:0.27.1"],\
             ["react", "npm:18.3.1"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
             ["react-hook-form", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.66.0"],\
@@ -13874,13 +13873,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lexical/utils", "npm:0.18.0"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/jest", "npm:29.5.14"],\
-            ["@types/ramda", "npm:0.27.20"],\
             ["@types/react", "npm:18.3.12"],\
             ["@types/react-dom", "npm:18.3.1"],\
             ["@types/react-lottie", "npm:1.2.10"],\
@@ -13900,7 +13898,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["ismounted", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.8"],\
             ["lexical", "npm:0.18.0"],\
-            ["ramda", "npm:0.27.1"],\
             ["react", "npm:18.3.1"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
             ["react-hook-form", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.66.0"],\
@@ -13970,13 +13967,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lexical/utils", "npm:0.18.0"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/jest", "npm:29.5.14"],\
-            ["@types/ramda", "npm:0.27.20"],\
             ["@types/react", "npm:18.3.12"],\
             ["@types/react-dom", "npm:18.3.1"],\
             ["@types/react-lottie", "npm:1.2.10"],\
@@ -13996,7 +13992,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["ismounted", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.8"],\
             ["lexical", "npm:0.18.0"],\
-            ["ramda", "npm:0.27.1"],\
             ["react", "npm:18.3.1"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
             ["react-hook-form", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.66.0"],\
@@ -14067,13 +14062,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lexical/utils", "npm:0.18.0"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/asap-hub__react-context", null],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/jest", "npm:29.5.14"],\
-            ["@types/ramda", "npm:0.27.20"],\
             ["@types/react", "npm:18.3.12"],\
             ["@types/react-dom", "npm:18.3.1"],\
             ["@types/react-lottie", "npm:1.2.10"],\
@@ -14093,7 +14087,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["ismounted", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.8"],\
             ["lexical", "npm:0.18.0"],\
-            ["ramda", "npm:0.27.1"],\
             ["react", "npm:18.3.1"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
             ["react-hook-form", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.66.0"],\
@@ -14162,12 +14155,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lexical/utils", "npm:0.18.0"],\
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
-            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
             ["@testing-library/user-event", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:14.5.2"],\
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],\
             ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],\
             ["@types/jest", "npm:29.5.14"],\
-            ["@types/ramda", "npm:0.27.20"],\
             ["@types/react", "npm:18.3.12"],\
             ["@types/react-dom", "npm:18.3.1"],\
             ["@types/react-lottie", "npm:1.2.10"],\
@@ -14186,7 +14178,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hast-util-sanitize", "npm:3.0.2"],\
             ["ismounted", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:0.1.8"],\
             ["lexical", "npm:0.18.0"],\
-            ["ramda", "npm:0.27.1"],\
             ["react", "npm:18.3.1"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
             ["react-hook-form", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:7.66.0"],\
@@ -14231,7 +14222,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-react", "virtual:0762e49f8f05b99f9eb6dd38f03eda5b98ded70b1b47ed1df35530cdc8ad087c801fbb1f204a197ccf8be7b04ff15b66bfa340e3665730ffabc4fa1fedfe5459#npm:7.28.5"],\
             ["@babel/runtime-corejs3", "npm:7.28.4"],\
             ["@testing-library/dom", "npm:10.4.0"],\
-            ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/react", "npm:18.3.12"],\
             ["core-js", "npm:3.34.0"],\
@@ -14259,7 +14250,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-react", "virtual:0762e49f8f05b99f9eb6dd38f03eda5b98ded70b1b47ed1df35530cdc8ad087c801fbb1f204a197ccf8be7b04ff15b66bfa340e3665730ffabc4fa1fedfe5459#npm:7.28.5"],\
             ["@babel/runtime-corejs3", "npm:7.28.4"],\
             ["@testing-library/dom", "npm:10.4.0"],\
-            ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.1.0"],\
+            ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/react", "npm:18.3.12"],\
             ["core-js", "npm:3.34.0"],\
@@ -29424,6 +29415,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+<<<<<<< HEAD
       ["@jeysal/babel-plugin-ramda", [\
         ["npm:2.0.1", {\
           "packageLocation": "./.yarn/cache/@jeysal-babel-plugin-ramda-npm-2.0.1-1229a0eaae-66358c297b.zip/node_modules/@jeysal/babel-plugin-ramda/",\
@@ -29435,6 +29427,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+=======
+>>>>>>> bbd380eed (Remove ramda and upgrade testing-library/react and testing-library/jest-dom)
       ["@joshwooding/vite-plugin-react-docgen-typescript", [\
         ["npm:0.6.1", {\
           "packageLocation": "./.yarn/cache/@joshwooding-vite-plugin-react-docgen-typescript-npm-0.6.1-c3c24221de-6c5e8f2f12.zip/node_modules/@joshwooding/vite-plugin-react-docgen-typescript/",\
@@ -34040,18 +34034,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@testing-library/react", [\
-        ["npm:16.1.0", {\
-          "packageLocation": "./.yarn/cache/@testing-library-react-npm-16.1.0-be1dcab76e-5dc8e7abda.zip/node_modules/@testing-library/react/",\
+        ["npm:16.3.0", {\
+          "packageLocation": "./.yarn/cache/@testing-library-react-npm-16.3.0-fcde6d23a2-85728ea8a1.zip/node_modules/@testing-library/react/",\
           "packageDependencies": [\
-            ["@testing-library/react", "npm:16.1.0"]\
+            ["@testing-library/react", "npm:16.3.0"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.1.0", {\
-          "packageLocation": "./.yarn/__virtual__/@testing-library-react-virtual-2d41374bc1/0/cache/@testing-library-react-npm-16.1.0-be1dcab76e-5dc8e7abda.zip/node_modules/@testing-library/react/",\
+        ["virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.0", {\
+          "packageLocation": "./.yarn/__virtual__/@testing-library-react-virtual-9e080e9ccb/0/cache/@testing-library-react-npm-16.3.0-fcde6d23a2-85728ea8a1.zip/node_modules/@testing-library/react/",\
           "packageDependencies": [\
+<<<<<<< HEAD
             ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.1.0"],\
             ["@babel/runtime", "npm:7.28.4"],\
+=======
+            ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.0"],\
+            ["@babel/runtime", "npm:7.23.8"],\
+>>>>>>> bbd380eed (Remove ramda and upgrade testing-library/react and testing-library/jest-dom)
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@types/react", "npm:18.3.12"],\
             ["@types/react-dom", null],\
@@ -34069,11 +34068,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0", {\
-          "packageLocation": "./.yarn/__virtual__/@testing-library-react-virtual-37e65ae60a/0/cache/@testing-library-react-npm-16.1.0-be1dcab76e-5dc8e7abda.zip/node_modules/@testing-library/react/",\
+        ["virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0", {\
+          "packageLocation": "./.yarn/__virtual__/@testing-library-react-virtual-78c960ff05/0/cache/@testing-library-react-npm-16.3.0-fcde6d23a2-85728ea8a1.zip/node_modules/@testing-library/react/",\
           "packageDependencies": [\
+<<<<<<< HEAD
             ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.1.0"],\
             ["@babel/runtime", "npm:7.28.4"],\
+=======
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.0"],\
+            ["@babel/runtime", "npm:7.23.8"],\
+>>>>>>> bbd380eed (Remove ramda and upgrade testing-library/react and testing-library/jest-dom)
             ["@testing-library/dom", "npm:10.4.0"],\
             ["@types/react", "npm:18.3.12"],\
             ["@types/react-dom", "npm:18.3.1"],\
@@ -35287,16 +35291,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-qs-npm-6.9.11-e12802ac61-620ca1628b.zip/node_modules/@types/qs/",\
           "packageDependencies": [\
             ["@types/qs", "npm:6.9.11"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/ramda", [\
-        ["npm:0.27.20", {\
-          "packageLocation": "./.yarn/cache/@types-ramda-npm-0.27.20-b84fed1726-28bb90bc8e.zip/node_modules/@types/ramda/",\
-          "packageDependencies": [\
-            ["@types/ramda", "npm:0.27.20"],\
-            ["ts-toolbelt", "npm:6.15.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -38147,6 +38141,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["asap-hub", "workspace:."],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@asap-hub/flags", "workspace:packages/flags"],\
+<<<<<<< HEAD
             ["@babel/cli", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.28.3"],\
             ["@babel/core", "npm:7.28.5"],\
             ["@babel/eslint-parser", "virtual:b8eca1899ef16d4b5ca0af75494c0c9ce6d87d2f2686ae642ba31aefc020e15e872422503391cf924a6eb32a2d2039338e6e8c15f75529194106095660179c06#npm:7.28.5"],\
@@ -38161,6 +38156,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.28.4"],\
             ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.14.2"],\
             ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],\
+=======
+            ["@babel/cli", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.4"],\
+            ["@babel/core", "npm:7.23.7"],\
+            ["@babel/eslint-parser", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.3"],\
+            ["@babel/node", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.22.19"],\
+            ["@babel/plugin-proposal-nullish-coalescing-operator", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.18.6"],\
+            ["@babel/plugin-proposal-optional-chaining", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.21.0"],\
+            ["@babel/plugin-transform-modules-commonjs", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.3"],\
+            ["@babel/plugin-transform-runtime", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.7"],\
+            ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.8"],\
+            ["@babel/preset-react", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.3"],\
+            ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.23.3"],\
+            ["@babel/runtime-corejs3", "npm:7.26.10"],\
+            ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.13.0"],\
+>>>>>>> bbd380eed (Remove ramda and upgrade testing-library/react and testing-library/jest-dom)
             ["@peculiar/webcrypto", "npm:1.4.6"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
             ["@types/jest", "npm:29.5.14"],\
@@ -59237,13 +59247,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:0.27.1", {\
-          "packageLocation": "./.yarn/cache/ramda-npm-0.27.1-5818f2cb83-31a0c0ef73.zip/node_modules/ramda/",\
-          "packageDependencies": [\
-            ["ramda", "npm:0.27.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:0.27.2", {\
           "packageLocation": "./.yarn/cache/ramda-npm-0.27.2-5f4ede0eb9-28d6735dd1.zip/node_modules/ramda/",\
           "packageDependencies": [\
@@ -64802,15 +64805,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/swc__wasm",\
             "@types/typescript",\
             "typescript"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["ts-toolbelt", [\
-        ["npm:6.15.5", {\
-          "packageLocation": "./.yarn/cache/ts-toolbelt-npm-6.15.5-e42f89942f-24ad00cfd9.zip/node_modules/ts-toolbelt/",\
-          "packageDependencies": [\
-            ["ts-toolbelt", "npm:6.15.5"]\
           ],\
           "linkType": "HARD"\
         }]\

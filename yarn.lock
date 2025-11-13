@@ -396,7 +396,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/dom": 10.4.0
     "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -422,8 +422,8 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.6.10
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -448,8 +448,8 @@ __metadata:
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -476,8 +476,8 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@lingui/core": ^4.0.0
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -503,8 +503,8 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -529,8 +529,8 @@ __metadata:
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -556,8 +556,8 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -584,8 +584,8 @@ __metadata:
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -612,8 +612,8 @@ __metadata:
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -639,8 +639,8 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.6.10
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -666,8 +666,8 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -694,8 +694,8 @@ __metadata:
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -720,8 +720,8 @@ __metadata:
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -746,8 +746,8 @@ __metadata:
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -774,8 +774,8 @@ __metadata:
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -845,8 +845,8 @@ __metadata:
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.4
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@testing-library/user-event": 14.5.2
     "@types/jest": 29.5.14
     "@types/jsdom": 16.2.15
@@ -892,8 +892,8 @@ __metadata:
     "@sentry/cli": ^2.20.3
     "@sentry/react": ^8.0.0
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@testing-library/user-event": 14.5.2
     "@types/file-saver": ^2
     "@types/jest": 29.5.14
@@ -1188,7 +1188,6 @@ __metadata:
     core-js: 3.34.0
     date-fns: 2.30.0
     jsonwebtoken: 9.0.1
-    ramda: 0.27.1
     uuid: 8.3.2
   languageName: unknown
   linkType: soft
@@ -1218,7 +1217,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.28.4
     "@sentry/react": ^8.0.0
     "@testing-library/dom": 10.4.0
-    "@testing-library/react": 16.1.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/js-cookie": ^3
     "@types/node": 20.10.5
@@ -1261,8 +1260,8 @@ __metadata:
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.4
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@testing-library/user-event": 14.5.2
     "@types/jest": 29.5.14
     "@types/jsdom": 16.2.15
@@ -1307,8 +1306,8 @@ __metadata:
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.11.1
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@testing-library/user-event": 14.5.2
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
@@ -1364,8 +1363,8 @@ __metadata:
     "@sentry/cli": ^2.20.3
     "@sentry/react": ^8.0.0
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@testing-library/user-event": 14.5.2
     "@types/jest": 29.5.14
     "@types/jsonwebtoken": 8.5.9
@@ -1630,13 +1629,12 @@ __metadata:
     "@lexical/selection": 0.18.0
     "@lexical/utils": 0.18.0
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
-    "@testing-library/react": 16.1.0
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.0
     "@testing-library/user-event": 14.5.2
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/jest": 29.5.14
-    "@types/ramda": 0.27.20
     "@types/react": 18.3.12
     "@types/react-dom": 18.3.1
     "@types/react-lottie": ^1
@@ -1655,7 +1653,6 @@ __metadata:
     hast-util-sanitize: 3.0.2
     ismounted: ^0.1.8
     lexical: 0.18.0
-    ramda: 0.27.1
     react: 18.3.1
     react-dom: 18.3.1
     react-hook-form: ^7.51.4
@@ -1703,7 +1700,7 @@ __metadata:
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.4
     "@testing-library/dom": 10.4.0
-    "@testing-library/react": 16.1.0
+    "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/react": 18.3.12
     core-js: 3.34.0
@@ -12670,7 +12667,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:^6.6.3":
+"@testing-library/jest-dom@npm:^6.6.3, @testing-library/jest-dom@npm:^6.9.0":
   version: 6.9.1
   resolution: "@testing-library/jest-dom@npm:6.9.1"
   dependencies:
@@ -12684,9 +12681,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:16.1.0":
-  version: 16.1.0
-  resolution: "@testing-library/react@npm:16.1.0"
+"@testing-library/react@npm:16.3.0":
+  version: 16.3.0
+  resolution: "@testing-library/react@npm:16.3.0"
   dependencies:
     "@babel/runtime": ^7.12.5
   peerDependencies:
@@ -12700,7 +12697,7 @@ __metadata:
       optional: true
     "@types/react-dom":
       optional: true
-  checksum: 5dc8e7abda23d108c29f43cdacd43fad750e981ee87ee8902fb349a2683f2f774ef1136f2d3ef3d9efb87e8b04426c43d7b46e95511cd7c9d37b10c3bdd3e9e2
+  checksum: 85728ea8a1bcc9d865782a3d3bcc1db6632cb77907b47fb99c7f338e3ebdfc74dc6d21dfc5526a215a4f4f7b7d8a6392de87f48da3848866ab088f327ebb3e92
   languageName: node
   linkType: hard
 
@@ -15918,9 +15915,8 @@ __metadata:
     "@babel/preset-typescript": 7.28.5
     "@babel/runtime-corejs3": 7.28.4
     "@emotion/jest": ^11.10.5
-    "@jeysal/babel-plugin-ramda": 2.0.1
     "@peculiar/webcrypto": 1.4.6
-    "@testing-library/jest-dom": ^6.6.3
+    "@testing-library/jest-dom": ^6.9.0
     "@types/jest": 29.5.14
     "@types/react-test-renderer": 18.3.0
     "@types/uuid": 8.3.4
@@ -37645,13 +37641,6 @@ __metadata:
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
   checksum: fde256c9073969e234526e2cfead42591b9a2aec5222bac154b0de2fa9e4ceb30efcd717ee8bc785a56f3a119bdd5aa27b333d9dbec94ed254bd26f8944c67ac
-  languageName: node
-  linkType: hard
-
-"ts-toolbelt@npm:^6.3.3":
-  version: 6.15.5
-  resolution: "ts-toolbelt@npm:6.15.5"
-  checksum: 24ad00cfd9ce735c76c873a9b1347eac475b94e39ebbdf100c9019dce88dd5f4babed52884cf82bb456a38c28edd0099ab6f704b84b2e5e034852b618472c1f3
   languageName: node
   linkType: hard
 

@@ -8,7 +8,6 @@ import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { EventInfo, BackLink, CtaCard } from '../molecules';
 import { Card, Link, Paragraph } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
-import { contentSidePaddingWithNavigation } from '../layout';
 import {
   EventMaterials,
   JoinEvent,
@@ -19,9 +18,6 @@ import {
 } from '../organisms';
 import { createMailTo, TECH_SUPPORT_EMAIL } from '../mail';
 
-const containerStyles = css({
-  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)}`,
-});
 const cardsStyles = css({
   display: 'grid',
   rowGap: rem(33),
@@ -89,12 +85,7 @@ const EventPage = <
   tableTitles,
   ...props
 }: EventPageProps<T>) => (
-  <div
-    css={({ components }) => [
-      containerStyles,
-      components?.EventPage?.containerStyles,
-    ]}
-  >
+  <div css={({ components }) => [components?.EventPage?.containerStyles]}>
     {backHref && <BackLink href={backHref} />}
     <>
       <div css={cardsStyles}>

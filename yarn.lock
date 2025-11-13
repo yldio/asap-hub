@@ -419,7 +419,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 12.1.5
@@ -445,7 +445,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.6.10
     "@testing-library/jest-dom": ^5.16.5
@@ -472,7 +472,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 12.1.5
@@ -498,7 +498,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/field-editor-date": ^1.6.2
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
@@ -525,7 +525,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
@@ -552,7 +552,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 12.1.5
@@ -578,7 +578,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
@@ -605,7 +605,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
@@ -633,7 +633,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
@@ -661,7 +661,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.6.10
     "@testing-library/jest-dom": ^5.16.5
@@ -688,7 +688,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
@@ -715,7 +715,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
@@ -743,7 +743,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 12.1.5
@@ -769,7 +769,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 12.1.5
@@ -795,7 +795,7 @@ __metadata:
     "@contentful/app-scripts": 1.33.2
     "@contentful/app-sdk": 4.46.0
     "@contentful/f36-components": 4.81.1
-    "@contentful/f36-tokens": 4.0.4
+    "@contentful/f36-tokens": 4.2.0
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
@@ -10951,17 +10951,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-tokens@npm:4.0.4, @contentful/f36-tokens@npm:^4.0.0, @contentful/f36-tokens@npm:^4.0.1, @contentful/f36-tokens@npm:^4.0.4":
-  version: 4.0.4
-  resolution: "@contentful/f36-tokens@npm:4.0.4"
-  checksum: 995c6bd8f44fa847893f57f53fb3321cd01f6741d5f6112f68989aaaef11a94403be813ef84dfcd2b9b00796510391587a680fe5add21dd937bcb87725ea10fb
-  languageName: node
-  linkType: hard
-
-"@contentful/f36-tokens@npm:^4.2.0":
+"@contentful/f36-tokens@npm:4.2.0, @contentful/f36-tokens@npm:^4.2.0":
   version: 4.2.0
   resolution: "@contentful/f36-tokens@npm:4.2.0"
   checksum: fba4b588b6144719f896cc069fae22b41953ba041227b17477752c58fcdd47940308b81e26e2571a911c402149983b7fd41e28c0c27550e35fc91ace48426d01
+  languageName: node
+  linkType: hard
+
+"@contentful/f36-tokens@npm:^4.0.0, @contentful/f36-tokens@npm:^4.0.1, @contentful/f36-tokens@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "@contentful/f36-tokens@npm:4.0.4"
+  checksum: 995c6bd8f44fa847893f57f53fb3321cd01f6741d5f6112f68989aaaef11a94403be813ef84dfcd2b9b00796510391587a680fe5add21dd937bcb87725ea10fb
   languageName: node
   linkType: hard
 

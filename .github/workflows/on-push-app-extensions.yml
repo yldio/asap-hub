@@ -78,6 +78,7 @@ jobs:
           - clear-on-change
           - working-group-deliverables
           - partial-last-updated
+          - project-role-validator
     steps:
       - name: Checkout
         uses: actions/checkout@v3

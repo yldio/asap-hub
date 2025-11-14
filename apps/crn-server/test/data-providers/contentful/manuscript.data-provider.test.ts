@@ -124,7 +124,9 @@ describe('Manuscripts Contentful Data Provider', () => {
       Teams: () => ({
         sys: { id: 'team-1' },
         displayName: 'Team A',
-        teamId: 'ID01',
+      }),
+      Projects: () => ({
+        projectId: 'ID01',
         grantId: 'grant',
       }),
     });

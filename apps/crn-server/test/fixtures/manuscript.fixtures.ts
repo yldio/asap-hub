@@ -217,11 +217,7 @@ export const getContentfulGraphqlManuscriptVersions = (
   ],
 });
 
-export const getContentfulGraphqlManuscriptsCollection = (
-  props: Partial<
-    NonNullable<NonNullable<FetchManuscriptsQuery>['manuscriptsCollection']>
-  > = {},
-): NonNullable<
+export const getContentfulGraphqlManuscriptsCollection = (): NonNullable<
   NonNullable<FetchManuscriptsQuery>['manuscriptsCollection']
 > => ({
   total: 1,
@@ -238,8 +234,24 @@ export const getContentfulGraphqlManuscriptsCollection = (
           {
             sys: { id: 'team-1' },
             displayName: 'Test Team',
-            teamId: '',
-            grantId: '',
+            linkedFrom: {
+              projectMembershipCollection: {
+                items: [
+                  {
+                    linkedFrom: {
+                      projectsCollection: {
+                        items: [
+                          {
+                            projectId: '',
+                            grantId: '',
+                          },
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
           },
         ],
       },

@@ -213,14 +213,19 @@ const parseGraphQLInterestGroup = (
 ): InterestGroupDataObject => {
   const teams = (interestGroup.teamsCollection?.items || [])
     .filter((x): x is InterestGroupTeams => x !== null)
-    .map((t) => ({
-      id: t?.team?.sys.id ?? '',
-      inactiveSince: t?.team?.inactiveSince ?? undefined,
-      endDate: t?.endDate,
-      displayName: t?.team?.displayName ?? '',
-      projectTitle: t?.team?.projectTitle ?? '',
-      tags: parseResearchTags(t?.team?.researchTagsCollection?.items || []),
-    }));
+    .map((t) => {
+      const project =
+        t?.team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
+          ?.projectsCollection?.items[0];
+      return {
+        id: t?.team?.sys.id ?? '',
+        inactiveSince: t?.team?.inactiveSince ?? undefined,
+        endDate: t?.endDate,
+        displayName: t?.team?.displayName ?? '',
+        projectTitle: project?.title ?? '',
+        tags: parseResearchTags(project?.researchTagsCollection?.items || []),
+      };
+    });
 
   const calendars = interestGroup.calendar
     ? [parseContentfulGraphqlCalendarToResponse(interestGroup.calendar)]

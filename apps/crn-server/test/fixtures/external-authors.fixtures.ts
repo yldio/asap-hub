@@ -110,14 +110,11 @@ export const getExternalAuthorContentfulWebhookDetail = (
     updatedAt: '2023-03-22T15:40:48.930Z',
   },
   fields: {
-    displayName: {
-      'en-US': 'team 1',
+    name: {
+      'en-US': 'external author 1',
     },
-    applicationNumber: {
-      'en-US': 'ASAP',
-    },
-    projectTitle: {
-      'en-US': 'Test title',
+    email: {
+      'en-US': 'arnold@gmail.com',
     },
   },
 });

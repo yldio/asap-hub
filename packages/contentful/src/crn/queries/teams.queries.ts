@@ -11,17 +11,8 @@ export const FETCH_TEAM_BY_ID = gql`
         publishedAt
       }
       displayName
-      teamId
-      grantId
       teamType
       inactiveSince
-      projectSummary
-      projectTitle
-      proposal {
-        sys {
-          id
-        }
-      }
       researchTheme {
         name
       }
@@ -30,25 +21,6 @@ export const FETCH_TEAM_BY_ID = gql`
           name
           description
           url
-        }
-      }
-      researchTagsCollection(limit: 20) {
-        items {
-          sys {
-            id
-          }
-          name
-        }
-      }
-      supplementGrant {
-        title
-        description
-        startDate
-        endDate
-        proposal {
-          sys {
-            id
-          }
         }
       }
       linkedFrom {
@@ -61,8 +33,20 @@ export const FETCH_TEAM_BY_ID = gql`
                 sys {
                   id
                 }
-                teamId
-                grantId
+                linkedFrom {
+                  projectMembershipCollection(limit: 1) {
+                    items {
+                      linkedFrom {
+                        projectsCollection(limit: 1) {
+                          items {
+                            projectId
+                            grantId
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -120,16 +104,7 @@ export const FETCH_TEAMS = gql`
         }
         displayName
         inactiveSince
-        projectTitle
         teamType
-        researchTagsCollection(limit: 20) {
-          items {
-            sys {
-              id
-            }
-            name
-          }
-        }
         linkedFrom {
           teamMembershipCollection(limit: 100) {
             items {
@@ -146,6 +121,25 @@ export const FETCH_TEAMS = gql`
                         sys {
                           id
                         }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          projectMembershipCollection(limit: 1) {
+            items {
+              linkedFrom {
+                projectsCollection(limit: 1) {
+                  items {
+                    title
+                    researchTagsCollection(limit: 20) {
+                      items {
+                        sys {
+                          id
+                        }
+                        name
                       }
                     }
                   }
@@ -173,8 +167,6 @@ export const FETCH_PUBLIC_TEAMS = gql`
           id
         }
         displayName
-        projectTitle
-        projectSummary
         inactiveSince
         researchTheme {
           name
@@ -213,6 +205,65 @@ export const FETCH_PUBLIC_TEAMS = gql`
                     }
                     active
                     name
+                  }
+                }
+              }
+            }
+          }
+          projectMembershipCollection(limit: 1) {
+            items {
+              linkedFrom {
+                projectsCollection(limit: 1) {
+                  items {
+                    title
+                    originalGrant
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_PROJECT_BY_TEAM_ID = gql`
+  query FetchTeamProjectById($id: String!) {
+    teams(id: $id) {
+      linkedFrom {
+        projectMembershipCollection(limit: 1) {
+          items {
+            linkedFrom {
+              projectsCollection(limit: 1) {
+                items {
+                  title
+                  projectId
+                  grantId
+                  originalGrant
+                  proposal {
+                    sys {
+                      id
+                    }
+                  }
+                  supplementGrant {
+                    title
+                    description
+                    startDate
+                    endDate
+                    proposal {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                  researchTagsCollection(limit: 20) {
+                    items {
+                      sys {
+                        id
+                      }
+                      name
+                    }
                   }
                 }
               }

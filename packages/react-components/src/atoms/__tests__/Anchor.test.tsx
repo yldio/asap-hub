@@ -1,4 +1,4 @@
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -94,7 +94,7 @@ describe.each`
 describe('for an internal link with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const { getByRole } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Anchor
           href={`${window.location.protocol}//${window.location.host}/page?query#fragment`}
         >
@@ -108,7 +108,7 @@ describe('for an internal link with a router', () => {
 
   it('smoothly scrolls the anchor referenced by the fragment into view', async () => {
     const { getByRole } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Anchor href={`#fragment`}>text</Anchor>
         <main id="fragment">text</main>
       </StaticRouter>,

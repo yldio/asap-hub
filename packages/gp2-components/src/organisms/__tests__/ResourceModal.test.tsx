@@ -46,7 +46,7 @@ describe('ResourceModal', () => {
     props: Partial<ComponentProps<typeof ResourceModal>> = {},
   ) => {
     render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <ResourceModal {...defaultProps} {...props} />
       </StaticRouter>,
     );

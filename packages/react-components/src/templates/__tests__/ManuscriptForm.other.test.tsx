@@ -17,7 +17,7 @@ import {
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import type {
   ByRoleOptions,
   waitForOptions,
@@ -148,7 +148,7 @@ describe('authors', () => {
       ]);
 
       const { getByLabelText, queryByText, getByText, findByRole } = render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...defaultProps}
@@ -217,7 +217,7 @@ describe('authors', () => {
       ]);
 
       const { getByLabelText, queryByText, getByText, findByRole } = render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...defaultProps}
@@ -293,7 +293,7 @@ describe('authors', () => {
       ]);
 
       const { getByLabelText, queryByText, getByText, findByRole } = render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...defaultProps}
@@ -357,7 +357,7 @@ describe('preprintDoi', () => {
     'preprintDoi is $status when lifecycle is $lifecycle',
     async ({ lifecycle, status }) => {
       const { getByRole } = render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...defaultProps}
@@ -426,7 +426,7 @@ describe('renders the necessary fields', () => {
         (lifecycle) => {
           const manuscriptLifecycle = lifecycle as ManuscriptLifecycle;
           const { getByText } = render(
-            <StaticRouter>
+            <StaticRouter location="/">
               <Suspense fallback={<div>Loading...</div>}>
                 <ManuscriptForm
                   {...defaultProps}
@@ -477,7 +477,7 @@ describe('manuscript file', () => {
       },
     );
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -511,7 +511,7 @@ describe('manuscript file', () => {
     });
 
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -541,7 +541,7 @@ describe('manuscript file', () => {
 
   it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
     const { getByLabelText, queryByText, getByText, getByRole } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -580,7 +580,7 @@ describe('manuscript file', () => {
 
   it('clears error when a valid manuscript file is uploaded after an error', async () => {
     const { getByLabelText, queryByText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -628,7 +628,7 @@ describe('manuscript file', () => {
 
   it('clears error when a valid key resource table is uploaded after an error', async () => {
     const { getByLabelText, queryByText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -673,7 +673,7 @@ describe('manuscript file', () => {
 
   it('clears error when a valid additional file is uploaded after an error', async () => {
     const { getByLabelText, queryByText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -737,7 +737,7 @@ describe('key resource table', () => {
         }),
     );
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -771,7 +771,7 @@ describe('key resource table', () => {
     });
 
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -808,7 +808,7 @@ describe('key resource table', () => {
       }),
     );
     const { getByLabelText, queryByText, getByText, getByRole } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -851,7 +851,7 @@ describe('additional files', () => {
   it('user can upload additional files', async () => {
     const onCreate = jest.fn();
     const { getByLabelText, queryByText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -899,7 +899,7 @@ describe('additional files', () => {
         }),
     );
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -926,7 +926,7 @@ describe('additional files', () => {
   it('user cannot upload the same file multiple times', async () => {
     const onCreate = jest.fn();
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -972,7 +972,7 @@ describe('additional files', () => {
     });
 
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -1002,7 +1002,7 @@ describe('additional files', () => {
 
   it('should remove one of the additional files without removing the others', async () => {
     const { queryByText, getByText, getAllByRole } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -1052,7 +1052,7 @@ it('user can add teams', async () => {
     { label: 'Team B', value: 'team-b' },
   ]);
   const { getByText, findByRole, getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1113,7 +1113,7 @@ it('user can add labs', async () => {
     { label: 'Lab Two', value: 'lab-2' },
   ]);
   const { getByText, findByRole, getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1167,7 +1167,7 @@ it('user can add labs', async () => {
 it('displays error message when no team is found', async () => {
   const getTeamSuggestionsMock = jest.fn().mockResolvedValue([]);
   const { queryByText, getByText, getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1184,7 +1184,7 @@ it('displays error message when no team is found', async () => {
 it('displays error message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   const { queryByText, getByText, getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1201,7 +1201,7 @@ it('displays error message when no lab is found', async () => {
 it('calls onUpdate when form is updated', async () => {
   const onUpdate = jest.fn();
   const { findByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1284,7 +1284,7 @@ it('calls onUpdate when form is updated', async () => {
 it('calls onResubmit when form details are saved and resubmitManuscript prop is true', async () => {
   const onResubmit = jest.fn();
   const { findByLabelText, findByRole, getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1408,7 +1408,7 @@ it('can generate short description when description is present', async () => {
     .mockResolvedValue('A tiny description');
 
   const { getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}

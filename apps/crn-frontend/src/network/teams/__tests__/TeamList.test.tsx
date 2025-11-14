@@ -9,7 +9,7 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 
 import Teams from '../TeamList';
-import { getTeams } from '../api';
+import { getAlgoliaTeams } from '../api';
 import { teamsState } from '../state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
@@ -18,7 +18,9 @@ jest.mock('../../users/api');
 jest.mock('../../interest-groups/api');
 jest.mock('../../working-groups/api');
 
-const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
+const mockGetAlgoliaTeams = getAlgoliaTeams as jest.MockedFunction<
+  typeof getAlgoliaTeams
+>;
 
 describe.each([
   ['discovery-teams', '/network/discovery-teams', 'Discovery Team'],
@@ -60,7 +62,7 @@ describe.each([
   it('renders a list of teams information', async () => {
     const response = createListTeamResponse(2);
 
-    mockGetTeams.mockResolvedValue({
+    mockGetAlgoliaTeams.mockResolvedValue({
       ...response,
       items: response.items.map((item, index) => ({
         ...item,
@@ -78,22 +80,22 @@ describe.each([
   });
 
   it('calls API with correct teamType parameter', async () => {
-    mockGetTeams.mockResolvedValue(createListTeamResponse(0));
+    mockGetAlgoliaTeams.mockResolvedValue(createListTeamResponse(0));
 
     await renderTeamList();
 
     await waitFor(() => {
-      expect(mockGetTeams).toHaveBeenCalledWith(
+      expect(mockGetAlgoliaTeams).toHaveBeenCalledWith(
+        expect.anything(),
         expect.objectContaining({
           teamType,
         }),
-        expect.anything(),
       );
     });
   });
 
   it('prefetches the opposite team type', async () => {
-    mockGetTeams.mockResolvedValue(createListTeamResponse(0));
+    mockGetAlgoliaTeams.mockResolvedValue(createListTeamResponse(0));
 
     await renderTeamList();
 
@@ -101,13 +103,13 @@ describe.each([
       teamType === 'Resource Team' ? 'Discovery Team' : 'Resource Team';
 
     await waitFor(() => {
-      expect(mockGetTeams).toHaveBeenCalledWith(
+      expect(mockGetAlgoliaTeams).toHaveBeenCalledWith(
+        expect.anything(),
         expect.objectContaining({
           teamType: oppositeTeamType,
           currentPage: 0,
           searchQuery: '',
         }),
-        expect.anything(),
       );
     });
   });

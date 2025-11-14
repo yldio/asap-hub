@@ -67,6 +67,7 @@
     "publishingEntity",
     "manuscriptId",
     "teams",
-    "assignedUsers"
+    "assignedUsers",
+    "projectTitle"
   ]
 }

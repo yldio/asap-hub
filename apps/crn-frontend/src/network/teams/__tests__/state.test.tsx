@@ -3,6 +3,7 @@ import {
   ManuscriptVersion,
   TeamDataObject,
   TeamManuscript,
+  TeamStatus,
   TeamType,
 } from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
@@ -49,11 +50,13 @@ jest.mock('../../../shared-api/files');
 
 const teamId = 'team-id-0';
 const teamType = 'Discovery Team' as TeamType;
+const teamStatus = 'Active' as TeamStatus;
 
 const teamMock = {
   id: 'id-0',
   teamId: 'team-id-0',
   teamType,
+  teamStatus,
   tags: [{ id: 'tag-1', name: 'Research' }],
   members: [],
   lastModifiedDate: '2021-09-01T00:00:00Z',
@@ -94,6 +97,7 @@ describe('team selectors', () => {
       id: 'id-0',
       teamId,
       teamType,
+      teamStatus,
       tags: [],
       members: [],
       lastModifiedDate: '2021-09-01T00:00:00Z',

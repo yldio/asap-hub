@@ -1,5 +1,5 @@
 import { render, waitFor } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { ComponentProps } from 'react';
 import userEvent from '@testing-library/user-event';
 
@@ -17,7 +17,7 @@ const props: ComponentProps<typeof ResearchOutputRelatedEventsCard> = {
 
 it('renders the related events card', async () => {
   const { getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputRelatedEventsCard {...props} />
     </StaticRouter>,
   );

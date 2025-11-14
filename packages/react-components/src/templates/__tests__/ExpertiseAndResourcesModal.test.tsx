@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
@@ -17,7 +17,7 @@ const props: ComponentProps<typeof ExpertiseAndResourcesModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<StaticRouter location="/">{children}</StaticRouter>);
 it('renders the title', () => {
   const { getByText } = renderModal(<ExpertiseAndResourcesModal {...props} />);
   expect(

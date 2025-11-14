@@ -1,5 +1,5 @@
 import { render, fireEvent } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import TabLink from '../TabLink';
@@ -43,7 +43,7 @@ describe.each`
 describe('with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const { getByRole } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <TabLink href="/">Text</TabLink>
       </StaticRouter>,
     );

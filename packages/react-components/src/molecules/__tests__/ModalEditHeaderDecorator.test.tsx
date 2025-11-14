@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import ModalEditHeaderDecorator from '../ModalEditHeaderDecorator';
 
@@ -8,7 +8,7 @@ const renderDecorator = (
   props: React.ComponentProps<typeof ModalEditHeaderDecorator>,
 ) =>
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ModalEditHeaderDecorator {...props} />
     </StaticRouter>,
   );

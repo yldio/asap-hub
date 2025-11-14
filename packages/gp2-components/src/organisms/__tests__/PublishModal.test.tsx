@@ -11,7 +11,7 @@ describe('PublishModal', () => {
   };
   it('renders the title', () => {
     render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <PublishModal {...defaultProps} />
       </StaticRouter>,
     );

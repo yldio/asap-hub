@@ -124,7 +124,7 @@ const renderManuscriptForm = async (
   props: ComponentProps<typeof ManuscriptForm>,
 ) => {
   const container = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm {...props} />
       </Suspense>
@@ -413,8 +413,8 @@ describe('Manuscript form', () => {
     const addFileButtons = document.querySelectorAll(
       'button:disabled',
     ) as NodeListOf<HTMLButtonElement>;
-    const disabledAddFileButtons = Array.from(addFileButtons).filter(
-      (button) => button.textContent?.includes('Add File'),
+    const disabledAddFileButtons = Array.from(addFileButtons).filter((button) =>
+      button.textContent?.includes('Add File'),
     );
     expect(disabledAddFileButtons.length).toBeGreaterThan(0);
 

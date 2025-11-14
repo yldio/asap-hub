@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { SharedResearchList } from '@asap-hub/react-components';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 
 import { number } from './knobs';
@@ -27,12 +27,12 @@ const props = (): ComponentProps<typeof SharedResearchList> => {
 };
 
 export const CardView = () => (
-  <StaticRouter>
+  <StaticRouter location="/">
     <SharedResearchList {...props()} isListView={false} />
   </StaticRouter>
 );
 export const ListView = () => (
-  <StaticRouter>
+  <StaticRouter location="/">
     <SharedResearchList {...props()} isListView />
   </StaticRouter>
 );

@@ -19,7 +19,7 @@ import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 jest.setTimeout(95_000);
 
 const renderWithRouter = (children: ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<StaticRouter location="/">{children}</StaticRouter>);
 
 describe('OutputForm', () => {
   const defaultProps = {

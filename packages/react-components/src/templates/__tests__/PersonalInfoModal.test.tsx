@@ -3,7 +3,7 @@ import { fireEvent } from '@testing-library/dom';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
@@ -14,7 +14,7 @@ const props: ComponentProps<typeof PersonalInfoModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<StaticRouter location="/">{children}</StaticRouter>);
 
 it('renders the title', () => {
   renderModal(

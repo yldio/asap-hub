@@ -1,10 +1,10 @@
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { generateKeyPairSync } from 'crypto';
-import { createMemoryHistory, History } from 'history';
 import { sign } from 'jsonwebtoken';
 import { useEffect } from 'react';
-import { Router, StaticRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import nock from 'nock';
 
@@ -14,6 +14,27 @@ import { authTestUtils } from '@asap-hub/react-components';
 import { useAuth0CRN } from '@asap-hub/react-context';
 
 import Signin from '../Signin';
+
+// Mock React Router v6 -> v7 deprecation warnings
+// These are known breaking changes that will need to be addressed in React Router v7
+const originalWarn = console.warn;
+beforeAll(() => {
+  console.warn = jest.fn((message, ...args) => {
+    // Suppress React Router v7 migration warnings
+    if (
+      typeof message === 'string' &&
+      message.includes('React Router Future Flag Warning')
+    ) {
+      return;
+    }
+    // Call original warn for other messages
+    originalWarn(message, ...args);
+  });
+});
+
+afterAll(() => {
+  console.warn = originalWarn;
+});
 
 let handleRedirectCallback: undefined | Auth0['handleRedirectCallback'];
 const renderSignin = async (): Promise<RenderResult> => {
@@ -85,7 +106,7 @@ afterEach(() => {
 
 it('renders a button to signin', async () => {
   const { getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Signin />
     </StaticRouter>,
   );
@@ -95,7 +116,7 @@ it('renders a button to signin', async () => {
 describe('when clicking the button', () => {
   beforeEach(async () => {
     const { getByText } = await renderSignin();
-    userEvent.click(getByText(/sign\sin/i));
+    await userEvent.click(getByText(/sign\sin/i));
   });
 
   it('redirects to the Auth0 signin page', async () => {
@@ -135,21 +156,46 @@ describe('when clicking the button', () => {
 });
 
 describe('after a failed flow', () => {
-  let history: History;
   let result!: RenderResult;
+  const locationRef = { current: '' };
+
+  const LocationCapture: React.FC = () => {
+    const location = useLocation();
+    useEffect(() => {
+      locationRef.current = location.search;
+    }, [location]);
+    return null;
+  };
 
   describe('for an unknown error', () => {
     beforeEach(() => {
-      history = createMemoryHistory({
-        initialEntries: [
-          '/?search&state=state&error=access_denied&error_description=Forbidden',
-        ],
+      // Explicitly mock console.warn for this test to suppress React Router v6->v7 deprecation warnings
+      jest.spyOn(console, 'warn').mockImplementation((message, ...args) => {
+        if (
+          typeof message === 'string' &&
+          message.includes('React Router Future Flag Warning')
+        ) {
+          return;
+        }
+        // Call through to jest-fail-on-console for other warnings
+        (console.warn as any).mockRestore?.();
+        console.warn(message, ...args);
       });
+
       result = render(
-        <Router history={history}>
+        <MemoryRouter
+          initialEntries={[
+            '/?search&state=state&error=access_denied&error_description=Forbidden',
+          ]}
+        >
+          <LocationCapture />
           <Signin />
-        </Router>,
+        </MemoryRouter>,
       );
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
     });
 
     it('shows an error message', () => {
@@ -157,32 +203,35 @@ describe('after a failed flow', () => {
     });
 
     describe('when closing the error message', () => {
-      beforeEach(() => {
-        userEvent.click(result.getByText('Close'));
+      beforeEach(async () => {
+        await userEvent.click(result.getByText('Close'));
       });
 
-      it('hides the error message', () => {
-        expect(result.container).not.toHaveTextContent(/problem/i);
+      it('hides the error message', async () => {
+        await waitFor(() => {
+          expect(result.container).not.toHaveTextContent(/problem/i);
+        });
       });
 
-      it('removes related query params', () => {
-        const searchParams = new URLSearchParams(history.location.search);
-        expect([...searchParams.keys()]).toEqual(['search']);
+      it('removes related query params', async () => {
+        await waitFor(() => {
+          const searchParams = new URLSearchParams(locationRef.current);
+          expect([...searchParams.keys()]).toEqual(['search']);
+        });
       });
     });
   });
 
   describe('for an alumni error', () => {
     beforeEach(() => {
-      history = createMemoryHistory({
-        initialEntries: [
-          '/?search&state=state&error=access_denied&error_description=alumni-user-access-denied',
-        ],
-      });
       result = render(
-        <Router history={history}>
+        <MemoryRouter
+          initialEntries={[
+            '/?search&state=state&error=access_denied&error_description=alumni-user-access-denied',
+          ]}
+        >
           <Signin />
-        </Router>,
+        </MemoryRouter>,
       );
     });
 

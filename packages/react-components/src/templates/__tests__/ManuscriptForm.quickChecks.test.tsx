@@ -1,6 +1,6 @@
 import { render, waitFor, within } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import userEvent from '@testing-library/user-event';
 import { createMessage } from '@asap-hub/fixtures';
 import {
@@ -158,7 +158,7 @@ describe('QuickCheck logic', () => {
         getDiscussion,
       };
       const { findByRole, queryByText } = render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...props}
@@ -269,7 +269,7 @@ describe('QuickCheck logic', () => {
         getDiscussion,
       };
       const { findByRole } = render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...props}
@@ -371,7 +371,7 @@ describe('QuickCheck logic', () => {
         [fieldDetails]: { message: { text: 'Explanation' } },
       };
       const { findByRole, getByRole, getByTestId } = render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...props}
@@ -450,7 +450,7 @@ describe('QuickCheck logic', () => {
       getAllByText,
       getByRole,
     } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -510,7 +510,7 @@ describe('QuickCheck logic', () => {
   it('displays an error message when quick check detail is longer than 256 characters', async () => {
     const onCreate = jest.fn();
     const { findByText, getByLabelText, queryByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}

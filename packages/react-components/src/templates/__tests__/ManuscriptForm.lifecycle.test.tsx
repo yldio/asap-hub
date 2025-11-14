@@ -6,7 +6,7 @@ import {
 import { cleanup, render, screen, waitFor, act } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import ManuscriptForm from '../ManuscriptForm';
 
 jest.setTimeout(30_000);
@@ -92,7 +92,7 @@ const renderManuscriptForm = async (
   props: ComponentProps<typeof ManuscriptForm>,
 ) => {
   const container = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm {...props} />
       </Suspense>

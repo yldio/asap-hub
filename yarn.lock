@@ -11880,18 +11880,18 @@ __metadata:
   linkType: hard
 
 "@contentful/field-editor-date@npm:^1.6.2":
-  version: 1.9.20
-  resolution: "@contentful/field-editor-date@npm:1.9.20"
+  version: 1.9.21
+  resolution: "@contentful/field-editor-date@npm:1.9.21"
   dependencies:
     "@contentful/f36-components": ^5.4.1
     "@contentful/f36-tokens": ^5.1.0
-    "@contentful/field-editor-shared": ^2.16.0
+    "@contentful/field-editor-shared": ^2.17.0
     emotion: ^10.0.17
     moment: ^2.20.0
   peerDependencies:
     "@lingui/core": ^5.3.0
     react: ">=16.8.0"
-  checksum: 54d93641c027e142311bd6f4a31bb127117609b1cfb19d932530a4db2e9bad1068f50c38bcf0d6eb4755fcab8024c93f7edbff85f938e89dbd5ba06072655105
+  checksum: 61421fd964aa777b7d1380fa3c5c555ac1cb3847586071e0bc41cf35ed3771f69caedb6f585c4f7dd90f7a713df234e0eb17c4ff0e6ad4bcff2eaa9ec500c687
   languageName: node
   linkType: hard
 
@@ -11943,9 +11943,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/field-editor-shared@npm:^2.16.0":
-  version: 2.16.0
-  resolution: "@contentful/field-editor-shared@npm:2.16.0"
+"@contentful/field-editor-shared@npm:^2.17.0":
+  version: 2.17.0
+  resolution: "@contentful/field-editor-shared@npm:2.17.0"
   dependencies:
     "@contentful/f36-components": ^5.4.1
     "@contentful/f36-icons": ^5.4.1
@@ -11960,7 +11960,7 @@ __metadata:
     "@lingui/core": ^5.3.0
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 7c3f9996bd405e926f6c833c8cf234519f7898f9f4a3e244ba21f0c92623b4d81e21a4c7e18c3776cc38925fc081cf17da51890cedabe719c15bf36791a82d4a
+  checksum: 273df15624db2ac8fc3729ff3868a758c54e5281e3cf87f56eee43aedfa12cda2adbaaac4e11f9ce04d5b5acdd6a4f50989ef3e0e6fa48a1577715adeb498b2b
   languageName: node
   linkType: hard
 

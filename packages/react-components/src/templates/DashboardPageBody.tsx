@@ -34,7 +34,6 @@ import { getIconForDocumentType, isInternalLink } from '../utils';
 const styles = css({
   display: 'grid',
   gridRowGap: rem(56),
-  marginBottom: rem(25),
 });
 
 const infoStyles = css({

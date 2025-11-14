@@ -3,12 +3,8 @@ import { css } from '@emotion/react';
 
 import AnalyticsPageHeader from './AnalyticsPageHeader';
 import AnalyticsMobilePage from './AnalyticsMobilePage';
-import { defaultPageLayoutPaddingStyle } from '../layout';
 import { mobileScreen } from '../pixels';
-
-const mainStyles = css({
-  padding: defaultPageLayoutPaddingStyle,
-});
+import PageConstraints from './PageConstraints';
 
 const pageMobileStyles = css({
   [`@media (min-width: ${mobileScreen.max}px)`]: {
@@ -30,7 +26,7 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
   <article>
     <div css={pageDesktopStyles}>
       <AnalyticsPageHeader onExportAnalytics={onExportAnalytics} />
-      <main css={mainStyles}>{children}</main>
+      <PageConstraints as="main">{children}</PageConstraints>
     </div>
     <div css={pageMobileStyles}>
       <AnalyticsMobilePage />

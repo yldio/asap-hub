@@ -8,7 +8,6 @@ import { EventIcon } from '../icons';
 import { charcoal } from '../colors';
 
 const containerStyles = css({
-  paddingTop: rem(36),
   display: 'grid',
   gridRowGap: rem(36),
 });

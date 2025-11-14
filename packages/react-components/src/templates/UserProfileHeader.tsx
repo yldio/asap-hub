@@ -4,9 +4,8 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
 import { Avatar, Display, Link, TabLink, StateTag, CopyButton } from '../atoms';
-import { paper, tin } from '../colors';
+import { tin } from '../colors';
 import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
-import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
 import { Toast } from '../organisms';
@@ -14,25 +13,22 @@ import {
   largeDesktopScreen,
   mobileScreen,
   rem,
-  tabletScreen,
   vminLinearCalc,
+  smallDesktopScreen,
 } from '../pixels';
 import { formatDateToTimezone } from '../date';
+import PageInfoContainer from './PageInfoContainer';
 
 const middleSizeQuery = '@media (min-width: 620px)';
-const bigSizeQuery = `@media (min-width: ${tabletScreen.width}px)`;
+const bigSizeQuery = `@media (min-width: ${smallDesktopScreen.width}px)`;
 
 const containerStyles = css({
-  backgroundColor: paper.rgb,
-  padding: `${rem(12)} ${contentSidePaddingWithNavigation(8)} 0`,
-
   display: 'grid',
   grid: `
     ".             edit-personal-info" ${rem(24)}
     "personal-info personal-info     " auto
     "contact       edit-contact-info " auto
     "social        social            " auto
-    "tab-nav       tab-nav           " auto
       / 1fr ${rem(36)}
   `,
   gridColumnGap: rem(12),
@@ -42,17 +38,14 @@ const containerStyles = css({
       ".             .             edit-personal-info" ${rem(24)}
       "personal-info personal-info personal-info     " auto
       "contact       social        edit-contact-info " auto
-      "tab-nav       tab-nav       tab-nav           " auto
         / max-content 1fr ${rem(36)}
     `,
   },
 
   [bigSizeQuery]: {
-    paddingTop: rem(36),
     grid: `
       "edit-personal-info personal-info personal-info ."
       "edit-contact-info  contact       social        ."
-      ".                  tab-nav       tab-nav       ."
         / ${rem(36)} max-content 1fr ${rem(36)}
     `,
     gridColumnGap: vminLinearCalc(
@@ -69,11 +62,6 @@ const nameHeaderStyles = css({
   display: 'flex',
   alignItems: 'center',
   gap: rem(6),
-  [`@media (max-width: ${tabletScreen.max}px)`]: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginBottom: rem(24),
-  },
 });
 
 const editPersonalInfoStyles = css({
@@ -86,12 +74,6 @@ const personalInfoStyles = css({
 
   display: 'flex',
   flexDirection: 'column-reverse',
-
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    // only on big grid to avoid potential Avatar <=> Edit Button overlap
-    flexDirection: 'row',
-    flexWrap: 'wrap-reverse',
-  },
 
   justifyContent: 'space-between',
   alignItems: 'start',
@@ -123,9 +105,6 @@ const socialIconStyles = css({
   gridArea: 'social',
 });
 
-const tabNavStyles = css({
-  gridArea: 'tab-nav',
-});
 const avatarContainer = css({
   display: 'grid',
   width: 90,
@@ -173,6 +152,15 @@ type UserProfileHeaderProps = Pick<
   readonly pastEventsCount?: number;
 };
 
+// TODO: Temporary hack to accommodate the component until ASAP-1233 is done
+const relativeAnchor = css({
+  position: 'relative',
+  left: 0,
+  [bigSizeQuery]: {
+    left: rem(-64),
+  },
+});
+
 const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   id,
   lastModifiedDate,
@@ -197,7 +185,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 
   editPersonalInfoHref,
   editContactInfoHref,
-  role,
+  role: _role,
   social,
   sharedOutputsCount,
   upcomingEventsCount,
@@ -228,149 +216,157 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           .
         </Toast>
       )}
-      <header css={[containerStyles]}>
-        <section css={personalInfoStyles}>
-          <div>
-            <div css={nameHeaderStyles}>
-              <div css={{ display: 'flex' }}>
-                <Display styleAsHeading={2}>{fullDisplayName}</Display>
-                {degree ? (
-                  <Display styleAsHeading={2}>, {degree}</Display>
-                ) : isOwnProfile ? (
-                  <div css={{ color: tin.rgb }}>
-                    <Display styleAsHeading={2}>, Degree</Display>
+      <header>
+        <PageInfoContainer
+          nav={
+            <TabNav>
+              <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
+              <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
+              <TabLink href={tabRoutes.outputs({}).$}>
+                Shared Outputs
+                {sharedOutputsCount !== undefined && ` (${sharedOutputsCount})`}
+              </TabLink>
+              <TabLink href={tabRoutes.upcoming({}).$}>
+                Upcoming Events
+                {upcomingEventsCount !== undefined &&
+                  ` (${upcomingEventsCount})`}
+              </TabLink>
+
+              <TabLink href={tabRoutes.past({}).$}>
+                Past Events
+                {pastEventsCount !== undefined && ` (${pastEventsCount})`}
+              </TabLink>
+            </TabNav>
+          }
+        >
+          <div css={relativeAnchor}>
+            <div css={[containerStyles]}>
+              <section css={personalInfoStyles}>
+                <div>
+                  <div css={nameHeaderStyles}>
+                    <div css={{ display: 'flex' }}>
+                      <Display styleAsHeading={2}>{fullDisplayName}</Display>
+                      {degree ? (
+                        <Display styleAsHeading={2}>, {degree}</Display>
+                      ) : isOwnProfile ? (
+                        <div css={{ color: tin.rgb }}>
+                          <Display styleAsHeading={2}>, Degree</Display>
+                        </div>
+                      ) : null}
+                    </div>
+                    {alumniSinceDate && (
+                      <StateTag icon={alumniBadgeIcon} label="Alumni" />
+                    )}
                   </div>
-                ) : null}
-              </div>
-              {alumniSinceDate && (
-                <StateTag icon={alumniBadgeIcon} label="Alumni" />
-              )}
-            </div>
-            <UserProfilePersonalText
-              institution={institution}
-              country={country}
-              stateOrProvince={stateOrProvince}
-              city={city}
-              jobTitle={jobTitle}
-              teams={teams}
-              labs={labs}
-              userActiveTeamsRoute={tabRoutes.research({}).$}
-              isAlumni={!!alumniSinceDate}
-            />
-          </div>
-          <div css={avatarContainer}>
-            <div css={imageContainer}>
-              <Avatar
-                imageUrl={avatarUrl}
-                firstName={firstName}
-                lastName={lastName}
-              />
-            </div>
-            {onImageSelect && (
-              <div css={editButtonContainer}>
-                <label>
+                  <UserProfilePersonalText
+                    institution={institution}
+                    country={country}
+                    stateOrProvince={stateOrProvince}
+                    city={city}
+                    jobTitle={jobTitle}
+                    teams={teams}
+                    labs={labs}
+                    userActiveTeamsRoute={tabRoutes.research({}).$}
+                    isAlumni={!!alumniSinceDate}
+                  />
+                </div>
+                <div css={avatarContainer}>
+                  <div css={imageContainer}>
+                    <Avatar
+                      imageUrl={avatarUrl}
+                      firstName={firstName}
+                      lastName={lastName}
+                    />
+                  </div>
+                  {onImageSelect && (
+                    <div css={editButtonContainer}>
+                      <label>
+                        <Link
+                          buttonStyle
+                          small
+                          primary
+                          href={undefined}
+                          label="Edit Avatar"
+                          enabled={!avatarSaving}
+                        >
+                          {uploadIcon}
+                          <input
+                            disabled={avatarSaving}
+                            type="file"
+                            accept="image/x-png,image/jpeg"
+                            aria-label="Upload Avatar"
+                            onChange={(event) =>
+                              event.target.files?.length &&
+                              event.target.files[0] &&
+                              onImageSelect(event.target.files[0])
+                            }
+                            css={{ display: 'none' }}
+                          />
+                        </Link>
+                      </label>
+                    </div>
+                  )}
+                </div>
+              </section>
+              {editPersonalInfoHref && (
+                <div css={editPersonalInfoStyles}>
                   <Link
                     buttonStyle
                     small
                     primary
-                    href={undefined}
-                    label="Edit Avatar"
-                    enabled={!avatarSaving}
+                    href={editPersonalInfoHref}
+                    label="Edit personal information"
                   >
-                    {uploadIcon}
-                    <input
-                      disabled={avatarSaving}
-                      type="file"
-                      accept="image/x-png,image/jpeg"
-                      aria-label="Upload Avatar"
-                      onChange={(event) =>
-                        event.target.files?.length &&
-                        event.target.files[0] &&
-                        onImageSelect(event.target.files[0])
-                      }
-                      css={{ display: 'none' }}
-                    />
+                    {editIcon}
                   </Link>
-                </label>
+                </div>
+              )}
+              <section
+                css={[
+                  contactStyles,
+                  editContactInfoHref ? null : contactNoEditStyles,
+                ]}
+              >
+                <Link
+                  small
+                  buttonStyle
+                  primary
+                  href={createMailTo(contactEmail || email)}
+                >
+                  Contact
+                </Link>
+                <div
+                  css={{
+                    margin: `${rem(12)} ${rem(8)}`,
+                  }}
+                >
+                  <CopyButton
+                    hoverTooltipText="Copy Email"
+                    clickTooltipText="Email Copied"
+                    onClick={() => navigator.clipboard.writeText(email)}
+                  />
+                </div>
+              </section>
+
+              {editContactInfoHref && (
+                <div css={editContactStyles}>
+                  <Link
+                    buttonStyle
+                    small
+                    primary
+                    href={editContactInfoHref}
+                    label="Edit contact information"
+                  >
+                    {editIcon}
+                  </Link>
+                </div>
+              )}
+              <div css={[socialIconStyles]}>
+                <SocialIcons {...social} />
               </div>
-            )}
+            </div>
           </div>
-        </section>
-        {editPersonalInfoHref && (
-          <div css={editPersonalInfoStyles}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={editPersonalInfoHref}
-              label="Edit personal information"
-            >
-              {editIcon}
-            </Link>
-          </div>
-        )}
-        <section
-          css={[
-            contactStyles,
-            editContactInfoHref ? null : contactNoEditStyles,
-          ]}
-        >
-          <Link
-            small
-            buttonStyle
-            primary
-            href={createMailTo(contactEmail || email)}
-          >
-            Contact
-          </Link>
-          <div
-            css={{
-              margin: `${rem(12)} ${rem(8)}`,
-            }}
-          >
-            <CopyButton
-              hoverTooltipText="Copy Email"
-              clickTooltipText="Email Copied"
-              onClick={() => navigator.clipboard.writeText(email)}
-            />
-          </div>
-        </section>
-
-        {editContactInfoHref && (
-          <div css={editContactStyles}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={editContactInfoHref}
-              label="Edit contact information"
-            >
-              {editIcon}
-            </Link>
-          </div>
-        )}
-        <div css={[socialIconStyles]}>
-          <SocialIcons {...social} />
-        </div>
-        <div css={tabNavStyles}>
-          <TabNav>
-            <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
-            <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
-            <TabLink href={tabRoutes.outputs({}).$}>
-              Shared Outputs
-              {sharedOutputsCount !== undefined && ` (${sharedOutputsCount})`}
-            </TabLink>
-            <TabLink href={tabRoutes.upcoming({}).$}>
-              Upcoming Events
-              {upcomingEventsCount !== undefined && ` (${upcomingEventsCount})`}
-            </TabLink>
-
-            <TabLink href={tabRoutes.past({}).$}>
-              Past Events
-              {pastEventsCount !== undefined && ` (${pastEventsCount})`}
-            </TabLink>
-          </TabNav>
-        </div>
+        </PageInfoContainer>
       </header>
     </>
   );

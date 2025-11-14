@@ -1,12 +1,7 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 
 import NetworkPageHeader from './NetworkPageHeader';
-import { networkPageLayoutPaddingStyle } from '../layout';
-
-const mainStyles = css({
-  padding: networkPageLayoutPaddingStyle,
-});
+import PageConstraints from './PageConstraints';
 
 const NetworkPage: React.FC<ComponentProps<typeof NetworkPageHeader>> = ({
   children,
@@ -15,7 +10,7 @@ const NetworkPage: React.FC<ComponentProps<typeof NetworkPageHeader>> = ({
 }) => (
   <article>
     <NetworkPageHeader {...props} />
-    <main css={mainStyles}>{children}</main>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

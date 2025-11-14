@@ -12,11 +12,6 @@ import { useFlags } from '@asap-hub/react-context';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { rem } from '../pixels';
-import { paper, steel } from '../colors';
-import {
-  networkPageLayoutPaddingStyle,
-  defaultPageLayoutPaddingStyle,
-} from '../layout';
 import { SearchAndFilter } from '../organisms';
 import { Option, Title } from '../organisms/CheckboxGroup';
 import { TabNav } from '../molecules';
@@ -28,19 +23,11 @@ import {
   ResourceTeamIcon,
 } from '../icons';
 import { queryParamString } from '../routing';
-
-const visualHeaderStyles = css({
-  padding: `${defaultPageLayoutPaddingStyle} 0`,
-  background: paper.rgb,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-});
+import PageInfoContainer from './PageInfoContainer';
+import PageConstraints from './PageConstraints';
 
 const textStyles = css({
   maxWidth: rem(610),
-});
-
-const controlsStyles = css({
-  padding: `${networkPageLayoutPaddingStyle} 0`,
 });
 
 type Page =
@@ -162,57 +149,62 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
 
   return (
     <header>
-      <div css={visualHeaderStyles}>
+      <PageInfoContainer
+        nav={
+          <TabNav>
+            <TabLink
+              href={network({}).users({}).$ + queryParamString(searchQuery)}
+              Icon={UserIcon}
+            >
+              People
+            </TabLink>
+            <TabLink
+              href={
+                network({}).discoveryTeams({}).$ + queryParamString(searchQuery)
+              }
+              Icon={DiscoveryTeamIcon}
+            >
+              Discovery Teams
+            </TabLink>
+            <TabLink
+              href={
+                network({}).resourceTeams({}).$ + queryParamString(searchQuery)
+              }
+              Icon={ResourceTeamIcon}
+            >
+              Resource Teams
+            </TabLink>
+            <TabLink
+              href={
+                network({}).interestGroups({}).$ + queryParamString(searchQuery)
+              }
+              Icon={InterestGroupsIcon}
+            >
+              Interest Groups
+            </TabLink>
+            <TabLink
+              href={
+                network({}).workingGroups({}).$ + queryParamString(searchQuery)
+              }
+              Icon={WorkingGroupsIcon}
+            >
+              Working Groups
+            </TabLink>
+          </TabNav>
+        }
+      >
         <Display styleAsHeading={2}>Network</Display>
         <div css={textStyles}>
           <Paragraph accent="lead">
             Explore the ASAP Network and collaborate!
           </Paragraph>
         </div>
-        <TabNav>
-          <TabLink
-            href={network({}).users({}).$ + queryParamString(searchQuery)}
-            Icon={UserIcon}
-          >
-            People
-          </TabLink>
-          <TabLink
-            href={
-              network({}).discoveryTeams({}).$ + queryParamString(searchQuery)
-            }
-            Icon={DiscoveryTeamIcon}
-          >
-            Discovery Teams
-          </TabLink>
-          <TabLink
-            href={
-              network({}).resourceTeams({}).$ + queryParamString(searchQuery)
-            }
-            Icon={ResourceTeamIcon}
-          >
-            Resource Teams
-          </TabLink>
-          <TabLink
-            href={
-              network({}).interestGroups({}).$ + queryParamString(searchQuery)
-            }
-            Icon={InterestGroupsIcon}
-          >
-            Interest Groups
-          </TabLink>
-          <TabLink
-            href={
-              network({}).workingGroups({}).$ + queryParamString(searchQuery)
-            }
-            Icon={WorkingGroupsIcon}
-          >
-            Working Groups
-          </TabLink>
-        </TabNav>
-      </div>
-      {pageDescription && <div css={controlsStyles}>{pageDescription}</div>}
+      </PageInfoContainer>
+      {pageDescription && (
+        <PageConstraints noPaddingBottom>{pageDescription}</PageConstraints>
+      )}
       {showSearch && (
-        <div css={controlsStyles}>
+        <PageConstraints noPaddingBottom>
           <SearchAndFilter
             onChangeSearch={onChangeSearchQuery}
             searchQuery={searchQuery}
@@ -220,7 +212,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
             filters={filters}
             {...getFilterOptionsAndPlaceholder(page, isDataManagerEnabled)}
           />
-        </div>
+        </PageConstraints>
       )}
     </header>
   );

@@ -2,26 +2,11 @@ import { UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { SharedResearchList } from '.';
-import {
-  rem,
-  vminLinearCalc,
-  mobileScreen,
-  largeDesktopScreen,
-  tabletScreen,
-} from '../pixels';
+import { rem } from '../pixels';
 import NoOutputsPage from './NoOutputsPage';
 
 const styles = css({
-  padding: `${rem(24)} calc(${rem(36)} + ${vminLinearCalc(
-    mobileScreen,
-    24,
-    largeDesktopScreen,
-    30,
-    'px',
-  )})`,
-  [`@media (max-width: ${tabletScreen.max}px)`]: {
-    padding: `${rem(24)} 0`,
-  },
+  paddingTop: rem(48),
 });
 
 export type UserProfileOutputsProps = Omit<

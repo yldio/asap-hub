@@ -5,7 +5,6 @@ import React, { ComponentProps, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Card, Headline2, Link, Markdown } from '../atoms';
-import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo, mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
 import { CtaCard } from '../molecules';
 import {
@@ -26,10 +25,7 @@ import {
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
 } from '../utils';
-
-const containerStyles = css({
-  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)}`,
-});
+import PageConstraints from './PageConstraints';
 
 const cardsStyles = css({
   display: 'grid',
@@ -181,7 +177,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         associationName={associationName}
         isInReview={isInReview}
       />
-      <div css={containerStyles}>
+      <PageConstraints>
         {!isGrantDocument && (
           <SharedResearchOutputButtons
             id={id}
@@ -326,7 +322,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             </CtaCard>
           )}
         </div>
-      </div>
+      </PageConstraints>
     </div>
   );
 };

@@ -25,6 +25,10 @@ export type TutorialPayload = WebhookDetail<
 
 export type NewsPayload = WebhookDetail<ContentfulWebhookPayload<'news'>>;
 
+export type ProjectPayload = WebhookDetail<
+  ContentfulWebhookPayload<'projects'>
+>;
+
 export type ManuscriptPayload = WebhookDetail<
   ContentfulWebhookPayload<'manuscripts'>
 >;

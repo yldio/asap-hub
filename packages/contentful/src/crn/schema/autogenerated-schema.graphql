@@ -4804,6 +4804,8 @@ enum MilestonesLinkingCollectionsProjectsCollectionOrder {
   contactEmail_DESC
   endDate_ASC
   endDate_DESC
+  googleDriveLink_ASC
+  googleDriveLink_DESC
   grantId_ASC
   grantId_DESC
   projectId_ASC
@@ -5300,6 +5302,8 @@ enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
   contactEmail_DESC
   endDate_ASC
   endDate_DESC
+  googleDriveLink_ASC
+  googleDriveLink_DESC
   grantId_ASC
   grantId_DESC
   projectId_ASC
@@ -5342,6 +5346,7 @@ type Projects implements Entry & _Node {
   contactEmail(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   endDate(locale: String): DateTime
+  googleDriveLink(locale: String): String
   grantId(locale: String): String
   linkedFrom(allowedLocales: [String]): ProjectsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectsMembersCollection
@@ -5393,6 +5398,13 @@ input ProjectsFilter {
   endDate_lte: DateTime
   endDate_not: DateTime
   endDate_not_in: [DateTime]
+  googleDriveLink: String
+  googleDriveLink_contains: String
+  googleDriveLink_exists: Boolean
+  googleDriveLink_in: [String]
+  googleDriveLink_not: String
+  googleDriveLink_not_contains: String
+  googleDriveLink_not_in: [String]
   grantId: String
   grantId_contains: String
   grantId_exists: Boolean
@@ -5516,6 +5528,8 @@ enum ProjectsOrder {
   contactEmail_DESC
   endDate_ASC
   endDate_DESC
+  googleDriveLink_ASC
+  googleDriveLink_DESC
   grantId_ASC
   grantId_DESC
   projectId_ASC
@@ -6303,6 +6317,8 @@ enum ResearchOutputsLinkingCollectionsProjectsCollectionOrder {
   contactEmail_DESC
   endDate_ASC
   endDate_DESC
+  googleDriveLink_ASC
+  googleDriveLink_DESC
   grantId_ASC
   grantId_DESC
   projectId_ASC
@@ -6819,6 +6835,8 @@ enum ResearchTagsLinkingCollectionsProjectsCollectionOrder {
   contactEmail_DESC
   endDate_ASC
   endDate_DESC
+  googleDriveLink_ASC
+  googleDriveLink_DESC
   grantId_ASC
   grantId_DESC
   projectId_ASC
@@ -7169,6 +7187,8 @@ enum ResourceTypeLinkingCollectionsProjectsCollectionOrder {
   contactEmail_DESC
   endDate_ASC
   endDate_DESC
+  googleDriveLink_ASC
+  googleDriveLink_DESC
   grantId_ASC
   grantId_DESC
   projectId_ASC
@@ -7276,6 +7296,8 @@ enum SupplementGrantLinkingCollectionsProjectsCollectionOrder {
   contactEmail_DESC
   endDate_ASC
   endDate_DESC
+  googleDriveLink_ASC
+  googleDriveLink_DESC
   grantId_ASC
   grantId_DESC
   projectId_ASC

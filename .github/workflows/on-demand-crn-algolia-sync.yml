@@ -14,6 +14,7 @@ on:
           - manuscripts
           - manuscript-versions
           - news
+          - projects
           - research-outputs
           - teams
           - tutorials

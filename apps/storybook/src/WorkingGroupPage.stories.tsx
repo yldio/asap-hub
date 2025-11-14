@@ -1,5 +1,5 @@
 import { ComponentProps, useState } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import {
   WorkingGroupAbout,
   WorkingGroupPage,

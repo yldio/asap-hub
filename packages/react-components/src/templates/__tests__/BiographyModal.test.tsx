@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import BiographyModal from '../BiographyModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<StaticRouter location="/">{children}</StaticRouter>);
 
 it('renders a form to edit the biography', () => {
   const { getByRole } = renderModal(<BiographyModal backHref="#" />);

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UserResponse } from '@asap-hub/model';
@@ -7,7 +7,7 @@ import { UserResponse } from '@asap-hub/model';
 import ContactInfoModal from '../ContactInfoModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<StaticRouter location="/">{children}</StaticRouter>);
 it('renders a form to edit the contact info', () => {
   const { getByText } = renderModal(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,

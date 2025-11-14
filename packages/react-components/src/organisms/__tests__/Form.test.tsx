@@ -22,7 +22,7 @@ beforeEach(() => {
   history = createMemoryHistory({ getUserConfirmation });
 });
 const renderForm = (children: ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<StaticRouter location="/">{children}</StaticRouter>);
 
 it('renders a form with given children', () => {
   const { getByText } = renderForm(<Form {...props}>{() => 'Content'}</Form>);

@@ -5,7 +5,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { Auth0Provider, WhenReady } from '../auth/test-utils';
@@ -34,7 +34,7 @@ const renderAuthenticatedApp = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{ id }}>
           <WhenReady>
-            <StaticRouter>
+            <StaticRouter location="/">
               <OnboardedApp />
             </StaticRouter>
           </WhenReady>

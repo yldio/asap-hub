@@ -28,7 +28,7 @@ const defaultProps = {
 
 it('renders the form', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -54,7 +54,7 @@ it('data is sent on form submission and calls setManuscript', async () => {
   };
   const setManuscript = jest.fn();
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm
         {...defaultProps}
         url="http://example.com"
@@ -105,7 +105,7 @@ it('data is sent on form submission without calling setManuscript', async () => 
   const setManuscript = jest.fn();
 
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm
         {...defaultProps}
         url="http://example.com"
@@ -146,7 +146,7 @@ it('data is sent on form submission without calling setManuscript', async () => 
 
 it('displays error message when url is missing', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -171,7 +171,7 @@ it('displays error message when url is missing', async () => {
 
 it('displays error message when description is missing', async () => {
   const { getByTestId, queryByText, getAllByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -228,7 +228,7 @@ it('should go back when cancel button is clicked', () => {
 
 it('should dismiss confirmation modal when Keep Editing button is clicked', () => {
   const { getByText, getByRole, queryByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -252,7 +252,7 @@ it('should dismiss confirmation modal when Keep Editing button is clicked', () =
 
 it('should focus the Lexical editor when pressing Tab on the URL input', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -278,7 +278,7 @@ it('should focus the Lexical editor when pressing Tab on the URL input', async (
 
 it('should show compliant modal when compliant status is selected', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm
         {...defaultProps}
         url="http://example.com"
@@ -309,7 +309,7 @@ it('should show compliant modal when compliant status is selected', async () => 
 
 it('should show "closed (other)" modal when compliant status is selected', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm
         {...defaultProps}
         url="http://example.com"

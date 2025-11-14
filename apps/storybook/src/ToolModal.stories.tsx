@@ -1,5 +1,5 @@
 import { ToolModal } from '@asap-hub/react-components';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import { text } from './knobs';
 
@@ -9,7 +9,7 @@ export default {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/">
     <ToolModal
       title={text('Title', 'Edit Tool')}
       name="Slack (#team-ferguson)"

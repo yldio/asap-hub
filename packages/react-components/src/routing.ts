@@ -1,6 +1,5 @@
 import { searchQueryParam } from '@asap-hub/routing';
-import { History } from 'history';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, NavigateFunction } from 'react-router-dom';
 
 export const queryParamString = (searchQuery: string | undefined): string => {
   let searchQueryParamString = '';
@@ -23,11 +22,19 @@ export const useHasRouter = (): boolean => {
 
 export const usePushFromPathname = (
   pathname: string,
-): History<unknown>['push'] => {
-  const history = useHistory();
-  return (...args: Parameters<(typeof history)['push']>) => {
-    if (history.location.pathname === pathname) {
-      history.push(...args);
+): NavigateFunction => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  return (to: string | number | { pathname?: string; search?: string; hash?: string }, options?: { replace?: boolean; state?: unknown }) => {
+    if (location.pathname === pathname) {
+      if (typeof to === 'number') {
+        navigate(to);
+      } else if (typeof to === 'string') {
+        navigate(to, options);
+      } else {
+        const path = `${to.pathname || ''}${to.search || ''}${to.hash || ''}`;
+        navigate(path, options);
+      }
     }
   };
 };

@@ -1632,6 +1632,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     loadOptions={getTeamSuggestions!}
                     onChange={(selectedOptions: MultiSelectOptionsType) => {
                       onChange(selectedOptions);
+                      // Wait for React Hook Form state to update before validating
                       validateTeams();
                     }}
                     customValidationMessage={error?.message}
@@ -1672,7 +1673,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     loadOptions={getLabSuggestions!}
                     onChange={(selectedOptions: MultiSelectOptionsType) => {
                       onChange(selectedOptions);
-                      validateTeams();
+                      // Wait for React Hook Form state to update before validating
+                      setTimeout(() => validateTeams(), 0);
                     }}
                     values={value}
                     noOptionsMessage={({

@@ -1,5 +1,5 @@
 import { ComponentProps, FC, lazy, ReactElement } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { NoEvents } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
@@ -50,41 +50,41 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
   Compliance,
 }) => (
   <Frame title={displayName}>
-    <Switch>
-      <Route path={paths.about}>
+    <Routes>
+      <Route path={paths.about} element={
         <Frame title="About">{<About />}</Frame>
-      </Route>
+      } />
       {isActive && Calendar && (
-        <Route path={paths.calendar}>
+        <Route path={paths.calendar} element={
           <Frame title="Calendar">
             <Calendar />
           </Frame>
-        </Route>
+        } />
       )}
       {Outputs && (
-        <Route path={paths.outputs}>
+        <Route path={paths.outputs} element={
           <SearchFrame title="Outputs">{Outputs}</SearchFrame>
-        </Route>
+        } />
       )}
       {DraftOutputs && (
-        <Route path={paths.draftOutputs}>
+        <Route path={paths.draftOutputs} element={
           <SearchFrame title="Draft Outputs">{DraftOutputs}</SearchFrame>
-        </Route>
+        } />
       )}
       {Workspace && (
-        <Route path={paths.workspace}>
+        <Route path={paths.workspace} element={
           <Frame title="Workspace">
             <Workspace />
           </Frame>
-        </Route>
+        } />
       )}
       {Compliance && (
-        <Route path={paths.compliance}>
+        <Route path={paths.compliance} element={
           <SearchFrame title="Compliance">{Compliance}</SearchFrame>
-        </Route>
+        } />
       )}
       {isActive && (
-        <Route path={paths.upcoming}>
+        <Route path={paths.upcoming} element={
           <Frame title="Upcoming Events">
             <EventsList
               constraint={eventConstraint}
@@ -95,9 +95,9 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
               }
             />
           </Frame>
-        </Route>
+        } />
       )}
-      <Route path={paths.past}>
+      <Route path={paths.past} element={
         <Frame title="Past Events">
           <EventsList
             constraint={eventConstraint}
@@ -108,9 +108,9 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
             }
           />
         </Frame>
-      </Route>
-      <Redirect to={paths.about} />
-    </Switch>
+      } />
+      <Route index element={<Navigate to={paths.about} replace />} />
+    </Routes>
   </Frame>
 );
 

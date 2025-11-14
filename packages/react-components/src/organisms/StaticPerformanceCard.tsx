@@ -80,7 +80,7 @@ const StaticPerformanceCard = ({
         {neutralFaceIcon}
         <Subtitle noMargin>Adequate:</Subtitle>
         <span css={dataTextStyles}>
-          {adequate}% - {needsImprovement - 1}%
+          {adequate}% - {outstanding - 1}%
         </span>
       </div>
       <div css={dataContainerStyles}>

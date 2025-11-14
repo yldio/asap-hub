@@ -8,7 +8,7 @@ describe('StaticPerformanceCard', () => {
     expect(screen.getByText('Outstanding:')).toBeInTheDocument();
     expect(screen.getByText('≥ 90%')).toBeInTheDocument();
     expect(screen.getByText('Adequate:')).toBeInTheDocument();
-    expect(screen.getByText('80% - 79%')).toBeInTheDocument();
+    expect(screen.getByText('80% - 89%')).toBeInTheDocument();
     expect(screen.getByText('Needs Improvement:')).toBeInTheDocument();
     expect(screen.getByText('< 80%')).toBeInTheDocument();
     expect(screen.getByText('Limited data')).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe('StaticPerformanceCard', () => {
     );
 
     expect(screen.getByText('≥ 95%')).toBeInTheDocument();
-    expect(screen.getByText('85% - 69%')).toBeInTheDocument();
+    expect(screen.getByText('85% - 94%')).toBeInTheDocument();
     expect(screen.getByText('< 70%')).toBeInTheDocument();
   });
 
@@ -58,7 +58,7 @@ describe('StaticPerformanceCard', () => {
 
     expect(screen.getByText(testLegend)).toBeInTheDocument();
     expect(screen.getByText('≥ 95%')).toBeInTheDocument();
-    expect(screen.getByText('85% - 69%')).toBeInTheDocument();
+    expect(screen.getByText('85% - 94%')).toBeInTheDocument();
     expect(screen.getByText('< 70%')).toBeInTheDocument();
   });
 

@@ -33,14 +33,11 @@ const TraineeProjectsListContent: FC<TraineeProjectsListContentProps> = ({
   currentPage,
   pageSize,
 }) => {
-  const result = useProjects(options);
-  const projects = useMemo<ReadonlyArray<TraineeProject>>(
-    () => result.items.filter(isTraineeProject),
-    [result.items],
-  );
+  const projects = useProjects(options);
+
   const projectsWithMemberLinks = useMemo(
     () =>
-      projects.map((project) => ({
+      (projects.items as TraineeProject[]).map((project) => ({
         ...project,
         trainer: withMemberHref(project.trainer),
         members: project.members.map(withMemberHref),
@@ -48,18 +45,18 @@ const TraineeProjectsListContent: FC<TraineeProjectsListContentProps> = ({
     [projects],
   );
   const { numberOfPages, renderPageHref } = usePagination(
-    result.total,
+    projects.total,
     pageSize,
   );
 
   return (
     <TraineeProjectsList
       projects={projectsWithMemberLinks}
-      numberOfItems={result.total}
+      numberOfItems={projects.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
-      algoliaIndexName={result.algoliaIndexName}
+      algoliaIndexName={projects.algoliaIndexName}
     />
   );
 };

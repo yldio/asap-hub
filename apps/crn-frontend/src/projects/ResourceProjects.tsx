@@ -47,14 +47,11 @@ const ResourceProjectsListContent: FC<ResourceProjectsListContentProps> = ({
   currentPage,
   pageSize,
 }) => {
-  const result = useProjects(options);
-  const projects = useMemo<ReadonlyArray<ResourceProject>>(
-    () => result.items.filter(isResourceProject),
-    [result.items],
-  );
+  const projects = useProjects(options);
+
   const projectsWithMemberLinks = useMemo(
     () =>
-      projects.map((project) =>
+      (projects.items as ResourceProject[]).map((project) =>
         project.isTeamBased
           ? project
           : {
@@ -65,18 +62,18 @@ const ResourceProjectsListContent: FC<ResourceProjectsListContentProps> = ({
     [projects],
   );
   const { numberOfPages, renderPageHref } = usePagination(
-    result.total,
+    projects.total,
     pageSize,
   );
 
   return (
     <ResourceProjectsList
       projects={projectsWithMemberLinks}
-      numberOfItems={result.total}
+      numberOfItems={projects.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
-      algoliaIndexName={result.algoliaIndexName}
+      algoliaIndexName={projects.algoliaIndexName}
     />
   );
 };

@@ -4,13 +4,10 @@ import {
   ProjectsPage,
   DiscoveryProjectsList,
 } from '@asap-hub/react-components';
+import { DiscoveryProject } from '@asap-hub/model';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects, useProjectFacets } from './state';
-import {
-  isDiscoveryProject,
-  toDiscoveryThemeFilters,
-  toStatusFilters,
-} from './utils';
+import { toDiscoveryThemeFilters, toStatusFilters } from './utils';
 import { ProjectListOptions } from './api';
 import {
   FilterOption,
@@ -42,24 +39,21 @@ const DiscoveryProjectsListContent: FC<DiscoveryProjectsListContentProps> = ({
   currentPage,
   pageSize,
 }) => {
-  const result = useProjects(options);
-  const projects = useMemo(
-    () => result.items.filter(isDiscoveryProject),
-    [result.items],
-  );
+  const projects = useProjects(options);
+
   const { numberOfPages, renderPageHref } = usePagination(
-    result.total,
+    projects.total,
     pageSize,
   );
 
   return (
     <DiscoveryProjectsList
-      projects={projects}
-      numberOfItems={result.total}
+      projects={projects.items as DiscoveryProject[]}
+      numberOfItems={projects.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
-      algoliaIndexName={result.algoliaIndexName}
+      algoliaIndexName={projects.algoliaIndexName}
     />
   );
 };

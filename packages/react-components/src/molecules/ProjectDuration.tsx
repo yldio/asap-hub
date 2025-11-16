@@ -70,8 +70,9 @@ const ProjectDuration: React.FC<ProjectDurationProps> = ({
     <div css={metadataRowStyles}>
       <span css={iconStyles}>{clockIcon}</span>
       <span>
-        {formatProjectDate(startDate)} - {formatProjectDate(endDate)} •{' '}
-        <span css={durationStyles}>({duration})</span>
+        {formatProjectDate(startDate)} -{' '}
+        {endDate ? formatProjectDate(endDate) + ' • ' : 'Present '}
+        {endDate && <span css={durationStyles}>({duration})</span>}
       </span>
     </div>
   );

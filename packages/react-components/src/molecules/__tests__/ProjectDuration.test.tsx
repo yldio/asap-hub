@@ -131,4 +131,33 @@ describe('ProjectDuration', () => {
     expect(container).toHaveTextContent(/\(/);
     expect(container).toHaveTextContent(/\)/);
   });
+
+  it('renders "Present" when endDate is not provided', () => {
+    const { getByText, container } = render(
+      <ProjectDuration startDate="2023-01-15" endDate="" />,
+    );
+    expect(getByText(/Present/)).toBeVisible();
+    expect(container).toHaveTextContent('Jan 2023');
+  });
+
+  it('does not show duration when endDate is not provided', () => {
+    const { container } = render(
+      <ProjectDuration startDate="2023-01-15" endDate="" />,
+    );
+    // Should NOT contain the separator bullet
+    expect(container).not.toHaveTextContent('•');
+    // Should NOT have duration in parentheses
+    expect(container).not.toHaveTextContent(/\(/);
+    expect(container).not.toHaveTextContent(/\)/);
+    expect(container).not.toHaveTextContent('mos');
+    expect(container).not.toHaveTextContent('yr');
+  });
+
+  it('does not show duration when endDate is empty string', () => {
+    const { getByText } = render(
+      <ProjectDuration startDate="2023-01-15" endDate="" />,
+    );
+    expect(getByText(/Present/)).toBeVisible();
+    expect(getByText(/Jan 2023/)).toBeVisible();
+  });
 });

@@ -24378,7 +24378,7 @@ export type ProjectsContentDataFragment = Pick<
             projectMember?: Maybe<
               | ({ __typename: 'Teams' } & Pick<
                   Teams,
-                  'displayName' | 'teamId' | 'inactiveSince'
+                  'displayName' | 'inactiveSince'
                 > & {
                     sys: Pick<Sys, 'id'>;
                     researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
@@ -24476,7 +24476,7 @@ export type FetchProjectsQuery = {
                       projectMember?: Maybe<
                         | ({ __typename: 'Teams' } & Pick<
                             Teams,
-                            'displayName' | 'teamId' | 'inactiveSince'
+                            'displayName' | 'inactiveSince'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               researchTheme?: Maybe<
@@ -24570,7 +24570,7 @@ export type FetchProjectByIdQuery = {
                 projectMember?: Maybe<
                   | ({ __typename: 'Teams' } & Pick<
                       Teams,
-                      'displayName' | 'teamId' | 'inactiveSince'
+                      'displayName' | 'inactiveSince'
                     > & {
                         sys: Pick<Sys, 'id'>;
                         researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
@@ -33762,10 +33762,6 @@ export const ProjectsContentDataFragmentDoc = {
                                       kind: 'Name',
                                       value: 'displayName',
                                     },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'teamId' },
                                   },
                                   {
                                     kind: 'Field',

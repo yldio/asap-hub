@@ -92,7 +92,6 @@ export const projectsContentQueryFragment = gql`
               id
             }
             displayName
-            teamId
             inactiveSince
             researchTheme {
               name

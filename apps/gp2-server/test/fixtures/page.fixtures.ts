@@ -3,10 +3,10 @@ import { PageResponse } from '@asap-hub/model';
 
 export const pageResponse: PageResponse = {
   id: 'some-id',
-  path: '/privacy-policy',
+  path: '/privacy-notice',
   shortText: 'short text',
-  text: '<h1>Privacy Policy</h1>',
-  title: 'Privacy Policy',
+  text: '<h1>Privacy Notice</h1>',
+  title: 'Privacy Notice',
   link: 'link',
   linkText: 'linkText',
 };
@@ -24,8 +24,8 @@ export const getContentfulGraphqlPages = (): NonNullable<
   sys: {
     id: 'some-id',
   },
-  title: 'Privacy Policy',
-  path: '/privacy-policy',
+  title: 'Privacy Notice',
+  path: '/privacy-notice',
   shortText: 'short text',
   link: 'link',
   linkText: 'linkText',
@@ -40,7 +40,7 @@ export const getContentfulGraphqlPages = (): NonNullable<
           content: [
             {
               nodeType: 'text',
-              value: 'Privacy Policy',
+              value: 'Privacy Notice',
               marks: [],
               data: {},
             },

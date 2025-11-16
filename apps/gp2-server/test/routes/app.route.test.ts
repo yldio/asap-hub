@@ -44,7 +44,7 @@ describe('App default routes', () => {
     });
 
     const { headers, status } = await supertest(appNoAuth).get(
-      '/pages/privacy-policy',
+      '/pages/privacy-notice',
     );
 
     expect(status).toBe(200);

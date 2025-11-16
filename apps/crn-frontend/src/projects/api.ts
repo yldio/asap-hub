@@ -77,7 +77,6 @@ export const getProjects = async (
       page: options.currentPage ?? 0,
       hitsPerPage: options.pageSize ?? 10,
       filters: buildFilters(options),
-      facets: ['status', 'researchTheme', 'resourceType'],
     })
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);

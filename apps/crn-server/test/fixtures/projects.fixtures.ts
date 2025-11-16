@@ -30,7 +30,6 @@ export const getDiscoveryProjectGraphqlItem = (): GraphQLProject => ({
         projectMember: {
           __typename: 'Teams',
           sys: { id: 'team-1' },
-          teamId: 'team-1-id',
           displayName: 'Discovery Team',
           inactiveSince: '2025-01-01',
           researchTheme: { name: 'Theme One' },
@@ -130,7 +129,6 @@ export const getResourceTeamProjectGraphqlItem = (): GraphQLProject => ({
           __typename: 'Teams',
           sys: { id: 'resource-team-main' },
           displayName: 'Resource Team',
-          teamId: 'resource-team-main-id',
           inactiveSince: null,
           researchTheme: null,
         },
@@ -142,7 +140,6 @@ export const getResourceTeamProjectGraphqlItem = (): GraphQLProject => ({
           __typename: 'Teams',
           sys: { id: 'resource-team-support' },
           displayName: 'Resource Support',
-          teamId: 'resource-team-support-id',
           inactiveSince: null,
           researchTheme: null,
         },

@@ -1,4 +1,4 @@
-import { render, RenderResult, waitFor } from '@testing-library/react';
+import { render, RenderResult, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { generateKeyPairSync } from 'crypto';
 import { createMemoryHistory, History } from 'history';
@@ -11,9 +11,10 @@ import nock from 'nock';
 import { Auth0 } from '@asap-hub/auth';
 import { mockLocation } from '@asap-hub/dom-test-utils';
 import { authTestUtils } from '@asap-hub/gp2-components';
+import { WelcomePage } from '@asap-hub/react-components';
 import { useAuth0GP2 } from '@asap-hub/react-context';
 
-import Signin from '../Signin';
+import Signin, { values } from '../Signin';
 
 let handleRedirectCallback: undefined | Auth0['handleRedirectCallback'];
 const renderSignin = async (): Promise<RenderResult> => {
@@ -90,6 +91,23 @@ it('renders a button to signin', async () => {
     </StaticRouter>,
   );
   expect(getByRole('button').textContent).toMatchInlineSnapshot(`"Sign in"`);
+});
+
+it('renders the footer with terms and conditions', async () => {
+  const { getByText } = await renderSignin();
+  expect(
+    getByText(/By signing in you are agreeing to our/i),
+  ).toBeInTheDocument();
+  expect(getByText('Terms and Conditions')).toBeInTheDocument();
+  expect(getByText('Privacy Notice')).toBeInTheDocument();
+});
+
+it('renders the signup footer when allowSignup is true', () => {
+  const handleClick = jest.fn();
+  render(<WelcomePage allowSignup onClick={handleClick} values={values} />);
+  expect(
+    screen.getByText(/By proceeding you are agreeing to our/i),
+  ).toBeInTheDocument();
 });
 
 describe('when clicking the button', () => {

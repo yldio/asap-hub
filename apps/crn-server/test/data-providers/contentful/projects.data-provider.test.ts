@@ -3,7 +3,7 @@ import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-c
 import {
   ProjectContentfulDataProvider,
   parseContentfulProject,
-  parseProjectMember,
+  parseProjectUserMember,
   parseProjectTeamMember,
   type ProjectMembershipItem,
 } from '../../../src/data-providers/contentful/project.data-provider';
@@ -299,7 +299,7 @@ describe('parseContentfulProject', () => {
   });
 });
 
-describe('parseProjectMember', () => {
+describe('parseProjectUserMember', () => {
   it('formats user membership details when typename matches Users', () => {
     const membership = {
       sys: { id: 'membership-users-1' },
@@ -316,7 +316,7 @@ describe('parseProjectMember', () => {
       },
     } as unknown as ProjectMembershipItem;
 
-    expect(parseProjectMember(membership)).toEqual({
+    expect(parseProjectUserMember(membership)).toEqual({
       id: 'user-1',
       displayName: 'Taylor (T) Swift',
       firstName: 'Taylor',
@@ -337,7 +337,7 @@ describe('parseProjectMember', () => {
       },
     } as unknown as ProjectMembershipItem;
 
-    expect(parseProjectMember(membership)).toEqual({
+    expect(parseProjectUserMember(membership)).toEqual({
       id: 'unknown-user-membership-users-2',
       displayName: '',
     });

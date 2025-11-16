@@ -204,7 +204,7 @@ export const parseContentfulProject = (
 
       const userMembers = members
         .filter((m) => m.projectMember?.__typename === 'Users')
-        .map((m) => parseProjectMember(m));
+        .map((m) => parseProjectUserMember(m));
 
       return {
         ...baseProject,
@@ -219,7 +219,7 @@ export const parseContentfulProject = (
     case 'Trainee': {
       const userMembers = members
         .filter((m) => m.projectMember?.__typename === 'Users')
-        .map((m) => parseProjectMember(m));
+        .map((m) => parseProjectUserMember(m));
 
       // First member with "Trainer" or "Project Lead" role is the trainer
       const trainerCandidate = userMembers.find(
@@ -253,7 +253,7 @@ export const parseContentfulProject = (
 };
 
 // Parse project member from Contentful membership
-export const parseProjectMember = (
+export const parseProjectUserMember = (
   membership: ProjectMembershipItem,
 ): ProjectMember => {
   const { projectMember } = membership;

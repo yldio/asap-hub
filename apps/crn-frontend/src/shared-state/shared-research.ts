@@ -11,6 +11,7 @@ import {
   ResearchOutputPutRequest,
   ResearchTagResponse,
   ResearchThemeResponse,
+  ResourceTypeResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { atom, selector, useRecoilValue } from 'recoil';
@@ -27,6 +28,7 @@ import {
 import {
   getResearchTags,
   getResearchThemes,
+  getResourceTypes,
   getResearchOutputs,
 } from '../shared-research/api';
 import {
@@ -170,6 +172,22 @@ export const researchThemesSelector = selector({
 });
 
 export const useResearchThemes = () => useRecoilValue(researchThemesSelector);
+
+const resourceTypesState = atom<ResourceTypeResponse[]>({
+  key: 'resourceTypesState',
+  default: [],
+});
+
+export const resourceTypesSelector = selector({
+  key: 'resourceTypes',
+  get: ({ get }) => {
+    get(resourceTypesState);
+    const authorization = get(authorizationState);
+    return getResourceTypes(authorization);
+  },
+});
+
+export const useResourceTypes = () => useRecoilValue(resourceTypesSelector);
 
 export const usePostResearchOutput = () => {
   const authorization = useRecoilValue(authorizationState);

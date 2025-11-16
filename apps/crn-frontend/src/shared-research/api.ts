@@ -10,6 +10,7 @@ import {
   ResearchOutputResponse,
   ResearchTagResponse,
   ResearchThemeResponse,
+  ResourceTypeResponse,
 } from '@asap-hub/model';
 import qs from 'qs';
 import { API_BASE_URL } from '../config';
@@ -185,6 +186,27 @@ export const getResearchThemes = async (
   if (!resp.ok) {
     throw new Error(
       `Failed to fetch research themes. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+
+  const response = await resp.json();
+
+  return response?.items || [];
+};
+
+export const getResourceTypes = async (
+  authorization: string,
+): Promise<ResourceTypeResponse[]> => {
+  const resp = await fetch(`${API_BASE_URL}/resource-types`, {
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+    },
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch resource types. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
 

@@ -5,13 +5,15 @@ import { network } from '@asap-hub/routing';
 
 import ResourceProjects from '../ResourceProjects';
 import { RESOURCE_TYPE_FILTER_PREFIX } from '../utils';
-import { useProjects, useProjectFacets } from '../state';
+import { useProjects } from '../state';
+import { useResourceTypes } from '../../shared-state/shared-research';
 
 jest.mock('../state');
+jest.mock('../../shared-state/shared-research');
 
 const mockUseProjects = useProjects as jest.MockedFunction<typeof useProjects>;
-const mockUseProjectFacets = useProjectFacets as jest.MockedFunction<
-  typeof useProjectFacets
+const mockUseResourceTypes = useResourceTypes as jest.MockedFunction<
+  typeof useResourceTypes
 >;
 
 const props: ComponentProps<typeof ResourceProjects> = {
@@ -46,9 +48,10 @@ beforeEach(() => {
     algoliaIndexName: 'index',
     algoliaQueryId: 'query',
   });
-  mockUseProjectFacets.mockReturnValue({
-    resourceType: { Database: 5 },
-  });
+  mockUseResourceTypes.mockReturnValue([
+    { id: 'type-1', name: 'Database' },
+    { id: 'type-2', name: 'Data Portal' },
+  ]);
 });
 
 it('renders the Resource Projects page', () => {

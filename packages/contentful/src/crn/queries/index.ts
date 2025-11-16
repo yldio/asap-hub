@@ -20,6 +20,7 @@ export * from './reminders.queries';
 export * from './research-outputs.queries';
 export * from './research-tags.queries';
 export * from './research-themes.queries';
+export * from './resource-types.queries';
 export * from './teams.queries';
 export * from './tutorials.queries';
 export * from './users.queries';

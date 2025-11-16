@@ -52,6 +52,7 @@ import ReminderController from './controllers/reminder.controller';
 import ResearchOutputController from './controllers/research-output.controller';
 import ResearchTagController from './controllers/research-tag.controller';
 import ResearchThemeController from './controllers/research-theme.controller';
+import ResourceTypeController from './controllers/resource-type.controller';
 import TeamController from './controllers/team.controller';
 import TutorialController from './controllers/tutorial.controller';
 import UserController from './controllers/user.controller';
@@ -75,6 +76,7 @@ import { ReminderContentfulDataProvider } from './data-providers/contentful/remi
 import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
 import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
 import { ResearchThemeContentfulDataProvider } from './data-providers/contentful/research-theme.data-provider';
+import { ResourceTypeContentfulDataProvider } from './data-providers/contentful/resource-type.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/team.data-provider';
 import { TutorialContentfulDataProvider } from './data-providers/contentful/tutorial.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
@@ -100,6 +102,7 @@ import {
   ResearchOutputDataProvider,
   ResearchTagDataProvider,
   ResearchThemeDataProvider,
+  ResourceTypeDataProvider,
   TutorialDataProvider,
   UserDataProvider,
   WorkingGroupDataProvider,
@@ -127,6 +130,7 @@ import { reminderRouteFactory } from './routes/reminder.route';
 import { researchOutputRouteFactory } from './routes/research-output.route';
 import { researchTagRouteFactory } from './routes/research-tag.route';
 import { researchThemeRouteFactory } from './routes/research-theme.route';
+import { resourceTypeRouteFactory } from './routes/resource-type.route';
 import { projectRouteFactory } from './routes/project.route';
 import { teamRouteFactory } from './routes/team.route';
 import { tutorialRouteFactory } from './routes/tutorial.route';
@@ -295,6 +299,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.researchThemeDataProvider ||
     new ResearchThemeContentfulDataProvider(contentfulGraphQLClient);
 
+  const resourceTypeDataProvider =
+    libs.resourceTypeDataProvider ||
+    new ResourceTypeContentfulDataProvider(contentfulGraphQLClient);
+
   const researchOutputDataProvider =
     libs.researchOutputDataProvider ||
     new ResearchOutputContentfulDataProvider(
@@ -373,6 +381,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchThemeController =
     libs.researchThemeController ||
     new ResearchThemeController(researchThemeDataProvider);
+  const resourceTypeController =
+    libs.resourceTypeController ||
+    new ResourceTypeController(resourceTypeDataProvider);
   const teamController =
     libs.teamController || new TeamController(teamDataProvider);
   const tutorialsController =
@@ -453,6 +464,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchThemeRoutes = researchThemeRouteFactory(
     researchThemeController,
   );
+  const resourceTypeRoutes = resourceTypeRouteFactory(resourceTypeController);
   const teamRoutes = teamRouteFactory(interestGroupController, teamController);
   const tutorialRoutes = tutorialRouteFactory(tutorialsController);
   const userPublicRoutes = userPublicRouteFactory(userController);
@@ -498,6 +510,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(userRoutes);
   app.use(researchTagRoutes);
   app.use(researchThemeRoutes);
+  app.use(resourceTypeRoutes);
 
   // Permission check
   app.use(permissionHandler);
@@ -572,6 +585,7 @@ export type Libs = {
   researchOutputController?: ResearchOutputController;
   researchTagController?: ResearchTagController;
   researchThemeController?: ResearchThemeController;
+  resourceTypeController?: ResourceTypeController;
   teamController?: TeamController;
   tutorialsController?: TutorialController;
   userController?: UserController;
@@ -596,6 +610,7 @@ export type Libs = {
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
   researchThemeDataProvider?: ResearchThemeDataProvider;
+  resourceTypeDataProvider?: ResourceTypeDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialDataProvider?: TutorialDataProvider;
   userDataProvider?: UserDataProvider;

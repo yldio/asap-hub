@@ -29,6 +29,7 @@ export * from './reminder';
 export * from './research-output';
 export * from './research-tag';
 export * from './research-theme';
+export * from './resource-type';
 export * from './tag';
 export * from './team';
 export * from './tutorials';

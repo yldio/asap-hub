@@ -3,6 +3,7 @@ import {
   createDiscoveryThemeFilterOptions,
   createDiscoveryThemeFilterOptionsFromThemes,
   createResourceTypeFilterOptions,
+  createResourceTypeFilterOptionsFromTypes,
 } from '../filter-options';
 import {
   DISCOVERY_THEME_FILTER_PREFIX,
@@ -83,6 +84,50 @@ describe('projects filter options', () => {
       { title: 'RESOURCE TYPE' },
       { label: 'Dataset', value: `${RESOURCE_TYPE_FILTER_PREFIX}Dataset` },
       { label: 'Portal', value: `${RESOURCE_TYPE_FILTER_PREFIX}Portal` },
+    ]);
+  });
+
+  it('returns an empty array when resource types array is empty', () => {
+    expect(createResourceTypeFilterOptionsFromTypes([])).toEqual([]);
+  });
+
+  it('returns resource type filter options from types with prefix', () => {
+    const types = [
+      { id: 'type-1', name: 'Database' },
+      { id: 'type-2', name: 'Data Portal' },
+      { id: 'type-3', name: 'Dataset' },
+    ];
+
+    const options = createResourceTypeFilterOptionsFromTypes(types);
+
+    expect(options).toEqual([
+      { title: 'RESOURCE TYPE' },
+      {
+        label: 'Database',
+        value: `${RESOURCE_TYPE_FILTER_PREFIX}Database`,
+      },
+      {
+        label: 'Data Portal',
+        value: `${RESOURCE_TYPE_FILTER_PREFIX}Data Portal`,
+      },
+      {
+        label: 'Dataset',
+        value: `${RESOURCE_TYPE_FILTER_PREFIX}Dataset`,
+      },
+    ]);
+  });
+
+  it('handles single resource type correctly', () => {
+    const types = [{ id: 'type-1', name: 'Database' }];
+
+    const options = createResourceTypeFilterOptionsFromTypes(types);
+
+    expect(options).toEqual([
+      { title: 'RESOURCE TYPE' },
+      {
+        label: 'Database',
+        value: `${RESOURCE_TYPE_FILTER_PREFIX}Database`,
+      },
     ]);
   });
 });

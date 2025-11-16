@@ -70,3 +70,18 @@ export const createResourceTypeFilterOptions = (
     RESOURCE_TYPE_FILTER_PREFIX,
     facets,
   );
+
+export const createResourceTypeFilterOptionsFromTypes = (
+  types: ReadonlyArray<{ id: string; name: string }>,
+): ReadonlyArray<FilterOption> => {
+  if (!types.length) {
+    return [];
+  }
+  return [
+    { title: 'RESOURCE TYPE' },
+    ...types.map((type) => ({
+      label: type.name,
+      value: `${RESOURCE_TYPE_FILTER_PREFIX}${type.name}`,
+    })),
+  ];
+};

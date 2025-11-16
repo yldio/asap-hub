@@ -4,19 +4,15 @@ import { ProjectsPage, ResourceProjectsList } from '@asap-hub/react-components';
 import type { ProjectMember, ResourceProject } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
-import { useProjects, useProjectFacets } from './state';
+import { useProjects } from './state';
 import { ProjectListOptions } from './api';
 import { toResourceTypeFilters, toStatusFilters } from './utils';
 import {
   FilterOption,
   STATUS_FILTER_OPTIONS,
-  createResourceTypeFilterOptions,
+  createResourceTypeFilterOptionsFromTypes,
 } from './filter-options';
-
-const resourceFacetRequest = {
-  projectType: 'Resource' as const,
-  facets: ['resourceType'] as const,
-};
+import { useResourceTypes } from '../shared-state/shared-research';
 
 type ResourceProjectsProps = {
   searchQuery: string;
@@ -119,10 +115,10 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
       statusFilters,
     ],
   );
-  const facets = useProjectFacets(resourceFacetRequest);
+  const resourceTypes = useResourceTypes();
   const resourceFilterOptions: ReadonlyArray<FilterOption> = useMemo(
-    () => createResourceTypeFilterOptions(facets?.resourceType),
-    [facets],
+    () => createResourceTypeFilterOptionsFromTypes(resourceTypes),
+    [resourceTypes],
   );
   const filterOptions = useMemo(
     () => [...resourceFilterOptions, ...STATUS_FILTER_OPTIONS],

@@ -111,7 +111,6 @@ export const toListProjectResponse = (
   items: response.hits,
   algoliaQueryId: response.queryID,
   algoliaIndexName: response.index,
-  facets: response.facets,
 });
 
 export const getProject = async (

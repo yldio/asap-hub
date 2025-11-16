@@ -6,19 +6,15 @@ import {
 } from '@asap-hub/react-components';
 import { DiscoveryProject } from '@asap-hub/model';
 import { usePagination, usePaginationParams } from '../hooks';
-import { useProjects, useProjectFacets } from './state';
+import { useProjects } from './state';
 import { toDiscoveryThemeFilters, toStatusFilters } from './utils';
 import { ProjectListOptions } from './api';
 import {
   FilterOption,
   STATUS_FILTER_OPTIONS,
-  createDiscoveryThemeFilterOptions,
+  createDiscoveryThemeFilterOptionsFromThemes,
 } from './filter-options';
-
-const discoveryFacetRequest = {
-  projectType: 'Discovery' as const,
-  facets: ['researchTheme'] as const,
-};
+import { useResearchThemes } from '../shared-state/shared-research';
 
 type DiscoveryProjectsProps = {
   searchQuery: string;
@@ -104,10 +100,10 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
       statusFilters,
     ],
   );
-  const facets = useProjectFacets(discoveryFacetRequest);
+  const researchThemes = useResearchThemes();
   const themeFilterOptions: ReadonlyArray<FilterOption> = useMemo(
-    () => createDiscoveryThemeFilterOptions(facets?.researchTheme),
-    [facets],
+    () => createDiscoveryThemeFilterOptionsFromThemes(researchThemes),
+    [researchThemes],
   );
   const filterOptions = useMemo(
     () => [...themeFilterOptions, ...STATUS_FILTER_OPTIONS],

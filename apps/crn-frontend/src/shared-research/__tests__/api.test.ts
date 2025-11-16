@@ -19,6 +19,7 @@ import {
   getResearchOutput,
   getResearchOutputs,
   getResearchTags,
+  getResearchThemes,
 } from '../api';
 
 jest.mock('../../config');
@@ -322,6 +323,42 @@ describe('getResearchTags', () => {
       getResearchTags(''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch research tags. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('getResearchThemes', () => {
+  it('makes an authorized GET request for the research themes', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/research-themes')
+      .reply(200, {});
+    await getResearchThemes('Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns successfully fetched research themes', async () => {
+    const researchThemes = {
+      total: 2,
+      items: [
+        { id: 'theme-1', name: 'Neurodegeneration' },
+        { id: 'theme-2', name: 'Cell Biology' },
+      ],
+    };
+    nock(API_BASE_URL).get('/research-themes').reply(200, researchThemes);
+    expect(await getResearchThemes('')).toEqual(researchThemes.items);
+  });
+
+  it('returns empty array when items are not provided', async () => {
+    nock(API_BASE_URL).get('/research-themes').reply(200, {});
+    expect(await getResearchThemes('')).toEqual([]);
+  });
+
+  it('errors for invalid status', async () => {
+    nock(API_BASE_URL).get('/research-themes').reply(500);
+    await expect(
+      getResearchThemes(''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch research themes. Expected status 2xx. Received status 500."`,
     );
   });
 });

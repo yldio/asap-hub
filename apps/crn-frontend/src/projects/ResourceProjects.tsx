@@ -6,11 +6,7 @@ import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects, useProjectFacets } from './state';
 import { ProjectListOptions } from './api';
-import {
-  isResourceProject,
-  toResourceTypeFilters,
-  toStatusFilters,
-} from './utils';
+import { toResourceTypeFilters, toStatusFilters } from './utils';
 import {
   FilterOption,
   STATUS_FILTER_OPTIONS,

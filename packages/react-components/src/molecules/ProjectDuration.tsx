@@ -71,7 +71,7 @@ const ProjectDuration: React.FC<ProjectDurationProps> = ({
       <span css={iconStyles}>{clockIcon}</span>
       <span>
         {formatProjectDate(startDate)} -{' '}
-        {endDate ? formatProjectDate(endDate) + ' • ' : 'Present '}
+        {endDate ? `${formatProjectDate(endDate)} • ` : 'Present '}
         {endDate && <span css={durationStyles}>({duration})</span>}
       </span>
     </div>

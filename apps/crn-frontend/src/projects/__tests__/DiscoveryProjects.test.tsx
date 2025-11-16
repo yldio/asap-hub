@@ -4,13 +4,15 @@ import { ComponentProps } from 'react';
 
 import DiscoveryProjects from '../DiscoveryProjects';
 import { DISCOVERY_THEME_FILTER_PREFIX } from '../utils';
-import { useProjects, useProjectFacets } from '../state';
+import { useProjects } from '../state';
+import { useResearchThemes } from '../../shared-state/shared-research';
 
 jest.mock('../state');
+jest.mock('../../shared-state/shared-research');
 
 const mockUseProjects = useProjects as jest.MockedFunction<typeof useProjects>;
-const mockUseProjectFacets = useProjectFacets as jest.MockedFunction<
-  typeof useProjectFacets
+const mockUseResearchThemes = useResearchThemes as jest.MockedFunction<
+  typeof useResearchThemes
 >;
 
 const props: ComponentProps<typeof DiscoveryProjects> = {
@@ -43,9 +45,10 @@ beforeEach(() => {
     algoliaIndexName: 'index',
     algoliaQueryId: 'query',
   });
-  mockUseProjectFacets.mockReturnValue({
-    researchTheme: { Theme: 3 },
-  });
+  mockUseResearchThemes.mockReturnValue([
+    { id: 'theme-1', name: 'Neurodegeneration' },
+    { id: 'theme-2', name: 'Cell Biology' },
+  ]);
 });
 
 it('renders the Discovery Projects page', () => {

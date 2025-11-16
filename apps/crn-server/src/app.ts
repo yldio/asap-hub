@@ -51,6 +51,7 @@ import PageController from './controllers/page.controller';
 import ReminderController from './controllers/reminder.controller';
 import ResearchOutputController from './controllers/research-output.controller';
 import ResearchTagController from './controllers/research-tag.controller';
+import ResearchThemeController from './controllers/research-theme.controller';
 import TeamController from './controllers/team.controller';
 import TutorialController from './controllers/tutorial.controller';
 import UserController from './controllers/user.controller';
@@ -73,6 +74,7 @@ import { PageContentfulDataProvider } from './data-providers/contentful/page.dat
 import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
 import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
 import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
+import { ResearchThemeContentfulDataProvider } from './data-providers/contentful/research-theme.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/team.data-provider';
 import { TutorialContentfulDataProvider } from './data-providers/contentful/tutorial.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
@@ -97,6 +99,7 @@ import {
   ReminderDataProvider,
   ResearchOutputDataProvider,
   ResearchTagDataProvider,
+  ResearchThemeDataProvider,
   TutorialDataProvider,
   UserDataProvider,
   WorkingGroupDataProvider,
@@ -123,6 +126,7 @@ import { pageRouteFactory } from './routes/page.route';
 import { reminderRouteFactory } from './routes/reminder.route';
 import { researchOutputRouteFactory } from './routes/research-output.route';
 import { researchTagRouteFactory } from './routes/research-tag.route';
+import { researchThemeRouteFactory } from './routes/research-theme.route';
 import { projectRouteFactory } from './routes/project.route';
 import { teamRouteFactory } from './routes/team.route';
 import { tutorialRouteFactory } from './routes/tutorial.route';
@@ -287,6 +291,10 @@ export const appFactory = (libs: Libs = {}): Express => {
       getContentfulRestClientFactory,
     );
 
+  const researchThemeDataProvider =
+    libs.researchThemeDataProvider ||
+    new ResearchThemeContentfulDataProvider(contentfulGraphQLClient);
+
   const researchOutputDataProvider =
     libs.researchOutputDataProvider ||
     new ResearchOutputContentfulDataProvider(
@@ -362,6 +370,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchTagController =
     libs.researchTagController ||
     new ResearchTagController(researchTagDataProvider);
+  const researchThemeController =
+    libs.researchThemeController ||
+    new ResearchThemeController(researchThemeDataProvider);
   const teamController =
     libs.teamController || new TeamController(teamDataProvider);
   const tutorialsController =
@@ -439,6 +450,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     manuscriptController,
   );
   const researchTagRoutes = researchTagRouteFactory(researchTagController);
+  const researchThemeRoutes = researchThemeRouteFactory(
+    researchThemeController,
+  );
   const teamRoutes = teamRouteFactory(interestGroupController, teamController);
   const tutorialRoutes = tutorialRouteFactory(tutorialsController);
   const userPublicRoutes = userPublicRouteFactory(userController);
@@ -483,6 +497,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   app.use(userRoutes);
   app.use(researchTagRoutes);
+  app.use(researchThemeRoutes);
 
   // Permission check
   app.use(permissionHandler);
@@ -556,6 +571,7 @@ export type Libs = {
   reminderController?: ReminderController;
   researchOutputController?: ResearchOutputController;
   researchTagController?: ResearchTagController;
+  researchThemeController?: ResearchThemeController;
   teamController?: TeamController;
   tutorialsController?: TutorialController;
   userController?: UserController;
@@ -579,6 +595,7 @@ export type Libs = {
   reminderDataProvider?: ReminderDataProvider;
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
+  researchThemeDataProvider?: ResearchThemeDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialDataProvider?: TutorialDataProvider;
   userDataProvider?: UserDataProvider;

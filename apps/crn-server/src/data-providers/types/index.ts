@@ -17,6 +17,7 @@ export * from './projects.data-provider.types';
 export * from './reminders.data-provider.types';
 export * from './research-output.data-provider.types';
 export * from './research-tags.data-provider.types';
+export * from './research-themes.data-provider.types';
 export * from './tutorials.data-provider.types';
 export * from './users.data-provider.types';
 export * from './working-groups.data-provider.types';

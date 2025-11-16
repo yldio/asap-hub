@@ -47,6 +47,21 @@ export const createDiscoveryThemeFilterOptions = (
     facets,
   );
 
+export const createDiscoveryThemeFilterOptionsFromThemes = (
+  themes: ReadonlyArray<{ id: string; name: string }>,
+): ReadonlyArray<FilterOption> => {
+  if (!themes.length) {
+    return [];
+  }
+  return [
+    { title: 'RESEARCH THEME' },
+    ...themes.map((theme) => ({
+      label: theme.name,
+      value: `${DISCOVERY_THEME_FILTER_PREFIX}${theme.name}`,
+    })),
+  ];
+};
+
 export const createResourceTypeFilterOptions = (
   facets?: Record<string, number>,
 ): ReadonlyArray<FilterOption> =>

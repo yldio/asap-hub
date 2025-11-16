@@ -10,6 +10,7 @@ import {
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
   ResearchTagResponse,
+  ResearchThemeResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { atom, selector, useRecoilValue } from 'recoil';
@@ -23,7 +24,11 @@ import {
   getOpenScienceMembers,
   getUsersAndExternalAuthors,
 } from '../network/users/api';
-import { getResearchTags, getResearchOutputs } from '../shared-research/api';
+import {
+  getResearchTags,
+  getResearchThemes,
+  getResearchOutputs,
+} from '../shared-research/api';
 import {
   useInvalidateResearchOutputIndex,
   useSetResearchOutputItem,
@@ -149,6 +154,22 @@ export const researchTagsSelector = selector({
 });
 
 export const useResearchTags = () => useRecoilValue(researchTagsSelector);
+
+const researchThemesState = atom<ResearchThemeResponse[]>({
+  key: 'researchThemesState',
+  default: [],
+});
+
+export const researchThemesSelector = selector({
+  key: 'researchThemes',
+  get: ({ get }) => {
+    get(researchThemesState);
+    const authorization = get(authorizationState);
+    return getResearchThemes(authorization);
+  },
+});
+
+export const useResearchThemes = () => useRecoilValue(researchThemesSelector);
 
 export const usePostResearchOutput = () => {
   const authorization = useRecoilValue(authorizationState);

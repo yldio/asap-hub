@@ -1,6 +1,7 @@
 import {
   STATUS_FILTER_OPTIONS,
   createDiscoveryThemeFilterOptions,
+  createDiscoveryThemeFilterOptionsFromThemes,
   createResourceTypeFilterOptions,
 } from '../filter-options';
 import {
@@ -51,6 +52,24 @@ describe('projects filter options', () => {
       { title: 'RESEARCH THEME' },
       { label: 'Alpha', value: `${DISCOVERY_THEME_FILTER_PREFIX}Alpha` },
       { label: 'Beta', value: `${DISCOVERY_THEME_FILTER_PREFIX}Beta` },
+    ]);
+  });
+
+  it('returns an empty array when themes array is empty', () => {
+    expect(createDiscoveryThemeFilterOptionsFromThemes([])).toEqual([]);
+  });
+
+  it('handles single theme correctly', () => {
+    const themes = [{ id: 'theme-1', name: 'Single Theme' }];
+
+    const options = createDiscoveryThemeFilterOptionsFromThemes(themes);
+
+    expect(options).toEqual([
+      { title: 'RESEARCH THEME' },
+      {
+        label: 'Single Theme',
+        value: `${DISCOVERY_THEME_FILTER_PREFIX}Single Theme`,
+      },
     ]);
   });
 

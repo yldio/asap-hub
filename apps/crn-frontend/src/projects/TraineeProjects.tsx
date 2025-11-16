@@ -6,7 +6,7 @@ import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
 import { ProjectListOptions } from './api';
-import { isTraineeProject, toStatusFilters } from './utils';
+import { toStatusFilters } from './utils';
 import { STATUS_FILTER_OPTIONS } from './filter-options';
 
 type TraineeProjectsProps = {

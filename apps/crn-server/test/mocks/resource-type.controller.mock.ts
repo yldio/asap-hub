@@ -3,4 +3,3 @@ import ResourceTypeController from '../../src/controllers/resource-type.controll
 export const resourceTypeControllerMock: jest.Mocked<ResourceTypeController> = {
   fetch: jest.fn(),
 } as unknown as jest.Mocked<ResourceTypeController>;
-

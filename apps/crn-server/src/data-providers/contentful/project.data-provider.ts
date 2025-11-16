@@ -85,8 +85,8 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     const statusQuery = filter?.status
       ? {
           status_in: Array.isArray(filter.status)
-            ? filter.status.map(normalizeStatus)
-            : [normalizeStatus(filter.status)],
+            ? filter.status
+            : [filter.status],
         }
       : {};
 
@@ -121,23 +121,6 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 // Helper function to normalize project type from Contentful format
 const normalizeProjectType = (type: ProjectType): string => `${type} Project`;
 
-// Helper function to normalize status
-const normalizeStatus = (status: ProjectStatus): string => {
-  // Contentful uses "Completed" but our model uses "Complete"
-  if (status === 'Complete') {
-    return 'Completed';
-  }
-  return status;
-};
-
-// Helper function to denormalize status from Contentful
-const denormalizeStatus = (status: string): ProjectStatus => {
-  if (status === 'Completed') {
-    return 'Complete';
-  }
-  return status as ProjectStatus;
-};
-
 // Parse Contentful project to model format
 export const parseContentfulProject = (
   item: ProjectItem | ProjectsCollectionItem,
@@ -155,7 +138,7 @@ export const parseContentfulProject = (
     }
     return undefined;
   })();
-  const status = denormalizeStatus(item.status || '');
+  const status = (item.status || '') as ProjectStatus;
   const tags = cleanArray(item.researchTagsCollection?.items || []).map(
     (tag) => tag.name || '',
   );

@@ -110,7 +110,7 @@ export const getStatusPillAccent = (
   switch (status) {
     case 'Active':
       return 'info';
-    case 'Complete':
+    case 'Completed':
       return 'success';
     case 'Closed':
       return 'warning';
@@ -123,7 +123,7 @@ export const getCardAccentByStatus = (
   status: ProjectStatus,
 ): 'default' | 'neutral200' => {
   switch (status) {
-    case 'Complete':
+    case 'Completed':
     case 'Closed':
       return 'neutral200';
     default:

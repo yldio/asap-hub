@@ -105,7 +105,7 @@ export const RESOURCE_TYPE_FILTER_PREFIX = 'resource-type:';
 
 export const PROJECT_STATUSES: readonly ProjectStatus[] = [
   'Active',
-  'Complete',
+  'Completed',
   'Closed',
 ];
 

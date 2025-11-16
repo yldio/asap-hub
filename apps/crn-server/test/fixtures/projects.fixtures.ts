@@ -354,7 +354,7 @@ export const getProjectByIdGraphqlResponse = (): FetchProjectByIdQuery => ({
 export const getExpectedDiscoveryProject = (): DiscoveryProject => ({
   id: 'discovery-1',
   title: 'Discovery Project 1',
-  status: 'Complete',
+  status: 'Completed',
   startDate: '2024-01-01',
   endDate: '2024-04-01',
   duration: '3 mos',
@@ -402,7 +402,7 @@ export const getExpectedResourceTeamProject = (): ResourceProject => ({
 export const getExpectedResourceIndividualProject = (): ResourceProject => ({
   id: 'resource-individual-1',
   title: 'Resource Project Individual',
-  status: 'Complete',
+  status: 'Completed',
   startDate: '2022-01-01',
   endDate: '2023-03-01',
   duration: '1 yr 2 mos',

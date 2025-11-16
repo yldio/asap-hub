@@ -56,4 +56,3 @@ describe('/resource-types/ route', () => {
     });
   });
 });
-

@@ -134,4 +134,3 @@ describe('Resource Types Data Provider', () => {
     });
   });
 });
-

@@ -46,7 +46,7 @@ describe('ProjectContentfulDataProvider', () => {
         search: 'brain health',
         filter: {
           projectType: ['Discovery', 'Resource'],
-          status: ['Complete', 'Active'],
+          status: ['Completed', 'Active'],
         },
       });
 
@@ -83,7 +83,7 @@ describe('ProjectContentfulDataProvider', () => {
       await dataProvider.fetch({
         filter: {
           projectType: 'Discovery',
-          status: 'Complete',
+          status: 'Completed',
         },
       });
 

@@ -15,6 +15,7 @@
     "migrate-preprint-versions": "ts-node ./scripts/migrate-research-output-versions.ts",
     "migrate-project-data": "ts-node ./scripts/migrate-project-data.ts",
     "migrate-preliminary-data-sharing": "ts-node ./scripts/migrate-preliminary-data-sharing.ts",
+    "migrate-impact-categories": "ts-node ./scripts/migrate-impact-categories.ts",
     "transform-privacy-policy": "ts-node ./scripts/transform-privacy-policy.ts",
     "rollback-privacy-policy": "ts-node ./scripts/rollback-privacy-policy.ts",
     "watch:babel": "../../scripts/build-babel.sh watch",

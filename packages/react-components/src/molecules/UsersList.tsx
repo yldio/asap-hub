@@ -61,6 +61,7 @@ const separatorStyles = css({
 });
 
 interface UsersListProps {
+  label?: string;
   separator?: string;
   users: ReadonlyArray<
     | (Pick<
@@ -81,6 +82,7 @@ interface UsersListProps {
 const UsersList: FC<UsersListProps> = ({
   users,
   max = Number.POSITIVE_INFINITY,
+  label = 'Authors',
   separator,
   noMargin = false,
 }) => (
@@ -122,7 +124,7 @@ const UsersList: FC<UsersListProps> = ({
       <li>
         <div css={userStyles}>
           <Avatar placeholder={`+${users.length - max}`} />
-          <span css={nameStyles}>Authors</span>
+          <span css={nameStyles}>{label}</span>
         </div>
       </li>
     )}

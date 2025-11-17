@@ -53,6 +53,37 @@ it('does not link external users', () => {
   expect(getByText(/John Doe/).closest('a')).toBeNull();
 });
 
+it('renders default label when no label is provided and max users is exceeded', () => {
+  const { getByText, queryByText } = render(
+    <UsersList
+      users={[
+        createUserResponse(),
+        { ...createUserResponse(), displayName: 'John Doe' },
+      ]}
+      max={1}
+    />,
+  );
+  expect(getByText('Authors')).toBeInTheDocument();
+  expect(getByText('+1')).toBeInTheDocument();
+  expect(queryByText('Members')).not.toBeInTheDocument();
+});
+
+it('renders a custom label when max users is exceeded', () => {
+  const { getByText, queryByText } = render(
+    <UsersList
+      label="Members"
+      users={[
+        createUserResponse(),
+        { ...createUserResponse(), displayName: 'John Doe' },
+      ]}
+      max={1}
+    />,
+  );
+  expect(getByText('Members')).toBeInTheDocument();
+  expect(getByText('+1')).toBeInTheDocument();
+  expect(queryByText('Authors')).not.toBeInTheDocument();
+});
+
 describe('alumni badge', () => {
   it('shows alumni badge for internal and alumni users', () => {
     const { getByText } = render(

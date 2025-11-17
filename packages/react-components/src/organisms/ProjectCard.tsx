@@ -216,6 +216,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
                   <ResourceMemberIcon />
                 </span>
                 <UsersList
+                  label="Members"
                   users={project.members}
                   separator="•"
                   noMargin
@@ -232,6 +233,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
                   <TrainerIcon />
                 </span>
                 <UsersList
+                  label="Members"
                   users={[project.trainer]}
                   separator="•"
                   noMargin
@@ -243,6 +245,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
                   <MemberIcon />
                 </span>
                 <UsersList
+                  label="Members"
                   users={project.members}
                   separator="•"
                   noMargin

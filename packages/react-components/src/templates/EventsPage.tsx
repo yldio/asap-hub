@@ -8,7 +8,7 @@ type EventsPageProps = ComponentProps<typeof EventsPageHeader>;
 const EventsPage: React.FC<EventsPageProps> = ({ children, ...props }) => (
   <article>
     <EventsPageHeader {...props} />
-    <PageConstraints>{children}</PageConstraints>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

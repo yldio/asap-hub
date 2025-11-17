@@ -83,7 +83,12 @@ describe('project utils', () => {
     });
 
     it('extracts status filters by checking against known statuses', () => {
-      const filters = new Set(['Active', 'Closed', 'UnknownStatus', 'Parkinson']);
+      const filters = new Set([
+        'Active',
+        'Closed',
+        'UnknownStatus',
+        'Parkinson',
+      ]);
 
       expect(toStatusFilters(filters)).toEqual(['Active', 'Closed']);
     });

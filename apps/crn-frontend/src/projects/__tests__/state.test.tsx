@@ -6,11 +6,7 @@ import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import type { ListProjectResponse, ProjectResponse } from '@asap-hub/model';
 
 import type { ProjectListOptions } from '../api';
-import {
-  projectsState,
-  useProjectById,
-  useProjects,
-} from '../state';
+import { projectsState, useProjectById, useProjects } from '../state';
 import { auth0State } from '../../auth/state';
 
 jest.mock('../../hooks/algolia', () => ({

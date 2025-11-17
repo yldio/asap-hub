@@ -1,15 +1,10 @@
 import {
   DiscoveryProject,
-  DiscoveryProjectDetail,
-  ProjectDetail,
   ProjectResponse,
   ProjectStatus,
   ResourceProject,
-  ResourceProjectDetail,
   TraineeProject,
-  TraineeProjectDetail,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
 
 export const isDiscoveryProject = (
   project: ProjectResponse,
@@ -22,82 +17,6 @@ export const isResourceProject = (
 export const isTraineeProject = (
   project: ProjectResponse,
 ): project is TraineeProject => project.projectType === 'Trainee';
-
-const defaultGrant = { title: '', description: '' } as const;
-
-const addMemberHref = <T extends { id: string }>(
-  member: T | undefined,
-): (T & { href: string }) | undefined =>
-  member
-    ? {
-        ...member,
-        href: network({}).users({}).user({ userId: member.id }).$,
-      }
-    : undefined;
-
-const addHrefToMembers = <T extends { id: string }>(
-  members: ReadonlyArray<T> | undefined,
-) => members?.map((member) => addMemberHref(member) as T & { href: string });
-
-export const toDiscoveryProjectDetail = (
-  project: DiscoveryProject,
-): DiscoveryProjectDetail => ({
-  ...project,
-  description: '',
-  originalGrant: defaultGrant,
-  supplementGrant: undefined,
-  milestones: [],
-  fundedTeam: {
-    id: project.teamId,
-    name: project.teamName,
-    type: 'Discovery Team',
-    researchTheme: project.researchTheme || undefined,
-    description: '',
-  },
-  collaborators: [],
-});
-
-export const toResourceProjectDetail = (
-  project: ResourceProject,
-): ResourceProjectDetail => ({
-  ...project,
-  description: '',
-  originalGrant: defaultGrant,
-  supplementGrant: undefined,
-  milestones: [],
-  fundedTeam: project.isTeamBased
-    ? {
-        id: project.teamId,
-        name: project.teamName ?? '',
-        type: 'Resource Project Team',
-        researchTheme: undefined,
-        description: '',
-      }
-    : undefined,
-  collaborators: project.isTeamBased
-    ? []
-    : addHrefToMembers(project.members) ?? project.members,
-  members: addHrefToMembers(project.members) ?? project.members,
-});
-
-export const toTraineeProjectDetail = (
-  project: TraineeProject,
-): TraineeProjectDetail => ({
-  ...project,
-  description: '',
-  originalGrant: defaultGrant,
-  supplementGrant: undefined,
-  milestones: [],
-  trainer: addMemberHref(project.trainer) ?? project.trainer,
-  members: addHrefToMembers(project.members) ?? project.members,
-});
-
-export const toProjectDetail = (project: ProjectResponse): ProjectDetail =>
-  ({
-    Discovery: toDiscoveryProjectDetail(project as DiscoveryProject),
-    Resource: toResourceProjectDetail(project as ResourceProject),
-    Trainee: toTraineeProjectDetail(project as TraineeProject),
-  })[project.projectType];
 
 export const PROJECT_STATUS_FILTER_PREFIX = 'status:';
 export const DISCOVERY_THEME_FILTER_PREFIX = 'theme:';

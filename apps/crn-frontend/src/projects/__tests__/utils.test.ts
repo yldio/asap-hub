@@ -3,7 +3,6 @@ import type {
   ResourceProject,
   TraineeProject,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
 
 import {
   DISCOVERY_THEME_FILTER_PREFIX,
@@ -11,13 +10,9 @@ import {
   isDiscoveryProject,
   isResourceProject,
   isTraineeProject,
-  toDiscoveryProjectDetail,
   toDiscoveryThemeFilters,
-  toProjectDetail,
-  toResourceProjectDetail,
   toResourceTypeFilters,
   toStatusFilters,
-  toTraineeProjectDetail,
   PROJECT_STATUS_FILTER_PREFIX,
 } from '../utils';
 
@@ -80,60 +75,6 @@ describe('project utils', () => {
       expect(isDiscoveryProject(baseDiscovery)).toBe(true);
       expect(isResourceProject(baseResource)).toBe(true);
       expect(isTraineeProject(baseTrainee)).toBe(true);
-    });
-  });
-
-  describe('detail transformers', () => {
-    it('creates discovery project detail with funded team info', () => {
-      const detail = toDiscoveryProjectDetail(baseDiscovery);
-      expect(detail.fundedTeam?.name).toEqual('Discovery Team');
-      expect(detail.researchTheme).toEqual('Theme One');
-      expect(detail.milestones).toEqual([]);
-    });
-
-    it('creates team-based resource project detail', () => {
-      const detail = toResourceProjectDetail(baseResource);
-      expect(detail.fundedTeam?.name).toEqual('Resource Team');
-      expect(detail.members).toEqual([]);
-    });
-
-    it('creates individual resource project detail', () => {
-      const resourceIndividual = {
-        ...baseResource,
-        isTeamBased: false,
-        members: [
-          {
-            id: 'member-1',
-            displayName: 'Pat Scientist',
-            role: 'Contributor',
-          },
-        ],
-      };
-
-      const detail = toResourceProjectDetail(resourceIndividual);
-      expect(detail.fundedTeam).toBeUndefined();
-      expect(detail.members).toHaveLength(1);
-      expect(detail.members?.[0]?.href).toEqual(
-        network({}).users({}).user({ userId: 'member-1' }).$,
-      );
-    });
-
-    it('creates trainee project detail with trainer and members', () => {
-      const detail = toTraineeProjectDetail(baseTrainee);
-      expect(detail.trainer.displayName).toEqual('Taylor Trainer');
-      expect(detail.members).toHaveLength(1);
-      expect(detail.trainer.href).toEqual(
-        network({}).users({}).user({ userId: 'trainer-1' }).$,
-      );
-      expect(detail.members?.[0]?.href).toEqual(
-        network({}).users({}).user({ userId: 'trainee-member' }).$,
-      );
-    });
-
-    it('maps project detail based on projectType', () => {
-      expect(toProjectDetail(baseDiscovery).projectType).toEqual('Discovery');
-      expect(toProjectDetail(baseResource).projectType).toEqual('Resource');
-      expect(toProjectDetail(baseTrainee).projectType).toEqual('Trainee');
     });
   });
 

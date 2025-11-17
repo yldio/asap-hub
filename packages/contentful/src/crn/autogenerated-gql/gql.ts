@@ -155,6 +155,14 @@ const documents = {
     types.FetchResearchTagsDocument,
   '\n  query FetchResearchTagsById($id: String!) {\n    researchTags(id: $id) {\n      ...ResearchTagsContent\n    }\n  }\n  \n':
     types.FetchResearchTagsByIdDocument,
+  '\n  fragment ResearchThemesContent on ResearchTheme {\n    sys {\n      id\n    }\n    name\n  }\n':
+    types.ResearchThemesContentFragmentDoc,
+  '\n  \n  query FetchResearchThemes(\n    $limit: Int\n    $skip: Int\n    $order: [ResearchThemeOrder]\n  ) {\n    researchThemeCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ResearchThemesContent\n      }\n    }\n  }\n':
+    types.FetchResearchThemesDocument,
+  '\n  fragment ResourceTypesContent on ResourceType {\n    sys {\n      id\n    }\n    name\n  }\n':
+    types.ResourceTypesContentFragmentDoc,
+  '\n  \n  query FetchResourceTypes(\n    $limit: Int\n    $skip: Int\n    $order: [ResourceTypeOrder]\n  ) {\n    resourceTypeCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ResourceTypesContent\n      }\n    }\n  }\n':
+    types.FetchResourceTypesDocument,
   '\n  query FetchTeamById($id: String!, $internalAPI: Boolean = true) {\n    teams(id: $id) {\n      sys {\n        id\n        publishedAt\n      }\n      displayName\n      teamType\n      inactiveSince\n      researchTheme {\n        name\n      }\n      toolsCollection {\n        items {\n          name\n          description\n          url\n        }\n      }\n      linkedFrom {\n        manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC)\n          @include(if: $internalAPI) {\n          items {\n            ...ManuscriptsContent\n            teamsCollection(limit: 1) {\n              items {\n                sys {\n                  id\n                }\n                linkedFrom {\n                  projectMembershipCollection(limit: 1) {\n                    items {\n                      linkedFrom {\n                        projectsCollection(limit: 1) {\n                          items {\n                            projectId\n                            grantId\n                          }\n                        }\n                      }\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n        teamMembershipCollection(limit: 100) {\n          items {\n            role\n            inactiveSinceDate\n            linkedFrom {\n              usersCollection(limit: 1) {\n                items {\n                  sys {\n                    id\n                  }\n                  onboarded\n                  firstName\n                  nickname\n                  lastName\n                  email\n                  alumniSinceDate\n                  avatar {\n                    url\n                  }\n                  labsCollection(limit: 5) {\n                    items {\n                      sys {\n                        id\n                      }\n                      name\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  \n':
     types.FetchTeamByIdDocument,
   '\n  query FetchTeams(\n    $limit: Int\n    $skip: Int\n    $order: [TeamsOrder]\n    $where: TeamsFilter\n  ) {\n    teamsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        sys {\n          id\n        }\n        displayName\n        inactiveSince\n        teamType\n        linkedFrom {\n          teamMembershipCollection(limit: 100) {\n            items {\n              role\n              linkedFrom {\n                usersCollection(limit: 1) {\n                  items {\n                    sys {\n                      id\n                    }\n                    onboarded\n                    labsCollection(limit: 5) {\n                      items {\n                        sys {\n                          id\n                        }\n                      }\n                    }\n                  }\n                }\n              }\n            }\n          }\n          projectMembershipCollection(limit: 1) {\n            items {\n              linkedFrom {\n                projectsCollection(limit: 1) {\n                  items {\n                    title\n                    researchTagsCollection(limit: 20) {\n                      items {\n                        sys {\n                          id\n                        }\n                        name\n                      }\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
@@ -633,6 +641,30 @@ export function gql(
 export function gql(
   source: '\n  query FetchResearchTagsById($id: String!) {\n    researchTags(id: $id) {\n      ...ResearchTagsContent\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchResearchTagsById($id: String!) {\n    researchTags(id: $id) {\n      ...ResearchTagsContent\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  fragment ResearchThemesContent on ResearchTheme {\n    sys {\n      id\n    }\n    name\n  }\n',
+): (typeof documents)['\n  fragment ResearchThemesContent on ResearchTheme {\n    sys {\n      id\n    }\n    name\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  \n  query FetchResearchThemes(\n    $limit: Int\n    $skip: Int\n    $order: [ResearchThemeOrder]\n  ) {\n    researchThemeCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ResearchThemesContent\n      }\n    }\n  }\n',
+): (typeof documents)['\n  \n  query FetchResearchThemes(\n    $limit: Int\n    $skip: Int\n    $order: [ResearchThemeOrder]\n  ) {\n    researchThemeCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ResearchThemesContent\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  fragment ResourceTypesContent on ResourceType {\n    sys {\n      id\n    }\n    name\n  }\n',
+): (typeof documents)['\n  fragment ResourceTypesContent on ResourceType {\n    sys {\n      id\n    }\n    name\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  \n  query FetchResourceTypes(\n    $limit: Int\n    $skip: Int\n    $order: [ResourceTypeOrder]\n  ) {\n    resourceTypeCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ResourceTypesContent\n      }\n    }\n  }\n',
+): (typeof documents)['\n  \n  query FetchResourceTypes(\n    $limit: Int\n    $skip: Int\n    $order: [ResourceTypeOrder]\n  ) {\n    resourceTypeCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ResourceTypesContent\n      }\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

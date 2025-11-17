@@ -48,14 +48,8 @@
     "manuscriptId",
     "teams",
     "assignedUsers",
-    "projectType",
-    "resourceType",
-    "researchTheme",
     "teamName",
-    "googleDriveLink",
-    "members.displayName",
-    "members.role",
-    "members.isTeam"
+    "members.displayName"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -82,14 +76,9 @@
     "openScienceTeamMember",
     "apcRequested",
     "apcCoverageRequestStatus",
-    "teamId",
     "projectType",
     "resourceType",
-    "researchTheme",
-    "members.id",
-    "searchable(members.displayName)",
-    "members.isTeam",
-    "members.role"
+    "researchTheme"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

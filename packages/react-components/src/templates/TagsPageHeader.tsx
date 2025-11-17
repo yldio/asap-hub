@@ -3,29 +3,15 @@ import { css } from '@emotion/react';
 import { CRNTagSearchEntities } from '@asap-hub/algolia';
 
 import { Display, MultiSelect, Paragraph } from '../atoms';
-import { rem } from '../pixels';
-import { paper, steel } from '../colors';
-import {
-  contentSidePaddingWithNavigation,
-  defaultContentTopPadding,
-} from '../layout';
+import { rem, smallDesktopScreen } from '../pixels';
 import { Filter } from '../organisms';
 import { searchIcon } from '../icons';
 import { noop } from '../utils';
+import PageConstraints from './PageConstraints';
+import PageInfoContainer from './PageInfoContainer';
 
-const visualHeaderStyles = css({
-  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)}`,
-  background: paper.rgb,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-});
 const textStyles = css({
-  maxWidth: rem(610),
-});
-
-const controlsStyles = css({
-  padding: `${defaultContentTopPadding} ${contentSidePaddingWithNavigation(
-    8,
-  )} 0`,
+  maxWidth: rem(smallDesktopScreen.width),
 });
 
 const styles = css({
@@ -55,7 +41,7 @@ const TagsPageHeader: React.FC<TagsPageHeaderProps> = ({
   loadTags = noop,
 }) => (
   <header>
-    <div css={visualHeaderStyles}>
+    <PageInfoContainer>
       <Display styleAsHeading={2}>Tags Search</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
@@ -64,10 +50,11 @@ const TagsPageHeader: React.FC<TagsPageHeaderProps> = ({
           groups and news).
         </Paragraph>
       </div>
-    </div>
-    <div css={controlsStyles}>
+    </PageInfoContainer>
+    <PageConstraints noPaddingBottom>
       <div role="search" css={styles}>
         <MultiSelect
+          noMargin
           leftIndicator={searchIcon}
           noOptionsMessage={() => 'No results found'}
           loadOptions={loadTags}
@@ -81,15 +68,13 @@ const TagsPageHeader: React.FC<TagsPageHeaderProps> = ({
           }`} // Force re-render to refresh default options. (https://github.com/JedWatson/react-select/discussions/5389)
           placeholder="Search for any tags..."
         />
-        <div css={{ marginTop: rem(15) }}>
-          <Filter
-            filters={filters}
-            onChangeFilter={onChangeFilter}
-            filterOptions={filterOptions}
-          />
-        </div>
+        <Filter
+          filters={filters}
+          onChangeFilter={onChangeFilter}
+          filterOptions={filterOptions}
+        />
       </div>
-    </div>
+    </PageConstraints>
   </header>
 );
 

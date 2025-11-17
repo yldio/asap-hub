@@ -1,10 +1,30 @@
 import failOnConsole from 'jest-fail-on-console';
+import { TextEncoder, TextDecoder } from 'util';
+
 failOnConsole({
-  silenceMessage: (msg, method, context) =>
-    /Recoil: Spent [0-9]{1,2}\.[0-9]+ms computing a cache key/.test(
-      context.group,
-    ),
+  silenceMessage: (msg, method, context) => {
+    // Silence Recoil performance warnings
+    if (/Recoil: Spent [0-9]{1,2}\.[0-9]+ms computing a cache key/.test(context.group)) {
+      return true;
+    }
+    // Silence React 18 compatibility warnings from third-party libraries
+    if (typeof msg === 'string') {
+      // react-select defaultProps warning
+      if (msg.includes('Support for defaultProps will be removed from function components')) {
+        return true;
+      }
+      // react-sortable-hoc findDOMNode warning
+      if (msg.includes('findDOMNode is deprecated')) {
+        return true;
+      }
+    }
+    return false;
+  },
 });
+
+// Polyfill TextEncoder/TextDecoder for React 18
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 if (typeof document === 'object') {
   // jest-dom adds custom jest matchers for asserting on DOM nodes.

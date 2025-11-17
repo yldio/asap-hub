@@ -1,6 +1,6 @@
 import { ListResponse } from './common';
 
-export type ProjectStatus = 'Active' | 'Completed' | 'Closed';
+export type ProjectStatus = 'Active' | 'Complete' | 'Closed';
 
 export type ProjectType = 'Discovery' | 'Resource' | 'Trainee';
 

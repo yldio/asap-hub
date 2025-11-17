@@ -20,7 +20,7 @@ export const isTraineeProject = (
 
 export const PROJECT_STATUSES: readonly ProjectStatus[] = [
   'Active',
-  'Completed',
+  'Complete',
   'Closed',
 ];
 

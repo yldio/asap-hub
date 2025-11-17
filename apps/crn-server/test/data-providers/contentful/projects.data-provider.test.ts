@@ -46,7 +46,7 @@ describe('ProjectContentfulDataProvider', () => {
         search: 'brain health',
         filter: {
           projectType: ['Discovery', 'Resource'],
-          status: ['Completed', 'Active'],
+          status: ['Complete', 'Active'],
         },
       });
 
@@ -69,7 +69,7 @@ describe('ProjectContentfulDataProvider', () => {
               { researchTags: { name_contains: 'health' } },
             ],
             projectType_in: ['Discovery Project', 'Resource Project'],
-            status_in: ['Completed', 'Active'],
+            status_in: ['Complete', 'Active'],
           },
         },
       );
@@ -83,7 +83,7 @@ describe('ProjectContentfulDataProvider', () => {
       await dataProvider.fetch({
         filter: {
           projectType: 'Discovery',
-          status: 'Completed',
+          status: 'Complete',
         },
       });
 
@@ -95,7 +95,7 @@ describe('ProjectContentfulDataProvider', () => {
           order: [ProjectsOrder.SysFirstPublishedAtDesc],
           where: {
             projectType_in: ['Discovery Project'],
-            status_in: ['Completed'],
+            status_in: ['Complete'],
           },
         }),
       );

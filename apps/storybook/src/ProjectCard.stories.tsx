@@ -34,7 +34,7 @@ export const DiscoveryProjectComplete = () => (
     projectType="Discovery"
     id="discovery-2"
     title="Biomarker Development for Early Parkinson's Detection"
-    status="Completed"
+    status="Complete"
     researchTheme="Biomarkers"
     teamName="Chen Discovery Team"
     teamId="team-2"
@@ -135,7 +135,7 @@ export const ResourceProjectComplete = () => (
     projectType="Resource"
     id="resource-3"
     title="Standardized Clinical Assessment Protocol"
-    status="Completed"
+    status="Complete"
     resourceType="Protocol"
     isTeamBased={true}
     teamName="Williams Clinical Team"
@@ -218,7 +218,7 @@ export const TraineeProjectComplete = () => (
     projectType="Trainee"
     id="trainee-2"
     title="Dopaminergic Neuron Vulnerability in Parkinson's Disease"
-    status="Completed"
+    status="Complete"
     trainer={{
       id: '10',
       displayName: 'Prof. Maria Gonzalez',

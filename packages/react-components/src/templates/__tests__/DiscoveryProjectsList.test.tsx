@@ -20,7 +20,7 @@ const mockProjects: ComponentProps<typeof DiscoveryProjectsList>['projects'] = [
   {
     id: '2',
     title: 'Test Discovery Project 2',
-    status: 'Completed',
+    status: 'Complete',
     projectType: 'Discovery' as const,
     researchTheme: 'Biomarkers',
     teamName: 'Team Beta',

@@ -13,7 +13,7 @@ const projectTypes: readonly ProjectType[] = [
 
 const projectStatuses: readonly ProjectStatus[] = [
   'Active',
-  'Completed',
+  'Complete',
   'Closed',
 ];
 

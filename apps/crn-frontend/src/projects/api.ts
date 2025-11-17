@@ -82,27 +82,6 @@ export const getProjects = async (
       throw new Error(`Could not search: ${error.message}`);
     });
 
-type ProjectFacetRequest = {
-  projectType: ProjectType;
-  facets: ReadonlyArray<'researchTheme' | 'resourceType'>;
-};
-
-export const getProjectFacets = async (
-  client: AlgoliaClient<'crn'>,
-  { projectType, facets }: ProjectFacetRequest,
-): Promise<Record<string, Record<string, number>>> =>
-  client
-    .search(['project'], '', {
-      page: 0,
-      hitsPerPage: 0,
-      filters: `projectType:"${projectType}"`,
-      facets,
-    })
-    .then((response) => response.facets ?? {})
-    .catch((error: Error) => {
-      throw new Error(`Could not fetch project facets: ${error.message}`);
-    });
-
 export const toListProjectResponse = (
   response: Awaited<ReturnType<typeof getProjects>>,
 ): ListProjectResponse => ({

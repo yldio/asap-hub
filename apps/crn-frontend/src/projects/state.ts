@@ -15,7 +15,6 @@ import { useAlgolia } from '../hooks/algolia';
 import {
   getProject,
   getProjects,
-  getProjectFacets,
   ProjectListOptions,
   toListProjectResponse,
 } from './api';
@@ -116,28 +115,3 @@ export const useProjects = (options: ProjectListOptions) => {
 };
 
 export const useProjectById = (id: string) => useRecoilValue(projectState(id));
-
-type ProjectFacetOptions = {
-  projectType: ProjectType;
-  facets: ReadonlyArray<'researchTheme' | 'resourceType'>;
-};
-
-const projectFacetsState = atomFamily<
-  Record<string, Record<string, number>> | Error | undefined,
-  ProjectFacetOptions
->({ key: 'projectFacets', default: undefined });
-
-export const useProjectFacets = (options: ProjectFacetOptions) => {
-  const [facets, setFacets] = useRecoilState(projectFacetsState(options));
-  const { client } = useAlgolia();
-
-  if (facets === undefined) {
-    throw getProjectFacets(client, options).then(setFacets).catch(setFacets);
-  }
-
-  if (facets instanceof Error) {
-    throw facets;
-  }
-
-  return facets;
-};

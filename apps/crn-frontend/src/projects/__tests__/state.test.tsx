@@ -9,7 +9,6 @@ import type { ProjectListOptions } from '../api';
 import {
   projectsState,
   useProjectById,
-  useProjectFacets,
   useProjects,
 } from '../state';
 import { auth0State } from '../../auth/state';
@@ -20,7 +19,6 @@ jest.mock('../../hooks/algolia', () => ({
 
 jest.mock('../api', () => ({
   getProjects: jest.fn(),
-  getProjectFacets: jest.fn(),
   getProject: jest.fn(),
   toListProjectResponse: jest.fn(),
 }));
@@ -30,7 +28,6 @@ const { useAlgolia } = jest.requireMock('../../hooks/algolia') as jest.Mocked<
 >;
 const {
   getProjects: mockGetProjects,
-  getProjectFacets: mockGetProjectFacets,
   getProject: mockGetProject,
   toListProjectResponse: mockToListProjectResponse,
 } = jest.requireMock('../api') as jest.Mocked<typeof import('../api')>;
@@ -61,10 +58,6 @@ const listResponse: ListProjectResponse = {
   ] as unknown as ProjectResponse[],
   algoliaIndexName: 'projects-index',
   algoliaQueryId: 'query-id',
-};
-
-const facetsResponse = {
-  researchTheme: { Neuro: 3 },
 };
 
 const createWrapper =
@@ -175,55 +168,6 @@ describe('projects state hooks', () => {
       });
 
       expect(result.current[0]).toBe(error);
-    });
-  });
-
-  describe('useProjectFacets', () => {
-    it('fetches and caches Algolia facets', async () => {
-      mockGetProjectFacets.mockResolvedValueOnce(facetsResponse);
-
-      const facetOptions = {
-        projectType: 'Discovery' as const,
-        facets: ['researchTheme'] as const,
-      };
-
-      const { result, waitForNextUpdate } = renderHook(
-        () => useProjectFacets(facetOptions),
-        { wrapper: createWrapper() },
-      );
-
-      await waitForNextUpdate();
-
-      expect(mockGetProjectFacets).toHaveBeenCalledWith(
-        mockAlgoliaClient,
-        facetOptions,
-      );
-      expect(result.current).toEqual(facetsResponse);
-    });
-
-    it('throws when facet fetching fails', async () => {
-      const rejection = new Error('Facet failure');
-      mockGetProjectFacets.mockRejectedValueOnce(rejection);
-
-      const facetOptions = {
-        projectType: 'Resource' as const,
-        facets: ['resourceType'] as const,
-      };
-
-      const consoleErrorSpy = jest
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-
-      const { result, waitForNextUpdate } = renderHook(
-        () => useProjectFacets(facetOptions),
-        { wrapper: createWrapper() },
-      );
-
-      await waitForNextUpdate();
-
-      expect(result.error).toBe(rejection);
-
-      consoleErrorSpy.mockRestore();
     });
   });
 

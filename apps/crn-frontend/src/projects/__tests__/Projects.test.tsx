@@ -111,24 +111,6 @@ jest.mock('../state', () => {
     }
   });
 
-  const useProjectFacets = jest.fn((options: { projectType: string }) => {
-    if (options.projectType === 'Discovery') {
-      return {
-        researchTheme: {
-          'Theme One': 2,
-        },
-      };
-    }
-    if (options.projectType === 'Resource') {
-      return {
-        resourceType: {
-          'Data Portal': 1,
-        },
-      };
-    }
-    return {};
-  });
-
   const useProjectById = jest.fn((id: string) => {
     if (id === '1') {
       return mockDiscoveryProject;
@@ -145,7 +127,6 @@ jest.mock('../state', () => {
   return {
     __esModule: true,
     useProjects,
-    useProjectFacets,
     useProjectById,
   };
 });

@@ -4,7 +4,6 @@ import type { ProjectResponse } from '@asap-hub/model';
 
 import {
   getProject,
-  getProjectFacets,
   getProjects,
   ProjectListOptions,
   toListProjectResponse,
@@ -148,46 +147,6 @@ describe('projects api', () => {
           ),
         }),
       );
-    });
-  });
-
-  describe('getProjectFacets', () => {
-    it('requests facet counts with hitsPerPage=0', async () => {
-      const facetsResponse = {
-        researchTheme: { Neuro: 3 },
-      };
-
-      mockAlgoliaClient.search.mockResolvedValueOnce({
-        facets: facetsResponse,
-      } as never);
-
-      const result = await getProjectFacets(mockAlgoliaClient, {
-        projectType: 'Resource',
-        facets: ['resourceType'],
-      });
-
-      expect(mockAlgoliaClient.search).toHaveBeenCalledWith(
-        ['project'],
-        '',
-        expect.objectContaining({
-          page: 0,
-          hitsPerPage: 0,
-          filters: 'projectType:"Resource"',
-          facets: ['resourceType'],
-        }),
-      );
-      expect(result).toEqual(facetsResponse);
-    });
-
-    it('wraps Algolia errors with a helpful message', async () => {
-      mockAlgoliaClient.search.mockRejectedValueOnce(new Error('Invalid key'));
-
-      await expect(
-        getProjectFacets(mockAlgoliaClient, {
-          projectType: 'Discovery',
-          facets: ['researchTheme'],
-        }),
-      ).rejects.toThrow('Could not fetch project facets: Invalid key');
     });
   });
 

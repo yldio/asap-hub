@@ -128,7 +128,7 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
             onChangeFilter={onChangeFilter}
             filters={filters}
             filterOptions={filterOptions}
-            searchPlaceholder="Enter project name, keyword, theme, …"
+            searchPlaceholder="Enter project name, keyword, …"
           />
         </div>
       )}

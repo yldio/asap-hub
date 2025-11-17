@@ -135,7 +135,7 @@ describe('search functionality', () => {
     const { getByRole } = render(<ProjectsPageHeader {...props} />);
     expect(
       (getByRole('searchbox') as HTMLInputElement).placeholder,
-    ).toMatchInlineSnapshot(`"Enter project name, keyword, theme, …"`);
+    ).toMatchInlineSnapshot(`"Enter project name, keyword, …"`);
   });
 
   it('calls onChangeSearchQuery when typing', async () => {

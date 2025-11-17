@@ -106,7 +106,8 @@
     "asc(lastUpdated)",
     "desc(addedDate)",
     "desc(createdDate)",
-    "asc(team.displayName)"
+    "asc(team.displayName)",
+    "asc(displayName"
   ],
   "separatorsToIndex": "",
   "removeWordsIfNoResults": "none",

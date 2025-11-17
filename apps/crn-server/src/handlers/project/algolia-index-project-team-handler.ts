@@ -20,9 +20,14 @@ import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import { addTagsFunction } from '../helper';
 
 /**
+ * On Project Published
  * 1. Find the previously linked team in Algolia
  * 2. Find the currently linked team in Contentful
  * 3. Sync each unique teamId (no removal)
+ *
+ * On Project Unpublished
+ * There won't be any new linked team
+ * 1. Sync any team linked to the project in Algolia
  */
 
 export const indexTeamByProjectHandler =

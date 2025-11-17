@@ -103,11 +103,12 @@ describe('Index Team by Project Handler', () => {
       }),
     );
 
-    // expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
-    //     {
-    //         data: {...previousTeamResponse, _tags},
-    //         type: 'team',
-    //     });
+    expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
+      {
+        data: { ...previousTeamResponse, _tags },
+        type: 'team',
+      },
+    ]);
   });
 
   test('should do nothing if no previous or new teams', async () => {

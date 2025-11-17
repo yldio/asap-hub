@@ -38,7 +38,7 @@ export default class TeamController {
   }
 
   async fetch(options: FetchTeamsOptions): Promise<ListTeamResponse> {
-    const { take = 8, skip = 0, search, filter, teamType } = options;
+    const { take = 8, skip = 0, search, filter, teamType, teamIds } = options;
 
     const { total, items } = await this.teamDataProvider.fetch({
       take,
@@ -46,6 +46,7 @@ export default class TeamController {
       search,
       filter,
       teamType,
+      teamIds,
     });
 
     return {
@@ -89,5 +90,9 @@ export default class TeamController {
     }
 
     return team;
+  }
+
+  async fetchTeamIdByProjectId(projectId: string): Promise<string | null> {
+    return this.teamDataProvider.fetchTeamIdByProjectId(projectId);
   }
 }

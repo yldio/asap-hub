@@ -133,6 +133,9 @@ export const FETCH_TEAMS = gql`
               linkedFrom {
                 projectsCollection(limit: 1) {
                   items {
+                    sys {
+                      id
+                    }
                     title
                     researchTagsCollection(limit: 20) {
                       items {
@@ -237,6 +240,9 @@ export const FETCH_PROJECT_BY_TEAM_ID = gql`
             linkedFrom {
               projectsCollection(limit: 1) {
                 items {
+                  sys {
+                    id
+                  }
                   title
                   projectId
                   grantId
@@ -266,6 +272,25 @@ export const FETCH_PROJECT_BY_TEAM_ID = gql`
                     }
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_TEAM_ID_BY_PROJECT_ID = gql`
+  query FetchTeamIdByProjectId($projectId: String!) {
+    projects(id: $projectId) {
+      membersCollection(limit: 1) {
+        items {
+          projectMember {
+            ... on Teams {
+              __typename
+              sys {
+                id
               }
             }
           }

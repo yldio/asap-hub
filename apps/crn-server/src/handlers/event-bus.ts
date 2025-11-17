@@ -40,6 +40,11 @@ export type TeamContentfulPayload = WebhookDetail<
 >;
 export type TeamPayload = TeamContentfulPayload;
 
+export type ProjectContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'projects'>
+>;
+export type ProjectPayload = TeamContentfulPayload;
+
 export type UserContentfulPayload = WebhookDetail<
   ContentfulWebhookPayload<'users'>
 >;

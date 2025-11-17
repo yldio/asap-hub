@@ -26492,6 +26492,7 @@ export type FetchTeamsQuery = {
                         items: Array<
                           Maybe<
                             Pick<Projects, 'title'> & {
+                              sys: Pick<Sys, 'id'>;
                               researchTagsCollection?: Maybe<{
                                 items: Array<
                                   Maybe<
@@ -26616,6 +26617,7 @@ export type FetchTeamProjectByIdQuery = {
                       Projects,
                       'title' | 'projectId' | 'grantId' | 'originalGrant'
                     > & {
+                      sys: Pick<Sys, 'id'>;
                       proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                       supplementGrant?: Maybe<
                         Pick<
@@ -26640,6 +26642,24 @@ export type FetchTeamProjectByIdQuery = {
           }>
         >;
       }>;
+    }>;
+  }>;
+};
+
+export type FetchTeamIdByProjectIdQueryVariables = Exact<{
+  projectId: Scalars['String'];
+}>;
+
+export type FetchTeamIdByProjectIdQuery = {
+  projects?: Maybe<{
+    membersCollection?: Maybe<{
+      items: Array<
+        Maybe<{
+          projectMember?: Maybe<
+            ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> }) | {}
+          >;
+        }>
+      >;
     }>;
   }>;
 };
@@ -51432,6 +51452,25 @@ export const FetchTeamsDocument = {
                                                             kind: 'Field',
                                                             name: {
                                                               kind: 'Name',
+                                                              value: 'sys',
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value: 'id',
+                                                                  },
+                                                                },
+                                                              ],
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
                                                               value: 'title',
                                                             },
                                                           },
@@ -52167,6 +52206,25 @@ export const FetchTeamProjectByIdDocument = {
                                                       kind: 'Field',
                                                       name: {
                                                         kind: 'Name',
+                                                        value: 'sys',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
                                                         value: 'title',
                                                       },
                                                     },
@@ -52397,6 +52455,128 @@ export const FetchTeamProjectByIdDocument = {
 } as unknown as DocumentNode<
   FetchTeamProjectByIdQuery,
   FetchTeamProjectByIdQueryVariables
+>;
+export const FetchTeamIdByProjectIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchTeamIdByProjectId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'projectId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'projects' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'projectId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'membersCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '1' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'projectMember' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Teams' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: '__typename',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchTeamIdByProjectIdQuery,
+  FetchTeamIdByProjectIdQueryVariables
 >;
 export const FetchTutorialByIdDocument = {
   kind: 'Document',

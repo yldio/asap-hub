@@ -5,6 +5,8 @@ import {
   FetchPublicTeamsQueryVariables,
   FetchTeamByIdQuery,
   FetchTeamByIdQueryVariables,
+  FetchTeamIdByProjectIdQuery,
+  FetchTeamIdByProjectIdQueryVariables,
   FetchTeamProjectByIdQuery,
   FetchTeamProjectByIdQueryVariables,
   FetchTeamsQuery,
@@ -13,12 +15,14 @@ import {
   FETCH_PUBLIC_TEAMS,
   FETCH_TEAMS,
   FETCH_TEAM_BY_ID,
+  FETCH_TEAM_ID_BY_PROJECT_ID,
   GraphQLClient,
   patchAndPublish,
   TeamsOrder,
 } from '@asap-hub/contentful';
 import {
   FetchPaginationOptions,
+  FetchTeamsOptions,
   LabResponse,
   ListPublicTeamDataObject,
   ListTeamDataObject,
@@ -38,10 +42,7 @@ import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
 
 import { sortMembers } from '../transformers';
-import {
-  FetchTeamsOptions,
-  TeamDataProvider,
-} from '../types/teams.data-provider.types';
+import { TeamDataProvider } from '../types/teams.data-provider.types';
 import { parseGraphqlManuscriptVersion } from './manuscript.data-provider';
 import { parseResearchTags } from './research-tag.data-provider';
 
@@ -115,6 +116,13 @@ export type ManuscriptItem = NonNullable<
   >['items'][number]
 >;
 
+export type ProjectMember = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<FetchTeamIdByProjectIdQuery['projects']>['membersCollection']
+    >['items'][number]
+  >['projectMember']
+> & { __typename?: string };
 const getTeamStatusQuery = (filter: FetchTeamsOptions['filter']) => {
   if (!filter || filter.length === 0) {
     return {};
@@ -148,7 +156,7 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
   }
 
   async fetch(options: FetchTeamsOptions): Promise<ListTeamDataObject> {
-    const { take = 8, skip = 0, search, filter, teamType } = options;
+    const { take = 8, skip = 0, search, filter, teamType, teamIds } = options;
 
     const searchTerms = (search || '').split(' ').filter(Boolean);
     const searchQuery = searchTerms.length
@@ -174,6 +182,7 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
         ...searchQuery,
         ...teamStatusQuery,
         ...(teamType ? { teamType } : {}),
+        ...(teamIds && teamIds.length > 0 ? { sys: { id_in: teamIds } } : {}),
       },
     });
 
@@ -246,6 +255,23 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
     return parseContentfulGraphQlTeam(teams, linkedProject);
   }
 
+  async fetchTeamIdByProjectId(projectId: string): Promise<string | null> {
+    const { projects } = await this.contentfulClient.request<
+      FetchTeamIdByProjectIdQuery,
+      FetchTeamIdByProjectIdQueryVariables
+    >(FETCH_TEAM_ID_BY_PROJECT_ID, { projectId });
+
+    const isTeam = (
+      member: ProjectMember,
+    ): member is { __typename: 'Teams'; sys: { id: string } } =>
+      member.__typename === 'Teams';
+
+    const projectMember =
+      projects?.membersCollection?.items?.[0]?.projectMember;
+
+    return projectMember && isTeam(projectMember) ? projectMember.sys.id : null;
+  }
+
   async update(id: string, update: TeamUpdateDataObject): Promise<void> {
     const environment = await this.getRestClient();
 
@@ -312,6 +338,7 @@ export const parseContentfulGraphQlTeamListItem = (
     inactiveSince: item.inactiveSince ?? undefined,
     teamStatus: item.inactiveSince ? 'Inactive' : 'Active',
     projectTitle: linkedProject?.title ?? '',
+    linkedProjectId: linkedProject?.sys.id ?? '',
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
     tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
     memberCount: numberOfMembers,
@@ -609,6 +636,7 @@ export const parseContentfulGraphQlTeam = (
     inactiveSince: item.inactiveSince ?? undefined,
     teamStatus: item.inactiveSince ? 'Inactive' : 'Active',
     projectTitle: linkedProject?.title ?? '',
+    linkedProjectId: linkedProject?.sys.id ?? '',
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
     tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
     tools,

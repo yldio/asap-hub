@@ -540,15 +540,34 @@ export const getContentfulGraphqlUser = (
                 },
               ],
             },
+            projectMembershipCollection: {
+              items: [
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [
+                        {
+                          proposal: {
+                            sys: {
+                              id: 'proposalId1',
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
           },
           researchTheme: {
             name: 'PD Functional Genomics',
           },
-          proposal: {
-            sys: {
-              id: 'proposalId1',
-            },
-          },
+          // proposal: {
+          //   sys: {
+          //     id: 'proposalId1',
+          //   },
+          // },
         },
       },
     ],

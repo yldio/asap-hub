@@ -12,7 +12,10 @@ import {
 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
-import { getContentfulGraphqlTeam } from './teams.fixtures';
+import {
+  getContentfulGraphqlProjectsCollection,
+  getContentfulGraphqlTeam,
+} from './teams.fixtures';
 
 export const listInterestGroupsResponse: ListInterestGroupResponse = {
   total: 2,
@@ -153,7 +156,7 @@ export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
       id: 'team-id-0',
       displayName: 'Team A',
       endDate: '2025-01-11T14:00:00.000Z',
-      tags: [],
+      tags: [{ id: 'tag-1', name: 'Animal resources 1' }],
       projectTitle:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
     },
@@ -183,6 +186,7 @@ export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
 export const getContentfulGraphql = () => {
   const graphqlInterestGroup = getContentfulGraphqlInterestGroup();
   const graphqlLeader = getContentfulGraphQLLeader();
+  const graphqlProject = getContentfulGraphqlProjectsCollection().items[0];
   return {
     InterestGroupsCollection: () => ({ total: 1, items: [{}] }),
     InterestGroups: () => ({
@@ -196,6 +200,8 @@ export const getContentfulGraphql = () => {
     }),
     Teams: () => getContentfulGraphqlTeam(),
     TeamsCollection: () => graphqlLeader.teamsCollection,
+    Projects: () => graphqlProject,
+    ResearchTags: () => graphqlProject?.researchTagsCollection?.items[0],
   };
 };
 

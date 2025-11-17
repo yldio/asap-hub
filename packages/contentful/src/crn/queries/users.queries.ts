@@ -72,12 +72,22 @@ export const usersContentQueryFragment = gql`
           researchTheme {
             name
           }
-          proposal {
-            sys {
-              id
-            }
-          }
           linkedFrom {
+            projectMembershipCollection(limit: 1) {
+              items {
+                linkedFrom {
+                  projectsCollection(limit: 1) {
+                    items {
+                      proposal {
+                        sys {
+                          id
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
             interestGroupsTeamsCollection(limit: 10) {
               items {
                 linkedFrom {

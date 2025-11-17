@@ -13,7 +13,7 @@
     "migrate-user-labs": "ts-node ./scripts/migrate-user-labs.ts",
     "migrate-assign-users-as-lab-pi": "ts-node ./scripts/assign-users-as-lab-pi.ts",
     "migrate-preprint-versions": "ts-node ./scripts/migrate-research-output-versions.ts",
-    "migrate-team-types": "ts-node ./scripts/migrate-team-types.ts",
+    "migrate-project-data": "ts-node ./scripts/migrate-project-data.ts",
     "migrate-preliminary-data-sharing": "ts-node ./scripts/migrate-preliminary-data-sharing.ts",
     "transform-privacy-policy": "ts-node ./scripts/transform-privacy-policy.ts",
     "rollback-privacy-policy": "ts-node ./scripts/rollback-privacy-policy.ts",

@@ -10,7 +10,7 @@ export type BaseProject = {
   readonly status: ProjectStatus;
   readonly startDate: string;
   readonly endDate: string;
-  readonly duration: string;
+  readonly duration?: string;
   readonly tags: string[];
 };
 

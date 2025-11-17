@@ -19,7 +19,6 @@ import {
   TraineeProject,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
-import { DateTime } from 'luxon';
 
 import {
   FetchProjectsOptions,
@@ -149,7 +148,6 @@ export const parseContentfulProject = (
     status,
     startDate: item.startDate,
     endDate: item.endDate,
-    duration: calculateDuration(item.startDate, item.endDate),
     tags,
   };
 
@@ -298,25 +296,4 @@ export const parseProjectTeamMember = (
     id: projectMember.sys.id,
     displayName: projectMember.displayName || '',
   };
-};
-
-// Calculate project duration
-const calculateDuration = (startDate: string, endDate: string): string => {
-  const start = DateTime.fromISO(startDate);
-  const end = DateTime.fromISO(endDate);
-
-  const duration = end.diff(start, ['years', 'months']);
-  const years = Math.floor(duration.years);
-  const months = Math.round(duration.months);
-
-  if (years > 0) {
-    if (months > 0) {
-      return `${years} yr${years > 1 ? 's' : ''} ${months} mo${
-        months > 1 ? 's' : ''
-      }`;
-    }
-    return `${years} yr${years > 1 ? 's' : ''}`;
-  }
-
-  return `${months} mo${months > 1 ? 's' : ''}`;
 };

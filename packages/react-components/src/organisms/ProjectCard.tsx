@@ -260,6 +260,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
           <ProjectDuration
             startDate={project.startDate}
             endDate={project.endDate}
+            projectStatus={project.status}
           />
         </div>
 

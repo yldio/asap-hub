@@ -20,7 +20,7 @@ const discoveryProjectProps: ComponentProps<typeof ProjectCard> = {
   ...baseProjectProps,
   projectType: 'Discovery',
   title: 'Understanding Genetic Mechanisms in PD',
-  status: 'Active',
+  status: 'Closed',
   researchTheme: 'Genetics',
   teamName: 'Alpha Team',
   teamId: 'team-1',

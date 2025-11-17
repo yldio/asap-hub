@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { ProjectDetail, ProjectType } from '@asap-hub/model';
 import ProjectDetailHeader, { getTeamIcon } from '../ProjectDetailHeader';
 
@@ -495,7 +495,7 @@ describe('ProjectDetailHeader', () => {
       );
       // Check that dates are rendered
       expect(screen.getByText(/Jan 2023/)).toBeInTheDocument();
-      expect(screen.getByText(/Dec 2025/)).toBeInTheDocument();
+      expect(screen.getByText(/Present/)).toBeInTheDocument();
     });
 
     it('renders duration for Trainee projects separately', () => {
@@ -506,18 +506,19 @@ describe('ProjectDetailHeader', () => {
         />,
       );
       expect(screen.getByText(/Jan 2023/)).toBeInTheDocument();
-      expect(screen.getByText(/Dec 2025/)).toBeInTheDocument();
+      expect(screen.getByText(/Present/)).toBeInTheDocument();
     });
 
     it('renders duration for Resource not team-based projects', () => {
-      render(
+      const { getByText } = render(
         <ProjectDetailHeader
           {...mockResourceMemberProject}
           aboutHref="/projects/resource/1/about"
         />,
       );
-      expect(screen.getByText(/Jan 2023/)).toBeInTheDocument();
-      expect(screen.getByText(/Dec 2025/)).toBeInTheDocument();
+
+      expect(getByText(/Jan 2023/)).toBeInTheDocument();
+      expect(getByText(/Present/)).toBeInTheDocument();
     });
   });
 });

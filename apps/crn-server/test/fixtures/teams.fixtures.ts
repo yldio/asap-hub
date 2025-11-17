@@ -108,6 +108,9 @@ export const getContentfulGraphqlTeamProjectById = (): NonNullable<
             projectsCollection: {
               items: [
                 {
+                  sys: {
+                    id: 'project-id-1',
+                  },
                   title:
                     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
                   projectId: '',
@@ -347,6 +350,9 @@ export const getContentfulGraphqlProjectMembershipsCollection = (): {
   total: 1,
   items: [
     {
+      sys: {
+        id: 'project-id-1',
+      },
       title:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
       projectId: 'WH1',
@@ -378,6 +384,9 @@ export const getContentfulGraphqlProjectsCollection = (): {
   total: 1,
   items: [
     {
+      sys: {
+        id: 'project-id-1',
+      },
       title:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
       projectId: 'WH1',
@@ -608,6 +617,7 @@ export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
   memberCount: 1,
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  linkedProjectId: 'project-id-1',
 });
 
 export const getTeamResponse = (): TeamResponse => getTeamDataObject();

@@ -194,6 +194,24 @@ describe('Team Controller', () => {
     });
   });
 
+  describe('fetchTeamIdByProjectId method', () => {
+    test('Should return null when team is not found', async () => {
+      teamDataProviderMock.fetchTeamIdByProjectId.mockResolvedValueOnce(null);
+      const result = await teamController.fetchTeamIdByProjectId('not-found');
+
+      expect(result).toEqual(null);
+    });
+
+    test('Should return the team id when found', async () => {
+      const teamId = 'team-id-1';
+      teamDataProviderMock.fetchTeamIdByProjectId.mockResolvedValueOnce(teamId);
+      const result =
+        await teamController.fetchTeamIdByProjectId('project-id-1');
+
+      expect(result).toEqual(teamId);
+    });
+  });
+
   describe('Update method', () => {
     const teamTools = [
       {

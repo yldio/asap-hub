@@ -13,7 +13,10 @@ const testPathIgnorePatterns = [
 
 module.exports = {
   testEnvironment: 'node',
-  setupFilesAfterEnv: [require.resolve('./flags-setup-after-env.js')],
+  setupFilesAfterEnv: [
+    require.resolve('./emotion-jsdom-setup.js'),
+    require.resolve('./flags-setup-after-env.js'),
+  ],
 
   cacheDirectory: join(root, '.jest-cache'),
 

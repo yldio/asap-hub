@@ -44,16 +44,8 @@ export const toDiscoveryThemeFilters = (
   if (!filters) {
     return [];
   }
-  // If themes are loaded, validate against them. Otherwise, pass through non-status filters.
-  if (availableThemes.length > 0) {
-    const themeNames = new Set(availableThemes.map((theme) => theme.name));
-    return Array.from(filters).filter((filter) => themeNames.has(filter));
-  }
-  // Fallback: if themes aren't loaded yet, pass through filters that aren't status filters
-  // This allows filters to work even if themes haven't loaded yet
-  return Array.from(filters).filter(
-    (filter) => !PROJECT_STATUSES.includes(filter as ProjectStatus),
-  );
+  const themeNames = new Set(availableThemes.map((theme) => theme.name));
+  return Array.from(filters).filter((filter) => themeNames.has(filter));
 };
 
 // Helper function to extract resource type filters from a set of filters
@@ -64,14 +56,6 @@ export const toResourceTypeFilters = (
   if (!filters) {
     return [];
   }
-  // If types are loaded, validate against them. Otherwise, pass through non-status filters.
-  if (availableTypes.length > 0) {
-    const typeNames = new Set(availableTypes.map((type) => type.name));
-    return Array.from(filters).filter((filter) => typeNames.has(filter));
-  }
-  // Fallback: if types aren't loaded yet, pass through filters that aren't status filters
-  // This allows filters to work even if types haven't loaded yet
-  return Array.from(filters).filter(
-    (filter) => !PROJECT_STATUSES.includes(filter as ProjectStatus),
-  );
+  const typeNames = new Set(availableTypes.map((type) => type.name));
+  return Array.from(filters).filter((filter) => typeNames.has(filter));
 };

@@ -71,5 +71,24 @@ describe('ResearchTheme controller', () => {
         expectedParameters,
       );
     });
+
+    test('Should use default parameter when fetch is called without arguments', async () => {
+      researchThemeDataProvider.fetch.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+
+      await researchThemeController.fetch();
+
+      const expectedParameters: Parameters<
+        ResearchThemeDataProvider['fetch']
+      >[0] = {
+        skip: 0,
+        take: 100,
+      };
+      expect(researchThemeDataProvider.fetch).toHaveBeenCalledWith(
+        expectedParameters,
+      );
+    });
   });
 });

@@ -5,6 +5,7 @@ import {
   screen,
   waitForElementToBeRemoved,
   waitFor,
+  act,
 } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
@@ -149,6 +150,22 @@ jest.mock('../state', () => {
   };
 });
 
+jest.mock('../../shared-research/api', () => ({
+  ...jest.requireActual('../../shared-research/api'),
+  getResearchThemes: jest.fn(() =>
+    Promise.resolve([
+      { id: 'theme-1', name: 'Theme One' },
+      { id: 'theme-2', name: 'Theme Two' },
+    ]),
+  ),
+  getResourceTypes: jest.fn(() =>
+    Promise.resolve([
+      { id: 'type-1', name: 'Data Portal' },
+      { id: 'type-2', name: 'Dataset' },
+    ]),
+  ),
+}));
+
 const renderProjectsPage = async (pathname: string, query = '') => {
   const { container } = render(
     <RecoilRoot>
@@ -215,16 +232,18 @@ describe('Projects Routes', () => {
 
     // Start on Discovery Projects - verify by checking for description
     expect(
-      screen.getByText(
+      await screen.findByText(
         /Discovery Projects are collaborative research projects/i,
       ),
     ).toBeVisible();
 
     // Navigate to Resource Projects tab
-    const resourceTab = screen.getByText('Resource Projects', {
+    const resourceTab = await screen.findByText('Resource Projects', {
       selector: 'p',
     });
-    await userEvent.click(resourceTab);
+    await act(async () => {
+      await userEvent.click(resourceTab);
+    });
 
     // Should now show Resource Projects description
     expect(
@@ -234,7 +253,9 @@ describe('Projects Routes', () => {
     ).toBeVisible();
 
     // Navigate to Trainee Projects tab
-    const traineeTab = screen.getByText('Trainee Projects', { selector: 'p' });
+    const traineeTab = await screen.findByText('Trainee Projects', {
+      selector: 'p',
+    });
     await userEvent.click(traineeTab);
 
     // Should now show Trainee Projects description
@@ -249,7 +270,9 @@ describe('Projects Routes', () => {
     await renderProjectsPage(
       projects.template + projects({}).discoveryProjects.template,
     );
-    const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
+    const searchBox = (await screen.findByRole(
+      'searchbox',
+    )) as HTMLInputElement;
 
     userEvent.type(searchBox, 'test project');
     expect(searchBox.value).toEqual('test project');
@@ -260,14 +283,18 @@ describe('Projects Routes', () => {
       projects.template + projects({}).discoveryProjects.template,
       '?searchQuery=biomarker',
     );
-    const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
+    const searchBox = (await screen.findByRole(
+      'searchbox',
+    )) as HTMLInputElement;
 
     expect(searchBox.value).toEqual('biomarker');
 
-    const resourceTab = screen.getByText('Resource Projects', {
+    const resourceTab = await screen.findByText('Resource Projects', {
       selector: 'p',
     });
-    await userEvent.click(resourceTab);
+    await act(async () => {
+      await userEvent.click(resourceTab);
+    });
 
     await waitFor(() => {
       expect(searchBox.value).toEqual('biomarker');

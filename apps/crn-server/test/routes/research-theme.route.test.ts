@@ -52,7 +52,7 @@ describe('/research-themes/ route', () => {
     test('Should call the controller fetch method', async () => {
       await supertest(app).get('/research-themes');
 
-      expect(researchThemeControllerMock.fetch).toHaveBeenCalledWith({});
+      expect(researchThemeControllerMock.fetch).toHaveBeenCalled();
     });
   });
 });

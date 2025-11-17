@@ -56,7 +56,6 @@ describe('projects api', () => {
           hitsPerPage: 15,
           filters:
             'projectType:"Discovery" AND (status:"Active" OR status:"Closed") AND researchTheme:"Neuro" AND (resourceType:"Dataset" OR resourceType:"Portal")',
-          facets: ['status', 'researchTheme', 'resourceType'],
         }),
       );
     });
@@ -199,7 +198,6 @@ describe('projects api', () => {
         hits: [{ id: '1' }, { id: '2' }],
         queryID: 'query-id',
         index: 'projects-index',
-        facets: { researchTheme: { Neuro: 1 } },
       } as never;
 
       expect(toListProjectResponse(response)).toEqual({
@@ -207,7 +205,6 @@ describe('projects api', () => {
         items: [{ id: '1' }, { id: '2' }],
         algoliaQueryId: 'query-id',
         algoliaIndexName: 'projects-index',
-        facets: { researchTheme: { Neuro: 1 } },
       });
     });
   });

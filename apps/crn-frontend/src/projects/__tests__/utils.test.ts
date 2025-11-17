@@ -5,15 +5,12 @@ import type {
 } from '@asap-hub/model';
 
 import {
-  DISCOVERY_THEME_FILTER_PREFIX,
-  RESOURCE_TYPE_FILTER_PREFIX,
   isDiscoveryProject,
   isResourceProject,
   isTraineeProject,
   toDiscoveryThemeFilters,
   toResourceTypeFilters,
   toStatusFilters,
-  PROJECT_STATUS_FILTER_PREFIX,
 } from '../utils';
 
 describe('project utils', () => {
@@ -81,36 +78,60 @@ describe('project utils', () => {
   describe('filter helpers', () => {
     it('returns empty arrays when filters are undefined', () => {
       expect(toStatusFilters(undefined)).toEqual([]);
-      expect(toDiscoveryThemeFilters(undefined)).toEqual([]);
-      expect(toResourceTypeFilters(undefined)).toEqual([]);
+      expect(toDiscoveryThemeFilters(undefined, [])).toEqual([]);
+      expect(toResourceTypeFilters(undefined, [])).toEqual([]);
     });
 
-    it('converts prefixed status filters', () => {
-      const filters = new Set([
-        `${PROJECT_STATUS_FILTER_PREFIX}Active`,
-        `${PROJECT_STATUS_FILTER_PREFIX}Closed`,
-        'other:value',
-      ]);
+    it('extracts status filters by checking against known statuses', () => {
+      const filters = new Set(['Active', 'Closed', 'UnknownStatus', 'Parkinson']);
 
       expect(toStatusFilters(filters)).toEqual(['Active', 'Closed']);
     });
 
-    it('extracts discovery theme filters', () => {
-      const filters = new Set([
-        `${DISCOVERY_THEME_FILTER_PREFIX}Parkinson`,
-        'status:Active',
-      ]);
+    it('extracts discovery theme filters by checking against available themes', () => {
+      const filters = new Set(['Parkinson', 'Active', 'Unknown Theme']);
+      const availableThemes = [
+        { id: 'theme-1', name: 'Parkinson' },
+        { id: 'theme-2', name: 'Alzheimer' },
+      ];
 
-      expect(toDiscoveryThemeFilters(filters)).toEqual(['Parkinson']);
+      expect(toDiscoveryThemeFilters(filters, availableThemes)).toEqual([
+        'Parkinson',
+      ]);
     });
 
-    it('extracts resource type filters', () => {
-      const filters = new Set([
-        `${RESOURCE_TYPE_FILTER_PREFIX}Dataset`,
-        `${RESOURCE_TYPE_FILTER_PREFIX}Portal`,
-      ]);
+    it('returns empty array when no themes match', () => {
+      const filters = new Set(['Unknown Theme', 'Another Theme']);
+      const availableThemes = [
+        { id: 'theme-1', name: 'Parkinson' },
+        { id: 'theme-2', name: 'Alzheimer' },
+      ];
 
-      expect(toResourceTypeFilters(filters)).toEqual(['Dataset', 'Portal']);
+      expect(toDiscoveryThemeFilters(filters, availableThemes)).toEqual([]);
+    });
+
+    it('extracts resource type filters by checking against available types', () => {
+      const filters = new Set(['Dataset', 'Portal', 'Unknown Type']);
+      const availableTypes = [
+        { id: 'type-1', name: 'Dataset' },
+        { id: 'type-2', name: 'Portal' },
+        { id: 'type-3', name: 'Database' },
+      ];
+
+      expect(toResourceTypeFilters(filters, availableTypes)).toEqual([
+        'Dataset',
+        'Portal',
+      ]);
+    });
+
+    it('returns empty array when no types match', () => {
+      const filters = new Set(['Unknown Type']);
+      const availableTypes = [
+        { id: 'type-1', name: 'Dataset' },
+        { id: 'type-2', name: 'Portal' },
+      ];
+
+      expect(toResourceTypeFilters(filters, availableTypes)).toEqual([]);
     });
   });
 });

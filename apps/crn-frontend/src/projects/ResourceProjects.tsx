@@ -78,10 +78,11 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
   onChangeFilter,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const resourceTypes = useResourceTypes();
   const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
   const resourceTypeFilters = useMemo(
-    () => toResourceTypeFilters(filters),
-    [filters],
+    () => toResourceTypeFilters(filters, resourceTypes),
+    [filters, resourceTypes],
   );
   const emptyFilters = useMemo(() => new Set<string>(), []);
   const normalizedFilters = useMemo(
@@ -115,7 +116,6 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
       statusFilters,
     ],
   );
-  const resourceTypes = useResourceTypes();
   const resourceFilterOptions: ReadonlyArray<FilterOption> = useMemo(
     () => createResourceTypeFilterOptionsFromTypes(resourceTypes),
     [resourceTypes],

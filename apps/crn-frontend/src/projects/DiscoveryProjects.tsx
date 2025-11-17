@@ -62,10 +62,11 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
   onChangeFilter,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const researchThemes = useResearchThemes();
   const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
   const themeFilters = useMemo(
-    () => toDiscoveryThemeFilters(filters),
-    [filters],
+    () => toDiscoveryThemeFilters(filters, researchThemes),
+    [filters, researchThemes],
   );
   const emptyFilters = useMemo(() => new Set<string>(), []);
   const normalizedFilters = useMemo(
@@ -100,7 +101,6 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
       statusFilters,
     ],
   );
-  const researchThemes = useResearchThemes();
   const themeFilterOptions: ReadonlyArray<FilterOption> = useMemo(
     () => createDiscoveryThemeFilterOptionsFromThemes(researchThemes),
     [researchThemes],

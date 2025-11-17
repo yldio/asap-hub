@@ -1,8 +1,4 @@
-import {
-  ListProjectResponse,
-  ProjectResponse,
-  ProjectType,
-} from '@asap-hub/model';
+import { ListProjectResponse, ProjectResponse } from '@asap-hub/model';
 import {
   atomFamily,
   DefaultValue,

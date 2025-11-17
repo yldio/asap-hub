@@ -3,7 +3,6 @@ import { MemoryRouter } from 'react-router-dom';
 import { ComponentProps } from 'react';
 
 import DiscoveryProjects from '../DiscoveryProjects';
-import { DISCOVERY_THEME_FILTER_PREFIX } from '../utils';
 import { useProjects } from '../state';
 import { useResearchThemes } from '../../shared-state/shared-research';
 
@@ -46,8 +45,9 @@ beforeEach(() => {
     algoliaQueryId: 'query',
   });
   mockUseResearchThemes.mockReturnValue([
-    { id: 'theme-1', name: 'Neurodegeneration' },
-    { id: 'theme-2', name: 'Cell Biology' },
+    { id: 'theme-1', name: 'Neuro' },
+    { id: 'theme-2', name: 'Neurodegeneration' },
+    { id: 'theme-3', name: 'Cell Biology' },
   ]);
 });
 
@@ -67,7 +67,7 @@ it('renders the Discovery Projects page', () => {
 });
 
 it('passes Algolia facet filters when the discovery theme filter is active', () => {
-  const themeValue = `${DISCOVERY_THEME_FILTER_PREFIX}Neuro`;
+  const themeValue = 'Neuro';
 
   render(
     <MemoryRouter>

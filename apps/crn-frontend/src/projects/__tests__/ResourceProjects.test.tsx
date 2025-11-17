@@ -4,7 +4,6 @@ import { render, screen } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 
 import ResourceProjects from '../ResourceProjects';
-import { RESOURCE_TYPE_FILTER_PREFIX } from '../utils';
 import { useProjects } from '../state';
 import { useResourceTypes } from '../../shared-state/shared-research';
 
@@ -51,6 +50,7 @@ beforeEach(() => {
   mockUseResourceTypes.mockReturnValue([
     { id: 'type-1', name: 'Database' },
     { id: 'type-2', name: 'Data Portal' },
+    { id: 'type-3', name: 'Dataset' },
   ]);
 });
 
@@ -111,7 +111,7 @@ it('renders resource project members as links when the project is not team-based
 });
 
 it('passes Algolia facet filters when the resource type filter is active', () => {
-  const resourceValue = `${RESOURCE_TYPE_FILTER_PREFIX}Dataset`;
+  const resourceValue = 'Dataset';
 
   render(
     <MemoryRouter>

@@ -46,10 +46,13 @@ import InterestGroupController from './controllers/interest-group.controller';
 import LabController from './controllers/lab.controller';
 import ManuscriptController from './controllers/manuscript.controller';
 import NewsController from './controllers/news.controller';
+import ProjectController from './controllers/project.controller';
 import PageController from './controllers/page.controller';
 import ReminderController from './controllers/reminder.controller';
 import ResearchOutputController from './controllers/research-output.controller';
 import ResearchTagController from './controllers/research-tag.controller';
+import ResearchThemeController from './controllers/research-theme.controller';
+import ResourceTypeController from './controllers/resource-type.controller';
 import TeamController from './controllers/team.controller';
 import TutorialController from './controllers/tutorial.controller';
 import UserController from './controllers/user.controller';
@@ -72,10 +75,13 @@ import { PageContentfulDataProvider } from './data-providers/contentful/page.dat
 import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
 import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
 import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
+import { ResearchThemeContentfulDataProvider } from './data-providers/contentful/research-theme.data-provider';
+import { ResourceTypeContentfulDataProvider } from './data-providers/contentful/resource-type.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/team.data-provider';
 import { TutorialContentfulDataProvider } from './data-providers/contentful/tutorial.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
+import { ProjectContentfulDataProvider } from './data-providers/contentful/project.data-provider';
 
 import { GuideContentfulDataProvider } from './data-providers/contentful/guide.data-provider';
 import {
@@ -95,10 +101,13 @@ import {
   ReminderDataProvider,
   ResearchOutputDataProvider,
   ResearchTagDataProvider,
+  ResearchThemeDataProvider,
+  ResourceTypeDataProvider,
   TutorialDataProvider,
   UserDataProvider,
   WorkingGroupDataProvider,
 } from './data-providers/types';
+import { ProjectDataProvider } from './data-providers/types/projects.data-provider.types';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { analyticsRouteFactory } from './routes/analytics.route';
@@ -120,6 +129,9 @@ import { pageRouteFactory } from './routes/page.route';
 import { reminderRouteFactory } from './routes/reminder.route';
 import { researchOutputRouteFactory } from './routes/research-output.route';
 import { researchTagRouteFactory } from './routes/research-tag.route';
+import { researchThemeRouteFactory } from './routes/research-theme.route';
+import { resourceTypeRouteFactory } from './routes/resource-type.route';
+import { projectRouteFactory } from './routes/project.route';
 import { teamRouteFactory } from './routes/team.route';
 import { tutorialRouteFactory } from './routes/tutorial.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
@@ -283,6 +295,14 @@ export const appFactory = (libs: Libs = {}): Express => {
       getContentfulRestClientFactory,
     );
 
+  const researchThemeDataProvider =
+    libs.researchThemeDataProvider ||
+    new ResearchThemeContentfulDataProvider(contentfulGraphQLClient);
+
+  const resourceTypeDataProvider =
+    libs.resourceTypeDataProvider ||
+    new ResourceTypeContentfulDataProvider(contentfulGraphQLClient);
+
   const researchOutputDataProvider =
     libs.researchOutputDataProvider ||
     new ResearchOutputContentfulDataProvider(
@@ -290,6 +310,10 @@ export const appFactory = (libs: Libs = {}): Express => {
       contentfulPreviewGraphQLClient,
       getContentfulRestClientFactory,
     );
+
+  const projectDataProvider =
+    libs.projectDataProvider ||
+    new ProjectContentfulDataProvider(contentfulGraphQLClient);
 
   const labDataProvider =
     libs.labDataProvider ||
@@ -324,6 +348,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.dashboardController || new DashboardController(dashboardDataProvider);
   const newsController =
     libs.newsController || new NewsController(newsDataProvider);
+  const projectController =
+    libs.projectController || new ProjectController(projectDataProvider);
   const discoverController =
     libs.discoverController || new DiscoverController(discoverDataProvider);
   const discussionController =
@@ -352,6 +378,12 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchTagController =
     libs.researchTagController ||
     new ResearchTagController(researchTagDataProvider);
+  const researchThemeController =
+    libs.researchThemeController ||
+    new ResearchThemeController(researchThemeDataProvider);
+  const resourceTypeController =
+    libs.resourceTypeController ||
+    new ResourceTypeController(resourceTypeDataProvider);
   const teamController =
     libs.teamController || new TeamController(teamDataProvider);
   const tutorialsController =
@@ -420,6 +452,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const labRoutes = labRouteFactory(labController);
   const manuscriptRoutes = manuscriptRouteFactory(manuscriptController);
   const newsRoutes = newsRouteFactory(newsController);
+  const projectRoutes = projectRouteFactory(projectController);
   const opensearchRoutes = opensearchRouteFactory(opensearchController);
   const pageRoutes = pageRouteFactory(pageController);
   const reminderRoutes = reminderRouteFactory(reminderController);
@@ -428,6 +461,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     manuscriptController,
   );
   const researchTagRoutes = researchTagRouteFactory(researchTagController);
+  const researchThemeRoutes = researchThemeRouteFactory(
+    researchThemeController,
+  );
+  const resourceTypeRoutes = resourceTypeRouteFactory(resourceTypeController);
   const teamRoutes = teamRouteFactory(interestGroupController, teamController);
   const tutorialRoutes = tutorialRouteFactory(tutorialsController);
   const userPublicRoutes = userPublicRouteFactory(userController);
@@ -472,6 +509,8 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   app.use(userRoutes);
   app.use(researchTagRoutes);
+  app.use(researchThemeRoutes);
+  app.use(resourceTypeRoutes);
 
   // Permission check
   app.use(permissionHandler);
@@ -495,6 +534,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(labRoutes);
   app.use(manuscriptRoutes);
   app.use(newsRoutes);
+  app.use(projectRoutes);
   app.use(opensearchRoutes);
   app.use(reminderRoutes);
   app.use(researchOutputRoutes);
@@ -539,10 +579,13 @@ export type Libs = {
   labController?: LabController;
   manuscriptController?: ManuscriptController;
   newsController?: NewsController;
+  projectController?: ProjectController;
   pageController?: PageController;
   reminderController?: ReminderController;
   researchOutputController?: ResearchOutputController;
   researchTagController?: ResearchTagController;
+  researchThemeController?: ResearchThemeController;
+  resourceTypeController?: ResourceTypeController;
   teamController?: TeamController;
   tutorialsController?: TutorialController;
   userController?: UserController;
@@ -561,10 +604,13 @@ export type Libs = {
   labDataProvider?: LabDataProvider;
   manuscriptDataProvider?: ManuscriptDataProvider;
   newsDataProvider?: NewsDataProvider;
+  projectDataProvider?: ProjectDataProvider;
   pageDataProvider?: PageDataProvider;
   reminderDataProvider?: ReminderDataProvider;
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
+  researchThemeDataProvider?: ResearchThemeDataProvider;
+  resourceTypeDataProvider?: ResourceTypeDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialDataProvider?: TutorialDataProvider;
   userDataProvider?: UserDataProvider;

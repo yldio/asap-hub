@@ -1,3 +1,5 @@
+import { ListResponse } from './common';
+
 export type ProjectStatus = 'Active' | 'Complete' | 'Closed';
 
 export type ProjectType = 'Discovery' | 'Resource' | 'Trainee';
@@ -8,7 +10,7 @@ export type BaseProject = {
   readonly status: ProjectStatus;
   readonly startDate: string;
   readonly endDate: string;
-  readonly duration: string;
+  readonly duration?: string;
   readonly tags: string[];
 };
 
@@ -26,7 +28,7 @@ export type ProjectMember = {
   readonly role?: string;
   readonly email?: string;
   readonly alumniSinceDate?: string;
-  readonly href: string;
+  readonly href?: string;
   readonly teams?: ReadonlyArray<ProjectMemberTeam>;
 };
 
@@ -118,3 +120,26 @@ export type ProjectDetail =
   | DiscoveryProjectDetail
   | ResourceProjectDetail
   | TraineeProjectDetail;
+
+// Data Provider types
+export type ProjectDataObject = Project;
+export type DiscoveryProjectDataObject = DiscoveryProject;
+export type ResourceProjectDataObject = ResourceProject;
+export type TraineeProjectDataObject = TraineeProject;
+
+export type ProjectDetailDataObject = ProjectDetail;
+
+export type ListProjectDataObject = ListResponse<ProjectDataObject>;
+
+// Filter types
+export type FetchProjectsFilter = {
+  readonly projectType?: ProjectType | ProjectType[];
+  readonly status?: ProjectStatus | ProjectStatus[];
+  readonly tags?: string[];
+  readonly teamId?: string;
+  readonly search?: string;
+};
+
+// Response types
+export type ProjectResponse = Project;
+export type ListProjectResponse = ListProjectDataObject;

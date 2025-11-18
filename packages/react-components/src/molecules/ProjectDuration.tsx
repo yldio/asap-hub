@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { ProjectStatus } from '@asap-hub/model';
 import { differenceInMonths } from 'date-fns';
 import { clockIcon } from '../icons';
 import { rem } from '../pixels';
@@ -58,20 +59,27 @@ export const calculateDuration = (
 type ProjectDurationProps = {
   readonly startDate: string;
   readonly endDate: string;
+  readonly projectStatus: ProjectStatus;
 };
 
 const ProjectDuration: React.FC<ProjectDurationProps> = ({
   startDate,
   endDate,
+  projectStatus,
 }) => {
   const duration = calculateDuration(startDate, endDate);
-
+  const showEndDateAndDuration = endDate && projectStatus !== 'Active';
   return (
     <div css={metadataRowStyles}>
       <span css={iconStyles}>{clockIcon}</span>
       <span>
-        {formatProjectDate(startDate)} - {formatProjectDate(endDate)} •{' '}
-        <span css={durationStyles}>({duration})</span>
+        {formatProjectDate(startDate)} -{' '}
+        {showEndDateAndDuration
+          ? `${formatProjectDate(endDate)} • `
+          : 'Present '}
+        {showEndDateAndDuration && (
+          <span css={durationStyles}>({duration})</span>
+        )}
       </span>
     </div>
   );

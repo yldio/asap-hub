@@ -10,6 +10,8 @@ import {
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
   ResearchTagResponse,
+  ResearchThemeResponse,
+  ResourceTypeResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { atom, selector, useRecoilValue } from 'recoil';
@@ -23,7 +25,12 @@ import {
   getOpenScienceMembers,
   getUsersAndExternalAuthors,
 } from '../network/users/api';
-import { getResearchTags, getResearchOutputs } from '../shared-research/api';
+import {
+  getResearchTags,
+  getResearchThemes,
+  getResourceTypes,
+  getResearchOutputs,
+} from '../shared-research/api';
 import {
   useInvalidateResearchOutputIndex,
   useSetResearchOutputItem,
@@ -149,6 +156,38 @@ export const researchTagsSelector = selector({
 });
 
 export const useResearchTags = () => useRecoilValue(researchTagsSelector);
+
+const researchThemesState = atom<ResearchThemeResponse[]>({
+  key: 'researchThemesState',
+  default: [],
+});
+
+export const researchThemesSelector = selector({
+  key: 'researchThemes',
+  get: ({ get }) => {
+    get(researchThemesState);
+    const authorization = get(authorizationState);
+    return getResearchThemes(authorization);
+  },
+});
+
+export const useResearchThemes = () => useRecoilValue(researchThemesSelector);
+
+const resourceTypesState = atom<ResourceTypeResponse[]>({
+  key: 'resourceTypesState',
+  default: [],
+});
+
+export const resourceTypesSelector = selector({
+  key: 'resourceTypes',
+  get: ({ get }) => {
+    get(resourceTypesState);
+    const authorization = get(authorizationState);
+    return getResourceTypes(authorization);
+  },
+});
+
+export const useResourceTypes = () => useRecoilValue(resourceTypesSelector);
 
 export const usePostResearchOutput = () => {
   const authorization = useRecoilValue(authorizationState);

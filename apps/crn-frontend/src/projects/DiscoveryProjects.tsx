@@ -4,88 +4,110 @@ import {
   ProjectsPage,
   DiscoveryProjectsList,
 } from '@asap-hub/react-components';
-
-// Mock data - this would come from API in real implementation
-const mockDiscoveryProjects = [
-  {
-    id: '1',
-    title: 'Alpha-Synuclein Aggregation Mechanisms',
-    status: 'Active' as const,
-    projectType: 'Discovery' as const,
-    researchTheme: 'Protein Aggregation',
-    startDate: '2023-01-15',
-    endDate: '2025-12-31',
-    tags: [
-      'Alpha-Synuclein',
-      'Protein Aggregation',
-      'Biochemistry',
-      'Cell Biology',
-      'Mitochondrial Dysfunction',
-    ],
-    teamName: 'Discovery Team Alpha',
-    duration: '2 yrs',
-  },
-  {
-    id: '2',
-    title: 'Neural Circuit Dysfunction in PD',
-    status: 'Complete' as const,
-    projectType: 'Discovery' as const,
-    researchTheme: 'Neural Circuits',
-    startDate: '2023-06-01',
-    endDate: '2026-05-31',
-    tags: ['Neural Circuits', 'Electrophysiology', 'Neuroimaging'],
-    teamName: 'Discovery Team Beta',
-    inactiveSinceDate: '2026-06-01',
-    duration: '3 yrs',
-  },
-  {
-    id: '3',
-    title: 'Mitochondrial Dysfunction in PD Models',
-    status: 'Closed' as const,
-    projectType: 'Discovery' as const,
-    researchTheme: 'Mitochondrial Biology',
-    startDate: '2022-03-01',
-    endDate: '2024-02-28',
-    tags: ['Mitochondria', 'Cell Biology', 'Animal Models'],
-    teamName: 'Discovery Team Gamma',
-    duration: '2 yrs',
-  },
-];
+import { DiscoveryProject } from '@asap-hub/model';
+import { usePagination, usePaginationParams } from '../hooks';
+import { useProjects } from './state';
+import { toDiscoveryThemeFilters, toStatusFilters } from './utils';
+import { ProjectListOptions } from './api';
+import {
+  FilterOption,
+  STATUS_FILTER_OPTIONS,
+  createDiscoveryThemeFilterOptionsFromThemes,
+} from './filter-options';
+import { useResearchThemes } from '../shared-state/shared-research';
 
 type DiscoveryProjectsProps = {
   searchQuery: string;
+  debouncedSearchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   filters?: Set<string>;
   onChangeFilter?: (filter: string) => void;
 };
 
-// Helper function to filter projects based on search query
-/* istanbul ignore next */
-const filterProjects = (
-  projects: typeof mockDiscoveryProjects,
-  searchQuery: string,
-) => {
-  const query = searchQuery.toLowerCase();
-  return projects.filter((project) => {
-    // Search in title
-    if (project.title.toLowerCase().includes(query)) {
-      return true;
-    }
+type DiscoveryProjectsListContentProps = {
+  options: ProjectListOptions;
+  currentPage: number;
+  pageSize: number;
+};
 
-    return false;
-  });
+const DiscoveryProjectsListContent: FC<DiscoveryProjectsListContentProps> = ({
+  options,
+  currentPage,
+  pageSize,
+}) => {
+  const projects = useProjects(options);
+
+  const { numberOfPages, renderPageHref } = usePagination(
+    projects.total,
+    pageSize,
+  );
+
+  return (
+    <DiscoveryProjectsList
+      projects={projects.items as DiscoveryProject[]}
+      numberOfItems={projects.total}
+      numberOfPages={numberOfPages}
+      currentPageIndex={currentPage}
+      renderPageHref={renderPageHref}
+      algoliaIndexName={projects.algoliaIndexName}
+    />
+  );
 };
 
 const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
   searchQuery,
+  debouncedSearchQuery,
   onChangeSearchQuery,
   filters,
   onChangeFilter,
 }) => {
-  // Filter projects based on search query
-  const filteredProjects = useMemo(
-    () => filterProjects(mockDiscoveryProjects, searchQuery),
-    [searchQuery],
+  const { currentPage, pageSize } = usePaginationParams();
+  const researchThemes = useResearchThemes();
+  const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
+  const themeFilters = useMemo(
+    () => toDiscoveryThemeFilters(filters, researchThemes),
+    [filters, researchThemes],
+  );
+  const emptyFilters = useMemo(() => new Set<string>(), []);
+  const normalizedFilters = useMemo(
+    () => (filters ? new Set(filters) : undefined),
+    [filters],
+  );
+  const facetFilters = useMemo(
+    () =>
+      themeFilters.length
+        ? { researchTheme: themeFilters as ReadonlyArray<string> }
+        : undefined,
+    [themeFilters],
+  );
+
+  const listOptions = useMemo(
+    () => ({
+      projectType: 'Discovery' as const,
+      searchQuery: debouncedSearchQuery,
+      statusFilters,
+      currentPage,
+      pageSize,
+      filters: normalizedFilters ?? emptyFilters,
+      facetFilters,
+    }),
+    [
+      currentPage,
+      debouncedSearchQuery,
+      emptyFilters,
+      facetFilters,
+      normalizedFilters,
+      pageSize,
+      statusFilters,
+    ],
+  );
+  const themeFilterOptions: ReadonlyArray<FilterOption> = useMemo(
+    () => createDiscoveryThemeFilterOptionsFromThemes(researchThemes),
+    [researchThemes],
+  );
+  const filterOptions = useMemo(
+    () => [...themeFilterOptions, ...STATUS_FILTER_OPTIONS],
+    [themeFilterOptions],
   );
 
   return (
@@ -95,14 +117,13 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
       onChangeSearchQuery={onChangeSearchQuery}
       filters={filters}
       onChangeFilter={onChangeFilter}
+      filterOptions={filterOptions}
     >
       <SearchFrame title="Discovery Projects">
-        <DiscoveryProjectsList
-          projects={filteredProjects}
-          numberOfItems={filteredProjects.length}
-          numberOfPages={1}
-          currentPageIndex={0}
-          renderPageHref={(pageIndex) => `#page-${pageIndex}`}
+        <DiscoveryProjectsListContent
+          options={listOptions}
+          currentPage={currentPage}
+          pageSize={pageSize}
         />
       </SearchFrame>
     </ProjectsPage>

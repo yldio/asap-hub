@@ -1,117 +1,128 @@
 import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { ProjectsPage, ResourceProjectsList } from '@asap-hub/react-components';
-
-// Mock data - this would come from API in real implementation
-const mockResourceProjects = [
-  {
-    id: '1',
-    title: 'PD Biomarker Database',
-    status: 'Active' as const,
-    projectType: 'Resource' as const,
-    resourceType: 'Database',
-    startDate: '2023-02-01',
-    endDate: '2025-01-31',
-    tags: ['Biomarkers', 'Database', 'Clinical Data'],
-    googleDriveLink: 'https://drive.google.com/drive/folders/example1',
-    isTeamBased: true,
-    duration: '2 yrs',
-    teamName: 'Resource Team Alpha',
-    teamId: '1',
-  },
-  {
-    id: '2',
-    title: 'Open Source PD Analysis Tools',
-    status: 'Complete' as const,
-    projectType: 'Resource' as const,
-    resourceType: 'Software Tools',
-    members: [
-      {
-        id: '1',
-        displayName: 'Dr. Jane Smith',
-        firstName: 'Jane',
-        lastName: 'Smith',
-        email: 'jane.smith@example.com',
-        href: '/users/1',
-      },
-      {
-        id: '2',
-        displayName: 'Dr. John Doe',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        href: '/users/2',
-        alumniSinceDate: '2022-10-27',
-      },
-      {
-        id: '3',
-        displayName: 'Dr. Alice Johnson',
-        firstName: 'Alice',
-        lastName: 'Johnson',
-        email: 'alice.johnson@example.com',
-        href: '/users/3',
-      },
-    ],
-    startDate: '2023-04-15',
-    endDate: '2026-04-14',
-    tags: ['Software', 'Open Source', 'Data Analysis'],
-    googleDriveLink: 'https://drive.google.com/drive/folders/example2',
-    isTeamBased: false,
-    duration: '3 yrs',
-    teamName: 'Resource Team Beta',
-    teamId: '2',
-  },
-  {
-    id: '3',
-    title: 'PD Model Organism Repository',
-    status: 'Closed' as const,
-    projectType: 'Resource' as const,
-    resourceType: 'Biological Resources',
-    startDate: '2022-01-01',
-    endDate: '2024-12-31',
-    tags: ['Animal Models', 'Repository', 'Biological Resources'],
-    googleDriveLink: 'https://drive.google.com/drive/folders/example3',
-    isTeamBased: true,
-    duration: '2 yrs',
-    teamName: 'Resource Team Beta',
-    teamId: '2',
-  },
-];
+import type { ProjectMember, ResourceProject } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
+import { usePagination, usePaginationParams } from '../hooks';
+import { useProjects } from './state';
+import { ProjectListOptions } from './api';
+import { toResourceTypeFilters, toStatusFilters } from './utils';
+import {
+  FilterOption,
+  STATUS_FILTER_OPTIONS,
+  createResourceTypeFilterOptionsFromTypes,
+} from './filter-options';
+import { useResourceTypes } from '../shared-state/shared-research';
 
 type ResourceProjectsProps = {
   searchQuery: string;
+  debouncedSearchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   filters?: Set<string>;
   onChangeFilter?: (filter: string) => void;
 };
 
-// Helper Mock function to filter projects based on search query
-/* istanbul ignore next */
-const filterProjects = (
-  projects: typeof mockResourceProjects,
-  searchQuery: string,
-) => {
-  const query = searchQuery.toLowerCase();
-  return projects.filter((project) => {
-    // Search in title
-    if (project.title.toLowerCase().includes(query)) {
-      return true;
-    }
+type ResourceProjectsListContentProps = {
+  options: ProjectListOptions;
+  currentPage: number;
+  pageSize: number;
+};
 
-    return false;
-  });
+const withMemberHref = (members?: ReadonlyArray<ProjectMember>) =>
+  members?.map((member) => ({
+    ...member,
+    href: network({}).users({}).user({ userId: member.id }).$,
+  }));
+
+const ResourceProjectsListContent: FC<ResourceProjectsListContentProps> = ({
+  options,
+  currentPage,
+  pageSize,
+}) => {
+  const projects = useProjects(options);
+
+  const projectsWithMemberLinks = useMemo(
+    () =>
+      (projects.items as ResourceProject[]).map((project) =>
+        project.isTeamBased
+          ? project
+          : {
+              ...project,
+              members: withMemberHref(project.members) ?? project.members,
+            },
+      ),
+    [projects],
+  );
+  const { numberOfPages, renderPageHref } = usePagination(
+    projects.total,
+    pageSize,
+  );
+
+  return (
+    <ResourceProjectsList
+      projects={projectsWithMemberLinks}
+      numberOfItems={projects.total}
+      numberOfPages={numberOfPages}
+      currentPageIndex={currentPage}
+      renderPageHref={renderPageHref}
+      algoliaIndexName={projects.algoliaIndexName}
+    />
+  );
 };
 
 const ResourceProjects: FC<ResourceProjectsProps> = ({
   searchQuery,
+  debouncedSearchQuery,
   onChangeSearchQuery,
   filters,
   onChangeFilter,
 }) => {
-  // Filter projects based on search query
-  const filteredProjects = useMemo(
-    () => filterProjects(mockResourceProjects, searchQuery),
-    [searchQuery],
+  const { currentPage, pageSize } = usePaginationParams();
+  const resourceTypes = useResourceTypes();
+  const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
+  const resourceTypeFilters = useMemo(
+    () => toResourceTypeFilters(filters, resourceTypes),
+    [filters, resourceTypes],
+  );
+  const emptyFilters = useMemo(() => new Set<string>(), []);
+  const normalizedFilters = useMemo(
+    () => (filters ? new Set(filters) : undefined),
+    [filters],
+  );
+  const facetFilters = useMemo(
+    () =>
+      resourceTypeFilters.length
+        ? { resourceType: resourceTypeFilters as ReadonlyArray<string> }
+        : undefined,
+    [resourceTypeFilters],
+  );
+  const listOptions = useMemo(
+    () => ({
+      projectType: 'Resource' as const,
+      searchQuery: debouncedSearchQuery,
+      statusFilters,
+      currentPage,
+      pageSize,
+      filters: normalizedFilters ?? emptyFilters,
+      facetFilters,
+    }),
+    [
+      currentPage,
+      debouncedSearchQuery,
+      emptyFilters,
+      facetFilters,
+      normalizedFilters,
+      pageSize,
+      statusFilters,
+    ],
+  );
+  const resourceFilterOptions: ReadonlyArray<FilterOption> = useMemo(
+    () => createResourceTypeFilterOptionsFromTypes(resourceTypes),
+    [resourceTypes],
+  );
+  const filterOptions = useMemo(
+    () => [...resourceFilterOptions, ...STATUS_FILTER_OPTIONS],
+    [resourceFilterOptions],
   );
 
   return (
@@ -121,14 +132,13 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
       onChangeSearchQuery={onChangeSearchQuery}
       filters={filters}
       onChangeFilter={onChangeFilter}
+      filterOptions={filterOptions}
     >
       <SearchFrame title="Resource Projects">
-        <ResourceProjectsList
-          projects={filteredProjects}
-          numberOfItems={filteredProjects.length}
-          numberOfPages={1}
-          currentPageIndex={0}
-          renderPageHref={(pageIndex) => `#page-${pageIndex}`}
+        <ResourceProjectsListContent
+          options={listOptions}
+          currentPage={currentPage}
+          pageSize={pageSize}
         />
       </SearchFrame>
     </ProjectsPage>

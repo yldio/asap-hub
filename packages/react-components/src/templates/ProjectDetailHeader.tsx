@@ -266,6 +266,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
               <ProjectDuration
                 startDate={project.startDate}
                 endDate={project.endDate}
+                projectStatus={project.status}
               />
             </div>
           </div>
@@ -288,6 +289,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
                   <ProjectDuration
                     startDate={project.startDate}
                     endDate={project.endDate}
+                    projectStatus={project.status}
                   />
                 </div>
               )}
@@ -322,6 +324,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
           <ProjectDuration
             startDate={project.startDate}
             endDate={project.endDate}
+            projectStatus={project.status}
           />
         )}
       </div>

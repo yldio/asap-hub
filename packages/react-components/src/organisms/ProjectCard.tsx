@@ -124,6 +124,7 @@ export const getCardAccentByStatus = (
 ): 'default' | 'neutral200' => {
   switch (status) {
     case 'Complete':
+      return 'neutral200';
     case 'Closed':
       return 'neutral200';
     default:
@@ -178,7 +179,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
                 <DiscoveryTeamIcon />
               </span>
               {project.teamId ? (
-                <Link href={`/teams/${project.teamId}`}>
+                <Link href={`/network/teams/${project.teamId}`}>
                   <span css={teamNameStyles}>{project.teamName}</span>
                 </Link>
               ) : (
@@ -197,7 +198,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
                   <ResourceTeamIcon />
                 </span>
                 {project.teamId ? (
-                  <Link href={`/teams/${project.teamId}`}>
+                  <Link href={`/network/teams/${project.teamId}`}>
                     <span css={teamNameStyles}>{project.teamName}</span>
                   </Link>
                 ) : (
@@ -215,7 +216,13 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
                 <span css={iconStyles}>
                   <ResourceMemberIcon />
                 </span>
-                <UsersList users={project.members} separator="•" noMargin />
+                <UsersList
+                  label="Members"
+                  users={project.members}
+                  separator="•"
+                  noMargin
+                  max={3}
+                />
               </div>
             )}
 
@@ -226,13 +233,25 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
                 <span css={iconStyles}>
                   <TrainerIcon />
                 </span>
-                <UsersList users={[project.trainer]} separator="•" noMargin />
+                <UsersList
+                  label="Members"
+                  users={[project.trainer]}
+                  separator="•"
+                  noMargin
+                  max={3}
+                />
               </div>
               <div css={metadataRowStyles}>
                 <span css={iconStyles}>
                   <MemberIcon />
                 </span>
-                <UsersList users={project.members} separator="•" noMargin />
+                <UsersList
+                  label="Members"
+                  users={project.members}
+                  separator="•"
+                  noMargin
+                  max={3}
+                />
               </div>
             </div>
           )}
@@ -241,6 +260,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
           <ProjectDuration
             startDate={project.startDate}
             endDate={project.endDate}
+            projectStatus={project.status}
           />
         </div>
 

@@ -4,6 +4,7 @@ import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
 import News from '../src/controllers/news.controller';
+import Projects from '../src/controllers/project.controller';
 import ResearchOutputs from '../src/controllers/research-output.controller';
 import Teams from '../src/controllers/team.controller';
 import Tutorials from '../src/controllers/tutorial.controller';
@@ -15,6 +16,7 @@ import ManuscriptVersions from '../src/controllers/manuscript-version.controller
 import { getEventDataProvider } from '../src/dependencies/events.dependencies';
 import { getExternalAuthorDataProvider } from '../src/dependencies/external-authors.dependencies';
 import { getNewsDataProvider } from '../src/dependencies/news.dependencies';
+import { getProjectDataProvider } from '../src/dependencies/projects.dependencies';
 import { getResearchOutputDataProvider } from '../src/dependencies/research-outputs.dependencies';
 import { getResearchTagDataProvider } from '../src/dependencies/research-tags.dependencies';
 import { getTeamDataProvider } from '../src/dependencies/team.dependencies';
@@ -99,6 +101,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
   const workingGroupDataProvider = getWorkingGroupDataProvider();
   const tutorialDataProvider = getTutorialDataProvider();
   const newsDataProvider = getNewsDataProvider();
+  const projectDataProvider = getProjectDataProvider();
   const interestGroupDataProvider = getInterestGroupDataProvider();
   const manuscriptDataProvider = getManuscriptsDataProvider();
   const manuscriptVersionDataProvider = getManuscriptVersionsDataProvider();
@@ -124,6 +127,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
     ),
     tutorial: new Tutorials(tutorialDataProvider),
     news: new News(newsDataProvider),
+    project: new Projects(projectDataProvider),
     manuscript: new Manuscripts(
       manuscriptDataProvider,
       externalAuthorDataProvider,
@@ -226,6 +230,14 @@ const transformRecords = (
 
   // type 'news'
   if ('frequency' in record) {
+    return {
+      ...payload,
+      _tags: record.tags,
+    };
+  }
+
+  // type 'project'
+  if ('projectType' in record && 'tags' in record) {
     return {
       ...payload,
       _tags: record.tags,

@@ -15,6 +15,7 @@ import {
   ResourceProjectIcon,
   TraineeProjectIcon,
 } from '../icons';
+import { Option, Title } from '../organisms/CheckboxGroup';
 
 const visualHeaderStyles = css({
   padding: `${defaultPageLayoutPaddingStyle} 0`,
@@ -48,6 +49,7 @@ type ProjectsPageHeaderProps = {
   searchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   showSearch?: boolean;
+  filterOptions?: ReadonlyArray<Option<string> | Title>;
 };
 
 const projectDescriptions: Record<Page, string> = {
@@ -66,6 +68,7 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
   filters,
   onChangeFilter,
   showSearch = true,
+  filterOptions = [],
 }) => {
   const isDiscoveryActive = page === 'Discovery';
   const isResourceActive = page === 'Resource';
@@ -124,8 +127,8 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
             searchQuery={searchQuery}
             onChangeFilter={onChangeFilter}
             filters={filters}
-            filterOptions={[]}
-            searchPlaceholder="Enter project name, keyword, theme, …"
+            filterOptions={filterOptions}
+            searchPlaceholder="Enter project name, keyword, …"
           />
         </div>
       )}

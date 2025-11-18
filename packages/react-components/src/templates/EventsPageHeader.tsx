@@ -2,25 +2,15 @@ import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { Display, Paragraph, TabLink } from '../atoms';
-import { paper, steel } from '../colors';
-import { contentSidePaddingWithNavigation } from '../layout';
 import { TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
-import { rem } from '../pixels';
+import { rem, smallDesktopScreen } from '../pixels';
 import { queryParamString } from '../routing';
+import PageConstraints from './PageConstraints';
+import PageInfoContainer from './PageInfoContainer';
 
-const visualHeaderStyles = css({
-  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} 0`,
-  marginBottom: rem(30),
-  background: paper.rgb,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-});
 const textStyles = css({
-  maxWidth: rem(610),
-});
-
-const controlsStyles = css({
-  padding: `0 ${contentSidePaddingWithNavigation(8)}`,
+  maxWidth: rem(smallDesktopScreen.width),
 });
 
 type EventsPageHeaderProps = ComponentProps<typeof EventSearch>;
@@ -29,14 +19,8 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
   onChangeSearchQuery,
 }) => (
   <header>
-    <div css={visualHeaderStyles}>
-      <Display styleAsHeading={2}>Calendar and Events</Display>
-      <div css={textStyles}>
-        <Paragraph accent="lead">
-          Find out about upcoming events from ASAP and Groups. You can easily
-          add specific calendars to your own Google Calendar to easily stay
-          updated.
-        </Paragraph>
+    <PageInfoContainer
+      nav={
         <TabNav>
           <TabLink
             href={events({}).upcoming({}).$ + queryParamString(searchQuery)}
@@ -50,14 +34,26 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
             Subscribe to Calendars
           </TabLink>
         </TabNav>
+      }
+    >
+      <Display styleAsHeading={2}>Calendar and Events</Display>
+      <div css={textStyles}>
+        <Paragraph accent="lead">
+          Find out about upcoming events from ASAP and Groups. You can easily
+          add specific calendars to your own Google Calendar to easily stay
+          updated.
+        </Paragraph>
       </div>
-    </div>
-    <div css={controlsStyles}>
-      <EventSearch
-        searchQuery={searchQuery}
-        onChangeSearchQuery={onChangeSearchQuery}
-      />
-    </div>
+    </PageInfoContainer>
+
+    {searchQuery ? (
+      <PageConstraints noPaddingBottom>
+        <EventSearch
+          searchQuery={searchQuery}
+          onChangeSearchQuery={onChangeSearchQuery}
+        />
+      </PageConstraints>
+    ) : null}
   </header>
 );
 

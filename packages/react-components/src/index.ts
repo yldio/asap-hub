@@ -289,6 +289,8 @@ export {
   NoOutputsPage,
   NotFoundPage,
   OpenQuestionsModal,
+  PageConstraints,
+  PageInfoContainer,
   PasswordResetEmailSentPage,
   PersonalInfoModal,
   ProfileOutputs,

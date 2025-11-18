@@ -4,7 +4,6 @@ import { TutorialsResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Divider, Paragraph } from '../atoms';
 import { rem } from '../pixels';
-import { defaultPageLayoutPaddingStyle } from '../layout';
 import { TagList } from '../molecules';
 import {
   RelatedTutorialsCard,
@@ -14,10 +13,7 @@ import {
   RelatedEventsCard,
   HelpSection,
 } from '../organisms';
-
-const containerStyles = css({
-  padding: defaultPageLayoutPaddingStyle,
-});
+import PageConstraints from './PageConstraints';
 
 const tagsContainer = css({
   margin: `${rem(12)} 0 ${rem(12)} 0`,
@@ -49,7 +45,7 @@ const TutorialDetailsPage: React.FC<TutorialDetailsPageProps> = ({
   ].some((info) => info != null);
 
   return (
-    <div css={containerStyles}>
+    <PageConstraints>
       <div css={cardsStyles}>
         <TutorialHeaderCard {...props} />
         {(text || !!tags.length) && (
@@ -89,7 +85,7 @@ const TutorialDetailsPage: React.FC<TutorialDetailsPageProps> = ({
         )}
         <HelpSection hideTechSupportText />
       </div>
-    </div>
+    </PageConstraints>
   );
 };
 export default TutorialDetailsPage;

@@ -2,12 +2,8 @@ import { css } from '@emotion/react';
 import { projects } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
-import { rem } from '../pixels';
-import { paper, steel, neutral900, neutral1000 } from '../colors';
-import {
-  networkPageLayoutPaddingStyle,
-  defaultPageLayoutPaddingStyle,
-} from '../layout';
+import { rem, smallDesktopScreen } from '../pixels';
+import { neutral900, neutral1000 } from '../colors';
 import { SearchAndFilter } from '../organisms';
 import { TabNav } from '../molecules';
 import {
@@ -16,28 +12,15 @@ import {
   TraineeProjectIcon,
 } from '../icons';
 import { Option, Title } from '../organisms/CheckboxGroup';
-
-const visualHeaderStyles = css({
-  padding: `${defaultPageLayoutPaddingStyle} 0`,
-  background: paper.rgb,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-});
+import PageInfoContainer from './PageInfoContainer';
+import PageConstraints from './PageConstraints';
 
 const descriptionStyles = css({
-  maxWidth: '53vw',
-  marginBottom: rem(16),
+  maxWidth: rem(smallDesktopScreen.width),
 });
 
 const projectTypeDescriptionStyles = css({
-  maxWidth: '53vw',
-  marginBottom: rem(0),
-});
-
-const controlsStyles = css({
-  padding: `${networkPageLayoutPaddingStyle} 0`,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: rem(48),
+  marginBottom: rem(48),
 });
 
 type Page = 'Discovery' | 'Resource' | 'Trainee';
@@ -76,49 +59,54 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
 
   return (
     <header>
-      <div css={visualHeaderStyles}>
-        <Display styleAsHeading={2}>Projects</Display>
-        <Paragraph accent="lead" styles={descriptionStyles}>
-          Projects are targeted efforts that translate recommendations into
-          action to advance the PD field. They address critical research needs,
-          drive discovery, or produce shared resources, often with dedicated
-          funding and support.
-        </Paragraph>
-        <TabNav>
-          <TabLink
-            href={projects.template + projects({}).discoveryProjects.template}
-            Icon={() => (
-              <DiscoveryProjectIcon
-                color={isDiscoveryActive ? neutral1000.rgb : neutral900.rgb}
-              />
-            )}
-          >
-            Discovery Projects
-          </TabLink>
-          <TabLink
-            href={projects.template + projects({}).resourceProjects.template}
-            Icon={() => (
-              <ResourceProjectIcon
-                color={isResourceActive ? neutral1000.rgb : neutral900.rgb}
-              />
-            )}
-          >
-            Resource Projects
-          </TabLink>
-          <TabLink
-            href={projects.template + projects({}).traineeProjects.template}
-            Icon={() => (
-              <TraineeProjectIcon
-                color={isTraineeActive ? neutral1000.rgb : neutral900.rgb}
-              />
-            )}
-          >
-            Trainee Projects
-          </TabLink>
-        </TabNav>
-      </div>
+      <PageInfoContainer
+        nav={
+          <TabNav>
+            <TabLink
+              href={projects.template + projects({}).discoveryProjects.template}
+              Icon={() => (
+                <DiscoveryProjectIcon
+                  color={isDiscoveryActive ? neutral1000.rgb : neutral900.rgb}
+                />
+              )}
+            >
+              Discovery Projects
+            </TabLink>
+            <TabLink
+              href={projects.template + projects({}).resourceProjects.template}
+              Icon={() => (
+                <ResourceProjectIcon
+                  color={isResourceActive ? neutral1000.rgb : neutral900.rgb}
+                />
+              )}
+            >
+              Resource Projects
+            </TabLink>
+            <TabLink
+              href={projects.template + projects({}).traineeProjects.template}
+              Icon={() => (
+                <TraineeProjectIcon
+                  color={isTraineeActive ? neutral1000.rgb : neutral900.rgb}
+                />
+              )}
+            >
+              Trainee Projects
+            </TabLink>
+          </TabNav>
+        }
+      >
+        <div>
+          <Display styleAsHeading={2}>Projects</Display>
+          <Paragraph accent="lead" styles={descriptionStyles}>
+            Projects are targeted efforts that translate recommendations into
+            action to advance the PD field. They address critical research
+            needs, drive discovery, or produce shared resources, often with
+            dedicated funding and support.
+          </Paragraph>
+        </div>
+      </PageInfoContainer>
       {showSearch && (
-        <div css={controlsStyles}>
+        <PageConstraints noPaddingBottom>
           <Paragraph accent="lead" styles={projectTypeDescriptionStyles}>
             {projectDescriptions[page]}
           </Paragraph>
@@ -130,7 +118,7 @@ const ProjectsPageHeader: React.FC<ProjectsPageHeaderProps> = ({
             filterOptions={filterOptions}
             searchPlaceholder="Enter project name, keyword, …"
           />
-        </div>
+        </PageConstraints>
       )}
     </header>
   );

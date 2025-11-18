@@ -1,8 +1,12 @@
+import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
+import { rem } from '../pixels';
 
 import TutorialsPageHeader from './TutorialsPageHeader';
 
 type TutorialsPageProps = ComponentProps<typeof TutorialsPageHeader>;
+
+const containerStyles = css({ paddingTop: rem(48) });
 
 const TutorialsPage: React.FC<TutorialsPageProps> = ({
   children,
@@ -10,7 +14,7 @@ const TutorialsPage: React.FC<TutorialsPageProps> = ({
 }) => (
   <article>
     <TutorialsPageHeader {...props} />
-    <main>{children}</main>
+    <main css={containerStyles}>{children}</main>
   </article>
 );
 

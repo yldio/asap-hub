@@ -1,13 +1,7 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 
-import { rem } from '../pixels';
 import TagsPageHeader from './TagsPageHeader';
-import { contentSidePaddingWithNavigation } from '../layout';
-
-const mainStyles = css({
-  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)}`,
-});
+import PageConstraints from './PageConstraints';
 
 const TagsPage: React.FC<ComponentProps<typeof TagsPageHeader>> = ({
   children,
@@ -15,7 +9,7 @@ const TagsPage: React.FC<ComponentProps<typeof TagsPageHeader>> = ({
 }) => (
   <article>
     <TagsPageHeader {...props} />
-    <main css={mainStyles}>{children}</main>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

@@ -4,12 +4,8 @@ import formatDistance from 'date-fns/formatDistance';
 import { network } from '@asap-hub/routing';
 import { InterestGroupResponse, InterestGroupTools } from '@asap-hub/model';
 
-import { paper, lead, steel } from '../colors';
+import { lead } from '../colors';
 import { mobileScreen, rem, tabletScreen } from '../pixels';
-import {
-  contentSidePaddingWithNavigation,
-  networkPageLayoutPaddingStyle,
-} from '../layout';
 import { CopyButton, Display, Link, StateTag, TabLink } from '../atoms';
 import {
   googleDriveIcon,
@@ -21,12 +17,8 @@ import { CalendarLink, TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
 import { queryParamString } from '../routing';
 import { createMailTo } from '../mail';
-
-const visualHeaderStyles = css({
-  backgroundColor: paper.rgb,
-  padding: `${networkPageLayoutPaddingStyle} 0`,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-});
+import PageInfoContainer from './PageInfoContainer';
+import PageConstraints from './PageConstraints';
 
 const belowHeadlineStyles = css({
   display: 'flex',
@@ -38,9 +30,6 @@ const belowHeadlineStyles = css({
   },
 });
 
-const controlsStyles = css({
-  padding: `0 ${contentSidePaddingWithNavigation(10)}`,
-});
 const titleStyle = css({
   display: 'flex',
   flexFlow: 'row',
@@ -110,7 +99,25 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
 
   return (
     <header>
-      <div css={visualHeaderStyles}>
+      <PageInfoContainer
+        nav={
+          <TabNav>
+            <TabLink href={route.about({}).$}>About</TabLink>
+            {active && <TabLink href={route.calendar({}).$}>Calendar</TabLink>}
+            {active && (
+              <TabLink
+                href={route.upcoming({}).$ + queryParamString(searchQuery)}
+              >
+                Upcoming Events ({upcomingEventsCount})
+              </TabLink>
+            )}
+
+            <TabLink href={route.past({}).$ + queryParamString(searchQuery)}>
+              Past Events ({pastEventsCount})
+            </TabLink>
+          </TabNav>
+        }
+      >
         <div css={titleStyle}>
           <Display styleAsHeading={2}>{name}</Display>
           {!active && (
@@ -193,28 +200,15 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
             {formatDistance(new Date(), new Date(lastModifiedDate))} ago
           </div>
         </div>
-        <TabNav>
-          <TabLink href={route.about({}).$}>About</TabLink>
-          {active && <TabLink href={route.calendar({}).$}>Calendar</TabLink>}
-          {active && (
-            <TabLink
-              href={route.upcoming({}).$ + queryParamString(searchQuery)}
-            >
-              Upcoming Events ({upcomingEventsCount})
-            </TabLink>
-          )}
-
-          <TabLink href={route.past({}).$ + queryParamString(searchQuery)}>
-            Past Events ({pastEventsCount})
-          </TabLink>
-        </TabNav>
-      </div>
-      <div css={controlsStyles}>
-        <EventSearch
-          searchQuery={searchQuery}
-          onChangeSearchQuery={onChangeSearchQuery}
-        />
-      </div>
+      </PageInfoContainer>
+      {!!searchQuery && (
+        <PageConstraints noPaddingBottom>
+          <EventSearch
+            searchQuery={searchQuery}
+            onChangeSearchQuery={onChangeSearchQuery}
+          />
+        </PageConstraints>
+      )}
     </header>
   );
 };

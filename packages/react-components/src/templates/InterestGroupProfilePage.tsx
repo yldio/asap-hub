@@ -1,13 +1,8 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 
 import InterestGroupProfileHeader from './InterestGroupProfileHeader';
-import { networkPageLayoutPaddingStyle } from '../layout';
 import { Toast } from '../organisms';
-
-const mainStyles = css({
-  padding: networkPageLayoutPaddingStyle,
-});
+import PageConstraints from './PageConstraints';
 
 type InterestGroupProfilePageProps = ComponentProps<
   typeof InterestGroupProfileHeader
@@ -24,7 +19,7 @@ const InterestGroupProfilePage: React.FC<InterestGroupProfilePageProps> = ({
       </Toast>
     )}
     <InterestGroupProfileHeader {...props} active={active} />
-    <main css={mainStyles}>{children}</main>
+    <PageConstraints as="main">{children}</PageConstraints>
   </article>
 );
 

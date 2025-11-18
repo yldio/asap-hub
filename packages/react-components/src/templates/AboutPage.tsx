@@ -1,19 +1,14 @@
 import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 
 import AboutPageHeader from './AboutPageHeader';
-import { defaultPageLayoutPaddingStyle } from '../layout';
-
-const mainStyles = css({
-  padding: defaultPageLayoutPaddingStyle,
-});
+import PageConstraints from './PageConstraints';
 
 type AboutPageProps = ComponentProps<typeof AboutPageHeader>;
 
 const About: React.FC<AboutPageProps> = ({ children }) => (
   <article>
     <AboutPageHeader />
-    <main css={mainStyles}>{children}</main>
+    <PageConstraints>{children}</PageConstraints>
   </article>
 );
 

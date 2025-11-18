@@ -29,7 +29,6 @@ const NEW_CATEGORIES = [
 
 const RELEGATED_IMPACTS = [
   'New mechanism linked to previously established PD target/pathway',
-  'General Discovery',
 ];
 const RELEGATED_CATEGORIES = [
   'Circuit Physiology & Function',
@@ -44,12 +43,12 @@ const RELEGATED_CATEGORIES = [
 
 const normalizeTitle = (title: string) => title.trim().toLowerCase();
 
-async function getEntriesByField(
+const getEntriesByField = async (
   environment: Environment,
   contentType: string,
   fieldName: string,
   entryNames: string[],
-) {
+) => {
   const results = await Promise.all(
     entryNames.map((name) =>
       environment.getEntries({
@@ -60,7 +59,7 @@ async function getEntriesByField(
   );
 
   return results.flatMap((r) => r.items);
-}
+};
 
 const createNewImpactAndCategories = async (environment: Environment) => {
   console.log(`Update General Discovery impact name to Foundational Biology`);
@@ -207,11 +206,11 @@ const updateAssociatedEntries = async (
   }
 };
 
-async function migrateEntryImpactAndCategories(
+const migrateEntryImpactAndCategories = async (
   environment: Environment,
   impacts: Entry[],
   categories: Entry[],
-) {
+) => {
   const csvPath = resolve(__dirname, './impact_categories_data.csv');
   const content = await fs.readFile(csvPath, 'utf8');
 
@@ -220,7 +219,7 @@ async function migrateEntryImpactAndCategories(
   for await (const row of parser) {
     await updateAssociatedEntries(environment, impacts, categories, row);
   }
-}
+};
 
 const deleteUnusedImpactAndCategories = async (environment: Environment) => {
   const impactEntries = await getEntriesByField(

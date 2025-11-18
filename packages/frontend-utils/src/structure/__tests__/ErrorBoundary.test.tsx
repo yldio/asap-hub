@@ -1,6 +1,5 @@
-import { Route, Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { render } from '@testing-library/react';
+import { createMemoryRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
 import ErrorBoundary from '../ErrorBoundary';
@@ -12,25 +11,41 @@ const Throw: React.FC<Record<string, never>> = () => {
 };
 
 describe('error boundary', () => {
-  it('catches child errors', async () => {
-    const { container } = render(
-      <ErrorBoundary disableSentryReporting={true}>
-        <Throw />
-      </ErrorBoundary>,
-    );
+  it('catches child errors', () => {
+    const router = createMemoryRouter([
+      {
+        path: '/',
+        element: (
+          <ErrorBoundary disableSentryReporting={true}>
+            <Outlet />
+          </ErrorBoundary>
+        ),
+        children: [{ path: '/', element: <Throw /> }],
+      },
+    ]);
+
+    const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('oops');
   });
 
-  it('Overrides title and description when error thrown', async () => {
-    const { container } = render(
-      <ErrorBoundary
-        disableSentryReporting={true}
-        title="Something went wrong"
-        description="There was a problem with your request"
-      >
-        <Throw />
-      </ErrorBoundary>,
-    );
+  it('Overrides title and description when error thrown', () => {
+    const router = createMemoryRouter([
+      {
+        path: '/',
+        element: (
+          <ErrorBoundary
+            disableSentryReporting={true}
+            title="Something went wrong"
+            description="There was a problem with your request"
+          >
+            <Outlet />
+          </ErrorBoundary>
+        ),
+        children: [{ path: '/', element: <Throw /> }],
+      },
+    ]);
+
+    const { container } = render(<RouterProvider router={router} />);
     expect(container).not.toHaveTextContent('oops');
     expect(container).toHaveTextContent('Something went wrong');
     expect(container).toHaveTextContent(
@@ -39,43 +54,70 @@ describe('error boundary', () => {
   });
 
   it('resets on navigation', async () => {
-    const history = createMemoryHistory({ initialEntries: ['/throw'] });
-    const { container } = render(
-      <Router history={history}>
-        <ErrorBoundary disableSentryReporting={true}>
-          <Route path="/home">at home</Route>
-          <Route path="/throw">
-            <Throw />
-          </Route>
-        </ErrorBoundary>
-      </Router>,
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: (
+            <ErrorBoundary disableSentryReporting={true}>
+              <Outlet />
+            </ErrorBoundary>
+          ),
+          children: [
+            { path: 'home', element: <>at home</> },
+            { path: 'throw', element: <Throw /> },
+          ],
+        },
+      ],
+      { initialEntries: ['/throw'] },
     );
+
+    const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('oops');
 
-    history.push('/home');
-    expect(container).not.toHaveTextContent('oops');
-    expect(container).toHaveTextContent('at home');
+    await router.navigate('/home');
+
+    await waitFor(() => {
+      expect(container).not.toHaveTextContent('oops');
+      expect(container).toHaveTextContent('at home');
+    });
   });
 });
 describe('sentry error boundary', () => {
-  it('catches child errors', async () => {
-    const { container } = render(
-      <ErrorBoundary>
-        <Throw />
-      </ErrorBoundary>,
-    );
+  it('catches child errors', () => {
+    const router = createMemoryRouter([
+      {
+        path: '/',
+        element: (
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
+        ),
+        children: [{ path: '/', element: <Throw /> }],
+      },
+    ]);
+
+    const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('oops');
   });
 
-  it('Overrides title and description when error thrown', async () => {
-    const { container } = render(
-      <ErrorBoundary
-        title="Something went wrong"
-        description="There was a problem with your request"
-      >
-        <Throw />
-      </ErrorBoundary>,
-    );
+  it('Overrides title and description when error thrown', () => {
+    const router = createMemoryRouter([
+      {
+        path: '/',
+        element: (
+          <ErrorBoundary
+            title="Something went wrong"
+            description="There was a problem with your request"
+          >
+            <Outlet />
+          </ErrorBoundary>
+        ),
+        children: [{ path: '/', element: <Throw /> }],
+      },
+    ]);
+
+    const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('Something went wrong');
     expect(container).toHaveTextContent(
       'There was a problem with your request',

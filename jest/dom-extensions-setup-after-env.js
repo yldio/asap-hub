@@ -17,6 +17,10 @@ failOnConsole({
       if (msg.includes('findDOMNode is deprecated')) {
         return true;
       }
+      // React Router v7 future flags warning (should be configured in individual routers)
+      if (msg.includes('React Router Future Flag Warning')) {
+        return true;
+      }
     }
     return false;
   },
@@ -25,6 +29,17 @@ failOnConsole({
 // Polyfill TextEncoder/TextDecoder for React 18
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
+
+// Polyfill Fetch API for React Router v6 data routers
+const nodeFetch = require('node-fetch');
+global.fetch = nodeFetch;
+global.Request = nodeFetch.Request;
+global.Response = nodeFetch.Response;
+global.Headers = nodeFetch.Headers;
+// AbortController is built-in in Node v15.4+, but ensure it's available globally
+if (typeof global.AbortController === 'undefined') {
+  global.AbortController = AbortController;
+}
 
 if (typeof document === 'object') {
   // jest-dom adds custom jest matchers for asserting on DOM nodes.

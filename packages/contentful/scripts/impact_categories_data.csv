@@ -10,7 +10,7 @@ Bridge-like lipid transfer protein 3A (BLTP3A) is associated with membranes of t
 Triglycerides are an important fuel reserve for synapse function in the brain,Foundational Biology,Translational and Clinical Measures of Disease Biology
 Repetitive Levodopa Treatment Drives Cell Type-Specific Striatal Adaptations Associated With Progressive Dyskinesia in Parkinsonian Mice,Elucidating known PD pathways,Circuitry & Neuromodulation
 GenoTools: an open-source Python package for efficient genotype data quality control and analysis,New method/model to explore PD mechanism,Omics
-"Faecalibacterium prausnitzii, depleted in the Parkinson's disease microbiome, improves motor deficits in α-synuclein overexpressing mice",Elucidating known PD pathways,"Gut & Microbiome, Imflammation & Immune Regulation"
+"Faecalibacterium prausnitzii, depleted in the Parkinson's disease microbiome, improves motor deficits in α-synuclein overexpressing mice",Elucidating known PD pathways,"Gut & Microbiome, Inflammation & Immune Regulation"
 Evaluating the performance of polygenic risk profiling across diverse ancestry populations in Parkinson’s disease,New method/model to explore PD mechanism,Omics
 Drug Repurposing for Parkinson's Disease: A Large-Scale Multi-Cohort Study,Foundational Biology,PD Risk Factors
 LINE-1 retrotransposons drive human neuronal transcriptome complexity and functional diversification,New method/model to explore PD mechanism,Omics
@@ -65,7 +65,7 @@ Anxa1+ dopamine neuron vulnerability defines prodromal Parkinson’s disease bra
 Dopamine and cortical iPSC-derived neurons with different Parkinsonian mutations show variation in lysosomal and mitochondrial dysfunction: implications for protein deposition versus selective cell loss,Elucidating known PD pathways,"Clearance, Methods"
 Transgenic A53T mice have astrocytic a-synuclein  aggregates in dopamine and striatal regions,Elucidating known PD pathways,"Methods, Proteinopathy"
 Subsecond Analysis of Locomotor Activity in Parkinsonian Mice,Foundational Biology,Methods
-The pyrethroid insecticide deltamethrin disrupts neuropeptide and monoamine signaling pathways in the gastrointestinal tract,Foundational Biology,"Gut & Microbiome, Imflammation & Immune Regulation"
+The pyrethroid insecticide deltamethrin disrupts neuropeptide and monoamine signaling pathways in the gastrointestinal tract,Foundational Biology,"Gut & Microbiome, Inflammation & Immune Regulation"
 The mitochondrial unfolded protein response promotes senescence in human microglia by increasing S-adenosylmethionine availability for polyamine synthesis,Foundational Biology,"Clearance, PD Risk Factors"
 Single cell long read whole genome sequencing reveals somatic transposon activity in human brain,New method/model to explore PD mechanism,"Omics, Inflammation & Immune Regulation"
 Thalamic integration of basal ganglia and cerebellar circuits during motor learning,Elucidating known PD pathways,Circuitry & Neuromodulation
@@ -108,8 +108,8 @@ scNAT: a deep learning method for integrating paired single-cell RNA and T cell 
 Gut-Initiated Alpha Synuclein Fibrils Drive Parkinson’s Disease Phenotypes: Temporal Mapping of non-Motor Symptoms and REM Sleep Behavior Disorder,Elucidating known PD pathways,Methods
 Restoration of striatal neuroprotective pathways by kinase inhibitor treatment of Parkinson’s linked-LRRK2 mutant mice,Elucidating known PD pathways,"Clearance, Circuitry & Neuromodulation"
 Pathogenic LRRK2 mutations cause loss of primary cilia and Neurturin in striatal Parvalbumin interneurons,Elucidating known PD pathways,"Clearance, Cellular Subtyping"
-A comparative analysis of Parkinson’s disease and inflammatory bowel disease gut microbiomes highlights shared depletions in key butyrate-producing bacteria,New target/circuit for PD,"Gut & Microbiome, Imflammation & Immune Regulation"
-Locus coeruleus injury modulates ventral midbrain neuroinflammation during DSS-induced colitis,Elucidating known PD pathways,"Gut & Microbiome, Imflammation & Immune Regulation"
+A comparative analysis of Parkinson’s disease and inflammatory bowel disease gut microbiomes highlights shared depletions in key butyrate-producing bacteria,New target/circuit for PD,"Gut & Microbiome, Inflammation & Immune Regulation"
+Locus coeruleus injury modulates ventral midbrain neuroinflammation during DSS-induced colitis,Elucidating known PD pathways,"Gut & Microbiome, Inflammation & Immune Regulation"
 Biochemical Fractionation of Human α-Synuclein in a Drosophila Model of Synucleinopathies,New method/model to explore PD mechanism,"Proteinopathy, Methods"
 PINK1 deficiency rewires early immune responses in a mouse model of Parkinson’s disease triggered by intestinal infection,Elucidating known PD pathways,Inflammation & Immune Regulation
 Genome-wide CRISPR screen identifies neddylation as a regulator of neuronal aging and AD neurodegeneration.,New target/circuit for PD,PD Risk Factors
@@ -345,7 +345,7 @@ ggtranscript: an R package for the visualization and interpretation of transcrip
 Combining biomarkers for prognostic modelling of Parkinson’s disease,Confirmatory results,PD Risk Factors
 Integrating protein networks and machine learning for disease stratification in the Hereditary Spastic Paraplegias,New method/model to explore PD mechanism,Methods
 A Markov random field model-based approach for differentially expressed gene detection from single-cell RNA-seq data,New method/model to explore PD mechanism,Methods
-A prebiotic diet modulates microglial states and motor deficits in α-synuclein overexpressing mice,Elucidating known PD pathways,"Gut & Microbiome, Imflammation & Immune Regulation"
+A prebiotic diet modulates microglial states and motor deficits in α-synuclein overexpressing mice,Elucidating known PD pathways,"Gut & Microbiome, Inflammation & Immune Regulation"
 Structural conversion of α-synuclein at the mitochondria induces neuronal toxicity,Elucidating known PD pathways,"Proteinopathy, Clearance"
 Integrated multi-cohort analysis of the Parkinson's disease gut metagenome,New target/circuit for PD,Gut & Microbiome
 Quantitative proteomics reveals the selectivity of ubiquitin-binding autophagy receptors in the turnover of damaged lysosomes by lysophagy,Elucidating known PD pathways,Clearance
@@ -410,7 +410,7 @@ Micro-invasive probes for monitoring electrical and chemical neural activity in 
 "Introducing PIGMO, a novel PIGmented MOuse model of Parkinson’s disease",New method/model to explore PD mechanism,Methods
 A neurocomputational view of the effects of Parkinson’s disease on speech production,Elucidating known PD pathways,Circuitry & Neuromodulation
 LRRK2-mutant microglia and neuromelanin synergize to drive dopaminergic neurodegeneration in an iPSC-based Parkinson’s disease model,Elucidating known PD pathways,Cellular Subtyping
-Longitudinal neuromelanin changes in prodromal and early Parkinson’s disease in humans and rat model,Elucidating known PD pathways,"Translational and Clinical Measures of Disease Biology, PD Risk Factors"
+Longitudinal neuromelanin changes in prodromal and early Parkinson’s disease in humans and rat model-man,Elucidating known PD pathways,"Translational and Clinical Measures of Disease Biology, PD Risk Factors"
 M4-mediated cholinergic transmission is reduced in parkinsonian mice and its restoration alleviates motor deficits and levodopa-induced dyskinesia,Elucidating known PD pathways,Circuitry & Neuromodulation
 Adaptor protein-3 produces synaptic vesicles that release phasic dopamine | PNAS,Elucidating known PD pathways,Circuitry & Neuromodulation
 Inhibition of striatal dopamine release by the L-type calcium channel inhibitor isradipine co-varies with risk factors for Parkinson’s,Elucidating known PD pathways,Circuitry & Neuromodulation
@@ -420,7 +420,7 @@ Neuromodulator control of energy reserves in dopaminergic neurons.,Elucidating k
 "Single-cell multiomics identifies both shared and unique features of immune dysfunction in the colon, plasma and stool from individuals diagnosed with Parkinson’s disease or inflammatory bowel disease",Foundational Biology,"Gut & Microbiome, Inflammation & Immune Regulation"
 Modulation of neural cell state by PARK2 and dopaminergic neuroprotection via small molecule Parkin agonism,Elucidating known PD pathways,Translational and Clinical Measures of Disease Biology
 "The Gut Microbiome, Systemic Inflammation, and Autoimmunity in Parkinson’s Disease",New target/circuit for PD,"Gut & Microbiome, Inflammation & Immune Regulation"
-"Faecalibacterium prausnitzii, depleted in the Parkinson’s disease microbiome, improves motor deficits in α-synuclein overexpressing mice",Elucidating known PD pathways,"Gut & Microbiome, Imflammation & Immune Regulation"
+"Faecalibacterium prausnitzii, depleted in the Parkinson’s disease microbiome, improves motor deficits in α-synuclein overexpressing mice",Elucidating known PD pathways,"Gut & Microbiome, Inflammation & Immune Regulation"
 Iron mishandling in the brain and periphery in Parkinson’s disease,Elucidating known PD pathways,Gut & Microbiome
 Structural remodeling of the mitochondrial protein biogenesis machinery under proteostatic stress,Elucidating known PD pathways,Clearance
 Protein network analysis links the NSL complex to Parkinson's disease and mitochondrial biology,Elucidating known PD pathways,Clearance
@@ -453,13 +453,10 @@ Proteome Landscapes Decode Organelle Vulnerabilities in cortical and dopaminergi
 Derailed degradation: LRRK2-dependent exocytosis in Parkinson’s disease,Foundational Biology,Clearance
 Whole proteome copy number dataset in primary mouse cortical neurons,New method/model to explore PD mechanism,Clearance
 The Human Autophagy Core Complexes,Confirmatory results,Clearance
-Leucine Rich Repeat Kinase 2: Pathways to Parkinson’s Disease,Elucidating known PD pathways,Clearance
 Internalized SNCA/a-synuclein fibrils become truncated and resist degradation in neurons while glial cells rapidly degrade SNCA fibrils,Foundational Biology,"Proteinopathy, Clearance"
-Lipid dynamics at membrane contact sites,Elucidating known PD pathways,Clearance
 Structural biology of Parkinson’s disease-associated leucine-rich repeat kinase 2 (LRRK2),Foundational Biology,Clearance
 Probing the proteome-wide interactomes of Leucine-rich Repeat Kinases 1 and 2 and elucidating perturbation-induced changes in their phosphorylation activity,Elucidating known PD pathways,Clearance
 A new selection strategy to enrich dopaminergic neurons facil-itates comparisons between patient iPSC-derived lines,New method/model to explore PD mechanism,Clearance
-Proteome Landscapes Decode Organelle Vulnerabilities in cortical and dopaminergic-like induced neurons Across Lysosomal Storage Disorders,Foundational Biology,Clearance
 Impaired hematopoiesis and embryonic lethality at midgestation of mice lacking both lipid transfer proteins VPS13A and VPS13C,Foundational Biology,Clearance
 Disruption of lysosomal proteolysis in astrocytes facilitates midbrain organoid proteostasis failure in an early-onset Parkinson’s disease model | Nature Communications,Elucidating known PD pathways,"Clearance, PD Risk Factors"
 Type-II kinase inhibitors that target Parkinson’s Disease-associated LRRK2,New method/model to explore PD mechanism,Clearance
@@ -473,7 +470,6 @@ VPS13B is localized at the cis-trans Golgi complex interface and is a functional
 Tagless LysoIP method for molecular profiling of lysosomal content in clinical samples,New method/model to explore PD mechanism,Clearance
 A novel alpha-synuclein G14R missense variant is associated with atypical neuropathological features,Elucidating known PD pathways,"Proteinopathy, Translational and Clinical Measures of Disease Biology"
 A Novel α-Synuclein K58N Missense Variant in a Patient with Parkinson's Disease,Foundational Biology,"Proteinopathy, Translational and Clinical Measures of Disease Biology"
-A novel alpha-synuclein G14R missense variant is associated with atypical neuropathological features,Elucidating known PD pathways,"Proteinopathy, Translational and Clinical Measures of Disease Biology"
 Soluble and Insoluble Lysates from the Human A53T Mutant α-Synuclein Transgenic Mouse Model Induces α-Synucleinopathy Independent of Injection Site,Foundational Biology,Proteinopathy
 A topographical atlas of αSyn dosage and cell-type expression in the mouse brain and periphery | bioRxiv,Elucidating known PD pathways,"Proteinopathy, Methods"
 Protocol for CRISPR-based manipulation and visualization of endogenous α-synuclein in cultured mouse hippocampal neurons,New method/model to explore PD mechanism,Methods
@@ -513,7 +509,7 @@ Single-nucleus multiomic profiling of the aging mouse substantia nigra reveals c
 MAPL orchestrates gasdermin-mediated release of mtDNA from lysosomes that drives pyroptotic cell death,Elucidating known PD pathways,Inflammation & Immune Regulation
 "Amyloid-beta, alpha-synuclein and tau aggregated co-pathologies enhance neuropathology and neuroinflammation",Elucidating known PD pathways,"Inflammation & Immune Regulation, Methods"
 "Clinical features, genetics and pathology in a large series of movement disorder cases: a retrospective multi-ancestry brain bank cohort study",Foundational Biology,PD Risk Factors
-Proteome Landscapes Decode Organelle Vulnerabilities in cortical and dopaminergic-like induced neurons Across Lysosomal Storage Disorders ,Foundational Biology,Clearance
+Proteome Landscapes Decode Organelle Vulnerabilities in cortical and dopaminergic-like induced neurons Across Lysosomal Storage Disorders -man,Foundational Biology,Clearance
 Structural remodeling of the mitochondrial protein biogenesis machinery under proteostatic stress,Elucidating known PD pathways,Clearance
 Pheomelanin promotes dopaminergic neurodegeneration in Parkinson’s disease,Elucidating known PD pathways,"PD Risk Factors, Gut & Microbiome"
 MAPL regulates gasdermin-mediated release of mtDNA from lysosomes to drive pyroptotic cell death,Elucidating known PD pathways,Clearance

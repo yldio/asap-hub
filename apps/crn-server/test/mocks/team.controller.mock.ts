@@ -4,5 +4,6 @@ export const teamControllerMock = {
   fetch: jest.fn(),
   fetchPublicTeams: jest.fn(),
   fetchById: jest.fn(),
+  fetchTeamIdByProjectId: jest.fn(),
   update: jest.fn(),
 } as unknown as jest.Mocked<TeamController>;

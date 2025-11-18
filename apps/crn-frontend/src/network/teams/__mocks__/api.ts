@@ -20,8 +20,11 @@ import {
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   createResearchOutput as originalCreateResearchOutput,
+  GetTeamsListOptions,
   updateTeamResearchOutput as originalUpdateTeamResearchOutput,
 } from '../api';
+
+const DEFAULT_PAGE_SIZE = 10;
 
 export const getTeam = jest.fn(
   async (id: string): Promise<TeamResponse> => ({
@@ -42,7 +45,12 @@ export const patchTeam = jest.fn(
 
 export const getTeams = jest.fn(
   async ({ pageSize }: GetListOptions): Promise<ListTeamResponse> =>
-    createListTeamResponse(pageSize ?? 10),
+    createListTeamResponse(pageSize ?? DEFAULT_PAGE_SIZE),
+);
+
+export const getAlgoliaTeams = jest.fn(
+  async ({ pageSize }: GetTeamsListOptions): Promise<ListTeamResponse> =>
+    createListTeamResponse(pageSize ?? DEFAULT_PAGE_SIZE),
 );
 
 export const createResearchOutput: jest.Mocked<

@@ -28,6 +28,7 @@ import {
   ListManuscriptVersionResponse,
   ManuscriptVersionResponse,
   TeamType,
+  teamStatus,
 } from '@asap-hub/model';
 import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
 import { getPresignedUrl } from '../../shared-api/files';
@@ -88,6 +89,50 @@ export const getTeams = async (
     );
   }
   return resp.json();
+};
+
+const getTeamTypeAlgoliaFilter = (teamType: TeamType | 'all') =>
+  teamType === 'all'
+    ? 'teamType:"Discovery Team" OR teamType:"Resource Team"'
+    : `teamType:"${teamType}"`;
+
+export const getAlgoliaTeams = async (
+  algoliaClient: AlgoliaClient<'crn'>,
+  {
+    searchQuery,
+    teamType,
+    filters,
+    currentPage,
+    pageSize,
+  }: GetTeamsListOptions,
+): Promise<ListTeamResponse> => {
+  const isteamStatusFilter = (filter: string) =>
+    (teamStatus as unknown as string[]).includes(filter);
+  const filterArray = Array.from(filters);
+
+  const teamStatusFilter = filterArray
+    .filter(isteamStatusFilter)
+    .map((filter) => `teamStatus:"${filter}"`)
+    .join(' OR ');
+
+  const teamTypeFilter = getTeamTypeAlgoliaFilter(teamType);
+
+  const algoliaFilters = teamStatusFilter
+    ? `(${teamTypeFilter}) AND (${teamStatusFilter})`
+    : teamTypeFilter || teamStatusFilter;
+
+  const result = await algoliaClient.search(['team'], searchQuery, {
+    filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
+
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };
 
 export const patchTeam = async (

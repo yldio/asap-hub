@@ -108,6 +108,9 @@ export const getContentfulGraphqlTeamProjectById = (): NonNullable<
             projectsCollection: {
               items: [
                 {
+                  sys: {
+                    id: 'project-id-1',
+                  },
                   title:
                     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
                   projectId: '',
@@ -347,6 +350,9 @@ export const getContentfulGraphqlProjectMembershipsCollection = (): {
   total: 1,
   items: [
     {
+      sys: {
+        id: 'project-id-1',
+      },
       title:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
       projectId: 'WH1',
@@ -378,6 +384,9 @@ export const getContentfulGraphqlProjectsCollection = (): {
   total: 1,
   items: [
     {
+      sys: {
+        id: 'project-id-1',
+      },
       title:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
       projectId: 'WH1',
@@ -415,6 +424,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
   id: 'team-id-0',
   displayName: 'Team A',
   teamType: 'Discovery Team',
+  teamStatus: 'Active',
   lastModifiedDate: '2020-11-26T11:56:04.000Z',
   labCount: 2,
   tags: [
@@ -601,11 +611,13 @@ export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
   id: 'team-id-0',
   displayName: 'Team A',
   teamType: 'Discovery Team',
+  teamStatus: 'Active',
   labCount: 2,
   tags: [{ id: 'tag-1', name: 'Animal resources 1' }],
   memberCount: 1,
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  linkedProjectId: 'project-id-1',
 });
 
 export const getTeamResponse = (): TeamResponse => getTeamDataObject();

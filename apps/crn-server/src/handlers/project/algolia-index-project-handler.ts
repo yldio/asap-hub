@@ -1,5 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
-import { ProjectResponse } from '@asap-hub/model';
+import { ProjectEvent, ProjectResponse } from '@asap-hub/model';
 import { EventBridgeHandler, ProjectPayload } from '@asap-hub/server-common';
 import { NotFoundError } from '@asap-hub/errors';
 import { Boom, isBoom } from '@hapi/boom';
@@ -10,8 +10,6 @@ import { getProjectDataProvider } from '../../dependencies/projects.dependencies
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { addTagsFunction } from '../helper';
-
-export type ProjectEvent = 'ProjectsPublished' | 'ProjectsUnpublished';
 
 /* istanbul ignore next */
 export const indexProjectHandler =

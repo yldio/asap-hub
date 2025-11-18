@@ -463,10 +463,6 @@ describe('Teams data provider', () => {
               OR: [
                 { displayName_contains: 'test' },
                 { displayName_contains: 'query' },
-                { projectTitle_contains: 'test' },
-                { projectTitle_contains: 'query' },
-                { researchTags: { name_contains: 'test' } },
-                { researchTags: { name_contains: 'query' } },
               ],
               inactiveSince_exists: true,
               teamType: 'Resource Team',
@@ -501,10 +497,6 @@ describe('Teams data provider', () => {
               OR: [
                 { displayName_contains: 'Tony' },
                 { displayName_contains: 'Stark' },
-                { projectTitle_contains: 'Tony' },
-                { projectTitle_contains: 'Stark' },
-                { researchTags: { name_contains: 'Tony' } },
-                { researchTags: { name_contains: 'Stark' } },
               ],
             },
           }),
@@ -538,10 +530,6 @@ describe('Teams data provider', () => {
               OR: [
                 { displayName_contains: 'Tony' },
                 { displayName_contains: 'Stark' },
-                { projectTitle_contains: 'Tony' },
-                { projectTitle_contains: 'Stark' },
-                { researchTags: { name_contains: 'Tony' } },
-                { researchTags: { name_contains: 'Stark' } },
               ],
               inactiveSince_exists: true,
             },
@@ -550,6 +538,68 @@ describe('Teams data provider', () => {
       });
     });
 
+    describe('Team Ids Filter', () => {
+      const teamIds = ['team-id-0'];
+      test('Should query data properly when passing team id param and other filters are not set', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const result = await teamDataProvider.fetch({
+          teamIds,
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 0,
+            where: { sys: { id_in: teamIds } },
+          }),
+        );
+      });
+
+      test('Should query data properly when passing team id param and other filters are set', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulTeamsGraphqlResponse(),
+        );
+
+        const search = 'Tony Stark';
+        const result = await teamDataProvider.fetch({
+          take: 8,
+          skip: 5,
+          search,
+          filter: ['Inactive'],
+          teamIds,
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: [getTeamListItemDataObject()],
+        });
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['displayName_ASC'],
+            skip: 5,
+            where: {
+              OR: [
+                { displayName_contains: 'Tony' },
+                { displayName_contains: 'Stark' },
+              ],
+              inactiveSince_exists: true,
+              sys: { id_in: teamIds },
+            },
+          }),
+        );
+      });
+    });
     describe('team members', () => {
       test('should ignore falsy items in the team membership list', async () => {
         const team = {
@@ -1875,6 +1925,102 @@ describe('Teams data provider', () => {
 
         expect(result!.tools).toEqual(tools);
       });
+    });
+  });
+
+  describe('fetchTeamIdByProjectId', () => {
+    const projectId = 'project-id-1';
+
+    test('Should return the linked team id if the projectMember is a Team', async () => {
+      const contentfulGraphQLResponse = {
+        projects: {
+          membersCollection: {
+            items: [
+              {
+                projectMember: {
+                  __typename: 'Teams',
+                  sys: { id: 'team-id-1' },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await teamDataProvider.fetchTeamIdByProjectId(projectId);
+
+      expect(result).toBe('team-id-1');
+    });
+
+    test('Should return null when there are no members linked to the project', async () => {
+      const contentfulGraphQLResponse = {
+        projects: {
+          membersCollection: {
+            items: [],
+          },
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await teamDataProvider.fetchTeamIdByProjectId(projectId);
+
+      expect(result).toBeNull();
+    });
+
+    test('Should return null when projectMember exists but is NOT a Team (e.g. User)', async () => {
+      const contentfulGraphQLResponse = {
+        projects: {
+          membersCollection: {
+            items: [
+              {
+                projectMember: {
+                  __typename: 'Users',
+                  sys: { id: 'user-123' },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await teamDataProvider.fetchTeamIdByProjectId(projectId);
+
+      expect(result).toBeNull();
+    });
+
+    test('Should return null when the entire query returns null', async () => {
+      const contentfulGraphQLResponse = {
+        projects: null,
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await teamDataProvider.fetchTeamIdByProjectId(projectId);
+
+      expect(result).toBeNull();
+    });
+
+    test('Should throw a GraphQL error when the client rejects', async () => {
+      contentfulGraphqlClientMock.request.mockRejectedValueOnce(
+        new GraphQLError('some error message'),
+      );
+
+      await expect(
+        teamDataProvider.fetchTeamIdByProjectId(projectId),
+      ).rejects.toThrow('some error message');
     });
   });
 

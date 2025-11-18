@@ -1,17 +1,12 @@
 import {
   DataProvider,
-  FetchOptions,
+  FetchTeamsOptions,
   ListPublicTeamDataObject,
   TeamCreateDataObject,
   TeamDataObject,
   TeamListItemDataObject,
-  TeamType,
   TeamUpdateDataObject,
 } from '@asap-hub/model';
-
-export type FetchTeamsOptions = FetchOptions & {
-  teamType?: TeamType;
-};
 
 export type TeamDataProvider = DataProvider<
   TeamDataObject,
@@ -28,4 +23,5 @@ export type TeamDataProvider = DataProvider<
     id: string,
     internalAPI: boolean,
   ) => Promise<TeamDataObject | null>;
+  fetchTeamIdByProjectId: (projectId: string) => Promise<string | null>;
 };

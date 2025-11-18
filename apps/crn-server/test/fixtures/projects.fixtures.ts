@@ -1,4 +1,5 @@
 import {
+  ContentfulWebhookPayload,
   FetchProjectByIdQuery,
   FetchProjectsQuery,
 } from '@asap-hub/contentful';
@@ -6,7 +7,11 @@ import {
   DiscoveryProject,
   ResourceProject,
   TraineeProject,
+  ProjectEvent,
+  WebhookDetail,
 } from '@asap-hub/model';
+import { EventBridgeEvent } from 'aws-lambda';
+import { createEventBridgeEventMock } from '../helpers/events';
 
 type GraphQLProject = NonNullable<
   NonNullable<FetchProjectsQuery['projectsCollection']>['items'][number]
@@ -466,3 +471,64 @@ export const getExpectedProjectList = () => [
   getExpectedResourceIndividualProject(),
   getExpectedTraineeProject(),
 ];
+
+export const getUserContentfulWebhookDetail = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'projects'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'crn-3046',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'projects',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {},
+});
+
+export const getProjectEvent = (
+  id: string,
+  eventType: ProjectEvent,
+): EventBridgeEvent<
+  ProjectEvent,
+  WebhookDetail<ContentfulWebhookPayload<'projects'>>
+> =>
+  createEventBridgeEventMock(getUserContentfulWebhookDetail(id), eventType, id);

@@ -23,6 +23,10 @@ export type TeamTool = { name: string; description?: string; url: string };
 
 export type TeamType = (typeof teamType)[number];
 
+export const teamStatus = ['Active', 'Inactive'] as const;
+
+export type TeamStatus = (typeof teamStatus)[number];
+
 export interface TeamCreateRequest {
   displayName: string;
   inactiveSince?: string;
@@ -88,6 +92,8 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   collaborationManuscripts?: TeamManuscript[];
   labCount: number;
   inactiveSince?: string;
+  teamStatus: TeamStatus;
+  linkedProjectId?: string;
   supplementGrant?: TeamSupplementGrant;
   researchTheme?: string;
 };
@@ -107,12 +113,9 @@ export type TeamCreateDataObject = {
 
 export type TeamResponse = Omit<TeamDataObject, 'researchTheme'>;
 
-export const teamStatus = ['Active', 'Inactive'] as const;
-
-export type TeamStatus = (typeof teamStatus)[number];
-
 export type FetchTeamsOptions = FetchOptions & {
   teamType?: TeamType;
+  teamIds?: string[];
 };
 
 export type TeamListItemDataObject = Pick<
@@ -120,7 +123,9 @@ export type TeamListItemDataObject = Pick<
   | 'id'
   | 'displayName'
   | 'inactiveSince'
+  | 'teamStatus'
   | 'projectTitle'
+  | 'linkedProjectId'
   | 'teamType'
   | 'tags'
   | 'labCount'

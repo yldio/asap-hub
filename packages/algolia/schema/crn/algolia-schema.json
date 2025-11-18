@@ -78,6 +78,7 @@
     "openScienceTeamMember",
     "apcRequested",
     "apcCoverageRequestStatus",
+    "teamid",
     "projectType",
     "resourceType",
     "researchTheme",

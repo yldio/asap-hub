@@ -7,7 +7,8 @@ import {
   DiscoveryProject,
   ResourceProject,
   TraineeProject,
-  ProjectEvent, WebhookDetail
+  ProjectEvent,
+  WebhookDetail,
 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';

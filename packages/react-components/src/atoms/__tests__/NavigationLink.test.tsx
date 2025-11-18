@@ -1,8 +1,9 @@
-import { findParentWithStyle } from '@asap-hub/dom-test-utils';
+mport { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { ThemeProvider } from '@emotion/react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import { Router, StaticRouter } from 'react-router-dom';
+import { Router, } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { activePrimaryBackgroundColorDefault } from '../../button';
 import { color, pine } from '../../colors';
 import NavigationLink from '../NavigationLink';

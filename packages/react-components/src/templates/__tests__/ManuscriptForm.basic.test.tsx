@@ -11,7 +11,8 @@ import {
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Router } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import ManuscriptForm from '../ManuscriptForm';
 
 type FindByRole = (

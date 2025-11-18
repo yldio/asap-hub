@@ -10,6 +10,13 @@ on:
           - Branch
           - Development
           - Production
+      application:
+        required: true
+        description: Select which application contentful space to target
+        type: choice
+        options:
+          - CRN
+          - GP2
       contentful-env:
         required: true
         type: string
@@ -32,12 +39,18 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Set Contentful Space Id
+        run: |
+          if [ "${{ inputs.application }}" = "GP2" ]; then
+            echo "CONTENTFUL_SPACE_ID=${{ steps.setup.outputs.gp2-contentful-space-id }}" >> $GITHUB_ENV
+          else
+            echo "CONTENTFUL_SPACE_ID=${{ steps.setup.outputs.crn-contentful-space-id }}" >> $GITHUB_ENV
+          fi
       - name: Rollback Privacy Policy
         run: |
           yarn workspace @asap-hub/contentful rollback-privacy-policy
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
 
   notify_failure:

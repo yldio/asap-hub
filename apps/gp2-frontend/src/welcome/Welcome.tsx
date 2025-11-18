@@ -1,11 +1,36 @@
-import { WelcomePage, mail } from '@asap-hub/react-components';
+import React, { useContext, useEffect, useRef } from 'react';
+import { Link, Paragraph, WelcomePage, mail } from '@asap-hub/react-components';
 import { ToastContext, useAuth0GP2 } from '@asap-hub/react-context';
 import { useRouteParams, welcome } from '@asap-hub/routing';
-import { useContext, useEffect, useRef } from 'react';
 import { API_BASE_URL } from '../config';
 
+const { INVITE_SUPPORT_EMAIL } = mail;
+
+const TermsFooter: React.FC<{ intro: string }> = ({ intro }) => (
+  <Paragraph accent="lead">
+    {intro} you are agreeing to our{' '}
+    <Link href="/terms-and-conditions">Terms and Conditions</Link> and{' '}
+    <Link href="/privacy-notice">Privacy Notice</Link>.
+  </Paragraph>
+);
+
+export const values = {
+  signup: {
+    title: 'Join the GP2 Hub',
+    content: 'Activate your account and start exploring the GP2 Network.',
+    buttonText: 'Activate account',
+    footer: () => <TermsFooter intro="By proceeding" />,
+  },
+  welcome: {
+    title: 'Welcome to the GP2 Hub',
+    content:
+      'A private, invite-only network where the GP2 community collaborates.',
+    buttonText: 'Sign in',
+    footer: () => <TermsFooter intro="By signing in" />,
+  },
+} as const;
+
 const Welcome: React.FC<Record<string, never>> = () => {
-  const { INVITE_SUPPORT_EMAIL } = mail;
   const { code } = useRouteParams(welcome({}).invited);
 
   const { loginWithRedirect } = useAuth0GP2();
@@ -44,20 +69,6 @@ const Welcome: React.FC<Record<string, never>> = () => {
       screen_hint: 'signup',
       invitation_code: code,
     });
-  };
-
-  const values = {
-    signup: {
-      title: 'Join the GP2 Hub',
-      content: 'Activate your account and start exploring the GP2 Network.',
-      buttonText: 'Activate account',
-    },
-    welcome: {
-      title: 'Welcome to the GP2 Hub',
-      content:
-        'A private, invite-only network where the GP2 community collaborates.',
-      buttonText: 'Sign in',
-    },
   };
 
   return (

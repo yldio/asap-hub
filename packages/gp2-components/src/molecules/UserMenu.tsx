@@ -136,7 +136,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
           <Anchor href={staticPages({}).terms({}).$}>Terms of Use</Anchor>
           {'  ·  '}
           <Anchor href={staticPages({}).privacyPolicy({}).$}>
-            Privacy Policy
+            Privacy Notice
           </Anchor>
         </Caption>
       </div>

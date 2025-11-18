@@ -1,12 +1,15 @@
 import { mockLocation } from '@asap-hub/dom-test-utils';
 import { authTestUtils } from '@asap-hub/gp2-components';
 import { ToastContext } from '@asap-hub/react-context';
+import { WelcomePage, mail } from '@asap-hub/react-components';
 import { render, RenderResult, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { API_BASE_URL } from '../../config';
-import Welcome from '../Welcome';
+import Welcome, { values } from '../Welcome';
+
+const { INVITE_SUPPORT_EMAIL } = mail;
 
 describe('the welcome page', () => {
   // fetch user by code request
@@ -54,6 +57,33 @@ describe('the welcome page', () => {
     expect(
       (await screen.findByRole('button')).textContent,
     ).toMatchInlineSnapshot(`"Activate account"`);
+  });
+
+  it('renders the signup footer with terms and conditions', async () => {
+    await renderWelcome();
+    expect(
+      await screen.findByText(/By proceeding you are agreeing to our/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Terms and Conditions')).toBeInTheDocument();
+    expect(screen.getByText('Privacy Notice')).toBeInTheDocument();
+  });
+
+  it('renders the welcome footer when allowSignup is false', async () => {
+    const handleClick = jest.fn();
+    render(
+      <WelcomePage
+        allowSignup={false}
+        onClick={handleClick}
+        values={values}
+        supportEmail={INVITE_SUPPORT_EMAIL}
+      />,
+    );
+    expect(
+      await screen.findByText(/By signing in you are agreeing to our/i),
+    ).toBeInTheDocument();
+    // This test doesn't use Welcome component, so no nock request is made
+    // Clean up nock to avoid afterEach failure
+    nock.cleanAll();
   });
 
   describe('when clicking the button', () => {

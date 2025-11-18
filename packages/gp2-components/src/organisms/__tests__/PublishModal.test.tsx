@@ -1,7 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 import PublishModal from '../PublishModal';
 
@@ -21,18 +20,21 @@ describe('PublishModal', () => {
     ).toBeVisible();
   });
   it('redirects to dashboard on save', async () => {
-    const getUserConfirmation = jest.fn((_message, cb) => cb(true));
-    const history = createMemoryHistory({ getUserConfirmation });
     const onSave = jest.fn();
-    render(
-      <Router history={history}>
-        <PublishModal {...defaultProps} onSave={onSave} />
-      </Router>,
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/*',
+          element: <PublishModal {...defaultProps} onSave={onSave} />,
+        },
+      ],
+      { initialEntries: ['/'] }
     );
+    render(<RouterProvider router={router} />);
     const saveButton = screen.getByRole('button', { name: 'Publish' });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
     await waitFor(() => {
-      expect(history.location.pathname).toBe('/');
+      expect(router.state.location.pathname).toBe('/');
     });
     expect(onSave).toHaveBeenCalledWith({ onboarded: true });
   });

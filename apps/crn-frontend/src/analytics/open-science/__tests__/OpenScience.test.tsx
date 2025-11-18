@@ -8,9 +8,8 @@ import { analytics } from '@asap-hub/routing';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Router } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { PreprintComplianceOpensearchResponse } from '@asap-hub/model';
 
@@ -95,16 +94,24 @@ beforeEach(() => {
 });
 
 const renderPage = async (path: string) => {
+  const router = createMemoryRouter(
+    [
+      {
+        path: '/analytics/open-science/:metric',
+        element: <OpenScience />,
+      },
+    ],
+    {
+      initialEntries: [path],
+    },
+  );
+
   const result = render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[path]}>
-              <Route path="/analytics/open-science/:metric">
-                <OpenScience />
-              </Route>
-            </MemoryRouter>
+            <RouterProvider router={router} />
           </WhenReady>
         </Auth0Provider>
       </Suspense>
@@ -157,26 +164,30 @@ describe('OpenScience', () => {
   });
 
   it('exports analytics for preprint-compliance metric', async () => {
+    jest.useRealTimers();
     await renderPage(
       analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
     );
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/open_science_preprint-compliance_\d+\.csv/),
       expect.anything(),
     );
+    jest.useFakeTimers();
   });
 
   it('exports analytics for publication-compliance metric', async () => {
+    jest.useRealTimers();
     await renderPage(
       analytics({}).openScience({}).metric({ metric: 'publication-compliance' })
         .$,
     );
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/open_science_publication-compliance_\d+\.csv/),
       expect.anything(),
     );
+    jest.useFakeTimers();
   });
 
   it('renders metric dropdown with correct options', async () => {
@@ -195,23 +206,29 @@ describe('OpenScience', () => {
   });
 
   it('changes route when metric dropdown selection changes', async () => {
-    const history = createMemoryHistory({
-      initialEntries: [
-        analytics({}).openScience({}).metric({ metric: 'preprint-compliance' })
-          .$,
+    jest.useRealTimers();
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/analytics/open-science/:metric',
+          element: <OpenScience />,
+        },
       ],
-    });
+      {
+        initialEntries: [
+          analytics({})
+            .openScience({})
+            .metric({ metric: 'preprint-compliance' }).$,
+        ],
+      },
+    );
 
     const result = render(
       <RecoilRoot>
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
-              <Router history={history}>
-                <Route path="/analytics/open-science/:metric">
-                  <OpenScience />
-                </Route>
-              </Router>
+              <RouterProvider router={router} />
             </WhenReady>
           </Auth0Provider>
         </Suspense>
@@ -228,23 +245,27 @@ describe('OpenScience', () => {
     ).toBeInTheDocument();
 
     const dropdownIndicators = screen.getAllByTitle('Chevron Down');
-    userEvent.click(dropdownIndicators[0]!);
+    await userEvent.click(dropdownIndicators[0]!);
 
     await waitFor(() => {
       expect(screen.getByText('Publication Compliance')).toBeInTheDocument();
     });
-    userEvent.click(screen.getByText('Publication Compliance'));
+    await userEvent.click(screen.getByText('Publication Compliance'));
 
-    expect(history.location.pathname).toBe(
-      analytics({}).openScience({}).metric({ metric: 'publication-compliance' })
-        .$,
-    );
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe(
+        analytics({})
+          .openScience({})
+          .metric({ metric: 'publication-compliance' }).$,
+      );
+    });
 
     await waitFor(() => {
       expect(
         screen.getByRole('heading', { name: 'Publication Compliance' }),
       ).toBeInTheDocument();
     });
+    jest.useFakeTimers();
   });
 
   describe('OpenSearch tag loading', () => {
@@ -329,6 +350,7 @@ describe('OpenScience', () => {
   });
 
   it('debounces tag suggestions and loads initial options', async () => {
+    jest.useRealTimers();
     await renderPage(
       analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
     );
@@ -357,5 +379,6 @@ describe('OpenScience', () => {
 
     // Should only be called once with the final value due to debouncing
     expect(mockGetTagSuggestions).toHaveBeenCalledTimes(1);
+    jest.useFakeTimers();
   });
 });

@@ -11,22 +11,9 @@ import {
   ResourceProjectIcon,
   TraineeProjectIcon,
 } from '../icons';
-<<<<<<< HEAD
 import { Option, Title } from '../organisms/CheckboxGroup';
-
-const visualHeaderStyles = css({
-  padding: `${defaultPageLayoutPaddingStyle} 0`,
-  background: paper.rgb,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-});
-=======
 import PageInfoContainer from './PageInfoContainer';
-<<<<<<< HEAD
-import PageContraints from './PageConstraints';
->>>>>>> 8a8658f43 ([ASAP-1232] - Adapt project section's components to match new designs)
-=======
 import PageConstraints from './PageConstraints';
->>>>>>> d90fec16c ([ASAP-1232] - Fix typo in `PageConstraints` component's name)
 
 const descriptionStyles = css({
   maxWidth: rem(smallDesktopScreen.width),

@@ -235,31 +235,6 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
             </div>
           )} */}
         </div>
-<<<<<<< HEAD
-      )}
-      {/* Metadata Section */}
-      <div css={metadataStyles}>
-        {/* Team/Members Info */}
-        {project.projectType === 'Discovery' && (
-          <div css={[metadataRowStyles, discoveryDurationMediaStyles]}>
-            <div css={iconContainerStyles}>
-              <span css={iconStyles}>{getTeamIcon(project)}</span>
-              {project.teamId ? (
-                <Link href={`/teams/${project.teamId}`}>
-                  <span css={teamLinkStyles}>{project.teamName}</span>
-                </Link>
-              ) : (
-                <span css={teamLinkStyles}>{project.teamName}</span>
-              )}
-            </div>
-            <div css={discoveryProjectDurationStyles}>
-              <ProjectDuration
-                startDate={project.startDate}
-                endDate={project.endDate}
-                projectStatus={project.status}
-              />
-            </div>
-=======
 
         {/* Access Drive for Resource projects */}
         {project.projectType === 'Resource' && project.googleDriveLink && (
@@ -267,7 +242,6 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
             <Link href={project.googleDriveLink} buttonStyle small noMargin>
               {googleDriveIcon} Access Drive
             </Link>
->>>>>>> 8a8658f43 ([ASAP-1232] - Adapt project section's components to match new designs)
           </div>
         )}
         {/* Metadata Section */}
@@ -283,30 +257,15 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
                   </Link>
                 ) : (
                   <span css={teamLinkStyles}>{project.teamName}</span>
-<<<<<<< HEAD
-                </Link>
-              ) : (
-                <span css={teamLinkStyles}>{project.teamName}</span>
-              )}
-              {project.isTeamBased && (
-                <div css={discoveryProjectDurationStyles}>
-                  <ProjectDuration
-                    startDate={project.startDate}
-                    endDate={project.endDate}
-                    projectStatus={project.status}
-                  />
-                </div>
-              )}
-=======
                 )}
               </div>
               <div css={discoveryProjectDurationStyles}>
                 <ProjectDuration
                   startDate={project.startDate}
                   endDate={project.endDate}
+                  projectStatus={project.status}
                 />
               </div>
->>>>>>> 8a8658f43 ([ASAP-1232] - Adapt project section's components to match new designs)
             </div>
           )}
 
@@ -327,6 +286,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
                     <ProjectDuration
                       startDate={project.startDate}
                       endDate={project.endDate}
+                      projectStatus={project.status}
                     />
                   </div>
                 )}
@@ -355,45 +315,17 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
             </>
           )}
 
-<<<<<<< HEAD
-        {project.projectType === 'Trainee' && (
-          <>
-            <div css={metadataRowStyles}>
-              <span css={iconStyles}>{getTeamIcon(project)}</span>
-              <UsersList users={[project.trainer]} separator="•" noMargin />
-            </div>
-            <div css={metadataRowStyles}>
-              <span css={iconStyles}>{getMemberIcon()}</span>
-              <UsersList users={project.members} separator="•" noMargin />
-            </div>
-          </>
-        )}
-
-        {/* Duration */}
-        {(project.projectType === 'Trainee' ||
-          (project.projectType === 'Resource' && !project.isTeamBased)) && (
-          <ProjectDuration
-            startDate={project.startDate}
-            endDate={project.endDate}
-            projectStatus={project.status}
-          />
-        )}
-      </div>
-      <TabNav>
-        <TabLink href={aboutHref}>About</TabLink>
-      </TabNav>
-=======
           {/* Duration */}
           {(project.projectType === 'Trainee' ||
             (project.projectType === 'Resource' && !project.isTeamBased)) && (
             <ProjectDuration
               startDate={project.startDate}
               endDate={project.endDate}
+              projectStatus={project.status}
             />
           )}
         </div>
       </PageInfoContainer>
->>>>>>> 8a8658f43 ([ASAP-1232] - Adapt project section's components to match new designs)
     </header>
   );
 };

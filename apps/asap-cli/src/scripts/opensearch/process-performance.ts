@@ -3,10 +3,14 @@ import {
   PerformanceMetrics,
   timeRanges,
   documentCategories,
+  outputTypes,
 } from '@asap-hub/model';
 import { getClient, indexOpensearchData } from '@asap-hub/server-common';
 import { getPerformanceMetrics } from '../shared/performance-utils';
-import { userProductivityPerformanceMapping } from './mappings';
+import {
+  userProductivityPerformanceMapping,
+  teamProductivityPerformanceMapping,
+} from './mappings';
 
 interface UserProductivityDocument {
   asapOutput: number;
@@ -34,15 +38,48 @@ interface UserProductivityPerformanceDocument {
   documentCategory: string;
 }
 
+interface TeamProductivityDocument {
+  Article: number;
+  Bioinformatics: number;
+  Dataset: number;
+  'Lab Material': number;
+  Protocol: number;
+  timeRange: string;
+  outputType: string;
+}
+
+interface TeamProductivityHit {
+  _source?: {
+    Article?: number;
+    Bioinformatics?: number;
+    Dataset?: number;
+    'Lab Material'?: number;
+    Protocol?: number;
+    timeRange?: string;
+    outputType?: string;
+  };
+}
+
+interface TeamProductivityPerformanceDocument {
+  article: PerformanceMetrics;
+  bioinformatics: PerformanceMetrics;
+  dataset: PerformanceMetrics;
+  labMaterial: PerformanceMetrics;
+  protocol: PerformanceMetrics;
+  timeRange: string;
+  outputType: string;
+}
+
 export interface ProcessPerformanceOptions {
   awsRegion: string;
   environment: string;
   opensearchUsername: string;
   opensearchPassword: string;
-  metric: 'all' | 'user-productivity';
+  metric: 'all' | 'user-productivity' | 'team-productivity';
 }
 
 const USER_PRODUCTIVITY_INDEX = 'user-productivity';
+const TEAM_PRODUCTIVITY_INDEX = 'team-productivity';
 const MAX_RESULTS = 10000;
 
 /**
@@ -103,7 +140,11 @@ const processUserMetricsForCombination = async (
     `Processing user performance metrics for ${timeRange}/${documentCategory}`,
   );
 
-  const documents = await getAllUserDocuments(client, timeRange, documentCategory);
+  const documents = await getAllUserDocuments(
+    client,
+    timeRange,
+    documentCategory,
+  );
 
   const asapOutputMetrics = getPerformanceMetrics(
     documents.map((doc) => doc.asapOutput),
@@ -173,7 +214,145 @@ export const processUserProductivityPerformance = async (
 };
 
 /**
- * Main entry point for processing user productivity performance
+ * Maps a search hit to a TeamProductivityDocument
+ */
+const mapTeamHitToDocument = (
+  hit: TeamProductivityHit,
+): TeamProductivityDocument => ({
+  Article: hit._source?.Article ?? 0,
+  Bioinformatics: hit._source?.Bioinformatics ?? 0,
+  Dataset: hit._source?.Dataset ?? 0,
+  'Lab Material': hit._source?.['Lab Material'] ?? 0,
+  Protocol: hit._source?.Protocol ?? 0,
+  timeRange: hit._source?.timeRange ?? '',
+  outputType: hit._source?.outputType ?? '',
+});
+
+/**
+ * Retrieves all team documents for a given time range and output type
+ */
+const getAllTeamDocuments = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+  timeRange: string,
+  outputType: string,
+): Promise<TeamProductivityDocument[]> => {
+  try {
+    const response = await client.search({
+      index: TEAM_PRODUCTIVITY_INDEX,
+      body: {
+        query: {
+          bool: {
+            must: [{ term: { timeRange } }, { term: { outputType } }],
+          },
+        },
+        size: MAX_RESULTS,
+      },
+    });
+
+    const hits = response.body.hits?.hits || [];
+    return hits.map(mapTeamHitToDocument);
+  } catch (error) {
+    console.error('Failed to retrieve team documents', {
+      error,
+      timeRange,
+      outputType,
+    });
+    throw error;
+  }
+};
+
+/**
+ * Processes team performance metrics for a single time range and output type combination
+ */
+const processTeamMetricsForCombination = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+  timeRange: string,
+  outputType: string,
+): Promise<TeamProductivityPerformanceDocument> => {
+  console.info(
+    `Processing team performance metrics for ${timeRange}/${outputType}`,
+  );
+
+  const documents = await getAllTeamDocuments(client, timeRange, outputType);
+
+  const articleMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.Article),
+    true,
+  );
+
+  const bioinformaticsMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.Bioinformatics),
+    true,
+  );
+
+  const datasetMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.Dataset),
+    true,
+  );
+
+  const labMaterialMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc['Lab Material']),
+    true,
+  );
+
+  const protocolMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.Protocol),
+    true,
+  );
+
+  console.info(
+    `Processed team performance metrics for ${timeRange}/${outputType} (${documents.length} teams)`,
+  );
+
+  return {
+    article: articleMetrics,
+    bioinformatics: bioinformaticsMetrics,
+    dataset: datasetMetrics,
+    labMaterial: labMaterialMetrics,
+    protocol: protocolMetrics,
+    timeRange,
+    outputType,
+  };
+};
+
+/**
+ * Processes team productivity performance metrics for all time ranges and output types
+ */
+export const processTeamProductivityPerformance = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+): Promise<TeamProductivityPerformanceDocument[]> => {
+  const combinations = timeRanges.flatMap((timeRange) =>
+    outputTypes.map((outputType) => ({
+      timeRange,
+      outputType,
+    })),
+  );
+
+  const results = await Promise.allSettled(
+    combinations.map(({ timeRange, outputType }) =>
+      processTeamMetricsForCombination(client, timeRange, outputType),
+    ),
+  );
+
+  const performanceDocuments: TeamProductivityPerformanceDocument[] = [];
+
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      performanceDocuments.push(result.value);
+    } else {
+      const { timeRange, outputType } = combinations[index];
+      console.error(
+        `Failed to process team productivity performance metrics for ${timeRange}/${outputType}`,
+        { error: result.reason },
+      );
+    }
+  });
+
+  return performanceDocuments;
+};
+
+/**
+ * Main entry point for processing productivity performance metrics
  */
 export const processPerformance = async ({
   awsRegion,
@@ -182,39 +361,75 @@ export const processPerformance = async ({
   opensearchPassword,
   metric,
 }: ProcessPerformanceOptions): Promise<void> => {
-  if (metric !== 'all' && metric !== 'user-productivity') {
-    return;
+  if (metric === 'all' || metric === 'user-productivity') {
+    try {
+      console.info('Processing user-productivity-performance...');
+
+      await indexOpensearchData<UserProductivityPerformanceDocument>({
+        awsRegion,
+        stage: environment,
+        opensearchUsername,
+        opensearchPassword,
+        indexAlias: 'user-productivity-performance',
+        getData: async () => {
+          const client = await getClient(
+            awsRegion,
+            environment,
+            opensearchUsername,
+            opensearchPassword,
+          );
+
+          const documents = await processUserProductivityPerformance(client);
+
+          return {
+            documents,
+            mapping: userProductivityPerformanceMapping,
+          };
+        },
+      });
+
+      console.info('Successfully indexed user-productivity-performance data');
+    } catch (error) {
+      console.error('Failed to process user-productivity-performance', {
+        error,
+      });
+      throw error;
+    }
   }
 
-  try {
-    console.info('Processing user-productivity-performance...');
+  if (metric === 'all' || metric === 'team-productivity') {
+    try {
+      console.info('Processing team-productivity-performance...');
 
-    await indexOpensearchData<UserProductivityPerformanceDocument>({
-      awsRegion,
-      stage: environment,
-      opensearchUsername,
-      opensearchPassword,
-      indexAlias: 'user-productivity-performance',
-      getData: async () => {
-        const client = await getClient(
-          awsRegion,
-          environment,
-          opensearchUsername,
-          opensearchPassword,
-        );
+      await indexOpensearchData<TeamProductivityPerformanceDocument>({
+        awsRegion,
+        stage: environment,
+        opensearchUsername,
+        opensearchPassword,
+        indexAlias: 'team-productivity-performance',
+        getData: async () => {
+          const client = await getClient(
+            awsRegion,
+            environment,
+            opensearchUsername,
+            opensearchPassword,
+          );
 
-        const documents = await processUserProductivityPerformance(client);
+          const documents = await processTeamProductivityPerformance(client);
 
-        return {
-          documents,
-          mapping: userProductivityPerformanceMapping,
-        };
-      },
-    });
+          return {
+            documents,
+            mapping: teamProductivityPerformanceMapping,
+          };
+        },
+      });
 
-    console.info('Successfully indexed user-productivity-performance data');
-  } catch (error) {
-    console.error('Failed to process user-productivity-performance', { error });
-    throw error;
+      console.info('Successfully indexed team-productivity-performance data');
+    } catch (error) {
+      console.error('Failed to process team-productivity-performance', {
+        error,
+      });
+      throw error;
+    }
   }
 };

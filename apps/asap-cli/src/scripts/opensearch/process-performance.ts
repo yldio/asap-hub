@@ -42,13 +42,13 @@ export interface ProcessPerformanceOptions {
   metric: 'all' | 'user-productivity';
 }
 
-const INDEX_NAME = 'user-productivity';
+const USER_PRODUCTIVITY_INDEX = 'user-productivity';
 const MAX_RESULTS = 10000;
 
 /**
  * Maps a search hit to a UserProductivityDocument
  */
-const mapHitToDocument = (
+const mapUserHitToDocument = (
   hit: UserProductivityHit,
 ): UserProductivityDocument => ({
   asapOutput: hit._source?.asapOutput ?? 0,
@@ -59,16 +59,16 @@ const mapHitToDocument = (
 });
 
 /**
- * Retrieves all documents for a given time range and document category
+ * Retrieves all user documents for a given time range and document category
  */
-const getAllDocuments = async (
+const getAllUserDocuments = async (
   client: Awaited<ReturnType<typeof getClient>>,
   timeRange: string,
   documentCategory: string,
 ): Promise<UserProductivityDocument[]> => {
   try {
     const response = await client.search({
-      index: INDEX_NAME,
+      index: USER_PRODUCTIVITY_INDEX,
       body: {
         query: {
           bool: {
@@ -80,7 +80,7 @@ const getAllDocuments = async (
     });
 
     const hits = response.body.hits?.hits || [];
-    return hits.map(mapHitToDocument);
+    return hits.map(mapUserHitToDocument);
   } catch (error) {
     console.error('Failed to retrieve documents', {
       error,
@@ -92,18 +92,18 @@ const getAllDocuments = async (
 };
 
 /**
- * Processes performance metrics for a single time range and document category combination
+ * Processes user performance metrics for a single time range and document category combination
  */
-const processMetricsForCombination = async (
+const processUserMetricsForCombination = async (
   client: Awaited<ReturnType<typeof getClient>>,
   timeRange: string,
   documentCategory: string,
 ): Promise<UserProductivityPerformanceDocument> => {
   console.info(
-    `Processing performance metrics for ${timeRange}/${documentCategory}`,
+    `Processing user performance metrics for ${timeRange}/${documentCategory}`,
   );
 
-  const documents = await getAllDocuments(client, timeRange, documentCategory);
+  const documents = await getAllUserDocuments(client, timeRange, documentCategory);
 
   const asapOutputMetrics = getPerformanceMetrics(
     documents.map((doc) => doc.asapOutput),
@@ -121,7 +121,7 @@ const processMetricsForCombination = async (
   );
 
   console.info(
-    `Processed performance metrics for ${timeRange}/${documentCategory} (${documents.length} users)`,
+    `Processed user performance metrics for ${timeRange}/${documentCategory} (${documents.length} users)`,
   );
 
   return {
@@ -150,7 +150,7 @@ export const processUserProductivityPerformance = async (
   // Process all combinations concurrently
   const results = await Promise.allSettled(
     combinations.map(({ timeRange, documentCategory }) =>
-      processMetricsForCombination(client, timeRange, documentCategory),
+      processUserMetricsForCombination(client, timeRange, documentCategory),
     ),
   );
 

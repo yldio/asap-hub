@@ -36,7 +36,7 @@ type IndexUserPayload = UserPayload | TeamMembershipPayload;
 const isTeamMembershipEvent = (type: string): type is TeamMembershipEvent =>
   type.startsWith('TeamMembership');
 
-const isNotFoundError = (e: unknown): boolean =>
+const isNotFoundError = (e: unknown): e is Error =>
   (isBoom(e) && e.output.statusCode === 404) || e instanceof NotFoundError;
 
 const shouldIndexUser = (
@@ -100,11 +100,20 @@ async function handleNotFoundError(
   algolia: AlgoliaClient<'crn'>,
   detailType: string,
   resourceId: string,
+  originalError: Error,
 ): Promise<void> {
   if (isTeamMembershipEvent(detailType)) {
-    throw new NotFoundError(
-      undefined,
+    logger.warn(
+      {
+        detailType,
+        resourceId,
+        originalError: originalError.message,
+      },
       'Cannot handle TeamMembership event for missing user',
+    );
+    throw new NotFoundError(
+      originalError,
+      `Cannot handle TeamMembership event for missing user (detailType: ${detailType}, resourceId: ${resourceId})`,
     );
   }
   await algolia.remove(resourceId);
@@ -137,6 +146,7 @@ export const indexUserHandler =
           algoliaClient,
           detailType,
           (event.detail as { resourceId: string }).resourceId,
+          error,
         );
         return;
       }

@@ -13,6 +13,7 @@ import {
 } from '../../fixtures/teams.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
+import logger from '../../../src/utils/logger';
 
 jest.mock('../../../src/utils/logger');
 describe('User index handler', () => {
@@ -258,7 +259,7 @@ describe('User index handler', () => {
     });
   });
 
-  test('Should handle TeamMembership event when no user is found', async () => {
+  test('Should gracefully handle TeamMembership event when no user is found', async () => {
     const membershipId = 'membership-123';
     const teamId = 'team-456';
 
@@ -268,7 +269,7 @@ describe('User index handler', () => {
       items: [],
     });
 
-    await expect(indexHandler(event)).rejects.toThrow(NotFoundError);
+    await expect(indexHandler(event)).resolves.toBeUndefined();
     expect(userControllerMock.fetch).toHaveBeenCalledWith({
       filter: { teamMembershipId: membershipId },
       take: 1,
@@ -276,6 +277,13 @@ describe('User index handler', () => {
     });
     expect(userControllerMock.fetchById).not.toHaveBeenCalled();
     expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detailType: expect.stringContaining('TeamMembership'),
+        resourceId: membershipId,
+      }),
+      'TeamMembership event received but no associated user found',
+    );
   });
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {

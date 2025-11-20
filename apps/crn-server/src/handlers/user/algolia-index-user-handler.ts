@@ -109,12 +109,9 @@ async function handleNotFoundError(
         resourceId,
         originalError: originalError.message,
       },
-      'Cannot handle TeamMembership event for missing user',
+      'TeamMembership event received but no associated user found',
     );
-    throw new NotFoundError(
-      originalError,
-      `Cannot handle TeamMembership event for missing user (detailType: ${detailType}, resourceId: ${resourceId})`,
-    );
+    return;
   }
   await algolia.remove(resourceId);
   logger.debug(

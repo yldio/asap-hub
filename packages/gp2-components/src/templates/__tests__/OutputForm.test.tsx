@@ -12,14 +12,15 @@ import {
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ReactNode } from 'react';
-import { Router, StaticRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
 jest.setTimeout(95_000);
 
 const renderWithRouter = (children: ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<StaticRouter location="/">{children}</StaticRouter>);
 
 describe('OutputForm', () => {
   const defaultProps = {

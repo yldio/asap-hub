@@ -11,7 +11,8 @@ import {
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Router } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import ManuscriptForm from '../ManuscriptForm';
 
 type FindByRole = (
@@ -124,7 +125,7 @@ const renderManuscriptForm = async (
   props: ComponentProps<typeof ManuscriptForm>,
 ) => {
   const container = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm {...props} />
       </Suspense>
@@ -413,8 +414,8 @@ describe('Manuscript form', () => {
     const addFileButtons = document.querySelectorAll(
       'button:disabled',
     ) as NodeListOf<HTMLButtonElement>;
-    const disabledAddFileButtons = Array.from(addFileButtons).filter(
-      (button) => button.textContent?.includes('Add File'),
+    const disabledAddFileButtons = Array.from(addFileButtons).filter((button) =>
+      button.textContent?.includes('Add File'),
     );
     expect(disabledAddFileButtons.length).toBeGreaterThan(0);
 

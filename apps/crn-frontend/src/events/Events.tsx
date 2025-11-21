@@ -1,7 +1,7 @@
 import { EventsPage } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 
 import { useSearch } from '../hooks';
@@ -21,22 +21,20 @@ const Events: FC<Record<string, never>> = () => {
     loadCalendars().then(loadEventList);
   }, []);
 
-  const { path } = useRouteMatch();
   const [currentTime] = useState(new Date());
 
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
   return (
-    <Switch>
-      <Route exact path={path + events({}).calendar.template}>
+    <Routes>
+      <Route path={events({}).calendar.template} element={
         <EventsPage>
           <Frame title="Subscribe to Calendars">
             <Calendars currentTime={currentTime} />
           </Frame>
         </EventsPage>
-      </Route>
-
-      <Route exact path={path + events({}).upcoming.template}>
+      } />
+      <Route path={events({}).upcoming.template} element={
         <EventsPage
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
@@ -48,8 +46,8 @@ const Events: FC<Record<string, never>> = () => {
             />
           </SearchFrame>
         </EventsPage>
-      </Route>
-      <Route exact path={path + events({}).past.template}>
+      } />
+      <Route path={events({}).past.template} element={
         <EventsPage
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
@@ -62,14 +60,14 @@ const Events: FC<Record<string, never>> = () => {
             />
           </SearchFrame>
         </EventsPage>
-      </Route>
-      <Route path={path + events({}).event.template}>
+      } />
+      <Route path={events({}).event.template} element={
         <Frame title="Event">
           <Event />
         </Frame>
-      </Route>
-      <Redirect to={events({}).upcoming({}).$} />
-    </Switch>
+      } />
+      <Route index element={<Navigate to={events({}).upcoming({}).$} replace />} />
+    </Routes>
   );
 };
 

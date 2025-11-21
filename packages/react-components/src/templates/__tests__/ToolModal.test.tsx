@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import ToolModal from '../ToolModal';
 
@@ -14,7 +14,7 @@ const props: ComponentProps<typeof ToolModal> = {
 };
 it('renders the title', () => {
   const { getByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ToolModal {...props} title="ModalTitle" />
     </StaticRouter>,
   );
@@ -23,7 +23,7 @@ it('renders the title', () => {
 
 it('indicates which fields are required or optional', () => {
   const { getByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ToolModal {...props} title="ModalTitle" />
     </StaticRouter>,
   );
@@ -39,7 +39,7 @@ it('indicates which fields are required or optional', () => {
 
 it('renders default values into inputs', () => {
   const { queryAllByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ToolModal
         {...props}
         name="LinkName"
@@ -60,7 +60,7 @@ it('renders default values into inputs', () => {
 
 it('allows url with https protocol', () => {
   const { getByLabelText, queryByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ToolModal {...props} />
     </StaticRouter>,
     {},
@@ -74,7 +74,7 @@ it('allows url with https protocol', () => {
 });
 it('allows url with http protocol', () => {
   const { getByLabelText, queryByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ToolModal {...props} />
     </StaticRouter>,
     {},
@@ -95,7 +95,7 @@ it('allows url with http protocol', () => {
 
 it('does not allow any other uri scheme', () => {
   const { getByLabelText, queryByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ToolModal {...props} />
     </StaticRouter>,
   );
@@ -114,7 +114,7 @@ it('does not allow any other uri scheme', () => {
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
   const { getByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ToolModal
         {...props}
         name="toolName"
@@ -144,7 +144,7 @@ it('disables the form elements while submitting', async () => {
       resolveSubmit = resolve;
     });
   const { getByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ToolModal {...props} onSave={handleSave} />
     </StaticRouter>,
   );

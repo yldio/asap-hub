@@ -1,6 +1,6 @@
 import { createLabs, createUserTeams } from '@asap-hub/fixtures';
 import { RoleModal } from '@asap-hub/react-components';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import { number, select, text } from './knobs';
 
@@ -10,7 +10,7 @@ export default {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/">
     <RoleModal
       backHref="#"
       firstName={text('First name', 'John')}

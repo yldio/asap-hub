@@ -1,12 +1,23 @@
-mport { findParentWithStyle } from '@asap-hub/dom-test-utils';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { ThemeProvider } from '@emotion/react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
-import { Router, } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 import { activePrimaryBackgroundColorDefault } from '../../button';
 import { color, pine } from '../../colors';
 import NavigationLink from '../NavigationLink';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
+// Helper to capture location in tests
+let currentPathname: string | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentPathname = location.pathname;
+  }, [location]);
+  return null;
+};
 
 describe.each`
   description           | wrapper
@@ -80,16 +91,17 @@ describe.each`
 
 describe('with a router', () => {
   it('does not trigger a full page navigation on click', () => {
-    const history = createMemoryHistory({ initialEntries: ['/'] });
+    currentPathname = null;
     render(
-      <Router history={history}>
+      <MemoryRouter initialEntries={['/']}>
+        <LocationCapture />
         <NavigationLink href="/location" icon={<svg />}>
           Text
         </NavigationLink>
-      </Router>,
+      </MemoryRouter>,
     );
     expect(fireEvent.click(screen.getByRole('link'))).toBe(false);
-    expect(history.location.pathname).toEqual('/location');
+    expect(currentPathname).toEqual('/location');
   });
 
   it('triggers a full page navigation on click of an external link', () => {
@@ -102,9 +114,10 @@ describe('with a router', () => {
   });
 
   it('default route is not always highlighted as selected', () => {
-    const history = createMemoryHistory({ initialEntries: ['/location'] });
+    currentPathname = null;
     render(
-      <Router history={history}>
+      <MemoryRouter initialEntries={['/location']}>
+        <LocationCapture />
         <NavigationLink href="/" icon={<svg />}>
           Default
         </NavigationLink>
@@ -114,9 +127,9 @@ describe('with a router', () => {
         <NavigationLink href="/location" icon={<svg />}>
           Target
         </NavigationLink>
-      </Router>,
+      </MemoryRouter>,
     );
-    expect(history.location.pathname).toEqual('/location');
+    expect(currentPathname).toEqual('/location');
     expect(
       findParentWithStyle(screen.getByText('Target'), 'backgroundColor')
         ?.backgroundColor,

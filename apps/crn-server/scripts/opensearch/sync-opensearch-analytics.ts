@@ -1,4 +1,9 @@
-import { ListResponse, timeRanges, documentCategories } from '@asap-hub/model';
+import {
+  ListResponse,
+  timeRanges,
+  documentCategories,
+  outputTypes,
+} from '@asap-hub/model';
 import { indexOpensearchData } from '@asap-hub/server-common';
 
 import {
@@ -143,6 +148,49 @@ export const exportAnalyticsData = async <T extends Metrics>(
         return {
           total: allUserProductivityItems.length,
           items: allUserProductivityItems,
+        } as ListResponse<MetricObject<T>>;
+
+      case 'team-productivity':
+        const allTeamProductivityItems: MetricObject<T>[] = [];
+
+        /* eslint-disable no-await-in-loop */
+        for (const timeRange of timeRanges) {
+          for (const outputType of outputTypes) {
+            let teamPage = 1;
+            let teamTotal = 0;
+            let teamRecordCount = 0;
+
+            do {
+              const teamProductivityResponse =
+                (await analyticsController.fetchTeamProductivity({
+                  take: PAGE_SIZE,
+                  skip: (teamPage - 1) * PAGE_SIZE,
+                  filter: { timeRange, outputType },
+                })) as ListResponse<MetricObject<T>>;
+
+              if (teamProductivityResponse) {
+                teamTotal = teamProductivityResponse.total;
+                teamPage++;
+                teamRecordCount += teamProductivityResponse.items.length;
+
+                const enrichedItems = teamProductivityResponse.items.map(
+                  (item) => ({
+                    ...item,
+                    timeRange,
+                    outputType,
+                  }),
+                );
+
+                allTeamProductivityItems.push(...enrichedItems);
+              }
+            } while (teamTotal > teamRecordCount);
+          }
+        }
+        /* eslint-enable no-await-in-loop */
+
+        return {
+          total: allTeamProductivityItems.length,
+          items: allTeamProductivityItems,
         } as ListResponse<MetricObject<T>>;
 
       default:

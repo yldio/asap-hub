@@ -50,6 +50,12 @@ const createIndexSettings = () => ({
         filter: ['lowercase'],
       },
     },
+    normalizer: {
+      lowercase_normalizer: {
+        type: 'custom' as const,
+        filter: ['lowercase'],
+      },
+    },
   },
 });
 

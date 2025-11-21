@@ -1,8 +1,9 @@
-import { Router } from 'react-router-dom';
+import { MemoryRouter, useNavigate, useLocation } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
-import { renderHook } from '@testing-library/react-hooks';
-import { createMemoryHistory } from 'history';
+import { renderHook, waitFor } from '@testing-library/react';
 import { searchQueryParam } from '@asap-hub/routing';
+import { useEffect } from 'react';
+import { act } from 'react';
 
 import {
   queryParamString,
@@ -10,6 +11,29 @@ import {
   usePushFromHere,
   usePushFromPathname,
 } from '../routing';
+
+// Helper to capture location pathname in tests
+let currentPathname: string | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentPathname = location.pathname;
+  }, [location]);
+  return null;
+};
+
+// Helper to trigger navigation in tests
+let navigateToPath: ReturnType<typeof useNavigate> | null = null;
+const NavigationHelper = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigateToPath = navigate;
+    return () => {
+      navigateToPath = null;
+    };
+  }, [navigate]);
+  return null;
+};
 
 describe('queryParamString', () => {
   it('appends the search query param', () => {
@@ -40,10 +64,13 @@ describe('useHasRouter', () => {
 });
 
 describe('usePushFromPathname', () => {
-  it('pushes a history entry if currently on given page', () => {
-    const history = createMemoryHistory({ initialEntries: ['/current'] });
+  it('pushes a history entry if currently on given page', async () => {
+    currentPathname = null;
     const wrapper: React.FC = ({ children }) => (
-      <Router history={history}>{children}</Router>
+      <MemoryRouter initialEntries={['/current']}>
+        <LocationCapture />
+        {children}
+      </MemoryRouter>
     );
     const {
       result: { current },
@@ -51,14 +78,22 @@ describe('usePushFromPathname', () => {
       wrapper,
     });
 
-    current('/new');
-    expect(history.location.pathname).toBe('/new');
+    act(() => {
+      current('/new');
+    });
+
+    await waitFor(() => {
+      expect(currentPathname).toBe('/new');
+    });
   });
 
-  it('does not push a history entry if currently on a different page', () => {
-    const history = createMemoryHistory({ initialEntries: ['/current'] });
+  it('does not push a history entry if currently on a different page', async () => {
+    currentPathname = null;
     const wrapper: React.FC = ({ children }) => (
-      <Router history={history}>{children}</Router>
+      <MemoryRouter initialEntries={['/current']}>
+        <LocationCapture />
+        {children}
+      </MemoryRouter>
     );
     const {
       result: { current },
@@ -66,16 +101,25 @@ describe('usePushFromPathname', () => {
       wrapper,
     });
 
-    current('/new');
-    expect(history.location.pathname).toBe('/current');
+    act(() => {
+      current('/new');
+    });
+
+    // Should not navigate, so location should still be /current
+    await waitFor(() => {
+      expect(currentPathname).toBe('/current');
+    });
   });
 });
 
 describe('usePushFromHere', () => {
-  it('pushes a history entry if still on the same page', () => {
-    const history = createMemoryHistory({ initialEntries: ['/current'] });
+  it('pushes a history entry if still on the same page', async () => {
+    currentPathname = null;
     const wrapper: React.FC = ({ children }) => (
-      <Router history={history}>{children}</Router>
+      <MemoryRouter initialEntries={['/current']}>
+        <LocationCapture />
+        {children}
+      </MemoryRouter>
     );
     const {
       result: { current },
@@ -83,26 +127,50 @@ describe('usePushFromHere', () => {
       wrapper,
     });
 
-    current('/new');
-    expect(history.location.pathname).toBe('/new');
+    act(() => {
+      current('/new');
+    });
+
+    await waitFor(() => {
+      expect(currentPathname).toBe('/new');
+    });
   });
 
-  it('does not push a history entry if no longer on the same page', () => {
-    const history = createMemoryHistory({ initialEntries: ['/current'] });
+  it('does not push a history entry if no longer on the same page', async () => {
+    currentPathname = null;
+    navigateToPath = null;
     const wrapper: React.FC = ({ children }) => (
-      <Router history={history}>{children}</Router>
+      <MemoryRouter initialEntries={['/current']}>
+        <LocationCapture />
+        <NavigationHelper />
+        {children}
+      </MemoryRouter>
     );
-    const {
-      result: { current },
-    } = renderHook(() => usePushFromHere(), {
+    const { result } = renderHook(() => usePushFromHere(), {
       wrapper,
     });
 
-    history.push('/elsewhere');
+    // Save the function returned when we were at /current
+    const pushFromCurrent = result.current;
 
-    // Note that `current` is still the hook result from before the push;
-    // now the hook is returning a function "bound" to `/elsewhere`.
-    current('/new');
-    expect(history.location.pathname).toBe('/elsewhere');
+    act(() => {
+      navigateToPath?.('/elsewhere');
+    });
+
+    await waitFor(() => {
+      expect(currentPathname).toBe('/elsewhere');
+    });
+
+    // Note that `pushFromCurrent` is still the hook result from before the push;
+    // it's a function "bound" to `/current`, so calling it when we're at `/elsewhere`
+    // should not navigate.
+    act(() => {
+      pushFromCurrent('/new');
+    });
+
+    // Location should still be /elsewhere because the function was "bound" to /current
+    await waitFor(() => {
+      expect(currentPathname).toBe('/elsewhere');
+    });
   });
 });

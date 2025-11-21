@@ -10,9 +10,8 @@ import {
   waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory, MemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { Route, Router } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
@@ -28,11 +27,9 @@ jest.setTimeout(100_000);
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 
 const teamId = '42';
-let history = createMemoryHistory({
-  initialEntries: [
-    network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$,
-  ],
-});
+const defaultInitialEntries = [
+  network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$,
+];
 
 jest.mock('../../users/api');
 
@@ -79,26 +76,39 @@ const mockGetGeneratedShortDescription =
 beforeEach(() => {
   mockSetFormType.mockReset();
   jest.spyOn(console, 'error').mockImplementation();
-
-  history = createMemoryHistory({
-    initialEntries: [
-      network({}).teams({}).team({ teamId }).workspace({}).createManuscript({})
-        .$,
-    ],
-  });
 });
 
 const renderPage = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
   resubmit: boolean = false,
-  path: string = network.template +
+  initialPath: string = defaultInitialEntries[0]!,
+) => {
+  const path =
+    network.template +
     network({}).teams.template +
     network({}).teams({}).team.template +
     network({}).teams({}).team({ teamId }).workspace.template +
     network({}).teams({}).team({ teamId }).workspace({}).createManuscript
-      .template,
-  routerHistory: MemoryHistory = history,
-) => {
+      .template;
+
+  const router = createMemoryRouter(
+    [
+      {
+        path,
+        element: (
+          <ManuscriptToastProvider>
+            <EligibilityReasonProvider>
+              <TeamManuscript teamId={teamId} resubmitManuscript={resubmit} />
+            </EligibilityReasonProvider>
+          </ManuscriptToastProvider>
+        ),
+      },
+    ],
+    {
+      initialEntries: [initialPath],
+    },
+  );
+
   const { container } = render(
     <RecoilRoot
       initializeState={({ set }) => {
@@ -108,18 +118,7 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router history={routerHistory}>
-              <Route path={path}>
-                <ManuscriptToastProvider>
-                  <EligibilityReasonProvider>
-                    <TeamManuscript
-                      teamId={teamId}
-                      resubmitManuscript={resubmit}
-                    />
-                  </EligibilityReasonProvider>
-                </ManuscriptToastProvider>
-              </Route>
-            </Router>
+            <RouterProvider router={router} />
           </WhenReady>
         </Auth0Provider>
       </Suspense>
@@ -132,9 +131,11 @@ const renderPage = async (
 it('renders manuscript form page', async () => {
   const { container } = await renderPage();
 
-  expect(container).toHaveTextContent(
-    'Start a new manuscript to receive an itemized compliance report outlining action items for compliance with the ASAP Open Science Policy',
-  );
+  await waitFor(() => {
+    expect(container).toHaveTextContent(
+      'Start a new manuscript to receive an itemized compliance report outlining action items for compliance with the ASAP Open Science Policy',
+    );
+  });
   expect(container).toHaveTextContent('What are you sharing');
   expect(container).toHaveTextContent('Title of Manuscript');
 });
@@ -146,10 +147,15 @@ it('generates the short description based on the current description', async () 
 
   await renderPage();
 
+  // Wait for form to be fully loaded
+  await waitFor(() => {
+    expect(screen.getByRole('textbox', { name: /Manuscript Description/i })).toBeInTheDocument();
+  });
+
   const descriptionTextbox = screen.getByRole('textbox', {
     name: /Manuscript Description/i,
   });
-  userEvent.type(descriptionTextbox, 'Some description');
+  await userEvent.type(descriptionTextbox, 'Some description');
 
   await userEvent.click(screen.getByRole('button', { name: 'Generate' }));
 

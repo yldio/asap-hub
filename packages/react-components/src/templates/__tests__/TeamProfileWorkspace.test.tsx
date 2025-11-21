@@ -9,9 +9,8 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
-import { ComponentProps } from 'react';
-import { Route, Router } from 'react-router-dom';
+import React, { ComponentProps } from 'react';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 import TeamProfileWorkspace from '../TeamProfileWorkspace';
 
@@ -54,8 +53,21 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   onMarkDiscussionAsRead: jest.fn(),
 };
 
+const renderWithRouter = (component: React.ReactElement) => {
+  const router = createMemoryRouter(
+    [
+      {
+        path: '/*',
+        element: component,
+      },
+    ],
+    { initialEntries: ['/'] }
+  );
+  return render(<RouterProvider router={router} />);
+};
+
 it('renders the team workspace page', () => {
-  const { getByRole } = render(
+  const { getByRole } = renderWithRouter(
     <TeamProfileWorkspace
       {...team}
       useManuscriptById={useManuscriptByIdMock}
@@ -69,7 +81,7 @@ it('renders the team workspace page', () => {
 });
 
 it('does not display Collaboration Tools section if user is not a team member', () => {
-  const { queryByRole } = render(
+  const { queryByRole } = renderWithRouter(
     <TeamProfileWorkspace {...team} isTeamMember={false} tools={[]} />,
   );
 
@@ -106,7 +118,7 @@ describe('compliance section', () => {
       ],
     };
 
-    const { getByRole, queryByRole, rerender } = render(
+    const { getByRole, queryByRole } = renderWithRouter(
       <TeamProfileWorkspace
         {...teamWithManuscripts}
         useManuscriptById={useManuscriptByIdMock}
@@ -117,13 +129,6 @@ describe('compliance section', () => {
       getByRole('heading', { name: 'Compliance Review' }),
     ).toBeInTheDocument();
 
-    rerender(
-      <TeamProfileWorkspace
-        {...teamWithManuscripts}
-        useManuscriptById={useManuscriptByIdMock}
-        tools={[]}
-      />,
-    );
     expect(queryByRole('heading', { name: 'Compliance' })).toBeNull();
   });
 
@@ -149,7 +154,7 @@ describe('compliance section', () => {
         },
       ],
     };
-    const { container } = render(
+    const { container } = renderWithRouter(
       <TeamProfileWorkspace
         {...teamWithManuscripts}
         useManuscriptById={useManuscriptByIdMock}
@@ -185,7 +190,7 @@ describe('compliance section', () => {
       ],
     };
 
-    const { container } = render(
+    const { container } = renderWithRouter(
       <TeamProfileWorkspace
         {...props}
         useManuscriptById={useManuscriptByIdMock}
@@ -223,7 +228,7 @@ describe('compliance section', () => {
       collaborationManuscripts: [],
     };
 
-    const { container } = render(
+    const { container } = renderWithRouter(
       <TeamProfileWorkspace {...props} tools={[]} />,
     );
 
@@ -251,7 +256,7 @@ describe('compliance section', () => {
       collaborationManuscripts: [],
     };
 
-    const { container } = render(
+    const { container } = renderWithRouter(
       <TeamProfileWorkspace {...props} tools={[]} />,
     );
 
@@ -271,7 +276,7 @@ describe('compliance section', () => {
     );
   });
 
-  it('renders type and lifecycle values when expanded', () => {
+  it('renders type and lifecycle values when expanded', async () => {
     const user = {
       displayName: 'John Doe',
       firstName: 'John',
@@ -370,7 +375,7 @@ describe('compliance section', () => {
         },
       ],
     };
-    const { container } = render(
+    const { container } = renderWithRouter(
       <TeamProfileWorkspace
         {...teamWithManuscripts}
         useManuscriptById={jest
@@ -390,7 +395,7 @@ describe('compliance section', () => {
 
     const manuscriptTitle = screen.getByText('Nice manuscript');
     const manuscriptCard = manuscriptTitle.closest('div');
-    userEvent.click(within(manuscriptCard!).getByTestId('collapsible-button'));
+    await userEvent.click(within(manuscriptCard!).getByTestId('collapsible-button'));
 
     expect(container).toHaveTextContent('Original Research');
     expect(container).toHaveTextContent(
@@ -399,7 +404,7 @@ describe('compliance section', () => {
   });
 
   it('does not show the submit manuscript button when team is inactive', () => {
-    const { queryByRole } = render(
+    const { queryByRole } = renderWithRouter(
       <TeamProfileWorkspace {...team} inactiveSince="a date" tools={[]} />,
     );
 
@@ -408,8 +413,8 @@ describe('compliance section', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('renders eligibility modal when user clicks on Share Manuscript', () => {
-    const { container, getByRole } = render(
+  it('renders eligibility modal when user clicks on Share Manuscript', async () => {
+    const { container, getByRole } = renderWithRouter(
       <TeamProfileWorkspace
         {...team}
         useManuscriptById={useManuscriptByIdMock}
@@ -421,51 +426,55 @@ describe('compliance section', () => {
       'Do you need to submit a manuscript?',
     );
 
-    userEvent.click(getByRole('button', { name: /submit manuscript/i }));
+    await userEvent.click(getByRole('button', { name: /submit manuscript/i }));
 
     expect(container).toHaveTextContent('Do you need to submit a manuscript?');
   });
 
-  it('hides the eligibility modal when user clicks on Cancel', () => {
-    const { container, getByRole } = render(
+  it('hides the eligibility modal when user clicks on Cancel', async () => {
+    const { container, getByRole } = renderWithRouter(
       <TeamProfileWorkspace {...team} tools={[]} />,
     );
 
-    userEvent.click(getByRole('button', { name: /submit manuscript/i }));
+    await userEvent.click(getByRole('button', { name: /submit manuscript/i }));
 
     expect(container).toHaveTextContent('Do you need to submit a manuscript?');
 
-    userEvent.click(getByRole('button', { name: /cancel/i }));
+    await userEvent.click(getByRole('button', { name: /cancel/i }));
 
     expect(container).not.toHaveTextContent(
       'Do you need to submit a manuscript?',
     );
   });
 
-  it('redirects to manuscript form when user finishes to fill eligibility modal', () => {
-    const history = createMemoryHistory({});
-    const { getByRole } = render(
-      <Router history={history}>
-        <Route path="">
-          <TeamProfileWorkspace {...team} tools={[]} />
-        </Route>
-      </Router>,
+  it('redirects to manuscript form when user finishes to fill eligibility modal', async () => {
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/*',
+          element: <TeamProfileWorkspace {...team} tools={[]} />,
+        },
+      ],
+      { initialEntries: ['/'] }
     );
+    const { getByRole } = render(<RouterProvider router={router} />);
 
-    userEvent.click(getByRole('button', { name: /submit manuscript/i }));
+    await userEvent.click(getByRole('button', { name: /submit manuscript/i }));
 
-    userEvent.click(screen.getByText(/Yes/i));
+    await userEvent.click(screen.getByText(/Yes/i));
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByText(
         'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
       ),
     );
-    userEvent.click(screen.getByText(/Continue/i));
+    await userEvent.click(screen.getByText(/Continue/i));
 
-    expect(history.location.pathname).toBe(
-      '/network/teams/t0/workspace/create-manuscript',
-    );
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe(
+        '/network/teams/t0/workspace/create-manuscript',
+      );
+    });
   });
 
   it('expands target manuscript if id provided', () => {
@@ -520,7 +529,7 @@ describe('compliance section', () => {
         },
       ],
     };
-    const { container } = render(
+    const { container } = renderWithRouter(
       <TeamProfileWorkspace
         {...teamWithManuscripts}
         useManuscriptById={jest
@@ -542,7 +551,7 @@ describe('compliance section', () => {
 });
 
 it('renders contact project manager when point of contact provided', () => {
-  const { getByText } = render(
+  const { getByText } = renderWithRouter(
     <TeamProfileWorkspace
       {...team}
       pointOfContact={{
@@ -565,7 +574,7 @@ it('renders contact project manager when point of contact provided', () => {
 });
 
 it('does not render contact project manager when user is not part a team member', () => {
-  const { queryByText } = render(
+  const { queryByText } = renderWithRouter(
     <TeamProfileWorkspace
       {...team}
       isTeamMember={false}
@@ -584,7 +593,7 @@ it('does not render contact project manager when user is not part a team member'
 });
 
 it('omits contact project manager when point of contact omitted', () => {
-  const { queryByText } = render(
+  const { queryByText } = renderWithRouter(
     <TeamProfileWorkspace {...team} pointOfContact={undefined} />,
   );
 
@@ -593,7 +602,7 @@ it('omits contact project manager when point of contact omitted', () => {
 
 describe('a tool', () => {
   it('is rendered when provided', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <TeamProfileWorkspace
         {...team}
         tools={[
@@ -610,7 +619,7 @@ describe('a tool', () => {
   });
 
   it('has edit links', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <TeamProfileWorkspace
         {...team}
         tools={[
@@ -642,7 +651,7 @@ describe('a tool', () => {
   it('has a delete button', async () => {
     jest.spyOn(console, 'error').mockImplementation();
     const handleDeleteTool = jest.fn();
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <TeamProfileWorkspace
         {...team}
         tools={[
@@ -662,7 +671,7 @@ describe('a tool', () => {
     );
     const discordCard = getByText('Discord').closest('li')!;
 
-    userEvent.click(getChildByText(discordCard, /delete/i));
+    await userEvent.click(getChildByText(discordCard, /delete/i));
 
     await waitFor(() => expect(handleDeleteTool).toHaveBeenCalledWith(1));
   });

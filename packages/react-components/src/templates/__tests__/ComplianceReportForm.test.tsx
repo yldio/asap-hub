@@ -6,16 +6,12 @@ import {
   waitFor,
 } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import { MemoryRouter, Route, Router } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
-import { createMemoryHistory, History } from 'history';
 import userEvent from '@testing-library/user-event';
 import ComplianceReportForm from '../ComplianceReportForm';
 
-let history!: History;
-
 beforeEach(() => {
-  history = createMemoryHistory();
   jest.spyOn(console, 'error').mockImplementation();
 });
 
@@ -54,6 +50,7 @@ it('data is sent on form submission and calls setManuscript', async () => {
     ],
   };
   const setManuscript = jest.fn();
+
   render(
     <StaticRouter location="/">
       <ComplianceReportForm
@@ -120,7 +117,7 @@ it('data is sent on form submission without calling setManuscript', async () => 
 
   userEvent.click(screen.getByLabelText(/Status/i));
   await act(async () => {
-    await userEvent.click(screen.getByText(/Addendum Required/i));
+    userEvent.click(screen.getByText(/Addendum Required/i));
   });
 
   const shareButton = screen.getByRole('button', { name: /Share/i });
@@ -162,7 +159,7 @@ it('displays error message when url is missing', async () => {
     ).toBeGreaterThanOrEqual(1);
   });
 
-  userEvent.type(input, 'http://example.com');
+  await userEvent.type(input, 'http://example.com');
   fireEvent.blur(input);
 
   await waitFor(() => {
@@ -188,10 +185,10 @@ it('displays error message when description is missing', async () => {
   });
 
   await act(async () => {
-    userEvent.click(editor);
-    userEvent.tab();
-    userEvent.type(editor, 'manuscription description');
-    userEvent.tab();
+    await userEvent.click(editor);
+    await userEvent.tab();
+    await userEvent.type(editor, 'manuscription description');
+    await userEvent.tab();
   });
 
   fireEvent.blur(editor);
@@ -200,34 +197,40 @@ it('displays error message when description is missing', async () => {
   });
 });
 
-it('should go back when cancel button is clicked', () => {
-  const { getByRole } = render(
-    <MemoryRouter>
-      <Router history={history}>
-        <Route path="/form">
-          <ComplianceReportForm {...defaultProps} />
-        </Route>
-      </Router>
-    </MemoryRouter>,
+it('should go back when cancel button is clicked', async () => {
+  const router = createMemoryRouter(
+    [
+      {
+        path: '/form',
+        element: <ComplianceReportForm {...defaultProps} />,
+      },
+      {
+        path: '/another-url',
+        element: <div>Another page</div>,
+      },
+    ],
+    { initialEntries: ['/another-url', '/form'], initialIndex: 1 },
   );
 
-  history.push('/another-url');
-  history.push('/form');
+  const { getByRole } = render(<RouterProvider router={router} />);
 
   const cancelButton = getByRole('button', {
     name: /cancel/i,
   });
-  userEvent.click(cancelButton);
+  await userEvent.click(cancelButton);
 
   const confirmCancellationButton = getByRole('button', {
     name: /cancel compliance report sharing/i,
   });
 
-  act(() => userEvent.click(confirmCancellationButton));
-  expect(history.location.pathname).toBe('/another-url');
+  await userEvent.click(confirmCancellationButton);
+
+  await waitFor(() => {
+    expect(router.state.location.pathname).toBe('/another-url');
+  });
 });
 
-it('should dismiss confirmation modal when Keep Editing button is clicked', () => {
+it('should dismiss confirmation modal when Keep Editing button is clicked', async () => {
   const { getByText, getByRole, queryByText } = render(
     <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
@@ -237,14 +240,14 @@ it('should dismiss confirmation modal when Keep Editing button is clicked', () =
   const cancelButton = getByRole('button', {
     name: /cancel/i,
   });
-  userEvent.click(cancelButton);
+  await userEvent.click(cancelButton);
 
   expect(getByText(/Cancel sharing of compliance report?/i)).toBeVisible();
 
   const keepEditingButton = getByRole('button', {
     name: /keep editing/i,
   });
-  userEvent.click(keepEditingButton);
+  await userEvent.click(keepEditingButton);
 
   expect(
     queryByText(/Cancel sharing of compliance report?/i),

@@ -4,8 +4,9 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useRecoilValue,
+  useResetRecoilState,
 } from 'recoil';
+import { useEffect } from 'react';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
@@ -110,4 +111,17 @@ export const useProjects = (options: ProjectListOptions) => {
   return projects;
 };
 
-export const useProjectById = (id: string) => useRecoilValue(projectState(id));
+export const useProjectById = (id: string) => {
+  const resetProject = useResetRecoilState(projectState(id));
+  const [project] = useRecoilState(projectState(id));
+
+  // Reset cached (potentially incomplete) data before fetching to ensure
+  // we always get complete data with milestones, originalGrant, etc.
+  useEffect(() => {
+    if (id) {
+      resetProject();
+    }
+  }, [id, resetProject]);
+
+  return project;
+};

@@ -15,7 +15,6 @@ import {
   ListProjectDataObject,
   Milestone,
   MilestoneStatus,
-  OriginalGrantInfo,
   ProjectDataObject,
   ProjectDetailDataObject,
   ProjectMember,
@@ -243,9 +242,9 @@ export const parseContentfulProjectDetail = (
   }));
 
   // Parse original grant
-  const originalGrant: OriginalGrantInfo = {
+  const originalGrant = {
     originalGrant: item.originalGrant || '',
-    proposalId: item.proposal?.sys.id || undefined,
+    originalGrantProposalId: item.proposal?.sys.id || undefined,
   };
 
   // Parse supplement grant
@@ -311,6 +310,7 @@ export const parseContentfulProjectDetail = (
           displayName: teamMember.displayName || '',
           teamType: 'Resource Team',
           researchTheme: teamMember.researchTheme?.name || undefined,
+          teamDescription: teamMember.teamDescription || undefined,
         };
 
         const collaborators: ProjectMember[] = members
@@ -327,11 +327,17 @@ export const parseContentfulProjectDetail = (
         } as ResourceProjectDetail;
       }
 
+      // Parse user members for non-team-based projects
+      const userMembers: ProjectMember[] = members
+        .filter((m) => m.projectMember?.__typename === 'Users')
+        .map((m) => parseProjectUserMember(m));
+
       return {
         ...baseProject,
         ...originalGrant,
         supplementGrant,
         milestones: milestones.length > 0 ? milestones : undefined,
+        members: userMembers.length > 0 ? userMembers : undefined,
       } as ResourceProjectDetail;
     }
 
@@ -427,7 +433,9 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
     return {
       total: projectsCollection.total,
-      items: cleanArray(projectsCollection.items).map(parseContentfulProject),
+      items: cleanArray<ProjectsCollectionItem>(projectsCollection.items).map(
+        parseContentfulProject,
+      ),
     };
   }
 }

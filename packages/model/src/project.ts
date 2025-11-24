@@ -156,7 +156,6 @@ export type FetchProjectsFilter = {
   readonly projectType?: ProjectType | ProjectType[];
   readonly status?: ProjectStatus | ProjectStatus[];
   readonly tags?: string[];
-  readonly teamId?: string;
   readonly search?: string;
 };
 

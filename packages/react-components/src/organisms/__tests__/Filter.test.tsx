@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Filter from '../Filter';
@@ -31,6 +31,27 @@ it('hides the dropdown menu when the options changes', () => {
 
   rerender(<Filter filterOptions={[{ label: 'F2', value: 'f2' }]} />);
   expect(getByText('F2')).not.toBeVisible();
+});
+
+it('closes the dropdown menu when clicking outside', async () => {
+  const { getByRole, getByText } = render(
+    <Filter
+      filterOptions={[
+        { title: 'Filter by Stuff' },
+        { label: 'F1', value: 'f1' },
+      ]}
+    />,
+  );
+  const filterButton = getByRole('button');
+  await act(async () => {
+    await userEvent.click(filterButton);
+  });
+  expect(getByText('Filter by Stuff')).toBeVisible();
+
+  await act(async () => {
+    fireEvent.mouseDown(document);
+  });
+  expect(getByText('Filter by Stuff')).not.toBeVisible();
 });
 
 describe('GTM data', () => {

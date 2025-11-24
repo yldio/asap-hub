@@ -1,5 +1,6 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
+  FetchPaginationOptions,
   FetchProjectsFilter,
   ListProjectResponse,
   ProjectResponse,
@@ -43,5 +44,12 @@ export default class ProjectController {
     }
 
     return project;
+  }
+
+  async fetchByTeamId(
+    teamId: string,
+    options: FetchPaginationOptions,
+  ): Promise<ListProjectResponse> {
+    return this.projectDataProvider.fetchByTeamId(teamId, options);
   }
 }

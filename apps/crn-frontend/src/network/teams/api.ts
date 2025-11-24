@@ -14,6 +14,7 @@ import {
   DiscussionResponse,
   ListLabDataProviderResponse,
   ListPartialManuscriptResponse,
+  ListResearchThemeResponse,
   ListTeamResponse,
   ManuscriptFileResponse,
   ManuscriptFileType,
@@ -108,18 +109,35 @@ export const getAlgoliaTeams = async (
 ): Promise<ListTeamResponse> => {
   const isteamStatusFilter = (filter: string) =>
     (teamStatus as unknown as string[]).includes(filter);
-  const filterArray = Array.from(filters);
+  const filterArray = Array.from(filters) as string[];
 
   const teamStatusFilter = filterArray
     .filter(isteamStatusFilter)
     .map((filter) => `teamStatus:"${filter}"`)
     .join(' OR ');
 
+  // Research theme filters are any filters that are not team status filters
+  const researchThemeFilters = filterArray
+    .filter((filter: string) => !isteamStatusFilter(filter))
+    .map((filter: string) => `researchTheme:"${filter}"`)
+    .join(' OR ');
+
   const teamTypeFilter = getTeamTypeAlgoliaFilter(teamType);
 
-  const algoliaFilters = teamStatusFilter
-    ? `(${teamTypeFilter}) AND (${teamStatusFilter})`
-    : teamTypeFilter || teamStatusFilter;
+  // Build combined filter string
+  const filterParts: string[] = [teamTypeFilter];
+
+  if (teamStatusFilter) {
+    filterParts.push(`(${teamStatusFilter})`);
+  }
+
+  if (researchThemeFilters) {
+    filterParts.push(`(${researchThemeFilters})`);
+  }
+
+  const algoliaFilters = filterParts.length > 1
+    ? filterParts.join(' AND ')
+    : teamTypeFilter;
 
   const result = await algoliaClient.search(['team'], searchQuery, {
     filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
@@ -716,4 +734,23 @@ export const downloadFullComplianceDataset = async (
   );
 
   return downloadUrl;
+};
+
+export const getResearchThemes = async (
+  authorization: string,
+): Promise<ListResearchThemeResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/research-themes`, {
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+    },
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch research themes. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+
+  return resp.json();
 };

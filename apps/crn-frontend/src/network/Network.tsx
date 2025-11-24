@@ -4,6 +4,7 @@ import { network } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useSearch } from '../hooks';
+import { useResearchThemes } from '../shared-state/shared-research';
 import InterestGroupProfile from './interest-groups/InterestGroupProfile';
 import WorkingGroupProfile from './working-groups/WorkingGroupProfile';
 
@@ -65,6 +66,7 @@ const Network: FC<Record<string, never>> = () => {
     toggleFilter,
   } = useSearch();
 
+  const researchThemes = useResearchThemes();
   const [currentTime] = useState(new Date());
   return (
     <Switch>
@@ -99,6 +101,7 @@ const Network: FC<Record<string, never>> = () => {
           onChangeSearchQuery={setSearchQuery}
           filters={filters}
           onChangeFilter={toggleFilter}
+          researchThemes={researchThemes}
           pageDescription={
             <Paragraph noMargin accent="lead">
               Discovery Teams conduct collaborative research projects focused on

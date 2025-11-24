@@ -45,6 +45,7 @@ type NetworkPageHeaderProps = {
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   showSearch?: boolean;
   pageDescription?: ReactNode;
+  researchThemes?: ReadonlyArray<{ id: string; name: string }>;
 };
 
 const userFilters: ReadonlyArray<
@@ -78,6 +79,24 @@ const workingGroupFilters: ReadonlyArray<
   { label: 'Complete', value: 'Complete' },
 ];
 
+const createResearchThemeFilters = (
+  researchThemes?: ReadonlyArray<{ id: string; name: string }>,
+): ReadonlyArray<Option<string> | Title> => {
+  const title: Title = { title: 'RESEARCH THEME' };
+
+  if (!researchThemes || researchThemes.length === 0) {
+    return [title];
+  }
+
+  return [
+    title,
+    ...researchThemes.map((theme) => ({
+      label: theme.name,
+      value: theme.name,
+    })),
+  ];
+};
+
 const teamFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
   { title: 'TEAM STATUS' },
   { label: 'Active', value: 'Active' },
@@ -96,6 +115,7 @@ const filterOutDataManager = (
 const getFilterOptionsAndPlaceholder = (
   page: Page,
   dataManagerEnabled: boolean,
+  researchThemes?: ReadonlyArray<{ id: string; name: string }>,
 ) => {
   switch (page) {
     case 'users':
@@ -125,7 +145,10 @@ const getFilterOptionsAndPlaceholder = (
       };
     case 'discovery-teams':
       return {
-        filterOptions: teamFilters,
+        filterOptions: [
+          ...createResearchThemeFilters(researchThemes),
+          ...teamFilters,
+        ],
         searchPlaceholder: 'Enter name, keyword, method, …',
       };
     default:
@@ -143,6 +166,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   onChangeFilter,
   showSearch = true,
   pageDescription,
+  researchThemes,
 }) => {
   const { isEnabled } = useFlags();
   const isDataManagerEnabled = isEnabled('DATA_MANAGER_ROLE_ENABLED');
@@ -210,7 +234,11 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
             searchQuery={searchQuery}
             onChangeFilter={onChangeFilter}
             filters={filters}
-            {...getFilterOptionsAndPlaceholder(page, isDataManagerEnabled)}
+            {...getFilterOptionsAndPlaceholder(
+              page,
+              isDataManagerEnabled,
+              researchThemes,
+            )}
           />
         </PageConstraints>
       )}

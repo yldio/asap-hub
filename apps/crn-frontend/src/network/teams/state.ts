@@ -33,7 +33,6 @@ import {
 } from 'recoil';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
-import { useAlgolia } from '../../hooks/algolia';
 import { getPresignedUrl } from '../../shared-api/files';
 import { useSetResearchOutputItem } from '../../shared-research/state';
 import {
@@ -57,7 +56,7 @@ import {
   uploadManuscriptFile,
   uploadManuscriptFileViaPresignedUrl,
   GetTeamsListOptions,
-  getAlgoliaTeams,
+  getTeams,
 } from './api';
 
 const teamIndexState = atomFamily<
@@ -152,21 +151,21 @@ export const teamListState = atomFamily<
 });
 
 export const usePrefetchTeams = (options: GetTeamsListOptions) => {
-  const algoliaClient = useAlgolia();
+  const authorization = useRecoilValue(authorizationState);
 
   const [teams, setTeams] = useRecoilState(teamsState(options));
   useDeepCompareEffect(() => {
     if (teams === undefined) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      getAlgoliaTeams(algoliaClient.client, options).then(setTeams).catch();
+      getTeams(options, authorization).then(setTeams).catch();
     }
-  }, [options, teams, setTeams]);
+  }, [options, teams, setTeams, authorization]);
 };
 export const useTeams = (options: GetTeamsListOptions): ListTeamResponse => {
-  const algoliaClient = useAlgolia();
+  const authorization = useRecoilValue(authorizationState);
   const [teams, setTeams] = useRecoilState(teamsState(options));
   if (teams === undefined) {
-    throw getAlgoliaTeams(algoliaClient.client, options)
+    throw getTeams(options, authorization)
       .then(setTeams)
       .catch(setTeams);
   }

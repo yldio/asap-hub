@@ -146,29 +146,6 @@ const getTeamStatusQuery = (filter: FetchTeamsOptions['filter']) => {
   return {};
 };
 
-const getResearchThemeQuery = (filter: FetchTeamsOptions['filter']) => {
-  if (!filter || filter.length === 0) {
-    return {};
-  }
-
-  // Research theme filters are any filters that are not team status filters
-  const teamStatuses = ['Active', 'Inactive'];
-  const researchThemeFilters = filter.filter(
-    (f) => !teamStatuses.includes(f),
-  );
-
-  if (researchThemeFilters.length === 0) {
-    return {};
-  }
-
-  // Use name_in filter for research themes
-  return {
-    researchTheme: {
-      name_in: researchThemeFilters,
-    },
-  };
-};
-
 export class TeamContentfulDataProvider implements TeamDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
@@ -193,7 +170,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       : {};
 
     const teamStatusQuery = getTeamStatusQuery(filter);
-    const researchThemeQuery = getResearchThemeQuery(filter);
 
     const { teamsCollection } = await this.contentfulClient.request<
       FetchTeamsQuery,
@@ -205,7 +181,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       where: {
         ...searchQuery,
         ...teamStatusQuery,
-        ...researchThemeQuery,
         ...(teamType ? { teamType } : {}),
         ...(teamIds && teamIds.length > 0 ? { sys: { id_in: teamIds } } : {}),
       },

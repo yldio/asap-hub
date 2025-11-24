@@ -31,7 +31,7 @@ const {
 const mockAlgoliaClient = { search: jest.fn() };
 
 const defaultOptions: ProjectListOptions = {
-  projectType: 'Discovery',
+  projectType: 'Discovery Project',
   searchQuery: '',
   currentPage: 0,
   pageSize: 10,
@@ -43,7 +43,7 @@ const listResponse: ListProjectResponse = {
   items: [
     {
       id: 'project-1',
-      projectType: 'Discovery',
+      projectType: 'Discovery Project',
       title: 'Discovery Project',
       status: 'Active',
       tags: [],
@@ -173,7 +173,7 @@ describe('projects state hooks', () => {
         id: 'project-99',
         title: 'Project 99',
         status: 'Active',
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         tags: [],
         startDate: '2024-01-01',
         endDate: '2024-06-01',

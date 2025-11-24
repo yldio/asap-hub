@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import { ProjectMember, TeamDetail } from '@asap-hub/model';
+import { FundedTeam, ProjectMember } from '@asap-hub/model';
 import ProjectContributors from '../ProjectContributors';
 
-const mockFundedTeam: TeamDetail = {
+const mockFundedTeam: FundedTeam = {
   id: 'team-1',
-  name: 'Test Team',
-  type: 'Discovery Team',
+  displayName: 'Test Team',
+  teamType: 'Discovery Team',
   researchTheme: 'Neurodegeneration',
-  description:
+  teamDescription:
     'This is a test team description explaining their research focus and goals.',
 };
 
@@ -45,7 +45,9 @@ describe('ProjectContributors', () => {
       expect(screen.getByText('Test Team')).toBeInTheDocument();
       expect(screen.getByText('Discovery Team')).toBeInTheDocument();
       expect(screen.getByText('Neurodegeneration')).toBeInTheDocument();
-      expect(screen.getByText(mockFundedTeam.description)).toBeInTheDocument();
+      expect(
+        screen.getByText(mockFundedTeam.teamDescription ?? ''),
+      ).toBeInTheDocument();
     });
 
     it('renders team without research theme', () => {
@@ -78,7 +80,7 @@ describe('ProjectContributors', () => {
   describe('edge cases', () => {
     it('returns null when no funded team provided', () => {
       const { container } = render(
-        <ProjectContributors fundedTeam={undefined as unknown as TeamDetail} />,
+        <ProjectContributors fundedTeam={undefined as unknown as FundedTeam} />,
       );
       expect(container.firstChild).toBeNull();
     });

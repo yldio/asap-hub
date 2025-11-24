@@ -3,7 +3,6 @@ import { render } from '@testing-library/react';
 import { formatProjectDate } from '../../date';
 
 import ProjectCard, {
-  getProjectTypeLabel,
   getStatusPillAccent,
   getCardAccentByStatus,
 } from '../ProjectCard';
@@ -18,7 +17,7 @@ const baseProjectProps = {
 
 const discoveryProjectProps: ComponentProps<typeof ProjectCard> = {
   ...baseProjectProps,
-  projectType: 'Discovery',
+  projectType: 'Discovery Project',
   title: 'Understanding Genetic Mechanisms in PD',
   status: 'Closed',
   researchTheme: 'Genetics',
@@ -28,7 +27,7 @@ const discoveryProjectProps: ComponentProps<typeof ProjectCard> = {
 
 const resourceProjectTeamBasedProps: ComponentProps<typeof ProjectCard> = {
   ...baseProjectProps,
-  projectType: 'Resource',
+  projectType: 'Resource Project',
   title: 'PD Biobank Resource',
   status: 'Active',
   resourceType: 'Biobank',
@@ -40,7 +39,7 @@ const resourceProjectTeamBasedProps: ComponentProps<typeof ProjectCard> = {
 
 const resourceProjectMemberBasedProps: ComponentProps<typeof ProjectCard> = {
   ...baseProjectProps,
-  projectType: 'Resource',
+  projectType: 'Resource Project',
   title: 'Open-Source Analysis Pipeline',
   status: 'Complete',
   resourceType: 'Software Tool',
@@ -76,7 +75,7 @@ const resourceProjectMemberBasedProps: ComponentProps<typeof ProjectCard> = {
 
 const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
   ...baseProjectProps,
-  projectType: 'Trainee',
+  projectType: 'Trainee Project',
   title: 'Alpha-Synuclein Aggregation Study',
   status: 'Active',
   trainer: {
@@ -124,25 +123,6 @@ describe('Date Formatting', () => {
 });
 
 describe('Helper Functions', () => {
-  describe('getProjectTypeLabel', () => {
-    it.each([
-      { projectType: 'Discovery' as const, expected: 'Discovery Project' },
-      { projectType: 'Resource' as const, expected: 'Resource Project' },
-      { projectType: 'Trainee' as const, expected: 'Trainee Project' },
-    ])(
-      'returns "$expected" for $projectType projects',
-      ({ projectType, expected }) => {
-        expect(getProjectTypeLabel(projectType)).toBe(expected);
-      },
-    );
-
-    it('returns default label for invalid project type', () => {
-      expect(
-        getProjectTypeLabel('Invalid' as 'Discovery' | 'Resource' | 'Trainee'),
-      ).toBe('Discovery Project');
-    });
-  });
-
   describe('getStatusPillAccent', () => {
     it.each([
       { status: 'Active' as const, expected: 'info' as const },

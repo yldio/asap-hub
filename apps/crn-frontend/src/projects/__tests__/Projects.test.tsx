@@ -30,7 +30,7 @@ const mockDiscoveryProject: DiscoveryProject = {
   endDate: '2024-06-01',
   duration: '5 mos',
   tags: [],
-  projectType: 'Discovery',
+  projectType: 'Discovery Project',
   researchTheme: 'Theme One',
   teamName: 'Discovery Team',
   teamId: 'team-1',
@@ -50,7 +50,7 @@ const mockResourceProject: ResourceProject = {
   endDate: '2023-07-01',
   duration: '6 mos',
   tags: [],
-  projectType: 'Resource',
+  projectType: 'Resource Project',
   resourceType: 'Data Portal',
   isTeamBased: true,
   teamName: 'Resource Team',
@@ -83,7 +83,7 @@ const mockTraineeProject: TraineeProject = {
   endDate: '2025-02-01',
   duration: '1 yr',
   tags: [],
-  projectType: 'Trainee',
+  projectType: 'Trainee Project',
   trainer: mockTraineeTrainer,
   members: mockTraineeProjectMembers,
 };
@@ -172,6 +172,10 @@ const renderProjectsPage = async (pathname: string, query = '') => {
 };
 
 describe('Projects Routes', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
   it('redirects to discovery projects when the index page is accessed', async () => {
     await renderProjectsPage(projects({}).$);
     // Verify we're on Discovery Projects by checking for the description

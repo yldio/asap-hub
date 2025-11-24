@@ -14,7 +14,7 @@ const mockTraineeProjectDetail: TraineeProjectDetailType = {
   id: '1',
   title: 'Trainee Project Title',
   status: 'Active',
-  projectType: 'Trainee',
+  projectType: 'Trainee Project',
   startDate: '2024-01-01',
   endDate: '2026-12-31',
   duration: '2 yrs',
@@ -59,14 +59,8 @@ const mockTraineeProjectDetail: TraineeProjectDetailType = {
       ],
     },
   ],
-  description:
-    "This trainee project focuses on developing skills and conducting research in Parkinson's disease pathology and therapeutic strategies.",
-  originalGrant: {
-    title: 'Trainee Grant - Research Training',
-    description:
-      "This training program will provide comprehensive education and research experience in Parkinson's disease research, focusing on molecular mechanisms and potential therapeutic interventions.",
-    proposalURL: 'https://example.com/trainee-proposal',
-  },
+  originalGrant: 'Trainee Grant - Research Training',
+  originalGrantProposalId: 'https://example.com/trainee-proposal',
   milestones: [
     {
       id: 'm1',

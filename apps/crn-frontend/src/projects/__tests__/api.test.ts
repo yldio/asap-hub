@@ -24,7 +24,7 @@ describe('projects api', () => {
 
   describe('getProjects', () => {
     const options: ProjectListOptions = {
-      projectType: 'Discovery',
+      projectType: 'Discovery Project',
       searchQuery: 'cell',
       currentPage: 2,
       pageSize: 15,
@@ -54,7 +54,7 @@ describe('projects api', () => {
           page: 2,
           hitsPerPage: 15,
           filters:
-            'projectType:"Discovery" AND (status:"Active" OR status:"Closed") AND researchTheme:"Neuro" AND (resourceType:"Dataset" OR resourceType:"Portal")',
+            'projectType:"Discovery Project" AND (status:"Active" OR status:"Closed") AND researchTheme:"Neuro" AND (resourceType:"Dataset" OR resourceType:"Portal")',
         }),
       );
     });
@@ -77,7 +77,7 @@ describe('projects api', () => {
       } as never);
 
       await getProjects(mockAlgoliaClient, {
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         currentPage: 0,
         pageSize: 10,
         filters: new Set<string>(),
@@ -88,7 +88,7 @@ describe('projects api', () => {
         ['project'],
         '',
         expect.objectContaining({
-          filters: 'projectType:"Discovery"',
+          filters: 'projectType:"Discovery Project"',
         }),
       );
     });
@@ -103,7 +103,7 @@ describe('projects api', () => {
       } as never);
 
       await getProjects(mockAlgoliaClient, {
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         currentPage: 0,
         pageSize: 10,
         filters: new Set<string>(),
@@ -115,7 +115,7 @@ describe('projects api', () => {
         ['project'],
         '',
         expect.objectContaining({
-          filters: 'projectType:"Discovery"',
+          filters: 'projectType:"Discovery Project"',
         }),
       );
     });
@@ -130,7 +130,7 @@ describe('projects api', () => {
       } as never);
 
       await getProjects(mockAlgoliaClient, {
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         currentPage: 0,
         pageSize: 10,
         filters: new Set<string>(),

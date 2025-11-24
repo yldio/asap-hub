@@ -98,7 +98,7 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
   );
   const listOptions = useMemo(
     () => ({
-      projectType: 'Resource' as const,
+      projectType: 'Resource Project' as const,
       searchQuery: debouncedSearchQuery,
       statusFilters,
       currentPage,

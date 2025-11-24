@@ -1,21 +1,21 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { GrantInfo } from '@asap-hub/model';
+import { OriginalGrantInfo, SupplementGrantInfo } from '@asap-hub/model';
 import ProjectDetailOverview from '../ProjectDetailOverview';
 
-const mockOriginalGrant: GrantInfo = {
-  title: 'Original Grant Title',
-  description: 'This is the original grant description explaining the project.',
-  proposalURL: 'https://example.com/original-proposal',
+const mockOriginalGrant: OriginalGrantInfo = {
+  originalGrant: 'Original Grant Title',
+  proposalId: 'proposal-1',
 };
 
-const mockSupplementGrant: GrantInfo = {
-  title: 'Supplement Grant Title',
-  description:
+const mockSupplementGrant: SupplementGrantInfo = {
+  grantTitle: 'Supplement Grant Title',
+  grantDescription:
     'This is the supplement grant description with additional funding.',
-  proposalURL: 'https://example.com/supplement-proposal',
+  grantProposalId: 'proposal-2',
+  grantStartDate: '2023-01-01',
+  grantEndDate: '2025-12-31',
 };
-
 describe('ProjectDetailOverview', () => {
   it('renders Overview title', () => {
     render(<ProjectDetailOverview originalGrant={mockOriginalGrant} />);
@@ -24,14 +24,16 @@ describe('ProjectDetailOverview', () => {
 
   it('renders original grant description when no supplement grant', () => {
     render(<ProjectDetailOverview originalGrant={mockOriginalGrant} />);
-    expect(screen.getByText(mockOriginalGrant.description)).toBeInTheDocument();
+    expect(
+      screen.getByText(mockOriginalGrant.originalGrant),
+    ).toBeInTheDocument();
   });
 
   it('renders Read Full Proposal button with correct link', () => {
     render(<ProjectDetailOverview originalGrant={mockOriginalGrant} />);
     const link = screen.getByRole('link', { name: /read full proposal/i });
     expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute('href', mockOriginalGrant.proposalURL);
+    expect(link).toHaveAttribute('href', mockOriginalGrant.proposalId);
   });
 
   it('does not render Read Full Proposal button when no URL provided', () => {
@@ -62,10 +64,10 @@ describe('ProjectDetailOverview', () => {
         />,
       );
       expect(
-        screen.getByText(mockSupplementGrant.description),
+        screen.getByText(mockSupplementGrant.grantTitle),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText(mockOriginalGrant.description),
+        screen.queryByText(mockOriginalGrant.originalGrant),
       ).not.toBeInTheDocument();
     });
 
@@ -83,10 +85,10 @@ describe('ProjectDetailOverview', () => {
       await userEvent.click(originalGrantTab);
 
       expect(
-        screen.getByText(mockOriginalGrant.description),
+        screen.getByText(mockOriginalGrant.originalGrant),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText(mockSupplementGrant.description),
+        screen.queryByText(mockSupplementGrant.grantTitle),
       ).not.toBeInTheDocument();
     });
 
@@ -111,10 +113,10 @@ describe('ProjectDetailOverview', () => {
       await userEvent.click(supplementGrantTab);
 
       expect(
-        screen.getByText(mockSupplementGrant.description),
+        screen.getByText(mockSupplementGrant.grantTitle),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText(mockOriginalGrant.description),
+        screen.queryByText(mockOriginalGrant.originalGrant),
       ).not.toBeInTheDocument();
     });
 
@@ -132,7 +134,7 @@ describe('ProjectDetailOverview', () => {
       });
       expect(proposalLink).toHaveAttribute(
         'href',
-        mockSupplementGrant.proposalURL,
+        mockSupplementGrant.grantProposalId,
       );
 
       // Switch to Original Grant
@@ -145,7 +147,7 @@ describe('ProjectDetailOverview', () => {
       proposalLink = screen.getByRole('link', { name: /read full proposal/i });
       expect(proposalLink).toHaveAttribute(
         'href',
-        mockOriginalGrant.proposalURL,
+        mockOriginalGrant.proposalId,
       );
     });
   });

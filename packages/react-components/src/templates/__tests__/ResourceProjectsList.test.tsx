@@ -9,7 +9,7 @@ const mockProjects: ComponentProps<typeof ResourceProjectsList>['projects'] = [
     id: '1',
     title: 'Test Resource Project 1',
     status: 'Active',
-    projectType: 'Resource' as const,
+    projectType: 'Resource Project' as const,
     resourceType: 'Database',
     isTeamBased: true,
     teamName: 'Resource Team Alpha',
@@ -24,7 +24,7 @@ const mockProjects: ComponentProps<typeof ResourceProjectsList>['projects'] = [
     id: '2',
     title: 'Test Resource Project 2',
     status: 'Complete',
-    projectType: 'Resource' as const,
+    projectType: 'Resource Project' as const,
     resourceType: 'Software',
     isTeamBased: false,
     members: [

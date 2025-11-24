@@ -1,8 +1,19 @@
 import { ListResponse } from './common';
+import { TeamDataObject } from './team';
 
 export type ProjectStatus = 'Active' | 'Complete' | 'Closed';
 
-export type ProjectType = 'Discovery' | 'Resource' | 'Trainee';
+export type ProjectType =
+  | 'Discovery Project'
+  | 'Resource Project'
+  | 'Trainee Project';
+
+export type ResearchTag = {
+  readonly id: string;
+  readonly name: string;
+  readonly category?: string;
+  readonly types?: ReadonlyArray<string>;
+};
 
 export type BaseProject = {
   readonly id: string;
@@ -12,6 +23,11 @@ export type BaseProject = {
   readonly endDate: string;
   readonly duration?: string;
   readonly tags: string[];
+  readonly projectId?: string;
+  readonly grantId?: string;
+  readonly applicationNumber?: string;
+  readonly contactEmail?: string;
+  readonly researchTags?: ReadonlyArray<ResearchTag>;
 };
 
 export type ProjectMemberTeam = {
@@ -33,7 +49,7 @@ export type ProjectMember = {
 };
 
 export type DiscoveryProject = BaseProject & {
-  readonly projectType: 'Discovery';
+  readonly projectType: 'Discovery Project';
   readonly researchTheme: string;
   readonly teamName: string;
   readonly teamId?: string;
@@ -41,7 +57,7 @@ export type DiscoveryProject = BaseProject & {
 };
 
 export type ResourceProject = BaseProject & {
-  readonly projectType: 'Resource';
+  readonly projectType: 'Resource Project';
   readonly resourceType: string;
   readonly isTeamBased: boolean;
   readonly teamName?: string;
@@ -51,7 +67,7 @@ export type ResourceProject = BaseProject & {
 };
 
 export type TraineeProject = BaseProject & {
-  readonly projectType: 'Trainee';
+  readonly projectType: 'Trainee Project';
   readonly trainer: ProjectMember;
   readonly members: ReadonlyArray<ProjectMember>;
 };
@@ -75,44 +91,47 @@ export type Milestone = {
 };
 
 // Grant information types
-export type GrantInfo = {
-  readonly title: string;
-  readonly description: string;
-  readonly proposalURL?: string;
+export type OriginalGrantInfo = {
+  readonly originalGrant: string;
+  readonly proposalId?: string;
 };
 
-// Team detail for funded teams section
-export type TeamDetail = {
-  readonly id?: string;
-  readonly name: string;
-  readonly type: string;
-  readonly researchTheme?: string;
-  readonly description: string;
+export type SupplementGrantInfo = {
+  readonly grantTitle: string;
+  readonly grantDescription?: string;
+  readonly grantProposalId?: string;
+  readonly grantStartDate?: string;
+  readonly grantEndDate?: string;
 };
+
+export type FundedTeam = Pick<
+  TeamDataObject,
+  'id' | 'displayName' | 'teamType' | 'researchTheme' | 'teamDescription'
+>;
 
 // Extended project detail types
 export type DiscoveryProjectDetail = DiscoveryProject & {
-  readonly description: string;
-  readonly originalGrant: GrantInfo;
-  readonly supplementGrant?: GrantInfo;
+  readonly originalGrant?: string;
+  readonly originalGrantProposalId?: string;
+  readonly supplementGrant?: SupplementGrantInfo;
   readonly milestones?: ReadonlyArray<Milestone>;
-  readonly fundedTeam: TeamDetail;
+  readonly fundedTeam: FundedTeam;
   readonly collaborators?: ReadonlyArray<ProjectMember>;
 };
 
 export type ResourceProjectDetail = ResourceProject & {
-  readonly description: string;
-  readonly originalGrant: GrantInfo;
-  readonly supplementGrant?: GrantInfo;
+  readonly originalGrant?: string;
+  readonly originalGrantProposalId?: string;
+  readonly supplementGrant?: SupplementGrantInfo;
   readonly milestones?: ReadonlyArray<Milestone>;
-  readonly fundedTeam?: TeamDetail;
+  readonly fundedTeam?: FundedTeam;
   readonly collaborators?: ReadonlyArray<ProjectMember>;
 };
 
 export type TraineeProjectDetail = TraineeProject & {
-  readonly description: string;
-  readonly originalGrant: GrantInfo;
-  readonly supplementGrant?: GrantInfo;
+  readonly originalGrant?: string;
+  readonly originalGrantProposalId?: string;
+  readonly supplementGrant?: SupplementGrantInfo;
   readonly milestones?: ReadonlyArray<Milestone>;
 };
 

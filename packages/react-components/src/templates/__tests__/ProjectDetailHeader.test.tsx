@@ -11,9 +11,13 @@ const baseProject = {
   duration: '3 yrs',
   tags: ['Tag1'],
   description: 'Test description',
-  originalGrant: {
-    title: 'Grant Title',
-    description: 'Grant description',
+  originalGrant: 'Grant Title',
+  supplementGrant: {
+    grantTitle: 'Supplement Grant Title',
+    grantDescription: 'Supplement grant description',
+    grantProposalId: 'proposal-1',
+    grantStartDate: '2023-01-01',
+    grantEndDate: '2025-12-31',
   },
 };
 
@@ -21,14 +25,14 @@ describe('getTeamIcon', () => {
   it('returns DiscoveryTeamIcon for Discovery projects', () => {
     const discoveryProject: ProjectDetail = {
       ...baseProject,
-      projectType: 'Discovery',
+      projectType: 'Discovery Project',
       researchTheme: 'Genetics',
       teamName: 'Test Team',
       fundedTeam: {
         id: 'team-1',
-        name: 'Test Team',
-        type: 'Discovery Team',
-        description: 'Team description',
+        displayName: 'Test Team',
+        teamType: 'Discovery Team',
+        researchTheme: 'Genetics',
       },
     };
 
@@ -42,14 +46,14 @@ describe('getTeamIcon', () => {
   it('returns ResourceTeamIcon for Resource projects that are team-based', () => {
     const resourceTeamProject: ProjectDetail = {
       ...baseProject,
-      projectType: 'Resource',
+      projectType: 'Resource Project',
       resourceType: 'Biobank',
       isTeamBased: true,
       fundedTeam: {
         id: 'team-1',
-        name: 'Test Team',
-        type: 'Resource Team',
-        description: 'Team description',
+        displayName: 'Test Team',
+        teamType: 'Resource Team',
+        researchTheme: 'Genetics',
       },
     };
 
@@ -63,7 +67,7 @@ describe('getTeamIcon', () => {
   it('returns ResourceMemberIcon for Resource projects that are not team-based', () => {
     const resourceMemberProject: ProjectDetail = {
       ...baseProject,
-      projectType: 'Resource',
+      projectType: 'Resource Project',
       resourceType: 'Software Tool',
       isTeamBased: false,
       members: [
@@ -87,7 +91,7 @@ describe('getTeamIcon', () => {
   it('returns TrainerIcon for Trainee projects', () => {
     const traineeProject: ProjectDetail = {
       ...baseProject,
-      projectType: 'Trainee',
+      projectType: 'Trainee Project',
       trainer: {
         id: 'trainer-1',
         displayName: 'Dr. Trainer',
@@ -116,7 +120,7 @@ describe('getTeamIcon', () => {
       projectType: 'Unknown' as unknown as ProjectType,
     };
 
-    const result = getTeamIcon(unknownProject as ProjectDetail);
+    const result = getTeamIcon(unknownProject as unknown as ProjectDetail);
     expect(result).toBeNull();
   });
 });
@@ -124,21 +128,21 @@ describe('getTeamIcon', () => {
 describe('ProjectDetailHeader', () => {
   const mockDiscoveryProject: ProjectDetail = {
     ...baseProject,
-    projectType: 'Discovery',
+    projectType: 'Discovery Project',
     researchTheme: 'Genetics',
     teamName: 'Alpha Team',
     teamId: 'team-1',
     fundedTeam: {
       id: 'team-1',
-      name: 'Alpha Team',
-      type: 'Discovery Team',
-      description: 'Team description',
+      displayName: 'Alpha Team',
+      teamType: 'Discovery Team',
+      researchTheme: 'Genetics',
     },
   };
 
   const mockResourceTeamProject: ProjectDetail = {
     ...baseProject,
-    projectType: 'Resource',
+    projectType: 'Resource Project',
     resourceType: 'Biobank',
     isTeamBased: true,
     teamName: 'Resource Team',
@@ -146,15 +150,15 @@ describe('ProjectDetailHeader', () => {
     googleDriveLink: 'https://drive.google.com/example',
     fundedTeam: {
       id: 'team-2',
-      name: 'Resource Team',
-      type: 'Resource Team',
-      description: 'Team description',
+      displayName: 'Resource Team',
+      teamType: 'Resource Team',
+      researchTheme: 'Genetics',
     },
   };
 
   const mockResourceMemberProject: ProjectDetail = {
     ...baseProject,
-    projectType: 'Resource',
+    projectType: 'Resource Project',
     resourceType: 'Software Tool',
     isTeamBased: false,
     members: [
@@ -170,7 +174,7 @@ describe('ProjectDetailHeader', () => {
 
   const mockTraineeProject: ProjectDetail = {
     ...baseProject,
-    projectType: 'Trainee',
+    projectType: 'Trainee Project',
     trainer: {
       id: 'trainer-1',
       displayName: 'Dr. Sarah Mentor',

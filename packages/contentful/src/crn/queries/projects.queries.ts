@@ -20,6 +20,11 @@ export const projectsContentQueryFragment = gql`
     applicationNumber
     contactEmail
     googleDriveLink
+    proposal {
+      sys {
+        id
+      }
+    }
     supplementGrant {
       sys {
         id
@@ -96,6 +101,7 @@ export const projectsContentQueryFragment = gql`
             researchTheme {
               name
             }
+            teamDescription
           }
         }
       }

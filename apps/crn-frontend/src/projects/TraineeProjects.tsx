@@ -78,7 +78,7 @@ const TraineeProjects: FC<TraineeProjectsProps> = ({
 
   const listOptions = useMemo(
     () => ({
-      projectType: 'Trainee' as const,
+      projectType: 'Trainee Project' as const,
       searchQuery: debouncedSearchQuery,
       statusFilters,
       currentPage,

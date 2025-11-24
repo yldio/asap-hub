@@ -1,4 +1,4 @@
-import { ProjectMember, TeamDetail } from '@asap-hub/model';
+import { ProjectMember, FundedTeam } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { Card, Headline3, Pill, TabButton } from '../atoms';
@@ -41,7 +41,7 @@ const teamDescriptionStyles = css({
 
 type ProjectContributorsProps =
   | {
-      fundedTeam: TeamDetail;
+      fundedTeam: FundedTeam;
       collaborators?: ReadonlyArray<ProjectMember>;
       projectMembers?: never;
       showTeamInfo?: never;
@@ -105,15 +105,15 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
           <div css={tabContentStyles}>
             <div css={teamSectionStyles}>
               <div css={teamHeaderStyles}>
-                <Pill noMargin>{fundedTeam.type}</Pill>
+                <Pill noMargin>{fundedTeam.teamType}</Pill>
                 {fundedTeam.researchTheme && (
                   <Pill noMargin>{fundedTeam.researchTheme}</Pill>
                 )}
               </div>
               <LinkHeadline href={'#'} level={3} styleAsHeading={4} noMargin>
-                {fundedTeam.name}
+                {fundedTeam.displayName}
               </LinkHeadline>
-              <p css={teamDescriptionStyles}>{fundedTeam.description}</p>
+              <p css={teamDescriptionStyles}>{fundedTeam.teamDescription}</p>
             </div>
           </div>
         </>

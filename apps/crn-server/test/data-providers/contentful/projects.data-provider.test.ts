@@ -10,6 +10,7 @@ import {
 import { TraineeProject } from '@asap-hub/model';
 import {
   getExpectedDiscoveryProject,
+  getExpectedDiscoveryProjectDetail,
   getExpectedDiscoveryProjectWithoutTeam,
   getExpectedProjectList,
   getExpectedResourceIndividualProject,
@@ -45,7 +46,7 @@ describe('ProjectContentfulDataProvider', () => {
         skip: 10,
         search: 'brain health',
         filter: {
-          projectType: ['Discovery', 'Resource'],
+          projectType: ['Discovery Project', 'Resource Project'],
           status: ['Complete', 'Active'],
         },
       });
@@ -82,7 +83,7 @@ describe('ProjectContentfulDataProvider', () => {
 
       await dataProvider.fetch({
         filter: {
-          projectType: 'Discovery',
+          projectType: 'Discovery Project',
           status: 'Complete',
         },
       });
@@ -136,7 +137,7 @@ describe('ProjectContentfulDataProvider', () => {
 
       const result = await dataProvider.fetchById('discovery-1');
 
-      expect(result).toEqual(getExpectedDiscoveryProject());
+      expect(result).toEqual(getExpectedDiscoveryProjectDetail());
     });
 
     it('returns null when Contentful does not return the project', async () => {
@@ -173,14 +174,14 @@ describe('ProjectContentfulDataProvider', () => {
     });
   });
 
-  it('throws when project type is not Discovery, Resource, or Trainee', () => {
+  it('throws when project type is not Discovery Project, Resource Project, or Trainee Project', () => {
     const invalidItem = {
       ...getDiscoveryProjectGraphqlItem(),
-      projectType: 'Unexpected Project',
+      projectType: 'Unexpected Project Type',
     };
 
     expect(() => parseContentfulProject(invalidItem as never)).toThrow(
-      'Unknown project type: Unexpected Project',
+      'Unknown project type: Unexpected Project Type',
     );
   });
 

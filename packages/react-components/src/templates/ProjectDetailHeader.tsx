@@ -12,10 +12,7 @@ import {
 import { createMailTo } from '../mail';
 import { UsersList, TabNav, ProjectDuration } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
-import {
-  getProjectTypeLabel,
-  getStatusPillAccent,
-} from '../organisms/ProjectCard';
+import { getStatusPillAccent } from '../organisms/ProjectCard';
 import TrainerIcon from '../icons/trainer';
 import PageInfoContainer from './PageInfoContainer';
 
@@ -127,16 +124,16 @@ type ProjectDetailHeaderProps = ProjectDetail & {
 };
 
 export const getTeamIcon = (project: ProjectDetail) => {
-  if (project.projectType === 'Discovery') {
+  if (project.projectType === 'Discovery Project') {
     return <DiscoveryTeamIcon />;
   }
-  if (project.projectType === 'Resource' && project.isTeamBased) {
+  if (project.projectType === 'Resource Project' && project.isTeamBased) {
     return <ResourceTeamIcon />;
   }
-  if (project.projectType === 'Resource' && !project.isTeamBased) {
+  if (project.projectType === 'Resource Project' && !project.isTeamBased) {
     return <ResourceMemberIcon />;
   }
-  if (project.projectType === 'Trainee') {
+  if (project.projectType === 'Trainee Project') {
     return <TrainerIcon />;
   }
   return null;
@@ -146,7 +143,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
   const { pointOfContactEmail, aboutHref } = project;
 
   const getMemberIcon = () => {
-    if (project.projectType === 'Trainee') {
+    if (project.projectType === 'Trainee Project') {
       return <MemberIcon />;
     }
     // istanbul ignore next - only used for Trainee projects
@@ -167,11 +164,11 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
           <Pill accent={getStatusPillAccent(project.status)} noMargin>
             {project.status}
           </Pill>
-          <Pill noMargin>{getProjectTypeLabel(project.projectType)}</Pill>
-          {project.projectType === 'Discovery' && (
+          <Pill noMargin>{project.projectType}</Pill>
+          {project.projectType === 'Discovery Project' && (
             <Pill noMargin>{project.researchTheme}</Pill>
           )}
-          {project.projectType === 'Resource' && (
+          {project.projectType === 'Resource Project' && (
             <Pill noMargin>{project.resourceType}</Pill>
           )}
         </div>
@@ -237,22 +234,23 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
         </div>
 
         {/* Access Drive for Resource projects */}
-        {project.projectType === 'Resource' && project.googleDriveLink && (
-          <div css={driveButtonStyles}>
-            <Link href={project.googleDriveLink} buttonStyle small noMargin>
-              {googleDriveIcon} Access Drive
-            </Link>
-          </div>
-        )}
+        {project.projectType === 'Resource Project' &&
+          project.googleDriveLink && (
+            <div css={driveButtonStyles}>
+              <Link href={project.googleDriveLink} buttonStyle small noMargin>
+                {googleDriveIcon} Access Drive
+              </Link>
+            </div>
+          )}
         {/* Metadata Section */}
         <div css={metadataStyles}>
           {/* Team/Members Info */}
-          {project.projectType === 'Discovery' && (
+          {project.projectType === 'Discovery Project' && (
             <div css={[metadataRowStyles, discoveryDurationMediaStyles]}>
               <div css={iconContainerStyles}>
                 <span css={iconStyles}>{getTeamIcon(project)}</span>
                 {project.teamId ? (
-                  <Link href={`/teams/${project.teamId}`}>
+                  <Link href={`/network/teams/${project.teamId}`}>
                     <span css={teamLinkStyles}>{project.teamName}</span>
                   </Link>
                 ) : (
@@ -269,13 +267,13 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
             </div>
           )}
 
-          {project.projectType === 'Resource' &&
+          {project.projectType === 'Resource Project' &&
             project.isTeamBased &&
             project.teamName && (
               <div css={metadataRowStyles}>
                 <span css={iconStyles}>{getTeamIcon(project)}</span>
                 {project.teamId ? (
-                  <Link href={`/teams/${project.teamId}`}>
+                  <Link href={`/network/teams/${project.teamId}`}>
                     <span css={teamLinkStyles}>{project.teamName}</span>
                   </Link>
                 ) : (
@@ -293,7 +291,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
               </div>
             )}
 
-          {project.projectType === 'Resource' &&
+          {project.projectType === 'Resource Project' &&
             !project.isTeamBased &&
             project.members && (
               <div css={metadataRowStyles}>
@@ -302,7 +300,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
               </div>
             )}
 
-          {project.projectType === 'Trainee' && (
+          {project.projectType === 'Trainee Project' && (
             <>
               <div css={metadataRowStyles}>
                 <span css={iconStyles}>{getTeamIcon(project)}</span>
@@ -316,8 +314,9 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
           )}
 
           {/* Duration */}
-          {(project.projectType === 'Trainee' ||
-            (project.projectType === 'Resource' && !project.isTeamBased)) && (
+          {(project.projectType === 'Trainee Project' ||
+            (project.projectType === 'Resource Project' &&
+              !project.isTeamBased)) && (
             <ProjectDuration
               startDate={project.startDate}
               endDate={project.endDate}

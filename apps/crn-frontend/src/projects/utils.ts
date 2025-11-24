@@ -8,15 +8,15 @@ import {
 
 export const isDiscoveryProject = (
   project: ProjectResponse,
-): project is DiscoveryProject => project.projectType === 'Discovery';
+): project is DiscoveryProject => project.projectType === 'Discovery Project';
 
 export const isResourceProject = (
   project: ProjectResponse,
-): project is ResourceProject => project.projectType === 'Resource';
+): project is ResourceProject => project.projectType === 'Resource Project';
 
 export const isTraineeProject = (
   project: ProjectResponse,
-): project is TraineeProject => project.projectType === 'Trainee';
+): project is TraineeProject => project.projectType === 'Trainee Project';
 
 export const PROJECT_STATUSES: readonly ProjectStatus[] = [
   'Active',

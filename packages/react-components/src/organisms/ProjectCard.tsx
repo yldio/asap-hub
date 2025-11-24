@@ -5,7 +5,6 @@ import {
   ResourceProject,
   TraineeProject,
   ProjectStatus,
-  ProjectType,
 } from '@asap-hub/model';
 
 import { Card, Pill, Link } from '../atoms';
@@ -91,19 +90,6 @@ const driveButtonStyles = css({
 
 type ProjectCardProps = DiscoveryProject | ResourceProject | TraineeProject;
 
-export const getProjectTypeLabel = (projectType: ProjectType): string => {
-  switch (projectType) {
-    case 'Discovery':
-      return 'Discovery Project';
-    case 'Resource':
-      return 'Resource Project';
-    case 'Trainee':
-      return 'Trainee Project';
-    default:
-      return 'Discovery Project';
-  }
-};
-
 export const getStatusPillAccent = (
   status: ProjectStatus,
 ): 'info' | 'success' | 'warning' => {
@@ -134,7 +120,9 @@ export const getCardAccentByStatus = (
 
 const ProjectCard: FC<ProjectCardProps> = (project) => {
   const getHref = () =>
-    `/projects/${project.projectType.toLowerCase()}/${project.id}/about`;
+    `/projects/${project.projectType
+      .replace(/\s+Project$/, '')
+      .toLowerCase()}/${project.id}/about`;
 
   return (
     <Card accent={getCardAccentByStatus(project.status)} padding={false}>
@@ -144,11 +132,11 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
           <Pill accent={getStatusPillAccent(project.status)} noMargin>
             {project.status}
           </Pill>
-          <Pill noMargin>{getProjectTypeLabel(project.projectType)}</Pill>
-          {project.projectType === 'Discovery' && (
+          <Pill noMargin>{project.projectType}</Pill>
+          {project.projectType === 'Discovery Project' && (
             <Pill noMargin>{project.researchTheme}</Pill>
           )}
-          {project.projectType === 'Resource' && (
+          {project.projectType === 'Resource Project' && (
             <Pill noMargin>{project.resourceType}</Pill>
           )}
         </div>
@@ -162,18 +150,19 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
         </div>
 
         {/* Google Drive Link for Resource Projects */}
-        {project.projectType === 'Resource' && project.googleDriveLink && (
-          <div css={driveButtonStyles}>
-            <Link href={project.googleDriveLink} buttonStyle small noMargin>
-              {googleDriveIcon} Access Drive
-            </Link>
-          </div>
-        )}
+        {project.projectType === 'Resource Project' &&
+          project.googleDriveLink && (
+            <div css={driveButtonStyles}>
+              <Link href={project.googleDriveLink} buttonStyle small noMargin>
+                {googleDriveIcon} Access Drive
+              </Link>
+            </div>
+          )}
 
         {/* Metadata Container */}
         <div css={metadataStyles}>
           {/* Team Name for Discovery Projects */}
-          {project.projectType === 'Discovery' && (
+          {project.projectType === 'Discovery Project' && (
             <div css={metadataRowStyles}>
               <span css={iconStyles}>
                 <DiscoveryTeamIcon />
@@ -190,7 +179,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
           )}
 
           {/* Team Name for Resource Projects (if team-based) */}
-          {project.projectType === 'Resource' &&
+          {project.projectType === 'Resource Project' &&
             project.isTeamBased &&
             project.teamName && (
               <div css={metadataRowStyles}>
@@ -208,7 +197,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
             )}
 
           {/* Members for Resource Projects (if not team-based) */}
-          {project.projectType === 'Resource' &&
+          {project.projectType === 'Resource Project' &&
             !project.isTeamBased &&
             project.members &&
             project.members.length > 0 && (
@@ -227,7 +216,7 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
             )}
 
           {/* Members for Trainee Projects */}
-          {project.projectType === 'Trainee' && (
+          {project.projectType === 'Trainee Project' && (
             <div css={traineeMetadataWrapperStyles}>
               <div css={metadataRowStyles}>
                 <span css={iconStyles}>

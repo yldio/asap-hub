@@ -9,7 +9,7 @@ export default {
 
 export const DiscoveryProjectActive = () => (
   <ProjectCard
-    projectType="Discovery"
+    projectType="Discovery Project"
     id="discovery-1"
     title="Understanding Genetic Mechanisms in Parkinson's Disease"
     status="Active"
@@ -31,7 +31,7 @@ export const DiscoveryProjectActive = () => (
 
 export const DiscoveryProjectComplete = () => (
   <ProjectCard
-    projectType="Discovery"
+    projectType="Discovery Project"
     id="discovery-2"
     title="Biomarker Development for Early Parkinson's Detection"
     status="Complete"
@@ -47,7 +47,7 @@ export const DiscoveryProjectComplete = () => (
 
 export const DiscoveryProjectClosed = () => (
   <ProjectCard
-    projectType="Discovery"
+    projectType="Discovery Project"
     id="discovery-3"
     title="Exploring Environmental Factors in PD Progression"
     status="Closed"
@@ -64,7 +64,7 @@ export const DiscoveryProjectClosed = () => (
 
 export const ResourceProjectActiveTeamBased = () => (
   <ProjectCard
-    projectType="Resource"
+    projectType="Resource Project"
     id="resource-1"
     title="Comprehensive Parkinson's Disease Biobank"
     status="Active"
@@ -82,7 +82,7 @@ export const ResourceProjectActiveTeamBased = () => (
 
 export const ResourceProjectActiveMemberBased = () => (
   <ProjectCard
-    projectType="Resource"
+    projectType="Resource Project"
     id="resource-2"
     title="Open-Source Analysis Pipeline for PD Genomics"
     status="Active"
@@ -132,7 +132,7 @@ export const ResourceProjectActiveMemberBased = () => (
 
 export const ResourceProjectComplete = () => (
   <ProjectCard
-    projectType="Resource"
+    projectType="Resource Project"
     id="resource-3"
     title="Standardized Clinical Assessment Protocol"
     status="Complete"
@@ -149,7 +149,7 @@ export const ResourceProjectComplete = () => (
 
 export const ResourceProjectClosed = () => (
   <ProjectCard
-    projectType="Resource"
+    projectType="Resource Project"
     id="resource-4"
     title="Automated Brain Imaging Analysis Tool"
     status="Closed"
@@ -184,7 +184,7 @@ export const ResourceProjectClosed = () => (
 
 export const TraineeProjectActive = () => (
   <ProjectCard
-    projectType="Trainee"
+    projectType="Trainee Project"
     id="trainee-1"
     title="Investigating Alpha-Synuclein Aggregation in Cell Models"
     status="Active"
@@ -215,7 +215,7 @@ export const TraineeProjectActive = () => (
 
 export const TraineeProjectComplete = () => (
   <ProjectCard
-    projectType="Trainee"
+    projectType="Trainee Project"
     id="trainee-2"
     title="Dopaminergic Neuron Vulnerability in Parkinson's Disease"
     status="Complete"
@@ -254,7 +254,7 @@ export const TraineeProjectComplete = () => (
 
 export const TraineeProjectClosed = () => (
   <ProjectCard
-    projectType="Trainee"
+    projectType="Trainee Project"
     id="trainee-3"
     title="Role of Inflammation in Parkinson's Progression"
     status="Closed"

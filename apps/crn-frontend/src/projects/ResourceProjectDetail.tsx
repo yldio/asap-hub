@@ -14,7 +14,7 @@ const mockResourceProjectDetail: ResourceProjectDetailType = {
   id: '1',
   title: 'Resource Project Title',
   status: 'Active',
-  projectType: 'Resource',
+  projectType: 'Resource Project',
   resourceType: 'Biospecimen',
   isTeamBased: false,
   startDate: '2023-01-15',
@@ -42,14 +42,8 @@ const mockResourceProjectDetail: ResourceProjectDetailType = {
       role: 'Grantee',
     },
   ],
-  description:
-    "We hypothesize that the functions of multiple Parkinson's disease genes converge on common biochemical pathways involving endocytic organelles and/or mitochondria within vulnerable cell types.",
-  originalGrant: {
-    title: 'Original Grant - Resource Development',
-    description:
-      "We hypothesize that the functions of multiple Parkinson's disease genes converge on common biochemical pathways involving endocytic organelles and/or mitochondria within vulnerable cell types. We will use a comprehensive cell biology tool kit including cutting-edge biochemistry, structural biology, microscopy at different scales, and genome editing tools.",
-    proposalURL: 'https://example.com/proposal',
-  },
+  originalGrant: 'Original Grant - Resource Development',
+  originalGrantProposalId: 'https://example.com/proposal',
   milestones: [
     {
       id: 'm1',

@@ -119,15 +119,13 @@ describe('Index Projects on User event handler', () => {
         },
       );
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
-        listProjectResponse.items
-          .map(mapPayload)
-          .map((item) => ({
-            ...item,
-            data: {
-              ...item.data,
-              _tags: (item.data as { tags?: string[] }).tags || [],
-            },
-          })),
+        listProjectResponse.items.map(mapPayload).map((item) => ({
+          ...item,
+          data: {
+            ...item.data,
+            _tags: (item.data as { tags?: string[] }).tags || [],
+          },
+        })),
       );
     },
   );

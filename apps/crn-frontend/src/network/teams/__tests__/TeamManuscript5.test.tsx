@@ -15,9 +15,8 @@ import {
   act,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { createMemoryHistory, MemoryHistory } from 'history';
-import { ComponentProps, Suspense } from 'react';
-import { Route, Router } from 'react-router-dom';
+import { ComponentProps, Suspense, useEffect } from 'react';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { getManuscript, resubmitManuscript } from '../api';
@@ -31,11 +30,21 @@ jest.setTimeout(100_000);
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 
 const teamId = '42';
-let history = createMemoryHistory({
-  initialEntries: [
-    network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$,
-  ],
-});
+const defaultPath = network({})
+  .teams({})
+  .team({ teamId })
+  .workspace({})
+  .createManuscript({}).$;
+
+// Helper to capture location in tests
+let currentLocation: { pathname: string; search: string } | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentLocation = { pathname: location.pathname, search: location.search };
+  }, [location]);
+  return null;
+};
 
 jest.mock('../../users/api');
 
@@ -82,14 +91,8 @@ jest.mock('../useManuscriptToast', () => {
 
 beforeEach(() => {
   mockSetFormType.mockReset();
+  currentLocation = null;
   jest.spyOn(console, 'error').mockImplementation();
-
-  history = createMemoryHistory({
-    initialEntries: [
-      network({}).teams({}).team({ teamId }).workspace({}).createManuscript({})
-        .$,
-    ],
-  });
 });
 
 afterEach(cleanup);
@@ -103,7 +106,7 @@ const renderPage = async (
     network({}).teams({}).team({ teamId }).workspace.template +
     network({}).teams({}).team({ teamId }).workspace({}).createManuscript
       .template,
-  routerHistory: MemoryHistory = history,
+  initialEntries: string[] = [defaultPath],
 ) => {
   const { container } = render(
     <RecoilRoot
@@ -114,18 +117,21 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router history={routerHistory}>
-              <Route path={path}>
-                <ManuscriptToastProvider>
-                  <EligibilityReasonProvider>
-                    <TeamManuscript
-                      teamId={teamId}
-                      resubmitManuscript={resubmit}
-                    />
-                  </EligibilityReasonProvider>
-                </ManuscriptToastProvider>
-              </Route>
-            </Router>
+            <MemoryRouter initialEntries={initialEntries}>
+              <LocationCapture />
+              <Routes>
+                <Route path={path}>
+                  <ManuscriptToastProvider>
+                    <EligibilityReasonProvider>
+                      <TeamManuscript
+                        teamId={teamId}
+                        resubmitManuscript={resubmit}
+                      />
+                    </EligibilityReasonProvider>
+                  </ManuscriptToastProvider>
+                </Route>
+              </Routes>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>
@@ -162,13 +168,11 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
   mockResubmitManuscript.mockResolvedValue(manuscript);
 
   const resubmitPath = `/network/teams/${teamId}/workspace/resubmit-manuscript/:manuscriptId`;
-  const resubmitHistory = createMemoryHistory({
-    initialEntries: [
-      `/network/teams/${teamId}/workspace/resubmit-manuscript/${manuscript.id}`,
-    ],
-  });
+  const resubmitInitialEntries = [
+    `/network/teams/${teamId}/workspace/resubmit-manuscript/${manuscript.id}`,
+  ];
 
-  await renderPage({}, true, resubmitPath, resubmitHistory);
+  await renderPage({}, true, resubmitPath, resubmitInitialEntries);
 
   const urlTextbox = screen.getByRole('textbox', {
     name: /URL/i,
@@ -236,9 +240,12 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
       }),
       expect.anything(),
     );
-    expect(resubmitHistory.location.pathname).toBe(
-      `/network/teams/${teamId}/workspace`,
-    );
+    await waitFor(() => {
+      expect(currentLocation).not.toBeNull();
+      expect(currentLocation?.pathname).toBe(
+        `/network/teams/${teamId}/workspace`,
+      );
+    });
   });
 });
 
@@ -266,13 +273,11 @@ it('files are not prefilled on manuscript resubmit', async () => {
   mockResubmitManuscript.mockResolvedValue(manuscript);
 
   const resubmitPath = `/network/teams/${teamId}/workspace/resubmit-manuscript/:manuscriptId`;
-  const resubmitHistory = createMemoryHistory({
-    initialEntries: [
-      `/network/teams/${teamId}/workspace/resubmit-manuscript/${manuscript.id}`,
-    ],
-  });
+  const resubmitInitialEntries = [
+    `/network/teams/${teamId}/workspace/resubmit-manuscript/${manuscript.id}`,
+  ];
 
-  await renderPage({}, true, resubmitPath, resubmitHistory);
+  await renderPage({}, true, resubmitPath, resubmitInitialEntries);
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,

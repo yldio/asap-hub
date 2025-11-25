@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import {
   createResearchOutputResponse,
@@ -8,7 +8,6 @@ import {
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
-import { createMemoryHistory, History } from 'history';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -19,7 +18,6 @@ import {
 jest.setTimeout(60000);
 
 describe('on submit', () => {
-  let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
@@ -29,7 +27,6 @@ describe('on submit', () => {
   const getShortDescriptionFromDescription = jest.fn();
 
   beforeEach(() => {
-    history = createMemoryHistory();
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
@@ -64,7 +61,7 @@ describe('on submit', () => {
     const researchTags = [researchTagSubtypeResponse];
 
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -88,7 +85,7 @@ describe('on submit', () => {
           }
           researchTags={researchTags}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(/metabolite/i)).toBeInTheDocument();
@@ -115,7 +112,7 @@ describe('on submit', () => {
   it('can submit published date', async () => {
     const { documentType } = initialResearchOutputData;
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={initialResearchOutputData}
@@ -134,7 +131,7 @@ describe('on submit', () => {
           }
           researchTags={[]}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     const sharingStatus = screen.getByRole('group', {
@@ -159,7 +156,7 @@ describe('on submit', () => {
     const documentType = 'Lab Material' as const;
     const type = 'Animal Model';
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -182,7 +179,7 @@ describe('on submit', () => {
           }
           researchTags={[]}
         />
-      </Router>,
+      </MemoryRouter>,
     );
     fireEvent.change(screen.getByRole('textbox', { name: /Catalog Number/i }), {
       target: { value: 'abc123' },

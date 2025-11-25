@@ -1,7 +1,6 @@
 import { gp2 } from '@asap-hub/fixtures';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import DashboardPageBody from '../DashboardPageBody';
 
 const mockStats = {
@@ -250,10 +249,10 @@ describe('DashboardPageBody', () => {
     });
 
     it('should render View All if there are more than 3 upcoming event items', () => {
-      const history = createMemoryHistory();
-      const pushSpy = jest.spyOn(history, 'push');
+      navigateSpy = null;
       render(
-        <Router history={history}>
+        <MemoryRouter>
+          <NavigationSpy />
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -275,7 +274,7 @@ describe('DashboardPageBody', () => {
             totalOutputs={0}
             announcements={[]}
           />
-        </Router>,
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Upcoming Events' }),
@@ -285,7 +284,7 @@ describe('DashboardPageBody', () => {
 
       fireEvent.click(viewAllButton);
 
-      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/events/upcoming' });
+      expect(navigateSpy).toHaveBeenCalledWith('/events/upcoming');
     });
   });
 
@@ -329,10 +328,10 @@ describe('DashboardPageBody', () => {
     });
 
     it('should render View All', () => {
-      const history = createMemoryHistory();
-      const pushSpy = jest.spyOn(history, 'push');
+      navigateSpy = null;
       render(
-        <Router history={history}>
+        <MemoryRouter>
+          <NavigationSpy />
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -347,7 +346,7 @@ describe('DashboardPageBody', () => {
             totalOutputs={0}
             announcements={[]}
           />
-        </Router>,
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Latest Users' }),
@@ -357,7 +356,7 @@ describe('DashboardPageBody', () => {
 
       fireEvent.click(viewAllButton);
 
-      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/users' });
+      expect(navigateSpy).toHaveBeenCalledWith('/users');
     });
   });
 
@@ -392,10 +391,10 @@ describe('DashboardPageBody', () => {
     });
 
     it('should render View All if there are more than 3 past event items', () => {
-      const history = createMemoryHistory();
-      const pushSpy = jest.spyOn(history, 'push');
+      navigateSpy = null;
       render(
-        <Router history={history}>
+        <MemoryRouter>
+          <NavigationSpy />
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -410,7 +409,7 @@ describe('DashboardPageBody', () => {
             totalOutputs={0}
             announcements={[]}
           />
-        </Router>,
+        </MemoryRouter>,
       );
 
       expect(
@@ -421,7 +420,7 @@ describe('DashboardPageBody', () => {
 
       fireEvent.click(viewAllButton);
 
-      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/events/past' });
+      expect(navigateSpy).toHaveBeenCalledWith('/events/past');
     });
   });
 
@@ -473,10 +472,10 @@ describe('DashboardPageBody', () => {
     });
 
     it('should render View All', () => {
-      const history = createMemoryHistory();
-      const pushSpy = jest.spyOn(history, 'push');
+      navigateSpy = null;
       render(
-        <Router history={history}>
+        <MemoryRouter>
+          <NavigationSpy />
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -491,7 +490,7 @@ describe('DashboardPageBody', () => {
             totalOutputs={9}
             announcements={[]}
           />
-        </Router>,
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Recent Outputs' }),
@@ -501,7 +500,7 @@ describe('DashboardPageBody', () => {
 
       fireEvent.click(viewAllButton);
 
-      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/outputs' });
+      expect(navigateSpy).toHaveBeenCalledWith('/outputs');
     });
   });
 });

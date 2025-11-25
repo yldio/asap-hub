@@ -2,15 +2,13 @@ export {};
 
 const mockSend = jest.fn();
 
-jest.mock('@slack/webhook', () => {
-  return {
-    IncomingWebhook: jest.fn().mockImplementation((url) => {
-      return {
-        send: async (...args: any) => mockSend(...args),
-      };
-    }),
-  };
-});
+jest.mock('@slack/webhook', () => ({
+  IncomingWebhook: jest.fn().mockImplementation((url) => {
+    return {
+      send: async (...args: any) => mockSend(...args),
+    };
+  }),
+}));
 
 describe('sendSlackAlert', () => {
   const OLD_ENV = process.env;

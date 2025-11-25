@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import type { MutableSnapshot } from 'recoil';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';

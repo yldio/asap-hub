@@ -1,3 +1,4 @@
+import { useEffect, act } from 'react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network, sharedResearch, staticPages } from '@asap-hub/routing';
@@ -7,8 +8,6 @@ import { MemoryRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import CheckOnboarded, { navigationPromptHandler } from '../CheckOnboarded';
 import { Auth0Provider, WhenReady } from '../test-utils';
-import { useEffect } from 'react';
-import { act } from 'react';
 
 // Helper component to trigger navigation in tests
 let navigateToPath: ((path: string) => void) | null = null;

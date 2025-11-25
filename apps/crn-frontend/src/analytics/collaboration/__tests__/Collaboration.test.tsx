@@ -19,8 +19,13 @@ import {
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import * as flags from '@asap-hub/flags';
-import { render, screen, waitFor, within } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import {
+  render,
+  screen,
+  waitFor,
+  within,
+  renderHook,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';

@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import {
   createResearchOutputResponse,
@@ -8,7 +8,6 @@ import {
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -26,8 +25,6 @@ describe('on submit', () => {
   const getAuthorSuggestions = jest.fn();
   const getRelatedResearchSuggestions = jest.fn();
   const getShortDescriptionFromDescription = jest.fn();
-
-  const history = createMemoryHistory();
   saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
   saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
   getLabSuggestions.mockResolvedValue([]);
@@ -58,7 +55,7 @@ describe('on submit', () => {
     const documentType = 'Dataset';
     const type = 'Spectroscopy';
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -80,7 +77,7 @@ describe('on submit', () => {
           }
           researchTags={researchTags}
         />
-      </Router>,
+      </MemoryRouter>,
     );
     await userEvent.click(
       await screen.findByRole('textbox', { name: /methods/i }),
@@ -101,7 +98,7 @@ describe('on submit', () => {
     const researchTags = [researchTagMethodResponse];
     const documentType = 'Dataset';
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -123,7 +120,7 @@ describe('on submit', () => {
           }
           researchTags={researchTags}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     const typeDropdown = screen.getByRole('textbox', {

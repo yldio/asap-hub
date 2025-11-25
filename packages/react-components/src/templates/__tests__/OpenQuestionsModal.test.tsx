@@ -51,7 +51,7 @@ describe('triggers the save function', () => {
       <OpenQuestionsModal {...props} onSave={jestFn} />,
     );
 
-    const answerQuestion = (index: number) =>
+    const answerQuestion = async (index: number) =>
       await userEvent.type(
         getByLabelText(
           `Open Question ${index}${
@@ -61,10 +61,10 @@ describe('triggers the save function', () => {
         questions[index]!,
       );
 
-    questions[1] && answerQuestion(1);
-    questions[2] && answerQuestion(2);
-    questions[3] && answerQuestion(3);
-    questions[4] && answerQuestion(4);
+    questions[1] && (await answerQuestion(1));
+    questions[2] && (await answerQuestion(2));
+    questions[3] && (await answerQuestion(3));
+    questions[4] && (await answerQuestion(4));
     await userEvent.click(getByText('Save'));
 
     await waitFor(() =>

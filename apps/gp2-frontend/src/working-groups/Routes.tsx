@@ -1,5 +1,4 @@
 import { WorkingGroupsPage } from '@asap-hub/gp2-components';
-import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Frame from '../Frame';
@@ -14,7 +13,6 @@ const loadWorkingGroupDetail = () =>
 const WorkingGroupList = lazy(loadWorkingGroupList);
 const WorkingGroupDetail = lazy(loadWorkingGroupDetail);
 
-const { workingGroups } = gp2;
 const RoutesComponent: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises

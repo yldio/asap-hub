@@ -1,6 +1,5 @@
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NetworkPage, Paragraph } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSearch } from '../hooks';

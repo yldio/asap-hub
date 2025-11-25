@@ -1723,6 +1723,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.28.4
     "@types/qs": 6.9.11
     qs: 6.11.2
+    react-router-dom: 6.28.0
     typesafe-routes: 9.0.1
     typescript: 4.9.5
   peerDependencies:

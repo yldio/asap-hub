@@ -88,7 +88,9 @@ export function useValidation<T extends ValidationTarget>(
     }
 
     return () => {
-      !skipValidation && input.setCustomValidity('');
+      if (!skipValidation) {
+        input.setCustomValidity('');
+      }
     };
   }, [customValidationMessage, skipValidation]);
 

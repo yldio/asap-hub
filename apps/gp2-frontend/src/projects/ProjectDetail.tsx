@@ -82,17 +82,11 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const isAdministrator =
     currentUser?.role === 'Administrator' || userRole === 'Project manager';
   const projectRoute = projects({}).project({ projectId });
-  const createOutputRoute = projectRoute.createOutput;
-  const duplicateOutputRoute = projectRoute.duplicateOutput;
   const workspaceRoute = projectRoute.workspace({});
   const editRoute = workspaceRoute.edit({});
   const add = isAdministrator ? workspaceRoute.add({}).$ : undefined;
   const edit = isAdministrator ? editRoute.$ : undefined;
-  const overview = projectRoute.overview({}).$;
-  const outputs = projectRoute.outputs({}).$;
   const workspace = workspaceRoute.$;
-  const upcoming = projectRoute.upcoming({}).$;
-  const past = projectRoute.past({}).$;
 
   const updateProjectResources = usePutProjectResources(projectId);
 

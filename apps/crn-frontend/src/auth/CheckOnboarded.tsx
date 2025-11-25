@@ -2,13 +2,7 @@ import { User } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { logout, network, staticPages } from '@asap-hub/routing';
 import { ReactNode, useEffect } from 'react';
-import {
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
 interface CheckOnboardedProps {
   children: ReactNode;
@@ -39,16 +33,11 @@ export const navigationPromptHandler = (
 const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
   const user = useCurrentUserCRN();
   const location = useLocation();
-  const navigate = useNavigate();
 
   // Note: React Router v6 removed history.block()
   // We now check on each navigation attempt
   useEffect(() => {
-    const blocked = navigationPromptHandler(user, location.pathname);
-    if (blocked === false) {
-      // Navigation was blocked - stay on current page
-      // The alert is already shown by navigationPromptHandler
-    }
+    navigationPromptHandler(user, location.pathname);
   }, [user, location.pathname]);
 
   if (!user) {

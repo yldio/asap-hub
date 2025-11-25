@@ -5,12 +5,10 @@
 process.env.LANG = 'en_US';
 process.env.TZ = 'UTC';
 
-module.exports = () => {
-  return {
+module.exports = () => ({
     testFramework: {
       // the jest configuration file path
       // (relative to project root)
       configFile: './jest.config.wallaby.js',
     },
-  };
-};
+  });

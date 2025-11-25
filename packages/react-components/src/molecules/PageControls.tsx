@@ -91,7 +91,7 @@ const disabledTextStyles = css({
 
 // Helper function to create sliding windows over an array
 function* aperture<T>(n: number, arr: T[]): Generator<T[]> {
-  for (let i = 0; i <= arr.length - n; i++) {
+  for (let i = 0; i <= arr.length - n; i += 1) {
     yield arr.slice(i, i + n);
   }
 }
@@ -201,10 +201,11 @@ const PageControls: React.FC<PageControlsProps> = ({
       const bWide = b.wideScreenOnly ? 1 : 0;
       return aWide - bWide;
     })
-    .filter((page, index, arr) => {
-      // Remove duplicates by index, keeping the first occurrence
-      return index === arr.findIndex((p) => p.index === page.index);
-    });
+    .filter(
+      (page, index, arr) =>
+        // Remove duplicates by index, keeping the first occurrence
+        index === arr.findIndex((p) => p.index === page.index),
+    );
 
   const shownPages = Array.from(
     makeFillersMandatory(Array.from(optimizeGaps(desiredPages)) || []),

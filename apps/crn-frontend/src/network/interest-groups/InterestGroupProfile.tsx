@@ -46,9 +46,6 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
   });
 
   if (interestGroup) {
-    const { about, past, upcoming, calendar } = route({
-      interestGroupId,
-    });
     const paths = {
       about: 'about',
       calendar: 'calendar',

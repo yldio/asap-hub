@@ -109,18 +109,6 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   });
 
   if (workingGroup) {
-    const {
-      about,
-      calendar,
-      createOutput,
-      outputs,
-      draftOutputs,
-      past,
-      upcoming,
-      duplicateOutput,
-    } = route({
-      workingGroupId,
-    });
     const paths = {
       about: 'about',
       calendar: 'calendar',

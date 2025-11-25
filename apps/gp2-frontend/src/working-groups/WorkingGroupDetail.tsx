@@ -79,16 +79,10 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const isAdministrator = currentUser?.role === 'Administrator';
   const workingGroupRoute = workingGroups({}).workingGroup({ workingGroupId });
   const resourcesRoute = workingGroupRoute.workspace({});
-  const createOutputRoute = workingGroupRoute.createOutput;
-  const duplicateOutputRoute = workingGroupRoute.duplicateOutput;
   const editRoute = resourcesRoute.edit({});
   const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;
   const edit = isAdministrator ? editRoute.$ : undefined;
-  const overview = workingGroupRoute.overview({}).$;
-  const outputs = workingGroupRoute.outputs({}).$;
   const resources = resourcesRoute.$;
-  const upcoming = workingGroupRoute.upcoming({}).$;
-  const past = workingGroupRoute.past({}).$;
 
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);

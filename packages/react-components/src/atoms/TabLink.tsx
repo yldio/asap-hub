@@ -11,7 +11,6 @@ import IconProps from '../icons/props';
 
 const borderBottomWidth = 4;
 
-const activeClassName = 'active-link';
 const styles = css({
   display: 'inline-block',
   paddingBottom: rem(16 + borderBottomWidth),

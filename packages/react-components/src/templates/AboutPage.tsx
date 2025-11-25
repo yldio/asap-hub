@@ -4,7 +4,7 @@ import AboutPageHeader from './AboutPageHeader';
 import PageConstraints from './PageConstraints';
 
 type AboutPageProps = ComponentProps<typeof AboutPageHeader> &
-  PropsWithChildren<{}>;
+  PropsWithChildren;
 
 const About: React.FC<AboutPageProps> = ({ children }) => (
   <article>

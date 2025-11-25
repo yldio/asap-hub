@@ -100,7 +100,7 @@ describe('UserDetailHeaderCard', () => {
     const uploadInput = screen.getByLabelText(/upload.+avatar/i);
     expect(editButton).toBeVisible();
     expect(uploadInput).not.toHaveAttribute('disabled');
-    userEvent.upload(uploadInput, testFile);
+    await userEvent.upload(uploadInput, testFile);
     expect(onImageSelect).toHaveBeenCalledWith(testFile);
   });
   describe('when passing a editHref', () => {

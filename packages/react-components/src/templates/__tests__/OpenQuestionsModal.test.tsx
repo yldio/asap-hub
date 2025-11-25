@@ -52,7 +52,7 @@ describe('triggers the save function', () => {
     );
 
     const answerQuestion = (index: number) =>
-      userEvent.type(
+      await userEvent.type(
         getByLabelText(
           `Open Question ${index}${
             index === 1 || index === 2 ? '(required)' : '(optional)'
@@ -65,7 +65,7 @@ describe('triggers the save function', () => {
     questions[2] && answerQuestion(2);
     questions[3] && answerQuestion(3);
     questions[4] && answerQuestion(4);
-    userEvent.click(getByText('Save'));
+    await userEvent.click(getByText('Save'));
 
     await waitFor(() =>
       expect(getByText(/save/i).closest('button')).toBeEnabled(),
@@ -107,7 +107,7 @@ it('disables the form elements while submitting', async () => {
     />,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
 
   const form = getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);

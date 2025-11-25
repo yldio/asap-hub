@@ -24,20 +24,20 @@ describe('Layout', () => {
     expect(screen.queryByTitle(/close/i)).not.toBeInTheDocument();
     expect(screen.getByTitle(/menu/i)).toBeInTheDocument();
 
-    userEvent.click(screen.getByLabelText(/toggle menu/i));
+    await userEvent.click(screen.getByLabelText(/toggle menu/i));
     expect(screen.getByTitle(/close/i)).toBeInTheDocument();
     expect(screen.queryByTitle(/menu/i)).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByLabelText(/toggle menu/i));
+    await userEvent.click(screen.getByLabelText(/toggle menu/i));
     expect(screen.queryByTitle(/close/i)).not.toBeInTheDocument();
     expect(screen.getByTitle(/menu/i)).toBeInTheDocument();
   });
 
   it('closes the drawer when clicking the overlay', async () => {
     render(<Layout {...props}>Content</Layout>);
-    userEvent.click(screen.getByLabelText(/toggle menu/i));
+    await userEvent.click(screen.getByLabelText(/toggle menu/i));
 
-    userEvent.click(screen.getByLabelText(/close/i));
+    await userEvent.click(screen.getByLabelText(/close/i));
     expect(screen.getByLabelText(/close/i)).not.toBeVisible();
   });
 
@@ -47,12 +47,14 @@ describe('Layout', () => {
         <Layout {...props}>Content</Layout>
       </MemoryRouter>,
     );
-    userEvent.click(screen.getByLabelText(/toggle menu/i));
+    await userEvent.click(screen.getByLabelText(/toggle menu/i));
     await waitFor(() => {
       expect(screen.getByLabelText(/close/i)).toBeVisible();
     });
 
-    userEvent.click(screen.getAllByText(/people/i, { selector: 'nav *' })[0]!);
+    await userEvent.click(
+      screen.getAllByText(/people/i, { selector: 'nav *' })[0]!,
+    );
     await waitFor(() => {
       expect(screen.getByLabelText(/close/i)).not.toBeVisible();
     });
@@ -65,7 +67,9 @@ describe('Layout', () => {
       </MemoryRouter>,
     );
 
-    userEvent.click(screen.getAllByText(/people/i, { selector: 'nav *' })[0]!);
+    await userEvent.click(
+      screen.getAllByText(/people/i, { selector: 'nav *' })[0]!,
+    );
     expect(screen.getByRole('main').scrollTo).toHaveBeenCalled();
   });
 });

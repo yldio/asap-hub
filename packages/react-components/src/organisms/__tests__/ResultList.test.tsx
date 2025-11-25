@@ -84,7 +84,7 @@ it('renders export as csv button', () => {
     </ResultList>,
   );
   expect(screen.getByText(/download:/i)).toBeVisible();
-  userEvent.click(screen.getByText(/csv/i));
+  await userEvent.click(screen.getByText(/csv/i));
   expect(mockExport).toHaveBeenCalled();
 });
 
@@ -118,7 +118,7 @@ it('triggers an error toast when export fails', async () => {
       </ResultList>
     </ToastContext.Provider>,
   );
-  userEvent.click(screen.getByText(/csv/i));
+  await userEvent.click(screen.getByText(/csv/i));
   expect(mockExport).toHaveBeenCalled();
   await waitFor(() =>
     expect(mockToast).toHaveBeenCalledWith(

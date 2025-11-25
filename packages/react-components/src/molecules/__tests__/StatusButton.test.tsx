@@ -37,8 +37,8 @@ it('renders a StatusButton button item', () => {
       {{ item: 'Second Item', onClick: jest.fn() }}
     </StatusButton>,
   );
-  userEvent.click(screen.getByRole('button'));
-  userEvent.click(screen.getByText('Example Button'));
+  await userEvent.click(screen.getByRole('button'));
+  await userEvent.click(screen.getByText('Example Button'));
 
   expect(onClick).toHaveBeenCalled();
 });
@@ -51,7 +51,7 @@ it('renders a modal on click', () => {
       {{ item: '3', onClick: jest.fn() }}
     </StatusButton>,
   );
-  userEvent.click(screen.getByRole('button'));
+  await userEvent.click(screen.getByRole('button'));
 
   expect(screen.getAllByRole('listitem').map((li) => li.textContent)).toEqual([
     '1',
@@ -73,9 +73,9 @@ it('renders items on modal and hides it on outside click', () => {
     </>,
   );
 
-  userEvent.click(screen.getByRole('button'));
+  await userEvent.click(screen.getByRole('button'));
   screen.getAllByRole('listitem').forEach((e) => expect(e).toBeVisible());
-  userEvent.click(screen.getByRole('heading'));
+  await userEvent.click(screen.getByRole('heading'));
   screen.queryAllByRole('listitem').forEach((e) => expect(e).not.toBeVisible());
 });
 

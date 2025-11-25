@@ -196,7 +196,7 @@ describe('ProjectDetail', () => {
       id: project.id,
       userId: '23',
     });
-    userEvent.click(screen.getByRole('link', { name: /workspace/i }));
+    await userEvent.click(screen.getByRole('link', { name: /workspace/i }));
     expect(
       screen.getByRole('heading', { name: /Workspace Resources/i }),
     ).toBeInTheDocument();
@@ -217,7 +217,7 @@ describe('ProjectDetail', () => {
     expect(
       screen.queryByRole('heading', { name: /Contact/i }),
     ).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('link', { name: /overview/i }));
+    await userEvent.click(screen.getByRole('link', { name: /overview/i }));
 
     expect(
       screen.getByRole('heading', { name: /Contact/i }),
@@ -350,13 +350,13 @@ describe('ProjectDetail', () => {
       });
 
       const addButton = screen.getByRole('link', { name: /add/i });
-      userEvent.click(addButton);
+      await userEvent.click(addButton);
       const typeBox = await screen.findByRole('textbox', { name: /type/i });
-      userEvent.type(typeBox, `${type}{enter}`);
+      await userEvent.type(typeBox, `${type}{enter}`);
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      userEvent.type(titleBox, title);
+      await userEvent.type(titleBox, title);
       const saveButton = screen.getByRole('button', { name: /save/i });
-      userEvent.click(saveButton);
+      await userEvent.click(saveButton);
 
       expect(mockPutProjectResources).toHaveBeenCalledWith(
         project.id,
@@ -397,12 +397,12 @@ describe('ProjectDetail', () => {
       });
 
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
-      userEvent.click(editButton);
+      await userEvent.click(editButton);
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      userEvent.clear(titleBox);
-      userEvent.type(titleBox, title);
+      await userEvent.clear(titleBox);
+      await userEvent.type(titleBox, title);
       const saveButton = screen.getByRole('button', { name: /save/i });
-      userEvent.click(saveButton);
+      await userEvent.click(saveButton);
 
       expect(mockPutProjectResources).toHaveBeenCalledWith(
         project.id,
@@ -417,7 +417,7 @@ describe('ProjectDetail', () => {
       const project = gp2Fixtures.createProjectResponse();
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id });
-      userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
+      await userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });
@@ -427,7 +427,7 @@ describe('ProjectDetail', () => {
       const project = gp2Fixtures.createProjectResponse();
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id });
-      userEvent.click(await screen.findByText(/past events \(1\)/i));
+      await userEvent.click(await screen.findByText(/past events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });

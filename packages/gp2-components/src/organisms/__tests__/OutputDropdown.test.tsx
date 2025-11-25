@@ -50,7 +50,7 @@ describe('OutputDropdown', () => {
         role: 'Administrator',
       });
 
-      userEvent.click(getByText('Share an output'));
+      await userEvent.click(getByText('Share an output'));
       expect(getByText('Test Group')).toBeInTheDocument();
       expect(getByText('Test Project')).toBeInTheDocument();
       expect(queryByText('Completed Project')).not.toBeInTheDocument();
@@ -95,7 +95,7 @@ describe('OutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Share an output'));
+      await userEvent.click(getByText('Share an output'));
       expect(getByText('Test Project 1')).toBeInTheDocument();
       expect(queryByText('Test Project 2')).not.toBeInTheDocument();
       expect(queryByText('Completed Project')).not.toBeInTheDocument();
@@ -126,7 +126,7 @@ describe('OutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Share an output'));
+      await userEvent.click(getByText('Share an output'));
       expect(queryByText('Test Group')).not.toBeInTheDocument();
     });
 
@@ -171,16 +171,16 @@ describe('OutputDropdown', () => {
         role: 'Administrator',
       });
 
-      userEvent.click(getByText('Working Group 1'));
+      await userEvent.click(getByText('Working Group 1'));
       expect(getByTitle('Article')).toBeInTheDocument();
       expect(getByTitle('Article').closest('a')).toHaveAttribute(
         'href',
         '/working-groups/1/create-output/article',
       );
 
-      userEvent.click(getByText('Working Group 1'));
+      await userEvent.click(getByText('Working Group 1'));
 
-      userEvent.click(getByText('Project 1'));
+      await userEvent.click(getByText('Project 1'));
       expect(getByTitle('Article')).toBeInTheDocument();
       expect(getByTitle('Article').closest('a')).toHaveAttribute(
         'href',

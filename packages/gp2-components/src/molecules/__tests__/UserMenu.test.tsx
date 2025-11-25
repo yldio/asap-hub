@@ -35,7 +35,7 @@ describe('UserMenu', () => {
     const closeUserMenu = jest.fn();
     render(<UserMenu {...props} closeUserMenu={closeUserMenu} />);
     const profileLink = screen.getByRole('link', { name: /my profile/i });
-    userEvent.click(profileLink);
+    await userEvent.click(profileLink);
     expect(closeUserMenu).toHaveBeenCalledWith(false);
   });
 
@@ -83,7 +83,7 @@ describe('UserMenu', () => {
       projectsRoute({}).project({ projectId: projects[0]!.id }).$,
     );
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('link', { name: /the first project title/i }),
     );
 
@@ -173,7 +173,9 @@ describe('UserMenu', () => {
       }).$,
     );
 
-    userEvent.click(screen.getByRole('link', { name: /the first wg title/i }));
+    await userEvent.click(
+      screen.getByRole('link', { name: /the first wg title/i }),
+    );
 
     expect(closeUserMenu).toHaveBeenCalledWith(false);
   });

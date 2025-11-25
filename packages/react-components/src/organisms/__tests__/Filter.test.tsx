@@ -15,10 +15,10 @@ it('shows and hides the dropdown menu', () => {
   );
   const filterButton = getByRole('button');
 
-  userEvent.click(filterButton);
+  await userEvent.click(filterButton);
   expect(getByText('Filter by Stuff')).toBeVisible();
 
-  userEvent.click(filterButton);
+  await userEvent.click(filterButton);
   expect(getByText('Filter by Stuff')).not.toBeVisible();
 });
 
@@ -26,7 +26,7 @@ it('hides the dropdown menu when the options changes', () => {
   const { rerender, getByRole, getByText } = render(
     <Filter filterOptions={[{ label: 'F1', value: 'f1' }]} />,
   );
-  userEvent.click(getByRole('button'));
+  await userEvent.click(getByRole('button'));
   expect(getByText('F1')).toBeVisible();
 
   rerender(<Filter filterOptions={[{ label: 'F2', value: 'f2' }]} />);

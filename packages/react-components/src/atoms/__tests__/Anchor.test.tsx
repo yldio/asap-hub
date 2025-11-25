@@ -116,7 +116,7 @@ describe('for an internal link with a router', () => {
     const main = getByRole('main');
     const spyScrollIntoView = jest.spyOn(main, 'scrollIntoView');
 
-    userEvent.click(getByRole('link'));
+    await userEvent.click(getByRole('link'));
     await waitFor(() =>
       expect(spyScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' }),
     );

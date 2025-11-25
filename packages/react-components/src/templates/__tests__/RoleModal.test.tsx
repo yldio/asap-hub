@@ -78,8 +78,8 @@ describe('User Role', () => {
       </StaticRouter>,
     );
 
-    userEvent.type(getByDisplayValue('interests'), ' 1');
-    userEvent.click(getByText('Save'));
+    await userEvent.type(getByDisplayValue('interests'), ' 1');
+    await userEvent.click(getByText('Save'));
     expect(mockSaveFn).toHaveBeenCalledWith({
       reachOut: '',
       researchInterests: 'interests 1',
@@ -104,7 +104,7 @@ describe('User Role', () => {
     );
 
     const saveButton = screen.getByRole('button', { name: /save/i });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     const form = saveButton.closest('form')!;
     expect(form.elements.length).toBeGreaterThan(1);
@@ -156,9 +156,9 @@ describe('Staff Role', () => {
       </StaticRouter>,
     );
 
-    userEvent.type(getByLabelText(/responsibilities/i), 'xample');
-    userEvent.type(getByLabelText(/reach out/i), '23');
-    userEvent.click(getByText('Save'));
+    await userEvent.type(getByLabelText(/responsibilities/i), 'xample');
+    await userEvent.type(getByLabelText(/reach out/i), '23');
+    await userEvent.click(getByText('Save'));
 
     await waitFor(() =>
       expect(getByText(/save/i).closest('button')).toBeEnabled(),
@@ -183,7 +183,7 @@ describe('Staff Role', () => {
       </StaticRouter>,
     );
 
-    userEvent.click(getByText(/save/i));
+    await userEvent.click(getByText(/save/i));
 
     const form = getByText(/save/i).closest('form')!;
     expect(form.elements.length).toBeGreaterThan(1);

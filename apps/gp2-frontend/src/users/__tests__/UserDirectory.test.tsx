@@ -141,7 +141,7 @@ it.each`
       displayFilters: true,
       filters: { [name]: [value] },
     });
-    userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
     expect(mockUpdateFilter).toHaveBeenCalledWith('/users', {
       regions: [],
       tags: [],
@@ -168,7 +168,7 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
       }),
     ),
   );
-  userEvent.click(screen.getByRole('button', { name: 'Export Export' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Export Export' }));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.stringMatching('user_export.csv'),
     expect.anything(),

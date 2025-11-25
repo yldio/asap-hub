@@ -11,7 +11,9 @@ describe('ShareOutputButton', () => {
   });
   it('renders the right links', () => {
     render(<ShareOutputButton entityType={'workingGroup'} id={'123'} />);
-    userEvent.click(screen.getByRole('button', { name: /share an output/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /share an output/i }),
+    );
     expect(
       screen
         .getAllByRole('link')
@@ -27,7 +29,9 @@ describe('ShareOutputButton', () => {
   });
   it('renders links for working groups', () => {
     render(<ShareOutputButton entityType={'workingGroup'} id={'123'} />);
-    userEvent.click(screen.getByRole('button', { name: /share an output/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /share an output/i }),
+    );
     expect(
       screen
         .getAllByRole('link')
@@ -38,7 +42,9 @@ describe('ShareOutputButton', () => {
   });
   it('renders links for projects', () => {
     render(<ShareOutputButton entityType={'project'} id={'123'} />);
-    userEvent.click(screen.getByRole('button', { name: /share an output/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /share an output/i }),
+    );
     expect(
       screen
         .getAllByRole('link')

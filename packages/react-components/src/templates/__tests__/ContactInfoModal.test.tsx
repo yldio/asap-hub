@@ -65,9 +65,9 @@ it('fires onSave when submitting', async () => {
     />,
   );
 
-  userEvent.clear(getByLabelText(/email/i));
+  await userEvent.clear(getByLabelText(/email/i));
   await userEvent.type(getByLabelText(/email/i), 'new-contact@example.com');
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
   expect(handleSave).toHaveBeenLastCalledWith(
     expect.objectContaining({ contactEmail: 'new-contact@example.com' }),
   );
@@ -86,9 +86,9 @@ it('does not fire onSave when the email is invalid', async () => {
     />,
   );
 
-  userEvent.clear(getByLabelText(/email/i));
+  await userEvent.clear(getByLabelText(/email/i));
   await userEvent.type(getByLabelText(/email/i), '.');
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
   expect(handleSave).not.toHaveBeenCalled();
 });
 
@@ -107,7 +107,7 @@ it('disables the form elements while submitting', async () => {
     />,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
 
   const form = getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);

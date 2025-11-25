@@ -87,7 +87,7 @@ describe('ShareOutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Share an output'));
+      await userEvent.click(getByText('Share an output'));
       expect(getByText('Correct group')).toBeInTheDocument();
       expect(queryByText('Wrong group')).not.toBeInTheDocument();
     });
@@ -108,7 +108,7 @@ describe('ShareOutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Share an output'));
+      await userEvent.click(getByText('Share an output'));
       expect(getByText('Correct team')).toBeInTheDocument();
       expect(queryByText('Wrong team')).not.toBeInTheDocument();
     });
@@ -144,7 +144,7 @@ describe('ShareOutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Team One'));
+      await userEvent.click(getByText('Team One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
     });
     it('let you select a working group', () => {
@@ -159,7 +159,7 @@ describe('ShareOutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Group One'));
+      await userEvent.click(getByText('Group One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
     });
   });
@@ -188,16 +188,16 @@ describe('ShareOutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Team One'));
+      await userEvent.click(getByText('Team One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
       expect(getByTitle('Bioinformatics').closest('a')).toHaveAttribute(
         'href',
         '/network/teams/1/create-output/bioinformatics',
       );
 
-      userEvent.click(getByText('Team One'));
+      await userEvent.click(getByText('Team One'));
 
-      userEvent.click(getByText('Group One'));
+      await userEvent.click(getByText('Group One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
       expect(getByTitle('Bioinformatics').closest('a')).toHaveAttribute(
         'href',
@@ -209,11 +209,11 @@ describe('ShareOutputDropdown', () => {
         teams,
       });
 
-      userEvent.click(getByText('Team One'));
+      await userEvent.click(getByText('Team One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
       expect(queryByText('Team Two')).not.toBeInTheDocument();
 
-      userEvent.click(getByText('Team One'));
+      await userEvent.click(getByText('Team One'));
       expect(getByText('Team Two')).toBeInTheDocument();
     });
   });

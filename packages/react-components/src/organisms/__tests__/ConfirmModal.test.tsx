@@ -46,7 +46,7 @@ it('triggers the save function', async () => {
     />,
   );
   const publish = getByText(/Publish and Explore/i);
-  userEvent.click(publish);
+  await userEvent.click(publish);
 
   expect(jestFn).toHaveBeenCalled();
 
@@ -64,7 +64,7 @@ it('triggers the cancel function', async () => {
     />,
   );
   const cancel = getByText(/Cancel/i);
-  userEvent.click(cancel);
+  await userEvent.click(cancel);
 
   expect(jestFn).toHaveBeenCalled();
 });
@@ -85,7 +85,7 @@ it('disables publish & back while submitting', async () => {
   );
   const publish = getByText(/Publish and Explore/i);
 
-  userEvent.click(publish);
+  await userEvent.click(publish);
   expect(publish.closest('button')).toBeDisabled();
   expect(getByText(/back/i).closest('a')).not.toHaveAttribute('href');
 
@@ -109,7 +109,7 @@ it('displays error message when save fails', async () => {
   );
 
   const publish = getByText(/Publish and Explore/i);
-  userEvent.click(publish);
+  await userEvent.click(publish);
   act(rejectSubmit);
 
   await waitFor(() => {

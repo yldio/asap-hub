@@ -224,7 +224,9 @@ describe('form buttons', () => {
         published: false,
         researchOutputData: createResearchOutputResponse(),
       });
-      userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
+      await userEvent.click(
+        screen.getByRole('button', { name: /Save Draft/i }),
+      );
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
       expect(screen.getByText(/Keep and save/i)).toBeVisible();
     });
@@ -236,7 +238,7 @@ describe('form buttons', () => {
         researchOutputData: createResearchOutputResponse(),
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
       expect(screen.getByText(/Keep and publish/i)).toBeVisible();
     });
@@ -248,9 +250,11 @@ describe('form buttons', () => {
         researchOutputData: createResearchOutputResponse(),
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+      await userEvent.click(
+        screen.getAllByRole('button', { name: /Cancel/i })[0]!,
+      );
       expect(screen.queryByText(/Keep the same description/i)).toBeNull();
     });
 
@@ -266,9 +270,9 @@ describe('form buttons', () => {
         },
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Keep and publish/i }),
       );
       await waitFor(() => {
@@ -288,16 +292,16 @@ describe('form buttons', () => {
         },
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Keep and publish/i }),
       );
       await waitFor(() => {
         expect(screen.queryByText(/Keep the same description/i)).toBeNull();
         expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.queryByText(/Keep the same description/i)).toBeNull();
     });
   });
@@ -310,7 +314,7 @@ describe('form buttons', () => {
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
@@ -326,11 +330,13 @@ describe('form buttons', () => {
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
-      userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+      await userEvent.click(
+        screen.getAllByRole('button', { name: /Cancel/i })[0]!,
+      );
       expect(
         screen.queryByText(/Publish new version for the whole hub?/i),
       ).toBeNull();
@@ -346,11 +352,11 @@ describe('form buttons', () => {
           link: '',
         },
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Publish new version/i }),
       );
       await waitFor(() => {
@@ -371,11 +377,11 @@ describe('form buttons', () => {
           link: '',
         },
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Publish new version/i }),
       );
       await waitFor(() => {
@@ -384,7 +390,7 @@ describe('form buttons', () => {
         ).toBeNull();
         expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.queryByText(/Publish new version for the whole hub?/i),
       ).toBeNull();

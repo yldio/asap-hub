@@ -73,7 +73,7 @@ describe('AssignedUsersAvatarList', () => {
     const plusAvatar = screen.getByLabelText(
       /Profile picture placeholder: \+2/,
     );
-    userEvent.hover(plusAvatar.parentElement!);
+    await userEvent.hover(plusAvatar.parentElement!);
 
     expect(screen.getByText(tooltipText)).toBeVisible();
 

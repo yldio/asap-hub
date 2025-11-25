@@ -78,10 +78,10 @@ describe('Routes', () => {
     expect(upcomingEventsLink).toBeVisible();
     expect(pastEventsLink).toBeVisible();
 
-    userEvent.click(upcomingEventsLink);
+    await userEvent.click(upcomingEventsLink);
     expect(screen.getByText('No upcoming events available.')).toBeVisible();
 
-    userEvent.click(pastEventsLink);
+    await userEvent.click(pastEventsLink);
     expect(await screen.findByText('No past events available.')).toBeVisible();
   });
 });

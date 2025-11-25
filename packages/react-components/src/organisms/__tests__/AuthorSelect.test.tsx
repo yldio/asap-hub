@@ -130,7 +130,7 @@ it('renders a new author option for new values', async () => {
     />,
   );
 
-  userEvent.type(getByRole('textbox'), 'Chris B');
+  await userEvent.type(getByRole('textbox'), 'Chris B');
 
   await waitFor(() => {
     expect(queryByText(/loading/i)).not.toBeInTheDocument();
@@ -171,7 +171,7 @@ it('renders the warning label correctly for a required author', () => {
     />,
   );
 
-  userEvent.click(getByRole('textbox'));
+  await userEvent.click(getByRole('textbox'));
 
   expect(getByText('Please select at least one author.')).toBeVisible();
 

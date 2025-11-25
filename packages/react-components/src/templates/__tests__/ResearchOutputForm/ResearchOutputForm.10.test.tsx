@@ -65,8 +65,8 @@ it('renders impact input and does not throw when getImpactSuggestions is noop', 
 
   const impactInput = screen.getByRole('textbox', { name: /impact/i });
   expect(impactInput).toBeInTheDocument();
-  userEvent.click(impactInput);
-  userEvent.type(impactInput, 'Test');
+  await userEvent.click(impactInput);
+  await userEvent.type(impactInput, 'Test');
 
   expect(
     screen.queryByText(/no impact options match/i),
@@ -86,8 +86,8 @@ it('renders category input and does not throw when getCategorySuggestions is noo
 
   const categoryInput = screen.getByRole('textbox', { name: /category/i });
   expect(categoryInput).toBeInTheDocument();
-  userEvent.click(categoryInput);
-  userEvent.type(categoryInput, 'Test');
+  await userEvent.click(categoryInput);
+  await userEvent.type(categoryInput, 'Test');
 
   expect(
     screen.queryByText(/no category options match/i),

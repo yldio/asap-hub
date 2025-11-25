@@ -120,10 +120,10 @@ describe('on submit', () => {
 
     editorRef.current?.focus();
     const descriptionEditor = screen.getByTestId('editor');
-    userEvent.click(descriptionEditor);
-    userEvent.tab();
+    await userEvent.click(descriptionEditor);
+    await userEvent.tab();
     fireEvent.input(descriptionEditor, { data: data.descriptionMD });
-    userEvent.tab();
+    await userEvent.tab();
 
     fireEvent.change(
       screen.getByRole('textbox', { name: /short description/i }),
@@ -156,7 +156,7 @@ describe('on submit', () => {
 
   const saveDraft = async () => {
     const button = screen.getByRole('button', { name: /Save Draft/i });
-    userEvent.click(button);
+    await userEvent.click(button);
 
     expect(
       await screen.findByRole('button', { name: /Save Draft/i }),

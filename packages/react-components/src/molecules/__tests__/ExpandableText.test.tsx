@@ -26,7 +26,7 @@ describe('ExpandableText', () => {
     const button = screen.getByRole('button');
     expect(button).toBeVisible();
     expect(button.textContent).toMatchInlineSnapshot(`"Show moreChevron Down"`);
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(button.textContent).toMatchInlineSnapshot(`"Show lessChevron Down"`);
   });
 
@@ -47,7 +47,7 @@ describe('ExpandableText', () => {
     const button = screen.getByRole('button');
     expect(button).toBeVisible();
     expect(button.textContent).toMatchInlineSnapshot(`"Show more ↓"`);
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(button.textContent).toMatchInlineSnapshot(`"Show less ↑"`);
   });
 });

@@ -143,13 +143,13 @@ it('calls getResearchOutputs with the right arguments', async () => {
     new Set(),
     userId,
   );
-  userEvent.type(getByRole('searchbox'), searchQuery);
+  await userEvent.type(getByRole('searchbox'), searchQuery);
 
-  userEvent.click(getByText('Filters'));
+  await userEvent.click(getByText('Filters'));
   const checkbox = getByLabelText('Grant Document');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
 
   await waitFor(() =>
@@ -181,7 +181,7 @@ it('triggers export with the same parameters and custom filename', async () => {
     userId,
   );
   // Filter is already set in URL, so verify it's checked and don't toggle it
-  userEvent.click(getByText('Filters'));
+  await userEvent.click(getByText('Filters'));
   const checkbox = getByLabelText('Grant Document');
   expect(checkbox).toBeChecked();
 

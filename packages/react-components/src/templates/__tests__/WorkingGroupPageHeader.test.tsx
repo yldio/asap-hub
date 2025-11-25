@@ -68,7 +68,7 @@ it('copy button copies pointOfContact email', () => {
 
   const copyButton = getByRole('button', { name: 'Copy' });
   expect(copyButton).toBeVisible();
-  userEvent.click(copyButton);
+  await userEvent.click(copyButton);
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
     pointOfContact?.user.email,
   );

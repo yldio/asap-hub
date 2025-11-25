@@ -40,7 +40,9 @@ describe('FilterSearchExport', () => {
         onFiltersClick={mockedOnFiltersClick}
       />,
     );
-    userEvent.click(screen.getByRole('button', { name: 'Filter Filters' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Filter Filters' }),
+    );
     expect(mockedOnFiltersClick).toHaveBeenCalledTimes(1);
   });
   it('uses the onExportClick when export is clicked', () => {
@@ -52,7 +54,9 @@ describe('FilterSearchExport', () => {
         onExportClick={mockedOnExportClick}
       />,
     );
-    userEvent.click(screen.getByRole('button', { name: 'Export Export' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Export Export' }),
+    );
     expect(mockedOnExportClick).toHaveBeenCalledTimes(1);
   });
   it('uses the searchQueary on the searchbox', () => {
@@ -69,7 +73,7 @@ describe('FilterSearchExport', () => {
         onSearchQueryChange={mockedSearchQueryChange}
       />,
     );
-    userEvent.type(screen.getByRole('searchbox'), 'a');
+    await userEvent.type(screen.getByRole('searchbox'), 'a');
     expect(mockedSearchQueryChange).toHaveBeenCalledWith('a');
   });
 });

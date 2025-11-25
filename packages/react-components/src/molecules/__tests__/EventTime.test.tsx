@@ -64,7 +64,7 @@ describe('a tooltip', () => {
         endDateTimeZone="Europe/Berlin"
       />,
     );
-    userEvent.click(getByTitle(/info/i));
+    await userEvent.click(getByTitle(/info/i));
     expect(getByRole('tooltip')).toHaveTextContent(
       /\D10:00\D.*\D11:00\D.*GMT\+1\D/,
     );
@@ -80,7 +80,7 @@ describe('a tooltip', () => {
         endDateTimeZone="Europe/Tallinn"
       />,
     );
-    userEvent.click(getByTitle(/info/i));
+    await userEvent.click(getByTitle(/info/i));
     expect(getByRole('tooltip')).toHaveTextContent(
       /\D10:00\D.*GMT\+1\D.*\D12:00\D.*GMT\+2\D/,
     );

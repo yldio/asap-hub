@@ -79,7 +79,8 @@ describe('Events', () => {
     it('can search for events', async () => {
       await renderEventsPage(route);
       const searchBox = screen.getByRole('searchbox');
-      userEvent.type(searchBox, 'searchterm');
+      // Select all existing text and replace it with new text
+      await userEvent.type(searchBox, '{selectall}searchterm');
       await waitFor(() =>
         expect(mockGetEventsFromAlgolia).toHaveBeenLastCalledWith(
           expect.anything(),

@@ -71,7 +71,7 @@ describe('UserProjects', () => {
     renderUserProjects(projects);
 
     const button = screen.getByRole('button', { name: /Show more/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
   });
   it('does not show a more button for less than 3 projects', async () => {
@@ -91,7 +91,7 @@ describe('UserProjects', () => {
     expect(screen.getByRole('link', { name: 'a title 2' })).toBeVisible();
     expect(screen.getByText('a title 3')).not.toBeVisible();
     const button = screen.getByRole('button', { name: /Show more/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(screen.getByText('a title 3')).toBeVisible();
   });
 });

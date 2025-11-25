@@ -21,6 +21,6 @@ it('links back to sign in', () => {
     </MemoryRouter>,
   );
 
-  userEvent.click(getByText(/sign.+in/i));
+  await userEvent.click(getByText(/sign.+in/i));
   expect(getByText('Signin page')).toBeVisible();
 });

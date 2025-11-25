@@ -14,31 +14,31 @@ const defaultProps: ComponentProps<typeof ResourceModal> = {
 
 const save = () => {
   const saveButton = screen.getByRole('button', { name: /save/i });
-  userEvent.click(saveButton);
+  await userEvent.click(saveButton);
   return saveButton;
 };
 
 const deleteClick = () => {
   const deleteButton = screen.getByRole('button', { name: /delete/i });
-  userEvent.click(deleteButton);
+  await userEvent.click(deleteButton);
   return deleteButton;
 };
 
 const typeBox = () => screen.getByRole('textbox', { name: /type/i });
 const enterType = (type: string) => {
-  userEvent.type(typeBox(), `${type}{enter}`);
+  await userEvent.type(typeBox(), `${type}{enter}`);
 };
 const titleBox = () => screen.getByRole('textbox', { name: /title/i });
-const enterTitle = (title: string) => userEvent.type(titleBox(), title);
+const enterTitle = (title: string) => await userEvent.type(titleBox(), title);
 const descriptionBox = () =>
   screen.getByRole('textbox', { name: /description/i });
 const enterDescription = (description: string) =>
-  userEvent.type(descriptionBox(), description);
+  await userEvent.type(descriptionBox(), description);
 
 const linkBox = () => screen.getByRole('textbox', { name: /url/i });
 const enterLink = (link: string) => {
-  userEvent.clear(linkBox());
-  userEvent.type(linkBox(), link);
+  await userEvent.clear(linkBox());
+  await userEvent.type(linkBox(), link);
 };
 
 describe('ResourceModal', () => {
@@ -76,7 +76,7 @@ describe('ResourceModal', () => {
       const { getUserConfirmation } = renderResourseModalWithDialog();
       enterType('Link');
       const cancelButton = screen.getByRole('link', { name: /cancel/i });
-      userEvent.click(cancelButton);
+      await userEvent.click(cancelButton);
       expect(getUserConfirmation).toHaveBeenCalledTimes(1);
     });
 
@@ -87,14 +87,14 @@ describe('ResourceModal', () => {
       enterTitle('A new title');
       enterDescription('A new description');
       const cancelButton = screen.getByRole('link', { name: /cancel/i });
-      userEvent.click(cancelButton);
+      await userEvent.click(cancelButton);
       expect(getUserConfirmation).toHaveBeenCalledTimes(1);
     });
 
     it(`the dialog doesn't show when the user doesn't add new changes`, () => {
       const { getUserConfirmation } = renderResourseModalWithDialog();
       const cancelButton = screen.getByRole('link', { name: /cancel/i });
-      userEvent.click(cancelButton);
+      await userEvent.click(cancelButton);
       expect(getUserConfirmation).not.toHaveBeenCalled();
     });
 
@@ -102,7 +102,7 @@ describe('ResourceModal', () => {
       const { getUserConfirmation } = renderResourseModalWithDialog();
       enterType('Link');
       const cancelButton = screen.getByRole('link', { name: /cancel/i });
-      userEvent.click(cancelButton);
+      await userEvent.click(cancelButton);
       expect(getUserConfirmation).toHaveBeenCalledTimes(1);
     });
     it('the dialog shows when the user changes the link', () => {
@@ -112,7 +112,7 @@ describe('ResourceModal', () => {
 
       enterLink('http://example2.com');
       const cancelButton = screen.getByRole('link', { name: /cancel/i });
-      userEvent.click(cancelButton);
+      await userEvent.click(cancelButton);
       expect(getUserConfirmation).toHaveBeenCalledTimes(1);
     });
   });

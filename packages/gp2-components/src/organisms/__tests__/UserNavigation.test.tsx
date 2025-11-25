@@ -13,7 +13,7 @@ describe('UserNavigation', () => {
   it('opens user menu when clicked', () => {
     render(<UserNavigation {...props} />);
 
-    userEvent.click(screen.getByLabelText(/toggle.+user menu/i));
+    await userEvent.click(screen.getByLabelText(/toggle.+user menu/i));
 
     expect(screen.getByText(/Log Out/i, { selector: 'p' })).toBeVisible();
   });

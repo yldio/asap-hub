@@ -85,8 +85,8 @@ describe('on submit', () => {
     const organisms = await screen.findByRole('textbox', {
       name: /organisms/i,
     });
-    userEvent.click(organisms);
-    userEvent.click(screen.getByText('Rat'));
+    await userEvent.click(organisms);
+    await userEvent.click(screen.getByText('Rat'));
 
     expect(screen.getByText('Rat')).toBeInTheDocument();
     fireEvent.change(typeDropdown, {
@@ -147,8 +147,8 @@ describe('on submit', () => {
     const environments = await screen.findByRole('textbox', {
       name: /environments/i,
     });
-    userEvent.click(environments);
-    userEvent.click(screen.getByText('In Vitro'));
+    await userEvent.click(environments);
+    await userEvent.click(screen.getByText('In Vitro'));
 
     expect(screen.getByText(/In Vitro/i)).toBeInTheDocument();
     fireEvent.change(typeDropdown, {

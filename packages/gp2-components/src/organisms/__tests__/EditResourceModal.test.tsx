@@ -58,10 +58,10 @@ describe('EditResource', () => {
     });
 
     const titleBox = screen.getByRole('textbox', { name: /title/i });
-    userEvent.clear(titleBox);
-    userEvent.type(titleBox, title);
+    await userEvent.clear(titleBox);
+    await userEvent.type(titleBox, title);
     const saveButton = screen.getByRole('button', { name: /save/i });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     await waitFor(() => expect(saveButton).toBeEnabled());
     expect(updateResources).toHaveBeenCalledWith([
@@ -98,10 +98,10 @@ describe('EditResource', () => {
     const title = 'a changed title';
 
     const titleBox = screen.getByRole('textbox', { name: /title/i });
-    userEvent.clear(titleBox);
-    userEvent.type(titleBox, title);
+    await userEvent.clear(titleBox);
+    await userEvent.type(titleBox, title);
     const saveButton = screen.getByRole('button', { name: /save/i });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     await waitFor(() => expect(saveButton).toBeEnabled());
     expect(updateResources).toHaveBeenCalledWith([
@@ -139,7 +139,7 @@ describe('EditResource', () => {
     });
 
     const deleteButton = screen.getByRole('button', { name: /delete/i });
-    userEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
 
     await waitFor(() => expect(deleteButton).toBeEnabled());
     expect(updateResources).toHaveBeenCalledWith([resources[0], resources[2]]);

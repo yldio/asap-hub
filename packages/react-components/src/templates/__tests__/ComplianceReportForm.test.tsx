@@ -64,20 +64,20 @@ it('data is sent on form submission and calls setManuscript', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByLabelText(/Status/i));
+  await userEvent.click(screen.getByLabelText(/Status/i));
   await act(async () => {
-    userEvent.click(screen.getByText(/Addendum Required/i));
+    await userEvent.click(screen.getByText(/Addendum Required/i));
   });
 
   const shareButton = screen.getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
 
-  userEvent.click(shareButton);
+  await userEvent.click(shareButton);
 
   const confirmButton = screen.getByRole('button', {
     name: /Share Compliance Report/i,
   });
-  userEvent.click(confirmButton);
+  await userEvent.click(confirmButton);
 
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
@@ -115,20 +115,20 @@ it('data is sent on form submission without calling setManuscript', async () => 
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByLabelText(/Status/i));
+  await userEvent.click(screen.getByLabelText(/Status/i));
   await act(async () => {
-    userEvent.click(screen.getByText(/Addendum Required/i));
+    await userEvent.click(screen.getByText(/Addendum Required/i));
   });
 
   const shareButton = screen.getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
 
-  userEvent.click(shareButton);
+  await userEvent.click(shareButton);
 
   const confirmButton = screen.getByRole('button', {
     name: /Share Compliance Report/i,
   });
-  userEvent.click(confirmButton);
+  await userEvent.click(confirmButton);
 
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
@@ -294,7 +294,7 @@ it('should show compliant modal when compliant status is selected', async () => 
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByLabelText(/Status/i));
+  await userEvent.click(screen.getByLabelText(/Status/i));
   await act(async () => {
     await userEvent.click(screen.getByText(/Compliant/i));
   });
@@ -302,7 +302,7 @@ it('should show compliant modal when compliant status is selected', async () => 
   const shareButton = screen.getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
 
-  userEvent.click(shareButton);
+  await userEvent.click(shareButton);
 
   const compliantModal = screen.getByText(
     /Share compliance report and set status to compliant\?/i,
@@ -325,7 +325,7 @@ it('should show "closed (other)" modal when compliant status is selected', async
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByLabelText(/Status/i));
+  await userEvent.click(screen.getByLabelText(/Status/i));
   await act(async () => {
     await userEvent.click(screen.getByText(/Closed \(other\)/i));
   });
@@ -333,7 +333,7 @@ it('should show "closed (other)" modal when compliant status is selected', async
   const shareButton = screen.getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
 
-  userEvent.click(shareButton);
+  await userEvent.click(shareButton);
 
   const compliantModal = screen.getByText(
     /Share compliance report and set status to closed \(other\)\?/i,

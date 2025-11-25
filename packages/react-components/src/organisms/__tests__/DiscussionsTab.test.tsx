@@ -34,18 +34,18 @@ describe('DiscussionsTab', () => {
   it('opens discussion modal when clicking the button', async () => {
     render(<DiscussionsTab {...defaultProps} />);
 
-    userEvent.click(screen.getByText('Start Discussion'));
+    await userEvent.click(screen.getByText('Start Discussion'));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
   it('closes modal when clicking Cancel Discussion', async () => {
     render(<DiscussionsTab {...defaultProps} />);
 
-    userEvent.click(screen.getByText('Start Discussion'));
+    await userEvent.click(screen.getByText('Start Discussion'));
     await act(async () => {
-      userEvent.click(screen.getByText('Cancel'));
+      await userEvent.click(screen.getByText('Cancel'));
     });
-    userEvent.click(screen.getByText('Cancel Discussion'));
+    await userEvent.click(screen.getByText('Cancel Discussion'));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -53,18 +53,18 @@ describe('DiscussionsTab', () => {
     mockCreateDiscussion.mockResolvedValueOnce('new-discussion-id');
     render(<DiscussionsTab {...defaultProps} />);
 
-    userEvent.click(screen.getByText('Start Discussion'));
+    await userEvent.click(screen.getByText('Start Discussion'));
 
-    userEvent.type(screen.getByLabelText(/title/i), 'Test Discussion');
+    await userEvent.type(screen.getByLabelText(/title/i), 'Test Discussion');
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'Test Message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
 
-    userEvent.click(screen.getByRole('button', { name: /send/i }));
+    await userEvent.click(screen.getByRole('button', { name: /send/i }));
 
     await waitFor(() => {
       expect(mockCreateDiscussion).toHaveBeenCalledWith(
@@ -122,7 +122,7 @@ describe('DiscussionsTab', () => {
     }));
 
     render(<DiscussionsTab {...defaultProps} discussions={discussions} />);
-    userEvent.click(screen.getByText('Show more'));
+    await userEvent.click(screen.getByText('Show more'));
 
     discussions.forEach((discussion) => {
       expect(screen.getByText(discussion.title)).toBeInTheDocument();

@@ -17,7 +17,7 @@ it('emits value changes', () => {
   const handleChange = jest.fn();
   render(<TextField value="val" onChange={handleChange} />);
 
-  userEvent.type(screen.getByRole('textbox'), 'u');
+  await userEvent.type(screen.getByRole('textbox'), 'u');
   expect(handleChange).toHaveBeenLastCalledWith('valu');
 });
 

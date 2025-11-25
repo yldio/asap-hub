@@ -89,6 +89,6 @@ it('emits value changes', () => {
       onChange={handleChange}
     />,
   );
-  userEvent.click(getByLabelText('Red'));
+  await userEvent.click(getByLabelText('Red'));
   expect(handleChange).toHaveBeenLastCalledWith('red');
 });

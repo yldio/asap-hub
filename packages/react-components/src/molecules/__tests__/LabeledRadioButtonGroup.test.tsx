@@ -96,7 +96,7 @@ it('emits value changes', () => {
       onChange={handleChange}
     />,
   );
-  userEvent.click(getByLabelText('Gatwick'));
+  await userEvent.click(getByLabelText('Gatwick'));
   expect(handleChange).toHaveBeenLastCalledWith('LGW');
 });
 

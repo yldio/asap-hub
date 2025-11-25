@@ -128,7 +128,7 @@ describe('ShareOutput', () => {
       projects: [{ id: '42', title: 'a title' }],
     });
 
-    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    await userEvent.click(screen.getByRole('button', { name: /save/i }));
     expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
     expect(mockUpdateOutput).toHaveBeenCalledWith(
       id,
@@ -149,7 +149,7 @@ describe('ShareOutput', () => {
       id,
     });
 
-    userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+    await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
 
     await waitFor(() => {
       expect(
@@ -183,7 +183,7 @@ describe('ShareOutput', () => {
       projects: [{ id: '42', title: 'a title' }],
     });
 
-    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    await userEvent.click(screen.getByRole('button', { name: /save/i }));
     expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
 
     expect(mockUpdateOutput).toHaveBeenCalled();
@@ -195,7 +195,7 @@ describe('ShareOutput', () => {
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-    userEvent.type(url, 'a');
+    await userEvent.type(url, 'a');
     url.blur();
 
     expect(
@@ -219,7 +219,7 @@ describe('ShareOutput', () => {
       projects: [{ id: '42', title: 'a title' }],
     });
 
-    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    await userEvent.click(screen.getByRole('button', { name: /save/i }));
     expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
 
     expect(mockUpdateOutput).toHaveBeenCalled();

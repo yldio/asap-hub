@@ -35,7 +35,7 @@ it('can close toast messages', () => {
       <TwoToasts />
     </ToastStack>,
   );
-  userEvent.click(getByTitle(getByText('t1').closest('li')!, /close/i));
+  await userEvent.click(getByTitle(getByText('t1').closest('li')!, /close/i));
   expect(getByRole('list')).toHaveTextContent('t2');
   expect(getByRole('list')).not.toHaveTextContent('t1');
 });

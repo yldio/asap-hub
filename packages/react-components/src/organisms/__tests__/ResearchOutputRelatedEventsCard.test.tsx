@@ -35,7 +35,7 @@ it('should render message when there is no match', async () => {
       getRelatedEventSuggestions={loadOptions}
     />,
   );
-  userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
+  await userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
   await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
   expect(queryByText(/no related events match/i)).toBeInTheDocument();
 });
@@ -57,8 +57,8 @@ it('Can select an option', async () => {
       onChangeRelatedEvents={mockOnChange}
     />,
   );
-  userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
+  await userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
   await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
-  userEvent.click(getByText('Event 1'));
+  await userEvent.click(getByText('Event 1'));
   expect(mockOnChange).toHaveBeenCalledWith(result, expect.anything());
 });

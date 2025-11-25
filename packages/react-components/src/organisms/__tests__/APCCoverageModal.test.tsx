@@ -41,7 +41,7 @@ describe('APCCoverageModal', () => {
     expect(
       await findByRole('heading', { name: 'APC Coverage' }),
     ).toBeInTheDocument();
-    userEvent.click(getByText('Cancel'));
+    await userEvent.click(getByText('Cancel'));
     expect(mockOnDismiss).toHaveBeenCalledTimes(1);
   });
 
@@ -57,7 +57,7 @@ describe('APCCoverageModal', () => {
     const updateButton = getByRole('button', { name: /Update/ });
     expect(updateButton).toBeDisabled();
 
-    userEvent.click(getByRole('radio', { name: 'Not Requested' }));
+    await userEvent.click(getByRole('radio', { name: 'Not Requested' }));
 
     await waitFor(() => {
       expect(updateButton).toBeEnabled();
@@ -81,7 +81,7 @@ describe('APCCoverageModal', () => {
       await findByRole('heading', { name: 'APC Coverage' }),
     ).toBeInTheDocument();
 
-    userEvent.click(getByRole('button', { name: /Update/ }));
+    await userEvent.click(getByRole('button', { name: /Update/ }));
 
     await waitFor(() => {
       expect(mockOnConfirm).toHaveBeenCalledWith({
@@ -110,7 +110,7 @@ describe('APCCoverageModal', () => {
       await findByRole('heading', { name: 'APC Coverage' }),
     ).toBeInTheDocument();
 
-    userEvent.click(getByRole('button', { name: /Update/ }));
+    await userEvent.click(getByRole('button', { name: /Update/ }));
 
     await waitFor(() => {
       expect(mockOnConfirm).toHaveBeenCalledWith({
@@ -139,7 +139,7 @@ describe('APCCoverageModal', () => {
       await findByRole('heading', { name: 'APC Coverage' }),
     ).toBeInTheDocument();
 
-    userEvent.click(getByRole('radio', { name: 'Not Paid' }));
+    await userEvent.click(getByRole('radio', { name: 'Not Paid' }));
 
     const updateButton = getByRole('button', { name: /Update/ });
 
@@ -147,7 +147,7 @@ describe('APCCoverageModal', () => {
       expect(updateButton).toBeEnabled();
     });
 
-    userEvent.click(updateButton);
+    await userEvent.click(updateButton);
 
     await waitFor(() => {
       expect(mockOnConfirm).toHaveBeenCalledWith({

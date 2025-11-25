@@ -395,7 +395,7 @@ describe('QuickCheck logic', () => {
         </StaticRouter>,
       );
 
-      userEvent.type(
+      await userEvent.type(
         getByRole('textbox', { name: /Title of Manuscript/i }),
         'manuscript title',
       );
@@ -498,9 +498,12 @@ describe('QuickCheck logic', () => {
       );
     });
 
-    userEvent.type(getByLabelText(/Please provide details/i), 'Some details');
+    await userEvent.type(
+      getByLabelText(/Please provide details/i),
+      'Some details',
+    );
 
-    userEvent.click(getByRole('button', { name: /Submit/ }));
+    await userEvent.click(getByRole('button', { name: /Submit/ }));
 
     await waitFor(() => {
       expect(queryByText(/Please enter the details./i)).not.toBeInTheDocument();
@@ -540,7 +543,7 @@ describe('QuickCheck logic', () => {
     ).not.toBeInTheDocument();
 
     const input = getByLabelText(/Please provide details/i);
-    userEvent.type(input, 'A'.repeat(257));
+    await userEvent.type(input, 'A'.repeat(257));
     input.blur();
 
     expect(

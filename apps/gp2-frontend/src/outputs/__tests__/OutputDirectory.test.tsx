@@ -84,7 +84,7 @@ it('renders the filters modal', async () => {
   await renderOutputDirectory();
   const filterButton = screen.getByText('Filters');
   expect(filterButton).toBeInTheDocument();
-  userEvent.click(filterButton);
+  await userEvent.click(filterButton);
   expect(screen.getByText('TYPE OF OUTPUT')).toBeVisible();
 });
 
@@ -105,7 +105,7 @@ it('triggers export', async () => {
       }),
     ),
   );
-  userEvent.click(screen.getByRole('button', { name: 'CSV' }));
+  await userEvent.click(screen.getByRole('button', { name: 'CSV' }));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.stringMatching(/output_export\.csv/),
     expect.anything(),

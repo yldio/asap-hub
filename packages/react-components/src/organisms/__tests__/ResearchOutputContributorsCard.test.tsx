@@ -42,11 +42,11 @@ describe('Authors Multiselect', () => {
       </StaticRouter>,
     );
 
-    userEvent.click(screen.getByLabelText(/Authors/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
-    userEvent.click(screen.getByText('Author Two'));
+    await userEvent.click(screen.getByText('Author Two'));
 
     expect(onChangeAuthors).toHaveBeenCalled();
   });
@@ -80,11 +80,11 @@ describe('Labs Multiselect', () => {
         getLabSuggestions={loadOptions}
       />,
     );
-    userEvent.click(getByLabelText(/Labs/i));
+    await userEvent.click(getByLabelText(/Labs/i));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
-    userEvent.click(getByText('One Lab'));
+    await userEvent.click(getByText('One Lab'));
     expect(mockOnChange).toHaveBeenCalledWith(
       [{ label: 'One Lab', value: '1' }],
       {
@@ -103,7 +103,7 @@ describe('Labs Multiselect', () => {
         getLabSuggestions={loadOptions}
       />,
     );
-    userEvent.click(getByLabelText(/Labs/i));
+    await userEvent.click(getByLabelText(/Labs/i));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -128,11 +128,11 @@ describe('Labs Multiselect', () => {
       </StaticRouter>,
     );
 
-    userEvent.click(screen.getByLabelText(/Labs/i));
+    await userEvent.click(screen.getByLabelText(/Labs/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
-    userEvent.click(screen.getByText('One Lab'));
+    await userEvent.click(screen.getByText('One Lab'));
 
     expect(onChangeLabs).toHaveBeenCalled();
   });
@@ -167,11 +167,11 @@ describe('Teams Multiselect', () => {
         onChangeTeams={mockOnChange}
       />,
     );
-    userEvent.click(getByLabelText(/teams/i));
+    await userEvent.click(getByLabelText(/teams/i));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
-    userEvent.click(getByText('One Team'));
+    await userEvent.click(getByText('One Team'));
     expect(mockOnChange).toHaveBeenCalledWith(
       [{ label: 'One Team', value: '1' }],
       {
@@ -190,7 +190,7 @@ describe('Teams Multiselect', () => {
         getTeamSuggestions={loadOptions}
       />,
     );
-    userEvent.click(getByLabelText(/Teams/i));
+    await userEvent.click(getByLabelText(/Teams/i));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );

@@ -41,7 +41,7 @@ describe('NotificationMessages', () => {
       </NotificationMessages>,
     );
     expect(screen.getByText('Welcome back to the GP2 Hub!')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: /close/i }));
+    await userEvent.click(screen.getByRole('button', { name: /close/i }));
     expect(
       screen.queryByText('Welcome back to the GP2 Hub!'),
     ).not.toBeInTheDocument();

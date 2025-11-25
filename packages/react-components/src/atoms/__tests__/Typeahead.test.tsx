@@ -24,8 +24,8 @@ it('opens a menu to select from on click', () => {
     <Typeahead suggestions={['LHR', 'LGW']} value="" onChange={handleChange} />,
   );
 
-  userEvent.click(getByDisplayValue(''));
-  userEvent.click(getByText('LGW'));
+  await userEvent.click(getByDisplayValue(''));
+  await userEvent.click(getByText('LGW'));
   expect(handleChange).toHaveBeenLastCalledWith('LGW');
 });
 
@@ -39,10 +39,10 @@ it('opens a filtered menu to select from when typing', () => {
     />,
   );
 
-  userEvent.type(getByDisplayValue(''), 'LT');
+  await userEvent.type(getByDisplayValue(''), 'LT');
   expect(queryByText('LGW')).not.toBeInTheDocument();
 
-  userEvent.click(getByText('LTN'));
+  await userEvent.click(getByText('LTN'));
   expect(handleChange).toHaveBeenLastCalledWith('LTN');
 });
 
@@ -51,7 +51,7 @@ it('allows non-suggested input', () => {
   const { getByDisplayValue } = render(
     <Typeahead suggestions={['LHR', 'LGW']} value="" onChange={handleChange} />,
   );
-  userEvent.type(getByDisplayValue(''), 'LTN');
+  await userEvent.type(getByDisplayValue(''), 'LTN');
   expect(handleChange).toHaveBeenLastCalledWith('LTN');
 });
 
@@ -59,7 +59,7 @@ it('shows the focused suggestion in green', () => {
   const { getByText, getByDisplayValue } = render(
     <Typeahead suggestions={['LHR', 'LGW']} value="" />,
   );
-  userEvent.click(getByDisplayValue(''));
+  await userEvent.click(getByDisplayValue(''));
   expect(
     findParentWithStyle(getByText('LGW'), 'color')?.color.replace(/ /g, ''),
   ).not.toBe(pine.rgb.replace(/ /g, ''));
@@ -115,8 +115,8 @@ describe('invalidity', () => {
     const { getByDisplayValue } = render(
       <Typeahead suggestions={['LHR', 'LGW']} value="LHR" required />,
     );
-    userEvent.clear(getByDisplayValue('LHR'));
-    userEvent.tab();
+    await userEvent.clear(getByDisplayValue('LHR'));
+    await userEvent.tab();
     expect(findParentWithStyle(getByDisplayValue(''), 'color')?.color).toBe(
       ember.rgb,
     );
@@ -143,7 +143,7 @@ describe('async', () => {
       />,
     );
     const input = getByDisplayValue('');
-    userEvent.type(input, 't');
+    await userEvent.type(input, 't');
 
     await waitFor(() => {
       const menuItem = getByText('test');
@@ -165,7 +165,7 @@ describe('async', () => {
       />,
     );
     const input = getByDisplayValue('');
-    userEvent.type(input, 'example');
+    await userEvent.type(input, 'example');
 
     await waitFor(() => expect(onChange).toHaveBeenCalledWith('example'));
   });

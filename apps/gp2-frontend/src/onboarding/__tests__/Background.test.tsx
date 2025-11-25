@@ -81,9 +81,9 @@ describe('Background', () => {
     const [, biographyEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(biographyEditButton!);
+    await userEvent.click(biographyEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -103,9 +103,9 @@ describe('Background', () => {
     const [tagsEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(tagsEditButton!);
+    await userEvent.click(tagsEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });

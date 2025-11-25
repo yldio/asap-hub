@@ -105,7 +105,7 @@ describe('ComplianceAssignUsersModal', () => {
       />,
     );
 
-    userEvent.click(screen.getByText('Cancel'));
+    await userEvent.click(screen.getByText('Cancel'));
     expect(mockOnDismiss).toHaveBeenCalledTimes(1);
   });
 
@@ -123,7 +123,7 @@ describe('ComplianceAssignUsersModal', () => {
       />,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /Update/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Update/ }));
 
     await waitFor(() => {
       expect(mockOnConfirm).toHaveBeenCalledWith({
@@ -146,7 +146,7 @@ describe('ComplianceAssignUsersModal', () => {
     );
 
     const input = screen.getByRole('textbox', { name: /Assign User/i });
-    userEvent.type(input, 'Bob');
+    await userEvent.type(input, 'Bob');
 
     await waitFor(() => {
       expect(mockGetAssignedUsersSuggestions).toHaveBeenCalled();
@@ -168,12 +168,16 @@ describe('ComplianceAssignUsersModal', () => {
 
     expect(screen.getByRole('button', { name: /Assign/ })).toBeDisabled();
 
-    userEvent.click(screen.getByRole('textbox', { name: /Assign User/i }));
+    await userEvent.click(
+      screen.getByRole('textbox', { name: /Assign User/i }),
+    );
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByLabelText(/Profile picture of Bob Johnson/i));
+    await userEvent.click(
+      screen.getByLabelText(/Profile picture of Bob Johnson/i),
+    );
 
     expect(screen.getByRole('button', { name: /Assign/ })).toBeEnabled();
   });
@@ -193,14 +197,16 @@ describe('ComplianceAssignUsersModal', () => {
 
     expect(screen.getByRole('button', { name: /Update/ })).toBeEnabled();
 
-    userEvent.click(screen.getByRole('textbox', { name: /Assign User/i }));
+    await userEvent.click(
+      screen.getByRole('textbox', { name: /Assign User/i }),
+    );
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
     expect(screen.getAllByLabelText(/Remove/i)).toHaveLength(2);
-    userEvent.click(screen.getByLabelText(/Remove John Doe/i));
-    userEvent.click(screen.getByLabelText(/Remove Jane Smith/i));
+    await userEvent.click(screen.getByLabelText(/Remove John Doe/i));
+    await userEvent.click(screen.getByLabelText(/Remove Jane Smith/i));
     expect(screen.queryAllByLabelText(/Remove/i)).toHaveLength(0);
 
     expect(screen.getByRole('button', { name: /Update/ })).toBeEnabled();

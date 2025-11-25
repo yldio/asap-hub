@@ -14,7 +14,7 @@ it('triggers the menu toggle event', () => {
     <MenuHeader onToggleMenu={handleToggleMenu} />,
   );
 
-  userEvent.click(getByLabelText(/toggle menu/i));
+  await userEvent.click(getByLabelText(/toggle menu/i));
   expect(handleToggleMenu).toHaveBeenCalledTimes(1);
 });
 

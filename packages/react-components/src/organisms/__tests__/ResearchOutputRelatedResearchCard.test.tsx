@@ -71,12 +71,12 @@ describe('Related Research Multiselect', () => {
         onChangeRelatedResearch={mockOnChange}
       />,
     );
-    userEvent.click(getByRole('textbox', { name: /related/i }));
+    await userEvent.click(getByRole('textbox', { name: /related/i }));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
     expect(getByText(/preprint/i)).toBeVisible();
-    userEvent.click(getByText('First Related Research'));
+    await userEvent.click(getByText('First Related Research'));
     expect(mockOnChange).toHaveBeenCalledWith(
       [
         {
@@ -107,7 +107,7 @@ describe('Related Research Multiselect', () => {
         getRelatedResearchSuggestions={loadOptions}
       />,
     );
-    userEvent.click(getByRole('textbox', { name: /related/i }));
+    await userEvent.click(getByRole('textbox', { name: /related/i }));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );

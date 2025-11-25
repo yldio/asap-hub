@@ -96,9 +96,9 @@ describe('AdditionalDetails', () => {
     const [openQuestionsButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(openQuestionsButton!);
+    await userEvent.click(openQuestionsButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -119,9 +119,9 @@ describe('AdditionalDetails', () => {
     const [fundingProvidersButton] = screen.getAllByRole('link', {
       name: 'Optional Add',
     });
-    userEvent.click(fundingProvidersButton!);
+    await userEvent.click(fundingProvidersButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -153,9 +153,9 @@ describe('AdditionalDetails', () => {
     const [, cohortEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(cohortEditButton!);
+    await userEvent.click(cohortEditButton!);
     expect(await screen.findByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });

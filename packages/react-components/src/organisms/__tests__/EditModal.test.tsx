@@ -44,7 +44,7 @@ it.skip('initially does not prompt when trying to leave', () => {
   //     <EditModal {...props} />
   //   </Router>,
   // );
-  // userEvent.click(screen.getByTitle(/close/i));
+  // await userEvent.click(screen.getByTitle(/close/i));
   // expect(getUserConfirmation).not.toHaveBeenCalled();
 });
 it.skip('prompts when trying to leave after making edits', () => {
@@ -55,7 +55,7 @@ it.skip('prompts when trying to leave after making edits', () => {
   //     <EditModal {...props} dirty />
   //   </Router>,
   // );
-  // userEvent.click(screen.getByTitle(/close/i));
+  // await userEvent.click(screen.getByTitle(/close/i));
   // expect(getUserConfirmation).toHaveBeenCalled();
 });
 
@@ -77,7 +77,7 @@ describe('when saving', () => {
       );
 
       const saveButton = screen.getByRole('button', { name: 'Save' });
-      userEvent.click(saveButton);
+      await userEvent.click(saveButton);
       expect(handleSave).not.toHaveBeenCalled();
     });
 
@@ -103,7 +103,7 @@ describe('when saving', () => {
       );
 
       const saveButton = screen.getByRole('button', { name: 'Save' });
-      userEvent.click(saveButton);
+      await userEvent.click(saveButton);
 
       expect(handleValidate).toHaveBeenCalled();
       expect(handleSave).not.toHaveBeenCalled();
@@ -137,7 +137,7 @@ describe('when saving', () => {
       renderEditModal({ handleSave });
 
       const saveButton = screen.getByRole('button', { name: 'Save' });
-      userEvent.click(saveButton);
+      await userEvent.click(saveButton);
       expect(handleSave).toHaveBeenCalled();
 
       await waitFor(() => expect(saveButton).toBeEnabled());
@@ -147,7 +147,7 @@ describe('when saving', () => {
       const handleSave = jest.fn().mockResolvedValue(null);
       renderEditModal({ handleSave });
       const saveButton = screen.getByRole('button', { name: 'Save' });
-      userEvent.click(saveButton);
+      await userEvent.click(saveButton);
       expect(saveButton).toBeDisabled();
 
       await waitFor(() => expect(saveButton).toBeEnabled());
@@ -157,9 +157,9 @@ describe('when saving', () => {
       const handleSave = jest.fn().mockResolvedValue(null);
       const { getUserConfirmation } = renderEditModal({ handleSave });
       const saveButton = screen.getByRole('button', { name: 'Save' });
-      userEvent.click(saveButton);
+      await userEvent.click(saveButton);
 
-      userEvent.click(screen.getByTitle(/close/i));
+      await userEvent.click(screen.getByTitle(/close/i));
       expect(getUserConfirmation).toHaveBeenCalled();
 
       await waitFor(() => expect(saveButton).toBeEnabled());
@@ -173,7 +173,7 @@ describe('when saving', () => {
         });
 
         const saveButton = screen.getByRole('button', { name: 'Save' });
-        userEvent.click(saveButton);
+        await userEvent.click(saveButton);
         await waitFor(() => {
           expect(history.location.pathname).toBe('/back');
         });
@@ -185,7 +185,7 @@ describe('when saving', () => {
         renderEditModal({ handleSave });
 
         const saveButton = screen.getByRole('button', { name: 'Save' });
-        userEvent.click(saveButton);
+        await userEvent.click(saveButton);
         await waitFor(() => expect(saveButton).toBeEnabled());
       });
 
@@ -198,7 +198,7 @@ describe('when saving', () => {
           });
 
           const saveButton = screen.getByRole('button', { name: 'Save' });
-          userEvent.click(saveButton);
+          await userEvent.click(saveButton);
           await waitFor(() => expect(saveButton).toBeEnabled());
 
           // not going to be dirty anymore since the values have just been saved
@@ -216,7 +216,7 @@ describe('when saving', () => {
               </EditModal>
             </Router>,
           );
-          userEvent.click(screen.getByTitle(/close/i));
+          await userEvent.click(screen.getByTitle(/close/i));
           expect(getUserConfirmation).not.toHaveBeenCalled();
 
           await waitFor(() =>
@@ -243,7 +243,7 @@ describe('when saving', () => {
               </EditModal>
             </Router>,
           );
-          userEvent.click(screen.getByTitle(/close/i));
+          await userEvent.click(screen.getByTitle(/close/i));
           expect(getUserConfirmation).toHaveBeenCalled();
 
           await waitFor(() =>
@@ -259,7 +259,7 @@ describe('when saving', () => {
         renderEditModal({ handleSave });
 
         const saveButton = screen.getByRole('button', { name: 'Save' });
-        userEvent.click(saveButton);
+        await userEvent.click(saveButton);
 
         await waitFor(() =>
           expect(screen.getByTitle(/error icon/i)).toBeInTheDocument(),
@@ -271,7 +271,7 @@ describe('when saving', () => {
         renderEditModal({ handleSave });
 
         const saveButton = screen.getByRole('button', { name: 'Save' });
-        userEvent.click(saveButton);
+        await userEvent.click(saveButton);
 
         await waitFor(() =>
           expect(screen.getByText(/^save/i).closest('button')).toBeEnabled(),
@@ -283,9 +283,9 @@ describe('when saving', () => {
         const { getUserConfirmation } = renderEditModal({ handleSave });
 
         const saveButton = screen.getByRole('button', { name: 'Save' });
-        userEvent.click(saveButton);
+        await userEvent.click(saveButton);
 
-        userEvent.click(screen.getByTitle(/close/i));
+        await userEvent.click(screen.getByTitle(/close/i));
         expect(getUserConfirmation).toHaveBeenCalled();
 
         await waitFor(() => expect(saveButton).toBeEnabled());
@@ -296,7 +296,7 @@ describe('when saving', () => {
         const { rerender, history } = renderEditModal({ handleSave });
 
         const saveButton = screen.getByRole('button', { name: 'Save' });
-        userEvent.click(saveButton);
+        await userEvent.click(saveButton);
         await waitFor(() => expect(saveButton).toBeEnabled());
 
         const handleSaveAgain = jest.fn().mockRejectedValue(new Error());
@@ -315,7 +315,7 @@ describe('when saving', () => {
           </Router>,
         );
 
-        userEvent.click(saveButton);
+        await userEvent.click(saveButton);
         expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
         await waitFor(() => expect(saveButton).toBeEnabled());
       });

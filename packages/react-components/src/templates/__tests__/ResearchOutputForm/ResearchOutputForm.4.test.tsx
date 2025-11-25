@@ -47,8 +47,10 @@ describe('on submit', () => {
 
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await userEvent.click(button);
+    await userEvent.click(
+      screen.getByRole('button', { name: /Publish Output/i }),
+    );
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
@@ -138,7 +140,7 @@ describe('on submit', () => {
     const sharingStatus = screen.getByRole('group', {
       name: /sharing status/i,
     });
-    userEvent.click(
+    await userEvent.click(
       within(sharingStatus).getByRole('radio', { name: 'Public' }),
     );
     fireEvent.change(screen.getByLabelText(/date published/i), {

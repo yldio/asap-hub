@@ -29,7 +29,7 @@ it('displays compliance report description and url when expanded', () => {
   expect(queryByText(/View Report/i)).not.toBeInTheDocument();
   expect(queryByText(/example.com/i)).not.toBeInTheDocument();
 
-  userEvent.click(getByRole('button'));
+  await userEvent.click(getByRole('button'));
 
   rerender(<ComplianceReportCard {...props} />);
 

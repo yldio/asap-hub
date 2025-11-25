@@ -48,8 +48,10 @@ describe('on submit 3', () => {
 
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await userEvent.click(button);
+    await userEvent.click(
+      screen.getByRole('button', { name: /Publish Output/i }),
+    );
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
@@ -107,10 +109,10 @@ describe('on submit 3', () => {
     editorRef.current?.focus();
 
     const descriptionEditor = screen.getByTestId('editor');
-    userEvent.click(descriptionEditor);
-    userEvent.tab();
+    await userEvent.click(descriptionEditor);
+    await userEvent.tab();
     fireEvent.input(descriptionEditor, { data: data.descriptionMD });
-    userEvent.tab();
+    await userEvent.tab();
 
     fireEvent.change(
       screen.getByRole('textbox', { name: /short description/i }),
@@ -141,10 +143,10 @@ describe('on submit 3', () => {
       keyCode: ENTER_KEYCODE,
     });
 
-    userEvent.click(
+    await userEvent.click(
       await screen.findByRole('textbox', { name: /environments/i }),
     );
-    userEvent.click(screen.getByText('In Vitro'));
+    await userEvent.click(screen.getByText('In Vitro'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,

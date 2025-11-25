@@ -201,22 +201,22 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
     /Upload Key Resource Table/i,
   );
 
-  userEvent.upload(manuscriptFileInput, testFile);
-  userEvent.upload(keyResourceTableInput, testFile);
+  await userEvent.upload(manuscriptFileInput, testFile);
+  await userEvent.upload(keyResourceTableInput, testFile);
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 
   within(quickChecks)
     .getAllByRole('radio', { name: 'Yes' })
     .forEach((button) => {
-      userEvent.click(button);
+      await userEvent.click(button);
     });
 
   await waitFor(() => {
     const submitButton = screen.getByRole('button', { name: /Submit/ });
     expect(submitButton).toBeEnabled();
   });
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+  await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
 
   await waitFor(() => {
     const confirmButton = screen.getByRole('button', {
@@ -224,7 +224,9 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
     });
     expect(confirmButton).toBeEnabled();
   });
-  userEvent.click(screen.getByRole('button', { name: /Submit Manuscript/i }));
+  await userEvent.click(
+    screen.getByRole('button', { name: /Submit Manuscript/i }),
+  );
 
   await waitFor(() => {
     expect(mockResubmitManuscript).toHaveBeenCalledWith(
@@ -276,8 +278,8 @@ it('files are not prefilled on manuscript resubmit', async () => {
     name: /Where is the manuscript in the life cycle/i,
   });
 
-  userEvent.type(lifecycleTextbox, 'Preprint');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  await userEvent.type(lifecycleTextbox, 'Preprint');
+  await userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 
   const preprintDoi = '10.4444/test';
@@ -285,7 +287,7 @@ it('files are not prefilled on manuscript resubmit', async () => {
   const preprintDoiTextbox = screen.getByRole('textbox', {
     name: /Preprint DOI/i,
   });
-  userEvent.type(preprintDoiTextbox, preprintDoi);
+  await userEvent.type(preprintDoiTextbox, preprintDoi);
 
   expect(screen.queryByText(/manuscript_1.pdf/i)).not.toBeInTheDocument();
   expect(screen.queryByText(/manuscript_1.csv/i)).not.toBeInTheDocument();

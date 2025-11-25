@@ -55,9 +55,11 @@ describe('UserPosition', () => {
       loadInstitutionOptions: jest.fn().mockResolvedValue([institution]),
       index: 1,
     });
-    userEvent.click(screen.getByRole('textbox', { name: /Institution/i }));
+    await userEvent.click(
+      screen.getByRole('textbox', { name: /Institution/i }),
+    );
     const institutionBox = await screen.findByText(institution);
-    userEvent.click(institutionBox);
+    await userEvent.click(institutionBox);
 
     expect(onChange).toHaveBeenCalledWith({
       ...defaultProps.position,
@@ -77,7 +79,7 @@ describe('UserPosition', () => {
         role: '',
       },
     });
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /Department/i }),
       department,
     );
@@ -101,7 +103,7 @@ describe('UserPosition', () => {
         role: '',
       },
     });
-    userEvent.type(screen.getByRole('textbox', { name: /Role/i }), role);
+    await userEvent.type(screen.getByRole('textbox', { name: /Role/i }), role);
 
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ role }));
   });
@@ -137,7 +139,7 @@ describe('UserPosition', () => {
     const onRemove = jest.fn();
     renderUserPosition({ onRemove, index: 2 });
     const removeButton = screen.getByRole('button');
-    userEvent.click(removeButton);
+    await userEvent.click(removeButton);
     expect(onRemove).toHaveBeenCalled();
   });
 
@@ -153,8 +155,10 @@ describe('UserPosition', () => {
         index,
       });
 
-      userEvent.click(screen.getByRole('textbox', { name: /Institution/i }));
-      userEvent.tab();
+      await userEvent.click(
+        screen.getByRole('textbox', { name: /Institution/i }),
+      );
+      await userEvent.tab();
       expect(screen.getByText(/Please add your institution/i)).toBeVisible();
     },
   );
@@ -170,8 +174,10 @@ describe('UserPosition', () => {
         index,
       });
 
-      userEvent.click(screen.getByRole('textbox', { name: /department/i }));
-      userEvent.tab();
+      await userEvent.click(
+        screen.getByRole('textbox', { name: /department/i }),
+      );
+      await userEvent.tab();
       expect(screen.getByText(/Please add your department/i)).toBeVisible();
     },
   );
@@ -187,8 +193,8 @@ describe('UserPosition', () => {
         index,
       });
 
-      userEvent.click(screen.getByRole('textbox', { name: /role/i }));
-      userEvent.tab();
+      await userEvent.click(screen.getByRole('textbox', { name: /role/i }));
+      await userEvent.tab();
       expect(screen.getByText(/Please add your role/i)).toBeVisible();
     },
   );

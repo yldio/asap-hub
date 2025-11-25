@@ -29,7 +29,7 @@ describe('NavigationHeader', () => {
   it('calls onMenuToggle when the menu toggle button is clicked', () => {
     const onMenuToggle = jest.fn();
     render(<NavigationHeader {...props} onToggleMenu={onMenuToggle} />);
-    userEvent.click(screen.getByLabelText(/toggle menu/i));
+    await userEvent.click(screen.getByLabelText(/toggle menu/i));
     expect(onMenuToggle).toHaveBeenCalledTimes(1);
   });
 });

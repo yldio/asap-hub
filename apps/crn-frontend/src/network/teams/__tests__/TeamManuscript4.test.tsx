@@ -143,7 +143,7 @@ it('shows default error toast when submitting with any other error', async () =>
 
   await renderPage();
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /title of manuscript/i }),
     title,
   );
@@ -190,7 +190,7 @@ it('shows default error toast when submitting with any other error', async () =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
 
-  userEvent.click(screen.getByText(/Non CRN/i));
+  await userEvent.click(screen.getByText(/Non CRN/i));
 
   expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
   await userEvent.type(
@@ -198,8 +198,8 @@ it('shows default error toast when submitting with any other error', async () =>
     'jane@doe.com',
   );
 
-  userEvent.upload(manuscriptFileInput, testFile);
-  userEvent.upload(keyResourceTableInput, testFile);
+  await userEvent.upload(manuscriptFileInput, testFile);
+  await userEvent.upload(keyResourceTableInput, testFile);
 
   const impactInput = screen.getByRole('textbox', {
     name: /Impact/i,
@@ -218,14 +218,14 @@ it('shows default error toast when submitting with any other error', async () =>
   within(quickChecks)
     .getAllByText('Yes')
     .forEach((button) => {
-      userEvent.click(button);
+      await userEvent.click(button);
     });
 
   await waitFor(() => {
     const submitButton = screen.getByRole('button', { name: /Submit/ });
     expect(submitButton).toBeEnabled();
   });
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+  await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
 
   await waitFor(() => {
     const confirmButton = screen.getByRole('button', {

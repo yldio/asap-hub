@@ -95,9 +95,9 @@ describe('OpenQuestionsModal', () => {
     const addButton = screen.getByRole('button', {
       name: 'Add Another Question Add',
     });
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     const emptyTextArea = screen.getAllByRole('textbox')[3]!;
-    userEvent.type(emptyTextArea, newQuestion);
+    await userEvent.type(emptyTextArea, newQuestion);
     expect(emptyTextArea).toHaveTextContent(newQuestion);
   });
   it('removes the only question it exists and shows the add open question button', () => {
@@ -109,7 +109,7 @@ describe('OpenQuestionsModal', () => {
     renderOpenQuestions(props);
 
     const deleteButton = screen.getByRole('button', { name: /delete/i });
-    userEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
     expect(
       screen.getByRole('button', { name: /add open question add/i }),
     ).toBeVisible();
@@ -121,7 +121,7 @@ describe('OpenQuestionsModal', () => {
     renderOpenQuestions(props);
 
     const closeButton = screen.getByRole('button', { name: /close/i });
-    await waitFor(() => userEvent.click(closeButton));
+    await waitFor(() => await userEvent.click(closeButton));
 
     expect(closeButton).toBeDisabled();
   });
@@ -142,12 +142,12 @@ describe('OpenQuestionsModal', () => {
     const addButton = screen.getByRole('button', {
       name: 'Add Another Question Add',
     });
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     const emptyTextArea = screen.getAllByRole('textbox')[3]!;
-    userEvent.type(emptyTextArea, newQuestion);
+    await userEvent.type(emptyTextArea, newQuestion);
     expect(emptyTextArea).toHaveTextContent(newQuestion);
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    await waitFor(() => userEvent.click(saveButton));
+    await waitFor(() => await userEvent.click(saveButton));
     expect(onSave).toHaveBeenCalledWith({
       questions: [
         'a first question?',
@@ -167,7 +167,7 @@ describe('OpenQuestionsModal', () => {
     renderOpenQuestions(props);
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    await waitFor(() => userEvent.click(saveButton));
+    await waitFor(() => await userEvent.click(saveButton));
     expect(onSave).toHaveBeenCalledWith({ questions: ['Am I a question?'] });
   });
 });

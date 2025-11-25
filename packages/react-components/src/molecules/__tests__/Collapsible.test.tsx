@@ -11,7 +11,7 @@ it('changes text from show to hide and has max height', () => {
   expect(
     findParentWithStyle(getByText(/text/i), 'maxHeight')?.maxHeight,
   ).toMatch(/120/i);
-  userEvent.click(getByText(/show/i));
+  await userEvent.click(getByText(/show/i));
   expect(getByText(/hide/i)).toBeVisible();
 });
 it('changes text from hide to show and removes maxHeight', () => {
@@ -22,6 +22,6 @@ it('changes text from hide to show and removes maxHeight', () => {
   expect(
     findParentWithStyle(getByText(/text/i), 'maxHeight')?.maxHeight,
   ).toBeUndefined();
-  userEvent.click(getByText(/hide/i));
+  await userEvent.click(getByText(/hide/i));
   expect(getByText(/show/i)).toBeVisible();
 });

@@ -13,7 +13,7 @@ it('emits a select event when enabling', () => {
   const { getByRole } = render(
     <RadioButton groupName="airport" onSelect={handleSelect} />,
   );
-  userEvent.click(getByRole('radio'));
+  await userEvent.click(getByRole('radio'));
   expect(handleSelect).toHaveBeenCalled();
 });
 
@@ -22,6 +22,6 @@ it('does not emit a select event when disabling', () => {
   const { getByRole } = render(
     <RadioButton groupName="airport" checked onSelect={handleSelect} />,
   );
-  userEvent.click(getByRole('radio'));
+  await userEvent.click(getByRole('radio'));
   expect(handleSelect).not.toHaveBeenCalled();
 });

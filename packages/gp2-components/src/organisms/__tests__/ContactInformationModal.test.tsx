@@ -76,7 +76,7 @@ describe('ContactInformationModal', () => {
       telephone,
       onSave,
     });
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       alternativeEmail,
       telephone,
@@ -98,28 +98,28 @@ describe('ContactInformationModal', () => {
       countryCodeSuggestions: [{ dialCode: '+351', name: 'Portugal' }],
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: /alternative email \(optional\)/i,
       }),
       alternativeEmail,
     );
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('textbox', {
         name: /country code \(optional\)/i,
       }),
     );
-    userEvent.click(screen.getByText('Portugal (+351)'));
+    await userEvent.click(screen.getByText('Portugal (+351)'));
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: /telephone number \(optional\)/i,
       }),
       number,
     );
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       alternativeEmail,
       telephone: {
@@ -140,14 +140,14 @@ describe('ContactInformationModal', () => {
       onSave,
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: /alternative email \(optional\)/i,
       }),
       alternativeEmail,
     );
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(
       screen.getByText(/please enter a valid email address/i),
     ).toBeVisible();
@@ -166,14 +166,14 @@ describe('ContactInformationModal', () => {
       onSave,
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: /telephone number \(optional\)/i,
       }),
       number,
     );
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(
       screen.getByText(/please enter a valid telephone number/i),
     ).toBeVisible();

@@ -124,7 +124,7 @@ it('displays manuscript version card when expanded', () => {
 
   expect(queryByText(/Preprint/i)).not.toBeInTheDocument();
 
-  userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(getByTestId('collapsible-button'));
 
   expect(getByText(/Original Research/i)).toBeVisible();
   expect(getByText(/Preprint/i)).toBeVisible();
@@ -134,7 +134,7 @@ it('displays share compliance report button if user has permission', () => {
   const { queryByRole, getByRole, rerender, getByTestId } = render(
     <ManuscriptCard {...props} />,
   );
-  userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(getByTestId('collapsible-button'));
 
   expect(
     queryByRole('button', { name: /Share Compliance Report Icon/i }),
@@ -169,7 +169,7 @@ it('displays submit revised manuscript button if user is an author', () => {
       ])}
     />,
   );
-  userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(getByTestId('collapsible-button'));
 
   expect(
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
@@ -199,20 +199,20 @@ it('shows tooltip on hover over disabled Submit Revised Manuscript button when n
       ])}
     />,
   );
-  userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(getByTestId('collapsible-button'));
 
   const button = getByRole('button', { name: /Submit Revised Manuscript/i });
   expect(button).toBeDisabled();
 
   const span = button.querySelector('span');
-  userEvent.hover(span!);
+  await userEvent.hover(span!);
 
   const tooltip = await findByRole('tooltip');
   expect(tooltip).toHaveTextContent(
     'A compliance report must be shared by an Open Science team member before submitting a new version of the manuscript.',
   );
 
-  userEvent.unhover(span!);
+  await userEvent.unhover(span!);
   await waitFor(() => {
     expect(queryByRole('tooltip')).not.toBeInTheDocument();
   });
@@ -235,7 +235,7 @@ it('displays submit revised manuscript button if user is team Lead PI', () => {
       user={piUser}
     />,
   );
-  userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(getByTestId('collapsible-button'));
 
   expect(
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
@@ -250,7 +250,7 @@ it('displays submit revised manuscript button if user is team project manager', 
       user={user}
     />,
   );
-  userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(getByTestId('collapsible-button'));
 
   expect(
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
@@ -279,7 +279,7 @@ it('displays submit revised manuscript button if user is a PI on a manuscript la
     />,
   );
 
-  userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(getByTestId('collapsible-button'));
 
   expect(
     getByRole('button', { name: /Resubmit Manuscript Icon/i }),
@@ -296,8 +296,8 @@ it('redirects to compliance report form when user clicks on share compliance rep
     </Router>,
   );
 
-  userEvent.click(getByTestId('collapsible-button'));
-  userEvent.click(
+  await userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(
     getByRole('button', { name: /Share Compliance Report Icon/i }),
   );
 
@@ -334,9 +334,11 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
     </Router>,
   );
 
-  userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(getByTestId('collapsible-button'));
 
-  userEvent.click(getByRole('button', { name: /Resubmit Manuscript Icon/i }));
+  await userEvent.click(
+    getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+  );
 
   expect(history.location.pathname).toBe(
     `/network/teams/${props.teamId}/workspace/resubmit-manuscript/${props.id}`,
@@ -350,8 +352,8 @@ it('displays the confirmation modal when isComplianceReviewer is true and the us
 
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeEnabled();
-  userEvent.click(statusButton);
-  userEvent.click(getByRole('button', { name: 'Addendum Required' }));
+  await userEvent.click(statusButton);
+  await userEvent.click(getByRole('button', { name: 'Addendum Required' }));
   expect(getByText('Update status and notify?')).toBeInTheDocument();
 });
 
@@ -374,8 +376,8 @@ it('does not display confirmation modal when isComplianceReviewer is true but th
 
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeEnabled();
-  userEvent.click(statusButton);
-  userEvent.click(getByRole('button', { name: /Addendum Required$/ }));
+  await userEvent.click(statusButton);
+  await userEvent.click(getByRole('button', { name: /Addendum Required$/ }));
   expect(queryByText('Update status and notify?')).not.toBeInTheDocument();
 });
 
@@ -400,11 +402,11 @@ it('calls onUpdateManuscript when user confirms status change', async () => {
   );
 
   const statusButton = getByTestId('status-button');
-  userEvent.click(statusButton);
-  userEvent.click(getByRole('button', { name: 'Addendum Required' }));
+  await userEvent.click(statusButton);
+  await userEvent.click(getByRole('button', { name: 'Addendum Required' }));
 
   await act(async () => {
-    userEvent.click(
+    await userEvent.click(
       getByRole('button', {
         name: 'Update Status and Notify',
       }),
@@ -485,12 +487,12 @@ it.each`
     );
 
     const statusButton = getByTestId('status-button');
-    userEvent.click(statusButton);
+    await userEvent.click(statusButton);
     await waitFor(() => {
       getByRole('button', { name: newStatus });
     });
     await act(async () => {
-      userEvent.click(getByRole('button', { name: newStatus }));
+      await userEvent.click(getByRole('button', { name: newStatus }));
     });
 
     await waitFor(() => {
@@ -502,7 +504,7 @@ it.each`
     });
 
     await act(async () => {
-      userEvent.click(
+      await userEvent.click(
         getByRole('button', {
           name: submissionButtonText,
         }),
@@ -536,7 +538,7 @@ it('disables submit compliance report button when there is an existing complianc
     />,
   );
 
-  userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(getByTestId('collapsible-button'));
 
   const complianceReportButton = getByRole('button', {
     name: /Share Compliance Report Icon/i,
@@ -578,14 +580,14 @@ it('displays show more/show less when there are more than three manuscript versi
     />,
   );
 
-  userEvent.click(getByTestId('collapsible-button'));
+  await userEvent.click(getByTestId('collapsible-button'));
   const showMoreButton = getByRole('button', {
     name: /Show more/i,
   });
 
   expect(showMoreButton).toBeVisible();
 
-  userEvent.click(showMoreButton);
+  await userEvent.click(showMoreButton);
   expect(getByRole('button', { name: /Show less/i })).toBeVisible();
 });
 
@@ -627,7 +629,7 @@ describe('Tabs', () => {
   it('displays the manuscript and reports tab as active by default', () => {
     const { getByRole, getByTestId } = render(<ManuscriptCard {...props} />);
 
-    userEvent.click(getByTestId('collapsible-button'));
+    await userEvent.click(getByTestId('collapsible-button'));
 
     expect(
       getByRole('button', { name: 'Manuscripts and Reports' }),
@@ -637,16 +639,18 @@ describe('Tabs', () => {
   it('displays the tab as active when the user clicks on the tab', () => {
     const { getByRole, getByTestId } = render(<ManuscriptCard {...props} />);
 
-    userEvent.click(getByTestId('collapsible-button'));
+    await userEvent.click(getByTestId('collapsible-button'));
 
-    userEvent.click(getByRole('button', { name: 'Discussions' }));
+    await userEvent.click(getByRole('button', { name: 'Discussions' }));
 
     expect(getByRole('button', { name: 'Discussions' })).toHaveClass('active');
     expect(
       getByRole('button', { name: 'Manuscripts and Reports' }),
     ).not.toHaveClass('active');
 
-    userEvent.click(getByRole('button', { name: 'Manuscripts and Reports' }));
+    await userEvent.click(
+      getByRole('button', { name: 'Manuscripts and Reports' }),
+    );
 
     expect(
       getByRole('button', { name: 'Manuscripts and Reports' }),
@@ -677,8 +681,8 @@ describe('Tabs', () => {
       />,
     );
 
-    userEvent.click(getByTestId('collapsible-button'));
-    userEvent.click(getByLabelText('Expand Version'));
+    await userEvent.click(getByTestId('collapsible-button'));
+    await userEvent.click(getByLabelText('Expand Version'));
 
     expect(getByRole('button', { name: 'Discussions' })).not.toHaveClass(
       'active',
@@ -688,7 +692,7 @@ describe('Tabs', () => {
     });
     expect(openDiscussionsButton).toBeVisible();
 
-    userEvent.click(openDiscussionsButton);
+    await userEvent.click(openDiscussionsButton);
     expect(getByRole('button', { name: 'Discussions' })).toHaveClass('active');
   });
 });
@@ -743,8 +747,8 @@ describe('Discussion Notification', () => {
       />,
     );
 
-    userEvent.click(getByTestId('collapsible-button'));
-    userEvent.click(getByLabelText('Expand Version'));
+    await userEvent.click(getByTestId('collapsible-button'));
+    await userEvent.click(getByLabelText('Expand Version'));
 
     expect(getByTitle(/notification dot/i)).toBeInTheDocument();
   });

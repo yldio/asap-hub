@@ -260,8 +260,8 @@ describe('user collaboration', () => {
 
     const input = screen.getAllByRole('textbox', { hidden: false });
 
-    userEvent.click(input[1]!);
-    userEvent.click(screen.getByText('Across Teams'));
+    await userEvent.click(input[1]!);
+    await userEvent.click(screen.getByText('Across Teams'));
 
     expect(
       screen.getByText('Co-Production Across Teams by User'),
@@ -310,8 +310,8 @@ describe('user collaboration', () => {
     const categoryButton = screen.getByRole('button', {
       name: /all chevron down/i,
     });
-    userEvent.click(categoryButton);
-    userEvent.click(screen.getByText(/Article/));
+    await userEvent.click(categoryButton);
+    await userEvent.click(screen.getByText(/Article/));
     await waitFor(() =>
       expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
     );
@@ -328,7 +328,9 @@ describe('user collaboration', () => {
         expect.not.stringContaining('user_desc'),
       );
     });
-    userEvent.click(getByTitle('User Active Alphabetical Ascending Sort Icon'));
+    await userEvent.click(
+      getByTitle('User Active Alphabetical Ascending Sort Icon'),
+    );
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
         expect.stringContaining('user_desc'),
@@ -353,8 +355,8 @@ describe('team collaboration', () => {
 
     const input = screen.getAllByRole('textbox', { hidden: false });
 
-    userEvent.click(input[1]!);
-    userEvent.click(screen.getByText('Across Teams'));
+    await userEvent.click(input[1]!);
+    await userEvent.click(screen.getByText('Across Teams'));
 
     expect(
       screen.getByText('Co-Production Across Teams by Team'),
@@ -404,8 +406,8 @@ describe('team collaboration', () => {
     const outputTypeButton = screen.getByRole('button', {
       name: /ASAP Output chevron down/i,
     });
-    userEvent.click(outputTypeButton);
-    userEvent.click(screen.getByText(/ASAP Public Output/i));
+    await userEvent.click(outputTypeButton);
+    await userEvent.click(screen.getByText(/ASAP Public Output/i));
     await waitFor(() =>
       expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
     );
@@ -422,7 +424,9 @@ describe('team collaboration', () => {
         expect.not.stringContaining('team_desc'),
       );
     });
-    userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+    await userEvent.click(
+      getByTitle('Active Alphabetical Ascending Sort Icon'),
+    );
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
         expect.stringContaining('team_desc'),
@@ -461,8 +465,8 @@ describe('sharing prelim findings', () => {
     await renderPage('user', 'within-team');
     const input = screen.getAllByRole('textbox', { hidden: false });
 
-    userEvent.click(input[0]!);
-    userEvent.click(screen.getByText('Sharing Preliminary Findings'));
+    await userEvent.click(input[0]!);
+    await userEvent.click(screen.getByText('Sharing Preliminary Findings'));
 
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -476,7 +480,7 @@ describe('sharing prelim findings', () => {
 
   it('exports analytics for sharing preliminary findings', async () => {
     await renderPage('sharing-prelim-findings', undefined);
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/collaboration_sharing-prelim-findings_\d+\.csv/),
       expect.anything(),
@@ -513,8 +517,8 @@ it('navigates between user and team collaboration pages', async () => {
   await renderPage('user', 'within-team');
   const input = screen.getAllByRole('textbox', { hidden: false });
 
-  userEvent.click(input[0]!);
-  userEvent.click(screen.getByText('Team Co-Production'));
+  await userEvent.click(input[0]!);
+  await userEvent.click(screen.getByText('Team Co-Production'));
 
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -540,7 +544,7 @@ describe('search', () => {
     await renderPage('user', 'within-team');
     const searchBox = getSearchBox();
 
-    userEvent.type(searchBox, 'test123');
+    await userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenCalledWith(
@@ -555,7 +559,7 @@ describe('search', () => {
 describe('csv export', () => {
   it('exports analytics for user', async () => {
     await renderPage('user', 'within-team');
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/collaboration_user_\d+\.csv/),
       expect.anything(),
@@ -568,8 +572,8 @@ describe('csv export', () => {
       await renderPage('team', type);
       const input = screen.getAllByRole('textbox', { hidden: false })[0];
 
-      input && userEvent.click(input);
-      userEvent.click(screen.getByText(/csv/i));
+      input && (await userEvent.click(input));
+      await userEvent.click(screen.getByText(/csv/i));
       expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
         expect.stringMatching(/collaboration_team_\d+\.csv/),
         expect.anything(),

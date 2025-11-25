@@ -40,7 +40,7 @@ describe('Switch', () => {
 
     // This test ensures the component doesn't throw when clicked without an onClick handler
     expect(() => {
-      userEvent.click(switchElement);
+      await userEvent.click(switchElement);
     }).not.toThrow();
   });
 
@@ -49,7 +49,7 @@ describe('Switch', () => {
     render(<Switch {...props} onClick={mockOnClick} />);
 
     const switchElement = screen.getByLabelText('Toggle switch');
-    userEvent.click(switchElement);
+    await userEvent.click(switchElement);
 
     expect(mockOnClick).toHaveBeenCalledTimes(1);
   });
@@ -59,7 +59,7 @@ describe('Switch', () => {
     render(<Switch {...props} onClick={mockOnClick} enabled={false} />);
 
     const switchElement = screen.getByLabelText('Toggle switch');
-    userEvent.click(switchElement);
+    await userEvent.click(switchElement);
 
     expect(mockOnClick).not.toHaveBeenCalled();
   });

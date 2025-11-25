@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { OriginalGrantInfo, SupplementGrantInfo } from '@asap-hub/model';
 import ProjectDetailOverview from '../ProjectDetailOverview';
@@ -37,7 +37,7 @@ describe('ProjectDetailOverview', () => {
   });
 
   it('does not render Read Full Proposal button when no URL provided', () => {
-    const grantWithoutURL = { ...mockOriginalGrant, proposalURL: undefined };
+    const grantWithoutURL = { ...mockOriginalGrant, proposalId: undefined };
     render(<ProjectDetailOverview originalGrant={grantWithoutURL} />);
     expect(
       screen.queryByRole('link', { name: /read full proposal/i }),
@@ -64,7 +64,7 @@ describe('ProjectDetailOverview', () => {
         />,
       );
       expect(
-        screen.getByText(mockSupplementGrant.grantTitle),
+        screen.getByText(mockSupplementGrant.grantDescription || ''),
       ).toBeInTheDocument();
       expect(
         screen.queryByText(mockOriginalGrant.originalGrant),
@@ -104,16 +104,21 @@ describe('ProjectDetailOverview', () => {
       const originalGrantTab = screen.getByRole('button', {
         name: 'Original Grant',
       });
-      await userEvent.click(originalGrantTab);
+      await act(async () => {
+        await userEvent.click(originalGrantTab);
+      });
 
       // Switch back to Supplement Grant
       const supplementGrantTab = screen.getByRole('button', {
         name: 'Supplement Grant',
       });
-      await userEvent.click(supplementGrantTab);
+
+      await act(async () => {
+        await userEvent.click(supplementGrantTab);
+      });
 
       expect(
-        screen.getByText(mockSupplementGrant.grantTitle),
+        screen.getByText(mockSupplementGrant.grantDescription || ''),
       ).toBeInTheDocument();
       expect(
         screen.queryByText(mockOriginalGrant.originalGrant),
@@ -154,7 +159,10 @@ describe('ProjectDetailOverview', () => {
 
   describe('without tabs', () => {
     it('does not render tabs when supplement grant has no title', () => {
-      const supplementGrantNoTitle = { ...mockSupplementGrant, title: '' };
+      const supplementGrantNoTitle = {
+        ...mockSupplementGrant,
+        grantTitle: '',
+      };
       render(
         <ProjectDetailOverview
           originalGrant={mockOriginalGrant}

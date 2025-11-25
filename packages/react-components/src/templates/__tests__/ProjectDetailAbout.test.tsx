@@ -62,13 +62,13 @@ describe('ProjectDetailAbout', () => {
       const projectWithTags: ProjectDetail = {
         ...baseProject,
         projectType: 'Discovery Project',
-        researchTheme: 'Genetics',
+        researchTheme: 'Genetics Theme',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
           displayName: 'Alpha Team',
           teamType: 'Discovery Team',
-          researchTheme: 'Genetics',
+          researchTheme: 'Genetics Theme',
         },
       };
 

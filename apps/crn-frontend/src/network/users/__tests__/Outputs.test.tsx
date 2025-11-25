@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
@@ -49,6 +49,20 @@ const renderOutputs = async (
   filters = new Set<string>(),
   userId = '42',
 ) => {
+  // Build URL with query parameters for searchQuery and filters
+  const urlParams = new URLSearchParams();
+  if (searchQuery) {
+    urlParams.set('searchQuery', searchQuery);
+  }
+  filters.forEach((filter) => {
+    urlParams.append('filter', filter);
+  });
+  const search = urlParams.toString();
+  const pathname = network({}).users({}).user({ userId }).outputs({}).$;
+  const initialEntry = search
+    ? { pathname, search: `?${search}` }
+    : { pathname };
+
   const result = render(
     <RecoilRoot
       initializeState={({ reset, set }) => {
@@ -76,14 +90,7 @@ const renderOutputs = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                {
-                  pathname: network({}).users({}).user({ userId }).outputs({})
-                    .$,
-                },
-              ]}
-            >
+            <MemoryRouter initialEntries={[initialEntry]}>
               <Route
                 path={network({}).users({}).user({ userId }).outputs({}).$}
               >
@@ -130,9 +137,10 @@ it('calls getResearchOutputs with the right arguments', async () => {
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(2),
   });
+  // Start with empty filters, then add them via UI interaction
   const { getByRole, getByText, getByLabelText } = await renderOutputs(
     searchQuery,
-    filters,
+    new Set(),
     userId,
   );
   userEvent.type(getByRole('searchbox'), searchQuery);
@@ -167,14 +175,17 @@ it('triggers export with the same parameters and custom filename', async () => {
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(2),
   });
-  const { getByRole, getByText, getByLabelText } = await renderOutputs(
+  const { getByText, getByLabelText } = await renderOutputs(
     searchQuery,
     filters,
     userId,
   );
-  userEvent.type(getByRole('searchbox'), searchQuery);
+  // Filter is already set in URL, so verify it's checked and don't toggle it
   userEvent.click(getByText('Filters'));
-  userEvent.click(getByLabelText('Grant Document'));
+  const checkbox = getByLabelText('Grant Document');
+  expect(checkbox).toBeChecked();
+
+  // Wait for initial API call with filters
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
       searchQuery,
@@ -185,13 +196,17 @@ it('triggers export with the same parameters and custom filename', async () => {
     }),
   );
 
-  userEvent.click(getByText(/csv/i));
-  expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
-    expect.stringMatching(/SharedOutputs_JohnSmith_\d+\.csv/),
-    expect.anything(),
-  );
+  await act(async () => {
+    await userEvent.click(getByText(/csv/i));
+  });
+  await waitFor(() => {
+    expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
+      expect.stringMatching(/SharedOutputs_JohnSmith_\d+\.csv/),
+      expect.anything(),
+    );
+  });
   await waitFor(() =>
-    expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
+    expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
       searchQuery,
       filters,
       userId,

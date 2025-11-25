@@ -303,7 +303,7 @@ describe('ProjectDetailHeader', () => {
         />,
       );
       const teamLink = screen.getByText('Alpha Team').closest('a');
-      expect(teamLink).toHaveAttribute('href', '/teams/team-1');
+      expect(teamLink).toHaveAttribute('href', '/network/teams/team-1');
     });
 
     it('renders team name without link when teamId is not provided', () => {
@@ -402,7 +402,7 @@ describe('ProjectDetailHeader', () => {
         />,
       );
       const teamLink = screen.getByText('Resource Team').closest('a');
-      expect(teamLink).toHaveAttribute('href', '/teams/team-2');
+      expect(teamLink).toHaveAttribute('href', '/network/teams/team-2');
     });
 
     it('renders team name without link when teamId is not provided', () => {

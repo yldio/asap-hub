@@ -293,11 +293,11 @@ describe('Projects Routes', () => {
     },
     {
       type: 'Resource',
-      path: `${projects.template}/resource/1/about`,
+      path: `${projects.template}/resource/2/about`,
     },
     {
       type: 'Trainee',
-      path: `${projects.template}/trainee/1/about`,
+      path: `${projects.template}/trainee/3/about`,
     },
   ])('renders $type project detail page', async ({ path }) => {
     await renderProjectsPage(path);

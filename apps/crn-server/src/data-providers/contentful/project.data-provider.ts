@@ -225,8 +225,6 @@ export const parseContentfulProject = (
 export const parseContentfulProjectDetail = (
   item: ProjectItem,
 ): ProjectDetailDataObject => {
-  logger.info('itemmmm');
-  logger.info(JSON.stringify(item, null, 2));
   const baseProject = parseContentfulProject(item);
   const { projectType } = baseProject;
 
@@ -350,6 +348,7 @@ export const parseContentfulProjectDetail = (
       } as TraineeProjectDetail;
     }
 
+    // istanbul ignore next - validated by parseContentfulProject
     default:
       throw new Error(`Unknown project type: ${item.projectType}`);
   }

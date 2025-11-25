@@ -403,8 +403,51 @@ export const getExpectedDiscoveryProjectDetail = () => ({
   },
   milestones: undefined,
   originalGrant: '',
-  proposalId: undefined,
+  originalGrantProposalId: undefined,
   supplementGrant: undefined,
+});
+
+// Expected Discovery Project detail with all detail fields populated (milestones, grants, teamDescription)
+export const getExpectedDiscoveryProjectDetailWithAllFields = () => ({
+  ...getExpectedDiscoveryProject(),
+  originalGrant: 'Original Grant Title',
+  originalGrantProposalId: 'proposal-1',
+  supplementGrant: {
+    grantTitle: 'Supplement Grant Title',
+    grantDescription: 'Supplement grant description',
+    grantProposalId: 'proposal-2',
+    grantStartDate: '2024-06-01',
+    grantEndDate: '2025-06-01',
+  },
+  milestones: [
+    {
+      id: 'milestone-1',
+      title: 'Milestone 1',
+      description: 'First milestone',
+      status: 'Complete',
+      link: 'https://example.com/milestone1',
+    },
+    {
+      id: 'milestone-2',
+      title: 'Milestone 2',
+      description: 'Second milestone',
+      status: 'In Progress',
+      link: undefined,
+    },
+  ],
+  fundedTeam: {
+    id: 'team-1',
+    displayName: 'Discovery Team',
+    teamType: 'Discovery Team',
+    researchTheme: 'Theme One',
+    teamDescription: 'Team description for discovery',
+  },
+  collaborators: [
+    {
+      id: 'user-1',
+      displayName: 'Alex (Al) Smith',
+    },
+  ],
 });
 
 export const getExpectedDiscoveryProjectWithoutTeam = (): DiscoveryProject => ({
@@ -606,3 +649,276 @@ export const getProjectEvent = (
   WebhookDetail<ContentfulWebhookPayload<'projects'>>
 > =>
   createEventBridgeEventMock(getUserContentfulWebhookDetail(id), eventType, id);
+
+// Reusable fixtures for project detail fields
+export const getMilestoneGraphqlItem = (
+  id: string,
+  overrides?: Partial<
+    NonNullable<
+      NonNullable<GraphQLProject['milestonesCollection']>['items'][number]
+    >
+  >,
+) => ({
+  sys: { id },
+  title: `Milestone ${id}`,
+  description: `Milestone ${id} description`,
+  status: 'Not Started' as const,
+  externalLink: null,
+  ...overrides,
+});
+
+export const getOriginalGrantFields = (overrides?: {
+  originalGrant?: string;
+  proposalId?: string | null;
+}) => ({
+  originalGrant: overrides?.originalGrant || '',
+  proposal: overrides?.proposalId
+    ? { sys: { id: overrides.proposalId } }
+    : null,
+});
+
+export const getSupplementGrantFields = (overrides?: {
+  id?: string;
+  title?: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string;
+  proposalId?: string | null;
+}) => ({
+  sys: { id: overrides?.id || 'supplement-1' },
+  title: overrides?.title || 'Supplement Grant Title',
+  description: overrides?.description || 'Supplement grant description',
+  startDate: overrides?.startDate || '2024-06-01',
+  endDate: overrides?.endDate || '2025-06-01',
+  proposal: overrides?.proposalId
+    ? { sys: { id: overrides.proposalId } }
+    : null,
+});
+
+export const getMilestonesCollection = (
+  milestones: Array<ReturnType<typeof getMilestoneGraphqlItem> | null>,
+) => ({
+  total: milestones.filter(Boolean).length,
+  items: milestones,
+});
+
+// Project detail fixtures that extend base fixtures
+export const getDiscoveryProjectDetailGraphqlItem = (overrides?: {
+  originalGrant?: string;
+  proposalId?: string | null;
+  supplementGrant?: ReturnType<typeof getSupplementGrantFields> | null;
+  milestones?: Array<ReturnType<typeof getMilestoneGraphqlItem> | null>;
+  teamDescription?: string | null;
+}): NonNullable<FetchProjectByIdQuery['projects']> =>
+  ({
+    ...getDiscoveryProjectGraphqlItem(),
+    ...getOriginalGrantFields({
+      originalGrant: overrides?.originalGrant,
+      proposalId: overrides?.proposalId,
+    }),
+    supplementGrant: overrides?.supplementGrant ?? null,
+    milestonesCollection: overrides?.milestones
+      ? getMilestonesCollection(overrides.milestones)
+      : {
+          total: 0,
+          items: [],
+        },
+    membersCollection: {
+      total: 2,
+      items: [
+        {
+          sys: { id: 'membership-discovery-team' },
+          role: 'Lead Investigator',
+          projectMember: {
+            __typename: 'Teams',
+            sys: { id: 'team-1' },
+            displayName: 'Discovery Team',
+            inactiveSince: '2025-01-01',
+            researchTheme: { name: 'Theme One' },
+            teamDescription: overrides?.teamDescription ?? null,
+          },
+        },
+        {
+          sys: { id: 'membership-discovery-user' },
+          role: 'Researcher',
+          projectMember: {
+            __typename: 'Users',
+            sys: { id: 'user-1' },
+            firstName: 'Alex',
+            nickname: 'Al',
+            lastName: 'Smith',
+            email: 'alex@example.com',
+            onboarded: true,
+            avatar: { url: 'https://example.com/alex.png' },
+            alumniSinceDate: undefined,
+          },
+        },
+      ],
+    },
+  }) as NonNullable<FetchProjectByIdQuery['projects']>;
+
+export const getResourceTeamProjectDetailGraphqlItem = (overrides?: {
+  originalGrant?: string;
+  proposalId?: string | null;
+  supplementGrant?: ReturnType<typeof getSupplementGrantFields> | null;
+  milestones?: Array<ReturnType<typeof getMilestoneGraphqlItem> | null>;
+  teamDescription?: string | null;
+}): NonNullable<FetchProjectByIdQuery['projects']> =>
+  ({
+    ...getResourceTeamProjectGraphqlItem(),
+    ...getOriginalGrantFields({
+      originalGrant: overrides?.originalGrant,
+      proposalId: overrides?.proposalId,
+    }),
+    supplementGrant: overrides?.supplementGrant ?? null,
+    milestonesCollection: overrides?.milestones
+      ? getMilestonesCollection(overrides.milestones)
+      : {
+          total: 0,
+          items: [],
+        },
+    membersCollection: {
+      total: 2,
+      items: [
+        {
+          sys: { id: 'membership-resource-main' },
+          role: 'Lead',
+          projectMember: {
+            __typename: 'Teams',
+            sys: { id: 'resource-team-main' },
+            displayName: 'Resource Team',
+            inactiveSince: null,
+            researchTheme: { name: 'Resource Theme' },
+            teamDescription: overrides?.teamDescription ?? null,
+          },
+        },
+        {
+          sys: { id: 'membership-resource-user' },
+          role: 'Contributor',
+          projectMember: {
+            __typename: 'Users',
+            sys: { id: 'user-resource-1' },
+            firstName: 'Resource',
+            nickname: '',
+            lastName: 'User',
+            email: 'resource@example.com',
+            onboarded: true,
+            avatar: { url: null },
+            alumniSinceDate: undefined,
+          },
+        },
+      ],
+    },
+  }) as NonNullable<FetchProjectByIdQuery['projects']>;
+
+export const getResourceIndividualProjectDetailGraphqlItem = (overrides?: {
+  originalGrant?: string;
+  proposalId?: string | null;
+  supplementGrant?: ReturnType<typeof getSupplementGrantFields> | null;
+  milestones?: Array<ReturnType<typeof getMilestoneGraphqlItem> | null>;
+}): NonNullable<FetchProjectByIdQuery['projects']> =>
+  ({
+    ...getResourceIndividualProjectGraphqlItem(),
+    ...getOriginalGrantFields({
+      originalGrant: overrides?.originalGrant,
+      proposalId: overrides?.proposalId,
+    }),
+    supplementGrant: overrides?.supplementGrant ?? null,
+    milestonesCollection: overrides?.milestones
+      ? getMilestonesCollection(overrides.milestones)
+      : {
+          total: 0,
+          items: [],
+        },
+    membersCollection: {
+      total: 2,
+      items: [
+        {
+          sys: { id: 'membership-resource-user-2' },
+          role: 'Contributor',
+          projectMember: {
+            __typename: 'Users',
+            sys: { id: 'user-2' },
+            firstName: 'Jamie',
+            nickname: '',
+            lastName: 'Lee',
+            email: 'jamie@example.com',
+            onboarded: true,
+            avatar: { url: null },
+            alumniSinceDate: '2025-01-01',
+          },
+        },
+        {
+          sys: { id: 'membership-resource-user-3' },
+          role: 'Contributor',
+          projectMember: {
+            __typename: 'Users',
+            sys: { id: 'user-3' },
+            firstName: 'Pat',
+            nickname: 'Patty',
+            lastName: 'Stone',
+            email: 'pat@example.com',
+            onboarded: true,
+            avatar: { url: 'https://example.com/pat.png' },
+            alumniSinceDate: undefined,
+          },
+        },
+      ],
+    },
+  }) as NonNullable<FetchProjectByIdQuery['projects']>;
+
+export const getTraineeProjectDetailGraphqlItem = (overrides?: {
+  originalGrant?: string;
+  proposalId?: string | null;
+  supplementGrant?: ReturnType<typeof getSupplementGrantFields> | null;
+  milestones?: Array<ReturnType<typeof getMilestoneGraphqlItem> | null>;
+}): NonNullable<FetchProjectByIdQuery['projects']> =>
+  ({
+    ...getTraineeProjectGraphqlItem(),
+    ...getOriginalGrantFields({
+      originalGrant: overrides?.originalGrant,
+      proposalId: overrides?.proposalId,
+    }),
+    supplementGrant: overrides?.supplementGrant ?? null,
+    milestonesCollection: overrides?.milestones
+      ? getMilestonesCollection(overrides.milestones)
+      : {
+          total: 0,
+          items: [],
+        },
+    membersCollection: {
+      total: 2,
+      items: [
+        {
+          sys: { id: 'membership-trainee-trainer' },
+          role: 'Project Lead',
+          projectMember: {
+            __typename: 'Users',
+            sys: { id: 'user-trainer' },
+            firstName: 'Taylor',
+            nickname: 'Tay',
+            lastName: 'Mills',
+            email: 'taylor@example.com',
+            onboarded: true,
+            avatar: { url: null },
+            alumniSinceDate: undefined,
+          },
+        },
+        {
+          sys: { id: 'membership-trainee-trainee' },
+          role: 'Key Personnel',
+          projectMember: {
+            __typename: 'Users',
+            sys: { id: 'user-trainee' },
+            firstName: 'Dana',
+            nickname: '',
+            lastName: 'Lopez',
+            email: 'dana@example.com',
+            onboarded: true,
+            avatar: { url: null },
+            alumniSinceDate: undefined,
+          },
+        },
+      ],
+    },
+  }) as NonNullable<FetchProjectByIdQuery['projects']>;

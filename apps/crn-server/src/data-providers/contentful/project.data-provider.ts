@@ -1,10 +1,13 @@
 import {
   FETCH_PROJECTS,
+  FETCH_PROJECTS_BY_MEMBERSHIP_ID,
   FETCH_PROJECTS_BY_TEAM_ID,
   FETCH_PROJECTS_BY_USER_ID,
   FETCH_PROJECT_BY_ID,
   FetchProjectByIdQuery,
   FetchProjectByIdQueryVariables,
+  FetchProjectsByMembershipIdQuery,
+  FetchProjectsByMembershipIdQueryVariables,
   FetchProjectsByTeamIdQuery,
   FetchProjectsByTeamIdQueryVariables,
   FetchProjectsByUserIdQuery,
@@ -80,6 +83,36 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
   async fetch(options: FetchProjectsOptions): Promise<ListProjectDataObject> {
     const { take = 10, skip = 0, search, filter } = options;
+
+    if (filter?.projectMembershipId) {
+      const { projectMembership } = await this.contentfulClient.request<
+        FetchProjectsByMembershipIdQuery,
+        FetchProjectsByMembershipIdQueryVariables
+      >(FETCH_PROJECTS_BY_MEMBERSHIP_ID, {
+        membershipId: filter.projectMembershipId,
+        // It's unlikely that one membership belongs to many projects, but for completeness sake I'm using a safe limit.
+        limit: 20,
+      });
+
+      if (!projectMembership?.linkedFrom?.projectsCollection?.items) {
+        return {
+          total: 0,
+          items: [],
+        };
+      }
+
+      const projects =
+        projectMembership.linkedFrom.projectsCollection.items.filter(
+          (project): project is NonNullable<typeof project> => project !== null,
+        );
+
+      const paginatedItems = projects.slice(skip, skip + take);
+
+      return {
+        total: projects.length,
+        items: paginatedItems.map(parseContentfulProject),
+      };
+    }
 
     const searchTerms = (search || '').split(' ').filter(Boolean);
     const searchQuery = searchTerms.length
@@ -161,11 +194,12 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
     // Extract projects from memberships and deduplicate by project ID
     const projectMap = new Map<string, ProjectItem>();
-    for (const membership of teams.linkedFrom.projectMembershipCollection
-      .items) {
-      if (!membership) {
-        continue;
-      }
+    const memberships =
+      teams.linkedFrom.projectMembershipCollection.items.filter(
+        (membership): membership is NonNullable<typeof membership> =>
+          membership !== null,
+      );
+    for (const membership of memberships) {
       const projects = membership.linkedFrom?.projectsCollection?.items || [];
       for (const project of projects) {
         if (project && !projectMap.has(project.sys.id)) {
@@ -208,11 +242,12 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
     // Extract projects from memberships and deduplicate by project ID
     const projectMap = new Map<string, ProjectItem>();
-    for (const membership of users.linkedFrom.projectMembershipCollection
-      .items) {
-      if (!membership) {
-        continue;
-      }
+    const memberships =
+      users.linkedFrom.projectMembershipCollection.items.filter(
+        (membership): membership is NonNullable<typeof membership> =>
+          membership !== null,
+      );
+    for (const membership of memberships) {
       const projects = membership.linkedFrom?.projectsCollection?.items || [];
       for (const project of projects) {
         if (project && !projectMap.has(project.sys.id)) {

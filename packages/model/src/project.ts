@@ -152,12 +152,21 @@ export type ProjectDetailDataObject = ProjectDetail;
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;
 
 // Filter types
-export type FetchProjectsFilter = {
-  readonly projectType?: ProjectType | ProjectType[];
-  readonly status?: ProjectStatus | ProjectStatus[];
-  readonly tags?: string[];
-  readonly search?: string;
-};
+export type FetchProjectsFilter =
+  | {
+      readonly projectType?: ProjectType | ProjectType[];
+      readonly status?: ProjectStatus | ProjectStatus[];
+      readonly tags?: string[];
+      readonly search?: string;
+      readonly projectMembershipId?: never;
+    }
+  | {
+      readonly projectMembershipId?: string;
+      readonly projectType?: never;
+      readonly status?: never;
+      readonly tags?: never;
+      readonly search?: never;
+    };
 
 // Response types
 export type ProjectResponse = Project;

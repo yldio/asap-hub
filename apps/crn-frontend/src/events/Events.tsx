@@ -27,46 +27,61 @@ const Events: FC<Record<string, never>> = () => {
 
   return (
     <Routes>
-      <Route path={events({}).calendar.template} element={
-        <EventsPage>
-          <Frame title="Subscribe to Calendars">
-            <Calendars currentTime={currentTime} />
+      <Route
+        path={events({}).calendar.template}
+        element={
+          <EventsPage>
+            <Frame title="Subscribe to Calendars">
+              <Calendars currentTime={currentTime} />
+            </Frame>
+          </EventsPage>
+        }
+      />
+      <Route
+        path={events({}).upcoming.template}
+        element={
+          <EventsPage
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+          >
+            <SearchFrame title="Upcoming Events">
+              <EventList
+                currentTime={currentTime}
+                searchQuery={debouncedSearchQuery}
+              />
+            </SearchFrame>
+          </EventsPage>
+        }
+      />
+      <Route
+        path={events({}).past.template}
+        element={
+          <EventsPage
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+          >
+            <SearchFrame title="Past Events">
+              <EventList
+                past
+                currentTime={currentTime}
+                searchQuery={debouncedSearchQuery}
+              />
+            </SearchFrame>
+          </EventsPage>
+        }
+      />
+      <Route
+        path={events({}).event.template}
+        element={
+          <Frame title="Event">
+            <Event />
           </Frame>
-        </EventsPage>
-      } />
-      <Route path={events({}).upcoming.template} element={
-        <EventsPage
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-        >
-          <SearchFrame title="Upcoming Events">
-            <EventList
-              currentTime={currentTime}
-              searchQuery={debouncedSearchQuery}
-            />
-          </SearchFrame>
-        </EventsPage>
-      } />
-      <Route path={events({}).past.template} element={
-        <EventsPage
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-        >
-          <SearchFrame title="Past Events">
-            <EventList
-              past
-              currentTime={currentTime}
-              searchQuery={debouncedSearchQuery}
-            />
-          </SearchFrame>
-        </EventsPage>
-      } />
-      <Route path={events({}).event.template} element={
-        <Frame title="Event">
-          <Event />
-        </Frame>
-      } />
-      <Route index element={<Navigate to={events({}).upcoming({}).$} replace />} />
+        }
+      />
+      <Route
+        index
+        element={<Navigate to={events({}).upcoming({}).$} replace />}
+      />
     </Routes>
   );
 };

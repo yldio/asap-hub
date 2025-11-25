@@ -67,7 +67,8 @@ const Form = <T extends void | Record<string, unknown>>({
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (shouldWarn) {
         e.preventDefault();
-        e.returnValue = 'Are you sure you want to leave? Unsaved changes will be lost.';
+        e.returnValue =
+          'Are you sure you want to leave? Unsaved changes will be lost.';
         return e.returnValue;
       }
     };

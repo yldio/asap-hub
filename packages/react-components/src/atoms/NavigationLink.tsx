@@ -99,12 +99,12 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren<{}>> = ({
 }) => {
   const [internal, url] = isInternalLink(href);
   const location = useLocation();
-  
+
   if (useHasRouter() && internal) {
     // Determine if the link is active by comparing the pathname
     // NavHashLink handles hash matching internally, but we need to check pathname
     const isActive = location.pathname === url.split('#')[0];
-    
+
     return (
       <NavHashLink
         to={url}

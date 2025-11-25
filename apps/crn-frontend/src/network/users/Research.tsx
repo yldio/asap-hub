@@ -68,34 +68,43 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
       />
       {id === user.id && (
         <Routes>
-          <Route path={route.editRole.template} element={
-            <Frame title="Edit Role">
-              <RoleModal
-                {...commonModalProps}
-                teams={user.teams}
-                labs={user.labs}
-                researchInterests={user.researchInterests}
-                responsibilities={user.responsibilities}
-                role={user.role}
-                reachOut={user.reachOut}
-                firstName={user.firstName}
-              />
-            </Frame>
-          } />
-          <Route path={route.editQuestions.template} element={
-            <Frame title="Edit Open Questions">
-              <OpenQuestionsModal {...user} {...commonModalProps} />
-            </Frame>
-          } />
-          <Route path={route.editExpertiseAndResources.template} element={
-            <Frame title="Edit Expertise and Resources">
-              <ExpertiseAndResourcesModal
-                {...user}
-                {...commonModalProps}
-                suggestions={researchTagsSuggestions}
-              />
-            </Frame>
-          } />
+          <Route
+            path={route.editRole.template}
+            element={
+              <Frame title="Edit Role">
+                <RoleModal
+                  {...commonModalProps}
+                  teams={user.teams}
+                  labs={user.labs}
+                  researchInterests={user.researchInterests}
+                  responsibilities={user.responsibilities}
+                  role={user.role}
+                  reachOut={user.reachOut}
+                  firstName={user.firstName}
+                />
+              </Frame>
+            }
+          />
+          <Route
+            path={route.editQuestions.template}
+            element={
+              <Frame title="Edit Open Questions">
+                <OpenQuestionsModal {...user} {...commonModalProps} />
+              </Frame>
+            }
+          />
+          <Route
+            path={route.editExpertiseAndResources.template}
+            element={
+              <Frame title="Edit Expertise and Resources">
+                <ExpertiseAndResourcesModal
+                  {...user}
+                  {...commonModalProps}
+                  suggestions={researchTagsSuggestions}
+                />
+              </Frame>
+            }
+          />
         </Routes>
       )}
     </>

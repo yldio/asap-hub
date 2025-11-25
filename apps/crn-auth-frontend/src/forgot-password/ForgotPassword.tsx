@@ -3,12 +3,7 @@ import {
   ForgotPasswordPage,
   PasswordResetEmailSentPage,
 } from '@asap-hub/react-components';
-import {
-  useNavigate,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
+import { useNavigate, Routes, Route, Navigate } from 'react-router-dom';
 import {
   extractErrorMessage,
   WebAuthError,
@@ -26,25 +21,31 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
 
   return (
     <Routes>
-      <Route index element={
-        <ForgotPasswordPage
-          email={email}
-          onChangeEmail={(newEmail) => {
-            setEmail(newEmail);
-            setError(undefined);
-          }}
-          onSubmit={() => {
-            sendPasswordResetLink(email)
-              .then(() => navigate('/forgot-password/completed', { replace: true }))
-              .catch(setError);
-          }}
-          customValidationMessage={error && extractErrorMessage(error).text}
-          onGoBack={() => navigate(-1)}
-        />
-      } />
-      <Route path="completed" element={
-        <PasswordResetEmailSentPage signInHref="/" />
-      } />
+      <Route
+        index
+        element={
+          <ForgotPasswordPage
+            email={email}
+            onChangeEmail={(newEmail) => {
+              setEmail(newEmail);
+              setError(undefined);
+            }}
+            onSubmit={() => {
+              sendPasswordResetLink(email)
+                .then(() =>
+                  navigate('/forgot-password/completed', { replace: true }),
+                )
+                .catch(setError);
+            }}
+            customValidationMessage={error && extractErrorMessage(error).text}
+            onGoBack={() => navigate(-1)}
+          />
+        }
+      />
+      <Route
+        path="completed"
+        element={<PasswordResetEmailSentPage signInHref="/" />}
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

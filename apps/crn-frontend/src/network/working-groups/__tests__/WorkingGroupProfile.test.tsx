@@ -75,7 +75,8 @@ const workingGroupResponse: WorkingGroupResponse = {
 const workingGroupId = workingGroupResponse.id;
 const renderWorkingGroupProfile = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
-  initialPath = network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+  initialPath = network({}).workingGroups({}).workingGroup({ workingGroupId })
+    .$,
   workingGroupOverrides = {},
 ) => {
   mockGetWorkingGroup.mockImplementation(async (id) =>
@@ -318,7 +319,9 @@ describe('Duplicate Output', () => {
         .workingGroup({ workingGroupId: wgResponse.id })
         .duplicateOutput({ id: researchOutput.id }).$,
     );
-    expect(await screen.findByLabelText(/Title/i)).toHaveValue('Copy of Example');
+    expect(await screen.findByLabelText(/Title/i)).toHaveValue(
+      'Copy of Example',
+    );
     await userEvent.type(screen.getByLabelText(/URL/i), 'http://example.com');
     await userEvent.click(screen.getByText(/save draft/i));
     await userEvent.click(screen.getByText(/keep and/i));
@@ -336,9 +339,10 @@ describe('Duplicate Output', () => {
     await waitFor(
       () => {
         expect(
-          router.state.location.pathname === sharedResearch({}).researchOutput({
-            researchOutputId: researchOutput.id,
-          }).$ || screen.queryByText(/Navigated/i)
+          router.state.location.pathname ===
+            sharedResearch({}).researchOutput({
+              researchOutputId: researchOutput.id,
+            }).$ || screen.queryByText(/Navigated/i),
         ).toBeTruthy();
       },
       { timeout: 15000 },
@@ -458,7 +462,9 @@ describe('the past events tab', () => {
     jest.useRealTimers();
 
     await renderWorkingGroupProfile();
-    await userEvent.click(await screen.findByText(/past/i, { selector: 'nav a *' }));
+    await userEvent.click(
+      await screen.findByText(/past/i, { selector: 'nav a *' }),
+    );
     expect(await screen.findByText(/results/i)).toBeVisible();
 
     jest.useFakeTimers();

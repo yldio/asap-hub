@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { } from 'react-router-dom';
+import {} from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import {

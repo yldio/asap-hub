@@ -28,23 +28,29 @@ const News: FC<Record<string, never>> = () => {
   } = useSearch();
   return (
     <Routes>
-      <Route index element={
-        <NewsPage
-          searchQuery={searchQuery}
-          onChangeSearch={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        >
+      <Route
+        index
+        element={
+          <NewsPage
+            searchQuery={searchQuery}
+            onChangeSearch={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          >
+            <Frame title={null}>
+              <NewsList filters={filters} searchQuery={debouncedSearchQuery} />
+            </Frame>
+          </NewsPage>
+        }
+      />
+      <Route
+        path={news({}).article.template}
+        element={
           <Frame title={null}>
-            <NewsList filters={filters} searchQuery={debouncedSearchQuery} />
+            <NewsDetailsPage />
           </Frame>
-        </NewsPage>
-      } />
-      <Route path={news({}).article.template} element={
-        <Frame title={null}>
-          <NewsDetailsPage />
-        </Frame>
-      } />
+        }
+      />
     </Routes>
   );
 };

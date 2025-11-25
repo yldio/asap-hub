@@ -21,7 +21,9 @@ export const usePaginationParams = () => {
   cardViewParams.delete(viewParam);
 
   const resetPagination = () => {
-    navigate({ search: resetPaginationSearchParams.toString() } as never, { replace: true });
+    navigate({ search: resetPaginationSearchParams.toString() } as never, {
+      replace: true,
+    });
   };
 
   return {
@@ -62,9 +64,12 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (numberOfItems && currentPage > lastAllowedPage)
-      navigate({
-        search: renderPageHref(lastAllowedPage),
-      } as never, { replace: true });
+      navigate(
+        {
+          search: renderPageHref(lastAllowedPage),
+        } as never,
+        { replace: true },
+      );
   });
 
   return {

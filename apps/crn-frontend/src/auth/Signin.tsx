@@ -41,7 +41,9 @@ const Signin: React.FC<Record<string, never>> = () => {
             newSearchParams.delete('state');
             newSearchParams.delete('error');
             newSearchParams.delete('error_description');
-            navigate({ search: newSearchParams.toString() } as never, { replace: true });
+            navigate({ search: newSearchParams.toString() } as never, {
+              replace: true,
+            });
           }}
         />
       </UtilityBar>

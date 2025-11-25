@@ -98,39 +98,42 @@ const ResearchOutput: React.FC = () => {
     return (
       <ResearchOutputPermissionsContext.Provider value={permissions}>
         <Routes>
-          <Route index element={
-            <Frame title={researchOutputData.title}>
-              {publishedNow && <ScrollToTop />}
-              <SharedResearchOutput
-                {...researchOutputData}
-                backHref={backHref}
-                onRequestReview={(shouldReview) =>
-                  updateResearchOutput(researchOutputData.id, {
-                    ...utils.transformResearchOutputResponseToRequest(
-                      researchOutputData,
-                    ),
-                    statusChangedById: currentUser?.id,
-                    hasStatusChanged: true,
-                    isInReview: shouldReview,
-                  })
-                }
-                onPublish={() =>
-                  publishResearchOutput(researchOutputData.id, {
-                    ...utils.transformResearchOutputResponseToRequest(
-                      researchOutputData,
-                    ),
-                    statusChangedById: currentUser?.id,
-                    hasStatusChanged: true,
-                    isInReview: false,
-                    published: true,
-                  })
-                }
-                publishedNow={publishedNow}
-                draftCreated={urlSearchParams.get('draftCreated') === 'true'}
-                checkForNewVersion={checkForNewVersion}
-              />
-            </Frame>
-          } />
+          <Route
+            index
+            element={
+              <Frame title={researchOutputData.title}>
+                {publishedNow && <ScrollToTop />}
+                <SharedResearchOutput
+                  {...researchOutputData}
+                  backHref={backHref}
+                  onRequestReview={(shouldReview) =>
+                    updateResearchOutput(researchOutputData.id, {
+                      ...utils.transformResearchOutputResponseToRequest(
+                        researchOutputData,
+                      ),
+                      statusChangedById: currentUser?.id,
+                      hasStatusChanged: true,
+                      isInReview: shouldReview,
+                    })
+                  }
+                  onPublish={() =>
+                    publishResearchOutput(researchOutputData.id, {
+                      ...utils.transformResearchOutputResponseToRequest(
+                        researchOutputData,
+                      ),
+                      statusChangedById: currentUser?.id,
+                      hasStatusChanged: true,
+                      isInReview: false,
+                      published: true,
+                    })
+                  }
+                  publishedNow={publishedNow}
+                  draftCreated={urlSearchParams.get('draftCreated') === 'true'}
+                  checkForNewVersion={checkForNewVersion}
+                />
+              </Frame>
+            }
+          />
           {permissions.canVersionResearchOutput && (
             <Route
               path={

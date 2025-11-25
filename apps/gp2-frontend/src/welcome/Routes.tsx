@@ -8,11 +8,14 @@ import Frame from '../Frame';
 const RoutesComponent: React.FC<Record<string, never>> = () => {
   return (
     <Routes>
-      <Route path={welcome({}).invited.template} element={
-        <Frame title="Register">
-          <Welcome />
-        </Frame>
-      } />
+      <Route
+        path={welcome({}).invited.template}
+        element={
+          <Frame title="Register">
+            <Welcome />
+          </Frame>
+        }
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

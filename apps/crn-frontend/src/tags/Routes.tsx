@@ -33,30 +33,33 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
 
   return (
     <Routes>
-      <Route index element={
-        <TagsPage
-          tags={tags}
-          setTags={setTags}
-          loadTags={async (tagQuery) => {
-            const searchedTags = await client.searchForTagValues(
-              entities,
-              tagQuery,
-              { facetFilters: tags.map((tag) => `_tags:${tag}`) },
-            );
-            return searchedTags.facetHits.map(({ value }) => ({
-              label: value,
-              value,
-            }));
-          }}
-          filters={new Set(urlEntities)}
-          filterOptions={[{ title: 'AREAS' }, ...options]}
-          onChangeFilter={toggleFilter}
-        >
-          <Frame title="Search">
-            <Tags entities={entities} />
-          </Frame>
-        </TagsPage>
-      } />
+      <Route
+        index
+        element={
+          <TagsPage
+            tags={tags}
+            setTags={setTags}
+            loadTags={async (tagQuery) => {
+              const searchedTags = await client.searchForTagValues(
+                entities,
+                tagQuery,
+                { facetFilters: tags.map((tag) => `_tags:${tag}`) },
+              );
+              return searchedTags.facetHits.map(({ value }) => ({
+                label: value,
+                value,
+              }));
+            }}
+            filters={new Set(urlEntities)}
+            filterOptions={[{ title: 'AREAS' }, ...options]}
+            onChangeFilter={toggleFilter}
+          >
+            <Frame title="Search">
+              <Tags entities={entities} />
+            </Frame>
+          </TagsPage>
+        }
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

@@ -31,8 +31,6 @@ const Projects: FC<Record<string, never>> = () => {
       .then(loadResourceProjects)
       .then(loadTraineeProjects);
   }, []);
-
-  const { path } = useRouteMatch();
   const {
     searchQuery,
     debouncedSearchQuery,

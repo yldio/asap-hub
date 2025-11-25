@@ -17,8 +17,10 @@ import Signin from '../Signin';
 
 // Mock React Router v6 -> v7 deprecation warnings
 // These are known breaking changes that will need to be addressed in React Router v7
+// eslint-disable-next-line no-console
 const originalWarn = console.warn;
 beforeAll(() => {
+  // eslint-disable-next-line no-console
   console.warn = jest.fn((message, ...args) => {
     // Suppress React Router v7 migration warnings
     if (
@@ -33,6 +35,7 @@ beforeAll(() => {
 });
 
 afterAll(() => {
+  // eslint-disable-next-line no-console
   console.warn = originalWarn;
 });
 
@@ -178,7 +181,9 @@ describe('after a failed flow', () => {
           return;
         }
         // Call through to jest-fail-on-console for other warnings
-        (console.warn as any).mockRestore?.();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (console.warn as jest.Mock).mockRestore?.();
+        // eslint-disable-next-line no-console
         console.warn(message, ...args);
       });
 

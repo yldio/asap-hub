@@ -1,7 +1,6 @@
 import { DEFAULT_COMPLETED_STATUS } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
-import { act } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { useComplianceSearch } from '../useComplianceSearch';
 

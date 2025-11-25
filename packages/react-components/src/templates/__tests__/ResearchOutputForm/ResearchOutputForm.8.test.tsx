@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import {
   createResearchOutputResponse,
@@ -14,7 +14,6 @@ import {
 } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory, History } from 'history';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -26,7 +25,6 @@ import { editorRef } from '../../../atoms';
 jest.setTimeout(60000);
 
 describe('on submit 2', () => {
-  let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
@@ -36,7 +34,6 @@ describe('on submit 2', () => {
   const getShortDescriptionFromDescription = jest.fn();
 
   beforeEach(() => {
-    history = createMemoryHistory();
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
@@ -89,7 +86,7 @@ describe('on submit 2', () => {
     },
   ) => {
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}
@@ -109,7 +106,7 @@ describe('on submit 2', () => {
           researchTags={researchTags}
           {...propOverride}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     fireEvent.change(screen.getByLabelText(/url/i), {

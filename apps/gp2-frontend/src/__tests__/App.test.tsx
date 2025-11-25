@@ -1,7 +1,12 @@
 import { authTestUtils } from '@asap-hub/gp2-components';
 import { useFlags } from '@asap-hub/react-context';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  renderHook,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { getConsentCookie } from '@asap-hub/frontend-utils';

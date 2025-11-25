@@ -9,9 +9,8 @@ import {
   waitFor,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { createMemoryHistory, History } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { MemoryRouter, Route, Router } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 import ManuscriptForm from '../ManuscriptForm';
 
@@ -20,8 +19,6 @@ type FindByRole = (
   options?: ByRoleOptions | undefined,
   waitForElementOptions?: waitForOptions | undefined,
 ) => Promise<HTMLElement>;
-
-let history!: History;
 
 const teamId = '1';
 
@@ -142,7 +139,6 @@ describe('Manuscript form', () => {
   beforeEach(() => {
     cleanup();
     jest.spyOn(console, 'error').mockImplementation();
-    history = createMemoryHistory();
   });
 
   it('renders the form', async () => {
@@ -357,20 +353,28 @@ describe('Manuscript form', () => {
   });
 
   it('should go back when cancel button is clicked', async () => {
+    let currentPathname = '/form';
+    const LocationCapture: React.FC = () => {
+      const location = useLocation();
+      currentPathname = location.pathname;
+      return null;
+    };
+
     const { findByText, getByRole } = render(
-      <MemoryRouter>
-        <Router history={history}>
-          <Route path="/form">
-            <Suspense fallback={<div>Loading...</div>}>
-              <ManuscriptForm {...defaultProps} />
-            </Suspense>
-          </Route>
-        </Router>
+      <MemoryRouter initialEntries={['/another-url', '/form']}>
+        <LocationCapture />
+        <Routes>
+          <Route
+            path="/form"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <ManuscriptForm {...defaultProps} />
+              </Suspense>
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     );
-
-    history.push('/another-url');
-    history.push('/form');
 
     await act(async () => {
       await userEvent.click(await findByText(/cancel/i));
@@ -380,7 +384,7 @@ describe('Manuscript form', () => {
       getByRole('button', { name: /Cancel manuscript submission/i }),
     );
 
-    expect(history.location.pathname).toBe('/another-url');
+    expect(currentPathname).toBe('/another-url');
   });
 
   it('should not enable OS fields on edit mode if user is not an OS team member', async () => {

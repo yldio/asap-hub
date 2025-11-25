@@ -4,7 +4,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { ToastContext } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Auth0Client } from '@auth0/auth0-spa-js';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import imageCompression from 'browser-image-compression';
 import { readFileSync } from 'fs';
 import { join } from 'path';

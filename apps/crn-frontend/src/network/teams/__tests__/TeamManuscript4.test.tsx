@@ -12,9 +12,8 @@ import {
   act,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { createMemoryHistory, MemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { Route, Router } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { createManuscript } from '../api';
@@ -28,11 +27,8 @@ jest.setTimeout(100_000);
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 
 const teamId = '42';
-let history = createMemoryHistory({
-  initialEntries: [
-    network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$,
-  ],
-});
+const defaultPath =
+  network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$;
 
 jest.mock('../../users/api');
 
@@ -80,13 +76,6 @@ jest.mock('../useManuscriptToast', () => {
 beforeEach(() => {
   mockSetFormType.mockReset();
   jest.spyOn(console, 'error').mockImplementation();
-
-  history = createMemoryHistory({
-    initialEntries: [
-      network({}).teams({}).team({ teamId }).workspace({}).createManuscript({})
-        .$,
-    ],
-  });
 });
 
 const renderPage = async (
@@ -98,7 +87,6 @@ const renderPage = async (
     network({}).teams({}).team({ teamId }).workspace.template +
     network({}).teams({}).team({ teamId }).workspace({}).createManuscript
       .template,
-  routerHistory: MemoryHistory = history,
 ) => {
   const { container } = render(
     <RecoilRoot
@@ -109,18 +97,20 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router history={routerHistory}>
-              <Route path={path}>
-                <ManuscriptToastProvider>
-                  <EligibilityReasonProvider>
-                    <TeamManuscript
-                      teamId={teamId}
-                      resubmitManuscript={resubmit}
-                    />
-                  </EligibilityReasonProvider>
-                </ManuscriptToastProvider>
-              </Route>
-            </Router>
+            <MemoryRouter initialEntries={[path]}>
+              <Routes>
+                <Route path={path}>
+                  <ManuscriptToastProvider>
+                    <EligibilityReasonProvider>
+                      <TeamManuscript
+                        teamId={teamId}
+                        resubmitManuscript={resubmit}
+                      />
+                    </EligibilityReasonProvider>
+                  </ManuscriptToastProvider>
+                </Route>
+              </Routes>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>

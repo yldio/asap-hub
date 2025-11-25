@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import {
   createResearchOutputResponse,
@@ -13,7 +13,6 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { createMemoryHistory, History } from 'history';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -25,7 +24,6 @@ import { editorRef } from '../../../atoms';
 jest.setTimeout(60000);
 
 describe('on submit', () => {
-  let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
@@ -35,7 +33,6 @@ describe('on submit', () => {
   const getShortDescriptionFromDescription = jest.fn();
 
   beforeEach(() => {
-    history = createMemoryHistory();
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
@@ -101,7 +98,7 @@ describe('on submit', () => {
     const researchTags = [{ id: '1', name: 'research tag 1' }];
 
     await render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}
@@ -121,7 +118,7 @@ describe('on submit', () => {
           researchTags={researchTags}
           {...propOverride}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     fireEvent.change(screen.getByLabelText(/url/i), {

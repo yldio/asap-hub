@@ -12,9 +12,8 @@ import {
   act,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { createMemoryHistory, MemoryHistory } from 'history';
-import { ComponentProps, Suspense } from 'react';
-import { Route, Router } from 'react-router-dom';
+import { ComponentProps, Suspense, useEffect } from 'react';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { createManuscript } from '../api';
@@ -31,11 +30,18 @@ jest.setTimeout(100_000);
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 
 const teamId = '42';
-let history = createMemoryHistory({
-  initialEntries: [
-    network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$,
-  ],
-});
+const defaultPath =
+  network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$;
+
+// Helper to capture location in tests
+let currentLocation: { pathname: string; search: string } | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentLocation = { pathname: location.pathname, search: location.search };
+  }, [location]);
+  return null;
+};
 
 jest.mock('../../users/api');
 
@@ -87,14 +93,8 @@ const mockGetGeneratedShortDescription =
 
 beforeEach(() => {
   mockSetFormType.mockReset();
+  currentLocation = null;
   jest.spyOn(console, 'error').mockImplementation();
-
-  history = createMemoryHistory({
-    initialEntries: [
-      network({}).teams({}).team({ teamId }).workspace({}).createManuscript({})
-        .$,
-    ],
-  });
 });
 
 const renderPage = async (
@@ -106,7 +106,6 @@ const renderPage = async (
     network({}).teams({}).team({ teamId }).workspace.template +
     network({}).teams({}).team({ teamId }).workspace({}).createManuscript
       .template,
-  routerHistory: MemoryHistory = history,
 ) => {
   const { container } = render(
     <RecoilRoot
@@ -117,18 +116,21 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router history={routerHistory}>
-              <Route path={path}>
-                <ManuscriptToastProvider>
-                  <EligibilityReasonProvider>
-                    <TeamManuscript
-                      teamId={teamId}
-                      resubmitManuscript={resubmit}
-                    />
-                  </EligibilityReasonProvider>
-                </ManuscriptToastProvider>
-              </Route>
-            </Router>
+            <MemoryRouter initialEntries={[path]}>
+              <LocationCapture />
+              <Routes>
+                <Route path={path}>
+                  <ManuscriptToastProvider>
+                    <EligibilityReasonProvider>
+                      <TeamManuscript
+                        teamId={teamId}
+                        resubmitManuscript={resubmit}
+                      />
+                    </EligibilityReasonProvider>
+                  </ManuscriptToastProvider>
+                </Route>
+              </Routes>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>
@@ -323,8 +325,11 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       },
       expect.anything(),
     );
-    expect(history.location.pathname).toBe(
-      `/network/teams/${teamId}/workspace`,
-    );
+    await waitFor(() => {
+      expect(currentLocation).not.toBeNull();
+      expect(currentLocation?.pathname).toBe(
+        `/network/teams/${teamId}/workspace`,
+      );
+    });
   });
 });

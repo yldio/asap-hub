@@ -139,19 +139,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   });
 
   if (team) {
-    const {
-      about,
-      compliance,
-      createOutput,
-      duplicateOutput,
-      outputs,
-      past,
-      upcoming,
-      workspace,
-      draftOutputs,
-    } = route({
-      teamId,
-    });
     const paths = {
       about: 'about',
       compliance: 'compliance',

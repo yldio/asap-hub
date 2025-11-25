@@ -6,7 +6,7 @@ import { PropsWithChildren } from 'react';
 
 // I'm not willing to add useless devDeps on all @types we have to the frontend though, so instead I just put this file here.
 declare module 'react-titled' {
-  interface TitledProps extends PropsWithChildren<{}> {
+  interface TitledProps extends PropsWithChildren {
     readonly title: (parentTitle: string) => string;
     readonly onChange?: (title: string) => void;
   }

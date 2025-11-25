@@ -58,11 +58,6 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
 
   const userRoute = users({}).user({ userId });
 
-  const overview = userRoute.overview({}).$;
-  const outputs = userRoute.outputs({}).$;
-  const upcoming = userRoute.upcoming({}).$;
-  const past = userRoute.past({}).$;
-
   const backToUserDetails = users({}).user({ userId }).$;
   const userOverviewRoute = userRoute.overview({});
   const editHrefs = {

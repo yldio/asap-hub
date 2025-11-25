@@ -73,7 +73,7 @@ it('copy button adds emails to clipboard', async () => {
   );
   const copyButton = screen.getByRole('button', { name: 'Copy' });
   expect(copyButton).toBeVisible();
-  userEvent.click(copyButton);
+  await userEvent.click(copyButton);
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
     'test@example.com,contact@example.com',
   );

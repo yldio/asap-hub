@@ -40,7 +40,7 @@ describe('EngagementSort', () => {
     expect(screen.getByText(/option 1/i)).not.toBeVisible();
 
     const sortButton = screen.getByTitle(/General Sort Icon/i);
-    userEvent.click(sortButton);
+    await userEvent.click(sortButton);
 
     expect(screen.getByText(/option 1/i)).toBeVisible();
   });
@@ -49,7 +49,7 @@ describe('EngagementSort', () => {
     render(<EngagementSort {...defaultProps} />);
 
     const sortButton = screen.getByTitle(/General Sort Icon/i);
-    userEvent.click(sortButton);
+    await userEvent.click(sortButton);
 
     expect(screen.getByText(/option 1/i)).toBeVisible();
 
@@ -60,7 +60,7 @@ describe('EngagementSort', () => {
   it('should close the menu when pressing Escape key', () => {
     render(<EngagementSort {...defaultProps} />);
     const sortButton = screen.getByTitle(/General Sort Icon/i);
-    userEvent.click(sortButton);
+    await userEvent.click(sortButton);
 
     expect(screen.getByText(/option 1/i)).toBeVisible();
 
@@ -71,10 +71,10 @@ describe('EngagementSort', () => {
   it('should call the onClick and close the menu when clicking a sorting option', () => {
     render(<EngagementSort {...defaultProps} />);
     const sortButton = screen.getByTitle(/General Sort Icon/i);
-    userEvent.click(sortButton);
+    await userEvent.click(sortButton);
 
     const option = screen.getByText(/option 1/i);
-    userEvent.click(option);
+    await userEvent.click(option);
     expect(onClickOption1).toHaveBeenCalled();
     expect(screen.getByText(/option 1/i)).not.toBeVisible();
   });

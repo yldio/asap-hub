@@ -122,7 +122,7 @@ it('shows the no option message when there are no options', () => {
   const { getByRole, getByText } = render(
     <MultiSelect suggestions={[]} noOptionsMessage={() => 'No options'} />,
   );
-  userEvent.type(getByRole('textbox'), 'LT');
+  await userEvent.type(getByRole('textbox'), 'LT');
   expect(getByText(/no options/i)).toBeVisible();
 });
 
@@ -138,8 +138,8 @@ it('opens a menu to select from on click', () => {
     />,
   );
 
-  userEvent.click(getByRole('textbox'));
-  userEvent.click(getByText('LGW'));
+  await userEvent.click(getByRole('textbox'));
+  await userEvent.click(getByText('LGW'));
   expect(handleChange).toHaveBeenLastCalledWith(
     [{ label: 'LGW', value: 'LGW' }],
     {
@@ -163,7 +163,7 @@ it('does not open a menu when clicking a value', () => {
     />,
   );
 
-  userEvent.click(getByText('LGW'));
+  await userEvent.click(getByText('LGW'));
   expect(() => getByText('LHR')).toThrow();
 });
 
@@ -180,10 +180,10 @@ it('opens a filtered menu to select from when typing', () => {
     />,
   );
 
-  userEvent.type(getByRole('textbox'), 'LT');
+  await userEvent.type(getByRole('textbox'), 'LT');
   expect(queryByText('LGW')).not.toBeInTheDocument();
 
-  userEvent.click(getByText('LTN'));
+  await userEvent.click(getByText('LTN'));
   expect(handleChange).toHaveBeenLastCalledWith(
     [{ label: 'LTN', value: 'LTN' }],
     {
@@ -205,8 +205,8 @@ it('does not allow non-suggested input', () => {
       onChange={handleChange}
     />,
   );
-  userEvent.type(getByRole('textbox'), 'LTN');
-  userEvent.tab();
+  await userEvent.type(getByRole('textbox'), 'LTN');
+  await userEvent.tab();
   expect(handleChange).not.toHaveBeenCalled();
 });
 
@@ -219,7 +219,7 @@ it('shows the focused suggestion in green', () => {
       ]}
     />,
   );
-  userEvent.click(getByRole('textbox'));
+  await userEvent.click(getByRole('textbox'));
   expect(
     findParentWithStyle(getByText('LGW'), 'color')?.color.replace(/ /g, ''),
   ).not.toBe(pine.rgb.replace(/ /g, ''));
@@ -307,7 +307,7 @@ describe('Async', () => {
         noOptionsMessage={() => 'No options'}
       />,
     );
-    userEvent.type(getByRole('textbox'), 'LT');
+    await userEvent.type(getByRole('textbox'), 'LT');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -334,11 +334,11 @@ describe('Async', () => {
         />,
       );
 
-      userEvent.click(getByRole('textbox'));
+      await userEvent.click(getByRole('textbox'));
       await waitFor(() =>
         expect(queryByText(/loading/i)).not.toBeInTheDocument(),
       );
-      userEvent.click(getByText('One'));
+      await userEvent.click(getByText('One'));
       expect(handleChange).toHaveBeenLastCalledWith(
         calledWith,
         expect.anything(),
@@ -420,8 +420,8 @@ describe('Async', () => {
       />,
     );
     const input = getByRole('textbox', { hidden: false });
-    userEvent.click(input);
-    userEvent.tab();
+    await userEvent.click(input);
+    await userEvent.tab();
 
     expect(getByText('Please fill out this field.')).toBeVisible();
 
@@ -435,7 +435,7 @@ describe('Async', () => {
       />,
     );
 
-    userEvent.click(input);
+    await userEvent.click(input);
     expect(queryByText('Please fill out this field.')).not.toBeInTheDocument();
   });
 
@@ -453,12 +453,12 @@ describe('Async', () => {
       />,
     );
 
-    userEvent.click(getByRole('textbox'));
+    await userEvent.click(getByRole('textbox'));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.type(getByRole('textbox'), 'Test');
+    await userEvent.type(getByRole('textbox'), 'Test');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -476,17 +476,17 @@ describe('Async', () => {
       />,
     );
 
-    userEvent.click(getByRole('textbox'));
+    await userEvent.click(getByRole('textbox'));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.type(getByRole('textbox'), 'Test');
+    await userEvent.type(getByRole('textbox'), 'Test');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.click(getAllByText('Test')[1]!);
+    await userEvent.click(getAllByText('Test')[1]!);
 
     await waitFor(() => {
       expect(mockOnChange).toHaveBeenCalledWith(

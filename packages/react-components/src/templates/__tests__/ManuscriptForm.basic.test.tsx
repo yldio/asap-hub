@@ -229,7 +229,7 @@ describe('Manuscript form', () => {
       await renderManuscriptForm(defaultProps);
 
     const input = getByRole('textbox', { name: /Title of Manuscript/i });
-    userEvent.type(input, '');
+    await userEvent.type(input, '');
     input.focus();
     input.blur();
     await waitFor(() => {
@@ -238,7 +238,7 @@ describe('Manuscript form', () => {
       ).toBeGreaterThanOrEqual(1);
     });
 
-    userEvent.type(input, 'title');
+    await userEvent.type(input, 'title');
     input.blur();
 
     await waitFor(() => {
@@ -285,7 +285,7 @@ describe('Manuscript form', () => {
     const textbox = getByRole('textbox', {
       name: /Type of Manuscript/i,
     });
-    userEvent.type(textbox, 'invalid type');
+    await userEvent.type(textbox, 'invalid type');
 
     expect(getByText(/Sorry, no types match/i)).toBeVisible();
   });
@@ -494,23 +494,23 @@ describe('Manuscript form', () => {
     // --- Required category error message ---
     await userEvent.clear(categoryInput);
 
-    userEvent.click(categoryInput);
+    await userEvent.click(categoryInput);
     categoryInput.blur();
 
     await waitFor(() => {
       expect(getByText(/Please add at least one category/i)).toBeVisible();
     });
     await userEvent.type(categoryInput, 'Category');
-    userEvent.click(getByText('Category A'));
+    await userEvent.click(getByText('Category A'));
     categoryInput.blur();
 
     expect(getByText('Category A')).toBeInTheDocument();
 
     // --- Category limit ---
-    userEvent.click(categoryInput);
-    userEvent.click(getByText('Category B'));
-    userEvent.click(categoryInput);
-    userEvent.click(getByText('Category C'));
+    await userEvent.click(categoryInput);
+    await userEvent.click(getByText('Category B'));
+    await userEvent.click(categoryInput);
+    await userEvent.click(getByText('Category C'));
     await categoryInput.blur();
 
     await waitFor(() => {
@@ -523,7 +523,7 @@ describe('Manuscript form', () => {
     const impactInput = getByRole('textbox', { name: /Impact/i });
 
     // --- Required impact error message ---
-    userEvent.click(impactInput);
+    await userEvent.click(impactInput);
     impactInput.blur();
 
     await waitFor(() => {
@@ -539,7 +539,7 @@ describe('Manuscript form', () => {
     });
 
     // --- Valid impact field ---
-    userEvent.clear(impactInput);
+    await userEvent.clear(impactInput);
 
     await userEvent.type(impactInput, 'Impact');
 
@@ -547,7 +547,7 @@ describe('Manuscript form', () => {
       expect(getByText('Impact A')).toBeVisible();
     });
 
-    userEvent.click(getByText('Impact A'));
+    await userEvent.click(getByText('Impact A'));
     expect(getByText('Impact A')).toBeInTheDocument();
   });
 

@@ -427,7 +427,7 @@ describe('a draft output', () => {
     );
     const toast = getByText('Draft Team Grant Document created successfully.');
     expect(toast).toBeVisible();
-    userEvent.click(getByTitle(/close/i));
+    await userEvent.click(getByTitle(/close/i));
     expect(toast).not.toBeInTheDocument();
   });
   it.each(researchOutputDocumentTypes)(
@@ -547,7 +547,7 @@ describe('a newly published output', () => {
     );
     const toast = getByText('Team Article published successfully.');
     expect(toast).toBeVisible();
-    userEvent.click(getByTitle(/close/i));
+    await userEvent.click(getByTitle(/close/i));
     expect(toast).not.toBeInTheDocument();
   });
   it.each(researchOutputDocumentTypes)(
@@ -1326,7 +1326,7 @@ describe('displayNoNewManuscriptVersionModal', () => {
     expect(getByText('No new manuscript versions available')).toBeVisible();
 
     const goToComplianceButton = getByText('Go to Compliance Area');
-    userEvent.click(goToComplianceButton);
+    await userEvent.click(goToComplianceButton);
 
     await waitFor(() => {
       expect(

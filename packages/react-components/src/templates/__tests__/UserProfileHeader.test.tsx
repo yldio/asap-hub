@@ -54,7 +54,7 @@ it('copy button adds email to clipboard', async () => {
   render(<UserProfileHeader {...boilerplateProps} email="me@example.com" />);
   const copyButton = screen.getByRole('button', { name: 'Copy' });
   expect(copyButton).toBeVisible();
-  userEvent.click(copyButton);
+  await userEvent.click(copyButton);
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith('me@example.com');
 });
 describe('an edit button', () => {
@@ -101,7 +101,7 @@ describe('an edit button', () => {
     const uploadInput = getByLabelText(/upload.+avatar/i);
     expect(editButton).toBeVisible();
     expect(uploadInput).not.toHaveAttribute('disabled');
-    userEvent.upload(uploadInput, testFile);
+    await userEvent.upload(uploadInput, testFile);
     expect(onImageSelect).toHaveBeenCalledWith(testFile);
   });
 });

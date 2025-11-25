@@ -170,66 +170,66 @@ describe('OutputForm', () => {
         },
       );
 
-      userEvent.type(
+      await userEvent.type(
         screen.getByRole('textbox', { name: /title/i }),
         'output title',
       );
 
-      userEvent.type(
+      await userEvent.type(
         screen.getByRole('textbox', { name: /url/i }),
         'https://example.com',
       );
 
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('textbox', { name: /identifier type/i }),
       );
-      userEvent.click(screen.getByText(/^none/i));
-      userEvent.click(
+      await userEvent.click(screen.getByText(/^none/i));
+      await userEvent.click(
         screen.getByRole('textbox', {
           name: /working groups/i,
         }),
       );
 
-      userEvent.click(screen.getByText('another group'));
+      await userEvent.click(screen.getByText('another group'));
 
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('textbox', {
           name: /projects/i,
         }),
       );
 
-      userEvent.click(screen.getByText('another project'));
+      await userEvent.click(screen.getByText('another project'));
 
       const authors = screen.getByRole('textbox', { name: /Authors/i });
-      userEvent.click(authors);
+      await userEvent.click(authors);
 
-      userEvent.click(await screen.findByText(/Chris Reed/i));
-      userEvent.click(authors);
-      userEvent.click(screen.getByText('Chris Blue'));
-      userEvent.click(authors);
-      userEvent.type(authors, 'Alex White');
+      await userEvent.click(await screen.findByText(/Chris Reed/i));
+      await userEvent.click(authors);
+      await userEvent.click(screen.getByText('Chris Blue'));
+      await userEvent.click(authors);
+      await userEvent.type(authors, 'Alex White');
 
       await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-      userEvent.click(screen.getAllByText('Alex White')[1]!);
+      await userEvent.click(screen.getAllByText('Alex White')[1]!);
 
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('textbox', {
           name: /related output/i,
         }),
       );
-      userEvent.click(await screen.findByText('some related output'));
-      userEvent.click(
+      await userEvent.click(await screen.findByText('some related output'));
+      await userEvent.click(
         screen.getByRole('textbox', {
           name: /related gp2 hub events/i,
         }),
       );
-      userEvent.click(await screen.findByText('some related event'));
+      await userEvent.click(await screen.findByText('some related event'));
 
       expect(
         screen.queryByText('Publish output for the whole hub?'),
       ).not.toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
 
       expect(
         screen.getByText('Publish output for the whole hub?'),
@@ -238,7 +238,9 @@ describe('OutputForm', () => {
         `All ${entityText} members listed on this output will be notified and all GP2 members will be able to access it. If you need to unpublish this output, please contact techsupport@gp2.org.`,
       );
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Publish Output' }),
+      );
 
       await waitFor(() => {
         expect(shareOutput).toHaveBeenCalledWith({
@@ -303,7 +305,7 @@ describe('OutputForm', () => {
       },
     );
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /url/i }),
       'https://example.com',
     );
@@ -311,7 +313,7 @@ describe('OutputForm', () => {
     const sharingStatus = screen.getByRole('group', {
       name: /sharing status?/i,
     });
-    userEvent.click(
+    await userEvent.click(
       within(sharingStatus).getByRole('radio', { name: 'Public' }),
     );
     fireEvent.change(
@@ -321,8 +323,10 @@ describe('OutputForm', () => {
       },
     );
 
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Publish Output' }),
+    );
 
     await waitFor(() => {
       expect(shareOutput).toHaveBeenCalledWith(
@@ -365,7 +369,7 @@ describe('OutputForm', () => {
       screen.getByRole('textbox', { name: /short description/i }),
     ).toHaveValue('');
 
-    userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+    await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
 
     await waitFor(() => {
       expect(
@@ -433,7 +437,7 @@ describe('OutputForm', () => {
         ),
       });
 
-      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await userEvent.click(screen.getByRole('button', { name: /save/i }));
 
       expect(
         screen.queryByText('Publish output for the whole hub?'),
@@ -528,8 +532,8 @@ describe('OutputForm', () => {
         },
       );
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-      userEvent.click(
+      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await userEvent.click(
         screen.getByRole('button', { name: 'Publish new version' }),
       );
 
@@ -559,8 +563,8 @@ describe('OutputForm', () => {
         renderWithRouter(
           <OutputForm {...defaultProps} documentType="Article" />,
         );
-        userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
-        userEvent.click(screen.getByText(type));
+        await userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
+        await userEvent.click(screen.getByText(type));
         expect(
           screen.queryByRole('textbox', { name: /subtype/i }),
         ).not.toBeInTheDocument();
@@ -568,8 +572,8 @@ describe('OutputForm', () => {
     );
     it.each<gp2.OutputType>(['Research'])('%s renders subtype', (type) => {
       renderWithRouter(<OutputForm {...defaultProps} documentType="Article" />);
-      userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
-      userEvent.click(screen.getByText(type));
+      await userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
+      await userEvent.click(screen.getByText(type));
       expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
     });
 
@@ -600,17 +604,19 @@ describe('OutputForm', () => {
         },
       );
 
-      userEvent.type(
+      await userEvent.type(
         screen.getByRole('textbox', { name: /url/i }),
         'https://example.com',
       );
-      userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
-      userEvent.click(screen.getByText('Research'));
-      userEvent.click(screen.getByRole('textbox', { name: /subtype/i }));
-      userEvent.click(screen.getByText('Published'));
+      await userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
+      await userEvent.click(screen.getByText('Research'));
+      await userEvent.click(screen.getByRole('textbox', { name: /subtype/i }));
+      await userEvent.click(screen.getByText('Published'));
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Publish Output' }),
+      );
 
       await waitFor(() => {
         expect(shareOutput).toHaveBeenCalledWith(
@@ -792,7 +798,7 @@ describe('OutputForm', () => {
 
       it('displays tags suggestions', () => {
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/additional tags/i));
+        await userEvent.click(screen.getByLabelText(/additional tags/i));
         expect(screen.getByText('2D Cultures')).toBeVisible();
         expect(screen.getByText('Adenosine')).toBeVisible();
         expect(screen.getByText('Adrenal')).toBeVisible();
@@ -805,8 +811,8 @@ describe('OutputForm', () => {
 
       it('update tags after adding one', () => {
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/additional tags/i));
-        userEvent.click(screen.getByText('2D Cultures'));
+        await userEvent.click(screen.getByLabelText(/additional tags/i));
+        await userEvent.click(screen.getByText('2D Cultures'));
         expect(screen.getByText('Neurology')).toBeVisible();
         expect(screen.getByText('2D Cultures')).toBeVisible();
       });
@@ -892,7 +898,7 @@ describe('OutputForm', () => {
 
       it('displays cohorts suggestions', () => {
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/cohorts/i));
+        await userEvent.click(screen.getByLabelText(/cohorts/i));
         expect(screen.getByText('2D Cultures')).toBeVisible();
         expect(screen.getByText('Adenosine')).toBeVisible();
         expect(screen.getByText('Adrenal')).toBeVisible();
@@ -905,8 +911,8 @@ describe('OutputForm', () => {
 
       it('update cohorts after adding one', () => {
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/cohorts/i));
-        userEvent.click(screen.getByText('2D Cultures'));
+        await userEvent.click(screen.getByLabelText(/cohorts/i));
+        await userEvent.click(screen.getByText('2D Cultures'));
         expect(screen.getByText('Neurology')).toBeVisible();
         expect(screen.getByText('2D Cultures')).toBeVisible();
       });
@@ -939,7 +945,7 @@ describe('OutputForm', () => {
 
       it('displays working groups suggestions', () => {
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/working groups/i));
+        await userEvent.click(screen.getByLabelText(/working groups/i));
         expect(screen.getByText('WG 1')).toBeVisible();
       });
 
@@ -950,8 +956,8 @@ describe('OutputForm', () => {
 
       it('update working groups after adding one', () => {
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/working groups/i));
-        userEvent.click(screen.getByText('WG 1'));
+        await userEvent.click(screen.getByLabelText(/working groups/i));
+        await userEvent.click(screen.getByText('WG 1'));
         expect(screen.getByText('A WG title')).toBeVisible();
         expect(screen.getByText('WG 1')).toBeVisible();
       });
@@ -959,7 +965,7 @@ describe('OutputForm', () => {
       it('shows the custom no options message for working groups', async () => {
         renderWithSuggestions();
 
-        userEvent.type(
+        await userEvent.type(
           screen.getByLabelText(/working groups/i),
           'asdflkjasdflkj',
         );
@@ -998,7 +1004,7 @@ describe('OutputForm', () => {
 
       it('displays projects suggestions', () => {
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/projects/i));
+        await userEvent.click(screen.getByLabelText(/projects/i));
         expect(screen.getByText('Project 1')).toBeVisible();
       });
 
@@ -1009,8 +1015,8 @@ describe('OutputForm', () => {
 
       it('update projects after adding one', () => {
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/projects/i));
-        userEvent.click(screen.getByText('Project 1'));
+        await userEvent.click(screen.getByLabelText(/projects/i));
+        await userEvent.click(screen.getByText('Project 1'));
         expect(screen.getByText('A Project title')).toBeVisible();
         expect(screen.getByText('Project 1')).toBeVisible();
       });
@@ -1018,7 +1024,10 @@ describe('OutputForm', () => {
       it('shows the custom no options message for projects', async () => {
         renderWithSuggestions();
 
-        userEvent.type(screen.getByLabelText(/projects/i), 'asdflkjasdflkj');
+        await userEvent.type(
+          screen.getByLabelText(/projects/i),
+          'asdflkjasdflkj',
+        );
 
         expect(
           screen.getByText('Sorry, no projects match asdflkjasdflkj'),
@@ -1083,7 +1092,7 @@ describe('OutputForm', () => {
       const sharingStatus = screen.getByRole('group', {
         name: /sharing status?/i,
       });
-      userEvent.click(
+      await userEvent.click(
         within(sharingStatus).getByRole('radio', { name: 'Public' }),
       );
 
@@ -1164,7 +1173,7 @@ describe('OutputForm', () => {
         },
       );
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
 
       expect(shareOutput).not.toHaveBeenCalled();
       expect(removeNotification).not.toHaveBeenCalled();
@@ -1205,13 +1214,13 @@ describe('OutputForm', () => {
         },
       );
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
 
       expect(
         screen.queryByText('Publish output for the whole hub?'),
       ).not.toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
 
       expect(
         screen.queryByText('Publish output for the whole hub?'),
@@ -1248,7 +1257,7 @@ describe('OutputForm', () => {
         },
       );
 
-      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await userEvent.click(screen.getByRole('button', { name: /save/i }));
       expect(
         await screen.findByRole('button', { name: /save/i }),
       ).toBeEnabled();
@@ -1297,7 +1306,7 @@ describe('OutputForm', () => {
       addNotification.mockImplementationOnce((not: Notification) =>
         notifications.push(not),
       );
-      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await userEvent.click(screen.getByRole('button', { name: /save/i }));
       expect(
         await screen.findByRole('button', { name: /save/i }),
       ).toBeEnabled();
@@ -1313,9 +1322,9 @@ describe('OutputForm', () => {
         ),
       );
 
-      userEvent.clear(screen.getByRole('textbox', { name: /title/i }));
+      await userEvent.clear(screen.getByRole('textbox', { name: /title/i }));
 
-      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await userEvent.click(screen.getByRole('button', { name: /save/i }));
       expect(
         await screen.findByRole('button', { name: /save/i }),
       ).toBeEnabled();
@@ -1362,7 +1371,7 @@ describe('OutputForm', () => {
         ),
       ).toBeVisible();
 
-      userEvent.type(screen.getByLabelText(/URL/i), 'a');
+      await userEvent.type(screen.getByLabelText(/URL/i), 'a');
       expect(mockClearError).toHaveBeenCalledWith('/link');
     });
 
@@ -1394,7 +1403,7 @@ describe('OutputForm', () => {
         ),
       ).toBeVisible();
 
-      userEvent.type(screen.getByLabelText(/title/i), 'a');
+      await userEvent.type(screen.getByLabelText(/title/i), 'a');
       expect(mockClearError).toHaveBeenCalledWith('/title');
     });
   });

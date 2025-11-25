@@ -32,6 +32,6 @@ it('is collapsible when prop set', () => {
   );
   expect(queryByText('example text')).toBeVisible();
 
-  userEvent.click(getByText(/show/i));
+  await userEvent.click(getByText(/show/i));
   expect(getByText(/hide/i)).toBeVisible();
 });

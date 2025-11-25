@@ -83,7 +83,7 @@ describe('Routes', () => {
   it('can perform a search', async () => {
     mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
     await renderRoutes();
-    userEvent.type(screen.getByPlaceholderText(/Enter name/i), 'example');
+    await userEvent.type(screen.getByPlaceholderText(/Enter name/i), 'example');
     await waitFor(() =>
       expect(mockGetProjects).toHaveBeenLastCalledWith(
         expect.anything(),

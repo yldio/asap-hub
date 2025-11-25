@@ -52,7 +52,7 @@ describe('TagsModal', () => {
       tags,
       onSave,
     });
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       tags: tags.map((t) => ({
         id: t.id,
@@ -68,14 +68,14 @@ describe('TagsModal', () => {
       onSave,
     });
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('textbox', {
         name: /Tags/i,
       }),
     );
-    userEvent.click(screen.getByText('Tag-2'));
+    await userEvent.click(screen.getByText('Tag-2'));
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       tags: [{ id: 'id-2' }],
     });
@@ -89,7 +89,7 @@ describe('TagsModal', () => {
       onSave,
     });
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).not.toHaveBeenCalled();
     expect(screen.getByText('Please add your tags')).toBeVisible();
     await waitFor(() => expect(getSaveButton()).toBeEnabled());

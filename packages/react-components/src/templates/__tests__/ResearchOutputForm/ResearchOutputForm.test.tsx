@@ -158,7 +158,7 @@ it('displays keywords suggestions', async () => {
       />
     </StaticRouter>,
   );
-  userEvent.click(
+  await userEvent.click(
     screen.getByText(/Start typing\.\.\. \(E\.g\. Cell Biology\)/i),
   );
   expect(screen.getByText('2D Cultures')).toBeVisible();
@@ -189,7 +189,7 @@ it('displays error message when no author is found', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
   expect(screen.getByText(/Sorry, no authors match/i)).toBeVisible();
 });
 
@@ -203,7 +203,7 @@ it('displays error message when no lab is found', async () => {
       />
     </StaticRouter>,
   );
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
   expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
 });
 
@@ -217,7 +217,9 @@ it('displays error message when no related research is found', async () => {
       />
     </StaticRouter>,
   );
-  userEvent.click(screen.getByRole('textbox', { name: /Related Outputs/i }));
+  await userEvent.click(
+    screen.getByRole('textbox', { name: /Related Outputs/i }),
+  );
   expect(screen.getByText(/Sorry, no related outputs match/i)).toBeVisible();
 });
 
@@ -254,7 +256,7 @@ it('can generate short description when description is present', async () => {
     screen.getByRole('textbox', { name: /short description/i }),
   ).toHaveValue('');
 
-  userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+  await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
 
   await waitFor(() => {
     expect(

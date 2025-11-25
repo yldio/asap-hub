@@ -59,15 +59,15 @@ it('triggers the save function', async () => {
     />,
   );
 
-  userEvent.type(
+  await userEvent.type(
     getByLabelText(/expertise and resources/i),
     'example description',
   );
 
-  userEvent.type(getByLabelText(/tags\s*\(required\)/i), '5');
-  userEvent.tab();
+  await userEvent.type(getByLabelText(/tags\s*\(required\)/i), '5');
+  await userEvent.tab();
 
-  userEvent.click(getByText('Save'));
+  await userEvent.click(getByText('Save'));
 
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
@@ -92,7 +92,7 @@ it('disables the form elements while submitting', async () => {
     />,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
 
   const form = getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);
@@ -110,7 +110,7 @@ describe('tags selection', () => {
       <ExpertiseAndResourcesModal {...props} suggestions={mapTags(['abc'])} />,
     );
 
-    userEvent.type(getByLabelText(/tags\s*\(required\)/i), 'def');
+    await userEvent.type(getByLabelText(/tags\s*\(required\)/i), 'def');
     expect(getByText('Sorry, No current tags match "def"')).toBeVisible();
   });
 
@@ -127,7 +127,7 @@ describe('tags selection', () => {
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).not.toEqual(
       ember.rgb,
     );
-    userEvent.click(getByText(/save/i));
+    await userEvent.click(getByText(/save/i));
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(
       steel.rgb,
     );
@@ -146,9 +146,9 @@ describe('tags selection', () => {
     );
 
     const input = getByLabelText(/tags\s*\(required\)/i);
-    userEvent.click(input);
-    userEvent.type(input, '4');
-    userEvent.type(input, `{enter}`);
+    await userEvent.click(input);
+    await userEvent.type(input, '4');
+    await userEvent.type(input, `{enter}`);
     fireEvent.blur(input);
 
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(
@@ -156,9 +156,9 @@ describe('tags selection', () => {
     );
     expect(getByText('Please add a minimum of 5 tags')).toBeVisible();
 
-    userEvent.click(input);
-    userEvent.type(input, '5');
-    userEvent.type(input, `{enter}`);
+    await userEvent.click(input);
+    await userEvent.type(input, '5');
+    await userEvent.type(input, `{enter}`);
     fireEvent.blur(input);
 
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(

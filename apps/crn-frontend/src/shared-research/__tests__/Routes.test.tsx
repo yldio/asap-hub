@@ -48,18 +48,18 @@ describe('the shared research listing page', () => {
     await renderSharedResearchPage('/shared-research');
     const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
-    userEvent.type(searchBox, 'test123');
+    await userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
   });
 
   it('allows selection of filters', async () => {
     await renderSharedResearchPage('/shared-research');
 
-    userEvent.click(screen.getByText('Filters'));
+    await userEvent.click(screen.getByText('Filters'));
     const checkbox = screen.getByLabelText('Grant Document');
     expect(checkbox).not.toBeChecked();
 
-    userEvent.click(checkbox);
+    await userEvent.click(checkbox);
     expect(checkbox).toBeChecked();
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),
@@ -73,7 +73,7 @@ describe('the shared research listing page', () => {
       '?filter=Grant+Document',
     );
 
-    userEvent.click(screen.getByText('Filters'));
+    await userEvent.click(screen.getByText('Filters'));
     const checkbox = screen.getByLabelText('Grant Document');
     expect(checkbox).toBeChecked();
 

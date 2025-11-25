@@ -43,8 +43,10 @@ describe('on submit', () => {
 
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await userEvent.click(button);
+    await userEvent.click(
+      screen.getByRole('button', { name: /Publish Output/i }),
+    );
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
@@ -90,7 +92,7 @@ describe('on submit', () => {
       const funded = screen.getByRole('group', {
         name: selector,
       });
-      userEvent.click(within(funded).getByText(value));
+      await userEvent.click(within(funded).getByText(value));
 
       await submitForm();
       expect(saveFn).toHaveBeenLastCalledWith(

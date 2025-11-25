@@ -55,7 +55,7 @@ describe('UserPositions', () => {
       onChange,
     });
     const addButton = getAddButton();
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     expect(onChange).toHaveBeenCalledWith([
       ...positions,
       { institution: '', department: '', role: '' },
@@ -102,13 +102,13 @@ describe('UserPositions', () => {
       })
       .closest('section') as HTMLElement;
 
-    userEvent.click(
+    await userEvent.click(
       within(secondary).getByRole('textbox', {
         name: /Institution/i,
       }),
     );
     const institution = await screen.findByText(position.institution);
-    userEvent.click(institution);
+    await userEvent.click(institution);
 
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
@@ -132,7 +132,7 @@ describe('UserPositions', () => {
         name: /Secondary Position/i,
       })
       .closest('section') as HTMLElement;
-    userEvent.type(
+    await userEvent.type(
       within(secondary).getByRole('textbox', { name: /Department/i }),
       position.department,
     );
@@ -159,7 +159,7 @@ describe('UserPositions', () => {
         name: /Secondary Position/i,
       })
       .closest('section') as HTMLElement;
-    userEvent.type(
+    await userEvent.type(
       within(secondary).getByRole('textbox', { name: /Role/i }),
       position.role,
     );
@@ -178,7 +178,7 @@ describe('UserPositions', () => {
       onChange,
     });
     const deleteButton = screen.getByRole('button', { name: /delete/i });
-    userEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
     expect(onChange).toHaveBeenCalledWith([positions[0]]);
   });
 });

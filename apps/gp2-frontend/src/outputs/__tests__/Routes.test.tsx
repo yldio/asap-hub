@@ -121,7 +121,7 @@ describe('Routes', () => {
   it('can perform a search', async () => {
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(pageSize));
     await renderRoutes();
-    userEvent.type(screen.getByPlaceholderText(/Enter name/i), 'example');
+    await userEvent.type(screen.getByPlaceholderText(/Enter name/i), 'example');
     await waitFor(() =>
       expect(mockGetOutputs).toHaveBeenLastCalledWith(
         expect.anything(),
@@ -137,8 +137,8 @@ describe('Routes', () => {
         createOutputListAlgoliaResponse(pageSize),
       );
       await renderRoutes();
-      userEvent.click(screen.getByTitle('Filter'));
-      userEvent.click(screen.getByRole('checkbox', { name }));
+      await userEvent.click(screen.getByTitle('Filter'));
+      await userEvent.click(screen.getByRole('checkbox', { name }));
 
       await waitFor(() =>
         expect(mockGetOutputs).toHaveBeenLastCalledWith(

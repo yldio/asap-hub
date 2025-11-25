@@ -52,7 +52,7 @@ describe('search', () => {
       loadTags,
     });
 
-    userEvent.type(getSearchBox(), 'foo');
+    await userEvent.type(getSearchBox(), 'foo');
 
     await waitFor(() => {
       expect(loadTags).toHaveBeenCalled();
@@ -69,9 +69,9 @@ describe('search', () => {
       setTags,
     });
 
-    userEvent.type(getSearchBox(), 'does not matter');
+    await userEvent.type(getSearchBox(), 'does not matter');
     await waitFor(() => expect(screen.getByText('foo')).toBeVisible());
-    userEvent.click(screen.getByText('foo'));
+    await userEvent.click(screen.getByText('foo'));
     expect(setTags).toHaveBeenCalledWith(['foo']);
   });
 });

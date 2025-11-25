@@ -80,7 +80,7 @@ describe('when showing the password', () => {
     const { getByRole, getByLabelText } = render(
       <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
     );
-    userEvent.click(getByRole('button'));
+    await userEvent.click(getByRole('button'));
     expect(getByLabelText(/^PW/)).toHaveAttribute('type', 'text');
   });
 
@@ -88,7 +88,7 @@ describe('when showing the password', () => {
     const { getByTitle, getByRole } = render(
       <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
     );
-    userEvent.click(getByRole('button'));
+    await userEvent.click(getByRole('button'));
     expect(getByRole('button')).toContainElement(getByTitle(/hide/i));
   });
 
@@ -97,8 +97,8 @@ describe('when showing the password', () => {
       const { getByRole, getByLabelText } = render(
         <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
       );
-      userEvent.click(getByRole('button'));
-      userEvent.click(getByRole('button'));
+      await userEvent.click(getByRole('button'));
+      await userEvent.click(getByRole('button'));
       expect(getByLabelText(/^PW/)).toHaveAttribute('type', 'password');
     });
   });

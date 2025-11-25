@@ -86,7 +86,7 @@ describe('when passed an error', () => {
         <ErrorCard error={makeDeterministicError()} refreshLink />,
       );
       const reloadLink = getByText(/reload/i);
-      userEvent.click(reloadLink);
+      await userEvent.click(reloadLink);
       expect(mockReload).toHaveBeenCalled();
     });
   });

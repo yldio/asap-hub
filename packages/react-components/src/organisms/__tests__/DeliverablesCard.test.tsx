@@ -56,13 +56,13 @@ describe('view more and less', () => {
     expect(viewLessOrMore.textContent).toMatchInlineSnapshot(
       `"View More Deliverables"`,
     );
-    userEvent.click(viewLessOrMore);
+    await userEvent.click(viewLessOrMore);
 
     expect(screen.getAllByText(/Item/i).length).toEqual(10);
     expect(viewLessOrMore.textContent).toMatchInlineSnapshot(
       `"View Less Deliverables"`,
     );
-    userEvent.click(viewLessOrMore);
+    await userEvent.click(viewLessOrMore);
     expect(viewLessOrMore.textContent).toMatchInlineSnapshot(
       `"View More Deliverables"`,
     );

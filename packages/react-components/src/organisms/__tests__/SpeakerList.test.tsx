@@ -124,7 +124,7 @@ describe('When rendering the speaker list', () => {
 
       const button = screen.getByRole('button', { name: /Show more/i });
       expect(button).toBeVisible();
-      userEvent.click(button);
+      await userEvent.click(button);
       expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
     });
 

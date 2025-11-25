@@ -16,10 +16,10 @@ describe('EnablePlugin', () => {
     );
     const editor = getByTestId('editor');
     await act(async () => {
-      userEvent.click(editor);
-      userEvent.tab();
+      await userEvent.click(editor);
+      await userEvent.tab();
       fireEvent.input(editor, { data: 'text' });
-      userEvent.tab();
+      await userEvent.tab();
     });
     expect(onChange).toHaveBeenCalledWith('text');
   });
@@ -30,10 +30,10 @@ describe('EnablePlugin', () => {
     );
     const editor = getByTestId('editor');
     await act(async () => {
-      userEvent.click(editor);
-      userEvent.tab();
+      await userEvent.click(editor);
+      await userEvent.tab();
       fireEvent.input(editor, { data: 'text' });
-      userEvent.tab();
+      await userEvent.tab();
     });
     expect(onChange).toHaveBeenCalledWith('');
   });
@@ -55,10 +55,10 @@ describe('TextEditorToolbar', () => {
 
       await act(async () => {
         await userEvent.click(getByLabelText('Format Bold'));
-        userEvent.click(editor);
-        userEvent.tab();
+        await userEvent.click(editor);
+        await userEvent.tab();
         fireEvent.input(editor, { data: 'text' });
-        userEvent.tab();
+        await userEvent.tab();
       });
 
       await act(async () => {
@@ -85,10 +85,10 @@ describe('TextEditorToolbar', () => {
       const editor = getByTestId('editor');
 
       await act(async () => {
-        userEvent.click(editor);
-        userEvent.tab();
+        await userEvent.click(editor);
+        await userEvent.tab();
         fireEvent.input(editor, { data: 'text' });
-        userEvent.tab();
+        await userEvent.tab();
       });
 
       expect(onBlur).toHaveBeenCalled();
@@ -106,10 +106,10 @@ describe('TextEditorToolbar', () => {
         await act(async () => {
           await userEvent.click(button);
 
-          userEvent.click(editor);
-          userEvent.tab();
+          await userEvent.click(editor);
+          await userEvent.tab();
           fireEvent.input(editor, { data: 'text' });
-          userEvent.tab();
+          await userEvent.tab();
         });
         expect(onChange).toHaveBeenCalledWith('**text**');
       });
@@ -125,10 +125,10 @@ describe('TextEditorToolbar', () => {
         await act(async () => {
           await userEvent.click(button);
 
-          userEvent.click(editor);
-          userEvent.tab();
+          await userEvent.click(editor);
+          await userEvent.tab();
           fireEvent.input(editor, { data: 'text' });
-          userEvent.tab();
+          await userEvent.tab();
         });
         expect(onChange).toHaveBeenCalledWith('*text*');
       });
@@ -144,10 +144,10 @@ describe('TextEditorToolbar', () => {
         await act(async () => {
           await userEvent.click(button);
 
-          userEvent.click(editor);
-          userEvent.tab();
+          await userEvent.click(editor);
+          await userEvent.tab();
           fireEvent.input(editor, { data: 'text' });
-          userEvent.tab();
+          await userEvent.tab();
         });
         expect(onChange).toHaveBeenCalledWith('~~text~~');
       });
@@ -165,10 +165,10 @@ describe('TextEditorToolbar', () => {
         await act(async () => {
           await userEvent.click(button);
 
-          userEvent.click(editor);
-          userEvent.tab();
+          await userEvent.click(editor);
+          await userEvent.tab();
           fireEvent.input(editor, { data: 'text' });
-          userEvent.tab();
+          await userEvent.tab();
         });
         expect(onChange).toHaveBeenCalledWith('- text');
 
@@ -190,10 +190,10 @@ describe('TextEditorToolbar', () => {
         await act(async () => {
           await userEvent.click(button);
 
-          userEvent.click(editor);
-          userEvent.tab();
+          await userEvent.click(editor);
+          await userEvent.tab();
           fireEvent.input(editor, { data: 'text' });
-          userEvent.tab();
+          await userEvent.tab();
         });
         expect(onChange).toHaveBeenCalledWith('1. text');
 
@@ -214,10 +214,10 @@ describe('TextEditorToolbar', () => {
         await act(async () => {
           await userEvent.click(getByLabelText('Bullet List'));
           await userEvent.click(getByLabelText('Indent'));
-          userEvent.click(editor);
-          userEvent.tab();
+          await userEvent.click(editor);
+          await userEvent.tab();
           fireEvent.input(editor, { data: 'text' });
-          userEvent.tab();
+          await userEvent.tab();
         });
         expect(onChange).toHaveBeenCalledWith('    - text');
 

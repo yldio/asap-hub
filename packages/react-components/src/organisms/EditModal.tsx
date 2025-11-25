@@ -71,7 +71,7 @@ const EditModal: React.FC<EditModalProps> = ({
     status === 'hasError' ||
     (status === 'initial' && dirty);
 
-  // Replace Prompt with beforeunload event for unsaved changes warning
+  // Replace Prompt with beforeunload event for unsaved changes warning (browser navigation)
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (shouldWarn) {
@@ -80,6 +80,7 @@ const EditModal: React.FC<EditModalProps> = ({
           'Are you sure you want to leave the dialog? Unsaved changes will be lost.';
         return e.returnValue;
       }
+      return undefined;
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);

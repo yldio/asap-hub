@@ -15,8 +15,6 @@ import {
 import { useHasRouter } from '../routing';
 import { isInternalLink } from '../utils';
 
-const activeClassName = 'active-link';
-
 const styles = css({
   display: 'block',
   paddingLeft: rem(12),
@@ -72,7 +70,7 @@ const squareBorderStyles = css({
 
 type NavigationLinkProps = NavigationProps & {
   readonly icon?: JSX.Element;
-} & PropsWithChildren<{}>;
+} & PropsWithChildren;
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   children,
@@ -91,7 +89,7 @@ interface NavigationProps {
   readonly enabled?: boolean;
   readonly squareBorder?: boolean;
 }
-export const Navigation: React.FC<NavigationProps & PropsWithChildren<{}>> = ({
+export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
   href,
   children,
   enabled = true,

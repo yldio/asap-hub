@@ -46,7 +46,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const route = network({}).users({}).user;
   const { userId } = useRouteParams(route);
 
-  const tabRoutes = route({ userId });
   const tabRoute = useCurrentUserProfileTabRoute();
 
   const user = useUserById(userId);

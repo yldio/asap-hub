@@ -71,6 +71,7 @@ const Form = <T extends void | Record<string, unknown>>({
           'Are you sure you want to leave? Unsaved changes will be lost.';
         return e.returnValue;
       }
+      return undefined;
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);

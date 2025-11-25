@@ -209,34 +209,40 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   await userEvent.type(categoryInput, 'My Cat');
   await userEvent.click(screen.getByText(/^My Category$/i));
 
-  userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+  await userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
 
-  userEvent.click(screen.getByText(/Non CRN/i));
+  await userEvent.click(screen.getByText(/Non CRN/i));
 
   expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
-  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
-  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), specialChars.enter);
+  await userEvent.type(
+    screen.getByLabelText(/Jane Doe Email/i),
+    'jane@doe.com',
+  );
+  await userEvent.type(
+    screen.getByLabelText(/Jane Doe Email/i),
+    specialChars.enter,
+  );
 
-  userEvent.upload(manuscriptFileInput, testFile);
-  userEvent.upload(keyResourceTableInput, testFile);
+  await userEvent.upload(manuscriptFileInput, testFile);
+  await userEvent.upload(keyResourceTableInput, testFile);
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 
   within(quickChecks)
     .getAllByText('Yes')
     .forEach((button) => {
-      userEvent.click(button);
+      await userEvent.click(button);
     });
 
   await waitFor(() => {
     const submitButton = screen.getByRole('button', { name: /Submit/ });
     expect(submitButton).toBeEnabled();
   });
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+  await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
 
   await waitFor(() => {
     const confirmButton = screen.getByRole('button', {

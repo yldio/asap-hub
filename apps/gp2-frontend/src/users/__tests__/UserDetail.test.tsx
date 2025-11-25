@@ -195,9 +195,9 @@ describe('UserDetail', () => {
       const [keyInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(keyInformationEditButton!);
+      await userEvent.click(keyInformationEditButton!);
       expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -218,9 +218,9 @@ describe('UserDetail', () => {
       const [, contactInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(contactInformationEditButton!);
+      await userEvent.click(contactInformationEditButton!);
       expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -247,9 +247,9 @@ describe('UserDetail', () => {
       const [, , tagsEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(tagsEditButton!);
+      await userEvent.click(tagsEditButton!);
       expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -272,9 +272,9 @@ describe('UserDetail', () => {
       const [, , , biographyEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(biographyEditButton!);
+      await userEvent.click(biographyEditButton!);
       expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -295,9 +295,9 @@ describe('UserDetail', () => {
       const [, , , , questionsEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(questionsEditButton!);
+      await userEvent.click(questionsEditButton!);
       expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -319,9 +319,9 @@ describe('UserDetail', () => {
       const [, , , , , fundingStreamsEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(fundingStreamsEditButton!);
+      await userEvent.click(fundingStreamsEditButton!);
       expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -352,9 +352,9 @@ describe('UserDetail', () => {
           name: 'Edit Edit',
         },
       );
-      userEvent.click(contributingCohortsEditButton!);
+      await userEvent.click(contributingCohortsEditButton!);
       expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -403,9 +403,12 @@ describe('UserDetail', () => {
       const [keyInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(keyInformationEditButton!);
+      await userEvent.click(keyInformationEditButton!);
 
-      userEvent.type(await screen.findByDisplayValue('Stark Industries'), ' 1');
+      await userEvent.type(
+        await screen.findByDisplayValue('Stark Industries'),
+        ' 1',
+      );
       expect(await screen.findByText('ExampleInst')).toBeVisible();
       expect(mockGetInstitutions).toHaveBeenCalledWith({
         searchQuery: 'Stark Industries 1',
@@ -417,7 +420,7 @@ describe('UserDetail', () => {
       const user = gp2Fixtures.createUserResponse();
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
-      userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
+      await userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });
@@ -427,7 +430,7 @@ describe('UserDetail', () => {
       const user = gp2Fixtures.createUserResponse();
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
-      userEvent.click(await screen.findByText(/past events \(1\)/i));
+      await userEvent.click(await screen.findByText(/past events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });

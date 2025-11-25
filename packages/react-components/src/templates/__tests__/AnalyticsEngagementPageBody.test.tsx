@@ -59,7 +59,9 @@ describe('AnalyticsEngagementPageBody', () => {
       <AnalyticsEngagementPageBody {...props} isMeetingRepAttendanceEnabled />,
     );
 
-    userEvent.click(screen.getAllByText('Representation of Presenters')[0]!);
+    await userEvent.click(
+      screen.getAllByText('Representation of Presenters')[0]!,
+    );
     expect(screen.getByText('Meeting Rep Attendance')).toBeInTheDocument();
   });
   it('does not display attendance option when flag is disabled', async () => {
@@ -70,7 +72,9 @@ describe('AnalyticsEngagementPageBody', () => {
       />,
     );
 
-    userEvent.click(screen.getAllByText('Representation of Presenters')[0]!);
+    await userEvent.click(
+      screen.getAllByText('Representation of Presenters')[0]!,
+    );
     expect(
       screen.queryByText('Meeting Rep Attendance'),
     ).not.toBeInTheDocument();

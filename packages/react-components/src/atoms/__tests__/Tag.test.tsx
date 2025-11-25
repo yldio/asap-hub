@@ -46,7 +46,7 @@ it('renders the remove Button if the onRemove is provided', () => {
   const { getByRole } = render(<Tag title="Text" onRemove={onRemove}></Tag>);
   const onRemoveButton = getByRole('button');
   expect(onRemoveButton).toBeVisible();
-  userEvent.click(onRemoveButton);
+  await userEvent.click(onRemoveButton);
   expect(onRemove).toHaveBeenCalled();
 });
 

@@ -26,7 +26,7 @@ describe('when closable', () => {
       <Toast onClose={handleClose}>error message</Toast>,
     );
 
-    userEvent.click(getByTitle(/close/i));
+    await userEvent.click(getByTitle(/close/i));
     expect(handleClose).toHaveBeenCalled();
   });
 });

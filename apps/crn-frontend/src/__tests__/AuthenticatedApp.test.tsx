@@ -153,7 +153,7 @@ it('renders the application layout correctly', async () => {
   const menu = getByText('Menu');
   expect(menu).toBeInTheDocument();
 
-  userEvent.click(menu);
+  await userEvent.click(menu);
 
   await waitFor(() => {
     expect(getByText('Team One')).toBeInTheDocument();
@@ -200,7 +200,7 @@ it('shows Projects in navigation when PROJECTS_MVP flag is enabled', async () =>
   );
 
   const menu = getByText('Menu');
-  userEvent.click(menu);
+  await userEvent.click(menu);
 
   await waitFor(() => {
     expect(getByText('Projects')).toBeInTheDocument();
@@ -228,7 +228,7 @@ it('hides Projects in navigation when PROJECTS_MVP flag is disabled', async () =
   );
 
   const menu = getByText('Menu');
-  userEvent.click(menu);
+  await userEvent.click(menu);
 
   await waitFor(() => {
     expect(

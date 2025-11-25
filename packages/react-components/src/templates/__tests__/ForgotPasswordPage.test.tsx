@@ -33,7 +33,7 @@ it('emits submit events', () => {
     <ForgotPasswordPage email="" onSubmit={handleSubmit} />,
   );
 
-  userEvent.click(getByText(/reset/i, { selector: 'button *' }));
+  await userEvent.click(getByText(/reset/i, { selector: 'button *' }));
   expect(handleSubmit).toHaveBeenCalled();
 });
 
@@ -43,6 +43,6 @@ it('emits go back events', () => {
     <ForgotPasswordPage email="" onGoBack={handleGoBack} />,
   );
 
-  userEvent.click(getByText(/back/i, { selector: 'button *' }));
+  await userEvent.click(getByText(/back/i, { selector: 'button *' }));
   expect(handleGoBack).toHaveBeenCalled();
 });

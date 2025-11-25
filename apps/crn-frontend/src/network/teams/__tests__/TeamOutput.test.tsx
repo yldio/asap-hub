@@ -90,44 +90,47 @@ const mandatoryFields = async (
 ) => {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
-  userEvent.type(screen.getByRole('textbox', { name: url }), link);
-  userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
+  await userEvent.type(screen.getByRole('textbox', { name: url }), link);
+  await userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
 
   await waitFor(() => expect(editorRef.current).not.toBeNull());
 
   editorRef.current?.focus();
 
   const descriptionEditor = screen.getByTestId('editor');
-  userEvent.click(descriptionEditor);
-  userEvent.tab();
+  await userEvent.click(descriptionEditor);
+  await userEvent.tab();
   fireEvent.input(descriptionEditor, { data: descriptionMD });
-  userEvent.tab();
+  await userEvent.tab();
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /short description/i }),
     shortDescription,
   );
 
   const typeInput = screen.getByRole('textbox', { name: /Select the type/i });
-  userEvent.type(typeInput, type);
-  userEvent.type(typeInput, specialChars.enter);
+  await userEvent.type(typeInput, type);
+  await userEvent.type(typeInput, specialChars.enter);
 
   const identifier = screen.getByRole('textbox', { name: /identifier/i });
-  userEvent.type(identifier, 'DOI');
-  userEvent.type(identifier, specialChars.enter);
-  userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
+  await userEvent.type(identifier, 'DOI');
+  await userEvent.type(identifier, specialChars.enter);
+  await userEvent.type(
+    screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'),
+    doi,
+  );
   return {
     publish: async () => {
       if (isEditMode && published) {
         const button = screen.getByRole('button', { name: /Save/i });
-        userEvent.click(button);
+        await userEvent.click(button);
         await waitFor(() => {
           expect(button).toBeEnabled();
         });
       } else {
-        userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+        await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
         const button = screen.getByRole('button', { name: /Publish Output/i });
-        userEvent.click(button);
+        await userEvent.click(button);
         await waitFor(() => {
           expect(button).not.toBeInTheDocument();
         });
@@ -138,7 +141,7 @@ const mandatoryFields = async (
         name: /Save Draft/i,
       });
       if (saveDraftButton) {
-        userEvent.click(saveDraftButton);
+        await userEvent.click(saveDraftButton);
         await waitFor(() => {
           expect(saveDraftButton).toBeEnabled();
         });
@@ -281,10 +284,10 @@ it('can publish a form when the data is valid', async () => {
     doi,
   });
 
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-  userEvent.click(screen.getByText('Example 1 Lab'));
-  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
-  userEvent.click(screen.getByText('Person A 3'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(screen.getByText('Example 1 Lab'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await userEvent.click(screen.getByText('Person A 3'));
 
   await publish();
 
@@ -348,10 +351,10 @@ it('can save draft when form data is valid', async () => {
     doi,
   });
 
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-  userEvent.click(screen.getByText('Example 1 Lab'));
-  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
-  userEvent.click(screen.getByText('Person A 3'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(screen.getByText('Example 1 Lab'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await userEvent.click(screen.getByText('Person A 3'));
 
   await saveDraft();
 
@@ -547,14 +550,14 @@ it('can publish a new version for an output', async () => {
     false,
   );
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /changelog/i }),
     changelog,
   );
 
-  userEvent.click(screen.getByRole('button', { name: /Save/i }));
+  await userEvent.click(screen.getByRole('button', { name: /Save/i }));
   const button = screen.getByRole('button', { name: /Publish new version/i });
-  userEvent.click(button);
+  await userEvent.click(button);
 
   await waitFor(() => {
     expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
@@ -588,7 +591,7 @@ it('generates the short description based on the current description', async () 
     },
   });
 
-  userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+  await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
 
   await waitFor(() => {
     expect(
@@ -627,7 +630,7 @@ it('will show server side validation error for link', async () => {
   ).toBeGreaterThan(1);
 
   const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-  userEvent.type(url, 'a');
+  await userEvent.type(url, 'a');
   url.blur();
 
   expect(
@@ -656,7 +659,7 @@ it('will toast server side errors for unknown errors', async () => {
   ).toBeInTheDocument();
   expect(window.scrollTo).toHaveBeenCalled();
 
-  userEvent.click(screen.getByRole('button', { name: /Close/i }));
+  await userEvent.click(screen.getByRole('button', { name: /Close/i }));
 
   expect(
     screen.queryByText(
@@ -842,13 +845,13 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
         screen.getByLabelText(manuscriptImportLabelText),
       ).toBeInTheDocument();
 
-      userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+      await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
-      userEvent.type(input, 'Error');
+      await userEvent.type(input, 'Error');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
-      userEvent.click(option);
+      await userEvent.click(option);
 
-      userEvent.click(screen.getByRole('button', { name: /import/i }));
+      await userEvent.click(screen.getByRole('button', { name: /import/i }));
 
       await waitFor(() => {
         expect(
@@ -856,7 +859,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
         ).toBeInTheDocument();
       });
 
-      userEvent.click(screen.getByRole('button', { name: /Close/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Close/i }));
 
       expect(
         screen.queryByText('An error has occurred. Please try again later.'),
@@ -876,13 +879,13 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-      userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+      await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
-      userEvent.type(input, 'Version One');
+      await userEvent.type(input, 'Version One');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
-      userEvent.click(option);
+      await userEvent.click(option);
 
-      userEvent.click(screen.getByRole('button', { name: /import/i }));
+      await userEvent.click(screen.getByRole('button', { name: /import/i }));
 
       await waitFor(() => {
         expect(
@@ -891,23 +894,26 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       });
       const changelog = 'creating new version with manuscript';
 
-      userEvent.type(
+      await userEvent.type(
         screen.getByRole('textbox', { name: /changelog/i }),
         changelog,
       );
 
       const doi = '10.1234/5678';
       const identifier = screen.getByRole('textbox', { name: /identifier/i });
-      userEvent.type(identifier, specialChars.enter);
-      userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
+      await userEvent.type(identifier, specialChars.enter);
+      await userEvent.type(
+        screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'),
+        doi,
+      );
 
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
 
       const button = screen.getByRole('button', {
         name: /Publish new version/i,
       });
 
-      userEvent.click(button);
+      await userEvent.click(button);
 
       await waitFor(() => {
         expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
@@ -937,13 +943,13 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-      userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+      await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
       await userEvent.type(input, 'Version One');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
       await userEvent.click(option);
 
-      userEvent.click(screen.getByRole('button', { name: /import/i }));
+      await userEvent.click(screen.getByRole('button', { name: /import/i }));
 
       expect(
         screen.getByText('How would you like to create your output?'),
@@ -1054,7 +1060,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       outputDocumentType: 'article',
     });
 
-    userEvent.click(screen.getByLabelText('Create manually'));
+    await userEvent.click(screen.getByLabelText('Create manually'));
 
     expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
     expect(
@@ -1067,7 +1073,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       teamId: '42',
       outputDocumentType: 'article',
     });
-    userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+    await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
 
     expect(screen.getByRole('button', { name: /Import/i })).toBeInTheDocument();
     expect(
@@ -1080,7 +1086,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       teamId: '42',
       outputDocumentType: 'article',
     });
-    userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+    await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
 
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'Version One');
@@ -1150,25 +1156,28 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-    userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+    await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'Version');
     const option = await screen.findByText('Version One');
     await userEvent.click(option);
 
-    userEvent.click(screen.getByRole('button', { name: /import/i }));
+    await userEvent.click(screen.getByRole('button', { name: /import/i }));
 
     expect(
       screen.getByRole('heading', { name: /Imported Manuscript Version/i }),
     ).toBeInTheDocument();
 
     const identifier = screen.getByRole('textbox', { name: /identifier/i });
-    userEvent.type(identifier, specialChars.enter);
-    userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
+    await userEvent.type(identifier, specialChars.enter);
+    await userEvent.type(
+      screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'),
+      doi,
+    );
 
-    userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+    await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
     const button = screen.getByRole('button', { name: /Publish Output/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     await waitFor(() => {
       expect(button).not.toBeInTheDocument();
     });
@@ -1244,14 +1253,14 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       latestManuscriptVersion,
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /changelog/i }),
       changelog,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /Save/i }));
+    await userEvent.click(screen.getByRole('button', { name: /Save/i }));
     const button = screen.getByRole('button', { name: /Publish new version/i });
-    userEvent.click(button);
+    await userEvent.click(button);
 
     await waitFor(() => {
       expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
@@ -1296,13 +1305,13 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     await renderPage({ teamId, outputDocumentType, history });
 
-    userEvent.click(screen.getByLabelText('Import from compliance'));
+    await userEvent.click(screen.getByLabelText('Import from compliance'));
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'Version');
     const option = await screen.findByText('Version One');
     await userEvent.click(option);
 
-    userEvent.click(screen.getByRole('button', { name: /import/i }));
+    await userEvent.click(screen.getByRole('button', { name: /import/i }));
 
     expect(history.location.pathname).toBe(
       `/shared-research/${researchOutputId}/version`,
@@ -1315,10 +1324,10 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       outputDocumentType: 'article',
     });
 
-    userEvent.click(screen.getByLabelText('Create manually'));
+    await userEvent.click(screen.getByLabelText('Create manually'));
 
     expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /Create/i }));
+    await userEvent.click(screen.getByRole('button', { name: /Create/i }));
 
     expect(
       screen.getByRole('heading', { name: 'What are you sharing?' }),

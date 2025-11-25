@@ -284,13 +284,13 @@ it('calls onChangeImpact with the correct option when an impact is selected', as
   });
 
   const impactField = screen.getByLabelText(/impact/i);
-  userEvent.click(impactField);
+  await userEvent.click(impactField);
 
   await waitFor(() => {
     expect(screen.getByText(/low impact/i)).toBeInTheDocument();
   });
 
-  userEvent.click(screen.getByText('Low Impact'));
+  await userEvent.click(screen.getByText('Low Impact'));
 
   expect(onChangeImpact).toHaveBeenCalledWith(
     expect.objectContaining({ label: 'Low Impact', value: 'low' }),

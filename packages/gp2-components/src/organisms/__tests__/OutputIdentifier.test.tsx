@@ -21,7 +21,7 @@ it('should render Identifier info with DOI and RRID', () => {
     name: /info/i,
   });
   expect(infoButton).toBeVisible();
-  userEvent.click(infoButton);
+  await userEvent.click(infoButton);
   expect(screen.getByText(/Your DOI must start/i)).toBeVisible();
   expect(screen.getByText(/Your RRID must start/i)).toBeInTheDocument();
   expect(
@@ -35,7 +35,7 @@ it('should render Identifier info with DOI and Accession Number', () => {
     name: /info/i,
   });
   expect(infoButton).toBeVisible();
-  userEvent.click(infoButton);
+  await userEvent.click(infoButton);
   expect(screen.getByText(/Your DOI must start/i)).toBeVisible();
   expect(screen.queryByText(/Your RRID must start/i)).not.toBeInTheDocument();
   expect(
@@ -47,8 +47,8 @@ it('should reset the identifier to a valid value on entering something unknown',
   const setIdentifierType = jest.fn();
   render(<OutputIdentifier {...props} setIdentifierType={setIdentifierType} />);
   const textbox = screen.getByRole('textbox', { name: /identifier type/i });
-  userEvent.type(textbox, 'UNKNOWN');
-  userEvent.type(textbox, specialChars.enter);
+  await userEvent.type(textbox, 'UNKNOWN');
+  await userEvent.type(textbox, specialChars.enter);
   textbox.blur();
 
   expect(screen.getByText('Choose an identifier...')).toBeVisible();
@@ -59,8 +59,8 @@ it('should set the identifier to the selected value', () => {
   const setIdentifierType = jest.fn();
   render(<OutputIdentifier {...props} setIdentifierType={setIdentifierType} />);
   const textbox = screen.getByRole('textbox', { name: /identifier/i });
-  userEvent.type(textbox, 'DOI');
-  userEvent.type(textbox, specialChars.enter);
+  await userEvent.type(textbox, 'DOI');
+  await userEvent.type(textbox, specialChars.enter);
   textbox.blur();
 
   expect(setIdentifierType).toHaveBeenCalledWith(gp2.OutputIdentifierType.DOI);

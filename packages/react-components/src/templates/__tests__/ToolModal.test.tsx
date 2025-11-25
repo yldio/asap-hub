@@ -125,7 +125,7 @@ it('triggers the save function', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
   expect(jestFn).toHaveBeenCalledWith({
     name: 'toolName',
     url: 'http://example.com',
@@ -149,7 +149,7 @@ it('disables the form elements while submitting', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
 
   const form = getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);

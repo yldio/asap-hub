@@ -129,8 +129,8 @@ it('can perform a filter search', async () => {
   );
 
   await renderPage();
-  userEvent.click(screen.getByTitle('Filter'));
-  userEvent.click(screen.getByRole('checkbox', { name: /Newsletters/i }));
+  await userEvent.click(screen.getByTitle('Filter'));
+  await userEvent.click(screen.getByRole('checkbox', { name: /Newsletters/i }));
 
   await waitFor(() =>
     expect(mockGetNews).toHaveBeenLastCalledWith(

@@ -82,7 +82,7 @@ describe('Events', () => {
       await renderEventsPage(route, '?searchQuery= ');
       const searchBox = screen.getByRole('searchbox');
       // Select all existing text and replace it with new text
-      userEvent.type(searchBox, '{selectall}searchterm');
+      await userEvent.type(searchBox, '{selectall}searchterm');
       await waitFor(() =>
         expect(mockGetEventsFromAlgolia).toHaveBeenLastCalledWith(
           expect.anything(),

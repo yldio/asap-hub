@@ -50,7 +50,7 @@ describe('ConfirmStatusChangeModal', () => {
       <ConfirmStatusChangeModal {...defaultProps} onDismiss={onDismiss} />,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+    await userEvent.click(screen.getByRole('button', { name: /cancel/i }));
 
     expect(onDismiss).toHaveBeenCalled();
   });
@@ -62,7 +62,7 @@ describe('ConfirmStatusChangeModal', () => {
       <ConfirmStatusChangeModal {...defaultProps} onDismiss={onDismiss} />,
     );
 
-    userEvent.click(screen.getByTitle(/close/i));
+    await userEvent.click(screen.getByTitle(/close/i));
 
     expect(onDismiss).toHaveBeenCalled();
   });
@@ -89,7 +89,9 @@ describe('ConfirmStatusChangeModal', () => {
         />,
       );
 
-      userEvent.click(getByRole('button', { name: submissionButtonText }));
+      await userEvent.click(
+        getByRole('button', { name: submissionButtonText }),
+      );
 
       await waitFor(() => {
         expect(onConfirm).toHaveBeenCalled();
@@ -119,7 +121,7 @@ describe('ConfirmStatusChangeModal', () => {
 
     expect(submitButton).not.toBeDisabled();
 
-    userEvent.click(submitButton);
+    await userEvent.click(submitButton);
 
     expect(submitButton).toBeDisabled();
 

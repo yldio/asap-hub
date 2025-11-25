@@ -88,10 +88,10 @@ describe('when editing the biography', () => {
       queryByDisplayValue,
     } = result;
 
-    userEvent.click(getByLabelText(/edit.+bio/i));
+    await userEvent.click(getByLabelText(/edit.+bio/i));
     expect(getByDisplayValue('My Bio')).toBeVisible();
 
-    userEvent.click(getByText(/close/i));
+    await userEvent.click(getByText(/close/i));
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('My Bio')).not.toBeInTheDocument();
@@ -107,11 +107,11 @@ describe('when editing the biography', () => {
       queryByDisplayValue,
     } = result;
 
-    userEvent.click(getByLabelText(/edit.+bio/i));
-    userEvent.type(getByDisplayValue('My Bio'), ' 2');
+    await userEvent.click(getByLabelText(/edit.+bio/i));
+    await userEvent.type(getByDisplayValue('My Bio'), ' 2');
     expect(getByDisplayValue('My Bio 2')).toBeVisible();
 
-    userEvent.click(getByText(/save/i));
+    await userEvent.click(getByText(/save/i));
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('My Bio 2')).not.toBeInTheDocument();

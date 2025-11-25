@@ -71,7 +71,7 @@ it('displays quick checks when present', async () => {
   const { getByText, queryByText, getByLabelText, rerender } = render(
     <ManuscriptVersionCard {...props} />,
   );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
 
   await waitFor(() => {
     expect(
@@ -136,7 +136,7 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
     />,
   );
 
-  userEvent.click(screen.getByLabelText('Expand Version'));
+  await userEvent.click(screen.getByLabelText('Expand Version'));
 
   expect(screen.getAllByText('Arthur Author').length).toEqual(2);
   expect(
@@ -175,7 +175,7 @@ describe('edit', () => {
         />
       </Router>,
     );
-    userEvent.click(getByLabelText('Edit'));
+    await userEvent.click(getByLabelText('Edit'));
     expect(pushSpy).toHaveBeenCalledWith(
       '/network/teams/team-id-0/workspace/edit-manuscript/manuscript-1',
     );
@@ -186,7 +186,7 @@ it('displays Additional Information section when present', () => {
   const { getByRole, queryByRole, rerender, getByLabelText } = render(
     <ManuscriptVersionCard {...props} />,
   );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
   expect(
     queryByRole('heading', { name: /Additional Information/i }),
   ).not.toBeInTheDocument();
@@ -216,7 +216,7 @@ it('renders a divider between fields in Additional Information section and files
     />,
   );
 
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
   expect(queryAllByRole('separator').length).toEqual(5);
 });
 
@@ -229,7 +229,7 @@ it.each`
   const { getByLabelText, getByText, queryByText, rerender } = render(
     <ManuscriptVersionCard {...props} />,
   );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
   expect(queryByText(title)).not.toBeInTheDocument();
 
   const updatedVersion = {
@@ -263,7 +263,7 @@ it('builds the correct href for doi fields', () => {
       }}
     />,
   );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
 
   expect(getByText(preprintDoiValue)?.closest('a')).toHaveAttribute(
     'href',
@@ -290,7 +290,7 @@ it('renders manuscript main file details and download link', () => {
       }}
     />,
   );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
 
   expect(getByText('manuscript_file.pdf')).toBeVisible();
   expect(getByText('Download').closest('a')).toHaveAttribute(
@@ -318,7 +318,7 @@ it('renders key resource table file details and download link', () => {
       }}
     />,
   );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
 
   expect(getByText('key_resource_table.csv')).toBeVisible();
   expect(getAllByText('Download')[1]!.closest('a')).toHaveAttribute(
@@ -349,7 +349,7 @@ it('renders additional files details and download link when provided', () => {
       }}
     />,
   );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
 
   expect(getByText('additional_file.pdf')).toBeVisible();
   expect(getAllByText('Download')[1]!.closest('a')).toHaveAttribute(
@@ -362,7 +362,7 @@ it('displays compliance report section when present', () => {
   const { getByLabelText, queryByRole, rerender, getByRole, unmount } = render(
     <ManuscriptVersionCard {...props} />,
   );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
   expect(
     queryByRole('heading', { name: /Compliance Report/i }),
   ).not.toBeInTheDocument();
@@ -396,7 +396,7 @@ it('displays manuscript description', () => {
         }}
       />,
     );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
   expect(getByText(shortDescription)).toBeInTheDocument();
   expect(queryByRole('button', { name: /show more/i })).not.toBeInTheDocument();
 
@@ -451,7 +451,7 @@ it('does not display edit button by default', async () => {
       isActiveVersion={false}
     />,
   );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
 
   await waitFor(() => {
     expect(getByText(/test discussion/i)).toBeVisible();
@@ -506,7 +506,7 @@ it('does not display reply button if isActiveVersion is false', async () => {
       ]}
     />,
   );
-  userEvent.click(getByLabelText('Expand Version'));
+  await userEvent.click(getByLabelText('Expand Version'));
 
   await waitFor(() => {
     expect(getByText(/test discussion/i)).toBeVisible();

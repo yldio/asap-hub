@@ -179,8 +179,8 @@ describe('authors', () => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument(),
       );
 
-      userEvent.click(getByLabelText(section));
-      userEvent.click(getByText('Author One'));
+      await userEvent.click(getByLabelText(section));
+      await userEvent.click(getByText('Author One'));
 
       await submitForm({ findByRole });
       await waitFor(() => {
@@ -244,12 +244,12 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      userEvent.click(getByLabelText(section));
+      await userEvent.click(getByLabelText(section));
       await waitFor(() =>
         expect(queryByText(/loading/i)).not.toBeInTheDocument(),
       );
-      userEvent.click(getByText(/External Author One \(Non CRN\)/));
-      userEvent.type(
+      await userEvent.click(getByText(/External Author One \(Non CRN\)/));
+      await userEvent.type(
         getByLabelText(/External Author One Email/i),
         'external@author.com',
       );
@@ -320,13 +320,13 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      userEvent.type(getByLabelText(section), 'Jane Doe');
+      await userEvent.type(getByLabelText(section), 'Jane Doe');
 
       await waitFor(() =>
         expect(queryByText(/loading/i)).not.toBeInTheDocument(),
       );
 
-      userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
+      await userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
       await userEvent.type(getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
 
       await submitForm({ findByRole });
@@ -495,7 +495,7 @@ describe('manuscript file', () => {
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
     await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
+      await userEvent.upload(uploadInput, mockFile);
     });
 
     expect(getByText(mockError)).toBeInTheDocument();
@@ -529,7 +529,7 @@ describe('manuscript file', () => {
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
     await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
+      await userEvent.upload(uploadInput, mockFile);
     });
 
     expect(
@@ -563,7 +563,7 @@ describe('manuscript file', () => {
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
     await waitFor(() => {
-      userEvent.upload(uploadInput, testFile);
+      await userEvent.upload(uploadInput, testFile);
     });
 
     expect(getByText(/test.pdf/i)).toBeInTheDocument();
@@ -572,7 +572,7 @@ describe('manuscript file', () => {
     expect(removeFileButton).toBeInTheDocument();
 
     await waitFor(() => {
-      userEvent.click(removeFileButton);
+      await userEvent.click(removeFileButton);
     });
 
     expect(queryByText(/test.pdf/i)).not.toBeInTheDocument();
@@ -603,7 +603,7 @@ describe('manuscript file', () => {
     );
 
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
-    await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
+    await waitFor(() => await userEvent.upload(uploadInput, tooLargeFile));
 
     expect(
       getByText(
@@ -616,7 +616,7 @@ describe('manuscript file', () => {
       type: 'application/pdf',
     });
 
-    await waitFor(() => userEvent.upload(uploadInput, validFile));
+    await waitFor(() => await userEvent.upload(uploadInput, validFile));
 
     // Error message should disappear
     expect(
@@ -649,7 +649,7 @@ describe('manuscript file', () => {
     );
 
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
-    await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
+    await waitFor(() => await userEvent.upload(uploadInput, tooLargeFile));
 
     expect(
       getByText(
@@ -661,7 +661,7 @@ describe('manuscript file', () => {
     const validFile = new File(['valid content'], 'valid.csv', {
       type: 'text/csv',
     });
-    await waitFor(() => userEvent.upload(uploadInput, validFile));
+    await waitFor(() => await userEvent.upload(uploadInput, validFile));
 
     // Error message should disappear
     expect(
@@ -694,7 +694,7 @@ describe('manuscript file', () => {
     );
 
     const uploadInput = getByLabelText(/Upload Additional Files/i);
-    await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
+    await waitFor(() => await userEvent.upload(uploadInput, tooLargeFile));
 
     expect(
       getByText(
@@ -706,7 +706,7 @@ describe('manuscript file', () => {
     const validFile = new File(['valid content'], 'valid.pdf', {
       type: 'application/pdf',
     });
-    await waitFor(() => userEvent.upload(uploadInput, validFile));
+    await waitFor(() => await userEvent.upload(uploadInput, validFile));
 
     expect(
       queryByText(
@@ -755,7 +755,7 @@ describe('key resource table', () => {
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
     await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
+      await userEvent.upload(uploadInput, mockFile);
     });
 
     expect(getByText(mockError)).toBeInTheDocument();
@@ -789,7 +789,7 @@ describe('key resource table', () => {
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
     await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
+      await userEvent.upload(uploadInput, mockFile);
     });
 
     expect(
@@ -831,7 +831,7 @@ describe('key resource table', () => {
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
     await waitFor(() => {
-      userEvent.upload(uploadInput, testFile);
+      await userEvent.upload(uploadInput, testFile);
     });
 
     expect(getByText(/test.csv/i)).toBeInTheDocument();
@@ -840,7 +840,7 @@ describe('key resource table', () => {
     expect(removeFileButton).toBeInTheDocument();
 
     await waitFor(() => {
-      userEvent.click(removeFileButton);
+      await userEvent.click(removeFileButton);
     });
 
     expect(queryByText(/test.csv/i)).not.toBeInTheDocument();
@@ -874,7 +874,7 @@ describe('additional files', () => {
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
     await waitFor(() => {
-      userEvent.upload(uploadInput, testFile);
+      await userEvent.upload(uploadInput, testFile);
     });
 
     expect(getByText(/test.pdf/i)).toBeInTheDocument();
@@ -917,7 +917,7 @@ describe('additional files', () => {
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
     await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
+      await userEvent.upload(uploadInput, mockFile);
     });
 
     expect(getByText(mockError)).toBeInTheDocument();
@@ -956,7 +956,7 @@ describe('additional files', () => {
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
     await waitFor(() => {
-      userEvent.upload(uploadInput, testFile);
+      await userEvent.upload(uploadInput, testFile);
     });
 
     expect(getByText(/File uploaded already exists./i)).toBeInTheDocument();
@@ -990,7 +990,7 @@ describe('additional files', () => {
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
     await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
+      await userEvent.upload(uploadInput, mockFile);
     });
 
     expect(
@@ -1037,7 +1037,7 @@ describe('additional files', () => {
     expect(removeFileOneButton).toBeInTheDocument();
 
     await waitFor(() => {
-      userEvent.click(removeFileOneButton);
+      await userEvent.click(removeFileOneButton);
     });
 
     expect(queryByText(/file_one.csv/i)).not.toBeInTheDocument();
@@ -1079,17 +1079,17 @@ it('user can add teams', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(getByRole('textbox', { name: /Teams/i }));
+  await userEvent.click(getByRole('textbox', { name: /Teams/i }));
   await waitFor(() => {
     expect(getByText('Team A')).toBeVisible();
   });
-  userEvent.click(getByText('Team A'));
+  await userEvent.click(getByText('Team A'));
 
-  userEvent.click(getByRole('textbox', { name: /Teams/i }));
+  await userEvent.click(getByRole('textbox', { name: /Teams/i }));
   await waitFor(() => {
     expect(getByText('Team B')).toBeVisible();
   });
-  userEvent.click(getByText('Team B'));
+  await userEvent.click(getByText('Team B'));
 
   await submitForm({ findByRole });
 
@@ -1139,15 +1139,15 @@ it('user can add labs', async () => {
       </Suspense>
     </StaticRouter>,
   );
-  userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(getByRole('textbox', { name: /Labs/i }));
   await waitFor(() => {
     expect(getByText('Lab One')).toBeVisible();
   });
-  userEvent.click(getByText('Lab One'));
+  await userEvent.click(getByText('Lab One'));
 
-  userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(getByRole('textbox', { name: /Labs/i }));
   expect(getByText('Lab Two')).toBeVisible();
-  userEvent.click(getByText('Lab Two'));
+  await userEvent.click(getByText('Lab Two'));
 
   await submitForm({ findByRole });
 
@@ -1176,7 +1176,7 @@ it('displays error message when no team is found', async () => {
       </Suspense>
     </StaticRouter>,
   );
-  userEvent.click(getByRole('textbox', { name: /Teams/i }));
+  await userEvent.click(getByRole('textbox', { name: /Teams/i }));
   await waitForElementToBeRemoved(() => queryByText(/loading/i));
   expect(getByText(/Sorry, no teams match/i)).toBeVisible();
 });
@@ -1193,7 +1193,7 @@ it('displays error message when no lab is found', async () => {
       </Suspense>
     </StaticRouter>,
   );
-  userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(getByRole('textbox', { name: /Labs/i }));
   await waitForElementToBeRemoved(() => queryByText(/loading/i));
   expect(getByText(/Sorry, no labs match/i)).toBeVisible();
 });
@@ -1318,8 +1318,11 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     name: /Where is the manuscript in the life cycle/i,
   });
 
-  userEvent.type(lifecycleTextbox, 'Draft Manuscript (prior to Publication)');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  await userEvent.type(
+    lifecycleTextbox,
+    'Draft Manuscript (prior to Publication)',
+  );
+  await userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 
   const testManuscriptFile = new File(['file content'], 'manuscript.pdf', {
@@ -1329,11 +1332,11 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     type: 'text/csv',
   });
 
-  userEvent.upload(
+  await userEvent.upload(
     await findByLabelText(/Upload Manuscript File/i),
     testManuscriptFile,
   );
-  userEvent.upload(
+  await userEvent.upload(
     await findByLabelText(/Upload Key Resource Table/i),
     testKeyResourceFile,
   );
@@ -1343,7 +1346,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
   within(quickChecks)
     .getAllByRole('radio', { name: 'Yes' })
     .forEach((button) => {
-      userEvent.click(button);
+      await userEvent.click(button);
     });
 
   await submitForm({ findByRole });
@@ -1427,7 +1430,7 @@ it('can generate short description when description is present', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(getByRole('button', { name: 'Generate' }));
+  await userEvent.click(getByRole('button', { name: 'Generate' }));
 
   await waitFor(() => {
     expect(getShortDescriptionFromDescription).toHaveBeenCalledWith(

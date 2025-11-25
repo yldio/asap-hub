@@ -9,7 +9,7 @@ it('renders the subscribe button', () => {
     name: /subscribe to calendar/i,
   });
   expect(subscribe).toBeVisible();
-  userEvent.click(subscribe);
+  await userEvent.click(subscribe);
   expect(
     screen.getByRole('link', { name: /Add to Google Calendar/i }),
   ).toBeVisible();
@@ -23,6 +23,6 @@ it('renders the paragraph', () => {
     name: /subscribe to calendar/i,
   });
   expect(subscribe).toBeVisible();
-  userEvent.click(subscribe);
+  await userEvent.click(subscribe);
   expect(screen.getByText(paragraph)).toBeVisible();
 });

@@ -19,7 +19,9 @@ describe('FilterModalFooter', () => {
   });
   it('applies the function to the buttons', () => {
     render(<FilterModalFooter {...defaultProps} />);
-    screen.getAllByRole('button').map((button) => userEvent.click(button));
+    screen
+      .getAllByRole('button')
+      .map((button) => await userEvent.click(button));
     expect(defaultProps.onApply).toHaveBeenCalledTimes(1);
     expect(defaultProps.onReset).toHaveBeenCalledTimes(1);
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1);

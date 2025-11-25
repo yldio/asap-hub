@@ -170,7 +170,7 @@ describe('tabs', () => {
       />,
     );
     expect(screen.getByText('Empty First Tab')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Second Tab' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Second Tab' }));
     expect(screen.getByText('Empty Second Tab')).toBeVisible();
   });
 });

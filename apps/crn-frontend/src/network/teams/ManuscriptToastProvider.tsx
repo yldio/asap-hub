@@ -23,8 +23,14 @@ type ManuscriptToastContextData = {
 
 export type ToastAccents = 'error' | 'successLarge';
 
+const defaultContextValue: ManuscriptToastContextData = {
+  setFormType: () => {
+    // No-op default function to prevent errors if used outside provider
+  },
+};
+
 export const ManuscriptToastContext = createContext<ManuscriptToastContextData>(
-  {} as ManuscriptToastContextData,
+  defaultContextValue,
 );
 
 export const ManuscriptToastProvider = ({

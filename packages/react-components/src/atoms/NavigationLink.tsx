@@ -2,6 +2,7 @@
 import { css, Theme } from '@emotion/react';
 import { PropsWithChildren } from 'react';
 import { NavHashLink } from 'react-router-hash-link';
+import { useLocation } from 'react-router-dom';
 import { activePrimaryStyles } from '../button';
 import { charcoal, lead, silver } from '../colors';
 import {
@@ -97,26 +98,30 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren<{}>> = ({
   squareBorder,
 }) => {
   const [internal, url] = isInternalLink(href);
+  const location = useLocation();
+  
   if (useHasRouter() && internal) {
+    // Determine if the link is active by comparing the pathname
+    // NavHashLink handles hash matching internally, but we need to check pathname
+    const isActive = location.pathname === url.split('#')[0];
+    
     return (
       <NavHashLink
         to={url}
         smooth
         style={{ textDecoration: 'none', color: 'unset' }}
       >
-        {({ isActive }: { isActive: boolean }) => (
-          <div
-            css={({ colors, components }: Theme) => [
-              styles,
-              squareBorder && squareBorderStyles,
-              enabled && isActive && activePrimaryStyles(colors),
-              !enabled && disableStyles,
-              components?.NavigationLink?.styles,
-            ]}
-          >
-            {children}
-          </div>
-        )}
+        <div
+          css={({ colors, components }: Theme) => [
+            styles,
+            squareBorder && squareBorderStyles,
+            enabled && isActive && activePrimaryStyles(colors),
+            !enabled && disableStyles,
+            components?.NavigationLink?.styles,
+          ]}
+        >
+          {children}
+        </div>
       </NavHashLink>
     );
   }

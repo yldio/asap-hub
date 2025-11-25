@@ -27,19 +27,22 @@ const About: React.FC<AboutProps> = ({ user }) => {
       />
       {id === user.id && (
         <Routes>
-          <Route path={route.editBiography.template} element={
-            <Frame title="Edit Biography">
-              <BiographyModal
-                biography={user.biography}
-                backHref={route.$}
-                onSave={(newBiography) =>
-                  patchUser({
-                    biography: newBiography,
-                  })
-                }
-              />
-            </Frame>
-          } />
+          <Route
+            path={route.editBiography.template}
+            element={
+              <Frame title="Edit Biography">
+                <BiographyModal
+                  biography={user.biography}
+                  backHref={route.$}
+                  onSave={(newBiography) =>
+                    patchUser({
+                      biography: newBiography,
+                    })
+                  }
+                />
+              </Frame>
+            }
+          />
         </Routes>
       )}
     </>

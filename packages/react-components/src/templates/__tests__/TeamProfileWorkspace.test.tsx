@@ -61,7 +61,7 @@ const renderWithRouter = (component: React.ReactElement) => {
         element: component,
       },
     ],
-    { initialEntries: ['/'] }
+    { initialEntries: ['/'] },
   );
   return render(<RouterProvider router={router} />);
 };
@@ -395,7 +395,9 @@ describe('compliance section', () => {
 
     const manuscriptTitle = screen.getByText('Nice manuscript');
     const manuscriptCard = manuscriptTitle.closest('div');
-    await userEvent.click(within(manuscriptCard!).getByTestId('collapsible-button'));
+    await userEvent.click(
+      within(manuscriptCard!).getByTestId('collapsible-button'),
+    );
 
     expect(container).toHaveTextContent('Original Research');
     expect(container).toHaveTextContent(
@@ -455,7 +457,7 @@ describe('compliance section', () => {
           element: <TeamProfileWorkspace {...team} tools={[]} />,
         },
       ],
-      { initialEntries: ['/'] }
+      { initialEntries: ['/'] },
     );
     const { getByRole } = render(<RouterProvider router={router} />);
 

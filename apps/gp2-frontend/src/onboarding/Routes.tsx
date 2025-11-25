@@ -43,51 +43,66 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
   return (
     <Routes>
       <Route index element={<Welcome />} />
-      <Route path={onboarding({}).coreDetails.template} element={
-        <Frame title={null}>
-          <Onboarding>
-            <Frame title={null}>
-              <CoreDetails />
-            </Frame>
-          </Onboarding>
-        </Frame>
-      } />
-      <Route path={onboarding({}).background.template} element={
-        <Frame title={null}>
-          <Onboarding>
-            <Frame title={null}>
-              <Background />
-            </Frame>
-          </Onboarding>
-        </Frame>
-      } />
-      <Route path={onboarding({}).groups.template} element={
-        <Frame title={null}>
-          <Onboarding>
-            <Frame title={null}>
-              <Groups />
-            </Frame>
-          </Onboarding>
-        </Frame>
-      } />
-      <Route path={onboarding({}).additionalDetails.template} element={
-        <Frame title={null}>
-          <Onboarding>
-            <Frame title={null}>
-              <AdditionalDetails />
-            </Frame>
-          </Onboarding>
-        </Frame>
-      } />
-      <Route path={onboarding({}).preview.template} element={
-        <Frame title={null}>
-          <Onboarding>
-            <Frame title={null}>
-              <Preview />
-            </Frame>
-          </Onboarding>
-        </Frame>
-      } />
+      <Route
+        path={onboarding({}).coreDetails.template}
+        element={
+          <Frame title={null}>
+            <Onboarding>
+              <Frame title={null}>
+                <CoreDetails />
+              </Frame>
+            </Onboarding>
+          </Frame>
+        }
+      />
+      <Route
+        path={onboarding({}).background.template}
+        element={
+          <Frame title={null}>
+            <Onboarding>
+              <Frame title={null}>
+                <Background />
+              </Frame>
+            </Onboarding>
+          </Frame>
+        }
+      />
+      <Route
+        path={onboarding({}).groups.template}
+        element={
+          <Frame title={null}>
+            <Onboarding>
+              <Frame title={null}>
+                <Groups />
+              </Frame>
+            </Onboarding>
+          </Frame>
+        }
+      />
+      <Route
+        path={onboarding({}).additionalDetails.template}
+        element={
+          <Frame title={null}>
+            <Onboarding>
+              <Frame title={null}>
+                <AdditionalDetails />
+              </Frame>
+            </Onboarding>
+          </Frame>
+        }
+      />
+      <Route
+        path={onboarding({}).preview.template}
+        element={
+          <Frame title={null}>
+            <Onboarding>
+              <Frame title={null}>
+                <Preview />
+              </Frame>
+            </Onboarding>
+          </Frame>
+        }
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

@@ -23,29 +23,44 @@ const Events: FC<Record<string, never>> = () => {
 
   return (
     <Routes>
-      <Route path={gp2.events({}).calendar.template} element={
-        <EventsPage>
-          <Frame title="Subscribe to Calendars">
-            <Calendars />
+      <Route
+        path={gp2.events({}).calendar.template}
+        element={
+          <EventsPage>
+            <Frame title="Subscribe to Calendars">
+              <Calendars />
+            </Frame>
+          </EventsPage>
+        }
+      />
+      <Route
+        path={gp2.events({}).upcoming.template}
+        element={
+          <EventsPage>
+            <EventsDirectory currentTime={currentTime} paddingTop={32} />
+          </EventsPage>
+        }
+      />
+      <Route
+        path={gp2.events({}).past.template}
+        element={
+          <EventsPage>
+            <EventsDirectory past currentTime={currentTime} paddingTop={32} />
+          </EventsPage>
+        }
+      />
+      <Route
+        path={gp2.events({}).event.template}
+        element={
+          <Frame title="Event">
+            <Event />
           </Frame>
-        </EventsPage>
-      } />
-      <Route path={gp2.events({}).upcoming.template} element={
-        <EventsPage>
-          <EventsDirectory currentTime={currentTime} paddingTop={32} />
-        </EventsPage>
-      } />
-      <Route path={gp2.events({}).past.template} element={
-        <EventsPage>
-          <EventsDirectory past currentTime={currentTime} paddingTop={32} />
-        </EventsPage>
-      } />
-      <Route path={gp2.events({}).event.template} element={
-        <Frame title="Event">
-          <Event />
-        </Frame>
-      } />
-      <Route index element={<Navigate to={gp2.events({}).upcoming({}).$} replace />} />
+        }
+      />
+      <Route
+        index
+        element={<Navigate to={gp2.events({}).upcoming({}).$} replace />}
+      />
     </Routes>
   );
 };

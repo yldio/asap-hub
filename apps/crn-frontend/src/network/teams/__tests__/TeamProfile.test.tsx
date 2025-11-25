@@ -159,7 +159,8 @@ const renderPage = async (
         ),
       },
       {
-        path: sharedResearch.template + sharedResearch({}).researchOutput.template,
+        path:
+          sharedResearch.template + sharedResearch({}).researchOutput.template,
         element: <div>Research Output Page</div>,
       },
     ],
@@ -414,7 +415,10 @@ it('displays manuscript success toast message and user can dismiss toast', async
   await userEvent.click(screen.getByText(/Non CRN/i));
 
   expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
-  await userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+  await userEvent.type(
+    screen.getByLabelText(/Jane Doe Email/i),
+    'jane@doe.com',
+  );
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
   for (const button of within(quickChecks).getAllByText('Yes')) {
@@ -487,7 +491,9 @@ describe('Share Output', () => {
     });
     expect(screen.queryByText(/about/i)).not.toBeInTheDocument();
     // Wait for the actual form to appear, not just loading to disappear
-    expect(await screen.findByText(/How would you like to create your output/i)).toBeVisible();
+    expect(
+      await screen.findByText(/How would you like to create your output/i),
+    ).toBeVisible();
     jest.useFakeTimers();
   });
 
@@ -541,7 +547,9 @@ describe('Duplicate Output', () => {
         .team({ teamId: teamResponse.id })
         .duplicateOutput({ id: researchOutput.id }).$,
     );
-    expect(await screen.findByLabelText(/Title/i)).toHaveValue('Copy of Example');
+    expect(await screen.findByLabelText(/Title/i)).toHaveValue(
+      'Copy of Example',
+    );
     expect(screen.getByLabelText(/URL/i)).toHaveValue('');
     expect(router.state.location.pathname).toEqual(
       `/network/teams/${teamResponse.id}/duplicate/${researchOutput.id}`,
@@ -580,7 +588,9 @@ describe('Duplicate Output', () => {
         .team({ teamId: teamResponse.id })
         .duplicateOutput({ id: researchOutput.id }).$,
     );
-    expect(await screen.findByLabelText(/Title/i)).toHaveValue('Copy of Example');
+    expect(await screen.findByLabelText(/Title/i)).toHaveValue(
+      'Copy of Example',
+    );
     await userEvent.type(screen.getByLabelText(/URL/i), 'http://example.com');
     await userEvent.click(screen.getByText(/save draft/i));
     await userEvent.click(screen.getByText(/keep and/i));
@@ -945,7 +955,9 @@ describe('The compliance tab', () => {
       },
     );
 
-    await userEvent.click(screen.getByText(/Compliance/i, { selector: 'nav *' }));
+    await userEvent.click(
+      screen.getByText(/Compliance/i, { selector: 'nav *' }),
+    );
     expect(await screen.findByText(manuscriptTeamName)).toBeVisible();
     jest.useFakeTimers();
   });

@@ -129,7 +129,9 @@ describe('ConfirmAndSaveOutput', () => {
         screen.getByText('Publish output for the whole hub?'),
       ).toBeVisible();
 
-      await userEvent.click(screen.getByRole('button', { name: /Publish output/i }));
+      await userEvent.click(
+        screen.getByRole('button', { name: /Publish output/i }),
+      );
 
       await waitFor(() => {
         expect(

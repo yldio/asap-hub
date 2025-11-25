@@ -21,9 +21,7 @@ export const useHasRouter = (): boolean => {
   }
 };
 
-export const usePushFromPathname = (
-  pathname: string,
-): NavigateFunction => {
+export const usePushFromPathname = (pathname: string): NavigateFunction => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationRef = useRef(location);
@@ -34,19 +32,27 @@ export const usePushFromPathname = (
   }, [location]);
 
   // Use useRef to create a stable function reference
-  const fnRef = useRef<NavigateFunction>((to: string | number | { pathname?: string; search?: string; hash?: string }, options?: { replace?: boolean; state?: unknown }) => {
-    // Check current location at call time via ref
-    if (locationRef.current.pathname === pathname) {
-      if (typeof to === 'number') {
-        navigate(to);
-      } else if (typeof to === 'string') {
-        navigate(to, options);
-      } else {
-        const path = `${to.pathname || ''}${to.search || ''}${to.hash || ''}`;
-        navigate(path, options);
+  const fnRef = useRef<NavigateFunction>(
+    (
+      to:
+        | string
+        | number
+        | { pathname?: string; search?: string; hash?: string },
+      options?: { replace?: boolean; state?: unknown },
+    ) => {
+      // Check current location at call time via ref
+      if (locationRef.current.pathname === pathname) {
+        if (typeof to === 'number') {
+          navigate(to);
+        } else if (typeof to === 'string') {
+          navigate(to, options);
+        } else {
+          const path = `${to.pathname || ''}${to.search || ''}${to.hash || ''}`;
+          navigate(path, options);
+        }
       }
-    }
-  });
+    },
+  );
 
   return fnRef.current;
 };

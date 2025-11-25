@@ -28,7 +28,7 @@ describe('PublishModal', () => {
           element: <PublishModal {...defaultProps} onSave={onSave} />,
         },
       ],
-      { initialEntries: ['/'] }
+      { initialEntries: ['/'] },
     );
     render(<RouterProvider router={router} />);
     const saveButton = screen.getByRole('button', { name: 'Publish' });

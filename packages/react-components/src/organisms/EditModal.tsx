@@ -76,7 +76,8 @@ const EditModal: React.FC<EditModalProps> = ({
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (shouldWarn) {
         e.preventDefault();
-        e.returnValue = 'Are you sure you want to leave the dialog? Unsaved changes will be lost.';
+        e.returnValue =
+          'Are you sure you want to leave the dialog? Unsaved changes will be lost.';
         return e.returnValue;
       }
     };

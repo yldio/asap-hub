@@ -35,33 +35,44 @@ const Discover: FC<Record<string, never>> = () => {
   return (
     <Routes>
       <Route
-        path={`${discover({}).tutorials.template}/${discover({}).tutorials({}).tutorial.template}`}
+        path={`${discover({}).tutorials.template}/${
+          discover({}).tutorials({}).tutorial.template
+        }`}
         element={
           <Frame title={null}>
             <TutorialPage />
           </Frame>
         }
       />
-      <Route path={discover({}).guides.template} element={
-        <DiscoverPage>
-          <Frame title="Guides">
-            <Guides />
-          </Frame>
-        </DiscoverPage>
-      } />
-      <Route path={discover({}).tutorials.template} element={
-        <DiscoverPage>
-          <TutorialsPage
-            searchQuery={searchQuery}
-            onSearchQueryChange={setSearchQuery}
-          >
-            <SearchFrame title="Tutorials">
-              <TutorialList searchQuery={debouncedSearchQuery} />
-            </SearchFrame>
-          </TutorialsPage>
-        </DiscoverPage>
-      } />
-      <Route index element={<Navigate to={discover({}).guides({}).$} replace />} />
+      <Route
+        path={discover({}).guides.template}
+        element={
+          <DiscoverPage>
+            <Frame title="Guides">
+              <Guides />
+            </Frame>
+          </DiscoverPage>
+        }
+      />
+      <Route
+        path={discover({}).tutorials.template}
+        element={
+          <DiscoverPage>
+            <TutorialsPage
+              searchQuery={searchQuery}
+              onSearchQueryChange={setSearchQuery}
+            >
+              <SearchFrame title="Tutorials">
+                <TutorialList searchQuery={debouncedSearchQuery} />
+              </SearchFrame>
+            </TutorialsPage>
+          </DiscoverPage>
+        }
+      />
+      <Route
+        index
+        element={<Navigate to={discover({}).guides({}).$} replace />}
+      />
     </Routes>
   );
 };

@@ -18,13 +18,16 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
 
   return (
     <Routes>
-      <Route index element={
-        <NewsPage>
-          <Frame title="News">
-            <NewsDirectory />
-          </Frame>
-        </NewsPage>
-      } />
+      <Route
+        index
+        element={
+          <NewsPage>
+            <Frame title="News">
+              <NewsDirectory />
+            </Frame>
+          </NewsPage>
+        }
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

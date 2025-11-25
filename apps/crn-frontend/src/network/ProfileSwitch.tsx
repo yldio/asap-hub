@@ -51,64 +51,82 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
 }) => (
   <Frame title={displayName}>
     <Routes>
-      <Route path={paths.about} element={
-        <Frame title="About">{<About />}</Frame>
-      } />
+      <Route
+        path={paths.about}
+        element={<Frame title="About">{<About />}</Frame>}
+      />
       {isActive && Calendar && (
-        <Route path={paths.calendar} element={
-          <Frame title="Calendar">
-            <Calendar />
-          </Frame>
-        } />
+        <Route
+          path={paths.calendar}
+          element={
+            <Frame title="Calendar">
+              <Calendar />
+            </Frame>
+          }
+        />
       )}
       {Outputs && (
-        <Route path={paths.outputs} element={
-          <SearchFrame title="Outputs">{Outputs}</SearchFrame>
-        } />
+        <Route
+          path={paths.outputs}
+          element={<SearchFrame title="Outputs">{Outputs}</SearchFrame>}
+        />
       )}
       {DraftOutputs && (
-        <Route path={paths.draftOutputs} element={
-          <SearchFrame title="Draft Outputs">{DraftOutputs}</SearchFrame>
-        } />
+        <Route
+          path={paths.draftOutputs}
+          element={
+            <SearchFrame title="Draft Outputs">{DraftOutputs}</SearchFrame>
+          }
+        />
       )}
       {Workspace && (
-        <Route path={paths.workspace} element={
-          <Frame title="Workspace">
-            <Workspace />
-          </Frame>
-        } />
+        <Route
+          path={paths.workspace}
+          element={
+            <Frame title="Workspace">
+              <Workspace />
+            </Frame>
+          }
+        />
       )}
       {Compliance && (
-        <Route path={paths.compliance} element={
-          <SearchFrame title="Compliance">{Compliance}</SearchFrame>
-        } />
+        <Route
+          path={paths.compliance}
+          element={<SearchFrame title="Compliance">{Compliance}</SearchFrame>}
+        />
       )}
       {isActive && (
-        <Route path={paths.upcoming} element={
-          <Frame title="Upcoming Events">
+        <Route
+          path={paths.upcoming}
+          element={
+            <Frame title="Upcoming Events">
+              <EventsList
+                constraint={eventConstraint}
+                currentTime={currentTime}
+                past={false}
+                noEventsComponent={
+                  <NoEvents link={events({}).upcoming({}).$} type={type} />
+                }
+              />
+            </Frame>
+          }
+        />
+      )}
+      <Route
+        path={paths.past}
+        element={
+          <Frame title="Past Events">
             <EventsList
               constraint={eventConstraint}
               currentTime={currentTime}
-              past={false}
+              past={true}
               noEventsComponent={
-                <NoEvents link={events({}).upcoming({}).$} type={type} />
+                <NoEvents past link={events({}).past({}).$} type={type} />
               }
             />
           </Frame>
-        } />
-      )}
-      <Route path={paths.past} element={
-        <Frame title="Past Events">
-          <EventsList
-            constraint={eventConstraint}
-            currentTime={currentTime}
-            past={true}
-            noEventsComponent={
-              <NoEvents past link={events({}).past({}).$} type={type} />
-            }
-          />
-        </Frame>
-      } />
+        }
+      />
       <Route index element={<Navigate to={paths.about} replace />} />
     </Routes>
   </Frame>

@@ -24,48 +24,57 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
 
   return (
     <Routes>
-      <Route path={route.editPersonalInfo.template} element={
-        <Frame title="Edit Personal Information">
-          <PersonalInfoModal
-            {...user}
-            countrySuggestions={countrySuggestions.map(
-              ({ countryName }) => countryName,
-            )}
-            loadInstitutionOptions={(searchQuery) =>
-              getInstitutions({ searchQuery }).then((data) =>
-                data.items.map(({ name }) => name),
-              )
-            }
-            backHref={backHref}
-            onSave={patchUser}
-          />
-        </Frame>
-      } />
-      <Route path={route.editContactInfo.template} element={
-        <Frame title="Edit Contact Information">
-          <ContactInfoModal
-            {...user}
-            email={user.contactEmail}
-            fallbackEmail={user.email}
-            backHref={backHref}
-            onSave={patchUser}
-          />
-        </Frame>
-      } />
-      <Route path={route.editOnboarded.template} element={
-        <Frame title="Publish your profile">
-          <ConfirmModal
-            backHref={backHref}
-            successHref="/"
-            title="Ready to publish your profile?"
-            description="In order to show you the Hub, we will need to make your profile public to the Hub network. Would you like to continue?"
-            error="There was an error and we were unable to publish your profile"
-            cancelText="Cancel"
-            confirmText="Publish Profile"
-            onSave={() => patchUser({ onboarded: true })}
-          />
-        </Frame>
-      } />
+      <Route
+        path={route.editPersonalInfo.template}
+        element={
+          <Frame title="Edit Personal Information">
+            <PersonalInfoModal
+              {...user}
+              countrySuggestions={countrySuggestions.map(
+                ({ countryName }) => countryName,
+              )}
+              loadInstitutionOptions={(searchQuery) =>
+                getInstitutions({ searchQuery }).then((data) =>
+                  data.items.map(({ name }) => name),
+                )
+              }
+              backHref={backHref}
+              onSave={patchUser}
+            />
+          </Frame>
+        }
+      />
+      <Route
+        path={route.editContactInfo.template}
+        element={
+          <Frame title="Edit Contact Information">
+            <ContactInfoModal
+              {...user}
+              email={user.contactEmail}
+              fallbackEmail={user.email}
+              backHref={backHref}
+              onSave={patchUser}
+            />
+          </Frame>
+        }
+      />
+      <Route
+        path={route.editOnboarded.template}
+        element={
+          <Frame title="Publish your profile">
+            <ConfirmModal
+              backHref={backHref}
+              successHref="/"
+              title="Ready to publish your profile?"
+              description="In order to show you the Hub, we will need to make your profile public to the Hub network. Would you like to continue?"
+              error="There was an error and we were unable to publish your profile"
+              cancelText="Cancel"
+              confirmText="Publish Profile"
+              onSave={() => patchUser({ onboarded: true })}
+            />
+          </Frame>
+        }
+      />
     </Routes>
   );
 };

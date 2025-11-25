@@ -73,52 +73,79 @@ const OnboardedApp: FC<Record<string, never>> = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     <Layout userId={user!.id} projects={projects} workingGroups={workingGroups}>
       <Routes>
-        <Route index element={
-          <Frame title="Dashboard">
-            <Dashboard />
-          </Frame>
-        } />
-        <Route path={`${usersRoute.template}/*`} element={
-          <Frame title="Users">
-            <Users />
-          </Frame>
-        } />
-        <Route path={`${workingGroupsRoute.template}/*`} element={
-          <Frame title="Working Groups">
-            <WorkingGroups />
-          </Frame>
-        } />
-        <Route path={`${projectsRoute.template}/*`} element={
-          <Frame title="Projects">
-            <Projects />
-          </Frame>
-        } />
-        <Route path={`${eventsRoute.template}/*`} element={
-          <Frame title="Events">
-            <Events />
-          </Frame>
-        } />
-        <Route path={`${outputsRoute.template}/*`} element={
-          <Frame title="Outputs">
-            <Outputs />
-          </Frame>
-        } />
-        <Route path={`${newsRoute.template}/*`} element={
-          <Frame title="News">
-            <News />
-          </Frame>
-        } />
-        <Route path={`${tagsRoute.template}/*`} element={
-          <Frame title="Tags">
-            <Tags />
-          </Frame>
-        } />
+        <Route
+          index
+          element={
+            <Frame title="Dashboard">
+              <Dashboard />
+            </Frame>
+          }
+        />
+        <Route
+          path={`${usersRoute.template}/*`}
+          element={
+            <Frame title="Users">
+              <Users />
+            </Frame>
+          }
+        />
+        <Route
+          path={`${workingGroupsRoute.template}/*`}
+          element={
+            <Frame title="Working Groups">
+              <WorkingGroups />
+            </Frame>
+          }
+        />
+        <Route
+          path={`${projectsRoute.template}/*`}
+          element={
+            <Frame title="Projects">
+              <Projects />
+            </Frame>
+          }
+        />
+        <Route
+          path={`${eventsRoute.template}/*`}
+          element={
+            <Frame title="Events">
+              <Events />
+            </Frame>
+          }
+        />
+        <Route
+          path={`${outputsRoute.template}/*`}
+          element={
+            <Frame title="Outputs">
+              <Outputs />
+            </Frame>
+          }
+        />
+        <Route
+          path={`${newsRoute.template}/*`}
+          element={
+            <Frame title="News">
+              <News />
+            </Frame>
+          }
+        />
+        <Route
+          path={`${tagsRoute.template}/*`}
+          element={
+            <Frame title="Tags">
+              <Tags />
+            </Frame>
+          }
+        />
 
-        <Route path="*" element={
-          <Frame title="Not Found">
-            <NotFoundPage />
-          </Frame>
-        } />
+        <Route
+          path="*"
+          element={
+            <Frame title="Not Found">
+              <NotFoundPage />
+            </Frame>
+          }
+        />
       </Routes>
     </Layout>
   );

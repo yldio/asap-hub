@@ -193,9 +193,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <p css={viewAllStyles}>
             <Button
               data-testid="view-upcoming-events"
-              onClick={() =>
-                navigate(gp2Routes.events({}).upcoming({}).$)
-              }
+              onClick={() => navigate(gp2Routes.events({}).upcoming({}).$)}
             >
               View All
             </Button>
@@ -212,9 +210,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <p css={viewAllStyles}>
             <Button
               data-testid="view-past-events"
-              onClick={() =>
-                navigate(gp2Routes.events({}).past({}).$)
-              }
+              onClick={() => navigate(gp2Routes.events({}).past({}).$)}
             >
               View All
             </Button>
@@ -238,9 +234,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <p css={viewAllStyles}>
             <Button
               data-testid="view-outputs"
-              onClick={() =>
-                navigate(gp2Routes.outputs({}).$)
-              }
+              onClick={() => navigate(gp2Routes.outputs({}).$)}
             >
               View All
             </Button>
@@ -264,9 +258,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <p css={viewAllStyles}>
           <Button
             data-testid="view-users"
-            onClick={() =>
-              navigate(gp2Routes.users({}).$)
-            }
+            onClick={() => navigate(gp2Routes.users({}).$)}
           >
             View All
           </Button>

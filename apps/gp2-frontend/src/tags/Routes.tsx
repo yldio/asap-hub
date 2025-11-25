@@ -17,15 +17,18 @@ const Tags: FC<Record<string, never>> = () => {
 
   return (
     <Routes>
-      <Route index element={
-        <Frame title="Tags Search">
-          <TagSearchPage>
-            <Frame title="Tags Search">
-              <TagSearch />
-            </Frame>
-          </TagSearchPage>
-        </Frame>
-      } />
+      <Route
+        index
+        element={
+          <Frame title="Tags Search">
+            <TagSearchPage>
+              <Frame title="Tags Search">
+                <TagSearch />
+              </Frame>
+            </TagSearchPage>
+          </Frame>
+        }
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

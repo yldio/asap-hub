@@ -43,9 +43,6 @@ const Projects: FC<Record<string, never>> = () => {
 
   return (
     <Switch>
-      {/* Project Detail Routes - must come before list routes */}
-      {/* Use full template path from routing package (like teams do) to include nested routes */}
-      {/* Pattern: path + parent.template + parent({}).child.template */}
       <Route
         path={
           path +

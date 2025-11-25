@@ -52,4 +52,11 @@ export default class ProjectController {
   ): Promise<ListProjectResponse> {
     return this.projectDataProvider.fetchByTeamId(teamId, options);
   }
+
+  async fetchByUserId(
+    userId: string,
+    options: FetchPaginationOptions,
+  ): Promise<ListProjectResponse> {
+    return this.projectDataProvider.fetchByUserId(userId, options);
+  }
 }

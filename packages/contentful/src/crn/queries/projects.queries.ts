@@ -163,3 +163,27 @@ export const FETCH_PROJECTS_BY_TEAM_ID = gql`
     }
   }
 `;
+
+// Fetches projects associated with a user via reverse lookup
+// Users -> linkedFrom.projectMembershipCollection -> linkedFrom.projectsCollection
+export const FETCH_PROJECTS_BY_USER_ID = gql`
+  ${projectsContentQueryFragment}
+  query FetchProjectsByUserId($userId: String!, $limit: Int) {
+    users(id: $userId) {
+      linkedFrom {
+        projectMembershipCollection(limit: $limit) {
+          total
+          items {
+            linkedFrom {
+              projectsCollection(limit: 1) {
+                items {
+                  ...ProjectsContentData
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

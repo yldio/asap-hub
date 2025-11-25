@@ -1,11 +1,14 @@
 import {
   FETCH_PROJECTS,
   FETCH_PROJECTS_BY_TEAM_ID,
+  FETCH_PROJECTS_BY_USER_ID,
   FETCH_PROJECT_BY_ID,
   FetchProjectByIdQuery,
   FetchProjectByIdQueryVariables,
   FetchProjectsByTeamIdQuery,
   FetchProjectsByTeamIdQueryVariables,
+  FetchProjectsByUserIdQuery,
+  FetchProjectsByUserIdQueryVariables,
   FetchProjectsQuery,
   FetchProjectsQueryVariables,
   GraphQLClient,
@@ -159,6 +162,53 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     // Extract projects from memberships and deduplicate by project ID
     const projectMap = new Map<string, ProjectItem>();
     for (const membership of teams.linkedFrom.projectMembershipCollection
+      .items) {
+      if (!membership) {
+        continue;
+      }
+      const projects = membership.linkedFrom?.projectsCollection?.items || [];
+      for (const project of projects) {
+        if (project && !projectMap.has(project.sys.id)) {
+          projectMap.set(project.sys.id, project);
+        }
+      }
+    }
+
+    const uniqueProjects = Array.from(projectMap.values());
+
+    // Apply pagination in memory on deduplicated projects
+    const paginatedItems = uniqueProjects.slice(skip, skip + take);
+
+    return {
+      total: uniqueProjects.length,
+      items: paginatedItems.map(parseContentfulProject),
+    };
+  }
+
+  async fetchByUserId(
+    userId: string,
+    options: FetchPaginationOptions,
+  ): Promise<ListProjectDataObject> {
+    const { take = 10, skip = 0 } = options;
+
+    const { users } = await this.contentfulClient.request<
+      FetchProjectsByUserIdQuery,
+      FetchProjectsByUserIdQueryVariables
+    >(FETCH_PROJECTS_BY_USER_ID, {
+      userId,
+      limit: 100, // Fetch all memberships, deduplicate in memory as a user may have more than one role per project.
+    });
+
+    if (!users?.linkedFrom?.projectMembershipCollection?.items) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    // Extract projects from memberships and deduplicate by project ID
+    const projectMap = new Map<string, ProjectItem>();
+    for (const membership of users.linkedFrom.projectMembershipCollection
       .items) {
       if (!membership) {
         continue;

@@ -18,4 +18,8 @@ export type ProjectDataProvider = DataProvider<
     teamId: string,
     options: FetchPaginationOptions,
   ) => Promise<ListProjectDataObject>;
+  fetchByUserId: (
+    userId: string,
+    options: FetchPaginationOptions,
+  ) => Promise<ListProjectDataObject>;
 };

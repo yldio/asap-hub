@@ -3,6 +3,7 @@ export const getDataProviderMock = () => ({
   fetchById: jest.fn(),
   fetchByCollectionTitle: jest.fn(),
   fetchByTeamId: jest.fn(),
+  fetchByUserId: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
   createFromUrl: jest.fn(),

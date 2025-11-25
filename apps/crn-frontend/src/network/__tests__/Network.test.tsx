@@ -31,7 +31,12 @@ import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algo
 jest.mock('../users/state', () => ({
   useUsers: jest.fn().mockReturnValue({ items: [], total: 0 }),
 }));
-jest.mock('../../shared-research/api');
+jest.mock('../../shared-research/api', () => ({
+  getResearchOutputs: jest.fn(),
+  getResearchThemes: jest.fn().mockResolvedValue([]),
+  getResearchTags: jest.fn(),
+  getResourceTypes: jest.fn(),
+}));
 
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs

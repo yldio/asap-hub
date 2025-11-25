@@ -1,13 +1,12 @@
+import { useEffect } from 'react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { ThemeProvider } from '@emotion/react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 import { activePrimaryBackgroundColorDefault } from '../../button';
 import { color, pine } from '../../colors';
 import NavigationLink from '../NavigationLink';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 // Helper to capture location in tests
 let currentPathname: string | null = null;

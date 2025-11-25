@@ -82,7 +82,7 @@ describe('OpenQuestionsModal', () => {
       screen.queryByRole('button', { name: /add another question/i }),
     ).not.toBeInTheDocument();
   });
-  it('adds a question', () => {
+  it('adds a question', async () => {
     const props = {
       questions: [
         'a first question?',
@@ -100,7 +100,7 @@ describe('OpenQuestionsModal', () => {
     await userEvent.type(emptyTextArea, newQuestion);
     expect(emptyTextArea).toHaveTextContent(newQuestion);
   });
-  it('removes the only question it exists and shows the add open question button', () => {
+  it('removes the only question it exists and shows the add open question button', async () => {
     const onSave = jest.fn();
     const props = {
       questions: ['a first question?'],
@@ -121,9 +121,8 @@ describe('OpenQuestionsModal', () => {
     renderOpenQuestions(props);
 
     const closeButton = screen.getByRole('button', { name: /close/i });
-    await waitFor(() => await userEvent.click(closeButton));
-
-    expect(closeButton).toBeDisabled();
+    await userEvent.click(closeButton);
+    await waitFor(() => expect(closeButton).toBeDisabled());
   });
 
   it('allows the saveButton to saves all the information', async () => {
@@ -147,7 +146,8 @@ describe('OpenQuestionsModal', () => {
     await userEvent.type(emptyTextArea, newQuestion);
     expect(emptyTextArea).toHaveTextContent(newQuestion);
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    await waitFor(() => await userEvent.click(saveButton));
+    await userEvent.click(saveButton);
+    await waitFor(() => expect(saveButton).toBeEnabled());
     expect(onSave).toHaveBeenCalledWith({
       questions: [
         'a first question?',
@@ -167,7 +167,8 @@ describe('OpenQuestionsModal', () => {
     renderOpenQuestions(props);
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    await waitFor(() => await userEvent.click(saveButton));
+    await userEvent.click(saveButton);
+    await waitFor(() => expect(saveButton).toBeEnabled());
     expect(onSave).toHaveBeenCalledWith({ questions: ['Am I a question?'] });
   });
 });

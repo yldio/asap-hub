@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FilterModalFooter from '../FilterModalFooter';
 
@@ -17,13 +17,17 @@ describe('FilterModalFooter', () => {
       screen.getAllByRole('button').map((button) => button.textContent),
     ).toMatchObject(['Close', 'Reset', 'Apply']);
   });
-  it('applies the function to the buttons', () => {
+  it('applies the function to the buttons', async () => {
     render(<FilterModalFooter {...defaultProps} />);
-    screen
-      .getAllByRole('button')
-      .map((button) => await userEvent.click(button));
-    expect(defaultProps.onApply).toHaveBeenCalledTimes(1);
-    expect(defaultProps.onReset).toHaveBeenCalledTimes(1);
-    expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      screen.getAllByRole('button').forEach(async (button) => {
+        await userEvent.click(button);
+      });
+    });
+    await waitFor(() => {
+      expect(defaultProps.onApply).toHaveBeenCalledTimes(1);
+      expect(defaultProps.onReset).toHaveBeenCalledTimes(1);
+      expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
+    });
   });
 });

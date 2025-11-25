@@ -12,8 +12,13 @@ import {
   MeetingRepAttendanceResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
-import { render, screen, waitFor, within } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import {
+  render,
+  screen,
+  waitFor,
+  within,
+  renderHook,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';

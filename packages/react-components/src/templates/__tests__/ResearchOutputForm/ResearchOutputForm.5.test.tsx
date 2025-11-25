@@ -1,11 +1,10 @@
 import userEvent from '@testing-library/user-event';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
-import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
   defaultProps,
@@ -15,7 +14,6 @@ import {
 jest.setTimeout(60000);
 
 describe('on submit', () => {
-  let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
@@ -25,7 +23,6 @@ describe('on submit', () => {
   const getShortDescriptionFromDescription = jest.fn();
 
   beforeEach(() => {
-    history = createMemoryHistory();
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
@@ -67,7 +64,7 @@ describe('on submit', () => {
       const documentType = 'Bioinformatics' as const;
 
       render(
-        <Router history={history}>
+        <MemoryRouter>
           <ResearchOutputForm
             {...defaultProps}
             researchOutputData={initialResearchOutputData}
@@ -86,7 +83,7 @@ describe('on submit', () => {
             }
             researchTags={[]}
           />
-        </Router>,
+        </MemoryRouter>,
       );
 
       const funded = screen.getByRole('group', {
@@ -104,18 +101,16 @@ describe('on submit', () => {
   });
 
   it('should disable "No" and "Not Sure" options', async () => {
-    history = createMemoryHistory({
-      initialEntries: [
-        network({}).teams({}).team({ teamId: 'TEAMID' }).createOutput({
-          outputDocumentType: 'article',
-        }).$,
-      ],
-    });
-
     const documentType = 'Article' as const;
 
     render(
-      <Router history={history}>
+      <MemoryRouter
+        initialEntries={[
+          network({}).teams({}).team({ teamId: 'TEAMID' }).createOutput({
+            outputDocumentType: 'article',
+          }).$,
+        ]}
+      >
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -139,7 +134,7 @@ describe('on submit', () => {
           }
           researchTags={[]}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     const usedInPublication = screen.getByRole('group', {

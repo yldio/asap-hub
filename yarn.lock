@@ -398,7 +398,7 @@ __metadata:
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/dom": 10.4.0
-    "@testing-library/jest-dom": ^6.6.3
+    "@testing-library/jest-dom": ^6.9.0
     "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/node": 20.10.5

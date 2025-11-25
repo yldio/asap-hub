@@ -135,9 +135,8 @@ export const getAlgoliaTeams = async (
     filterParts.push(`(${researchThemeFilters})`);
   }
 
-  const algoliaFilters = filterParts.length > 1
-    ? filterParts.join(' AND ')
-    : teamTypeFilter;
+  const algoliaFilters =
+    filterParts.length > 1 ? filterParts.join(' AND ') : teamTypeFilter;
 
   const result = await algoliaClient.search(['team'], searchQuery, {
     filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,

@@ -143,17 +143,20 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
         targetManuscriptId={targetManuscript.slice(1)}
       />
       <Routes>
-        <Route path={route.tools.template} element={
-          <ToolModal
-            title="Add Link"
-            backHref={route.$}
-            onSave={(data: TeamTool) =>
-              patchTeam({
-                tools: [...(team.tools ?? []), data],
-              })
-            }
-          />
-        } />
+        <Route
+          path={route.tools.template}
+          element={
+            <ToolModal
+              title="Add Link"
+              backHref={route.$}
+              onSave={(data: TeamTool) =>
+                patchTeam({
+                  tools: [...(team.tools ?? []), data],
+                })
+              }
+            />
+          }
+        />
         <Route
           path={`${route.tools.template}/${route.tools({}).tool.template}`}
           element={<EditTool teamId={team.id} tools={team.tools} />}

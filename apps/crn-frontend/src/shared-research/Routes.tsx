@@ -32,22 +32,28 @@ const SharedResearch: FC<Record<string, never>> = () => {
 
   return (
     <Routes>
-      <Route index element={
-        <SharedResearchPage
-          onChangeSearch={setSearchQuery}
-          searchQuery={searchQuery}
-          onChangeFilter={toggleFilter}
-          filters={filters}
-        >
-          <SearchFrame title={null}>
-            <ResearchOutputList
-              searchQuery={debouncedSearchQuery}
-              filters={filters}
-            />
-          </SearchFrame>
-        </SharedResearchPage>
-      } />
-      <Route path={`${sharedResearch({}).researchOutput.template}/*`} element={<ResearchOutput />} />
+      <Route
+        index
+        element={
+          <SharedResearchPage
+            onChangeSearch={setSearchQuery}
+            searchQuery={searchQuery}
+            onChangeFilter={toggleFilter}
+            filters={filters}
+          >
+            <SearchFrame title={null}>
+              <ResearchOutputList
+                searchQuery={debouncedSearchQuery}
+                filters={filters}
+              />
+            </SearchFrame>
+          </SharedResearchPage>
+        }
+      />
+      <Route
+        path={`${sharedResearch({}).researchOutput.template}/*`}
+        element={<ResearchOutput />}
+      />
     </Routes>
   );
 };

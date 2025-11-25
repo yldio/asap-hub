@@ -9,10 +9,11 @@ import { Auth0Provider } from './react-auth0-spa';
 // A function that routes the user to the right place
 // after login
 const onRedirectCallback = (appState: RedirectLoginResult['appState']) => {
-  const targetUrl = appState && appState.targetUrl
-    ? appState.targetUrl
-    : window.location.pathname;
-  
+  const targetUrl =
+    appState && appState.targetUrl
+      ? appState.targetUrl
+      : window.location.pathname;
+
   // In React Router v6 with BrowserRouter, we use window.history.replaceState
   // instead of the history package
   window.history.replaceState({}, '', targetUrl);

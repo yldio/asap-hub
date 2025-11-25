@@ -19,16 +19,22 @@ const Outputs: FC<Record<string, never>> = () => {
 
   return (
     <Routes>
-      <Route index element={
-        <Frame title="Outputs">
-          <OutputsPage>
-            <Frame title="Outputs">
-              <OutputDirectory />
-            </Frame>
-          </OutputsPage>
-        </Frame>
-      } />
-      <Route path={`${gp2.outputs({}).output.template}/*`} element={<OutputDetail />} />
+      <Route
+        index
+        element={
+          <Frame title="Outputs">
+            <OutputsPage>
+              <Frame title="Outputs">
+                <OutputDirectory />
+              </Frame>
+            </OutputsPage>
+          </Frame>
+        }
+      />
+      <Route
+        path={`${gp2.outputs({}).output.template}/*`}
+        element={<OutputDetail />}
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

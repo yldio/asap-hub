@@ -71,11 +71,14 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     <BasicLayout>
       <Routes>
         <Route path="/*" element={<Onboarding />} />
-        <Route path="*" element={
-          <Frame title="Not Found">
-            <NotFoundPage />
-          </Frame>
-        } />
+        <Route
+          path="*"
+          element={
+            <Frame title="Not Found">
+              <NotFoundPage />
+            </Frame>
+          }
+        />
       </Routes>
     </BasicLayout>
   );

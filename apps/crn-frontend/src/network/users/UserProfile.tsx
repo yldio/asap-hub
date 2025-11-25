@@ -136,56 +136,74 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
             {
               <>
                 <Routes>
-                  <Route path="research" element={
-                    <Frame title="Research">
-                      <Research user={user} />
-                    </Frame>
-                  } />
-                  <Route path="about" element={
-                    <Frame title="About">
-                      <About user={user} />
-                    </Frame>
-                  } />
-                  <Route path="outputs" element={
-                    <Frame title="Outputs">
-                      <Outputs userId={user?.id} />
-                    </Frame>
-                  } />
-                  <Route path="upcoming" element={
-                    <Frame title="Upcoming Events">
-                      <EventsList
-                        constraint={{ userId: user?.id }}
-                        currentTime={currentTime}
-                        past={false}
-                        noEventsComponent={
-                          <NoEvents
-                            link={events({}).upcoming({}).$}
-                            type="member"
-                          />
-                        }
-                      />
-                    </Frame>
-                  } />
-                  <Route path="past" element={
-                    <Frame title="Past Events">
-                      <EventsList
-                        past
-                        constraint={{ userId: user?.id }}
-                        currentTime={currentTime}
-                        noEventsComponent={
-                          <NoEvents
-                            past
-                            link={events({}).past({}).$}
-                            type="member"
-                          />
-                        }
-                      />
-                    </Frame>
-                  } />
+                  <Route
+                    path="research"
+                    element={
+                      <Frame title="Research">
+                        <Research user={user} />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path="about"
+                    element={
+                      <Frame title="About">
+                        <About user={user} />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path="outputs"
+                    element={
+                      <Frame title="Outputs">
+                        <Outputs userId={user?.id} />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path="upcoming"
+                    element={
+                      <Frame title="Upcoming Events">
+                        <EventsList
+                          constraint={{ userId: user?.id }}
+                          currentTime={currentTime}
+                          past={false}
+                          noEventsComponent={
+                            <NoEvents
+                              link={events({}).upcoming({}).$}
+                              type="member"
+                            />
+                          }
+                        />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path="past"
+                    element={
+                      <Frame title="Past Events">
+                        <EventsList
+                          past
+                          constraint={{ userId: user?.id }}
+                          currentTime={currentTime}
+                          noEventsComponent={
+                            <NoEvents
+                              past
+                              link={events({}).past({}).$}
+                              type="member"
+                            />
+                          }
+                        />
+                      </Frame>
+                    }
+                  />
                   {isOwnProfile && tabRoute && (
-                    <Route path="about/*" element={
-                      <Editing user={user} backHref={tabRoute({}).$} />
-                    } />
+                    <Route
+                      path="about/*"
+                      element={
+                        <Editing user={user} backHref={tabRoute({}).$} />
+                      }
+                    />
                   )}
                   <Route index element={<Navigate to="research" replace />} />
                 </Routes>

@@ -23,21 +23,30 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
 
   return (
     <Routes>
-      <Route index element={
-        <UsersPage>
-          <Frame title="Users">
-            <UserDirectory />
-          </Frame>
-        </UsersPage>
-      } />
-      <Route path={users({}).filters.template} element={
-        <UsersPage>
-          <Frame title="Users Display Filters">
-            <UserDirectory displayFilters />
-          </Frame>
-        </UsersPage>
-      } />
-      <Route path={`${users({}).user.template}/*`} element={<UserDetail currentTime={currentTime} />} />
+      <Route
+        index
+        element={
+          <UsersPage>
+            <Frame title="Users">
+              <UserDirectory />
+            </Frame>
+          </UsersPage>
+        }
+      />
+      <Route
+        path={users({}).filters.template}
+        element={
+          <UsersPage>
+            <Frame title="Users Display Filters">
+              <UserDirectory displayFilters />
+            </Frame>
+          </UsersPage>
+        }
+      />
+      <Route
+        path={`${users({}).user.template}/*`}
+        element={<UserDetail currentTime={currentTime} />}
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

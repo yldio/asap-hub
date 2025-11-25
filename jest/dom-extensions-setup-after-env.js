@@ -4,13 +4,21 @@ import { TextEncoder, TextDecoder } from 'util';
 failOnConsole({
   silenceMessage: (msg, method, context) => {
     // Silence Recoil performance warnings
-    if (/Recoil: Spent [0-9]{1,2}\.[0-9]+ms computing a cache key/.test(context.group)) {
+    if (
+      /Recoil: Spent [0-9]{1,2}\.[0-9]+ms computing a cache key/.test(
+        context.group,
+      )
+    ) {
       return true;
     }
     // Silence React 18 compatibility warnings from third-party libraries
     if (typeof msg === 'string') {
       // react-select defaultProps warning
-      if (msg.includes('Support for defaultProps will be removed from function components')) {
+      if (
+        msg.includes(
+          'Support for defaultProps will be removed from function components',
+        )
+      ) {
         return true;
       }
       // react-sortable-hoc findDOMNode warning

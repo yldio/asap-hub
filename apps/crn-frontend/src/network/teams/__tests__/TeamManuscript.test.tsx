@@ -149,7 +149,9 @@ it('generates the short description based on the current description', async () 
 
   // Wait for form to be fully loaded
   await waitFor(() => {
-    expect(screen.getByRole('textbox', { name: /Manuscript Description/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('textbox', { name: /Manuscript Description/i }),
+    ).toBeInTheDocument();
   });
 
   const descriptionTextbox = screen.getByRole('textbox', {

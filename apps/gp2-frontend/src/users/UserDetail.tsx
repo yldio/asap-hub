@@ -103,82 +103,115 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
         {...user}
       >
         <Routes>
-          <Route path="overview" element={
-            <Frame title="Overview">
-              <UserOverview {...user} {...(isOwnProfile ? editHrefs : {})} />
-              {isOwnProfile && (
-                <Routes>
-                  <Route path="edit-key-info" element={
-                    <KeyInformationModal
-                      {...user}
-                      {...commonModalProps}
-                      locationSuggestions={locationSuggestions.map(
-                        ({ shortName }) => shortName,
-                      )}
-                      loadInstitutionOptions={(searchQuery) =>
-                        getInstitutions({ searchQuery }).then((data) =>
-                          data.items.map(({ name }) => name),
-                        )
+          <Route
+            path="overview"
+            element={
+              <Frame title="Overview">
+                <UserOverview {...user} {...(isOwnProfile ? editHrefs : {})} />
+                {isOwnProfile && (
+                  <Routes>
+                    <Route
+                      path="edit-key-info"
+                      element={
+                        <KeyInformationModal
+                          {...user}
+                          {...commonModalProps}
+                          locationSuggestions={locationSuggestions.map(
+                            ({ shortName }) => shortName,
+                          )}
+                          loadInstitutionOptions={(searchQuery) =>
+                            getInstitutions({ searchQuery }).then((data) =>
+                              data.items.map(({ name }) => name),
+                            )
+                          }
+                        />
                       }
                     />
-                  } />
-                  <Route path="edit-biography" element={
-                    <BiographyModal {...user} {...commonModalProps} />
-                  } />
-                  <Route path="edit-contact-info" element={
-                    <ContactInformationModal
-                      {...user}
-                      {...commonModalProps}
-                      countryCodeSuggestions={countryCodesSuggestions}
+                    <Route
+                      path="edit-biography"
+                      element={
+                        <BiographyModal {...user} {...commonModalProps} />
+                      }
                     />
-                  } />
-                  <Route path="edit-contributing-cohorts" element={
-                    <ContributingCohortsModal
-                      {...user}
-                      {...commonModalProps}
-                      cohortOptions={cohortOptions}
+                    <Route
+                      path="edit-contact-info"
+                      element={
+                        <ContactInformationModal
+                          {...user}
+                          {...commonModalProps}
+                          countryCodeSuggestions={countryCodesSuggestions}
+                        />
+                      }
                     />
-                  } />
-                  <Route path="edit-funding-streams" element={
-                    <FundingProviderModal {...user} {...commonModalProps} />
-                  } />
-                  <Route path="edit-tags" element={
-                    <TagsModal
-                      {...user}
-                      {...commonModalProps}
-                      suggestions={allTags}
+                    <Route
+                      path="edit-contributing-cohorts"
+                      element={
+                        <ContributingCohortsModal
+                          {...user}
+                          {...commonModalProps}
+                          cohortOptions={cohortOptions}
+                        />
+                      }
                     />
-                  } />
-                  <Route path="edit-questions" element={
-                    <OpenQuestionsModal {...user} {...commonModalProps} />
-                  } />
-                </Routes>
-              )}
-            </Frame>
-          } />
-          <Route path="outputs" element={
-            <Frame title="Shared Outputs">
-              <OutputDirectory userId={userId} />
-            </Frame>
-          } />
-          <Route path="upcoming" element={
-            <Frame title="Upcoming Events">
-              <EventsList
-                constraint={{ userId }}
-                currentTime={currentTime}
-                past={false}
-              />
-            </Frame>
-          } />
-          <Route path="past" element={
-            <Frame title="Past Events">
-              <EventsList
-                currentTime={currentTime}
-                past={true}
-                constraint={{ userId }}
-              />
-            </Frame>
-          } />
+                    <Route
+                      path="edit-funding-streams"
+                      element={
+                        <FundingProviderModal {...user} {...commonModalProps} />
+                      }
+                    />
+                    <Route
+                      path="edit-tags"
+                      element={
+                        <TagsModal
+                          {...user}
+                          {...commonModalProps}
+                          suggestions={allTags}
+                        />
+                      }
+                    />
+                    <Route
+                      path="edit-questions"
+                      element={
+                        <OpenQuestionsModal {...user} {...commonModalProps} />
+                      }
+                    />
+                  </Routes>
+                )}
+              </Frame>
+            }
+          />
+          <Route
+            path="outputs"
+            element={
+              <Frame title="Shared Outputs">
+                <OutputDirectory userId={userId} />
+              </Frame>
+            }
+          />
+          <Route
+            path="upcoming"
+            element={
+              <Frame title="Upcoming Events">
+                <EventsList
+                  constraint={{ userId }}
+                  currentTime={currentTime}
+                  past={false}
+                />
+              </Frame>
+            }
+          />
+          <Route
+            path="past"
+            element={
+              <Frame title="Past Events">
+                <EventsList
+                  currentTime={currentTime}
+                  past={true}
+                  constraint={{ userId }}
+                />
+              </Frame>
+            }
+          />
           <Route index element={<Navigate to="overview" replace />} />
         </Routes>
       </UserDetailPage>

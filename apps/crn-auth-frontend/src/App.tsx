@@ -13,8 +13,14 @@ const App: React.FC<Record<string, never>> = () => {
     <HashRouter>
       <BasicLayout logoHref={hubUrl}>
         <Routes>
-          <Route path="/login" element={<Login email={email} setEmail={setEmail} />} />
-          <Route path="/forgot-password" element={<ForgotPassword email={email} setEmail={setEmail} />} />
+          <Route
+            path="/login"
+            element={<Login email={email} setEmail={setEmail} />}
+          />
+          <Route
+            path="/forgot-password"
+            element={<ForgotPassword email={email} setEmail={setEmail} />}
+          />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BasicLayout>

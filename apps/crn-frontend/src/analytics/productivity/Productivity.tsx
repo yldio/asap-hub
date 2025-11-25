@@ -38,9 +38,7 @@ const Productivity = () => {
 
   const { metric } = useParams<{ metric: 'user' | 'team' }>();
   const setMetric = (newMetric: 'user' | 'team') =>
-    navigate(
-      analytics({}).productivity({}).metric({ metric: newMetric }).$,
-    );
+    navigate(analytics({}).productivity({}).metric({ metric: newMetric }).$);
 
   const { timeRange, documentCategory, outputType } = useAnalytics();
   const { tags, setTags } = useSearch();

@@ -23,14 +23,20 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
   const [currentTime] = useState(new Date());
   return (
     <Routes>
-      <Route index element={
-        <ProjectsPage>
-          <Frame title="Projects">
-            <ProjectDirectory />
-          </Frame>
-        </ProjectsPage>
-      } />
-      <Route path={`${projects({}).project.template}/*`} element={<ProjectDetail currentTime={currentTime} />} />
+      <Route
+        index
+        element={
+          <ProjectsPage>
+            <Frame title="Projects">
+              <ProjectDirectory />
+            </Frame>
+          </ProjectsPage>
+        }
+      />
+      <Route
+        path={`${projects({}).project.template}/*`}
+        element={<ProjectDetail currentTime={currentTime} />}
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

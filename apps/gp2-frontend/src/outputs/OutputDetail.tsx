@@ -38,11 +38,14 @@ const OutputDetail: FC = () => {
   }
   return (
     <Routes>
-      <Route index element={
-        <Frame title="Output">
-          <OutputDetailPage isAdministrator={isAdministrator} {...output} />
-        </Frame>
-      } />
+      <Route
+        index
+        element={
+          <Frame title="Output">
+            <OutputDetailPage isAdministrator={isAdministrator} {...output} />
+          </Frame>
+        }
+      />
       <Route
         path={gp2Routing.outputs({}).output({ outputId }).edit.template}
         element={

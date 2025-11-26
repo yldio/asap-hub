@@ -30,11 +30,6 @@ jest.setTimeout(100_000);
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 
 const teamId = '42';
-const defaultPath = network({})
-  .teams({})
-  .team({ teamId })
-  .workspace({})
-  .createManuscript({}).$;
 
 // Helper to capture location in tests
 let currentLocation: { pathname: string; search: string } | null = null;

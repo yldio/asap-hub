@@ -54,6 +54,7 @@ export type DiscoveryProject = BaseProject & {
   readonly teamName: string;
   readonly teamId?: string;
   readonly inactiveSinceDate?: string;
+  readonly fundedTeam?: FundedTeam;
 };
 
 export type ResourceProject = BaseProject & {
@@ -64,6 +65,7 @@ export type ResourceProject = BaseProject & {
   readonly teamId?: string;
   readonly members?: ReadonlyArray<ProjectMember>;
   readonly googleDriveLink?: string;
+  readonly fundedTeam?: FundedTeam;
 };
 
 export type TraineeProject = BaseProject & {

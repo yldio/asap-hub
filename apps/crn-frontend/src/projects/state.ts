@@ -1,4 +1,8 @@
-import { ListProjectResponse, ProjectResponse } from '@asap-hub/model';
+import {
+  ListProjectResponse,
+  ProjectDetail,
+  ProjectResponse,
+} from '@asap-hub/model';
 import {
   atomFamily,
   DefaultValue,
@@ -82,7 +86,7 @@ export const projectsState = selectorFamily<
     },
 });
 
-const fetchProjectState = selectorFamily<ProjectResponse | undefined, string>({
+const fetchProjectState = selectorFamily<ProjectDetail | undefined, string>({
   key: 'fetchProject',
   get:
     (id) =>
@@ -92,7 +96,7 @@ const fetchProjectState = selectorFamily<ProjectResponse | undefined, string>({
     },
 });
 
-const projectState = atomFamily<ProjectResponse | undefined, string>({
+const projectState = atomFamily<ProjectDetail | undefined, string>({
   key: 'project',
   default: fetchProjectState,
 });

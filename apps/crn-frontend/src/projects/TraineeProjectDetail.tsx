@@ -7,7 +7,6 @@ import {
   NotFoundPage,
 } from '@asap-hub/react-components';
 import { projects } from '@asap-hub/routing';
-import { TraineeProjectDetail as TraineeProjectDetailType } from '@asap-hub/model';
 import { useProjectById } from './state';
 
 type TraineeProjectDetailParams = {
@@ -16,24 +15,21 @@ type TraineeProjectDetailParams = {
 
 const TraineeProjectDetail: FC<Record<string, never>> = () => {
   const { projectId } = useParams<TraineeProjectDetailParams>();
-  const project = useProjectById(projectId);
+  const projectDetail = useProjectById(projectId);
 
-  if (!project) {
+  if (!projectDetail) {
     return <NotFoundPage />;
   }
 
   // Ensure we're working with a TraineeProjectDetail
-  if (project.projectType !== 'Trainee Project') {
+  if (projectDetail.projectType !== 'Trainee Project') {
     return <NotFoundPage />;
   }
-
-  // Cast to TraineeProjectDetail - API now returns full detail data
-  const projectDetail = project as TraineeProjectDetailType;
 
   const route = projects({}).traineeProjects({}).traineeProject({ projectId });
 
   return (
-    <Frame title={project?.title || ''}>
+    <Frame title={projectDetail?.title || ''}>
       <ProjectDetailPage
         {...projectDetail}
         pointOfContactEmail={projectDetail.contactEmail}

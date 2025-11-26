@@ -7,7 +7,6 @@ import {
   NotFoundPage,
 } from '@asap-hub/react-components';
 import { projects } from '@asap-hub/routing';
-import { DiscoveryProjectDetail as DiscoveryProjectDetailType } from '@asap-hub/model';
 import { useProjectById } from './state';
 
 type DiscoveryProjectDetailParams = {
@@ -16,26 +15,23 @@ type DiscoveryProjectDetailParams = {
 
 const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
   const { projectId } = useParams<DiscoveryProjectDetailParams>();
-  const project = useProjectById(projectId);
+  const projectDetail = useProjectById(projectId);
 
-  if (!project) {
+  if (!projectDetail) {
     return <NotFoundPage />;
   }
 
   // Ensure we're working with a DiscoveryProjectDetail
-  if (project.projectType !== 'Discovery Project') {
+  if (projectDetail.projectType !== 'Discovery Project') {
     return <NotFoundPage />;
   }
-
-  // Cast to DiscoveryProjectDetail - API now returns full detail data
-  const projectDetail = project as DiscoveryProjectDetailType;
 
   const route = projects({})
     .discoveryProjects({})
     .discoveryProject({ projectId });
 
   return (
-    <Frame title={project?.title || ''}>
+    <Frame title={projectDetail?.title || ''}>
       <ProjectDetailPage
         {...projectDetail}
         pointOfContactEmail={projectDetail.contactEmail || undefined}

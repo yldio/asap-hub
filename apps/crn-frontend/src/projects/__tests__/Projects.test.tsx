@@ -173,10 +173,6 @@ const renderProjectsPage = async (pathname: string, query = '') => {
 };
 
 describe('Projects Routes', () => {
-  beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-  });
-
   it('redirects to discovery projects when the index page is accessed', async () => {
     await renderProjectsPage(projects({}).$);
     // Verify we're on Discovery Projects by checking for the description

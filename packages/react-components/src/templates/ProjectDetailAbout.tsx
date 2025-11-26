@@ -77,7 +77,7 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
       )}
 
       {/* Contact CTA Card */}
-      {pointOfContactEmail && (
+      {pointOfContactEmail && project.status === 'Active' && (
         <CtaCard
           href={createMailTo(pointOfContactEmail)}
           buttonText="Contact"

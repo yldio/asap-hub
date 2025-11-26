@@ -307,7 +307,7 @@ describe('ProjectDetailAbout', () => {
       expect(screen.getByText('Contact')).toBeInTheDocument();
     });
 
-    it('does not render Contact CTA when no email is provided', () => {
+    it('does not render Contact CTA when no email is provided or status is not Active', () => {
       const discoveryProject: ProjectDetail = {
         ...baseProject,
         projectType: 'Discovery Project',
@@ -321,7 +321,16 @@ describe('ProjectDetailAbout', () => {
         },
       };
 
-      render(<ProjectDetailAbout {...discoveryProject} />);
+      const { rerender } = render(
+        <ProjectDetailAbout
+          {...discoveryProject}
+          pointOfContactEmail={undefined}
+        />,
+      );
+      expect(
+        screen.queryByText('Have additional questions?'),
+      ).not.toBeInTheDocument();
+      rerender(<ProjectDetailAbout {...discoveryProject} status="Closed" />);
       expect(
         screen.queryByText('Have additional questions?'),
       ).not.toBeInTheDocument();

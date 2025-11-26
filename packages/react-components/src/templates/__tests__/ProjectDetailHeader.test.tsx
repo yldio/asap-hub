@@ -226,15 +226,30 @@ describe('ProjectDetailHeader', () => {
       expect(aboutLink).toHaveAttribute('href', '/projects/discovery/1/about');
     });
 
-    it('renders Contact button when point of contact email is provided', () => {
-      render(
+    it('renders or hides Contact button when point of contact email is provided and project status is Active or not', () => {
+      const { rerender } = render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           pointOfContactEmail="contact@example.com"
-          aboutHref="/projects/discovery/1/about"
         />,
       );
       expect(screen.getByText('Contact')).toBeInTheDocument();
+      rerender(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          status="Closed"
+          pointOfContactEmail="contact@example.com"
+        />,
+      );
+      expect(screen.queryByText('Contact')).not.toBeInTheDocument();
+      rerender(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          status="Active"
+          pointOfContactEmail={undefined}
+        />,
+      );
+      expect(screen.queryByText('Contact')).not.toBeInTheDocument();
     });
 
     it('does not render Contact button when no email is provided', () => {

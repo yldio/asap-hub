@@ -16,7 +16,7 @@ import { ComponentProps, Suspense, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { createManuscript } from '../api';
+import { createManuscript, uploadManuscriptFileViaPresignedUrl } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
@@ -30,8 +30,11 @@ jest.setTimeout(100_000);
 const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 
 const teamId = '42';
-const defaultPath =
-  network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$;
+const defaultPath = network({})
+  .teams({})
+  .team({ teamId })
+  .workspace({})
+  .createManuscript({}).$;
 
 // Helper to capture location in tests
 let currentLocation: { pathname: string; search: string } | null = null;
@@ -49,17 +52,19 @@ jest.mock('../api', () => ({
   createManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
   getManuscript: jest.fn().mockResolvedValue(null),
   resubmitManuscript: jest.fn().mockResolvedValue(null),
-  uploadManuscriptFileViaPresignedUrl: jest.fn().mockResolvedValue({
-    filename: 'manuscript.pdf',
-    url: 'https://example.com/manuscript.pdf',
-    id: 'file-id',
-  }),
+  uploadManuscriptFileViaPresignedUrl: jest.fn(),
   getTeam: jest.fn().mockResolvedValue({ id: teamId, displayName: 'Team A' }),
   getLabs: jest.fn().mockResolvedValue([{ id: 'lab-1', name: 'Lab 1' }]),
   getTeams: jest
     .fn()
     .mockResolvedValue([{ id: teamId, displayName: 'Team A' }]),
 }));
+
+// Get reference to the mock after jest.mock has run
+const mockUploadManuscriptFileViaPresignedUrl =
+  uploadManuscriptFileViaPresignedUrl as jest.MockedFunction<
+    typeof uploadManuscriptFileViaPresignedUrl
+  >;
 
 jest.mock('../../../shared-api/impact', () => ({
   getImpacts: jest
@@ -95,6 +100,35 @@ beforeEach(() => {
   mockSetFormType.mockReset();
   currentLocation = null;
   jest.spyOn(console, 'error').mockImplementation();
+  jest.spyOn(console, 'warn').mockImplementation();
+  // Set up mock to return different file responses based on file type
+  mockUploadManuscriptFileViaPresignedUrl.mockReset();
+  mockUploadManuscriptFileViaPresignedUrl.mockImplementation(
+    async (file: File, fileType: string) => {
+      if (fileType === 'Manuscript File') {
+        const result = {
+          filename: 'manuscript.pdf',
+          url: 'https://example.com/manuscript.pdf',
+          id: 'manuscript-file-id',
+        };
+        return result;
+      }
+      if (fileType === 'Key Resource Table') {
+        const result = {
+          filename: 'key-resource-table.csv',
+          url: 'https://example.com/key-resource-table.csv',
+          id: 'key-resource-table-id',
+        };
+        return result;
+      }
+      const result = {
+        filename: file.name,
+        url: `https://example.com/${file.name}`,
+        id: 'file-id',
+      };
+      return result;
+    },
+  );
 });
 
 const renderPage = async (
@@ -119,16 +153,19 @@ const renderPage = async (
             <MemoryRouter initialEntries={[path]}>
               <LocationCapture />
               <Routes>
-                <Route path={path}>
-                  <ManuscriptToastProvider>
-                    <EligibilityReasonProvider>
-                      <TeamManuscript
-                        teamId={teamId}
-                        resubmitManuscript={resubmit}
-                      />
-                    </EligibilityReasonProvider>
-                  </ManuscriptToastProvider>
-                </Route>
+                <Route
+                  path={path}
+                  element={
+                    <ManuscriptToastProvider>
+                      <EligibilityReasonProvider>
+                        <TeamManuscript
+                          teamId={teamId}
+                          resubmitManuscript={resubmit}
+                        />
+                      </EligibilityReasonProvider>
+                    </ManuscriptToastProvider>
+                  }
+                ></Route>
               </Routes>
             </MemoryRouter>
           </WhenReady>
@@ -146,115 +183,125 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   });
 
   const title = 'The Manuscript';
+  const user = userEvent.setup();
 
   await renderPage();
 
-  await userEvent.type(
-    screen.getByRole('textbox', { name: /title of manuscript/i }),
-    title,
-  );
+  // Title of manuscript
+  const titleInput = await screen.findByRole('textbox', {
+    name: /title of manuscript/i,
+  });
+  await user.type(titleInput, title);
+
+  // Type of manuscript
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
+  await user.click(typeTextbox);
+  await user.type(typeTextbox, 'Original{enter}');
 
-  await userEvent.type(typeTextbox, 'Original');
-  await act(async () => {
-    await userEvent.type(typeTextbox, specialChars.enter);
-    typeTextbox.blur();
-  });
-
-  await waitFor(() => {
-    expect(screen.getByText(/Original Research/i)).toBeInTheDocument();
-  });
-
+  // Lifecycle
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
+  await user.click(lifecycleTextbox);
+  await user.type(lifecycleTextbox, 'Typeset{enter}');
 
-  await userEvent.type(lifecycleTextbox, 'Typeset');
-  await act(async () => {
-    await userEvent.type(lifecycleTextbox, specialChars.enter);
-    lifecycleTextbox.blur();
-  });
+  // Impact and category
+  const impactInput = screen.getByRole('textbox', { name: /Impact/i });
+  await user.type(impactInput, 'My Imp');
+  await user.click(await screen.findByText(/^My Impact$/i));
 
-  await waitFor(() => {
-    expect(screen.getByText(/Typeset proof/i)).toBeInTheDocument();
-  });
+  const categoryInput = screen.getByRole('textbox', { name: /Category/i });
+  await user.type(categoryInput, 'My Cat');
+  await user.click(await screen.findByText(/^My Category$/i));
 
-  const testFile = new File(['file content'], 'file.txt', {
-    type: 'text/plain',
+  // Description and short description
+  await user.type(
+    screen.getByRole('textbox', { name: /Manuscript Description/i }),
+    'Some description',
+  );
+  await user.type(
+    screen.getByRole('textbox', { name: /Short Description/i }),
+    'Some short description',
+  );
+
+  // First authors
+  await user.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+
+  // External author email
+  await user.click(screen.getByText(/Non CRN/i));
+  await user.type(
+    screen.getByLabelText(/Jane Doe Email/i),
+    'jane@doe.com{enter}',
+  );
+
+  // Quick checks
+  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
+  const yesButtons = within(quickChecks).getAllByText('Yes');
+
+  await Promise.all(
+    yesButtons.map((button: HTMLElement) => user.click(button)),
+  );
+
+  // Upload files
+  const manuscriptFile = new File(['manuscript content'], 'manuscript.pdf', {
+    type: 'application/pdf',
   });
+  const keyResourceTableFile = new File(
+    ['key,resource,table'],
+    'key-resource-table.csv',
+    {
+      type: 'text/csv',
+    },
+  );
   const manuscriptFileInput = screen.getByLabelText(/Upload Manuscript File/i);
   const keyResourceTableInput = screen.getByLabelText(
     /Upload Key Resource Table/i,
   );
 
-  const descriptionTextbox = screen.getByRole('textbox', {
-    name: /Manuscript Description/i,
-  });
-  await userEvent.type(descriptionTextbox, 'Some description');
+  // Upload manuscript file and wait for upload to complete
+  await user.upload(manuscriptFileInput, manuscriptFile);
 
-  const shortDescriptionTextbox = screen.getByRole('textbox', {
-    name: /Short Description/i,
-  });
-  await userEvent.type(shortDescriptionTextbox, 'Some short description');
+  // Upload key resource table file and wait for upload to complete
+  await user.upload(keyResourceTableInput, keyResourceTableFile);
 
-  const impactInput = screen.getByRole('textbox', {
-    name: /Impact/i,
-  });
-  await userEvent.type(impactInput, 'My Imp');
-  await userEvent.click(screen.getByText(/^My Impact$/i));
-
-  const categoryInput = screen.getByRole('textbox', {
-    name: /Category/i,
-  });
-  await userEvent.type(categoryInput, 'My Cat');
-  await userEvent.click(screen.getByText(/^My Category$/i));
-
-  await userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
-
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  await waitFor(
+    () => {
+      expect(screen.getByText('key-resource-table.csv')).toBeInTheDocument();
+      expect(screen.getByText('manuscript.pdf')).toBeInTheDocument();
+    },
+    { timeout: 10000 },
   );
 
-  await userEvent.click(screen.getByText(/Non CRN/i));
-
-  expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
-  await userEvent.type(
-    screen.getByLabelText(/Jane Doe Email/i),
-    'jane@doe.com',
-  );
-  await userEvent.type(
-    screen.getByLabelText(/Jane Doe Email/i),
-    specialChars.enter,
+  // Submit
+  const submitButton = await screen.findByRole(
+    'button',
+    {
+      name: /Submit/,
+    },
+    { timeout: 5000 },
   );
 
-  await userEvent.upload(manuscriptFileInput, testFile);
-  await userEvent.upload(keyResourceTableInput, testFile);
+  expect(submitButton).toBeEnabled();
 
-  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
+  await user.click(submitButton);
 
-  within(quickChecks)
-    .getAllByText('Yes')
-    .forEach((button) => {
-      await userEvent.click(button);
-    });
-
-  await waitFor(() => {
-    const submitButton = screen.getByRole('button', { name: /Submit/ });
-    expect(submitButton).toBeEnabled();
-  });
-  await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
-
-  await waitFor(() => {
-    const confirmButton = screen.getByRole('button', {
-      name: /Submit Manuscript/i,
-    });
-    expect(confirmButton).toBeEnabled();
+  const confirmButton = await screen.findByRole('button', {
+    name: /Submit Manuscript/i,
   });
 
-  await userEvent.click(
-    screen.getByRole('button', { name: /Submit Manuscript/ }),
+  await user.click(confirmButton);
+
+  // Verify results
+  await waitFor(
+    () => {
+      expect(mockSetFormType).toHaveBeenCalledWith({
+        type: '',
+        accent: 'successLarge',
+      });
+    },
+    { timeout: 5000 },
   );
 
   await waitFor(() => {
@@ -267,7 +314,6 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       {
         title,
         teamId,
-        url: undefined,
         eligibilityReasons: [],
         versions: [
           {
@@ -276,12 +322,12 @@ it('can publish a form when the data is valid and navigates to team workspace', 
             manuscriptFile: {
               filename: 'manuscript.pdf',
               url: 'https://example.com/manuscript.pdf',
-              id: 'file-id',
+              id: 'manuscript-file-id',
             },
             keyResourceTable: {
-              filename: 'manuscript.pdf',
-              url: 'https://example.com/manuscript.pdf',
-              id: 'file-id',
+              filename: 'key-resource-table.csv',
+              url: 'https://example.com/key-resource-table.csv',
+              id: 'key-resource-table-id',
             },
             acknowledgedGrantNumber: 'Yes',
             asapAffiliationIncluded: 'Yes',
@@ -325,11 +371,11 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       },
       expect.anything(),
     );
-    await waitFor(() => {
-      expect(currentLocation).not.toBeNull();
-      expect(currentLocation?.pathname).toBe(
-        `/network/teams/${teamId}/workspace`,
-      );
-    });
+  });
+  await waitFor(() => {
+    expect(currentLocation).not.toBeNull();
+    expect(currentLocation?.pathname).toBe(
+      `/network/teams/${teamId}/workspace`,
+    );
   });
 });

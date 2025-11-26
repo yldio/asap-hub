@@ -464,7 +464,9 @@ describe('getResearchThemes', () => {
 
   it('errors for error status', async () => {
     nock(API_BASE_URL).get('/research-themes').reply(500);
-    await expect(getResearchThemes('')).rejects.toThrowErrorMatchingInlineSnapshot(
+    await expect(
+      getResearchThemes(''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch research themes. Expected status 2xx. Received status 500."`,
     );
   });

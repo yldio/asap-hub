@@ -110,7 +110,12 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
                   <Pill noMargin>{fundedTeam.researchTheme}</Pill>
                 )}
               </div>
-              <LinkHeadline href={'#'} level={3} styleAsHeading={4} noMargin>
+              <LinkHeadline
+                href={`/network/teams/${fundedTeam.id}`}
+                level={3}
+                styleAsHeading={4}
+                noMargin
+              >
                 {fundedTeam.displayName}
               </LinkHeadline>
               <p css={teamDescriptionStyles}>{fundedTeam.teamDescription}</p>

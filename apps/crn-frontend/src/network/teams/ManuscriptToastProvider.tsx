@@ -29,9 +29,8 @@ const defaultContextValue: ManuscriptToastContextData = {
   },
 };
 
-export const ManuscriptToastContext = createContext<ManuscriptToastContextData>(
-  defaultContextValue,
-);
+export const ManuscriptToastContext =
+  createContext<ManuscriptToastContextData>(defaultContextValue);
 
 export const ManuscriptToastProvider = ({
   children,

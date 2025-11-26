@@ -15,6 +15,7 @@ import { rem, tabletScreen } from '../pixels';
 import { getStatusPillAccent } from '../organisms/ProjectCard';
 import TrainerIcon from '../icons/trainer';
 import PageInfoContainer from './PageInfoContainer';
+import Toast from '../organisms/Toast';
 
 const headerStyles = css({
   display: 'flex',
@@ -112,6 +113,10 @@ const discoveryDurationMediaStyles = css({
   },
 });
 
+const toastContainerStyles = css({
+  marginBottom: rem(24),
+});
+
 // not used yet - will be included when sharing outputs is implemented
 // const dropdownButtonStyling = css({
 //   display: 'flex',
@@ -151,60 +156,70 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
   };
 
   return (
-    <header>
-      <PageInfoContainer
-        nav={
-          <TabNav>
-            <TabLink href={aboutHref}>About</TabLink>
-          </TabNav>
-        }
-      >
-        {/* Status and Type Pills */}
-        <div css={headerStyles}>
-          <Pill accent={getStatusPillAccent(project.status)} noMargin>
-            {project.status}
-          </Pill>
-          <Pill noMargin>{project.projectType}</Pill>
-          {project.projectType === 'Discovery Project' && (
-            <Pill noMargin>{project.researchTheme}</Pill>
-          )}
-          {project.projectType === 'Resource Project' && (
-            <Pill noMargin>{project.resourceType}</Pill>
-          )}
+    <>
+      {/* Closed Project Banner */}
+      {project.status === 'Closed' && (
+        <div css={toastContainerStyles}>
+          <Toast accent="warning">
+            This project concluded earlier than expected and some milestones are
+            incomplete.
+          </Toast>
         </div>
+      )}
+      <header>
+        <PageInfoContainer
+          nav={
+            <TabNav>
+              <TabLink href={aboutHref}>About</TabLink>
+            </TabNav>
+          }
+        >
+          {/* Status and Type Pills */}
+          <div css={headerStyles}>
+            <Pill accent={getStatusPillAccent(project.status)} noMargin>
+              {project.status}
+            </Pill>
+            <Pill noMargin>{project.projectType}</Pill>
+            {project.projectType === 'Discovery Project' && (
+              <Pill noMargin>{project.researchTheme}</Pill>
+            )}
+            {project.projectType === 'Resource Project' && (
+              <Pill noMargin>{project.resourceType}</Pill>
+            )}
+          </div>
 
-        {/* Title */}
-        <div css={titleStyles}>
-          <Display styleAsHeading={2}>{project.title}</Display>
-        </div>
+          {/* Title */}
+          <div css={titleStyles}>
+            <Display styleAsHeading={2}>{project.title}</Display>
+          </div>
 
-        {/* Action Buttons */}
-        <div css={actionsContainerStyles}>
-          {pointOfContactEmail && (
-            <div css={contactButtonStyles}>
-              <span css={buttonStyles}>
-                <Link
-                  buttonStyle
-                  small
-                  primary
-                  href={createMailTo(pointOfContactEmail)}
-                  noMargin
-                >
-                  Contact
-                </Link>
-              </span>
-              <CopyButton
-                hoverTooltipText="Copy Email"
-                clickTooltipText="Email Copied"
-                onClick={() =>
-                  navigator.clipboard.writeText(pointOfContactEmail)
-                }
-              />
-            </div>
-          )}
+          {/* Action Buttons */}
+          <div css={actionsContainerStyles}>
+            {pointOfContactEmail && (
+              <div css={contactButtonStyles}>
+                <span css={buttonStyles}>
+                  <Link
+                    buttonStyle
+                    small
+                    primary
+                    href={createMailTo(pointOfContactEmail)}
+                    noMargin
+                  >
+                    Contact
+                  </Link>
+                </span>
+                <CopyButton
+                  hoverTooltipText="Copy Email"
+                  clickTooltipText="Email Copied"
+                  onClick={() =>
+                    navigator.clipboard.writeText(pointOfContactEmail)
+                  }
+                />
+              </div>
+            )}
 
-          {/* Share Output button for Discovery projects - not included yet */}
-          {/* {project.projectType === 'Discovery' && (
+            {/* Share Output button for Discovery projects - not included yet */}
+            {/* {project.projectType === 'Discovery' && (
             <div css={css({ marginLeft: 'auto' })}>
               <DropdownButton
                 noMargin
@@ -231,101 +246,102 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
               </DropdownButton>
             </div>
           )} */}
-        </div>
+          </div>
 
-        {/* Access Drive for Resource projects */}
-        {project.projectType === 'Resource Project' &&
-          project.googleDriveLink && (
-            <div css={driveButtonStyles}>
-              <Link href={project.googleDriveLink} buttonStyle small noMargin>
-                {googleDriveIcon} Access Drive
-              </Link>
-            </div>
-          )}
-        {/* Metadata Section */}
-        <div css={metadataStyles}>
-          {/* Team/Members Info */}
-          {project.projectType === 'Discovery Project' && (
-            <div css={[metadataRowStyles, discoveryDurationMediaStyles]}>
-              <div css={iconContainerStyles}>
-                <span css={iconStyles}>{getTeamIcon(project)}</span>
-                {project.teamId ? (
-                  <Link href={`/network/teams/${project.teamId}`}>
-                    <span css={teamLinkStyles}>{project.teamName}</span>
-                  </Link>
-                ) : (
-                  <span css={teamLinkStyles}>{project.teamName}</span>
-                )}
-              </div>
-              <div css={discoveryProjectDurationStyles}>
-                <ProjectDuration
-                  startDate={project.startDate}
-                  endDate={project.endDate}
-                  projectStatus={project.status}
-                />
-              </div>
-            </div>
-          )}
-
+          {/* Access Drive for Resource projects */}
           {project.projectType === 'Resource Project' &&
-            project.isTeamBased &&
-            project.teamName && (
-              <div css={metadataRowStyles}>
-                <span css={iconStyles}>{getTeamIcon(project)}</span>
-                {project.teamId ? (
-                  <Link href={`/network/teams/${project.teamId}`}>
+            project.googleDriveLink && (
+              <div css={driveButtonStyles}>
+                <Link href={project.googleDriveLink} buttonStyle small noMargin>
+                  {googleDriveIcon} Access Drive
+                </Link>
+              </div>
+            )}
+          {/* Metadata Section */}
+          <div css={metadataStyles}>
+            {/* Team/Members Info */}
+            {project.projectType === 'Discovery Project' && (
+              <div css={[metadataRowStyles, discoveryDurationMediaStyles]}>
+                <div css={iconContainerStyles}>
+                  <span css={iconStyles}>{getTeamIcon(project)}</span>
+                  {project.teamId ? (
+                    <Link href={`/network/teams/${project.teamId}`}>
+                      <span css={teamLinkStyles}>{project.teamName}</span>
+                    </Link>
+                  ) : (
                     <span css={teamLinkStyles}>{project.teamName}</span>
-                  </Link>
-                ) : (
-                  <span css={teamLinkStyles}>{project.teamName}</span>
-                )}
-                {project.isTeamBased && (
-                  <div css={discoveryProjectDurationStyles}>
-                    <ProjectDuration
-                      startDate={project.startDate}
-                      endDate={project.endDate}
-                      projectStatus={project.status}
-                    />
-                  </div>
-                )}
+                  )}
+                </div>
+                <div css={discoveryProjectDurationStyles}>
+                  <ProjectDuration
+                    startDate={project.startDate}
+                    endDate={project.endDate}
+                    projectStatus={project.status}
+                  />
+                </div>
               </div>
             )}
 
-          {project.projectType === 'Resource Project' &&
-            !project.isTeamBased &&
-            project.members && (
-              <div css={metadataRowStyles}>
-                <span css={iconStyles}>{getTeamIcon(project)}</span>
-                <UsersList users={project.members} separator="•" noMargin />
-              </div>
+            {project.projectType === 'Resource Project' &&
+              project.isTeamBased &&
+              project.teamName && (
+                <div css={metadataRowStyles}>
+                  <span css={iconStyles}>{getTeamIcon(project)}</span>
+                  {project.teamId ? (
+                    <Link href={`/network/teams/${project.teamId}`}>
+                      <span css={teamLinkStyles}>{project.teamName}</span>
+                    </Link>
+                  ) : (
+                    <span css={teamLinkStyles}>{project.teamName}</span>
+                  )}
+                  {project.isTeamBased && (
+                    <div css={discoveryProjectDurationStyles}>
+                      <ProjectDuration
+                        startDate={project.startDate}
+                        endDate={project.endDate}
+                        projectStatus={project.status}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
+            {project.projectType === 'Resource Project' &&
+              !project.isTeamBased &&
+              project.members && (
+                <div css={metadataRowStyles}>
+                  <span css={iconStyles}>{getTeamIcon(project)}</span>
+                  <UsersList users={project.members} separator="•" noMargin />
+                </div>
+              )}
+
+            {project.projectType === 'Trainee Project' && (
+              <>
+                <div css={metadataRowStyles}>
+                  <span css={iconStyles}>{getTeamIcon(project)}</span>
+                  <UsersList users={[project.trainer]} separator="•" noMargin />
+                </div>
+                <div css={metadataRowStyles}>
+                  <span css={iconStyles}>{getMemberIcon()}</span>
+                  <UsersList users={project.members} separator="•" noMargin />
+                </div>
+              </>
             )}
 
-          {project.projectType === 'Trainee Project' && (
-            <>
-              <div css={metadataRowStyles}>
-                <span css={iconStyles}>{getTeamIcon(project)}</span>
-                <UsersList users={[project.trainer]} separator="•" noMargin />
-              </div>
-              <div css={metadataRowStyles}>
-                <span css={iconStyles}>{getMemberIcon()}</span>
-                <UsersList users={project.members} separator="•" noMargin />
-              </div>
-            </>
-          )}
-
-          {/* Duration */}
-          {(project.projectType === 'Trainee Project' ||
-            (project.projectType === 'Resource Project' &&
-              !project.isTeamBased)) && (
-            <ProjectDuration
-              startDate={project.startDate}
-              endDate={project.endDate}
-              projectStatus={project.status}
-            />
-          )}
-        </div>
-      </PageInfoContainer>
-    </header>
+            {/* Duration */}
+            {(project.projectType === 'Trainee Project' ||
+              (project.projectType === 'Resource Project' &&
+                !project.isTeamBased)) && (
+              <ProjectDuration
+                startDate={project.startDate}
+                endDate={project.endDate}
+                projectStatus={project.status}
+              />
+            )}
+          </div>
+        </PageInfoContainer>
+      </header>
+    </>
   );
 };
 

@@ -272,6 +272,15 @@ describe('ProjectDetailHeader', () => {
       copyButton?.click();
       expect(writeTextMock).toHaveBeenCalledWith('test@example.com');
     });
+
+    it('renders Closed Project banner when status is Closed', () => {
+      render(<ProjectDetailHeader {...mockDiscoveryProject} status="Closed" />);
+      expect(
+        screen.getByText(
+          'This project concluded earlier than expected and some milestones are incomplete.',
+        ),
+      ).toBeInTheDocument();
+    });
   });
 
   describe('Discovery projects', () => {

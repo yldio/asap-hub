@@ -2,6 +2,7 @@ import { OpensearchMetricConfig } from '@asap-hub/server-common';
 import { Metrics } from './types';
 
 export const PAGE_SIZE = 45;
+export const MAX_CONCURRENT_COMBINATIONS = 5;
 export const PREPRINT_COMPLIANCE_SHEET_NAME = 'Preprint Compliance';
 export const PUBLICATION_COMPLIANCE_ALL_TIME_SHEET_NAME =
   'Publication Compliance_All Time';

@@ -1,3 +1,4 @@
+import { mapLimit } from 'async';
 import {
   ListResponse,
   timeRanges,
@@ -14,7 +15,12 @@ import {
 } from '../../src/config';
 import AnalyticsController from '../../src/controllers/analytics.controller';
 import { getAnalyticsDataProvider } from '../../src/dependencies/analytics.dependencies';
-import { metricConfig, PAGE_SIZE, validMetrics } from './constants';
+import {
+  MAX_CONCURRENT_COMBINATIONS,
+  metricConfig,
+  PAGE_SIZE,
+  validMetrics,
+} from './constants';
 import { exportPreprintComplianceData } from './preprint-compliance';
 import { exportPublicationComplianceData } from './publication-compliance';
 import type { MetricObject, Metrics } from './types';
@@ -151,46 +157,60 @@ export const exportAnalyticsData = async <T extends Metrics>(
         } as ListResponse<MetricObject<T>>;
 
       case 'team-productivity':
-        const allTeamProductivityItems: MetricObject<T>[] = [];
+        // Helper to fetch all pages for a single timeRange/outputType combination
+        const fetchAllPagesForTeamCombination = async (
+          timeRange: (typeof timeRanges)[number],
+          outputType: (typeof outputTypes)[number],
+        ): Promise<MetricObject<T>[]> => {
+          const items: MetricObject<T>[] = [];
+          let page = 1;
+          let total = 0;
+          let recordCount = 0;
 
-        /* eslint-disable no-await-in-loop */
-        for (const timeRange of timeRanges) {
-          for (const outputType of outputTypes) {
-            let teamPage = 1;
-            let teamTotal = 0;
-            let teamRecordCount = 0;
+          do {
+            const response = (await analyticsController.fetchTeamProductivity({
+              take: PAGE_SIZE,
+              skip: (page - 1) * PAGE_SIZE,
+              filter: { timeRange, outputType },
+            })) as ListResponse<MetricObject<T>>;
 
-            do {
-              const teamProductivityResponse =
-                (await analyticsController.fetchTeamProductivity({
-                  take: PAGE_SIZE,
-                  skip: (teamPage - 1) * PAGE_SIZE,
-                  filter: { timeRange, outputType },
-                })) as ListResponse<MetricObject<T>>;
+            if (response) {
+              total = response.total;
+              page++;
+              recordCount += response.items.length;
 
-              if (teamProductivityResponse) {
-                teamTotal = teamProductivityResponse.total;
-                teamPage++;
-                teamRecordCount += teamProductivityResponse.items.length;
+              const enrichedItems = response.items.map((item) => ({
+                ...item,
+                timeRange,
+                outputType,
+              }));
 
-                const enrichedItems = teamProductivityResponse.items.map(
-                  (item) => ({
-                    ...item,
-                    timeRange,
-                    outputType,
-                  }),
-                );
+              items.push(...enrichedItems);
+            }
+          } while (total > recordCount);
 
-                allTeamProductivityItems.push(...enrichedItems);
-              }
-            } while (teamTotal > teamRecordCount);
-          }
-        }
-        /* eslint-enable no-await-in-loop */
+          return items;
+        };
+
+        // Create all timeRange<->outputType combinations
+        const teamCombinations = timeRanges.flatMap((timeRange) =>
+          outputTypes.map((outputType) => ({ timeRange, outputType })),
+        );
+
+        // Process combinations with controlled concurrency
+        const teamResultArrays = await mapLimit(
+          teamCombinations,
+          MAX_CONCURRENT_COMBINATIONS,
+          async (combination: (typeof teamCombinations)[number]) =>
+            fetchAllPagesForTeamCombination(
+              combination.timeRange,
+              combination.outputType,
+            ),
+        );
 
         return {
-          total: allTeamProductivityItems.length,
-          items: allTeamProductivityItems,
+          total: teamResultArrays.flat().length,
+          items: teamResultArrays.flat(),
         } as ListResponse<MetricObject<T>>;
 
       default:

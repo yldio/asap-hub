@@ -1,12 +1,12 @@
 import { ManuscriptLifecycle, ManuscriptType } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ManuscriptOutputSelection from '../ManuscriptOutputSelection';
 
 // Mock react-router-dom
 jest.mock('react-router-dom', () => ({
-  useHistory: jest.fn(),
+  useNavigate: jest.fn(),
 }));
 
 jest.mock(
@@ -18,9 +18,7 @@ jest.mock(
 );
 
 describe('ManuscriptOutputSelection', () => {
-  const mockHistory = {
-    goBack: jest.fn(),
-  };
+  const mockNavigate = jest.fn();
 
   const defaultProps = {
     isImportingManuscript: false,
@@ -33,7 +31,7 @@ describe('ManuscriptOutputSelection', () => {
   };
 
   beforeEach(() => {
-    (useHistory as jest.Mock).mockReturnValue(mockHistory);
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
     jest.clearAllMocks();
   });
 
@@ -122,7 +120,7 @@ describe('ManuscriptOutputSelection', () => {
     const cancelButton = screen.getByRole('button', { name: 'Cancel' });
     await userEvent.click(cancelButton);
 
-    expect(mockHistory.goBack).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith(-1);
   });
 
   it('handles create button click when manually selected', async () => {
@@ -171,7 +169,7 @@ describe('ManuscriptOutputSelection', () => {
       />,
     );
 
-    userEvent.type(getByRole('textbox'), 'asdflkjasdflkj');
+    await userEvent.type(getByRole('textbox'), 'asdflkjasdflkj');
 
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),

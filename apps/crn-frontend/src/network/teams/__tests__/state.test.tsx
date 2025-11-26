@@ -8,7 +8,7 @@ import {
 } from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
 import { waitFor } from '@testing-library/dom';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import * as recoilModule from 'recoil';
 import {
   MutableSnapshot,

@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
+import { PropsWithChildren } from 'react';
 import { NavHashLink } from 'react-router-hash-link';
+import { useLocation } from 'react-router-dom';
 import { activePrimaryStyles } from '../button';
 import { charcoal, lead, silver } from '../colors';
 import {
@@ -12,8 +14,6 @@ import {
 } from '../pixels';
 import { useHasRouter } from '../routing';
 import { isInternalLink } from '../utils';
-
-const activeClassName = 'active-link';
 
 const styles = css({
   display: 'block',
@@ -70,7 +70,7 @@ const squareBorderStyles = css({
 
 type NavigationLinkProps = NavigationProps & {
   readonly icon?: JSX.Element;
-};
+} & PropsWithChildren;
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   children,
@@ -89,31 +89,37 @@ interface NavigationProps {
   readonly enabled?: boolean;
   readonly squareBorder?: boolean;
 }
-export const Navigation: React.FC<NavigationProps> = ({
+export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
   href,
   children,
   enabled = true,
   squareBorder,
 }) => {
   const [internal, url] = isInternalLink(href);
+  const location = useLocation();
+
   if (useHasRouter() && internal) {
+    // Determine if the link is active by comparing the pathname
+    // NavHashLink handles hash matching internally, but we need to check pathname
+    const isActive = location.pathname === url.split('#')[0];
+
     return (
       <NavHashLink
         to={url}
-        activeClassName={activeClassName}
-        css={({ colors, components }) => [
-          styles,
-          squareBorder && squareBorderStyles,
-          {
-            [`&.${activeClassName}`]: activePrimaryStyles(colors),
-          },
-          !enabled && disableStyles,
-          components?.NavigationLink?.styles,
-        ]}
         smooth
-        isActive={(match) => enabled && !!match && match.url === url}
+        style={{ textDecoration: 'none', color: 'unset' }}
       >
-        {children}
+        <div
+          css={({ colors, components }: Theme) => [
+            styles,
+            squareBorder && squareBorderStyles,
+            enabled && isActive && activePrimaryStyles(colors),
+            !enabled && disableStyles,
+            components?.NavigationLink?.styles,
+          ]}
+        >
+          {children}
+        </div>
       </NavHashLink>
     );
   }
@@ -123,7 +129,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   return (
     <a
       href={url}
-      css={({ colors, components }) => [
+      css={({ colors, components }: Theme) => [
         styles,
         squareBorder && squareBorderStyles,
         active && activePrimaryStyles(colors),

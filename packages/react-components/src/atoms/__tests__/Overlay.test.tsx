@@ -28,6 +28,6 @@ it('triggers click events', () => {
   const { getByLabelText } = render(<Overlay onClick={handleClick} />);
   expect(getByLabelText(/close/i)).not.toBeDisabled();
 
-  userEvent.click(getByLabelText(/close/i));
+  await userEvent.click(getByLabelText(/close/i));
   expect(handleClick).toHaveBeenCalled();
 });

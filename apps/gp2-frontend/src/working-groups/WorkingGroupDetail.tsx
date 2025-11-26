@@ -11,13 +11,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import {
-  Redirect,
-  Route,
-  Switch,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
+import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -62,7 +56,6 @@ const DuplicateOutput: FC = () => {
 };
 
 const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
   useEffect(() => {
@@ -86,16 +79,10 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const isAdministrator = currentUser?.role === 'Administrator';
   const workingGroupRoute = workingGroups({}).workingGroup({ workingGroupId });
   const resourcesRoute = workingGroupRoute.workspace({});
-  const createOutputRoute = workingGroupRoute.createOutput;
-  const duplicateOutputRoute = workingGroupRoute.duplicateOutput;
   const editRoute = resourcesRoute.edit({});
   const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;
   const edit = isAdministrator ? editRoute.$ : undefined;
-  const overview = workingGroupRoute.overview({}).$;
-  const outputs = workingGroupRoute.outputs({}).$;
   const resources = resourcesRoute.$;
-  const upcoming = workingGroupRoute.upcoming({}).$;
-  const past = workingGroupRoute.past({}).$;
 
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
@@ -106,100 +93,132 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
 
   if (workingGroup) {
     return (
-      <Switch>
-        <Route exact path={path + createOutputRoute.template}>
-          <Frame title="Create Output">
-            <OutputFormPage>
-              <CreateWorkingGroupOutput />
-            </OutputFormPage>
-          </Frame>
-        </Route>
-        {isAdministrator && (
-          <Route exact path={path + duplicateOutputRoute.template}>
-            <Frame title="Duplicate Output">
-              <DuplicateOutput />
+      <Routes>
+        <Route
+          path="create-output/:outputDocumentType"
+          element={
+            <Frame title="Create Output">
+              <OutputFormPage>
+                <CreateWorkingGroupOutput />
+              </OutputFormPage>
             </Frame>
-          </Route>
+          }
+        />
+        {isAdministrator && (
+          <Route
+            path="duplicate/:outputId"
+            element={
+              <Frame title="Duplicate Output">
+                <DuplicateOutput />
+              </Frame>
+            }
+          />
         )}
-        <WorkingGroupDetailPage
-          {...workingGroup}
-          isWorkingGroupMember={isWorkingGroupMember}
-          isAdministrator={isAdministrator}
-          outputsTotal={outputsTotal}
-          upcomingTotal={upcomingEvents?.total || 0}
-          pastTotal={pastEvents?.total || 0}
-        >
-          <Switch>
-            <Route path={overview}>
-              <Frame title="Overview">
-                <WorkingGroupOverview {...workingGroup} />
-              </Frame>
-            </Route>
-            {isWorkingGroupMember && (
-              <Route path={resources}>
-                <Frame title="Resources">
-                  <WorkingGroupResources
-                    {...workingGroup}
-                    add={add}
-                    edit={edit}
+        <Route
+          path="*"
+          element={
+            <WorkingGroupDetailPage
+              {...workingGroup}
+              isWorkingGroupMember={isWorkingGroupMember}
+              isAdministrator={isAdministrator}
+              outputsTotal={outputsTotal}
+              upcomingTotal={upcomingEvents?.total || 0}
+              pastTotal={pastEvents?.total || 0}
+            >
+              <Routes>
+                <Route
+                  path="overview"
+                  element={
+                    <Frame title="Overview">
+                      <WorkingGroupOverview {...workingGroup} />
+                    </Frame>
+                  }
+                />
+                {isWorkingGroupMember && (
+                  <Route
+                    path="resources"
+                    element={
+                      <Frame title="Resources">
+                        <WorkingGroupResources
+                          {...workingGroup}
+                          add={add}
+                          edit={edit}
+                        />
+                        {isAdministrator && (
+                          <Routes>
+                            <Route
+                              path="add"
+                              element={
+                                <ResourceModal
+                                  modalTitle={'Add Resource'}
+                                  modalDescription={
+                                    'Select a resource type and provide the necessary information required to share a resource privately with your group.'
+                                  }
+                                  backHref={resources}
+                                  onSave={(resource: gp2Model.Resource) =>
+                                    updateWorkingGroupResources([
+                                      ...(workingGroup.resources || []),
+                                      resource,
+                                    ])
+                                  }
+                                />
+                              }
+                            />
+                            <Route
+                              path="edit/:resource"
+                              element={
+                                <EditResourceModal
+                                  route={editRoute.resource}
+                                  resources={workingGroup.resources || []}
+                                  backHref={resources}
+                                  updateResources={updateWorkingGroupResources}
+                                />
+                              }
+                            />
+                          </Routes>
+                        )}
+                      </Frame>
+                    }
                   />
-                  {isAdministrator && (
-                    <>
-                      <Route path={add}>
-                        <ResourceModal
-                          modalTitle={'Add Resource'}
-                          modalDescription={
-                            'Select a resource type and provide the necessary information required to share a resource privately with your group.'
-                          }
-                          backHref={resources}
-                          onSave={(resource: gp2Model.Resource) =>
-                            updateWorkingGroupResources([
-                              ...(workingGroup.resources || []),
-                              resource,
-                            ])
-                          }
-                        />
-                      </Route>
-                      <Route exact path={edit + editRoute.resource.template}>
-                        <EditResourceModal
-                          route={editRoute.resource}
-                          resources={workingGroup.resources || []}
-                          backHref={resources}
-                          updateResources={updateWorkingGroupResources}
-                        />
-                      </Route>
-                    </>
-                  )}
-                </Frame>
-              </Route>
-            )}
-            <Route path={outputs}>
-              <Frame title="Shared Outputs">
-                <OutputDirectory workingGroupId={workingGroupId} />
-              </Frame>
-            </Route>
-            <Route path={upcoming}>
-              <Frame title="Upcoming Events">
-                <EventsList
-                  constraint={{ workingGroupId }}
-                  currentTime={currentTime}
-                  past={false}
+                )}
+                <Route
+                  path="outputs"
+                  element={
+                    <Frame title="Shared Outputs">
+                      <OutputDirectory workingGroupId={workingGroupId} />
+                    </Frame>
+                  }
                 />
-              </Frame>
-            </Route>
-            <Route path={past}>
-              <Frame title="Past Events">
-                <EventsList
-                  currentTime={currentTime}
-                  past={true}
-                  constraint={{ workingGroupId }}
+                <Route
+                  path="upcoming"
+                  element={
+                    <Frame title="Upcoming Events">
+                      <EventsList
+                        constraint={{ workingGroupId }}
+                        currentTime={currentTime}
+                        past={false}
+                      />
+                    </Frame>
+                  }
                 />
-              </Frame>
-            </Route>
-            <Redirect to={overview} />
-          </Switch>
-        </WorkingGroupDetailPage>
-      </Switch>
+                <Route
+                  path="past"
+                  element={
+                    <Frame title="Past Events">
+                      <EventsList
+                        currentTime={currentTime}
+                        past={true}
+                        constraint={{ workingGroupId }}
+                      />
+                    </Frame>
+                  }
+                />
+                <Route index element={<Navigate to="overview" replace />} />
+              </Routes>
+            </WorkingGroupDetailPage>
+          }
+        />
+      </Routes>
     );
   }
   return <NotFoundPage />;

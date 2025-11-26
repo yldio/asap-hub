@@ -1,7 +1,12 @@
 import { authTestUtils } from '@asap-hub/gp2-components';
 import { useFlags } from '@asap-hub/react-context';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  renderHook,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { getConsentCookie } from '@asap-hub/frontend-utils';
@@ -109,7 +114,7 @@ describe('Cookie Modal & Button', () => {
 
   it('closes modal when save button is clicked, shows the cookie button and saves cookies', async () => {
     render(<App />);
-    userEvent.click(screen.getByText('Save and close'));
+    await userEvent.click(screen.getByText('Save and close'));
 
     await waitFor(() => {
       expect(screen.getByTestId('cookie-button')).toBeInTheDocument();
@@ -135,10 +140,10 @@ describe('Cookie Modal & Button', () => {
     render(<App />);
 
     const cookieButton = await screen.findByTestId('cookie-button');
-    userEvent.click(cookieButton);
+    await userEvent.click(cookieButton);
 
     const saveAndCloseButton = await screen.findByText('Save and close');
-    userEvent.click(saveAndCloseButton);
+    await userEvent.click(saveAndCloseButton);
 
     await waitFor(() => {
       expect(

@@ -18,7 +18,7 @@ it('links back to the home page', () => {
     </MemoryRouter>,
   );
 
-  userEvent.click(getByTitle('ASAP Logo'));
+  await userEvent.click(getByTitle('ASAP Logo'));
   expect(container).toHaveTextContent('home');
 });
 

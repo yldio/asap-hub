@@ -121,7 +121,7 @@ describe('Resources', () => {
     render(<Resources {...defaultProps()} resources={resources} />);
 
     const button = screen.getByRole('button', { name: /Show more/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
   });
   it('does not show a more button for less than 3 milestones', async () => {
@@ -140,7 +140,7 @@ describe('Resources', () => {
     expect(screen.getByText('resource title 2')).toBeVisible();
     expect(screen.getByText('resource title 3')).not.toBeVisible();
     const button = screen.getByRole('button', { name: /Show more/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(screen.getByText('resource title 3')).toBeVisible();
   });
 });

@@ -96,11 +96,11 @@ describe('show more and show less functionality', () => {
     render(<RemindersCard {...propsWith10Reminders} limit={5} />);
     expect(screen.getAllByText(/reminder-/).length).toEqual(5);
 
-    userEvent.click(screen.getByText(/show more/i));
+    await userEvent.click(screen.getByText(/show more/i));
 
     expect(screen.getAllByText(/reminder-/).length).toEqual(10);
 
-    userEvent.click(screen.getByText(/show less/i));
+    await userEvent.click(screen.getByText(/show less/i));
     expect(screen.getAllByText(/reminder-/).length).toEqual(5);
   });
 });

@@ -32,7 +32,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { mapManuscriptVersionToResearchOutput } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
@@ -83,7 +83,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   versionAction: versionActionProp,
   isDuplicate = false,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [versionAction, setVersionAction] = useState<
     'create' | 'edit' | undefined
   >(versionActionProp);
@@ -258,7 +258,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               setSelectedVersion={setManuscriptVersion}
               onImportManuscript={async () => {
                 if (selectedManuscriptVersion?.version?.researchOutputId) {
-                  history.push(
+                  navigate(
                     sharedResearch({})
                       .researchOutput({
                         researchOutputId:

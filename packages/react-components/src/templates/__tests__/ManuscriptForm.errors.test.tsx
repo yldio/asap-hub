@@ -7,7 +7,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import ManuscriptForm from '../ManuscriptForm';
 
 jest.setTimeout(30_000);
@@ -129,7 +129,7 @@ it('displays error message when manuscript title is not unique', async () => {
   });
 
   const { container, findByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Test Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -157,7 +157,7 @@ it('displays error message when manuscript title is not unique', async () => {
   await waitForElementToBeRemoved(() => screen.queryByText(/Test Loading.../i));
 
   const submitBtn = await findByRole('button', { name: /Submit/ });
-  userEvent.click(submitBtn);
+  await userEvent.click(submitBtn);
 
   await waitFor(() => {
     const confirmBtn = screen.getByRole('button', {
@@ -166,7 +166,7 @@ it('displays error message when manuscript title is not unique', async () => {
     expect(confirmBtn).toBeInTheDocument();
   });
 
-  userEvent.click(
+  await userEvent.click(
     screen.getByRole('button', {
       name: /Submit Manuscript/i,
     }),

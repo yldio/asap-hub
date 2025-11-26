@@ -10,7 +10,6 @@ import {
   NavigationLink,
   pixels,
 } from '@asap-hub/react-components';
-import { Location } from 'history';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { projectIcon, userIcon, workingGroupIcon } from '../icons';
@@ -67,7 +66,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
   workingGroups,
   closeUserMenu,
 }) => {
-  let location: Location | undefined;
+  let location: ReturnType<typeof useLocation> | undefined;
 
   // This hook *is* called unconditionally despite what rules-of-hooks says
   /* eslint-disable react-hooks/rules-of-hooks */

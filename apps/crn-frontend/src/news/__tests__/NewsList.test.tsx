@@ -2,8 +2,7 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createListNewsResponse } from '@asap-hub/fixtures';
 import { NewsFrequency } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
-import { render, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { render, waitFor, renderHook } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -131,8 +130,8 @@ it('can perform a search', async () => {
 it('can perform a filter search', async () => {
   mockGetNews.mockResolvedValue(createListNewsResponse(pageSize));
   const { getByTitle, getByText } = await renderPage();
-  userEvent.click(getByTitle('Filter'));
-  userEvent.click(getByText(/Biweekly/i));
+  await userEvent.click(getByTitle('Filter'));
+  await userEvent.click(getByText(/Biweekly/i));
 
   await waitFor(() =>
     expect(mockGetNews).toHaveBeenLastCalledWith(

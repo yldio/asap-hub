@@ -2,7 +2,7 @@ import { NewsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { lazy, useEffect } from 'react';
 
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Frame from '../Frame';
 
 const loadNewsDirectory = () =>
@@ -10,25 +10,27 @@ const loadNewsDirectory = () =>
 
 const NewsDirectory = lazy(loadNewsDirectory);
 
-const Routes: React.FC<Record<string, never>> = () => {
+const RoutesComponent: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadNewsDirectory();
   }, []);
-  const { path } = useRouteMatch();
 
   return (
-    <Switch>
-      <Route exact path={path}>
-        <NewsPage>
-          <Frame title="News">
-            <NewsDirectory />
-          </Frame>
-        </NewsPage>
-      </Route>
-      <Route component={NotFoundPage} />
-    </Switch>
+    <Routes>
+      <Route
+        index
+        element={
+          <NewsPage>
+            <Frame title="News">
+              <NewsDirectory />
+            </Frame>
+          </NewsPage>
+        }
+      />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 };
 
-export default Routes;
+export default RoutesComponent;

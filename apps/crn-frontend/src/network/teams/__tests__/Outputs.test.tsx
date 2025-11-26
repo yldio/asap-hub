@@ -151,13 +151,13 @@ it('calls getResearchOutputs with the right arguments', async () => {
     filters,
     { ...createTeamResponse(), id: teamId },
   );
-  userEvent.type(getByRole('searchbox'), searchQuery);
+  await userEvent.type(getByRole('searchbox'), searchQuery);
 
-  userEvent.click(getByText('Filters'));
+  await userEvent.click(getByText('Filters'));
   const checkbox = getByLabelText('Grant Document');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
 
   await waitFor(() =>
@@ -184,9 +184,9 @@ it('triggers export with the same parameters and custom file name', async () => 
     filters,
     { ...createTeamResponse(), id: teamId, displayName: 'example team 123' },
   );
-  userEvent.type(getByRole('searchbox'), searchQuery);
-  userEvent.click(getByText('Filters'));
-  userEvent.click(getByLabelText('Grant Document'));
+  await userEvent.type(getByRole('searchbox'), searchQuery);
+  await userEvent.click(getByText('Filters'));
+  await userEvent.click(getByLabelText('Grant Document'));
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
       searchQuery,
@@ -197,7 +197,7 @@ it('triggers export with the same parameters and custom file name', async () => 
     }),
   );
 
-  userEvent.click(getByText(/csv/i));
+  await userEvent.click(getByText(/csv/i));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.stringMatching(/SharedOutputs_Team_ExampleTeam123_\d+\.csv/),
     expect.anything(),
@@ -232,7 +232,7 @@ it('triggers draft research output export with custom file name', async () => {
     true,
   );
 
-  userEvent.click(getByText(/csv/i));
+  await userEvent.click(getByText(/csv/i));
   await waitFor(() =>
     expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
       {

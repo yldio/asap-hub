@@ -1,8 +1,7 @@
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NetworkPage, Paragraph } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSearch } from '../hooks';
 import InterestGroupProfile from './interest-groups/InterestGroupProfile';
 import WorkingGroupProfile from './working-groups/WorkingGroupProfile';
@@ -56,7 +55,6 @@ const Network: FC<Record<string, never>> = () => {
       .then(loadWorkingGroupProfile);
   }, []);
 
-  const { path } = useRouteMatch();
   const {
     searchQuery,
     debouncedSearchQuery,
@@ -67,138 +65,141 @@ const Network: FC<Record<string, never>> = () => {
 
   const [currentTime] = useState(new Date());
   return (
-    <Switch>
-      <Route exact path={path + network({}).users.template}>
-        <NetworkPage
-          page="users"
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        >
-          <SearchFrame title="People">
-            <UserList filters={filters} searchQuery={debouncedSearchQuery} />
-          </SearchFrame>
-        </NetworkPage>
-      </Route>
+    <Routes>
       <Route
-        path={
-          path +
-          network({}).users.template +
-          network({}).users({}).user.template
+        path="users"
+        element={
+          <NetworkPage
+            page="users"
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          >
+            <SearchFrame title="People">
+              <UserList filters={filters} searchQuery={debouncedSearchQuery} />
+            </SearchFrame>
+          </NetworkPage>
         }
-      >
-        <Frame title="User Profile">
-          <UserProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Route exact path={path + network({}).discoveryTeams.template}>
-        <NetworkPage
-          page="discovery-teams"
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-          pageDescription={
-            <Paragraph noMargin accent="lead">
-              Discovery Teams conduct collaborative research projects focused on
-              advancing scientific understanding within a defined theme or area
-              of inquiry.
-            </Paragraph>
-          }
-        >
-          <SearchFrame title="Discovery Teams">
-            <TeamList filters={filters} searchQuery={debouncedSearchQuery} />
-          </SearchFrame>
-        </NetworkPage>
-      </Route>
-      <Route exact path={path + network({}).resourceTeams.template}>
-        <NetworkPage
-          page="resource-teams"
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-          pageDescription={
-            <Paragraph noMargin accent="lead">
-              Resource Teams support the development of tools, services, and
-              shared resources to enable the CRN and ultimately strengthen the
-              broader research community.
-            </Paragraph>
-          }
-        >
-          <SearchFrame title="Resource Teams">
-            <TeamList filters={filters} searchQuery={debouncedSearchQuery} />
-          </SearchFrame>
-        </NetworkPage>
-      </Route>
+      />
       <Route
-        path={
-          path +
-          network({}).teams.template +
-          network({}).teams({}).team.template
+        path="users/:userId/*"
+        element={
+          <Frame title="User Profile">
+            <UserProfile currentTime={currentTime} />
+          </Frame>
         }
-      >
-        <Frame title="Team Profile">
-          <TeamProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Route exact path={path + network({}).interestGroups.template}>
-        <NetworkPage
-          page="interest-groups"
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        >
-          <SearchFrame title="Interest Groups">
-            <InterestGroupList
-              filters={filters}
-              searchQuery={debouncedSearchQuery}
-            />
-          </SearchFrame>
-        </NetworkPage>
-      </Route>
+      />
       <Route
-        path={
-          path +
-          network({}).interestGroups.template +
-          network({}).interestGroups({}).interestGroup.template
+        path="discovery-teams"
+        element={
+          <NetworkPage
+            page="discovery-teams"
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+            pageDescription={
+              <Paragraph noMargin accent="lead">
+                Discovery Teams conduct collaborative research projects focused
+                on advancing scientific understanding within a defined theme or
+                area of inquiry.
+              </Paragraph>
+            }
+          >
+            <SearchFrame title="Discovery Teams">
+              <TeamList filters={filters} searchQuery={debouncedSearchQuery} />
+            </SearchFrame>
+          </NetworkPage>
         }
-      >
-        <Frame title="Interest Group Profile">
-          <InterestGroupProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Route exact path={path + network({}).workingGroups.template}>
-        <NetworkPage
-          page="working-groups"
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        >
-          <SearchFrame title="Working Groups">
-            <WorkingGroupList
-              filters={filters}
-              searchQuery={debouncedSearchQuery}
-            />
-          </SearchFrame>
-        </NetworkPage>
-      </Route>
+      />
       <Route
-        path={
-          path +
-          network({}).workingGroups.template +
-          network({}).workingGroups({}).workingGroup.template
+        path="resource-teams"
+        element={
+          <NetworkPage
+            page="resource-teams"
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+            pageDescription={
+              <Paragraph noMargin accent="lead">
+                Resource Teams support the development of tools, services, and
+                shared resources to enable the CRN and ultimately strengthen the
+                broader research community.
+              </Paragraph>
+            }
+          >
+            <SearchFrame title="Resource Teams">
+              <TeamList filters={filters} searchQuery={debouncedSearchQuery} />
+            </SearchFrame>
+          </NetworkPage>
         }
-      >
-        <Frame title="Working Group Profile">
-          <WorkingGroupProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Redirect to={network({}).users({}).$} />
-    </Switch>
+      />
+      <Route
+        path="teams/:teamId/*"
+        element={
+          <Frame title="Team Profile">
+            <TeamProfile currentTime={currentTime} />
+          </Frame>
+        }
+      />
+      <Route
+        path="interest-groups"
+        element={
+          <NetworkPage
+            page="interest-groups"
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          >
+            <SearchFrame title="Interest Groups">
+              <InterestGroupList
+                filters={filters}
+                searchQuery={debouncedSearchQuery}
+              />
+            </SearchFrame>
+          </NetworkPage>
+        }
+      />
+      <Route
+        path="interest-groups/:interestGroupId/*"
+        element={
+          <Frame title="Interest Group Profile">
+            <InterestGroupProfile currentTime={currentTime} />
+          </Frame>
+        }
+      />
+      <Route
+        path="working-groups"
+        element={
+          <NetworkPage
+            page="working-groups"
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          >
+            <SearchFrame title="Working Groups">
+              <WorkingGroupList
+                filters={filters}
+                searchQuery={debouncedSearchQuery}
+              />
+            </SearchFrame>
+          </NetworkPage>
+        }
+      />
+      <Route
+        path="working-groups/:workingGroupId/*"
+        element={
+          <Frame title="Working Group Profile">
+            <WorkingGroupProfile currentTime={currentTime} />
+          </Frame>
+        }
+      />
+      <Route index element={<Navigate to="users" replace />} />
+    </Routes>
   );
 };
 

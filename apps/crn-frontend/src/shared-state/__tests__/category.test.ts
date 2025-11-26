@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import { useRecoilValue } from 'recoil';
 import { getCategories } from '../../shared-api/category';
 import { useCategorySuggestions } from '../category';

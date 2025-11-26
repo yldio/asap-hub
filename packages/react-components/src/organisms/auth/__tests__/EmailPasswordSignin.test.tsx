@@ -59,7 +59,7 @@ it('renders a button that emits signin events', () => {
       onSignin={handleSignin}
     />,
   );
-  userEvent.click(getByText(/sign.*in/i));
+  await userEvent.click(getByText(/sign.*in/i));
   expect(handleSignin).toHaveBeenCalled();
 });
 it('does not emit a signin event without input', () => {
@@ -72,7 +72,7 @@ it('does not emit a signin event without input', () => {
       onSignin={handleSignin}
     />,
   );
-  userEvent.click(getByText(/sign.*in/i));
+  await userEvent.click(getByText(/sign.*in/i));
   expect(handleSignin).not.toHaveBeenCalled();
 });
 

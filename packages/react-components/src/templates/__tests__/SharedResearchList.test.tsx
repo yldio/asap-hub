@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import SharedResearchList from '../SharedResearchList';
 
@@ -17,7 +17,7 @@ const props: Omit<ComponentProps<typeof SharedResearchList>, 'children'> = {
 
 it('renders multiple shared outputs cards in card view', () => {
   const { queryAllByRole, getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <SharedResearchList {...props} isListView={false} />
     </StaticRouter>,
   );
@@ -29,7 +29,7 @@ it('renders multiple shared outputs cards in card view', () => {
 
 it('renders multiple research outputs in list view', () => {
   const { queryAllByRole, getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <SharedResearchList {...props} isListView />
     </StaticRouter>,
   );

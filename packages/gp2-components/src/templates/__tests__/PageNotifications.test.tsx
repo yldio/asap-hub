@@ -56,7 +56,7 @@ describe('PageNotifications', () => {
       },
     );
     expect(screen.getByText('Notification visible')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: /close/i }));
+    await userEvent.click(screen.getByRole('button', { name: /close/i }));
     expect(removeNotification).toHaveBeenCalled();
   });
 });

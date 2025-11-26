@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import {
   createResearchOutputResponse,
@@ -8,7 +8,6 @@ import {
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -26,8 +25,6 @@ describe('on submit', () => {
   const getAuthorSuggestions = jest.fn();
   const getRelatedResearchSuggestions = jest.fn();
   const getShortDescriptionFromDescription = jest.fn();
-
-  const history = createMemoryHistory();
   saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
   saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
   getLabSuggestions.mockResolvedValue([]);
@@ -41,9 +38,11 @@ describe('on submit', () => {
 
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
+    await userEvent.click(button);
 
-    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /Publish Output/i }),
+    );
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
@@ -56,7 +55,7 @@ describe('on submit', () => {
     const documentType = 'Dataset';
     const type = 'Spectroscopy';
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -78,10 +77,12 @@ describe('on submit', () => {
           }
           researchTags={researchTags}
         />
-      </Router>,
+      </MemoryRouter>,
     );
-    userEvent.click(await screen.findByRole('textbox', { name: /methods/i }));
-    userEvent.click(screen.getByText('ELISA'));
+    await userEvent.click(
+      await screen.findByRole('textbox', { name: /methods/i }),
+    );
+    await userEvent.click(screen.getByText('ELISA'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -97,7 +98,7 @@ describe('on submit', () => {
     const researchTags = [researchTagMethodResponse];
     const documentType = 'Dataset';
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -119,7 +120,7 @@ describe('on submit', () => {
           }
           researchTags={researchTags}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     const typeDropdown = screen.getByRole('textbox', {
@@ -133,8 +134,8 @@ describe('on submit', () => {
     });
 
     const methods = await screen.findByRole('textbox', { name: /methods/i });
-    userEvent.click(methods);
-    userEvent.click(screen.getByText('ELISA'));
+    await userEvent.click(methods);
+    await userEvent.click(screen.getByText('ELISA'));
 
     expect(screen.getByText(/ELISA/i)).toBeInTheDocument();
 

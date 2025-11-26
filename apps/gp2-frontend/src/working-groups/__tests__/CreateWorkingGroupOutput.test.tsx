@@ -133,26 +133,33 @@ describe('Create WorkingGroup Output', () => {
     const link = 'https://example.com';
     await renderCreateWorkingGroupOutput('procedural-form');
 
-    userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
-    userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
-    userEvent.type(
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /title/i }),
+      title,
+    );
+    await userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
+    await userEvent.type(
       screen.getByRole('textbox', { name: /^description/i }),
       'An interesting article',
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /^short description/i }),
       'An article',
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Tony Stark'));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText(/Steve Rogers \(/i));
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByText(/^none/i));
+    await userEvent.click(authors);
+    await userEvent.click(screen.getByText('Tony Stark'));
+    await userEvent.click(authors);
+    await userEvent.click(screen.getByText(/Steve Rogers \(/i));
+    await userEvent.click(
+      screen.getByRole('textbox', { name: /identifier type/i }),
+    );
+    await userEvent.click(screen.getByText(/^none/i));
     expect(screen.getByText('Working Group Title')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Publish Output' }),
+    );
 
     await waitFor(() => {
       expect(mockCreateOutput).toHaveBeenCalledWith(
@@ -203,24 +210,31 @@ describe('Create WorkingGroup Output', () => {
     const link = 'https://example.com';
     await renderCreateWorkingGroupOutput('procedural-form');
 
-    userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
-    userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
-    userEvent.type(
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /title/i }),
+      title,
+    );
+    await userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
+    await userEvent.type(
       screen.getByRole('textbox', { name: /^description/i }),
       'An interesting article',
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /^short description/i }),
       'An article',
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Tony Stark'));
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByText(/^none/i));
+    await userEvent.click(authors);
+    await userEvent.click(screen.getByText('Tony Stark'));
+    await userEvent.click(
+      screen.getByRole('textbox', { name: /identifier type/i }),
+    );
+    await userEvent.click(screen.getByText(/^none/i));
     expect(screen.getByText('Working Group Title')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Publish Output' }),
+    );
     await waitFor(() => {
       expect(mockCreateOutput).toHaveBeenCalled();
     });
@@ -232,7 +246,7 @@ describe('Create WorkingGroup Output', () => {
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-    userEvent.type(url, 'a');
+    await userEvent.type(url, 'a');
     url.blur();
 
     expect(

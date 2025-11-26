@@ -20,7 +20,7 @@ it('renders with copy email button', () => {
 
   const copyButton = getByRole('button', { name: 'Copy' });
   expect(copyButton).toBeVisible();
-  userEvent.click(copyButton);
+  await userEvent.click(copyButton);
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
     'test123@gmail.com',
   );

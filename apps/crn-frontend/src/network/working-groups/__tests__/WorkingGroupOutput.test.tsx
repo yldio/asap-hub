@@ -83,19 +83,19 @@ const mandatoryFields = async (
 ) => {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
-  userEvent.type(screen.getByRole('textbox', { name: url }), link);
-  userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
+  await userEvent.type(screen.getByRole('textbox', { name: url }), link);
+  await userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
 
   await waitFor(() => expect(editorRef.current).not.toBeNull());
   editorRef.current?.focus();
 
   const descriptionEditor = screen.getByTestId('editor');
-  userEvent.click(descriptionEditor);
-  userEvent.tab();
+  await userEvent.click(descriptionEditor);
+  await userEvent.tab();
   fireEvent.input(descriptionEditor, { data: descriptionMD });
-  userEvent.tab();
+  await userEvent.tab();
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /short description/i }),
     shortDescription,
   );
@@ -103,24 +103,29 @@ const mandatoryFields = async (
   const typeInput = screen.getByRole('textbox', {
     name: /Select the type/i,
   });
-  userEvent.type(typeInput, type);
-  userEvent.type(typeInput, specialChars.enter);
+  await userEvent.type(typeInput, type);
+  await userEvent.type(typeInput, specialChars.enter);
 
   const identifier = screen.getByRole('textbox', { name: /identifier/i });
-  userEvent.type(identifier, 'DOI');
-  userEvent.type(identifier, specialChars.enter);
-  userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
-  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
-  userEvent.click(screen.getByText('Person A 3'));
+  await userEvent.type(identifier, 'DOI');
+  await userEvent.type(identifier, specialChars.enter);
+  await userEvent.type(
+    screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'),
+    doi,
+  );
+  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await userEvent.click(screen.getByText('Person A 3'));
 
-  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
-  userEvent.click(screen.getByText('Abu-Remaileh, M 1'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+  await userEvent.click(screen.getByText('Abu-Remaileh, M 1'));
 
   return {
     publish: async () => {
       const button = screen.getByRole('button', { name: /Publish/i });
-      userEvent.click(button);
-      userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+      await userEvent.click(button);
+      await userEvent.click(
+        screen.getByRole('button', { name: /Publish Output/i }),
+      );
       await waitFor(() => {
         expect(button).toBeEnabled();
       });
@@ -129,7 +134,7 @@ const mandatoryFields = async (
       const saveDraftButton = screen.getByRole('button', {
         name: /Save Draft/i,
       });
-      userEvent.click(saveDraftButton);
+      await userEvent.click(saveDraftButton);
       await waitFor(() => {
         expect(saveDraftButton).toBeEnabled();
       });
@@ -138,7 +143,7 @@ const mandatoryFields = async (
       const updatePublishedButton = screen.getByRole('button', {
         name: /Save/i,
       });
-      userEvent.click(updatePublishedButton);
+      await userEvent.click(updatePublishedButton);
       await waitFor(() => {
         expect(updatePublishedButton).toBeEnabled();
       });
@@ -297,8 +302,8 @@ it('can submit a form when form data is valid', async () => {
     doi,
   });
 
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-  userEvent.click(screen.getByText('Example 1 Lab'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(screen.getByText('Example 1 Lab'));
 
   await publish();
 
@@ -380,8 +385,8 @@ it('can save draft when form data is valid', async () => {
     doi,
   });
 
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-  userEvent.click(screen.getByText('Example 1 Lab'));
+  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(screen.getByText('Example 1 Lab'));
 
   await saveDraft();
 
@@ -453,14 +458,14 @@ it('can publish a new version for an output', async () => {
     true,
   );
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /changelog/i }),
     changelog,
   );
 
-  userEvent.click(screen.getByRole('button', { name: /Save/i }));
+  await userEvent.click(screen.getByRole('button', { name: /Save/i }));
   const button = screen.getByRole('button', { name: /Publish new version/i });
-  userEvent.click(button);
+  await userEvent.click(button);
 
   await waitFor(() => {
     expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
@@ -509,7 +514,7 @@ it('will show server side validation error for link', async () => {
   ).toBeGreaterThan(1);
 
   const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-  userEvent.type(url, 'a');
+  await userEvent.type(url, 'a');
   url.blur();
 
   expect(
@@ -610,9 +615,11 @@ it.each([
     });
 
     const button = screen.getByRole('button', { name: buttonName });
-    userEvent.click(button);
+    await userEvent.click(button);
     if (buttonName === 'Publish') {
-      userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+      await userEvent.click(
+        screen.getByRole('button', { name: /Publish Output/i }),
+      );
     }
     await waitFor(() => {
       expect(button).toBeEnabled();

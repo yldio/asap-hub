@@ -3,7 +3,7 @@ import { fireEvent } from '@testing-library/dom';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
@@ -14,7 +14,7 @@ const props: ComponentProps<typeof PersonalInfoModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<StaticRouter location="/">{children}</StaticRouter>);
 
 it('renders the title', () => {
   renderModal(
@@ -98,12 +98,12 @@ it('renders a country selector', () => {
     />,
   );
 
-  userEvent.click(screen.getByText('Start Typing...'));
+  await userEvent.click(screen.getByText('Start Typing...'));
   expect(screen.queryByText('United States')).toBeVisible();
   expect(screen.queryByText('Mexico')).toBeVisible();
 
-  userEvent.click(screen.getByText('Start Typing...'));
-  userEvent.type(screen.getByText('Start Typing...'), 'xx');
+  await userEvent.click(screen.getByText('Start Typing...'));
+  await userEvent.type(screen.getByText('Start Typing...'), 'xx');
   expect(screen.queryByText(/no+countries/i)).toBeDefined();
 });
 it('shows validation message country when it not selected', async () => {
@@ -118,10 +118,10 @@ it('shows validation message country when it not selected', async () => {
     />,
   );
   const field = screen.getByRole('textbox', { name: /country/i });
-  userEvent.click(field);
-  userEvent.tab();
+  await userEvent.click(field);
+  await userEvent.tab();
 
-  userEvent.click(screen.getByRole('button', { name: /save/i }));
+  await userEvent.click(screen.getByRole('button', { name: /save/i }));
   expect(await screen.findByText(/Please add your country/i)).toBeVisible();
   await waitFor(() =>
     expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
@@ -153,7 +153,7 @@ it.each`
     fireEvent.change(input, { target: { value: '' } });
     expect(input).toHaveValue('');
 
-    userEvent.click(screen.getByText(/save/i));
+    await userEvent.click(screen.getByText(/save/i));
     expect(await screen.findByText(new RegExp(message, 'i'))).toBeVisible();
   },
 );
@@ -174,7 +174,7 @@ it('disables the form elements while submitting', async () => {
     />,
   );
 
-  userEvent.click(screen.getByText(/save/i));
+  await userEvent.click(screen.getByText(/save/i));
 
   const form = screen.getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);
@@ -205,7 +205,7 @@ it('triggers the save function', async () => {
     />,
   );
 
-  userEvent.click(screen.getByText('Save'));
+  await userEvent.click(screen.getByText('Save'));
   expect(jestFn).toHaveBeenCalledWith({
     firstName: 'firstName',
     middleName: 'middleName',

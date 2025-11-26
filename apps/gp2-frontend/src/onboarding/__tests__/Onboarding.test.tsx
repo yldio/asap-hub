@@ -61,10 +61,10 @@ describe('Onboarding', () => {
     mockGetUser.mockResolvedValueOnce(user);
 
     await renderOnboarding(user.id);
-    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
-    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
-    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
-    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Continue' }));
     expect(screen.getByRole('link', { name: 'Publish' })).toBeVisible();
   });
 });

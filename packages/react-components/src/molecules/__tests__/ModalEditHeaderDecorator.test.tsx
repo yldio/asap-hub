@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import ModalEditHeaderDecorator from '../ModalEditHeaderDecorator';
 
@@ -8,7 +8,7 @@ const renderDecorator = (
   props: React.ComponentProps<typeof ModalEditHeaderDecorator>,
 ) =>
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ModalEditHeaderDecorator {...props} />
     </StaticRouter>,
   );
@@ -58,7 +58,7 @@ describe('save button', () => {
     renderDecorator({ backHref: '/back', onSave: handleSave });
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     expect(handleSave).toHaveBeenCalledTimes(1);
   });
@@ -68,9 +68,9 @@ describe('save button', () => {
     renderDecorator({ backHref: '/back', onSave: handleSave });
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    userEvent.click(saveButton);
-    userEvent.click(saveButton);
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
+    await userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     expect(handleSave).toHaveBeenCalledTimes(3);
   });
@@ -118,7 +118,7 @@ describe('save button state', () => {
     });
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     expect(handleSave).not.toHaveBeenCalled();
   });

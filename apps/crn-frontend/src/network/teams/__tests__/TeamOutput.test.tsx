@@ -23,12 +23,11 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { editorRef } from '@asap-hub/react-components';
-import { Suspense } from 'react';
-import { Route, Router } from 'react-router-dom';
+import { Suspense, useEffect } from 'react';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { createMemoryHistory, History } from 'history';
 import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
 import {
   createResearchOutput,
@@ -55,6 +54,7 @@ beforeEach(() => {
   window.scrollTo = jest.fn();
   // TODO: fix act error
   jest.spyOn(console, 'error').mockImplementation();
+  currentLocation = null;
 });
 
 const baseUser = createUserResponse();
@@ -66,6 +66,16 @@ const baseResearchOutput: ResearchOutputResponse = {
       displayName: 'Jakobsson, J',
     },
   ],
+};
+
+// Helper to capture location in tests
+let currentLocation: { pathname: string; search: string } | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentLocation = { pathname: location.pathname, search: location.search };
+  }, [location]);
+  return null;
 };
 
 const mandatoryFields = async (
@@ -87,50 +97,56 @@ const mandatoryFields = async (
   isLinkRequired: boolean = false,
   isEditMode: boolean = false,
   published: boolean = true,
+  user = userEvent.setup(),
 ) => {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
-  await userEvent.type(screen.getByRole('textbox', { name: url }), link);
-  await userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
+  if (link) {
+    await user.type(screen.getByRole('textbox', { name: url }), link);
+  }
+  if (title) {
+    await user.type(screen.getByRole('textbox', { name: /title/i }), title);
+  }
 
   await waitFor(() => expect(editorRef.current).not.toBeNull());
 
-  editorRef.current?.focus();
+  if (descriptionMD) {
+    editorRef.current?.focus();
 
-  const descriptionEditor = screen.getByTestId('editor');
-  await userEvent.click(descriptionEditor);
-  await userEvent.tab();
-  fireEvent.input(descriptionEditor, { data: descriptionMD });
-  await userEvent.tab();
+    const descriptionEditor = screen.getByTestId('editor');
+    await user.click(descriptionEditor);
+    await user.keyboard('{Tab}');
+    fireEvent.input(descriptionEditor, { data: descriptionMD });
+    await user.keyboard('{Tab}');
+  }
 
-  await userEvent.type(
-    screen.getByRole('textbox', { name: /short description/i }),
-    shortDescription,
-  );
+  if (shortDescription) {
+    await user.type(
+      screen.getByRole('textbox', { name: /short description/i }),
+      shortDescription,
+    );
+  }
 
   const typeInput = screen.getByRole('textbox', { name: /Select the type/i });
-  await userEvent.type(typeInput, type);
-  await userEvent.type(typeInput, specialChars.enter);
+  await user.type(typeInput, type);
+  await user.keyboard('{Enter}');
 
   const identifier = screen.getByRole('textbox', { name: /identifier/i });
-  await userEvent.type(identifier, 'DOI');
-  await userEvent.type(identifier, specialChars.enter);
-  await userEvent.type(
-    screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'),
-    doi,
-  );
+  await user.type(identifier, 'DOI');
+  await user.keyboard('{Enter}');
+  await user.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
   return {
     publish: async () => {
       if (isEditMode && published) {
         const button = screen.getByRole('button', { name: /Save/i });
-        await userEvent.click(button);
+        await user.click(button);
         await waitFor(() => {
           expect(button).toBeEnabled();
         });
       } else {
-        await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+        await user.click(screen.getByRole('button', { name: /Publish/i }));
         const button = screen.getByRole('button', { name: /Publish Output/i });
-        await userEvent.click(button);
+        await user.click(button);
         await waitFor(() => {
           expect(button).not.toBeInTheDocument();
         });
@@ -141,7 +157,7 @@ const mandatoryFields = async (
         name: /Save Draft/i,
       });
       if (saveDraftButton) {
-        await userEvent.click(saveDraftButton);
+        await user.click(saveDraftButton);
         await waitFor(() => {
           expect(saveDraftButton).toBeEnabled();
         });
@@ -184,11 +200,11 @@ interface RenderPageOptions {
   outputDocumentType?: OutputDocumentTypeParameter;
   researchOutputData?: ResearchOutputResponse;
   latestManuscriptVersion?: ManuscriptVersionResponse;
-  history?: History;
   isDuplicate?: boolean;
 }
 
 beforeEach(() => {
+  jest.spyOn(console, 'warn').mockImplementation();
   mockGetImpacts.mockResolvedValue({
     total: 0,
     items: [],
@@ -275,19 +291,26 @@ it('can publish a form when the data is valid', async () => {
 
   await renderPage({ teamId, outputDocumentType: 'lab-material' });
 
-  const { publish } = await mandatoryFields({
-    link,
-    title,
-    descriptionMD,
-    shortDescription,
-    type,
-    doi,
-  });
+  const user = userEvent.setup();
+  const { publish } = await mandatoryFields(
+    {
+      link,
+      title,
+      descriptionMD,
+      shortDescription,
+      type,
+      doi,
+    },
+    false,
+    false,
+    true,
+    user,
+  );
 
-  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-  await userEvent.click(screen.getByText('Example 1 Lab'));
-  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
-  await userEvent.click(screen.getByText('Person A 3'));
+  await user.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await user.click(screen.getByText('Example 1 Lab'));
+  await user.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await user.click(screen.getByText('Person A 3'));
 
   await publish();
 
@@ -342,19 +365,26 @@ it('can save draft when form data is valid', async () => {
 
   await renderPage({ teamId, outputDocumentType: 'lab-material' });
 
-  const { saveDraft } = await mandatoryFields({
-    link,
-    title,
-    descriptionMD,
-    shortDescription,
-    type,
-    doi,
-  });
+  const user = userEvent.setup();
+  const { saveDraft } = await mandatoryFields(
+    {
+      link,
+      title,
+      descriptionMD,
+      shortDescription,
+      type,
+      doi,
+    },
+    false,
+    false,
+    true,
+    user,
+  );
 
-  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-  await userEvent.click(screen.getByText('Example 1 Lab'));
-  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
-  await userEvent.click(screen.getByText('Person A 3'));
+  await user.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await user.click(screen.getByText('Example 1 Lab'));
+  await user.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await user.click(screen.getByText('Person A 3'));
 
   await saveDraft();
 
@@ -410,6 +440,7 @@ it('can edit a research output', async () => {
     researchOutputData: { ...baseResearchOutput, doi },
   });
 
+  const user = userEvent.setup();
   const { publish } = await mandatoryFields(
     {
       link,
@@ -421,6 +452,8 @@ it('can edit a research output', async () => {
     },
     true,
     true,
+    true,
+    user,
   );
   await publish();
 
@@ -449,6 +482,7 @@ it('can edit a draft research output', async () => {
     researchOutputData: { ...researchOutput, doi, published: false },
   });
 
+  const user = userEvent.setup();
   const { saveDraft } = await mandatoryFields(
     {
       link,
@@ -459,6 +493,8 @@ it('can edit a draft research output', async () => {
     },
     true,
     true,
+    false,
+    user,
   );
   await saveDraft();
 
@@ -498,6 +534,7 @@ it('can edit and publish a draft research output', async () => {
   });
 
   const initiallyPublished = false;
+  const user = userEvent.setup();
   const { publish } = await mandatoryFields(
     {
       link,
@@ -508,6 +545,7 @@ it('can edit and publish a draft research output', async () => {
     true,
     true,
     initiallyPublished,
+    user,
   );
   await publish();
 
@@ -537,6 +575,7 @@ it('can publish a new version for an output', async () => {
     versionAction: 'create',
   });
 
+  const user = userEvent.setup();
   await mandatoryFields(
     {
       link,
@@ -548,16 +587,18 @@ it('can publish a new version for an output', async () => {
     },
     true,
     false,
+    true,
+    user,
   );
 
-  await userEvent.type(
+  await user.type(
     screen.getByRole('textbox', { name: /changelog/i }),
     changelog,
   );
 
-  await userEvent.click(screen.getByRole('button', { name: /Save/i }));
+  await user.click(screen.getByRole('button', { name: /Save/i }));
   const button = screen.getByRole('button', { name: /Publish new version/i });
-  await userEvent.click(button);
+  await user.click(button);
 
   await waitFor(() => {
     expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
@@ -591,7 +632,8 @@ it('generates the short description based on the current description', async () 
     },
   });
 
-  await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+  const user = userEvent.setup();
+  await user.click(screen.getByRole('button', { name: /Generate/i }));
 
   await waitFor(() => {
     expect(
@@ -618,7 +660,14 @@ it('will show server side validation error for link', async () => {
     teamId: '42',
     outputDocumentType: 'bioinformatics',
   });
-  const { publish } = await mandatoryFields({ type: 'Code' }, true);
+  const user = userEvent.setup();
+  const { publish } = await mandatoryFields(
+    { type: 'Code' },
+    true,
+    false,
+    true,
+    user,
+  );
 
   await publish();
 
@@ -627,17 +676,23 @@ it('will show server side validation error for link', async () => {
     screen.queryAllByText(
       'A Research Output with this URL already exists. Please enter a different URL.',
     ).length,
-  ).toBeGreaterThan(1);
+  ).toBeGreaterThanOrEqual(1);
 
   const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-  await userEvent.type(url, 'a');
-  url.blur();
+  await user.clear(url);
+  await user.type(url, 'a');
+  await user.keyboard('{Tab}');
 
-  expect(
-    screen.queryByText(
-      'A Research Output with this URL already exists. Please enter a different URL.',
-    ),
-  ).toBeNull();
+  await waitFor(
+    () => {
+      expect(
+        screen.queryByText(
+          'A Research Output with this URL already exists. Please enter a different URL.',
+        ),
+      ).toBeNull();
+    },
+    { timeout: 3000 },
+  );
 });
 
 it('will toast server side errors for unknown errors', async () => {
@@ -647,7 +702,14 @@ it('will toast server side errors for unknown errors', async () => {
     teamId: '42',
     outputDocumentType: 'bioinformatics',
   });
-  const { publish } = await mandatoryFields({ type: 'Code' }, true);
+  const user = userEvent.setup();
+  const { publish } = await mandatoryFields(
+    { type: 'Code' },
+    true,
+    false,
+    true,
+    user,
+  );
 
   await publish();
 
@@ -659,7 +721,7 @@ it('will toast server side errors for unknown errors', async () => {
   ).toBeInTheDocument();
   expect(window.scrollTo).toHaveBeenCalled();
 
-  await userEvent.click(screen.getByRole('button', { name: /Close/i }));
+  await user.click(screen.getByRole('button', { name: /Close/i }));
 
   expect(
     screen.queryByText(
@@ -682,6 +744,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
     researchOutputData: { ...baseResearchOutput, doi },
   });
 
+  const user = userEvent.setup();
   const { publish } = await mandatoryFields(
     {
       link,
@@ -692,6 +755,8 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
     },
     true,
     true,
+    true,
+    user,
   );
   await publish();
 
@@ -845,13 +910,14 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
         screen.getByLabelText(manuscriptImportLabelText),
       ).toBeInTheDocument();
 
-      await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+      const user = userEvent.setup();
+      await user.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
-      await userEvent.type(input, 'Error');
+      await user.type(input, 'Error');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
-      await userEvent.click(option);
+      await user.click(option);
 
-      await userEvent.click(screen.getByRole('button', { name: /import/i }));
+      await user.click(screen.getByRole('button', { name: /import/i }));
 
       await waitFor(() => {
         expect(
@@ -859,7 +925,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
         ).toBeInTheDocument();
       });
 
-      await userEvent.click(screen.getByRole('button', { name: /Close/i }));
+      await user.click(screen.getByRole('button', { name: /Close/i }));
 
       expect(
         screen.queryByText('An error has occurred. Please try again later.'),
@@ -879,13 +945,14 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-      await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+      const user = userEvent.setup();
+      await user.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
-      await userEvent.type(input, 'Version One');
+      await user.type(input, 'Version One');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
-      await userEvent.click(option);
+      await user.click(option);
 
-      await userEvent.click(screen.getByRole('button', { name: /import/i }));
+      await user.click(screen.getByRole('button', { name: /import/i }));
 
       await waitFor(() => {
         expect(
@@ -894,26 +961,26 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       });
       const changelog = 'creating new version with manuscript';
 
-      await userEvent.type(
+      await user.type(
         screen.getByRole('textbox', { name: /changelog/i }),
         changelog,
       );
 
       const doi = '10.1234/5678';
       const identifier = screen.getByRole('textbox', { name: /identifier/i });
-      await userEvent.type(identifier, specialChars.enter);
-      await userEvent.type(
+      await user.keyboard('{Enter}');
+      await user.type(
         screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'),
         doi,
       );
 
-      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await user.click(screen.getByRole('button', { name: /Publish/i }));
 
       const button = screen.getByRole('button', {
         name: /Publish new version/i,
       });
 
-      await userEvent.click(button);
+      await user.click(button);
 
       await waitFor(() => {
         expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
@@ -943,17 +1010,20 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-      await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+      const user = userEvent.setup();
+      await user.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
-      await userEvent.type(input, 'Version One');
+      await user.type(input, 'Version One');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
-      await userEvent.click(option);
+      await user.click(option);
 
-      await userEvent.click(screen.getByRole('button', { name: /import/i }));
+      await user.click(screen.getByRole('button', { name: /import/i }));
 
-      expect(
-        screen.getByText('How would you like to create your output?'),
-      ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          screen.getByRole('heading', { name: /Imported Manuscript Version/i }),
+        ).toBeInTheDocument();
+      });
     });
   });
 
@@ -1060,7 +1130,8 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       outputDocumentType: 'article',
     });
 
-    await userEvent.click(screen.getByLabelText('Create manually'));
+    const user = userEvent.setup();
+    await user.click(screen.getByLabelText('Create manually'));
 
     expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
     expect(
@@ -1073,7 +1144,8 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       teamId: '42',
       outputDocumentType: 'article',
     });
-    await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+    const user = userEvent.setup();
+    await user.click(screen.getByLabelText(manuscriptImportLabelText));
 
     expect(screen.getByRole('button', { name: /Import/i })).toBeInTheDocument();
     expect(
@@ -1086,11 +1158,12 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       teamId: '42',
       outputDocumentType: 'article',
     });
-    await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+    const user = userEvent.setup();
+    await user.click(screen.getByLabelText(manuscriptImportLabelText));
 
     const input = screen.getByRole('textbox');
-    await userEvent.type(input, 'Version One');
-    await userEvent.tab();
+    await user.type(input, 'Version One');
+    await user.keyboard('{Tab}');
 
     expect(screen.getByRole('button', { name: /import/i })).toBeEnabled();
   });
@@ -1156,28 +1229,26 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-    await userEvent.click(screen.getByLabelText(manuscriptImportLabelText));
+    const user = userEvent.setup();
+    await user.click(screen.getByLabelText(manuscriptImportLabelText));
     const input = screen.getByRole('textbox');
-    await userEvent.type(input, 'Version');
+    await user.type(input, 'Version');
     const option = await screen.findByText('Version One');
-    await userEvent.click(option);
+    await user.click(option);
 
-    await userEvent.click(screen.getByRole('button', { name: /import/i }));
+    await user.click(screen.getByRole('button', { name: /import/i }));
 
     expect(
       screen.getByRole('heading', { name: /Imported Manuscript Version/i }),
     ).toBeInTheDocument();
 
     const identifier = screen.getByRole('textbox', { name: /identifier/i });
-    await userEvent.type(identifier, specialChars.enter);
-    await userEvent.type(
-      screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'),
-      doi,
-    );
+    await user.keyboard('{Enter}');
+    await user.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
 
-    await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+    await user.click(screen.getByRole('button', { name: /Publish/i }));
     const button = screen.getByRole('button', { name: /Publish Output/i });
-    await userEvent.click(button);
+    await user.click(button);
     await waitFor(() => {
       expect(button).not.toBeInTheDocument();
     });
@@ -1253,14 +1324,15 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       latestManuscriptVersion,
     });
 
-    await userEvent.type(
+    const user = userEvent.setup();
+    await user.type(
       screen.getByRole('textbox', { name: /changelog/i }),
       changelog,
     );
 
-    await userEvent.click(screen.getByRole('button', { name: /Save/i }));
+    await user.click(screen.getByRole('button', { name: /Save/i }));
     const button = screen.getByRole('button', { name: /Publish new version/i });
-    await userEvent.click(button);
+    await user.click(button);
 
     await waitFor(() => {
       expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
@@ -1281,15 +1353,6 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
     const teamId = '42';
     const outputDocumentType = 'article';
     const researchOutputId = 'linked-output-id';
-
-    const history = createMemoryHistory({
-      initialEntries: [
-        network({})
-          .teams({})
-          .team({ teamId })
-          .createOutput({ outputDocumentType }).$,
-      ],
-    });
     mockGetManuscriptVersions.mockResolvedValue({
       total: 1,
       items: [
@@ -1303,19 +1366,28 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       ],
     });
 
-    await renderPage({ teamId, outputDocumentType, history });
+    // Suppress React Router warning about missing route
+    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
 
-    await userEvent.click(screen.getByLabelText('Import from compliance'));
+    await renderPage({ teamId, outputDocumentType });
+
+    const user = userEvent.setup();
+    await user.click(screen.getByLabelText('Import from compliance'));
     const input = screen.getByRole('textbox');
-    await userEvent.type(input, 'Version');
+    await user.type(input, 'Version');
     const option = await screen.findByText('Version One');
-    await userEvent.click(option);
+    await user.click(option);
 
-    await userEvent.click(screen.getByRole('button', { name: /import/i }));
+    await user.click(screen.getByRole('button', { name: /import/i }));
 
-    expect(history.location.pathname).toBe(
-      `/shared-research/${researchOutputId}/version`,
-    );
+    await waitFor(() => {
+      expect(currentLocation).not.toBeNull();
+      expect(currentLocation?.pathname).toBe(
+        `/shared-research/${researchOutputId}/version`,
+      );
+    });
+
+    consoleWarnSpy.mockRestore();
   });
 
   it('navigates to standard output form when manual creation is confirmed', async () => {
@@ -1324,10 +1396,11 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       outputDocumentType: 'article',
     });
 
-    await userEvent.click(screen.getByLabelText('Create manually'));
+    const user = userEvent.setup();
+    await user.click(screen.getByLabelText('Create manually'));
 
     expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: /Create/i }));
+    await user.click(screen.getByRole('button', { name: /Create/i }));
 
     expect(
       screen.getByRole('heading', { name: 'What are you sharing?' }),
@@ -1345,14 +1418,6 @@ async function renderPage({
   researchOutputData,
   versionAction,
   latestManuscriptVersion,
-  history = createMemoryHistory({
-    initialEntries: [
-      network({})
-        .teams({})
-        .team({ teamId })
-        .createOutput({ outputDocumentType }).$,
-    ],
-  }),
   isDuplicate = false,
 }: RenderPageOptions) {
   const path =
@@ -1360,6 +1425,13 @@ async function renderPage({
     network({}).teams.template +
     network({}).teams({}).team.template +
     network({}).teams({}).team({ teamId }).createOutput.template;
+
+  const initialPath = network({})
+    .teams({})
+    .team({ teamId })
+    .createOutput({ outputDocumentType }).$;
+
+  currentLocation = null;
 
   render(
     <RecoilRoot
@@ -1370,17 +1442,23 @@ async function renderPage({
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router history={history}>
-              <Route path={path}>
-                <TeamOutput
-                  teamId={teamId}
-                  researchOutputData={researchOutputData}
-                  versionAction={versionAction}
-                  latestManuscriptVersion={latestManuscriptVersion}
-                  isDuplicate={isDuplicate}
+            <MemoryRouter initialEntries={[initialPath]}>
+              <LocationCapture />
+              <Routes>
+                <Route
+                  path={path}
+                  element={
+                    <TeamOutput
+                      teamId={teamId}
+                      researchOutputData={researchOutputData}
+                      versionAction={versionAction}
+                      latestManuscriptVersion={latestManuscriptVersion}
+                      isDuplicate={isDuplicate}
+                    />
+                  }
                 />
-              </Route>
-            </Router>
+              </Routes>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>

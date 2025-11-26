@@ -125,7 +125,13 @@ export const getAlgoliaTeams = async (
   const teamTypeFilter = getTeamTypeAlgoliaFilter(teamType);
 
   // Build combined filter string
-  const filterParts: string[] = [teamTypeFilter];
+  const filterParts: string[] = [];
+
+  if (teamStatusFilter || researchThemeFilters) {
+    filterParts.push(`(${teamTypeFilter})`);
+  } else {
+    filterParts.push(teamTypeFilter);
+  }
 
   if (teamStatusFilter) {
     filterParts.push(`(${teamStatusFilter})`);

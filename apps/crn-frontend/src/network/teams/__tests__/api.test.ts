@@ -55,6 +55,7 @@ import {
   updateTeamResearchOutput,
   uploadManuscriptFile,
   uploadManuscriptFileViaPresignedUrl,
+  getResearchThemes,
 } from '../api';
 
 jest.mock('../../../config', () => ({
@@ -197,6 +198,7 @@ describe('getAlgoliaTeams', () => {
     await getAlgoliaTeams(algoliaSearchClient, {
       ...options,
       teamType,
+      filters: new Set(), // No filters to test the else branch
     });
     expect(search).toHaveBeenCalledWith(
       ['team'],
@@ -219,6 +221,37 @@ describe('getAlgoliaTeams', () => {
       '',
       expect.objectContaining({
         filters: `(teamType:"${teamType}") AND (teamStatus:"Inactive")`,
+      }),
+    );
+  });
+
+  it('can filter teams by research theme', async () => {
+    await getAlgoliaTeams(algoliaSearchClient, {
+      ...options,
+      teamType: 'Discovery Team',
+      filters: new Set(['Theme1']),
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({
+        filters: '(teamType:"Discovery Team") AND (researchTheme:"Theme1")',
+      }),
+    );
+  });
+
+  it('can filter teams by team type, status, and research theme', async () => {
+    await getAlgoliaTeams(algoliaSearchClient, {
+      ...options,
+      teamType: 'Discovery Team',
+      filters: new Set(['Active', 'Theme1', 'Theme2']),
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({
+        filters:
+          '(teamType:"Discovery Team") AND (teamStatus:"Active") AND (researchTheme:"Theme1" OR researchTheme:"Theme2")',
       }),
     );
   });
@@ -404,6 +437,35 @@ describe('Team Research Output', () => {
       updateTeamResearchOutput('123', payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update research output for teams 90210 Expected status 200. Received status 500."`,
+    );
+  });
+});
+
+describe('getResearchThemes', () => {
+  it('makes an authorized GET request for research themes', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/research-themes')
+      .reply(200, { items: [], total: 0 });
+    await getResearchThemes('Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns successfully fetched research themes', async () => {
+    const themes = {
+      items: [
+        { id: '1', name: 'Theme 1' },
+        { id: '2', name: 'Theme 2' },
+      ],
+      total: 2,
+    };
+    nock(API_BASE_URL).get('/research-themes').reply(200, themes);
+    expect(await getResearchThemes('')).toEqual(themes);
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL).get('/research-themes').reply(500);
+    await expect(getResearchThemes('')).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch research themes. Expected status 2xx. Received status 500."`,
     );
   });
 });

@@ -253,3 +253,48 @@ describe('Data Manager filter', () => {
     expect(getByText('Data Manager')).toBeInTheDocument();
   });
 });
+
+describe('Research Theme Filters', () => {
+  it('renders research theme filters when researchThemes are provided', () => {
+    const researchThemes = [
+      { id: '1', name: 'Theme 1' },
+      { id: '2', name: 'Theme 2' },
+    ];
+    const { getByText } = render(
+      <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
+        <NetworkPageHeader
+          {...props}
+          page="discovery-teams"
+          researchThemes={researchThemes}
+        />
+      </MemoryRouter>,
+    );
+    expect(getByText('RESEARCH THEME')).toBeInTheDocument();
+    expect(getByText('Theme 1')).toBeInTheDocument();
+    expect(getByText('Theme 2')).toBeInTheDocument();
+  });
+
+  it('renders only the title when researchThemes are empty', () => {
+    const { getByText, queryByText } = render(
+      <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
+        <NetworkPageHeader
+          {...props}
+          page="discovery-teams"
+          researchThemes={[]}
+        />
+      </MemoryRouter>,
+    );
+    expect(getByText('RESEARCH THEME')).toBeInTheDocument();
+    expect(queryByText('Theme 1')).not.toBeInTheDocument();
+  });
+
+  it('renders only the title when researchThemes are undefined', () => {
+    const { getByText, queryByText } = render(
+      <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
+        <NetworkPageHeader {...props} page="discovery-teams" />
+      </MemoryRouter>,
+    );
+    expect(getByText('RESEARCH THEME')).toBeInTheDocument();
+    expect(queryByText('Theme 1')).not.toBeInTheDocument();
+  });
+});

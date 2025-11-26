@@ -20,6 +20,7 @@ import type {
   TraineeProject,
   ProjectMember,
 } from '@asap-hub/model';
+import type { ProjectType } from '@asap-hub/model';
 import Projects from '../Projects';
 
 const mockDiscoveryProject: DiscoveryProject = {
@@ -98,13 +99,13 @@ jest.mock('../state', () => {
     algoliaQueryId: 'query-id',
   });
 
-  const useProjects = jest.fn((options: { projectType: string }) => {
+  const useProjects = jest.fn((options: { projectType: ProjectType }) => {
     switch (options.projectType) {
-      case 'Discovery':
+      case 'Discovery Project':
         return createMockListResponse([mockDiscoveryProject]);
-      case 'Resource':
+      case 'Resource Project':
         return createMockListResponse([mockResourceProject]);
-      case 'Trainee':
+      case 'Trainee Project':
         return createMockListResponse([mockTraineeProject]);
       default:
         return createMockListResponse([mockDiscoveryProject]);

@@ -26,15 +26,16 @@ type ProjectDetailOverviewProps = {
 };
 
 type ProjectDetailOverviewContentProps = {
-  title: string;
+  title?: string;
   description: string;
   proposalURL?: string;
 };
 
 const ProjectDetailOverviewContent: React.FC<
   ProjectDetailOverviewContentProps
-> = ({ description, proposalURL }) => (
+> = ({ title, description, proposalURL }) => (
   <>
+    <Display styleAsHeading={4}>{title}</Display>
     <Paragraph accent="lead">{description}</Paragraph>
     {proposalURL ? (
       <div css={buttonContainerStyles}>
@@ -82,7 +83,6 @@ const ProjectDetailOverview: React.FC<ProjectDetailOverviewProps> = ({
             <div css={tabContentStyles}>
               {selectedTab === 'Original Grant' ? (
                 <ProjectDetailOverviewContent
-                  title={originalGrant.originalGrant}
                   description={originalGrant.originalGrant}
                   proposalURL={originalGrant.proposalId}
                 />
@@ -98,7 +98,6 @@ const ProjectDetailOverview: React.FC<ProjectDetailOverviewProps> = ({
         ) : (
           <div css={css({ marginTop: rem(24) })}>
             <ProjectDetailOverviewContent
-              title={originalGrant.originalGrant}
               description={originalGrant.originalGrant}
               proposalURL={originalGrant.proposalId}
             />

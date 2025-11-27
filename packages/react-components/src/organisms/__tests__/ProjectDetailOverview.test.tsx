@@ -33,7 +33,10 @@ describe('ProjectDetailOverview', () => {
     render(<ProjectDetailOverview originalGrant={mockOriginalGrant} />);
     const link = screen.getByRole('link', { name: /read full proposal/i });
     expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute('href', mockOriginalGrant.proposalId);
+    expect(link).toHaveAttribute(
+      'href',
+      `/shared-research/${mockOriginalGrant.proposalId}`,
+    );
   });
 
   it('does not render Read Full Proposal button when no URL provided', () => {
@@ -139,7 +142,7 @@ describe('ProjectDetailOverview', () => {
       });
       expect(proposalLink).toHaveAttribute(
         'href',
-        mockSupplementGrant.grantProposalId,
+        `/shared-research/${mockSupplementGrant.grantProposalId}`,
       );
 
       // Switch to Original Grant
@@ -152,7 +155,7 @@ describe('ProjectDetailOverview', () => {
       proposalLink = screen.getByRole('link', { name: /read full proposal/i });
       expect(proposalLink).toHaveAttribute(
         'href',
-        mockOriginalGrant.proposalId,
+        `/shared-research/${mockOriginalGrant.proposalId}`,
       );
     });
   });

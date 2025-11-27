@@ -39,7 +39,12 @@ const ProjectDetailOverviewContent: React.FC<
     <Paragraph accent="lead">{description}</Paragraph>
     {proposalURL ? (
       <div css={buttonContainerStyles}>
-        <Link href={proposalURL} buttonStyle primary small>
+        <Link
+          href={`/shared-research/${proposalURL}`}
+          buttonStyle
+          primary
+          small
+        >
           Read Full Proposal
         </Link>
       </div>

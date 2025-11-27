@@ -3,7 +3,11 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import type { MutableSnapshot } from 'recoil';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
-import type { ListProjectResponse, ProjectResponse } from '@asap-hub/model';
+import type {
+  ListProjectResponse,
+  ProjectDetail,
+  ProjectResponse,
+} from '@asap-hub/model';
 
 import type { ProjectListOptions } from '../api';
 import { projectsState, useProjectById, useProjects } from '../state';
@@ -169,7 +173,7 @@ describe('projects state hooks', () => {
 
   describe('useProjectById', () => {
     it('requests project details with authorization token', async () => {
-      const project = {
+      const project: ProjectDetail = {
         id: 'project-99',
         title: 'Project 99',
         status: 'Active',
@@ -180,7 +184,13 @@ describe('projects state hooks', () => {
         duration: '5 mos',
         researchTheme: '',
         teamName: '',
-      } as ProjectResponse;
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Test Team',
+          teamType: 'Discovery Team',
+          researchTheme: '',
+        },
+      };
       const getTokenSilently = jest.fn().mockResolvedValue('token-123');
       mockGetProject.mockResolvedValueOnce(project);
 
@@ -219,7 +229,7 @@ describe('projects state hooks', () => {
       } as ProjectResponse;
 
       // Complete detail data (includes all fields)
-      const completeDetailProject = {
+      const completeDetailProject: ProjectDetail = {
         id: 'project-1',
         projectType: 'Discovery Project',
         title: 'Discovery Project',
@@ -229,10 +239,23 @@ describe('projects state hooks', () => {
         endDate: '2024-06-01',
         duration: '5 mos',
         originalGrant: 'Grant-123',
-        milestones: [{ id: 'milestone-1', title: 'Milestone 1' }],
+        milestones: [
+          {
+            id: 'milestone-1',
+            title: 'Milestone 1',
+            description: '',
+            status: 'Not Started',
+          },
+        ],
         researchTheme: 'Theme 1',
         teamName: 'Team 1',
-      } as ProjectResponse;
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Team 1',
+          teamType: 'Discovery Team',
+          researchTheme: 'Theme 1',
+        },
+      };
 
       const getTokenSilently = jest.fn().mockResolvedValue('token-123');
       mockGetProject.mockResolvedValueOnce(completeDetailProject);
@@ -279,7 +302,7 @@ describe('projects state hooks', () => {
         teamName: '',
       } as ProjectResponse;
 
-      const detailProject = {
+      const detailProject: ProjectDetail = {
         id: 'project-1',
         title: 'Detail Project',
         status: 'Active',
@@ -291,7 +314,13 @@ describe('projects state hooks', () => {
         originalGrant: 'Grant-123',
         researchTheme: 'Theme 1',
         teamName: 'Team 1',
-      } as ProjectResponse;
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Team 1',
+          teamType: 'Discovery Team',
+          researchTheme: 'Theme 1',
+        },
+      };
 
       const getTokenSilently = jest.fn().mockResolvedValue('token-123');
       mockGetProject.mockResolvedValueOnce(detailProject);
@@ -330,7 +359,7 @@ describe('projects state hooks', () => {
     });
 
     it('preserves detail cache when list cache is cleared', async () => {
-      const detailProject = {
+      const detailProject: ProjectDetail = {
         id: 'project-1',
         title: 'Detail Project',
         status: 'Active',
@@ -342,7 +371,13 @@ describe('projects state hooks', () => {
         originalGrant: 'Grant-123',
         researchTheme: 'Theme 1',
         teamName: 'Team 1',
-      } as ProjectResponse;
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Team 1',
+          teamType: 'Discovery Team',
+          researchTheme: 'Theme 1',
+        },
+      };
 
       const getTokenSilently = jest.fn().mockResolvedValue('token-123');
       mockGetProject.mockResolvedValueOnce(detailProject);

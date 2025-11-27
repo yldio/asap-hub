@@ -231,6 +231,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           pointOfContactEmail="contact@example.com"
+          aboutHref="/projects/discovery/1/about"
         />,
       );
       expect(screen.getByText('Contact')).toBeInTheDocument();
@@ -239,6 +240,7 @@ describe('ProjectDetailHeader', () => {
           {...mockDiscoveryProject}
           status="Closed"
           pointOfContactEmail="contact@example.com"
+          aboutHref="/projects/discovery/1/about"
         />,
       );
       expect(screen.queryByText('Contact')).not.toBeInTheDocument();
@@ -247,6 +249,7 @@ describe('ProjectDetailHeader', () => {
           {...mockDiscoveryProject}
           status="Active"
           pointOfContactEmail={undefined}
+          aboutHref="/projects/discovery/1/about"
         />,
       );
       expect(screen.queryByText('Contact')).not.toBeInTheDocument();
@@ -289,7 +292,13 @@ describe('ProjectDetailHeader', () => {
     });
 
     it('renders Closed Project banner when status is Closed', () => {
-      render(<ProjectDetailHeader {...mockDiscoveryProject} status="Closed" />);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          status="Closed"
+          aboutHref="/projects/discovery/1/about"
+        />,
+      );
       expect(
         screen.getByText(
           'This project concluded earlier than expected and some milestones are incomplete.',

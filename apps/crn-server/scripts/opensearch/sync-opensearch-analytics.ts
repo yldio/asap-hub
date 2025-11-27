@@ -208,9 +208,11 @@ export const exportAnalyticsData = async <T extends Metrics>(
             ),
         );
 
+        const items = teamResultArrays.flat();
+
         return {
-          total: teamResultArrays.flat().length,
-          items: teamResultArrays.flat(),
+          total: items.length,
+          items,
         } as ListResponse<MetricObject<T>>;
 
       default:

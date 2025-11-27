@@ -48,6 +48,11 @@ export type ProjectMember = {
   readonly teams?: ReadonlyArray<ProjectMemberTeam>;
 };
 
+export type FundedTeam = Pick<
+  TeamDataObject,
+  'id' | 'displayName' | 'teamType' | 'researchTheme' | 'teamDescription'
+>;
+
 export type DiscoveryProject = BaseProject & {
   readonly projectType: 'Discovery Project';
   readonly researchTheme: string;
@@ -105,11 +110,6 @@ export type SupplementGrantInfo = {
   readonly grantStartDate?: string;
   readonly grantEndDate?: string;
 };
-
-export type FundedTeam = Pick<
-  TeamDataObject,
-  'id' | 'displayName' | 'teamType' | 'researchTheme' | 'teamDescription'
->;
 
 // Extended project detail types
 export type DiscoveryProjectDetail = DiscoveryProject & {

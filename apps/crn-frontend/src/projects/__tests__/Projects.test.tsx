@@ -19,8 +19,8 @@ import type {
   ResourceProject,
   TraineeProject,
   ProjectMember,
+  ProjectType,
 } from '@asap-hub/model';
-import type { ProjectType } from '@asap-hub/model';
 import Projects from '../Projects';
 
 const mockDiscoveryProject: DiscoveryProject = {

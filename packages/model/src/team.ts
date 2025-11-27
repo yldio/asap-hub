@@ -96,6 +96,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   linkedProjectId?: string;
   supplementGrant?: TeamSupplementGrant;
   researchTheme?: string;
+  resourceType?: string;
 };
 
 export type TeamCreateDataObject = {
@@ -129,7 +130,8 @@ export type TeamListItemDataObject = Pick<
   | 'teamType'
   | 'tags'
   | 'labCount'
-> & { memberCount: number };
+  | 'researchTheme'
+> & { memberCount: number; resourceType?: string };
 
 export type ListTeamDataObject = ListResponse<TeamListItemDataObject>;
 

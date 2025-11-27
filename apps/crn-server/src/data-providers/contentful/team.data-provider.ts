@@ -343,6 +343,8 @@ export const parseContentfulGraphQlTeamListItem = (
     tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
     memberCount: numberOfMembers,
     labCount: labIds.size,
+    researchTheme: item.researchTheme?.name ?? undefined,
+    resourceType: linkedProject?.resourceType?.name ?? undefined,
   };
 };
 
@@ -653,6 +655,7 @@ export const parseContentfulGraphQlTeam = (
       ? linkedProject.proposal.sys.id
       : undefined,
     researchTheme: item.researchTheme?.name ?? undefined,
+    resourceType: linkedProject?.resourceType?.name ?? undefined,
   };
 };
 

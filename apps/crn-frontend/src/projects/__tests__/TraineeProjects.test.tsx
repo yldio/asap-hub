@@ -38,7 +38,7 @@ beforeEach(() => {
             firstName: 'Member',
             lastName: 'One',
             displayName: 'Member One',
-            role: 'Trainee',
+            role: 'Trainee Project - Lead',
           },
           {
             id: 'trainer',
@@ -89,7 +89,7 @@ it('renders trainer and members as links', () => {
             firstName: 'Morgan',
             lastName: 'Trainee',
             displayName: 'Morgan Trainee',
-            role: 'Trainee',
+            role: 'Trainee Project - Lead',
           },
           {
             id: 'trainer-2',

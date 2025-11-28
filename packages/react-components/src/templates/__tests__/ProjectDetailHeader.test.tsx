@@ -99,7 +99,7 @@ describe('getTeamIcon', () => {
           firstName: 'Trainee',
           lastName: 'Name',
           href: '/users/trainee-1',
-          role: 'Trainee',
+          role: 'Trainee Project - Lead',
         },
         {
           id: 'trainer-1',
@@ -184,7 +184,7 @@ describe('ProjectDetailHeader', () => {
         firstName: 'Emily',
         lastName: 'Trainee',
         href: '/users/trainee-1',
-        role: 'Trainee',
+        role: 'Trainee Project - Lead',
       },
       {
         id: 'trainer-1',
@@ -512,37 +512,37 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
     });
 
-    it('renders multiple trainers correctly', () => {
-      const projectWithMultipleTrainers = {
+    it('renders multiple mentors correctly', () => {
+      const projectWithMultipleMentors = {
         ...mockTraineeProject,
         members: [
           ...mockTraineeProject.members,
           {
-            id: 'trainer-2',
-            displayName: 'Dr. John Lead',
+            id: 'mentor-2',
+            displayName: 'Dr. John Mentor',
             firstName: 'John',
-            lastName: 'Lead',
-            href: '/users/trainer-2',
-            role: 'Trainee Project - Lead',
+            lastName: 'Mentor',
+            href: '/users/mentor-2',
+            role: 'Trainee Project - Mentor',
           },
           {
-            id: 'trainer-3',
+            id: 'mentor-3',
             displayName: 'Dr. Jane Key',
             firstName: 'Jane',
             lastName: 'Key',
-            href: '/users/trainer-3',
+            href: '/users/mentor-3',
             role: 'Trainee Project - Key Personnel',
           },
         ],
       };
       render(
         <ProjectDetailHeader
-          {...projectWithMultipleTrainers}
+          {...projectWithMultipleMentors}
           aboutHref="/projects/trainee/1/about"
         />,
       );
       expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
-      expect(screen.getByText('Dr. John Lead')).toBeInTheDocument();
+      expect(screen.getByText('Dr. John Mentor')).toBeInTheDocument();
       expect(screen.getByText('Dr. Jane Key')).toBeInTheDocument();
     });
 

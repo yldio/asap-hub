@@ -86,7 +86,7 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Martinez',
       email: 'david.m@example.com',
       href: '/users/2',
-      role: 'Trainee',
+      role: 'Trainee Project - Lead',
     },
     {
       id: '3',
@@ -95,7 +95,7 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Chen',
       email: 'emily.c@example.com',
       href: '/users/3',
-      role: 'Trainee',
+      role: 'Trainee Project - Lead',
     },
     {
       id: '1',
@@ -366,19 +366,19 @@ describe('ProjectCard - Trainee Project', () => {
     expect(getAllByText(/Dr\./)).toHaveLength(3);
   });
 
-  it('handles multiple trainers correctly', () => {
-    const projectWithMultipleTrainers = {
+  it('handles multiple mentors correctly', () => {
+    const projectWithMultipleMentors = {
       ...traineeProjectProps,
       members: [
         ...traineeProjectProps.members,
         {
           id: '4',
-          displayName: 'Dr. John Lead',
+          displayName: 'Dr. John Mentor',
           firstName: 'John',
-          lastName: 'Lead',
-          email: 'john.l@example.com',
+          lastName: 'Mentor',
+          email: 'john.m@example.com',
           href: '/users/4',
-          role: 'Trainee Project - Lead',
+          role: 'Trainee Project - Mentor',
         },
         {
           id: '5',
@@ -392,9 +392,9 @@ describe('ProjectCard - Trainee Project', () => {
       ],
     };
     const { getByText } = render(
-      <ProjectCard {...projectWithMultipleTrainers} />,
+      <ProjectCard {...projectWithMultipleMentors} />,
     );
-    expect(getByText('Dr. John Lead')).toBeVisible();
+    expect(getByText('Dr. John Mentor')).toBeVisible();
     expect(getByText('Dr. Jane Key')).toBeVisible();
     expect(getByText('Dr. Amanda Foster')).toBeVisible();
   });

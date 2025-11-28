@@ -8,7 +8,7 @@ import {
   parseProjectTeamMember,
   type ProjectMembershipItem,
 } from '../../../src/data-providers/contentful/project.data-provider';
-import { TraineeProject } from '@asap-hub/model';
+import { TraineeProject, TraineeProjectDetail } from '@asap-hub/model';
 import {
   getExpectedDiscoveryProject,
   getExpectedDiscoveryProjectDetail,
@@ -695,7 +695,9 @@ describe('parseContentfulProjectDetail', () => {
       ],
     });
 
-    const result = parseContentfulProjectDetail(traineeItem);
+    const result = parseContentfulProjectDetail(
+      traineeItem,
+    ) as TraineeProjectDetail;
 
     expect(result).toMatchObject({
       id: 'trainee-1',
@@ -718,6 +720,20 @@ describe('parseContentfulProjectDetail', () => {
           link: 'https://example.com/trainee',
         },
       ],
+    });
+
+    // Verify members are included and ordered correctly: trainees first, then trainers
+    expect(result.members).toBeDefined();
+    expect(result.members).toHaveLength(2);
+    // Trainee should come first
+    expect(result.members[0]).toMatchObject({
+      id: 'user-trainee',
+      role: 'Trainee',
+    });
+    // Trainer should come after
+    expect(result.members[1]).toMatchObject({
+      id: 'user-trainer',
+      role: 'Trainee Project - Mentor',
     });
   });
 

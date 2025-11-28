@@ -60,19 +60,20 @@ const mockResourceProject: ResourceProject = {
   members: mockResourceMembers,
 };
 
-const mockTraineeTrainer: ProjectMember = {
-  id: 'trainer-1',
-  displayName: 'Taylor Trainer',
-  firstName: 'Taylor',
-  lastName: 'Trainer',
-};
-
 const mockTraineeProjectMembers: ReadonlyArray<ProjectMember> = [
   {
     id: 'trainee-1',
     displayName: 'Dana Trainee',
     firstName: 'Dana',
     lastName: 'Trainee',
+    role: 'Trainee',
+  },
+  {
+    id: 'trainer-1',
+    displayName: 'Taylor Trainer',
+    firstName: 'Taylor',
+    lastName: 'Trainer',
+    role: 'Trainee Project - Mentor',
   },
 ];
 
@@ -85,7 +86,6 @@ const mockTraineeProject: TraineeProject = {
   duration: '1 yr',
   tags: [],
   projectType: 'Trainee Project',
-  trainer: mockTraineeTrainer,
   members: mockTraineeProjectMembers,
 };
 

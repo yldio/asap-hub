@@ -32,18 +32,20 @@ beforeEach(() => {
         endDate: '2024-12-01',
         duration: '11 mos',
         tags: [],
-        trainer: {
-          id: 'trainer',
-          firstName: 'Trainer',
-          lastName: 'One',
-          displayName: 'Trainer One',
-        },
         members: [
           {
             id: 'member-1',
             firstName: 'Member',
             lastName: 'One',
             displayName: 'Member One',
+            role: 'Trainee',
+          },
+          {
+            id: 'trainer',
+            firstName: 'Trainer',
+            lastName: 'One',
+            displayName: 'Trainer One',
+            role: 'Trainee Project - Mentor',
           },
         ],
       },
@@ -81,18 +83,20 @@ it('renders trainer and members as links', () => {
         endDate: '2025-03-01',
         duration: '1 yr',
         tags: [],
-        trainer: {
-          id: 'trainer-2',
-          firstName: 'Taylor',
-          lastName: 'Trainer',
-          displayName: 'Taylor Trainer',
-        },
         members: [
           {
             id: 'member-2',
             firstName: 'Morgan',
             lastName: 'Trainee',
             displayName: 'Morgan Trainee',
+            role: 'Trainee',
+          },
+          {
+            id: 'trainer-2',
+            firstName: 'Taylor',
+            lastName: 'Trainer',
+            displayName: 'Taylor Trainer',
+            role: 'Trainee Project - Mentor',
           },
         ],
       },

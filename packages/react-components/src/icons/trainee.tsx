@@ -1,12 +1,12 @@
 import React from 'react';
 
-interface TrainerIconProps {
+interface TraineeIconProps {
   readonly width?: number;
   readonly height?: number;
   readonly color?: string;
 }
 
-const TrainerIcon: React.FC<TrainerIconProps> = ({
+const TraineeIcon: React.FC<TraineeIconProps> = ({
   width = 25,
   height = 24,
   color = '#4D646B',
@@ -18,7 +18,7 @@ const TrainerIcon: React.FC<TrainerIconProps> = ({
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <title>Trainer Icon</title>
+    <title>Trainee Icon</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -44,4 +44,4 @@ const TrainerIcon: React.FC<TrainerIconProps> = ({
   </svg>
 );
 
-export default TrainerIcon;
+export default TraineeIcon;

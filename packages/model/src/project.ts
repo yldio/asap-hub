@@ -75,7 +75,6 @@ export type ResourceProject = BaseProject & {
 
 export type TraineeProject = BaseProject & {
   readonly projectType: 'Trainee Project';
-  readonly trainer: ProjectMember;
   readonly members: ReadonlyArray<ProjectMember>;
 };
 

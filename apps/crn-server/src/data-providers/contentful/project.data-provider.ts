@@ -187,32 +187,28 @@ export const parseContentfulProject = (
     }
 
     case 'Trainee Project': {
+      // this is done to only receive the members with correct roles
       const userMembers = members
         .filter((m) => m.projectMember?.__typename === 'Users')
         .map((m) => parseProjectUserMember(m));
 
-      // First member with "Trainer" or "Project Lead" role is the trainer
-      const trainerCandidate = userMembers.find(
+      // Separate members into two lists:
+      // - Trainees: "Trainee" role
+      // - Trainers: "Trainee Project - Lead", "Trainee Project - Mentor", or "Trainee Project - Key Personnel"
+      const trainees = userMembers.filter((m) => m.role === 'Trainee');
+      const trainers = userMembers.filter(
         (m) =>
-          m.role === 'Project CoLead' ||
-          m.role === 'Project Lead' ||
-          m.role === 'Project Manager',
+          m.role === 'Trainee Project - Lead' ||
+          m.role === 'Trainee Project - Mentor' ||
+          m.role === 'Trainee Project - Key Personnel',
       );
 
-      const trainer =
-        trainerCandidate ??
-        userMembers[0] ??
-        ({
-          id: `trainer-unknown-${item.sys.id}`,
-          displayName: '',
-        } as ProjectMember);
-
-      const trainees = userMembers.filter((m) => m.id !== trainer.id);
+      // Members array: trainees first, then trainers (allows multiple of each)
+      const allMembers = [...trainees, ...trainers];
 
       return {
         ...baseProject,
-        trainer,
-        members: trainees,
+        members: allMembers,
       } as TraineeProject;
     }
 

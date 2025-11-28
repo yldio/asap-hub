@@ -8,12 +8,12 @@ import {
   ResourceTeamIcon,
   ResourceMemberIcon,
   MemberIcon,
+  TraineeIcon,
 } from '../icons';
 import { createMailTo } from '../mail';
 import { UsersList, TabNav, ProjectDuration } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { getStatusPillAccent } from '../organisms/ProjectCard';
-import TrainerIcon from '../icons/trainer';
 import PageInfoContainer from './PageInfoContainer';
 import Toast from '../organisms/Toast';
 
@@ -139,21 +139,13 @@ export const getTeamIcon = (project: ProjectDetail) => {
     return <ResourceMemberIcon />;
   }
   if (project.projectType === 'Trainee Project') {
-    return <TrainerIcon />;
+    return <TraineeIcon />;
   }
   return null;
 };
 
 const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
   const { pointOfContactEmail, aboutHref } = project;
-
-  const getMemberIcon = () => {
-    if (project.projectType === 'Trainee Project') {
-      return <MemberIcon />;
-    }
-    // istanbul ignore next - only used for Trainee projects
-    return null;
-  };
 
   return (
     <>
@@ -317,18 +309,44 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
                 </div>
               )}
 
-            {project.projectType === 'Trainee Project' && (
-              <>
-                <div css={metadataRowStyles}>
-                  <span css={iconStyles}>{getTeamIcon(project)}</span>
-                  <UsersList users={[project.trainer]} separator="•" noMargin />
-                </div>
-                <div css={metadataRowStyles}>
-                  <span css={iconStyles}>{getMemberIcon()}</span>
-                  <UsersList users={project.members} separator="•" noMargin />
-                </div>
-              </>
-            )}
+            {project.projectType === 'Trainee Project' &&
+              (() => {
+                // Group members by role for Trainee projects
+                // Trainees: "Trainee" role
+                // Trainers: "Trainee Project - Lead", "Trainee Project - Mentor", or "Trainee Project - Key Personnel"
+                const trainees = project.members.filter(
+                  (m) => m.role === 'Trainee',
+                );
+                const trainers = project.members.filter(
+                  (m) =>
+                    m.role === 'Trainee Project - Lead' ||
+                    m.role === 'Trainee Project - Mentor' ||
+                    m.role === 'Trainee Project - Key Personnel',
+                );
+
+                return (
+                  <>
+                    {/* First row: Trainees */}
+                    {trainees.length > 0 && (
+                      <div css={metadataRowStyles}>
+                        <span css={iconStyles}>
+                          <TraineeIcon />
+                        </span>
+                        <UsersList users={trainees} separator="•" noMargin />
+                      </div>
+                    )}
+                    {/* Second row: Trainers (Lead, Mentor, Key Personnel) */}
+                    {trainers.length > 0 && (
+                      <div css={metadataRowStyles}>
+                        <span css={iconStyles}>
+                          <MemberIcon />
+                        </span>
+                        <UsersList users={trainers} separator="•" noMargin />
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
 
             {/* Duration */}
             {(project.projectType === 'Trainee Project' ||

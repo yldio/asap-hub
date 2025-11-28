@@ -19,13 +19,15 @@ const mockTraineeProject: TraineeProjectDetailType = {
   duration: '5 mos',
   tags: [],
   projectType: 'Trainee Project',
-  trainer: {
-    id: 'trainer-1',
-    displayName: 'Taylor Trainer',
-    firstName: 'Taylor',
-    lastName: 'Trainer',
-  },
-  members: [],
+  members: [
+    {
+      id: 'trainer-1',
+      displayName: 'Taylor Trainer',
+      firstName: 'Taylor',
+      lastName: 'Trainer',
+      role: 'Trainee Project - Mentor',
+    },
+  ],
   originalGrant: 'Original Grant',
   originalGrantProposalId: 'proposal-1',
   contactEmail: 'contact@example.com',

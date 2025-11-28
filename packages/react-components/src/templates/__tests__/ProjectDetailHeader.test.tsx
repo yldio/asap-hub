@@ -88,17 +88,10 @@ describe('getTeamIcon', () => {
     );
   });
 
-  it('returns TrainerIcon for Trainee projects', () => {
+  it('returns TraineeIcon for Trainee projects', () => {
     const traineeProject: ProjectDetail = {
       ...baseProject,
       projectType: 'Trainee Project',
-      trainer: {
-        id: 'trainer-1',
-        displayName: 'Dr. Trainer',
-        firstName: 'Trainer',
-        lastName: 'Name',
-        href: '/users/trainer-1',
-      },
       members: [
         {
           id: 'trainee-1',
@@ -106,6 +99,15 @@ describe('getTeamIcon', () => {
           firstName: 'Trainee',
           lastName: 'Name',
           href: '/users/trainee-1',
+          role: 'Trainee',
+        },
+        {
+          id: 'trainer-1',
+          displayName: 'Dr. Trainer',
+          firstName: 'Trainer',
+          lastName: 'Name',
+          href: '/users/trainer-1',
+          role: 'Trainee Project - Mentor',
         },
       ],
     };
@@ -175,13 +177,6 @@ describe('ProjectDetailHeader', () => {
   const mockTraineeProject: ProjectDetail = {
     ...baseProject,
     projectType: 'Trainee Project',
-    trainer: {
-      id: 'trainer-1',
-      displayName: 'Dr. Sarah Mentor',
-      firstName: 'Sarah',
-      lastName: 'Mentor',
-      href: '/users/trainer-1',
-    },
     members: [
       {
         id: 'trainee-1',
@@ -189,6 +184,15 @@ describe('ProjectDetailHeader', () => {
         firstName: 'Emily',
         lastName: 'Trainee',
         href: '/users/trainee-1',
+        role: 'Trainee',
+      },
+      {
+        id: 'trainer-1',
+        displayName: 'Dr. Sarah Mentor',
+        firstName: 'Sarah',
+        lastName: 'Mentor',
+        href: '/users/trainer-1',
+        role: 'Trainee Project - Mentor',
       },
     ],
   };
@@ -488,7 +492,17 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Trainee Project')).toBeInTheDocument();
     });
 
-    it('renders trainer information', () => {
+    it('renders trainees in the first row', () => {
+      render(
+        <ProjectDetailHeader
+          {...mockTraineeProject}
+          aboutHref="/projects/trainee/1/about"
+        />,
+      );
+      expect(screen.getByText('Emily Trainee')).toBeInTheDocument();
+    });
+
+    it('renders trainers in the second row', () => {
       render(
         <ProjectDetailHeader
           {...mockTraineeProject}
@@ -498,14 +512,38 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
     });
 
-    it('renders trainee members', () => {
+    it('renders multiple trainers correctly', () => {
+      const projectWithMultipleTrainers = {
+        ...mockTraineeProject,
+        members: [
+          ...mockTraineeProject.members,
+          {
+            id: 'trainer-2',
+            displayName: 'Dr. John Lead',
+            firstName: 'John',
+            lastName: 'Lead',
+            href: '/users/trainer-2',
+            role: 'Trainee Project - Lead',
+          },
+          {
+            id: 'trainer-3',
+            displayName: 'Dr. Jane Key',
+            firstName: 'Jane',
+            lastName: 'Key',
+            href: '/users/trainer-3',
+            role: 'Trainee Project - Key Personnel',
+          },
+        ],
+      };
       render(
         <ProjectDetailHeader
-          {...mockTraineeProject}
+          {...projectWithMultipleTrainers}
           aboutHref="/projects/trainee/1/about"
         />,
       );
-      expect(screen.getByText('Emily Trainee')).toBeInTheDocument();
+      expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
+      expect(screen.getByText('Dr. John Lead')).toBeInTheDocument();
+      expect(screen.getByText('Dr. Jane Key')).toBeInTheDocument();
     });
 
     /* eslint-disable jest/no-commented-out-tests */

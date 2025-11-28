@@ -22,9 +22,9 @@ import {
   ResourceMemberIcon,
   MemberIcon,
   InactiveBadgeIcon,
+  TraineeIcon,
 } from '../icons';
 import { fern, lead } from '../colors';
-import TrainerIcon from '../icons/trainer';
 
 const cardStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -216,34 +216,56 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
             )}
 
           {/* Members for Trainee Projects */}
-          {project.projectType === 'Trainee Project' && (
-            <div css={traineeMetadataWrapperStyles}>
-              <div css={metadataRowStyles}>
-                <span css={iconStyles}>
-                  <TrainerIcon />
-                </span>
-                <UsersList
-                  label="Members"
-                  users={[project.trainer]}
-                  separator="•"
-                  noMargin
-                  max={3}
-                />
-              </div>
-              <div css={metadataRowStyles}>
-                <span css={iconStyles}>
-                  <MemberIcon />
-                </span>
-                <UsersList
-                  label="Members"
-                  users={project.members}
-                  separator="•"
-                  noMargin
-                  max={3}
-                />
-              </div>
-            </div>
-          )}
+          {project.projectType === 'Trainee Project' &&
+            (() => {
+              // Group members by role for Trainee projects
+              // Trainees: "Trainee" role
+              // Trainers: "Trainee Project - Lead", "Trainee Project - Mentor", or "Trainee Project - Key Personnel"
+              const trainees = project.members.filter(
+                (m) => m.role === 'Trainee',
+              );
+              const trainers = project.members.filter(
+                (m) =>
+                  m.role === 'Trainee Project - Lead' ||
+                  m.role === 'Trainee Project - Mentor' ||
+                  m.role === 'Trainee Project - Key Personnel',
+              );
+
+              return (
+                <div css={traineeMetadataWrapperStyles}>
+                  {/* First row: Trainees */}
+                  {trainees.length > 0 && (
+                    <div css={metadataRowStyles}>
+                      <span css={iconStyles}>
+                        <TraineeIcon />
+                      </span>
+                      <UsersList
+                        label="Members"
+                        users={trainees}
+                        separator="•"
+                        noMargin
+                        max={3}
+                      />
+                    </div>
+                  )}
+                  {/* Second row: Trainers (Lead, Mentor, Key Personnel) */}
+                  {trainers.length > 0 && (
+                    <div css={metadataRowStyles}>
+                      <span css={iconStyles}>
+                        <MemberIcon />
+                      </span>
+                      <UsersList
+                        label="Members"
+                        users={trainers}
+                        separator="•"
+                        noMargin
+                        max={3}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
           {/* Duration */}
           <ProjectDuration

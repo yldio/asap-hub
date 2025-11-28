@@ -78,14 +78,6 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
   projectType: 'Trainee Project',
   title: 'Alpha-Synuclein Aggregation Study',
   status: 'Active',
-  trainer: {
-    id: '1',
-    displayName: 'Dr. Amanda Foster',
-    firstName: 'Amanda',
-    lastName: 'Foster',
-    email: 'amanda.f@example.com',
-    href: '/users/1',
-  },
   members: [
     {
       id: '2',
@@ -94,6 +86,7 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Martinez',
       email: 'david.m@example.com',
       href: '/users/2',
+      role: 'Trainee',
     },
     {
       id: '3',
@@ -102,6 +95,16 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Chen',
       email: 'emily.c@example.com',
       href: '/users/3',
+      role: 'Trainee',
+    },
+    {
+      id: '1',
+      displayName: 'Dr. Amanda Foster',
+      firstName: 'Amanda',
+      lastName: 'Foster',
+      email: 'amanda.f@example.com',
+      href: '/users/1',
+      role: 'Trainee Project - Mentor',
     },
   ],
 };
@@ -346,21 +349,54 @@ describe('ProjectCard - Trainee Project', () => {
     expect(getByText('Trainee Project')).toBeVisible();
   });
 
-  it('renders the trainer', () => {
-    const { getByText } = render(<ProjectCard {...traineeProjectProps} />);
-    expect(getByText('Dr. Amanda Foster')).toBeVisible();
-  });
-
-  it('renders the project members', () => {
+  it('renders trainees in the first row', () => {
     const { getByText } = render(<ProjectCard {...traineeProjectProps} />);
     expect(getByText('Dr. David Martinez')).toBeVisible();
     expect(getByText('Dr. Emily Chen')).toBeVisible();
   });
 
-  it('renders both trainer and members separately', () => {
+  it('renders trainers in the second row', () => {
+    const { getByText } = render(<ProjectCard {...traineeProjectProps} />);
+    expect(getByText('Dr. Amanda Foster')).toBeVisible();
+  });
+
+  it('renders trainees and trainers in separate rows', () => {
     const { getAllByText } = render(<ProjectCard {...traineeProjectProps} />);
-    // Should have trainer listed once and members listed separately
-    expect(getAllByText(/Dr\./)).toHaveLength(3); // 1 trainer + 2 members
+    // Should have all members displayed (2 trainees + 1 trainer)
+    expect(getAllByText(/Dr\./)).toHaveLength(3);
+  });
+
+  it('handles multiple trainers correctly', () => {
+    const projectWithMultipleTrainers = {
+      ...traineeProjectProps,
+      members: [
+        ...traineeProjectProps.members,
+        {
+          id: '4',
+          displayName: 'Dr. John Lead',
+          firstName: 'John',
+          lastName: 'Lead',
+          email: 'john.l@example.com',
+          href: '/users/4',
+          role: 'Trainee Project - Lead',
+        },
+        {
+          id: '5',
+          displayName: 'Dr. Jane Key',
+          firstName: 'Jane',
+          lastName: 'Key',
+          email: 'jane.k@example.com',
+          href: '/users/5',
+          role: 'Trainee Project - Key Personnel',
+        },
+      ],
+    };
+    const { getByText } = render(
+      <ProjectCard {...projectWithMultipleTrainers} />,
+    );
+    expect(getByText('Dr. John Lead')).toBeVisible();
+    expect(getByText('Dr. Jane Key')).toBeVisible();
+    expect(getByText('Dr. Amanda Foster')).toBeVisible();
   });
 });
 

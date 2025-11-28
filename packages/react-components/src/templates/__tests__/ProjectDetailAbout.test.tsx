@@ -254,13 +254,6 @@ describe('ProjectDetailAbout', () => {
       const traineeProject: ProjectDetail = {
         ...baseProject,
         projectType: 'Trainee Project',
-        trainer: {
-          id: 'trainer-1',
-          displayName: 'Dr. Sarah Mentor',
-          firstName: 'Sarah',
-          lastName: 'Mentor',
-          href: '/users/trainer-1',
-        },
         members: [
           {
             id: 'trainee-1',
@@ -268,6 +261,15 @@ describe('ProjectDetailAbout', () => {
             firstName: 'Emily',
             lastName: 'Trainee',
             href: '/users/trainee-1',
+            role: 'Trainee',
+          },
+          {
+            id: 'trainer-1',
+            displayName: 'Dr. Sarah Mentor',
+            firstName: 'Sarah',
+            lastName: 'Mentor',
+            href: '/users/trainer-1',
+            role: 'Trainee Project - Mentor',
           },
         ],
       };
@@ -469,14 +471,6 @@ describe('ProjectDetailAbout', () => {
       const completeTraineeProject: ProjectDetail = {
         ...baseProject,
         projectType: 'Trainee Project',
-        trainer: {
-          id: 'trainer-1',
-          displayName: 'Dr. Sarah Mentor',
-          firstName: 'Sarah',
-          lastName: 'Mentor',
-          href: '/users/trainer-1',
-          role: 'Principal Investigator',
-        },
         members: [
           {
             id: 'trainee-1',
@@ -484,7 +478,7 @@ describe('ProjectDetailAbout', () => {
             firstName: 'Emily',
             lastName: 'Trainee',
             href: '/users/trainee-1',
-            role: 'PhD Candidate',
+            role: 'Trainee',
           },
           {
             id: 'trainee-2',
@@ -492,7 +486,15 @@ describe('ProjectDetailAbout', () => {
             firstName: 'Michael',
             lastName: 'Student',
             href: '/users/trainee-2',
-            role: 'Postdoctoral Fellow',
+            role: 'Trainee',
+          },
+          {
+            id: 'trainer-1',
+            displayName: 'Dr. Sarah Mentor',
+            firstName: 'Sarah',
+            lastName: 'Mentor',
+            href: '/users/trainer-1',
+            role: 'Trainee Project - Mentor',
           },
         ],
       };

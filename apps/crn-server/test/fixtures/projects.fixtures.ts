@@ -228,7 +228,7 @@ export const getTraineeProjectGraphqlItem = (): GraphQLProject => ({
     items: [
       {
         sys: { id: 'membership-trainee-trainer' },
-        role: 'Project Lead',
+        role: 'Trainee Project - Mentor',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-trainer' },
@@ -243,7 +243,7 @@ export const getTraineeProjectGraphqlItem = (): GraphQLProject => ({
       },
       {
         sys: { id: 'membership-trainee-trainee' },
-        role: 'Key Personnel',
+        role: 'Trainee',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-trainee' },
@@ -558,16 +558,6 @@ export const getExpectedTraineeProject = (): TraineeProject => ({
   applicationNumber: undefined,
   contactEmail: undefined,
   projectType: 'Trainee Project',
-  trainer: {
-    id: 'user-trainer',
-    displayName: 'Taylor (Tay) Mills',
-    firstName: 'Taylor',
-    lastName: 'Mills',
-    avatarUrl: undefined,
-    role: 'Project Lead',
-    email: 'taylor@example.com',
-    alumniSinceDate: undefined,
-  },
   members: [
     {
       id: 'user-trainee',
@@ -575,8 +565,18 @@ export const getExpectedTraineeProject = (): TraineeProject => ({
       firstName: 'Dana',
       lastName: 'Lopez',
       avatarUrl: undefined,
-      role: 'Key Personnel',
+      role: 'Trainee',
       email: 'dana@example.com',
+      alumniSinceDate: undefined,
+    },
+    {
+      id: 'user-trainer',
+      displayName: 'Taylor (Tay) Mills',
+      firstName: 'Taylor',
+      lastName: 'Mills',
+      avatarUrl: undefined,
+      role: 'Trainee Project - Mentor',
+      email: 'taylor@example.com',
       alumniSinceDate: undefined,
     },
   ],
@@ -891,7 +891,7 @@ export const getTraineeProjectDetailGraphqlItem = (overrides?: {
       items: [
         {
           sys: { id: 'membership-trainee-trainer' },
-          role: 'Project Lead',
+          role: 'Trainee Project - Mentor',
           projectMember: {
             __typename: 'Users',
             sys: { id: 'user-trainer' },
@@ -906,7 +906,7 @@ export const getTraineeProjectDetailGraphqlItem = (overrides?: {
         },
         {
           sys: { id: 'membership-trainee-trainee' },
-          role: 'Key Personnel',
+          role: 'Trainee',
           projectMember: {
             __typename: 'Users',
             sys: { id: 'user-trainee' },

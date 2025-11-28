@@ -10,14 +10,6 @@ const mockProjects: ComponentProps<typeof TraineeProjectsList>['projects'] = [
     title: 'Test Trainee Project 1',
     status: 'Active',
     projectType: 'Trainee Project' as const,
-    trainer: {
-      id: '1',
-      displayName: 'Dr. Mentor One',
-      firstName: 'Mentor',
-      lastName: 'One',
-      email: 'mentor1@example.com',
-      href: '/users/1',
-    },
     members: [
       {
         id: '2',
@@ -26,6 +18,16 @@ const mockProjects: ComponentProps<typeof TraineeProjectsList>['projects'] = [
         lastName: 'One',
         email: 'student1@example.com',
         href: '/users/2',
+        role: 'Trainee',
+      },
+      {
+        id: '1',
+        displayName: 'Dr. Mentor One',
+        firstName: 'Mentor',
+        lastName: 'One',
+        email: 'mentor1@example.com',
+        href: '/users/1',
+        role: 'Trainee Project - Mentor',
       },
     ],
     startDate: '2023-01-01',
@@ -38,14 +40,6 @@ const mockProjects: ComponentProps<typeof TraineeProjectsList>['projects'] = [
     title: 'Test Trainee Project 2',
     status: 'Completed',
     projectType: 'Trainee Project' as const,
-    trainer: {
-      id: '3',
-      displayName: 'Dr. Mentor Two',
-      firstName: 'Mentor',
-      lastName: 'Two',
-      email: 'mentor2@example.com',
-      href: '/users/3',
-    },
     members: [
       {
         id: '4',
@@ -54,6 +48,16 @@ const mockProjects: ComponentProps<typeof TraineeProjectsList>['projects'] = [
         lastName: 'Two',
         email: 'student2@example.com',
         href: '/users/4',
+        role: 'Trainee',
+      },
+      {
+        id: '3',
+        displayName: 'Dr. Mentor Two',
+        firstName: 'Mentor',
+        lastName: 'Two',
+        email: 'mentor2@example.com',
+        href: '/users/3',
+        role: 'Trainee Project - Mentor',
       },
     ],
     startDate: '2022-06-01',

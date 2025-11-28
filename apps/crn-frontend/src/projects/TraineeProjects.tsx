@@ -39,7 +39,6 @@ const TraineeProjectsListContent: FC<TraineeProjectsListContentProps> = ({
     () =>
       (projects.items as TraineeProject[]).map((project) => ({
         ...project,
-        trainer: withMemberHref(project.trainer),
         members: project.members.map(withMemberHref),
       })),
     [projects],

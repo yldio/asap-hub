@@ -55,14 +55,16 @@ describe('project utils', () => {
     duration: '1 yr',
     tags: [],
     projectType: 'Trainee Project',
-    trainer: {
-      id: 'trainer-1',
-      displayName: 'Taylor Trainer',
-    },
     members: [
       {
         id: 'trainee-member',
         displayName: 'Dana Trainee',
+        role: 'Trainee',
+      },
+      {
+        id: 'trainer-1',
+        displayName: 'Taylor Trainer',
+        role: 'Trainee Project - Mentor',
       },
     ],
   };

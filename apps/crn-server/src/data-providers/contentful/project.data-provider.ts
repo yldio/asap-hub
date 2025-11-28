@@ -187,24 +187,33 @@ export const parseContentfulProject = (
     }
 
     case 'Trainee Project': {
-      // this is done to only receive the members with correct roles
+      // Only valid roles for Trainee Projects:
+      // - Trainees: "Trainee Project - Lead"
+      // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
       const userMembers = members
         .filter((m) => m.projectMember?.__typename === 'Users')
-        .map((m) => parseProjectUserMember(m));
+        .map((m) => parseProjectUserMember(m))
+        .filter(
+          (m) =>
+            m.role === 'Trainee Project - Lead' ||
+            m.role === 'Trainee Project - Mentor' ||
+            m.role === 'Trainee Project - Key Personnel',
+        );
 
       // Separate members into two lists:
-      // - Trainees: "Trainee" role
-      // - Trainers: "Trainee Project - Lead", "Trainee Project - Mentor", or "Trainee Project - Key Personnel"
-      const trainees = userMembers.filter((m) => m.role === 'Trainee');
-      const trainers = userMembers.filter(
+      // - Trainees: "Trainee Project - Lead"
+      // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
+      const trainees = userMembers.filter(
+        (m) => m.role === 'Trainee Project - Lead',
+      );
+      const mentors = userMembers.filter(
         (m) =>
-          m.role === 'Trainee Project - Lead' ||
           m.role === 'Trainee Project - Mentor' ||
           m.role === 'Trainee Project - Key Personnel',
       );
 
-      // Members array: trainees first, then trainers (allows multiple of each)
-      const allMembers = [...trainees, ...trainers];
+      // Members array: trainees first, then mentors (allows multiple of each)
+      const allMembers = [...trainees, ...mentors];
 
       return {
         ...baseProject,
@@ -336,24 +345,33 @@ export const parseContentfulProjectDetail = (
     }
 
     case 'Trainee Project': {
-      // this is done to only receive the members with correct roles
+      // Only valid roles for Trainee Projects:
+      // - Trainees: "Trainee Project - Lead"
+      // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
       const userMembers = members
         .filter((m) => m.projectMember?.__typename === 'Users')
-        .map((m) => parseProjectUserMember(m));
+        .map((m) => parseProjectUserMember(m))
+        .filter(
+          (m) =>
+            m.role === 'Trainee Project - Lead' ||
+            m.role === 'Trainee Project - Mentor' ||
+            m.role === 'Trainee Project - Key Personnel',
+        );
 
       // Separate members into two lists:
-      // - Trainees: "Trainee" role
-      // - Trainers: "Trainee Project - Lead", "Trainee Project - Mentor", or "Trainee Project - Key Personnel"
-      const trainees = userMembers.filter((m) => m.role === 'Trainee');
-      const trainers = userMembers.filter(
+      // - Trainees: "Trainee Project - Lead"
+      // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
+      const trainees = userMembers.filter(
+        (m) => m.role === 'Trainee Project - Lead',
+      );
+      const mentors = userMembers.filter(
         (m) =>
-          m.role === 'Trainee Project - Lead' ||
           m.role === 'Trainee Project - Mentor' ||
           m.role === 'Trainee Project - Key Personnel',
       );
 
-      // Members array: trainees first, then trainers (allows multiple of each)
-      const allMembers = [...trainees, ...trainers];
+      // Members array: trainees first, then mentors (allows multiple of each)
+      const allMembers = [...trainees, ...mentors];
 
       return {
         ...baseProject,

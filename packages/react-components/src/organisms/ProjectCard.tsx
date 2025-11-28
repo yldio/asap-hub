@@ -219,14 +219,13 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
           {project.projectType === 'Trainee Project' &&
             (() => {
               // Group members by role for Trainee projects
-              // Trainees: "Trainee" role
-              // Trainers: "Trainee Project - Lead", "Trainee Project - Mentor", or "Trainee Project - Key Personnel"
+              // Trainees: "Trainee Project - Lead"
+              // Mentors: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
               const trainees = project.members.filter(
-                (m) => m.role === 'Trainee',
+                (m) => m.role === 'Trainee Project - Lead',
               );
-              const trainers = project.members.filter(
+              const mentors = project.members.filter(
                 (m) =>
-                  m.role === 'Trainee Project - Lead' ||
                   m.role === 'Trainee Project - Mentor' ||
                   m.role === 'Trainee Project - Key Personnel',
               );
@@ -248,15 +247,15 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
                       />
                     </div>
                   )}
-                  {/* Second row: Trainers (Lead, Mentor, Key Personnel) */}
-                  {trainers.length > 0 && (
+                  {/* Second row: Mentors */}
+                  {mentors.length > 0 && (
                     <div css={metadataRowStyles}>
                       <span css={iconStyles}>
                         <MemberIcon />
                       </span>
                       <UsersList
                         label="Members"
-                        users={trainers}
+                        users={mentors}
                         separator="•"
                         noMargin
                         max={3}

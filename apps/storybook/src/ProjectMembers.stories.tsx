@@ -152,7 +152,7 @@ export const RealWorldExample = () => (
             displayName: 'Alex Chen',
             firstName: 'Alex',
             lastName: 'Chen',
-            role: 'Trainee',
+            role: 'Trainee Project - Lead',
             href: '/users/alex-chen',
             teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
           },
@@ -161,7 +161,7 @@ export const RealWorldExample = () => (
             displayName: 'Maria Garcia',
             firstName: 'Maria',
             lastName: 'Garcia',
-            role: 'Trainee',
+            role: 'Trainee Project - Lead',
             href: '/users/maria-garcia',
             teams: [
               { id: 'team-1', displayName: 'Alpha Team' },
@@ -173,7 +173,7 @@ export const RealWorldExample = () => (
             displayName: 'Dr. Sarah Martinez',
             firstName: 'Sarah',
             lastName: 'Martinez',
-            role: 'Trainee Project - Lead',
+            role: 'Trainee Project - Mentor',
             href: '/users/sarah-martinez',
             teams: [
               { id: 'team-1', displayName: 'Alpha Team' },

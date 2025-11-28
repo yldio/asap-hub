@@ -243,7 +243,7 @@ export const getTraineeProjectGraphqlItem = (): GraphQLProject => ({
       },
       {
         sys: { id: 'membership-trainee-trainee' },
-        role: 'Trainee',
+        role: 'Trainee Project - Lead',
         projectMember: {
           __typename: 'Users',
           sys: { id: 'user-trainee' },
@@ -565,7 +565,7 @@ export const getExpectedTraineeProject = (): TraineeProject => ({
       firstName: 'Dana',
       lastName: 'Lopez',
       avatarUrl: undefined,
-      role: 'Trainee',
+      role: 'Trainee Project - Lead',
       email: 'dana@example.com',
       alumniSinceDate: undefined,
     },
@@ -890,6 +890,21 @@ export const getTraineeProjectDetailGraphqlItem = (overrides?: {
       total: 2,
       items: [
         {
+          sys: { id: 'membership-trainee-trainee' },
+          role: 'Trainee Project - Lead',
+          projectMember: {
+            __typename: 'Users',
+            sys: { id: 'user-trainee' },
+            firstName: 'Dana',
+            nickname: '',
+            lastName: 'Lopez',
+            email: 'dana@example.com',
+            onboarded: true,
+            avatar: { url: null },
+            alumniSinceDate: undefined,
+          },
+        },
+        {
           sys: { id: 'membership-trainee-trainer' },
           role: 'Trainee Project - Mentor',
           projectMember: {
@@ -899,21 +914,6 @@ export const getTraineeProjectDetailGraphqlItem = (overrides?: {
             nickname: 'Tay',
             lastName: 'Mills',
             email: 'taylor@example.com',
-            onboarded: true,
-            avatar: { url: null },
-            alumniSinceDate: undefined,
-          },
-        },
-        {
-          sys: { id: 'membership-trainee-trainee' },
-          role: 'Trainee',
-          projectMember: {
-            __typename: 'Users',
-            sys: { id: 'user-trainee' },
-            firstName: 'Dana',
-            nickname: '',
-            lastName: 'Lopez',
-            email: 'dana@example.com',
             onboarded: true,
             avatar: { url: null },
             alumniSinceDate: undefined,

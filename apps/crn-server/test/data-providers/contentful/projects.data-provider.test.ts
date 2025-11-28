@@ -214,7 +214,7 @@ describe('ProjectContentfulDataProvider', () => {
         items: [
           {
             sys: { id: 'membership-trainee-1' },
-            role: 'Trainee',
+            role: 'Trainee Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-trainee-1' },
@@ -229,7 +229,7 @@ describe('ProjectContentfulDataProvider', () => {
           },
           {
             sys: { id: 'membership-trainee-2' },
-            role: 'Trainee',
+            role: 'Trainee Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-trainee-2' },
@@ -243,41 +243,41 @@ describe('ProjectContentfulDataProvider', () => {
             },
           },
           {
-            sys: { id: 'membership-trainer-lead' },
-            role: 'Trainee Project - Lead',
-            projectMember: {
-              __typename: 'Users',
-              sys: { id: 'user-trainer-lead' },
-              firstName: 'Lead',
-              nickname: '',
-              lastName: 'Trainer',
-              email: 'lead@example.com',
-              onboarded: true,
-              avatar: { url: null },
-              alumniSinceDate: undefined,
-            },
-          },
-          {
-            sys: { id: 'membership-trainer-mentor' },
+            sys: { id: 'membership-mentor-1' },
             role: 'Trainee Project - Mentor',
             projectMember: {
               __typename: 'Users',
-              sys: { id: 'user-trainer-mentor' },
+              sys: { id: 'user-mentor-1' },
               firstName: 'Mentor',
               nickname: '',
-              lastName: 'Trainer',
-              email: 'mentor@example.com',
+              lastName: 'One',
+              email: 'mentor1@example.com',
               onboarded: true,
               avatar: { url: null },
               alumniSinceDate: undefined,
             },
           },
           {
-            sys: { id: 'membership-trainer-key' },
+            sys: { id: 'membership-mentor-2' },
+            role: 'Trainee Project - Mentor',
+            projectMember: {
+              __typename: 'Users',
+              sys: { id: 'user-mentor-2' },
+              firstName: 'Mentor',
+              nickname: '',
+              lastName: 'Two',
+              email: 'mentor2@example.com',
+              onboarded: true,
+              avatar: { url: null },
+              alumniSinceDate: undefined,
+            },
+          },
+          {
+            sys: { id: 'membership-key-personnel' },
             role: 'Trainee Project - Key Personnel',
             projectMember: {
               __typename: 'Users',
-              sys: { id: 'user-trainer-key' },
+              sys: { id: 'user-key-personnel' },
               firstName: 'Key',
               nickname: '',
               lastName: 'Personnel',
@@ -295,44 +295,44 @@ describe('ProjectContentfulDataProvider', () => {
       traineeProjectWithMultipleRoles,
     ) as TraineeProject;
 
-    // Members should include all: trainees first, then trainers
+    // Members should include all: trainees first, then mentors
     expect(result.members).toHaveLength(5);
 
-    // Check trainees are first
+    // Check trainees (Trainee Project - Lead) are first
     expect(result.members[0]).toMatchObject({
       id: 'user-trainee-1',
-      role: 'Trainee',
+      role: 'Trainee Project - Lead',
     });
     expect(result.members[1]).toMatchObject({
       id: 'user-trainee-2',
-      role: 'Trainee',
-    });
-
-    // Check trainers follow
-    expect(result.members[2]).toMatchObject({
-      id: 'user-trainer-lead',
       role: 'Trainee Project - Lead',
     });
+
+    // Check mentors follow (Trainee Project - Mentor and Trainee Project - Key Personnel)
+    expect(result.members[2]).toMatchObject({
+      id: 'user-mentor-1',
+      role: 'Trainee Project - Mentor',
+    });
     expect(result.members[3]).toMatchObject({
-      id: 'user-trainer-mentor',
+      id: 'user-mentor-2',
       role: 'Trainee Project - Mentor',
     });
     expect(result.members[4]).toMatchObject({
-      id: 'user-trainer-key',
+      id: 'user-key-personnel',
       role: 'Trainee Project - Key Personnel',
     });
   });
 
-  it('defaults trainee trainer to the first trainer when no trainer roles are present', () => {
-    const traineeWithoutTrainer = {
+  it('includes multiple trainees when only trainee roles are present', () => {
+    const traineeWithoutMentors = {
       ...getTraineeProjectGraphqlItem(),
-      sys: { id: 'trainee-no-trainer' },
+      sys: { id: 'trainee-no-mentors' },
       membersCollection: {
         total: 2,
         items: [
           {
             sys: { id: 'membership-trainee-1' },
-            role: 'Trainee',
+            role: 'Trainee Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-primary' },
@@ -347,7 +347,7 @@ describe('ProjectContentfulDataProvider', () => {
           },
           {
             sys: { id: 'membership-trainee-2' },
-            role: 'Trainee',
+            role: 'Trainee Project - Lead',
             projectMember: {
               __typename: 'Users',
               sys: { id: 'user-secondary' },
@@ -365,18 +365,18 @@ describe('ProjectContentfulDataProvider', () => {
     } as ReturnType<typeof getTraineeProjectGraphqlItem>;
 
     const result = parseContentfulProject(
-      traineeWithoutTrainer,
+      traineeWithoutMentors,
     ) as TraineeProject;
 
     // Should include all members (both trainees)
     expect(result.members).toHaveLength(2);
     expect(result.members[0]).toMatchObject({
       id: 'user-primary',
-      role: 'Trainee',
+      role: 'Trainee Project - Lead',
     });
     expect(result.members[1]).toMatchObject({
       id: 'user-secondary',
-      role: 'Trainee',
+      role: 'Trainee Project - Lead',
     });
   });
 
@@ -722,15 +722,15 @@ describe('parseContentfulProjectDetail', () => {
       ],
     });
 
-    // Verify members are included and ordered correctly: trainees first, then trainers
+    // Verify members are included and ordered correctly: trainees first, then mentors
     expect(result.members).toBeDefined();
     expect(result.members).toHaveLength(2);
-    // Trainee should come first
+    // Trainee (Trainee Project - Lead) should come first
     expect(result.members[0]).toMatchObject({
       id: 'user-trainee',
-      role: 'Trainee',
+      role: 'Trainee Project - Lead',
     });
-    // Trainer should come after
+    // Mentor should come after
     expect(result.members[1]).toMatchObject({
       id: 'user-trainer',
       role: 'Trainee Project - Mentor',

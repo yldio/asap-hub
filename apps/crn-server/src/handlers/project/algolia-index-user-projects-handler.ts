@@ -35,13 +35,22 @@ export const indexUserProjectsHandler = (
 
     const userId = event.detail.resourceId;
 
-    const fetchFunction = ({
-      skip,
-      take,
-    }: LoopOverCustomCollectionFetchOptions): Promise<ListProjectResponse> =>
-      projectController.fetchByUserId(userId, { skip, take });
+    try {
+      const fetchFunction = ({
+        skip,
+        take,
+      }: LoopOverCustomCollectionFetchOptions): Promise<ListProjectResponse> =>
+        projectController.fetchByUserId(userId, { skip, take });
 
-    await loopOverCustomCollection(fetchFunction, processingFunction, 8);
+      await loopOverCustomCollection(fetchFunction, processingFunction, 8);
+    } catch (error) {
+      logger.error(
+        error,
+        `Error indexing projects for user id ${userId}`,
+        event,
+      );
+      throw error;
+    }
   };
 };
 

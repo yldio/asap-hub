@@ -35,13 +35,22 @@ export const indexTeamProjectsHandler = (
 
     const teamId = event.detail.resourceId;
 
-    const fetchFunction = ({
-      skip,
-      take,
-    }: LoopOverCustomCollectionFetchOptions): Promise<ListProjectResponse> =>
-      projectController.fetchByTeamId(teamId, { skip, take });
+    try {
+      const fetchFunction = ({
+        skip,
+        take,
+      }: LoopOverCustomCollectionFetchOptions): Promise<ListProjectResponse> =>
+        projectController.fetchByTeamId(teamId, { skip, take });
 
-    await loopOverCustomCollection(fetchFunction, processingFunction, 8);
+      await loopOverCustomCollection(fetchFunction, processingFunction, 8);
+    } catch (error) {
+      logger.error(
+        error,
+        `Error indexing projects for team id ${teamId}`,
+        event,
+      );
+      throw error;
+    }
   };
 };
 

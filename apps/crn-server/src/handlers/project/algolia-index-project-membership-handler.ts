@@ -3,14 +3,12 @@ import {
   algoliaSearchClientFactory,
   Payload,
 } from '@asap-hub/algolia';
-import { NotFoundError } from '@asap-hub/errors';
 import { ListProjectResponse, ProjectMembershipEvent } from '@asap-hub/model';
 import {
   createProcessingFunction,
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '@asap-hub/server-common';
-import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ProjectController from '../../controllers/project.controller';
@@ -22,9 +20,6 @@ import { addTagsFunction } from '../helper';
 type ProjectMembershipPayload = {
   resourceId: string;
 };
-
-const isNotFoundError = (e: unknown): e is Error =>
-  (isBoom(e) && e.output.statusCode === 404) || e instanceof NotFoundError;
 
 export const indexProjectMembershipHandler = (
   projectController: ProjectController,
@@ -58,18 +53,11 @@ export const indexProjectMembershipHandler = (
 
       await loopOverCustomCollection(fetchFunction, processingFunction, 8);
     } catch (error) {
-      if (isNotFoundError(error)) {
-        logger.warn(
-          {
-            membershipId,
-            detailType: event['detail-type'],
-            originalError: (error as Error).message,
-          },
-          'ProjectMembership event received but no associated projects found',
-        );
-        return;
-      }
-      logger.error(error, 'Error indexing projects for membership');
+      logger.error(
+        error,
+        `Error indexing projects for membership id ${membershipId}`,
+        event,
+      );
       throw error;
     }
   };

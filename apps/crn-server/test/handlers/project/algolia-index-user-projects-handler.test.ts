@@ -9,6 +9,7 @@ import { getUserEvent } from '../../fixtures/users.fixtures';
 import { toPayload } from '../../helpers/algolia';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { projectControllerMock } from '../../mocks/project.controller.mock';
+import logger from '../../../src/utils/logger';
 
 const mapPayload = toPayload('project');
 
@@ -28,17 +29,23 @@ describe('Index Projects on User event handler', () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  test('Should throw an error and not trigger algolia when the project request fails with another error code', async () => {
-    projectControllerMock.fetchByUserId.mockRejectedValue(Boom.badData());
+  test('Should throw an error, log it, and not trigger algolia when the project request fails with another error code', async () => {
+    const error = Boom.badData();
+    const event = getUserEvent('user-id', 'UsersPublished');
+    projectControllerMock.fetchByUserId.mockRejectedValue(error);
 
-    await expect(
-      indexHandler(getUserEvent('user-id', 'UsersPublished')),
-    ).rejects.toThrow(Boom.badData());
+    await expect(indexHandler(event)).rejects.toThrow(error);
+    expect(logger.error).toHaveBeenCalledWith(
+      error,
+      'Error indexing projects for user id user-id',
+      event,
+    );
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });
 
-  test('Should throw the algolia error when saving the record fails', async () => {
+  test('Should throw the algolia error, log it, when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
+    const event = getUserEvent('user-id', 'UsersPublished');
 
     const listProjectResponse = {
       total: 1,
@@ -49,9 +56,12 @@ describe('Index Projects on User event handler', () => {
     );
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
-    await expect(
-      indexHandler(getUserEvent('user-id', 'UsersPublished')),
-    ).rejects.toThrow(algoliaError);
+    await expect(indexHandler(event)).rejects.toThrow(algoliaError);
+    expect(logger.error).toHaveBeenCalledWith(
+      algoliaError,
+      'Error indexing projects for user id user-id',
+      event,
+    );
   });
 
   test('Should call saveMany with empty array when no projects are found for the user', async () => {

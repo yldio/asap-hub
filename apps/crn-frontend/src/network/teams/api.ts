@@ -14,7 +14,6 @@ import {
   DiscussionResponse,
   ListLabDataProviderResponse,
   ListPartialManuscriptResponse,
-  ListResearchThemeResponse,
   ListTeamResponse,
   ManuscriptFileResponse,
   ManuscriptFileType,
@@ -109,7 +108,7 @@ export const getAlgoliaTeams = async (
 ): Promise<ListTeamResponse> => {
   const isteamStatusFilter = (filter: string) =>
     (teamStatus as unknown as string[]).includes(filter);
-  const filterArray = Array.from(filters) as string[];
+  const filterArray = Array.from(filters);
 
   const teamStatusFilter = filterArray
     .filter(isteamStatusFilter)
@@ -739,23 +738,4 @@ export const downloadFullComplianceDataset = async (
   );
 
   return downloadUrl;
-};
-
-export const getResearchThemes = async (
-  authorization: string,
-): Promise<ListResearchThemeResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/research-themes`, {
-    headers: {
-      authorization,
-      ...createSentryHeaders(),
-    },
-  });
-
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch research themes. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-
-  return resp.json();
 };

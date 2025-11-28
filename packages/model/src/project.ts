@@ -1,7 +1,7 @@
 import { ListResponse } from './common';
 import { TeamDataObject } from './team';
 
-export type ProjectStatus = 'Active' | 'Complete' | 'Closed';
+export type ProjectStatus = 'Active' | 'Completed' | 'Closed';
 
 export type ProjectType =
   | 'Discovery Project'

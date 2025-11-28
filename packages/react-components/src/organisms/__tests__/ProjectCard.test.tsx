@@ -41,7 +41,7 @@ const resourceProjectMemberBasedProps: ComponentProps<typeof ProjectCard> = {
   ...baseProjectProps,
   projectType: 'Resource Project',
   title: 'Open-Source Analysis Pipeline',
-  status: 'Complete',
+  status: 'Completed',
   resourceType: 'Software Tool',
   isTeamBased: false,
   members: [
@@ -126,7 +126,7 @@ describe('Helper Functions', () => {
   describe('getStatusPillAccent', () => {
     it.each([
       { status: 'Active' as const, expected: 'info' as const },
-      { status: 'Complete' as const, expected: 'success' as const },
+      { status: 'Completed' as const, expected: 'success' as const },
       { status: 'Closed' as const, expected: 'warning' as const },
     ])(
       'returns $expected accent for $status status',
@@ -137,7 +137,7 @@ describe('Helper Functions', () => {
 
     it('returns default accent for invalid status', () => {
       expect(
-        getStatusPillAccent('Invalid' as 'Active' | 'Complete' | 'Closed'),
+        getStatusPillAccent('Invalid' as 'Active' | 'Completed' | 'Closed'),
       ).toBe('info');
     });
   });
@@ -145,7 +145,7 @@ describe('Helper Functions', () => {
   describe('getCardAccentByStatus', () => {
     it.each([
       { status: 'Active' as const, expected: 'default' as const },
-      { status: 'Complete' as const, expected: 'neutral200' as const },
+      { status: 'Completed' as const, expected: 'neutral200' as const },
       { status: 'Closed' as const, expected: 'neutral200' as const },
     ])(
       'returns $expected accent for $status status',
@@ -156,7 +156,7 @@ describe('Helper Functions', () => {
 
     it('returns default accent for invalid status', () => {
       expect(
-        getCardAccentByStatus('Invalid' as 'Active' | 'Complete' | 'Closed'),
+        getCardAccentByStatus('Invalid' as 'Active' | 'Completed' | 'Closed'),
       ).toBe('default');
     });
   });
@@ -172,7 +172,7 @@ describe('ProjectCard - Discovery Project', () => {
 
   it.each([
     { status: 'Active' as const },
-    { status: 'Complete' as const },
+    { status: 'Completed' as const },
     { status: 'Closed' as const },
   ])('renders the $status status pill', ({ status }) => {
     const { getByText } = render(
@@ -375,7 +375,7 @@ describe('ProjectCard - Card Background Colors', () => {
 
   it('renders Complete projects with grey background', () => {
     const { container } = render(
-      <ProjectCard {...discoveryProjectProps} status="Complete" />,
+      <ProjectCard {...discoveryProjectProps} status="Completed" />,
     );
     const card = container.querySelector('section');
     expect(card).toHaveStyle({ backgroundColor: 'var(--neutral200)' }); // neutral200

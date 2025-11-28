@@ -32,7 +32,7 @@ describe('project utils', () => {
   const baseResource: ResourceProject = {
     id: 'resource-1',
     title: 'Resource Project',
-    status: 'Complete',
+    status: 'Completed',
     startDate: '2023-01-01',
     endDate: '2023-07-01',
     duration: '6 mos',

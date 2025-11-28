@@ -57,7 +57,7 @@ describe('ProjectContentfulDataProvider', () => {
         search: 'brain health',
         filter: {
           projectType: ['Discovery Project', 'Resource Project'],
-          status: ['Complete', 'Active'],
+          status: ['Completed', 'Active'],
         },
       });
 
@@ -80,7 +80,7 @@ describe('ProjectContentfulDataProvider', () => {
               { researchTags: { name_contains: 'health' } },
             ],
             projectType_in: ['Discovery Project', 'Resource Project'],
-            status_in: ['Complete', 'Active'],
+            status_in: ['Completed', 'Active'],
           },
         },
       );
@@ -94,7 +94,7 @@ describe('ProjectContentfulDataProvider', () => {
       await dataProvider.fetch({
         filter: {
           projectType: 'Discovery Project',
-          status: 'Complete',
+          status: 'Completed',
         },
       });
 
@@ -106,7 +106,7 @@ describe('ProjectContentfulDataProvider', () => {
           order: [ProjectsOrder.SysFirstPublishedAtDesc],
           where: {
             projectType_in: ['Discovery Project'],
-            status_in: ['Complete'],
+            status_in: ['Completed'],
           },
         }),
       );
@@ -413,7 +413,7 @@ describe('parseContentfulProjectDetail', () => {
         getMilestoneGraphqlItem('milestone-1', {
           title: 'Milestone 1',
           description: 'First milestone',
-          status: 'Complete',
+          status: 'Completed',
           externalLink: 'https://example.com/milestone1',
         }),
         getMilestoneGraphqlItem('milestone-2', {
@@ -564,7 +564,7 @@ describe('parseContentfulProjectDetail', () => {
         getMilestoneGraphqlItem('trainee-milestone-1', {
           title: 'Trainee Milestone',
           description: 'Trainee milestone description',
-          status: 'Complete',
+          status: 'Completed',
           externalLink: 'https://example.com/trainee',
         }),
       ],
@@ -589,7 +589,7 @@ describe('parseContentfulProjectDetail', () => {
           id: 'trainee-milestone-1',
           title: 'Trainee Milestone',
           description: 'Trainee milestone description',
-          status: 'Complete',
+          status: 'Completed',
           link: 'https://example.com/trainee',
         },
       ],
@@ -643,7 +643,7 @@ describe('parseContentfulProjectDetail', () => {
       milestonesCollection: getMilestonesCollection([
         getMilestoneGraphqlItem('milestone-no-team', {
           title: 'Milestone Without Team',
-          status: 'Complete',
+          status: 'Completed',
         }),
       ]),
     };
@@ -664,7 +664,7 @@ describe('parseContentfulProjectDetail', () => {
         {
           id: 'milestone-no-team',
           title: 'Milestone Without Team',
-          status: 'Complete',
+          status: 'Completed',
         },
       ],
       // Should not have fundedTeam or collaborators when no team exists

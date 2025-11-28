@@ -20,7 +20,7 @@ type GraphQLProject = NonNullable<
 export const getDiscoveryProjectGraphqlItem = (): GraphQLProject => ({
   sys: { id: 'discovery-1' },
   title: 'Discovery Project 1',
-  status: 'Complete',
+  status: 'Completed',
   startDate: '2024-01-01',
   endDate: '2024-04-01',
   projectType: 'Discovery Project',
@@ -160,7 +160,7 @@ export const getResourceTeamProjectGraphqlItem = (): GraphQLProject => ({
 export const getResourceIndividualProjectGraphqlItem = (): GraphQLProject => ({
   sys: { id: 'resource-individual-1' },
   title: 'Resource Project Individual',
-  status: 'Complete',
+  status: 'Completed',
   startDate: '2022-01-01',
   endDate: '2023-03-01',
   projectType: 'Resource Project',
@@ -356,7 +356,7 @@ export const getProjectByIdGraphqlResponse = (): FetchProjectByIdQuery => ({
 export const getExpectedDiscoveryProject = (): DiscoveryProject => ({
   id: 'discovery-1',
   title: 'Discovery Project 1',
-  status: 'Complete',
+  status: 'Completed',
   startDate: '2024-01-01',
   endDate: '2024-04-01',
   tags: ['Tag A'],
@@ -424,7 +424,7 @@ export const getExpectedDiscoveryProjectDetailWithAllFields = () => ({
       id: 'milestone-1',
       title: 'Milestone 1',
       description: 'First milestone',
-      status: 'Complete',
+      status: 'Completed',
       link: 'https://example.com/milestone1',
     },
     {
@@ -501,7 +501,7 @@ export const getExpectedResourceTeamProject = (): ResourceProject => ({
 export const getExpectedResourceIndividualProject = (): ResourceProject => ({
   id: 'resource-individual-1',
   title: 'Resource Project Individual',
-  status: 'Complete',
+  status: 'Completed',
   startDate: '2022-01-01',
   endDate: '2023-03-01',
   tags: ['Tag B'],

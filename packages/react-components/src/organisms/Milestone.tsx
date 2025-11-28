@@ -2,8 +2,8 @@ import { Milestone as MilestoneType, MilestoneStatus } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { FC, useState, useEffect, useRef } from 'react';
 import { Pill } from '../atoms';
-import { rem } from '../pixels';
-import { lead } from '../colors';
+import { rem, tabletScreen } from '../pixels';
+import { lead, neutral1000 } from '../colors';
 
 const milestoneRowStyles = css({
   display: 'grid',
@@ -12,6 +12,10 @@ const milestoneRowStyles = css({
   paddingBottom: rem(20),
   borderBottom: `1px solid #E9ECEF`,
   marginBottom: rem(20),
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    gridTemplateColumns: '1fr',
+    gap: rem(12),
+  },
   '&:last-child': {
     marginBottom: 0,
     paddingBottom: 0,
@@ -24,6 +28,17 @@ const descriptionContainerStyles = css({
   flexDirection: 'column',
   gap: rem(4),
   justifyContent: 'flex-start',
+});
+
+const mobileLabelStyles = css({
+  fontSize: rem(17),
+  fontWeight: 'bold',
+  color: neutral1000.rgb,
+  marginBottom: rem(8),
+  display: 'none',
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    display: 'block',
+  },
 });
 
 const descriptionStyles = (isExpanded: boolean) =>
@@ -62,6 +77,10 @@ const statusContainerStyles = css({
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
   paddingBlock: rem(4),
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    flexDirection: 'column',
+    paddingBlock: 0,
+  },
 });
 
 export const getMilestoneStatusAccent = (
@@ -137,6 +156,7 @@ const Milestone: FC<MilestoneProps> = ({ milestone }) => {
   return (
     <div css={milestoneRowStyles}>
       <div css={descriptionContainerStyles}>
+        <div css={mobileLabelStyles}>Description</div>
         <div ref={descriptionRef} css={descriptionStyles(isExpanded)}>
           {milestone.description}
         </div>
@@ -151,6 +171,7 @@ const Milestone: FC<MilestoneProps> = ({ milestone }) => {
         )}
       </div>
       <div css={statusContainerStyles}>
+        <div css={mobileLabelStyles}>Status</div>
         <Pill accent={getMilestoneStatusAccent(milestone.status)} noMargin>
           {milestone.status}
         </Pill>

@@ -94,6 +94,39 @@ export const parseProjectTeamMember = (
   };
 };
 
+// Process Trainee Project members: filter by valid roles and separate into trainees and mentors
+export const processTraineeProjectMembers = (
+  members: ProjectMembershipItem[],
+): ProjectMember[] => {
+  // Only valid roles for Trainee Projects:
+  // - Trainees: "Trainee Project - Lead"
+  // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
+  const userMembers = members
+    .filter((m) => m.projectMember?.__typename === 'Users')
+    .map((m) => parseProjectUserMember(m))
+    .filter(
+      (m) =>
+        m.role === 'Trainee Project - Lead' ||
+        m.role === 'Trainee Project - Mentor' ||
+        m.role === 'Trainee Project - Key Personnel',
+    );
+
+  // Separate members into two lists:
+  // - Trainees: "Trainee Project - Lead"
+  // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
+  const trainees = userMembers.filter(
+    (m) => m.role === 'Trainee Project - Lead',
+  );
+  const mentors = userMembers.filter(
+    (m) =>
+      m.role === 'Trainee Project - Mentor' ||
+      m.role === 'Trainee Project - Key Personnel',
+  );
+
+  // Members array: trainees first, then mentors (allows multiple of each)
+  return [...trainees, ...mentors];
+};
+
 // Parse Contentful project to model format
 export const parseContentfulProject = (
   item: ProjectItem | ProjectsCollectionItem,
@@ -187,33 +220,7 @@ export const parseContentfulProject = (
     }
 
     case 'Trainee Project': {
-      // Only valid roles for Trainee Projects:
-      // - Trainees: "Trainee Project - Lead"
-      // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
-      const userMembers = members
-        .filter((m) => m.projectMember?.__typename === 'Users')
-        .map((m) => parseProjectUserMember(m))
-        .filter(
-          (m) =>
-            m.role === 'Trainee Project - Lead' ||
-            m.role === 'Trainee Project - Mentor' ||
-            m.role === 'Trainee Project - Key Personnel',
-        );
-
-      // Separate members into two lists:
-      // - Trainees: "Trainee Project - Lead"
-      // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
-      const trainees = userMembers.filter(
-        (m) => m.role === 'Trainee Project - Lead',
-      );
-      const mentors = userMembers.filter(
-        (m) =>
-          m.role === 'Trainee Project - Mentor' ||
-          m.role === 'Trainee Project - Key Personnel',
-      );
-
-      // Members array: trainees first, then mentors (allows multiple of each)
-      const allMembers = [...trainees, ...mentors];
+      const allMembers = processTraineeProjectMembers(members);
 
       return {
         ...baseProject,
@@ -345,33 +352,7 @@ export const parseContentfulProjectDetail = (
     }
 
     case 'Trainee Project': {
-      // Only valid roles for Trainee Projects:
-      // - Trainees: "Trainee Project - Lead"
-      // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
-      const userMembers = members
-        .filter((m) => m.projectMember?.__typename === 'Users')
-        .map((m) => parseProjectUserMember(m))
-        .filter(
-          (m) =>
-            m.role === 'Trainee Project - Lead' ||
-            m.role === 'Trainee Project - Mentor' ||
-            m.role === 'Trainee Project - Key Personnel',
-        );
-
-      // Separate members into two lists:
-      // - Trainees: "Trainee Project - Lead"
-      // - Mentors/Trainers: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
-      const trainees = userMembers.filter(
-        (m) => m.role === 'Trainee Project - Lead',
-      );
-      const mentors = userMembers.filter(
-        (m) =>
-          m.role === 'Trainee Project - Mentor' ||
-          m.role === 'Trainee Project - Key Personnel',
-      );
-
-      // Members array: trainees first, then mentors (allows multiple of each)
-      const allMembers = [...trainees, ...mentors];
+      const allMembers = processTraineeProjectMembers(members);
 
       return {
         ...baseProject,

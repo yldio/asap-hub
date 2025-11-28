@@ -6,6 +6,7 @@ import {
   parseContentfulProjectDetail,
   parseProjectUserMember,
   parseProjectTeamMember,
+  processTraineeProjectMembers,
   type ProjectMembershipItem,
 } from '../../../src/data-providers/contentful/project.data-provider';
 import { TraineeProject, TraineeProjectDetail } from '@asap-hub/model';
@@ -513,6 +514,160 @@ describe('parseProjectTeamMember', () => {
   });
 });
 
+describe('processTraineeProjectMembers', () => {
+  it('filters and orders members correctly: trainees first, then mentors', () => {
+    const members: ProjectMembershipItem[] = [
+      {
+        sys: { id: 'membership-mentor-1' },
+        role: 'Trainee Project - Mentor',
+        projectMember: {
+          __typename: 'Users',
+          sys: { id: 'user-mentor-1' },
+          firstName: 'Mentor',
+          nickname: '',
+          lastName: 'One',
+          email: 'mentor1@example.com',
+          onboarded: true,
+          avatar: { url: null },
+          alumniSinceDate: undefined,
+        },
+      },
+      {
+        sys: { id: 'membership-trainee-1' },
+        role: 'Trainee Project - Lead',
+        projectMember: {
+          __typename: 'Users',
+          sys: { id: 'user-trainee-1' },
+          firstName: 'Trainee',
+          nickname: '',
+          lastName: 'One',
+          email: 'trainee1@example.com',
+          onboarded: true,
+          avatar: { url: null },
+          alumniSinceDate: undefined,
+        },
+      },
+      {
+        sys: { id: 'membership-key-personnel' },
+        role: 'Trainee Project - Key Personnel',
+        projectMember: {
+          __typename: 'Users',
+          sys: { id: 'user-key-personnel' },
+          firstName: 'Key',
+          nickname: '',
+          lastName: 'Personnel',
+          email: 'key@example.com',
+          onboarded: true,
+          avatar: { url: null },
+          alumniSinceDate: undefined,
+        },
+      },
+      {
+        sys: { id: 'membership-trainee-2' },
+        role: 'Trainee Project - Lead',
+        projectMember: {
+          __typename: 'Users',
+          sys: { id: 'user-trainee-2' },
+          firstName: 'Trainee',
+          nickname: '',
+          lastName: 'Two',
+          email: 'trainee2@example.com',
+          onboarded: true,
+          avatar: { url: null },
+          alumniSinceDate: undefined,
+        },
+      },
+      {
+        sys: { id: 'membership-team' },
+        role: 'Supporting Team',
+        projectMember: {
+          __typename: 'Teams',
+          sys: { id: 'team-support' },
+          displayName: 'Support Team',
+          inactiveSince: null,
+          researchTheme: null,
+        },
+      },
+      {
+        sys: { id: 'membership-invalid-role' },
+        role: 'Invalid Role',
+        projectMember: {
+          __typename: 'Users',
+          sys: { id: 'user-invalid' },
+          firstName: 'Invalid',
+          nickname: '',
+          lastName: 'Role',
+          email: 'invalid@example.com',
+          onboarded: true,
+          avatar: { url: null },
+          alumniSinceDate: undefined,
+        },
+      },
+    ] as ProjectMembershipItem[];
+
+    const result = processTraineeProjectMembers(members);
+
+    // Should only include valid roles (Trainee Project - Lead, Mentor, Key Personnel)
+    // Should exclude Teams and invalid roles
+    expect(result).toHaveLength(4);
+
+    // Trainees should come first
+    expect(result[0]).toMatchObject({
+      id: 'user-trainee-1',
+      role: 'Trainee Project - Lead',
+    });
+    expect(result[1]).toMatchObject({
+      id: 'user-trainee-2',
+      role: 'Trainee Project - Lead',
+    });
+
+    // Mentors should come after
+    expect(result[2]).toMatchObject({
+      id: 'user-mentor-1',
+      role: 'Trainee Project - Mentor',
+    });
+    expect(result[3]).toMatchObject({
+      id: 'user-key-personnel',
+      role: 'Trainee Project - Key Personnel',
+    });
+  });
+
+  it('returns empty array when no valid members exist', () => {
+    const members: ProjectMembershipItem[] = [
+      {
+        sys: { id: 'membership-team' },
+        role: 'Supporting Team',
+        projectMember: {
+          __typename: 'Teams',
+          sys: { id: 'team-support' },
+          displayName: 'Support Team',
+          inactiveSince: null,
+          researchTheme: null,
+        },
+      },
+      {
+        sys: { id: 'membership-invalid-role' },
+        role: 'Invalid Role',
+        projectMember: {
+          __typename: 'Users',
+          sys: { id: 'user-invalid' },
+          firstName: 'Invalid',
+          nickname: '',
+          lastName: 'Role',
+          email: 'invalid@example.com',
+          onboarded: true,
+          avatar: { url: null },
+          alumniSinceDate: undefined,
+        },
+      },
+    ] as ProjectMembershipItem[];
+
+    const result = processTraineeProjectMembers(members);
+
+    expect(result).toHaveLength(0);
+  });
+});
+
 describe('parseContentfulProjectDetail', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -734,6 +889,64 @@ describe('parseContentfulProjectDetail', () => {
     expect(result.members[1]).toMatchObject({
       id: 'user-trainer',
       role: 'Trainee Project - Mentor',
+    });
+  });
+
+  it('parses Trainee Project detail with Key Personnel role', () => {
+    const traineeItem = getTraineeProjectDetailGraphqlItem({
+      originalGrant: 'Trainee Original Grant',
+      proposalId: 'trainee-proposal-1',
+    });
+
+    // Override members to include Key Personnel
+    traineeItem.membersCollection = {
+      total: 2,
+      items: [
+        {
+          sys: { id: 'membership-trainee-trainee' },
+          role: 'Trainee Project - Lead',
+          projectMember: {
+            __typename: 'Users',
+            sys: { id: 'user-trainee' },
+            firstName: 'Dana',
+            nickname: '',
+            lastName: 'Lopez',
+            email: 'dana@example.com',
+            onboarded: true,
+            avatar: { url: null },
+            alumniSinceDate: undefined,
+          },
+        },
+        {
+          sys: { id: 'membership-trainee-key-personnel' },
+          role: 'Trainee Project - Key Personnel',
+          projectMember: {
+            __typename: 'Users',
+            sys: { id: 'user-key-personnel' },
+            firstName: 'Key',
+            nickname: '',
+            lastName: 'Personnel',
+            email: 'key@example.com',
+            onboarded: true,
+            avatar: { url: null },
+            alumniSinceDate: undefined,
+          },
+        },
+      ],
+    };
+
+    const result = parseContentfulProjectDetail(
+      traineeItem,
+    ) as TraineeProjectDetail;
+
+    expect(result.members).toHaveLength(2);
+    expect(result.members[0]).toMatchObject({
+      id: 'user-trainee',
+      role: 'Trainee Project - Lead',
+    });
+    expect(result.members[1]).toMatchObject({
+      id: 'user-key-personnel',
+      role: 'Trainee Project - Key Personnel',
     });
   });
 

@@ -25,6 +25,7 @@ import {
   TraineeIcon,
 } from '../icons';
 import { fern, lead } from '../colors';
+import { groupTraineeProjectMembers } from '../utils';
 
 const cardStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -218,16 +219,8 @@ const ProjectCard: FC<ProjectCardProps> = (project) => {
           {/* Members for Trainee Projects */}
           {project.projectType === 'Trainee Project' &&
             (() => {
-              // Group members by role for Trainee projects
-              // Trainees: "Trainee Project - Lead"
-              // Mentors: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
-              const trainees = project.members.filter(
-                (m) => m.role === 'Trainee Project - Lead',
-              );
-              const mentors = project.members.filter(
-                (m) =>
-                  m.role === 'Trainee Project - Mentor' ||
-                  m.role === 'Trainee Project - Key Personnel',
+              const { trainees, mentors } = groupTraineeProjectMembers(
+                project.members,
               );
 
               return (

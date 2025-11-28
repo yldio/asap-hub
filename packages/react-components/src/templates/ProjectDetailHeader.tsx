@@ -16,6 +16,7 @@ import { rem, tabletScreen } from '../pixels';
 import { getStatusPillAccent } from '../organisms/ProjectCard';
 import PageInfoContainer from './PageInfoContainer';
 import Toast from '../organisms/Toast';
+import { groupTraineeProjectMembers } from '../utils';
 
 const headerStyles = css({
   display: 'flex',
@@ -311,16 +312,8 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
 
             {project.projectType === 'Trainee Project' &&
               (() => {
-                // Group members by role for Trainee projects
-                // Trainees: "Trainee Project - Lead"
-                // Mentors: "Trainee Project - Mentor" or "Trainee Project - Key Personnel"
-                const trainees = project.members.filter(
-                  (m) => m.role === 'Trainee Project - Lead',
-                );
-                const mentors = project.members.filter(
-                  (m) =>
-                    m.role === 'Trainee Project - Mentor' ||
-                    m.role === 'Trainee Project - Key Personnel',
+                const { trainees, mentors } = groupTraineeProjectMembers(
+                  project.members,
                 );
 
                 return (

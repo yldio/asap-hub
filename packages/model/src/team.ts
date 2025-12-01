@@ -113,7 +113,7 @@ export type TeamCreateDataObject = {
   teamType: TeamType;
 };
 
-export type TeamResponse = Omit<TeamDataObject, 'researchTheme'>;
+export type TeamResponse = TeamDataObject;
 
 export type FetchTeamsOptions = FetchOptions & {
   teamType?: TeamType;

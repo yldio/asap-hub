@@ -2,6 +2,7 @@ import { OpensearchMetricConfig } from '@asap-hub/server-common';
 import { Metrics } from './types';
 
 export const PAGE_SIZE = 45;
+export const MAX_CONCURRENT_COMBINATIONS = 5;
 export const PREPRINT_COMPLIANCE_SHEET_NAME = 'Preprint Compliance';
 export const PUBLICATION_COMPLIANCE_ALL_TIME_SHEET_NAME =
   'Publication Compliance_All Time';
@@ -43,6 +44,7 @@ export const validMetrics = [
   'preprint-compliance',
   'publication-compliance',
   'user-productivity',
+  'team-productivity',
 ] as const;
 
 export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
@@ -212,6 +214,30 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         ratio: { type: 'float' },
         timeRange: { type: 'keyword' },
         documentCategory: { type: 'keyword' },
+      },
+    },
+  },
+  'team-productivity': {
+    indexAlias: 'team-productivity',
+    mapping: {
+      properties: {
+        id: { type: 'text' },
+        name: {
+          type: 'text',
+          analyzer: 'ngram_analyzer',
+          search_analyzer: 'ngram_search_analyzer',
+          fields: {
+            keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
+          },
+        },
+        isInactive: { type: 'boolean' },
+        Article: { type: 'integer' },
+        Bioinformatics: { type: 'integer' },
+        Dataset: { type: 'integer' },
+        'Lab Material': { type: 'integer' },
+        Protocol: { type: 'integer' },
+        timeRange: { type: 'keyword' },
+        outputType: { type: 'keyword' },
       },
     },
   },

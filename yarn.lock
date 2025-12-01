@@ -1057,6 +1057,7 @@ __metadata:
     "@slack/webhook": ^6.1.0
     "@types/apicache": ^1
     "@types/apr-intercept": "workspace:*"
+    "@types/async": ^3
     "@types/async-retry": ^1
     "@types/aws-lambda": 8.10.158
     "@types/babel__preset-env": 7.9.7
@@ -1097,6 +1098,7 @@ __metadata:
     algoliasearch: 4.25.3
     apicache: 1.6.3
     apr-intercept: 3.0.4
+    async: ^3.2.4
     async-retry: 1.3.3
     aws-lambda: 1.0.7
     babel-loader: 8.3.0

@@ -14,6 +14,7 @@ on:
           - preprint-compliance
           - publication-compliance
           - user-productivity
+          - team-productivity
           - all
       environment-name:
         required: true

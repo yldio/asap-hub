@@ -50,6 +50,7 @@ const dropdownContainer = css({
 
 const showMenuStyles = css({
   display: 'flex',
+  zIndex: 10,
 });
 
 export interface FilterProps<V extends string> {

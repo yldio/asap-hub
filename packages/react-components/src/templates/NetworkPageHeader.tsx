@@ -7,7 +7,7 @@ import {
   inactiveUserMembershipStatus,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { useFlags } from '@asap-hub/react-context';
 
 import { Display, Paragraph, TabLink } from '../atoms';
@@ -171,6 +171,16 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   const { isEnabled } = useFlags();
   const isDataManagerEnabled = isEnabled('DATA_MANAGER_ROLE_ENABLED');
 
+  const { filterOptions, searchPlaceholder } = useMemo(
+    () =>
+      getFilterOptionsAndPlaceholder(
+        page,
+        isDataManagerEnabled,
+        researchThemes,
+      ),
+    [page, isDataManagerEnabled, researchThemes],
+  );
+
   return (
     <header>
       <PageInfoContainer
@@ -234,11 +244,8 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
             searchQuery={searchQuery}
             onChangeFilter={onChangeFilter}
             filters={filters}
-            {...getFilterOptionsAndPlaceholder(
-              page,
-              isDataManagerEnabled,
-              researchThemes,
-            )}
+            filterOptions={filterOptions}
+            searchPlaceholder={searchPlaceholder}
           />
         </PageConstraints>
       )}

@@ -1,8 +1,17 @@
 import {
   FETCH_PROJECTS,
+  FETCH_PROJECTS_BY_MEMBERSHIP_ID,
+  FETCH_PROJECTS_BY_TEAM_ID,
+  FETCH_PROJECTS_BY_USER_ID,
   FETCH_PROJECT_BY_ID,
   FetchProjectByIdQuery,
   FetchProjectByIdQueryVariables,
+  FetchProjectsByMembershipIdQuery,
+  FetchProjectsByMembershipIdQueryVariables,
+  FetchProjectsByTeamIdQuery,
+  FetchProjectsByTeamIdQueryVariables,
+  FetchProjectsByUserIdQuery,
+  FetchProjectsByUserIdQueryVariables,
   FetchProjectsQuery,
   FetchProjectsQueryVariables,
   GraphQLClient,
@@ -10,6 +19,7 @@ import {
 } from '@asap-hub/contentful';
 import {
   DiscoveryProject,
+  FetchPaginationOptions,
   DiscoveryProjectDetail,
   FundedTeam,
   ListProjectDataObject,
@@ -394,6 +404,36 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
   async fetch(options: FetchProjectsOptions): Promise<ListProjectDataObject> {
     const { take = 10, skip = 0, search, filter } = options;
 
+    if (filter?.projectMembershipId) {
+      const { projectMembership } = await this.contentfulClient.request<
+        FetchProjectsByMembershipIdQuery,
+        FetchProjectsByMembershipIdQueryVariables
+      >(FETCH_PROJECTS_BY_MEMBERSHIP_ID, {
+        membershipId: filter.projectMembershipId,
+        // It's unlikely that one membership belongs to many projects, but for completeness sake I'm using a safe limit.
+        limit: 20,
+      });
+
+      if (!projectMembership?.linkedFrom?.projectsCollection?.items) {
+        return {
+          total: 0,
+          items: [],
+        };
+      }
+
+      const projects =
+        projectMembership.linkedFrom.projectsCollection.items.filter(
+          (project): project is NonNullable<typeof project> => project !== null,
+        );
+
+      const paginatedItems = projects.slice(skip, skip + take);
+
+      return {
+        total: projects.length,
+        items: paginatedItems.map(parseContentfulProject),
+      };
+    }
+
     const searchTerms = (search || '').split(' ').filter(Boolean);
     const searchQuery = searchTerms.length
       ? {
@@ -450,6 +490,102 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       items: cleanArray<ProjectsCollectionItem>(projectsCollection.items).map(
         parseContentfulProject,
       ),
+    };
+  }
+
+  async fetchByTeamId(
+    teamId: string,
+    options: FetchPaginationOptions,
+  ): Promise<ListProjectDataObject> {
+    const { take = 10, skip = 0 } = options;
+
+    const { teams } = await this.contentfulClient.request<
+      FetchProjectsByTeamIdQuery,
+      FetchProjectsByTeamIdQueryVariables
+    >(FETCH_PROJECTS_BY_TEAM_ID, {
+      teamId,
+      limit: 100, // Fetch all memberships, deduplicate in memory as a team may have more than one role per project.
+    });
+
+    if (!teams?.linkedFrom?.projectMembershipCollection?.items) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    // Extract projects from memberships and deduplicate by project ID
+    const projectMap = new Map<string, ProjectItem>();
+    const memberships =
+      teams.linkedFrom.projectMembershipCollection.items.filter(
+        (membership): membership is NonNullable<typeof membership> =>
+          membership !== null,
+      );
+    for (const membership of memberships) {
+      const projects = membership.linkedFrom?.projectsCollection?.items || [];
+      for (const project of projects) {
+        if (project && !projectMap.has(project.sys.id)) {
+          projectMap.set(project.sys.id, project);
+        }
+      }
+    }
+
+    const uniqueProjects = Array.from(projectMap.values());
+
+    // Apply pagination in memory on deduplicated projects
+    const paginatedItems = uniqueProjects.slice(skip, skip + take);
+
+    return {
+      total: uniqueProjects.length,
+      items: paginatedItems.map(parseContentfulProject),
+    };
+  }
+
+  async fetchByUserId(
+    userId: string,
+    options: FetchPaginationOptions,
+  ): Promise<ListProjectDataObject> {
+    const { take = 10, skip = 0 } = options;
+
+    const { users } = await this.contentfulClient.request<
+      FetchProjectsByUserIdQuery,
+      FetchProjectsByUserIdQueryVariables
+    >(FETCH_PROJECTS_BY_USER_ID, {
+      userId,
+      limit: 100, // Fetch all memberships, deduplicate in memory as a user may have more than one role per project.
+    });
+
+    if (!users?.linkedFrom?.projectMembershipCollection?.items) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    // Extract projects from memberships and deduplicate by project ID
+    const projectMap = new Map<string, ProjectItem>();
+    const memberships =
+      users.linkedFrom.projectMembershipCollection.items.filter(
+        (membership): membership is NonNullable<typeof membership> =>
+          membership !== null,
+      );
+    for (const membership of memberships) {
+      const projects = membership.linkedFrom?.projectsCollection?.items || [];
+      for (const project of projects) {
+        if (project && !projectMap.has(project.sys.id)) {
+          projectMap.set(project.sys.id, project);
+        }
+      }
+    }
+
+    const uniqueProjects = Array.from(projectMap.values());
+
+    // Apply pagination in memory on deduplicated projects
+    const paginatedItems = uniqueProjects.slice(skip, skip + take);
+
+    return {
+      total: uniqueProjects.length,
+      items: paginatedItems.map(parseContentfulProject),
     };
   }
 }

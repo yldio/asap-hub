@@ -25214,6 +25214,352 @@ export type FetchProjectByIdQuery = {
   >;
 };
 
+export type FetchProjectsByTeamIdQueryVariables = Exact<{
+  teamId: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchProjectsByTeamIdQuery = {
+  teams?: Maybe<{
+    linkedFrom?: Maybe<{
+      projectMembershipCollection?: Maybe<
+        Pick<ProjectMembershipCollection, 'total'> & {
+          items: Array<
+            Maybe<{
+              linkedFrom?: Maybe<{
+                projectsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<
+                        Projects,
+                        | 'title'
+                        | 'projectId'
+                        | 'grantId'
+                        | 'originalGrant'
+                        | 'projectType'
+                        | 'status'
+                        | 'startDate'
+                        | 'endDate'
+                        | 'applicationNumber'
+                        | 'contactEmail'
+                        | 'googleDriveLink'
+                      > & {
+                        sys: Pick<
+                          Sys,
+                          'id' | 'firstPublishedAt' | 'publishedAt'
+                        >;
+                        supplementGrant?: Maybe<
+                          Pick<
+                            SupplementGrant,
+                            'title' | 'description' | 'startDate' | 'endDate'
+                          > & {
+                            sys: Pick<Sys, 'id'>;
+                            proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                          }
+                        >;
+                        resourceType?: Maybe<
+                          Pick<ResourceType, 'name'> & { sys: Pick<Sys, 'id'> }
+                        >;
+                        researchTagsCollection?: Maybe<
+                          Pick<ProjectsResearchTagsCollection, 'total'> & {
+                            items: Array<
+                              Maybe<
+                                Pick<
+                                  ResearchTags,
+                                  'name' | 'category' | 'types'
+                                > & { sys: Pick<Sys, 'id'> }
+                              >
+                            >;
+                          }
+                        >;
+                        milestonesCollection?: Maybe<
+                          Pick<ProjectsMilestonesCollection, 'total'> & {
+                            items: Array<
+                              Maybe<
+                                Pick<
+                                  Milestones,
+                                  | 'title'
+                                  | 'description'
+                                  | 'status'
+                                  | 'externalLink'
+                                > & { sys: Pick<Sys, 'id'> }
+                              >
+                            >;
+                          }
+                        >;
+                        membersCollection?: Maybe<
+                          Pick<ProjectsMembersCollection, 'total'> & {
+                            items: Array<
+                              Maybe<
+                                Pick<ProjectMembership, 'role'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                  projectMember?: Maybe<
+                                    | ({ __typename: 'Teams' } & Pick<
+                                        Teams,
+                                        'displayName' | 'inactiveSince'
+                                      > & {
+                                          sys: Pick<Sys, 'id'>;
+                                          researchTheme?: Maybe<
+                                            Pick<ResearchTheme, 'name'>
+                                          >;
+                                        })
+                                    | ({ __typename: 'Users' } & Pick<
+                                        Users,
+                                        | 'firstName'
+                                        | 'nickname'
+                                        | 'lastName'
+                                        | 'email'
+                                        | 'onboarded'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                          sys: Pick<Sys, 'id'>;
+                                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                                        })
+                                  >;
+                                }
+                              >
+                            >;
+                          }
+                        >;
+                      }
+                    >
+                  >;
+                }>;
+              }>;
+            }>
+          >;
+        }
+      >;
+    }>;
+  }>;
+};
+
+export type FetchProjectsByUserIdQueryVariables = Exact<{
+  userId: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchProjectsByUserIdQuery = {
+  users?: Maybe<{
+    linkedFrom?: Maybe<{
+      projectMembershipCollection?: Maybe<
+        Pick<ProjectMembershipCollection, 'total'> & {
+          items: Array<
+            Maybe<{
+              linkedFrom?: Maybe<{
+                projectsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<
+                        Projects,
+                        | 'title'
+                        | 'projectId'
+                        | 'grantId'
+                        | 'originalGrant'
+                        | 'projectType'
+                        | 'status'
+                        | 'startDate'
+                        | 'endDate'
+                        | 'applicationNumber'
+                        | 'contactEmail'
+                        | 'googleDriveLink'
+                      > & {
+                        sys: Pick<
+                          Sys,
+                          'id' | 'firstPublishedAt' | 'publishedAt'
+                        >;
+                        supplementGrant?: Maybe<
+                          Pick<
+                            SupplementGrant,
+                            'title' | 'description' | 'startDate' | 'endDate'
+                          > & {
+                            sys: Pick<Sys, 'id'>;
+                            proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                          }
+                        >;
+                        resourceType?: Maybe<
+                          Pick<ResourceType, 'name'> & { sys: Pick<Sys, 'id'> }
+                        >;
+                        researchTagsCollection?: Maybe<
+                          Pick<ProjectsResearchTagsCollection, 'total'> & {
+                            items: Array<
+                              Maybe<
+                                Pick<
+                                  ResearchTags,
+                                  'name' | 'category' | 'types'
+                                > & { sys: Pick<Sys, 'id'> }
+                              >
+                            >;
+                          }
+                        >;
+                        milestonesCollection?: Maybe<
+                          Pick<ProjectsMilestonesCollection, 'total'> & {
+                            items: Array<
+                              Maybe<
+                                Pick<
+                                  Milestones,
+                                  | 'title'
+                                  | 'description'
+                                  | 'status'
+                                  | 'externalLink'
+                                > & { sys: Pick<Sys, 'id'> }
+                              >
+                            >;
+                          }
+                        >;
+                        membersCollection?: Maybe<
+                          Pick<ProjectsMembersCollection, 'total'> & {
+                            items: Array<
+                              Maybe<
+                                Pick<ProjectMembership, 'role'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                  projectMember?: Maybe<
+                                    | ({ __typename: 'Teams' } & Pick<
+                                        Teams,
+                                        'displayName' | 'inactiveSince'
+                                      > & {
+                                          sys: Pick<Sys, 'id'>;
+                                          researchTheme?: Maybe<
+                                            Pick<ResearchTheme, 'name'>
+                                          >;
+                                        })
+                                    | ({ __typename: 'Users' } & Pick<
+                                        Users,
+                                        | 'firstName'
+                                        | 'nickname'
+                                        | 'lastName'
+                                        | 'email'
+                                        | 'onboarded'
+                                        | 'alumniSinceDate'
+                                      > & {
+                                          sys: Pick<Sys, 'id'>;
+                                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                                        })
+                                  >;
+                                }
+                              >
+                            >;
+                          }
+                        >;
+                      }
+                    >
+                  >;
+                }>;
+              }>;
+            }>
+          >;
+        }
+      >;
+    }>;
+  }>;
+};
+
+export type FetchProjectsByMembershipIdQueryVariables = Exact<{
+  membershipId: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchProjectsByMembershipIdQuery = {
+  projectMembership?: Maybe<{
+    sys: Pick<Sys, 'id'>;
+    linkedFrom?: Maybe<{
+      projectsCollection?: Maybe<
+        Pick<ProjectsCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<
+                Projects,
+                | 'title'
+                | 'projectId'
+                | 'grantId'
+                | 'originalGrant'
+                | 'projectType'
+                | 'status'
+                | 'startDate'
+                | 'endDate'
+                | 'applicationNumber'
+                | 'contactEmail'
+                | 'googleDriveLink'
+              > & {
+                sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
+                supplementGrant?: Maybe<
+                  Pick<
+                    SupplementGrant,
+                    'title' | 'description' | 'startDate' | 'endDate'
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                  }
+                >;
+                resourceType?: Maybe<
+                  Pick<ResourceType, 'name'> & { sys: Pick<Sys, 'id'> }
+                >;
+                researchTagsCollection?: Maybe<
+                  Pick<ProjectsResearchTagsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<ResearchTags, 'name' | 'category' | 'types'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }
+                >;
+                milestonesCollection?: Maybe<
+                  Pick<ProjectsMilestonesCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          Milestones,
+                          'title' | 'description' | 'status' | 'externalLink'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }
+                >;
+                membersCollection?: Maybe<
+                  Pick<ProjectsMembersCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<ProjectMembership, 'role'> & {
+                          sys: Pick<Sys, 'id'>;
+                          projectMember?: Maybe<
+                            | ({ __typename: 'Teams' } & Pick<
+                                Teams,
+                                'displayName' | 'inactiveSince'
+                              > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  researchTheme?: Maybe<
+                                    Pick<ResearchTheme, 'name'>
+                                  >;
+                                })
+                            | ({ __typename: 'Users' } & Pick<
+                                Users,
+                                | 'firstName'
+                                | 'nickname'
+                                | 'lastName'
+                                | 'email'
+                                | 'onboarded'
+                                | 'alumniSinceDate'
+                              > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                })
+                          >;
+                        }
+                      >
+                    >;
+                  }
+                >;
+              }
+            >
+          >;
+        }
+      >;
+    }>;
+  }>;
+};
+
 export type FetchRemindersQueryVariables = Exact<{
   researchOutputFilter?: InputMaybe<ResearchOutputsFilter>;
   eventFilter?: InputMaybe<EventsFilter>;
@@ -48189,6 +48535,446 @@ export const FetchProjectByIdDocument = {
 } as unknown as DocumentNode<
   FetchProjectByIdQuery,
   FetchProjectByIdQueryVariables
+>;
+export const FetchProjectsByTeamIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProjectsByTeamId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'teamId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teams' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'teamId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'projectMembershipCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'limit' },
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'linkedFrom' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'projectsCollection',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'limit',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '1',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'items',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'FragmentSpread',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'ProjectsContentData',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ProjectsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchProjectsByTeamIdQuery,
+  FetchProjectsByTeamIdQueryVariables
+>;
+export const FetchProjectsByUserIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProjectsByUserId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'users' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'projectMembershipCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'limit' },
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'linkedFrom' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'projectsCollection',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'limit',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '1',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'items',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'FragmentSpread',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'ProjectsContentData',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ProjectsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchProjectsByUserIdQuery,
+  FetchProjectsByUserIdQueryVariables
+>;
+export const FetchProjectsByMembershipIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProjectsByMembershipId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'membershipId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'projectMembership' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'membershipId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'projectsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'limit' },
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'ProjectsContentData',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ProjectsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchProjectsByMembershipIdQuery,
+  FetchProjectsByMembershipIdQueryVariables
 >;
 export const FetchRemindersDocument = {
   kind: 'Document',

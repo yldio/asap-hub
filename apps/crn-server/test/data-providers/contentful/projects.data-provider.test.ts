@@ -514,7 +514,6 @@ describe('parseProjectTeamMember', () => {
   });
 });
 
-<<<<<<< HEAD
 describe('processTraineeProjectMembers', () => {
   it('filters and orders members correctly: trainees first, then mentors', () => {
     const members: ProjectMembershipItem[] = [
@@ -1045,535 +1044,542 @@ describe('parseContentfulProjectDetail', () => {
     expect(() => parseContentfulProjectDetail(invalidItem as never)).toThrow(
       'Unknown project type: Unknown Project Type',
     );
-=======
-describe('ProjectContentfulDataProvider - fetch with projectMembershipId filter', () => {
-  const contentfulClientMock = getContentfulGraphqlClientMock();
-  const dataProvider = new ProjectContentfulDataProvider(contentfulClientMock);
-
-  afterEach(() => {
-    jest.resetAllMocks();
   });
 
-  it('fetches projects by membership ID when projectMembershipId filter is provided', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      projectMembership: {
-        sys: { id: 'membership-1' },
-        linkedFrom: {
-          projectsCollection: {
-            total: 2,
-            items: [
-              getDiscoveryProjectGraphqlItem(),
-              getResourceTeamProjectGraphqlItem(),
-            ],
-          },
-        },
-      },
-    });
-
-    const result = await dataProvider.fetch({
-      filter: { projectMembershipId: 'membership-1' },
-      take: 10,
-      skip: 0,
-    });
-
-    expect(result.total).toBe(2);
-    expect(result.items).toHaveLength(2);
-    expect(contentfulClientMock.request).toHaveBeenCalledWith(
-      expect.anything(),
-      {
-        membershipId: 'membership-1',
-        limit: 20,
-      },
+  describe('ProjectContentfulDataProvider - fetch with projectMembershipId filter', () => {
+    const contentfulClientMock = getContentfulGraphqlClientMock();
+    const dataProvider = new ProjectContentfulDataProvider(
+      contentfulClientMock,
     );
-  });
 
-  it('returns empty list when project membership does not exist', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      projectMembership: null,
+    afterEach(() => {
+      jest.resetAllMocks();
     });
 
-    const result = await dataProvider.fetch({
-      filter: { projectMembershipId: 'non-existent' },
-    });
-
-    expect(result).toEqual({
-      total: 0,
-      items: [],
-    });
-  });
-
-  it('returns empty list when project membership has no linked projects', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      projectMembership: {
-        sys: { id: 'membership-1' },
-        linkedFrom: {
-          projectsCollection: null,
-        },
-      },
-    });
-
-    const result = await dataProvider.fetch({
-      filter: { projectMembershipId: 'membership-1' },
-    });
-
-    expect(result).toEqual({
-      total: 0,
-      items: [],
-    });
-  });
-
-  it('filters out null projects from the results', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      projectMembership: {
-        sys: { id: 'membership-1' },
-        linkedFrom: {
-          projectsCollection: {
-            total: 3,
-            items: [
-              getDiscoveryProjectGraphqlItem(),
-              null,
-              getResourceTeamProjectGraphqlItem(),
-            ],
+    it('fetches projects by membership ID when projectMembershipId filter is provided', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        projectMembership: {
+          sys: { id: 'membership-1' },
+          linkedFrom: {
+            projectsCollection: {
+              total: 2,
+              items: [
+                getDiscoveryProjectGraphqlItem(),
+                getResourceTeamProjectGraphqlItem(),
+              ],
+            },
           },
         },
-      },
+      });
+
+      const result = await dataProvider.fetch({
+        filter: { projectMembershipId: 'membership-1' },
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result.total).toBe(2);
+      expect(result.items).toHaveLength(2);
+      expect(contentfulClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          membershipId: 'membership-1',
+          limit: 20,
+        },
+      );
     });
 
-    const result = await dataProvider.fetch({
-      filter: { projectMembershipId: 'membership-1' },
+    it('returns empty list when project membership does not exist', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        projectMembership: null,
+      });
+
+      const result = await dataProvider.fetch({
+        filter: { projectMembershipId: 'non-existent' },
+      });
+
+      expect(result).toEqual({
+        total: 0,
+        items: [],
+      });
     });
 
-    expect(result.total).toBe(2);
-    expect(result.items).toHaveLength(2);
-  });
-
-  it('applies pagination correctly to filtered results', async () => {
-    const projects = [
-      getDiscoveryProjectGraphqlItem(),
-      getResourceTeamProjectGraphqlItem(),
-      getResourceIndividualProjectGraphqlItem(),
-      getTraineeProjectGraphqlItem(),
-    ];
-
-    contentfulClientMock.request.mockResolvedValueOnce({
-      projectMembership: {
-        sys: { id: 'membership-1' },
-        linkedFrom: {
-          projectsCollection: {
-            total: 4,
-            items: projects,
+    it('returns empty list when project membership has no linked projects', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        projectMembership: {
+          sys: { id: 'membership-1' },
+          linkedFrom: {
+            projectsCollection: null,
           },
         },
-      },
+      });
+
+      const result = await dataProvider.fetch({
+        filter: { projectMembershipId: 'membership-1' },
+      });
+
+      expect(result).toEqual({
+        total: 0,
+        items: [],
+      });
     });
 
-    const result = await dataProvider.fetch({
-      filter: { projectMembershipId: 'membership-1' },
-      take: 2,
-      skip: 1,
-    });
-
-    expect(result.total).toBe(4);
-    expect(result.items).toHaveLength(2);
-    // Should return items at index 1 and 2
-    expect(result.items[0]).toMatchObject({
-      id: projects[1]?.sys.id,
-    });
-    expect(result.items[1]).toMatchObject({
-      id: projects[2]?.sys.id,
-    });
-  });
-});
-
-describe('ProjectContentfulDataProvider - fetchByTeamId', () => {
-  const contentfulClientMock = getContentfulGraphqlClientMock();
-  const dataProvider = new ProjectContentfulDataProvider(contentfulClientMock);
-
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
-  it('fetches projects for a given team ID', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      teams: {
-        linkedFrom: {
-          projectMembershipCollection: {
-            items: [
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getDiscoveryProjectGraphqlItem()],
-                  },
-                },
-              },
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getResourceTeamProjectGraphqlItem()],
-                  },
-                },
-              },
-            ],
+    it('filters out null projects from the results', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        projectMembership: {
+          sys: { id: 'membership-1' },
+          linkedFrom: {
+            projectsCollection: {
+              total: 3,
+              items: [
+                getDiscoveryProjectGraphqlItem(),
+                null,
+                getResourceTeamProjectGraphqlItem(),
+              ],
+            },
           },
         },
-      },
+      });
+
+      const result = await dataProvider.fetch({
+        filter: { projectMembershipId: 'membership-1' },
+      });
+
+      expect(result.total).toBe(2);
+      expect(result.items).toHaveLength(2);
     });
 
-    const result = await dataProvider.fetchByTeamId('team-1', {
-      take: 10,
-      skip: 0,
-    });
+    it('applies pagination correctly to filtered results', async () => {
+      const projects = [
+        getDiscoveryProjectGraphqlItem(),
+        getResourceTeamProjectGraphqlItem(),
+        getResourceIndividualProjectGraphqlItem(),
+        getTraineeProjectGraphqlItem(),
+      ];
 
-    expect(result.total).toBe(2);
-    expect(result.items).toHaveLength(2);
-    expect(contentfulClientMock.request).toHaveBeenCalledWith(
-      expect.anything(),
-      {
-        teamId: 'team-1',
-        limit: 100,
-      },
+      contentfulClientMock.request.mockResolvedValueOnce({
+        projectMembership: {
+          sys: { id: 'membership-1' },
+          linkedFrom: {
+            projectsCollection: {
+              total: 4,
+              items: projects,
+            },
+          },
+        },
+      });
+
+      const result = await dataProvider.fetch({
+        filter: { projectMembershipId: 'membership-1' },
+        take: 2,
+        skip: 1,
+      });
+
+      expect(result.total).toBe(4);
+      expect(result.items).toHaveLength(2);
+      // Should return items at index 1 and 2
+      expect(result.items[0]).toMatchObject({
+        id: projects[1]?.sys.id,
+      });
+      expect(result.items[1]).toMatchObject({
+        id: projects[2]?.sys.id,
+      });
+    });
+  });
+
+  describe('ProjectContentfulDataProvider - fetchByTeamId', () => {
+    const contentfulClientMock = getContentfulGraphqlClientMock();
+    const dataProvider = new ProjectContentfulDataProvider(
+      contentfulClientMock,
     );
-  });
 
-  it('returns empty list when team does not exist', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      teams: null,
+    afterEach(() => {
+      jest.resetAllMocks();
     });
 
-    const result = await dataProvider.fetchByTeamId('non-existent', {
-      take: 10,
-      skip: 0,
-    });
-
-    expect(result).toEqual({
-      total: 0,
-      items: [],
-    });
-  });
-
-  it('returns empty list when team has no project memberships', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      teams: {
-        linkedFrom: {
-          projectMembershipCollection: null,
-        },
-      },
-    });
-
-    const result = await dataProvider.fetchByTeamId('team-1', {
-      take: 10,
-      skip: 0,
-    });
-
-    expect(result).toEqual({
-      total: 0,
-      items: [],
-    });
-  });
-
-  it('deduplicates projects when team has multiple memberships to same project', async () => {
-    const discoveryProject = getDiscoveryProjectGraphqlItem();
-
-    contentfulClientMock.request.mockResolvedValueOnce({
-      teams: {
-        linkedFrom: {
-          projectMembershipCollection: {
-            items: [
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [discoveryProject],
+    it('fetches projects for a given team ID', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        teams: {
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getDiscoveryProjectGraphqlItem()],
+                    },
                   },
                 },
-              },
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [discoveryProject], // Same project again
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getResourceTeamProjectGraphqlItem()],
+                    },
                   },
                 },
-              },
-            ],
+              ],
+            },
           },
         },
-      },
+      });
+
+      const result = await dataProvider.fetchByTeamId('team-1', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result.total).toBe(2);
+      expect(result.items).toHaveLength(2);
+      expect(contentfulClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          teamId: 'team-1',
+          limit: 100,
+        },
+      );
     });
 
-    const result = await dataProvider.fetchByTeamId('team-1', {
-      take: 10,
-      skip: 0,
+    it('returns empty list when team does not exist', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        teams: null,
+      });
+
+      const result = await dataProvider.fetchByTeamId('non-existent', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result).toEqual({
+        total: 0,
+        items: [],
+      });
     });
 
-    expect(result.total).toBe(1); // Should be deduplicated
-    expect(result.items).toHaveLength(1);
-  });
-
-  it('filters out null memberships', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      teams: {
-        linkedFrom: {
-          projectMembershipCollection: {
-            items: [
-              null,
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getDiscoveryProjectGraphqlItem()],
-                  },
-                },
-              },
-              null,
-            ],
+    it('returns empty list when team has no project memberships', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        teams: {
+          linkedFrom: {
+            projectMembershipCollection: null,
           },
         },
-      },
+      });
+
+      const result = await dataProvider.fetchByTeamId('team-1', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result).toEqual({
+        total: 0,
+        items: [],
+      });
     });
 
-    const result = await dataProvider.fetchByTeamId('team-1', {
-      take: 10,
-      skip: 0,
-    });
+    it('deduplicates projects when team has multiple memberships to same project', async () => {
+      const discoveryProject = getDiscoveryProjectGraphqlItem();
 
-    expect(result.total).toBe(1);
-    expect(result.items).toHaveLength(1);
-  });
-
-  it('applies pagination correctly after deduplication', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      teams: {
-        linkedFrom: {
-          projectMembershipCollection: {
-            items: [
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getDiscoveryProjectGraphqlItem()],
+      contentfulClientMock.request.mockResolvedValueOnce({
+        teams: {
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [discoveryProject],
+                    },
                   },
                 },
-              },
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getResourceTeamProjectGraphqlItem()],
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [discoveryProject], // Same project again
+                    },
                   },
                 },
-              },
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getResourceIndividualProjectGraphqlItem()],
-                  },
-                },
-              },
-            ],
+              ],
+            },
           },
         },
-      },
+      });
+
+      const result = await dataProvider.fetchByTeamId('team-1', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result.total).toBe(1); // Should be deduplicated
+      expect(result.items).toHaveLength(1);
     });
 
-    const result = await dataProvider.fetchByTeamId('team-1', {
-      take: 1,
-      skip: 1,
-    });
-
-    expect(result.total).toBe(3);
-    expect(result.items).toHaveLength(1);
-  });
-});
-
-describe('ProjectContentfulDataProvider - fetchByUserId', () => {
-  const contentfulClientMock = getContentfulGraphqlClientMock();
-  const dataProvider = new ProjectContentfulDataProvider(contentfulClientMock);
-
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
-  it('fetches projects for a given user ID', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      users: {
-        linkedFrom: {
-          projectMembershipCollection: {
-            items: [
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getDiscoveryProjectGraphqlItem()],
+    it('filters out null memberships', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        teams: {
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [
+                null,
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getDiscoveryProjectGraphqlItem()],
+                    },
                   },
                 },
-              },
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getResourceTeamProjectGraphqlItem()],
-                  },
-                },
-              },
-            ],
+                null,
+              ],
+            },
           },
         },
-      },
+      });
+
+      const result = await dataProvider.fetchByTeamId('team-1', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result.total).toBe(1);
+      expect(result.items).toHaveLength(1);
     });
 
-    const result = await dataProvider.fetchByUserId('user-1', {
-      take: 10,
-      skip: 0,
-    });
+    it('applies pagination correctly after deduplication', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        teams: {
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getDiscoveryProjectGraphqlItem()],
+                    },
+                  },
+                },
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getResourceTeamProjectGraphqlItem()],
+                    },
+                  },
+                },
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getResourceIndividualProjectGraphqlItem()],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
 
-    expect(result.total).toBe(2);
-    expect(result.items).toHaveLength(2);
-    expect(contentfulClientMock.request).toHaveBeenCalledWith(
-      expect.anything(),
-      {
-        userId: 'user-1',
-        limit: 100,
-      },
+      const result = await dataProvider.fetchByTeamId('team-1', {
+        take: 1,
+        skip: 1,
+      });
+
+      expect(result.total).toBe(3);
+      expect(result.items).toHaveLength(1);
+    });
+  });
+
+  describe('ProjectContentfulDataProvider - fetchByUserId', () => {
+    const contentfulClientMock = getContentfulGraphqlClientMock();
+    const dataProvider = new ProjectContentfulDataProvider(
+      contentfulClientMock,
     );
-  });
 
-  it('returns empty list when user does not exist', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      users: null,
+    afterEach(() => {
+      jest.resetAllMocks();
     });
 
-    const result = await dataProvider.fetchByUserId('non-existent', {
-      take: 10,
-      skip: 0,
-    });
-
-    expect(result).toEqual({
-      total: 0,
-      items: [],
-    });
-  });
-
-  it('returns empty list when user has no project memberships', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      users: {
-        linkedFrom: {
-          projectMembershipCollection: null,
-        },
-      },
-    });
-
-    const result = await dataProvider.fetchByUserId('user-1', {
-      take: 10,
-      skip: 0,
-    });
-
-    expect(result).toEqual({
-      total: 0,
-      items: [],
-    });
-  });
-
-  it('deduplicates projects when user has multiple memberships to same project', async () => {
-    const discoveryProject = getDiscoveryProjectGraphqlItem();
-
-    contentfulClientMock.request.mockResolvedValueOnce({
-      users: {
-        linkedFrom: {
-          projectMembershipCollection: {
-            items: [
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [discoveryProject],
+    it('fetches projects for a given user ID', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        users: {
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getDiscoveryProjectGraphqlItem()],
+                    },
                   },
                 },
-              },
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [discoveryProject], // Same project again
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getResourceTeamProjectGraphqlItem()],
+                    },
                   },
                 },
-              },
-            ],
+              ],
+            },
           },
         },
-      },
+      });
+
+      const result = await dataProvider.fetchByUserId('user-1', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result.total).toBe(2);
+      expect(result.items).toHaveLength(2);
+      expect(contentfulClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          userId: 'user-1',
+          limit: 100,
+        },
+      );
     });
 
-    const result = await dataProvider.fetchByUserId('user-1', {
-      take: 10,
-      skip: 0,
+    it('returns empty list when user does not exist', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        users: null,
+      });
+
+      const result = await dataProvider.fetchByUserId('non-existent', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result).toEqual({
+        total: 0,
+        items: [],
+      });
     });
 
-    expect(result.total).toBe(1); // Should be deduplicated
-    expect(result.items).toHaveLength(1);
-  });
-
-  it('filters out null memberships', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      users: {
-        linkedFrom: {
-          projectMembershipCollection: {
-            items: [
-              null,
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getDiscoveryProjectGraphqlItem()],
-                  },
-                },
-              },
-              null,
-            ],
+    it('returns empty list when user has no project memberships', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        users: {
+          linkedFrom: {
+            projectMembershipCollection: null,
           },
         },
-      },
+      });
+
+      const result = await dataProvider.fetchByUserId('user-1', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result).toEqual({
+        total: 0,
+        items: [],
+      });
     });
 
-    const result = await dataProvider.fetchByUserId('user-1', {
-      take: 10,
-      skip: 0,
-    });
+    it('deduplicates projects when user has multiple memberships to same project', async () => {
+      const discoveryProject = getDiscoveryProjectGraphqlItem();
 
-    expect(result.total).toBe(1);
-    expect(result.items).toHaveLength(1);
-  });
-
-  it('applies pagination correctly after deduplication', async () => {
-    contentfulClientMock.request.mockResolvedValueOnce({
-      users: {
-        linkedFrom: {
-          projectMembershipCollection: {
-            items: [
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getDiscoveryProjectGraphqlItem()],
+      contentfulClientMock.request.mockResolvedValueOnce({
+        users: {
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [discoveryProject],
+                    },
                   },
                 },
-              },
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getResourceTeamProjectGraphqlItem()],
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [discoveryProject], // Same project again
+                    },
                   },
                 },
-              },
-              {
-                linkedFrom: {
-                  projectsCollection: {
-                    items: [getResourceIndividualProjectGraphqlItem()],
-                  },
-                },
-              },
-            ],
+              ],
+            },
           },
         },
-      },
+      });
+
+      const result = await dataProvider.fetchByUserId('user-1', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result.total).toBe(1); // Should be deduplicated
+      expect(result.items).toHaveLength(1);
     });
 
-    const result = await dataProvider.fetchByUserId('user-1', {
-      take: 1,
-      skip: 1,
+    it('filters out null memberships', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        users: {
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [
+                null,
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getDiscoveryProjectGraphqlItem()],
+                    },
+                  },
+                },
+                null,
+              ],
+            },
+          },
+        },
+      });
+
+      const result = await dataProvider.fetchByUserId('user-1', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result.total).toBe(1);
+      expect(result.items).toHaveLength(1);
     });
 
-    expect(result.total).toBe(3);
-    expect(result.items).toHaveLength(1);
->>>>>>> ce0e2a926 ([ASAP-1274] - Add new webhook handler to update projects' index at Algolia when updating a ProjectMembership)
+    it('applies pagination correctly after deduplication', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        users: {
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getDiscoveryProjectGraphqlItem()],
+                    },
+                  },
+                },
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getResourceTeamProjectGraphqlItem()],
+                    },
+                  },
+                },
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [getResourceIndividualProjectGraphqlItem()],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      const result = await dataProvider.fetchByUserId('user-1', {
+        take: 1,
+        skip: 1,
+      });
+
+      expect(result.total).toBe(3);
+      expect(result.items).toHaveLength(1);
+    });
   });
 });

@@ -19,12 +19,9 @@ import {
 } from '@asap-hub/contentful';
 import {
   DiscoveryProject,
-<<<<<<< HEAD
+  FetchPaginationOptions,
   DiscoveryProjectDetail,
   FundedTeam,
-=======
-  FetchPaginationOptions,
->>>>>>> a15bc36fd ([ASAP-1274] - Add new webhook handler to update projects' index at Algolia when updating a team)
   ListProjectDataObject,
   Milestone,
   MilestoneStatus,
@@ -59,349 +56,6 @@ export type ProjectMembershipItem = NonNullable<
   NonNullable<ProjectItem['membersCollection']>['items'][number]
 >;
 
-<<<<<<< HEAD
-=======
-export class ProjectContentfulDataProvider implements ProjectDataProvider {
-  constructor(private contentfulClient: GraphQLClient) {}
-
-  async fetchById(id: string): Promise<ProjectDataObject | null> {
-    try {
-      const { projects } = await this.contentfulClient.request<
-        FetchProjectByIdQuery,
-        FetchProjectByIdQueryVariables
-      >(FETCH_PROJECT_BY_ID, { id });
-
-      if (!projects) {
-        return null;
-      }
-
-      return parseContentfulProject(projects);
-    } catch (error) {
-      return null;
-    }
-  }
-
-  async fetch(options: FetchProjectsOptions): Promise<ListProjectDataObject> {
-    const { take = 10, skip = 0, search, filter } = options;
-
-    if (filter?.projectMembershipId) {
-      const { projectMembership } = await this.contentfulClient.request<
-        FetchProjectsByMembershipIdQuery,
-        FetchProjectsByMembershipIdQueryVariables
-      >(FETCH_PROJECTS_BY_MEMBERSHIP_ID, {
-        membershipId: filter.projectMembershipId,
-        // It's unlikely that one membership belongs to many projects, but for completeness sake I'm using a safe limit.
-        limit: 20,
-      });
-
-      if (!projectMembership?.linkedFrom?.projectsCollection?.items) {
-        return {
-          total: 0,
-          items: [],
-        };
-      }
-
-      const projects =
-        projectMembership.linkedFrom.projectsCollection.items.filter(
-          (project): project is NonNullable<typeof project> => project !== null,
-        );
-
-      const paginatedItems = projects.slice(skip, skip + take);
-
-      return {
-        total: projects.length,
-        items: paginatedItems.map(parseContentfulProject),
-      };
-    }
-
-    const searchTerms = (search || '').split(' ').filter(Boolean);
-    const searchQuery = searchTerms.length
-      ? {
-          OR: [
-            ...searchTerms.map((term) => ({
-              title_contains: term,
-            })),
-            ...searchTerms.map((term) => ({
-              researchTags: { name_contains: term },
-            })),
-          ],
-        }
-      : {};
-
-    const projectTypeQuery = filter?.projectType
-      ? {
-          projectType_in: Array.isArray(filter.projectType)
-            ? filter.projectType.map(normalizeProjectType)
-            : [normalizeProjectType(filter.projectType)],
-        }
-      : {};
-
-    const statusQuery = filter?.status
-      ? {
-          status_in: Array.isArray(filter.status)
-            ? filter.status
-            : [filter.status],
-        }
-      : {};
-
-    const { projectsCollection } = await this.contentfulClient.request<
-      FetchProjectsQuery,
-      FetchProjectsQueryVariables
-    >(FETCH_PROJECTS, {
-      limit: take,
-      skip,
-      order: [ProjectsOrder.SysFirstPublishedAtDesc],
-      where: {
-        ...searchQuery,
-        ...projectTypeQuery,
-        ...statusQuery,
-      },
-    });
-
-    if (!projectsCollection?.items) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
-    return {
-      total: projectsCollection.total,
-      items: cleanArray(projectsCollection.items).map(parseContentfulProject),
-    };
-  }
-
-  async fetchByTeamId(
-    teamId: string,
-    options: FetchPaginationOptions,
-  ): Promise<ListProjectDataObject> {
-    const { take = 10, skip = 0 } = options;
-
-    const { teams } = await this.contentfulClient.request<
-      FetchProjectsByTeamIdQuery,
-      FetchProjectsByTeamIdQueryVariables
-    >(FETCH_PROJECTS_BY_TEAM_ID, {
-      teamId,
-      limit: 100, // Fetch all memberships, deduplicate in memory as a team may have more than one role per project.
-    });
-
-    if (!teams?.linkedFrom?.projectMembershipCollection?.items) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
-    // Extract projects from memberships and deduplicate by project ID
-    const projectMap = new Map<string, ProjectItem>();
-    const memberships =
-      teams.linkedFrom.projectMembershipCollection.items.filter(
-        (membership): membership is NonNullable<typeof membership> =>
-          membership !== null,
-      );
-    for (const membership of memberships) {
-      const projects = membership.linkedFrom?.projectsCollection?.items || [];
-      for (const project of projects) {
-        if (project && !projectMap.has(project.sys.id)) {
-          projectMap.set(project.sys.id, project);
-        }
-      }
-    }
-
-    const uniqueProjects = Array.from(projectMap.values());
-
-    // Apply pagination in memory on deduplicated projects
-    const paginatedItems = uniqueProjects.slice(skip, skip + take);
-
-    return {
-      total: uniqueProjects.length,
-      items: paginatedItems.map(parseContentfulProject),
-    };
-  }
-
-  async fetchByUserId(
-    userId: string,
-    options: FetchPaginationOptions,
-  ): Promise<ListProjectDataObject> {
-    const { take = 10, skip = 0 } = options;
-
-    const { users } = await this.contentfulClient.request<
-      FetchProjectsByUserIdQuery,
-      FetchProjectsByUserIdQueryVariables
-    >(FETCH_PROJECTS_BY_USER_ID, {
-      userId,
-      limit: 100, // Fetch all memberships, deduplicate in memory as a user may have more than one role per project.
-    });
-
-    if (!users?.linkedFrom?.projectMembershipCollection?.items) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
-    // Extract projects from memberships and deduplicate by project ID
-    const projectMap = new Map<string, ProjectItem>();
-    const memberships =
-      users.linkedFrom.projectMembershipCollection.items.filter(
-        (membership): membership is NonNullable<typeof membership> =>
-          membership !== null,
-      );
-    for (const membership of memberships) {
-      const projects = membership.linkedFrom?.projectsCollection?.items || [];
-      for (const project of projects) {
-        if (project && !projectMap.has(project.sys.id)) {
-          projectMap.set(project.sys.id, project);
-        }
-      }
-    }
-
-    const uniqueProjects = Array.from(projectMap.values());
-
-    // Apply pagination in memory on deduplicated projects
-    const paginatedItems = uniqueProjects.slice(skip, skip + take);
-
-    return {
-      total: uniqueProjects.length,
-      items: paginatedItems.map(parseContentfulProject),
-    };
-  }
-}
-
-// Helper function to normalize project type from Contentful format
-const normalizeProjectType = (type: ProjectType): string => `${type} Project`;
-
-// Parse Contentful project to model format
-export const parseContentfulProject = (
-  item: ProjectItem | ProjectsCollectionItem,
-): ProjectDataObject => {
-  const projectType = (() => {
-    const type = item.projectType || '';
-    if (type.includes('Discovery')) {
-      return 'Discovery' as ProjectType;
-    }
-    if (type.includes('Resource')) {
-      return 'Resource' as ProjectType;
-    }
-    if (type.includes('Trainee')) {
-      return 'Trainee' as ProjectType;
-    }
-    return undefined;
-  })();
-  const status = (item.status || '') as ProjectStatus;
-  const tags = cleanArray(item.researchTagsCollection?.items || []).map(
-    (tag) => tag.name || '',
-  );
-
-  const baseProject = {
-    id: item.sys.id,
-    title: item.title,
-    status,
-    startDate: item.startDate,
-    endDate: item.endDate,
-    tags,
-  };
-
-  const members = cleanArray(item.membersCollection?.items || []);
-
-  switch (projectType) {
-    case 'Discovery': {
-      const team = members.find((m) => m.projectMember?.__typename === 'Teams');
-      const teamMember = team?.projectMember;
-
-      if (teamMember?.__typename === 'Teams') {
-        return {
-          ...baseProject,
-          projectType: 'Discovery',
-          researchTheme: teamMember.researchTheme?.name || '',
-          teamName: teamMember.displayName || '',
-          teamId: teamMember.sys?.id,
-          inactiveSinceDate: teamMember.inactiveSince || undefined,
-        } as DiscoveryProject;
-      }
-
-      // Fallback if no team found
-      return {
-        ...baseProject,
-        projectType: 'Discovery',
-        researchTheme: '',
-        teamName: '',
-      } as DiscoveryProject;
-    }
-
-    case 'Resource': {
-      const team = members.find((m) => m.projectMember?.__typename === 'Teams');
-      const isTeamBased = !!team;
-
-      if (isTeamBased && team?.projectMember?.__typename === 'Teams') {
-        const teamMember = team.projectMember;
-        const teamMembers = members
-          .filter((m) => m.projectMember?.__typename === 'Teams')
-          .map((m) => parseProjectTeamMember(m));
-
-        return {
-          ...baseProject,
-          projectType: 'Resource',
-          resourceType: item.resourceType?.name || '',
-          isTeamBased: true,
-          teamName: teamMember.displayName || '',
-          teamId: teamMember.sys?.id,
-          googleDriveLink: item.googleDriveLink || undefined,
-          members: teamMembers,
-        } as ResourceProject;
-      }
-
-      const userMembers = members
-        .filter((m) => m.projectMember?.__typename === 'Users')
-        .map((m) => parseProjectUserMember(m));
-
-      return {
-        ...baseProject,
-        projectType: 'Resource',
-        resourceType: item.resourceType?.name || '',
-        isTeamBased: false,
-        members: userMembers,
-        googleDriveLink: item.googleDriveLink || undefined,
-      } as ResourceProject;
-    }
-
-    case 'Trainee': {
-      const userMembers = members
-        .filter((m) => m.projectMember?.__typename === 'Users')
-        .map((m) => parseProjectUserMember(m));
-
-      // First member with "Trainer" or "Project Lead" role is the trainer
-      const trainerCandidate = userMembers.find(
-        (m) =>
-          m.role === 'Project CoLead' ||
-          m.role === 'Project Lead' ||
-          m.role === 'Project Manager',
-      );
-
-      const trainer =
-        trainerCandidate ??
-        userMembers[0] ??
-        ({
-          id: `trainer-unknown-${item.sys.id}`,
-          displayName: '',
-        } as ProjectMember);
-
-      const trainees = userMembers.filter((m) => m.id !== trainer.id);
-
-      return {
-        ...baseProject,
-        projectType: 'Trainee',
-        trainer,
-        members: trainees,
-      } as TraineeProject;
-    }
-
-    default:
-      throw new Error(`Unknown project type: ${item.projectType}`);
-  }
-};
-
->>>>>>> a15bc36fd ([ASAP-1274] - Add new webhook handler to update projects' index at Algolia when updating a team)
 // Parse project member from Contentful membership
 export const parseProjectUserMember = (
   membership: ProjectMembershipItem,
@@ -750,6 +404,36 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
   async fetch(options: FetchProjectsOptions): Promise<ListProjectDataObject> {
     const { take = 10, skip = 0, search, filter } = options;
 
+    if (filter?.projectMembershipId) {
+      const { projectMembership } = await this.contentfulClient.request<
+        FetchProjectsByMembershipIdQuery,
+        FetchProjectsByMembershipIdQueryVariables
+      >(FETCH_PROJECTS_BY_MEMBERSHIP_ID, {
+        membershipId: filter.projectMembershipId,
+        // It's unlikely that one membership belongs to many projects, but for completeness sake I'm using a safe limit.
+        limit: 20,
+      });
+
+      if (!projectMembership?.linkedFrom?.projectsCollection?.items) {
+        return {
+          total: 0,
+          items: [],
+        };
+      }
+
+      const projects =
+        projectMembership.linkedFrom.projectsCollection.items.filter(
+          (project): project is NonNullable<typeof project> => project !== null,
+        );
+
+      const paginatedItems = projects.slice(skip, skip + take);
+
+      return {
+        total: projects.length,
+        items: paginatedItems.map(parseContentfulProject),
+      };
+    }
+
     const searchTerms = (search || '').split(' ').filter(Boolean);
     const searchQuery = searchTerms.length
       ? {
@@ -806,6 +490,102 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       items: cleanArray<ProjectsCollectionItem>(projectsCollection.items).map(
         parseContentfulProject,
       ),
+    };
+  }
+
+  async fetchByTeamId(
+    teamId: string,
+    options: FetchPaginationOptions,
+  ): Promise<ListProjectDataObject> {
+    const { take = 10, skip = 0 } = options;
+
+    const { teams } = await this.contentfulClient.request<
+      FetchProjectsByTeamIdQuery,
+      FetchProjectsByTeamIdQueryVariables
+    >(FETCH_PROJECTS_BY_TEAM_ID, {
+      teamId,
+      limit: 100, // Fetch all memberships, deduplicate in memory as a team may have more than one role per project.
+    });
+
+    if (!teams?.linkedFrom?.projectMembershipCollection?.items) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    // Extract projects from memberships and deduplicate by project ID
+    const projectMap = new Map<string, ProjectItem>();
+    const memberships =
+      teams.linkedFrom.projectMembershipCollection.items.filter(
+        (membership): membership is NonNullable<typeof membership> =>
+          membership !== null,
+      );
+    for (const membership of memberships) {
+      const projects = membership.linkedFrom?.projectsCollection?.items || [];
+      for (const project of projects) {
+        if (project && !projectMap.has(project.sys.id)) {
+          projectMap.set(project.sys.id, project);
+        }
+      }
+    }
+
+    const uniqueProjects = Array.from(projectMap.values());
+
+    // Apply pagination in memory on deduplicated projects
+    const paginatedItems = uniqueProjects.slice(skip, skip + take);
+
+    return {
+      total: uniqueProjects.length,
+      items: paginatedItems.map(parseContentfulProject),
+    };
+  }
+
+  async fetchByUserId(
+    userId: string,
+    options: FetchPaginationOptions,
+  ): Promise<ListProjectDataObject> {
+    const { take = 10, skip = 0 } = options;
+
+    const { users } = await this.contentfulClient.request<
+      FetchProjectsByUserIdQuery,
+      FetchProjectsByUserIdQueryVariables
+    >(FETCH_PROJECTS_BY_USER_ID, {
+      userId,
+      limit: 100, // Fetch all memberships, deduplicate in memory as a user may have more than one role per project.
+    });
+
+    if (!users?.linkedFrom?.projectMembershipCollection?.items) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    // Extract projects from memberships and deduplicate by project ID
+    const projectMap = new Map<string, ProjectItem>();
+    const memberships =
+      users.linkedFrom.projectMembershipCollection.items.filter(
+        (membership): membership is NonNullable<typeof membership> =>
+          membership !== null,
+      );
+    for (const membership of memberships) {
+      const projects = membership.linkedFrom?.projectsCollection?.items || [];
+      for (const project of projects) {
+        if (project && !projectMap.has(project.sys.id)) {
+          projectMap.set(project.sys.id, project);
+        }
+      }
+    }
+
+    const uniqueProjects = Array.from(projectMap.values());
+
+    // Apply pagination in memory on deduplicated projects
+    const paginatedItems = uniqueProjects.slice(skip, skip + take);
+
+    return {
+      total: uniqueProjects.length,
+      items: paginatedItems.map(parseContentfulProject),
     };
   }
 }

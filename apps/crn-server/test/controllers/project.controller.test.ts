@@ -45,7 +45,7 @@ describe('Project Controller', () => {
         skip: 15,
         search: 'olfactory',
         filter: {
-          projectType: ['Discovery'] as ProjectType[],
+          projectType: ['Discovery Project'] as ProjectType[],
           status: ['Active'] as ProjectStatus[],
         },
       };

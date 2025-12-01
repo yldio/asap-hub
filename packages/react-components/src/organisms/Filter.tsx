@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
 import { CheckboxGroup } from '.';
@@ -30,6 +30,7 @@ const dropdownContainer = css({
   width: rem(295),
   right: rem(0),
   top: rem(8),
+  zIndex: 1000,
 
   backgroundColor: paper.rgb,
   border: `1px solid ${steel.rgb}`,
@@ -63,9 +64,29 @@ export default function Filter<V extends string>({
   filterOptions,
 }: FilterProps<V>): ReturnType<React.FC> {
   const [menuShown, setMenuShown] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     setMenuShown(false);
   }, [filterOptions]);
+
+  // Handle click outside to close the filter dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterRef.current &&
+        !filterRef.current.contains(event.target as Node)
+      ) {
+        setMenuShown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const [debouncedFilters] = useDebounce(filters, 5000);
   useEffect(() => {
@@ -85,7 +106,7 @@ export default function Filter<V extends string>({
   }, [debouncedFilters, filters]);
 
   return (
-    <div>
+    <div ref={filterRef}>
       <Button
         noMargin
         active={menuShown}

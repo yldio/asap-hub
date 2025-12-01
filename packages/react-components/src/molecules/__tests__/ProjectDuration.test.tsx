@@ -47,7 +47,7 @@ describe('ProjectDuration', () => {
       <ProjectDuration
         startDate="2023-01-15"
         endDate="2025-12-31"
-        projectStatus="Complete"
+        projectStatus="Completed"
       />,
     );
     expect(getByText(/Jan 2023/)).toBeVisible();
@@ -59,7 +59,7 @@ describe('ProjectDuration', () => {
       <ProjectDuration
         startDate="2023-01-15"
         endDate="2023-06-15"
-        projectStatus="Complete"
+        projectStatus="Completed"
       />,
     );
     expect(getByText(/5 mos/)).toBeVisible();
@@ -93,7 +93,7 @@ describe('ProjectDuration', () => {
       <ProjectDuration
         startDate="2023-01-15"
         endDate="2025-12-31"
-        projectStatus="Complete"
+        projectStatus="Completed"
       />,
     );
     // Jan 2023 to Dec 2025 is approximately 35-36 months = 2-3 years
@@ -105,7 +105,7 @@ describe('ProjectDuration', () => {
       <ProjectDuration
         startDate="2023-01-15"
         endDate="2025-01-15"
-        projectStatus="Complete"
+        projectStatus="Completed"
       />,
     );
     expect(getByText(/2 yrs/)).toBeVisible();
@@ -116,7 +116,7 @@ describe('ProjectDuration', () => {
       <ProjectDuration
         startDate="2020-01-15"
         endDate="2025-01-15"
-        projectStatus="Complete"
+        projectStatus="Completed"
       />,
     );
     expect(getByText(/5 yrs/)).toBeVisible();
@@ -127,7 +127,7 @@ describe('ProjectDuration', () => {
       <ProjectDuration
         startDate="2023-01-15"
         endDate="2023-01-20"
-        projectStatus="Complete"
+        projectStatus="Completed"
       />,
     );
     expect(getByText(/0 mos/)).toBeVisible();
@@ -138,7 +138,7 @@ describe('ProjectDuration', () => {
       <ProjectDuration
         startDate="2023-01-15"
         endDate="2024-01-15"
-        projectStatus="Complete"
+        projectStatus="Completed"
       />,
     );
     // Check that SVG icon is rendered
@@ -150,7 +150,7 @@ describe('ProjectDuration', () => {
       <ProjectDuration
         startDate="invalid-date"
         endDate="also-invalid"
-        projectStatus="Complete"
+        projectStatus="Completed"
       />,
     );
     // Component should still render without crashing
@@ -163,7 +163,7 @@ describe('ProjectDuration', () => {
       <ProjectDuration
         startDate="2023-01-15"
         endDate="2024-06-15"
-        projectStatus="Complete"
+        projectStatus="Completed"
       />,
     );
     // Should contain the separator bullet

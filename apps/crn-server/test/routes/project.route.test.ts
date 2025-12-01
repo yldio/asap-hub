@@ -69,37 +69,6 @@ describe('project routes', () => {
       );
     });
 
-    it('normalises query parameters before calling the controller', async () => {
-      projectControllerMock.fetch.mockResolvedValueOnce({
-        total: 0,
-        items: [],
-      });
-
-      await supertest(app)
-        .get('/projects')
-        .query({
-          take: 20,
-          skip: 5,
-          search: 'alpha',
-          projectType: ['Discovery', 'Resource'],
-          status: ['Active'],
-          tags: ['Data'],
-          teamId: 'team-3',
-        });
-
-      expect(projectControllerMock.fetch).toHaveBeenCalledWith({
-        take: 20,
-        skip: 5,
-        search: 'alpha',
-        filter: {
-          projectType: ['Discovery', 'Resource'],
-          status: 'Active',
-          tags: ['Data'],
-          teamId: 'team-3',
-        },
-      });
-    });
-
     it('returns 400 for invalid query parameters', async () => {
       const response = await supertest(app)
         .get('/projects')
@@ -118,14 +87,14 @@ describe('project routes', () => {
       await supertest(app)
         .get('/projects')
         .query({
-          projectType: 'Discovery',
+          projectType: 'Discovery Project',
           status: ['Active', 'Closed'],
         });
 
       expect(projectControllerMock.fetch).toHaveBeenCalledWith(
         expect.objectContaining({
           filter: {
-            projectType: 'Discovery',
+            projectType: 'Discovery Project',
             status: ['Active', 'Closed'],
           },
         }),

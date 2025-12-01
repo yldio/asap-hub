@@ -6,14 +6,14 @@ import {
 import { JSONSchemaType } from 'ajv';
 
 const projectTypes: readonly ProjectType[] = [
-  'Discovery',
-  'Resource',
-  'Trainee',
+  'Discovery Project',
+  'Resource Project',
+  'Trainee Project',
 ];
 
 const projectStatuses: readonly ProjectStatus[] = [
   'Active',
-  'Complete',
+  'Completed',
   'Closed',
 ];
 

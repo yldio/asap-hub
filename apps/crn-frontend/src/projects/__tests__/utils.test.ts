@@ -22,7 +22,7 @@ describe('project utils', () => {
     endDate: '2024-06-01',
     duration: '5 mos',
     tags: ['Tag A'],
-    projectType: 'Discovery',
+    projectType: 'Discovery Project',
     researchTheme: 'Theme One',
     teamName: 'Discovery Team',
     teamId: 'team-1',
@@ -32,12 +32,12 @@ describe('project utils', () => {
   const baseResource: ResourceProject = {
     id: 'resource-1',
     title: 'Resource Project',
-    status: 'Complete',
+    status: 'Completed',
     startDate: '2023-01-01',
     endDate: '2023-07-01',
     duration: '6 mos',
     tags: [],
-    projectType: 'Resource',
+    projectType: 'Resource Project',
     resourceType: 'Dataset',
     isTeamBased: true,
     teamName: 'Resource Team',
@@ -54,15 +54,17 @@ describe('project utils', () => {
     endDate: '2025-02-01',
     duration: '1 yr',
     tags: [],
-    projectType: 'Trainee',
-    trainer: {
-      id: 'trainer-1',
-      displayName: 'Taylor Trainer',
-    },
+    projectType: 'Trainee Project',
     members: [
       {
         id: 'trainee-member',
         displayName: 'Dana Trainee',
+        role: 'Trainee',
+      },
+      {
+        id: 'trainer-1',
+        displayName: 'Taylor Trainer',
+        role: 'Trainee Project - Mentor',
       },
     ],
   };

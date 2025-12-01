@@ -26,7 +26,10 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
     <div css={styles}>
       {/* Overview Section */}
       <ProjectDetailOverview
-        originalGrant={project.originalGrant}
+        originalGrant={{
+          originalGrant: project.originalGrant ?? '',
+          proposalId: project.originalGrantProposalId,
+        }}
         supplementGrant={project.supplementGrant}
       />
 
@@ -44,14 +47,14 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
       )}
 
       {/* Contributors Section */}
-      {project.projectType === 'Discovery' && (
+      {project.projectType === 'Discovery Project' && (
         <ProjectContributors
           fundedTeam={project.fundedTeam}
           collaborators={project.collaborators}
         />
       )}
 
-      {project.projectType === 'Resource' &&
+      {project.projectType === 'Resource Project' &&
         project.isTeamBased &&
         project.fundedTeam && (
           <ProjectContributors
@@ -60,21 +63,21 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
           />
         )}
 
-      {project.projectType === 'Resource' &&
+      {project.projectType === 'Resource Project' &&
         !project.isTeamBased &&
         project.members && (
           <ProjectContributors projectMembers={project.members} />
         )}
 
-      {project.projectType === 'Trainee' && (
+      {project.projectType === 'Trainee Project' && (
         <ProjectContributors
-          projectMembers={[project.trainer, ...project.members]}
+          projectMembers={project.members}
           showTeamInfo={true}
         />
       )}
 
       {/* Contact CTA Card */}
-      {pointOfContactEmail && (
+      {pointOfContactEmail && project.status === 'Active' && (
         <CtaCard
           href={createMailTo(pointOfContactEmail)}
           buttonText="Contact"

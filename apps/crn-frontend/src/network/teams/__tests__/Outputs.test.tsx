@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   createListResearchOutputResponse,
@@ -197,20 +197,22 @@ it('triggers export with the same parameters and custom file name', async () => 
     }),
   );
 
-  userEvent.click(getByText(/csv/i));
-  expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
-    expect.stringMatching(/SharedOutputs_Team_ExampleTeam123_\d+\.csv/),
-    expect.anything(),
-  );
-  await waitFor(() =>
+  await act(async () => {
+    await userEvent.click(getByText(/csv/i));
+  });
+  await waitFor(() => {
+    expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
+      expect.stringMatching(/SharedOutputs_Team_ExampleTeam123_\d+\.csv/),
+      expect.anything(),
+    );
     expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
       searchQuery,
       filters,
       teamId,
       currentPage: 0,
       pageSize: CARD_VIEW_PAGE_SIZE,
-    }),
-  );
+    });
+  });
 });
 
 it('triggers draft research output export with custom file name', async () => {

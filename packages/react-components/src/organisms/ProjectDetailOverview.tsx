@@ -1,4 +1,4 @@
-import { GrantInfo } from '@asap-hub/model';
+import { OriginalGrantInfo, SupplementGrantInfo } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 
@@ -21,24 +21,30 @@ const buttonContainerStyles = css({
 });
 
 type ProjectDetailOverviewProps = {
-  readonly originalGrant: GrantInfo;
-  readonly supplementGrant?: GrantInfo;
+  readonly originalGrant: OriginalGrantInfo;
+  readonly supplementGrant?: SupplementGrantInfo;
 };
 
 type ProjectDetailOverviewContentProps = {
-  title: string;
+  title?: string;
   description: string;
   proposalURL?: string;
 };
 
 const ProjectDetailOverviewContent: React.FC<
   ProjectDetailOverviewContentProps
-> = ({ description, proposalURL }) => (
+> = ({ title, description, proposalURL }) => (
   <>
+    <Display styleAsHeading={4}>{title}</Display>
     <Paragraph accent="lead">{description}</Paragraph>
     {proposalURL ? (
       <div css={buttonContainerStyles}>
-        <Link href={proposalURL} buttonStyle primary small>
+        <Link
+          href={`/shared-research/${proposalURL}`}
+          buttonStyle
+          primary
+          small
+        >
           Read Full Proposal
         </Link>
       </div>
@@ -61,7 +67,7 @@ const ProjectDetailOverview: React.FC<ProjectDetailOverviewProps> = ({
       <div>
         <Display styleAsHeading={3}>Overview</Display>
 
-        {supplementGrant?.title ? (
+        {supplementGrant?.grantTitle ? (
           <>
             <div css={tabsContainerStyles}>
               <TabNav>
@@ -82,15 +88,14 @@ const ProjectDetailOverview: React.FC<ProjectDetailOverviewProps> = ({
             <div css={tabContentStyles}>
               {selectedTab === 'Original Grant' ? (
                 <ProjectDetailOverviewContent
-                  title={originalGrant.title}
-                  description={originalGrant.description}
-                  proposalURL={originalGrant.proposalURL}
+                  description={originalGrant.originalGrant}
+                  proposalURL={originalGrant.proposalId}
                 />
               ) : (
                 <ProjectDetailOverviewContent
-                  title={supplementGrant.title}
-                  description={supplementGrant.description}
-                  proposalURL={supplementGrant.proposalURL}
+                  title={supplementGrant.grantTitle}
+                  description={supplementGrant.grantDescription ?? ''}
+                  proposalURL={supplementGrant.grantProposalId}
                 />
               )}
             </div>
@@ -98,9 +103,8 @@ const ProjectDetailOverview: React.FC<ProjectDetailOverviewProps> = ({
         ) : (
           <div css={css({ marginTop: rem(24) })}>
             <ProjectDetailOverviewContent
-              title={originalGrant.title}
-              description={originalGrant.description}
-              proposalURL={originalGrant.proposalURL}
+              description={originalGrant.originalGrant}
+              proposalURL={originalGrant.proposalId}
             />
           </div>
         )}

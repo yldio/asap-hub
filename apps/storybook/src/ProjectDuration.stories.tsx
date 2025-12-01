@@ -9,7 +9,7 @@ export const ShortDuration = () => (
   <ProjectDuration
     startDate="2024-01-15"
     endDate="2024-03-15"
-    projectStatus="Complete"
+    projectStatus="Completed"
   />
 );
 
@@ -17,7 +17,7 @@ export const MediumDuration = () => (
   <ProjectDuration
     startDate="2024-01-15"
     endDate="2024-08-15"
-    projectStatus="Complete"
+    projectStatus="Completed"
   />
 );
 
@@ -25,7 +25,7 @@ export const AlmostOneYear = () => (
   <ProjectDuration
     startDate="2024-01-15"
     endDate="2024-11-15"
-    projectStatus="Complete"
+    projectStatus="Completed"
   />
 );
 
@@ -33,7 +33,7 @@ export const ExactlyOneYear = () => (
   <ProjectDuration
     startDate="2023-01-15"
     endDate="2024-01-15"
-    projectStatus="Complete"
+    projectStatus="Completed"
   />
 );
 
@@ -41,7 +41,7 @@ export const TwoYears = () => (
   <ProjectDuration
     startDate="2023-01-15"
     endDate="2025-01-15"
-    projectStatus="Complete"
+    projectStatus="Completed"
   />
 );
 
@@ -49,7 +49,7 @@ export const ThreeYears = () => (
   <ProjectDuration
     startDate="2022-01-15"
     endDate="2025-01-15"
-    projectStatus="Complete"
+    projectStatus="Completed"
   />
 );
 
@@ -57,7 +57,7 @@ export const FiveYears = () => (
   <ProjectDuration
     startDate="2020-01-15"
     endDate="2025-01-15"
-    projectStatus="Complete"
+    projectStatus="Completed"
   />
 );
 
@@ -74,7 +74,7 @@ export const RealWorldExample = () => (
     <ProjectDuration
       startDate="2021-03-15"
       endDate="2023-09-30"
-      projectStatus="Complete"
+      projectStatus="Completed"
     />
 
     <h3>Short-term Trainee Project</h3>

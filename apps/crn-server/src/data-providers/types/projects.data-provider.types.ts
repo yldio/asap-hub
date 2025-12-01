@@ -1,7 +1,9 @@
 import {
   DataProvider,
   FetchOptions,
+  FetchPaginationOptions,
   FetchProjectsFilter,
+  ListProjectDataObject,
   ProjectDataObject,
 } from '@asap-hub/model';
 
@@ -11,4 +13,13 @@ export type ProjectDataProvider = DataProvider<
   ProjectDataObject,
   ProjectDataObject,
   FetchProjectsOptions
->;
+> & {
+  fetchByTeamId: (
+    teamId: string,
+    options: FetchPaginationOptions,
+  ) => Promise<ListProjectDataObject>;
+  fetchByUserId: (
+    userId: string,
+    options: FetchPaginationOptions,
+  ) => Promise<ListProjectDataObject>;
+};

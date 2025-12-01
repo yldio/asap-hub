@@ -9,7 +9,7 @@ export default {
 
 export const DiscoveryProjectActive = () => (
   <ProjectCard
-    projectType="Discovery"
+    projectType="Discovery Project"
     id="discovery-1"
     title="Understanding Genetic Mechanisms in Parkinson's Disease"
     status="Active"
@@ -31,10 +31,10 @@ export const DiscoveryProjectActive = () => (
 
 export const DiscoveryProjectComplete = () => (
   <ProjectCard
-    projectType="Discovery"
+    projectType="Discovery Project"
     id="discovery-2"
     title="Biomarker Development for Early Parkinson's Detection"
-    status="Complete"
+    status="Completed"
     researchTheme="Biomarkers"
     teamName="Chen Discovery Team"
     teamId="team-2"
@@ -47,7 +47,7 @@ export const DiscoveryProjectComplete = () => (
 
 export const DiscoveryProjectClosed = () => (
   <ProjectCard
-    projectType="Discovery"
+    projectType="Discovery Project"
     id="discovery-3"
     title="Exploring Environmental Factors in PD Progression"
     status="Closed"
@@ -64,7 +64,7 @@ export const DiscoveryProjectClosed = () => (
 
 export const ResourceProjectActiveTeamBased = () => (
   <ProjectCard
-    projectType="Resource"
+    projectType="Resource Project"
     id="resource-1"
     title="Comprehensive Parkinson's Disease Biobank"
     status="Active"
@@ -82,7 +82,7 @@ export const ResourceProjectActiveTeamBased = () => (
 
 export const ResourceProjectActiveMemberBased = () => (
   <ProjectCard
-    projectType="Resource"
+    projectType="Resource Project"
     id="resource-2"
     title="Open-Source Analysis Pipeline for PD Genomics"
     status="Active"
@@ -132,10 +132,10 @@ export const ResourceProjectActiveMemberBased = () => (
 
 export const ResourceProjectComplete = () => (
   <ProjectCard
-    projectType="Resource"
+    projectType="Resource Project"
     id="resource-3"
     title="Standardized Clinical Assessment Protocol"
-    status="Complete"
+    status="Completed"
     resourceType="Protocol"
     isTeamBased={true}
     teamName="Williams Clinical Team"
@@ -149,7 +149,7 @@ export const ResourceProjectComplete = () => (
 
 export const ResourceProjectClosed = () => (
   <ProjectCard
-    projectType="Resource"
+    projectType="Resource Project"
     id="resource-4"
     title="Automated Brain Imaging Analysis Tool"
     status="Closed"
@@ -184,18 +184,10 @@ export const ResourceProjectClosed = () => (
 
 export const TraineeProjectActive = () => (
   <ProjectCard
-    projectType="Trainee"
+    projectType="Trainee Project"
     id="trainee-1"
     title="Investigating Alpha-Synuclein Aggregation in Cell Models"
     status="Active"
-    trainer={{
-      id: '7',
-      displayName: 'Dr. Amanda Foster',
-      firstName: 'Amanda',
-      lastName: 'Foster',
-      email: 'amanda.f@example.com',
-      href: '/users/7',
-    }}
     members={[
       {
         id: '8',
@@ -204,6 +196,16 @@ export const TraineeProjectActive = () => (
         lastName: 'Martinez',
         email: 'david.m@example.com',
         href: '/users/8',
+        role: 'Trainee Project - Lead',
+      },
+      {
+        id: '7',
+        displayName: 'Dr. Amanda Foster',
+        firstName: 'Amanda',
+        lastName: 'Foster',
+        email: 'amanda.f@example.com',
+        href: '/users/7',
+        role: 'Trainee Project - Mentor',
       },
     ]}
     startDate="2023-07-01"
@@ -215,18 +217,10 @@ export const TraineeProjectActive = () => (
 
 export const TraineeProjectComplete = () => (
   <ProjectCard
-    projectType="Trainee"
+    projectType="Trainee Project"
     id="trainee-2"
     title="Dopaminergic Neuron Vulnerability in Parkinson's Disease"
-    status="Complete"
-    trainer={{
-      id: '10',
-      displayName: 'Prof. Maria Gonzalez',
-      firstName: 'Maria',
-      lastName: 'Gonzalez',
-      email: 'maria.g@example.com',
-      href: '/users/10',
-    }}
+    status="Completed"
     members={[
       {
         id: '9',
@@ -235,6 +229,7 @@ export const TraineeProjectComplete = () => (
         lastName: 'Patel',
         email: 'kevin.p@example.com',
         href: '/users/9',
+        role: 'Trainee Project - Lead',
       },
       {
         id: '11',
@@ -243,6 +238,16 @@ export const TraineeProjectComplete = () => (
         lastName: 'Lee',
         email: 'thomas.l@example.com',
         href: '/users/11',
+        role: 'Trainee Project - Lead',
+      },
+      {
+        id: '10',
+        displayName: 'Prof. Maria Gonzalez',
+        firstName: 'Maria',
+        lastName: 'Gonzalez',
+        email: 'maria.g@example.com',
+        href: '/users/10',
+        role: 'Trainee Project - Mentor',
       },
     ]}
     startDate="2022-01-01"
@@ -254,18 +259,10 @@ export const TraineeProjectComplete = () => (
 
 export const TraineeProjectClosed = () => (
   <ProjectCard
-    projectType="Trainee"
+    projectType="Trainee Project"
     id="trainee-3"
     title="Role of Inflammation in Parkinson's Progression"
     status="Closed"
-    trainer={{
-      id: '12',
-      displayName: 'Dr. Sophie Anderson',
-      firstName: 'Sophie',
-      lastName: 'Anderson',
-      email: 'sophie.a@example.com',
-      href: '/users/12',
-    }}
     members={[
       {
         id: '13',
@@ -274,12 +271,82 @@ export const TraineeProjectClosed = () => (
         lastName: 'Kim',
         email: 'rachel.k@example.com',
         href: '/users/13',
+        role: 'Trainee Project - Lead',
+      },
+      {
+        id: '12',
+        displayName: 'Dr. Sophie Anderson',
+        firstName: 'Sophie',
+        lastName: 'Anderson',
+        email: 'sophie.a@example.com',
+        href: '/users/12',
+        role: 'Trainee Project - Mentor',
+      },
+      {
+        id: '124',
+        displayName: 'Dr. John Lead',
+        firstName: 'John',
+        lastName: 'Lead',
+        email: 'john.l@example.com',
+        href: '/users/124',
+        role: 'Trainee Project - Mentor',
       },
     ]}
     startDate="2020-09-01"
     endDate="2021-08-31"
     duration="1 yr"
     tags={['Neuroinflammation', 'Microglia', 'Cytokines']}
+  />
+);
+
+export const TraineeProjectMultipleTrainersAndTrainees = () => (
+  <ProjectCard
+    projectType="Trainee Project"
+    id="trainee-4"
+    title="Multi-Mentor Training Program in PD Research"
+    status="Active"
+    members={[
+      {
+        id: 'trainee-1',
+        displayName: 'Dr. Alex Johnson',
+        firstName: 'Alex',
+        lastName: 'Johnson',
+        email: 'alex.j@example.com',
+        href: '/users/trainee-1',
+        role: 'Trainee Project - Lead',
+      },
+      {
+        id: 'trainee-2',
+        displayName: 'Dr. Sam Chen',
+        firstName: 'Sam',
+        lastName: 'Chen',
+        email: 'sam.c@example.com',
+        href: '/users/trainee-2',
+        role: 'Trainee Project - Lead',
+      },
+      {
+        id: 'mentor-1',
+        displayName: 'Dr. Lisa Brown',
+        firstName: 'Lisa',
+        lastName: 'Brown',
+        email: 'lisa.b@example.com',
+        href: '/users/mentor-1',
+        role: 'Trainee Project - Mentor',
+      },
+      {
+        id: 'mentor-2',
+        displayName: 'Dr. Michael Davis',
+        firstName: 'Michael',
+        lastName: 'Davis',
+        email: 'michael.d@example.com',
+        href: '/users/mentor-2',
+        role: 'Trainee Project - Key Personnel',
+      },
+    ]}
+    startDate="2024-01-01"
+    endDate="2026-12-31"
+    duration="3 yrs"
+    tags={['Training', 'Multi-mentor', 'Career development']}
   />
 );
 

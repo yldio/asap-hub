@@ -1,4 +1,10 @@
-import { ListResponse, timeRanges, documentCategories } from '@asap-hub/model';
+import { mapLimit } from 'async';
+import {
+  ListResponse,
+  timeRanges,
+  documentCategories,
+  outputTypes,
+} from '@asap-hub/model';
 import { indexOpensearchData } from '@asap-hub/server-common';
 
 import {
@@ -9,7 +15,12 @@ import {
 } from '../../src/config';
 import AnalyticsController from '../../src/controllers/analytics.controller';
 import { getAnalyticsDataProvider } from '../../src/dependencies/analytics.dependencies';
-import { metricConfig, PAGE_SIZE, validMetrics } from './constants';
+import {
+  MAX_CONCURRENT_COMBINATIONS,
+  metricConfig,
+  PAGE_SIZE,
+  validMetrics,
+} from './constants';
 import { exportPreprintComplianceData } from './preprint-compliance';
 import { exportPublicationComplianceData } from './publication-compliance';
 import type { MetricObject, Metrics } from './types';
@@ -143,6 +154,65 @@ export const exportAnalyticsData = async <T extends Metrics>(
         return {
           total: allUserProductivityItems.length,
           items: allUserProductivityItems,
+        } as ListResponse<MetricObject<T>>;
+
+      case 'team-productivity':
+        // Helper to fetch all pages for a single timeRange/outputType combination
+        const fetchAllPagesForTeamCombination = async (
+          timeRange: (typeof timeRanges)[number],
+          outputType: (typeof outputTypes)[number],
+        ): Promise<MetricObject<T>[]> => {
+          const items: MetricObject<T>[] = [];
+          let page = 1;
+          let total = 0;
+          let recordCount = 0;
+
+          do {
+            const response = (await analyticsController.fetchTeamProductivity({
+              take: PAGE_SIZE,
+              skip: (page - 1) * PAGE_SIZE,
+              filter: { timeRange, outputType },
+            })) as ListResponse<MetricObject<T>>;
+
+            if (response) {
+              total = response.total;
+              page++;
+              recordCount += response.items.length;
+
+              const enrichedItems = response.items.map((item) => ({
+                ...item,
+                timeRange,
+                outputType,
+              }));
+
+              items.push(...enrichedItems);
+            }
+          } while (total > recordCount);
+
+          return items;
+        };
+
+        // Create all timeRange<->outputType combinations
+        const teamCombinations = timeRanges.flatMap((timeRange) =>
+          outputTypes.map((outputType) => ({ timeRange, outputType })),
+        );
+
+        // Process combinations with controlled concurrency
+        const teamResultArrays = await mapLimit(
+          teamCombinations,
+          MAX_CONCURRENT_COMBINATIONS,
+          async (combination: (typeof teamCombinations)[number]) =>
+            fetchAllPagesForTeamCombination(
+              combination.timeRange,
+              combination.outputType,
+            ),
+        );
+
+        const items = teamResultArrays.flat();
+
+        return {
+          total: items.length,
+          items,
         } as ListResponse<MetricObject<T>>;
 
       default:

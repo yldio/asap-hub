@@ -3,6 +3,7 @@ import { cleanup, render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { RecoilRoot, useRecoilValue } from 'recoil';
+import nock from 'nock';
 
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import userEvent from '@testing-library/user-event';
@@ -60,6 +61,21 @@ beforeEach(() => {
   cleanup();
   MockDashboard.mockReset().mockReturnValue(null);
   (useCurrentUserCRN as jest.Mock).mockReturnValue(mockedUser);
+
+  // Mock OpenSearch endpoints that might be called when rendering Analytics routes
+  nock('http://localhost:3333')
+    .post('/opensearch/search/user-productivity')
+    .reply(200, {
+      hits: {
+        total: { value: 0 },
+        hits: [],
+      },
+    })
+    .persist();
+});
+
+afterEach(() => {
+  nock.cleanAll();
 });
 
 it('syncs the auth state to recoil', async () => {

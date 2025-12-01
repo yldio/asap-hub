@@ -19,6 +19,7 @@ import type {
   ResourceProject,
   TraineeProject,
   ProjectMember,
+  ProjectType,
 } from '@asap-hub/model';
 import Projects from '../Projects';
 
@@ -30,7 +31,7 @@ const mockDiscoveryProject: DiscoveryProject = {
   endDate: '2024-06-01',
   duration: '5 mos',
   tags: [],
-  projectType: 'Discovery',
+  projectType: 'Discovery Project',
   researchTheme: 'Theme One',
   teamName: 'Discovery Team',
   teamId: 'team-1',
@@ -50,7 +51,7 @@ const mockResourceProject: ResourceProject = {
   endDate: '2023-07-01',
   duration: '6 mos',
   tags: [],
-  projectType: 'Resource',
+  projectType: 'Resource Project',
   resourceType: 'Data Portal',
   isTeamBased: true,
   teamName: 'Resource Team',
@@ -59,19 +60,20 @@ const mockResourceProject: ResourceProject = {
   members: mockResourceMembers,
 };
 
-const mockTraineeTrainer: ProjectMember = {
-  id: 'trainer-1',
-  displayName: 'Taylor Trainer',
-  firstName: 'Taylor',
-  lastName: 'Trainer',
-};
-
 const mockTraineeProjectMembers: ReadonlyArray<ProjectMember> = [
   {
     id: 'trainee-1',
     displayName: 'Dana Trainee',
     firstName: 'Dana',
     lastName: 'Trainee',
+    role: 'Trainee',
+  },
+  {
+    id: 'trainer-1',
+    displayName: 'Taylor Trainer',
+    firstName: 'Taylor',
+    lastName: 'Trainer',
+    role: 'Trainee Project - Mentor',
   },
 ];
 
@@ -83,8 +85,7 @@ const mockTraineeProject: TraineeProject = {
   endDate: '2025-02-01',
   duration: '1 yr',
   tags: [],
-  projectType: 'Trainee',
-  trainer: mockTraineeTrainer,
+  projectType: 'Trainee Project',
   members: mockTraineeProjectMembers,
 };
 
@@ -98,13 +99,13 @@ jest.mock('../state', () => {
     algoliaQueryId: 'query-id',
   });
 
-  const useProjects = jest.fn((options: { projectType: string }) => {
+  const useProjects = jest.fn((options: { projectType: ProjectType }) => {
     switch (options.projectType) {
-      case 'Discovery':
+      case 'Discovery Project':
         return createMockListResponse([mockDiscoveryProject]);
-      case 'Resource':
+      case 'Resource Project':
         return createMockListResponse([mockResourceProject]);
-      case 'Trainee':
+      case 'Trainee Project':
         return createMockListResponse([mockTraineeProject]);
       default:
         return createMockListResponse([mockDiscoveryProject]);
@@ -289,11 +290,11 @@ describe('Projects Routes', () => {
     },
     {
       type: 'Resource',
-      path: `${projects.template}/resource/1/about`,
+      path: `${projects.template}/resource/2/about`,
     },
     {
       type: 'Trainee',
-      path: `${projects.template}/trainee/1/about`,
+      path: `${projects.template}/trainee/3/about`,
     },
   ])('renders $type project detail page', async ({ path }) => {
     await renderProjectsPage(path);

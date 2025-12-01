@@ -20,6 +20,11 @@ export const projectsContentQueryFragment = gql`
     applicationNumber
     contactEmail
     googleDriveLink
+    proposal {
+      sys {
+        id
+      }
+    }
     supplementGrant {
       sys {
         id
@@ -96,6 +101,7 @@ export const projectsContentQueryFragment = gql`
             researchTheme {
               name
             }
+            teamDescription
           }
         }
       }
@@ -130,6 +136,75 @@ export const FETCH_PROJECT_BY_ID = gql`
   query FetchProjectById($id: String!) {
     projects(id: $id) {
       ...ProjectsContentData
+    }
+  }
+`;
+
+// Fetches projects associated with a team via reverse lookup
+// Teams -> linkedFrom.projectMembershipCollection -> linkedFrom.projectsCollection
+export const FETCH_PROJECTS_BY_TEAM_ID = gql`
+  ${projectsContentQueryFragment}
+  query FetchProjectsByTeamId($teamId: String!, $limit: Int) {
+    teams(id: $teamId) {
+      linkedFrom {
+        projectMembershipCollection(limit: $limit) {
+          total
+          items {
+            linkedFrom {
+              projectsCollection(limit: 1) {
+                items {
+                  ...ProjectsContentData
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+// Fetches projects associated with a user via reverse lookup
+// Users -> linkedFrom.projectMembershipCollection -> linkedFrom.projectsCollection
+export const FETCH_PROJECTS_BY_USER_ID = gql`
+  ${projectsContentQueryFragment}
+  query FetchProjectsByUserId($userId: String!, $limit: Int) {
+    users(id: $userId) {
+      linkedFrom {
+        projectMembershipCollection(limit: $limit) {
+          total
+          items {
+            linkedFrom {
+              projectsCollection(limit: 1) {
+                items {
+                  ...ProjectsContentData
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+// Fetches projects that contain a specific project membership via reverse lookup
+// ProjectMembership -> linkedFrom.projectsCollection
+export const FETCH_PROJECTS_BY_MEMBERSHIP_ID = gql`
+  ${projectsContentQueryFragment}
+  query FetchProjectsByMembershipId($membershipId: String!, $limit: Int) {
+    projectMembership(id: $membershipId) {
+      sys {
+        id
+      }
+      linkedFrom {
+        projectsCollection(limit: $limit) {
+          total
+          items {
+            ...ProjectsContentData
+          }
+        }
+      }
     }
   }
 `;

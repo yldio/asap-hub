@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/frontend-utils';
 import {
   ListProjectResponse,
-  ProjectResponse,
+  ProjectDetail,
   ProjectStatus,
   ProjectType,
 } from '@asap-hub/model';
@@ -94,7 +94,7 @@ export const toListProjectResponse = (
 export const getProject = async (
   id: string,
   authorization: string,
-): Promise<ProjectResponse | undefined> => {
+): Promise<ProjectDetail | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/project/${id}`, {
     headers: { authorization, ...createSentryHeaders() },
   });

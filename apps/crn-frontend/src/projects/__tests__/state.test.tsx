@@ -3,7 +3,11 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import type { MutableSnapshot } from 'recoil';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
-import type { ListProjectResponse, ProjectResponse } from '@asap-hub/model';
+import type {
+  ListProjectResponse,
+  ProjectDetail,
+  ProjectResponse,
+} from '@asap-hub/model';
 
 import type { ProjectListOptions } from '../api';
 import { projectsState, useProjectById, useProjects } from '../state';
@@ -31,7 +35,7 @@ const {
 const mockAlgoliaClient = { search: jest.fn() };
 
 const defaultOptions: ProjectListOptions = {
-  projectType: 'Discovery',
+  projectType: 'Discovery Project',
   searchQuery: '',
   currentPage: 0,
   pageSize: 10,
@@ -43,7 +47,7 @@ const listResponse: ListProjectResponse = {
   items: [
     {
       id: 'project-1',
-      projectType: 'Discovery',
+      projectType: 'Discovery Project',
       title: 'Discovery Project',
       status: 'Active',
       tags: [],
@@ -169,18 +173,24 @@ describe('projects state hooks', () => {
 
   describe('useProjectById', () => {
     it('requests project details with authorization token', async () => {
-      const project = {
+      const project: ProjectDetail = {
         id: 'project-99',
         title: 'Project 99',
         status: 'Active',
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         tags: [],
         startDate: '2024-01-01',
         endDate: '2024-06-01',
         duration: '5 mos',
         researchTheme: '',
         teamName: '',
-      } as ProjectResponse;
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Test Team',
+          teamType: 'Discovery Team',
+          researchTheme: '',
+        },
+      };
       const getTokenSilently = jest.fn().mockResolvedValue('token-123');
       mockGetProject.mockResolvedValueOnce(project);
 
@@ -201,6 +211,228 @@ describe('projects state hooks', () => {
         'Bearer token-123',
       );
       expect(result.current).toEqual(project);
+    });
+
+    it('fetches complete detail data from API even when incomplete list data exists', async () => {
+      // Incomplete list data (missing fields like originalGrant, milestones)
+      const incompleteListProject = {
+        id: 'project-1',
+        projectType: 'Discovery Project',
+        title: 'Discovery Project',
+        status: 'Active',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        researchTheme: '',
+        teamName: '',
+      } as ProjectResponse;
+
+      // Complete detail data (includes all fields)
+      const completeDetailProject: ProjectDetail = {
+        id: 'project-1',
+        projectType: 'Discovery Project',
+        title: 'Discovery Project',
+        status: 'Active',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        originalGrant: 'Grant-123',
+        milestones: [
+          {
+            id: 'milestone-1',
+            title: 'Milestone 1',
+            description: '',
+            status: 'Not Started',
+          },
+        ],
+        researchTheme: 'Theme 1',
+        teamName: 'Team 1',
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Team 1',
+          teamType: 'Discovery Team',
+          researchTheme: 'Theme 1',
+        },
+      };
+
+      const getTokenSilently = jest.fn().mockResolvedValue('token-123');
+      mockGetProject.mockResolvedValueOnce(completeDetailProject);
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+        // Pre-populate list cache with incomplete data
+        set(projectsState(defaultOptions), {
+          total: 1,
+          items: [incompleteListProject],
+          algoliaIndexName: 'projects-index',
+          algoliaQueryId: 'query-id',
+        });
+      };
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useProjectById('project-1'),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      await waitForNextUpdate();
+
+      // Should fetch from API, not use incomplete list data
+      expect(mockGetProject).toHaveBeenCalledWith(
+        'project-1',
+        'Bearer token-123',
+      );
+      // Should return complete data, not incomplete list data
+      expect(result.current).toEqual(completeDetailProject);
+      expect(result.current).not.toEqual(incompleteListProject);
+    });
+
+    it('maintains separate caches for list and detail data', async () => {
+      const listProject = {
+        id: 'project-1',
+        title: 'List Project',
+        status: 'Active',
+        projectType: 'Discovery Project',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        researchTheme: '',
+        teamName: '',
+      } as ProjectResponse;
+
+      const detailProject: ProjectDetail = {
+        id: 'project-1',
+        title: 'Detail Project',
+        status: 'Active',
+        projectType: 'Discovery Project',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        originalGrant: 'Grant-123',
+        researchTheme: 'Theme 1',
+        teamName: 'Team 1',
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Team 1',
+          teamType: 'Discovery Team',
+          researchTheme: 'Theme 1',
+        },
+      };
+
+      const getTokenSilently = jest.fn().mockResolvedValue('token-123');
+      mockGetProject.mockResolvedValueOnce(detailProject);
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+        // Set list cache
+        set(projectsState(defaultOptions), {
+          total: 1,
+          items: [listProject],
+          algoliaIndexName: 'projects-index',
+          algoliaQueryId: 'query-id',
+        });
+      };
+
+      // Fetch list data
+      const { result: listResult } = renderHook(
+        () => useProjects(defaultOptions),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      // Fetch detail data
+      const { result: detailResult, waitForNextUpdate } = renderHook(
+        () => useProjectById('project-1'),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      await waitForNextUpdate();
+
+      // List cache should have list data
+      expect(listResult.current?.items[0]).toEqual(listProject);
+      // Detail cache should have detail data (fetched from API)
+      expect(detailResult.current).toEqual(detailProject);
+      // They should be different (separate caches)
+      expect(listResult.current?.items[0]).not.toEqual(detailResult.current);
+    });
+
+    it('preserves detail cache when list cache is cleared', async () => {
+      const detailProject: ProjectDetail = {
+        id: 'project-1',
+        title: 'Detail Project',
+        status: 'Active',
+        projectType: 'Discovery Project',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        originalGrant: 'Grant-123',
+        researchTheme: 'Theme 1',
+        teamName: 'Team 1',
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Team 1',
+          teamType: 'Discovery Team',
+          researchTheme: 'Theme 1',
+        },
+      };
+
+      const getTokenSilently = jest.fn().mockResolvedValue('token-123');
+      mockGetProject.mockResolvedValueOnce(detailProject);
+
+      const listProject = {
+        id: 'project-1',
+        title: 'List Project',
+        status: 'Active',
+        projectType: 'Discovery Project',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        researchTheme: '',
+        teamName: '',
+      } as ProjectResponse;
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+        // Set list cache
+        set(projectsState(defaultOptions), {
+          total: 1,
+          items: [listProject],
+          algoliaIndexName: 'projects-index',
+          algoliaQueryId: 'query-id',
+        });
+      };
+
+      // Fetch detail data first
+      const { result: detailResult, waitForNextUpdate } = renderHook(
+        () => useProjectById('project-1'),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      await waitForNextUpdate();
+      expect(detailResult.current).toEqual(detailProject);
+
+      // Clear list cache
+      const { result: listResult } = renderHook(
+        () => useRecoilState(projectsState(defaultOptions)),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      act(() => {
+        const [, setProjects] = listResult.current;
+        setProjects(undefined);
+      });
+
+      expect(listResult.current[0]).toBeUndefined();
+
+      // Detail cache should still be intact - verify by checking the detail hook again
+      // The detail hook should still return the cached value without a new API call
+      expect(detailResult.current).toEqual(detailProject);
+      // getProject should only be called once (the initial fetch, not after clearing list)
+      expect(mockGetProject).toHaveBeenCalledTimes(1);
     });
   });
 });

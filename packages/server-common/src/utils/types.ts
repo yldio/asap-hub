@@ -46,6 +46,7 @@ export type OpensearchFieldMapping = {
   fields?: {
     keyword?: {
       type: 'keyword';
+      normalizer?: string;
     };
   };
   properties?: {

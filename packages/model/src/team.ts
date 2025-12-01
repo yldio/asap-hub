@@ -97,6 +97,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   supplementGrant?: TeamSupplementGrant;
   researchTheme?: string;
   resourceType?: string;
+  teamDescription?: string;
 };
 
 export type TeamCreateDataObject = {

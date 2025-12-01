@@ -55,7 +55,6 @@ import {
   updateTeamResearchOutput,
   uploadManuscriptFile,
   uploadManuscriptFileViaPresignedUrl,
-  getResearchThemes,
 } from '../api';
 
 jest.mock('../../../config', () => ({
@@ -437,37 +436,6 @@ describe('Team Research Output', () => {
       updateTeamResearchOutput('123', payload, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update research output for teams 90210 Expected status 200. Received status 500."`,
-    );
-  });
-});
-
-describe('getResearchThemes', () => {
-  it('makes an authorized GET request for research themes', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/research-themes')
-      .reply(200, { items: [], total: 0 });
-    await getResearchThemes('Bearer x');
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('returns successfully fetched research themes', async () => {
-    const themes = {
-      items: [
-        { id: '1', name: 'Theme 1' },
-        { id: '2', name: 'Theme 2' },
-      ],
-      total: 2,
-    };
-    nock(API_BASE_URL).get('/research-themes').reply(200, themes);
-    expect(await getResearchThemes('')).toEqual(themes);
-  });
-
-  it('errors for error status', async () => {
-    nock(API_BASE_URL).get('/research-themes').reply(500);
-    await expect(
-      getResearchThemes(''),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch research themes. Expected status 2xx. Received status 500."`,
     );
   });
 });

@@ -2,7 +2,7 @@ import { Milestone as MilestoneType } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { FC, useState } from 'react';
 import { Headline3, Card, Button } from '../atoms';
-import { rem } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
 import { lead, neutral1000 } from '../colors';
 
@@ -20,6 +20,9 @@ const tableHeaderStyles = css({
   display: 'grid',
   gridTemplateColumns: '1fr 120px',
   marginBottom: rem(16),
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    display: 'none',
+  },
 });
 
 const headerLabelStyles = css({

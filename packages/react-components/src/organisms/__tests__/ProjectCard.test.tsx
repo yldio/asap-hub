@@ -3,7 +3,6 @@ import { render } from '@testing-library/react';
 import { formatProjectDate } from '../../date';
 
 import ProjectCard, {
-  getProjectTypeLabel,
   getStatusPillAccent,
   getCardAccentByStatus,
 } from '../ProjectCard';
@@ -18,7 +17,7 @@ const baseProjectProps = {
 
 const discoveryProjectProps: ComponentProps<typeof ProjectCard> = {
   ...baseProjectProps,
-  projectType: 'Discovery',
+  projectType: 'Discovery Project',
   title: 'Understanding Genetic Mechanisms in PD',
   status: 'Closed',
   researchTheme: 'Genetics',
@@ -28,7 +27,7 @@ const discoveryProjectProps: ComponentProps<typeof ProjectCard> = {
 
 const resourceProjectTeamBasedProps: ComponentProps<typeof ProjectCard> = {
   ...baseProjectProps,
-  projectType: 'Resource',
+  projectType: 'Resource Project',
   title: 'PD Biobank Resource',
   status: 'Active',
   resourceType: 'Biobank',
@@ -40,9 +39,9 @@ const resourceProjectTeamBasedProps: ComponentProps<typeof ProjectCard> = {
 
 const resourceProjectMemberBasedProps: ComponentProps<typeof ProjectCard> = {
   ...baseProjectProps,
-  projectType: 'Resource',
+  projectType: 'Resource Project',
   title: 'Open-Source Analysis Pipeline',
-  status: 'Complete',
+  status: 'Completed',
   resourceType: 'Software Tool',
   isTeamBased: false,
   members: [
@@ -76,17 +75,9 @@ const resourceProjectMemberBasedProps: ComponentProps<typeof ProjectCard> = {
 
 const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
   ...baseProjectProps,
-  projectType: 'Trainee',
+  projectType: 'Trainee Project',
   title: 'Alpha-Synuclein Aggregation Study',
   status: 'Active',
-  trainer: {
-    id: '1',
-    displayName: 'Dr. Amanda Foster',
-    firstName: 'Amanda',
-    lastName: 'Foster',
-    email: 'amanda.f@example.com',
-    href: '/users/1',
-  },
   members: [
     {
       id: '2',
@@ -95,6 +86,7 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Martinez',
       email: 'david.m@example.com',
       href: '/users/2',
+      role: 'Trainee Project - Lead',
     },
     {
       id: '3',
@@ -103,6 +95,16 @@ const traineeProjectProps: ComponentProps<typeof ProjectCard> = {
       lastName: 'Chen',
       email: 'emily.c@example.com',
       href: '/users/3',
+      role: 'Trainee Project - Lead',
+    },
+    {
+      id: '1',
+      displayName: 'Dr. Amanda Foster',
+      firstName: 'Amanda',
+      lastName: 'Foster',
+      email: 'amanda.f@example.com',
+      href: '/users/1',
+      role: 'Trainee Project - Mentor',
     },
   ],
 };
@@ -124,29 +126,10 @@ describe('Date Formatting', () => {
 });
 
 describe('Helper Functions', () => {
-  describe('getProjectTypeLabel', () => {
-    it.each([
-      { projectType: 'Discovery' as const, expected: 'Discovery Project' },
-      { projectType: 'Resource' as const, expected: 'Resource Project' },
-      { projectType: 'Trainee' as const, expected: 'Trainee Project' },
-    ])(
-      'returns "$expected" for $projectType projects',
-      ({ projectType, expected }) => {
-        expect(getProjectTypeLabel(projectType)).toBe(expected);
-      },
-    );
-
-    it('returns default label for invalid project type', () => {
-      expect(
-        getProjectTypeLabel('Invalid' as 'Discovery' | 'Resource' | 'Trainee'),
-      ).toBe('Discovery Project');
-    });
-  });
-
   describe('getStatusPillAccent', () => {
     it.each([
       { status: 'Active' as const, expected: 'info' as const },
-      { status: 'Complete' as const, expected: 'success' as const },
+      { status: 'Completed' as const, expected: 'success' as const },
       { status: 'Closed' as const, expected: 'warning' as const },
     ])(
       'returns $expected accent for $status status',
@@ -157,7 +140,7 @@ describe('Helper Functions', () => {
 
     it('returns default accent for invalid status', () => {
       expect(
-        getStatusPillAccent('Invalid' as 'Active' | 'Complete' | 'Closed'),
+        getStatusPillAccent('Invalid' as 'Active' | 'Completed' | 'Closed'),
       ).toBe('info');
     });
   });
@@ -165,7 +148,7 @@ describe('Helper Functions', () => {
   describe('getCardAccentByStatus', () => {
     it.each([
       { status: 'Active' as const, expected: 'default' as const },
-      { status: 'Complete' as const, expected: 'neutral200' as const },
+      { status: 'Completed' as const, expected: 'neutral200' as const },
       { status: 'Closed' as const, expected: 'neutral200' as const },
     ])(
       'returns $expected accent for $status status',
@@ -176,7 +159,7 @@ describe('Helper Functions', () => {
 
     it('returns default accent for invalid status', () => {
       expect(
-        getCardAccentByStatus('Invalid' as 'Active' | 'Complete' | 'Closed'),
+        getCardAccentByStatus('Invalid' as 'Active' | 'Completed' | 'Closed'),
       ).toBe('default');
     });
   });
@@ -192,7 +175,7 @@ describe('ProjectCard - Discovery Project', () => {
 
   it.each([
     { status: 'Active' as const },
-    { status: 'Complete' as const },
+    { status: 'Completed' as const },
     { status: 'Closed' as const },
   ])('renders the $status status pill', ({ status }) => {
     const { getByText } = render(
@@ -366,21 +349,54 @@ describe('ProjectCard - Trainee Project', () => {
     expect(getByText('Trainee Project')).toBeVisible();
   });
 
-  it('renders the trainer', () => {
-    const { getByText } = render(<ProjectCard {...traineeProjectProps} />);
-    expect(getByText('Dr. Amanda Foster')).toBeVisible();
-  });
-
-  it('renders the project members', () => {
+  it('renders trainees in the first row', () => {
     const { getByText } = render(<ProjectCard {...traineeProjectProps} />);
     expect(getByText('Dr. David Martinez')).toBeVisible();
     expect(getByText('Dr. Emily Chen')).toBeVisible();
   });
 
-  it('renders both trainer and members separately', () => {
+  it('renders trainers in the second row', () => {
+    const { getByText } = render(<ProjectCard {...traineeProjectProps} />);
+    expect(getByText('Dr. Amanda Foster')).toBeVisible();
+  });
+
+  it('renders trainees and trainers in separate rows', () => {
     const { getAllByText } = render(<ProjectCard {...traineeProjectProps} />);
-    // Should have trainer listed once and members listed separately
-    expect(getAllByText(/Dr\./)).toHaveLength(3); // 1 trainer + 2 members
+    // Should have all members displayed (2 trainees + 1 trainer)
+    expect(getAllByText(/Dr\./)).toHaveLength(3);
+  });
+
+  it('handles multiple mentors correctly', () => {
+    const projectWithMultipleMentors = {
+      ...traineeProjectProps,
+      members: [
+        ...traineeProjectProps.members,
+        {
+          id: '4',
+          displayName: 'Dr. John Mentor',
+          firstName: 'John',
+          lastName: 'Mentor',
+          email: 'john.m@example.com',
+          href: '/users/4',
+          role: 'Trainee Project - Mentor',
+        },
+        {
+          id: '5',
+          displayName: 'Dr. Jane Key',
+          firstName: 'Jane',
+          lastName: 'Key',
+          email: 'jane.k@example.com',
+          href: '/users/5',
+          role: 'Trainee Project - Key Personnel',
+        },
+      ],
+    };
+    const { getByText } = render(
+      <ProjectCard {...projectWithMultipleMentors} />,
+    );
+    expect(getByText('Dr. John Mentor')).toBeVisible();
+    expect(getByText('Dr. Jane Key')).toBeVisible();
+    expect(getByText('Dr. Amanda Foster')).toBeVisible();
   });
 });
 
@@ -395,7 +411,7 @@ describe('ProjectCard - Card Background Colors', () => {
 
   it('renders Complete projects with grey background', () => {
     const { container } = render(
-      <ProjectCard {...discoveryProjectProps} status="Complete" />,
+      <ProjectCard {...discoveryProjectProps} status="Completed" />,
     );
     const card = container.querySelector('section');
     expect(card).toHaveStyle({ backgroundColor: 'var(--neutral200)' }); // neutral200

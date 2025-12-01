@@ -31,7 +31,7 @@ beforeEach(() => {
         id: 'proj-1',
         title: 'Discovery Project',
         status: 'Active',
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Theme',
         startDate: '2024-01-01',
         endDate: '2024-06-01',

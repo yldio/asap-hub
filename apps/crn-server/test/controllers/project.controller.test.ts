@@ -45,7 +45,7 @@ describe('Project Controller', () => {
         skip: 15,
         search: 'olfactory',
         filter: {
-          projectType: ['Discovery'] as ProjectType[],
+          projectType: ['Discovery Project'] as ProjectType[],
           status: ['Active'] as ProjectStatus[],
         },
       };
@@ -71,6 +71,76 @@ describe('Project Controller', () => {
 
       await expect(controller.fetchById('missing-id')).rejects.toThrow(
         NotFoundError,
+      );
+    });
+  });
+
+  describe('fetchByTeamId', () => {
+    it('returns the list provided by the data provider', async () => {
+      const expectedList = {
+        total: 2,
+        items: [getExpectedDiscoveryProject()],
+      };
+      projectDataProviderMock.fetchByTeamId.mockResolvedValueOnce(expectedList);
+
+      const result = await controller.fetchByTeamId('team-1', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result).toEqual(expectedList);
+      expect(projectDataProviderMock.fetchByTeamId).toHaveBeenCalledWith(
+        'team-1',
+        { take: 10, skip: 0 },
+      );
+    });
+
+    it('passes through pagination options correctly', async () => {
+      projectDataProviderMock.fetchByTeamId.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+
+      await controller.fetchByTeamId('team-1', { take: 5, skip: 15 });
+
+      expect(projectDataProviderMock.fetchByTeamId).toHaveBeenCalledWith(
+        'team-1',
+        { take: 5, skip: 15 },
+      );
+    });
+  });
+
+  describe('fetchByUserId', () => {
+    it('returns the list provided by the data provider', async () => {
+      const expectedList = {
+        total: 2,
+        items: [getExpectedDiscoveryProject()],
+      };
+      projectDataProviderMock.fetchByUserId.mockResolvedValueOnce(expectedList);
+
+      const result = await controller.fetchByUserId('user-1', {
+        take: 10,
+        skip: 0,
+      });
+
+      expect(result).toEqual(expectedList);
+      expect(projectDataProviderMock.fetchByUserId).toHaveBeenCalledWith(
+        'user-1',
+        { take: 10, skip: 0 },
+      );
+    });
+
+    it('passes through pagination options correctly', async () => {
+      projectDataProviderMock.fetchByUserId.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+
+      await controller.fetchByUserId('user-1', { take: 5, skip: 15 });
+
+      expect(projectDataProviderMock.fetchByUserId).toHaveBeenCalledWith(
+        'user-1',
+        { take: 5, skip: 15 },
       );
     });
   });

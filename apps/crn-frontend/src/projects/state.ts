@@ -1,10 +1,13 @@
-import { ListProjectResponse, ProjectResponse } from '@asap-hub/model';
+import {
+  ListProjectResponse,
+  ProjectDetail,
+  ProjectResponse,
+} from '@asap-hub/model';
 import {
   atomFamily,
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useRecoilValue,
 } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
@@ -15,7 +18,8 @@ import {
   toListProjectResponse,
 } from './api';
 
-const projectIndexState = atomFamily<
+// Separate cache for list data (incomplete, from Algolia)
+const projectListCacheState = atomFamily<
   | {
       ids: ReadonlyArray<string>;
       total: number;
@@ -25,7 +29,13 @@ const projectIndexState = atomFamily<
   | Error
   | undefined,
   ProjectListOptions
->({ key: 'projectIndex', default: undefined });
+>({ key: 'projectListCache', default: undefined });
+
+// Cache for individual list items
+const projectListItemState = atomFamily<ProjectResponse | undefined, string>({
+  key: 'projectListItem',
+  default: undefined,
+});
 
 export const projectsState = selectorFamily<
   ListProjectResponse | Error | undefined,
@@ -35,15 +45,11 @@ export const projectsState = selectorFamily<
   get:
     (options) =>
     ({ get }) => {
-      const index = get(
-        projectIndexState({
-          ...options,
-        }),
-      );
+      const index = get(projectListCacheState(options));
       if (index === undefined || index instanceof Error) return index;
       const projects: ProjectResponse[] = [];
       for (const id of index.ids) {
-        const project = get(projectState(id));
+        const project = get(projectListItemState(id));
         if (project === undefined) return undefined;
         projects.push(project);
       }
@@ -57,20 +63,20 @@ export const projectsState = selectorFamily<
   set:
     (options) =>
     ({ get, set, reset }, projects) => {
-      const indexStateOptions = { ...options };
       if (projects === undefined || projects instanceof DefaultValue) {
-        const previous = get(projectIndexState(indexStateOptions));
+        const previous = get(projectListCacheState(options));
         if (previous && !(previous instanceof Error)) {
-          previous.ids.forEach((id) => reset(projectState(id)));
+          previous.ids.forEach((id) => reset(projectListItemState(id)));
         }
-        reset(projectIndexState(indexStateOptions));
+        reset(projectListCacheState(options));
       } else if (projects instanceof Error) {
-        set(projectIndexState(indexStateOptions), projects);
+        set(projectListCacheState(options), projects);
       } else {
+        // Cache list items separately (incomplete data)
         projects.items.forEach((project) =>
-          set(projectState(project.id), project),
+          set(projectListItemState(project.id), project),
         );
-        set(projectIndexState(indexStateOptions), {
+        set(projectListCacheState(options), {
           total: projects.total,
           ids: projects.items.map(({ id }) => id),
           algoliaIndexName: projects.algoliaIndexName,
@@ -80,7 +86,7 @@ export const projectsState = selectorFamily<
     },
 });
 
-const fetchProjectState = selectorFamily<ProjectResponse | undefined, string>({
+const fetchProjectState = selectorFamily<ProjectDetail | undefined, string>({
   key: 'fetchProject',
   get:
     (id) =>
@@ -90,7 +96,7 @@ const fetchProjectState = selectorFamily<ProjectResponse | undefined, string>({
     },
 });
 
-const projectState = atomFamily<ProjectResponse | undefined, string>({
+const projectState = atomFamily<ProjectDetail | undefined, string>({
   key: 'project',
   default: fetchProjectState,
 });
@@ -110,4 +116,7 @@ export const useProjects = (options: ProjectListOptions) => {
   return projects;
 };
 
-export const useProjectById = (id: string) => useRecoilValue(projectState(id));
+// projectState is separate from list cache - always fetches complete detail data
+// No need to reset since list data doesn't pollute this cache
+export const useProjectById = (id: string) =>
+  useRecoilState(projectState(id))[0];

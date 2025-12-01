@@ -83,7 +83,7 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
 
   const listOptions = useMemo(
     () => ({
-      projectType: 'Discovery' as const,
+      projectType: 'Discovery Project' as const,
       searchQuery: debouncedSearchQuery,
       statusFilters,
       currentPage,

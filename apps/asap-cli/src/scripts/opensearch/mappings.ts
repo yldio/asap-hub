@@ -36,3 +36,60 @@ export const userProductivityPerformanceMapping = {
     documentCategory: { type: 'keyword' },
   },
 } as const;
+
+export const teamProductivityPerformanceMapping = {
+  properties: {
+    article: {
+      properties: {
+        belowAverageMin: { type: 'integer' },
+        belowAverageMax: { type: 'integer' },
+        averageMin: { type: 'integer' },
+        averageMax: { type: 'integer' },
+        aboveAverageMin: { type: 'integer' },
+        aboveAverageMax: { type: 'integer' },
+      },
+    },
+    bioinformatics: {
+      properties: {
+        belowAverageMin: { type: 'integer' },
+        belowAverageMax: { type: 'integer' },
+        averageMin: { type: 'integer' },
+        averageMax: { type: 'integer' },
+        aboveAverageMin: { type: 'integer' },
+        aboveAverageMax: { type: 'integer' },
+      },
+    },
+    dataset: {
+      properties: {
+        belowAverageMin: { type: 'integer' },
+        belowAverageMax: { type: 'integer' },
+        averageMin: { type: 'integer' },
+        averageMax: { type: 'integer' },
+        aboveAverageMin: { type: 'integer' },
+        aboveAverageMax: { type: 'integer' },
+      },
+    },
+    labMaterial: {
+      properties: {
+        belowAverageMin: { type: 'integer' },
+        belowAverageMax: { type: 'integer' },
+        averageMin: { type: 'integer' },
+        averageMax: { type: 'integer' },
+        aboveAverageMin: { type: 'integer' },
+        aboveAverageMax: { type: 'integer' },
+      },
+    },
+    protocol: {
+      properties: {
+        belowAverageMin: { type: 'integer' },
+        belowAverageMax: { type: 'integer' },
+        averageMin: { type: 'integer' },
+        averageMax: { type: 'integer' },
+        aboveAverageMin: { type: 'integer' },
+        aboveAverageMax: { type: 'integer' },
+      },
+    },
+    timeRange: { type: 'keyword' },
+    outputType: { type: 'keyword' },
+  },
+} as const;

@@ -15,6 +15,7 @@ export type NewsEvent = `News${EntityEventAction}`;
 export type TutorialEvent = `Tutorials${EntityEventAction}`;
 export type TeamMembershipEvent = `TeamMembership${EntityEventAction}`;
 export type ProjectEvent = `Projects${EntityEventAction}`;
+export type ProjectMembershipEvent = `ProjectMembership${EntityEventAction}`;
 
 export type WebhookDetailType =
   | CalendarEvent
@@ -31,7 +32,8 @@ export type WebhookDetailType =
   | WorkingGroupEvent
   | TutorialEvent
   | TeamMembershipEvent
-  | ProjectEvent;
+  | ProjectEvent
+  | ProjectMembershipEvent;
 
 export type WebhookDetail<T extends object = object> = {
   resourceId: string;

@@ -11,15 +11,14 @@ const baseProject = {
   duration: '3 yrs',
   tags: ['Machine Learning', 'Neuroscience', 'Genetics'],
   description: 'This is a detailed project description.',
-  originalGrant: {
-    title: 'Original Grant Title',
-    description: 'Original grant description explaining the project goals.',
-    proposalURL: 'https://example.com/proposal.pdf',
-  },
+  originalGrant: 'Original Grant Title',
+  originalGrantProposalId: 'proposal-1',
   supplementGrant: {
-    title: 'Supplement Grant Title',
-    description: 'Supplement grant description with additional funding.',
-    proposalURL: 'https://example.com/supplement.pdf',
+    grantTitle: 'Supplement Grant Title',
+    grantDescription: 'Supplement grant description with additional funding.',
+    grantProposalId: 'proposal-2',
+    grantStartDate: '2023-01-01',
+    grantEndDate: '2025-12-31',
   },
   milestones: [
     {
@@ -42,14 +41,14 @@ describe('ProjectDetailAbout', () => {
     it('always renders the overview section', () => {
       const discoveryProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -62,14 +61,14 @@ describe('ProjectDetailAbout', () => {
     it('renders tags when tags array has items', () => {
       const projectWithTags: ProjectDetail = {
         ...baseProject,
-        projectType: 'Discovery',
-        researchTheme: 'Genetics',
+        projectType: 'Discovery Project',
+        researchTheme: 'Genetics Theme',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics Theme',
         },
       };
 
@@ -83,14 +82,14 @@ describe('ProjectDetailAbout', () => {
       const projectWithoutTags: ProjectDetail = {
         ...baseProject,
         tags: [],
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -106,14 +105,14 @@ describe('ProjectDetailAbout', () => {
     it('renders milestones when milestones array has items', () => {
       const projectWithMilestones: ProjectDetail = {
         ...baseProject,
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -125,14 +124,14 @@ describe('ProjectDetailAbout', () => {
       const projectWithoutMilestones: ProjectDetail = {
         ...baseProject,
         milestones: [],
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -144,14 +143,14 @@ describe('ProjectDetailAbout', () => {
       const projectWithoutMilestones: ProjectDetail = {
         ...baseProject,
         milestones: undefined,
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -164,14 +163,14 @@ describe('ProjectDetailAbout', () => {
     it('renders Contributors for Discovery projects', () => {
       const discoveryProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -184,14 +183,14 @@ describe('ProjectDetailAbout', () => {
     it('renders Contributors for Resource team-based projects', () => {
       const resourceTeamProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Resource',
+        projectType: 'Resource Project',
         resourceType: 'Biobank',
         isTeamBased: true,
         fundedTeam: {
           id: 'team-1',
-          name: 'Resource Team',
-          type: 'Resource Team',
-          description: 'Team description',
+          displayName: 'Resource Team',
+          teamType: 'Resource Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -202,7 +201,7 @@ describe('ProjectDetailAbout', () => {
     it('does not render Contributors when fundedTeam is not provided', () => {
       const resourceTeamProjectNoTeam: ProjectDetail = {
         ...baseProject,
-        projectType: 'Resource',
+        projectType: 'Resource Project',
         resourceType: 'Biobank',
         isTeamBased: true,
         fundedTeam: undefined,
@@ -217,7 +216,7 @@ describe('ProjectDetailAbout', () => {
     it('renders Contributors for Resource not team-based projects with members', () => {
       const resourceMemberProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Resource',
+        projectType: 'Resource Project',
         resourceType: 'Software Tool',
         isTeamBased: false,
         members: [
@@ -239,7 +238,7 @@ describe('ProjectDetailAbout', () => {
     it('does not render Contributors when members is not provided', () => {
       const resourceMemberProjectNoMembers: ProjectDetail = {
         ...baseProject,
-        projectType: 'Resource',
+        projectType: 'Resource Project',
         resourceType: 'Software Tool',
         isTeamBased: false,
         members: undefined,
@@ -254,14 +253,7 @@ describe('ProjectDetailAbout', () => {
     it('renders Contributors for Trainee projects', () => {
       const traineeProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Trainee',
-        trainer: {
-          id: 'trainer-1',
-          displayName: 'Dr. Sarah Mentor',
-          firstName: 'Sarah',
-          lastName: 'Mentor',
-          href: '/users/trainer-1',
-        },
+        projectType: 'Trainee Project',
         members: [
           {
             id: 'trainee-1',
@@ -269,6 +261,15 @@ describe('ProjectDetailAbout', () => {
             firstName: 'Emily',
             lastName: 'Trainee',
             href: '/users/trainee-1',
+            role: 'Trainee',
+          },
+          {
+            id: 'trainer-1',
+            displayName: 'Dr. Sarah Mentor',
+            firstName: 'Sarah',
+            lastName: 'Mentor',
+            href: '/users/trainer-1',
+            role: 'Trainee Project - Mentor',
           },
         ],
       };
@@ -284,14 +285,14 @@ describe('ProjectDetailAbout', () => {
     it('renders Contact CTA when point of contact email is provided', () => {
       const discoveryProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -308,21 +309,30 @@ describe('ProjectDetailAbout', () => {
       expect(screen.getByText('Contact')).toBeInTheDocument();
     });
 
-    it('does not render Contact CTA when no email is provided', () => {
+    it('does not render Contact CTA when no email is provided or status is not Active', () => {
       const discoveryProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
-      render(<ProjectDetailAbout {...discoveryProject} />);
+      const { rerender } = render(
+        <ProjectDetailAbout
+          {...discoveryProject}
+          pointOfContactEmail={undefined}
+        />,
+      );
+      expect(
+        screen.queryByText('Have additional questions?'),
+      ).not.toBeInTheDocument();
+      rerender(<ProjectDetailAbout {...discoveryProject} status="Closed" />);
       expect(
         screen.queryByText('Have additional questions?'),
       ).not.toBeInTheDocument();
@@ -331,14 +341,14 @@ describe('ProjectDetailAbout', () => {
     it('renders Contact CTA with mailto link', () => {
       const discoveryProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -357,14 +367,14 @@ describe('ProjectDetailAbout', () => {
     it('renders all sections for a complete Discovery project', () => {
       const completeDiscoveryProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -387,14 +397,14 @@ describe('ProjectDetailAbout', () => {
     it('renders all sections for a complete Resource team-based project', () => {
       const completeResourceProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Resource',
+        projectType: 'Resource Project',
         resourceType: 'Biobank',
         isTeamBased: true,
         fundedTeam: {
           id: 'team-1',
-          name: 'Resource Team',
-          type: 'Resource Team',
-          description: 'Team description',
+          displayName: 'Resource Team',
+          teamType: 'Resource Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -417,7 +427,7 @@ describe('ProjectDetailAbout', () => {
     it('renders all sections for a complete Resource not team-based project', () => {
       const completeResourceMemberProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Resource',
+        projectType: 'Resource Project',
         resourceType: 'Software Tool',
         isTeamBased: false,
         members: [
@@ -460,15 +470,7 @@ describe('ProjectDetailAbout', () => {
     it('renders all sections for a complete Trainee project', () => {
       const completeTraineeProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Trainee',
-        trainer: {
-          id: 'trainer-1',
-          displayName: 'Dr. Sarah Mentor',
-          firstName: 'Sarah',
-          lastName: 'Mentor',
-          href: '/users/trainer-1',
-          role: 'Principal Investigator',
-        },
+        projectType: 'Trainee Project',
         members: [
           {
             id: 'trainee-1',
@@ -476,7 +478,7 @@ describe('ProjectDetailAbout', () => {
             firstName: 'Emily',
             lastName: 'Trainee',
             href: '/users/trainee-1',
-            role: 'PhD Candidate',
+            role: 'Trainee',
           },
           {
             id: 'trainee-2',
@@ -484,7 +486,15 @@ describe('ProjectDetailAbout', () => {
             firstName: 'Michael',
             lastName: 'Student',
             href: '/users/trainee-2',
-            role: 'Postdoctoral Fellow',
+            role: 'Trainee',
+          },
+          {
+            id: 'trainer-1',
+            displayName: 'Dr. Sarah Mentor',
+            firstName: 'Sarah',
+            lastName: 'Mentor',
+            href: '/users/trainer-1',
+            role: 'Trainee Project - Mentor',
           },
         ],
       };
@@ -515,14 +525,14 @@ describe('ProjectDetailAbout', () => {
         ...baseProject,
         tags: [],
         milestones: undefined,
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 
@@ -541,14 +551,14 @@ describe('ProjectDetailAbout', () => {
     it('renders all sections', () => {
       const discoveryProject: ProjectDetail = {
         ...baseProject,
-        projectType: 'Discovery',
+        projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
         fundedTeam: {
           id: 'team-1',
-          name: 'Alpha Team',
-          type: 'Discovery Team',
-          description: 'Team description',
+          displayName: 'Alpha Team',
+          teamType: 'Discovery Team',
+          researchTheme: 'Genetics',
         },
       };
 

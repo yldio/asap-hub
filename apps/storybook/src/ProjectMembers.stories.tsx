@@ -148,24 +148,11 @@ export const RealWorldExample = () => (
       <ProjectMembers
         members={[
           {
-            id: '1',
-            displayName: 'Dr. Sarah Martinez',
-            firstName: 'Sarah',
-            lastName: 'Martinez',
-            role: 'Trainer - Principal Investigator',
-            href: '/users/sarah-martinez',
-            teams: [
-              { id: 'team-1', displayName: 'Alpha Team' },
-              { id: 'team-2', displayName: 'Neuroscience Research' },
-              { id: 'team-3', displayName: 'PD Consortium' },
-            ],
-          },
-          {
             id: '2',
             displayName: 'Alex Chen',
             firstName: 'Alex',
             lastName: 'Chen',
-            role: 'Trainee - PhD Candidate',
+            role: 'Trainee Project - Lead',
             href: '/users/alex-chen',
             teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
           },
@@ -174,11 +161,24 @@ export const RealWorldExample = () => (
             displayName: 'Maria Garcia',
             firstName: 'Maria',
             lastName: 'Garcia',
-            role: 'Trainee - Postdoctoral Fellow',
+            role: 'Trainee Project - Lead',
             href: '/users/maria-garcia',
             teams: [
               { id: 'team-1', displayName: 'Alpha Team' },
               { id: 'team-4', displayName: 'Genomics Lab' },
+            ],
+          },
+          {
+            id: '1',
+            displayName: 'Dr. Sarah Martinez',
+            firstName: 'Sarah',
+            lastName: 'Martinez',
+            role: 'Trainee Project - Mentor',
+            href: '/users/sarah-martinez',
+            teams: [
+              { id: 'team-1', displayName: 'Alpha Team' },
+              { id: 'team-2', displayName: 'Neuroscience Research' },
+              { id: 'team-3', displayName: 'PD Consortium' },
             ],
           },
         ]}

@@ -39,7 +39,6 @@ const TraineeProjectsListContent: FC<TraineeProjectsListContentProps> = ({
     () =>
       (projects.items as TraineeProject[]).map((project) => ({
         ...project,
-        trainer: withMemberHref(project.trainer),
         members: project.members.map(withMemberHref),
       })),
     [projects],
@@ -78,7 +77,7 @@ const TraineeProjects: FC<TraineeProjectsProps> = ({
 
   const listOptions = useMemo(
     () => ({
-      projectType: 'Trainee' as const,
+      projectType: 'Trainee Project' as const,
       searchQuery: debouncedSearchQuery,
       statusFilters,
       currentPage,

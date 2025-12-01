@@ -11,9 +11,13 @@ const baseProject = {
   duration: '3 yrs',
   tags: ['Tag1'],
   description: 'Test description',
-  originalGrant: {
-    title: 'Grant Title',
-    description: 'Grant description',
+  originalGrant: 'Grant Title',
+  supplementGrant: {
+    grantTitle: 'Supplement Grant Title',
+    grantDescription: 'Supplement grant description',
+    grantProposalId: 'proposal-1',
+    grantStartDate: '2023-01-01',
+    grantEndDate: '2025-12-31',
   },
 };
 
@@ -21,14 +25,14 @@ describe('getTeamIcon', () => {
   it('returns DiscoveryTeamIcon for Discovery projects', () => {
     const discoveryProject: ProjectDetail = {
       ...baseProject,
-      projectType: 'Discovery',
+      projectType: 'Discovery Project',
       researchTheme: 'Genetics',
       teamName: 'Test Team',
       fundedTeam: {
         id: 'team-1',
-        name: 'Test Team',
-        type: 'Discovery Team',
-        description: 'Team description',
+        displayName: 'Test Team',
+        teamType: 'Discovery Team',
+        researchTheme: 'Genetics',
       },
     };
 
@@ -42,14 +46,14 @@ describe('getTeamIcon', () => {
   it('returns ResourceTeamIcon for Resource projects that are team-based', () => {
     const resourceTeamProject: ProjectDetail = {
       ...baseProject,
-      projectType: 'Resource',
+      projectType: 'Resource Project',
       resourceType: 'Biobank',
       isTeamBased: true,
       fundedTeam: {
         id: 'team-1',
-        name: 'Test Team',
-        type: 'Resource Team',
-        description: 'Team description',
+        displayName: 'Test Team',
+        teamType: 'Resource Team',
+        researchTheme: 'Genetics',
       },
     };
 
@@ -63,7 +67,7 @@ describe('getTeamIcon', () => {
   it('returns ResourceMemberIcon for Resource projects that are not team-based', () => {
     const resourceMemberProject: ProjectDetail = {
       ...baseProject,
-      projectType: 'Resource',
+      projectType: 'Resource Project',
       resourceType: 'Software Tool',
       isTeamBased: false,
       members: [
@@ -84,17 +88,10 @@ describe('getTeamIcon', () => {
     );
   });
 
-  it('returns TrainerIcon for Trainee projects', () => {
+  it('returns TraineeIcon for Trainee projects', () => {
     const traineeProject: ProjectDetail = {
       ...baseProject,
-      projectType: 'Trainee',
-      trainer: {
-        id: 'trainer-1',
-        displayName: 'Dr. Trainer',
-        firstName: 'Trainer',
-        lastName: 'Name',
-        href: '/users/trainer-1',
-      },
+      projectType: 'Trainee Project',
       members: [
         {
           id: 'trainee-1',
@@ -102,6 +99,15 @@ describe('getTeamIcon', () => {
           firstName: 'Trainee',
           lastName: 'Name',
           href: '/users/trainee-1',
+          role: 'Trainee Project - Lead',
+        },
+        {
+          id: 'trainer-1',
+          displayName: 'Dr. Trainer',
+          firstName: 'Trainer',
+          lastName: 'Name',
+          href: '/users/trainer-1',
+          role: 'Trainee Project - Mentor',
         },
       ],
     };
@@ -116,7 +122,7 @@ describe('getTeamIcon', () => {
       projectType: 'Unknown' as unknown as ProjectType,
     };
 
-    const result = getTeamIcon(unknownProject as ProjectDetail);
+    const result = getTeamIcon(unknownProject as unknown as ProjectDetail);
     expect(result).toBeNull();
   });
 });
@@ -124,21 +130,21 @@ describe('getTeamIcon', () => {
 describe('ProjectDetailHeader', () => {
   const mockDiscoveryProject: ProjectDetail = {
     ...baseProject,
-    projectType: 'Discovery',
+    projectType: 'Discovery Project',
     researchTheme: 'Genetics',
     teamName: 'Alpha Team',
     teamId: 'team-1',
     fundedTeam: {
       id: 'team-1',
-      name: 'Alpha Team',
-      type: 'Discovery Team',
-      description: 'Team description',
+      displayName: 'Alpha Team',
+      teamType: 'Discovery Team',
+      researchTheme: 'Genetics',
     },
   };
 
   const mockResourceTeamProject: ProjectDetail = {
     ...baseProject,
-    projectType: 'Resource',
+    projectType: 'Resource Project',
     resourceType: 'Biobank',
     isTeamBased: true,
     teamName: 'Resource Team',
@@ -146,15 +152,15 @@ describe('ProjectDetailHeader', () => {
     googleDriveLink: 'https://drive.google.com/example',
     fundedTeam: {
       id: 'team-2',
-      name: 'Resource Team',
-      type: 'Resource Team',
-      description: 'Team description',
+      displayName: 'Resource Team',
+      teamType: 'Resource Team',
+      researchTheme: 'Genetics',
     },
   };
 
   const mockResourceMemberProject: ProjectDetail = {
     ...baseProject,
-    projectType: 'Resource',
+    projectType: 'Resource Project',
     resourceType: 'Software Tool',
     isTeamBased: false,
     members: [
@@ -170,14 +176,7 @@ describe('ProjectDetailHeader', () => {
 
   const mockTraineeProject: ProjectDetail = {
     ...baseProject,
-    projectType: 'Trainee',
-    trainer: {
-      id: 'trainer-1',
-      displayName: 'Dr. Sarah Mentor',
-      firstName: 'Sarah',
-      lastName: 'Mentor',
-      href: '/users/trainer-1',
-    },
+    projectType: 'Trainee Project',
     members: [
       {
         id: 'trainee-1',
@@ -185,6 +184,15 @@ describe('ProjectDetailHeader', () => {
         firstName: 'Emily',
         lastName: 'Trainee',
         href: '/users/trainee-1',
+        role: 'Trainee Project - Lead',
+      },
+      {
+        id: 'trainer-1',
+        displayName: 'Dr. Sarah Mentor',
+        firstName: 'Sarah',
+        lastName: 'Mentor',
+        href: '/users/trainer-1',
+        role: 'Trainee Project - Mentor',
       },
     ],
   };
@@ -222,8 +230,8 @@ describe('ProjectDetailHeader', () => {
       expect(aboutLink).toHaveAttribute('href', '/projects/discovery/1/about');
     });
 
-    it('renders Contact button when point of contact email is provided', () => {
-      render(
+    it('renders or hides Contact button when point of contact email is provided and project status is Active or not', () => {
+      const { rerender } = render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           pointOfContactEmail="contact@example.com"
@@ -231,6 +239,24 @@ describe('ProjectDetailHeader', () => {
         />,
       );
       expect(screen.getByText('Contact')).toBeInTheDocument();
+      rerender(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          status="Closed"
+          pointOfContactEmail="contact@example.com"
+          aboutHref="/projects/discovery/1/about"
+        />,
+      );
+      expect(screen.queryByText('Contact')).not.toBeInTheDocument();
+      rerender(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          status="Active"
+          pointOfContactEmail={undefined}
+          aboutHref="/projects/discovery/1/about"
+        />,
+      );
+      expect(screen.queryByText('Contact')).not.toBeInTheDocument();
     });
 
     it('does not render Contact button when no email is provided', () => {
@@ -268,6 +294,21 @@ describe('ProjectDetailHeader', () => {
       copyButton?.click();
       expect(writeTextMock).toHaveBeenCalledWith('test@example.com');
     });
+
+    it('renders Closed Project banner when status is Closed', () => {
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          status="Closed"
+          aboutHref="/projects/discovery/1/about"
+        />,
+      );
+      expect(
+        screen.getByText(
+          'This project concluded earlier than expected and some milestones are incomplete.',
+        ),
+      ).toBeInTheDocument();
+    });
   });
 
   describe('Discovery projects', () => {
@@ -299,7 +340,7 @@ describe('ProjectDetailHeader', () => {
         />,
       );
       const teamLink = screen.getByText('Alpha Team').closest('a');
-      expect(teamLink).toHaveAttribute('href', '/teams/team-1');
+      expect(teamLink).toHaveAttribute('href', '/network/teams/team-1');
     });
 
     it('renders team name without link when teamId is not provided', () => {
@@ -398,7 +439,7 @@ describe('ProjectDetailHeader', () => {
         />,
       );
       const teamLink = screen.getByText('Resource Team').closest('a');
-      expect(teamLink).toHaveAttribute('href', '/teams/team-2');
+      expect(teamLink).toHaveAttribute('href', '/network/teams/team-2');
     });
 
     it('renders team name without link when teamId is not provided', () => {
@@ -451,7 +492,17 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Trainee Project')).toBeInTheDocument();
     });
 
-    it('renders trainer information', () => {
+    it('renders trainees in the first row', () => {
+      render(
+        <ProjectDetailHeader
+          {...mockTraineeProject}
+          aboutHref="/projects/trainee/1/about"
+        />,
+      );
+      expect(screen.getByText('Emily Trainee')).toBeInTheDocument();
+    });
+
+    it('renders trainers in the second row', () => {
       render(
         <ProjectDetailHeader
           {...mockTraineeProject}
@@ -461,14 +512,38 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
     });
 
-    it('renders trainee members', () => {
+    it('renders multiple mentors correctly', () => {
+      const projectWithMultipleMentors = {
+        ...mockTraineeProject,
+        members: [
+          ...mockTraineeProject.members,
+          {
+            id: 'mentor-2',
+            displayName: 'Dr. John Mentor',
+            firstName: 'John',
+            lastName: 'Mentor',
+            href: '/users/mentor-2',
+            role: 'Trainee Project - Mentor',
+          },
+          {
+            id: 'mentor-3',
+            displayName: 'Dr. Jane Key',
+            firstName: 'Jane',
+            lastName: 'Key',
+            href: '/users/mentor-3',
+            role: 'Trainee Project - Key Personnel',
+          },
+        ],
+      };
       render(
         <ProjectDetailHeader
-          {...mockTraineeProject}
+          {...projectWithMultipleMentors}
           aboutHref="/projects/trainee/1/about"
         />,
       );
-      expect(screen.getByText('Emily Trainee')).toBeInTheDocument();
+      expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
+      expect(screen.getByText('Dr. John Mentor')).toBeInTheDocument();
+      expect(screen.getByText('Dr. Jane Key')).toBeInTheDocument();
     });
 
     /* eslint-disable jest/no-commented-out-tests */

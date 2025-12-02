@@ -22,7 +22,6 @@ import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import {
   getAlgoliaIndexName,
   makeFlagBasedPerformanceHook,
-  makePerformanceHook,
   makePerformanceState,
 } from '../utils/state';
 import {
@@ -155,9 +154,10 @@ export const teamProductivityPerformanceState =
   );
 
 export const useTeamProductivityPerformance =
-  makePerformanceHook<TeamProductivityPerformance>(
+  makeFlagBasedPerformanceHook<TeamProductivityPerformance>(
     teamProductivityPerformanceState,
     getTeamProductivityPerformance,
+    'team-productivity-performance',
   );
 
 export const useTeamProductivityPerformanceValue = (

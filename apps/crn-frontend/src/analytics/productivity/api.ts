@@ -11,7 +11,6 @@ import {
   USER_PRODUCTIVITY_PERFORMANCE,
 } from '@asap-hub/algolia';
 import {
-  ListTeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
   SortTeamProductivity,
   SortUserProductivity,
@@ -20,6 +19,7 @@ import {
   OutputTypeOption,
   TimeRangeOption,
   UserProductivityResponse,
+  TeamProductivityResponse,
 } from '@asap-hub/model';
 import {
   buildNormalizedStringSort,
@@ -118,6 +118,21 @@ const userProductivyOpensearchSort: OpensearchSortMap<SortUserProductivity> = {
   ],
 };
 
+const teamProductivyOpensearchSort: OpensearchSortMap<SortTeamProductivity> = {
+  team_asc: [{ 'name.keyword': { order: 'asc' } }],
+  team_desc: [{ 'name.keyword': { order: 'desc' } }],
+  article_asc: [{ Article: { order: 'asc' } }],
+  article_desc: [{ Article: { order: 'desc' } }],
+  bioinformatics_asc: [{ Bioinformatics: { order: 'asc' } }],
+  bioinformatics_desc: [{ Bioinformatics: { order: 'desc' } }],
+  dataset_asc: [{ Dataset: { order: 'asc' } }],
+  dataset_desc: [{ Dataset: { order: 'desc' } }],
+  lab_material_asc: [{ 'Lab Material': { order: 'asc' } }],
+  lab_material_desc: [{ 'Lab Material': { order: 'desc' } }],
+  protocol_asc: [{ Protocol: { order: 'asc' } }],
+  protocol_desc: [{ Protocol: { order: 'desc' } }],
+};
+
 export const getUserProductivity = (
   client:
     | AlgoliaClient<'analytics'>
@@ -153,10 +168,31 @@ export type ProductivityListOptions = Pick<
   sort: SortUserProductivity | SortTeamProductivity;
 };
 
-export const getTeamProductivity = getMetric<
-  ListTeamProductivityAlgoliaResponse,
-  SortTeamProductivity
->(TEAM_PRODUCTIVITY);
+export const getTeamProductivity = (
+  client:
+    | AlgoliaClient<'analytics'>
+    | OpensearchClient<TeamProductivityResponse>,
+  options: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>,
+) => {
+  if (client instanceof OpensearchClient) {
+    const { tags, currentPage, pageSize, timeRange, outputType, sort } =
+      options;
+    return client.search(
+      tags,
+      currentPage,
+      pageSize,
+      timeRange,
+      'both',
+      undefined,
+      teamProductivyOpensearchSort[sort],
+      outputType,
+    );
+  }
+  return getMetric<
+    SearchResult<TeamProductivityResponse>,
+    SortTeamProductivity
+  >(TEAM_PRODUCTIVITY)(client, options);
+};
 
 export const getUserProductivityPerformance = async (
   client:
@@ -171,8 +207,9 @@ export const getUserProductivityPerformance = async (
       null,
       options.timeRange,
       'both',
-      options.documentCategory,
+      undefined,
       [],
+      options.outputType,
     );
     return results.items[0] as UserProductivityPerformance | undefined;
   }
@@ -181,7 +218,26 @@ export const getUserProductivityPerformance = async (
   )(client, options);
 };
 
-export const getTeamProductivityPerformance =
-  getPerformanceForMetric<TeamProductivityPerformance>(
+export const getTeamProductivityPerformance = async (
+  client:
+    | AlgoliaClient<'analytics'>
+    | OpensearchClient<TeamProductivityPerformance>,
+  options: AnalyticsPerformanceOptions,
+) => {
+  if (client instanceof OpensearchClient) {
+    const results = await client.search(
+      [],
+      null,
+      null,
+      options.timeRange,
+      'both',
+      undefined,
+      [],
+      undefined,
+    );
+    return results.items[0] as TeamProductivityPerformance | undefined;
+  }
+  return getPerformanceForMetric<TeamProductivityPerformance>(
     TEAM_PRODUCTIVITY_PERFORMANCE,
-  );
+  )(client, options);
+};

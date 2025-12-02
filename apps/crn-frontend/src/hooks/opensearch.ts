@@ -33,18 +33,6 @@ export const useAnalyticsOpensearch = <T>(index: OpensearchIndex) => {
   };
 };
 
-export const opensearchMetrics = [
-  'publication-compliance',
-  'preprint-compliance',
-  'os-champion',
-  'attendance',
-  'preliminary-data-sharing',
-  'user-productivity',
-  'user-productivity-performance',
-] as const;
-
-export type OpensearchMetric = (typeof opensearchMetrics)[number];
-
 /**
  * Façade to all metrics stored in OpenSearch.
  */

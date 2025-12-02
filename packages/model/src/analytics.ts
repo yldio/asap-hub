@@ -373,13 +373,8 @@ export type ListUserProductivityResponse =
 export type ListTeamProductivityDataObject =
   ListResponse<TeamProductivityDataObject>;
 export type TeamProductivityResponse = TeamProductivityDataObject;
-export type TeamProductivityAlgoliaResponse = TeamProductivityDataObject & {
-  objectID: string;
-};
 export type ListTeamProductivityResponse =
   ListResponse<TeamProductivityResponse>;
-export type ListTeamProductivityAlgoliaResponse =
-  ListResponse<TeamProductivityAlgoliaResponse>;
 
 export type UserCollaborationTeam = {
   id: string;

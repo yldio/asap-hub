@@ -1,5 +1,9 @@
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
-import { DocumentCategoryOption, TimeRangeOption } from '@asap-hub/model';
+import {
+  DocumentCategoryOption,
+  OutputTypeOption,
+  TimeRangeOption,
+} from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
 
 const DEFAULT_PAGE_NUMBER = 0;
@@ -66,6 +70,7 @@ type OpensearchSearchOptions = {
   searchScope: SearchScope;
   documentCategory?: DocumentCategoryOption;
   sort?: OpensearchSort[];
+  outputType?: OutputTypeOption;
 };
 
 type SortConfigOrder = 'asc' | 'desc';
@@ -120,7 +125,9 @@ export type OpensearchIndex =
   | 'attendance'
   | 'preliminary-data-sharing'
   | 'user-productivity'
-  | 'user-productivity-performance';
+  | 'user-productivity-performance'
+  | 'team-productivity'
+  | 'team-productivity-performance';
 
 type ShouldClause =
   | {
@@ -273,6 +280,50 @@ export const userWithTeamsRecordSearchQueryBuilder = (
   };
 };
 
+export const teamRecordSearchQueryBuilder = (
+  options: OpensearchSearchOptions,
+): SearchQuery => {
+  const shouldClauses = options.searchTags.flatMap((term) => {
+    const clauses: ShouldClause[] = [
+      {
+        term: {
+          'name.keyword': term,
+        },
+      },
+    ];
+
+    return clauses;
+  });
+
+  const mustClauses: SearchQuery['query']['bool']['must'] = [];
+
+  mustClauses.push({
+    term: {
+      timeRange: options.timeRange,
+    },
+  });
+
+  if (options.outputType) {
+    mustClauses.push({
+      term: { outputType: options.outputType },
+    });
+  }
+
+  return {
+    from: options.currentPage * options.pageSize,
+    size: options.pageSize,
+    query: {
+      bool: {
+        ...(shouldClauses.length > 0
+          ? { should: shouldClauses, minimum_should_match: 1 }
+          : {}),
+        must: mustClauses,
+      },
+    },
+    ...(options.sort ? { sort: options.sort } : {}),
+  };
+};
+
 export const taglessSearchQueryBuilder = (
   options: OpensearchSearchOptions,
 ): SearchQuery => ({
@@ -303,6 +354,8 @@ const queryBuilderByIndex: Record<
   'publication-compliance': teamWithUsersRecordSearchQueryBuilder,
   'user-productivity': userWithTeamsRecordSearchQueryBuilder,
   'user-productivity-performance': taglessSearchQueryBuilder,
+  'team-productivity': teamRecordSearchQueryBuilder,
+  'team-productivity-performance': taglessSearchQueryBuilder,
 };
 
 export class OpensearchClient<T> {
@@ -345,6 +398,7 @@ export class OpensearchClient<T> {
     searchScope: SearchScope = 'both',
     documentCategory?: DocumentCategoryOption,
     sort?: OpensearchSort[],
+    outputType?: OutputTypeOption,
   ): Promise<SearchResult<T>> {
     const searchQuery = queryBuilderByIndex[this.index]({
       pageSize: pageSize ?? DEFAULT_PAGE_SIZE,
@@ -354,6 +408,7 @@ export class OpensearchClient<T> {
       timeRange,
       searchTags,
       sort,
+      outputType,
     });
     const response = await this.request<OpensearchHitsResponse<T>>(searchQuery);
 

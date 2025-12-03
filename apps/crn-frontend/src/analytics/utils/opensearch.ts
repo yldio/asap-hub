@@ -390,16 +390,19 @@ export class OpensearchClient<T> {
     return resp.json();
   }
 
-  async search(
-    searchTags: string[],
-    currentPage: number | null,
-    pageSize: number | null,
-    timeRange: TimeRangeOption,
-    searchScope: SearchScope = 'both',
-    documentCategory?: DocumentCategoryOption,
-    sort?: OpensearchSort[],
-    outputType?: OutputTypeOption,
-  ): Promise<SearchResult<T>> {
+  async search({
+    searchTags,
+    currentPage,
+    pageSize,
+    timeRange,
+    searchScope,
+    documentCategory,
+    sort,
+    outputType,
+  }: Omit<OpensearchSearchOptions, 'currentPage' | 'pageSize'> & {
+    currentPage?: number;
+    pageSize?: number;
+  }): Promise<SearchResult<T>> {
     const searchQuery = queryBuilderByIndex[this.index]({
       pageSize: pageSize ?? DEFAULT_PAGE_SIZE,
       currentPage: currentPage ?? DEFAULT_PAGE_NUMBER,

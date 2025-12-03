@@ -217,7 +217,7 @@ export const teamWithUsersRecordSearchQueryBuilder = (
   };
 };
 
-export const userBasedRecordSearchQueryBuilder = (
+export const userWithTeamsRecordSearchQueryBuilder = (
   options: OpensearchSearchOptions,
 ): SearchQuery => {
   const shouldClauses = options.searchTags.flatMap((term) => {
@@ -301,7 +301,7 @@ const queryBuilderByIndex: Record<
   'preliminary-data-sharing': teamWithUsersRecordSearchQueryBuilder,
   'preprint-compliance': teamWithUsersRecordSearchQueryBuilder,
   'publication-compliance': teamWithUsersRecordSearchQueryBuilder,
-  'user-productivity': userBasedRecordSearchQueryBuilder,
+  'user-productivity': userWithTeamsRecordSearchQueryBuilder,
   'user-productivity-performance': taglessSearchQueryBuilder,
 };
 

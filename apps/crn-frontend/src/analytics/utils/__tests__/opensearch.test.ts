@@ -3,7 +3,7 @@ import {
   OpensearchIndex,
   buildNormalizedStringSort,
   teamWithUsersRecordSearchQueryBuilder,
-  userBasedRecordSearchQueryBuilder,
+  userWithTeamsRecordSearchQueryBuilder,
   taglessSearchQueryBuilder,
 } from '../opensearch';
 
@@ -799,9 +799,9 @@ describe('OpensearchClient', () => {
     });
   });
 
-  describe('userBasedRecordSearchQueryBuilder', () => {
+  describe('userWithTeamsRecordSearchQueryBuilder', () => {
     it('builds query with empty searchTags array', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: [],
         currentPage: 0,
         pageSize: 10,
@@ -815,7 +815,7 @@ describe('OpensearchClient', () => {
     });
 
     it('builds query with single tag and scope="teams"', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: ['John Doe'],
         currentPage: 0,
         pageSize: 10,
@@ -833,7 +833,7 @@ describe('OpensearchClient', () => {
     });
 
     it('builds query with single tag and scope="both"', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: ['John Doe'],
         currentPage: 0,
         pageSize: 10,
@@ -859,7 +859,7 @@ describe('OpensearchClient', () => {
     });
 
     it('builds query with multiple tags and scope="teams"', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: ['John Doe', 'Jane Smith'],
         currentPage: 0,
         pageSize: 10,
@@ -879,7 +879,7 @@ describe('OpensearchClient', () => {
     });
 
     it('builds query with multiple tags and scope="both"', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: ['John Doe', 'Jane Smith'],
         currentPage: 0,
         pageSize: 10,
@@ -911,7 +911,7 @@ describe('OpensearchClient', () => {
     });
 
     it('includes documentCategory in must clauses when provided', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: [],
         currentPage: 0,
         pageSize: 10,
@@ -927,7 +927,7 @@ describe('OpensearchClient', () => {
     });
 
     it('excludes documentCategory from must clauses when undefined', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: [],
         currentPage: 0,
         pageSize: 10,
@@ -940,7 +940,7 @@ describe('OpensearchClient', () => {
 
     it('includes sort property when custom sort is provided', () => {
       const customSort = [{ asapOutput: { order: 'asc' as const } }];
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: [],
         currentPage: 0,
         pageSize: 10,
@@ -953,7 +953,7 @@ describe('OpensearchClient', () => {
     });
 
     it('does not include sort property when sort is undefined', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: [],
         currentPage: 0,
         pageSize: 10,
@@ -965,7 +965,7 @@ describe('OpensearchClient', () => {
     });
 
     it('calculates pagination correctly for page 0 size 10', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: [],
         currentPage: 0,
         pageSize: 10,
@@ -978,7 +978,7 @@ describe('OpensearchClient', () => {
     });
 
     it('calculates pagination correctly for page 1 size 15', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: [],
         currentPage: 1,
         pageSize: 15,
@@ -991,7 +991,7 @@ describe('OpensearchClient', () => {
     });
 
     it('includes different timeRange values in must clause', () => {
-      const result = userBasedRecordSearchQueryBuilder({
+      const result = userWithTeamsRecordSearchQueryBuilder({
         searchTags: [],
         currentPage: 0,
         pageSize: 10,

@@ -46,4 +46,10 @@ export const getAnalyticsOSChampion = async (
     timeRange,
   }: AnalyticsSearchOptionsWithFiltering<SortOSChampion>,
 ): Promise<ListOSChampionOpensearchResponse | undefined> =>
-  opensearchClient.search(tags, currentPage, pageSize, timeRange);
+  opensearchClient.search({
+    searchTags: tags,
+    currentPage: currentPage ?? undefined,
+    pageSize: pageSize ?? undefined,
+    timeRange,
+    searchScope: 'both',
+  });

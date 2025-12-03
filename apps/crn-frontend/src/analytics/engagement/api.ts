@@ -57,4 +57,10 @@ export const getMeetingRepAttendance = async (
   opensearchClient: OpensearchClient<MeetingRepAttendanceResponse>,
   { tags, currentPage, pageSize, timeRange }: MeetingRepAttendanceOptions,
 ): Promise<ListMeetingRepAttendanceResponse | undefined> =>
-  opensearchClient.search(tags, currentPage, pageSize, timeRange, 'teams');
+  opensearchClient.search({
+    searchTags: tags,
+    currentPage: currentPage ?? undefined,
+    pageSize: pageSize ?? undefined,
+    timeRange,
+    searchScope: 'teams',
+  });

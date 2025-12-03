@@ -68,13 +68,13 @@ export const getPreliminaryDataSharing = async (
     timeRange,
   }: PreliminaryDataSharingSearchOptions,
 ): Promise<ListPreliminaryDataSharingResponse | undefined> => {
-  const response = await opensearchClient.search(
-    tags,
-    currentPage,
-    pageSize,
+  const response = await opensearchClient.search({
+    searchTags: tags,
+    currentPage: currentPage ?? undefined,
+    pageSize: pageSize ?? undefined,
     timeRange,
-    'teams',
-  );
+    searchScope: 'teams',
+  });
 
   return {
     items: response.items || [],

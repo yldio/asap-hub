@@ -142,15 +142,15 @@ export const getUserProductivity = (
   if (client instanceof OpensearchClient) {
     const { tags, currentPage, pageSize, timeRange, documentCategory, sort } =
       options;
-    return client.search(
-      tags,
-      currentPage,
-      pageSize,
+    return client.search({
+      searchTags: tags,
+      currentPage: currentPage ?? undefined,
+      pageSize: pageSize ?? undefined,
       timeRange,
-      'both',
+      searchScope: 'both',
       documentCategory,
-      userProductivyOpensearchSort[sort],
-    );
+      sort: userProductivyOpensearchSort[sort],
+    });
   }
   return getMetric<
     SearchResult<UserProductivityResponse>,
@@ -177,16 +177,15 @@ export const getTeamProductivity = (
   if (client instanceof OpensearchClient) {
     const { tags, currentPage, pageSize, timeRange, outputType, sort } =
       options;
-    return client.search(
-      tags,
-      currentPage,
-      pageSize,
+    return client.search({
+      searchTags: tags,
+      currentPage: currentPage ?? undefined,
+      pageSize: pageSize ?? undefined,
       timeRange,
-      'both',
-      undefined,
-      teamProductivyOpensearchSort[sort],
+      searchScope: 'both',
+      sort: teamProductivyOpensearchSort[sort],
       outputType,
-    );
+    });
   }
   return getMetric<
     SearchResult<TeamProductivityResponse>,
@@ -201,16 +200,13 @@ export const getUserProductivityPerformance = async (
   options: AnalyticsPerformanceOptions,
 ) => {
   if (client instanceof OpensearchClient) {
-    const results = await client.search(
-      [],
-      null,
-      null,
-      options.timeRange,
-      'both',
-      undefined,
-      [],
-      options.outputType,
-    );
+    const results = await client.search({
+      searchTags: [],
+      timeRange: options.timeRange,
+      searchScope: 'both',
+      sort: [],
+      outputType: options.outputType,
+    });
     return results.items[0] as UserProductivityPerformance | undefined;
   }
   return getPerformanceForMetric<UserProductivityPerformance>(
@@ -225,16 +221,12 @@ export const getTeamProductivityPerformance = async (
   options: AnalyticsPerformanceOptions,
 ) => {
   if (client instanceof OpensearchClient) {
-    const results = await client.search(
-      [],
-      null,
-      null,
-      options.timeRange,
-      'both',
-      undefined,
-      [],
-      undefined,
-    );
+    const results = await client.search({
+      searchTags: [],
+      timeRange: options.timeRange,
+      searchScope: 'both',
+      sort: [],
+    });
     return results.items[0] as TeamProductivityPerformance | undefined;
   }
   return getPerformanceForMetric<TeamProductivityPerformance>(

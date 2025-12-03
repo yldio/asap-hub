@@ -14,13 +14,13 @@ export const getPreprintCompliance = async (
   options: AnalyticsSearchOptionsWithFiltering<SortPreprintCompliance>,
 ): Promise<ListPreprintComplianceOpensearchResponse | undefined> => {
   const { tags, currentPage, pageSize, timeRange } = options;
-  return opensearchClient.search(
-    tags,
-    currentPage,
-    pageSize,
+  return opensearchClient.search({
+    searchTags: tags,
+    currentPage: currentPage ?? undefined,
+    pageSize: pageSize ?? undefined,
     timeRange,
-    'teams',
-  );
+    searchScope: 'teams',
+  });
 };
 
 export const getPublicationCompliance = async (
@@ -28,11 +28,11 @@ export const getPublicationCompliance = async (
   options: AnalyticsSearchOptionsWithFiltering<SortPublicationCompliance>,
 ): Promise<ListPublicationComplianceOpensearchResponse | undefined> => {
   const { tags, currentPage, pageSize, timeRange } = options;
-  return opensearchClient.search(
-    tags,
-    currentPage,
-    pageSize,
+  return opensearchClient.search({
+    searchTags: tags,
+    currentPage: currentPage ?? undefined,
+    pageSize: pageSize ?? undefined,
     timeRange,
-    'teams',
-  );
+    searchScope: 'teams',
+  });
 };

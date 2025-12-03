@@ -26,6 +26,12 @@ export type PerformanceMetricByDocumentType = {
 
 export type TeamProductivityPerformance = PerformanceMetricByDocumentType;
 
+export type TeamProductivityPerformanceDataObject =
+  TeamProductivityPerformance & {
+    timeRange: TimeRangeOption;
+    outputType: OutputTypeOption;
+  };
+
 export type TeamCollaborationPerformance = {
   withinTeam: PerformanceMetricByDocumentType;
   acrossTeam: PerformanceMetricByDocumentType;

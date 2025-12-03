@@ -156,18 +156,31 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-productivity',
           () =>
-            getTeamProductivityPerformance(algoliaClient, {
-              timeRange,
-              outputType: 'all',
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getTeamProductivityPerformance({
+                  timeRange,
+                  outputType: 'all',
+                })
+              : getTeamProductivityPerformance(algoliaClient, {
+                  timeRange,
+                  outputType: 'all',
+                }),
           (paginationParams) =>
-            getTeamProductivity(algoliaClient, {
-              timeRange,
-              outputType: 'all',
-              sort: 'team_asc',
-              tags: [],
-              ...paginationParams,
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getTeamProductivity({
+                  timeRange,
+                  outputType: 'all',
+                  sort,
+                  tags,
+                  ...paginationParams,
+                })
+              : getTeamProductivity(algoliaClient, {
+                  timeRange,
+                  outputType: 'all',
+                  sort: 'team_asc',
+                  tags: [],
+                  ...paginationParams,
+                }),
           teamProductivityToCSV,
         ),
       'user-collaboration-within': () =>

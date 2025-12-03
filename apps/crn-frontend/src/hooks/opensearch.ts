@@ -4,11 +4,15 @@ import {
   PreliminaryDataSharingDataObject,
   PreprintComplianceOpensearchResponse,
   PublicationComplianceOpensearchResponse,
+  TeamProductivityPerformanceDataObject,
+  TeamProductivityResponse,
   UserProductivityPerformanceDataObject,
   UserProductivityResponse,
 } from '@asap-hub/model';
 import { useRecoilValue } from 'recoil';
 import {
+  getTeamProductivity,
+  getTeamProductivityPerformance,
   getUserProductivity,
   getUserProductivityPerformance,
 } from '../analytics/productivity/api';
@@ -110,6 +114,27 @@ export const useOpensearchMetrics = () => {
           authorization,
         );
       return getUserProductivityPerformance(client, paginationParams);
+    },
+
+    getTeamProductivity(
+      paginationParams: Parameters<typeof getTeamProductivity>[1],
+    ) {
+      const client = new OpensearchClient<TeamProductivityResponse>(
+        'team-productivity',
+        authorization,
+      );
+      return getTeamProductivity(client, paginationParams);
+    },
+
+    getTeamProductivityPerformance(
+      paginationParams: Parameters<typeof getTeamProductivityPerformance>[1],
+    ) {
+      const client =
+        new OpensearchClient<TeamProductivityPerformanceDataObject>(
+          'team-productivity-performance',
+          authorization,
+        );
+      return getTeamProductivityPerformance(client, paginationParams);
     },
   } as const;
 };

@@ -106,18 +106,18 @@ export const getAlgoliaTeams = async (
     pageSize,
   }: GetTeamsListOptions,
 ): Promise<ListTeamResponse> => {
-  const isteamStatusFilter = (filter: string) =>
+  const isTeamStatusFilter = (filter: string) =>
     (teamStatus as unknown as string[]).includes(filter);
   const filterArray = Array.from(filters);
 
   const teamStatusFilter = filterArray
-    .filter(isteamStatusFilter)
+    .filter(isTeamStatusFilter)
     .map((filter) => `teamStatus:"${filter}"`)
     .join(' OR ');
 
   // Research theme filters are any filters that are not team status filters
   const researchThemeFilters = filterArray
-    .filter((filter: string) => !isteamStatusFilter(filter))
+    .filter((filter: string) => !isTeamStatusFilter(filter))
     .map((filter: string) => `researchTheme:"${filter}"`)
     .join(' OR ');
 

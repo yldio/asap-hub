@@ -197,6 +197,7 @@ describe('getAlgoliaTeams', () => {
     await getAlgoliaTeams(algoliaSearchClient, {
       ...options,
       teamType,
+      filters: new Set(), // No filters to test the else branch
     });
     expect(search).toHaveBeenCalledWith(
       ['team'],
@@ -219,6 +220,37 @@ describe('getAlgoliaTeams', () => {
       '',
       expect.objectContaining({
         filters: `(teamType:"${teamType}") AND (teamStatus:"Inactive")`,
+      }),
+    );
+  });
+
+  it('can filter teams by research theme', async () => {
+    await getAlgoliaTeams(algoliaSearchClient, {
+      ...options,
+      teamType: 'Discovery Team',
+      filters: new Set(['Theme1']),
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({
+        filters: '(teamType:"Discovery Team") AND (researchTheme:"Theme1")',
+      }),
+    );
+  });
+
+  it('can filter teams by team type, status, and research theme', async () => {
+    await getAlgoliaTeams(algoliaSearchClient, {
+      ...options,
+      teamType: 'Discovery Team',
+      filters: new Set(['Active', 'Theme1', 'Theme2']),
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team'],
+      '',
+      expect.objectContaining({
+        filters:
+          '(teamType:"Discovery Team") AND (teamStatus:"Active") AND (researchTheme:"Theme1" OR researchTheme:"Theme2")',
       }),
     );
   });

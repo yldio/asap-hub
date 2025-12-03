@@ -72,6 +72,9 @@ export const getContentfulGraphqlTeamById = (
   displayName: 'Team A',
   inactiveSince: null,
   teamType: 'Discovery Team',
+  researchTheme: {
+    name: 'PD Functional Genomics',
+  },
   toolsCollection: {
     items: [],
   },
@@ -122,6 +125,9 @@ export const getContentfulGraphqlTeamProjectById = (): NonNullable<
                     },
                   },
                   supplementGrant: {},
+                  resourceType: {
+                    name: 'Isogenic iPSC Lines',
+                  },
                   researchTagsCollection: {
                     items: [
                       { sys: { id: 'tag-1' }, name: 'Animal resources 1' },
@@ -146,6 +152,9 @@ export const getContentfulGraphqlTeam = (): NonNullable<
   displayName: 'Team A',
   inactiveSince: null,
   teamType: 'Discovery Team',
+  researchTheme: {
+    name: 'PD Functional Genomics',
+  },
   linkedFrom: {
     teamMembershipCollection: {
       items: [
@@ -408,6 +417,9 @@ export const getContentfulGraphqlProjectsCollection = (): {
           },
         },
       },
+      resourceType: {
+        name: 'Isogenic iPSC Lines',
+      },
       researchTagsCollection: {
         items: [{ sys: { id: 'tag-1' }, name: 'Animal resources 1' }],
       },
@@ -538,6 +550,8 @@ export const getTeamDataObject = (): TeamDataObject => ({
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
   tools: [],
+  researchTheme: 'PD Functional Genomics',
+  resourceType: 'Isogenic iPSC Lines',
 });
 
 export const getPublicTeamListItemDataObject =
@@ -618,6 +632,8 @@ export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   linkedProjectId: 'project-id-1',
+  researchTheme: 'PD Functional Genomics',
+  resourceType: 'Isogenic iPSC Lines',
 });
 
 export const getTeamResponse = (): TeamResponse => getTeamDataObject();
@@ -628,7 +644,7 @@ export const getPublicTeamResponse = (): PublicTeamResponse => ({
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   status: 'Active',
   tags: ['Animal resources 1'],
-  projectSummary: undefined,
+  researchTheme: 'PD Functional Genomics',
   members: [
     {
       id: 'user-id-1',
@@ -637,7 +653,6 @@ export const getPublicTeamResponse = (): PublicTeamResponse => ({
       lastName: 'Hardy',
       displayName: 'Tom (Tim) Hardy',
       role: 'Lead PI (Core Leadership)',
-      avatarUrl: undefined,
     },
     {
       id: 'user-id-2',
@@ -646,7 +661,6 @@ export const getPublicTeamResponse = (): PublicTeamResponse => ({
       lastName: 'Doe',
       displayName: 'John Doe',
       role: 'Lead PI (Core Leadership)',
-      avatarUrl: undefined,
     },
   ],
 });

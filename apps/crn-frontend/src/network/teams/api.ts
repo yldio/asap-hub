@@ -106,20 +106,42 @@ export const getAlgoliaTeams = async (
     pageSize,
   }: GetTeamsListOptions,
 ): Promise<ListTeamResponse> => {
-  const isteamStatusFilter = (filter: string) =>
+  const isTeamStatusFilter = (filter: string) =>
     (teamStatus as unknown as string[]).includes(filter);
   const filterArray = Array.from(filters);
 
   const teamStatusFilter = filterArray
-    .filter(isteamStatusFilter)
+    .filter(isTeamStatusFilter)
     .map((filter) => `teamStatus:"${filter}"`)
+    .join(' OR ');
+
+  // Research theme filters are any filters that are not team status filters
+  const researchThemeFilters = filterArray
+    .filter((filter: string) => !isTeamStatusFilter(filter))
+    .map((filter: string) => `researchTheme:"${filter}"`)
     .join(' OR ');
 
   const teamTypeFilter = getTeamTypeAlgoliaFilter(teamType);
 
-  const algoliaFilters = teamStatusFilter
-    ? `(${teamTypeFilter}) AND (${teamStatusFilter})`
-    : teamTypeFilter || teamStatusFilter;
+  // Build combined filter string
+  const filterParts: string[] = [];
+
+  if (teamStatusFilter || researchThemeFilters) {
+    filterParts.push(`(${teamTypeFilter})`);
+  } else {
+    filterParts.push(teamTypeFilter);
+  }
+
+  if (teamStatusFilter) {
+    filterParts.push(`(${teamStatusFilter})`);
+  }
+
+  if (researchThemeFilters) {
+    filterParts.push(`(${researchThemeFilters})`);
+  }
+
+  const algoliaFilters =
+    filterParts.length > 1 ? filterParts.join(' AND ') : teamTypeFilter;
 
   const result = await algoliaClient.search(['team'], searchQuery, {
     filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,

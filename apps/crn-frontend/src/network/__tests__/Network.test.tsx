@@ -4,7 +4,10 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
   createListEventResponse,
+  createListInterestGroupResponse,
+  createListTeamResponse,
   createListUserResponse,
+  createWorkingGroupListResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
@@ -24,20 +27,43 @@ import { getAlgoliaTeams } from '../teams/api';
 import { getInterestGroups } from '../interest-groups/api';
 import { useUsers } from '../users/state';
 import { getWorkingGroup, getWorkingGroups } from '../working-groups/api';
-import { getResearchOutputs } from '../../shared-research/api';
+import {
+  getResearchOutputs,
+  getDraftResearchOutputs,
+} from '../../shared-research/api';
 import { getEvents } from '../../events/api';
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 
 jest.mock('../users/state', () => ({
   useUsers: jest.fn().mockReturnValue({ items: [], total: 0 }),
 }));
-jest.mock('../../shared-research/api');
+jest.mock('../../shared-state/shared-research', () => ({
+  useResearchThemes: jest.fn().mockReturnValue([]),
+  useResearchTags: jest.fn().mockReturnValue([]),
+  useResourceTypes: jest.fn().mockReturnValue([]),
+}));
+jest.mock('../../shared-research/api', () => ({
+  getResearchOutputs: jest.fn(),
+  getDraftResearchOutputs: jest.fn(),
+  getResearchThemes: jest.fn().mockResolvedValue([]),
+  getResearchTags: jest.fn(),
+  getResourceTypes: jest.fn(),
+}));
 
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
 mockGetResearchOutputs.mockResolvedValue({
   ...createResearchOutputListAlgoliaResponse(1),
+});
+
+const mockGetDraftResearchOutputs =
+  getDraftResearchOutputs as jest.MockedFunction<
+    typeof getDraftResearchOutputs
+  >;
+mockGetDraftResearchOutputs.mockResolvedValue({
+  items: [],
+  total: 0,
 });
 
 jest.mock('../teams/api');
@@ -66,6 +92,10 @@ const response = createListEventResponse(7);
 mockGetWorkingGroupEventsFromAlgolia.mockResolvedValue(response);
 
 mockUseUsers.mockReturnValue(createListUserResponse(1));
+mockGetAlgoliaTeams.mockResolvedValue(createListTeamResponse(1));
+mockGetGroups.mockResolvedValue(createListInterestGroupResponse(1));
+mockGetWorkingGroups.mockResolvedValue(createWorkingGroupListResponse(1));
+mockGetWorkingGroup.mockResolvedValue(createWorkingGroupResponse());
 
 const renderNetworkPage = async (pathname: string, query = '') => {
   const { container } = render(

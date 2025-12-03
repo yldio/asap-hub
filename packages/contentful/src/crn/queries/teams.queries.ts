@@ -105,6 +105,9 @@ export const FETCH_TEAMS = gql`
         displayName
         inactiveSince
         teamType
+        researchTheme {
+          name
+        }
         linkedFrom {
           teamMembershipCollection(limit: 100) {
             items {
@@ -137,6 +140,9 @@ export const FETCH_TEAMS = gql`
                       id
                     }
                     title
+                    resourceType {
+                      name
+                    }
                     researchTagsCollection(limit: 20) {
                       items {
                         sys {
@@ -262,6 +268,9 @@ export const FETCH_PROJECT_BY_TEAM_ID = gql`
                         id
                       }
                     }
+                  }
+                  resourceType {
+                    name
                   }
                   researchTagsCollection(limit: 20) {
                     items {

@@ -153,8 +153,8 @@ export const teamListState = atomFamily<
 
 export const usePrefetchTeams = (options: GetTeamsListOptions) => {
   const algoliaClient = useAlgolia();
-
   const [teams, setTeams] = useRecoilState(teamsState(options));
+
   useDeepCompareEffect(() => {
     if (teams === undefined) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises

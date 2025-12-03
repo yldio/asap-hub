@@ -15,6 +15,11 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, getUsers, patchUser } from '../../network/users/api';
 import { refreshUserState } from '../../network/users/state';
+import {
+  getResearchOutputs,
+  getDraftResearchOutputs,
+} from '../../shared-research/api';
+import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getDashboard, getReminders } from '../api';
 import Dashboard from '../Dashboard';
 import { refreshDashboardState } from '../state';
@@ -22,7 +27,13 @@ import { refreshDashboardState } from '../state';
 jest.mock('../api');
 jest.mock('../../events/api');
 jest.mock('../../guides/api');
-jest.mock('../../shared-research/api');
+jest.mock('../../shared-research/api', () => ({
+  getResearchOutputs: jest.fn(),
+  getDraftResearchOutputs: jest.fn(),
+  getResearchThemes: jest.fn().mockResolvedValue([]),
+  getResearchTags: jest.fn(),
+  getResourceTypes: jest.fn(),
+}));
 jest.mock('../../network/teams/api');
 jest.mock('../../network/users/api');
 
@@ -44,6 +55,22 @@ const mockGetReminders = getReminders as jest.MockedFunction<
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
+mockGetResearchOutputs.mockResolvedValue({
+  ...createResearchOutputListAlgoliaResponse(1),
+});
+
+const mockGetDraftResearchOutputs =
+  getDraftResearchOutputs as jest.MockedFunction<
+    typeof getDraftResearchOutputs
+  >;
+mockGetDraftResearchOutputs.mockResolvedValue({
+  items: [],
+  total: 0,
+});
 
 const renderDashboard = async (user: Partial<User>) => {
   const result = render(

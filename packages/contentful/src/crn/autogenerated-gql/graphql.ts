@@ -27424,6 +27424,7 @@ export type FetchTeamsQuery = {
         Maybe<
           Pick<Teams, 'displayName' | 'inactiveSince' | 'teamType'> & {
             sys: Pick<Sys, 'id'>;
+            researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
             linkedFrom?: Maybe<{
               teamMembershipCollection?: Maybe<{
                 items: Array<
@@ -27456,6 +27457,7 @@ export type FetchTeamsQuery = {
                           Maybe<
                             Pick<Projects, 'title'> & {
                               sys: Pick<Sys, 'id'>;
+                              resourceType?: Maybe<Pick<ResourceType, 'name'>>;
                               researchTagsCollection?: Maybe<{
                                 items: Array<
                                   Maybe<
@@ -27588,6 +27590,7 @@ export type FetchTeamProjectByIdQuery = {
                           'title' | 'description' | 'startDate' | 'endDate'
                         > & { proposal?: Maybe<{ sys: Pick<Sys, 'id'> }> }
                       >;
+                      resourceType?: Maybe<Pick<ResourceType, 'name'>>;
                       researchTagsCollection?: Maybe<{
                         items: Array<
                           Maybe<
@@ -52638,6 +52641,19 @@ export const FetchTeamsDocument = {
                       },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'researchTheme' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'linkedFrom' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -52901,6 +52917,27 @@ export const FetchTeamsDocument = {
                                                             name: {
                                                               kind: 'Name',
                                                               value: 'title',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'resourceType',
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'name',
+                                                                  },
+                                                                },
+                                                              ],
                                                             },
                                                           },
                                                           {
@@ -53782,6 +53819,25 @@ export const FetchTeamProjectByIdDocument = {
                                                                     },
                                                                 },
                                                               ],
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'resourceType',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'name',
                                                             },
                                                           },
                                                         ],

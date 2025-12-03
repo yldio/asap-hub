@@ -335,7 +335,7 @@ describe('OpenScience', () => {
 
     // Should be called immediately with empty string for initial load
     await waitFor(() =>
-      expect(mockGetTagSuggestions).toHaveBeenCalledWith('', 'teams'),
+      expect(mockGetTagSuggestions).toHaveBeenCalledWith('', 'flat'),
     );
 
     // Clear previous calls
@@ -350,7 +350,7 @@ describe('OpenScience', () => {
     // Wait for debounce delay (500ms) + a bit more for the API call
     await waitFor(
       () => {
-        expect(mockGetTagSuggestions).toHaveBeenCalledWith('bio', 'teams');
+        expect(mockGetTagSuggestions).toHaveBeenCalledWith('bio', 'flat');
       },
       { timeout: 1000 },
     );

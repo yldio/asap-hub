@@ -150,12 +150,13 @@ describe('getAnalyticsOSChampion', () => {
       defaultOSChampionOptions,
     );
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
-      [],
-      null,
-      null,
-      'all',
-    );
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith({
+      searchTags: [],
+      currentPage: undefined,
+      pageSize: undefined,
+      timeRange: 'all',
+      searchScope: 'extended',
+    });
   });
 
   it('should pass the options if provided to search', async () => {
@@ -169,12 +170,13 @@ describe('getAnalyticsOSChampion', () => {
       sort: 'team_asc',
     });
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
-      ['Alessi'],
-      0,
-      10,
-      'all',
-    );
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith({
+      searchTags: ['Alessi'],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'extended',
+    });
   });
 
   it.each`
@@ -192,12 +194,13 @@ describe('getAnalyticsOSChampion', () => {
       timeRange,
     });
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
-      [],
-      null,
-      null,
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith({
+      searchTags: [],
+      currentPage: undefined,
+      pageSize: undefined,
       timeRange,
-    );
+      searchScope: 'extended',
+    });
   });
 
   it('should return successfully fetched os champion data', async () => {

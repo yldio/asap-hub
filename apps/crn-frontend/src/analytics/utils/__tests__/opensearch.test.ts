@@ -4,6 +4,7 @@ import {
   buildNormalizedStringSort,
   teamWithUsersRecordSearchQueryBuilder,
   userWithTeamsRecordSearchQueryBuilder,
+  teamRecordSearchQueryBuilder,
   taglessSearchQueryBuilder,
 } from '../opensearch';
 
@@ -68,7 +69,13 @@ describe('OpensearchClient', () => {
     it('returns parsed search result', async () => {
       mockFetch.mockResolvedValueOnce(defaultResponse);
 
-      const result = await client.search(['Team'], 0, 10, 'all');
+      const result = await client.search({
+        searchTags: ['Team'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: 'all',
+        searchScope: 'extended',
+      });
 
       expect(result.total).toBe(2);
       expect(result.items).toHaveLength(2);
@@ -78,7 +85,11 @@ describe('OpensearchClient', () => {
     it('handles default case', async () => {
       mockFetch.mockResolvedValueOnce(defaultResponse);
 
-      const result = await client.search([], null, null, 'all');
+      const result = await client.search({
+        searchTags: [],
+        timeRange: 'all',
+        searchScope: 'extended',
+      });
 
       expect(result.total).toBe(2);
       expect(result.items).toHaveLength(2);
@@ -88,7 +99,11 @@ describe('OpensearchClient', () => {
       mockFetch.mockResolvedValueOnce(defaultResponse);
       const timeRange = '90d';
 
-      const result = await client.search([], null, null, timeRange);
+      const result = await client.search({
+        searchTags: [],
+        timeRange,
+        searchScope: 'extended',
+      });
 
       const fetchArgs = mockFetch.mock.calls[0];
       const requestBody = JSON.parse(fetchArgs[1].body);
@@ -121,7 +136,13 @@ describe('OpensearchClient', () => {
         }),
       });
 
-      const result = await client.search(['Team Only'], 0, 10, 'all', 'teams');
+      const result = await client.search({
+        searchTags: ['Team Only'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: 'all',
+        searchScope: 'flat',
+      });
 
       expect(result.total).toBe(1);
 
@@ -144,7 +165,13 @@ describe('OpensearchClient', () => {
       mockFetch.mockResolvedValueOnce(defaultResponse);
       const timeRange = '30d';
 
-      await client.search(['Team A'], 0, 10, timeRange);
+      await client.search({
+        searchTags: ['Team A'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange,
+        searchScope: 'extended',
+      });
 
       const fetchArgs = mockFetch.mock.calls[0];
       const requestBody = JSON.parse(fetchArgs[1].body);
@@ -160,7 +187,15 @@ describe('OpensearchClient', () => {
         statusText: 'Internal Server Error',
       });
 
-      await expect(client.search([], 0, 10, 'all')).rejects.toThrow(
+      await expect(
+        client.search({
+          searchTags: [],
+          currentPage: 0,
+          pageSize: 10,
+          timeRange: 'all',
+          searchScope: 'extended',
+        }),
+      ).rejects.toThrow(
         `Failed to search ${TARGET_TEST_INDEX} index. Expected status 2xx. Received status 500 Internal Server Error.`,
       );
     });
@@ -244,7 +279,7 @@ describe('OpensearchClient', () => {
         }),
       });
 
-      const result = await client.getTagSuggestions('Alpha', 'teams');
+      const result = await client.getTagSuggestions('Alpha', 'flat');
 
       expect(mockFetch).toHaveBeenCalledTimes(1);
 
@@ -273,7 +308,7 @@ describe('OpensearchClient', () => {
         }),
       });
 
-      const result = await client.getTagSuggestions('', 'both');
+      const result = await client.getTagSuggestions('', 'extended');
 
       expect(result).toEqual(['Team Alpha', 'Jackson']);
     });
@@ -288,7 +323,7 @@ describe('OpensearchClient', () => {
         }),
       });
 
-      const result = await client.getTagSuggestions('Alpha', 'teams');
+      const result = await client.getTagSuggestions('Alpha', 'flat');
 
       expect(mockFetch).toHaveBeenCalledTimes(1);
       expect(result).toEqual([]);
@@ -315,7 +350,13 @@ describe('OpensearchClient', () => {
         },
       });
 
-      await teamClient.search(['Team A'], 0, 10, '30d', 'both');
+      await teamClient.search({
+        searchTags: ['Team A'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'extended',
+      });
 
       expect(requestSpy).toHaveBeenCalledTimes(1);
       const query = requestSpy.mock.calls[0]?.[0] as {
@@ -367,7 +408,13 @@ describe('OpensearchClient', () => {
           },
         });
 
-        await teamClient.search(['Team A'], 0, 10, '30d', 'teams');
+        await teamClient.search({
+          searchTags: ['Team A'],
+          currentPage: 0,
+          pageSize: 10,
+          timeRange: '30d',
+          searchScope: 'flat',
+        });
 
         const query = requestSpy.mock.calls[0]?.[0] as {
           query: { bool: { should: unknown[] } };
@@ -393,7 +440,13 @@ describe('OpensearchClient', () => {
         },
       });
 
-      await userClient.search(['User A'], 0, 10, '30d', 'both');
+      await userClient.search({
+        searchTags: ['User A'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'extended',
+      });
 
       expect(requestSpy).toHaveBeenCalledTimes(1);
       const query = requestSpy.mock.calls[0]?.[0] as {
@@ -435,7 +488,13 @@ describe('OpensearchClient', () => {
         },
       });
 
-      await userClient.search(['User A'], 0, 10, '30d', 'teams');
+      await userClient.search({
+        searchTags: ['User A'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
 
       const query = requestSpy.mock.calls[0]?.[0] as {
         query: { bool: { should: unknown[] } };
@@ -462,7 +521,13 @@ describe('OpensearchClient', () => {
           },
         });
 
-      await taglessClient.search(['ignored tag'], 0, 10, '30d');
+      await taglessClient.search({
+        searchTags: ['ignored tag'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
 
       expect(requestSpy).toHaveBeenCalledTimes(1);
       const query = requestSpy.mock.calls[0]?.[0] as {
@@ -491,7 +556,14 @@ describe('OpensearchClient', () => {
           },
         });
 
-      await taglessClient.search([], 0, 10, '30d', 'both', 'article');
+      await taglessClient.search({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+        documentCategory: 'article',
+      });
 
       const query = requestSpy.mock.calls[0]?.[0] as {
         query: { bool: { must: unknown[] } };
@@ -502,6 +574,80 @@ describe('OpensearchClient', () => {
         { term: { timeRange: '30d' } },
         { term: { documentCategory: 'article' } },
       ]);
+    });
+
+    it('uses team-based query builder for team-productivity index', async () => {
+      const teamClient = new OpensearchClient<MockData>(
+        'team-productivity',
+        'Bearer fake-token',
+      );
+      const requestSpy = jest.spyOn(teamClient, 'request').mockResolvedValue({
+        hits: {
+          total: { value: 0 },
+          hits: [],
+        },
+      });
+
+      await teamClient.search({
+        searchTags: ['Team A'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+        outputType: 'public',
+      });
+
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      const query = requestSpy.mock.calls[0]?.[0] as {
+        query: { bool: { should: unknown[]; must: unknown[] } };
+      };
+
+      // Verify team-productivity structure (uses name.keyword, not teamName.keyword)
+      expect(query).toHaveProperty('query.bool.should');
+      expect(query.query.bool.should).toEqual([
+        { term: { 'name.keyword': 'Team A' } },
+      ]);
+
+      // Verify outputType is in must clause
+      expect(query.query.bool.must).toEqual([
+        { term: { timeRange: '30d' } },
+        { term: { outputType: 'public' } },
+      ]);
+    });
+
+    it('uses tagless query builder for team-productivity-performance index', async () => {
+      const taglessClient = new OpensearchClient<MockData>(
+        'team-productivity-performance',
+        'Bearer fake-token',
+      );
+      const requestSpy = jest
+        .spyOn(taglessClient, 'request')
+        .mockResolvedValue({
+          hits: {
+            total: { value: 0 },
+            hits: [],
+          },
+        });
+
+      await taglessClient.search({
+        searchTags: ['ignored tag'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
+
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      const query = requestSpy.mock.calls[0]?.[0] as {
+        query: { bool: { must: unknown[]; should?: unknown[] } };
+      };
+
+      // Verify tagless structure - no should clauses
+      expect(query.query.bool).not.toHaveProperty('should');
+      expect(query).toHaveProperty('query.bool.must');
+
+      // Should only have timeRange in must clause
+      expect(query.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
     });
   });
 
@@ -600,7 +746,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'both',
+        searchScope: 'extended',
       });
 
       expect(result.query.bool).not.toHaveProperty('should');
@@ -614,7 +760,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect('should' in result.query.bool && result.query.bool.should).toEqual(
@@ -632,7 +778,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'both',
+        searchScope: 'extended',
       });
 
       expect('should' in result.query.bool && result.query.bool.should).toEqual(
@@ -658,7 +804,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect('should' in result.query.bool && result.query.bool.should).toEqual(
@@ -678,7 +824,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'both',
+        searchScope: 'extended',
       });
 
       expect('should' in result.query.bool && result.query.bool.should).toEqual(
@@ -710,7 +856,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
         documentCategory: 'article',
       });
 
@@ -726,7 +872,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
@@ -739,7 +885,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
         sort: customSort,
       });
 
@@ -752,7 +898,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.sort).toEqual([{ 'teamName.keyword': { order: 'asc' } }]);
@@ -764,7 +910,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.from).toBe(0);
@@ -777,7 +923,7 @@ describe('OpensearchClient', () => {
         currentPage: 2,
         pageSize: 20,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.from).toBe(40);
@@ -790,7 +936,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '90d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.query.bool.must).toContainEqual({
@@ -806,7 +952,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'both',
+        searchScope: 'extended',
       });
 
       expect(result.query.bool).not.toHaveProperty('should');
@@ -820,7 +966,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect('should' in result.query.bool && result.query.bool.should).toEqual(
@@ -838,7 +984,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'both',
+        searchScope: 'extended',
       });
 
       expect('should' in result.query.bool && result.query.bool.should).toEqual(
@@ -864,7 +1010,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect('should' in result.query.bool && result.query.bool.should).toEqual(
@@ -884,7 +1030,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'both',
+        searchScope: 'extended',
       });
 
       expect('should' in result.query.bool && result.query.bool.should).toEqual(
@@ -916,7 +1062,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
         documentCategory: 'protocol',
       });
 
@@ -932,7 +1078,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
@@ -945,7 +1091,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
         sort: customSort,
       });
 
@@ -958,7 +1104,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result).not.toHaveProperty('sort');
@@ -970,7 +1116,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.from).toBe(0);
@@ -983,7 +1129,7 @@ describe('OpensearchClient', () => {
         currentPage: 1,
         pageSize: 15,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.from).toBe(15);
@@ -996,12 +1142,190 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: 'last-year',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.query.bool.must).toContainEqual({
         term: { timeRange: 'last-year' },
       });
+    });
+  });
+
+  describe('teamRecordSearchQueryBuilder', () => {
+    it('builds query with empty searchTags array', () => {
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
+
+      expect(result.query.bool).not.toHaveProperty('should');
+      expect(result.query.bool).not.toHaveProperty('minimum_should_match');
+      expect(result.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
+    });
+
+    it('builds query with single search tag', () => {
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: ['Team Alpha'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
+
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [{ term: { 'name.keyword': 'Team Alpha' } }],
+      );
+      expect(
+        'minimum_should_match' in result.query.bool &&
+          result.query.bool.minimum_should_match,
+      ).toBe(1);
+    });
+
+    it('builds query with multiple search tags', () => {
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: ['Team Alpha', 'Team Beta'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
+
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [
+          { term: { 'name.keyword': 'Team Alpha' } },
+          { term: { 'name.keyword': 'Team Beta' } },
+        ],
+      );
+      expect(
+        'should' in result.query.bool && result.query.bool.should,
+      ).toHaveLength(2);
+    });
+
+    it('includes outputType in must clauses when provided', () => {
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+        outputType: 'public',
+      });
+
+      expect(result.query.bool.must).toEqual([
+        { term: { timeRange: '30d' } },
+        { term: { outputType: 'public' } },
+      ]);
+    });
+
+    it('excludes outputType from must clauses when undefined', () => {
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
+
+      expect(result.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
+    });
+
+    it('includes sort property when custom sort is provided', () => {
+      const customSort = [{ Article: { order: 'asc' as const } }];
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: customSort,
+      });
+
+      expect(result.sort).toEqual(customSort);
+    });
+
+    it('does not include sort property when sort is undefined', () => {
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
+
+      expect(result).not.toHaveProperty('sort');
+    });
+
+    it('calculates pagination correctly for page 0 size 10', () => {
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
+
+      expect(result.from).toBe(0);
+      expect(result.size).toBe(10);
+    });
+
+    it('calculates pagination correctly for page 2 size 15', () => {
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 2,
+        pageSize: 15,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
+
+      expect(result.from).toBe(30);
+      expect(result.size).toBe(15);
+    });
+
+    it('includes different timeRange values in must clause', () => {
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '90d',
+        searchScope: 'flat',
+      });
+
+      expect(result.query.bool.must).toContainEqual({
+        term: { timeRange: '90d' },
+      });
+    });
+
+    it('does not support nested queries (only flat searchScope)', () => {
+      const result = teamRecordSearchQueryBuilder({
+        searchTags: ['Team Alpha'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+      });
+
+      // Should only have team name query, no nested user queries
+      expect('should' in result.query.bool && result.query.bool.should).toEqual(
+        [{ term: { 'name.keyword': 'Team Alpha' } }],
+      );
+      expect(
+        'should' in result.query.bool && result.query.bool.should,
+      ).toHaveLength(1);
+    });
+
+    it('throws error when searchScope is "extended"', () => {
+      expect(() =>
+        teamRecordSearchQueryBuilder({
+          searchTags: ['Team Alpha'],
+          currentPage: 0,
+          pageSize: 10,
+          timeRange: '30d',
+          searchScope: 'extended',
+        }),
+      ).toThrow("The search scope 'extended' is not available for this index");
     });
   });
 
@@ -1012,7 +1336,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
         documentCategory: 'article',
       });
 
@@ -1028,7 +1352,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '90d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.query.bool.must).toEqual([{ term: { timeRange: '90d' } }]);
@@ -1041,7 +1365,7 @@ describe('OpensearchClient', () => {
         pageSize: 10,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         timeRange: undefined as any,
-        searchScope: 'teams',
+        searchScope: 'flat',
         documentCategory: 'dataset',
       });
 
@@ -1057,7 +1381,7 @@ describe('OpensearchClient', () => {
         pageSize: 10,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         timeRange: undefined as any,
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.query.bool.must).toEqual([]);
@@ -1069,7 +1393,7 @@ describe('OpensearchClient', () => {
         currentPage: 3,
         pageSize: 25,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.from).toBe(75);
@@ -1082,7 +1406,7 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
       });
 
       expect(result.query.bool).not.toHaveProperty('should');
@@ -1096,11 +1420,57 @@ describe('OpensearchClient', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: '30d',
-        searchScope: 'teams',
+        searchScope: 'flat',
         sort: [{ ratio: { order: 'desc' as const } }],
       });
 
       expect(result).not.toHaveProperty('sort');
+    });
+
+    it('throws error when searchScope is "extended"', () => {
+      expect(() =>
+        taglessSearchQueryBuilder({
+          searchTags: [],
+          currentPage: 0,
+          pageSize: 10,
+          timeRange: '30d',
+          searchScope: 'extended',
+        }),
+      ).toThrow("The search scope 'extended' is not available for this index");
+    });
+
+    it('includes outputType in must clauses when provided', () => {
+      const result = taglessSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+        outputType: 'public',
+      });
+
+      expect(result.query.bool.must).toEqual([
+        { term: { timeRange: '30d' } },
+        { term: { outputType: 'public' } },
+      ]);
+    });
+
+    it('includes timeRange, documentCategory, and outputType when all provided', () => {
+      const result = taglessSearchQueryBuilder({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+        documentCategory: 'article',
+        outputType: 'public',
+      });
+
+      expect(result.query.bool.must).toEqual([
+        { term: { timeRange: '30d' } },
+        { term: { documentCategory: 'article' } },
+        { term: { outputType: 'public' } },
+      ]);
     });
   });
 });

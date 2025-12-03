@@ -26,6 +26,20 @@ export type PerformanceMetricByDocumentType = {
 
 export type TeamProductivityPerformance = PerformanceMetricByDocumentType;
 
+export const timeRanges = [
+  '30d',
+  '90d',
+  'current-year',
+  'last-year',
+  'all',
+] as const;
+
+export const outputTypes = ['public', 'all'] as const;
+
+export type OutputTypeOption = (typeof outputTypes)[number];
+
+export type TimeRangeOption = (typeof timeRanges)[number];
+
 export type TeamProductivityPerformanceDataObject =
   TeamProductivityPerformance & {
     timeRange: TimeRangeOption;
@@ -111,16 +125,6 @@ export type OSChampionSortingDirection = {
   [key in OSChampionFields]: SortingDirection;
 };
 
-export const timeRanges = [
-  '30d',
-  '90d',
-  'current-year',
-  'last-year',
-  'all',
-] as const;
-
-export type TimeRangeOption = (typeof timeRanges)[number];
-
 export const warningMessageByTimeRange: Record<
   TimeRangeOption,
   string | undefined
@@ -192,8 +196,6 @@ export const documentCategories = [
   'protocol',
 ] as const;
 
-export const outputTypes = ['public', 'all'] as const;
-
 export type LimitedTimeRangeOption = Extract<
   TimeRangeOption,
   'all' | 'last-year'
@@ -213,7 +215,6 @@ export const limitedTimeRangeOptions: Record<LimitedTimeRangeOption, string> = {
 };
 
 export type DocumentCategoryOption = (typeof documentCategories)[number];
-export type OutputTypeOption = (typeof outputTypes)[number];
 
 export type FilterAnalyticsOptions = {
   timeRange?: TimeRangeOption;

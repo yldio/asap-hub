@@ -280,12 +280,13 @@ describe('search', () => {
       });
       userEvent.click(screen.getByText('Alessi'));
       await waitFor(() =>
-        expect(mockOSChampionSearch).toHaveBeenCalledWith(
-          ['Alessi'],
-          0,
-          10,
-          'all',
-        ),
+        expect(mockOSChampionSearch).toHaveBeenCalledWith({
+          searchTags: ['Alessi'],
+          currentPage: 0,
+          pageSize: 10,
+          timeRange: 'all',
+          searchScope: 'extended',
+        }),
       );
     });
   });
@@ -344,10 +345,22 @@ it('renders data for different time ranges', async () => {
   };
   jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
   when(mockOSChampionSearch)
-    .calledWith([], 0, 10, 'all')
+    .calledWith({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'extended',
+    })
     .mockResolvedValue({ items: [osChampionResponse], total: 1 });
   when(mockOSChampionSearch)
-    .calledWith([], 0, 10, '30d')
+    .calledWith({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: '30d',
+      searchScope: 'extended',
+    })
     .mockResolvedValue({
       items: [
         {

@@ -2,10 +2,10 @@ import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   SortTeamProductivity,
   SortUserProductivity,
-  TeamProductivityAlgoliaResponse,
   UserProductivityPerformance,
   TeamProductivityPerformance,
   UserProductivityResponse,
+  TeamProductivityResponse,
 } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
@@ -122,7 +122,7 @@ const Productivity = () => {
       );
     }
 
-    return resultsToStream<TeamProductivityAlgoliaResponse>(
+    return resultsToStream<TeamProductivityResponse>(
       createCsvFileStream(
         `productivity_${metric}_${format(new Date(), 'MMddyy')}.csv`,
         {
@@ -130,14 +130,23 @@ const Productivity = () => {
         },
       ),
       (paginationParams) =>
-        getTeamProductivity(teamClient, {
-          sort: teamSort,
-          timeRange,
-          outputType,
-          tags,
-          ...paginationParams,
-        }),
+        isEnabled('OPENSEARCH_METRICS')
+          ? opensearchMetrics.getTeamProductivity({
+              sort: teamSort,
+              timeRange,
+              outputType,
+              tags,
+              ...paginationParams,
+            })
+          : getTeamProductivity(teamClient, {
+              sort: teamSort,
+              timeRange,
+              outputType,
+              tags,
+              ...paginationParams,
+            }),
       teamProductivityToCSV(teamPerformanceValue ?? defaultTeamPerformance),
+      200,
     );
   };
 

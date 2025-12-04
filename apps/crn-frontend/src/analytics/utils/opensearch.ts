@@ -1,5 +1,9 @@
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
-import { DocumentCategoryOption, TimeRangeOption } from '@asap-hub/model';
+import {
+  DocumentCategoryOption,
+  OutputTypeOption,
+  TimeRangeOption,
+} from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
 
 const DEFAULT_PAGE_NUMBER = 0;
@@ -56,7 +60,18 @@ interface TagSuggestionsResponse {
   };
 }
 
-type SearchScope = 'teams' | 'both';
+/**
+ * Controls whether search queries match only the primary record or also include
+ * nested/related entities.
+ *
+ * - `flat`: Only match the primary entity field (team name for team-based
+ *   indices, user name for user-based indices)
+ * - `extended`: Also search related entities (e.g., searching "Hawk" in a team
+ *   index will find teams that have a member named "Hawk")
+ *
+ * Used by query builders to conditionally add nested search clauses.
+ */
+type SearchScope = 'flat' | 'extended';
 
 type OpensearchSearchOptions = {
   currentPage: number;
@@ -66,6 +81,7 @@ type OpensearchSearchOptions = {
   searchScope: SearchScope;
   documentCategory?: DocumentCategoryOption;
   sort?: OpensearchSort[];
+  outputType?: OutputTypeOption;
 };
 
 type SortConfigOrder = 'asc' | 'desc';
@@ -120,7 +136,9 @@ export type OpensearchIndex =
   | 'attendance'
   | 'preliminary-data-sharing'
   | 'user-productivity'
-  | 'user-productivity-performance';
+  | 'user-productivity-performance'
+  | 'team-productivity'
+  | 'team-productivity-performance';
 
 type ShouldClause =
   | {
@@ -152,7 +170,7 @@ type SearchQuery = {
   size: number;
 };
 
-export const teamBasedRecordSearchQueryBuilder = (
+export const teamWithUsersRecordSearchQueryBuilder = (
   options: OpensearchSearchOptions,
 ): SearchQuery => {
   const shouldClauses = options.searchTags.flatMap((term) => {
@@ -164,7 +182,7 @@ export const teamBasedRecordSearchQueryBuilder = (
       },
     ];
 
-    if (options.searchScope === 'both') {
+    if (options.searchScope === 'extended') {
       clauses.push({
         nested: {
           path: 'users',
@@ -217,7 +235,7 @@ export const teamBasedRecordSearchQueryBuilder = (
   };
 };
 
-export const userBasedRecordSearchQueryBuilder = (
+export const userWithTeamsRecordSearchQueryBuilder = (
   options: OpensearchSearchOptions,
 ): SearchQuery => {
   const shouldClauses = options.searchTags.flatMap((term) => {
@@ -229,7 +247,7 @@ export const userBasedRecordSearchQueryBuilder = (
       },
     ];
 
-    if (options.searchScope === 'both') {
+    if (options.searchScope === 'extended') {
       clauses.push({
         nested: {
           path: 'teams',
@@ -273,36 +291,98 @@ export const userBasedRecordSearchQueryBuilder = (
   };
 };
 
+export const teamRecordSearchQueryBuilder = (
+  options: OpensearchSearchOptions,
+): SearchQuery => {
+  if (options.searchScope === 'extended') {
+    throw new Error(
+      `The search scope 'extended' is not available for this index`,
+    );
+  }
+  const shouldClauses = options.searchTags.flatMap((term) => {
+    const clauses: ShouldClause[] = [
+      {
+        term: {
+          'name.keyword': term,
+        },
+      },
+    ];
+
+    return clauses;
+  });
+
+  const mustClauses: SearchQuery['query']['bool']['must'] = [];
+
+  mustClauses.push({
+    term: {
+      timeRange: options.timeRange,
+    },
+  });
+
+  if (options.outputType) {
+    mustClauses.push({
+      term: { outputType: options.outputType },
+    });
+  }
+
+  return {
+    from: options.currentPage * options.pageSize,
+    size: options.pageSize,
+    query: {
+      bool: {
+        ...(shouldClauses.length > 0
+          ? { should: shouldClauses, minimum_should_match: 1 }
+          : {}),
+        must: mustClauses,
+      },
+    },
+    ...(options.sort ? { sort: options.sort } : {}),
+  };
+};
+
 export const taglessSearchQueryBuilder = (
   options: OpensearchSearchOptions,
-): SearchQuery => ({
-  from: options.currentPage * options.pageSize,
-  size: options.pageSize,
-  query: {
-    bool: {
-      must: [
-        ...(options.timeRange
-          ? [{ term: { timeRange: options.timeRange } }]
-          : []),
-        ...(options.documentCategory
-          ? [{ term: { documentCategory: options.documentCategory } }]
-          : []),
-      ],
+): SearchQuery => {
+  if (options.searchScope === 'extended') {
+    throw new Error(
+      `The search scope 'extended' is not available for this index`,
+    );
+  }
+
+  return {
+    from: options.currentPage * options.pageSize,
+    size: options.pageSize,
+    query: {
+      bool: {
+        must: [
+          ...(options.timeRange
+            ? [{ term: { timeRange: options.timeRange } }]
+            : []),
+          ...(options.documentCategory
+            ? [{ term: { documentCategory: options.documentCategory } }]
+            : []),
+          ...(options.outputType
+            ? [{ term: { outputType: options.outputType } }]
+            : []),
+        ],
+      },
     },
-  },
-});
+  };
+};
 
 const queryBuilderByIndex: Record<
   OpensearchIndex,
   (options: OpensearchSearchOptions) => SearchQuery
 > = {
-  attendance: teamBasedRecordSearchQueryBuilder,
-  'os-champion': teamBasedRecordSearchQueryBuilder,
-  'preliminary-data-sharing': teamBasedRecordSearchQueryBuilder,
-  'preprint-compliance': teamBasedRecordSearchQueryBuilder,
-  'publication-compliance': teamBasedRecordSearchQueryBuilder,
-  'user-productivity': userBasedRecordSearchQueryBuilder,
+  attendance: teamWithUsersRecordSearchQueryBuilder,
+  'os-champion': teamWithUsersRecordSearchQueryBuilder,
+  'preliminary-data-sharing': teamWithUsersRecordSearchQueryBuilder,
+  'preprint-compliance': teamWithUsersRecordSearchQueryBuilder,
+  'publication-compliance': teamWithUsersRecordSearchQueryBuilder,
+  'user-productivity': userWithTeamsRecordSearchQueryBuilder,
   'user-productivity-performance': taglessSearchQueryBuilder,
+  'team-productivity': teamRecordSearchQueryBuilder,
+  'team-productivity-performance': taglessSearchQueryBuilder,
 };
 
 export class OpensearchClient<T> {
@@ -337,15 +417,19 @@ export class OpensearchClient<T> {
     return resp.json();
   }
 
-  async search(
-    searchTags: string[],
-    currentPage: number | null,
-    pageSize: number | null,
-    timeRange: TimeRangeOption,
-    searchScope: SearchScope = 'both',
-    documentCategory?: DocumentCategoryOption,
-    sort?: OpensearchSort[],
-  ): Promise<SearchResult<T>> {
+  async search({
+    searchTags,
+    currentPage,
+    pageSize,
+    timeRange,
+    searchScope,
+    documentCategory,
+    sort,
+    outputType,
+  }: Omit<OpensearchSearchOptions, 'currentPage' | 'pageSize'> & {
+    currentPage?: number;
+    pageSize?: number;
+  }): Promise<SearchResult<T>> {
     const searchQuery = queryBuilderByIndex[this.index]({
       pageSize: pageSize ?? DEFAULT_PAGE_SIZE,
       currentPage: currentPage ?? DEFAULT_PAGE_NUMBER,
@@ -354,6 +438,7 @@ export class OpensearchClient<T> {
       timeRange,
       searchTags,
       sort,
+      outputType,
     });
     const response = await this.request<OpensearchHitsResponse<T>>(searchQuery);
 
@@ -372,7 +457,7 @@ export class OpensearchClient<T> {
 
   async getTagSuggestions(
     queryText: string,
-    searchScope: SearchScope = 'both',
+    searchScope: SearchScope = 'extended',
   ): Promise<string[]> {
     const isEmptyQuery = !queryText;
 
@@ -425,7 +510,7 @@ const buildAggregationQuery = (
     },
   };
 
-  if (searchScope === 'both') {
+  if (searchScope === 'extended') {
     shouldClauses.push({
       nested: {
         path: 'users',
@@ -484,7 +569,7 @@ const buildDefaultAggregationQuery = (
     },
   };
 
-  if (searchScope === 'both') {
+  if (searchScope === 'extended') {
     aggs.users = {
       nested: {
         path: 'users',

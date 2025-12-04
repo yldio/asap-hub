@@ -4,11 +4,15 @@ import {
   PreliminaryDataSharingDataObject,
   PreprintComplianceOpensearchResponse,
   PublicationComplianceOpensearchResponse,
+  TeamProductivityPerformanceDataObject,
+  TeamProductivityResponse,
   UserProductivityPerformanceDataObject,
   UserProductivityResponse,
 } from '@asap-hub/model';
 import { useRecoilValue } from 'recoil';
 import {
+  getTeamProductivity,
+  getTeamProductivityPerformance,
   getUserProductivity,
   getUserProductivityPerformance,
 } from '../analytics/productivity/api';
@@ -32,18 +36,6 @@ export const useAnalyticsOpensearch = <T>(index: OpensearchIndex) => {
     client,
   };
 };
-
-export const opensearchMetrics = [
-  'publication-compliance',
-  'preprint-compliance',
-  'os-champion',
-  'attendance',
-  'preliminary-data-sharing',
-  'user-productivity',
-  'user-productivity-performance',
-] as const;
-
-export type OpensearchMetric = (typeof opensearchMetrics)[number];
 
 /**
  * Façade to all metrics stored in OpenSearch.
@@ -122,6 +114,27 @@ export const useOpensearchMetrics = () => {
           authorization,
         );
       return getUserProductivityPerformance(client, paginationParams);
+    },
+
+    getTeamProductivity(
+      paginationParams: Parameters<typeof getTeamProductivity>[1],
+    ) {
+      const client = new OpensearchClient<TeamProductivityResponse>(
+        'team-productivity',
+        authorization,
+      );
+      return getTeamProductivity(client, paginationParams);
+    },
+
+    getTeamProductivityPerformance(
+      paginationParams: Parameters<typeof getTeamProductivityPerformance>[1],
+    ) {
+      const client =
+        new OpensearchClient<TeamProductivityPerformanceDataObject>(
+          'team-productivity-performance',
+          authorization,
+        );
+      return getTeamProductivityPerformance(client, paginationParams);
     },
   } as const;
 };

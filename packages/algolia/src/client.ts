@@ -15,7 +15,6 @@ import {
   ResearchOutputResponse,
   TeamCollaborationResponse,
   TeamListItemResponse,
-  TeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
   TeamCollaborationPerformance,
   TeamProductivityResponse,
@@ -151,7 +150,7 @@ export type EntityResponses = {
   [ANALYTICS]: {
     [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipAlgoliaResponse;
 
-    [TEAM_PRODUCTIVITY]: TeamProductivityAlgoliaResponse;
+    [TEAM_PRODUCTIVITY]: TeamProductivityResponse;
     [USER_PRODUCTIVITY]: UserProductivityResponse;
     [TEAM_PRODUCTIVITY_PERFORMANCE]: TeamProductivityPerformance;
     [USER_PRODUCTIVITY_PERFORMANCE]: UserProductivityPerformance;

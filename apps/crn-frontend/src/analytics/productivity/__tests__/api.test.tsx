@@ -173,15 +173,15 @@ describe('getUserProductivity', () => {
     it('calls opensearch client with correct parameters', async () => {
       await getUserProductivity(opensearchClient, defaultUserOptions);
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [], // tags
-        null, // currentPage
-        null, // pageSize
-        '30d', // timeRange
-        'both', // searchScope
-        'all', // documentCategory
-        expect.any(Array), // sort
-      );
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'extended',
+        documentCategory: 'all',
+        sort: expect.any(Array),
+      });
     });
 
     it('passes tags to opensearch client', async () => {
@@ -190,15 +190,15 @@ describe('getUserProductivity', () => {
         tags: ['Team Alpha', 'User Beta'],
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        ['Team Alpha', 'User Beta'],
-        null,
-        null,
-        '30d',
-        'both',
-        'all',
-        expect.any(Array),
-      );
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: ['Team Alpha', 'User Beta'],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'extended',
+        documentCategory: 'all',
+        sort: expect.any(Array),
+      });
     });
 
     it('passes pagination parameters to opensearch client', async () => {
@@ -208,15 +208,15 @@ describe('getUserProductivity', () => {
         pageSize: 20,
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [],
-        2,
-        20,
-        '30d',
-        'both',
-        'all',
-        expect.any(Array),
-      );
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: 2,
+        pageSize: 20,
+        timeRange: '30d',
+        searchScope: 'extended',
+        documentCategory: 'all',
+        sort: expect.any(Array),
+      });
     });
 
     it('passes time range to opensearch client', async () => {
@@ -225,15 +225,15 @@ describe('getUserProductivity', () => {
         timeRange: '90d',
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [],
-        null,
-        null,
-        '90d',
-        'both',
-        'all',
-        expect.any(Array),
-      );
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '90d',
+        searchScope: 'extended',
+        documentCategory: 'all',
+        sort: expect.any(Array),
+      });
     });
 
     it('passes document category to opensearch client', async () => {
@@ -242,15 +242,15 @@ describe('getUserProductivity', () => {
         documentCategory: 'article',
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [],
-        null,
-        null,
-        '30d',
-        'both',
-        'article',
-        expect.any(Array),
-      );
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'extended',
+        documentCategory: 'article',
+        sort: expect.any(Array),
+      });
     });
 
     it('applies user_asc sort correctly', async () => {
@@ -259,14 +259,14 @@ describe('getUserProductivity', () => {
         sort: 'user_asc',
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [],
-        null,
-        null,
-        '30d',
-        'both',
-        'all',
-        [
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'extended',
+        documentCategory: 'all',
+        sort: [
           {
             _script: {
               type: 'string',
@@ -278,7 +278,7 @@ describe('getUserProductivity', () => {
             },
           },
         ],
-      );
+      });
     });
 
     it('applies user_desc sort correctly', async () => {
@@ -287,9 +287,9 @@ describe('getUserProductivity', () => {
         sort: 'user_desc',
       });
 
-      const sortArg = searchSpy.mock.calls[0][6];
+      const callArg = searchSpy.mock.calls[0][0];
       // eslint-disable-next-line no-underscore-dangle
-      expect(sortArg[0]._script.order).toBe('desc');
+      expect(callArg.sort[0]._script.order).toBe('desc');
     });
 
     it('applies team_asc sort with nested path', async () => {
@@ -298,14 +298,14 @@ describe('getUserProductivity', () => {
         sort: 'team_asc',
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [],
-        null,
-        null,
-        '30d',
-        'both',
-        'all',
-        [
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'extended',
+        documentCategory: 'all',
+        sort: [
           {
             _script: {
               type: 'string',
@@ -318,7 +318,7 @@ describe('getUserProductivity', () => {
             },
           },
         ],
-      );
+      });
     });
 
     it('applies asap_output_asc sort correctly', async () => {
@@ -327,21 +327,21 @@ describe('getUserProductivity', () => {
         sort: 'asap_output_asc',
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [],
-        null,
-        null,
-        '30d',
-        'both',
-        'all',
-        [
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'extended',
+        documentCategory: 'all',
+        sort: [
           {
             asapOutput: {
               order: 'asc',
             },
           },
         ],
-      );
+      });
     });
 
     it('applies ratio_desc sort correctly', async () => {
@@ -350,19 +350,19 @@ describe('getUserProductivity', () => {
         sort: 'ratio_desc',
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [],
-        null,
-        null,
-        '30d',
-        'both',
-        'all',
-        [
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'extended',
+        documentCategory: 'all',
+        sort: [
           {
             ratio: { order: 'desc' },
           },
         ],
-      );
+      });
     });
 
     it('applies role_asc sort with nested path and missing value handling', async () => {
@@ -371,14 +371,14 @@ describe('getUserProductivity', () => {
         sort: 'role_asc',
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [],
-        null,
-        null,
-        '30d',
-        'both',
-        'all',
-        [
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'extended',
+        documentCategory: 'all',
+        sort: [
           {
             'teams.role': {
               nested: { path: 'teams' },
@@ -387,7 +387,7 @@ describe('getUserProductivity', () => {
             },
           },
         ],
-      );
+      });
     });
 
     it('returns the result from opensearch client', async () => {
@@ -415,6 +415,7 @@ describe('getTeamProductivity', () => {
       createAlgoliaResponse<'analytics', 'team-productivity'>([
         {
           ...teamProductivityResponse,
+          objectID: '1-team-productivity-30d',
           __meta: { type: 'team-productivity', range: '30d' },
         },
       ]),
@@ -431,6 +432,7 @@ describe('getTeamProductivity', () => {
         items: [
           {
             ...teamProductivityResponse,
+            objectID: '1-team-productivity-30d',
             __meta: { type: 'team-productivity', range: '30d' },
           },
         ],
@@ -490,6 +492,192 @@ describe('getTeamProductivity', () => {
       }),
     );
   });
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<typeof teamProductivityResponse>;
+    let searchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient(
+        'team-productivity',
+        'Bearer test-token',
+      );
+      searchSpy = jest.spyOn(opensearchClient, 'search').mockResolvedValue({
+        items: [teamProductivityResponse],
+        total: 1,
+      });
+    });
+
+    afterEach(() => {
+      searchSpy.mockRestore();
+    });
+
+    it('calls opensearch client with correct parameters', async () => {
+      await getTeamProductivity(opensearchClient, defaultTeamOptions);
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: expect.any(Array),
+        outputType: 'all',
+      });
+    });
+
+    it('passes tags to opensearch client', async () => {
+      await getTeamProductivity(opensearchClient, {
+        ...defaultTeamOptions,
+        tags: ['Team Alpha', 'Team Beta'],
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: ['Team Alpha', 'Team Beta'],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: expect.any(Array),
+        outputType: 'all',
+      });
+    });
+
+    it('passes pagination parameters to opensearch client', async () => {
+      await getTeamProductivity(opensearchClient, {
+        ...defaultTeamOptions,
+        currentPage: 2,
+        pageSize: 20,
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: 2,
+        pageSize: 20,
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: expect.any(Array),
+        outputType: 'all',
+      });
+    });
+
+    it('passes time range to opensearch client', async () => {
+      await getTeamProductivity(opensearchClient, {
+        ...defaultTeamOptions,
+        timeRange: '90d',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '90d',
+        searchScope: 'flat',
+        sort: expect.any(Array),
+        outputType: 'all',
+      });
+    });
+
+    it('passes output type to opensearch client', async () => {
+      await getTeamProductivity(opensearchClient, {
+        ...defaultTeamOptions,
+        outputType: 'public',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: expect.any(Array),
+        outputType: 'public',
+      });
+    });
+
+    it('applies team_asc sort correctly', async () => {
+      await getTeamProductivity(opensearchClient, {
+        ...defaultTeamOptions,
+        sort: 'team_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: [{ 'name.keyword': { order: 'asc' } }],
+        outputType: 'all',
+      });
+    });
+
+    it('applies team_desc sort correctly', async () => {
+      await getTeamProductivity(opensearchClient, {
+        ...defaultTeamOptions,
+        sort: 'team_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: [{ 'name.keyword': { order: 'desc' } }],
+        outputType: 'all',
+      });
+    });
+
+    it('applies article_asc sort correctly', async () => {
+      await getTeamProductivity(opensearchClient, {
+        ...defaultTeamOptions,
+        sort: 'article_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: [{ Article: { order: 'asc' } }],
+        outputType: 'all',
+      });
+    });
+
+    it('applies dataset_desc sort correctly', async () => {
+      await getTeamProductivity(opensearchClient, {
+        ...defaultTeamOptions,
+        sort: 'dataset_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: [{ Dataset: { order: 'desc' } }],
+        outputType: 'all',
+      });
+    });
+
+    it('returns the result from opensearch client', async () => {
+      const mockResult = {
+        items: [{ ...teamProductivityResponse, name: 'Test Team' }],
+        total: 1,
+      };
+      searchSpy.mockResolvedValue(mockResult);
+
+      const result = await getTeamProductivity(
+        opensearchClient,
+        defaultTeamOptions,
+      );
+
+      expect(result).toEqual(mockResult);
+    });
+  });
 });
 
 describe('getTeamProductivityPerformance', () => {
@@ -541,6 +729,95 @@ describe('getTeamProductivityPerformance', () => {
       );
     },
   );
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<typeof teamProductivityPerformance>;
+    let searchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient(
+        'team-productivity-performance',
+        'Bearer test-token',
+      );
+      searchSpy = jest.spyOn(opensearchClient, 'search').mockResolvedValue({
+        items: [teamProductivityPerformance],
+        total: 1,
+      });
+    });
+
+    afterEach(() => {
+      searchSpy.mockRestore();
+    });
+
+    it('calls opensearch client with correct parameters', async () => {
+      await getTeamProductivityPerformance(opensearchClient, {
+        timeRange: '30d',
+        outputType: 'all',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: [],
+        outputType: 'all',
+      });
+    });
+
+    it('passes different time range to opensearch client', async () => {
+      await getTeamProductivityPerformance(opensearchClient, {
+        timeRange: '90d',
+        outputType: 'all',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        timeRange: '90d',
+        searchScope: 'flat',
+        sort: [],
+        outputType: 'all',
+      });
+    });
+
+    it('returns the first item from opensearch results', async () => {
+      const mockPerformance = {
+        ...teamProductivityPerformance,
+        Article: {
+          belowAverageMin: 0,
+          belowAverageMax: 5,
+          averageMin: 5,
+          averageMax: 15,
+          aboveAverageMin: 15,
+          aboveAverageMax: 30,
+        },
+      };
+      searchSpy.mockResolvedValue({
+        items: [mockPerformance],
+        total: 1,
+      });
+
+      const result = await getTeamProductivityPerformance(opensearchClient, {
+        timeRange: '30d',
+        outputType: 'all',
+      });
+
+      expect(result).toEqual(mockPerformance);
+    });
+
+    it('returns undefined when opensearch returns empty items', async () => {
+      searchSpy.mockResolvedValue({
+        items: [],
+        total: 0,
+      });
+
+      const result = await getTeamProductivityPerformance(opensearchClient, {
+        timeRange: '30d',
+        outputType: 'all',
+      });
+
+      expect(result).toBeUndefined();
+    });
+  });
 });
 
 describe('getUserProductivityPerformance', () => {
@@ -622,15 +899,13 @@ describe('getUserProductivityPerformance', () => {
         documentCategory: 'all',
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [], // tags
-        null, // currentPage
-        null, // pageSize
-        '30d', // timeRange
-        'both', // searchScope
-        'all', // documentCategory
-        [], // sort
-      );
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: [],
+        documentCategory: 'all',
+      });
     });
 
     it('passes different time range to opensearch client', async () => {
@@ -639,15 +914,13 @@ describe('getUserProductivityPerformance', () => {
         documentCategory: 'all',
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [],
-        null,
-        null,
-        '90d',
-        'both',
-        'all',
-        [],
-      );
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        timeRange: '90d',
+        searchScope: 'flat',
+        sort: [],
+        documentCategory: 'all',
+      });
     });
 
     it('passes different document category to opensearch client', async () => {
@@ -656,15 +929,13 @@ describe('getUserProductivityPerformance', () => {
         documentCategory: 'article',
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(
-        [],
-        null,
-        null,
-        '30d',
-        'both',
-        'article',
-        [],
-      );
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: [],
+        documentCategory: 'article',
+      });
     });
 
     it('returns the first item from opensearch results', async () => {

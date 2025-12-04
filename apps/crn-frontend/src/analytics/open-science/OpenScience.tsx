@@ -97,7 +97,7 @@ const OpenScience: FC<Record<string, never>> = () => {
     : publicationClient.client;
   const loadTags = useCallback(
     async (tagQuery: string) => {
-      const response = await tagClient.getTagSuggestions(tagQuery, 'teams');
+      const response = await tagClient.getTagSuggestions(tagQuery, 'flat');
       return response.map((value) => ({ label: value, value }));
     },
     [tagClient],

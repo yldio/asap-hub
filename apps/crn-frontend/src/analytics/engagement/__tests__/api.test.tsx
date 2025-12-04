@@ -110,13 +110,13 @@ describe('getMeetingRepAttendance', () => {
       defaultAttendanceOptions,
     );
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
-      [],
-      null,
-      null,
-      'all',
-      'teams',
-    );
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith({
+      searchTags: [],
+      currentPage: undefined,
+      pageSize: undefined,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
   });
 
   it('should pass the options if provided to search', async () => {
@@ -130,13 +130,13 @@ describe('getMeetingRepAttendance', () => {
       sort: 'team_asc',
     });
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
-      ['Alessi'],
-      0,
-      10,
-      'all',
-      'teams',
-    );
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith({
+      searchTags: ['Alessi'],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
   });
 
   it.each`
@@ -154,13 +154,13 @@ describe('getMeetingRepAttendance', () => {
       timeRange,
     });
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
-      [],
-      null,
-      null,
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith({
+      searchTags: [],
+      currentPage: undefined,
+      pageSize: undefined,
       timeRange,
-      'teams',
-    );
+      searchScope: 'flat',
+    });
   });
 
   it('should return successfully fetched attendance data', async () => {

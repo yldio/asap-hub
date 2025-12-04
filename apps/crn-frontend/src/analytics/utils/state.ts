@@ -24,7 +24,9 @@ export const makeFlagBasedPerformanceHook =
       client: AlgoliaClient<'analytics'> | OpensearchClient<T>,
       options: AnalyticsPerformanceOptions,
     ) => Promise<T | undefined>,
-    opensearchIndex: 'user-productivity-performance', // NOTE: Add more as we add new performance indexes to opensearch
+    opensearchIndex:
+      | 'user-productivity-performance'
+      | 'team-productivity-performance', // NOTE: Add more as we add new performance indexes to opensearch
   ) =>
   (options: AnalyticsPerformanceOptions) => {
     const { isEnabled } = useFlags();

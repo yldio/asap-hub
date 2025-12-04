@@ -31,13 +31,13 @@ describe('getPreprintCompliance', () => {
 
     const result = await getPreprintCompliance(mockOpensearchClient, options);
 
-    expect(mockSearch).toHaveBeenCalledWith(
-      ['tag1', 'tag2'],
-      1,
-      20,
-      'last-year',
-      'teams',
-    );
+    expect(mockSearch).toHaveBeenCalledWith({
+      searchTags: ['tag1', 'tag2'],
+      currentPage: 1,
+      pageSize: 20,
+      timeRange: 'last-year',
+      searchScope: 'flat',
+    });
     expect(result).toEqual(mockResponse);
   });
 
@@ -59,7 +59,13 @@ describe('getPreprintCompliance', () => {
 
     await getPreprintCompliance(mockOpensearchClient, options);
 
-    expect(mockSearch).toHaveBeenCalledWith([], 0, 10, 'all', 'teams');
+    expect(mockSearch).toHaveBeenCalledWith({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
   });
 
   it('returns undefined when opensearch client returns undefined', async () => {

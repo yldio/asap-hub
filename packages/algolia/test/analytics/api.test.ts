@@ -3,7 +3,7 @@ import {
   teamProductivityResponse,
 } from '@asap-hub/fixtures';
 import {
-  ListTeamProductivityAlgoliaResponse,
+  ListTeamProductivityResponse,
   SortTeamProductivity,
   TeamProductivityPerformance,
 } from '@asap-hub/model';
@@ -88,6 +88,7 @@ describe('getMetric', () => {
     search.mockResolvedValue(
       createAlgoliaResponse<'analytics', 'team-productivity'>([
         {
+          objectID: 'team-productivity-30d-1',
           ...teamProductivityResponse,
           __meta: { type: 'team-productivity', range: '30d' },
         },
@@ -95,10 +96,9 @@ describe('getMetric', () => {
     );
   });
   it('creates a metric api function', async () => {
-    const get = getMetric<
-      ListTeamProductivityAlgoliaResponse,
-      SortTeamProductivity
-    >(TEAM_PRODUCTIVITY);
+    const get = getMetric<ListTeamProductivityResponse, SortTeamProductivity>(
+      TEAM_PRODUCTIVITY,
+    );
 
     await get(algoliaSearchClient, {
       pageSize: null,
@@ -116,10 +116,9 @@ describe('getMetric', () => {
   });
 
   it('handles documentCategory', async () => {
-    const get = getMetric<
-      ListTeamProductivityAlgoliaResponse,
-      SortTeamProductivity
-    >(TEAM_PRODUCTIVITY);
+    const get = getMetric<ListTeamProductivityResponse, SortTeamProductivity>(
+      TEAM_PRODUCTIVITY,
+    );
 
     await get(algoliaSearchClient, {
       pageSize: null,

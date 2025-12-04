@@ -117,7 +117,7 @@ const iconStyles = css({
 });
 
 type TeamProfileHeaderProps = Readonly<
-  Omit<TeamResponse, 'tools' | 'teamStatus'>
+  Omit<TeamResponse, 'tools'>
 > & {
   readonly isStaff: boolean;
   readonly inactiveSince?: string;
@@ -147,6 +147,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   isStaff,
   manuscriptsCount,
   isAsapTeam = false,
+  teamStatus,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   const { canShareResearchOutput } = useContext(
@@ -204,7 +205,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             members={members}
             fullListRoute={`${route.about({}).$}#${teamListElementId}`}
           />
-          {pointOfContact && (
+          {pointOfContact && teamStatus === 'Active' && (
             <div css={pointOfContactStyles}>
               <span css={buttonStyles}>
                 <Link

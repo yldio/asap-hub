@@ -24,7 +24,7 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<
     TeamResponse,
-    'pointOfContact' | 'members' | 'inactiveSince' | 'supplementGrant'
+    'pointOfContact' | 'members' | 'inactiveSince' | 'supplementGrant' | 'teamStatus'
   > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
@@ -41,6 +41,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   teamGroupsCard,
   teamListElementId,
   supplementGrant,
+  teamStatus,
 }) => (
   <div css={styles}>
     {projectTitle ? (
@@ -62,7 +63,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       />
     </section>
     {teamGroupsCard}
-    {pointOfContact && (
+    {pointOfContact && teamStatus === 'Active' && (
       <CtaCard
         href={createMailTo(pointOfContact.email)}
         buttonText="Contact PM"

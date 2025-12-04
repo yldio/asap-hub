@@ -51,5 +51,5 @@ export const getAnalyticsOSChampion = async (
     currentPage: currentPage ?? undefined,
     pageSize: pageSize ?? undefined,
     timeRange,
-    searchScope: 'both',
+    searchScope: 'extended',
   });

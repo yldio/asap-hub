@@ -147,7 +147,7 @@ export const getUserProductivity = (
       currentPage: currentPage ?? undefined,
       pageSize: pageSize ?? undefined,
       timeRange,
-      searchScope: 'both',
+      searchScope: 'extended',
       documentCategory,
       sort: userProductivyOpensearchSort[sort],
     });
@@ -182,7 +182,7 @@ export const getTeamProductivity = (
       currentPage: currentPage ?? undefined,
       pageSize: pageSize ?? undefined,
       timeRange,
-      searchScope: 'both',
+      searchScope: 'extended',
       sort: teamProductivyOpensearchSort[sort],
       outputType,
     });
@@ -203,7 +203,7 @@ export const getUserProductivityPerformance = async (
     const results = await client.search({
       searchTags: [],
       timeRange: options.timeRange,
-      searchScope: 'both',
+      searchScope: 'extended',
       sort: [],
       outputType: options.outputType,
     });
@@ -224,7 +224,7 @@ export const getTeamProductivityPerformance = async (
     const results = await client.search({
       searchTags: [],
       timeRange: options.timeRange,
-      searchScope: 'both',
+      searchScope: 'extended',
       sort: [],
     });
     return results.items[0] as TeamProductivityPerformance | undefined;

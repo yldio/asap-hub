@@ -19,7 +19,7 @@ export const getPreprintCompliance = async (
     currentPage: currentPage ?? undefined,
     pageSize: pageSize ?? undefined,
     timeRange,
-    searchScope: 'teams',
+    searchScope: 'flat',
   });
 };
 
@@ -33,6 +33,6 @@ export const getPublicationCompliance = async (
     currentPage: currentPage ?? undefined,
     pageSize: pageSize ?? undefined,
     timeRange,
-    searchScope: 'teams',
+    searchScope: 'flat',
   });
 };

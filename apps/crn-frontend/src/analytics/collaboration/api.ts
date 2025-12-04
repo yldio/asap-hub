@@ -73,7 +73,7 @@ export const getPreliminaryDataSharing = async (
     currentPage: currentPage ?? undefined,
     pageSize: pageSize ?? undefined,
     timeRange,
-    searchScope: 'teams',
+    searchScope: 'flat',
   });
 
   return {

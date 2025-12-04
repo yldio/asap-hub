@@ -62,5 +62,5 @@ export const getMeetingRepAttendance = async (
     currentPage: currentPage ?? undefined,
     pageSize: pageSize ?? undefined,
     timeRange,
-    searchScope: 'teams',
+    searchScope: 'flat',
   });

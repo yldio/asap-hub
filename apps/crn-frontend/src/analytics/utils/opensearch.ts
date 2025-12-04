@@ -294,6 +294,11 @@ export const userWithTeamsRecordSearchQueryBuilder = (
 export const teamRecordSearchQueryBuilder = (
   options: OpensearchSearchOptions,
 ): SearchQuery => {
+  if (options.searchScope === 'extended') {
+    throw new Error(
+      `The search scope 'extended' is not available for this index`,
+    );
+  }
   const shouldClauses = options.searchTags.flatMap((term) => {
     const clauses: ShouldClause[] = [
       {
@@ -337,22 +342,33 @@ export const teamRecordSearchQueryBuilder = (
 
 export const taglessSearchQueryBuilder = (
   options: OpensearchSearchOptions,
-): SearchQuery => ({
-  from: options.currentPage * options.pageSize,
-  size: options.pageSize,
-  query: {
-    bool: {
-      must: [
-        ...(options.timeRange
-          ? [{ term: { timeRange: options.timeRange } }]
-          : []),
-        ...(options.documentCategory
-          ? [{ term: { documentCategory: options.documentCategory } }]
-          : []),
-      ],
+): SearchQuery => {
+  if (options.searchScope === 'extended') {
+    throw new Error(
+      `The search scope 'extended' is not available for this index`,
+    );
+  }
+
+  return {
+    from: options.currentPage * options.pageSize,
+    size: options.pageSize,
+    query: {
+      bool: {
+        must: [
+          ...(options.timeRange
+            ? [{ term: { timeRange: options.timeRange } }]
+            : []),
+          ...(options.documentCategory
+            ? [{ term: { documentCategory: options.documentCategory } }]
+            : []),
+          ...(options.outputType
+            ? [{ term: { outputType: options.outputType } }]
+            : []),
+        ],
+      },
     },
-  },
-});
+  };
+};
 
 const queryBuilderByIndex: Record<
   OpensearchIndex,

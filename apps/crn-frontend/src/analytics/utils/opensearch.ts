@@ -60,7 +60,18 @@ interface TagSuggestionsResponse {
   };
 }
 
-type SearchScope = 'teams' | 'both';
+/**
+ * Controls whether search queries match only the primary record or also include
+ * nested/related entities.
+ *
+ * - `flat`: Only match the primary entity field (team name for team-based
+ *   indices, user name for user-based indices)
+ * - `extended`: Also search related entities (e.g., searching "Hawk" in a team
+ *   index will find teams that have a member named "Hawk")
+ *
+ * Used by query builders to conditionally add nested search clauses.
+ */
+type SearchScope = 'flat' | 'extended';
 
 type OpensearchSearchOptions = {
   currentPage: number;
@@ -171,7 +182,7 @@ export const teamWithUsersRecordSearchQueryBuilder = (
       },
     ];
 
-    if (options.searchScope === 'both') {
+    if (options.searchScope === 'extended') {
       clauses.push({
         nested: {
           path: 'users',
@@ -236,7 +247,7 @@ export const userWithTeamsRecordSearchQueryBuilder = (
       },
     ];
 
-    if (options.searchScope === 'both') {
+    if (options.searchScope === 'extended') {
       clauses.push({
         nested: {
           path: 'teams',
@@ -430,7 +441,7 @@ export class OpensearchClient<T> {
 
   async getTagSuggestions(
     queryText: string,
-    searchScope: SearchScope = 'both',
+    searchScope: SearchScope = 'extended',
   ): Promise<string[]> {
     const isEmptyQuery = !queryText;
 
@@ -483,7 +494,7 @@ const buildAggregationQuery = (
     },
   };
 
-  if (searchScope === 'both') {
+  if (searchScope === 'extended') {
     shouldClauses.push({
       nested: {
         path: 'users',
@@ -542,7 +553,7 @@ const buildDefaultAggregationQuery = (
     },
   };
 
-  if (searchScope === 'both') {
+  if (searchScope === 'extended') {
     aggs.users = {
       nested: {
         path: 'users',

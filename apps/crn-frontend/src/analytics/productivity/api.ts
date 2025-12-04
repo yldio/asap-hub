@@ -118,20 +118,21 @@ const userProductivyOpensearchSort: OpensearchSortMap<SortUserProductivity> = {
   ],
 };
 
-const teamProductivyOpensearchSort: OpensearchSortMap<SortTeamProductivity> = {
-  team_asc: [{ 'name.keyword': { order: 'asc' } }],
-  team_desc: [{ 'name.keyword': { order: 'desc' } }],
-  article_asc: [{ Article: { order: 'asc' } }],
-  article_desc: [{ Article: { order: 'desc' } }],
-  bioinformatics_asc: [{ Bioinformatics: { order: 'asc' } }],
-  bioinformatics_desc: [{ Bioinformatics: { order: 'desc' } }],
-  dataset_asc: [{ Dataset: { order: 'asc' } }],
-  dataset_desc: [{ Dataset: { order: 'desc' } }],
-  lab_material_asc: [{ 'Lab Material': { order: 'asc' } }],
-  lab_material_desc: [{ 'Lab Material': { order: 'desc' } }],
-  protocol_asc: [{ Protocol: { order: 'asc' } }],
-  protocol_desc: [{ Protocol: { order: 'desc' } }],
-};
+const teamProductivityOpensearchSort: OpensearchSortMap<SortTeamProductivity> =
+  {
+    team_asc: [{ 'name.keyword': { order: 'asc' } }],
+    team_desc: [{ 'name.keyword': { order: 'desc' } }],
+    article_asc: [{ Article: { order: 'asc' } }],
+    article_desc: [{ Article: { order: 'desc' } }],
+    bioinformatics_asc: [{ Bioinformatics: { order: 'asc' } }],
+    bioinformatics_desc: [{ Bioinformatics: { order: 'desc' } }],
+    dataset_asc: [{ Dataset: { order: 'asc' } }],
+    dataset_desc: [{ Dataset: { order: 'desc' } }],
+    lab_material_asc: [{ 'Lab Material': { order: 'asc' } }],
+    lab_material_desc: [{ 'Lab Material': { order: 'desc' } }],
+    protocol_asc: [{ Protocol: { order: 'asc' } }],
+    protocol_desc: [{ Protocol: { order: 'desc' } }],
+  };
 
 export const getUserProductivity = (
   client:
@@ -183,7 +184,7 @@ export const getTeamProductivity = (
       pageSize: pageSize ?? undefined,
       timeRange,
       searchScope: 'extended',
-      sort: teamProductivyOpensearchSort[sort],
+      sort: teamProductivityOpensearchSort[sort],
       outputType,
     });
   }
@@ -205,7 +206,7 @@ export const getUserProductivityPerformance = async (
       timeRange: options.timeRange,
       searchScope: 'extended',
       sort: [],
-      outputType: options.outputType,
+      documentCategory: options.documentCategory,
     });
     return results.items[0] as UserProductivityPerformance | undefined;
   }
@@ -226,6 +227,7 @@ export const getTeamProductivityPerformance = async (
       timeRange: options.timeRange,
       searchScope: 'extended',
       sort: [],
+      outputType: options.outputType,
     });
     return results.items[0] as TeamProductivityPerformance | undefined;
   }

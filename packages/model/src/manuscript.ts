@@ -851,7 +851,8 @@ export type ASAPFundingReason = (typeof asapFundingReason)[number];
 export const asapFundingReasons = [
   {
     field: 'projects',
-    reason: 'BROKEN_TEST_COMMIT_A',
+    reason:
+      'The manuscript reports findings from your team’s ASAP-funded proposal.',
   },
   {
     field: 'method-or-resource',

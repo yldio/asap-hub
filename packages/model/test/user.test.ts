@@ -6,6 +6,10 @@ import {
   toUserListItem,
 } from '../src';
 
+it('will fail', () => {
+  expect(1).toBe(2);
+});
+
 describe('User', () => {
   describe('Role', () => {
     it.each(userRole)('should recognise correct role - %s', (role) => {

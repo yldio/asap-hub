@@ -2,8 +2,8 @@ const { execSync } = require('child_process');
 
 // Packages that should be sharded (with their shard count)
 const SHARDED_PACKAGES = {
-  '@asap-hub/crn-frontend': 8, // Split into 8 shards (128 test files, ~16 per shard)
-  '@asap-hub/react-components': 6, // Split into 6 shards (385 test files)
+  '@asap-hub/crn-frontend': 8, // Update as needed based on the number of tests in the package
+  '@asap-hub/react-components': 6, // Update as needed based on the number of tests in the package
 };
 
 // run turborepo dry run to get the list of tasks

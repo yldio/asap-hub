@@ -74,9 +74,14 @@ jobs:
   unit:
     needs: setup-turbo
     runs-on: ubuntu-latest
-    # Limit concurrent test jobs to avoid hitting GitHub Actions limits
-    # Adjust max-parallel based on your GitHub plan (Free: 20, Pro: 40, Enterprise: 60)
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     strategy:
+      # Limit concurrent test jobs to avoid hitting GitHub Actions limits
+      # Adjust max-parallel based on GitHub plan (Free: 20, Pro: 40, Enterprise: 60)
       fail-fast: false
       max-parallel: 40 # Check if our GitHub plan allows more
       matrix: ${{ fromJson(needs.setup-turbo.outputs.matrix) }}

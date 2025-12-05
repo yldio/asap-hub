@@ -21,11 +21,6 @@ export interface OpensearchHit<T> {
   _source: T;
 }
 
-interface AggregationBucket {
-  key: string;
-  doc_count: number;
-}
-
 export interface OpensearchHitsResponse<T> {
   hits: {
     total: {
@@ -35,30 +30,44 @@ export interface OpensearchHitsResponse<T> {
   };
 }
 
-interface TagSuggestionsResponse {
-  aggregations: {
-    matching_teams?: {
-      teams?: {
-        buckets?: AggregationBucket[];
-      };
+type AggregationBucket = {
+  key: string;
+  doc_count: number;
+};
+
+// When there is a search query (filtered results) for tags
+type SearchQueryResultAggregations = {
+  matching_teams?: {
+    teams: {
+      buckets: AggregationBucket[];
     };
-    matching_users?: {
-      filtered_names?: {
-        names?: {
-          buckets?: AggregationBucket[];
-        };
-      };
-    };
-    teams?: {
-      buckets?: AggregationBucket[];
-    };
-    users?: {
-      names?: {
-        buckets?: AggregationBucket[];
+  };
+  matching_users?: {
+    filtered_names: {
+      names: {
+        buckets: AggregationBucket[];
       };
     };
   };
-}
+};
+
+// When there is NO search query (default results) for tags
+type QuerylessResultAggregations = {
+  teams: {
+    // Assumes there will always be some results (builders return a min number of results)
+    buckets: AggregationBucket[];
+  };
+  users: {
+    names: {
+      // Assumes there will always be some results (builders return a min number of results)
+      buckets: AggregationBucket[];
+    };
+  };
+};
+
+type TagSuggestionsResponse = {
+  aggregations: SearchQueryResultAggregations | QuerylessResultAggregations;
+};
 
 /**
  * Controls whether search queries match only the primary record or also include
@@ -466,18 +475,21 @@ export class OpensearchClient<T> {
       : buildAggregationQuery(queryText, searchScope);
     const response = await this.request<TagSuggestionsResponse>(query);
 
-    const teams = isEmptyQuery
-      ? response.aggregations?.teams?.buckets?.map((b) => b.key)
-      : response.aggregations?.matching_teams?.teams?.buckets?.map(
-          (b) => b.key,
-        );
+    const teams =
+      'teams' in response.aggregations
+        ? response.aggregations.teams.buckets.map((b) => b.key)
+        : (response.aggregations.matching_teams?.teams.buckets.map(
+            (b) => b.key,
+          ) ?? []);
 
-    const users = isEmptyQuery
-      ? response.aggregations?.users?.names?.buckets?.map((b) => b.key)
-      : response.aggregations?.matching_users?.filtered_names?.names?.buckets?.map(
-          (b) => b.key,
-        );
-    return [...(teams || []), ...(users || [])];
+    const users =
+      'users' in response.aggregations
+        ? response.aggregations.users.names.buckets.map((b) => b.key)
+        : (response.aggregations.matching_users?.filtered_names.names.buckets.map(
+            (b) => b.key,
+          ) ?? []);
+
+    return [...teams, ...users];
   }
 }
 

@@ -105,16 +105,13 @@ jobs:
           key: ${{ runner.os }}-turbo-and-jest-cache-${{ matrix.package }}${{ steps.cache-suffix.outputs.suffix }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-turbo-and-jest-cache-${{ matrix.package }}${{ steps.cache-suffix.outputs.suffix }}-
-      - name: Get number of CPU cores
-        id: cpu-cores
-        uses: SimenB/github-actions-cpu-cores@v1
       - name: Test ${{ matrix.package }}${{ matrix.shard && ' (shard ' || '' }}${{ matrix.shard || '' }}${{ matrix.shard && ')' || '' }}
         run: |
           SHARD_ARGS=""
           if [ -n "${{ matrix.shard }}" ]; then
             SHARD_ARGS="--shard=${{ matrix.shard }}"
           fi
-          yarn turbo test:coverage --filter="${{ matrix.package }}" --cache-dir=.turbo -- --maxWorkers=${{ steps.cpu-cores.outputs.count }} --ci $SHARD_ARGS
+          yarn turbo test:coverage --filter="${{ matrix.package }}" --cache-dir=.turbo -- --ci $SHARD_ARGS
       - name: move coverage
         shell: bash
         run: |

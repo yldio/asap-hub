@@ -4,8 +4,8 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 
 import { steel } from '..';
-import { Card, Display, Headline2, Link, Paragraph, TabButton } from '../atoms';
-import { TabNav } from '../molecules';
+import { Card, Display, Divider, Headline2, Headline3, Link, Paragraph, TabButton } from '../atoms';
+import { TabNav, TagList } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 
 const tabsContainerStyles = css({
@@ -24,9 +24,18 @@ const stretchOnMobile = css({
   },
 });
 
+const dividerStyles = css({
+  marginTop: rem(24),
+  marginBottom: rem(24),
+});
+
+const contentStyles = css({
+  paddingTop: rem(20),
+});
+
 type TeamProfileOverviewProps = Pick<
   TeamResponse,
-  'projectTitle' | 'projectSummary' | 'proposalURL' | 'supplementGrant'
+  'projectTitle' | 'projectSummary' | 'proposalURL' | 'supplementGrant' | 'tags'
 > & {
   readonly proposalURL?: string;
 };
@@ -71,6 +80,7 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
   projectTitle,
   proposalURL,
   supplementGrant,
+  tags,
 }) => {
   const [selectedTab, setSelectedTab] = useState<Tabs>('Supplement Grant');
 
@@ -114,11 +124,27 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
             </div>
           </>
         ) : (
+          <>
           <TeamProfileOverviewContent
             title={projectTitle}
             description={projectSummary}
             researchOutputURL={proposalURL}
           />
+         
+          
+    {tags && tags.length ? (
+      <>
+       <Divider css={dividerStyles} />
+        <Headline3 noMargin>Tags</Headline3>
+        <Paragraph accent="lead">
+          Explore keywords related to skills, techniques, resources, and tools.
+        </Paragraph>
+        <div css={contentStyles}>
+          <TagList tags={tags.map(({ name }) => name)} />
+        </div>
+      </>
+    ) : null}
+          </>
         )}
       </div>
     </Card>

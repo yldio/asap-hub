@@ -201,10 +201,12 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             canShareResearchOutput ? createSectionStyles : contactSectionStyles
           }
         >
-          <UserAvatarList
-            members={members}
-            fullListRoute={`${route.about({}).$}#${teamListElementId}`}
-          />
+          {teamStatus === 'Active' && (
+            <UserAvatarList
+              members={members}
+              fullListRoute={`${route.about({}).$}#${teamListElementId}`}
+            />
+          )}
           {pointOfContact && teamStatus === 'Active' && (
             <div css={pointOfContactStyles}>
               <span css={buttonStyles}>
@@ -215,7 +217,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                   href={`${createMailTo(pointOfContact.email)}`}
                   noMargin
                 >
-                  Contact PM
+                  Contact
                 </Link>
               </span>
               <CopyButton
@@ -227,7 +229,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               />
             </div>
           )}
-          {labCount > 0 && (
+          {labCount > 0 && teamStatus === 'Active' && (
             <div css={labCountStyles}>
               <span css={iconStyles}>
                 <LabIcon />

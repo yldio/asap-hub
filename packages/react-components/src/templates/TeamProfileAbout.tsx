@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
 
@@ -24,7 +24,12 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<
     TeamResponse,
-    'pointOfContact' | 'members' | 'inactiveSince' | 'supplementGrant' | 'teamStatus' | 'teamType'
+    | 'pointOfContact'
+    | 'members'
+    | 'inactiveSince'
+    | 'supplementGrant'
+    | 'teamStatus'
+    | 'teamType'
   > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;

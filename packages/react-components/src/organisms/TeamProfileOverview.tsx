@@ -1,10 +1,19 @@
 import { TeamResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { steel } from '..';
-import { Card, Display, Divider, Headline2, Headline3, Link, Paragraph, TabButton } from '../atoms';
+import {
+  Card,
+  Display,
+  Divider,
+  Headline2,
+  Headline3,
+  Link,
+  Paragraph,
+  TabButton,
+} from '../atoms';
 import { TabNav, TagList } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 
@@ -125,25 +134,24 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
           </>
         ) : (
           <>
-          <TeamProfileOverviewContent
-            title={projectTitle}
-            description={projectSummary}
-            researchOutputURL={proposalURL}
-          />
-         
-          
-    {tags && tags.length ? (
-      <>
-       <Divider css={dividerStyles} />
-        <Headline3 noMargin>Tags</Headline3>
-        <Paragraph accent="lead">
-          Explore keywords related to skills, techniques, resources, and tools.
-        </Paragraph>
-        <div css={contentStyles}>
-          <TagList tags={tags.map(({ name }) => name)} />
-        </div>
-      </>
-    ) : null}
+            <TeamProfileOverviewContent
+              title={projectTitle}
+              description={projectSummary}
+              researchOutputURL={proposalURL}
+            />
+            {tags && tags.length ? (
+              <>
+                <Divider css={dividerStyles} />
+                <Headline3 noMargin>Tags</Headline3>
+                <Paragraph accent="lead">
+                  Explore keywords related to skills, techniques, resources, and
+                  tools.
+                </Paragraph>
+                <div css={contentStyles}>
+                  <TagList tags={tags.map(({ name }) => name)} />
+                </div>
+              </>
+            ) : null}
           </>
         )}
       </div>

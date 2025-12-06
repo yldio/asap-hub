@@ -116,9 +116,7 @@ const iconStyles = css({
   paddingRight: rem(12),
 });
 
-type TeamProfileHeaderProps = Readonly<
-  Omit<TeamResponse, 'tools'>
-> & {
+type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly isStaff: boolean;
   readonly inactiveSince?: string;
   readonly tools?: ReadonlyArray<TeamTool>;

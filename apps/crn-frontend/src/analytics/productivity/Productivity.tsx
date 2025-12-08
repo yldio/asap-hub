@@ -162,6 +162,21 @@ const Productivity = () => {
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => {
+        if (isEnabled('OPENSEARCH_METRICS')) {
+          const tags =
+            entityType === 'user-productivity'
+              ? await opensearchMetrics.getUserProductivityTagSuggestions(
+                  tagQuery,
+                )
+              : await opensearchMetrics.getTeamProductivityTagSuggestions(
+                  tagQuery,
+                );
+
+          return tags.map((value) => ({
+            label: value,
+            value,
+          }));
+        }
         const searchedTags = await client.searchForTagValues(
           [entityType],
           tagQuery,

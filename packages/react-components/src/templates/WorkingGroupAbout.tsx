@@ -99,7 +99,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         isComplete={complete}
       />
     </section>
-    {!complete && (
+    {!complete && pointOfContact && (
       <Card accent="green">
         <div css={getInTouchStyles}>
           <div css={{ display: 'flex', flexDirection: 'column' }}>

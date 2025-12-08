@@ -46,14 +46,14 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
       </div>
     </PageInfoContainer>
 
-    {searchQuery ? (
+    {searchQuery === undefined ? null : (
       <PageConstraints noPaddingBottom>
         <EventSearch
           searchQuery={searchQuery}
           onChangeSearchQuery={onChangeSearchQuery}
         />
       </PageConstraints>
-    ) : null}
+    )}
   </header>
 );
 

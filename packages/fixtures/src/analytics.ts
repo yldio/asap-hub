@@ -5,13 +5,13 @@ import {
   ListUserCollaborationAlgoliaResponse,
   PerformanceMetricByDocumentType,
   TeamCollaborationPerformance,
-  TeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
   UserCollaborationPerformance,
   UserProductivityPerformance,
   PreliminaryDataSharingDataObject,
   ListPreliminaryDataSharingResponse,
   UserProductivityResponse,
+  TeamProductivityResponse,
 } from '@asap-hub/model';
 
 export const teamLeadershipResponse: AnalyticsTeamLeadershipResponse = {
@@ -91,9 +91,8 @@ export const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
   ],
 };
 
-export const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
+export const teamProductivityResponse: TeamProductivityResponse = {
   id: '1',
-  objectID: '1-team-productivity-30d',
   name: 'Test Team',
   isInactive: false,
   Article: 1,

@@ -429,6 +429,12 @@ describe('getPreliminaryDataSharing', () => {
       timeRange: 'all',
     });
 
-    expect(mockSearch).toHaveBeenCalledWith([], 0, 10, 'all', 'teams');
+    expect(mockSearch).toHaveBeenCalledWith({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
   });
 });

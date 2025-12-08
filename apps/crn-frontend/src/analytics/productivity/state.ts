@@ -1,11 +1,11 @@
 import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
-  ListTeamProductivityAlgoliaResponse,
+  ListTeamProductivityResponse,
   ListUserProductivityResponse,
   SortTeamProductivity,
   SortUserProductivity,
-  TeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
+  TeamProductivityResponse,
   UserProductivityPerformance,
   UserProductivityResponse,
 } from '@asap-hub/model';
@@ -22,7 +22,6 @@ import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import {
   getAlgoliaIndexName,
   makeFlagBasedPerformanceHook,
-  makePerformanceHook,
   makePerformanceState,
 } from '../utils/state';
 import {
@@ -155,9 +154,10 @@ export const teamProductivityPerformanceState =
   );
 
 export const useTeamProductivityPerformance =
-  makePerformanceHook<TeamProductivityPerformance>(
+  makeFlagBasedPerformanceHook<TeamProductivityPerformance>(
     teamProductivityPerformanceState,
     getTeamProductivityPerformance,
+    'team-productivity-performance',
   );
 
 export const useTeamProductivityPerformanceValue = (
@@ -178,7 +178,7 @@ const analyticsTeamProductivityIndexState = atomFamily<
 });
 
 export const analyticsTeamProductivityListState = atomFamily<
-  TeamProductivityAlgoliaResponse | undefined,
+  TeamProductivityResponse | undefined,
   string
 >({
   key: 'analyticsTeamProductivityList',
@@ -186,7 +186,7 @@ export const analyticsTeamProductivityListState = atomFamily<
 });
 
 export const analyticsTeamProductivityState = selectorFamily<
-  ListTeamProductivityAlgoliaResponse | Error | undefined,
+  ListTeamProductivityResponse | Error | undefined,
   AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>
 >({
   key: 'teamProductivity',
@@ -195,7 +195,7 @@ export const analyticsTeamProductivityState = selectorFamily<
     ({ get }) => {
       const index = get(analyticsTeamProductivityIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const teams: TeamProductivityAlgoliaResponse[] = [];
+      const teams: TeamProductivityResponse[] = [];
       for (const id of index.ids) {
         const team = get(analyticsTeamProductivityListState(id));
         if (team === undefined) return undefined;
@@ -216,14 +216,16 @@ export const analyticsTeamProductivityState = selectorFamily<
       } else {
         newTeamProductivity?.items.forEach((teamProductivity) =>
           set(
-            analyticsTeamProductivityListState(teamProductivity.objectID),
+            analyticsTeamProductivityListState(
+              teamProductivity.id + JSON.stringify(options), // Cache the original id plus the current sort/search/filter options
+            ),
             teamProductivity,
           ),
         );
         set(analyticsTeamProductivityIndexState(options), {
           total: newTeamProductivity.total,
           ids: newTeamProductivity.items.map(
-            (teamProductivity) => teamProductivity.objectID,
+            (teamProductivity) => teamProductivity.id + JSON.stringify(options),
           ),
         });
       }
@@ -233,17 +235,29 @@ export const analyticsTeamProductivityState = selectorFamily<
 export const useAnalyticsTeamProductivity = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>,
 ) => {
+  const { isEnabled } = useFlags();
+
   const indexName = getAlgoliaIndexName(options.sort, 'team-productivity');
   const algoliaClient = useAnalyticsAlgolia(indexName).client;
+
+  const opensearchClient =
+    useAnalyticsOpensearch<TeamProductivityResponse>(
+      'team-productivity',
+    ).client;
 
   const [teamProductivity, setTeamProductivity] = useRecoilState(
     analyticsTeamProductivityState(options),
   );
+
   if (teamProductivity === undefined) {
-    throw getTeamProductivity(algoliaClient, options)
+    throw getTeamProductivity(
+      isEnabled('OPENSEARCH_METRICS') ? opensearchClient : algoliaClient,
+      options,
+    )
       .then(setTeamProductivity)
       .catch(setTeamProductivity);
   }
+
   if (teamProductivity instanceof Error) {
     throw teamProductivity;
   }

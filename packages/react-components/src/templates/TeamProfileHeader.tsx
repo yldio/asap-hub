@@ -214,7 +214,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                   href={`${createMailTo(pointOfContact.email)}`}
                   noMargin
                 >
-                  Contact PM
+                  Contact
                 </Link>
               </span>
               <CopyButton

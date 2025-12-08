@@ -94,7 +94,7 @@ it('renders a contact button when there is a pointOfContact', () => {
     />,
   );
 
-  expect(screen.getByText('Contact PM').parentElement).toHaveAttribute(
+  expect(screen.getByText('Contact').parentElement).toHaveAttribute(
     'href',
     'mailto:test@test.com',
   );

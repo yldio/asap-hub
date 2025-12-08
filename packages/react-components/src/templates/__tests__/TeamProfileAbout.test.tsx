@@ -202,7 +202,7 @@ describe('footer', () => {
       <TeamProfileAbout {...props} pointOfContact={undefined} />,
     );
 
-    expect(queryByText('Contact PM')).not.toBeInTheDocument();
+    expect(queryByText('Contact')).not.toBeInTheDocument();
     expect(queryByTitle(/copy/i)).not.toBeInTheDocument();
   });
 
@@ -211,7 +211,7 @@ describe('footer', () => {
       <TeamProfileAbout {...props} pointOfContact={pointOfContact} />,
     );
 
-    expect(getByText('Contact PM').parentElement).toHaveAttribute(
+    expect(getByText('Contact').parentElement).toHaveAttribute(
       'href',
       'mailto:pm@asap.com',
     );

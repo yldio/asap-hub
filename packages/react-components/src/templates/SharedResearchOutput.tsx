@@ -313,12 +313,11 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           {!!contactEmails.length && (
             <CtaCard
               href={createMailTo(contactEmails)}
-              buttonText="Contact PM"
+              buttonText="Contact"
               displayCopy
             >
               <strong>Have additional questions?</strong>
-              <br /> The project managers associated with this output are here
-              to help.
+              <br /> Members associated with this output are here to help.
             </CtaCard>
           )}
         </div>

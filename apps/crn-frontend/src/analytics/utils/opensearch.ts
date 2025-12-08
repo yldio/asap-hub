@@ -394,6 +394,132 @@ const queryBuilderByIndex: Record<
   'team-productivity-performance': taglessSearchQueryBuilder,
 };
 
+type TagQueryBuilder = (
+  searchQuery: string,
+  searchScope: SearchScope,
+) => Record<string, unknown>;
+
+export const teamWithUsersRecordsTagQueryBuilder: TagQueryBuilder = (
+  searchQuery: string,
+  searchScope: SearchScope,
+): ReturnType<TagQueryBuilder> => {
+  if (!searchQuery) {
+    const aggs: Record<string, unknown> = {
+      teams: {
+        terms: {
+          field: 'teamName.keyword',
+          size: 5,
+        },
+      },
+    };
+
+    if (searchScope === 'extended') {
+      aggs.users = {
+        nested: {
+          path: 'users',
+        },
+        aggs: {
+          names: {
+            terms: {
+              field: 'users.name.keyword',
+              size: 5,
+            },
+          },
+        },
+      };
+    }
+
+    return {
+      size: 0,
+      aggs,
+    };
+  }
+
+  const shouldClauses: Record<string, unknown>[] = [
+    {
+      match: {
+        teamName: searchQuery,
+      },
+    },
+  ];
+  const aggs: Record<string, unknown> = {
+    matching_teams: {
+      filter: {
+        match: {
+          teamName: searchQuery,
+        },
+      },
+      aggs: {
+        teams: {
+          terms: {
+            field: 'teamName.keyword',
+            size: 10,
+          },
+        },
+      },
+    },
+  };
+
+  if (searchScope === 'extended') {
+    shouldClauses.push({
+      nested: {
+        path: 'users',
+        query: {
+          match: {
+            'users.name': searchQuery,
+          },
+        },
+      },
+    });
+
+    aggs.matching_users = {
+      nested: {
+        path: 'users',
+      },
+      aggs: {
+        filtered_names: {
+          filter: {
+            match: {
+              'users.name': searchQuery,
+            },
+          },
+          aggs: {
+            names: {
+              terms: {
+                field: 'users.name.keyword',
+                size: 10,
+              },
+            },
+          },
+        },
+      },
+    };
+  }
+
+  return {
+    size: 0,
+    query: {
+      bool: {
+        should: shouldClauses,
+      },
+    },
+    aggs,
+  };
+};
+
+const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
+  attendance: teamWithUsersRecordsTagQueryBuilder,
+  'os-champion': teamWithUsersRecordsTagQueryBuilder,
+  'preliminary-data-sharing': teamWithUsersRecordsTagQueryBuilder,
+  'preprint-compliance': teamWithUsersRecordsTagQueryBuilder,
+  'publication-compliance': teamWithUsersRecordsTagQueryBuilder,
+  // temporary stubs to make Typescript happy
+  'user-productivity': teamWithUsersRecordsTagQueryBuilder,
+  'user-productivity-performance': teamWithUsersRecordsTagQueryBuilder,
+  'team-productivity': teamWithUsersRecordsTagQueryBuilder,
+  'team-productivity-performance': teamWithUsersRecordsTagQueryBuilder,
+};
+
 export class OpensearchClient<T> {
   private index: OpensearchIndex;
   private authorization: string;
@@ -468,11 +594,7 @@ export class OpensearchClient<T> {
     queryText: string,
     searchScope: SearchScope = 'extended',
   ): Promise<string[]> {
-    const isEmptyQuery = !queryText;
-
-    const query = isEmptyQuery
-      ? buildDefaultAggregationQuery(searchScope)
-      : buildAggregationQuery(queryText, searchScope);
+    const query = tagQueryBuilderByIndex[this.index](queryText, searchScope);
     const response = await this.request<TagSuggestionsResponse>(query);
 
     const teams =
@@ -492,113 +614,3 @@ export class OpensearchClient<T> {
     return [...teams, ...users];
   }
 }
-
-const buildAggregationQuery = (
-  searchQuery: string,
-  searchScope: SearchScope,
-) => {
-  const shouldClauses: Record<string, unknown>[] = [
-    {
-      match: {
-        teamName: searchQuery,
-      },
-    },
-  ];
-  const aggs: Record<string, unknown> = {
-    matching_teams: {
-      filter: {
-        match: {
-          teamName: searchQuery,
-        },
-      },
-      aggs: {
-        teams: {
-          terms: {
-            field: 'teamName.keyword',
-            size: 10,
-          },
-        },
-      },
-    },
-  };
-
-  if (searchScope === 'extended') {
-    shouldClauses.push({
-      nested: {
-        path: 'users',
-        query: {
-          match: {
-            'users.name': searchQuery,
-          },
-        },
-      },
-    });
-
-    aggs.matching_users = {
-      nested: {
-        path: 'users',
-      },
-      aggs: {
-        filtered_names: {
-          filter: {
-            match: {
-              'users.name': searchQuery,
-            },
-          },
-          aggs: {
-            names: {
-              terms: {
-                field: 'users.name.keyword',
-                size: 10,
-              },
-            },
-          },
-        },
-      },
-    };
-  }
-
-  return {
-    size: 0,
-    query: {
-      bool: {
-        should: shouldClauses,
-      },
-    },
-    aggs,
-  };
-};
-
-const buildDefaultAggregationQuery = (
-  searchScope: SearchScope,
-): Record<string, unknown> => {
-  const aggs: Record<string, unknown> = {
-    teams: {
-      terms: {
-        field: 'teamName.keyword',
-        size: 5,
-      },
-    },
-  };
-
-  if (searchScope === 'extended') {
-    aggs.users = {
-      nested: {
-        path: 'users',
-      },
-      aggs: {
-        names: {
-          terms: {
-            field: 'users.name.keyword',
-            size: 5,
-          },
-        },
-      },
-    };
-  }
-
-  return {
-    size: 0,
-    aggs,
-  };
-};

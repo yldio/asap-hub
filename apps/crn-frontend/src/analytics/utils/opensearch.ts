@@ -722,6 +722,54 @@ const unsupportedCall: TagQueryBuilder = (
   throw new Error(`This Opensearch index doesn't support tag suggestions`);
 };
 
+export const teamRecordTagQueryBuilder: TagQueryBuilder = (
+  searchQuery: string,
+  searchScope: SearchScope,
+): ReturnType<TagQueryBuilder> => {
+  if (!searchQuery) {
+    const aggs: Record<string, unknown> = {
+      teams: {
+        terms: {
+          field: 'name.raw',
+          size: 10,
+        },
+      },
+    };
+
+    if (searchScope === 'extended') {
+      throw new Error(
+        `The search scope 'extended' is not available for this index`,
+      );
+    }
+
+    return {
+      query: {
+        size: 0,
+        aggs,
+      },
+      responseTransformer: (queryResponse: TagSuggestionsResponse) => {
+        let teams: string[] = [];
+
+        if ('teams' in queryResponse.aggregations) {
+          const aggregations =
+            queryResponse.aggregations as EmptyQueryResultAggregations;
+          teams = aggregations.teams.buckets.map((b) => b.key);
+        }
+
+        return teams;
+      },
+    };
+  }
+
+  return {
+    query: {
+      size: 0,
+      aggs: {},
+    },
+    responseTransformer: () => [],
+  };
+};
+
 const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
   attendance: teamWithUsersRecordsTagQueryBuilder,
   'os-champion': teamWithUsersRecordsTagQueryBuilder,
@@ -730,8 +778,8 @@ const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
   'publication-compliance': teamWithUsersRecordsTagQueryBuilder,
   'user-productivity': userWithTeamsRecordsTagQueryBuilder,
   'user-productivity-performance': unsupportedCall,
-  'team-productivity': unsupportedCall,
-  'team-productivity-performance': unsupportedCall,
+  'team-productivity': teamRecordTagQueryBuilder,
+  'team-productivity-performance': teamRecordTagQueryBuilder,
 };
 
 export class OpensearchClient<T> {

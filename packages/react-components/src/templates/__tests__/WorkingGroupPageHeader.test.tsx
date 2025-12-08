@@ -38,9 +38,9 @@ it('renders CTA when pointOfContact is provided', () => {
       pointOfContact={createWorkingGroupPointOfContact()}
     />,
   );
-  expect(queryAllByText('Contact PM')).toHaveLength(1);
+  expect(queryAllByText('Contact')).toHaveLength(1);
   rerender(<WorkingGroupHeader {...baseProps} />);
-  expect(queryAllByText('Contact PM')).toHaveLength(0);
+  expect(queryAllByText('Contact')).toHaveLength(0);
 });
 
 it('does not render CTA when pointOfContact is provided but working group is complete', () => {
@@ -51,7 +51,7 @@ it('does not render CTA when pointOfContact is provided but working group is com
       complete
     />,
   );
-  expect(queryAllByText('Contact PM')).toHaveLength(0);
+  expect(queryAllByText('Contact')).toHaveLength(0);
 });
 
 it('copy button copies pointOfContact email', () => {

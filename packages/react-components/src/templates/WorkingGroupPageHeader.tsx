@@ -244,7 +244,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
                   href={`${createMailTo(pointOfContact.user.email)}`}
                   noMargin
                 >
-                  Contact PM
+                  Contact
                 </Link>
               </div>
               <CopyButton

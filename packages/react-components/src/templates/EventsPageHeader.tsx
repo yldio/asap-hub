@@ -46,14 +46,15 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
       </div>
     </PageInfoContainer>
 
-    {searchQuery ? (
+    {/* the searchQuery might be an empty string, in which case we still want to show the search box */}
+    {searchQuery === undefined ? null : (
       <PageConstraints noPaddingBottom>
         <EventSearch
           searchQuery={searchQuery}
           onChangeSearchQuery={onChangeSearchQuery}
         />
       </PageConstraints>
-    ) : null}
+    )}
   </header>
 );
 

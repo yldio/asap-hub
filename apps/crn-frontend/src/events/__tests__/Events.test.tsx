@@ -70,19 +70,16 @@ describe('Events', () => {
     ${'after'}    | ${events({}).past({}).$}     | ${'past'}
     ${'before'}   | ${events({}).upcoming({}).$} | ${'upcoming'}
   `('the events $expected page', ({ eventProperty, route, expected }) => {
-    it('does not render search box without searchQuery parameter', async () => {
-      // Without searchQuery parameter, the search box should not render (prevents empty gap)
+    it('renders search box even without searchQuery parameter', async () => {
+      // Search box is always visible for past/upcoming events pages
       await renderEventsPage(route);
-      expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
+      expect(screen.getByRole('searchbox')).toBeInTheDocument();
     });
 
     it('can search for events', async () => {
-      // Add searchQuery parameter with a space to ensure search box is rendered
-      // (empty string is falsy and won't trigger the conditional render)
-      await renderEventsPage(route, '?searchQuery= ');
+      await renderEventsPage(route);
       const searchBox = screen.getByRole('searchbox');
-      // Select all existing text and replace it with new text
-      userEvent.type(searchBox, '{selectall}searchterm');
+      userEvent.type(searchBox, 'searchterm');
       await waitFor(() =>
         expect(mockGetEventsFromAlgolia).toHaveBeenLastCalledWith(
           expect.anything(),

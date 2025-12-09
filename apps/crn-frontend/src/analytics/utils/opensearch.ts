@@ -394,21 +394,6 @@ export const taglessSearchQueryBuilder = (
   };
 };
 
-const queryBuilderByIndex: Record<
-  OpensearchIndex,
-  (options: OpensearchSearchOptions) => SearchQuery
-> = {
-  attendance: teamWithUsersRecordSearchQueryBuilder,
-  'os-champion': teamWithUsersRecordSearchQueryBuilder,
-  'preliminary-data-sharing': teamWithUsersRecordSearchQueryBuilder,
-  'preprint-compliance': teamWithUsersRecordSearchQueryBuilder,
-  'publication-compliance': teamWithUsersRecordSearchQueryBuilder,
-  'user-productivity': userWithTeamsRecordSearchQueryBuilder,
-  'user-productivity-performance': taglessSearchQueryBuilder,
-  'team-productivity': teamRecordSearchQueryBuilder,
-  'team-productivity-performance': taglessSearchQueryBuilder,
-};
-
 type TagQueryBuilder = (
   searchQuery: string,
   searchScope: SearchScope,
@@ -869,6 +854,21 @@ export const teamRecordTagQueryBuilder: TagQueryBuilder = (
       return teams;
     },
   };
+};
+
+const queryBuilderByIndex: Record<
+  OpensearchIndex,
+  (options: OpensearchSearchOptions) => SearchQuery
+> = {
+  attendance: teamWithUsersRecordSearchQueryBuilder,
+  'os-champion': teamWithUsersRecordSearchQueryBuilder,
+  'preliminary-data-sharing': teamWithUsersRecordSearchQueryBuilder,
+  'preprint-compliance': teamWithUsersRecordSearchQueryBuilder,
+  'publication-compliance': teamWithUsersRecordSearchQueryBuilder,
+  'user-productivity': userWithTeamsRecordSearchQueryBuilder,
+  'user-productivity-performance': taglessSearchQueryBuilder,
+  'team-productivity': teamRecordSearchQueryBuilder,
+  'team-productivity-performance': taglessSearchQueryBuilder,
 };
 
 const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {

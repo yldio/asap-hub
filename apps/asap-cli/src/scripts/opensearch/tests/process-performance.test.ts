@@ -9,6 +9,7 @@ import { getPerformanceMetrics } from '../../shared/performance-utils';
 import {
   processUserProductivityPerformance,
   processTeamProductivityPerformance,
+  processUserCollaborationPerformance,
   processPerformance,
   ProcessPerformanceOptions,
 } from '../process-performance';
@@ -536,15 +537,41 @@ describe('processPerformance', () => {
     );
   });
 
+  it('should process user collaboration performance when metric is "user-collaboration"', async () => {
+    await processPerformance({
+      ...defaultOptions,
+      metric: 'user-collaboration',
+    });
+
+    expect(mockIndexOpensearchData).toHaveBeenCalledWith({
+      awsRegion: 'us-east-1',
+      stage: 'dev',
+      opensearchUsername: 'admin',
+      opensearchPassword: 'password',
+      indexAlias: 'user-collaboration-performance',
+      getData: expect.any(Function),
+    });
+
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
+      'Processing user-collaboration-performance...',
+    );
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
+      'Successfully indexed user-collaboration-performance data',
+    );
+  });
+
   it('should process both user and team productivity performance when metric is "all"', async () => {
     await processPerformance({ ...defaultOptions, metric: 'all' });
 
-    expect(mockIndexOpensearchData).toHaveBeenCalledTimes(2);
+    expect(mockIndexOpensearchData).toHaveBeenCalledTimes(3);
     expect(consoleInfoSpy).toHaveBeenCalledWith(
       'Processing user-productivity-performance...',
     );
     expect(consoleInfoSpy).toHaveBeenCalledWith(
       'Processing team-productivity-performance...',
+    );
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
+      'Processing user-collaboration-performance...',
     );
   });
 
@@ -770,6 +797,95 @@ describe('processPerformance', () => {
     });
   });
 
+  it('should call getData function with correct parameters for user-collaboration', async () => {
+    type GetDataFn = () => Promise<{
+      documents: unknown[];
+      mapping: typeof import('../mappings').userCollaborationPerformanceMapping;
+    }>;
+
+    let getDataFn: GetDataFn | undefined;
+
+    mockIndexOpensearchData.mockImplementation(async (options) => {
+      getDataFn = options.getData as GetDataFn;
+    });
+
+    await processPerformance({
+      ...defaultOptions,
+      metric: 'user-collaboration',
+    });
+
+    expect(getDataFn).toBeDefined();
+
+    if (!getDataFn) {
+      throw new Error('getDataFn should be defined');
+    }
+
+    const result = await getDataFn();
+
+    expect(mockGetClient).toHaveBeenCalledWith(
+      'us-east-1',
+      'dev',
+      'admin',
+      'password',
+    );
+
+    expect(result).toHaveProperty('documents');
+    expect(result).toHaveProperty('mapping');
+    expect(result.documents).toHaveLength(30);
+    expect(result.mapping).toHaveProperty('properties');
+  });
+
+  it('should include correct mapping in getData result for user-collaboration', async () => {
+    type GetDataFn = () => Promise<{
+      documents: unknown[];
+      mapping: typeof import('../mappings').userCollaborationPerformanceMapping;
+    }>;
+
+    let getDataFn: GetDataFn | undefined;
+
+    mockIndexOpensearchData.mockImplementation(async (options) => {
+      getDataFn = options.getData as GetDataFn;
+    });
+
+    await processPerformance({
+      ...defaultOptions,
+      metric: 'user-collaboration',
+    });
+
+    if (!getDataFn) {
+      throw new Error('getDataFn should be defined');
+    }
+
+    const result = await getDataFn();
+
+    expect(result.mapping).toEqual({
+      properties: {
+        withinTeam: {
+          properties: {
+            belowAverageMin: { type: 'integer' },
+            belowAverageMax: { type: 'integer' },
+            averageMin: { type: 'integer' },
+            averageMax: { type: 'integer' },
+            aboveAverageMin: { type: 'integer' },
+            aboveAverageMax: { type: 'integer' },
+          },
+        },
+        acrossTeam: {
+          properties: {
+            belowAverageMin: { type: 'integer' },
+            belowAverageMax: { type: 'integer' },
+            averageMin: { type: 'integer' },
+            averageMax: { type: 'integer' },
+            aboveAverageMin: { type: 'integer' },
+            aboveAverageMax: { type: 'integer' },
+          },
+        },
+        timeRange: { type: 'keyword' },
+        documentCategory: { type: 'keyword' },
+      },
+    });
+  });
+
   it('should handle errors and rethrow', async () => {
     const indexError = new Error('Failed to index data');
     mockIndexOpensearchData.mockRejectedValue(indexError);
@@ -834,5 +950,330 @@ describe('processPerformance', () => {
       'Failed to process team-productivity-performance',
       expect.objectContaining({ error: clientError }),
     );
+  });
+
+  it('should handle errors for user-collaboration and rethrow', async () => {
+    const indexError = new Error('Failed to index user collaboration data');
+    mockIndexOpensearchData.mockRejectedValue(indexError);
+
+    await expect(
+      processPerformance({ ...defaultOptions, metric: 'user-collaboration' }),
+    ).rejects.toThrow(indexError);
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Failed to process user-collaboration-performance',
+      { error: indexError },
+    );
+  });
+
+  it('should handle errors from getData function for user-collaboration', async () => {
+    const clientError = new Error(
+      'Failed to get client for user collaboration',
+    );
+    mockGetClient.mockRejectedValue(clientError);
+
+    // Make indexOpensearchData call getData and let the error propagate
+    mockIndexOpensearchData.mockImplementation(async (options) => {
+      await options.getData();
+    });
+
+    await expect(
+      processPerformance({ ...defaultOptions, metric: 'user-collaboration' }),
+    ).rejects.toThrow(clientError);
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Failed to process user-collaboration-performance',
+      expect.objectContaining({ error: clientError }),
+    );
+  });
+});
+
+describe('processUserCollaborationPerformance', () => {
+  let mockClient: MockClient;
+  let consoleInfoSpy: jest.SpyInstance;
+  let consoleErrorSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation();
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+
+    const mockPerformanceMetrics: PerformanceMetrics = {
+      belowAverageMin: 0,
+      belowAverageMax: 1,
+      averageMin: 2,
+      averageMax: 4,
+      aboveAverageMin: 5,
+      aboveAverageMax: 10,
+    };
+
+    mockGetPerformanceMetrics.mockReturnValue(mockPerformanceMetrics);
+  });
+
+  afterEach(() => {
+    consoleInfoSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('should process user collaboration performance for all time ranges and document categories', async () => {
+    const mockHits = [
+      {
+        _source: {
+          teams: [
+            {
+              outputsCoAuthoredWithinTeam: 5,
+              outputsCoAuthoredAcrossTeams: 3,
+            },
+            {
+              outputsCoAuthoredWithinTeam: 2,
+              outputsCoAuthoredAcrossTeams: 1,
+            },
+          ],
+          timeRange: 'all',
+          documentCategory: 'article',
+        },
+      },
+      {
+        _source: {
+          teams: [
+            {
+              outputsCoAuthoredWithinTeam: 10,
+              outputsCoAuthoredAcrossTeams: 8,
+            },
+          ],
+          timeRange: 'all',
+          documentCategory: 'article',
+        },
+      },
+    ];
+
+    mockClient = {
+      search: jest.fn().mockResolvedValue({
+        body: {
+          hits: { hits: mockHits },
+        },
+      }),
+    };
+
+    const results = await processUserCollaborationPerformance(
+      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
+    );
+
+    // Should process all combinations (5 time ranges x 6 document categories = 30)
+    expect(results).toHaveLength(30);
+
+    // Verify each result has the correct structure
+    results.forEach((result) => {
+      expect(result).toHaveProperty('withinTeam');
+      expect(result).toHaveProperty('acrossTeam');
+      expect(result).toHaveProperty('timeRange');
+      expect(result).toHaveProperty('documentCategory');
+      expect(timeRanges).toContain(result.timeRange);
+      expect(documentCategories).toContain(result.documentCategory);
+    });
+
+    // Verify getPerformanceMetrics was called correctly (2 times per combination)
+    expect(mockGetPerformanceMetrics).toHaveBeenCalledTimes(60); // 30 combinations x 2 metrics
+
+    // Verify info logs
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Processing user collaboration performance metrics for',
+      ),
+    );
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Processed user collaboration performance metrics for',
+      ),
+    );
+  });
+
+  it('should handle documents with missing or undefined team properties gracefully', async () => {
+    const mockHits = [
+      {
+        _source: {
+          teams: [
+            {
+              // Missing both properties
+            },
+            {
+              outputsCoAuthoredWithinTeam: 5,
+              // Missing outputsCoAuthoredAcrossTeams
+            },
+            {
+              // Missing outputsCoAuthoredWithinTeam
+              outputsCoAuthoredAcrossTeams: 3,
+            },
+            {
+              outputsCoAuthoredWithinTeam: 10,
+              outputsCoAuthoredAcrossTeams: 8,
+            },
+          ],
+          timeRange: 'all',
+          documentCategory: 'article',
+        },
+      },
+      {
+        _source: {
+          // Missing teams array
+          timeRange: 'last-30-days',
+          documentCategory: 'protocol',
+        },
+      },
+    ];
+
+    mockClient = {
+      search: jest.fn().mockResolvedValue({
+        body: {
+          hits: { hits: mockHits },
+        },
+      }),
+    };
+
+    const results = await processUserCollaborationPerformance(
+      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
+    );
+
+    expect(results).toHaveLength(30);
+
+    // Verify metrics were calculated with default values (0) for missing properties
+    expect(mockGetPerformanceMetrics).toHaveBeenCalledWith(
+      expect.arrayContaining([0, 5, 0, 10]),
+      true,
+    );
+    expect(mockGetPerformanceMetrics).toHaveBeenCalledWith(
+      expect.arrayContaining([0, 0, 3, 8]),
+      true,
+    );
+  });
+
+  it('should handle empty teams array', async () => {
+    const mockHits = [
+      {
+        _source: {
+          teams: [],
+          timeRange: 'all',
+          documentCategory: 'article',
+        },
+      },
+    ];
+
+    mockClient = {
+      search: jest.fn().mockResolvedValue({
+        body: {
+          hits: { hits: mockHits },
+        },
+      }),
+    };
+
+    const results = await processUserCollaborationPerformance(
+      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
+    );
+
+    expect(results).toHaveLength(30);
+
+    // Verify getPerformanceMetrics was called with empty arrays
+    expect(mockGetPerformanceMetrics).toHaveBeenCalledWith([], true);
+  });
+
+  it('should flatten teams from all users correctly', async () => {
+    const mockHits = [
+      {
+        _source: {
+          teams: [
+            {
+              outputsCoAuthoredWithinTeam: 1,
+              outputsCoAuthoredAcrossTeams: 2,
+            },
+            {
+              outputsCoAuthoredWithinTeam: 3,
+              outputsCoAuthoredAcrossTeams: 4,
+            },
+          ],
+          timeRange: 'all',
+          documentCategory: 'article',
+        },
+      },
+      {
+        _source: {
+          teams: [
+            {
+              outputsCoAuthoredWithinTeam: 5,
+              outputsCoAuthoredAcrossTeams: 6,
+            },
+          ],
+          timeRange: 'all',
+          documentCategory: 'article',
+        },
+      },
+    ];
+
+    mockClient = {
+      search: jest.fn().mockResolvedValue({
+        body: {
+          hits: { hits: mockHits },
+        },
+      }),
+    };
+
+    await processUserCollaborationPerformance(
+      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
+    );
+
+    // Verify getPerformanceMetrics was called with flattened arrays
+    expect(mockGetPerformanceMetrics).toHaveBeenCalledWith([1, 3, 5], true);
+    expect(mockGetPerformanceMetrics).toHaveBeenCalledWith([2, 4, 6], true);
+  });
+
+  it('should log error and exclude failed combinations', async () => {
+    const searchError = new Error('Search failed');
+
+    mockClient = {
+      search: jest.fn().mockRejectedValue(searchError),
+    };
+
+    const results = await processUserCollaborationPerformance(
+      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
+    );
+
+    // All combinations should fail, so results should be empty
+    expect(results).toHaveLength(0);
+
+    // Should log errors for each failed combination
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Failed to process user collaboration performance metrics for',
+      ),
+      expect.objectContaining({ error: searchError }),
+    );
+  });
+
+  it('should process metrics concurrently for all combinations', async () => {
+    mockClient = {
+      search: jest.fn().mockResolvedValue({
+        body: {
+          hits: { hits: [] },
+        },
+      }),
+    };
+
+    await processUserCollaborationPerformance(
+      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
+    );
+
+    // All searches should be initiated (one per combination)
+    expect(mockClient.search).toHaveBeenCalledTimes(30);
+
+    // Verify searches were made with correct filters
+    const { calls } = mockClient.search.mock;
+    calls.forEach((call: unknown[]) => {
+      const [firstArg] = call as [
+        { body: { query: { bool: { must: unknown[] } } } },
+      ];
+      const { body } = firstArg;
+      expect(body.query.bool.must).toHaveLength(2);
+      expect(body.query.bool.must[0]).toHaveProperty('term');
+      expect(body.query.bool.must[1]).toHaveProperty('term');
+    });
   });
 });

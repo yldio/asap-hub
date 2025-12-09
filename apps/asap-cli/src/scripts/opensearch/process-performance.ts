@@ -10,6 +10,7 @@ import { getPerformanceMetrics } from '../shared/performance-utils';
 import {
   userProductivityPerformanceMapping,
   teamProductivityPerformanceMapping,
+  userCollaborationPerformanceMapping,
 } from './mappings';
 
 interface UserProductivityDocument {
@@ -70,16 +71,48 @@ interface TeamProductivityPerformanceDocument {
   outputType: string;
 }
 
+interface UserCollaborationDocument {
+  teams: Array<{
+    outputsCoAuthoredWithinTeam: number;
+    outputsCoAuthoredAcrossTeams: number;
+  }>;
+  timeRange: string;
+  documentCategory: string;
+}
+
+interface UserCollaborationHit {
+  _source?: {
+    teams?: Array<{
+      outputsCoAuthoredWithinTeam?: number;
+      outputsCoAuthoredAcrossTeams?: number;
+    }>;
+    timeRange?: string;
+    documentCategory?: string;
+  };
+}
+
+interface UserCollaborationPerformanceDocument {
+  withinTeam: PerformanceMetrics;
+  acrossTeam: PerformanceMetrics;
+  timeRange: string;
+  documentCategory: string;
+}
+
 export interface ProcessPerformanceOptions {
   awsRegion: string;
   environment: string;
   opensearchUsername: string;
   opensearchPassword: string;
-  metric: 'all' | 'user-productivity' | 'team-productivity';
+  metric:
+    | 'all'
+    | 'user-productivity'
+    | 'team-productivity'
+    | 'user-collaboration';
 }
 
 const USER_PRODUCTIVITY_INDEX = 'user-productivity';
 const TEAM_PRODUCTIVITY_INDEX = 'team-productivity';
+const USER_COLLABORATION_INDEX = 'user-collaboration';
 const MAX_RESULTS = 10000;
 
 /**
@@ -352,6 +385,140 @@ export const processTeamProductivityPerformance = async (
 };
 
 /**
+ * Maps a search hit to a UserCollaborationDocument
+ */
+const mapUserCollaborationHitToDocument = (
+  hit: UserCollaborationHit,
+): UserCollaborationDocument => ({
+  teams:
+    hit._source?.teams?.map((team) => ({
+      outputsCoAuthoredWithinTeam: team.outputsCoAuthoredWithinTeam ?? 0,
+      outputsCoAuthoredAcrossTeams: team.outputsCoAuthoredAcrossTeams ?? 0,
+    })) || [],
+  timeRange: hit._source?.timeRange ?? '',
+  documentCategory: hit._source?.documentCategory ?? '',
+});
+
+/**
+ * Retrieves all user collaboration documents for a given time range and document category
+ */
+const getAllUserCollaborationDocuments = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+  timeRange: string,
+  documentCategory: string,
+): Promise<UserCollaborationDocument[]> => {
+  try {
+    const response = await client.search({
+      index: USER_COLLABORATION_INDEX,
+      body: {
+        query: {
+          bool: {
+            must: [{ term: { timeRange } }, { term: { documentCategory } }],
+          },
+        },
+        size: MAX_RESULTS,
+      },
+    });
+
+    const hits = response.body.hits?.hits || [];
+    return hits.map(mapUserCollaborationHitToDocument);
+  } catch (error) {
+    console.error('Failed to retrieve user collaboration documents', {
+      error,
+      timeRange,
+      documentCategory,
+    });
+    throw error;
+  }
+};
+
+/**
+ * Processes user collaboration performance metrics for a single time range and document category combination
+ */
+const processUserCollaborationMetricsForCombination = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+  timeRange: string,
+  documentCategory: string,
+): Promise<UserCollaborationPerformanceDocument> => {
+  console.info(
+    `Processing user collaboration performance metrics for ${timeRange}/${documentCategory}`,
+  );
+
+  const documents = await getAllUserCollaborationDocuments(
+    client,
+    timeRange,
+    documentCategory,
+  );
+
+  // Flatten all teams from all users
+  const flatTeams = documents.flatMap((doc) => doc.teams);
+
+  const withinTeamMetrics = getPerformanceMetrics(
+    flatTeams.map((team) => team.outputsCoAuthoredWithinTeam),
+    true,
+  );
+
+  const acrossTeamMetrics = getPerformanceMetrics(
+    flatTeams.map((team) => team.outputsCoAuthoredAcrossTeams),
+    true,
+  );
+
+  console.info(
+    `Processed user collaboration performance metrics for ${timeRange}/${documentCategory} (${documents.length} users, ${flatTeams.length} team memberships)`,
+  );
+
+  return {
+    withinTeam: withinTeamMetrics,
+    acrossTeam: acrossTeamMetrics,
+    timeRange,
+    documentCategory,
+  };
+};
+
+/**
+ * Processes user collaboration performance metrics for all time ranges and document categories
+ */
+export const processUserCollaborationPerformance = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+): Promise<UserCollaborationPerformanceDocument[]> => {
+  // Create all combinations
+  const combinations = timeRanges.flatMap((timeRange) =>
+    documentCategories.map((documentCategory) => ({
+      timeRange,
+      documentCategory,
+    })),
+  );
+
+  // Process all combinations concurrently
+  const results = await Promise.allSettled(
+    combinations.map(({ timeRange, documentCategory }) =>
+      processUserCollaborationMetricsForCombination(
+        client,
+        timeRange,
+        documentCategory,
+      ),
+    ),
+  );
+
+  // Filter out failures and log them
+  const performanceDocuments: UserCollaborationPerformanceDocument[] = [];
+
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      performanceDocuments.push(result.value);
+    } else {
+      const { timeRange, documentCategory } = combinations[index];
+      console.error(
+        `Failed to process user collaboration performance metrics for ${timeRange}/${documentCategory}`,
+        { error: result.reason },
+      );
+    }
+  });
+
+  return performanceDocuments;
+};
+
+/**
  * Main entry point for processing productivity performance metrics
  */
 export const processPerformance = async ({
@@ -427,6 +594,42 @@ export const processPerformance = async ({
       console.info('Successfully indexed team-productivity-performance data');
     } catch (error) {
       console.error('Failed to process team-productivity-performance', {
+        error,
+      });
+      throw error;
+    }
+  }
+
+  if (metric === 'all' || metric === 'user-collaboration') {
+    try {
+      console.info('Processing user-collaboration-performance...');
+
+      await indexOpensearchData<UserCollaborationPerformanceDocument>({
+        awsRegion,
+        stage: environment,
+        opensearchUsername,
+        opensearchPassword,
+        indexAlias: 'user-collaboration-performance',
+        getData: async () => {
+          const client = await getClient(
+            awsRegion,
+            environment,
+            opensearchUsername,
+            opensearchPassword,
+          );
+
+          const documents = await processUserCollaborationPerformance(client);
+
+          return {
+            documents,
+            mapping: userCollaborationPerformanceMapping,
+          };
+        },
+      });
+
+      console.info('Successfully indexed user-collaboration-performance data');
+    } catch (error) {
+      console.error('Failed to process user-collaboration-performance', {
         error,
       });
       throw error;

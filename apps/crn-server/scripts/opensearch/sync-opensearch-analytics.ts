@@ -4,6 +4,7 @@ import {
   timeRanges,
   documentCategories,
   outputTypes,
+  UserCollaborationDataObject,
 } from '@asap-hub/model';
 import { indexOpensearchData } from '@asap-hub/server-common';
 
@@ -17,6 +18,7 @@ import AnalyticsController from '../../src/controllers/analytics.controller';
 import { getAnalyticsDataProvider } from '../../src/dependencies/analytics.dependencies';
 import {
   MAX_CONCURRENT_COMBINATIONS,
+  MAX_CONCURRENT_PAGES,
   metricConfig,
   PAGE_SIZE,
   validMetrics,
@@ -214,6 +216,117 @@ export const exportAnalyticsData = async <T extends Metrics>(
           total: items.length,
           items,
         } as ListResponse<MetricObject<T>>;
+
+      case 'user-collaboration': {
+        // Helper to fetch all pages for a single timeRange/documentCategory combination
+        const fetchAllPagesForUserCollaborationCombination = async (
+          timeRange: (typeof timeRanges)[number],
+          documentCategory: (typeof documentCategories)[number],
+        ): Promise<MetricObject<T>[]> => {
+          const items: MetricObject<T>[] = [];
+
+          console.log(
+            `Fetching user-collaboration data for ${timeRange}/${documentCategory}...`,
+          );
+
+          // First request → get total pages
+          const firstPage = (await analyticsController.fetchUserCollaboration({
+            take: PAGE_SIZE,
+            skip: 0,
+            filter: { timeRange, documentCategory },
+          })) as ListResponse<MetricObject<T>>;
+
+          if (!firstPage) {
+            console.log(`No data found for ${timeRange}/${documentCategory}`);
+            return items;
+          }
+
+          const total = firstPage.total;
+          const pages = Math.ceil(total / PAGE_SIZE);
+
+          console.log(
+            `Found ${total} items (${pages} pages) for ${timeRange}/${documentCategory}`,
+          );
+
+          // Build page indexes [0, 1, 2, ...]
+          const pageIndexes = [...Array(pages).keys()];
+
+          // Fetch all pages with concurrency control
+          const responses = await mapLimit(
+            pageIndexes,
+            MAX_CONCURRENT_PAGES,
+            async (pageIndex: number) => {
+              // Use cached first page
+              if (pageIndex === 0) return firstPage;
+
+              console.log(
+                `Fetching page ${
+                  pageIndex + 1
+                }/${pages} for ${timeRange}/${documentCategory}...`,
+              );
+
+              return (await analyticsController.fetchUserCollaboration({
+                take: PAGE_SIZE,
+                skip: pageIndex * PAGE_SIZE,
+                filter: { timeRange, documentCategory },
+              })) as ListResponse<MetricObject<T>>;
+            },
+          );
+
+          // Process and enrich items
+          for (const res of responses) {
+            if (!res) continue;
+
+            const enriched = res.items.map((item) => ({
+              ...item,
+              isAlumni: !!(item as UserCollaborationDataObject).alumniSince,
+              timeRange,
+              documentCategory,
+            }));
+
+            items.push(...enriched);
+          }
+
+          return items;
+        };
+
+        // Build all (timeRange, documentCategory) combos
+        const combos = timeRanges.flatMap((timeRange) =>
+          documentCategories.map((documentCategory) => ({
+            timeRange,
+            documentCategory,
+          })),
+        );
+
+        console.log(
+          `Processing ${combos.length} combinations (${timeRanges.length} timeRanges × ${documentCategories.length} documentCategories)`,
+        );
+
+        // Process combinations with controlled concurrency
+        const userCollaborationResultArrays = await mapLimit(
+          combos,
+          MAX_CONCURRENT_COMBINATIONS,
+          async (combination: (typeof combos)[number]) =>
+            fetchAllPagesForUserCollaborationCombination(
+              combination.timeRange,
+              combination.documentCategory,
+            ),
+        );
+
+        console.log(
+          `Completed fetching all combinations. Total items: ${userCollaborationResultArrays.reduce(
+            (sum, arr) => sum + arr.length,
+            0,
+          )}`,
+        );
+
+        const items = userCollaborationResultArrays.flat();
+
+        return {
+          total: items.length,
+          items,
+        } as ListResponse<MetricObject<T>>;
+      }
 
       default:
         throw new Error(`Metric ${metric} not supported`);

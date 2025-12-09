@@ -3,6 +3,7 @@ import { Metrics } from './types';
 
 export const PAGE_SIZE = 45;
 export const MAX_CONCURRENT_COMBINATIONS = 5;
+export const MAX_CONCURRENT_PAGES = 10;
 export const PREPRINT_COMPLIANCE_SHEET_NAME = 'Preprint Compliance';
 export const PUBLICATION_COMPLIANCE_ALL_TIME_SHEET_NAME =
   'Publication Compliance_All Time';
@@ -45,6 +46,7 @@ export const validMetrics = [
   'publication-compliance',
   'user-productivity',
   'team-productivity',
+  'user-collaboration',
 ] as const;
 
 export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
@@ -238,6 +240,47 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         Protocol: { type: 'integer' },
         timeRange: { type: 'keyword' },
         outputType: { type: 'keyword' },
+      },
+    },
+  },
+  'user-collaboration': {
+    indexAlias: 'user-collaboration',
+    mapping: {
+      properties: {
+        id: { type: 'text' },
+        name: {
+          type: 'text',
+          analyzer: 'ngram_analyzer',
+          search_analyzer: 'ngram_search_analyzer',
+          fields: {
+            keyword: { type: 'keyword' },
+          },
+        },
+        isAlumni: { type: 'boolean' },
+        alumniSince: { type: 'keyword' },
+        teams: {
+          type: 'nested',
+          properties: {
+            id: { type: 'text' },
+            team: {
+              type: 'text',
+              analyzer: 'ngram_analyzer',
+              search_analyzer: 'ngram_search_analyzer',
+              fields: {
+                keyword: { type: 'keyword' },
+              },
+            },
+            role: { type: 'keyword' },
+            teamInactiveSince: { type: 'keyword' },
+            teamMembershipInactiveSince: { type: 'keyword' },
+            outputsCoAuthoredWithinTeam: { type: 'integer' },
+            outputsCoAuthoredAcrossTeams: { type: 'integer' },
+          },
+        },
+        totalUniqueOutputsCoAuthoredWithinTeam: { type: 'integer' },
+        totalUniqueOutputsCoAuthoredAcrossTeams: { type: 'integer' },
+        timeRange: { type: 'keyword' },
+        documentCategory: { type: 'keyword' },
       },
     },
   },

@@ -93,3 +93,30 @@ export const teamProductivityPerformanceMapping = {
     outputType: { type: 'keyword' },
   },
 } as const;
+
+export const userCollaborationPerformanceMapping = {
+  properties: {
+    withinTeam: {
+      properties: {
+        belowAverageMin: { type: 'integer' },
+        belowAverageMax: { type: 'integer' },
+        averageMin: { type: 'integer' },
+        averageMax: { type: 'integer' },
+        aboveAverageMin: { type: 'integer' },
+        aboveAverageMax: { type: 'integer' },
+      },
+    },
+    acrossTeam: {
+      properties: {
+        belowAverageMin: { type: 'integer' },
+        belowAverageMax: { type: 'integer' },
+        averageMin: { type: 'integer' },
+        averageMax: { type: 'integer' },
+        aboveAverageMin: { type: 'integer' },
+        aboveAverageMax: { type: 'integer' },
+      },
+    },
+    timeRange: { type: 'keyword' },
+    documentCategory: { type: 'keyword' },
+  },
+} as const;

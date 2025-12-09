@@ -880,7 +880,7 @@ const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
   'user-productivity': userWithTeamsRecordsTagQueryBuilder,
   'user-productivity-performance': unsupportedCall,
   'team-productivity': teamRecordTagQueryBuilder,
-  'team-productivity-performance': teamRecordTagQueryBuilder,
+  'team-productivity-performance': unsupportedCall,
 };
 
 export class OpensearchClient<T> {

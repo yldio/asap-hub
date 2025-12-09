@@ -267,7 +267,11 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
               analyzer: 'ngram_analyzer',
               search_analyzer: 'ngram_search_analyzer',
               fields: {
-                keyword: { type: 'keyword' },
+                keyword: {
+                  type: 'keyword',
+                  normalizer: 'lowercase_normalizer',
+                },
+                // raw: { type: 'keyword' },
               },
             },
             role: { type: 'keyword' },

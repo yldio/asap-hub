@@ -726,6 +726,12 @@ export const teamRecordTagQueryBuilder: TagQueryBuilder = (
   searchQuery: string,
   searchScope: SearchScope,
 ): ReturnType<TagQueryBuilder> => {
+  if (searchScope === 'extended') {
+    throw new Error(
+      `The search scope 'extended' is not available for this index`,
+    );
+  }
+
   if (!searchQuery) {
     const aggs: Record<string, unknown> = {
       teams: {
@@ -735,12 +741,6 @@ export const teamRecordTagQueryBuilder: TagQueryBuilder = (
         },
       },
     };
-
-    if (searchScope === 'extended') {
-      throw new Error(
-        `The search scope 'extended' is not available for this index`,
-      );
-    }
 
     return {
       query: {
@@ -761,12 +761,66 @@ export const teamRecordTagQueryBuilder: TagQueryBuilder = (
     };
   }
 
+  const wildcardPattern = `*${searchQuery.toLowerCase()}*`; // a wildcard pattern works better in the typeahead feature
+
+  const shouldClauses: Record<string, unknown>[] = [
+    {
+      wildcard: {
+        'name.raw': {
+          value: wildcardPattern,
+          case_insensitive: true,
+        },
+      },
+    },
+  ];
+
+  const aggs: Record<string, unknown> = {
+    matching_teams: {
+      filter: {
+        wildcard: {
+          'name.raw': {
+            value: wildcardPattern,
+            case_insensitive: true,
+          },
+        },
+      },
+      aggs: {
+        teams: {
+          terms: {
+            field: 'name.raw',
+            size: 10,
+          },
+        },
+      },
+    },
+  };
+
   return {
     query: {
       size: 0,
-      aggs: {},
+      query: {
+        bool: {
+          should: shouldClauses,
+        },
+      },
+      aggs,
     },
-    responseTransformer: () => [],
+    responseTransformer: (queryResponse: TagSuggestionsResponse) => {
+      let teams: string[] = [];
+      if (
+        'matching_teams' in queryResponse.aggregations &&
+        queryResponse.aggregations.matching_teams // Just for type compliance
+      ) {
+        teams =
+          'teams' in queryResponse.aggregations.matching_teams &&
+          queryResponse.aggregations.matching_teams.teams
+            ? queryResponse.aggregations.matching_teams.teams.buckets.map(
+                (b) => b.key,
+              )
+            : [];
+      }
+      return teams;
+    },
   };
 };
 

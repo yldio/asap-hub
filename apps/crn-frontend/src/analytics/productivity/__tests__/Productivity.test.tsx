@@ -135,8 +135,10 @@ beforeEach(() => {
   });
   mockUseOpensearchMetrics.mockReturnValue({
     getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
     getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
     getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
     getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
     getPublicationCompliance: jest
       .fn()
@@ -625,8 +627,10 @@ describe('csv export', () => {
 
     mockUseOpensearchMetrics.mockReturnValue({
       getUserProductivity: mockGetUserProductivityOS,
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserProductivityPerformance: mockGetUserProductivityPerformanceOS,
       getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
       getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
       getPublicationCompliance: jest
         .fn()
@@ -758,8 +762,10 @@ describe('csv export', () => {
 
     mockUseOpensearchMetrics.mockReturnValue({
       getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
       getTeamProductivity: mockGetTeamProductivityOS,
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
       getTeamProductivityPerformance: mockGetTeamProductivityPerformanceOS,
       getPublicationCompliance: jest
         .fn()
@@ -817,5 +823,158 @@ describe('csv export', () => {
 
     // Verify Algolia getTeamProductivity was NOT called during CSV export
     expect(mockGetTeamProductivity).not.toHaveBeenCalled();
+  });
+});
+
+describe('tag suggestions', () => {
+  const getSearchBox = () => {
+    const searchContainer = screen.getByRole('search') as HTMLElement;
+    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+  };
+
+  it('uses OpenSearch for user productivity tag suggestions when flag is enabled', async () => {
+    const mockGetUserProductivityTagSuggestions = jest
+      .fn()
+      .mockResolvedValue(['User One', 'User Two']);
+
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityTagSuggestions: mockGetUserProductivityTagSuggestions,
+      getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getPublicationCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreprintCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsOSChampion: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreliminaryDataSharing: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+    });
+
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    const searchBox = getSearchBox();
+    await act(async () => {
+      userEvent.type(searchBox, 'test123');
+    });
+
+    await waitFor(() => {
+      expect(mockGetUserProductivityTagSuggestions).toHaveBeenCalled();
+    });
+
+    expect(mockSearchForTagValues).not.toHaveBeenCalled();
+  });
+
+  it('uses OpenSearch for team productivity tag suggestions when flag is enabled', async () => {
+    const mockGetTeamProductivityTagSuggestions = jest
+      .fn()
+      .mockResolvedValue(['Team Alpha', 'Team Beta']);
+
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityTagSuggestions: mockGetTeamProductivityTagSuggestions,
+      getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getPublicationCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreprintCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsOSChampion: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreliminaryDataSharing: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+    });
+
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    const searchBox = getSearchBox();
+    await act(async () => {
+      userEvent.type(searchBox, 'test123');
+    });
+
+    await waitFor(() => {
+      expect(mockGetTeamProductivityTagSuggestions).toHaveBeenCalled();
+    });
+
+    expect(mockSearchForTagValues).not.toHaveBeenCalled();
+  });
+
+  it('uses Algolia for tag suggestions when OPENSEARCH_METRICS flag is disabled', async () => {
+    mockSearchForTagValues.mockClear();
+
+    // The beforeEach already sets flag to false, but let's be explicit
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest.fn().mockReturnValue(false),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    const searchBox = getSearchBox();
+    await act(async () => {
+      // Type multiple characters like the existing test does
+      userEvent.type(searchBox, 'test123');
+    });
+
+    await waitFor(() => {
+      // The loadTags is called with each character typed
+      // Check for the last character like the existing test
+      expect(mockSearchForTagValues).toHaveBeenCalledWith(
+        ['team-productivity'],
+        '3',
+        {},
+      );
+    });
   });
 });

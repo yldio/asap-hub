@@ -6,6 +6,12 @@ import {
   userWithTeamsRecordSearchQueryBuilder,
   teamRecordSearchQueryBuilder,
   taglessSearchQueryBuilder,
+  userWithTeamsRecordsTagQueryBuilder,
+  teamRecordTagQueryBuilder,
+  unsupportedTagQueryBuilder,
+  teamWithUsersRecordsTagQueryBuilder,
+  TagSuggestionsResponse,
+  SearchQueryResultAggregations,
 } from '../opensearch';
 
 const originalFetch = global.fetch;
@@ -1471,6 +1477,823 @@ describe('OpensearchClient', () => {
         { term: { documentCategory: 'article' } },
         { term: { outputType: 'public' } },
       ]);
+    });
+  });
+
+  describe('teamWithUsersRecordsTagQueryBuilder', () => {
+    describe('query structure', () => {
+      it('builds query without search text and flat scope', () => {
+        const { query } = teamWithUsersRecordsTagQueryBuilder('', 'flat');
+
+        expect(query).toEqual({
+          size: 0,
+          aggs: {
+            teams: {
+              terms: {
+                field: 'teamName.keyword',
+                size: 5,
+              },
+            },
+          },
+        });
+      });
+
+      it('builds query without search text and extended scope', () => {
+        const { query } = teamWithUsersRecordsTagQueryBuilder('', 'extended');
+
+        expect(query).toEqual({
+          size: 0,
+          aggs: {
+            teams: {
+              terms: {
+                field: 'teamName.keyword',
+                size: 5,
+              },
+            },
+            users: {
+              nested: {
+                path: 'users',
+              },
+              aggs: {
+                names: {
+                  terms: {
+                    field: 'users.name.keyword',
+                    size: 5,
+                  },
+                },
+              },
+            },
+          },
+        });
+      });
+
+      it('builds query with search text and flat scope', () => {
+        const { query } = teamWithUsersRecordsTagQueryBuilder('Alpha', 'flat');
+
+        expect(query).toMatchObject({
+          size: 0,
+          query: {
+            bool: {
+              should: [{ match: { teamName: 'Alpha' } }],
+            },
+          },
+          aggs: {
+            matching_teams: expect.objectContaining({
+              filter: { match: { teamName: 'Alpha' } },
+            }),
+          },
+        });
+        expect(query.aggs).not.toHaveProperty('matching_users');
+      });
+
+      it('builds query with search text and extended scope', () => {
+        const { query } = teamWithUsersRecordsTagQueryBuilder(
+          'Alpha',
+          'extended',
+        );
+
+        expect(query).toMatchObject({
+          size: 0,
+          query: {
+            bool: {
+              should: expect.arrayContaining([
+                { match: { teamName: 'Alpha' } },
+                {
+                  nested: {
+                    path: 'users',
+                    query: { match: { 'users.name': 'Alpha' } },
+                  },
+                },
+              ]),
+            },
+          },
+        });
+        expect(query.aggs).toHaveProperty('matching_teams');
+        expect(query.aggs).toHaveProperty('matching_users');
+      });
+    });
+
+    describe('response transformer', () => {
+      it('transforms empty query response with teams only (flat scope)', () => {
+        const { responseTransformer } = teamWithUsersRecordsTagQueryBuilder(
+          '',
+          'flat',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            teams: {
+              buckets: [
+                { key: 'Team A', doc_count: 5 },
+                { key: 'Team B', doc_count: 3 },
+              ],
+              names: undefined as never,
+            },
+            users: { names: { buckets: [] }, buckets: undefined as never },
+          },
+        };
+
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['Team A', 'Team B']);
+      });
+
+      it('transforms empty query response with teams and users (extended scope)', () => {
+        const { responseTransformer } = teamWithUsersRecordsTagQueryBuilder(
+          '',
+          'extended',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            teams: {
+              buckets: [{ key: 'Team A', doc_count: 5 }],
+              names: undefined as never,
+            },
+            users: {
+              names: {
+                buckets: [{ key: 'John Doe', doc_count: 3 }],
+              },
+              buckets: undefined as never,
+            },
+          },
+        };
+
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['Team A', 'John Doe']);
+      });
+
+      it('transforms search query response with matching_teams and matching_users', () => {
+        const { responseTransformer } = teamWithUsersRecordsTagQueryBuilder(
+          'Alpha',
+          'extended',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            matching_teams: {
+              teams: {
+                buckets: [{ key: 'Alpha Team', doc_count: 10 }],
+                filtered_names: undefined as never,
+              },
+            },
+            matching_users: {
+              filtered_names: {
+                names: {
+                  buckets: [{ key: 'Alpha User', doc_count: 5 }],
+                },
+              },
+              buckets: undefined as never,
+            },
+          },
+        };
+
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['Alpha Team', 'Alpha User']);
+      });
+
+      it('handles missing aggregations gracefully', () => {
+        const { responseTransformer } = teamWithUsersRecordsTagQueryBuilder(
+          'Alpha',
+          'flat',
+        );
+
+        // Testing defensive handling of empty aggregations
+        const response: TagSuggestionsResponse = {
+          aggregations: {},
+        };
+
+        const result = responseTransformer(response);
+
+        expect(result).toEqual([]);
+      });
+
+      it('handles null matching_teams gracefully', () => {
+        const { responseTransformer } = teamWithUsersRecordsTagQueryBuilder(
+          'Alpha',
+          'flat',
+        );
+
+        // Testing defensive handling of null values (edge case)
+        const response = {
+          aggregations: {
+            matching_teams: null,
+          },
+        } as unknown as TagSuggestionsResponse;
+
+        const result = responseTransformer(response);
+
+        expect(result).toEqual([]);
+      });
+
+      it('handles matching_teams present but without teams property', () => {
+        const { responseTransformer } = teamWithUsersRecordsTagQueryBuilder(
+          'Alpha',
+          'extended',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            matching_teams: {
+              doc_count: 0,
+              // Note: teams property is missing
+            } as unknown as SearchQueryResultAggregations['matching_teams'],
+            matching_users: {
+              filtered_names: {
+                names: {
+                  buckets: [{ key: 'Alpha User', doc_count: 5 }],
+                },
+              },
+              buckets: undefined as never,
+            },
+          },
+        };
+
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['Alpha User']);
+      });
+
+      it('handles matching_users present but without filtered_names property', () => {
+        const { responseTransformer } = teamWithUsersRecordsTagQueryBuilder(
+          'Alpha',
+          'extended',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            matching_teams: {
+              teams: {
+                buckets: [{ key: 'Alpha Team', doc_count: 10 }],
+                filtered_names: undefined as never,
+              },
+            },
+            matching_users: {
+              doc_count: 0,
+              // Note: filtered_names property is missing
+            } as unknown as SearchQueryResultAggregations['matching_users'],
+          },
+        };
+
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['Alpha Team']);
+      });
+    });
+  });
+
+  describe('userWithTeamsRecordsTagQueryBuilder', () => {
+    describe('query structure', () => {
+      it('builds query without search text and flat scope', () => {
+        const { query } = userWithTeamsRecordsTagQueryBuilder('', 'flat');
+
+        expect(query).toEqual({
+          size: 0,
+          aggs: {
+            users: {
+              terms: {
+                field: 'name.keyword',
+                size: 5,
+              },
+            },
+          },
+        });
+      });
+
+      it('builds query without search text and extended scope', () => {
+        const { query } = userWithTeamsRecordsTagQueryBuilder('', 'extended');
+
+        expect(query).toEqual({
+          size: 0,
+          aggs: {
+            users: {
+              terms: {
+                field: 'name.keyword',
+                size: 5,
+              },
+            },
+            teams: {
+              nested: {
+                path: 'teams',
+              },
+              aggs: {
+                names: {
+                  terms: {
+                    field: 'teams.team.keyword',
+                    size: 10,
+                  },
+                },
+              },
+            },
+          },
+        });
+      });
+
+      it('builds query with search text and flat scope using wildcard', () => {
+        const { query } = userWithTeamsRecordsTagQueryBuilder('john', 'flat');
+
+        expect(query).toMatchObject({
+          size: 0,
+          query: {
+            bool: {
+              should: [
+                {
+                  wildcard: {
+                    'name.keyword': {
+                      value: '*john*',
+                      case_insensitive: true,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          aggs: {
+            matching_users: expect.objectContaining({
+              filter: {
+                wildcard: {
+                  'name.keyword': {
+                    value: '*john*',
+                    case_insensitive: true,
+                  },
+                },
+              },
+            }),
+          },
+        });
+        expect(query.aggs).not.toHaveProperty('matching_teams');
+      });
+
+      it('builds query with search text and extended scope', () => {
+        const { query } = userWithTeamsRecordsTagQueryBuilder(
+          'john',
+          'extended',
+        );
+
+        expect(query.query?.bool).toHaveProperty('should');
+        expect(
+          (query.query!.bool as { should: unknown[] }).should,
+        ).toHaveLength(2);
+        expect(query.aggs).toHaveProperty('matching_users');
+        expect(query.aggs).toHaveProperty('matching_teams');
+      });
+
+      it('converts search text to lowercase for wildcard pattern', () => {
+        const { query } = userWithTeamsRecordsTagQueryBuilder('JOHN', 'flat');
+
+        expect(
+          query.aggs.matching_users!.filter!.wildcard!['name.keyword']!.value,
+        ).toBe('*john*');
+      });
+    });
+
+    describe('response transformer', () => {
+      it('transforms empty query response with users only (flat scope)', () => {
+        const { responseTransformer } = userWithTeamsRecordsTagQueryBuilder(
+          '',
+          'flat',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            users: {
+              buckets: [
+                { key: 'John Doe', doc_count: 5 },
+                { key: 'Jane Smith', doc_count: 3 },
+              ],
+              names: undefined as never,
+            },
+            teams: { names: { buckets: [] }, buckets: undefined as never },
+          },
+        };
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['John Doe', 'Jane Smith']);
+      });
+
+      it('transforms empty query response with teams first then users (extended scope)', () => {
+        const { responseTransformer } = userWithTeamsRecordsTagQueryBuilder(
+          '',
+          'extended',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            teams: {
+              names: {
+                buckets: [{ key: 'Alpha Team', doc_count: 10 }],
+              },
+              buckets: undefined as never,
+            },
+            users: {
+              buckets: [{ key: 'John Doe', doc_count: 5 }],
+              names: undefined as never,
+            },
+          },
+        };
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['Alpha Team', 'John Doe']);
+      });
+
+      it('transforms search query response with matching_users and matching_teams', () => {
+        const { responseTransformer } = userWithTeamsRecordsTagQueryBuilder(
+          'john',
+          'extended',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            matching_users: {
+              users: {
+                buckets: [{ key: 'John Doe', doc_count: 5 }],
+                filtered_names: undefined as never,
+              },
+            },
+            matching_teams: {
+              filtered_names: {
+                names: {
+                  buckets: [{ key: 'Johnson Team', doc_count: 3 }],
+                },
+              },
+              buckets: undefined as never,
+            },
+          },
+        };
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['Johnson Team', 'John Doe']);
+      });
+
+      it('handles missing matching_users gracefully', () => {
+        const { responseTransformer } = userWithTeamsRecordsTagQueryBuilder(
+          'john',
+          'flat',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {},
+        };
+        const result = responseTransformer(response);
+
+        expect(result).toEqual([]);
+      });
+
+      it('handles null matching_users gracefully', () => {
+        const { responseTransformer } = userWithTeamsRecordsTagQueryBuilder(
+          'john',
+          'flat',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            matching_users: undefined,
+          },
+        };
+        const result = responseTransformer(response);
+
+        expect(result).toEqual([]);
+      });
+
+      it('handles matching_users present but without users property', () => {
+        const { responseTransformer } = userWithTeamsRecordsTagQueryBuilder(
+          'john',
+          'extended',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            matching_users: {
+              doc_count: 0,
+              // Note: users property is missing
+            } as unknown as SearchQueryResultAggregations['matching_users'],
+            matching_teams: {
+              filtered_names: {
+                names: {
+                  buckets: [{ key: 'Johnson Team', doc_count: 3 }],
+                },
+              },
+              buckets: undefined as never,
+            },
+          },
+        };
+
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['Johnson Team']);
+      });
+
+      it('handles matching_teams present but without filtered_names property', () => {
+        const { responseTransformer } = userWithTeamsRecordsTagQueryBuilder(
+          'john',
+          'extended',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            matching_users: {
+              users: {
+                buckets: [{ key: 'John Doe', doc_count: 5 }],
+                filtered_names: undefined as never,
+              },
+            },
+            matching_teams: {
+              doc_count: 0,
+              // Note: filtered_names property is missing
+            } as unknown as SearchQueryResultAggregations['matching_teams'],
+          },
+        };
+
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['John Doe']);
+      });
+    });
+  });
+
+  describe('teamRecordTagQueryBuilder', () => {
+    describe('query structure', () => {
+      it('throws error when searchScope is extended', () => {
+        expect(() => teamRecordTagQueryBuilder('', 'extended')).toThrow(
+          "The search scope 'extended' is not available for this index",
+        );
+      });
+
+      it('builds query without search text', () => {
+        const { query } = teamRecordTagQueryBuilder('', 'flat');
+
+        expect(query).toEqual({
+          size: 0,
+          aggs: {
+            teams: {
+              terms: {
+                field: 'name.raw',
+                size: 10,
+              },
+            },
+          },
+        });
+      });
+
+      it('builds query with search text using wildcard', () => {
+        const { query } = teamRecordTagQueryBuilder('alpha', 'flat');
+
+        expect(query).toMatchObject({
+          size: 0,
+          query: {
+            bool: {
+              should: [
+                {
+                  wildcard: {
+                    'name.raw': {
+                      value: '*alpha*',
+                      case_insensitive: true,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          aggs: {
+            matching_teams: {
+              filter: {
+                wildcard: {
+                  'name.raw': {
+                    value: '*alpha*',
+                    case_insensitive: true,
+                  },
+                },
+              },
+              aggs: {
+                teams: {
+                  terms: {
+                    field: 'name.raw',
+                    size: 10,
+                  },
+                },
+              },
+            },
+          },
+        });
+      });
+
+      it('converts search text to lowercase for wildcard pattern', () => {
+        const { query } = teamRecordTagQueryBuilder('ALPHA', 'flat');
+
+        expect(
+          query.aggs.matching_teams!.filter!.wildcard!['name.raw']!.value,
+        ).toBe('*alpha*');
+      });
+    });
+
+    describe('response transformer', () => {
+      it('transforms empty query response with teams', () => {
+        const { responseTransformer } = teamRecordTagQueryBuilder('', 'flat');
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            teams: {
+              buckets: [
+                { key: 'Team Alpha', doc_count: 10 },
+                { key: 'Team Beta', doc_count: 5 },
+              ],
+              names: undefined as never,
+            },
+            users: { buckets: [], names: undefined as never },
+          },
+        };
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['Team Alpha', 'Team Beta']);
+      });
+
+      it('transforms search query response with matching_teams', () => {
+        const { responseTransformer } = teamRecordTagQueryBuilder(
+          'alpha',
+          'flat',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            matching_teams: {
+              teams: {
+                buckets: [{ key: 'Alpha Team', doc_count: 10 }],
+                filtered_names: undefined as never,
+              },
+            },
+          },
+        };
+        const result = responseTransformer(response);
+
+        expect(result).toEqual(['Alpha Team']);
+      });
+
+      it('handles missing teams aggregation gracefully', () => {
+        const { responseTransformer } = teamRecordTagQueryBuilder('', 'flat');
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {},
+        };
+        const result = responseTransformer(response);
+
+        expect(result).toEqual([]);
+      });
+
+      it('handles null matching_teams gracefully', () => {
+        const { responseTransformer } = teamRecordTagQueryBuilder(
+          'alpha',
+          'flat',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            matching_teams: undefined,
+          },
+        };
+        const result = responseTransformer(response);
+
+        expect(result).toEqual([]);
+      });
+
+      it('handles missing teams inside matching_teams gracefully', () => {
+        const { responseTransformer } = teamRecordTagQueryBuilder(
+          'alpha',
+          'flat',
+        );
+
+        const response: TagSuggestionsResponse = {
+          aggregations: {
+            matching_teams: {
+              buckets: [],
+              filtered_names: undefined as never,
+            },
+          },
+        };
+        const result = responseTransformer(response);
+
+        expect(result).toEqual([]);
+      });
+    });
+  });
+
+  describe('unsupportedTagQueryBuilder', () => {
+    it('throws error when called', () => {
+      expect(() => unsupportedTagQueryBuilder('', 'flat')).toThrow(
+        "This Opensearch index doesn't support tag suggestions",
+      );
+    });
+
+    it('throws error regardless of parameters', () => {
+      expect(() => unsupportedTagQueryBuilder('search', 'extended')).toThrow(
+        "This Opensearch index doesn't support tag suggestions",
+      );
+    });
+  });
+
+  describe('getTagSuggestions with different indices', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      global.fetch = mockFetch;
+    });
+
+    afterEach(() => {
+      global.fetch = originalFetch;
+    });
+
+    it('uses userWithTeamsRecordsTagQueryBuilder for user-productivity index', async () => {
+      const userProductivityClient = new OpensearchClient<unknown>(
+        'user-productivity',
+        'Bearer fake-token',
+      );
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          aggregations: {
+            matching_users: {
+              users: {
+                buckets: [{ key: 'John Doe', doc_count: 5 }],
+              },
+            },
+          },
+        }),
+      });
+
+      const result = await userProductivityClient.getTagSuggestions(
+        'john',
+        'flat',
+      );
+
+      expect(result).toEqual(['John Doe']);
+
+      const fetchArgs = mockFetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchArgs[1].body);
+
+      expect(requestBody.aggs.matching_users.filter.wildcard).toHaveProperty([
+        'name.keyword',
+      ]);
+    });
+
+    it('uses teamRecordTagQueryBuilder for team-productivity index', async () => {
+      const teamProductivityClient = new OpensearchClient<unknown>(
+        'team-productivity',
+        'Bearer fake-token',
+      );
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          aggregations: {
+            matching_teams: {
+              teams: {
+                buckets: [{ key: 'Alpha Team', doc_count: 10 }],
+              },
+            },
+          },
+        }),
+      });
+
+      const result = await teamProductivityClient.getTagSuggestions(
+        'alpha',
+        'flat',
+      );
+
+      expect(result).toEqual(['Alpha Team']);
+
+      const fetchArgs = mockFetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchArgs[1].body);
+
+      expect(requestBody.aggs.matching_teams.filter.wildcard).toHaveProperty([
+        'name.raw',
+      ]);
+    });
+
+    it('throws error for user-productivity-performance index', async () => {
+      const performanceClient = new OpensearchClient<unknown>(
+        'user-productivity-performance',
+        'Bearer fake-token',
+      );
+
+      await expect(
+        performanceClient.getTagSuggestions('test', 'flat'),
+      ).rejects.toThrow(
+        "This Opensearch index doesn't support tag suggestions",
+      );
+    });
+
+    it('throws error for team-productivity-performance index', async () => {
+      const performanceClient = new OpensearchClient<unknown>(
+        'team-productivity-performance',
+        'Bearer fake-token',
+      );
+
+      await expect(
+        performanceClient.getTagSuggestions('test', 'flat'),
+      ).rejects.toThrow(
+        "This Opensearch index doesn't support tag suggestions",
+      );
     });
   });
 });

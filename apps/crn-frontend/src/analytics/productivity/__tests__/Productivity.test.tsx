@@ -135,8 +135,10 @@ beforeEach(() => {
   });
   mockUseOpensearchMetrics.mockReturnValue({
     getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
     getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
     getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
     getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
     getPublicationCompliance: jest
       .fn()
@@ -625,8 +627,10 @@ describe('csv export', () => {
 
     mockUseOpensearchMetrics.mockReturnValue({
       getUserProductivity: mockGetUserProductivityOS,
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserProductivityPerformance: mockGetUserProductivityPerformanceOS,
       getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
       getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
       getPublicationCompliance: jest
         .fn()
@@ -758,8 +762,10 @@ describe('csv export', () => {
 
     mockUseOpensearchMetrics.mockReturnValue({
       getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
       getTeamProductivity: mockGetTeamProductivityOS,
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
       getTeamProductivityPerformance: mockGetTeamProductivityPerformanceOS,
       getPublicationCompliance: jest
         .fn()

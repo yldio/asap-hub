@@ -5,6 +5,7 @@ import { TeamResponse } from '@asap-hub/model';
 import { rem } from '../pixels';
 import {
   ProfileExpertiseAndResources,
+  TeamLabsCard,
   TeamMembersTabbedCard,
   TeamProfileOverview,
 } from '../organisms';
@@ -61,6 +62,9 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
     ) : null}
     {tags && tags.length ? (
       <ProfileExpertiseAndResources hideExpertiseAndResources tags={tags} />
+    ) : null}
+    {pointOfContact && pointOfContact.labs && pointOfContact.labs.length ? (
+      <TeamLabsCard labs={pointOfContact.labs} />
     ) : null}
     <section id={teamListElementId} css={membersCardStyles}>
       <TeamMembersTabbedCard

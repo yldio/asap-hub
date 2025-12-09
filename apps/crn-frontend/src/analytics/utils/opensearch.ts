@@ -452,9 +452,27 @@ export const teamWithUsersRecordsTagQueryBuilder: TagQueryBuilder = (
         size: 0,
         aggs,
       },
-      responseTransformer: (_queryResponse) => {
-        // temporary stub
-        return [];
+      responseTransformer: (queryResponse: TagSuggestionsResponse) => {
+        let teams: string[] = [];
+        let users: string[] = [];
+
+        if (
+          'teams' in queryResponse.aggregations &&
+          queryResponse.aggregations.teams // type compliance
+        ) {
+          teams = queryResponse.aggregations.teams.buckets.map((b) => b.key);
+        }
+
+        if (
+          'users' in queryResponse.aggregations &&
+          queryResponse.aggregations.users // type compliance
+        ) {
+          users = queryResponse.aggregations.users.names.buckets.map(
+            (b) => b.key,
+          );
+        }
+
+        return [...teams, ...users];
       },
     };
   }
@@ -530,9 +548,38 @@ export const teamWithUsersRecordsTagQueryBuilder: TagQueryBuilder = (
       },
       aggs,
     },
-    responseTransformer: (_queryResponse) => {
-      // temporary stub
-      return [];
+    responseTransformer: (queryResponse: TagSuggestionsResponse) => {
+      let teams: string[] = [];
+      let users: string[] = [];
+
+      if (
+        'matching_teams' in queryResponse.aggregations &&
+        queryResponse.aggregations.matching_teams // Just for type compliance
+      ) {
+        users =
+          'teams' in queryResponse.aggregations.matching_teams &&
+          queryResponse.aggregations.matching_teams.teams
+            ? queryResponse.aggregations.matching_teams.teams.buckets.map(
+                (b) => b.key,
+              )
+            : [];
+      }
+
+      if (
+        'matching_users' in queryResponse.aggregations &&
+        queryResponse.aggregations.matching_users // Just for type compliance
+      ) {
+        teams =
+          'filtered_names' in queryResponse.aggregations.matching_users &&
+          queryResponse.aggregations.matching_users.filtered_names
+            ? queryResponse.aggregations.matching_users.filtered_names.names.buckets.map(
+                (b) => b.key,
+              )
+            : [];
+      }
+
+      // Returning teams first because it's the current behavior with Algolia.
+      return [...teams, ...users];
     },
   };
 };

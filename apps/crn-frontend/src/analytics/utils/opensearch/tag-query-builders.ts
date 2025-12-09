@@ -1,6 +1,8 @@
 import type {
+  AggregationQuery,
   EmptyQueryResultAggregations,
   SearchScope,
+  ShouldClause,
   TagQueryBuilder,
   TagSuggestionsResponse,
 } from './types';
@@ -10,7 +12,7 @@ export const teamWithUsersRecordsTagQueryBuilder: TagQueryBuilder = (
   searchScope: SearchScope,
 ): ReturnType<TagQueryBuilder> => {
   if (!searchQuery) {
-    const aggs: Record<string, unknown> = {
+    const aggs: AggregationQuery['aggs'] = {
       teams: {
         terms: {
           field: 'teamName.keyword',
@@ -65,14 +67,14 @@ export const teamWithUsersRecordsTagQueryBuilder: TagQueryBuilder = (
     };
   }
 
-  const shouldClauses: Record<string, unknown>[] = [
+  const shouldClauses: ShouldClause[] = [
     {
       match: {
         teamName: searchQuery,
       },
     },
   ];
-  const aggs: Record<string, unknown> = {
+  const aggs: AggregationQuery['aggs'] = {
     matching_teams: {
       filter: {
         match: {
@@ -177,7 +179,7 @@ export const userWithTeamsRecordsTagQueryBuilder: TagQueryBuilder = (
   searchScope: SearchScope,
 ): ReturnType<TagQueryBuilder> => {
   if (!searchQuery) {
-    const aggs: Record<string, unknown> = {
+    const aggs: AggregationQuery['aggs'] = {
       users: {
         terms: {
           field: 'name.keyword',
@@ -232,7 +234,7 @@ export const userWithTeamsRecordsTagQueryBuilder: TagQueryBuilder = (
   // A wildcard pattern works better in the typeahead feature
   const wildcardPattern = `*${searchQuery.toLowerCase()}*`;
 
-  const shouldClauses: Record<string, unknown>[] = [
+  const shouldClauses: ShouldClause[] = [
     {
       wildcard: {
         'name.keyword': {
@@ -243,7 +245,7 @@ export const userWithTeamsRecordsTagQueryBuilder: TagQueryBuilder = (
     },
   ];
 
-  const aggs: Record<string, unknown> = {
+  const aggs: AggregationQuery['aggs'] = {
     matching_users: {
       filter: {
         wildcard: {
@@ -369,7 +371,7 @@ export const teamRecordTagQueryBuilder: TagQueryBuilder = (
   }
 
   if (!searchQuery) {
-    const aggs: Record<string, unknown> = {
+    const aggs: AggregationQuery['aggs'] = {
       teams: {
         terms: {
           field: 'name.raw',
@@ -400,7 +402,7 @@ export const teamRecordTagQueryBuilder: TagQueryBuilder = (
   // A wildcard pattern works better in the typeahead feature
   const wildcardPattern = `*${searchQuery.toLowerCase()}*`;
 
-  const shouldClauses: Record<string, unknown>[] = [
+  const shouldClauses: ShouldClause[] = [
     {
       wildcard: {
         'name.raw': {
@@ -411,7 +413,7 @@ export const teamRecordTagQueryBuilder: TagQueryBuilder = (
     },
   ];
 
-  const aggs: Record<string, unknown> = {
+  const aggs: AggregationQuery['aggs'] = {
     matching_teams: {
       filter: {
         wildcard: {
@@ -421,6 +423,7 @@ export const teamRecordTagQueryBuilder: TagQueryBuilder = (
           },
         },
       },
+
       aggs: {
         teams: {
           terms: {

@@ -1,4 +1,5 @@
 import type {
+  MustClause,
   OpensearchSearchOptions,
   SearchQuery,
   ShouldClause,
@@ -65,7 +66,7 @@ export const teamWithUsersRecordSearchQueryBuilder = (
     return clauses;
   });
 
-  const mustClauses: SearchQuery['query']['bool']['must'] = [];
+  const mustClauses: MustClause[] = [];
 
   mustClauses.push({
     term: {
@@ -129,7 +130,7 @@ export const userWithTeamsRecordSearchQueryBuilder = (
     return clauses;
   });
 
-  const mustClauses: SearchQuery['query']['bool']['must'] = [];
+  const mustClauses: MustClause[] = [];
 
   mustClauses.push({
     term: {
@@ -178,7 +179,7 @@ export const teamRecordSearchQueryBuilder = (
     return clauses;
   });
 
-  const mustClauses: SearchQuery['query']['bool']['must'] = [];
+  const mustClauses: MustClause[] = [];
 
   mustClauses.push({
     term: {

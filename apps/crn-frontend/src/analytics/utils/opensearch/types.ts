@@ -103,7 +103,7 @@ export type OpensearchSearchOptions = {
 
 type SortConfigOrder = 'asc' | 'desc';
 
-type SortConfigNested = {
+type NestedConfig = {
   path: string;
 };
 
@@ -111,7 +111,7 @@ type OpensearchPropertySort = {
   [id: string]: {
     order: SortConfigOrder;
     mode?: 'avg' | 'sum' | 'median' | 'min' | 'max';
-    nested?: SortConfigNested;
+    nested?: NestedConfig;
     missing?: '_first' | '_last' | number | string;
   };
 };
@@ -124,7 +124,7 @@ type OpensearchScriptSort = {
       lang: 'painless';
     };
     order: SortConfigOrder;
-    nested?: SortConfigNested;
+    nested?: NestedConfig;
   };
 };
 
@@ -143,26 +143,59 @@ export type OpensearchIndex =
 
 export type ShouldClause =
   | {
+      wildcard: Record<string, { value: string; case_insensitive: boolean }>;
+    }
+  | {
       term: Record<string, string>;
     }
   | {
-      nested: {
-        path: string;
-        query: {
-          term: Record<string, string>;
-        };
+      nested: NestedConfig & {
+        query:
+          | {
+              term: Record<string, string>;
+              match?: never;
+              wildcard?: never;
+            }
+          | {
+              term?: never;
+              match: Record<string, string>;
+              wildcard?: never;
+            }
+          | {
+              term?: never;
+              match?: never;
+              wildcard: Record<
+                string,
+                { value: string; case_insensitive: boolean }
+              >;
+            };
       };
-    };
+    }
+  | { match: Record<string, string> };
+
+type TermKey = 'timeRange' | 'documentCategory' | 'outputType';
+
+type ExclusiveRecord<K extends string, V> = {
+  [P in K]: { [_ in P]: V } & { [O in Exclude<K, P>]?: never };
+}[K];
+
+export type MustClause = {
+  // Allow only one key in the term object.
+  // Example:
+  // {term: {timeRange: 'something'}} -> is valid
+  // {term: {timeRange: 'something', documentCategory: 'something-else'}} -> not valid
+  term: ExclusiveRecord<TermKey, string>;
+};
 
 export type SearchQuery = {
   query: {
     bool:
       | {
-          must: { term: Record<string, unknown> }[];
+          must: MustClause[];
         }
       | {
           should: ShouldClause[];
-          minimum_should_match: number;
+          minimum_should_match?: number;
           must?: { term: Record<string, unknown> }[];
         };
   };
@@ -171,10 +204,156 @@ export type SearchQuery = {
   size: number;
 };
 
+type WildcardFilter = Record<
+  string,
+  { value: string; case_insensitive: boolean }
+>;
+
+export type AggregationQuery = {
+  size: 0;
+  aggs: {
+    teams?:
+      | {
+          terms: {
+            field: string;
+            size: number;
+          };
+          nested?: never;
+          aggs?: never;
+        }
+      | {
+          terms?: never;
+          nested: NestedConfig;
+          aggs: {
+            names: {
+              terms: {
+                field: string;
+                size: number;
+              };
+            };
+          };
+        };
+    users?:
+      | {
+          terms: {
+            field: string;
+            size: number;
+          };
+          nested?: never;
+          aggs?: never;
+        }
+      | {
+          terms?: never;
+          nested: NestedConfig;
+          aggs: {
+            names: {
+              terms: {
+                field: string;
+                size: number;
+              };
+            };
+          };
+        };
+    matching_teams?: (
+      | {
+          filter:
+            | {
+                match: Record<string, string>;
+                wildcard?: never;
+              }
+            | {
+                match?: never;
+                wildcard: Record<
+                  string,
+                  { value: string; case_insensitive: boolean }
+                >;
+              };
+          nested?: never;
+        }
+      | {
+          filter?: never;
+          nested: NestedConfig;
+        }
+    ) & {
+      aggs:
+        | {
+            teams: {
+              terms: {
+                field: string;
+                size: number;
+              };
+            };
+            filtered_names?: never;
+          }
+        | {
+            teams?: never;
+            filtered_names: {
+              filter: { wildcard: WildcardFilter };
+              aggs: {
+                names: {
+                  terms: { field: string; size: number };
+                };
+              };
+            };
+          };
+    };
+
+    matching_users?:
+      | {
+          filter: {
+            wildcard: Record<
+              string,
+              { value: string; case_insensitive: boolean }
+            >;
+          };
+          users?: never;
+          nested?: never;
+        }
+      | {
+          filter?: never;
+          users: { terms: { field: string; size: number } };
+          nested?: never;
+          aggs?: never;
+        }
+      | {
+          filter?: never;
+          users?: never;
+          nested: NestedConfig;
+          aggs:
+            | {
+                users: {
+                  terms: {
+                    field: string;
+                    size: number;
+                  };
+                };
+                filtered_names?: never;
+              }
+            | {
+                users?: never;
+                filtered_names: {
+                  filter: {
+                    match: Record<string, string>;
+                  };
+                  aggs: {
+                    names: {
+                      terms: {
+                        field: string;
+                        size: number;
+                      };
+                    };
+                  };
+                };
+              };
+        };
+  };
+  query?: SearchQuery['query'];
+};
+
 export type TagQueryBuilder = (
   searchQuery: string,
   searchScope: SearchScope,
 ) => {
-  query: Record<string, unknown>;
+  query: AggregationQuery;
   responseTransformer: (queryResponse: TagSuggestionsResponse) => string[];
 };

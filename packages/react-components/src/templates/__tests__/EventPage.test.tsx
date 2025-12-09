@@ -192,7 +192,7 @@ describe('footer', () => {
       <EventPage {...props} hasFinished />,
     );
 
-    expect(queryByText('Contact PM')).not.toBeInTheDocument();
+    expect(queryByText('Contact tech support')).not.toBeInTheDocument();
     expect(queryByTitle(/copy/i)).not.toBeInTheDocument();
   });
 

@@ -137,7 +137,7 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
                 href={`${createMailTo(contactEmails)}`}
                 noMargin
               >
-                Contact PM
+                Contact
               </Link>
             </span>
             <CopyButton

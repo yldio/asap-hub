@@ -43,10 +43,10 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
       <Display styleAsHeading={2}>Shared Research</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          This page contains all shared research from the research teams. As
-          teams begin to share more items, this library will grow. Teams should
-          be mindful to respect intellectual boundaries and not share outside of
-          the Network
+          This page contains all shared research outputs. As grantees begin to
+          share more items, this library will grow. Grantees should be mindful
+          to respect intellectual boundaries and not share private outputs
+          outside of the Network.
         </Paragraph>
         <div css={buttonStyles}>
           <SharedOutputDropdown />

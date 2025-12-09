@@ -135,7 +135,7 @@ export const useOpensearchMetrics = () => {
     },
 
     getTeamProductivityTagSuggestions(tagQuery: string) {
-      const client = new OpensearchClient<UserProductivityResponse>(
+      const client = new OpensearchClient<TeamProductivityResponse>(
         'team-productivity',
         authorization,
       );

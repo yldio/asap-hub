@@ -48,6 +48,9 @@ export type OpensearchFieldMapping = {
       type: 'keyword';
       normalizer?: string;
     };
+    raw?: {
+      type: 'keyword'; // For display, preserves original case if a normalizer was used
+    };
   };
   properties?: {
     [key: string]: OpensearchFieldMapping;

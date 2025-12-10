@@ -20,6 +20,7 @@ const boilerplateProps: Omit<
   labCount: 15,
   upcomingEventsCount: 0,
   isStaff: false,
+  teamStatus: 'Active',
 };
 
 it('renders the header', () => {

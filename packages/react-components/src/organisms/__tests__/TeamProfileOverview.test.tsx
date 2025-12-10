@@ -11,7 +11,11 @@ const supplementGrant = {
 
 it('renders project title and project summary', () => {
   const { getByText } = render(
-    <TeamProfileOverview projectTitle="Title" projectSummary="Summary" />,
+    <TeamProfileOverview
+      projectTitle="Title"
+      projectSummary="Summary"
+      tags={[]}
+    />,
   );
 
   expect(getByText('Title')).toBeDefined();
@@ -24,6 +28,7 @@ it('renders supplement grant tab only if it team has a supplementGrant', () => {
       projectTitle="Title"
       projectSummary="Summary"
       supplementGrant={supplementGrant}
+      tags={[]}
     />,
   );
 
@@ -36,6 +41,7 @@ it('renders supplement grant tab only if it team has a supplementGrant', () => {
       projectTitle="Title"
       projectSummary="Summary"
       supplementGrant={undefined}
+      tags={[]}
     />,
   );
 
@@ -50,6 +56,7 @@ it('renders supplement grant title, description and read full proposal button', 
       projectTitle="Title"
       projectSummary="Summary"
       supplementGrant={supplementGrant}
+      tags={[]}
     />,
   );
 
@@ -70,6 +77,7 @@ it('renders original grant when user clicks on original grant tab', () => {
       projectTitle="Original Title"
       projectSummary="Original Summary"
       supplementGrant={supplementGrant}
+      tags={[]}
     />,
   );
 
@@ -88,11 +96,16 @@ it('does not show read proposal if no proposal available', () => {
       projectTitle="Title"
       projectSummary="Summary"
       proposalURL="42"
+      tags={[]}
     />,
   );
   expect(queryByText('Read Proposal')).toBeDefined();
   rerender(
-    <TeamProfileOverview projectTitle="Title" projectSummary="Summary" />,
+    <TeamProfileOverview
+      projectTitle="Title"
+      projectSummary="Summary"
+      tags={[]}
+    />,
   );
   expect(queryByText('Read Proposal')).toBe(null);
 });

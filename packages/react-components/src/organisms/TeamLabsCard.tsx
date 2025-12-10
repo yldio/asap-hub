@@ -6,6 +6,7 @@ import { Card, Paragraph, Button, Headline3, Ellipsis } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 
 import { LabIcon } from '../icons';
+import { steel } from '../colors';
 
 type TeamLabsCardProps = {
   readonly labs: ReadonlyArray<LabDataObject>;
@@ -33,8 +34,6 @@ const descriptionStyles = css({
   marginTop: rem(24),
   marginBottom: rem(33),
 });
-
-import { steel } from '../colors';
 
 const buttonWrapperStyle = css({
   display: 'flex',

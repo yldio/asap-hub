@@ -24,4 +24,7 @@ export type UserDataProvider = DataProvider<
     id: string,
     publicUser: boolean,
   ) => Promise<UserDataObject | null>;
+  fetchByIdForAlgoliaList: (
+    id: string,
+  ) => Promise<UserListItemDataObject | null>;
 };

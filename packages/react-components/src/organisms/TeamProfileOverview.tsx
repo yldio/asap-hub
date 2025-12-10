@@ -4,17 +4,8 @@ import { css } from '@emotion/react';
 import React, { useState } from 'react';
 
 import { steel } from '..';
-import {
-  Card,
-  Display,
-  Divider,
-  Headline2,
-  Headline3,
-  Link,
-  Paragraph,
-  TabButton,
-} from '../atoms';
-import { TabNav, TagList } from '../molecules';
+import { Card, Display, Headline2, Link, Paragraph, TabButton } from '../atoms';
+import { TabNav, TeamProfileTags } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 
 const tabsContainerStyles = css({
@@ -31,15 +22,6 @@ const stretchOnMobile = css({
     display: 'flex',
     justifyContent: 'stretch',
   },
-});
-
-const dividerStyles = css({
-  marginTop: rem(24),
-  marginBottom: rem(24),
-});
-
-const contentStyles = css({
-  paddingTop: rem(20),
 });
 
 type TeamProfileOverviewProps = Pick<
@@ -139,19 +121,7 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
               description={projectSummary}
               researchOutputURL={proposalURL}
             />
-            {tags && tags.length ? (
-              <>
-                <Divider css={dividerStyles} />
-                <Headline3 noMargin>Tags</Headline3>
-                <Paragraph accent="lead">
-                  Explore keywords related to skills, techniques, resources, and
-                  tools.
-                </Paragraph>
-                <div css={contentStyles}>
-                  <TagList tags={tags.map(({ name }) => name)} />
-                </div>
-              </>
-            ) : null}
+            {tags && tags.length ? <TeamProfileTags tags={tags} /> : null}
           </>
         )}
       </div>

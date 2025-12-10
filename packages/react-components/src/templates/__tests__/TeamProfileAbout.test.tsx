@@ -204,7 +204,7 @@ describe('footer', () => {
       <TeamProfileAbout {...props} pointOfContact={undefined} />,
     );
 
-    expect(queryByText('Contact PM')).not.toBeInTheDocument();
+    expect(queryByText('Contact')).not.toBeInTheDocument();
     expect(queryByTitle(/copy/i)).not.toBeInTheDocument();
   });
 
@@ -213,10 +213,25 @@ describe('footer', () => {
       <TeamProfileAbout {...props} pointOfContact={pointOfContact} />,
     );
 
-    expect(getByText('Contact PM').parentElement).toHaveAttribute(
+    expect(getByText('Contact').parentElement).toHaveAttribute(
       'href',
       'mailto:pm@asap.com',
     );
+  });
+
+  it('renders the lab list when point of contact has labs', () => {
+    const { getByText, getByRole } = render(
+      <TeamProfileAbout
+        {...props}
+        pointOfContact={{
+          ...pointOfContact,
+          labs: [{ name: 'Lab 1', id: '1' }],
+        }}
+      />,
+    );
+
+    expect(getByText('Lab 1')).toBeVisible();
+    expect(getByRole('heading', { name: /labs/i })).toBeVisible();
   });
 
   it('adds the pm email to clipboard when user clicks on copy button', () => {

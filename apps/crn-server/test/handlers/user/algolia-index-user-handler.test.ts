@@ -34,10 +34,12 @@ describe('User index handler', () => {
   test('Should fetch the user and create a record in Algolia when the user is published', async () => {
     const event = publishedEvent();
     const userResponse = getUserResponse();
-    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+    userControllerMock.fetchByIdForAlgoliaList.mockResolvedValueOnce(
+      userResponse,
+    );
 
     await indexHandler(event);
-    expect(userControllerMock.fetchById).toHaveBeenCalledWith(
+    expect(userControllerMock.fetchByIdForAlgoliaList).toHaveBeenCalledWith(
       event.detail.resourceId,
     );
 
@@ -56,7 +58,9 @@ describe('User index handler', () => {
       ...getUserResponse(),
       onboarded: false,
     };
-    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+    userControllerMock.fetchByIdForAlgoliaList.mockResolvedValueOnce(
+      userResponse,
+    );
 
     await indexHandler(publishedEvent(userResponse.id));
 
@@ -67,7 +71,7 @@ describe('User index handler', () => {
 
   test('Should fetch the user and remove a record in Algolia when user is published but Hidden', async () => {
     const userResponse = getUserResponse();
-    userControllerMock.fetchById.mockResolvedValueOnce({
+    userControllerMock.fetchByIdForAlgoliaList.mockResolvedValueOnce({
       ...userResponse,
       role: 'Hidden',
     });
@@ -82,7 +86,9 @@ describe('User index handler', () => {
   test('Should fetch the user and remove the record in Algolia when user is unpublished', async () => {
     const event = unpublishedEvent();
 
-    userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    userControllerMock.fetchByIdForAlgoliaList.mockRejectedValue(
+      Boom.notFound(),
+    );
 
     await indexHandler(event);
 
@@ -94,7 +100,7 @@ describe('User index handler', () => {
   test('Should fetch the user and remove the record in Algolia when controller throws NotFoundError', async () => {
     const event = unpublishedEvent();
 
-    userControllerMock.fetchById.mockRejectedValue(
+    userControllerMock.fetchByIdForAlgoliaList.mockRejectedValue(
       new NotFoundError(undefined, 'not found'),
     );
 
@@ -113,7 +119,9 @@ describe('User index handler', () => {
       { id: '2', name: 'A53T' },
       { id: '3', name: 'Adapter ligation' },
     ];
-    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+    userControllerMock.fetchByIdForAlgoliaList.mockResolvedValueOnce(
+      userResponse,
+    );
 
     await indexHandler(event);
 
@@ -126,7 +134,9 @@ describe('User index handler', () => {
   });
 
   test('Should throw an error and do not trigger algolia when the user request fails with another error code', async () => {
-    userControllerMock.fetchById.mockRejectedValue(Boom.badData());
+    userControllerMock.fetchByIdForAlgoliaList.mockRejectedValue(
+      Boom.badData(),
+    );
 
     await expect(indexHandler(publishedEvent())).rejects.toThrow(
       Boom.badData(),
@@ -137,7 +147,9 @@ describe('User index handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
+    userControllerMock.fetchByIdForAlgoliaList.mockResolvedValueOnce(
+      getUserResponse(),
+    );
     algoliaSearchClientMock.save.mockRejectedValueOnce(algoliaError);
 
     await expect(indexHandler(publishedEvent())).rejects.toThrow(algoliaError);
@@ -146,7 +158,9 @@ describe('User index handler', () => {
   test('Should throw the algolia error when deleting the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    userControllerMock.fetchByIdForAlgoliaList.mockRejectedValue(
+      Boom.notFound(),
+    );
 
     algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
 
@@ -179,7 +193,9 @@ describe('User index handler', () => {
         total: 1,
         items: [getUserListItemResponse()],
       });
-      userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+      userControllerMock.fetchByIdForAlgoliaList.mockResolvedValueOnce(
+        userResponse,
+      );
 
       await indexHandler(event);
 
@@ -189,8 +205,8 @@ describe('User index handler', () => {
         take: 1,
         skip: 0,
       });
-      expect(userControllerMock.fetchById).toHaveBeenCalledWith(
-        userResponse.id,
+      expect(userControllerMock.fetchByIdForAlgoliaList).toHaveBeenCalledWith(
+        getUserListItemResponse().id,
       );
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
         data: expect.objectContaining({
@@ -211,7 +227,9 @@ describe('User index handler', () => {
       total: 1,
       items: [getUserListItemResponse()],
     });
-    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+    userControllerMock.fetchByIdForAlgoliaList.mockResolvedValueOnce(
+      userResponse,
+    );
 
     await indexHandler(event);
 
@@ -221,7 +239,9 @@ describe('User index handler', () => {
       take: 1,
       skip: 0,
     });
-    expect(userControllerMock.fetchById).toHaveBeenCalledWith(userResponse.id);
+    expect(userControllerMock.fetchByIdForAlgoliaList).toHaveBeenCalledWith(
+      getUserListItemResponse().id,
+    );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: expect.objectContaining({
         id: userResponse.id,
@@ -240,7 +260,9 @@ describe('User index handler', () => {
       total: 1,
       items: [getUserListItemResponse()],
     });
-    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+    userControllerMock.fetchByIdForAlgoliaList.mockResolvedValueOnce(
+      userResponse,
+    );
 
     await indexHandler(event);
 
@@ -250,7 +272,9 @@ describe('User index handler', () => {
       take: 1,
       skip: 0,
     });
-    expect(userControllerMock.fetchById).toHaveBeenCalledWith(userResponse.id);
+    expect(userControllerMock.fetchByIdForAlgoliaList).toHaveBeenCalledWith(
+      getUserListItemResponse().id,
+    );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: expect.objectContaining({
         id: userResponse.id,
@@ -275,7 +299,7 @@ describe('User index handler', () => {
       take: 1,
       skip: 0,
     });
-    expect(userControllerMock.fetchById).not.toHaveBeenCalled();
+    expect(userControllerMock.fetchByIdForAlgoliaList).not.toHaveBeenCalled();
     expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
     expect(logger.warn).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -293,7 +317,9 @@ describe('User index handler', () => {
       const unpublishedEv = unpublishedEvent(userId);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchByIdForAlgoliaList.mockRejectedValue(
+        Boom.notFound(),
+      );
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -313,7 +339,9 @@ describe('User index handler', () => {
       const unpublishedEv = unpublishedEvent(userId);
       const algoliaError = new Error('ERROR');
 
-      userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      userControllerMock.fetchByIdForAlgoliaList.mockRejectedValue(
+        Boom.notFound(),
+      );
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 

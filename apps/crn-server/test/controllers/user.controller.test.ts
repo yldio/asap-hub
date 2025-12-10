@@ -167,6 +167,59 @@ describe('Users controller', () => {
     });
   });
 
+  describe('FetchByIdForAlgoliaList', () => {
+    test('Should throw when user is not found', async () => {
+      userDataProviderMock.fetchByIdForAlgoliaList.mockResolvedValue(null);
+
+      await expect(
+        userController.fetchByIdForAlgoliaList('not-found'),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('Should return the user when it finds it', async () => {
+      userDataProviderMock.fetchByIdForAlgoliaList.mockResolvedValue(
+        getUserListItemDataObject(),
+      );
+      const result = await userController.fetchByIdForAlgoliaList('user-id');
+
+      expect(result).toMatchObject({
+        ...getUserListItemDataObject(),
+        displayName: 'Tom (Iron Man) Hardy',
+        fullDisplayName: 'Tom (Iron Man) E. Hardy',
+        onboarded: true,
+        dismissedGettingStarted: false,
+      });
+      expect(result.id).toBe('user-id-1');
+      expect(result.teams).toEqual([
+        {
+          id: 'team-id-0',
+          role: 'Lead PI (Core Leadership)',
+          displayName: 'Team A',
+        },
+      ]);
+    });
+
+    test('Should default onboarded flag to true when its null', async () => {
+      const userData = getUserListItemDataObject();
+      userData.onboarded = null;
+      userDataProviderMock.fetchByIdForAlgoliaList.mockResolvedValue(userData);
+      const result = await userController.fetchByIdForAlgoliaList('user-id');
+
+      expect(result?.onboarded).toEqual(true);
+    });
+
+    test('Should call data provider with correct id', async () => {
+      userDataProviderMock.fetchByIdForAlgoliaList.mockResolvedValue(
+        getUserListItemDataObject(),
+      );
+      await userController.fetchByIdForAlgoliaList('user-id');
+
+      expect(userDataProviderMock.fetchByIdForAlgoliaList).toHaveBeenCalledWith(
+        'user-id',
+      );
+    });
+  });
+
   describe('fetchByCode', () => {
     const code = 'some-uuid-code';
 

@@ -40,6 +40,7 @@ import {
   FETCH_USERS_BY_TEAM_ID,
   FETCH_USERS_BY_TEAM_MEMBERSHIP_ID,
   FETCH_USER_BY_ID,
+  FETCH_USER_BY_ID_FOR_ALGOLIA_LIST,
   getLinkEntities,
   GraphQLClient,
   Maybe,
@@ -49,6 +50,7 @@ import {
   UsersFilter,
   UsersOrder,
 } from '@asap-hub/contentful';
+import { DocumentNode } from 'graphql';
 import { cleanArray } from '../../utils/clean-array';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
@@ -134,11 +136,26 @@ export class UserContentfulDataProvider implements UserDataProvider {
     private getRestClient: () => Promise<Environment>,
   ) {}
 
-  private fetchUserById(id: string, publicUser: boolean = false) {
+  private fetchUserById(
+    id: string,
+    publicUser: boolean = false,
+    query: DocumentNode = FETCH_USER_BY_ID,
+  ) {
     return this.contentfulClient.request<
       FetchUserByIdQuery,
       FetchUserByIdQueryVariables
-    >(FETCH_USER_BY_ID, { id, publicUser });
+    >(query, { id, publicUser });
+  }
+
+  async fetchByIdForAlgoliaList(
+    id: string,
+  ): Promise<UserListItemDataObject | null> {
+    const { users } = await this.fetchUserById(
+      id,
+      false,
+      FETCH_USER_BY_ID_FOR_ALGOLIA_LIST,
+    );
+    return users ? parseContentfulGraphQlUserListItem(users) : null;
   }
 
   async fetchById(

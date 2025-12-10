@@ -122,6 +122,28 @@ export default class UserController {
     orcid: string,
   ): Promise<gp2.UserResponse> {
     logger.debug(orcid, 'ORCID');
+
+    // Validate ORCID format before attempting to fetch
+    // ORCID format: 0000-0000-0000-0000 (16 digits in 4 groups separated by hyphens)
+    const isValidOrcidFormat = (orcidValue: string | undefined): boolean => {
+      if (!orcidValue || orcidValue === '-') {
+        return false;
+      }
+      return /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(orcidValue);
+    };
+
+    if (!isValidOrcidFormat(orcid)) {
+      logger.warn(
+        { userId: id, orcid },
+        'Skipping ORCID sync: invalid or missing ORCID format',
+      );
+      // Don't update orcidLastSyncDate - let cronjob retry periodically
+      // This allows event-driven sync to work when user fixes their ORCID
+      return this.update(id, {
+        email,
+      });
+    }
+
     const [error, res] = await Intercept(fetchOrcidProfile(orcid));
     logger.debug(res, 'response');
     logger.debug(error, 'error');

@@ -98,6 +98,55 @@ export default class UserController {
     return parseUserToResponse(user);
   }
 
+  async fetchByIdForAlgoliaList(id: string): Promise<UserResponse> {
+    const user = await this.userDataProvider.fetchByIdForAlgoliaList(id);
+
+    if (!user) {
+      throw new NotFoundError(undefined, `user with id ${id} not found`);
+    }
+    const displayName = parseUserDisplayName(
+      user.firstName,
+      user.lastName,
+      undefined,
+      user.nickname,
+    );
+    const fullDisplayName = parseUserDisplayName(
+      user.firstName,
+      user.lastName,
+      user.middleName,
+      user.nickname,
+    );
+
+    return {
+      ...user,
+      displayName,
+      fullDisplayName,
+      onboarded: typeof user.onboarded === 'boolean' ? user.onboarded : true,
+      dismissedGettingStarted: !!user.dismissedGettingStarted,
+      questions: [],
+      reachOut: undefined,
+      researchInterests: undefined,
+      researchOutputs: [],
+      researchTheme: [],
+      responsibilities: undefined,
+      social: {},
+      workingGroups: [],
+      interestGroups: [],
+      connections: [],
+      contactEmail: undefined,
+      biography: undefined,
+      alumniLocation: undefined,
+      alumniSinceDate: user.alumniSinceDate,
+      orcid: undefined,
+      orcidLastModifiedDate: undefined,
+      orcidLastSyncDate: undefined,
+      orcidWorks: [],
+      activeCampaignId: undefined,
+      stateOrProvince: user.stateOrProvince,
+      lastModifiedDate: user.createdDate,
+    } as UserResponse;
+  }
+
   async fetchByCode(code: string): Promise<UserResponse> {
     const { items: users } = await this.queryByCode(code);
     if (users.length === 0) {

@@ -3,7 +3,12 @@ import TeamProfileTags from '../TeamProfileTags';
 
 it('renders the tags list', () => {
   const { getByText, getByRole } = render(
-    <TeamProfileTags tags={[{ name: 'Tag 1' }, { name: 'Tag 2' }]} />,
+    <TeamProfileTags
+      tags={[
+        { name: 'Tag 1', id: '1' },
+        { name: 'Tag 2', id: '2' },
+      ]}
+    />,
   );
 
   expect(getByText('Tags')).toBeVisible();

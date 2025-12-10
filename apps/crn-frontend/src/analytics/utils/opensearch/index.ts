@@ -10,11 +10,9 @@ export type {
   SearchQuery,
   ShouldClause,
   TagSuggestionsResponse,
-  EmptyQueryResultAggregations,
-  SearchQueryResultAggregations,
-  ResultAggregation,
-  SearchResultAggregation,
   AggregationBucket,
+  NestedConfig,
+  TermsField,
 } from './types';
 
 export { OpensearchClient } from './client';
@@ -34,4 +32,14 @@ export {
   userWithTeamsRecordsTagQueryBuilder,
   teamRecordTagQueryBuilder,
   unsupportedTagQueryBuilder,
+} from './tag-query-builders';
+
+// Response types (exported for testing)
+export type {
+  TeamWithUsersIndexEmptyQueryResponse,
+  TeamWithUsersIndexSearchQueryResponse,
+  UserWithTeamsIndexEmptyQueryResponse,
+  UserWithTeamsIndexSearchQueryResponse,
+  TeamBasedIndexEmptyQueryResponse,
+  TeamBasedIndexSearchQueryResponse,
 } from './tag-query-builders';

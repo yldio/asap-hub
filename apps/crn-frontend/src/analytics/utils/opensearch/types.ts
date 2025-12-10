@@ -26,55 +26,15 @@ export type AggregationBucket = {
   doc_count: number;
 };
 
-export type SearchResultAggregation =
-  | {
-      filtered_names: {
-        names: {
-          buckets: AggregationBucket[];
-        };
-      };
-      buckets: never;
-    }
-  | {
-      filtered_names: never;
-      buckets: AggregationBucket[];
-    };
-
-/** When there is a search query (filtered results) for tags */
-export type SearchQueryResultAggregations = {
-  matching_teams?:
-    | {
-        teams: SearchResultAggregation;
-      }
-    | SearchResultAggregation;
-  matching_users?:
-    | {
-        users: SearchResultAggregation;
-      }
-    | SearchResultAggregation;
-};
-
-export type ResultAggregation =
-  | {
-      names: { buckets: AggregationBucket[] };
-      buckets: never;
-    }
-  | {
-      names: never;
-      buckets: AggregationBucket[];
-    };
-
 /**
- * When there is NO search query (default results) for tags.
- * Assumes there will always be some results (builders return a min number of results).
+ * Generic response type for tag suggestions.
  */
-export type EmptyQueryResultAggregations = {
-  teams: ResultAggregation;
-  users: ResultAggregation;
-};
-
 export type TagSuggestionsResponse = {
-  aggregations: EmptyQueryResultAggregations | SearchQueryResultAggregations;
+  /**
+   * Each tag query builder defines its own specific response types locally
+   * and uses type guards to narrow this loose type.
+   */
+  aggregations: Record<string, unknown>;
 };
 
 /**
@@ -103,8 +63,13 @@ export type OpensearchSearchOptions = {
 
 type SortConfigOrder = 'asc' | 'desc';
 
-type NestedConfig = {
+export type NestedConfig = {
   path: string;
+};
+
+export type TermsField = {
+  field: string;
+  size: number;
 };
 
 type OpensearchPropertySort = {
@@ -204,149 +169,14 @@ export type SearchQuery = {
   size: number;
 };
 
-type WildcardFilter = Record<
-  string,
-  { value: string; case_insensitive: boolean }
->;
-
 export type AggregationQuery = {
   size: 0;
-  aggs: {
-    teams?:
-      | {
-          terms: {
-            field: string;
-            size: number;
-          };
-          nested?: never;
-          aggs?: never;
-        }
-      | {
-          terms?: never;
-          nested: NestedConfig;
-          aggs: {
-            names: {
-              terms: {
-                field: string;
-                size: number;
-              };
-            };
-          };
-        };
-    users?:
-      | {
-          terms: {
-            field: string;
-            size: number;
-          };
-          nested?: never;
-          aggs?: never;
-        }
-      | {
-          terms?: never;
-          nested: NestedConfig;
-          aggs: {
-            names: {
-              terms: {
-                field: string;
-                size: number;
-              };
-            };
-          };
-        };
-    matching_teams?: (
-      | {
-          filter:
-            | {
-                match: Record<string, string>;
-                wildcard?: never;
-              }
-            | {
-                match?: never;
-                wildcard: Record<
-                  string,
-                  { value: string; case_insensitive: boolean }
-                >;
-              };
-          nested?: never;
-        }
-      | {
-          filter?: never;
-          nested: NestedConfig;
-        }
-    ) & {
-      aggs:
-        | {
-            teams: {
-              terms: {
-                field: string;
-                size: number;
-              };
-            };
-            filtered_names?: never;
-          }
-        | {
-            teams?: never;
-            filtered_names: {
-              filter: { wildcard: WildcardFilter };
-              aggs: {
-                names: {
-                  terms: { field: string; size: number };
-                };
-              };
-            };
-          };
-    };
-
-    matching_users?:
-      | {
-          filter: {
-            wildcard: Record<
-              string,
-              { value: string; case_insensitive: boolean }
-            >;
-          };
-          users?: never;
-          nested?: never;
-        }
-      | {
-          filter?: never;
-          users: { terms: { field: string; size: number } };
-          nested?: never;
-          aggs?: never;
-        }
-      | {
-          filter?: never;
-          users?: never;
-          nested: NestedConfig;
-          aggs:
-            | {
-                users: {
-                  terms: {
-                    field: string;
-                    size: number;
-                  };
-                };
-                filtered_names?: never;
-              }
-            | {
-                users?: never;
-                filtered_names: {
-                  filter: {
-                    match: Record<string, string>;
-                  };
-                  aggs: {
-                    names: {
-                      terms: {
-                        field: string;
-                        size: number;
-                      };
-                    };
-                  };
-                };
-              };
-        };
-  };
+  /**
+   * Generic aggregation query type.
+   * Each tag query builder defines its own specific aggregation types locally,
+   * keeping this shared type intentionally loose.
+   */
+  aggs: Record<string, unknown>;
   query?: SearchQuery['query'];
 };
 

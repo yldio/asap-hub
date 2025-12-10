@@ -230,6 +230,35 @@ export default class UserController {
     }
 
     const user = cachedUser || (fetchedUser as UserResponse);
+
+    // Validate ORCID format before attempting to fetch
+    // ORCID format: 0000-0000-0000-0000 (16 digits in 4 groups separated by hyphens)
+    const isValidOrcidFormat = (orcid: string | undefined): boolean => {
+      if (!orcid || orcid === '-') {
+        return false;
+      }
+      return /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(orcid);
+    };
+
+    if (!isValidOrcidFormat(user?.orcid)) {
+      logger.warn(
+        { userId: user.id, orcid: user?.orcid },
+        'Skipping ORCID sync: invalid or missing ORCID format',
+      );
+      // Don't update orcidLastSyncDate - let cronjob retry periodically
+      // This allows event-driven sync to work when user fixes their ORCID
+      return this.update(
+        user.id,
+        {
+          email: user.email,
+        },
+        {
+          suppressConflict: true,
+          polling: false,
+        },
+      );
+    }
+
     const [error, res] = await Intercept(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       fetchOrcidProfile(user!.orcid!),

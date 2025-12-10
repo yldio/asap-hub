@@ -11,7 +11,10 @@ jest.mock('../../src/utils/logger');
 describe('Users controller', () => {
   const userController = new Users(userDataProviderMock, assetDataProviderMock);
 
-  beforeEach(jest.resetAllMocks);
+  beforeEach(() => {
+    jest.resetAllMocks();
+    nock.cleanAll();
+  });
 
   describe('Fetch', () => {
     beforeEach(jest.resetAllMocks);
@@ -433,7 +436,7 @@ describe('Users controller', () => {
 
   describe('syncOrcidProfile', () => {
     const userId = 'userId';
-    const orcid = '363-98-9330';
+    const orcid = '0000-0001-9884-1913';
 
     test('should successfully fetch and update user - with explicit params', async () => {
       const user = { ...getUserDataObject(), id: userId, orcid };
@@ -566,6 +569,143 @@ describe('Users controller', () => {
           ).toISOString(),
         }),
       );
+    });
+
+    describe('ORCID validation', () => {
+      test('should skip sync and return early when ORCID is empty string', async () => {
+        const user = { ...getUserDataObject(), id: userId };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(
+          userId,
+          user.email,
+          '',
+        );
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
+          email: user.email,
+        });
+        expect(userDataProviderMock.update).not.toHaveBeenCalledWith(
+          userId,
+          expect.objectContaining({
+            orcidLastSyncDate: expect.any(String),
+          }),
+        );
+        expect(result).toBeDefined();
+      });
+
+      test('should skip sync and return early when ORCID is placeholder "-"', async () => {
+        const user = { ...getUserDataObject(), id: userId };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(
+          userId,
+          user.email,
+          '-',
+        );
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
+          email: user.email,
+        });
+        expect(userDataProviderMock.update).not.toHaveBeenCalledWith(
+          userId,
+          expect.objectContaining({
+            orcidLastSyncDate: expect.any(String),
+          }),
+        );
+        expect(result).toBeDefined();
+      });
+
+      test('should skip sync when ORCID has wrong format (too short)', async () => {
+        const user = { ...getUserDataObject(), id: userId };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(
+          userId,
+          user.email,
+          '363-98-9330',
+        );
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
+          email: user.email,
+        });
+        expect(userDataProviderMock.update).not.toHaveBeenCalledWith(
+          userId,
+          expect.objectContaining({
+            orcidLastSyncDate: expect.any(String),
+          }),
+        );
+        expect(result).toBeDefined();
+      });
+
+      test('should skip sync when ORCID has wrong format (missing hyphens)', async () => {
+        const user = { ...getUserDataObject(), id: userId };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(
+          userId,
+          user.email,
+          '00000000198841913',
+        );
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
+          email: user.email,
+        });
+        expect(userDataProviderMock.update).not.toHaveBeenCalledWith(
+          userId,
+          expect.objectContaining({
+            orcidLastSyncDate: expect.any(String),
+          }),
+        );
+        expect(result).toBeDefined();
+      });
+
+      test('should skip sync when ORCID has wrong format (non-numeric)', async () => {
+        const user = { ...getUserDataObject(), id: userId };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(
+          userId,
+          user.email,
+          'abcd-efgh-ijkl-mnop',
+        );
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
+          email: user.email,
+        });
+        expect(userDataProviderMock.update).not.toHaveBeenCalledWith(
+          userId,
+          expect.objectContaining({
+            orcidLastSyncDate: expect.any(String),
+          }),
+        );
+        expect(result).toBeDefined();
+      });
+
+      test('should proceed with sync when ORCID format is valid', async () => {
+        const user = { ...getUserDataObject(), id: userId, orcid };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        nock('https://pub.orcid.org')
+          .get(`/v2.1/${orcid}/works`)
+          .reply(200, orcidFixtures.orcidWorksResponse);
+
+        await userController.syncOrcidProfile(userId, user.email, orcid);
+
+        expect(nock.isDone()).toBe(true);
+        expect(userDataProviderMock.update).toHaveBeenCalledWith(
+          userId,
+          expect.objectContaining({
+            email: user.email,
+            orcidLastSyncDate: expect.any(String),
+          }),
+        );
+      });
     });
   });
 });

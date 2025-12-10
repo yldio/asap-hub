@@ -23,6 +23,7 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   upcomingEventsCount: 0,
   pastEventsCount: 0,
   isStaff: false,
+  teamStatus: 'Active',
 };
 
 it('renders the name as the top-level heading', () => {

@@ -1,11 +1,11 @@
 import { TeamResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { steel } from '..';
 import { Card, Display, Headline2, Link, Paragraph, TabButton } from '../atoms';
-import { TabNav } from '../molecules';
+import { TabNav, TeamProfileTags } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
 
 const tabsContainerStyles = css({
@@ -26,7 +26,7 @@ const stretchOnMobile = css({
 
 type TeamProfileOverviewProps = Pick<
   TeamResponse,
-  'projectTitle' | 'projectSummary' | 'proposalURL' | 'supplementGrant'
+  'projectTitle' | 'projectSummary' | 'proposalURL' | 'supplementGrant' | 'tags'
 > & {
   readonly proposalURL?: string;
 };
@@ -71,6 +71,7 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
   projectTitle,
   proposalURL,
   supplementGrant,
+  tags,
 }) => {
   const [selectedTab, setSelectedTab] = useState<Tabs>('Supplement Grant');
 
@@ -114,11 +115,14 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
             </div>
           </>
         ) : (
-          <TeamProfileOverviewContent
-            title={projectTitle}
-            description={projectSummary}
-            researchOutputURL={proposalURL}
-          />
+          <>
+            <TeamProfileOverviewContent
+              title={projectTitle}
+              description={projectSummary}
+              researchOutputURL={proposalURL}
+            />
+            {tags && tags.length ? <TeamProfileTags tags={tags} /> : null}
+          </>
         )}
       </div>
     </Card>

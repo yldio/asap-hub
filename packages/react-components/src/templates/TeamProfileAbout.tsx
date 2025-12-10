@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
 
@@ -24,7 +24,12 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<
     TeamResponse,
-    'pointOfContact' | 'members' | 'inactiveSince' | 'supplementGrant'
+    | 'pointOfContact'
+    | 'members'
+    | 'inactiveSince'
+    | 'supplementGrant'
+    | 'teamStatus'
+    | 'teamType'
   > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
@@ -41,6 +46,8 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   teamGroupsCard,
   teamListElementId,
   supplementGrant,
+  teamStatus,
+  teamType,
 }) => (
   <div css={styles}>
     {projectTitle ? (
@@ -49,6 +56,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         projectTitle={projectTitle}
         projectSummary={projectSummary}
         proposalURL={proposalURL}
+        tags={tags}
       />
     ) : null}
     {tags && tags.length ? (
@@ -61,7 +69,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         isTeamInactive={!!inactiveSince}
       />
     </section>
-    {teamGroupsCard}
+    {teamType !== 'Resource Team' && teamGroupsCard}
     {pointOfContact && (
       <CtaCard
         href={createMailTo(pointOfContact.email)}

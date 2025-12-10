@@ -9,6 +9,8 @@ const props: ComponentProps<typeof TeamProfileAbout> = {
   tags: [],
   members: [],
   teamListElementId: '',
+  teamStatus: 'Active',
+  teamType: 'Discovery Team',
 };
 it('renders the overview', () => {
   const { getByText } = render(

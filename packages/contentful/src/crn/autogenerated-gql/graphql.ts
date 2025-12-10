@@ -29042,6 +29042,57 @@ export type FetchUsersByLabIdQuery = {
   }>;
 };
 
+export type FetchUserByIdForAlgoliaListQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchUserByIdForAlgoliaListQuery = {
+  users?: Maybe<
+    Pick<
+      Users,
+      | 'firstName'
+      | 'middleName'
+      | 'lastName'
+      | 'nickname'
+      | 'email'
+      | 'alumniSinceDate'
+      | 'createdDate'
+      | 'openScienceTeamMember'
+      | 'country'
+      | 'city'
+      | 'stateOrProvince'
+      | 'degree'
+      | 'jobTitle'
+      | 'institution'
+      | 'dismissedGettingStarted'
+      | 'role'
+      | 'onboarded'
+    > & {
+      sys: Pick<Sys, 'id'>;
+      avatar?: Maybe<Pick<Asset, 'url'>>;
+      teamsCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<TeamMembership, 'role'> & {
+              team?: Maybe<
+                Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+              >;
+            }
+          >
+        >;
+      }>;
+      researchTagsCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
+        >;
+      }>;
+      labsCollection?: Maybe<{
+        items: Array<Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+      }>;
+    }
+  >;
+};
+
 export type WorkingGroupsContentFragment = Pick<
   WorkingGroups,
   'title' | 'externalLink' | 'shortText' | 'complete' | 'lastUpdated'
@@ -55816,6 +55867,247 @@ export const FetchUsersByLabIdDocument = {
 } as unknown as DocumentNode<
   FetchUsersByLabIdQuery,
   FetchUsersByLabIdQueryVariables
+>;
+export const FetchUserByIdForAlgoliaListDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchUserByIdForAlgoliaList' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'users' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'middleName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'alumniSinceDate' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdDate' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'openScienceTeamMember' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'avatar' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'stateOrProvince' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'institution' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'dismissedGettingStarted' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'teamsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '10' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'team' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'displayName',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'role' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'researchTagsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '20' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'labsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '10' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchUserByIdForAlgoliaListQuery,
+  FetchUserByIdForAlgoliaListQueryVariables
 >;
 export const FetchWorkingGroupByIdDocument = {
   kind: 'Document',

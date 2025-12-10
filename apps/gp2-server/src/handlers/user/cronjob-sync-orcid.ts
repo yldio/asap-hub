@@ -42,8 +42,20 @@ const rawHandler = async (): Promise<lambda.Response> => {
       users.syncOrcidProfile(user.id, user.email, user.orcid),
   );
 
+  // ORCID format: 0000-0000-0000-0000 (16 digits in 4 groups separated by hyphens)
+  const isValidOrcid = (orcid: string | undefined): boolean => {
+    if (!orcid) {
+      return false;
+    }
+    // Basic validation: should match ORCID format pattern
+    return /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(orcid);
+  };
+
   for (const outdatedUser of outdatedUsers) {
-    await throttledSyncOrcidProfile(outdatedUser);
+    // Skip users with invalid or placeholder ORCID values
+    if (isValidOrcid(outdatedUser.orcid)) {
+      await throttledSyncOrcidProfile(outdatedUser);
+    }
   }
 
   return {

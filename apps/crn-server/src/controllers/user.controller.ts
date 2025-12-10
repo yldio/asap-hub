@@ -98,6 +98,55 @@ export default class UserController {
     return parseUserToResponse(user);
   }
 
+  async fetchByIdForAlgoliaList(id: string): Promise<UserResponse> {
+    const user = await this.userDataProvider.fetchByIdForAlgoliaList(id);
+
+    if (!user) {
+      throw new NotFoundError(undefined, `user with id ${id} not found`);
+    }
+    const displayName = parseUserDisplayName(
+      user.firstName,
+      user.lastName,
+      undefined,
+      user.nickname,
+    );
+    const fullDisplayName = parseUserDisplayName(
+      user.firstName,
+      user.lastName,
+      user.middleName,
+      user.nickname,
+    );
+
+    return {
+      ...user,
+      displayName,
+      fullDisplayName,
+      onboarded: typeof user.onboarded === 'boolean' ? user.onboarded : true,
+      dismissedGettingStarted: !!user.dismissedGettingStarted,
+      questions: [],
+      reachOut: undefined,
+      researchInterests: undefined,
+      researchOutputs: [],
+      researchTheme: [],
+      responsibilities: undefined,
+      social: {},
+      workingGroups: [],
+      interestGroups: [],
+      connections: [],
+      contactEmail: undefined,
+      biography: undefined,
+      alumniLocation: undefined,
+      alumniSinceDate: user.alumniSinceDate,
+      orcid: undefined,
+      orcidLastModifiedDate: undefined,
+      orcidLastSyncDate: undefined,
+      orcidWorks: [],
+      activeCampaignId: undefined,
+      stateOrProvince: user.stateOrProvince,
+      lastModifiedDate: user.createdDate,
+    } as UserResponse;
+  }
+
   async fetchByCode(code: string): Promise<UserResponse> {
     const { items: users } = await this.queryByCode(code);
     if (users.length === 0) {
@@ -181,6 +230,35 @@ export default class UserController {
     }
 
     const user = cachedUser || (fetchedUser as UserResponse);
+
+    // Validate ORCID format before attempting to fetch
+    // ORCID format: 0000-0000-0000-0000 (16 digits in 4 groups separated by hyphens)
+    const isValidOrcidFormat = (orcid: string | undefined): boolean => {
+      if (!orcid || orcid === '-') {
+        return false;
+      }
+      return /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(orcid);
+    };
+
+    if (!isValidOrcidFormat(user?.orcid)) {
+      logger.warn(
+        { userId: user.id, orcid: user?.orcid },
+        'Skipping ORCID sync: invalid or missing ORCID format',
+      );
+      // Don't update orcidLastSyncDate - let cronjob retry periodically
+      // This allows event-driven sync to work when user fixes their ORCID
+      return this.update(
+        user.id,
+        {
+          email: user.email,
+        },
+        {
+          suppressConflict: true,
+          polling: false,
+        },
+      );
+    }
+
     const [error, res] = await Intercept(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       fetchOrcidProfile(user!.orcid!),

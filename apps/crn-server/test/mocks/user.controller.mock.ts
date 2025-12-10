@@ -3,6 +3,7 @@ import UserController from '../../src/controllers/user.controller';
 export const userControllerMock = {
   fetch: jest.fn(),
   fetchById: jest.fn(),
+  fetchByIdForAlgoliaList: jest.fn(),
   fetchByCode: jest.fn(),
   fetchPublicUsers: jest.fn(),
   connectByCode: jest.fn(),

@@ -1,5 +1,5 @@
 import { network } from '@asap-hub/routing';
-import { useRouteMatch } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { TeamDataObject } from '@asap-hub/model';
 import {
   NetworkTeams,
@@ -32,7 +32,8 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
   filters,
   searchQuery = '',
 }) => {
-  const { path } = useRouteMatch();
+  const location = useLocation();
+  const path = location.pathname;
 
   const teamType: TeamDataObject['teamType'] | null =
     path === network({}).discoveryTeams({}).$

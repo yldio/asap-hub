@@ -2,7 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import BiographyModal from '../BiographyModal';
 
 describe('BiographyModal', () => {
@@ -18,7 +18,7 @@ describe('BiographyModal', () => {
 
   const renderModal = (overrides: Partial<BiographyModalProps> = {}) =>
     render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <BiographyModal {...defaultProps} {...overrides} />
       </StaticRouter>,
     );
@@ -50,7 +50,7 @@ describe('BiographyModal', () => {
       biography,
       onSave,
     });
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       biography,
     });
@@ -65,14 +65,14 @@ describe('BiographyModal', () => {
       onSave,
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: /Background/i,
       }),
       biography,
     );
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       biography,
     });
@@ -85,7 +85,7 @@ describe('BiographyModal', () => {
       onSave,
     });
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).not.toHaveBeenCalled();
     expect(screen.getByText('Please add your biography')).toBeVisible();
     await waitFor(() => expect(getSaveButton()).toBeEnabled());

@@ -63,7 +63,7 @@ describe('ManuscriptByStatus', () => {
     );
 
     const statusButton = screen.getByText('Waiting for Report');
-    userEvent.click(statusButton);
+    await userEvent.click(statusButton);
 
     expect(mockOnSelectStatus).toHaveBeenCalledWith('Waiting for Report');
   });

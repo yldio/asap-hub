@@ -28,7 +28,7 @@ it('should render draft created banner', async () => {
 
   const closeButton = getByRole('button');
 
-  userEvent.click(closeButton);
+  await userEvent.click(closeButton);
 
   await waitFor(() => expect(queryByText(bannerText)).toBeNull());
 });
@@ -54,7 +54,7 @@ test.each`
 
     const closeButton = getByRole('button');
 
-    userEvent.click(closeButton);
+    await userEvent.click(closeButton);
 
     await waitFor(() => expect(queryByText(bannerText)).toBeNull());
   },
@@ -81,7 +81,7 @@ it('should render review requested banner', async () => {
 
   const closeButton = getByRole('button');
 
-  userEvent.click(closeButton);
+  await userEvent.click(closeButton);
 
   await waitFor(() => expect(queryByText(bannerText)).toBeNull());
 });
@@ -102,7 +102,7 @@ it('should render review dismissed banner', async () => {
 
   const closeButton = getByRole('button');
 
-  userEvent.click(closeButton);
+  await userEvent.click(closeButton);
 
   await waitFor(() => expect(queryByText(bannerText)).toBeNull());
 });
@@ -138,7 +138,7 @@ it('should render published now banner', async () => {
 
   const closeButton = getByRole('button');
 
-  userEvent.click(closeButton);
+  await userEvent.click(closeButton);
 
   await waitFor(() => expect(queryByText(bannerText)).toBeNull());
 });

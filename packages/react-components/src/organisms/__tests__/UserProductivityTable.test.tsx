@@ -204,7 +204,7 @@ describe('UserProductivityTable', () => {
       const sortIcon = getByTitle(iconTitle);
       expect(sortIcon).toBeInTheDocument();
 
-      userEvent.click(sortIcon);
+      await userEvent.click(sortIcon);
       expect(setSort).toHaveBeenCalledWith(newSort);
       expect(setSortingDirection).toHaveBeenCalledWith(newSortingDirection);
     },

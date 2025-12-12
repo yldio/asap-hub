@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import BiographyModal from '../BiographyModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<StaticRouter location="/">{children}</StaticRouter>);
 
 it('renders a form to edit the biography', () => {
   const { getByRole } = renderModal(<BiographyModal backHref="#" />);
@@ -27,8 +27,8 @@ it('fires onSave when submitting', async () => {
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
   );
 
-  userEvent.type(getByDisplayValue('My Bio'), ' 2');
-  userEvent.click(getByText(/save/i));
+  await userEvent.type(getByDisplayValue('My Bio'), ' 2');
+  await userEvent.click(getByText(/save/i));
   expect(handleSave).toHaveBeenLastCalledWith('My Bio 2');
 
   await waitFor(() =>
@@ -41,8 +41,8 @@ it('does not fire onSave when the bio is missing', () => {
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
   );
 
-  userEvent.clear(getByDisplayValue('My Bio'));
-  userEvent.click(getByText(/save/i));
+  await userEvent.clear(getByDisplayValue('My Bio'));
+  await userEvent.click(getByText(/save/i));
   expect(handleSave).not.toHaveBeenCalled();
 });
 
@@ -56,7 +56,7 @@ it('disables the form elements while submitting', async () => {
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
 
   const form = getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);

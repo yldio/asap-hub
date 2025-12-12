@@ -12,8 +12,13 @@ import {
   MeetingRepAttendanceResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
-import { render, screen, waitFor, within } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import {
+  render,
+  screen,
+  waitFor,
+  within,
+  renderHook,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -244,7 +249,7 @@ describe('Engagement', () => {
       );
     });
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByTitle('Active Alphabetical Ascending Sort Icon'),
     );
 
@@ -267,8 +272,10 @@ describe('Engagement', () => {
       );
     });
 
-    userEvent.click(screen.getByRole('button', { name: /chevron down/i }));
-    userEvent.click(
+    await userEvent.click(
+      screen.getByRole('button', { name: /chevron down/i }),
+    );
+    await userEvent.click(
       screen.getByRole('link', { name: 'Since Hub Launch (2020)' }),
     );
 
@@ -285,7 +292,7 @@ describe('Engagement', () => {
       analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
     );
 
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/engagement_\d+\.csv/),
       expect.anything(),
@@ -304,7 +311,7 @@ describe('Engagement', () => {
 
       const searchBox = getSearchBox();
 
-      userEvent.type(searchBox, 'test123');
+      await userEvent.type(searchBox, 'test123');
       await waitFor(() => {
         expect(searchBox.value).toEqual('test123');
         expect(mockSearchForTagValues).toHaveBeenCalledWith(
@@ -358,8 +365,8 @@ describe('Engagement', () => {
 
       const input = screen.getAllByRole('textbox', { hidden: false });
 
-      userEvent.click(input[0]!);
-      userEvent.click(screen.getByText('Meeting Rep Attendance'));
+      await userEvent.click(input[0]!);
+      await userEvent.click(screen.getByText('Meeting Rep Attendance'));
 
       await waitFor(() =>
         expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -376,7 +383,7 @@ describe('Engagement', () => {
       await renderPage(
         analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
       );
-      userEvent.click(screen.getByText(/csv/i));
+      await userEvent.click(screen.getByText(/csv/i));
       expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
         expect.stringMatching(/engagement_attendance_\d+\.csv/),
         expect.anything(),
@@ -457,7 +464,7 @@ describe('Engagement', () => {
           'textbox',
         ) as HTMLInputElement;
 
-        userEvent.type(searchBox, 'test');
+        await userEvent.type(searchBox, 'test');
 
         await waitFor(() => {
           expect(mockGetTagSuggestions).toHaveBeenCalledWith('test', 'flat');

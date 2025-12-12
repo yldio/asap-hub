@@ -1,5 +1,5 @@
 import { Auth0User, gp2, User } from '@asap-hub/auth';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import {
   getUserClaimKey,

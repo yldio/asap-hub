@@ -7,7 +7,7 @@ import {
   mail,
 } from '@asap-hub/react-components';
 import { useAuth0GP2 } from '@asap-hub/react-context';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Frame from '../Frame';
 
 const { INVITE_SUPPORT_EMAIL } = mail;
@@ -41,9 +41,10 @@ export const values = {
 const Signin: React.FC<Record<string, never>> = () => {
   const { loginWithRedirect } = useAuth0GP2();
 
-  const { pathname, search, hash } = useLocation();
+  const location = useLocation();
+  const { pathname, search, hash } = location;
   const searchParams = new URLSearchParams(search);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const signin = () =>
     loginWithRedirect({
@@ -64,13 +65,13 @@ const Signin: React.FC<Record<string, never>> = () => {
               : undefined
           }
           onCloseAuthFailedToast={() => {
-            const newSearchParams = new URLSearchParams(
-              history.location.search,
-            );
+            const newSearchParams = new URLSearchParams(location.search);
             newSearchParams.delete('state');
             newSearchParams.delete('error');
             newSearchParams.delete('error_description');
-            history.replace({ search: newSearchParams.toString() });
+            navigate({ search: newSearchParams.toString() } as never, {
+              replace: true,
+            });
           }}
           values={values}
         />

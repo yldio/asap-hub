@@ -3,7 +3,8 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { Route, StaticRouter } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import EditResourceModal from '../EditResourceModal';
 
 const { resource: resourceRoute } = gp2Routing;
@@ -57,10 +58,10 @@ describe('EditResource', () => {
     });
 
     const titleBox = screen.getByRole('textbox', { name: /title/i });
-    userEvent.clear(titleBox);
-    userEvent.type(titleBox, title);
+    await userEvent.clear(titleBox);
+    await userEvent.type(titleBox, title);
     const saveButton = screen.getByRole('button', { name: /save/i });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     await waitFor(() => expect(saveButton).toBeEnabled());
     expect(updateResources).toHaveBeenCalledWith([
@@ -97,10 +98,10 @@ describe('EditResource', () => {
     const title = 'a changed title';
 
     const titleBox = screen.getByRole('textbox', { name: /title/i });
-    userEvent.clear(titleBox);
-    userEvent.type(titleBox, title);
+    await userEvent.clear(titleBox);
+    await userEvent.type(titleBox, title);
     const saveButton = screen.getByRole('button', { name: /save/i });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     await waitFor(() => expect(saveButton).toBeEnabled());
     expect(updateResources).toHaveBeenCalledWith([
@@ -138,7 +139,7 @@ describe('EditResource', () => {
     });
 
     const deleteButton = screen.getByRole('button', { name: /delete/i });
-    userEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
 
     await waitFor(() => expect(deleteButton).toBeEnabled());
     expect(updateResources).toHaveBeenCalledWith([resources[0], resources[2]]);

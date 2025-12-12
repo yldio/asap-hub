@@ -37,16 +37,16 @@ describe('FilterPills', () => {
     expect(onRemoveProjectButton).toBeVisible();
     expect(onRemoveWorkingGroupButton).toBeVisible();
 
-    userEvent.click(onRemoveTagButton);
+    await userEvent.click(onRemoveTagButton);
     expect(props.onRemove).toHaveBeenCalledWith('tag-1', 'tags');
 
-    userEvent.click(onRemoveRegionButton);
+    await userEvent.click(onRemoveRegionButton);
     expect(props.onRemove).toHaveBeenCalledWith('Asia', 'regions');
 
-    userEvent.click(onRemoveProjectButton);
+    await userEvent.click(onRemoveProjectButton);
     expect(props.onRemove).toHaveBeenCalledWith('project-1', 'projects');
 
-    userEvent.click(onRemoveWorkingGroupButton);
+    await userEvent.click(onRemoveWorkingGroupButton);
     expect(props.onRemove).toHaveBeenCalledWith(
       'working-group-1',
       'workingGroups',

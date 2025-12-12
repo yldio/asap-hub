@@ -2,7 +2,7 @@ import { createUserResponse } from '@asap-hub/fixtures';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import RoleModal from '../RoleModal';
 
 const props: ComponentProps<typeof RoleModal> = {
@@ -13,7 +13,7 @@ const props: ComponentProps<typeof RoleModal> = {
 
 it('renders the title', () => {
   const { getByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <RoleModal {...props} />
     </StaticRouter>,
   );
@@ -22,7 +22,7 @@ it('renders the title', () => {
 
 it('renders teams and lan names into inputs', async () => {
   const { getByLabelText, getAllByLabelText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <RoleModal
         {...props}
         researchInterests={undefined}
@@ -52,7 +52,7 @@ it('renders teams and lan names into inputs', async () => {
 describe('User Role', () => {
   it('indicates which fields are required or optional', () => {
     const { getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <RoleModal {...props} />
       </StaticRouter>,
     );
@@ -67,7 +67,7 @@ describe('User Role', () => {
   it('triggers the save function', async () => {
     const mockSaveFn = jest.fn();
     const { getByText, getByDisplayValue } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <RoleModal
           {...props}
           reachOut={undefined}
@@ -78,8 +78,8 @@ describe('User Role', () => {
       </StaticRouter>,
     );
 
-    userEvent.type(getByDisplayValue('interests'), ' 1');
-    userEvent.click(getByText('Save'));
+    await userEvent.type(getByDisplayValue('interests'), ' 1');
+    await userEvent.click(getByText('Save'));
     expect(mockSaveFn).toHaveBeenCalledWith({
       reachOut: '',
       researchInterests: 'interests 1',
@@ -93,7 +93,7 @@ describe('User Role', () => {
 
   it('disables the form elements while submitting', async () => {
     render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <RoleModal
           {...props}
           researchInterests="researchInterests"
@@ -104,7 +104,7 @@ describe('User Role', () => {
     );
 
     const saveButton = screen.getByRole('button', { name: /save/i });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     const form = saveButton.closest('form')!;
     expect(form.elements.length).toBeGreaterThan(1);
@@ -115,7 +115,7 @@ describe('User Role', () => {
 
   it('shows validation message for invalid research interests', async () => {
     const { getByLabelText, findByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <RoleModal {...props} researchInterests="" />
       </StaticRouter>,
     );
@@ -128,7 +128,7 @@ describe('User Role', () => {
 
   it('shows validation message for invalid responsibilities', async () => {
     const { getByLabelText, findByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <RoleModal {...props} responsibilities="abc" researchInterests="123" />
       </StaticRouter>,
     );
@@ -144,7 +144,7 @@ describe('Staff Role', () => {
   it('triggers the save function', async () => {
     const mockSaveFn = jest.fn();
     const { getByText, getByLabelText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <RoleModal
           {...props}
           role="Staff"
@@ -156,9 +156,9 @@ describe('Staff Role', () => {
       </StaticRouter>,
     );
 
-    userEvent.type(getByLabelText(/responsibilities/i), 'xample');
-    userEvent.type(getByLabelText(/reach out/i), '23');
-    userEvent.click(getByText('Save'));
+    await userEvent.type(getByLabelText(/responsibilities/i), 'xample');
+    await userEvent.type(getByLabelText(/reach out/i), '23');
+    await userEvent.click(getByText('Save'));
 
     await waitFor(() =>
       expect(getByText(/save/i).closest('button')).toBeEnabled(),
@@ -172,7 +172,7 @@ describe('Staff Role', () => {
 
   it('disables the form elements while submitting', async () => {
     const { getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <RoleModal
           {...props}
           role="Staff"
@@ -183,7 +183,7 @@ describe('Staff Role', () => {
       </StaticRouter>,
     );
 
-    userEvent.click(getByText(/save/i));
+    await userEvent.click(getByText(/save/i));
 
     const form = getByText(/save/i).closest('form')!;
     expect(form.elements.length).toBeGreaterThan(1);

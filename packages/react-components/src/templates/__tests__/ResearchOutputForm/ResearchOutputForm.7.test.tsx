@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import {
   createResearchOutputResponse,
@@ -13,7 +13,6 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { createMemoryHistory, History } from 'history';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -25,7 +24,6 @@ import { editorRef } from '../../../atoms';
 jest.setTimeout(60000);
 
 describe('on submit', () => {
-  let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
@@ -35,7 +33,6 @@ describe('on submit', () => {
   const getShortDescriptionFromDescription = jest.fn();
 
   beforeEach(() => {
-    history = createMemoryHistory();
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
@@ -53,8 +50,10 @@ describe('on submit', () => {
 
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await userEvent.click(button);
+    await userEvent.click(
+      screen.getByRole('button', { name: /Publish Output/i }),
+    );
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
@@ -99,7 +98,7 @@ describe('on submit', () => {
     const researchTags = [{ id: '1', name: 'research tag 1' }];
 
     await render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}
@@ -119,7 +118,7 @@ describe('on submit', () => {
           researchTags={researchTags}
           {...propOverride}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     fireEvent.change(screen.getByLabelText(/url/i), {
@@ -133,10 +132,10 @@ describe('on submit', () => {
     editorRef.current?.focus();
 
     const descriptionEditor = screen.getByTestId('editor');
-    userEvent.click(descriptionEditor);
-    userEvent.tab();
+    await userEvent.click(descriptionEditor);
+    await userEvent.tab();
     fireEvent.input(descriptionEditor, { data: data.descriptionMD });
-    userEvent.tab();
+    await userEvent.tab();
 
     fireEvent.change(
       screen.getByRole('textbox', { name: /short description/i }),
@@ -168,26 +167,28 @@ describe('on submit', () => {
 
     // can submit a lab
 
-    userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-    userEvent.click(screen.getByText('One Lab'));
+    await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+    await userEvent.click(screen.getByText('One Lab'));
 
     // related research
-    userEvent.click(screen.getByRole('textbox', { name: /Related Outputs/i }));
-    userEvent.click(screen.getByText('First Related Research'));
+    await userEvent.click(
+      screen.getByRole('textbox', { name: /Related Outputs/i }),
+    );
+    await userEvent.click(screen.getByText('First Related Research'));
 
     // authors
     const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-    userEvent.click(screen.getByText(/Chris Reed/i));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Chris Blue'));
-    userEvent.click(authors);
-    userEvent.type(authors, 'Alex White');
+    await userEvent.click(authors);
+    await userEvent.click(screen.getByText(/Chris Reed/i));
+    await userEvent.click(authors);
+    await userEvent.click(screen.getByText('Chris Blue'));
+    await userEvent.click(authors);
+    await userEvent.type(authors, 'Alex White');
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getAllByText('Alex White')[1]!);
+    await userEvent.click(screen.getAllByText('Alex White')[1]!);
 
     // access instructions
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /usage notes/i }),
       'Access Instructions',
     );

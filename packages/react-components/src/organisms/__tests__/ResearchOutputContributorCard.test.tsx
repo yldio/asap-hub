@@ -51,11 +51,11 @@ describe('Labs', () => {
         getLabSuggestions={mockGetLabSuggestions}
       />,
     );
-    userEvent.click(getByLabelText(/Labs/i));
+    await userEvent.click(getByLabelText(/Labs/i));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
-    userEvent.click(getByText('One Lab'));
+    await userEvent.click(getByText('One Lab'));
     expect(mockOnChange).toHaveBeenCalledWith(
       [{ label: 'One Lab', value: '1' }],
       expect.anything(),
@@ -76,11 +76,11 @@ describe('Labs', () => {
         getAuthorSuggestions={loadOptions}
       />,
     );
-    userEvent.click(getByLabelText(/Authors/i));
+    await userEvent.click(getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
-    userEvent.click(getByText('Author One'));
+    await userEvent.click(getByText('Author One'));
     expect(mockOnChange).toHaveBeenCalledWith(
       [{ author: createUserResponse(), label: 'Author One', value: '1' }],
       expect.anything(),
@@ -95,7 +95,7 @@ describe('Labs', () => {
         getLabSuggestions={loadOptions}
       />,
     );
-    userEvent.click(getByLabelText(/Labs/i));
+    await userEvent.click(getByLabelText(/Labs/i));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );

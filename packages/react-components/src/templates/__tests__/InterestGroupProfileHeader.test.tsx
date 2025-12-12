@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { network, searchQueryParam } from '@asap-hub/routing';
 import { render, screen } from '@testing-library/react';
 import subYears from 'date-fns/subYears';
@@ -73,7 +73,7 @@ it('copy button adds emails to clipboard', async () => {
   );
   const copyButton = screen.getByRole('button', { name: 'Copy' });
   expect(copyButton).toBeVisible();
-  userEvent.click(copyButton);
+  await userEvent.click(copyButton);
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
     'test@example.com,contact@example.com',
   );

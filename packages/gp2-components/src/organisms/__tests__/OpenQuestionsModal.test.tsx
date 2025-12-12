@@ -82,7 +82,7 @@ describe('OpenQuestionsModal', () => {
       screen.queryByRole('button', { name: /add another question/i }),
     ).not.toBeInTheDocument();
   });
-  it('adds a question', () => {
+  it('adds a question', async () => {
     const props = {
       questions: [
         'a first question?',
@@ -95,12 +95,12 @@ describe('OpenQuestionsModal', () => {
     const addButton = screen.getByRole('button', {
       name: 'Add Another Question Add',
     });
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     const emptyTextArea = screen.getAllByRole('textbox')[3]!;
-    userEvent.type(emptyTextArea, newQuestion);
+    await userEvent.type(emptyTextArea, newQuestion);
     expect(emptyTextArea).toHaveTextContent(newQuestion);
   });
-  it('removes the only question it exists and shows the add open question button', () => {
+  it('removes the only question it exists and shows the add open question button', async () => {
     const onSave = jest.fn();
     const props = {
       questions: ['a first question?'],
@@ -109,7 +109,7 @@ describe('OpenQuestionsModal', () => {
     renderOpenQuestions(props);
 
     const deleteButton = screen.getByRole('button', { name: /delete/i });
-    userEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
     expect(
       screen.getByRole('button', { name: /add open question add/i }),
     ).toBeVisible();
@@ -121,9 +121,8 @@ describe('OpenQuestionsModal', () => {
     renderOpenQuestions(props);
 
     const closeButton = screen.getByRole('button', { name: /close/i });
-    await waitFor(() => userEvent.click(closeButton));
-
-    expect(closeButton).toBeDisabled();
+    await userEvent.click(closeButton);
+    await waitFor(() => expect(closeButton).toBeDisabled());
   });
 
   it('allows the saveButton to saves all the information', async () => {
@@ -142,12 +141,13 @@ describe('OpenQuestionsModal', () => {
     const addButton = screen.getByRole('button', {
       name: 'Add Another Question Add',
     });
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     const emptyTextArea = screen.getAllByRole('textbox')[3]!;
-    userEvent.type(emptyTextArea, newQuestion);
+    await userEvent.type(emptyTextArea, newQuestion);
     expect(emptyTextArea).toHaveTextContent(newQuestion);
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    await waitFor(() => userEvent.click(saveButton));
+    await userEvent.click(saveButton);
+    await waitFor(() => expect(saveButton).toBeEnabled());
     expect(onSave).toHaveBeenCalledWith({
       questions: [
         'a first question?',
@@ -167,7 +167,8 @@ describe('OpenQuestionsModal', () => {
     renderOpenQuestions(props);
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    await waitFor(() => userEvent.click(saveButton));
+    await userEvent.click(saveButton);
+    await waitFor(() => expect(saveButton).toBeEnabled());
     expect(onSave).toHaveBeenCalledWith({ questions: ['Am I a question?'] });
   });
 });

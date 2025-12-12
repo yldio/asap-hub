@@ -25,7 +25,7 @@ it('fires the select event', async () => {
   const { getByRole } = render(<Checkbox {...props} onSelect={handleChange} />);
   expect(handleChange.mock.calls.length).toBe(0);
 
-  userEvent.click(getByRole('checkbox'));
+  await userEvent.click(getByRole('checkbox'));
   expect(handleChange.mock.calls.length).toBe(1);
 });
 

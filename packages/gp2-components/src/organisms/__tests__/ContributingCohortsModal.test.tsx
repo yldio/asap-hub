@@ -3,7 +3,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import ContributingCohortsModal from '../ContributingCohortsModal';
 
 describe('ContributingCohortsModal', () => {
@@ -29,7 +29,7 @@ describe('ContributingCohortsModal', () => {
     overrides: Partial<ContributingCohortsModalProps> = {},
   ) =>
     render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <ContributingCohortsModal {...defaultProps} {...overrides} />
       </StaticRouter>,
     );
@@ -62,7 +62,7 @@ describe('ContributingCohortsModal', () => {
       screen.queryByRole('heading', { name: /#2 Cohort Study/i }),
     ).not.toBeInTheDocument();
     const addButton = getAddButton();
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     expect(
       screen.getByRole('heading', { name: /#2 Cohort Study/i }),
     ).toBeVisible();
@@ -121,7 +121,7 @@ describe('ContributingCohortsModal', () => {
       name: /delete/i,
     });
 
-    userEvent.click(removeButton);
+    await userEvent.click(removeButton);
     expect(
       screen.queryByRole('heading', { name: /#2 Cohort Study/i }),
     ).not.toBeInTheDocument();
@@ -143,7 +143,7 @@ describe('ContributingCohortsModal', () => {
       name: /delete/i,
     });
 
-    userEvent.click(removeButton);
+    await userEvent.click(removeButton);
 
     expect(
       screen.queryByRole('heading', { name: /#1 Cohort Study/i }),
@@ -181,11 +181,11 @@ describe('ContributingCohortsModal', () => {
     });
     const name = 'S3';
     const input = screen.getByRole('textbox', { name: /Name/i });
-    userEvent.click(input);
-    userEvent.click(screen.getByText(name));
+    await userEvent.click(input);
+    await userEvent.click(screen.getByText(name));
     expect(screen.getByText(/S3/i)).toBeVisible();
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       contributingCohorts: [{ contributingCohortId: '7', role }],
     });
@@ -218,10 +218,10 @@ describe('ContributingCohortsModal', () => {
         onSave,
       });
       const input = screen.getByRole('textbox', { name: /Role/i });
-      userEvent.click(input);
-      userEvent.click(screen.getByText(updatedRole));
+      await userEvent.click(input);
+      await userEvent.click(screen.getByText(updatedRole));
       expect(screen.getByText(updatedRole)).toBeVisible();
-      userEvent.click(getSaveButton());
+      await userEvent.click(getSaveButton());
       expect(onSave).toHaveBeenCalledWith({
         contributingCohorts: [{ contributingCohortId, role: updatedRole }],
       });
@@ -241,7 +241,7 @@ describe('ContributingCohortsModal', () => {
       contributingCohorts: [],
       onSave,
     });
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).not.toHaveBeenCalled();
     expect(screen.getByText('Please add the cohort name')).toBeVisible();
     expect(screen.getByText('Please add the role')).toBeVisible();

@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { createIdentifierField } from '../../../utils/research-output-form';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { defaultProps } from '../../test-utils/research-output-form';
@@ -19,7 +19,7 @@ beforeEach(() => {
 
 it('sets authors to required', () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm {...defaultProps} authorsRequired={false} />
     </StaticRouter>,
   );
@@ -27,7 +27,7 @@ it('sets authors to required', () => {
     screen.getByRole('textbox', { name: 'Authors (optional)' }),
   ).toBeVisible();
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm {...defaultProps} authorsRequired={true} />
     </StaticRouter>,
   );
@@ -58,7 +58,7 @@ describe('createIdentifierField', () => {
 
 it('renders the form', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -71,7 +71,7 @@ it('renders the form', async () => {
 it('renders the edit form button when research output data is present', async () => {
   jest.spyOn(console, 'error').mockImplementation();
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
         researchOutputData={createResearchOutputResponse()}
@@ -101,7 +101,7 @@ it('pre populates the form with provided backend response', async () => {
     ],
   };
   await render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
         documentType={'Dataset'}
@@ -135,7 +135,7 @@ it('pre populates the form with markdown value of usageNotes if it is defined', 
     usageNotesMD: 'markdown',
   };
   await render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
         documentType={'Dataset'}
@@ -151,14 +151,14 @@ it('pre populates the form with markdown value of usageNotes if it is defined', 
 
 it('displays keywords suggestions', async () => {
   await render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
         tagSuggestions={['2D Cultures', 'Adenosine', 'Adrenal']}
       />
     </StaticRouter>,
   );
-  userEvent.click(
+  await userEvent.click(
     screen.getByText(/Start typing\.\.\. \(E\.g\. Cell Biology\)/i),
   );
   expect(screen.getByText('2D Cultures')).toBeVisible();
@@ -168,7 +168,7 @@ it('displays keywords suggestions', async () => {
 
 it('displays selected teams', async () => {
   await render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
         selectedTeams={[{ label: 'Team 1', value: 'abc123' }]}
@@ -181,7 +181,7 @@ it('displays selected teams', async () => {
 it('displays error message when no author is found', async () => {
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   await render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
         getAuthorSuggestions={getAuthorSuggestions}
@@ -189,41 +189,43 @@ it('displays error message when no author is found', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
   expect(screen.getByText(/Sorry, no authors match/i)).toBeVisible();
 });
 
 it('displays error message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   await render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
         getLabSuggestions={getLabSuggestions}
       />
     </StaticRouter>,
   );
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
   expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
 });
 
 it('displays error message when no related research is found', async () => {
   const getRelatedResearchSuggestions = jest.fn().mockResolvedValue([]);
   await render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
         getRelatedResearchSuggestions={getRelatedResearchSuggestions}
       />
     </StaticRouter>,
   );
-  userEvent.click(screen.getByRole('textbox', { name: /Related Outputs/i }));
+  await userEvent.click(
+    screen.getByRole('textbox', { name: /Related Outputs/i }),
+  );
   expect(screen.getByText(/Sorry, no related outputs match/i)).toBeVisible();
 });
 
 it('displays current team within the form', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
         selectedTeams={[{ label: 'example team', value: 'id' }]}
@@ -242,7 +244,7 @@ it('can generate short description when description is present', async () => {
     shortDescription: '',
   };
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputForm
         {...defaultProps}
         researchOutputData={researchOutputData}
@@ -254,7 +256,7 @@ it('can generate short description when description is present', async () => {
     screen.getByRole('textbox', { name: /short description/i }),
   ).toHaveValue('');
 
-  userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+  await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
 
   await waitFor(() => {
     expect(

@@ -28,19 +28,19 @@ it('data is sent on form submission', async () => {
   render(<DiscussionModal {...defaultProps} onSave={onSave} />);
 
   const titleInput = screen.getByRole('textbox', { name: /Title/i });
-  userEvent.type(titleInput, 'test title');
+  await userEvent.type(titleInput, 'test title');
 
   const textInput = screen.getByTestId('editor');
   await act(async () => {
-    userEvent.click(textInput);
-    userEvent.tab();
+    await userEvent.click(textInput);
+    await userEvent.tab();
     fireEvent.input(textInput, { data: 'test message' });
-    userEvent.tab();
+    await userEvent.tab();
   });
 
   const shareButton = screen.getByRole('button', { name: /Send/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
-  userEvent.click(shareButton);
+  await userEvent.click(shareButton);
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'test title',
@@ -57,10 +57,10 @@ it('send button is disabled when title is not provided', async () => {
 
   const textInput = screen.getByTestId('editor');
   await act(async () => {
-    userEvent.click(textInput);
-    userEvent.tab();
+    await userEvent.click(textInput);
+    await userEvent.tab();
     fireEvent.input(textInput, { data: 'test message' });
-    userEvent.tab();
+    await userEvent.tab();
   });
 
   expect(sendButton).toBeDisabled();
@@ -74,7 +74,7 @@ it('send button is disabled when text is not provided', async () => {
 
   await act(async () => {
     const titleInput = screen.getByRole('textbox', { name: /Title/i });
-    userEvent.type(titleInput, 'test title');
+    await userEvent.type(titleInput, 'test title');
   });
 
   expect(sendButton).toBeDisabled();
@@ -84,12 +84,12 @@ it('displays error message when title is bigger than 100 characters', async () =
   render(<DiscussionModal {...defaultProps} />);
 
   const titleInput = screen.getByRole('textbox', { name: /Title/i });
-  userEvent.type(
+  await userEvent.type(
     titleInput,
     'test title, test title, test title, test title, test title, test title, test title, test title, test title',
   );
   await act(async () => {
-    userEvent.tab();
+    await userEvent.tab();
   });
 
   expect(
@@ -102,7 +102,7 @@ it('displays cancellation confirmation on cancel', async () => {
 
   const cancelButton = screen.getByRole('button', { name: /Cancel/i });
   await act(async () => {
-    userEvent.click(cancelButton);
+    await userEvent.click(cancelButton);
   });
 
   expect(

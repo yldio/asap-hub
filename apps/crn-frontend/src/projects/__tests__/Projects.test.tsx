@@ -256,7 +256,7 @@ describe('Projects Routes', () => {
       'searchbox',
     )) as HTMLInputElement;
 
-    userEvent.type(searchBox, 'test project');
+    await userEvent.type(searchBox, 'test project');
     expect(searchBox.value).toEqual('test project');
   });
 

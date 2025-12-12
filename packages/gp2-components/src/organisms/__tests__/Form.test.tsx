@@ -43,7 +43,7 @@ it('initially does not prompt when trying to leave', () => {
     </Router>,
   );
 
-  userEvent.click(getByText(/navigate/i));
+  await userEvent.click(getByText(/navigate/i));
   expect(getUserConfirmation).not.toHaveBeenCalled();
 });
 it('prompts when trying to leave after making edits', () => {
@@ -55,7 +55,7 @@ it('prompts when trying to leave after making edits', () => {
     </Router>,
   );
 
-  userEvent.click(getByText(/navigate/i));
+  await userEvent.click(getByText(/navigate/i));
   expect(getUserConfirmation).toHaveBeenCalled();
 });
 
@@ -76,7 +76,7 @@ describe('on cancel', () => {
       </Router>,
     );
 
-    userEvent.click(getByText(/^cancel/i));
+    await userEvent.click(getByText(/^cancel/i));
     expect(getUserConfirmation).toHaveBeenCalled();
   });
   it('goes to the root route if previous navigation is not available', () => {
@@ -95,7 +95,7 @@ describe('on cancel', () => {
       </Router>,
     );
 
-    userEvent.click(getByText(/^cancel/i));
+    await userEvent.click(getByText(/^cancel/i));
     expect(history.location.pathname).toBe('/');
   });
 
@@ -120,7 +120,7 @@ describe('on cancel', () => {
     history.push('/another-url');
     history.push('/form');
 
-    userEvent.click(getByText(/^cancel/i));
+    await userEvent.click(getByText(/^cancel/i));
     expect(history.location.pathname).toBe('/another-url');
   });
 });
@@ -151,7 +151,7 @@ describe('when saving', () => {
         </Form>,
       );
 
-      userEvent.click(getByText(/^save/i));
+      await userEvent.click(getByText(/^save/i));
       expect(handleSave).not.toHaveBeenCalled();
     });
 
@@ -201,7 +201,7 @@ describe('when saving', () => {
         </NotificationContext.Provider>,
       );
 
-      userEvent.click(getByText(/^save/i));
+      await userEvent.click(getByText(/^save/i));
 
       expect(handleValidate).toHaveBeenCalled();
       expect(handleSave).not.toHaveBeenCalled();
@@ -259,7 +259,7 @@ describe('when saving', () => {
     it('calls onSave', async () => {
       const { getByText } = result;
 
-      userEvent.click(getByText(/^save/i));
+      await userEvent.click(getByText(/^save/i));
       expect(handleSave).toHaveBeenCalled();
 
       act(resolveSave);
@@ -272,7 +272,7 @@ describe('when saving', () => {
     it('disables the save button while saving', async () => {
       const { getByText, unmount } = result;
 
-      userEvent.click(getByText(/^save/i));
+      await userEvent.click(getByText(/^save/i));
       expect(getByText(/^save/i).closest('button')).toBeDisabled();
 
       resolveSave();
@@ -284,9 +284,9 @@ describe('when saving', () => {
 
     it('prompts when trying to leave while saving', async () => {
       const { getByText, unmount } = result;
-      userEvent.click(getByText(/^save/i));
+      await userEvent.click(getByText(/^save/i));
 
-      userEvent.click(getByText(/navigate/i));
+      await userEvent.click(getByText(/navigate/i));
       expect(getUserConfirmation).toHaveBeenCalled();
 
       resolveSave();
@@ -304,7 +304,7 @@ describe('when saving', () => {
       it('resets to initial state once a saved form matches the default state', async () => {
         const { getByText, rerender } = result;
 
-        userEvent.click(getByText(/^save/i));
+        await userEvent.click(getByText(/^save/i));
         await waitFor(() =>
           expect(getByText(/^save/i).closest('button')).toBeEnabled(),
         );
@@ -343,7 +343,7 @@ describe('when saving', () => {
       it('re-enables the save button', async () => {
         const { getByText } = result;
 
-        userEvent.click(getByText(/^save/i));
+        await userEvent.click(getByText(/^save/i));
         await waitFor(() =>
           expect(getByText(/^save/i).closest('button')).toBeEnabled(),
         );
@@ -357,7 +357,7 @@ describe('when saving', () => {
       it('shows an error message', async () => {
         const { getByText } = result;
 
-        userEvent.click(getByText(/^save/i));
+        await userEvent.click(getByText(/^save/i));
         await waitFor(() => expect(handleSave).toHaveBeenCalled());
         await waitFor(() =>
           expect(addNotificationOnSave).toHaveBeenCalledWith(
@@ -369,7 +369,7 @@ describe('when saving', () => {
       it('re-enables the save button', async () => {
         const { getByText } = result;
 
-        userEvent.click(getByText(/^save/i));
+        await userEvent.click(getByText(/^save/i));
 
         await waitFor(() =>
           expect(getByText(/^save/i).closest('button')).toBeEnabled(),
@@ -378,9 +378,9 @@ describe('when saving', () => {
 
       it('prompts when trying to leave', async () => {
         const { getByText } = result;
-        userEvent.click(getByText(/^save/i));
+        await userEvent.click(getByText(/^save/i));
 
-        userEvent.click(getByText(/navigate/i));
+        await userEvent.click(getByText(/navigate/i));
         expect(getUserConfirmation).toHaveBeenCalled();
 
         await waitFor(() =>
@@ -428,7 +428,7 @@ describe('when saving', () => {
 
     const { getByText } = result;
 
-    userEvent.click(getByText(/^save/i));
+    await userEvent.click(getByText(/^save/i));
 
     await waitFor(() => expect(history.location.pathname).toBe('/another-url'));
   });
@@ -473,7 +473,7 @@ describe('when saving', () => {
 
     const { getByText } = result;
 
-    userEvent.click(getByText(/^save/i));
+    await userEvent.click(getByText(/^save/i));
     await waitFor(() => {
       expect(onDisplayModalFn).toHaveBeenCalled();
     });

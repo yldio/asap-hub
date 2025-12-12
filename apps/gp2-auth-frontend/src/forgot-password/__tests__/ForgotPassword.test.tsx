@@ -55,7 +55,7 @@ it('has a button to go back in browser history', () => {
     </MemoryRouter>,
   );
 
-  userEvent.click(getByText(/back/i));
+  await userEvent.click(getByText(/back/i));
   expect(getByText('Previous Page')).toBeVisible();
 });
 
@@ -72,7 +72,7 @@ describe('when clicking the reset button', () => {
   it('sends a reset link', async () => {
     const resetButton = result.getByText(/reset/i, { selector: 'button *' });
 
-    userEvent.click(resetButton);
+    await userEvent.click(resetButton);
     expect(mockSendPasswordResetLink).toHaveBeenCalledWith(
       'john.doe@example.com',
     );
@@ -83,7 +83,7 @@ describe('when clicking the reset button', () => {
       mockSendPasswordResetLink.mockResolvedValue(undefined);
 
       const resetButton = result.getByText(/reset/i, { selector: 'button *' });
-      userEvent.click(resetButton);
+      await userEvent.click(resetButton);
       await waitForElementToBeRemoved(resetButton);
     });
 
@@ -104,7 +104,9 @@ describe('when clicking the reset button', () => {
       error.errorDescription = 'Rate limit exceeded';
       mockSendPasswordResetLink.mockRejectedValue(error);
 
-      userEvent.click(result.getByText(/reset/i, { selector: 'button *' }));
+      await userEvent.click(
+        result.getByText(/reset/i, { selector: 'button *' }),
+      );
       expect(await result.findByText('Rate limit exceeded')).toBeVisible();
     });
   });

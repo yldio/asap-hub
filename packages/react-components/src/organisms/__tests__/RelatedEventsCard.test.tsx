@@ -46,8 +46,12 @@ it('can show hide events', () => {
     />,
   );
   expect(screen.getAllByText(/Example/i)).toHaveLength(3);
-  userEvent.click(screen.getByRole('button', { name: /View More Events/i }));
+  await userEvent.click(
+    screen.getByRole('button', { name: /View More Events/i }),
+  );
   expect(screen.getAllByText(/Example/i)).toHaveLength(5);
-  userEvent.click(screen.getByRole('button', { name: /View Less Events/i }));
+  await userEvent.click(
+    screen.getByRole('button', { name: /View Less Events/i }),
+  );
   expect(screen.getAllByText(/Example/i)).toHaveLength(3);
 });

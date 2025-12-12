@@ -268,8 +268,8 @@ describe('user productivity', () => {
 
     // Change to "Last 30 days" time range
     await act(async () => {
-      userEvent.click(rangeButton);
-      userEvent.click(screen.getByText(/Last 30 days/i));
+      await userEvent.click(rangeButton);
+      await userEvent.click(screen.getByText(/Last 30 days/i));
     });
 
     // Wait for the new data to load with asapOutput: 300
@@ -279,8 +279,8 @@ describe('user productivity', () => {
 
     // Change to "Last 90 days"
     await act(async () => {
-      userEvent.click(rangeButton);
-      userEvent.click(screen.getByText(/Last 90 days/i));
+      await userEvent.click(rangeButton);
+      await userEvent.click(screen.getByText(/Last 90 days/i));
     });
 
     // Data should change back to default (timeRange='90d' returns default response)
@@ -319,8 +319,8 @@ describe('user productivity', () => {
 
     // Change to "Protocol" document category
     await act(async () => {
-      userEvent.click(categoryButton);
-      userEvent.click(screen.getByText(/Protocol/));
+      await userEvent.click(categoryButton);
+      await userEvent.click(screen.getByText(/Protocol/));
     });
 
     // Wait for the new data to load with asapOutput: 75
@@ -330,8 +330,8 @@ describe('user productivity', () => {
 
     // Change to "Article"
     await act(async () => {
-      userEvent.click(categoryButton);
-      userEvent.click(screen.getByText(/^Article$/));
+      await userEvent.click(categoryButton);
+      await userEvent.click(screen.getByText(/^Article$/));
     });
 
     // Data should change to default (documentCategory='article' returns default response)
@@ -352,7 +352,7 @@ describe('user productivity', () => {
       );
     });
     await act(async () => {
-      userEvent.click(
+      await userEvent.click(
         getByTitle('User Active Alphabetical Ascending Sort Icon'),
       );
     });
@@ -408,8 +408,8 @@ describe('team productivity', () => {
       name: /Since Hub Launch \(2020\) Chevron Down/i,
     });
     await act(async () => {
-      userEvent.click(rangeButton);
-      userEvent.click(screen.getByText(/Last 90 days/));
+      await userEvent.click(rangeButton);
+      await userEvent.click(screen.getByText(/Last 90 days/));
     });
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
@@ -419,8 +419,8 @@ describe('team productivity', () => {
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
     await act(async () => {
-      userEvent.click(rangeButton);
-      userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/i));
+      await userEvent.click(rangeButton);
+      await userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/i));
     });
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
@@ -462,8 +462,8 @@ describe('team productivity', () => {
       name: /ASAP Output chevron down/i,
     });
     await act(async () => {
-      userEvent.click(outputTypeButton);
-      userEvent.click(screen.getByText(/ASAP Public Output/i));
+      await userEvent.click(outputTypeButton);
+      await userEvent.click(screen.getByText(/ASAP Public Output/i));
     });
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
@@ -473,8 +473,8 @@ describe('team productivity', () => {
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
     await act(async () => {
-      userEvent.click(outputTypeButton);
-      userEvent.click(screen.getByText(/ASAP Output/));
+      await userEvent.click(outputTypeButton);
+      await userEvent.click(screen.getByText(/ASAP Output/));
     });
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
@@ -495,7 +495,9 @@ describe('team productivity', () => {
       );
     });
     await act(async () => {
-      userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+      await userEvent.click(
+        getByTitle('Active Alphabetical Ascending Sort Icon'),
+      );
     });
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenCalledWith(
@@ -517,7 +519,7 @@ describe('search', () => {
     const searchBox = getSearchBox();
 
     await act(async () => {
-      userEvent.type(searchBox, 'test123');
+      await userEvent.type(searchBox, 'test123');
     });
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenCalledWith(
@@ -535,7 +537,7 @@ describe('csv export', () => {
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
     await act(async () => {
-      userEvent.click(screen.getByText(/csv/i));
+      await userEvent.click(screen.getByText(/csv/i));
     });
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/productivity_user_\d+\.csv/),
@@ -550,8 +552,8 @@ describe('csv export', () => {
     const input = screen.getAllByRole('textbox', { hidden: false })[0];
 
     await act(async () => {
-      input && userEvent.click(input);
-      userEvent.click(screen.getByText(/csv/i));
+      input && (await userEvent.click(input));
+      await userEvent.click(screen.getByText(/csv/i));
     });
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/productivity_team_\d+\.csv/),
@@ -660,7 +662,7 @@ describe('csv export', () => {
 
     // Click CSV export button
     await act(async () => {
-      userEvent.click(screen.getByText(/csv/i));
+      await userEvent.click(screen.getByText(/csv/i));
     });
 
     // Verify createCsvFileStream was called with correct filename

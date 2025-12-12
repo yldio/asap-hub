@@ -90,7 +90,7 @@ describe('UsersPageList', () => {
         />,
       );
 
-      userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
       expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
         regions: [],
         tags: [],
@@ -123,7 +123,7 @@ describe('UsersPageList', () => {
 
     const onRemoveButton = screen.getByRole('button', { name: /cross/i });
 
-    userEvent.click(onRemoveButton);
+    await userEvent.click(onRemoveButton);
 
     expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
       regions: [],

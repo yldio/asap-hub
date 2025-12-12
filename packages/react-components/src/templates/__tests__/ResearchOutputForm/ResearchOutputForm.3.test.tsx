@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import {
   createResearchOutputResponse,
@@ -9,7 +9,6 @@ import {
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory, History } from 'history';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -20,7 +19,6 @@ import {
 jest.setTimeout(60000);
 
 describe('on submit', () => {
-  let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
@@ -30,7 +28,6 @@ describe('on submit', () => {
   const getShortDescriptionFromDescription = jest.fn();
 
   beforeEach(() => {
-    history = createMemoryHistory();
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
@@ -52,7 +49,7 @@ describe('on submit', () => {
     const type = 'Model System';
 
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -75,7 +72,7 @@ describe('on submit', () => {
           }
           researchTags={researchTags}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     const typeDropdown = screen.getByRole('textbox', {
@@ -85,8 +82,8 @@ describe('on submit', () => {
     const organisms = await screen.findByRole('textbox', {
       name: /organisms/i,
     });
-    userEvent.click(organisms);
-    userEvent.click(screen.getByText('Rat'));
+    await userEvent.click(organisms);
+    await userEvent.click(screen.getByText('Rat'));
 
     expect(screen.getByText('Rat')).toBeInTheDocument();
     fireEvent.change(typeDropdown, {
@@ -108,7 +105,7 @@ describe('on submit', () => {
     const researchTags = [researchTagEnvironmentResponse];
 
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -131,7 +128,7 @@ describe('on submit', () => {
           }
           researchTags={researchTags}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     const typeDropdown = screen.getByRole('textbox', {
@@ -147,8 +144,8 @@ describe('on submit', () => {
     const environments = await screen.findByRole('textbox', {
       name: /environments/i,
     });
-    userEvent.click(environments);
-    userEvent.click(screen.getByText('In Vitro'));
+    await userEvent.click(environments);
+    await userEvent.click(screen.getByText('In Vitro'));
 
     expect(screen.getByText(/In Vitro/i)).toBeInTheDocument();
     fireEvent.change(typeDropdown, {

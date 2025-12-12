@@ -47,17 +47,17 @@ it('renders a button to delete', async () => {
   const handleDelete = jest.fn();
   const { getByText } = render(<ToolCard {...props} onDelete={handleDelete} />);
 
-  userEvent.click(getByText(/delete/i));
+  await userEvent.click(getByText(/delete/i));
   await waitFor(() => expect(handleDelete).toHaveBeenCalled());
 });
 it('refuses to delete again', async () => {
   const handleDelete = jest.fn().mockReturnValue(new Promise(() => {}));
   const { getByText } = render(<ToolCard {...props} onDelete={handleDelete} />);
 
-  userEvent.click(getByText(/delete/i));
+  await userEvent.click(getByText(/delete/i));
   expect(handleDelete).toHaveBeenCalled();
   handleDelete.mockClear();
 
-  userEvent.click(getByText(/deleting/i));
+  await userEvent.click(getByText(/deleting/i));
   expect(handleDelete).not.toHaveBeenCalled();
 });

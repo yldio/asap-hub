@@ -153,7 +153,7 @@ it('navigates to the background tab', async () => {
   });
 
   const tab = screen.getByRole('link', { name: /background/i });
-  userEvent.click(tab);
+  await userEvent.click(tab);
   expect(await screen.findByText('My Bio')).toBeVisible();
 });
 
@@ -168,7 +168,7 @@ it('navigates to the outputs tab', async () => {
   await renderUserProfile(createUserResponse());
 
   const tab = screen.getByRole('link', { name: /output/i });
-  userEvent.click(tab);
+  await userEvent.click(tab);
   expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Enter a keyword, method, resource…',
@@ -247,11 +247,11 @@ describe('a header edit button', () => {
 
     await renderUserProfile(userProfile);
 
-    userEvent.click(await screen.findByLabelText(/edit.+personal/i));
-    userEvent.type(await screen.findByDisplayValue('Lon'), 'don');
+    await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
+    await userEvent.type(await screen.findByDisplayValue('Lon'), 'don');
     expect(await screen.findByDisplayValue('London')).toBeVisible();
 
-    userEvent.click(screen.getByText(/save/i));
+    await userEvent.click(screen.getByText(/save/i));
     expect(await screen.findByText(/London/i)).toBeVisible();
     expect(mockPatchUser).toHaveBeenLastCalledWith(
       '42',
@@ -269,27 +269,27 @@ describe('a header edit button', () => {
     await renderUserProfile(userProfile);
 
     // Open and close on research tab
-    userEvent.click(
+    await userEvent.click(
       await screen.findByText(/research/i, { selector: 'nav *' }),
     );
     expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
     expect(screen.queryByText(/main details/i)).toBeNull();
-    userEvent.click(await screen.findByLabelText(/edit.+personal/i));
+    await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
     expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
     expect(screen.getByText(/main details/i)).toBeVisible();
-    userEvent.click(screen.getByTitle(/Close/i));
+    await userEvent.click(screen.getByTitle(/Close/i));
     expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
     expect(screen.queryByText(/main details/i)).toBeNull();
 
     // Open and close on background tab
-    userEvent.click(
+    await userEvent.click(
       await screen.findByText(/background/i, { selector: 'nav *' }),
     );
     expect(await screen.findByText('My Bio')).toBeVisible();
-    userEvent.click(await screen.findByLabelText(/edit.+personal/i));
+    await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
     expect(screen.getByText(/my bio/i)).toBeVisible();
     expect(screen.getByText(/main details/i)).toBeVisible();
-    userEvent.click(screen.getByTitle(/Close/i));
+    await userEvent.click(screen.getByTitle(/Close/i));
     expect(screen.getByText(/my bio/i)).toBeVisible();
     expect(screen.queryByText(/main details/i)).toBeNull();
   });
@@ -303,13 +303,16 @@ describe('a header edit button', () => {
 
     await renderUserProfile(userProfile);
 
-    userEvent.click(await screen.findByLabelText(/edit.+contact/i));
-    userEvent.type(await screen.findByDisplayValue('contact@example.com'), 'm');
+    await userEvent.click(await screen.findByLabelText(/edit.+contact/i));
+    await userEvent.type(
+      await screen.findByDisplayValue('contact@example.com'),
+      'm',
+    );
     expect(
       await screen.findByDisplayValue('contact@example.comm'),
     ).toBeVisible();
 
-    userEvent.click(screen.getByText(/save/i));
+    await userEvent.click(screen.getByText(/save/i));
     expect(
       (await screen.findByText(/contact/i, { selector: 'header *' })).closest(
         'a',
@@ -337,9 +340,9 @@ describe('a header edit button', () => {
               throw new Error('Not Ready');
             },
     }));
-    userEvent.click(await screen.findByLabelText(/edit.+contact/i));
+    await userEvent.click(await screen.findByLabelText(/edit.+contact/i));
 
-    userEvent.click(screen.getByText(/save/i));
+    await userEvent.click(screen.getByText(/save/i));
     await waitFor(() => expect(mockToken).toHaveBeenCalled());
   });
 
@@ -362,7 +365,10 @@ describe('a header edit button', () => {
       };
       await renderUserProfile(userProfile);
 
-      userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
+      await userEvent.upload(
+        await screen.findByLabelText(/upload.+avatar/i),
+        file,
+      );
       await waitFor(() =>
         expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
           '42',
@@ -391,7 +397,7 @@ describe('a header edit button', () => {
       }));
 
       const upload = await screen.findByLabelText(/upload.+avatar/i);
-      userEvent.upload(upload, file);
+      await userEvent.upload(upload, file);
       await waitFor(() => expect(mockToken).toHaveBeenCalled());
       await waitFor(() => expect(mockPostUserAvatar).toHaveBeenCalled());
     });
@@ -406,7 +412,7 @@ describe('a header edit button', () => {
 
       mockPostUserAvatar.mockRejectedValue(new Error('500'));
       const upload = await screen.findByLabelText(/upload.+avatar/i);
-      userEvent.upload(upload, file);
+      await userEvent.upload(upload, file);
       await waitFor(() => {
         expect(mockToast).toHaveBeenCalledWith(
           expect.stringMatching(/error.+picture/i),
@@ -450,7 +456,7 @@ it('navigates to the upcoming events tab', async () => {
   await renderUserProfile(userResponse, { currentTime });
 
   const tab = screen.getByRole('link', { name: /upcoming/i });
-  userEvent.click(tab);
+  await userEvent.click(tab);
   expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Search by topic, presenting team, …',
@@ -478,7 +484,7 @@ it('navigates to the past events tab', async () => {
   await renderUserProfile(userResponse, { currentTime });
 
   const tab = screen.getByRole('link', { name: /past/i });
-  userEvent.click(tab);
+  await userEvent.click(tab);
   expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Search by topic, presenting team, …',

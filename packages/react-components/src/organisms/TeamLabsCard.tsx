@@ -11,7 +11,6 @@ import { steel } from '../colors';
 type TeamLabsCardProps = {
   readonly labs: ReadonlyArray<LabDataObject>;
   readonly isTeamActive?: boolean;
-  readonly pointOfContactId?: string;
 };
 
 const containerStyles = css({
@@ -48,11 +47,7 @@ const contentStyles = css({
   padding: `${rem(24)} ${rem(24)} 2rem`,
 });
 
-const TeamLabsCard: React.FC<TeamLabsCardProps> = ({
-  labs,
-  isTeamActive,
-  pointOfContactId,
-}) => {
+const TeamLabsCard: React.FC<TeamLabsCardProps> = ({ labs, isTeamActive }) => {
   const [showMore, setShowMore] = React.useState(false);
   const displayLabs = showMore ? labs : labs.slice(0, 8);
 
@@ -72,8 +67,10 @@ const TeamLabsCard: React.FC<TeamLabsCardProps> = ({
             <li key={lab.id} css={itemStyles}>
               <LabIcon />
               <Ellipsis>
-                {pointOfContactId ? (
-                  <Link href={`/network/users/${pointOfContactId}`}>
+                {lab.labPrincipalInvestigatorId ? (
+                  <Link
+                    href={`/network/users/${lab.labPrincipalInvestigatorId}`}
+                  >
                     {lab.name}
                   </Link>
                 ) : (

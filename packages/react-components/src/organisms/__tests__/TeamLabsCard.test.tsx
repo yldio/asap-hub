@@ -2,15 +2,16 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { LabDataObject } from '@asap-hub/model';
 import TeamLabsCard from '../TeamLabsCard';
 
-const createLabs = (length: number): LabDataObject[] =>
+const createLabs = (length = 1, piId?: string): LabDataObject[] =>
   Array.from({ length }, (_, i) => ({
-    id: `lab-${i}`,
-    name: `Lab ${i + 1}`,
+    id: `l${i}`,
+    name: `Lab ${i}`,
+    labPrincipalInvestigatorId: piId,
   }));
 
 describe('TeamLabsCard', () => {
   it('renders the headline and description', () => {
-    render(<TeamLabsCard labs={createLabs(1)} />);
+    render(<TeamLabsCard labs={createLabs()} />);
     expect(
       screen.getByRole('heading', { level: 3, name: 'Labs' }),
     ).toBeVisible();
@@ -20,7 +21,7 @@ describe('TeamLabsCard', () => {
   });
 
   it('renders the correct description when the team is active', () => {
-    render(<TeamLabsCard labs={createLabs(1)} isTeamActive={true} />);
+    render(<TeamLabsCard labs={createLabs()} isTeamActive={true} />);
     expect(
       screen.getByText(
         'View the labs within this team and connect directly with their principal investigators.',
@@ -28,23 +29,19 @@ describe('TeamLabsCard', () => {
     ).toBeVisible();
   });
 
-  it('renders a list of labs with links when pointOfContactId is provided', () => {
-    const labs = createLabs(3);
-    render(<TeamLabsCard labs={labs} pointOfContactId="poc-123" />);
-    labs.forEach((lab) => {
-      expect(screen.getByText(lab.name).closest('a')).toHaveAttribute(
-        'href',
-        '/network/users/poc-123',
-      );
-    });
+  it('links to the user profile when labPrincipalInvestigatorId is present', () => {
+    const labs = createLabs(1, 'user-id');
+    render(<TeamLabsCard labs={labs} />);
+    expect(screen.getByText('Lab 0').closest('a')).toHaveAttribute(
+      'href',
+      expect.stringMatching(/user-id/),
+    );
   });
 
-  it('renders a list of labs without links when pointOfContactId is not provided', () => {
-    const labs = createLabs(3);
+  it('does not link to user profile when labPrincipalInvestigatorId is missing', () => {
+    const labs = createLabs(1);
     render(<TeamLabsCard labs={labs} />);
-    labs.forEach((lab) => {
-      expect(screen.getByText(lab.name).closest('a')).not.toBeInTheDocument();
-    });
+    expect(screen.getByText('Lab 0').closest('a')).not.toBeInTheDocument();
   });
 
   it('renders a maximum of 8 labs initially', () => {
@@ -52,11 +49,11 @@ describe('TeamLabsCard', () => {
     render(<TeamLabsCard labs={labs} />);
 
     // First 8 should be visible
-    expect(screen.getByText('Lab 1')).toBeVisible();
-    expect(screen.getByText('Lab 8')).toBeVisible();
+    expect(screen.getByText('Lab 0')).toBeVisible();
+    expect(screen.getByText('Lab 7')).toBeVisible();
 
     // 9th lab should not be visible (slice(0,8))
-    expect(screen.queryByText('Lab 9')).not.toBeInTheDocument();
+    expect(screen.queryByText('Lab 8')).not.toBeInTheDocument();
   });
 
   it('shows the "View More Labs" button if there are more than 8 labs', () => {
@@ -80,8 +77,8 @@ describe('TeamLabsCard', () => {
     fireEvent.click(button);
 
     // List should expand
+    expect(screen.getByText('Lab 8')).toBeVisible();
     expect(screen.getByText('Lab 9')).toBeVisible();
-    expect(screen.getByText('Lab 10')).toBeVisible();
 
     // Button should be gone
     expect(

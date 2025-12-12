@@ -538,6 +538,7 @@ export const parseContentfulGraphQlTeam = (
             {
               id: lab.sys.id,
               name: lab.name || '',
+              labPrincipalInvestigatorId: lab.labPi?.sys.id,
             },
           ];
         },

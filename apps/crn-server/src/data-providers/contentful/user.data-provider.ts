@@ -701,6 +701,7 @@ export const parseLabsCollection = (
         {
           id: lab.sys.id,
           name: lab.name,
+          labPrincipalInvestigatorId: lab.labPi?.sys.id,
         },
       ];
     },

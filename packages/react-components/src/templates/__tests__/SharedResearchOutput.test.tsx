@@ -1,14 +1,26 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, useEffect } from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
-import { MemoryRouter, Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
 
 import SharedResearchOutput from '../SharedResearchOutput';
+
+let currentLocation: { pathname: string; search: string } | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentLocation = { pathname: location.pathname, search: location.search };
+  }, [location]);
+  return null;
+};
+
+const renderWithRouter = (component: React.ReactElement) => {
+  return render(<MemoryRouter>{component}</MemoryRouter>);
+};
 
 const props: ComponentProps<typeof SharedResearchOutput> = {
   ...createResearchOutputResponse(),
@@ -28,12 +40,13 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
 };
 
 beforeEach(() => {
+  currentLocation = null;
   jest.spyOn(console, 'error').mockImplementation();
 });
 
 describe('Grant Documents', () => {
   it('renders an output with title and content', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         documentType="Grant Document"
@@ -47,7 +60,7 @@ describe('Grant Documents', () => {
   });
 
   it('displays edit button when user has permission', () => {
-    const { queryByTitle, rerender } = render(
+    const { queryByTitle, rerender } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: false,
@@ -61,34 +74,38 @@ describe('Grant Documents', () => {
     expect(queryByTitle('Edit')).toBeNull();
 
     rerender(
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          canEditResearchOutput: false,
-          canPublishResearchOutput: false,
-          canShareResearchOutput: false,
-        }}
-      >
-        <SharedResearchOutput {...props} documentType="Grant Document" />,
-      </ResearchOutputPermissionsContext.Provider>,
+      <MemoryRouter>
+        <ResearchOutputPermissionsContext.Provider
+          value={{
+            canEditResearchOutput: false,
+            canPublishResearchOutput: false,
+            canShareResearchOutput: false,
+          }}
+        >
+          <SharedResearchOutput {...props} documentType="Grant Document" />,
+        </ResearchOutputPermissionsContext.Provider>
+      </MemoryRouter>,
     );
     expect(queryByTitle('Edit')).toBeNull();
 
     rerender(
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          canEditResearchOutput: true,
-          canPublishResearchOutput: false,
-          canShareResearchOutput: false,
-        }}
-      >
-        <SharedResearchOutput {...props} documentType="Article" />,
-      </ResearchOutputPermissionsContext.Provider>,
+      <MemoryRouter>
+        <ResearchOutputPermissionsContext.Provider
+          value={{
+            canEditResearchOutput: true,
+            canPublishResearchOutput: false,
+            canShareResearchOutput: false,
+          }}
+        >
+          <SharedResearchOutput {...props} documentType="Article" />,
+        </ResearchOutputPermissionsContext.Provider>
+      </MemoryRouter>,
     );
     expect(queryByTitle('Edit')).toBeInTheDocument();
   });
 
   it('displays duplicate button when user has permission', () => {
-    const { queryByTitle, rerender } = render(
+    const { queryByTitle, rerender } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: false,
@@ -103,36 +120,40 @@ describe('Grant Documents', () => {
     expect(queryByTitle('Duplicate')).toBeNull();
 
     rerender(
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          canEditResearchOutput: false,
-          canPublishResearchOutput: false,
-          canShareResearchOutput: false,
-          canDuplicateResearchOutput: false,
-        }}
-      >
-        <SharedResearchOutput {...props} documentType="Grant Document" />,
-      </ResearchOutputPermissionsContext.Provider>,
+      <MemoryRouter>
+        <ResearchOutputPermissionsContext.Provider
+          value={{
+            canEditResearchOutput: false,
+            canPublishResearchOutput: false,
+            canShareResearchOutput: false,
+            canDuplicateResearchOutput: false,
+          }}
+        >
+          <SharedResearchOutput {...props} documentType="Grant Document" />,
+        </ResearchOutputPermissionsContext.Provider>
+      </MemoryRouter>,
     );
     expect(queryByTitle('Duplicate')).toBeNull();
 
     rerender(
-      <ResearchOutputPermissionsContext.Provider
-        value={{
-          canEditResearchOutput: true,
-          canPublishResearchOutput: false,
-          canShareResearchOutput: false,
-          canDuplicateResearchOutput: true,
-        }}
-      >
-        <SharedResearchOutput {...props} documentType="Article" />,
-      </ResearchOutputPermissionsContext.Provider>,
+      <MemoryRouter>
+        <ResearchOutputPermissionsContext.Provider
+          value={{
+            canEditResearchOutput: true,
+            canPublishResearchOutput: false,
+            canShareResearchOutput: false,
+            canDuplicateResearchOutput: true,
+          }}
+        >
+          <SharedResearchOutput {...props} documentType="Article" />,
+        </ResearchOutputPermissionsContext.Provider>
+      </MemoryRouter>,
     );
     expect(queryByTitle('Duplicate')).toBeInTheDocument();
   });
 
   it('handles tags and separate RTF description', () => {
-    const { queryByText, getByText, queryByRole } = render(
+    const { queryByText, getByText, queryByRole } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         documentType="Grant Document"
@@ -150,7 +171,7 @@ describe('Grant Documents', () => {
   });
 
   it('does not display additional information when data provided', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         documentType="Grant Document"
@@ -163,22 +184,24 @@ describe('Grant Documents', () => {
 
 describe('Not Grant Documents', () => {
   it('displays access instructions when data provided', () => {
-    const { queryByText, getByText, rerender } = render(
+    const { queryByText, getByText, rerender } = renderWithRouter(
       <SharedResearchOutput {...props} documentType="Article" usageNotes="" />,
     );
     expect(queryByText(/access instructions/i)).not.toBeInTheDocument();
     rerender(
-      <SharedResearchOutput
-        {...props}
-        documentType="Article"
-        usageNotes="Some Data"
-      />,
+      <MemoryRouter>
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          usageNotes="Some Data"
+        />
+      </MemoryRouter>,
     );
     expect(getByText(/usage notes/i)).toBeVisible();
     expect(getByText(/some data/i)).toBeVisible();
   });
   it('displays access instructions when data provided as markdown', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         documentType="Article"
@@ -189,7 +212,7 @@ describe('Not Grant Documents', () => {
   });
   describe('tags and description', () => {
     it('handles tags and description omitted', () => {
-      const { queryByText, queryByRole } = render(
+      const { queryByText, queryByRole } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           documentType="Article"
@@ -206,7 +229,7 @@ describe('Not Grant Documents', () => {
     });
 
     it('handles just a description', () => {
-      const { queryByText, getByText, queryByRole } = render(
+      const { queryByText, getByText, queryByRole } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           documentType="Article"
@@ -223,7 +246,7 @@ describe('Not Grant Documents', () => {
     });
 
     it('handles no description', () => {
-      const { queryByText } = render(
+      const { queryByText } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           documentType="Article"
@@ -237,7 +260,7 @@ describe('Not Grant Documents', () => {
       ).not.toBeInTheDocument();
     });
     it('handles just tags', () => {
-      const { queryByText, getByText, queryByRole } = render(
+      const { queryByText, getByText, queryByRole } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           documentType="Article"
@@ -254,7 +277,7 @@ describe('Not Grant Documents', () => {
       expect(queryByRole('separator')).not.toBeInTheDocument();
     });
     it('handles tags and description', () => {
-      const { queryByText, getByText, queryByRole } = render(
+      const { queryByText, getByText, queryByRole } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           documentType="Article"
@@ -271,7 +294,7 @@ describe('Not Grant Documents', () => {
       expect(queryByRole('separator')).toBeVisible();
     });
     it('only display descriptionMD if it is set', () => {
-      const { queryByText, getByText, queryByRole } = render(
+      const { queryByText, getByText, queryByRole } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           documentType="Article"
@@ -285,7 +308,7 @@ describe('Not Grant Documents', () => {
       expect(queryByRole('separator')).toBeVisible();
     });
     it('displays the related research card when data provided', () => {
-      const { queryByText, getByText, rerender } = render(
+      const { queryByText, getByText, rerender } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           documentType="Article"
@@ -295,20 +318,22 @@ describe('Not Grant Documents', () => {
       expect(queryByText(/Related Research/i)).not.toBeInTheDocument();
 
       rerender(
-        <SharedResearchOutput
-          {...props}
-          documentType="Article"
-          relatedResearch={[
-            {
-              id: 'id1',
-              title: 'Related research article',
-              teams: [{ id: 'team1', displayName: 'team 1' }],
-              workingGroups: [],
-              type: 'Published',
-              documentType: 'Article',
-            },
-          ]}
-        />,
+        <MemoryRouter>
+          <SharedResearchOutput
+            {...props}
+            documentType="Article"
+            relatedResearch={[
+              {
+                id: 'id1',
+                title: 'Related research article',
+                teams: [{ id: 'team1', displayName: 'team 1' }],
+                workingGroups: [],
+                type: 'Published',
+                documentType: 'Article',
+              },
+            ]}
+          />
+        </MemoryRouter>,
       );
       expect(getByText('Related Research')).toBeVisible();
       expect(
@@ -330,6 +355,7 @@ describe('footer', () => {
   });
 
   beforeEach(() => {
+    currentLocation = null;
     jest.spyOn(window.navigator.clipboard, 'writeText');
   });
   afterEach(() => {
@@ -337,12 +363,14 @@ describe('footer', () => {
   });
 
   it('displays contact card when there are contact emails', () => {
-    const { queryByText, getByText, rerender } = render(
+    const { queryByText, getByText, rerender } = renderWithRouter(
       <SharedResearchOutput {...props} contactEmails={[]} />,
     );
     expect(queryByText(/contact/i)).not.toBeInTheDocument();
     rerender(
-      <SharedResearchOutput {...props} contactEmails={['blah@gmail.com']} />,
+      <MemoryRouter>
+        <SharedResearchOutput {...props} contactEmails={['blah@gmail.com']} />
+      </MemoryRouter>,
     );
     expect(getByText(/contact/i).closest('a')).toHaveAttribute(
       'href',
@@ -351,7 +379,7 @@ describe('footer', () => {
   });
 
   it('adds the email to clipboard when user clicks on copy button', () => {
-    const { getByTitle } = render(
+    const { getByTitle } = renderWithRouter(
       <SharedResearchOutput {...props} contactEmails={['blah@gmail.com']} />,
     );
 
@@ -363,7 +391,7 @@ describe('footer', () => {
 });
 
 it('merges different tag types in the correct order', () => {
-  const { getAllByRole } = render(
+  const { getAllByRole } = renderWithRouter(
     <SharedResearchOutput
       {...props}
       methods={['method']}
@@ -388,7 +416,7 @@ it('merges different tag types in the correct order', () => {
 
 describe('a draft output', () => {
   it('can never display the published now banner for a draft', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         published={false}
@@ -402,7 +430,7 @@ describe('a draft output', () => {
     ).not.toBeInTheDocument();
   });
   it('can display the draft created now toast', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         published={false}
@@ -415,8 +443,9 @@ describe('a draft output', () => {
       getByText('Draft Team Grant Document created successfully.'),
     ).toBeInTheDocument();
   });
-  it('has a closable toast', () => {
-    const { getByText, getByTitle } = render(
+  it('has a closable toast', async () => {
+    const user = userEvent.setup();
+    const { getByText, getByTitle } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         published={false}
@@ -427,13 +456,13 @@ describe('a draft output', () => {
     );
     const toast = getByText('Draft Team Grant Document created successfully.');
     expect(toast).toBeVisible();
-    await userEvent.click(getByTitle(/close/i));
+    await user.click(getByTitle(/close/i));
     expect(toast).not.toBeInTheDocument();
   });
   it.each(researchOutputDocumentTypes)(
     'shows the created now toast for team draft outputs with documentType: %s',
     (researchOutputDocumentType) => {
-      const { getByText } = render(
+      const { getByText } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           published={false}
@@ -453,7 +482,7 @@ describe('a draft output', () => {
   it.each(researchOutputDocumentTypes)(
     'shows the created now toast for working group draft outputs with documentType: %s',
     (researchOutputDocumentType) => {
-      const { getByText } = render(
+      const { getByText } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           published={false}
@@ -476,7 +505,7 @@ describe('a draft output', () => {
     },
   );
   it('shows the toast for team drafts that contain only one team', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         published={false}
@@ -492,7 +521,7 @@ describe('a draft output', () => {
     expect(getByText('Draft')).toBeVisible();
   });
   it('shows the toast for team drafts that contain more than one teams', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         published={false}
@@ -511,7 +540,7 @@ describe('a draft output', () => {
     expect(getByText('Draft')).toBeVisible();
   });
   it('shows the toast for team drafts that contain a working group', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         published={false}
@@ -534,8 +563,9 @@ describe('a draft output', () => {
 });
 
 describe('a newly published output', () => {
-  it('has a closable toast', () => {
-    const { getByText, getByTitle } = render(
+  it('has a closable toast', async () => {
+    const user = userEvent.setup();
+    const { getByText, getByTitle } = renderWithRouter(
       <SharedResearchOutput
         {...props}
         teams={[{ id: 'team1', displayName: 'team 1' }]}
@@ -547,13 +577,13 @@ describe('a newly published output', () => {
     );
     const toast = getByText('Team Article published successfully.');
     expect(toast).toBeVisible();
-    await userEvent.click(getByTitle(/close/i));
+    await user.click(getByTitle(/close/i));
     expect(toast).not.toBeInTheDocument();
   });
   it.each(researchOutputDocumentTypes)(
     'shows the toast for team outputs with documentType: %s',
     (researchOutputDocumentType) => {
-      const { getByText } = render(
+      const { getByText } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           teams={[{ id: 'team1', displayName: 'team 1' }]}
@@ -571,7 +601,7 @@ describe('a newly published output', () => {
   it.each(researchOutputDocumentTypes)(
     'shows the toast for working group outputs with documentType: %s',
     (researchOutputDocumentType) => {
-      const { getByText } = render(
+      const { getByText } = renderWithRouter(
         <SharedResearchOutput
           {...props}
           teams={[{ id: 'team1', displayName: 'team 1' }]}
@@ -597,7 +627,7 @@ describe('a newly published output', () => {
 
 describe('the ready for pm review button', () => {
   it('does not render if the user does not have ready for review permissions', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: true,
@@ -617,7 +647,7 @@ describe('the ready for pm review button', () => {
     expect(queryByText('Ready for PM Review.')).not.toBeInTheDocument();
   });
   it('does not render if someone requested a review', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: false,
@@ -638,7 +668,7 @@ describe('the ready for pm review button', () => {
     expect(queryByText('Ready for PM Review.')).not.toBeInTheDocument();
   });
   it('does not render if the research output was published', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: false,
@@ -658,7 +688,7 @@ describe('the ready for pm review button', () => {
     expect(queryByText('Ready for PM Review.')).not.toBeInTheDocument();
   });
   it('renders if user has ready for review permissions', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: false,
@@ -818,7 +848,7 @@ describe('the ready for pm review button', () => {
 
 describe('the switch to draft button', () => {
   it('does not render if the user does not staff level permissions', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: true,
@@ -839,7 +869,7 @@ describe('the switch to draft button', () => {
     expect(queryByText('Switch to draft')).not.toBeInTheDocument();
   });
   it('does not render if the research output was published', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: true,
@@ -860,7 +890,7 @@ describe('the switch to draft button', () => {
     expect(queryByText('Switch to draft')).not.toBeInTheDocument();
   });
   it('does not render if no one requested a review', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: true,
@@ -881,7 +911,7 @@ describe('the switch to draft button', () => {
     expect(queryByText('Switch to draft')).not.toBeInTheDocument();
   });
   it('renders if someone requested a review and user is staff', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: false,
@@ -1044,7 +1074,7 @@ describe('the switch to draft button', () => {
 
 describe('the publish button', () => {
   it('does not render if the user is not staff', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canPublishResearchOutput: false,
@@ -1062,7 +1092,7 @@ describe('the publish button', () => {
     expect(queryByText('Publish')).not.toBeInTheDocument();
   });
   it('does not render if the research output was published', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canPublishResearchOutput: true,
@@ -1080,7 +1110,7 @@ describe('the publish button', () => {
     expect(queryByText('Publish')).not.toBeInTheDocument();
   });
   it('renders if user is staff and output is not published', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithRouter(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canPublishResearchOutput: true,
@@ -1233,6 +1263,7 @@ describe('displayNoNewManuscriptVersionModal', () => {
   const checkForNewVersion = jest.fn().mockResolvedValue(false);
 
   it('renders the modal when there is no new manuscript version', async () => {
+    const user = userEvent.setup();
     const { getByText } = render(
       <MemoryRouter>
         <ResearchOutputPermissionsContext.Provider
@@ -1255,13 +1286,14 @@ describe('displayNoNewManuscriptVersionModal', () => {
     );
 
     const importVersionButton = getByText('Import Manuscript Version');
-    await userEvent.click(importVersionButton);
+    await user.click(importVersionButton);
 
     expect(getByText('No new manuscript versions available')).toBeVisible();
     expect(getByText('Go to Compliance Area')).toBeVisible();
   });
 
   it('closes the modal on clicking cancel', async () => {
+    const user = userEvent.setup();
     const { getByText, queryByText } = render(
       <MemoryRouter>
         <ResearchOutputPermissionsContext.Provider
@@ -1283,7 +1315,7 @@ describe('displayNoNewManuscriptVersionModal', () => {
       </MemoryRouter>,
     );
     const importVersionButton = getByText('Import Manuscript Version');
-    await userEvent.click(importVersionButton);
+    await user.click(importVersionButton);
 
     expect(getByText('No new manuscript versions available')).toBeVisible();
 
@@ -1295,59 +1327,66 @@ describe('displayNoNewManuscriptVersionModal', () => {
   });
 
   it('navigates to team workspace on clicking Go to Compliance Area', async () => {
-    const history = createMemoryHistory({
-      initialEntries: [
-        sharedResearch({}).researchOutput({ researchOutputId: props.id }).$,
-      ],
-    });
+    const user = userEvent.setup();
     const { getByText, queryByText } = render(
-      <Router history={history}>
-        <ResearchOutputPermissionsContext.Provider
-          value={{
-            canVersionResearchOutput: true,
-          }}
-        >
-          <SharedResearchOutput
-            {...props}
-            documentType="Article"
-            published={true}
-            workingGroups={undefined}
-            checkForNewVersion={checkForNewVersion}
-            relatedManuscriptVersion={'manuscript-version-id-1'}
+      <MemoryRouter
+        initialEntries={[
+          sharedResearch({}).researchOutput({ researchOutputId: props.id }).$,
+        ]}
+      >
+        <Routes>
+          <Route
+            path="*"
+            element={
+              <>
+                <LocationCapture />
+                <ResearchOutputPermissionsContext.Provider
+                  value={{
+                    canVersionResearchOutput: true,
+                  }}
+                >
+                  <SharedResearchOutput
+                    {...props}
+                    documentType="Article"
+                    published={true}
+                    workingGroups={undefined}
+                    checkForNewVersion={checkForNewVersion}
+                    relatedManuscriptVersion={'manuscript-version-id-1'}
+                  />
+                  ,
+                </ResearchOutputPermissionsContext.Provider>
+              </>
+            }
           />
-          ,
-        </ResearchOutputPermissionsContext.Provider>
-        ,
-      </Router>,
+        </Routes>
+      </MemoryRouter>,
     );
     const importVersionButton = getByText('Import Manuscript Version');
-    await userEvent.click(importVersionButton);
+    await user.click(importVersionButton);
 
     expect(getByText('No new manuscript versions available')).toBeVisible();
 
     const goToComplianceButton = getByText('Go to Compliance Area');
-    await userEvent.click(goToComplianceButton);
+    await user.click(goToComplianceButton);
 
     await waitFor(() => {
-      expect(
-        queryByText('No new manuscript versions available'),
-      ).not.toBeInTheDocument();
+      expect(currentLocation?.pathname).toBe(
+        `/network/teams/${props.teams[0]?.id}/workspace`,
+      );
     });
-    expect(history.location.pathname).toBe(
-      `/network/teams/${props.teams[0]?.id}/workspace`,
-    );
   });
 });
 
 it('navigates to version creation page if there is a new manuscript version', async () => {
-  const history = createMemoryHistory({
-    initialEntries: [
-      sharedResearch({}).researchOutput({ researchOutputId: props.id }).$,
-    ],
-  });
+  const user = userEvent.setup();
   const checkForNewVersion = jest.fn().mockResolvedValue(true);
   const { getByText } = render(
-    <Router history={history}>
+    <MemoryRouter
+      initialEntries={[
+        sharedResearch({}).researchOutput({ researchOutputId: props.id }).$,
+      ]}
+    >
+      <LocationCapture />
       <ResearchOutputPermissionsContext.Provider
         value={{
           canVersionResearchOutput: true,
@@ -1364,13 +1403,13 @@ it('navigates to version creation page if there is a new manuscript version', as
         ,
       </ResearchOutputPermissionsContext.Provider>
       ,
-    </Router>,
+    </MemoryRouter>,
   );
   const importVersionButton = getByText('Import Manuscript Version');
-  await userEvent.click(importVersionButton);
+  await user.click(importVersionButton);
 
   await waitFor(() => {
-    expect(history.location.pathname).toBe(
+    expect(currentLocation?.pathname).toBe(
       `/shared-research/${props.id}/version`,
     );
   });

@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
-import { Router } from 'react-router-dom';
+import { ComponentProps, useEffect } from 'react';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import { InnerToastContext } from '@asap-hub/react-context';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
@@ -10,22 +10,29 @@ import {
   ResearchTagResponse,
 } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { fern, paper } from '../../../colors';
 import { defaultProps } from '../../test-utils/research-output-form';
 
 jest.setTimeout(60000);
 
+let currentLocation: { pathname: string; search: string } | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentLocation = { pathname: location.pathname, search: location.search };
+  }, [location]);
+  return null;
+};
+
 describe('form buttons', () => {
-  let history!: History;
   const id = '42';
   const saveFn = jest.fn();
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
 
   beforeEach(() => {
-    history = createMemoryHistory();
+    currentLocation = null;
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
@@ -75,7 +82,8 @@ describe('form buttons', () => {
   ) => {
     render(
       <InnerToastContext.Provider value={jest.fn()}>
-        <Router history={history}>
+        <MemoryRouter>
+          <LocationCapture />
           <ResearchOutputForm
             {...defaultProps}
             versionAction={versionAction}
@@ -98,7 +106,7 @@ describe('form buttons', () => {
               canShareResearchOutput: true,
             }}
           />
-        </Router>
+        </MemoryRouter>
       </InnerToastContext.Provider>,
     );
   };

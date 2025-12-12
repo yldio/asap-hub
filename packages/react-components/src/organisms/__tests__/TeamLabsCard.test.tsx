@@ -28,11 +28,22 @@ describe('TeamLabsCard', () => {
     ).toBeVisible();
   });
 
-  it('renders a list of labs', () => {
+  it('renders a list of labs with links when pointOfContactId is provided', () => {
+    const labs = createLabs(3);
+    render(<TeamLabsCard labs={labs} pointOfContactId="poc-123" />);
+    labs.forEach((lab) => {
+      expect(screen.getByText(lab.name).closest('a')).toHaveAttribute(
+        'href',
+        '/network/users/poc-123',
+      );
+    });
+  });
+
+  it('renders a list of labs without links when pointOfContactId is not provided', () => {
     const labs = createLabs(3);
     render(<TeamLabsCard labs={labs} />);
     labs.forEach((lab) => {
-      expect(screen.getByText(lab.name)).toBeVisible();
+      expect(screen.getByText(lab.name).closest('a')).not.toBeInTheDocument();
     });
   });
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { LabDataObject } from '@asap-hub/model';
 
-import { Card, Paragraph, Button, Headline3, Ellipsis } from '../atoms';
+import { Card, Paragraph, Button, Headline3, Ellipsis, Link } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 
 import { LabIcon } from '../icons';
@@ -11,6 +11,7 @@ import { steel } from '../colors';
 type TeamLabsCardProps = {
   readonly labs: ReadonlyArray<LabDataObject>;
   readonly isTeamActive?: boolean;
+  readonly pointOfContactId?: string;
 };
 
 const containerStyles = css({
@@ -47,7 +48,11 @@ const contentStyles = css({
   padding: `${rem(24)} ${rem(24)} 2rem`,
 });
 
-const TeamLabsCard: React.FC<TeamLabsCardProps> = ({ labs, isTeamActive }) => {
+const TeamLabsCard: React.FC<TeamLabsCardProps> = ({
+  labs,
+  isTeamActive,
+  pointOfContactId,
+}) => {
   const [showMore, setShowMore] = React.useState(false);
   const displayLabs = showMore ? labs : labs.slice(0, 8);
 
@@ -66,7 +71,15 @@ const TeamLabsCard: React.FC<TeamLabsCardProps> = ({ labs, isTeamActive }) => {
           {displayLabs.map((lab) => (
             <li key={lab.id} css={itemStyles}>
               <LabIcon />
-              <Ellipsis>{lab.name}</Ellipsis>
+              <Ellipsis>
+                {pointOfContactId ? (
+                  <Link href={`/network/users/${pointOfContactId}`}>
+                    {lab.name}
+                  </Link>
+                ) : (
+                  lab.name
+                )}
+              </Ellipsis>
             </li>
           ))}
         </ul>

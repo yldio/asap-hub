@@ -71,6 +71,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       <TeamLabsCard
         labs={pointOfContact.labs}
         isTeamActive={teamStatus === 'Active'}
+        pointOfContactId={pointOfContact.id}
       />
     ) : null}
     <section id={teamListElementId} css={membersCardStyles}>

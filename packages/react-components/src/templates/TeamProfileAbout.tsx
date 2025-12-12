@@ -1,6 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
+import { isEnabled } from '@asap-hub/flags';
 
 import { rem } from '../pixels';
 import {
@@ -63,8 +64,14 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
     {tags && tags.length ? (
       <ProfileExpertiseAndResources hideExpertiseAndResources tags={tags} />
     ) : null}
-    {pointOfContact && pointOfContact.labs && pointOfContact.labs.length ? (
-      <TeamLabsCard labs={pointOfContact.labs} />
+    {isEnabled('TEAM_LABS_CARD') &&
+    pointOfContact &&
+    pointOfContact.labs &&
+    pointOfContact.labs.length ? (
+      <TeamLabsCard
+        labs={pointOfContact.labs}
+        isTeamActive={teamStatus === 'Active'}
+      />
     ) : null}
     <section id={teamListElementId} css={membersCardStyles}>
       <TeamMembersTabbedCard
@@ -73,7 +80,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         isTeamInactive={!!inactiveSince}
       />
     </section>
-    {teamType !== 'Resource Team' && teamGroupsCard}
+    {teamType !== 'Resource Team' && teamStatus === 'Active' && teamGroupsCard}
     {pointOfContact && (
       <CtaCard
         href={createMailTo(pointOfContact.email)}

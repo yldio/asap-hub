@@ -10,6 +10,7 @@ import { steel } from '../colors';
 
 type TeamLabsCardProps = {
   readonly labs: ReadonlyArray<LabDataObject>;
+  readonly isTeamActive?: boolean;
 };
 
 const containerStyles = css({
@@ -46,7 +47,7 @@ const contentStyles = css({
   padding: `${rem(24)} ${rem(24)} 2rem`,
 });
 
-const TeamLabsCard: React.FC<TeamLabsCardProps> = ({ labs }) => {
+const TeamLabsCard: React.FC<TeamLabsCardProps> = ({ labs, isTeamActive }) => {
   const [showMore, setShowMore] = React.useState(false);
   const displayLabs = showMore ? labs : labs.slice(0, 8);
 
@@ -56,7 +57,9 @@ const TeamLabsCard: React.FC<TeamLabsCardProps> = ({ labs }) => {
         <Headline3>Labs</Headline3>
         <div css={descriptionStyles}>
           <Paragraph accent="lead">
-            View the labs that were part of this team.
+            {isTeamActive
+              ? 'View the labs within this team and connect directly with their principal investigators.'
+              : 'View the labs that were part of this team.'}
           </Paragraph>
         </div>
         <ul css={containerStyles}>

@@ -1,8 +1,14 @@
 import { ComponentProps } from 'react';
 import { TeamRole } from '@asap-hub/model';
 import { fireEvent, render } from '@testing-library/react';
+import { isEnabled } from '@asap-hub/flags';
 
 import TeamProfileAbout from '../TeamProfileAbout';
+
+jest.mock('@asap-hub/flags', () => ({
+  isEnabled: jest.fn(() => true),
+  reset: jest.fn(),
+}));
 
 const props: ComponentProps<typeof TeamProfileAbout> = {
   projectTitle: '',
@@ -219,7 +225,8 @@ describe('footer', () => {
     );
   });
 
-  it('renders the lab list when point of contact has labs', () => {
+  it('renders the lab list when point of contact has labs and flag is enabled', () => {
+    (isEnabled as jest.Mock).mockReturnValue(true);
     const { getByText, getByRole } = render(
       <TeamProfileAbout
         {...props}
@@ -234,6 +241,22 @@ describe('footer', () => {
     expect(getByRole('heading', { name: /labs/i })).toBeVisible();
   });
 
+  it('does not render the lab list when point of contact has labs but flag is disabled', () => {
+    (isEnabled as jest.Mock).mockReturnValue(false);
+    const { queryByText, queryByRole } = render(
+      <TeamProfileAbout
+        {...props}
+        pointOfContact={{
+          ...pointOfContact,
+          labs: [{ name: 'Lab 1', id: '1' }],
+        }}
+      />,
+    );
+
+    expect(queryByText('Lab 1')).not.toBeInTheDocument();
+    expect(queryByRole('heading', { name: /labs/i })).not.toBeInTheDocument();
+  });
+
   it('adds the pm email to clipboard when user clicks on copy button', () => {
     const { getByTitle } = render(
       <TeamProfileAbout {...props} pointOfContact={pointOfContact} />,
@@ -243,5 +266,29 @@ describe('footer', () => {
     expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith(
       expect.stringMatching(/pm@asap.com/i),
     );
+  });
+
+  it('renders team groups card when team is active', () => {
+    const { getByText } = render(
+      <TeamProfileAbout
+        {...props}
+        teamStatus="Active"
+        teamGroupsCard={<div>Groups Card</div>}
+      />,
+    );
+
+    expect(getByText('Groups Card')).toBeVisible();
+  });
+
+  it('does not render team groups card when team is not active', () => {
+    const { queryByText } = render(
+      <TeamProfileAbout
+        {...props}
+        teamStatus="Inactive"
+        teamGroupsCard={<div>Groups Card</div>}
+      />,
+    );
+
+    expect(queryByText('Groups Card')).not.toBeInTheDocument();
   });
 });

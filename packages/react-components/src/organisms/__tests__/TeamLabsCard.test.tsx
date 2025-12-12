@@ -19,6 +19,15 @@ describe('TeamLabsCard', () => {
     ).toBeVisible();
   });
 
+  it('renders the correct description when the team is active', () => {
+    render(<TeamLabsCard labs={createLabs(1)} isTeamActive={true} />);
+    expect(
+      screen.getByText(
+        'View the labs within this team and connect directly with their principal investigators.',
+      ),
+    ).toBeVisible();
+  });
+
   it('renders a list of labs', () => {
     const labs = createLabs(3);
     render(<TeamLabsCard labs={labs} />);

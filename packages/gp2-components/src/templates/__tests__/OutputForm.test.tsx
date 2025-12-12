@@ -10,14 +10,22 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
-import { ReactNode } from 'react';
-import { Router } from 'react-router-dom';
+import { ReactNode, useEffect } from 'react';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
 jest.setTimeout(95_000);
+
+let currentLocation: { pathname: string; search: string } | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentLocation = { pathname: location.pathname, search: location.search };
+  }, [location]);
+  return null;
+};
 
 const renderWithRouter = (children: ReactNode) =>
   render(<StaticRouter location="/">{children}</StaticRouter>);
@@ -94,8 +102,6 @@ describe('OutputForm', () => {
       },
     ]);
 
-    const history = createMemoryHistory();
-
     const shareOutput = jest.fn();
     shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
 
@@ -110,10 +116,14 @@ describe('OutputForm', () => {
       getRelatedEventSuggestions,
       getRelatedOutputSuggestions,
       getShortDescriptionFromDescription,
-      history,
       shareOutput,
     };
   };
+
+  beforeEach(() => {
+    currentLocation = null;
+  });
+
   afterEach(jest.resetAllMocks);
 
   it.each`
@@ -123,12 +133,12 @@ describe('OutputForm', () => {
   `(
     'publish the form for entity $entityType',
     async ({ entityType, entityText, entity, notificationMessage }) => {
+      const user = userEvent.setup();
       const {
         addNotification,
         getAuthorSuggestions,
         getRelatedEventSuggestions,
         getRelatedOutputSuggestions,
-        history,
         shareOutput,
       } = setup();
       const { container } = render(
@@ -164,72 +174,78 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      await userEvent.type(
+      await user.type(
         screen.getByRole('textbox', { name: /title/i }),
         'output title',
       );
 
-      await userEvent.type(
+      await user.type(
         screen.getByRole('textbox', { name: /url/i }),
         'https://example.com',
       );
 
-      await userEvent.click(
+      await user.click(
         screen.getByRole('textbox', { name: /identifier type/i }),
       );
-      await userEvent.click(screen.getByText(/^none/i));
-      await userEvent.click(
+      await user.click(screen.getByText(/^none/i));
+      await user.click(
         screen.getByRole('textbox', {
           name: /working groups/i,
         }),
       );
 
-      await userEvent.click(screen.getByText('another group'));
+      await user.click(screen.getByText('another group'));
 
-      await userEvent.click(
+      await user.click(
         screen.getByRole('textbox', {
           name: /projects/i,
         }),
       );
 
-      await userEvent.click(screen.getByText('another project'));
+      await user.click(screen.getByText('another project'));
 
       const authors = screen.getByRole('textbox', { name: /Authors/i });
-      await userEvent.click(authors);
+      await user.click(authors);
 
-      await userEvent.click(await screen.findByText(/Chris Reed/i));
-      await userEvent.click(authors);
-      await userEvent.click(screen.getByText('Chris Blue'));
-      await userEvent.click(authors);
-      await userEvent.type(authors, 'Alex White');
+      await user.click(await screen.findByText(/Chris Reed/i));
+      await user.click(authors);
+      await user.click(screen.getByText('Chris Blue'));
+      await user.click(authors);
+      await user.type(authors, 'Alex White');
 
-      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-      await userEvent.click(screen.getAllByText('Alex White')[1]!);
+      const loadingElement = screen.queryByText(/loading/i);
+      if (loadingElement) {
+        await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+      }
+      await user.click(screen.getAllByText('Alex White')[1]!);
 
-      await userEvent.click(
+      await user.click(
         screen.getByRole('textbox', {
           name: /related output/i,
         }),
       );
-      await userEvent.click(await screen.findByText('some related output'));
-      await userEvent.click(
+      await user.click(await screen.findByText('some related output'));
+      await user.click(
         screen.getByRole('textbox', {
           name: /related gp2 hub events/i,
         }),
       );
-      await userEvent.click(await screen.findByText('some related event'));
+      await user.click(await screen.findByText('some related event'));
 
       expect(
         screen.queryByText('Publish output for the whole hub?'),
       ).not.toBeInTheDocument();
 
-      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
 
       expect(
         screen.getByText('Publish output for the whole hub?'),
@@ -238,9 +254,7 @@ describe('OutputForm', () => {
         `All ${entityText} members listed on this output will be notified and all GP2 members will be able to access it. If you need to unpublish this output, please contact techsupport@gp2.org.`,
       );
 
-      await userEvent.click(
-        screen.getByRole('button', { name: 'Publish Output' }),
-      );
+      await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
       await waitFor(() => {
         expect(shareOutput).toHaveBeenCalledWith({
@@ -274,13 +288,13 @@ describe('OutputForm', () => {
           type: 'success',
         }),
       );
-      expect(history.location.pathname).toEqual(`/outputs/ro0`);
+      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
     },
   );
 
   it('can submit published date', async () => {
-    const { addNotification, getAuthorSuggestions, history, shareOutput } =
-      setup();
+    const user = userEvent.setup();
+    const { addNotification, getAuthorSuggestions, shareOutput } = setup();
 
     render(
       <OutputForm
@@ -299,13 +313,16 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>{children}</Router>
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
           </NotificationContext.Provider>
         ),
       },
     );
 
-    await userEvent.type(
+    await user.type(
       screen.getByRole('textbox', { name: /url/i }),
       'https://example.com',
     );
@@ -313,7 +330,7 @@ describe('OutputForm', () => {
     const sharingStatus = screen.getByRole('group', {
       name: /sharing status?/i,
     });
-    await userEvent.click(
+    await user.click(
       within(sharingStatus).getByRole('radio', { name: 'Public' }),
     );
     fireEvent.change(
@@ -323,10 +340,8 @@ describe('OutputForm', () => {
       },
     );
 
-    await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    await userEvent.click(
-      screen.getByRole('button', { name: 'Publish Output' }),
-    );
+    await user.click(screen.getByRole('button', { name: 'Publish' }));
+    await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
     await waitFor(() => {
       expect(shareOutput).toHaveBeenCalledWith(
@@ -339,8 +354,8 @@ describe('OutputForm', () => {
   });
 
   it('can generate short description when description is present', async () => {
-    const { addNotification, getShortDescriptionFromDescription, history } =
-      setup();
+    const user = userEvent.setup();
+    const { addNotification, getShortDescriptionFromDescription } = setup();
     getShortDescriptionFromDescription.mockResolvedValue(
       'An interesting article',
     );
@@ -360,7 +375,10 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>{children}</Router>
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
           </NotificationContext.Provider>
         ),
       },
@@ -369,7 +387,7 @@ describe('OutputForm', () => {
       screen.getByRole('textbox', { name: /short description/i }),
     ).toHaveValue('');
 
-    await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+    await user.click(screen.getByRole('button', { name: /Generate/i }));
 
     await waitFor(() => {
       expect(
@@ -412,7 +430,8 @@ describe('OutputForm', () => {
     });
 
     it('does not display publish modal when editing and clicks save', async () => {
-      const { addNotification, history } = setup();
+      const user = userEvent.setup();
+      const { addNotification } = setup();
       const publishDate = '2020-03-04';
       const output = {
         ...defaultProps,
@@ -432,12 +451,15 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>{children}</Router>
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
           </NotificationContext.Provider>
         ),
       });
 
-      await userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(
         screen.queryByText('Publish output for the whole hub?'),
@@ -505,8 +527,8 @@ describe('OutputForm', () => {
     });
 
     it('should publish the version for an Article and display an appropriate message', async () => {
-      const { addNotification, getAuthorSuggestions, history, shareOutput } =
-        setup();
+      const user = userEvent.setup();
+      const { addNotification, getAuthorSuggestions, shareOutput } = setup();
 
       render(
         <OutputForm
@@ -526,14 +548,17 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-      await userEvent.click(
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(
         screen.getByRole('button', { name: 'Publish new version' }),
       );
 
@@ -548,7 +573,7 @@ describe('OutputForm', () => {
           type: 'success',
         }),
       );
-      expect(history.location.pathname).toEqual(`/outputs/ro0`);
+      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
     });
   });
 
@@ -559,26 +584,34 @@ describe('OutputForm', () => {
     });
     it.each<gp2.OutputType>(['Blog', 'Hot Topic', 'Letter', 'Review'])(
       '%s does not render subtype',
-      (type) => {
+      async (type) => {
+        const user = userEvent.setup();
         renderWithRouter(
           <OutputForm {...defaultProps} documentType="Article" />,
         );
-        await userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
-        await userEvent.click(screen.getByText(type));
+        await user.click(screen.getByRole('textbox', { name: /^type/i }));
+        await user.click(screen.getByText(type));
         expect(
           screen.queryByRole('textbox', { name: /subtype/i }),
         ).not.toBeInTheDocument();
       },
     );
-    it.each<gp2.OutputType>(['Research'])('%s renders subtype', (type) => {
-      renderWithRouter(<OutputForm {...defaultProps} documentType="Article" />);
-      await userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
-      await userEvent.click(screen.getByText(type));
-      expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
-    });
+    it.each<gp2.OutputType>(['Research'])(
+      '%s renders subtype',
+      async (type) => {
+        const user = userEvent.setup();
+        renderWithRouter(
+          <OutputForm {...defaultProps} documentType="Article" />,
+        );
+        await user.click(screen.getByRole('textbox', { name: /^type/i }));
+        await user.click(screen.getByText(type));
+        expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
+      },
+    );
 
     it('publishes with type and subtype', async () => {
-      const { getAuthorSuggestions, history, shareOutput } = setup();
+      const user = userEvent.setup();
+      const { getAuthorSuggestions, shareOutput } = setup();
 
       render(
         <OutputForm
@@ -598,25 +631,26 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      await userEvent.type(
+      await user.type(
         screen.getByRole('textbox', { name: /url/i }),
         'https://example.com',
       );
-      await userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
-      await userEvent.click(screen.getByText('Research'));
-      await userEvent.click(screen.getByRole('textbox', { name: /subtype/i }));
-      await userEvent.click(screen.getByText('Published'));
+      await user.click(screen.getByRole('textbox', { name: /^type/i }));
+      await user.click(screen.getByText('Research'));
+      await user.click(screen.getByRole('textbox', { name: /subtype/i }));
+      await user.click(screen.getByText('Published'));
 
-      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-      await userEvent.click(
-        screen.getByRole('button', { name: 'Publish Output' }),
-      );
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
       await waitFor(() => {
         expect(shareOutput).toHaveBeenCalledWith(
@@ -627,7 +661,7 @@ describe('OutputForm', () => {
           }),
         );
       });
-      expect(history.location.pathname).toEqual(`/outputs/ro0`);
+      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
     });
   });
 
@@ -796,9 +830,10 @@ describe('OutputForm', () => {
         ).toBeVisible();
       });
 
-      it('displays tags suggestions', () => {
+      it('displays tags suggestions', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        await userEvent.click(screen.getByLabelText(/additional tags/i));
+        await user.click(screen.getByLabelText(/additional tags/i));
         expect(screen.getByText('2D Cultures')).toBeVisible();
         expect(screen.getByText('Adenosine')).toBeVisible();
         expect(screen.getByText('Adrenal')).toBeVisible();
@@ -809,10 +844,11 @@ describe('OutputForm', () => {
         expect(screen.getByText('Neurology')).toBeVisible();
       });
 
-      it('update tags after adding one', () => {
+      it('update tags after adding one', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        await userEvent.click(screen.getByLabelText(/additional tags/i));
-        await userEvent.click(screen.getByText('2D Cultures'));
+        await user.click(screen.getByLabelText(/additional tags/i));
+        await user.click(screen.getByText('2D Cultures'));
         expect(screen.getByText('Neurology')).toBeVisible();
         expect(screen.getByText('2D Cultures')).toBeVisible();
       });
@@ -896,9 +932,10 @@ describe('OutputForm', () => {
         expect(textbox).toHaveValue('');
       });
 
-      it('displays cohorts suggestions', () => {
+      it('displays cohorts suggestions', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        await userEvent.click(screen.getByLabelText(/cohorts/i));
+        await user.click(screen.getByLabelText(/cohorts/i));
         expect(screen.getByText('2D Cultures')).toBeVisible();
         expect(screen.getByText('Adenosine')).toBeVisible();
         expect(screen.getByText('Adrenal')).toBeVisible();
@@ -909,10 +946,11 @@ describe('OutputForm', () => {
         expect(screen.getByText('Neurology')).toBeVisible();
       });
 
-      it('update cohorts after adding one', () => {
+      it('update cohorts after adding one', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        await userEvent.click(screen.getByLabelText(/cohorts/i));
-        await userEvent.click(screen.getByText('2D Cultures'));
+        await user.click(screen.getByLabelText(/cohorts/i));
+        await user.click(screen.getByText('2D Cultures'));
         expect(screen.getByText('Neurology')).toBeVisible();
         expect(screen.getByText('2D Cultures')).toBeVisible();
       });
@@ -943,9 +981,10 @@ describe('OutputForm', () => {
         expect(textbox).toHaveValue('');
       });
 
-      it('displays working groups suggestions', () => {
+      it('displays working groups suggestions', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        await userEvent.click(screen.getByLabelText(/working groups/i));
+        await user.click(screen.getByLabelText(/working groups/i));
         expect(screen.getByText('WG 1')).toBeVisible();
       });
 
@@ -954,18 +993,20 @@ describe('OutputForm', () => {
         expect(screen.getByText('A WG title')).toBeVisible();
       });
 
-      it('update working groups after adding one', () => {
+      it('update working groups after adding one', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        await userEvent.click(screen.getByLabelText(/working groups/i));
-        await userEvent.click(screen.getByText('WG 1'));
+        await user.click(screen.getByLabelText(/working groups/i));
+        await user.click(screen.getByText('WG 1'));
         expect(screen.getByText('A WG title')).toBeVisible();
         expect(screen.getByText('WG 1')).toBeVisible();
       });
 
       it('shows the custom no options message for working groups', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
 
-        await userEvent.type(
+        await user.type(
           screen.getByLabelText(/working groups/i),
           'asdflkjasdflkj',
         );
@@ -1002,9 +1043,10 @@ describe('OutputForm', () => {
         expect(textbox).toHaveValue('');
       });
 
-      it('displays projects suggestions', () => {
+      it('displays projects suggestions', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        await userEvent.click(screen.getByLabelText(/projects/i));
+        await user.click(screen.getByLabelText(/projects/i));
         expect(screen.getByText('Project 1')).toBeVisible();
       });
 
@@ -1013,21 +1055,20 @@ describe('OutputForm', () => {
         expect(screen.getByText('A Project title')).toBeVisible();
       });
 
-      it('update projects after adding one', () => {
+      it('update projects after adding one', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        await userEvent.click(screen.getByLabelText(/projects/i));
-        await userEvent.click(screen.getByText('Project 1'));
+        await user.click(screen.getByLabelText(/projects/i));
+        await user.click(screen.getByText('Project 1'));
         expect(screen.getByText('A Project title')).toBeVisible();
         expect(screen.getByText('Project 1')).toBeVisible();
       });
 
       it('shows the custom no options message for projects', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
 
-        await userEvent.type(
-          screen.getByLabelText(/projects/i),
-          'asdflkjasdflkj',
-        );
+        await user.type(screen.getByLabelText(/projects/i), 'asdflkjasdflkj');
 
         expect(
           screen.getByText('Sorry, no projects match asdflkjasdflkj'),
@@ -1037,62 +1078,71 @@ describe('OutputForm', () => {
   });
 
   describe('Validation', () => {
-    it('shows error message for missing value title', () => {
+    it('shows error message for missing value title', async () => {
       renderWithRouter(<OutputForm {...defaultProps} />);
       const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
-      expect(screen.getByText('Please enter a title.')).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByText('Please enter a title.')).toBeVisible();
+      });
     });
 
     describe('Short Description Validation', () => {
-      it('shows error message when short description exceeds 250 characters', () => {
+      it('shows error message when short description exceeds 250 characters', async () => {
         renderWithRouter(<OutputForm {...defaultProps} />);
         const input = screen.getByLabelText(/short description/i);
         const longText = 'a'.repeat(251);
         fireEvent.change(input, { target: { value: longText } });
         fireEvent.focusOut(input);
-        expect(
-          screen.getByText(
-            'The short description exceeds the character limit. Please limit it to 250 characters.',
-          ),
-        ).toBeVisible();
+        await waitFor(() => {
+          expect(
+            screen.getByText(
+              'The short description exceeds the character limit. Please limit it to 250 characters.',
+            ),
+          ).toBeVisible();
+        });
       });
 
-      it('shows error message when short description is empty after trimming', () => {
+      it('shows error message when short description is empty after trimming', async () => {
         renderWithRouter(<OutputForm {...defaultProps} />);
         const input = screen.getByLabelText(/short description/i);
         fireEvent.change(input, { target: { value: '   ' } });
         fireEvent.focusOut(input);
-        expect(
-          screen.getByText('Please enter a short description'),
-        ).toBeVisible();
+        await waitFor(() => {
+          expect(
+            screen.getByText('Please enter a short description'),
+          ).toBeVisible();
+        });
       });
 
-      it('does not show error message when short description is valid', () => {
+      it('does not show error message when short description is valid', async () => {
         renderWithRouter(<OutputForm {...defaultProps} />);
         const input = screen.getByLabelText(/short description/i);
         fireEvent.change(input, {
           target: { value: 'Valid short description' },
         });
         fireEvent.focusOut(input);
-        expect(
-          screen.queryByText('Please enter a short description'),
-        ).not.toBeInTheDocument();
-        expect(
-          screen.queryByText(
-            'The short description exceeds the character limit. Please limit it to 250 characters.',
-          ),
-        ).not.toBeInTheDocument();
+        await waitFor(() => {
+          expect(
+            screen.queryByText('Please enter a short description'),
+          ).not.toBeInTheDocument();
+          expect(
+            screen.queryByText(
+              'The short description exceeds the character limit. Please limit it to 250 characters.',
+            ),
+          ).not.toBeInTheDocument();
+        });
       });
     });
 
     it('shows the custom error message for a date in the future', async () => {
+      const user = userEvent.setup();
       renderWithRouter(<OutputForm {...defaultProps} />);
 
       const sharingStatus = screen.getByRole('group', {
         name: /sharing status?/i,
       });
-      await userEvent.click(
+      await user.click(
         within(sharingStatus).getByRole('radio', { name: 'Public' }),
       );
 
@@ -1102,9 +1152,11 @@ describe('OutputForm', () => {
       });
       fireEvent.focusOut(input);
 
-      expect(
-        screen.getByText(/publish date cannot be greater than today/i),
-      ).toBeVisible();
+      await waitFor(() => {
+        expect(
+          screen.getByText(/publish date cannot be greater than today/i),
+        ).toBeVisible();
+      });
     });
   });
 
@@ -1137,18 +1189,50 @@ describe('OutputForm', () => {
   });
 
   describe('Notification Errors', () => {
-    const {
-      addNotification,
-      getAuthorSuggestions,
-      getRelatedOutputSuggestions,
-      history,
-      shareOutput,
-    } = setup();
+    let addNotification: jest.Mock;
+    let getAuthorSuggestions: jest.Mock;
+    let getRelatedOutputSuggestions: jest.Mock;
+    let shareOutput: jest.Mock;
+    let removeNotification: jest.Mock;
+    let notifications: Notification[];
 
-    const removeNotification = jest.fn();
-    const notifications: Notification[] = [];
+    beforeEach(() => {
+      addNotification = jest.fn();
+      getAuthorSuggestions = jest.fn();
+      getAuthorSuggestions.mockResolvedValue([
+        {
+          author: {
+            ...gp2Fixtures.createUserResponse(),
+            displayName: 'Chris Blue',
+          },
+          label: 'Chris Blue',
+          value: 'u2',
+        },
+        {
+          author: {
+            ...gp2Fixtures.createExternalUserResponse(),
+            displayName: 'Chris Reed',
+          },
+          label: 'Chris Reed (Non CRN)',
+          value: 'u1',
+        },
+      ]);
+      getRelatedOutputSuggestions = jest.fn();
+      getRelatedOutputSuggestions.mockResolvedValue([
+        {
+          value: '11',
+          label: 'some related output',
+          documentType: 'GP2 Reports',
+        },
+      ]);
+      shareOutput = jest.fn();
+      shareOutput.mockResolvedValue(gp2Fixtures.createOutputResponse());
+      removeNotification = jest.fn();
+      notifications = [];
+    });
 
     it('shows error message because of empty required fields', async () => {
+      const user = userEvent.setup();
       render(
         <OutputForm
           {...defaultProps}
@@ -1167,17 +1251,20 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
 
-      expect(shareOutput).not.toHaveBeenCalled();
-      expect(removeNotification).not.toHaveBeenCalled();
-      await waitFor(() =>
+      await waitFor(() => {
+        expect(shareOutput).not.toHaveBeenCalled();
+        expect(removeNotification).not.toHaveBeenCalled();
         expect(addNotification).toHaveBeenCalledWith(
           expect.objectContaining({
             message:
@@ -1185,11 +1272,12 @@ describe('OutputForm', () => {
             page: 'output-form',
             type: 'error',
           }),
-        ),
-      );
+        );
+      });
     });
 
-    it('does not remove notification if error remains', () => {
+    it('does not remove notification if error remains', async () => {
+      const user = userEvent.setup();
       render(
         <OutputForm
           {...defaultProps}
@@ -1208,28 +1296,35 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
 
-      expect(
-        screen.queryByText('Publish output for the whole hub?'),
-      ).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          screen.queryByText('Publish output for the whole hub?'),
+        ).not.toBeInTheDocument();
+      });
 
-      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
 
-      expect(
-        screen.queryByText('Publish output for the whole hub?'),
-      ).not.toBeInTheDocument();
-
-      expect(removeNotification).not.toHaveBeenCalled();
+      await waitFor(() => {
+        expect(
+          screen.queryByText('Publish output for the whole hub?'),
+        ).not.toBeInTheDocument();
+        expect(removeNotification).not.toHaveBeenCalled();
+      });
     });
 
     it('shows error message because of unknown error', async () => {
+      const user = userEvent.setup();
       shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
       render(
         <OutputForm
@@ -1251,13 +1346,16 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      await userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
       expect(
         await screen.findByRole('button', { name: /save/i }),
       ).toBeEnabled();
@@ -1276,6 +1374,7 @@ describe('OutputForm', () => {
     });
 
     it('changes notification if another error', async () => {
+      const user = userEvent.setup();
       shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
       render(
         <OutputForm
@@ -1297,7 +1396,10 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
@@ -1306,7 +1408,7 @@ describe('OutputForm', () => {
       addNotification.mockImplementationOnce((not: Notification) =>
         notifications.push(not),
       );
-      await userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
       expect(
         await screen.findByRole('button', { name: /save/i }),
       ).toBeEnabled();
@@ -1322,9 +1424,13 @@ describe('OutputForm', () => {
         ),
       );
 
-      await userEvent.clear(screen.getByRole('textbox', { name: /title/i }));
+      await user.clear(screen.getByRole('textbox', { name: /title/i }));
 
-      await userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await waitFor(() => {
+        expect(screen.getByRole('textbox', { name: /title/i })).toHaveValue('');
+      });
+
+      await user.click(screen.getByRole('button', { name: /save/i }));
       expect(
         await screen.findByRole('button', { name: /save/i }),
       ).toBeEnabled();
@@ -1344,6 +1450,7 @@ describe('OutputForm', () => {
     });
 
     it('displays server side validation error for link and calls clears function when changed', async () => {
+      const user = userEvent.setup();
       const mockClearError = jest.fn();
       render(
         <OutputForm
@@ -1361,7 +1468,10 @@ describe('OutputForm', () => {
         />,
         {
           wrapper: ({ children }) => (
-            <Router history={createMemoryHistory()}>{children}</Router>
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
           ),
         },
       );
@@ -1371,11 +1481,14 @@ describe('OutputForm', () => {
         ),
       ).toBeVisible();
 
-      await userEvent.type(screen.getByLabelText(/URL/i), 'a');
-      expect(mockClearError).toHaveBeenCalledWith('/link');
+      await user.type(screen.getByLabelText(/URL/i), 'a');
+      await waitFor(() => {
+        expect(mockClearError).toHaveBeenCalledWith('/link');
+      });
     });
 
     it('displays server side validation error for title and calls clears function when changed', async () => {
+      const user = userEvent.setup();
       const mockClearError = jest.fn();
       render(
         <OutputForm
@@ -1393,7 +1506,10 @@ describe('OutputForm', () => {
         />,
         {
           wrapper: ({ children }) => (
-            <Router history={createMemoryHistory()}>{children}</Router>
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
           ),
         },
       );
@@ -1403,8 +1519,10 @@ describe('OutputForm', () => {
         ),
       ).toBeVisible();
 
-      await userEvent.type(screen.getByLabelText(/title/i), 'a');
-      expect(mockClearError).toHaveBeenCalledWith('/title');
+      await user.type(screen.getByLabelText(/title/i), 'a');
+      await waitFor(() => {
+        expect(mockClearError).toHaveBeenCalledWith('/title');
+      });
     });
   });
 });

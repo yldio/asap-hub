@@ -76,6 +76,11 @@ export const FETCH_TEAM_BY_ID = gql`
                         id
                       }
                       name
+                      labPi {
+                        sys {
+                          id
+                        }
+                      }
                     }
                   }
                 }
@@ -123,6 +128,11 @@ export const FETCH_TEAMS = gql`
                       items {
                         sys {
                           id
+                        }
+                        labPi {
+                          sys {
+                            id
+                          }
                         }
                       }
                     }

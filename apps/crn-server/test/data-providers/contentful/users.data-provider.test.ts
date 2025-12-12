@@ -260,6 +260,32 @@ describe('User data provider', () => {
       expect(result!.labs[0]!.name).toEqual('My lab');
     });
 
+    test('should map labPrincipalInvestigatorId when present', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          labsCollection: {
+            items: [
+              {
+                sys: {
+                  id: '1',
+                },
+                name: 'My lab',
+                labPi: {
+                  sys: {
+                    id: 'pi-1',
+                  },
+                },
+              },
+            ],
+          },
+        }),
+      });
+
+      const result = await userDataProvider.fetchById('123');
+      expect(result!.labs).toHaveLength(1);
+      expect(result!.labs[0]!.labPrincipalInvestigatorId).toEqual('pi-1');
+    });
+
     test('should tag alumni users', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: getContentfulGraphqlUser({

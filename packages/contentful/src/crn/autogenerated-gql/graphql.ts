@@ -25248,6 +25248,7 @@ export type FetchProjectsByTeamIdQuery = {
                           Sys,
                           'id' | 'firstPublishedAt' | 'publishedAt'
                         >;
+                        proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                         supplementGrant?: Maybe<
                           Pick<
                             SupplementGrant,
@@ -25296,7 +25297,9 @@ export type FetchProjectsByTeamIdQuery = {
                                   projectMember?: Maybe<
                                     | ({ __typename: 'Teams' } & Pick<
                                         Teams,
-                                        'displayName' | 'inactiveSince'
+                                        | 'displayName'
+                                        | 'inactiveSince'
+                                        | 'teamDescription'
                                       > & {
                                           sys: Pick<Sys, 'id'>;
                                           researchTheme?: Maybe<
@@ -25368,6 +25371,7 @@ export type FetchProjectsByUserIdQuery = {
                           Sys,
                           'id' | 'firstPublishedAt' | 'publishedAt'
                         >;
+                        proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                         supplementGrant?: Maybe<
                           Pick<
                             SupplementGrant,
@@ -25416,7 +25420,9 @@ export type FetchProjectsByUserIdQuery = {
                                   projectMember?: Maybe<
                                     | ({ __typename: 'Teams' } & Pick<
                                         Teams,
-                                        'displayName' | 'inactiveSince'
+                                        | 'displayName'
+                                        | 'inactiveSince'
+                                        | 'teamDescription'
                                       > & {
                                           sys: Pick<Sys, 'id'>;
                                           researchTheme?: Maybe<
@@ -25482,6 +25488,7 @@ export type FetchProjectsByMembershipIdQuery = {
                 | 'googleDriveLink'
               > & {
                 sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
+                proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                 supplementGrant?: Maybe<
                   Pick<
                     SupplementGrant,
@@ -25526,7 +25533,9 @@ export type FetchProjectsByMembershipIdQuery = {
                           projectMember?: Maybe<
                             | ({ __typename: 'Teams' } & Pick<
                                 Teams,
-                                'displayName' | 'inactiveSince'
+                                | 'displayName'
+                                | 'inactiveSince'
+                                | 'teamDescription'
                               > & {
                                   sys: Pick<Sys, 'id'>;
                                   researchTheme?: Maybe<
@@ -27392,7 +27401,10 @@ export type FetchTeamByIdQuery = {
                           labsCollection?: Maybe<{
                             items: Array<
                               Maybe<
-                                Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }
+                                Pick<Labs, 'name'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                  labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                                }
                               >
                             >;
                           }>;
@@ -27437,7 +27449,12 @@ export type FetchTeamsQuery = {
                               Pick<Users, 'onboarded'> & {
                                 sys: Pick<Sys, 'id'>;
                                 labsCollection?: Maybe<{
-                                  items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                                  items: Array<
+                                    Maybe<{
+                                      sys: Pick<Sys, 'id'>;
+                                      labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                                    }>
+                                  >;
                                 }>;
                               }
                             >
@@ -28295,7 +28312,14 @@ export type UsersContentFragment = Pick<
     >;
   }>;
   labsCollection?: Maybe<{
-    items: Array<Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+    items: Array<
+      Maybe<
+        Pick<Labs, 'name'> & {
+          sys: Pick<Sys, 'id'>;
+          labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+        }
+      >
+    >;
   }>;
   linkedFrom?: Maybe<{
     workingGroupMembersCollection?: Maybe<{
@@ -28634,7 +28658,14 @@ export type FetchUserByIdQuery = {
         >;
       }>;
       labsCollection?: Maybe<{
-        items: Array<Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+        items: Array<
+          Maybe<
+            Pick<Labs, 'name'> & {
+              sys: Pick<Sys, 'id'>;
+              labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+            }
+          >
+        >;
       }>;
       linkedFrom?: Maybe<{
         workingGroupMembersCollection?: Maybe<{
@@ -28739,7 +28770,14 @@ export type UserListItemContentFragment = Pick<
   avatar?: Maybe<Pick<Asset, 'url'>>;
   sys: Pick<Sys, 'id'>;
   labsCollection?: Maybe<{
-    items: Array<Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+    items: Array<
+      Maybe<
+        Pick<Labs, 'name'> & {
+          sys: Pick<Sys, 'id'>;
+          labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+        }
+      >
+    >;
   }>;
   researchTagsCollection?: Maybe<{
     items: Array<Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>>;
@@ -28791,7 +28829,12 @@ export type FetchUsersQuery = {
             sys: Pick<Sys, 'id'>;
             labsCollection?: Maybe<{
               items: Array<
-                Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+                Maybe<
+                  Pick<Labs, 'name'> & {
+                    sys: Pick<Sys, 'id'>;
+                    labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                  }
+                >
               >;
             }>;
             researchTagsCollection?: Maybe<{
@@ -28856,7 +28899,12 @@ export type FetchUsersByTeamIdQuery = {
                     sys: Pick<Sys, 'id'>;
                     labsCollection?: Maybe<{
                       items: Array<
-                        Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+                        Maybe<
+                          Pick<Labs, 'name'> & {
+                            sys: Pick<Sys, 'id'>;
+                            labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                          }
+                        >
                       >;
                     }>;
                     researchTagsCollection?: Maybe<{
@@ -28929,7 +28977,12 @@ export type FetchUsersByTeamMembershipIdQuery = {
                     sys: Pick<Sys, 'id'>;
                     labsCollection?: Maybe<{
                       items: Array<
-                        Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+                        Maybe<
+                          Pick<Labs, 'name'> & {
+                            sys: Pick<Sys, 'id'>;
+                            labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                          }
+                        >
                       >;
                     }>;
                     researchTagsCollection?: Maybe<{
@@ -29004,7 +29057,12 @@ export type FetchUsersByLabIdQuery = {
                         sys: Pick<Sys, 'id'>;
                         labsCollection?: Maybe<{
                           items: Array<
-                            Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+                            Maybe<
+                              Pick<Labs, 'name'> & {
+                                sys: Pick<Sys, 'id'>;
+                                labPi?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                              }
+                            >
                           >;
                         }>;
                         researchTagsCollection?: Maybe<{
@@ -37556,6 +37614,28 @@ export const UsersContentFragmentDoc = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'labPi' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -38119,6 +38199,28 @@ export const UserListItemContentFragmentDoc = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'labPi' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -52484,6 +52586,44 @@ export const FetchTeamByIdDocument = {
                                                                       'name',
                                                                   },
                                                                 },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'labPi',
+                                                                  },
+                                                                  selectionSet:
+                                                                    {
+                                                                      kind: 'SelectionSet',
+                                                                      selections:
+                                                                        [
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'sys',
+                                                                            },
+                                                                            selectionSet:
+                                                                              {
+                                                                                kind: 'SelectionSet',
+                                                                                selections:
+                                                                                  [
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'id',
+                                                                                      },
+                                                                                    },
+                                                                                  ],
+                                                                              },
+                                                                          },
+                                                                        ],
+                                                                    },
+                                                                },
                                                               ],
                                                             },
                                                           },
@@ -52806,6 +52946,44 @@ export const FetchTeamsDocument = {
                                                                                         value:
                                                                                           'id',
                                                                                       },
+                                                                                    },
+                                                                                  ],
+                                                                              },
+                                                                          },
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'labPi',
+                                                                            },
+                                                                            selectionSet:
+                                                                              {
+                                                                                kind: 'SelectionSet',
+                                                                                selections:
+                                                                                  [
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'sys',
+                                                                                      },
+                                                                                      selectionSet:
+                                                                                        {
+                                                                                          kind: 'SelectionSet',
+                                                                                          selections:
+                                                                                            [
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'id',
+                                                                                                },
+                                                                                              },
+                                                                                            ],
+                                                                                        },
                                                                                     },
                                                                                   ],
                                                                               },

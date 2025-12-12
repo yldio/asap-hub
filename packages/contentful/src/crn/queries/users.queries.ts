@@ -115,6 +115,11 @@ export const usersContentQueryFragment = gql`
           id
         }
         name
+        labPi {
+          sys {
+            id
+          }
+        }
       }
     }
     linkedFrom {
@@ -373,6 +378,11 @@ export const userListItemContentQueryFragment = gql`
           id
         }
         name
+        labPi {
+          sys {
+            id
+          }
+        }
       }
     }
     lastName

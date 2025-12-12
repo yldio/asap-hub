@@ -102,6 +102,7 @@ export { default as TeamCard } from './TeamCard';
 export { default as TeamCollaborationTable } from './TeamCollaborationTable';
 export { default as TeamInterestGroupsTabbedCard } from './TeamInterestGroupsTabbedCard';
 export { default as TeamMembersSection } from './TeamMembersSection';
+export { default as TeamLabsCard } from './TeamLabsCard';
 export { default as TeamMembersTabbedCard } from './TeamMembersTabbedCard';
 export { default as TeamProductivityTable } from './TeamProductivityTable';
 export { default as TeamProfileOverview } from './TeamProfileOverview';

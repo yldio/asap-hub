@@ -103,13 +103,13 @@ describe('CollapsibleTable', () => {
       await userEvent.click(button);
       expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
     });
-    it('displays the hidden rows if the show more button is clicked', () => {
+    it('displays the hidden rows if the show more button is clicked', async () => {
       renderTableDisplay({ children: getRows(4) });
       const button = screen.getByRole('button', { name: /Show more/i });
       await userEvent.click(button);
       expect(screen.getByText('a name 3')).toBeVisible();
     });
-    it('hides the hidden rows if the show less button is clicked', () => {
+    it('hides the hidden rows if the show less button is clicked', async () => {
       renderTableDisplay({ children: getRows(4) });
       const moreButton = screen.getByRole('button', { name: /Show more/i });
       await userEvent.click(moreButton);

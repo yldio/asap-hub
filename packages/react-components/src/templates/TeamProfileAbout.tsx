@@ -61,7 +61,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         tags={tags}
       />
     ) : null}
-    {tags && tags.length ? (
+    {supplementGrant && tags && tags.length ? (
       <ProfileExpertiseAndResources hideExpertiseAndResources tags={tags} />
     ) : null}
     {isEnabled('TEAM_LABS_CARD') &&

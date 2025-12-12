@@ -108,10 +108,21 @@ it('shows the lab list when present on member list', () => {
   expect(queryByText('Doe Lab')).toBeInTheDocument();
 });
 
-it('renders the expertise and resources list', () => {
+it('does not render the expertise and resources list when supplementGrant is missing', () => {
+  const { queryByText } = render(
+    <TeamProfileAbout
+      {...props}
+      tags={[{ name: 'example expertise', id: '1' }]}
+    />,
+  );
+  expect(queryByText(/example expertise/i)).not.toBeInTheDocument();
+});
+
+it('renders the expertise and resources list when supplementGrant is present', () => {
   const { getByText, queryByText } = render(
     <TeamProfileAbout
       {...props}
+      supplementGrant={{ title: 'Supplement Grant' }}
       tags={[{ name: 'example expertise', id: '1' }]}
     />,
   );

@@ -2,32 +2,37 @@ import { gp2 } from '@asap-hub/model';
 import { AWS } from '@serverless/typescript';
 import assert from 'assert';
 
-[
-  'ACTIVE_CAMPAIGN_ACCOUNT',
-  'ALGOLIA_INDEX',
-  'AUTH0_AUDIENCE',
-  'AUTH0_CLIENT_ID',
-  'AUTH0_SHARED_SECRET',
-  'AWS_ACM_CERTIFICATE_ARN',
-  'AWS_REGION',
-  'CONTENTFUL_ACCESS_TOKEN',
-  'CONTENTFUL_ENV',
-  'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
-  'CONTENTFUL_PREVIEW_ACCESS_TOKEN',
-  'CONTENTFUL_SPACE_ID',
-  'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
-  'HOSTNAME',
-  'OPENAI_API_KEY',
-  'SES_REGION',
-  'SLS_STAGE',
-].forEach((env) => {
-  assert.ok(process.env[env], `${env} not defined`);
-});
+if (process.env.SLS_STAGE !== 'local') {
+  [
+    'ACTIVE_CAMPAIGN_ACCOUNT',
+    'ALGOLIA_INDEX',
+    'AUTH0_AUDIENCE',
+    'AUTH0_CLIENT_ID',
+    'AUTH0_SHARED_SECRET',
+    'AWS_ACM_CERTIFICATE_ARN',
+    'AWS_REGION',
+    'CONTENTFUL_ACCESS_TOKEN',
+    'CONTENTFUL_ENV',
+    'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
+    'CONTENTFUL_PREVIEW_ACCESS_TOKEN',
+    'CONTENTFUL_SPACE_ID',
+    'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
+    'HOSTNAME',
+    'OPENAI_API_KEY',
+    'SES_REGION',
+    'SLS_STAGE',
+  ].forEach((env) => {
+    assert.ok(process.env[env], `${env} not defined`);
+  });
+}
 
 const stage = process.env.SLS_STAGE!;
 assert.ok(
-  stage === 'dev' || stage === 'production' || !isNaN(Number.parseInt(stage)),
-  'SLS_STAGE must be either "dev" or "production" or a PR number',
+  stage === 'dev' ||
+    stage === 'production' ||
+    stage === 'local' ||
+    !isNaN(Number.parseInt(stage)),
+  'SLS_STAGE must be either "dev", "production", "local" or a PR number',
 );
 
 const activeCampaignAccount = process.env.ACTIVE_CAMPAIGN_ACCOUNT || '';
@@ -80,9 +85,32 @@ const envRef = ['production', 'dev'].includes(stage) ? envAlias : `CI-${stage}`;
 const algoliaIndex = process.env.ALGOLIA_INDEX ?? `gp2-hub_${envRef}`;
 const s3SyncEnabled = process.env.S3_SYNC_ENABLED !== 'false';
 
+const offlineSSM =
+  stage === 'local'
+    ? {
+        'gp2-algolia-app-id-dev': '${env:ALGOLIA_APP_ID}',
+        'gp2-algolia-index-api-key-dev': '${env:ALGOLIA_API_KEY}',
+        'gp2-algolia-search-api-key-dev': '${env:ALGOLIA_API_KEY}',
+        'email-invite-sender-gp2-dev': '${env:EMAIL_SENDER}',
+        'email-invite-bcc-gp2-dev': '${env:EMAIL_BCC}',
+        'email-invite-return-gp2-dev': '${env:EMAIL_RETURN}',
+        'google-api-token-dev': '${env:GOOGLE_API_TOKEN}',
+        'google-api-token-prod': '${env:GOOGLE_API_TOKEN}',
+      }
+    : {};
+
+const offlinePlugins =
+  stage === 'local'
+    ? [
+        './serverless-plugins/serverless-offline',
+        './serverless-plugins/serverless-offline-ssm',
+      ]
+    : [];
+
 export const plugins = [
   './serverless-plugins/serverless-esbuild',
   ...(s3SyncEnabled ? ['./serverless-plugins/serverless-s3-sync'] : []),
+  ...offlinePlugins,
 ];
 
 const serverlessConfig: AWS = {
@@ -90,7 +118,7 @@ const serverlessConfig: AWS = {
   plugins,
   provider: {
     name: 'aws',
-    runtime: 'nodejs20.x',
+    runtime: stage === 'local' ? 'nodejs16.x' : 'nodejs20.x',
     architecture: 'arm64',
     timeout: 16,
     memorySize: 1024,
@@ -100,9 +128,12 @@ const serverlessConfig: AWS = {
     httpApi: {
       payload: '2.0',
       cors: {
-        allowedOrigins: [appUrl],
+        allowedOrigins:
+          stage === 'local'
+            ? ['http://localhost:4000', 'http://127.0.0.1:4000']
+            : [appUrl],
         allowCredentials: true,
-        allowedMethods: ['options', 'post', 'get', 'put', 'delete', 'patch'],
+        allowedMethods: ['OPTIONS', 'POST', 'GET', 'PUT', 'DELETE', 'PATCH'],
         allowedHeaders: [
           'authorization',
           'x-transaction-id',
@@ -124,13 +155,19 @@ const serverlessConfig: AWS = {
       ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,
       ACTIVE_CAMPAIGN_TOKEN: activeCampaignToken,
       APP_ORIGIN: appUrl,
-      ENVIRONMENT: '${env:SLS_STAGE}',
+      ENVIRONMENT: stage,
       ALGOLIA_APP_ID: `\${ssm:gp2-algolia-app-id-${envAlias}}`,
       CURRENT_REVISION: ciCommitSha ?? currentRevision,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
       CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: contentfulManagementAccessToken,
       CONTENTFUL_SPACE_ID: contentfulSpaceId,
+      ...(stage === 'local'
+        ? {
+            LOCAL_DYNAMODB_ENDPOINT:
+              process.env.LOCAL_DYNAMODB_ENDPOINT || 'http://localhost:8000',
+          }
+        : {}),
     },
     iam: {
       role: {
@@ -246,6 +283,18 @@ const serverlessConfig: AWS = {
     excludeDevDependencies: false,
   },
   custom: {
+    'serverless-offline-ssm': {
+      stages: ['local'],
+      ssm: offlineSSM,
+    },
+    'serverless-offline': {
+      httpPort: 4444,
+      corsAllowOrigin: 'http://localhost:3000,http://127.0.0.1:3000',
+      corsAllowHeaders:
+        'authorization,x-transaction-id,content-type,accept,origin',
+      corsAllowCredentials: true,
+      useWorkerThreads: false,
+    },
     esbuild: {
       packager: 'yarn',
       platform: 'node',
@@ -898,8 +947,16 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         COOKIE_PREFERENCES_TABLE_NAME:
-          '${self:service}-${self:provider.stage}-cookie-preferences',
+          stage === 'local'
+            ? 'gp2-hub-dev-cookie-preferences'
+            : '${self:service}-${self:provider.stage}-cookie-preferences',
         SENTRY_DSN: sentryDsnHandlers,
+        ...(stage === 'local'
+          ? {
+              LOCAL_DYNAMODB_ENDPOINT:
+                process.env.LOCAL_DYNAMODB_ENDPOINT || 'http://localhost:8000',
+            }
+          : {}),
       },
     },
     getCookiePreferences: {
@@ -915,11 +972,18 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         COOKIE_PREFERENCES_TABLE_NAME:
-          '${self:service}-${self:provider.stage}-cookie-preferences',
+          stage === 'local'
+            ? 'gp2-hub-dev-cookie-preferences'
+            : '${self:service}-${self:provider.stage}-cookie-preferences',
         SENTRY_DSN: sentryDsnHandlers,
+        ...(stage === 'local'
+          ? {
+              LOCAL_DYNAMODB_ENDPOINT:
+                process.env.LOCAL_DYNAMODB_ENDPOINT || 'http://localhost:8000',
+            }
+          : {}),
       },
     },
-
     eventsUpdated: {
       handler: './src/handlers/webhooks/events-updated.handler',
       events: [

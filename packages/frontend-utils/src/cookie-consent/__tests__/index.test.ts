@@ -154,7 +154,9 @@ describe('useCookieConsent', () => {
   it('throws error when save response is null', async () => {
     jest
       .spyOn(global, 'fetch')
-      .mockImplementationOnce(() => Promise.resolve(null as any));
+      .mockImplementationOnce(() =>
+        Promise.resolve(null as unknown as Response),
+      );
     const { result } = renderHook(() =>
       useCookieConsent({
         name: COOKIE_NAME,

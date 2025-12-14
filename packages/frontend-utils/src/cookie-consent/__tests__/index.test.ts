@@ -151,6 +151,64 @@ describe('useCookieConsent', () => {
     expect(result.current.showCookieModal).toBe(false);
   });
 
+  it('throws error when save response is null', async () => {
+    jest
+      .spyOn(global, 'fetch')
+      .mockImplementationOnce(() => Promise.resolve(null as any));
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: COOKIE_NAME,
+        baseUrl: apiUrl,
+        savePath: `save`,
+      }),
+    );
+
+    await expect(
+      act(async () => result.current.onSaveCookiePreferences(true)),
+    ).rejects.toThrow('Failed to save cookie preferences: unknown');
+  });
+
+  it('throws error when save response is not ok with status code', async () => {
+    jest.spyOn(global, 'fetch').mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: false,
+        status: 500,
+        json: () => Promise.resolve(),
+      } as Response),
+    );
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: COOKIE_NAME,
+        baseUrl: apiUrl,
+        savePath: `save`,
+      }),
+    );
+
+    await expect(
+      act(async () => result.current.onSaveCookiePreferences(true)),
+    ).rejects.toThrow('Failed to save cookie preferences: 500');
+  });
+
+  it('throws error when save response is not ok without status code', async () => {
+    jest.spyOn(global, 'fetch').mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: false,
+        json: () => Promise.resolve(),
+      } as Response),
+    );
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: COOKIE_NAME,
+        baseUrl: apiUrl,
+        savePath: `save`,
+      }),
+    );
+
+    await expect(
+      act(async () => result.current.onSaveCookiePreferences(true)),
+    ).rejects.toThrow('Failed to save cookie preferences: unknown');
+  });
+
   it('should toggle the value of showCookieModal when toggleCookieModal is called', async () => {
     const { result } = renderHook(() =>
       useCookieConsent({
@@ -257,8 +315,44 @@ describe('useCookieConsent', () => {
     });
   });
 
-  it('should not show modal when cookie data is not found (relies on local cookie)', async () => {
-    jest.spyOn(console, 'warn').mockImplementation();
+  it('should show modal when remote cookie data returns 404 status', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    const fetchPromise = Promise.resolve({
+      ok: false,
+      status: 404,
+    } as Response);
+    (global.fetch as jest.Mock).mockReturnValue(fetchPromise);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await act(async () => {
+      await fetchPromise;
+    });
+
+    await waitFor(() => {
+      // Modal should show when remote data is not found (404)
+      expect(result.current.showCookieModal).toBe(true);
+    });
+  });
+
+  it('should not show modal when fetch fails with non-404 error', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
     const mockCookieData = {
       cookieId: 'test-id',
       preferences: {
@@ -270,13 +364,10 @@ describe('useCookieConsent', () => {
     (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
 
     (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          error: 'Not found - mocked',
-          statusCode: 404,
-        }),
-    });
+      ok: false,
+      status: 500,
+      json: () => Promise.resolve({}),
+    } as Response);
 
     const { result } = renderHook(() =>
       useCookieConsent({
@@ -287,7 +378,35 @@ describe('useCookieConsent', () => {
     );
 
     await waitFor(() => {
-      // Modal should not show since cookie is saved locally
+      // Modal should not show when fetch fails for non-404 reasons
+      expect(result.current.showCookieModal).toBe(false);
+    });
+  });
+
+  it('should not show modal when fetch returns null/undefined response', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    (global.fetch as jest.Mock).mockResolvedValue(null);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await waitFor(() => {
+      // Modal should not show when fetch returns null
       expect(result.current.showCookieModal).toBe(false);
     });
   });

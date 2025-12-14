@@ -209,4 +209,26 @@ describe('Get cookie preferences handler', () => {
 
     await expect(handler(request)).rejects.toThrow('DynamoDB error');
   });
+
+  it('should handle non-Error exceptions', async () => {
+    const mockDynamoClient = new DynamoDBClient(
+      {},
+    ) as jest.Mocked<DynamoDBClient>;
+
+    // Mock a non-Error exception (e.g., a string or object)
+    (mockDynamoClient.send as jest.Mock).mockRejectedValueOnce('String error');
+
+    const request = getLambdaGetRequest({
+      cookieId: 'cookie-id',
+    });
+
+    await expect(handler(request)).rejects.toThrow('String error');
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining('Failed to get cookie preferences from DynamoDB'),
+      expect.objectContaining({
+        error: 'String error',
+        errorName: 'Error',
+      }),
+    );
+  });
 });

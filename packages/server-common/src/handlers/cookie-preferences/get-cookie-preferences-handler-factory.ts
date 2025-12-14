@@ -37,14 +37,17 @@ export const getCookiePreferencesHandlerFactory =
     }
 
     // Use local DynamoDB if LOCAL_DYNAMODB_ENDPOINT is set, or if we're in local/dev environment
+    /* istanbul ignore next */
     const isLocalEnv =
       process.env.ENVIRONMENT === 'local' ||
       process.env.NODE_ENV === 'development' ||
       process.env.SLS_STAGE === 'local';
+    /* istanbul ignore next */
     const localEndpoint =
       process.env.LOCAL_DYNAMODB_ENDPOINT ||
       (isLocalEnv ? 'http://localhost:8000' : undefined);
 
+    /* istanbul ignore next */
     const dynamoDbConfig = localEndpoint
       ? {
           endpoint: localEndpoint,

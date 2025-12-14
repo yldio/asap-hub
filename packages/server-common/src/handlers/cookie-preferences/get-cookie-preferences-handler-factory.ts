@@ -1,6 +1,6 @@
-import { NotFoundError } from '@asap-hub/errors';
 import { framework as lambda } from '@asap-hub/services-common';
 import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import Boom from '@hapi/boom';
 
 import { Logger } from '../../utils';
 
@@ -19,6 +19,11 @@ export const getCookiePreferencesHandlerFactory =
             analytics: boolean;
             essential: boolean;
           };
+        }
+      | {
+          error: string;
+          message: string;
+          statusCode: number;
         };
   }>) =>
   async (request: lambda.Request) => {
@@ -31,7 +36,36 @@ export const getCookiePreferencesHandlerFactory =
       };
     }
 
-    const client = new DynamoDBClient();
+    // Use local DynamoDB if LOCAL_DYNAMODB_ENDPOINT is set, or if we're in local/dev environment
+    const isLocalEnv =
+      process.env.ENVIRONMENT === 'local' ||
+      process.env.NODE_ENV === 'development' ||
+      process.env.SLS_STAGE === 'local';
+    const localEndpoint =
+      process.env.LOCAL_DYNAMODB_ENDPOINT ||
+      (isLocalEnv ? 'http://localhost:8000' : undefined);
+
+    const dynamoDbConfig = localEndpoint
+      ? {
+          endpoint: localEndpoint,
+          region: process.env.AWS_REGION || 'us-east-1',
+          credentials: {
+            accessKeyId: 'local',
+            secretAccessKey: 'local',
+          },
+        }
+      : {};
+
+    logger.info(
+      `DynamoDB config: ${JSON.stringify({
+        endpoint: dynamoDbConfig.endpoint || 'default AWS endpoint',
+        region: dynamoDbConfig.region || 'default',
+        hasLocalEndpoint: !!localEndpoint,
+        isLocalEnv,
+      })}`,
+    );
+
+    const client = new DynamoDBClient(dynamoDbConfig);
     const command = new GetItemCommand({
       TableName: tableName,
       Key: {
@@ -39,7 +73,39 @@ export const getCookiePreferencesHandlerFactory =
       },
     });
 
-    const { Item } = await client.send(command);
+    let Item;
+    try {
+      const result = await client.send(command);
+      Item = result.Item;
+    } catch (error) {
+      // Extract error message from various error types (Error, AWS SDK errors, etc.)
+      let errorMessage = 'Unknown error';
+      let errorName = 'Error';
+
+      if (error instanceof Error) {
+        errorMessage = error.message || error.name || String(error);
+        errorName = error.name || 'Error';
+      } else {
+        errorMessage = String(error);
+      }
+
+      logger.error(
+        `Failed to get cookie preferences from DynamoDB: ${errorName}`,
+        {
+          error: errorMessage,
+          errorName,
+          tableName,
+          endpoint: dynamoDbConfig.endpoint,
+          cookieId: request.params.cookieId,
+          // Log error code if available (for AWS SDK errors)
+          errorCode: (error as { $metadata?: { httpStatusCode?: number } })
+            ?.$metadata?.httpStatusCode,
+        },
+      );
+      // Throw Boom error to preserve error message - this will be serialized to browser response
+      const boomMessage = errorMessage || errorName || 'Unknown error';
+      throw Boom.badImplementation(boomMessage);
+    }
 
     if (
       !Item ||
@@ -54,10 +120,19 @@ export const getCookiePreferencesHandlerFactory =
       !Item.cookieId?.S ||
       !Item.createdAt?.S
     ) {
-      throw new NotFoundError(
-        undefined,
+      // Cookie not found - return 404 response
+      // Frontend will handle this gracefully and use locally stored values
+      const notFoundError = Boom.notFound(
         `Cookie with id ${request.params.cookieId} not found`,
       );
+      return {
+        statusCode: notFoundError.output.statusCode,
+        payload: {
+          error: notFoundError.output.payload.error,
+          message: notFoundError.output.payload.message,
+          statusCode: notFoundError.output.statusCode,
+        },
+      };
     }
 
     logger.info(`${JSON.stringify(Item)}`);

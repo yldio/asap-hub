@@ -9,6 +9,7 @@ jest.mock('@aws-sdk/client-dynamodb');
 const logger = {
   info: jest.fn(),
   debug: jest.fn(),
+  error: jest.fn(),
 } as unknown as jest.Mocked<Logger>;
 
 describe('Save cookie preferences handler', () => {

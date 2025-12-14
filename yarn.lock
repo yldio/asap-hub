@@ -22428,7 +22428,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "asap-hub@workspace:."
   dependencies:
-    "@asap-hub/contentful": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/flags": "workspace:*"
     "@babel/cli": 7.28.3
@@ -22478,7 +22477,6 @@ __metadata:
     turbo: ^1.11.3
     typescript: 4.9.5
     uuid: 8.3.2
-    xlsx: ^0.18.5
   dependenciesMeta:
     aws-sdk:
       built: false

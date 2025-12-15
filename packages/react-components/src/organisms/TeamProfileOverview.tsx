@@ -25,15 +25,13 @@ const TeamProfileOverviewContent: React.FC<TeamProfileOverviewContentProps> = ({
 const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
   tags,
   teamDescription,
-}) => {
-  return (
-    <Card>
-      <div>
-        <TeamProfileOverviewContent description={teamDescription} />
-        {tags && tags.length ? <TeamProfileTags tags={tags} /> : null}
-      </div>
-    </Card>
-  );
-};
+}) => (
+  <Card>
+    <div>
+      <TeamProfileOverviewContent description={teamDescription} />
+      {tags && tags.length ? <TeamProfileTags tags={tags} /> : null}
+    </div>
+  </Card>
+);
 
 export default TeamProfileOverview;

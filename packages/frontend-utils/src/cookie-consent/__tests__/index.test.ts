@@ -413,6 +413,106 @@ describe('useCookieConsent', () => {
     });
   });
 
+  it('should not show modal when remoteCookieData is null', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(null),
+    } as Response);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await waitFor(() => {
+      // Modal should not show when remoteCookieData is null
+      expect(result.current.showCookieModal).toBe(false);
+    });
+  });
+
+  it('should not show modal when remoteCookieData has error', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          error: 'Some error occurred',
+        }),
+    } as Response);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await waitFor(() => {
+      // Modal should not show when remoteCookieData has error
+      expect(result.current.showCookieModal).toBe(false);
+    });
+  });
+
+  it('should not show modal when remoteCookieData is missing preferences', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          cookieId: 'test-id',
+          // preferences is missing
+        }),
+    } as Response);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await waitFor(() => {
+      // Modal should not show when remoteCookieData is missing preferences
+      expect(result.current.showCookieModal).toBe(false);
+    });
+  });
+
   it('generates a new cookieId when no valid cookieId exists', async () => {
     (Cookies.get as jest.Mock).mockReturnValueOnce(
       JSON.stringify({

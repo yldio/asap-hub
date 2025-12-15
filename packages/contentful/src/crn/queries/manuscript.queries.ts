@@ -2,7 +2,7 @@
 
 import { gql } from 'graphql-tag';
 import { discussionContentQueryFragment } from './discussions.queries';
-
+// // TODO: Increase limit to 10. We have to reduced it to 5 for now to avoid break down of the application.
 export const manuscriptContentQueryFragment = gql`
   fragment ManuscriptsContent on Manuscripts {
     sys {
@@ -32,7 +32,7 @@ export const manuscriptContentQueryFragment = gql`
         name
       }
     }
-    assignedUsersCollection(limit: 5) { // TODO: Increase limit to 30. We have to reduced it to 5 for now to avoid break down of the application.
+    assignedUsersCollection(limit: 5) {
       items {
         sys {
           id
@@ -71,7 +71,7 @@ export const manuscriptContentQueryFragment = gql`
           fileName
           url
         }
-        additionalFilesCollection(limit: 5) { // TODO: Increase limit to 10. We have to reduced it to 5 for now to avoid break down of the application.
+        additionalFilesCollection(limit: 5) {
           items {
             sys {
               id

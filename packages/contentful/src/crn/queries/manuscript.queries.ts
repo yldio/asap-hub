@@ -32,7 +32,7 @@ export const manuscriptContentQueryFragment = gql`
         name
       }
     }
-    assignedUsersCollection(limit: 5) {
+    assignedUsersCollection(limit: 5) { // TODO: Increase limit to 30. We have to reduced it to 5 for now to avoid break down of the application.
       items {
         sys {
           id
@@ -71,7 +71,7 @@ export const manuscriptContentQueryFragment = gql`
           fileName
           url
         }
-        additionalFilesCollection(limit: 5) {
+        additionalFilesCollection(limit: 5) { // TODO: Increase limit to 10. We have to reduced it to 5 for now to avoid break down of the application.
           items {
             sys {
               id

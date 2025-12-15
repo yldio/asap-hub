@@ -257,7 +257,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             </div>
           )}
           {projectTitle && (
-            <div css={projectNameStyles}>
+            <div css={projectNameStyles} data-testid="project-icon">
               {teamType === 'Discovery Team' ? (
                 <DiscoveryProjectIcon />
               ) : (

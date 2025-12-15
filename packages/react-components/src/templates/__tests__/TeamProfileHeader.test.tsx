@@ -299,3 +299,42 @@ describe('copy button', () => {
     );
   });
 });
+
+it('renders project icon and links to project when linkedProjectId is present', () => {
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      teamType="Discovery Team"
+      linkedProjectId="123"
+      projectTitle="Test Project"
+    />,
+  );
+  expect(screen.getByText('Test Project').closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/discovery\/123/),
+  );
+});
+
+it('renders the Discovery Project icon for Discovery Team', () => {
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      teamType="Discovery Team"
+      linkedProjectId="123"
+      projectTitle="Test Project"
+    />,
+  );
+  expect(screen.getByTestId('project-icon')).toContainHTML('<svg');
+});
+
+it('renders the Resource Project icon for Resource Team', () => {
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      teamType="Resource Team"
+      linkedProjectId="123"
+      projectTitle="Test Project"
+    />,
+  );
+  expect(screen.getByTestId('project-icon')).toContainHTML('<svg');
+});

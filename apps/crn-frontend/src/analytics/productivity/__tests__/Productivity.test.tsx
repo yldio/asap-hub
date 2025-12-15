@@ -804,14 +804,16 @@ describe('csv export', () => {
 
     // Click CSV export button
     await act(async () => {
-      userEvent.click(screen.getByText(/csv/i));
+      await userEvent.click(screen.getByText(/csv/i));
     });
 
     // Verify createCsvFileStream was called with correct filename
-    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
-      expect.stringMatching(/productivity_team_\d+\.csv/),
-      expect.anything(),
-    );
+    await waitFor(() => {
+      expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+        expect.stringMatching(/productivity_team_\d+\.csv/),
+        expect.anything(),
+      );
+    });
 
     // Verify OpenSearch getTeamProductivity was called for CSV export
     // Note: Team CSV export currently uses default pageSize (10) - unlike user export which uses 200
@@ -968,16 +970,15 @@ describe('tag suggestions', () => {
 
     const searchBox = getSearchBox();
     await act(async () => {
-      // Type multiple characters like the existing test does
-      userEvent.type(searchBox, 'test123');
+      // Type characters - the search is called with the full input value
+      await userEvent.type(searchBox, 'test123');
     });
 
     await waitFor(() => {
-      // The loadTags is called with each character typed
-      // Check for the last character like the existing test
+      // Algolia searchForTagValues is called with the search input value
       expect(mockSearchForTagValues).toHaveBeenCalledWith(
         ['team-productivity'],
-        '3',
+        'test123',
         {},
       );
     });

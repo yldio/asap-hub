@@ -1,6 +1,6 @@
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { network, projects } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
 import { CopyButton, Display, Link, StateTag, TabLink } from '../atoms';
@@ -10,11 +10,13 @@ import {
   bioinformatics,
   crnReportIcon,
   dataset,
+  DiscoveryProjectIcon,
   InactiveBadgeIcon,
   LabIcon,
   labMaterial,
   plusIcon,
   protocol,
+  ResourceProjectIcon,
 } from '../icons';
 import { createMailTo } from '../mail';
 import { DropdownButton, UserAvatarList, TabNav } from '../molecules';
@@ -43,12 +45,14 @@ const contactSectionStyles = css({
   grid: `
     "members" auto
     "contact" auto
-    "lab"    auto
+    "info"    auto
+    "lab"     auto
   `,
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     grid: `
       "contact members"
+      "info info"
       "lab lab"/ max-content 1fr
     `,
   },
@@ -63,13 +67,15 @@ const createSectionStyles = css({
   grid: `
     "members" auto
     "contact" auto
-    "create" auto
-    "lab"    auto
+    "create"  auto
+    "info"    auto
+    "lab"     auto
   `,
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     grid: `
       "contact members create"
+      "info info info"
       "lab lab lab"/ auto auto 1fr
     `,
   },
@@ -94,6 +100,13 @@ const labCountStyles = css({
   alignItems: 'center',
   padding: `${rem(12)} 0`,
   color: lead.rgb,
+});
+const projectNameStyles = css({
+  gridArea: 'info',
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+  marginTop: rem(12),
 });
 const createStyles = css({
   gridArea: 'create',
@@ -146,8 +159,25 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   manuscriptsCount,
   isAsapTeam = false,
   teamStatus,
+  teamType,
+  projectTitle,
+  linkedProjectId,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
+  let projectLink;
+
+  if (linkedProjectId) {
+    if (teamType === 'Discovery Team') {
+      projectLink = projects({})
+        .discoveryProjects({})
+        .discoveryProject({ projectId: linkedProjectId }).$;
+    } else if (teamType === 'Resource Team') {
+      projectLink = projects({})
+        .resourceProjects({})
+        .resourceProject({ projectId: linkedProjectId }).$;
+    }
+  }
+
   const { canShareResearchOutput } = useContext(
     ResearchOutputPermissionsContext,
   );
@@ -193,7 +223,6 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             <StateTag icon={<InactiveBadgeIcon />} label="Inactive" />
           )}
         </div>
-
         <section
           css={
             canShareResearchOutput ? createSectionStyles : contactSectionStyles
@@ -225,6 +254,20 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                   navigator.clipboard.writeText(pointOfContact.email)
                 }
               />
+            </div>
+          )}
+          {projectTitle && (
+            <div css={projectNameStyles}>
+              {teamType === 'Discovery Team' ? (
+                <DiscoveryProjectIcon />
+              ) : (
+                <ResourceProjectIcon />
+              )}
+              {projectLink ? (
+                <Link href={projectLink}>{projectTitle}</Link>
+              ) : (
+                projectTitle
+              )}
             </div>
           )}
           {labCount > 0 && teamStatus === 'Active' && (

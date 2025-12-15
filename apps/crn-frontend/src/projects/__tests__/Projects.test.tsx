@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import {
   render,
   screen,
@@ -155,9 +155,9 @@ const renderProjectsPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={projects.template}>
-                <Projects />
-              </Route>
+              <Routes>
+                <Route path={`${projects.template}/*`} element={<Projects />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -286,15 +286,15 @@ describe('Projects Routes', () => {
   it.each([
     {
       type: 'Discovery',
-      path: `${projects.template}/discovery/1/about`,
+      path: `${projects.template}/discovery/1`,
     },
     {
       type: 'Resource',
-      path: `${projects.template}/resource/2/about`,
+      path: `${projects.template}/resource/2`,
     },
     {
       type: 'Trainee',
-      path: `${projects.template}/trainee/3/about`,
+      path: `${projects.template}/trainee/3`,
     },
   ])('renders $type project detail page', async ({ path }) => {
     await renderProjectsPage(path);

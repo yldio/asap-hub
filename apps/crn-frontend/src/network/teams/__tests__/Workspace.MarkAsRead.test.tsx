@@ -6,7 +6,7 @@ import { network } from '@asap-hub/routing';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactNode, Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -40,16 +40,19 @@ const renderWithWrapper = (
                 network({}).teams({}).team({ teamId: id }).workspace({}).$,
               ]}
             >
-              <Route
-                path={
-                  network.template +
-                  network({}).teams.template +
-                  network({}).teams({}).team.template +
-                  network({}).teams({}).team({ teamId: id }).workspace.template
-                }
-              >
-                {children}
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    network.template +
+                    network({}).teams.template +
+                    network({}).teams({}).team.template +
+                    network({}).teams({}).team({ teamId: id }).workspace
+                      .template +
+                    '/*'
+                  }
+                  element={children}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -60,6 +63,7 @@ const renderWithWrapper = (
 const mockSetFormType = jest.fn();
 
 beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation();
   (useManuscriptToast as jest.Mock).mockImplementation(() => ({
     setFormType: mockSetFormType,
   }));

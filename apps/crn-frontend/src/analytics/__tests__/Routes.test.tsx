@@ -16,7 +16,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -43,6 +43,12 @@ jest.mock('../leadership/api');
 jest.mock('../productivity/api');
 jest.mock('../collaboration/api');
 jest.mock('../engagement/api');
+jest.mock('../open-science/api', () => ({
+  getPreprintCompliance: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+  getPublicationCompliance: jest
+    .fn()
+    .mockResolvedValue({ items: [], total: 0 }),
+}));
 
 mockConsoleError();
 afterEach(() => {
@@ -137,9 +143,12 @@ const renderPage = async (path: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: path }]}>
-              <Route path={analytics.template}>
-                <Analytics />
-              </Route>
+              <Routes>
+                <Route
+                  path={analytics.template + '/*'}
+                  element={<Analytics />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

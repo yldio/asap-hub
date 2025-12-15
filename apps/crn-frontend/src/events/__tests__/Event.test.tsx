@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 import { render, act, waitFor } from '@testing-library/react';
 import {
@@ -39,9 +39,12 @@ const wrapper: React.FC = ({ children }) => (
       <WhenReady>
         <Suspense fallback="Loading...">
           <StaticRouter location={events({}).event({ eventId: id }).$}>
-            <Route path={events.template + events({}).event.template}>
-              {children}
-            </Route>
+            <Routes>
+              <Route
+                path={events.template + events({}).event.template}
+                element={children}
+              />
+            </Routes>
           </StaticRouter>
         </Suspense>
       </WhenReady>

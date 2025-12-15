@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import {
@@ -90,20 +90,23 @@ const renderOutputs = async (
                 },
               ]}
             >
-              <Route
-                path={
-                  network({})
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: workingGroup.id })
-                    .outputs({}).$
-                }
-              >
-                <Outputs
-                  userAssociationMember={userAssociationMember}
-                  workingGroup={workingGroup}
-                  draftOutputs={draftOutputs}
+              <Routes>
+                <Route
+                  path={
+                    network({})
+                      .workingGroups({})
+                      .workingGroup({ workingGroupId: workingGroup.id })
+                      .outputs({}).$
+                  }
+                  element={
+                    <Outputs
+                      userAssociationMember={userAssociationMember}
+                      workingGroup={workingGroup}
+                      draftOutputs={draftOutputs}
+                    />
+                  }
                 />
-              </Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

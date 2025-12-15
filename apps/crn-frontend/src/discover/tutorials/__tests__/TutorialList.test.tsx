@@ -1,6 +1,6 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render, waitFor, screen, renderHook } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import {
@@ -46,11 +46,16 @@ const renderTutorials = async (searchQuery = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/guides-tutorials/tutorials']}>
-              <Route path="/guides-tutorials/tutorials">
-                <Frame title={null}>
-                  <TutorialList searchQuery={searchQuery} />
-                </Frame>
-              </Route>
+              <Routes>
+                <Route
+                  path="/guides-tutorials/tutorials"
+                  element={
+                    <Frame title={null}>
+                      <TutorialList searchQuery={searchQuery} />
+                    </Frame>
+                  }
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

@@ -20,7 +20,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import Network from '../Network';
 import { getAlgoliaTeams } from '../teams/api';
@@ -104,9 +104,9 @@ const renderNetworkPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={network.template}>
-                <Network />
-              </Route>
+              <Routes>
+                <Route path={`${network.template}/*`} element={<Network />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

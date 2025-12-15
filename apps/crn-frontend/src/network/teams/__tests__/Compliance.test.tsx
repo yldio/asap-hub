@@ -11,7 +11,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Stringifier } from 'csv-stringify';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getPresignedUrl } from '../../../shared-api/files';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -100,11 +100,16 @@ const renderCompliancePage = async () => {
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: '/' }]}>
               <ManuscriptToastProvider>
-                <Route path="/">
-                  <Frame title={null}>
-                    <Compliance />
-                  </Frame>
-                </Route>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      <Frame title={null}>
+                        <Compliance />
+                      </Frame>
+                    }
+                  />
+                </Routes>
               </ManuscriptToastProvider>
             </MemoryRouter>
           </WhenReady>

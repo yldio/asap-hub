@@ -13,7 +13,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import * as flags from '@asap-hub/flags';
@@ -125,9 +125,12 @@ const renderPage = async (metric = 'working-group') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[getPath(metric)]}>
-              <Route path="/analytics/leadership/:metric">
-                <Leadership />
-              </Route>
+              <Routes>
+                <Route
+                  path="/analytics/leadership/:metric"
+                  element={<Leadership />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -184,7 +187,7 @@ it('switches to open science champion data if flag is on', async () => {
   await userEvent.click(input);
   await userEvent.click(screen.getByText(label));
 
-  expect(screen.getAllByText(label).length).toBe(3);
+  expect(screen.getAllByText(label).length).toBe(4);
 });
 
 it('redirects to working group if OS Champion feature flag is off', async () => {

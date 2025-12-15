@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { createListInterestGroupResponse } from '@asap-hub/fixtures';
 import { ListInterestGroupResponse } from '@asap-hub/model';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -42,7 +42,12 @@ const renderInterestGroupList = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/interest-groups/']}>
-              <Route path="/interest-groups" component={InterestGroupList} />
+              <Routes>
+                <Route
+                  path="/interest-groups"
+                  element={<InterestGroupList />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -51,15 +51,17 @@ const renderGroupProfile = async (
                   .interestGroup({ interestGroupId }).$,
               ]}
             >
-              <Route
-                path={
-                  network.template +
-                  network({}).interestGroups.template +
-                  network({}).interestGroups({}).interestGroup.template
-                }
-              >
-                <InterestGroupProfile currentTime={new Date()} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    network.template +
+                    network({}).interestGroups.template +
+                    network({}).interestGroups({}).interestGroup.template +
+                    '/*'
+                  }
+                  element={<InterestGroupProfile currentTime={new Date()} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

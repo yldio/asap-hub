@@ -61,7 +61,7 @@ it.skip('prompts when trying to leave after making edits', () => {
 
 describe('when saving', () => {
   describe('and the form is invalid', () => {
-    it.skip('does not call onSave', () => {
+    it.skip('does not call onSave', async () => {
       const handleSave = jest.fn();
       renderModal(
         <EditModal {...props} onSave={handleSave} dirty>
@@ -81,7 +81,7 @@ describe('when saving', () => {
       expect(handleSave).not.toHaveBeenCalled();
     });
 
-    it.skip('does not call onSave when parent validation fails', () => {
+    it.skip('does not call onSave when parent validation fails', async () => {
       const handleSave = jest.fn(() => Promise.resolve());
       const handleValidate = jest.fn(() => false);
       renderModal(

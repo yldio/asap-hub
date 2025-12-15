@@ -18,6 +18,7 @@ const DiscoveryProjectIcon: React.FC<DiscoveryProjectIconProps> = ({
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Discovery Project</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

@@ -1,11 +1,17 @@
 import { css } from '@emotion/react';
 import { TeamListItemResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { network, projects } from '@asap-hub/routing';
 
 import { StateTag } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
 import { lead } from '../colors';
-import { TeamIcon, LabIcon, InactiveBadgeIcon } from '../icons';
+import {
+  TeamIcon,
+  LabIcon,
+  InactiveBadgeIcon,
+  DiscoveryProjectIcon,
+  ResourceProjectIcon,
+} from '../icons';
 import { getCounterString } from '../utils';
 import { EntityCard } from '.';
 
@@ -38,8 +44,25 @@ const TeamCard: React.FC<TeamCardProps> = ({
   tags,
   memberCount,
   labCount,
+  teamType,
+  researchTheme,
+  resourceType,
+  linkedProjectId,
 }) => {
   const href = network({}).teams({}).team({ teamId: id }).$;
+  let projectLink;
+
+  if (linkedProjectId) {
+    if (teamType === 'Discovery Team') {
+      projectLink = projects({})
+        .discoveryProjects({})
+        .discoveryProject({ projectId: linkedProjectId }).$;
+    } else if (teamType === 'Resource Team') {
+      projectLink = projects({})
+        .resourceProjects({})
+        .resourceProject({ projectId: linkedProjectId }).$;
+    }
+  }
 
   const footer = (
     <div css={footerStyles}>
@@ -63,12 +86,29 @@ const TeamCard: React.FC<TeamCardProps> = ({
   return (
     <EntityCard
       active={!inactiveSince}
-      footer={footer}
+      footer={!inactiveSince ? footer : undefined}
       href={href}
       inactiveBadge={<StateTag icon={<InactiveBadgeIcon />} label="Inactive" />}
       tags={tags.map(({ name }) => name)}
       text={projectTitle}
       title={`Team ${displayName}`}
+      teamType={teamType}
+      researchTheme={
+        teamType === 'Discovery Team' && researchTheme
+          ? researchTheme
+          : undefined
+      }
+      resourceType={
+        teamType === 'Resource Team' && resourceType ? resourceType : undefined
+      }
+      textIcon={
+        teamType === 'Discovery Team' ? (
+          <DiscoveryProjectIcon />
+        ) : (
+          <ResourceProjectIcon />
+        )
+      }
+      textHref={projectLink}
     />
   );
 };

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
-import { Anchor, Card, Ellipsis, Link } from '../atoms';
-import { lead } from '../colors';
+import { Anchor, Card, Ellipsis, Link, Pill } from '../atoms';
+import { fern } from '../colors';
 import { googleDriveIcon } from '../icons';
 import { LinkHeadline, TagList } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
@@ -32,11 +32,24 @@ const googleDriveButtonStyle = css({
 });
 
 const textStyles = css({
-  color: lead.rgb,
+  color: fern.rgb,
+  display: 'flex',
 });
 
 const tagsContainerStyles = css({
   margin: `${rem(8)} 0`,
+});
+
+const iconStyles = css({
+  display: 'inline-grid',
+  verticalAlign: 'middle',
+  paddingRight: rem(8),
+});
+
+const pillsStyles = css({
+  display: 'flex',
+  gap: rem(8),
+  height: '3rem',
 });
 
 type CardWrapperProps = {
@@ -48,6 +61,11 @@ type CardWrapperProps = {
   readonly tags: string[];
   readonly text: string;
   readonly title: string;
+  readonly teamType?: string;
+  readonly researchTheme?: string;
+  readonly resourceType?: string;
+  readonly textIcon?: React.ReactNode;
+  readonly textHref?: string;
 };
 
 const EntityCard: React.FC<CardWrapperProps> = ({
@@ -59,8 +77,20 @@ const EntityCard: React.FC<CardWrapperProps> = ({
   tags,
   text,
   title,
+  teamType,
+  researchTheme,
+  resourceType,
+  textIcon,
+  textHref,
 }) => (
   <Card accent={active ? 'default' : 'neutral200'}>
+    {(teamType || researchTheme || resourceType) && (
+      <div css={pillsStyles}>
+        {teamType && <Pill>{teamType}</Pill>}
+        {researchTheme && <Pill>{researchTheme}</Pill>}
+        {resourceType && <Pill>{resourceType}</Pill>}
+      </div>
+    )}
     <div css={contentStyles}>
       <div css={titleStyle}>
         <LinkHeadline level={2} styleAsHeading={4} href={href} noMargin>
@@ -75,15 +105,19 @@ const EntityCard: React.FC<CardWrapperProps> = ({
           </Link>
         </span>
       )}
-      <Anchor href={href} css={textStyles}>
-        <Ellipsis numberOfLines={2}>{text}</Ellipsis>
-      </Anchor>
+      {!!text && (
+        <div css={textStyles}>
+          {textIcon && <span css={iconStyles}>{textIcon}</span>}
+          <Anchor href={textHref ?? href}>
+            <Ellipsis numberOfLines={2}>{text}</Ellipsis>
+          </Anchor>
+        </div>
+      )}
       {!!tags.length && (
         <div css={tagsContainerStyles}>
           <TagList max={3} tags={tags} />
         </div>
       )}
-
       {footer}
     </div>
   </Card>

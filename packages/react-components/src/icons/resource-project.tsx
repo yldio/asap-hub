@@ -18,6 +18,7 @@ const ResourceProjectIcon: React.FC<ResourceProjectIconProps> = ({
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Resource Project</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

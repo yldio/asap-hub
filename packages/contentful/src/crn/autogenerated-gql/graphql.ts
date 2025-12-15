@@ -27045,7 +27045,10 @@ export type FetchTeamByIdQueryVariables = Exact<{
 
 export type FetchTeamByIdQuery = {
   teams?: Maybe<
-    Pick<Teams, 'displayName' | 'teamType' | 'inactiveSince'> & {
+    Pick<
+      Teams,
+      'displayName' | 'teamType' | 'teamDescription' | 'inactiveSince'
+    > & {
       sys: Pick<Sys, 'id' | 'publishedAt'>;
       researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
       toolsCollection?: Maybe<{
@@ -32463,7 +32466,7 @@ export const ManuscriptsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '30' },
+                value: { kind: 'IntValue', value: '5' },
               },
             ],
             selectionSet: {
@@ -32648,7 +32651,7 @@ export const ManuscriptsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '10' },
+                            value: { kind: 'IntValue', value: '5' },
                           },
                         ],
                         selectionSet: {
@@ -52089,6 +52092,10 @@ export const FetchTeamByIdDocument = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'teamType' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'teamDescription' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'inactiveSince' },

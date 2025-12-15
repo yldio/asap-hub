@@ -479,6 +479,8 @@ export const parseContentfulGraphQlTeam = (
   item: TeamByIdItem,
   linkedProject?: TeamProjectItem | null,
 ): TeamDataObject => {
+  console.log('🔍 DEBUG Item', item);
+
   const teamId = item.sys.id;
   const tools = (item.toolsCollection?.items || []).reduce(
     (teamTools: TeamTool[], tool) => {
@@ -657,6 +659,7 @@ export const parseContentfulGraphQlTeam = (
       : undefined,
     researchTheme: item.researchTheme?.name ?? undefined,
     resourceType: linkedProject?.resourceType?.name ?? undefined,
+    teamDescription: item.teamDescription ?? null,
   };
 };
 

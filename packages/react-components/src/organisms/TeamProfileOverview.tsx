@@ -26,7 +26,12 @@ const stretchOnMobile = css({
 
 type TeamProfileOverviewProps = Pick<
   TeamResponse,
-  'projectTitle' | 'projectSummary' | 'proposalURL' | 'supplementGrant' | 'tags'
+  | 'projectTitle'
+  | 'projectSummary'
+  | 'proposalURL'
+  | 'supplementGrant'
+  | 'tags'
+  | 'teamDescription'
 > & {
   readonly proposalURL?: string;
 };
@@ -72,6 +77,7 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
   proposalURL,
   supplementGrant,
   tags,
+  teamDescription,
 }) => {
   const [selectedTab, setSelectedTab] = useState<Tabs>('Supplement Grant');
 
@@ -102,7 +108,7 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
               {selectedTab === 'Original Grant' ? (
                 <TeamProfileOverviewContent
                   title={projectTitle}
-                  description={projectSummary}
+                  description={teamDescription || projectSummary}
                   researchOutputURL={proposalURL}
                 />
               ) : (
@@ -118,7 +124,7 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
           <>
             <TeamProfileOverviewContent
               title={projectTitle}
-              description={projectSummary}
+              description={teamDescription || projectSummary}
               researchOutputURL={proposalURL}
             />
             {tags && tags.length ? <TeamProfileTags tags={tags} /> : null}

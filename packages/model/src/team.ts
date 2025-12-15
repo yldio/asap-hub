@@ -132,6 +132,7 @@ export type TeamListItemDataObject = Pick<
   | 'tags'
   | 'labCount'
   | 'researchTheme'
+  | 'teamDescription'
 > & { memberCount: number; resourceType?: string };
 
 export type ListTeamDataObject = ListResponse<TeamListItemDataObject>;

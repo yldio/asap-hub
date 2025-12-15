@@ -32,7 +32,7 @@ export const manuscriptContentQueryFragment = gql`
         name
       }
     }
-    assignedUsersCollection(limit: 30) {
+    assignedUsersCollection(limit: 5) {
       items {
         sys {
           id
@@ -71,7 +71,7 @@ export const manuscriptContentQueryFragment = gql`
           fileName
           url
         }
-        additionalFilesCollection(limit: 10) {
+        additionalFilesCollection(limit: 5) {
           items {
             sys {
               id

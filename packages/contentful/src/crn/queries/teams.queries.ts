@@ -12,6 +12,7 @@ export const FETCH_TEAM_BY_ID = gql`
       }
       displayName
       teamType
+      teamDescription
       inactiveSince
       researchTheme {
         name

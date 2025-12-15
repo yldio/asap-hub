@@ -50,6 +50,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   supplementGrant,
   teamStatus,
   teamType,
+  teamDescription,
 }) => (
   <div css={styles}>
     {projectTitle ? (
@@ -59,6 +60,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         projectSummary={projectSummary}
         proposalURL={proposalURL}
         tags={tags}
+        teamDescription={teamDescription}
       />
     ) : null}
     {supplementGrant && tags && tags.length ? (

@@ -47,10 +47,8 @@ it('uses singular for one team member', () => {
   expect(getByText('1 Team Member')).toBeVisible();
 });
 
-it('displays footer when the team type is Project Team', () => {
-  const { getByText } = render(
-    <TeamCard {...teamCardProps} teamType={'Project Team' as any} />,
-  );
+it('displays footer', () => {
+  const { getByText } = render(<TeamCard {...teamCardProps} />);
   expect(getByText(/Team Member/i)).toBeVisible();
 });
 

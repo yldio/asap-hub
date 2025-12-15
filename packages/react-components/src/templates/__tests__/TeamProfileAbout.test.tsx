@@ -17,6 +17,7 @@ const props: ComponentProps<typeof TeamProfileAbout> = {
   teamListElementId: '',
   teamStatus: 'Active',
   teamType: 'Discovery Team',
+  labs: [],
 };
 it('renders the overview', () => {
   const { getByText } = render(
@@ -225,15 +226,12 @@ describe('footer', () => {
     );
   });
 
-  it('renders the lab list when point of contact has labs and flag is enabled', () => {
+  it('renders the lab list when team has labs and flag is enabled', () => {
     (isEnabled as jest.Mock).mockReturnValue(true);
     const { getByText, getByRole } = render(
       <TeamProfileAbout
         {...props}
-        pointOfContact={{
-          ...pointOfContact,
-          labs: [{ name: 'Lab 1', id: '1' }],
-        }}
+        labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
       />,
     );
 
@@ -241,15 +239,12 @@ describe('footer', () => {
     expect(getByRole('heading', { name: /labs/i })).toBeVisible();
   });
 
-  it('does not render the lab list when point of contact has labs but flag is disabled', () => {
+  it('does not render the lab list when team has labs but flag is disabled', () => {
     (isEnabled as jest.Mock).mockReturnValue(false);
     const { queryByText, queryByRole } = render(
       <TeamProfileAbout
         {...props}
-        pointOfContact={{
-          ...pointOfContact,
-          labs: [{ name: 'Lab 1', id: '1' }],
-        }}
+        labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
       />,
     );
 

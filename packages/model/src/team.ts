@@ -91,6 +91,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   manuscripts: TeamManuscript[];
   collaborationManuscripts?: TeamManuscript[];
   labCount: number;
+  labs: LabResponse[];
   inactiveSince?: string;
   teamStatus: TeamStatus;
   linkedProjectId?: string;

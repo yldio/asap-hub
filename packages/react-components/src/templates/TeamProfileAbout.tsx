@@ -32,6 +32,7 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
     | 'supplementGrant'
     | 'teamStatus'
     | 'teamType'
+    | 'labs'
   > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
@@ -47,19 +48,14 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   teamStatus,
   teamType,
   teamDescription,
+  labs,
 }) => (
   <div css={styles}>
     {teamDescription ? (
       <TeamProfileOverview tags={tags} teamDescription={teamDescription} />
     ) : null}
-    {isEnabled('TEAM_LABS_CARD') &&
-    pointOfContact &&
-    pointOfContact.labs &&
-    pointOfContact.labs.length ? (
-      <TeamLabsCard
-        labs={pointOfContact.labs}
-        isTeamActive={teamStatus === 'Active'}
-      />
+    {isEnabled('TEAM_LABS_CARD') && labs && labs.length ? (
+      <TeamLabsCard labs={labs} isTeamActive={teamStatus === 'Active'} />
     ) : null}
     <section id={teamListElementId} css={membersCardStyles}>
       <TeamMembersTabbedCard

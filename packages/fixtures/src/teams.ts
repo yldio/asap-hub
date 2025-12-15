@@ -36,6 +36,7 @@ const listTeamResponseItem: Omit<TeamResponse, 'id'> = {
   manuscripts: [],
   lastModifiedDate: '2020-09-07T17:36:54Z',
   labCount: 0,
+  labs: [],
 };
 
 type FixtureOptions = {

@@ -552,6 +552,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
   tools: [],
   researchTheme: 'PD Functional Genomics',
   resourceType: 'Isogenic iPSC Lines',
+  labs: [],
 });
 
 export const getPublicTeamListItemDataObject =

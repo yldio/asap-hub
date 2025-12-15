@@ -230,6 +230,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
           search_analyzer: 'ngram_search_analyzer',
           fields: {
             keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
+            raw: { type: 'keyword' }, // For display in aggregations, preserves original case
           },
         },
         isInactive: { type: 'boolean' },

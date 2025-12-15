@@ -105,6 +105,14 @@ export const useOpensearchMetrics = () => {
       return getUserProductivity(client, paginationParams);
     },
 
+    getUserProductivityTagSuggestions(tagQuery: string) {
+      const client = new OpensearchClient<UserProductivityResponse>(
+        'user-productivity',
+        authorization,
+      );
+      return client.getTagSuggestions(tagQuery, 'extended');
+    },
+
     getUserProductivityPerformance(
       paginationParams: Parameters<typeof getUserProductivityPerformance>[1],
     ) {
@@ -124,6 +132,14 @@ export const useOpensearchMetrics = () => {
         authorization,
       );
       return getTeamProductivity(client, paginationParams);
+    },
+
+    getTeamProductivityTagSuggestions(tagQuery: string) {
+      const client = new OpensearchClient<TeamProductivityResponse>(
+        'team-productivity',
+        authorization,
+      );
+      return client.getTagSuggestions(tagQuery, 'flat');
     },
 
     getTeamProductivityPerformance(

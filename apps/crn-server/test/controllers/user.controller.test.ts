@@ -181,13 +181,16 @@ describe('Users controller', () => {
     });
 
     test('Should return the user when it finds it', async () => {
+      const userListItem = getUserListItemDataObject();
+      const { _tags: _ignoredTags, ...userListItemWithoutTags } = userListItem;
+
       userDataProviderMock.fetchByIdForAlgoliaList.mockResolvedValue(
-        getUserListItemDataObject(),
+        userListItem,
       );
       const result = await userController.fetchByIdForAlgoliaList('user-id');
 
       expect(result).toMatchObject({
-        ...getUserListItemDataObject(),
+        ...userListItemWithoutTags,
         displayName: 'Tom (Iron Man) Hardy',
         fullDisplayName: 'Tom (Iron Man) E. Hardy',
         onboarded: true,

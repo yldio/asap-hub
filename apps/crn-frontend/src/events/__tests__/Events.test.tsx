@@ -4,7 +4,7 @@ import { events } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -37,9 +37,9 @@ const renderEventsPage = async (pathname = events({}).$, search?: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search }]}>
-              <Route path={events.template}>
-                <Events />
-              </Route>
+              <Routes>
+                <Route path={`${events.template}/*`} element={<Events />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

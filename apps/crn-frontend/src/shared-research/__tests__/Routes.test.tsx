@@ -6,15 +6,16 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { getResearchOutputs } from '../api';
-import Routes from '../Routes';
+import SharedResearchRoutes from '../Routes';
 
 jest.mock('../api');
 
@@ -31,9 +32,12 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={'/shared-research'}>
-                <Routes />
-              </Route>
+              <Routes>
+                <Route
+                  path="/shared-research/*"
+                  element={<SharedResearchRoutes />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -86,7 +90,9 @@ describe('the shared research listing page', () => {
     mockGetResearchOutputs.mockRejectedValue(new Error('error'));
 
     await renderSharedResearchPage('/shared-research');
-    expect(mockGetResearchOutputs).toHaveBeenCalled();
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    await waitFor(() => expect(mockGetResearchOutputs).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(screen.getByText(/Something went wrong/i)).toBeVisible(),
+    );
   });
 });

@@ -10,7 +10,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useSearch } from '../../hooks/search';
@@ -108,9 +108,12 @@ const renderUserDirectory = async ({
         >
           <WhenReady>
             <MemoryRouter initialEntries={['/users/']}>
-              <Route path="/users">
-                <UserDirectory displayFilters={displayFilters} />
-              </Route>
+              <Routes>
+                <Route
+                  path="/users"
+                  element={<UserDirectory displayFilters={displayFilters} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

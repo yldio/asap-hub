@@ -1,10 +1,13 @@
-import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactNode, Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import About from '../About';
@@ -21,22 +24,26 @@ const renderWithWrapper =
       <RecoilRoot>
         <Suspense fallback="loading">
           <Auth0Provider user={{ id: currentUserId }}>
-            <MemoryRouter
-              initialEntries={[
-                network({}).users({}).user({ userId }).about({}).$,
-              ]}
-            >
-              <Route
-                path={
-                  network.template +
-                  network({}).users.template +
-                  network({}).users({}).user.template +
-                  network({}).users({}).user({ userId }).about.template
-                }
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  network({}).users({}).user({ userId }).about({}).$,
+                ]}
               >
-                {children}
-              </Route>
-            </MemoryRouter>
+                <Routes>
+                  <Route
+                    path={
+                      network.template +
+                      network({}).users.template +
+                      network({}).users({}).user.template +
+                      network({}).users({}).user({ userId }).about.template +
+                      '/*'
+                    }
+                    element={children}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
           </Auth0Provider>
         </Suspense>
       </RecoilRoot>,

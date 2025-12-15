@@ -9,7 +9,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
@@ -36,13 +36,16 @@ const renderUserDetail = async (id: string) => {
             <MemoryRouter
               initialEntries={[gp2Routing.users({}).user({ userId: id }).$]}
             >
-              <Route
-                path={
-                  gp2Routing.users.template + gp2Routing.users({}).user.template
-                }
-              >
-                <UserDetail currentTime={new Date()} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    gp2Routing.users.template +
+                    gp2Routing.users({}).user.template +
+                    '/*'
+                  }
+                  element={<UserDetail currentTime={new Date()} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

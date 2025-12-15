@@ -7,7 +7,7 @@ import {
 
 import { gp2 } from '@asap-hub/fixtures';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getProjects } from '../../projects/api';
@@ -44,14 +44,16 @@ const renderOutputDetail = async () => {
               ]}
               initialIndex={1}
             >
-              <Route
-                path={
-                  gp2Routing.outputs.template +
-                  gp2Routing.outputs({}).output.template
-                }
-              >
-                <OutputDetail />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    gp2Routing.outputs.template +
+                    gp2Routing.outputs({}).output.template +
+                    '/*'
+                  }
+                  element={<OutputDetail />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

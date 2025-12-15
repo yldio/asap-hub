@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
@@ -91,11 +91,12 @@ const renderOutputs = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[initialEntry]}>
-              <Route
-                path={network({}).users({}).user({ userId }).outputs({}).$}
-              >
-                <Outputs userId={userId} />
-              </Route>
+              <Routes>
+                <Route
+                  path={network({}).users({}).user({ userId }).outputs({}).$}
+                  element={<Outputs userId={userId} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

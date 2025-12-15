@@ -10,7 +10,7 @@ import userEvent from '@testing-library/user-event';
 import { ValidationErrorResponse } from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
@@ -74,20 +74,23 @@ const renderCreateWorkingGroupOutput = async (
                   .createOutput({ outputDocumentType: documentType }).$,
               ]}
             >
-              <Route
-                path={
-                  gp2Routing.workingGroups.template +
-                  gp2Routing.workingGroups({}).workingGroup.template +
-                  gp2Routing
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: 'working-group-id-1' })
-                    .createOutput.template
-                }
-              >
-                <NotificationMessages>
-                  <CreateWorkingGroupOutput />
-                </NotificationMessages>
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    gp2Routing.workingGroups.template +
+                    gp2Routing.workingGroups({}).workingGroup.template +
+                    gp2Routing
+                      .workingGroups({})
+                      .workingGroup({ workingGroupId: 'working-group-id-1' })
+                      .createOutput.template
+                  }
+                  element={
+                    <NotificationMessages>
+                      <CreateWorkingGroupOutput />
+                    </NotificationMessages>
+                  }
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

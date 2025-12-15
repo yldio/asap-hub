@@ -8,7 +8,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
@@ -16,7 +16,7 @@ import {
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
 import { getProjects } from '../api';
-import Routes from '../Routes';
+import ProjectRoutes from '../Routes';
 
 mockConsoleError();
 
@@ -27,9 +27,9 @@ const renderRoutes = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/projects']}>
-              <Route path="/projects">
-                <Routes />
-              </Route>
+              <Routes>
+                <Route path="/projects/*" element={<ProjectRoutes />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

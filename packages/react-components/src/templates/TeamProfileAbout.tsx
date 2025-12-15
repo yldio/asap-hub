@@ -39,32 +39,18 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
 
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   inactiveSince,
-  projectTitle,
-  projectSummary,
   tags,
   pointOfContact,
   members,
-  proposalURL,
   teamGroupsCard,
   teamListElementId,
-  supplementGrant,
   teamStatus,
   teamType,
   teamDescription,
 }) => (
   <div css={styles}>
-    {projectTitle ? (
-      <TeamProfileOverview
-        supplementGrant={supplementGrant}
-        projectTitle={projectTitle}
-        projectSummary={projectSummary}
-        proposalURL={proposalURL}
-        tags={tags}
-        teamDescription={teamDescription}
-      />
-    ) : null}
-    {supplementGrant && tags && tags.length ? (
-      <ProfileExpertiseAndResources hideExpertiseAndResources tags={tags} />
+    {teamDescription ? (
+      <TeamProfileOverview tags={tags} teamDescription={teamDescription} />
     ) : null}
     {isEnabled('TEAM_LABS_CARD') &&
     pointOfContact &&

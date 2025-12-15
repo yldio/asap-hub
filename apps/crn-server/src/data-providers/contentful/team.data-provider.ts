@@ -659,7 +659,7 @@ export const parseContentfulGraphQlTeam = (
       : undefined,
     researchTheme: item.researchTheme?.name ?? undefined,
     resourceType: linkedProject?.resourceType?.name ?? undefined,
-    teamDescription: item.teamDescription ?? null,
+    teamDescription: item.teamDescription ?? undefined,
   };
 };
 

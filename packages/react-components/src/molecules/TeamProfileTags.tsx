@@ -9,7 +9,7 @@ import TagList from './TagList';
 
 const dividerStyles = css({
   marginTop: rem(24),
-  marginBottom: rem(24),
+  marginBottom: rem(16),
 });
 
 const contentStyles = css({
@@ -21,8 +21,10 @@ type TeamProfileTagsProps = {
 };
 
 const TeamProfileTags: React.FC<TeamProfileTagsProps> = ({ tags }) => (
-  <div css={dividerStyles}>
-    <Divider />
+  <div>
+    <div css={dividerStyles}>
+      <Divider />
+    </div>
     <Headline3 noMargin>Tags</Headline3>
     <Paragraph accent="lead">
       Explore keywords related to skills, techniques, resources, and tools.

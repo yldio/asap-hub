@@ -11,7 +11,7 @@ jest.mock('@asap-hub/flags', () => ({
 }));
 
 const props: ComponentProps<typeof TeamProfileAbout> = {
-  projectTitle: '',
+  teamDescription: '',
   tags: [],
   members: [],
   teamListElementId: '',
@@ -20,11 +20,11 @@ const props: ComponentProps<typeof TeamProfileAbout> = {
 };
 it('renders the overview', () => {
   const { getByText } = render(
-    <TeamProfileAbout {...props} projectTitle="Title" />,
+    <TeamProfileAbout {...props} teamDescription="Description" />,
   );
 
-  expect(getByText(/overview/i)).toBeVisible();
-  expect(getByText('Title')).toBeVisible();
+  expect(getByText(/Team Description/i)).toBeVisible();
+  expect(getByText('Description')).toBeVisible();
 });
 
 it('renders the contact banner', () => {
@@ -108,26 +108,15 @@ it('shows the lab list when present on member list', () => {
   expect(queryByText('Doe Lab')).toBeInTheDocument();
 });
 
-it('does not render the expertise and resources list when supplementGrant is missing', () => {
-  const { queryByText } = render(
+it('renders the tags list when tags are present', () => {
+  const { getByText } = render(
     <TeamProfileAbout
       {...props}
-      tags={[{ name: 'example expertise', id: '1' }]}
-    />,
-  );
-  expect(queryByText(/example expertise/i)).not.toBeInTheDocument();
-});
-
-it('renders the expertise and resources list when supplementGrant is present', () => {
-  const { getByText, queryByText } = render(
-    <TeamProfileAbout
-      {...props}
-      supplementGrant={{ title: 'Supplement Grant' }}
+      teamDescription="Description"
       tags={[{ name: 'example expertise', id: '1' }]}
     />,
   );
   expect(getByText(/example expertise/i)).toBeVisible();
-  expect(queryByText(/expertise and resources/i)).toBeNull();
   expect(getByText(/tags/i)).toBeVisible();
 });
 

@@ -4,13 +4,13 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { ToastContext } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Auth0Client } from '@auth0/auth0-spa-js';
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import imageCompression from 'browser-image-compression';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { act } from 'react-test-renderer';
+import { act } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, postUserAvatar } from '../../users/api';
@@ -83,17 +83,24 @@ describe('useSelectAvatar', () => {
     };
     mockGetUser.mockResolvedValueOnce(user);
 
-    const { result, waitForNextUpdate } = renderHook(
+    const { result } = renderHook(
       () => useSelectAvatar(user.id),
       {
         wrapper: wrapper({ user }),
       },
     );
 
-    await waitForNextUpdate();
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    act(() => result.current.onImageSelect(file));
-    await waitForNextUpdate();
+    await waitFor(() => {
+      expect(result.current.onImageSelect).toBeDefined();
+    });
+
+    await act(async () => {
+      result.current.onImageSelect(file);
+    });
+
+    await waitFor(() => {
+      expect(mockPostUserAvatar).toHaveBeenCalled();
+    });
 
     expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
       '42',
@@ -113,7 +120,7 @@ describe('useSelectAvatar', () => {
     const mockToken = jest.fn().mockResolvedValue('token');
     mockGetUser.mockResolvedValueOnce(user);
 
-    const { result, waitForNextUpdate } = renderHook(
+    const { result } = renderHook(
       () => useSelectAvatar(user.id),
       {
         wrapper: wrapper({ user }, (authClient, authUser) => ({
@@ -127,12 +134,17 @@ describe('useSelectAvatar', () => {
       },
     );
 
-    await waitForNextUpdate();
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    act(() => result.current.onImageSelect(file));
-    await waitForNextUpdate();
+    await waitFor(() => {
+      expect(result.current.onImageSelect).toBeDefined();
+    });
 
-    expect(mockToken).toHaveBeenCalled();
+    await act(async () => {
+      result.current.onImageSelect(file);
+    });
+
+    await waitFor(() => {
+      expect(mockToken).toHaveBeenCalled();
+    });
   });
 
   it('toasts if the upload fails', async () => {
@@ -143,7 +155,7 @@ describe('useSelectAvatar', () => {
     };
     mockGetUser.mockResolvedValueOnce(user);
 
-    const { result, waitForNextUpdate } = renderHook(
+    const { result } = renderHook(
       () => useSelectAvatar(user.id),
       {
         wrapper: wrapper({ user }),
@@ -151,10 +163,17 @@ describe('useSelectAvatar', () => {
     );
     mockPostUserAvatar.mockRejectedValue(new Error('500'));
 
-    await waitForNextUpdate();
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    act(() => result.current.onImageSelect(file));
-    await waitForNextUpdate();
+    await waitFor(() => {
+      expect(result.current.onImageSelect).toBeDefined();
+    });
+
+    await act(async () => {
+      result.current.onImageSelect(file);
+    });
+
+    await waitFor(() => {
+      expect(mockToast).toHaveBeenCalled();
+    });
 
     expect(mockToast).toHaveBeenCalledWith(
       expect.stringMatching(/error.+picture/i),

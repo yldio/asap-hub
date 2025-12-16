@@ -1,15 +1,18 @@
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 import ManuscriptFormModals from '../ManuscriptFormModals';
 
 it('renders default cancellation title and description', () => {
   render(
-    <ManuscriptFormModals
-      modal={'cancel'}
-      setModal={jest.fn}
-      handleSubmit={jest.fn}
-      isSubmitting={false}
-    />,
+    <MemoryRouter>
+      <ManuscriptFormModals
+        modal={'cancel'}
+        setModal={jest.fn}
+        handleSubmit={jest.fn}
+        isSubmitting={false}
+      />
+    </MemoryRouter>,
   );
   expect(
     screen.getByRole('heading', { name: /Cancel manuscript submission/i }),
@@ -23,13 +26,15 @@ it('renders default cancellation title and description', () => {
 
 it('renders edit cancellation title and description when isEditMode is true', () => {
   render(
-    <ManuscriptFormModals
-      modal={'cancel'}
-      setModal={jest.fn}
-      handleSubmit={jest.fn}
-      isEditMode
-      isSubmitting={false}
-    />,
+    <MemoryRouter>
+      <ManuscriptFormModals
+        modal={'cancel'}
+        setModal={jest.fn}
+        handleSubmit={jest.fn}
+        isEditMode
+        isSubmitting={false}
+      />
+    </MemoryRouter>,
   );
   expect(
     screen.getByRole('heading', { name: /Cancel manuscript edits/i }),

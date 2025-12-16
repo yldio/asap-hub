@@ -1,6 +1,7 @@
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import ManuscriptForm from '../ManuscriptForm';
 
@@ -478,9 +479,11 @@ describe('ManuscriptForm URL Requirement', () => {
     'should set URL as $label for $lifecycle lifecycle - last',
     async ({ lifecycle, label }) => {
       const container = render(
-        <Suspense fallback={<div>Loading...</div>}>
-          <ManuscriptForm {...defaultProps} lifecycle={lifecycle} />
-        </Suspense>,
+        <MemoryRouter>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm {...defaultProps} lifecycle={lifecycle} />
+          </Suspense>
+        </MemoryRouter>,
       );
 
       await waitFor(() => {
@@ -504,13 +507,15 @@ describe('ManuscriptForm URL Requirement', () => {
     'should set URL as $label when selecting $lifecycle lifecycle',
     async ({ lifecycle, label }) => {
       const container = render(
-        <Suspense fallback={<div>Loading...</div>}>
-          <ManuscriptForm
-            {...defaultProps}
-            type="Original Research"
-            lifecycle={undefined}
-          />
-        </Suspense>,
+        <MemoryRouter>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...defaultProps}
+              type="Original Research"
+              lifecycle={undefined}
+            />
+          </Suspense>
+        </MemoryRouter>,
       );
 
       await waitFor(() => {

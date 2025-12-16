@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 import UserNavigation from '../UserNavigation';
 
@@ -27,7 +28,11 @@ const props: ComponentProps<typeof UserNavigation> = {
 };
 
 it('renders the bottom links', () => {
-  const { getByText } = render(<UserNavigation {...props} />);
+  const { getByText } = render(
+    <MemoryRouter>
+      <UserNavigation {...props} />
+    </MemoryRouter>
+  );
   expect(getByText(/terms/i)).toBeVisible();
   expect(getByText(/privacy/i)).toBeVisible();
   expect(getByText(/about/i)).toBeVisible();
@@ -35,7 +40,9 @@ it('renders the bottom links', () => {
 
 it('applies the passed href', () => {
   const { getAllByRole } = render(
-    <UserNavigation {...props} userProfileHref="/profile" />,
+    <MemoryRouter>
+      <UserNavigation {...props} userProfileHref="/profile" />
+    </MemoryRouter>
   );
   expect(
     getAllByRole('link').find(({ textContent }) =>
@@ -45,7 +52,11 @@ it('applies the passed href', () => {
 });
 
 it('renders the associations sections', () => {
-  const { getByText } = render(<UserNavigation {...props} />);
+  const { getByText } = render(
+    <MemoryRouter>
+      <UserNavigation {...props} />
+    </MemoryRouter>
+  );
   expect(getByText('MY TEAMS')).toBeVisible();
   expect(getByText(/team 1/i)).toBeVisible();
   expect(getByText(/team 2/i)).toBeVisible();
@@ -59,7 +70,9 @@ it('renders the associations sections', () => {
 
 it('does not render the associations sections for missing associations', () => {
   const { queryByText } = render(
-    <UserNavigation {...props} interestGroups={[]} workingGroups={[]} />,
+    <MemoryRouter>
+      <UserNavigation {...props} interestGroups={[]} workingGroups={[]} />
+    </MemoryRouter>
   );
 
   expect(queryByText('MY INTEREST GROUPS')).not.toBeInTheDocument();
@@ -68,23 +81,25 @@ it('does not render the associations sections for missing associations', () => {
 
 it('does not render the associations sections if associations are not active', () => {
   const { queryByText } = render(
-    <UserNavigation
-      {...props}
-      interestGroups={[
-        {
-          name: 'Interest Group 1',
-          href: '/interest-group-1',
-          active: false,
-        },
-      ]}
-      workingGroups={[
-        {
-          name: 'Working Group 1',
-          href: '/working-group-1',
-          active: false,
-        },
-      ]}
-    />,
+    <MemoryRouter>
+      <UserNavigation
+        {...props}
+        interestGroups={[
+          {
+            name: 'Interest Group 1',
+            href: '/interest-group-1',
+            active: false,
+          },
+        ]}
+        workingGroups={[
+          {
+            name: 'Working Group 1',
+            href: '/working-group-1',
+            active: false,
+          },
+        ]}
+      />
+    </MemoryRouter>
   );
 
   expect(queryByText('MY INTEREST GROUPS')).not.toBeInTheDocument();
@@ -93,21 +108,23 @@ it('does not render the associations sections if associations are not active', (
 
 it('does only renders associations which are active', () => {
   const { queryByText } = render(
-    <UserNavigation
-      {...props}
-      interestGroups={[
-        {
-          name: 'Interest Group 1',
-          href: '/interest-group-1',
-          active: false,
-        },
-        {
-          name: 'Interest Group 2',
-          href: '/interest-group-2',
-          active: true,
-        },
-      ]}
-    />,
+    <MemoryRouter>
+      <UserNavigation
+        {...props}
+        interestGroups={[
+          {
+            name: 'Interest Group 1',
+            href: '/interest-group-1',
+            active: false,
+          },
+          {
+            name: 'Interest Group 2',
+            href: '/interest-group-2',
+            active: true,
+          },
+        ]}
+      />
+    </MemoryRouter>
   );
 
   expect(queryByText('MY INTEREST GROUPS')).toBeVisible();

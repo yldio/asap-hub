@@ -10,10 +10,9 @@ export const usePaginationParams = () => {
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;
   const pageSize = PAGE_SIZE;
 
-  const resetPaginationSearchParams = new URLSearchParams(searchParams);
-  resetPaginationSearchParams.delete('currentPage');
-
   const resetPagination = () => {
+    const resetPaginationSearchParams = new URLSearchParams(location.search);
+    resetPaginationSearchParams.delete('currentPage');
     navigate({ search: resetPaginationSearchParams.toString() } as never, {
       replace: true,
     });

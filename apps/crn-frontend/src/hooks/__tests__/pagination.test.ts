@@ -1,5 +1,6 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
+import { createElement, ReactNode } from 'react';
 
 import {
   usePaginationParams,
@@ -10,6 +11,11 @@ import {
 
 const urlSearchParamsToObject = (queryString: string) =>
   Object.fromEntries(new URLSearchParams(queryString));
+
+const createWrapper = (initialEntries: string[]) => {
+  return ({ children }: { children: ReactNode }) =>
+    createElement(MemoryRouter, { initialEntries }, children);
+};
 
 describe('usePaginationParams', () => {
   it('returns default page, page size and view', () => {
@@ -23,20 +29,14 @@ describe('usePaginationParams', () => {
 
   it('returns current page', () => {
     const { result } = renderHook(() => usePaginationParams(), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [{ search: '?currentPage=1' }],
-      },
+      wrapper: createWrapper(['/?currentPage=1']),
     });
     expect(result.current.currentPage).toBe(1);
   });
 
   it('returns list view page size', () => {
     const { result } = renderHook(() => usePaginationParams(), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [{ search: `?view=list` }],
-      },
+      wrapper: createWrapper(['/?view=list']),
     });
     expect(result.current.pageSize).toBe(LIST_VIEW_PAGE_SIZE);
     expect(result.current.isListView).toBe(true);
@@ -49,14 +49,15 @@ describe('usePaginationParams', () => {
         useLocationResult: useLocation(),
       }),
       {
-        wrapper: MemoryRouter,
-        initialProps: { initialEntries: [{ search: '?currentPage=2' }] },
+        wrapper: createWrapper(['/?currentPage=2']),
       },
     );
     expect(
       urlSearchParamsToObject(result.current.useLocationResult.search),
     ).toEqual({ currentPage: '2' });
-    result.current.usePaginationParamsResult.resetPagination();
+    act(() => {
+      result.current.usePaginationParamsResult.resetPagination();
+    });
     expect(
       urlSearchParamsToObject(result.current.useLocationResult.search),
     ).toEqual({});
@@ -69,12 +70,7 @@ describe('usePaginationParams', () => {
         useLocationResult: useLocation(),
       }),
       {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: [
-            { search: '?currentPage=2&view=list&searchQuery=123' },
-          ],
-        },
+        wrapper: createWrapper(['/?currentPage=2&view=list&searchQuery=123']),
       },
     );
     expect(
@@ -116,10 +112,7 @@ describe('usePagination', () => {
         usePaginationLoadedResult: usePagination(31, 10),
       }),
       {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: [{ search: '?currentPage=10' }],
-        },
+        wrapper: createWrapper(['/?currentPage=10']),
       },
     );
     const searchParams = new URLSearchParams(useLocationResult.search);
@@ -132,10 +125,7 @@ describe('usePagination', () => {
         current: { renderPageHref },
       },
     } = renderHook(() => usePagination(31, 10), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [{ search: '?currentPage=3' }],
-      },
+      wrapper: createWrapper(['/?currentPage=3']),
     });
 
     expect(renderPageHref(0)).toEqual('/');
@@ -153,15 +143,7 @@ describe('usePagination', () => {
         current: { renderPageHref },
       },
     } = renderHook(() => usePagination(31, 10), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [
-          {
-            pathname: '/test',
-            search: '?currentPage=3',
-          },
-        ],
-      },
+      wrapper: createWrapper(['/test?currentPage=3']),
     });
 
     expect(renderPageHref(0)).toEqual('/test');
@@ -179,10 +161,7 @@ describe('usePagination', () => {
         current: { renderPageHref },
       },
     } = renderHook(() => usePagination(31, 10), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [{ search: '?currentPage=3&searchQuery=123' }],
-      },
+      wrapper: createWrapper(['/?currentPage=3&searchQuery=123']),
     });
 
     expect(urlSearchParamsToObject(renderPageHref(0))).toEqual({
@@ -200,10 +179,7 @@ describe('usePagination', () => {
         current: { renderPageHref },
       },
     } = renderHook(() => usePagination(31, 10), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [{ search: '?currentPage=3' }],
-      },
+      wrapper: createWrapper(['/?currentPage=3']),
     });
 
     expect(renderPageHref(3)).toEqual('');

@@ -37,16 +37,19 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
 
   const tags = currentUrlParams.getAll('tag');
   const setTags = (newTags: string[]) => {
-    resetPagination();
-    replaceArrayParams('tag', newTags);
+    const newUrlParams = new URLSearchParams(location.search);
+    newUrlParams.delete('tag');
+    newUrlParams.delete('currentPage');
+    newTags.forEach((v) => newUrlParams.append('tag', v));
+    navigate({ search: newUrlParams.toString() } as never, { replace: true });
   };
 
   const searchQuery = currentUrlParams.get(searchQueryParam) || '';
 
   const toggleFilter = (filter: string, filterName: keyof Filter) => {
-    resetPagination();
     const newUrlParams = new URLSearchParams(location.search);
     newUrlParams.delete(filterName);
+    newUrlParams.delete('currentPage');
 
     const currentFilters = currentUrlParams.getAll(filterName);
     const filterIndex = currentFilters.indexOf(filter);
@@ -62,9 +65,8 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
   };
 
   const updateFilters = (pathname: string, updatedFilters: Filter) => {
-    resetPagination();
-
     const newUrlParams = new URLSearchParams(location.search);
+    newUrlParams.delete('currentPage');
 
     filterNames.forEach((filterName) => {
       newUrlParams.delete(filterName);
@@ -78,12 +80,11 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
   };
 
   const setSearchQuery = (newSearchQuery: string) => {
-    resetPagination();
-
     const newUrlParams = new URLSearchParams(location.search);
     newSearchQuery
       ? newUrlParams.set(searchQueryParam, newSearchQuery)
       : newUrlParams.delete(searchQueryParam);
+    newUrlParams.delete('currentPage');
 
     navigate({ search: newUrlParams.toString() } as never, { replace: true });
   };

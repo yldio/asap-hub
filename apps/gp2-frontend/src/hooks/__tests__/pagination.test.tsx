@@ -1,5 +1,6 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
+import { ReactNode } from 'react';
 import { PAGE_SIZE, usePagination, usePaginationParams } from '../pagination';
 
 const urlSearchParamsToObject = (queryString: string) =>
@@ -15,33 +16,45 @@ describe('usePaginationParams', () => {
   });
 
   it('returns current page', () => {
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/?currentPage=1']}>
+        {children}
+      </MemoryRouter>
+    );
     const { result } = renderHook(() => usePaginationParams(), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [{ search: '?currentPage=1' }],
-      },
+      wrapper,
     });
     expect(result.current.currentPage).toBe(1);
   });
 
-  it('removes pagination parameters from url after reset', () => {
+  it('removes pagination parameters from url after reset', async () => {
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/?currentPage=2']}>
+        {children}
+      </MemoryRouter>
+    );
     const { result } = renderHook(
       () => ({
         usePaginationParamsResult: usePaginationParams(),
         useLocationResult: useLocation(),
       }),
       {
-        wrapper: MemoryRouter,
-        initialProps: { initialEntries: [{ search: '?currentPage=2' }] },
+        wrapper,
       },
     );
     expect(
       urlSearchParamsToObject(result.current.useLocationResult.search),
     ).toEqual({ currentPage: '2' });
-    result.current.usePaginationParamsResult.resetPagination();
-    expect(
-      urlSearchParamsToObject(result.current.useLocationResult.search),
-    ).toEqual({});
+
+    act(() => {
+      result.current.usePaginationParamsResult.resetPagination();
+    });
+
+    await waitFor(() => {
+      expect(
+        urlSearchParamsToObject(result.current.useLocationResult.search),
+      ).toEqual({});
+    });
   });
 });
 
@@ -61,6 +74,11 @@ describe('usePagination', () => {
   });
 
   it('redirects if page is out of bounds', async () => {
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/?currentPage=10']}>
+        {children}
+      </MemoryRouter>
+    );
     const {
       result: {
         current: { useLocationResult },
@@ -71,10 +89,7 @@ describe('usePagination', () => {
         usePaginationLoadedResult: usePagination(31, 10),
       }),
       {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: [{ search: '?currentPage=10' }],
-        },
+        wrapper,
       },
     );
     const searchParams = new URLSearchParams(useLocationResult.search);
@@ -82,15 +97,17 @@ describe('usePagination', () => {
   });
 
   it('generates hrefs', async () => {
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/?currentPage=3']}>
+        {children}
+      </MemoryRouter>
+    );
     const {
       result: {
         current: { renderPageHref },
       },
     } = renderHook(() => usePagination(31, 10), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [{ search: '?currentPage=3' }],
-      },
+      wrapper,
     });
 
     expect(renderPageHref(0)).toEqual('/');
@@ -103,20 +120,17 @@ describe('usePagination', () => {
   });
 
   it('generates hrefs one level deep', async () => {
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/test?currentPage=3']}>
+        {children}
+      </MemoryRouter>
+    );
     const {
       result: {
         current: { renderPageHref },
       },
     } = renderHook(() => usePagination(31, 10), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [
-          {
-            pathname: '/test',
-            search: '?currentPage=3',
-          },
-        ],
-      },
+      wrapper,
     });
 
     expect(renderPageHref(0)).toEqual('/test');
@@ -129,15 +143,17 @@ describe('usePagination', () => {
   });
 
   it('preserves other query parameters', async () => {
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/?currentPage=3&searchQuery=123']}>
+        {children}
+      </MemoryRouter>
+    );
     const {
       result: {
         current: { renderPageHref },
       },
     } = renderHook(() => usePagination(31, 10), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [{ search: '?currentPage=3&searchQuery=123' }],
-      },
+      wrapper,
     });
 
     expect(urlSearchParamsToObject(renderPageHref(0))).toEqual({
@@ -150,15 +166,17 @@ describe('usePagination', () => {
   });
 
   it('does not return a link for the current page', async () => {
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/?currentPage=3']}>
+        {children}
+      </MemoryRouter>
+    );
     const {
       result: {
         current: { renderPageHref },
       },
     } = renderHook(() => usePagination(31, 10), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [{ search: '?currentPage=3' }],
-      },
+      wrapper,
     });
 
     expect(renderPageHref(3)).toEqual('');

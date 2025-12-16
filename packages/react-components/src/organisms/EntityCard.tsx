@@ -92,7 +92,7 @@ const EntityCard: React.FC<CardWrapperProps> = ({
   <Card accent={active ? 'default' : 'neutral200'}>
     {(teamType || researchTheme || resourceType) && (
       <div css={pillsStyles}>
-        {teamType && <Pill>{teamType}</Pill>}
+        {teamType && <Pill noMargin>{teamType}</Pill>}
         {researchTheme && <Pill>{researchTheme}</Pill>}
         {resourceType && <Pill>{resourceType}</Pill>}
       </div>

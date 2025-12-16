@@ -9,7 +9,7 @@ interface DiscoveryProjectIconProps {
 const DiscoveryProjectIcon: React.FC<DiscoveryProjectIconProps> = ({
   width = 24,
   height = 24,
-  color = '#00202C',
+  color = '#4D646B',
 }) => (
   <svg
     width={width}

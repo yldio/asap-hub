@@ -58,7 +58,11 @@ it('renders the title, text, tags and footer', () => {
 describe('textHref and isTeamCard behavior', () => {
   it('renders text as clickable link when textHref is provided and isTeamCard is true', () => {
     const { getByText } = render(
-      <EntityCard {...props} isTeamCard={true} textHref="https://example.com/text" />,
+      <EntityCard
+        {...props}
+        isTeamCard={true}
+        textHref="https://example.com/text"
+      />,
     );
     const link = getByText('Text').closest('a');
     expect(link).toHaveAttribute('href', 'https://example.com/text');
@@ -76,7 +80,12 @@ describe('textHref and isTeamCard behavior', () => {
 
   it('renders text as clickable link when textHref is not provided, isTeamCard is false, and href exists', () => {
     const { getByText } = render(
-      <EntityCard {...props} isTeamCard={false} textHref={undefined} href="https://example.com" />,
+      <EntityCard
+        {...props}
+        isTeamCard={false}
+        textHref={undefined}
+        href="https://example.com"
+      />,
     );
     const link = getByText('Text').closest('a');
     expect(link).toHaveAttribute('href', 'https://example.com');
@@ -94,7 +103,11 @@ describe('textHref and isTeamCard behavior', () => {
 
   it('renders text as clickable link when textHref is not provided and isTeamCard is undefined (default behavior)', () => {
     const { getByText } = render(
-      <EntityCard {...props} textHref={undefined} href="https://example.com/default" />,
+      <EntityCard
+        {...props}
+        textHref={undefined}
+        href="https://example.com/default"
+      />,
     );
     const link = getByText('Text').closest('a');
     expect(link).toHaveAttribute('href', 'https://example.com/default');

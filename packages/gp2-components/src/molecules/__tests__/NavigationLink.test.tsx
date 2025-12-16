@@ -1,13 +1,22 @@
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import NavigationLink from '../NavigationLink';
 
 describe('NavigationLink', () => {
   it('renders the icon', () => {
-    render(<NavigationLink href="/" icon={<svg />} />);
+    render(
+      <MemoryRouter>
+        <NavigationLink href="/" icon={<svg />} />
+      </MemoryRouter>
+    );
     expect(screen.getByRole('link')).toContainHTML('<svg');
   });
   it('renders the children', () => {
-    render(<NavigationLink href="/">Network</NavigationLink>);
+    render(
+      <MemoryRouter>
+        <NavigationLink href="/">Network</NavigationLink>
+      </MemoryRouter>
+    );
     expect(screen.getByRole('link')).toHaveTextContent('Network');
   });
 });

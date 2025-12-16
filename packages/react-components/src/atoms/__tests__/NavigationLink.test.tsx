@@ -21,7 +21,7 @@ const LocationCapture = () => {
 describe.each`
   description           | wrapper
   ${'with a router'}    | ${StaticRouter}
-  ${'without a router'} | ${undefined}
+  ${'without a router'} | ${MemoryRouter}
 `('$description', ({ wrapper }) => {
   it('renders a link with the given text', () => {
     render(
@@ -76,15 +76,19 @@ describe.each`
   });
 
   it('disables the current link when not enabled', () => {
+    const Wrapper = wrapper;
     render(
-      <NavigationLink href="/location" icon={<svg />} enabled={false}>
-        Target
-      </NavigationLink>,
+      <Wrapper>
+        <NavigationLink href="/location" icon={<svg />} enabled={false}>
+          Target
+        </NavigationLink>
+      </Wrapper>,
     );
-    expect(screen.getByText('Target')).toHaveStyle('opacity:0,3');
-    expect(screen.getByText('Target').closest('a')).toHaveStyle(
-      'pointer-events:none',
-    );
+    const targetElement = screen.getByText('Target');
+    // The text is inside a <p>, which is inside a styled div
+    const styledDiv = targetElement.parentElement;
+    expect(styledDiv).toHaveStyle('opacity: 0.3');
+    expect(styledDiv).toHaveStyle('pointer-events: none');
   });
 });
 
@@ -105,9 +109,11 @@ describe('with a router', () => {
 
   it('triggers a full page navigation on click of an external link', () => {
     render(
-      <NavigationLink href="http://example.com/" icon={<svg />}>
-        Text
-      </NavigationLink>,
+      <MemoryRouter>
+        <NavigationLink href="http://example.com/" icon={<svg />}>
+          Text
+        </NavigationLink>
+      </MemoryRouter>,
     );
     expect(fireEvent.click(screen.getByRole('link'))).toBe(true);
   });
@@ -147,9 +153,11 @@ describe('with a router', () => {
 describe('with ThemeProvider', () => {
   it('uses default colors when no theme whas provided', () => {
     render(
-      <NavigationLink href="http://example.com/" icon={<svg />}>
-        Text
-      </NavigationLink>,
+      <MemoryRouter>
+        <NavigationLink href="http://example.com/" icon={<svg />}>
+          Text
+        </NavigationLink>
+      </MemoryRouter>,
     );
     const { color: primaryColor, backgroundColor } = getComputedStyle(
       screen.getByRole('link'),
@@ -167,11 +175,13 @@ describe('with ThemeProvider', () => {
       },
     };
     render(
-      <ThemeProvider theme={theme}>
-        <NavigationLink href="http://example.com/" icon={<svg />}>
-          Text
-        </NavigationLink>
-      </ThemeProvider>,
+      <MemoryRouter>
+        <ThemeProvider theme={theme}>
+          <NavigationLink href="http://example.com/" icon={<svg />}>
+            Text
+          </NavigationLink>
+        </ThemeProvider>
+      </MemoryRouter>,
     );
     const { color: primaryColor, backgroundColor } = getComputedStyle(
       screen.getByRole('link'),

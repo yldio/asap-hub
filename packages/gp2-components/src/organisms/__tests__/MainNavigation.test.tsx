@@ -1,9 +1,14 @@
 import { screen, render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import MainNavigation from '../MainNavigation';
 
 describe('MainNavigation', () => {
   it('renders the navigation items', () => {
-    render(<MainNavigation />);
+    render(
+      <MemoryRouter>
+        <MainNavigation />
+      </MemoryRouter>
+    );
     expect(
       screen.getAllByRole('listitem').map(({ textContent }) => textContent),
     ).toEqual([

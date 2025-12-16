@@ -97,8 +97,10 @@ describe('downloadAnalyticsXLSX', () => {
 
   const mockOpensearchMetrics: jest.Mocked<OpensearchMetricsFacade> = {
     getUserProductivity: jest.fn(),
+    getUserProductivityTagSuggestions: jest.fn(),
     getUserProductivityPerformance: jest.fn(),
     getTeamProductivity: jest.fn(),
+    getTeamProductivityTagSuggestions: jest.fn(),
     getTeamProductivityPerformance: jest.fn(),
     getPublicationCompliance: jest.fn(),
     getPreprintCompliance: jest.fn(),

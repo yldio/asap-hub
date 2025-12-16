@@ -10,7 +10,7 @@ it('renders an ASAP logo', () => {
   expect(getByTitle('ASAP Logo')).toBeInTheDocument();
 });
 
-it('links back to the home page', () => {
+it('links back to the home page', async () => {
   const { getByTitle, container } = render(
     <MemoryRouter initialEntries={['/page']}>
       <Route exact path="/page" component={Header} />

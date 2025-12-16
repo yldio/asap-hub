@@ -91,7 +91,7 @@ describe('an edit button', () => {
     );
   });
 
-  it('is rendered for avatar', () => {
+  it('is rendered for avatar', async () => {
     const onImageSelect = jest.fn((file: File) => {});
     const testFile = new File(['foo'], 'foo.png', { type: 'image/png' });
     const { getByLabelText } = render(

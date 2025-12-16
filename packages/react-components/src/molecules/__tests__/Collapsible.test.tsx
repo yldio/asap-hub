@@ -4,7 +4,7 @@ import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Collapsible from '../Collapsible';
 
-it('changes text from show to hide and has max height', () => {
+it('changes text from show to hide and has max height', async () => {
   const { getByText } = render(<Collapsible>text</Collapsible>);
   expect(getByText('text')).toBeVisible();
 
@@ -14,7 +14,7 @@ it('changes text from show to hide and has max height', () => {
   await userEvent.click(getByText(/show/i));
   expect(getByText(/hide/i)).toBeVisible();
 });
-it('changes text from hide to show and removes maxHeight', () => {
+it('changes text from hide to show and removes maxHeight', async () => {
   const { getByText } = render(
     <Collapsible initiallyExpanded>text</Collapsible>,
   );

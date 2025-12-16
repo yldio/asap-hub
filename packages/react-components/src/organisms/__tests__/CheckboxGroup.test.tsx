@@ -77,7 +77,7 @@ it('assigns all checkboxes a unique group name', () => {
   );
 });
 
-it('emits value changes', () => {
+it('emits value changes', async () => {
   const handleChange = jest.fn();
   const { getByLabelText } = render(
     <CheckboxGroup

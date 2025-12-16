@@ -8,7 +8,7 @@ it('renders the header', () => {
   expect(getByTitle('ASAP Logo')).toBeInTheDocument();
 });
 
-it('triggers the menu toggle event', () => {
+it('triggers the menu toggle event', async () => {
   const handleToggleMenu = jest.fn();
   const { getByLabelText } = render(
     <MenuHeader onToggleMenu={handleToggleMenu} />,

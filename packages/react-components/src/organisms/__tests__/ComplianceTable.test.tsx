@@ -83,7 +83,7 @@ describe('ComplianceTable', () => {
         name: /Set to Compliant and Notify/i,
       });
 
-      await waitFor(() => {
+      await waitFor(async () => {
         await userEvent.click(confirmButton);
       });
 
@@ -94,7 +94,7 @@ describe('ComplianceTable', () => {
       });
     });
 
-    it('opens modal when clicking in a different status than the current one', () => {
+    it('opens modal when clicking in a different status than the current one', async () => {
       const { getByRole, getByText } = render(
         <ComplianceTable {...defaultProps} />,
       );
@@ -112,7 +112,7 @@ describe('ComplianceTable', () => {
       expect(getByText(/Update status and notify\?/i)).toBeInTheDocument();
     });
 
-    it('does not open modal when clicking the current status', () => {
+    it('does not open modal when clicking the current status', async () => {
       const data = [
         {
           ...complianceData,
@@ -147,7 +147,7 @@ describe('ComplianceTable', () => {
         assignedUsers: [],
       },
     ];
-    it('opens when clicking the assign button', () => {
+    it('opens when clicking the assign button', async () => {
       const { getByLabelText, getByRole, queryByRole } = render(
         <ComplianceTable {...defaultProps} data={data} />,
       );
@@ -162,7 +162,7 @@ describe('ComplianceTable', () => {
       ).toBeInTheDocument();
     });
 
-    it('closes modal when clicking the close button', () => {
+    it('closes modal when clicking the close button', async () => {
       const { getByLabelText, getByRole, queryByText } = render(
         <ComplianceTable {...defaultProps} data={data} />,
       );
@@ -205,7 +205,7 @@ describe('ComplianceTable', () => {
         apcRequested: false,
       },
     ];
-    it('opens when clicking the Edit APC Coverage Details button', () => {
+    it('opens when clicking the Edit APC Coverage Details button', async () => {
       const { getByRole, queryByRole } = render(
         <ComplianceTable {...defaultProps} data={data} />,
       );

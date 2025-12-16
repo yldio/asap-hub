@@ -51,7 +51,7 @@ it('changes the chevron direction based on open state', () => {
   );
 });
 
-it('triggers the click event', () => {
+it('triggers the click event', async () => {
   const handleClick = jest.fn();
   render(<UserMenuButton onClick={handleClick} />);
 

@@ -18,7 +18,7 @@ it('when empty shows a placeholder message', () => {
   expect(container).toHaveTextContent(/start typing/i);
 });
 
-it('opens a menu to select from on click', () => {
+it('opens a menu to select from on click', async () => {
   const handleChange = jest.fn();
   const { getByText, getByDisplayValue } = render(
     <Typeahead suggestions={['LHR', 'LGW']} value="" onChange={handleChange} />,
@@ -29,7 +29,7 @@ it('opens a menu to select from on click', () => {
   expect(handleChange).toHaveBeenLastCalledWith('LGW');
 });
 
-it('opens a filtered menu to select from when typing', () => {
+it('opens a filtered menu to select from when typing', async () => {
   const handleChange = jest.fn();
   const { getByText, queryByText, getByDisplayValue } = render(
     <Typeahead
@@ -46,7 +46,7 @@ it('opens a filtered menu to select from when typing', () => {
   expect(handleChange).toHaveBeenLastCalledWith('LTN');
 });
 
-it('allows non-suggested input', () => {
+it('allows non-suggested input', async () => {
   const handleChange = jest.fn();
   const { getByDisplayValue } = render(
     <Typeahead suggestions={['LHR', 'LGW']} value="" onChange={handleChange} />,
@@ -55,7 +55,7 @@ it('allows non-suggested input', () => {
   expect(handleChange).toHaveBeenLastCalledWith('LTN');
 });
 
-it('shows the focused suggestion in green', () => {
+it('shows the focused suggestion in green', async () => {
   const { getByText, getByDisplayValue } = render(
     <Typeahead suggestions={['LHR', 'LGW']} value="" />,
   );
@@ -111,7 +111,7 @@ describe('invalidity', () => {
     );
   });
 
-  it('is caused by being empty when required', () => {
+  it('is caused by being empty when required', async () => {
     const { getByDisplayValue } = render(
       <Typeahead suggestions={['LHR', 'LGW']} value="LHR" required />,
     );

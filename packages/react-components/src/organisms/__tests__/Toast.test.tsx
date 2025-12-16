@@ -20,7 +20,7 @@ describe('when closable', () => {
     expect(getByTitle(/close/i)).toBeInTheDocument();
   });
 
-  it('emits close events', () => {
+  it('emits close events', async () => {
     const handleClose = jest.fn();
     const { getByTitle } = render(
       <Toast onClose={handleClose}>error message</Toast>,

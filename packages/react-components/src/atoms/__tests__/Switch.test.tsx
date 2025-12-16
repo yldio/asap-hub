@@ -34,17 +34,17 @@ describe('Switch', () => {
     expect(switchElement).toHaveAttribute('aria-label', 'Custom label');
   });
 
-  it('uses noop function when no onClick is provided', () => {
+  it('uses noop function when no onClick is provided', async () => {
     render(<Switch />);
     const switchElement = screen.getByRole('checkbox');
 
     // This test ensures the component doesn't throw when clicked without an onClick handler
-    expect(() => {
+    expect(async () => {
       await userEvent.click(switchElement);
     }).not.toThrow();
   });
 
-  it('calls onClick handler when clicked', () => {
+  it('calls onClick handler when clicked', async () => {
     const mockOnClick = jest.fn();
     render(<Switch {...props} onClick={mockOnClick} />);
 
@@ -54,7 +54,7 @@ describe('Switch', () => {
     expect(mockOnClick).toHaveBeenCalledTimes(1);
   });
 
-  it('does not call onClick handler when disabled', () => {
+  it('does not call onClick handler when disabled', async () => {
     const mockOnClick = jest.fn();
     render(<Switch {...props} onClick={mockOnClick} enabled={false} />);
 

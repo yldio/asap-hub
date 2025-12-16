@@ -13,7 +13,7 @@ it('renders an input field, passing through props', () => {
   expect(screen.getByRole('textbox')).toHaveValue('val');
 });
 
-it('emits value changes', () => {
+it('emits value changes', async () => {
   const handleChange = jest.fn();
   render(<TextField value="val" onChange={handleChange} />);
 

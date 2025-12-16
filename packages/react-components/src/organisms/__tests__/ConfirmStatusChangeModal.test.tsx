@@ -43,7 +43,7 @@ describe('ConfirmStatusChangeModal', () => {
     },
   );
 
-  it('calls onDismiss when user clicks on "Cancel" button', () => {
+  it('calls onDismiss when user clicks on "Cancel" button', async () => {
     const onDismiss = jest.fn();
 
     renderModal(
@@ -55,7 +55,7 @@ describe('ConfirmStatusChangeModal', () => {
     expect(onDismiss).toHaveBeenCalled();
   });
 
-  it('calls onDismiss when user clicks on "Close" button', () => {
+  it('calls onDismiss when user clicks on "Close" button', async () => {
     const onDismiss = jest.fn();
 
     renderModal(

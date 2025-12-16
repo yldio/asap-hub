@@ -159,7 +159,7 @@ it('renders an author multi select, passing through props for new external autho
   expect(getByText('Chris White (Non CRN)')).toBeVisible();
 });
 
-it('renders the warning label correctly for a required author', () => {
+it('renders the warning label correctly for a required author', async () => {
   const { getByText, getByRole, rerender, queryByText } = render(
     <AuthorSelect
       title="Title"

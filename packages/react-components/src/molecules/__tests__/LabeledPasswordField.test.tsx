@@ -76,7 +76,7 @@ it('changes the show password button color to red when invalid', () => {
 });
 
 describe('when showing the password', () => {
-  it('renders a labeled text field', () => {
+  it('renders a labeled text field', async () => {
     const { getByRole, getByLabelText } = render(
       <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
     );
@@ -84,7 +84,7 @@ describe('when showing the password', () => {
     expect(getByLabelText(/^PW/)).toHaveAttribute('type', 'text');
   });
 
-  it('renders a button to hide the password', () => {
+  it('renders a button to hide the password', async () => {
     const { getByTitle, getByRole } = render(
       <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
     );
@@ -93,7 +93,7 @@ describe('when showing the password', () => {
   });
 
   describe('and hiding it again', () => {
-    it('renders a labeled password field', () => {
+    it('renders a labeled password field', async () => {
       const { getByRole, getByLabelText } = render(
         <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
       );

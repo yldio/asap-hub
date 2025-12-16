@@ -13,7 +13,7 @@ it('should render Identifier', () => {
   expect(screen.getByRole('textbox', { name: /Identifier/i })).toBeVisible();
 });
 
-it('should render Identifier info with DOI and RRID', () => {
+it('should render Identifier info with DOI and RRID', async () => {
   render(<ResearchOutputIdentifier {...props} documentType={'Lab Material'} />);
   const infoButton = screen.getByRole('button', {
     name: /info/i,
@@ -27,7 +27,7 @@ it('should render Identifier info with DOI and RRID', () => {
   ).not.toBeInTheDocument();
 });
 
-it('should render Identifier info with DOI and Accession Number', () => {
+it('should render Identifier info with DOI and Accession Number', async () => {
   render(<ResearchOutputIdentifier {...props} documentType={'Dataset'} />);
   const infoButton = screen.getByRole('button', {
     name: /info/i,
@@ -41,7 +41,7 @@ it('should render Identifier info with DOI and Accession Number', () => {
   ).toBeInTheDocument();
 });
 
-it('should reset the identifier to a valid value on entering something unknown', () => {
+it('should reset the identifier to a valid value on entering something unknown', async () => {
   const setIdentifierType = jest.fn();
   render(
     <ResearchOutputIdentifier
@@ -58,7 +58,7 @@ it('should reset the identifier to a valid value on entering something unknown',
   expect(screen.getByRole('textbox', { name: /Identifier/i })).toHaveValue('');
 });
 
-it('should set the identifier to the selected value', () => {
+it('should set the identifier to the selected value', async () => {
   const setIdentifierType = jest.fn();
   render(
     <ResearchOutputIdentifier

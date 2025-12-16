@@ -29,7 +29,7 @@ it('renders a StatusButton as dropdown when canEdit is true', () => {
   expect(screen.getByRole('button')).toBeEnabled();
 });
 
-it('renders a StatusButton button item', () => {
+it('renders a StatusButton button item', async () => {
   const onClick = jest.fn();
   render(
     <StatusButton buttonChildren={() => <>Example</>}>
@@ -43,7 +43,7 @@ it('renders a StatusButton button item', () => {
   expect(onClick).toHaveBeenCalled();
 });
 
-it('renders a modal on click', () => {
+it('renders a modal on click', async () => {
   render(
     <StatusButton buttonChildren={() => <>test</>} canEdit={true}>
       {{ item: '1', onClick: jest.fn() }}
@@ -60,7 +60,7 @@ it('renders a modal on click', () => {
   ]);
 });
 
-it('renders items on modal and hides it on outside click', () => {
+it('renders items on modal and hides it on outside click', async () => {
   jest.spyOn(console, 'error').mockImplementation();
   render(
     <>

@@ -91,7 +91,7 @@ describe('ComplianceAssignUsersModal', () => {
     expect(screen.getByText('Jane Smith')).toBeInTheDocument();
   });
 
-  it('calls onDismiss when cancel button is clicked', () => {
+  it('calls onDismiss when cancel button is clicked', async () => {
     const mockOnDismiss = jest.fn();
     render(
       <ComplianceAssignUsersModal

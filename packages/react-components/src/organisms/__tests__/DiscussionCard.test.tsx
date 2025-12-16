@@ -222,7 +222,7 @@ describe('DiscussionCard', () => {
     });
   });
 
-  it('collapses when clicking the collapse button', () => {
+  it('collapses when clicking the collapse button', async () => {
     render(
       <DiscussionCard
         manuscriptId="manuscript-1"
@@ -302,7 +302,7 @@ describe('DiscussionCard', () => {
     );
     await userEvent.click(expandButton);
 
-    await waitFor(() => {
+    await waitFor(async () => {
       const replyButton = screen.getByText('Reply');
       expect(replyButton).toBeInTheDocument();
       await userEvent.click(replyButton);
@@ -326,7 +326,7 @@ describe('DiscussionCard', () => {
       'discussion-collapsible-button-discussion-1',
     );
     await userEvent.click(expandButton);
-    await waitFor(() => {
+    await waitFor(async () => {
       const replyButton = screen.getByText('Reply');
       expect(replyButton).toBeInTheDocument();
       await userEvent.click(replyButton);

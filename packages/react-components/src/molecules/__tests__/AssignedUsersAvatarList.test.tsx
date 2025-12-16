@@ -64,7 +64,7 @@ describe('AssignedUsersAvatarList', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows tooltip with remaining members on hover', () => {
+  it('shows tooltip with remaining members on hover', async () => {
     render(<AssignedUsersAvatarList members={mockMembers} />);
 
     const tooltipText = /Billie Eilish and/i;

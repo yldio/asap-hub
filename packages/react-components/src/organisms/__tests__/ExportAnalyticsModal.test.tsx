@@ -44,7 +44,7 @@ describe('ExportAnalyticsModal', () => {
     expect(container).toHaveTextContent(/Select metrics to download/i);
   });
 
-  it('calls onDismiss when user clicks on "Cancel" button', () => {
+  it('calls onDismiss when user clicks on "Cancel" button', async () => {
     const onDismiss = jest.fn();
     renderModal(
       <ExportAnalyticsModal {...defaultProps} onDismiss={onDismiss} />,
@@ -55,7 +55,7 @@ describe('ExportAnalyticsModal', () => {
     expect(onDismiss).toHaveBeenCalled();
   });
 
-  it('calls onDismiss when user clicks on "Close" button', () => {
+  it('calls onDismiss when user clicks on "Close" button', async () => {
     const onDismiss = jest.fn();
     renderModal(
       <ExportAnalyticsModal {...defaultProps} onDismiss={onDismiss} />,
@@ -214,7 +214,7 @@ describe('ExportAnalyticsModal', () => {
     ])(
       'when time range is "%s" (alwaysVisible)',
       (timeRangeName, timeRangePattern) => {
-        beforeEach(() => {
+        beforeEach(async () => {
           renderModal(<ExportAnalyticsModal {...defaultProps} />);
           await userEvent.click(screen.getByText(/Choose a data range/i));
           await userEvent.click(screen.getByText(timeRangePattern));
@@ -308,7 +308,7 @@ describe('ExportAnalyticsModal', () => {
 
     describe('when time range is "Last 12 months"', () => {
       describe('without ANALYTICS_PHASE_TWO feature flag', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
           mockUseFlags.mockReturnValue({
             isEnabled: jest.fn().mockReturnValue(false),
             enable: jest.fn(),
@@ -371,7 +371,7 @@ describe('ExportAnalyticsModal', () => {
       });
 
       describe('with ANALYTICS_PHASE_TWO feature flag', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
           mockUseFlags.mockReturnValue({
             isEnabled: jest.fn().mockReturnValue(true),
             enable: jest.fn(),
@@ -436,7 +436,7 @@ describe('ExportAnalyticsModal', () => {
 
     describe('when time range is "Since Hub Launch"', () => {
       describe('without ANALYTICS_PHASE_TWO feature flag', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
           mockUseFlags.mockReturnValue({
             isEnabled: jest.fn().mockReturnValue(false),
             enable: jest.fn(),
@@ -512,7 +512,7 @@ describe('ExportAnalyticsModal', () => {
       });
 
       describe('with ANALYTICS_PHASE_TWO feature flag', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
           mockUseFlags.mockReturnValue({
             isEnabled: jest.fn().mockReturnValue(true),
             enable: jest.fn(),

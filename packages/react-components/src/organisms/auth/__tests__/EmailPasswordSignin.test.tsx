@@ -49,7 +49,7 @@ it('emits password change events', async () => {
   expect(handleChangePassword).toHaveBeenLastCalledWith('PW');
 });
 
-it('renders a button that emits signin events', () => {
+it('renders a button that emits signin events', async () => {
   const handleSignin = jest.fn();
   const { getByText } = render(
     <EmailPasswordSignin
@@ -62,7 +62,7 @@ it('renders a button that emits signin events', () => {
   await userEvent.click(getByText(/sign.*in/i));
   expect(handleSignin).toHaveBeenCalled();
 });
-it('does not emit a signin event without input', () => {
+it('does not emit a signin event without input', async () => {
   const handleSignin = jest.fn();
   const { getByText } = render(
     <EmailPasswordSignin

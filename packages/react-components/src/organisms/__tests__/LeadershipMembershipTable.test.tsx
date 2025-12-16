@@ -104,7 +104,7 @@ describe('LeadershipMembershipTable', () => {
     ${'interest-group'} | ${'ig_previous_membership_desc'} | ${{ ...initialSortingDirection, previousMembership: 'desc' }} | ${'Interest Group Previous Membership Active Numerical Descending Sort Icon'}   | ${'ig_previous_membership_asc'}  | ${{ ...initialSortingDirection, previousMembership: 'asc' }}
   `(
     'when metric is $metric, sort is $sort and user clicks on $iconTitle, the new sort becomes $newSort and the sorting direction $newSortingDirection',
-    ({
+    async ({
       metric,
       sort,
       sortingDirection,

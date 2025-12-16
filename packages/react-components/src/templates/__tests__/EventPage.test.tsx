@@ -205,7 +205,7 @@ describe('footer', () => {
     );
   });
 
-  it('adds the tech support email to clipboard when user clicks on copy button', () => {
+  it('adds the tech support email to clipboard when user clicks on copy button', async () => {
     const { getByTitle } = render(<EventPage {...props} hasFinished={false} />);
 
     await userEvent.click(getByTitle(/copy/i));

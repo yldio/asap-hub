@@ -13,7 +13,7 @@ it('does not show the children by default', () => {
   expect(getByText('text')).not.toBeVisible();
 });
 
-it('shows a the children when clicking the info icon', () => {
+it('shows a the children when clicking the info icon', async () => {
   const { getByTitle, getByText } = render(<Info>text</Info>);
   await userEvent.click(getByTitle(/info/i));
   expect(getByText('text')).toBeVisible();

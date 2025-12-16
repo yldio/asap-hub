@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import CtaContactSection from '../CtaContactSection';
 
-it('renders with copy email button', () => {
+it('renders with copy email button', async () => {
   Object.assign(navigator, {
     clipboard: {
       writeText: jest.fn(),

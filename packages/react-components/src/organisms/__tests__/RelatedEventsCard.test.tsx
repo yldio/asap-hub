@@ -35,7 +35,7 @@ it('truncates the related events card', () => {
   expect(screen.getAllByText(/Example/i)).toHaveLength(3);
 });
 
-it('can show hide events', () => {
+it('can show hide events', async () => {
   render(
     <RelatedEventsCard
       relatedEvents={createListEventResponse(5).items.map((event, i) => ({

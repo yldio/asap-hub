@@ -23,7 +23,7 @@ it('disables when there is no handler', () => {
   expect(getByLabelText(/close/i)).toBeDisabled();
 });
 
-it('triggers click events', () => {
+it('triggers click events', async () => {
   const handleClick = jest.fn();
   const { getByLabelText } = render(<Overlay onClick={handleClick} />);
   expect(getByLabelText(/close/i)).not.toBeDisabled();

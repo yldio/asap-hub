@@ -81,7 +81,7 @@ describe('when passed an error', () => {
   describe('refresh link', () => {
     const { mockReload } = mockLocation();
 
-    it('includes a refresh link', () => {
+    it('includes a refresh link', async () => {
       const { getByText } = render(
         <ErrorCard error={makeDeterministicError()} refreshLink />,
       );

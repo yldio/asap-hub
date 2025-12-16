@@ -35,7 +35,7 @@ it('fires onSave when submitting', async () => {
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
 });
-it('does not fire onSave when the bio is missing', () => {
+it('does not fire onSave when the bio is missing', async () => {
   const handleSave = jest.fn();
   const { getByDisplayValue, getByText } = renderModal(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,

@@ -84,7 +84,7 @@ describe('open close behaviour', () => {
     findParentWithStyle(screen.getByText(description), 'maxHeight')
       ?.maxHeight === '0';
 
-  it('opens an item', () => {
+  it('opens an item', async () => {
     render(
       <Accordion
         items={[
@@ -99,7 +99,7 @@ describe('open close behaviour', () => {
     expect(isContentHidden('description 1')).toBe(false);
   });
 
-  it('closes the previous item when a new item is opened', () => {
+  it('closes the previous item when a new item is opened', async () => {
     render(
       <Accordion
         items={[
@@ -118,7 +118,7 @@ describe('open close behaviour', () => {
     expect(isContentHidden('description 1')).toBe(true);
     expect(isContentHidden('description 2')).toBe(false);
   });
-  it('allows description to be an ReactNode', () => {
+  it('allows description to be an ReactNode', async () => {
     const node = <div id="id1">description 1</div>;
     render(
       <Accordion items={[{ ...item, title: 'title 1', description: node }]} />,

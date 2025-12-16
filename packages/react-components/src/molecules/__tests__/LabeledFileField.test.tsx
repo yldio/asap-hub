@@ -214,7 +214,7 @@ it('trigger file upload when clicking on the add file button', async () => {
   uploadInput.click = jest.fn();
 
   expect(addFileButton).toBeInTheDocument();
-  await waitFor(() => {
+  await waitFor(async () => {
     await userEvent.click(addFileButton);
   });
 

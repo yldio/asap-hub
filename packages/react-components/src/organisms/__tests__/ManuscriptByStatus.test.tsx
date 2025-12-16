@@ -52,7 +52,7 @@ describe('ManuscriptByStatus', () => {
     expect(screen.queryByText('Closed (other)')).not.toBeInTheDocument();
   });
 
-  it('calls onSelectStatus when a status button is clicked', () => {
+  it('calls onSelectStatus when a status button is clicked', async () => {
     render(
       <ManuscriptByStatus
         isComplianceReviewer={false}

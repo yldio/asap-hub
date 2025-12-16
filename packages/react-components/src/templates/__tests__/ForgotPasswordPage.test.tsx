@@ -27,7 +27,7 @@ it('emits email change events', () => {
   expect(handleChangeEmail).toHaveBeenLastCalledWith('batman@example.com');
 });
 
-it('emits submit events', () => {
+it('emits submit events', async () => {
   const handleSubmit = jest.fn();
   const { getByText } = render(
     <ForgotPasswordPage email="" onSubmit={handleSubmit} />,
@@ -37,7 +37,7 @@ it('emits submit events', () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
-it('emits go back events', () => {
+it('emits go back events', async () => {
   const handleGoBack = jest.fn();
   const { getByText } = render(
     <ForgotPasswordPage email="" onGoBack={handleGoBack} />,

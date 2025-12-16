@@ -562,7 +562,7 @@ describe('manuscript file', () => {
     });
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
-    await waitFor(() => {
+    await waitFor(async () => {
       await userEvent.upload(uploadInput, testFile);
     });
 
@@ -571,7 +571,7 @@ describe('manuscript file', () => {
     const removeFileButton = getByRole('button', { name: /cross/i });
     expect(removeFileButton).toBeInTheDocument();
 
-    await waitFor(() => {
+    await waitFor(async () => {
       await userEvent.click(removeFileButton);
     });
 
@@ -603,7 +603,9 @@ describe('manuscript file', () => {
     );
 
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
-    await waitFor(() => await userEvent.upload(uploadInput, tooLargeFile));
+    await waitFor(
+      async () => await userEvent.upload(uploadInput, tooLargeFile),
+    );
 
     expect(
       getByText(
@@ -616,7 +618,7 @@ describe('manuscript file', () => {
       type: 'application/pdf',
     });
 
-    await waitFor(() => await userEvent.upload(uploadInput, validFile));
+    await waitFor(async () => await userEvent.upload(uploadInput, validFile));
 
     // Error message should disappear
     expect(
@@ -649,7 +651,9 @@ describe('manuscript file', () => {
     );
 
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
-    await waitFor(() => await userEvent.upload(uploadInput, tooLargeFile));
+    await waitFor(
+      async () => await userEvent.upload(uploadInput, tooLargeFile),
+    );
 
     expect(
       getByText(
@@ -661,7 +665,7 @@ describe('manuscript file', () => {
     const validFile = new File(['valid content'], 'valid.csv', {
       type: 'text/csv',
     });
-    await waitFor(() => await userEvent.upload(uploadInput, validFile));
+    await waitFor(async () => await userEvent.upload(uploadInput, validFile));
 
     // Error message should disappear
     expect(
@@ -694,7 +698,9 @@ describe('manuscript file', () => {
     );
 
     const uploadInput = getByLabelText(/Upload Additional Files/i);
-    await waitFor(() => await userEvent.upload(uploadInput, tooLargeFile));
+    await waitFor(
+      async () => await userEvent.upload(uploadInput, tooLargeFile),
+    );
 
     expect(
       getByText(
@@ -706,7 +712,7 @@ describe('manuscript file', () => {
     const validFile = new File(['valid content'], 'valid.pdf', {
       type: 'application/pdf',
     });
-    await waitFor(() => await userEvent.upload(uploadInput, validFile));
+    await waitFor(async () => await userEvent.upload(uploadInput, validFile));
 
     expect(
       queryByText(
@@ -830,7 +836,7 @@ describe('key resource table', () => {
     });
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
-    await waitFor(() => {
+    await waitFor(async () => {
       await userEvent.upload(uploadInput, testFile);
     });
 
@@ -839,7 +845,7 @@ describe('key resource table', () => {
     const removeFileButton = getByRole('button', { name: /cross/i });
     expect(removeFileButton).toBeInTheDocument();
 
-    await waitFor(() => {
+    await waitFor(async () => {
       await userEvent.click(removeFileButton);
     });
 
@@ -873,7 +879,7 @@ describe('additional files', () => {
     });
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(() => {
+    await waitFor(async () => {
       await userEvent.upload(uploadInput, testFile);
     });
 
@@ -955,7 +961,7 @@ describe('additional files', () => {
     });
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(() => {
+    await waitFor(async () => {
       await userEvent.upload(uploadInput, testFile);
     });
 
@@ -1036,7 +1042,7 @@ describe('additional files', () => {
     })[0]!;
     expect(removeFileOneButton).toBeInTheDocument();
 
-    await waitFor(() => {
+    await waitFor(async () => {
       await userEvent.click(removeFileOneButton);
     });
 
@@ -1343,11 +1349,11 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
 
   const quickChecks = getByRole('region', { name: /quick checks/i });
 
-  within(quickChecks)
-    .getAllByRole('radio', { name: 'Yes' })
-    .forEach((button) => {
-      await userEvent.click(button);
-    });
+  for (const button of within(quickChecks).getAllByRole('radio', {
+    name: 'Yes',
+  })) {
+    await userEvent.click(button);
+  }
 
   await submitForm({ findByRole });
 

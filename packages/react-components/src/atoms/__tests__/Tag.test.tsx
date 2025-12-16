@@ -41,7 +41,7 @@ it('renders a tag with a title', () => {
   expect(getByTitle('Text')).toBeVisible();
 });
 
-it('renders the remove Button if the onRemove is provided', () => {
+it('renders the remove Button if the onRemove is provided', async () => {
   const onRemove = jest.fn();
   const { getByRole } = render(<Tag title="Text" onRemove={onRemove}></Tag>);
   const onRemoveButton = getByRole('button');

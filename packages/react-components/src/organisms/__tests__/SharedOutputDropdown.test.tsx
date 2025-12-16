@@ -74,7 +74,7 @@ describe('ShareOutputDropdown', () => {
   };
 
   describe('permissions', () => {
-    it('only displays working groups the user can share outputs with', () => {
+    it('only displays working groups the user can share outputs with', async () => {
       const { getByText, queryByText } = renderWithContent({
         groups: [
           {
@@ -91,7 +91,7 @@ describe('ShareOutputDropdown', () => {
       expect(getByText('Correct group')).toBeInTheDocument();
       expect(queryByText('Wrong group')).not.toBeInTheDocument();
     });
-    it('only displays teams the user can share outputs with', () => {
+    it('only displays teams the user can share outputs with', async () => {
       const { getByText, queryByText } = renderWithContent({
         teams: [
           {
@@ -136,7 +136,7 @@ describe('ShareOutputDropdown', () => {
     });
   });
   describe('list view', () => {
-    it('let you select a team', () => {
+    it('let you select a team', async () => {
       const { getByText, getByTitle } = renderWithContent({
         teams: [
           { displayName: 'Team One', id: '1', role: 'Project Manager' },
@@ -147,7 +147,7 @@ describe('ShareOutputDropdown', () => {
       await userEvent.click(getByText('Team One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
     });
-    it('let you select a working group', () => {
+    it('let you select a working group', async () => {
       const { getByText, getByTitle } = renderWithContent({
         groups: [
           {
@@ -169,7 +169,7 @@ describe('ShareOutputDropdown', () => {
       { displayName: 'Team Two', id: '2', role: 'Project Manager' },
     ];
 
-    it('let you create an output', () => {
+    it('let you create an output', async () => {
       const { getByText, getByTitle } = renderWithContent({
         teams,
         groups: [
@@ -204,7 +204,7 @@ describe('ShareOutputDropdown', () => {
         '/network/working-groups/1/create-output/bioinformatics',
       );
     });
-    it('let you go back to the list view', () => {
+    it('let you go back to the list view', async () => {
       const { getByText, queryByText, getByTitle } = renderWithContent({
         teams,
       });

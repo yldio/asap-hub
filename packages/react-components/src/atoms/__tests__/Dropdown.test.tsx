@@ -44,7 +44,7 @@ it('shows a placeholder without a selection', () => {
   );
 });
 
-it('shows no options message when there are no matching options', () => {
+it('shows no options message when there are no matching options', async () => {
   const { rerender } = render(
     <Dropdown options={[]} value="" placeholder="Select" />,
   );
@@ -64,7 +64,7 @@ it('shows no options message when there are no matching options', () => {
   expect(screen.getByText('Not found ll')).toBeVisible();
 });
 
-it('allows selecting from a menu with available options', () => {
+it('allows selecting from a menu with available options', async () => {
   const handleChange = jest.fn();
   render(
     <Dropdown
@@ -88,7 +88,7 @@ it('allows selecting from a menu with available options', () => {
   expect(handleChange).toHaveBeenCalledWith('LGW');
 });
 
-it('only shows valid options', () => {
+it('only shows valid options', async () => {
   render(
     <Dropdown
       placeholder="Select"
@@ -106,7 +106,7 @@ it('only shows valid options', () => {
   expect(screen.queryByText('-')).toBeNull();
 });
 
-it('shows the focused option in green', () => {
+it('shows the focused option in green', async () => {
   render(
     <Dropdown
       placeholder="Select"
@@ -137,7 +137,7 @@ it('shows the focused option in green', () => {
   ).not.toBe(pine.rgb.replace(/ /g, ''));
 });
 
-it('gets a green border when focused', () => {
+it('gets a green border when focused', async () => {
   render(
     <Dropdown
       placeholder="Select"
@@ -187,7 +187,7 @@ it('gets greyed out when disabled', () => {
   expect(screen.getByRole('textbox')).not.toBeDisabled();
 });
 
-it('when invalidated and then option selected it should not display error message', () => {
+it('when invalidated and then option selected it should not display error message', async () => {
   const { rerender } = render(
     <Dropdown
       placeholder="Select"
@@ -217,7 +217,7 @@ it('when invalidated and then option selected it should not display error messag
     screen.queryByText('Please fill out this field.'),
   ).not.toBeInTheDocument();
 });
-it('when invalidated and then rendered optional it should not display error message', () => {
+it('when invalidated and then rendered optional it should not display error message', async () => {
   const { rerender } = render(
     <Dropdown
       placeholder="Select"
@@ -275,7 +275,7 @@ it('when optional and then rendered required it should not display error message
   ).not.toBeInTheDocument();
 });
 
-it('shows the field in red when required field not filled', () => {
+it('shows the field in red when required field not filled', async () => {
   const handleChange = jest.fn();
   const { rerender } = render(
     <Dropdown

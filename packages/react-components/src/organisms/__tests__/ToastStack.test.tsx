@@ -29,7 +29,7 @@ it('adds toast messages in order', () => {
   expect(getByRole('list')).toHaveTextContent(/t1.*t2/);
 });
 
-it('can close toast messages', () => {
+it('can close toast messages', async () => {
   const { getByText, getByRole } = render(
     <ToastStack>
       <TwoToasts />

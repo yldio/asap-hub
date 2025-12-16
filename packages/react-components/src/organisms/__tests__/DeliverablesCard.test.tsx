@@ -40,7 +40,7 @@ describe('view more and less', () => {
     expect(screen.getAllByText(/Item/i).length).toEqual(4);
     expect(screen.getByRole('button')).toBeVisible();
   });
-  it('will display and less deliverables when the button is clicked', () => {
+  it('will display and less deliverables when the button is clicked', async () => {
     render(
       <DeliverablesCard
         {...props}

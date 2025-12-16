@@ -11,7 +11,7 @@ it('renders a heading', () => {
   expect(getByRole('heading')).toHaveTextContent(/email.+sent/i);
 });
 
-it('links back to sign in', () => {
+it('links back to sign in', async () => {
   const { getByText } = render(
     <MemoryRouter initialEntries={['/email-sent']}>
       <Route path="/email-sent">

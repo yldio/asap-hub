@@ -118,7 +118,7 @@ it('shows left indicator when one is provided', () => {
   expect(getByTitle('Search')).toBeInTheDocument();
 });
 
-it('shows the no option message when there are no options', () => {
+it('shows the no option message when there are no options', async () => {
   const { getByRole, getByText } = render(
     <MultiSelect suggestions={[]} noOptionsMessage={() => 'No options'} />,
   );
@@ -126,7 +126,7 @@ it('shows the no option message when there are no options', () => {
   expect(getByText(/no options/i)).toBeVisible();
 });
 
-it('opens a menu to select from on click', () => {
+it('opens a menu to select from on click', async () => {
   const handleChange = jest.fn();
   const { getByText, getByRole } = render(
     <MultiSelect
@@ -150,7 +150,7 @@ it('opens a menu to select from on click', () => {
   );
 });
 
-it('does not open a menu when clicking a value', () => {
+it('does not open a menu when clicking a value', async () => {
   const handleChange = jest.fn();
   const { getByText } = render(
     <MultiSelect
@@ -167,7 +167,7 @@ it('does not open a menu when clicking a value', () => {
   expect(() => getByText('LHR')).toThrow();
 });
 
-it('opens a filtered menu to select from when typing', () => {
+it('opens a filtered menu to select from when typing', async () => {
   const handleChange = jest.fn();
   const { getByText, queryByText, getByRole } = render(
     <MultiSelect
@@ -194,7 +194,7 @@ it('opens a filtered menu to select from when typing', () => {
   );
 });
 
-it('does not allow non-suggested input', () => {
+it('does not allow non-suggested input', async () => {
   const handleChange = jest.fn();
   const { getByRole } = render(
     <MultiSelect
@@ -210,7 +210,7 @@ it('does not allow non-suggested input', () => {
   expect(handleChange).not.toHaveBeenCalled();
 });
 
-it('shows the focused suggestion in green', () => {
+it('shows the focused suggestion in green', async () => {
   const { getByText, getByRole } = render(
     <MultiSelect
       suggestions={[
@@ -408,7 +408,7 @@ describe('Async', () => {
     );
   });
 
-  it('shows an error message when required field not filled', () => {
+  it('shows an error message when required field not filled', async () => {
     const mockOnChange = jest.fn();
     const { rerender, getByRole, getByText, queryByText } = render(
       <MultiSelect

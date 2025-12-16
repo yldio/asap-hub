@@ -17,7 +17,7 @@ describe('when open', () => {
   });
 });
 
-it('triggers the click event', () => {
+it('triggers the click event', async () => {
   const handleClick = jest.fn();
   const { getByLabelText } = render(<MenuButton onClick={handleClick} />);
 

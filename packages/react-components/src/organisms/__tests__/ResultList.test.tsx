@@ -69,7 +69,7 @@ it('renders page controls', () => {
   );
 });
 
-it('renders export as csv button', () => {
+it('renders export as csv button', async () => {
   const { rerender } = render(
     <ResultList {...props} exportResults={undefined}>
       cards

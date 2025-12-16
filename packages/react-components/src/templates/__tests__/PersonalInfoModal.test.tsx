@@ -89,7 +89,7 @@ it('renders default values into text inputs', () => {
   `);
 });
 
-it('renders a country selector', () => {
+it('renders a country selector', async () => {
   renderModal(
     <PersonalInfoModal
       {...props}

@@ -34,7 +34,7 @@ describe('EngagementSort', () => {
     expect(screen.getByTitle(/General Sort Icon/i)).toBeInTheDocument();
   });
 
-  it('should toggle the menu when the button is clicked', () => {
+  it('should toggle the menu when the button is clicked', async () => {
     render(<EngagementSort {...defaultProps} />);
 
     expect(screen.getByText(/option 1/i)).not.toBeVisible();
@@ -45,7 +45,7 @@ describe('EngagementSort', () => {
     expect(screen.getByText(/option 1/i)).toBeVisible();
   });
 
-  it('should close the menu when clicking outside', () => {
+  it('should close the menu when clicking outside', async () => {
     render(<EngagementSort {...defaultProps} />);
 
     const sortButton = screen.getByTitle(/General Sort Icon/i);
@@ -57,7 +57,7 @@ describe('EngagementSort', () => {
     expect(screen.getByText(/option 1/i)).not.toBeVisible();
   });
 
-  it('should close the menu when pressing Escape key', () => {
+  it('should close the menu when pressing Escape key', async () => {
     render(<EngagementSort {...defaultProps} />);
     const sortButton = screen.getByTitle(/General Sort Icon/i);
     await userEvent.click(sortButton);
@@ -68,7 +68,7 @@ describe('EngagementSort', () => {
     expect(screen.getByText(/option 1/i)).not.toBeVisible();
   });
 
-  it('should call the onClick and close the menu when clicking a sorting option', () => {
+  it('should call the onClick and close the menu when clicking a sorting option', async () => {
     render(<EngagementSort {...defaultProps} />);
     const sortButton = screen.getByTitle(/General Sort Icon/i);
     await userEvent.click(sortButton);

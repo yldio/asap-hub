@@ -39,7 +39,7 @@ it('truncates the related tutorials card', () => {
   expect(screen.getAllByText(/Example/i)).toHaveLength(3);
 });
 
-it('can show hidden tutorials', () => {
+it('can show hidden tutorials', async () => {
   render(
     <RelatedTutorialsCard
       relatedTutorials={createListTutorialsResponse(5).items.map(

@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import EmailPasswordSignin from '../EmailPasswordSignin';
@@ -76,7 +76,7 @@ it('does not emit a signin event without input', async () => {
   expect(handleSignin).not.toHaveBeenCalled();
 });
 
-it('shows a custom email validation message', () => {
+it('shows a custom email validation message', async () => {
   const { getByText, getByLabelText } = render(
     <EmailPasswordSignin
       email="me@example.com"
@@ -84,11 +84,13 @@ it('shows a custom email validation message', () => {
       emailValidationMessage="Email already exists!"
     />,
   );
-  expect(getByText('Email already exists!')).toBeVisible();
+  await waitFor(() => {
+    expect(getByText('Email already exists!')).toBeVisible();
+  });
   expect(getByLabelText(/e-?mail/i)).toBeInvalid();
   expect(getByLabelText(/password/i)).not.toBeInvalid();
 });
-it('shows a custom password validation message', () => {
+it('shows a custom password validation message', async () => {
   const { getByText, getByLabelText } = render(
     <EmailPasswordSignin
       email="me@example.com"
@@ -96,7 +98,9 @@ it('shows a custom password validation message', () => {
       passwordValidationMessage="Password too weak!"
     />,
   );
-  expect(getByText('Password too weak!')).toBeVisible();
+  await waitFor(() => {
+    expect(getByText('Password too weak!')).toBeVisible();
+  });
   expect(getByLabelText(/e-?mail/i)).not.toBeInvalid();
   expect(getByLabelText(/password/i)).toBeInvalid();
 });

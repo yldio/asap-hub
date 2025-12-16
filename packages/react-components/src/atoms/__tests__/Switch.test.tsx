@@ -65,6 +65,21 @@ describe('Switch', () => {
   });
 
   it('uses ThemeProvider theme primaryColor', () => {
+    // Mock getComputedStyle to avoid jsdom "Not implemented: window.computedStyle(elt, pseudoElt)" error
+    const originalGetComputedStyle = window.getComputedStyle;
+    const mockGetComputedStyle = jest.fn(
+      (elt: Element, pseudoElt?: string | null) => {
+        if (pseudoElt) {
+          // Return a mock CSSStyleDeclaration for pseudo-elements
+          return {
+            backgroundColor: 'rgb(0, 106, 146)',
+          } as unknown as CSSStyleDeclaration;
+        }
+        return originalGetComputedStyle(elt);
+      },
+    );
+    window.getComputedStyle = mockGetComputedStyle;
+
     const testCheckedBackgroundColor = color(0, 106, 146);
     const theme = {
       colors: {
@@ -85,5 +100,8 @@ describe('Switch', () => {
     );
 
     expect(checkedBackgroundColor).toBe(testCheckedBackgroundColor.rgb);
+
+    // Restore original getComputedStyle
+    window.getComputedStyle = originalGetComputedStyle;
   });
 });

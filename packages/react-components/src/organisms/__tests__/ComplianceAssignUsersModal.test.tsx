@@ -53,7 +53,7 @@ describe('ComplianceAssignUsersModal', () => {
   const onConfirm = jest.fn();
   const onDismiss = jest.fn();
 
-  it('renders the modal with correct initial state', () => {
+  it('renders the modal with correct initial state', async () => {
     render(
       <ComplianceAssignUsersModal
         onDismiss={onDismiss}
@@ -72,9 +72,13 @@ describe('ComplianceAssignUsersModal', () => {
     expect(screen.getByTestId('pill-id')).toBeInTheDocument();
     expect(screen.getByText('Team A')).toBeInTheDocument();
     expect(screen.getByText('Test Manuscript')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(mockGetAssignedUsersSuggestions).toHaveBeenCalled();
+    });
   });
 
-  it('displays assigned users in the multi-select', () => {
+  it('displays assigned users in the multi-select', async () => {
     render(
       <ComplianceAssignUsersModal
         onDismiss={onDismiss}
@@ -89,6 +93,10 @@ describe('ComplianceAssignUsersModal', () => {
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(mockGetAssignedUsersSuggestions).toHaveBeenCalled();
+    });
   });
 
   it('calls onDismiss when cancel button is clicked', async () => {

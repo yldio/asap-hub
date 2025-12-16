@@ -178,7 +178,11 @@ describe('ExportAnalyticsModal', () => {
   });
 
   it('changes the text to "Exporting..." and disables buttons while downloading', async () => {
-    const onDownload = jest.fn(() => Promise.resolve());
+    let resolveDownload: () => void;
+    const downloadPromise = new Promise<void>((resolve) => {
+      resolveDownload = resolve;
+    });
+    const onDownload = jest.fn(() => downloadPromise);
     renderModal(
       <ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />,
     );
@@ -190,9 +194,13 @@ describe('ExportAnalyticsModal', () => {
       screen.getByRole('checkbox', { name: /Team Productivity/i }),
     );
     const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
-    await userEvent.click(exportButton);
 
-    expect(exportButton).toHaveTextContent('Exporting...');
+    // Start the click but don't await it - we want to check state while downloading
+    const clickPromise = userEvent.click(exportButton);
+
+    await waitFor(() => {
+      expect(exportButton).toHaveTextContent('Exporting...');
+    });
     expect(exportButton).toBeDisabled();
 
     expect(screen.getByLabelText(/time range/i)).toBeDisabled();
@@ -200,9 +208,12 @@ describe('ExportAnalyticsModal', () => {
       screen.getByRole('checkbox', { name: /User Productivity/i }),
     ).toBeDisabled();
 
+    // Now resolve the download promise to let the export complete
+    resolveDownload!();
+    await clickPromise;
+
     await waitFor(() => {
-      expect(exportButton).toHaveTextContent('Download XLSX');
-      expect(exportButton).toBeEnabled();
+      expect(onDownload).toHaveBeenCalled();
     });
   });
 

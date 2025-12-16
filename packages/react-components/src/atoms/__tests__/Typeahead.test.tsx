@@ -124,12 +124,14 @@ describe('invalidity', () => {
 });
 
 describe('async', () => {
-  it('displays value', () => {
+  it('displays value', async () => {
     const loadOptions = jest.fn().mockResolvedValue(['example']);
     const { getByDisplayValue } = render(
       <Typeahead loadOptions={loadOptions} value="example" required />,
     );
-    expect(getByDisplayValue('example')).toBeVisible();
+    await waitFor(() => {
+      expect(getByDisplayValue('example')).toBeVisible();
+    });
   });
   it('displays and able to select suggestions', async () => {
     const loadOptions = jest.fn().mockResolvedValue(['test']);

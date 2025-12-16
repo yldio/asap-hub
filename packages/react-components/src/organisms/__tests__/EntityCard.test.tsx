@@ -14,7 +14,7 @@ const props: ComponentProps<typeof EntityCard> = {
   title: 'Title',
 };
 
-it('renders the title linking to the href value', () => {
+it('renders the title linking to the href value when textHref is not provided and isTeamCard is undefined', () => {
   const { getByText } = render(<EntityCard {...props} />);
   expect(getByText('Text').closest('a')).toHaveAttribute(
     'href',
@@ -53,4 +53,50 @@ it('renders the title, text, tags and footer', () => {
   expect(getByText('Tag 1')).toBeVisible();
   expect(getByText('Tag 2')).toBeVisible();
   expect(getByText(/footer/i)).toBeVisible();
+});
+
+describe('textHref and isTeamCard behavior', () => {
+  it('renders text as clickable link when textHref is provided and isTeamCard is true', () => {
+    const { getByText } = render(
+      <EntityCard {...props} isTeamCard={true} textHref="https://example.com/text" />,
+    );
+    const link = getByText('Text').closest('a');
+    expect(link).toHaveAttribute('href', 'https://example.com/text');
+  });
+
+  it('renders text as plain text (not clickable) when textHref is not provided and isTeamCard is true', () => {
+    const { getByText, queryByRole } = render(
+      <EntityCard {...props} isTeamCard={true} textHref={undefined} />,
+    );
+    const textElement = getByText('Text');
+    expect(textElement.closest('a')).not.toBeInTheDocument();
+    expect(textElement.closest('span')).toBeInTheDocument();
+    expect(queryByRole('link', { name: 'Text' })).not.toBeInTheDocument();
+  });
+
+  it('renders text as clickable link when textHref is not provided, isTeamCard is false, and href exists', () => {
+    const { getByText } = render(
+      <EntityCard {...props} isTeamCard={false} textHref={undefined} href="https://example.com" />,
+    );
+    const link = getByText('Text').closest('a');
+    expect(link).toHaveAttribute('href', 'https://example.com');
+  });
+
+  it('renders text as plain text when textHref is not provided, isTeamCard is false, and href is empty string', () => {
+    const { getByText, queryByRole } = render(
+      <EntityCard {...props} isTeamCard={false} textHref={undefined} href="" />,
+    );
+    const textElement = getByText('Text');
+    expect(textElement.closest('a')).not.toBeInTheDocument();
+    expect(textElement.closest('span')).toBeInTheDocument();
+    expect(queryByRole('link', { name: 'Text' })).not.toBeInTheDocument();
+  });
+
+  it('renders text as clickable link when textHref is not provided and isTeamCard is undefined (default behavior)', () => {
+    const { getByText } = render(
+      <EntityCard {...props} textHref={undefined} href="https://example.com/default" />,
+    );
+    const link = getByText('Text').closest('a');
+    expect(link).toHaveAttribute('href', 'https://example.com/default');
+  });
 });

@@ -31,6 +31,7 @@ const originalCookie = document.cookie;
 const originalFetch = global.fetch;
 
 beforeEach(() => {
+  // Default mock: return undefined for any fetch (tests can override as needed)
   global.fetch = jest.fn();
   MockSignin.mockReset().mockReturnValue(<>Signin</>);
   MockAuthenticatedApp.mockReset().mockReturnValue(<>Authenticated</>);
@@ -41,6 +42,15 @@ afterEach(() => {
 });
 
 it('changes routing for logged in users', async () => {
+  // Set up cookie consent to prevent modal from blocking the view
+  const mockCookiesPreferences = {
+    cookieId: 'a29956e6-897a-47c9-a2f6-3216986d20c7',
+    preferences: { essential: true, analytics: false },
+  };
+  document.cookie = `crn-cookie-consent=${JSON.stringify(
+    mockCookiesPreferences,
+  )};`;
+
   const { container, rerender } = render(
     <authTestUtils.UserAuth0Provider>
       <App />
@@ -48,7 +58,8 @@ it('changes routing for logged in users', async () => {
   );
 
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
-  expect(container).toHaveTextContent(/Signin/i);
+  await waitFor(() => expect(container).toHaveTextContent(/Signin/i));
+
   rerender(
     <authTestUtils.UserAuth0Provider>
       <authTestUtils.UserLoggedIn user={{}}>
@@ -57,7 +68,7 @@ it('changes routing for logged in users', async () => {
     </authTestUtils.UserAuth0Provider>,
   );
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
-  expect(container).toHaveTextContent(/Authenticated/i);
+  await waitFor(() => expect(container).toHaveTextContent(/Authenticated/i));
 });
 
 it('loads overrides for feature flags', async () => {
@@ -81,14 +92,26 @@ it('loads overrides for feature flags', async () => {
 });
 
 describe('Cookie Modal & Button', () => {
+  beforeEach(() => {
+    // Ensure cookie is cleared before each test
+    document.cookie = `crn-cookie-consent=;`;
+  });
+
   afterEach(() => {
     document.cookie = `crn-cookie-consent=;`;
     cleanup();
   });
 
-  it('shows the cookie modal if showCookieModal is true', () => {
+  it('shows the cookie modal if showCookieModal is true', async () => {
+    // Ensure fetch is reset (no cookie means no fetch should be called)
+    (global.fetch as jest.Mock).mockReset();
+
     render(<App />);
-    expect(screen.queryByText('Privacy Preference Center')).toBeInTheDocument();
+    // The modal should appear immediately when there's no cookie consent
+    // Use findByText which will wait for the element to appear
+    expect(
+      await screen.findByText('Privacy Preference Center'),
+    ).toBeInTheDocument();
   });
 
   it('hides the cookie modal if consent has been given before', () => {
@@ -112,24 +135,15 @@ describe('Cookie Modal & Button', () => {
   });
 
   it('closes modal when save button is clicked, shows the cookie button and saves cookies', async () => {
-    // Mock fetch for both the consistency check (GET) and save (POST) requests
-    (global.fetch as jest.Mock).mockImplementation((url, options) => {
-      // GET request is for checkConsistencyWithRemote
-      if (options?.method === 'GET' || !options?.method) {
-        return Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve({}),
-        } as Response);
-      }
-      // POST request is for onSaveCookiePreferences
-      return Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve(),
-      } as Response);
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({}),
     });
 
     render(<App />);
-    await userEvent.click(screen.getByText('Save and close'));
+
+    const saveButton = await screen.findByText('Save and close');
+    await userEvent.click(saveButton);
 
     await waitFor(() => {
       expect(screen.getByTestId('cookie-button')).toBeInTheDocument();
@@ -155,19 +169,20 @@ describe('Cookie Modal & Button', () => {
       mockCookiesPreferences,
     )};`;
 
-    // Mock fetch for consistency check (GET request)
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve(mockCookiesPreferences),
+    (global.fetch as jest.Mock).mockImplementation((url: string) => {
+      if (url.includes('/cookie-preferences/')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockCookiesPreferences),
+        });
+      }
+      return Promise.reject(new Error('Unexpected fetch call'));
     });
 
     render(<App />);
 
     const cookieButton = await screen.findByTestId('cookie-button');
     await userEvent.click(cookieButton);
-
-    const saveAndCloseButton = await screen.findByText('Save and close');
-    await userEvent.click(saveAndCloseButton);
 
     await waitFor(() => {
       expect(

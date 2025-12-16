@@ -109,6 +109,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
         )
       }
       textHref={projectLink}
+      isTeamCard={true}
     />
   );
 };

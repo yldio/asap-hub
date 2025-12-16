@@ -36,6 +36,10 @@ const textStyles = css({
   display: 'flex',
 });
 
+const plainTextStyles = css({
+  color: 'rgb(77, 100, 107)',
+});
+
 const tagsContainerStyles = css({
   margin: `${rem(8)} 0`,
 });
@@ -66,6 +70,7 @@ type CardWrapperProps = {
   readonly resourceType?: string;
   readonly textIcon?: React.ReactNode;
   readonly textHref?: string;
+  readonly isTeamCard?: boolean;
 };
 
 const EntityCard: React.FC<CardWrapperProps> = ({
@@ -82,6 +87,7 @@ const EntityCard: React.FC<CardWrapperProps> = ({
   resourceType,
   textIcon,
   textHref,
+  isTeamCard,
 }) => (
   <Card accent={active ? 'default' : 'neutral200'}>
     {(teamType || researchTheme || resourceType) && (
@@ -108,9 +114,25 @@ const EntityCard: React.FC<CardWrapperProps> = ({
       {!!text && (
         <div css={textStyles}>
           {textIcon && <span css={iconStyles}>{textIcon}</span>}
-          <Anchor href={textHref ?? href}>
-            <Ellipsis numberOfLines={2}>{text}</Ellipsis>
-          </Anchor>
+          {(() => {
+            const ellipsisContent = (
+              <Ellipsis numberOfLines={2}>{text}</Ellipsis>
+            );
+
+            if (isTeamCard) {
+              return textHref ? (
+                <Anchor href={textHref}>{ellipsisContent}</Anchor>
+              ) : (
+                <span css={plainTextStyles}>{ellipsisContent}</span>
+              );
+            }
+
+            return href ? (
+              <Anchor href={href}>{ellipsisContent}</Anchor>
+            ) : (
+              <span css={plainTextStyles}>{ellipsisContent}</span>
+            );
+          })()}
         </div>
       )}
       {!!tags.length && (

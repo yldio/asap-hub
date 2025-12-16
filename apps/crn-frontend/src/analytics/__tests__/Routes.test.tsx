@@ -409,7 +409,7 @@ describe('Engagement', () => {
       expect(mockGetEngagement).toHaveBeenCalled();
     });
 
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 });
 

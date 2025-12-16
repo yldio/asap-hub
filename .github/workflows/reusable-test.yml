@@ -168,12 +168,98 @@ jobs:
       - name: Run copy-paste detection
         run: git diff --name-only --diff-filter=d origin/master origin/${GITHUB_HEAD_REF} | xargs yarn jscpd
 
+  check-integration-test-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      should-run: ${{ steps.set-output.outputs.should-run }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Check for relevant file changes (Branch only)
+        id: filter
+        if: ${{ inputs.environment-name == 'Branch' }}
+        run: |
+          # Get the base branch (master for PRs, or use the default branch)
+          BASE_BRANCH="${GITHUB_BASE_REF:-master}"
+
+          # Get list of changed files (works for both PRs and pushes)
+          if [ -n "$GITHUB_BASE_REF" ]; then
+            # PR scenario: compare base to head
+            CHANGED_FILES=$(git diff --name-only --diff-filter=d origin/${BASE_BRANCH}...origin/${GITHUB_HEAD_REF} 2>/dev/null || git diff --name-only --diff-filter=d origin/${BASE_BRANCH}...HEAD)
+          else
+            # Push scenario: compare previous commit to current
+            CHANGED_FILES=$(git diff --name-only --diff-filter=d HEAD~1...HEAD)
+          fi
+
+          # Define patterns that should trigger integration tests
+          PATTERNS=(
+            "apps/crn-server/"
+            "packages/model/"
+            "packages/contentful/"
+            "packages/server-common/"
+            "packages/algolia/"
+            "packages/auth/"
+            "packages/errors/"
+            "packages/message-templates/"
+            "packages/routing/"
+            "packages/services-common/"
+            "packages/validation/"
+            "jest-integration.config.js"
+            ".github/workflows/reusable-test.yml"
+            ".github/workflows/on-push-branch.yml"
+            ".github/workflows/on-push-master.yml"
+          )
+
+          # Check if any changed file matches the patterns
+          SHOULD_RUN="false"
+          if [ -n "$CHANGED_FILES" ]; then
+            while IFS= read -r file; do
+              [ -z "$file" ] && continue
+              for pattern in "${PATTERNS[@]}"; do
+                if [[ "$file" == *"$pattern"* ]]; then
+                  SHOULD_RUN="true"
+                  echo "✅ Found relevant change: $file (matches pattern: $pattern)"
+                  break
+                fi
+              done
+              if [ "$SHOULD_RUN" == "true" ]; then
+                break
+              fi
+            done <<< "$CHANGED_FILES"
+          fi
+
+          echo "should-run=$SHOULD_RUN" >> $GITHUB_OUTPUT
+          echo "Changed files:"
+          echo "$CHANGED_FILES" | head -20 || echo "(no changes detected)"
+          echo "Should run integration tests: $SHOULD_RUN"
+      - name: Set output
+        id: set-output
+        run: |
+          if [ "${{ inputs.environment-name }}" != "Branch" ]; then
+            echo "should-run=true" >> $GITHUB_OUTPUT
+          else
+            # Use filter output if available, default to 'false' if filter didn't run
+            FILTER_RESULT="${{ steps.filter.outputs.should-run }}"
+            if [ -z "$FILTER_RESULT" ]; then
+              echo "should-run=false" >> $GITHUB_OUTPUT
+            else
+              echo "should-run=$FILTER_RESULT" >> $GITHUB_OUTPUT
+            fi
+          fi
+
   integration-test:
     concurrency: integration-test
     permissions:
       packages: read
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
+    # Skip integration tests if irrelevant files changed (for Branch environment)
+    # Always run for Development/Production environments
+    if: needs.check-integration-test-paths.outputs.should-run == 'true'
+    needs:
+      - check-integration-test-paths
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
       credentials:

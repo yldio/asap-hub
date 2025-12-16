@@ -552,7 +552,18 @@ export const getTeamDataObject = (): TeamDataObject => ({
   tools: [],
   researchTheme: 'PD Functional Genomics',
   resourceType: 'Isogenic iPSC Lines',
-  labs: [],
+  labs: [
+    {
+      id: 'cd7be4902',
+      name: 'Brighton',
+      labPrincipalInvestigatorId: 'user-id-1',
+    },
+    {
+      id: 'cd7be4903',
+      name: 'Liverpool',
+      labPrincipalInvestigatorId: 'user-id-1',
+    },
+  ],
 });
 
 export const getPublicTeamListItemDataObject =

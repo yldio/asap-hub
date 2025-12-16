@@ -24,7 +24,7 @@ const mockOpensearchClient = OpensearchClient as jest.MockedClass<
 describe('useOpensearchMetrics', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockOpensearchClient.mockClear();
+    mockOpensearchClient.mockReset();
   });
 
   it('throws when user is not provided', () => {
@@ -53,7 +53,11 @@ describe('useOpensearchMetrics', () => {
     expect(result.current).toHaveProperty('getMeetingRepAttendance');
     expect(result.current).toHaveProperty('getPreliminaryDataSharing');
     expect(result.current).toHaveProperty('getUserProductivity');
+    expect(result.current).toHaveProperty('getUserProductivityTagSuggestions');
     expect(result.current).toHaveProperty('getUserProductivityPerformance');
+    expect(result.current).toHaveProperty('getTeamProductivity');
+    expect(result.current).toHaveProperty('getTeamProductivityTagSuggestions');
+    expect(result.current).toHaveProperty('getTeamProductivityPerformance');
   });
 
   describe('getPublicationCompliance', () => {
@@ -374,6 +378,45 @@ describe('useOpensearchMetrics', () => {
     });
   });
 
+  describe('getUserProductivityTagSuggestions', () => {
+    it('creates OpensearchClient with correct index and calls getTagSuggestions', async () => {
+      const mockGetTagSuggestions = jest.fn().mockResolvedValue(['Team Alpha']);
+      mockOpensearchClient.mockImplementation(
+        () =>
+          ({
+            getTagSuggestions: mockGetTagSuggestions,
+          }) as unknown as OpensearchClient<unknown>,
+      );
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useOpensearchMetrics(),
+        {
+          wrapper: ({ children }) => (
+            <RecoilRoot>
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </RecoilRoot>
+          ),
+        },
+      );
+      await waitForNextUpdate();
+
+      const tagQuery = 'Team';
+
+      const suggestions =
+        await result.current.getUserProductivityTagSuggestions(tagQuery);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'user-productivity',
+        expect.any(String),
+      );
+
+      expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'extended');
+      expect(suggestions).toEqual(['Team Alpha']);
+    });
+  });
+
   describe('getUserProductivityPerformance', () => {
     it('creates OpensearchClient with correct index and calls API method', async () => {
       const mockGetUserProductivityPerformance = jest
@@ -432,6 +475,186 @@ describe('useOpensearchMetrics', () => {
       );
 
       expect(mockGetUserProductivityPerformance).toHaveBeenCalledWith(
+        expect.any(OpensearchClient),
+        paginationParams,
+      );
+    });
+  });
+
+  describe('getTeamProductivity', () => {
+    it('creates OpensearchClient with correct index and calls API method', async () => {
+      const mockGetTeamProductivity = jest
+        .spyOn(productivityApi, 'getTeamProductivity')
+        .mockResolvedValue({
+          items: [
+            {
+              id: 'team-1',
+              name: 'Team Alpha',
+              isInactive: false,
+              Article: 5,
+              Bioinformatics: 3,
+              Dataset: 2,
+              'Lab Material': 1,
+              Protocol: 4,
+            },
+          ],
+          total: 1,
+        });
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useOpensearchMetrics(),
+        {
+          wrapper: ({ children }) => (
+            <RecoilRoot>
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </RecoilRoot>
+          ),
+        },
+      );
+      await waitForNextUpdate();
+
+      const paginationParams = {
+        tags: ['Team Alpha'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d' as const,
+        outputType: 'all' as const,
+        sort: 'team_asc' as const,
+      };
+
+      await result.current.getTeamProductivity(paginationParams);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'team-productivity',
+        expect.any(String),
+      );
+
+      expect(mockGetTeamProductivity).toHaveBeenCalledWith(
+        expect.any(OpensearchClient),
+        paginationParams,
+      );
+    });
+  });
+
+  describe('getTeamProductivityTagSuggestions', () => {
+    afterEach(() => {
+      mockOpensearchClient.mockReset();
+    });
+
+    it('creates OpensearchClient with correct index and calls getTagSuggestions', async () => {
+      const mockGetTagSuggestions = jest.fn().mockResolvedValue(['Team Beta']);
+      mockOpensearchClient.mockImplementation(
+        () =>
+          ({
+            getTagSuggestions: mockGetTagSuggestions,
+          }) as unknown as OpensearchClient<unknown>,
+      );
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useOpensearchMetrics(),
+        {
+          wrapper: ({ children }) => (
+            <RecoilRoot>
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </RecoilRoot>
+          ),
+        },
+      );
+      await waitForNextUpdate();
+
+      const tagQuery = 'Team';
+
+      const suggestions =
+        await result.current.getTeamProductivityTagSuggestions(tagQuery);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'team-productivity',
+        expect.any(String),
+      );
+
+      expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
+      expect(suggestions).toEqual(['Team Beta']);
+    });
+  });
+
+  describe('getTeamProductivityPerformance', () => {
+    it('creates OpensearchClient with correct index and calls API method', async () => {
+      const mockGetTeamProductivityPerformance = jest
+        .spyOn(productivityApi, 'getTeamProductivityPerformance')
+        .mockResolvedValue({
+          article: {
+            belowAverageMin: 0,
+            belowAverageMax: 2,
+            averageMin: 2,
+            averageMax: 5,
+            aboveAverageMin: 5,
+            aboveAverageMax: 10,
+          },
+          bioinformatics: {
+            belowAverageMin: 0,
+            belowAverageMax: 1,
+            averageMin: 1,
+            averageMax: 3,
+            aboveAverageMin: 3,
+            aboveAverageMax: 8,
+          },
+          dataset: {
+            belowAverageMin: 0,
+            belowAverageMax: 1,
+            averageMin: 1,
+            averageMax: 3,
+            aboveAverageMin: 3,
+            aboveAverageMax: 6,
+          },
+          labMaterial: {
+            belowAverageMin: 0,
+            belowAverageMax: 1,
+            averageMin: 1,
+            averageMax: 2,
+            aboveAverageMin: 2,
+            aboveAverageMax: 5,
+          },
+          protocol: {
+            belowAverageMin: 0,
+            belowAverageMax: 2,
+            averageMin: 2,
+            averageMax: 4,
+            aboveAverageMin: 4,
+            aboveAverageMax: 8,
+          },
+        });
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => useOpensearchMetrics(),
+        {
+          wrapper: ({ children }) => (
+            <RecoilRoot>
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </RecoilRoot>
+          ),
+        },
+      );
+      await waitForNextUpdate();
+
+      const paginationParams = {
+        timeRange: '90d' as const,
+        outputType: 'public' as const,
+      };
+
+      await result.current.getTeamProductivityPerformance(paginationParams);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'team-productivity-performance',
+        expect.any(String),
+      );
+
+      expect(mockGetTeamProductivityPerformance).toHaveBeenCalledWith(
         expect.any(OpensearchClient),
         paginationParams,
       );

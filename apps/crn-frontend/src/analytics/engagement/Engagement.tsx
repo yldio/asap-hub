@@ -122,7 +122,7 @@ const Engagement = () => {
     if (isAttendancePage) {
       const response = await attendanceClient.client.getTagSuggestions(
         tagQuery,
-        'teams',
+        'flat',
       );
 
       return response.map((value) => ({

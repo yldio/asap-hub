@@ -97,7 +97,11 @@ describe('downloadAnalyticsXLSX', () => {
 
   const mockOpensearchMetrics: jest.Mocked<OpensearchMetricsFacade> = {
     getUserProductivity: jest.fn(),
+    getUserProductivityTagSuggestions: jest.fn(),
     getUserProductivityPerformance: jest.fn(),
+    getTeamProductivity: jest.fn(),
+    getTeamProductivityTagSuggestions: jest.fn(),
+    getTeamProductivityPerformance: jest.fn(),
     getPublicationCompliance: jest.fn(),
     getPreprintCompliance: jest.fn(),
     getAnalyticsOSChampion: jest.fn(),
@@ -1003,6 +1007,125 @@ describe('downloadAnalyticsXLSX', () => {
     expect(XLSX.writeFile).toHaveBeenCalledWith(
       'workbook',
       expect.stringContaining('crn-analytics-90d'),
+    );
+  });
+
+  it('should process team-productivity with OpenSearch when flag is enabled', async () => {
+    // Mock OpenSearch team productivity performance response
+    // Note: Performance object uses camelCase property names
+    mockOpensearchMetrics.getTeamProductivityPerformance.mockResolvedValue({
+      article: {
+        belowAverageMin: 0,
+        belowAverageMax: 2,
+        averageMin: 2,
+        averageMax: 5,
+        aboveAverageMin: 5,
+        aboveAverageMax: 10,
+      },
+      bioinformatics: {
+        belowAverageMin: 0,
+        belowAverageMax: 1,
+        averageMin: 1,
+        averageMax: 3,
+        aboveAverageMin: 3,
+        aboveAverageMax: 8,
+      },
+      dataset: {
+        belowAverageMin: 0,
+        belowAverageMax: 1,
+        averageMin: 1,
+        averageMax: 3,
+        aboveAverageMin: 3,
+        aboveAverageMax: 6,
+      },
+      labMaterial: {
+        belowAverageMin: 0,
+        belowAverageMax: 1,
+        averageMin: 1,
+        averageMax: 2,
+        aboveAverageMin: 2,
+        aboveAverageMax: 5,
+      },
+      protocol: {
+        belowAverageMin: 0,
+        belowAverageMax: 2,
+        averageMin: 2,
+        averageMax: 4,
+        aboveAverageMin: 4,
+        aboveAverageMax: 8,
+      },
+    });
+
+    // Mock OpenSearch team productivity data response
+    mockOpensearchMetrics.getTeamProductivity.mockResolvedValue({
+      items: [
+        {
+          id: 'team-1',
+          name: 'Team Alpha',
+          isInactive: false,
+          Article: 6,
+          Bioinformatics: 4,
+          Dataset: 2,
+          'Lab Material': 3,
+          Protocol: 5,
+        },
+      ],
+      total: 1,
+    });
+
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
+    })('30d', new Set(['team-productivity']) as Set<MetricExportKeys>);
+
+    // Verify getTeamProductivityPerformance was called with correct parameters
+    expect(
+      mockOpensearchMetrics.getTeamProductivityPerformance,
+    ).toHaveBeenCalledWith({
+      timeRange: '30d',
+      outputType: 'all',
+    });
+
+    // Verify getTeamProductivity was called with correct parameters
+    expect(mockOpensearchMetrics.getTeamProductivity).toHaveBeenCalledWith({
+      timeRange: '30d',
+      outputType: 'all',
+      sort: 'team_asc',
+      tags: [],
+      currentPage: 0,
+      pageSize: 200,
+    });
+
+    // Verify worksheet was created with transformed data
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([
+      {
+        team: 'Team Alpha',
+        status: 'Active',
+        ASAPArticleOutputValue: 6,
+        ASAPArticleOutputAverage: 'Above',
+        ASAPBioinformaticOutputValue: 4,
+        ASAPBioinformaticOutputAverage: 'Above',
+        ASAPDatasetOutputValue: 2,
+        ASAPDatasetOutputAverage: 'Average',
+        ASAPALabMaterialValue: 3,
+        ASAPALabMaterialAverage: 'Above',
+        ASAPProtocolValue: 5,
+        ASAPProtocolAverage: 'Above',
+      },
+    ]);
+
+    // Verify worksheet was appended with correct sheet name
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Team Productivity',
+    );
+
+    // Verify workbook was written
+    expect(XLSX.writeFile).toHaveBeenCalledWith(
+      'workbook',
+      expect.stringContaining('crn-analytics-30d'),
     );
   });
 });

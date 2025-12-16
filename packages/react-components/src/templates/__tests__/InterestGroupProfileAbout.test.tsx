@@ -48,42 +48,21 @@ it('assigns given id to the members section for deep linking', () => {
   expect(membersSection).toHaveTextContent(/teams/i);
 });
 
-it('renders a call to action button, when PMs are defined on the group', () => {
+it('renders a call to action button, when contact emails are defined on the group', () => {
   const { getByText } = render(
     <InterestGroupProfileAbout
       {...props}
-      leaders={[
-        {
-          user: {
-            ...createUserResponse(),
-            id: 'u0',
-            displayName: 'John',
-            teams: [],
-            email: 'test1@test.com',
-          },
-          role: 'Project Manager',
-        },
-        {
-          user: {
-            ...createUserResponse(),
-            id: 'u1',
-            displayName: 'Johnny',
-            teams: [],
-            email: 'test2@test.com',
-          },
-          role: 'Project Manager',
-        },
-      ]}
+      contactEmails={['test1@test.com', 'test2@test.com']}
     />,
   );
 
-  expect(getByText(/contact pm/i).closest('a')).toHaveAttribute(
+  expect(getByText(/contact/i).closest('a')).toHaveAttribute(
     'href',
     'mailto:test1@test.com,test2@test.com',
   );
 });
 
-it('does not render a call to action button, when a PM is NOT defined on the group', () => {
+it('does not render a call to action button, when the contact emails list for the group is empty', () => {
   const { queryByText } = render(
     <InterestGroupProfileAbout
       {...props}
@@ -102,15 +81,15 @@ it('does not render a call to action button, when a PM is NOT defined on the gro
     />,
   );
 
-  expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
+  expect(queryByText(/contact/i)).not.toBeInTheDocument();
 });
 
-it('does not render a call to action button, when a PM is defined but group is inactive', () => {
+it('does not render a call to action button, when there are contact emails but group is inactive', () => {
   const { queryByText } = render(
     <InterestGroupProfileAbout
       {...props}
       active={false}
-      contactEmails={[]}
+      contactEmails={['test1@test.com', 'test2@test.com']}
       leaders={[
         {
           user: {
@@ -125,7 +104,7 @@ it('does not render a call to action button, when a PM is defined but group is i
     />,
   );
 
-  expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
+  expect(queryByText(/contact/i)).not.toBeInTheDocument();
 });
 
 it('renders the Teams Tabbed card', () => {

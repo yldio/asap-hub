@@ -5,6 +5,7 @@ import {
   PreprintComplianceDataObject,
   PublicationComplianceDataObject,
   TeamProductivityDataObject,
+  UserCollaborationDataObject,
   UserProductivityDataObject,
 } from '@asap-hub/model';
 import { validMetrics } from './constants';
@@ -19,6 +20,7 @@ export type MetricToObjectMap = {
   'publication-compliance': PublicationComplianceDataObject;
   'user-productivity': UserProductivityDataObject;
   'team-productivity': TeamProductivityDataObject;
+  'user-collaboration': UserCollaborationDataObject;
 };
 
 export type MetricObject<T extends Metrics> = MetricToObjectMap[T];

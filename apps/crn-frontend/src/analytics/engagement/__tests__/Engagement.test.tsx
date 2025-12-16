@@ -460,7 +460,7 @@ describe('Engagement', () => {
         userEvent.type(searchBox, 'test');
 
         await waitFor(() => {
-          expect(mockGetTagSuggestions).toHaveBeenCalledWith('test', 'teams');
+          expect(mockGetTagSuggestions).toHaveBeenCalledWith('test', 'flat');
         });
 
         expect(mockGetTagSuggestions).toHaveBeenCalledTimes(1);

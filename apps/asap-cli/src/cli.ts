@@ -302,7 +302,12 @@ yargs(hideBin(process.argv))
         .option('metric', {
           alias: 'm',
           description: 'Performance Metric',
-          choices: ['all', 'user-productivity', 'team-productivity'] as const,
+          choices: [
+            'all',
+            'user-productivity',
+            'team-productivity',
+            'user-collaboration',
+          ] as const,
           default: 'all' as const,
         }),
     handler: async ({

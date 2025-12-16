@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/fixtures';
 import {
   SortTeamProductivity,
-  TeamProductivityAlgoliaResponse,
+  TeamProductivityResponse,
   UserProductivityResponse,
 } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
@@ -135,7 +135,11 @@ beforeEach(() => {
   });
   mockUseOpensearchMetrics.mockReturnValue({
     getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
     getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+    getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+    getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
     getPublicationCompliance: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
@@ -192,9 +196,8 @@ const userProductivityResponse: UserProductivityResponse = {
   ratio: 0.5,
 };
 
-const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
+const teamProductivityResponse: TeamProductivityResponse = {
   id: '1',
-  objectID: '1-team-productivity-all',
   name: 'Team Alessi',
   isInactive: false,
   Article: 50,
@@ -391,7 +394,6 @@ describe('team productivity', () => {
         items: [
           {
             ...teamProductivityResponse,
-            objectID: '1-team-productivity-90d',
             Article: 60,
           },
         ],
@@ -446,7 +448,6 @@ describe('team productivity', () => {
         items: [
           {
             ...teamProductivityResponse,
-            objectID: '1-team-productivity-public',
             Article: 60,
           },
         ],
@@ -626,7 +627,11 @@ describe('csv export', () => {
 
     mockUseOpensearchMetrics.mockReturnValue({
       getUserProductivity: mockGetUserProductivityOS,
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserProductivityPerformance: mockGetUserProductivityPerformanceOS,
+      getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
       getPublicationCompliance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -680,5 +685,296 @@ describe('csv export', () => {
 
     // Verify Algolia getUserProductivity was NOT called during CSV export
     expect(mockGetUserProductivity).not.toHaveBeenCalled();
+  });
+
+  it('exports team productivity analytics via OpenSearch when flag is enabled', async () => {
+    // Set up flag to enable OpenSearch metrics
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    // Mock OpenSearch metrics methods for team productivity
+    const mockGetTeamProductivityOS = jest.fn().mockResolvedValue({
+      items: [
+        {
+          id: 'team-1',
+          name: 'Team OpenSearch',
+          isInactive: false,
+          Article: 25,
+          Bioinformatics: 10,
+          Dataset: 5,
+          'Lab Material': 3,
+          Protocol: 8,
+        },
+      ],
+      total: 1,
+    });
+
+    const mockGetTeamProductivityPerformanceOS = jest.fn().mockResolvedValue({
+      article: {
+        belowAverageMin: 0,
+        belowAverageMax: 10,
+        averageMin: 10,
+        averageMax: 20,
+        aboveAverageMin: 20,
+        aboveAverageMax: 50,
+      },
+      bioinformatics: {
+        belowAverageMin: 0,
+        belowAverageMax: 5,
+        averageMin: 5,
+        averageMax: 10,
+        aboveAverageMin: 10,
+        aboveAverageMax: 25,
+      },
+      dataset: {
+        belowAverageMin: 0,
+        belowAverageMax: 3,
+        averageMin: 3,
+        averageMax: 7,
+        aboveAverageMin: 7,
+        aboveAverageMax: 15,
+      },
+      labMaterial: {
+        belowAverageMin: 0,
+        belowAverageMax: 2,
+        averageMin: 2,
+        averageMax: 5,
+        aboveAverageMin: 5,
+        aboveAverageMax: 10,
+      },
+      protocol: {
+        belowAverageMin: 0,
+        belowAverageMax: 4,
+        averageMin: 4,
+        averageMax: 8,
+        aboveAverageMin: 8,
+        aboveAverageMax: 20,
+      },
+    });
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamProductivity: mockGetTeamProductivityOS,
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamProductivityPerformance: mockGetTeamProductivityPerformanceOS,
+      getPublicationCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreprintCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsOSChampion: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreliminaryDataSharing: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+    });
+
+    // Render the page
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    // Wait for page to be fully rendered
+    await waitFor(() => {
+      expect(screen.getAllByText('Team Productivity')).toHaveLength(2);
+    });
+
+    // Clear only the Algolia mock after initial render to isolate CSV export behavior
+    mockGetTeamProductivity.mockClear();
+
+    // Click CSV export button
+    await act(async () => {
+      userEvent.click(screen.getByText(/csv/i));
+    });
+
+    // Verify createCsvFileStream was called with correct filename
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/productivity_team_\d+\.csv/),
+      expect.anything(),
+    );
+
+    // Verify OpenSearch getTeamProductivity was called for CSV export
+    // Note: Team CSV export currently uses default pageSize (10) - unlike user export which uses 200
+    // This is a potential bug for consistency
+    expect(mockGetTeamProductivityOS).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: 'team_asc',
+        timeRange: 'all',
+        outputType: 'all',
+        tags: [],
+        pageSize: 200,
+      }),
+    );
+
+    // Verify Algolia getTeamProductivity was NOT called during CSV export
+    expect(mockGetTeamProductivity).not.toHaveBeenCalled();
+  });
+});
+
+describe('tag suggestions', () => {
+  const getSearchBox = () => {
+    const searchContainer = screen.getByRole('search') as HTMLElement;
+    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+  };
+
+  it('uses OpenSearch for user productivity tag suggestions when flag is enabled', async () => {
+    const mockGetUserProductivityTagSuggestions = jest
+      .fn()
+      .mockResolvedValue(['User One', 'User Two']);
+
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityTagSuggestions: mockGetUserProductivityTagSuggestions,
+      getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getPublicationCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreprintCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsOSChampion: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreliminaryDataSharing: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+    });
+
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    const searchBox = getSearchBox();
+    await act(async () => {
+      userEvent.type(searchBox, 'test123');
+    });
+
+    await waitFor(() => {
+      expect(mockGetUserProductivityTagSuggestions).toHaveBeenCalled();
+    });
+
+    expect(mockSearchForTagValues).not.toHaveBeenCalled();
+  });
+
+  it('uses OpenSearch for team productivity tag suggestions when flag is enabled', async () => {
+    const mockGetTeamProductivityTagSuggestions = jest
+      .fn()
+      .mockResolvedValue(['Team Alpha', 'Team Beta']);
+
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityTagSuggestions: mockGetTeamProductivityTagSuggestions,
+      getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getPublicationCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreprintCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsOSChampion: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreliminaryDataSharing: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+    });
+
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    const searchBox = getSearchBox();
+    await act(async () => {
+      userEvent.type(searchBox, 'test123');
+    });
+
+    await waitFor(() => {
+      expect(mockGetTeamProductivityTagSuggestions).toHaveBeenCalled();
+    });
+
+    expect(mockSearchForTagValues).not.toHaveBeenCalled();
+  });
+
+  it('uses Algolia for tag suggestions when OPENSEARCH_METRICS flag is disabled', async () => {
+    mockSearchForTagValues.mockClear();
+
+    // The beforeEach already sets flag to false, but let's be explicit
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest.fn().mockReturnValue(false),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    const searchBox = getSearchBox();
+    await act(async () => {
+      // Type multiple characters like the existing test does
+      userEvent.type(searchBox, 'test123');
+    });
+
+    await waitFor(() => {
+      // The loadTags is called with each character typed
+      // Check for the last character like the existing test
+      expect(mockSearchForTagValues).toHaveBeenCalledWith(
+        ['team-productivity'],
+        '3',
+        {},
+      );
+    });
   });
 });

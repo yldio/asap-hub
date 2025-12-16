@@ -15,6 +15,7 @@ on:
           - publication-compliance
           - user-productivity
           - team-productivity
+          - user-collaboration
           - all
       environment-name:
         required: true

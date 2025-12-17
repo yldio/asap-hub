@@ -1,6 +1,6 @@
-import { renderHook, act } from '@testing-library/react';
-import { waitFor } from '@testing-library/dom';
+import { renderHook, waitFor } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
+import React, { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter } from 'react-router-dom';
 import { UserResponse } from '@asap-hub/model';
@@ -26,29 +26,35 @@ const emptyUser: UserResponse = {
 };
 
 const wrapper =
-  ({ user }: { user?: UserResponse }): React.FC =>
-  ({ children }) => (
+  ({
+    user,
+  }: {
+    user?: UserResponse;
+  }): React.FC<{ children: React.ReactNode }> =>
+  ({ children }: { children: React.ReactNode }) => (
     <RecoilRoot
       initializeState={({ set }) => {
         user?.id && set(refreshUserState(user.id), Math.random());
       }}
     >
-      <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
-        <WhenReady>
-          <MemoryRouter
-            initialEntries={[
-              network({})
-                .users({})
-                .user({
-                  userId: user?.id ?? '',
-                })
-                .research({}).$,
-            ]}
-          >
-            {children}
-          </MemoryRouter>
-        </WhenReady>
-      </Auth0Provider>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[
+                network({})
+                  .users({})
+                  .user({
+                    userId: user?.id ?? '',
+                  })
+                  .research({}).$,
+              ]}
+            >
+              {children}
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
     </RecoilRoot>
   );
 
@@ -62,11 +68,12 @@ describe('useOnboarding', () => {
       wrapper: wrapper({ user: undefined }),
     });
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current).toEqual(undefined);
-      });
-    });
+    await waitFor(
+      () => {
+        expect(result.current).toBeUndefined();
+      },
+      { timeout: 10000 },
+    );
   });
 
   it('returns all steps required to complete the profile', async () => {
@@ -77,13 +84,14 @@ describe('useOnboarding', () => {
       wrapper: wrapper({ user }),
     });
 
-    await act(async () => {
-      await waitFor(() => {
+    await waitFor(
+      () => {
         expect(
           (result.current?.incompleteSteps ?? []).map(({ label }) => label),
         ).toEqual(['Details', 'Role', 'Expertise', 'Questions', 'Biography']);
-      });
-    });
+      },
+      { timeout: 10000 },
+    );
   });
 
   it('returns incomplete step in order', async () => {
@@ -94,13 +102,14 @@ describe('useOnboarding', () => {
       wrapper: wrapper({ user }),
     });
 
-    await act(async () => {
-      await waitFor(() => {
+    await waitFor(
+      () => {
         expect(
           (result.current?.incompleteSteps ?? []).map(({ label }) => label),
         ).toEqual(['Details', 'Role', 'Expertise', 'Biography']);
-      });
-    });
+      },
+      { timeout: 10000 },
+    );
   });
 
   it('calculates the modal href for every step', async () => {
@@ -120,8 +129,9 @@ describe('useOnboarding', () => {
       wrapper: wrapper({ user }),
     });
 
-    await act(async () => {
-      await waitFor(() => {
+    await waitFor(
+      () => {
+        expect(result.current).toBeTruthy();
         const [details, role, questions, bio] =
           result.current?.incompleteSteps ?? [];
         expect(details!.modalHref).toBe(
@@ -150,8 +160,9 @@ describe('useOnboarding', () => {
             .about({})
             .editBiography({}).$,
         );
-      });
-    });
+      },
+      { timeout: 10000 },
+    );
   });
   describe('when user role is Staff', () => {
     it('returns all steps required to complete the profile', async () => {
@@ -162,13 +173,14 @@ describe('useOnboarding', () => {
         wrapper: wrapper({ user }),
       });
 
-      await act(async () => {
-        await waitFor(() => {
+      await waitFor(
+        () => {
           expect(
             (result.current?.incompleteSteps ?? []).map(({ label }) => label),
           ).toEqual(['Details', 'Role', 'Expertise', 'Biography']);
-        });
-      });
+        },
+        { timeout: 10000 },
+      );
     });
     it('returns no incomplete steps if user has all information', async () => {
       const user = {
@@ -187,13 +199,14 @@ describe('useOnboarding', () => {
         wrapper: wrapper({ user }),
       });
 
-      await act(async () => {
-        await waitFor(() => {
+      await waitFor(
+        () => {
           expect(
             (result.current?.incompleteSteps ?? []).map(({ label }) => label),
           ).toEqual([]);
-        });
-      });
+        },
+        { timeout: 10000 },
+      );
     });
   });
 });

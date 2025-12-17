@@ -224,7 +224,9 @@ describe('Get cookie preferences handler', () => {
 
     await expect(handler(request)).rejects.toThrow('String error');
     expect(logger.error).toHaveBeenCalledWith(
-      expect.stringContaining('Failed to get cookie preferences from DynamoDB'),
+      expect.stringContaining(
+        'Failed to fetch cookie preferences from DynamoDB',
+      ),
       expect.objectContaining({
         error: 'String error',
         errorName: 'Error',

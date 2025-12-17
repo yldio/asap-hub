@@ -4,6 +4,7 @@ import Boom from '@hapi/boom';
 
 import { Logger } from '../../utils';
 import { createDynamoDBClient } from './dynamo-init';
+import { handleDynamoDBError } from './error-handler';
 
 export const getCookiePreferencesHandlerFactory =
   (
@@ -50,32 +51,10 @@ export const getCookiePreferencesHandlerFactory =
       const result = await client.send(command);
       item = result.Item;
     } catch (error) {
-      // Extract error message from various error types (Error, AWS SDK errors, etc.)
-      let errorMessage = 'Unknown error';
-      let errorName = 'Error';
-
-      if (error instanceof Error) {
-        errorMessage = error.message || error.name || String(error);
-        errorName = error.name || 'Error';
-      } else {
-        errorMessage = String(error);
-      }
-
-      logger.error(
-        `Failed to get cookie preferences from DynamoDB: ${errorName}`,
-        {
-          error: errorMessage,
-          errorName,
-          tableName,
-          cookieId: request.params.cookieId,
-          // Log error code if available (for AWS SDK errors)
-          errorCode: (error as { $metadata?: { httpStatusCode?: number } })
-            ?.$metadata?.httpStatusCode,
-        },
-      );
-      // Throw Boom error to preserve error message - this will be serialized to browser response
-      const boomMessage = errorMessage || errorName || 'Unknown error';
-      throw Boom.badImplementation(boomMessage);
+      throw handleDynamoDBError(error, logger, 'get', {
+        tableName,
+        cookieId: request.params.cookieId,
+      });
     }
 
     if (

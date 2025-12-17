@@ -1,10 +1,10 @@
 import { framework as lambda } from '@asap-hub/services-common';
 import { PutItemCommand } from '@aws-sdk/client-dynamodb';
-import Boom from '@hapi/boom';
 
 import { Logger } from '../../utils';
 import { validateCookieCreateData } from '../../validation';
 import { createDynamoDBClient } from './dynamo-init';
+import { handleDynamoDBError } from './error-handler';
 
 export const saveCookiePreferencesHandlerFactory =
   (
@@ -45,31 +45,9 @@ export const saveCookiePreferencesHandlerFactory =
         body: JSON.stringify(response),
       };
     } catch (error) {
-      // Extract error message from various error types (Error, AWS SDK errors, etc.)
-      let errorMessage = 'Unknown error';
-      let errorName = 'Error';
-
-      if (error instanceof Error) {
-        errorMessage = error.message || error.name || String(error);
-        errorName = error.name || 'Error';
-      } else {
-        errorMessage = String(error);
-      }
-
-      logger.error(
-        `Failed to save cookie preferences to DynamoDB: ${errorName}`,
-        {
-          error: errorMessage,
-          errorName,
-          tableName,
-          cookieId,
-          // Log error code if available (for AWS SDK errors)
-          errorCode: (error as { $metadata?: { httpStatusCode?: number } })
-            ?.$metadata?.httpStatusCode,
-        },
-      );
-      // Throw Boom error to preserve error message - this will be serialized to browser response
-      const boomMessage = errorMessage || errorName || 'Unknown error';
-      throw Boom.badImplementation(boomMessage);
+      throw handleDynamoDBError(error, logger, 'save', {
+        tableName,
+        cookieId,
+      });
     }
   };

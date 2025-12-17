@@ -1,8 +1,9 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import { GetItemCommand } from '@aws-sdk/client-dynamodb';
 import Boom from '@hapi/boom';
 
 import { Logger } from '../../utils';
+import { createDynamoDBClient } from './dynamo-init';
 
 export const getCookiePreferencesHandlerFactory =
   (
@@ -36,39 +37,7 @@ export const getCookiePreferencesHandlerFactory =
       };
     }
 
-    // Use local DynamoDB if LOCAL_DYNAMODB_ENDPOINT is set, or if we're in local/dev environment
-    /* istanbul ignore next */
-    const isLocalEnv =
-      process.env.ENVIRONMENT === 'local' ||
-      process.env.NODE_ENV === 'development' ||
-      process.env.SLS_STAGE === 'local';
-    /* istanbul ignore next */
-    const localEndpoint =
-      process.env.LOCAL_DYNAMODB_ENDPOINT ||
-      (isLocalEnv ? 'http://localhost:8000' : undefined);
-
-    /* istanbul ignore next */
-    const dynamoDbConfig = localEndpoint
-      ? {
-          endpoint: localEndpoint,
-          region: process.env.AWS_REGION || 'us-east-1',
-          credentials: {
-            accessKeyId: 'local',
-            secretAccessKey: 'local',
-          },
-        }
-      : {};
-
-    logger.info(
-      `DynamoDB config: ${JSON.stringify({
-        endpoint: dynamoDbConfig.endpoint || 'default AWS endpoint',
-        region: dynamoDbConfig.region || 'default',
-        hasLocalEndpoint: !!localEndpoint,
-        isLocalEnv,
-      })}`,
-    );
-
-    const client = new DynamoDBClient(dynamoDbConfig);
+    const client = createDynamoDBClient(logger);
     const command = new GetItemCommand({
       TableName: tableName,
       Key: {
@@ -98,7 +67,6 @@ export const getCookiePreferencesHandlerFactory =
           error: errorMessage,
           errorName,
           tableName,
-          endpoint: dynamoDbConfig.endpoint,
           cookieId: request.params.cookieId,
           // Log error code if available (for AWS SDK errors)
           errorCode: (error as { $metadata?: { httpStatusCode?: number } })

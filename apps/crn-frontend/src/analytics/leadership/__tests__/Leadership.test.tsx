@@ -206,9 +206,10 @@ it('calls algolia client with the right index name', async () => {
       expect.not.stringContaining('team_desc'),
     );
   });
-  await userEvent.click(
-    screen.getByTitle('Active Alphabetical Ascending Sort Icon'),
-  );
+  
+  const sortIcon = await screen.findByTitle('Active Alphabetical Ascending Sort Icon');
+  await userEvent.click(sortIcon);
+  
   await waitFor(() => {
     expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
       expect.stringContaining('team_desc'),
@@ -379,7 +380,9 @@ it('renders data for different time ranges', async () => {
     });
   await renderPage('os-champion');
 
-  expect(screen.getByText('20')).toBeVisible();
+  await waitFor(() => {
+    expect(screen.getByText('20')).toBeVisible();
+  });
   expect(screen.queryByText('10')).not.toBeInTheDocument();
 
   const rangeButton = screen.getByRole('button', {
@@ -391,6 +394,8 @@ it('renders data for different time ranges', async () => {
     expect(screen.getAllByText('Open Science Champion')).toHaveLength(2),
   );
 
-  expect(screen.getByText('10')).toBeVisible();
+  await waitFor(() => {
+    expect(screen.getByText('10')).toBeVisible();
+  });
   expect(screen.queryByText('20')).not.toBeInTheDocument();
 });

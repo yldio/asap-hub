@@ -29,7 +29,7 @@ it('renders the header', () => {
 
 it('alters the search placeholder based on the tab', () => {
   const { getByRole, rerender } = render(
-    <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
+    <MemoryRouter initialEntries={['/network/discovery-teams']}>
       <NetworkPageHeader {...props} page="discovery-teams" />
     </MemoryRouter>,
   );
@@ -38,7 +38,7 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
   rerender(
-    <MemoryRouter initialEntries={[network({}).resourceTeams({}).$]}>
+    <MemoryRouter initialEntries={['/network/resource-teams']}>
       <NetworkPageHeader {...props} page="resource-teams" />
     </MemoryRouter>,
   );
@@ -76,14 +76,14 @@ it('alters the search placeholder based on the tab', () => {
 
 it('shows the filter in all the tabs (discovery-teams, resource-teams, groups, working-groups and users)', () => {
   const { getByText, queryByText, rerender } = render(
-    <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
+    <MemoryRouter initialEntries={['/network/discovery-teams']}>
       <NetworkPageHeader {...props} page="discovery-teams" />
     </MemoryRouter>,
   );
   expect(queryByText(/filters/i)).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter initialEntries={[network({}).resourceTeams({}).$]}>
+    <MemoryRouter initialEntries={['/network/resource-teams']}>
       <NetworkPageHeader {...props} page="resource-teams" />
     </MemoryRouter>,
   );
@@ -115,7 +115,7 @@ it('highlights the current tab', () => {
   const { getByText, rerender } = render(
     <StaticRouter
       key="discovery-teams"
-      location={network({}).discoveryTeams({}).$}
+      location={'/network/discovery-teams'}
     >
       <NetworkPageHeader {...props} page="discovery-teams" />
     </StaticRouter>,
@@ -136,7 +136,7 @@ it('highlights the current tab', () => {
   rerender(
     <StaticRouter
       key="resource-teams"
-      location={network({}).resourceTeams({}).$}
+      location={'/network/resource-teams'}
     >
       <NetworkPageHeader {...props} page="resource-teams" />
     </StaticRouter>,
@@ -261,7 +261,7 @@ describe('Research Theme Filters', () => {
       { id: '2', name: 'Theme 2' },
     ];
     const { getByText } = render(
-      <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
+      <MemoryRouter initialEntries={['/network/discovery-teams']}>
         <NetworkPageHeader
           {...props}
           page="discovery-teams"
@@ -276,7 +276,7 @@ describe('Research Theme Filters', () => {
 
   it('renders only the title when researchThemes are empty', () => {
     const { getByText, queryByText } = render(
-      <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
+      <MemoryRouter initialEntries={['/network/discovery-teams']}>
         <NetworkPageHeader
           {...props}
           page="discovery-teams"
@@ -290,7 +290,7 @@ describe('Research Theme Filters', () => {
 
   it('renders only the title when researchThemes are undefined', () => {
     const { getByText, queryByText } = render(
-      <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
+      <MemoryRouter initialEntries={['/network/discovery-teams']}>
         <NetworkPageHeader {...props} page="discovery-teams" />
       </MemoryRouter>,
     );

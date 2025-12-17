@@ -14,6 +14,14 @@ export const FETCH_TEAM_BY_ID = gql`
       teamType
       teamDescription
       inactiveSince
+      researchTagsCollection(limit: 10) {
+        items {
+          sys {
+            id
+          }
+          name
+        }
+      }
       researchTheme {
         name
       }

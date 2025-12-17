@@ -5,7 +5,6 @@ export type Flag =
   | 'PROJECTS_MVP'
   | 'OPENSEARCH_METRICS'
   | 'DATA_MANAGER_ROLE_ENABLED'
-  | 'TEAM_LABS_CARD';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
 let overrides: Flags = {
@@ -16,7 +15,6 @@ let overrides: Flags = {
   PROJECTS_MVP: true,
   OPENSEARCH_METRICS: false,
   DATA_MANAGER_ROLE_ENABLED: false,
-  TEAM_LABS_CARD: true,
 };
 
 const envDefaults: Record<string, boolean> = {

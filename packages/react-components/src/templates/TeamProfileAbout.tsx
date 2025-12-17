@@ -54,7 +54,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
     {teamDescription ? (
       <TeamProfileOverview tags={tags} teamDescription={teamDescription} />
     ) : null}
-    {isEnabled('TEAM_LABS_CARD') && labs && labs.length ? (
+    {isEnabled('PROJECTS_MVP') && labs && labs.length ? (
       <TeamLabsCard labs={labs} isTeamActive={teamStatus === 'Active'} />
     ) : null}
     <section id={teamListElementId} css={membersCardStyles}>

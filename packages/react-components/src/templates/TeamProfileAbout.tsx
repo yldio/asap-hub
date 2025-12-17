@@ -48,11 +48,19 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   teamStatus,
   teamType,
   teamDescription,
+  researchTheme,
+  resourceType,
   labs,
 }) => (
   <div css={styles}>
     {teamDescription ? (
-      <TeamProfileOverview tags={tags} teamDescription={teamDescription} />
+      <TeamProfileOverview
+        tags={tags}
+        teamDescription={teamDescription}
+        teamType={teamType}
+        researchTheme={researchTheme}
+        resourceType={resourceType}
+      />
     ) : null}
     {isEnabled('PROJECTS_MVP') && labs && labs.length ? (
       <TeamLabsCard labs={labs} isTeamActive={teamStatus === 'Active'} />

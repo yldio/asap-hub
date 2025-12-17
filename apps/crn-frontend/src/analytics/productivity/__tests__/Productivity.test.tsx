@@ -517,22 +517,21 @@ describe('search', () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
     return within(searchContainer).getByRole('textbox') as HTMLInputElement;
   };
-  // TODO: React Router v6 migration - skipped due to: pre-existing test bug - expects '3' but receives 'test123' (not router-related)
-  it.skip('allows typing in search queries', async () => {
-    // await renderPage(
-    //   analytics({}).productivity({}).metric({ metric: 'team' }).$,
-    // );
-    // const searchBox = getSearchBox();
-    // await act(async () => {
-    //   await userEvent.type(searchBox, 'test123');
-    // });
-    // await waitFor(() =>
-    //   expect(mockSearchForTagValues).toHaveBeenCalledWith(
-    //     ['team-productivity'],
-    //     '3',
-    //     {},
-    //   ),
-    // );
+  it('allows typing in search queries', async () => {
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+    const searchBox = getSearchBox();
+    await act(async () => {
+      await userEvent.type(searchBox, 'test123');
+    });
+    await waitFor(() =>
+      expect(mockSearchForTagValues).toHaveBeenCalledWith(
+        ['team-productivity'],
+        'test123',
+        {},
+      ),
+    );
   });
 });
 

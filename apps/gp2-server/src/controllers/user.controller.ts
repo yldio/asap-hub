@@ -132,9 +132,8 @@ export default class UserController {
       );
       // Don't update orcidLastSyncDate - let cronjob retry periodically
       // This allows event-driven sync to work when user fixes their ORCID
-      return this.update(id, {
-        email,
-      });
+      // Return the user without updating since there's nothing to update
+      return this.fetchById(id);
     }
 
     const [error, res] = await Intercept(fetchOrcidProfile(orcid));

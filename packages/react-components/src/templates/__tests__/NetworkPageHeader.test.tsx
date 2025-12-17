@@ -113,10 +113,7 @@ it('shows the filter in all the tabs (discovery-teams, resource-teams, groups, w
 
 it('highlights the current tab', () => {
   const { getByText, rerender } = render(
-    <StaticRouter
-      key="discovery-teams"
-      location={'/network/discovery-teams'}
-    >
+    <StaticRouter key="discovery-teams" location={'/network/discovery-teams'}>
       <NetworkPageHeader {...props} page="discovery-teams" />
     </StaticRouter>,
   );
@@ -134,10 +131,7 @@ it('highlights the current tab', () => {
   ).not.toBe('bold');
 
   rerender(
-    <StaticRouter
-      key="resource-teams"
-      location={'/network/resource-teams'}
-    >
+    <StaticRouter key="resource-teams" location={'/network/resource-teams'}>
       <NetworkPageHeader {...props} page="resource-teams" />
     </StaticRouter>,
   );

@@ -260,7 +260,10 @@ export default class UserController {
       updateToUser.orcidWorks = works.slice(0, 10);
     }
     if (error) {
-      logger.warn(error, 'Failed to sync ORCID profile');
+      logger.warn(
+        error,
+        `Failed to sync ORCID profile for user ${user.id} with ORCID ${user.orcid}`,
+      );
     }
 
     return this.update(user.id, updateToUser, {

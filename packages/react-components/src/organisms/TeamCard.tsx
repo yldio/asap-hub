@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { TeamListItemResponse } from '@asap-hub/model';
 import { network, projects } from '@asap-hub/routing';
+import { isEnabled } from '@asap-hub/flags';
 
 import { StateTag } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
@@ -57,7 +58,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
       projectLink = projects({})
         .discoveryProjects({})
         .discoveryProject({ projectId: linkedProjectId }).$;
-    } else if (teamType === 'Resource Team') {
+    } else {
       projectLink = projects({})
         .resourceProjects({})
         .resourceProject({ projectId: linkedProjectId }).$;
@@ -83,6 +84,8 @@ const TeamCard: React.FC<TeamCardProps> = ({
     </div>
   );
 
+  const projectsMVPFlagEnabled = isEnabled('PROJECTS_MVP');
+
   return (
     <EntityCard
       active={!inactiveSince}
@@ -90,7 +93,8 @@ const TeamCard: React.FC<TeamCardProps> = ({
       href={href}
       inactiveBadge={<StateTag icon={<InactiveBadgeIcon />} label="Inactive" />}
       tags={tags.map(({ name }) => name)}
-      text={projectTitle}
+      text={projectsMVPFlagEnabled ? projectTitle : ''}
+      textHref={projectsMVPFlagEnabled ? projectLink : undefined}
       title={`Team ${displayName}`}
       teamType={teamType}
       researchTheme={
@@ -108,7 +112,6 @@ const TeamCard: React.FC<TeamCardProps> = ({
           <ResourceProjectIcon />
         )
       }
-      textHref={projectLink}
       isTeamCard={true}
     />
   );

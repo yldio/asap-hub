@@ -1,4 +1,3 @@
-import { network } from '@asap-hub/routing';
 import { useRouteMatch } from 'react-router-dom';
 import { TeamDataObject } from '@asap-hub/model';
 import {
@@ -35,9 +34,9 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
   const { path } = useRouteMatch();
 
   const teamType: TeamDataObject['teamType'] | null =
-    path === network({}).discoveryTeams({}).$
+    path === '/network/discovery-teams'
       ? 'Discovery Team'
-      : path === network({}).resourceTeams({}).$
+      : path === '/network/resource-teams'
         ? 'Resource Team'
         : null;
 

@@ -701,7 +701,8 @@ export const parseLabsCollection = (
         {
           id: lab.sys.id,
           name: lab.name,
-          labPrincipalInvestigatorId: lab.labPi?.sys.id,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          labPrincipalInvestigatorId: (lab as any).labPi?.sys.id,
         },
       ];
     },

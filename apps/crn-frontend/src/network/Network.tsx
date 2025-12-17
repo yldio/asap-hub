@@ -101,7 +101,7 @@ const Network: FC<Record<string, never>> = () => {
           <UserProfile currentTime={currentTime} />
         </Frame>
       </Route>
-      <Route exact path={path + network({}).discoveryTeams.template}>
+      <Route exact path={`${path}/network/discovery-teams`}>
         <NetworkPage
           page="discovery-teams"
           searchQuery={searchQuery}
@@ -122,7 +122,7 @@ const Network: FC<Record<string, never>> = () => {
           </SearchFrame>
         </NetworkPage>
       </Route>
-      <Route exact path={path + network({}).resourceTeams.template}>
+      <Route exact path={`${path}/network/resource-teams`}>
         <NetworkPage
           page="resource-teams"
           searchQuery={searchQuery}

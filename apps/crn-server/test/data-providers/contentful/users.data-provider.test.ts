@@ -275,7 +275,7 @@ describe('User data provider', () => {
                     id: 'pi-1',
                   },
                 },
-              },
+              } as any,
             ],
           },
         }),

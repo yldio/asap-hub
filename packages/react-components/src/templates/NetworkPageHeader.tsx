@@ -193,17 +193,13 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
               People
             </TabLink>
             <TabLink
-              href={
-                network({}).discoveryTeams({}).$ + queryParamString(searchQuery)
-              }
+              href={`/network/discovery-teams${queryParamString(searchQuery)}`}
               Icon={DiscoveryTeamIcon}
             >
               Discovery Teams
             </TabLink>
             <TabLink
-              href={
-                network({}).resourceTeams({}).$ + queryParamString(searchQuery)
-              }
+              href={`/network/resource-teams${queryParamString(searchQuery)}`}
               Icon={ResourceTeamIcon}
             >
               Resource Teams

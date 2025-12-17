@@ -122,8 +122,8 @@ const renderNetworkPage = async (pathname: string, query = '') => {
 };
 
 describe.each([
-  ['discovery teams', network({}).discoveryTeams({}).$],
-  ['resource teams', network({}).resourceTeams({}).$],
+  ['discovery teams', '/network/discovery-teams'],
+  ['resource teams', '/network/resource-teams'],
 ] as const)('when toggling from %s to users', (teamType, teamPath) => {
   it('changes the placeholder', async () => {
     jest.spyOn(console, 'error').mockImplementation();
@@ -278,8 +278,8 @@ it('allows selection of working group filters', async () => {
 });
 
 describe.each([
-  ['discovery team', network({}).discoveryTeams({}).$],
-  ['resource team', network({}).resourceTeams({}).$],
+  ['discovery team', '/network/discovery-teams'],
+  ['resource team', '/network/resource-teams'],
 ] as const)('allows selection of %s filters', (teamTypeName, teamPath) => {
   it(`allows selection of ${teamTypeName} filters`, async () => {
     await renderNetworkPage(teamPath);
@@ -302,10 +302,7 @@ describe.each([
 });
 
 it('allows toggling between discovery teams and resource teams', async () => {
-  await renderNetworkPage(
-    network({}).discoveryTeams({}).$,
-    '?searchQuery=test123',
-  );
+  await renderNetworkPage('/network/discovery-teams', '?searchQuery=test123');
 
   const resourceTeamsLink = screen.getByText(/resource teams/i, {
     selector: 'nav a *',

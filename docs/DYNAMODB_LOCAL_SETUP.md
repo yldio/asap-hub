@@ -22,7 +22,7 @@ This guide explains how to run DynamoDB Local using Docker for local development
 
    ```bash
    aws dynamodb create-table \
-   --table-name gp2-hub-dev-cookie-preferences \
+   --table-name asap-hub-dev-cookie-preferences \
    --attribute-definitions AttributeName=cookieId,AttributeType=S \
    --key-schema AttributeName=cookieId,KeyType=HASH \
    --billing-mode PAY_PER_REQUEST \

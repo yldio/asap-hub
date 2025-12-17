@@ -583,16 +583,9 @@ describe('Users controller', () => {
         );
 
         expect(nock.pendingMocks()).toHaveLength(0);
-        expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
-          email: user.email,
-        });
-        expect(userDataProviderMock.update).not.toHaveBeenCalledWith(
-          userId,
-          expect.objectContaining({
-            orcidLastSyncDate: expect.any(String),
-          }),
-        );
-        expect(result).toBeDefined();
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        const { telephone, ...expectedResponse } = getUserResponse();
+        expect(result).toEqual({ ...expectedResponse, id: userId });
       });
 
       test('should skip sync and return early when ORCID is placeholder "-"', async () => {
@@ -606,16 +599,9 @@ describe('Users controller', () => {
         );
 
         expect(nock.pendingMocks()).toHaveLength(0);
-        expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
-          email: user.email,
-        });
-        expect(userDataProviderMock.update).not.toHaveBeenCalledWith(
-          userId,
-          expect.objectContaining({
-            orcidLastSyncDate: expect.any(String),
-          }),
-        );
-        expect(result).toBeDefined();
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        const { telephone, ...expectedResponse } = getUserResponse();
+        expect(result).toEqual({ ...expectedResponse, id: userId });
       });
 
       test('should skip sync when ORCID has wrong format (too short)', async () => {
@@ -629,16 +615,9 @@ describe('Users controller', () => {
         );
 
         expect(nock.pendingMocks()).toHaveLength(0);
-        expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
-          email: user.email,
-        });
-        expect(userDataProviderMock.update).not.toHaveBeenCalledWith(
-          userId,
-          expect.objectContaining({
-            orcidLastSyncDate: expect.any(String),
-          }),
-        );
-        expect(result).toBeDefined();
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        const { telephone, ...expectedResponse } = getUserResponse();
+        expect(result).toEqual({ ...expectedResponse, id: userId });
       });
 
       test('should skip sync when ORCID has wrong format (missing hyphens)', async () => {
@@ -652,16 +631,9 @@ describe('Users controller', () => {
         );
 
         expect(nock.pendingMocks()).toHaveLength(0);
-        expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
-          email: user.email,
-        });
-        expect(userDataProviderMock.update).not.toHaveBeenCalledWith(
-          userId,
-          expect.objectContaining({
-            orcidLastSyncDate: expect.any(String),
-          }),
-        );
-        expect(result).toBeDefined();
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        const { telephone, ...expectedResponse } = getUserResponse();
+        expect(result).toEqual({ ...expectedResponse, id: userId });
       });
 
       test('should skip sync when ORCID has wrong format (non-numeric)', async () => {
@@ -675,16 +647,9 @@ describe('Users controller', () => {
         );
 
         expect(nock.pendingMocks()).toHaveLength(0);
-        expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
-          email: user.email,
-        });
-        expect(userDataProviderMock.update).not.toHaveBeenCalledWith(
-          userId,
-          expect.objectContaining({
-            orcidLastSyncDate: expect.any(String),
-          }),
-        );
-        expect(result).toBeDefined();
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        const { telephone, ...expectedResponse } = getUserResponse();
+        expect(result).toEqual({ ...expectedResponse, id: userId });
       });
 
       test('should proceed with sync when ORCID format is valid', async () => {

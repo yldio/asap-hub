@@ -93,8 +93,8 @@ const EntityCard: React.FC<CardWrapperProps> = ({
     {(teamType || researchTheme || resourceType) && (
       <div css={pillsStyles}>
         {teamType && <Pill noMargin>{teamType}</Pill>}
-        {researchTheme && <Pill>{researchTheme}</Pill>}
-        {resourceType && <Pill>{resourceType}</Pill>}
+        {researchTheme && <Pill noMargin>{researchTheme}</Pill>}
+        {resourceType && <Pill noMargin>{resourceType}</Pill>}
       </div>
     )}
     <div css={contentStyles}>

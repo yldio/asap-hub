@@ -4,7 +4,7 @@ export type Flag =
   | 'ANALYTICS_PHASE_TWO'
   | 'PROJECTS_MVP'
   | 'OPENSEARCH_METRICS'
-  | 'DATA_MANAGER_ROLE_ENABLED'
+  | 'DATA_MANAGER_ROLE_ENABLED';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
 let overrides: Flags = {

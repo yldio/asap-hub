@@ -215,9 +215,7 @@ export default class ManuscriptController {
       firstAuthors ?? [],
     );
     const correspondingAuthorValues = correspondingAuthor
-      ? await this.mapAuthorsPostRequestToId(
-          correspondingAuthor ? [correspondingAuthor] : [],
-        )
+      ? await this.mapAuthorsPostRequestToId([correspondingAuthor])
       : [];
 
     const additionalAuthorsValues = await this.mapAuthorsPostRequestToId(
@@ -273,9 +271,7 @@ export default class ManuscriptController {
         firstAuthors ?? [],
       );
       const correspondingAuthorValues = correspondingAuthor
-        ? await this.mapAuthorsPostRequestToId(
-            correspondingAuthor ? [correspondingAuthor] : [],
-          )
+        ? await this.mapAuthorsPostRequestToId([correspondingAuthor])
         : [];
 
       const additionalAuthorsValues = await this.mapAuthorsPostRequestToId(

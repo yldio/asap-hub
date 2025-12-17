@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -95,17 +95,21 @@ const renderOutputs = async (
                 },
               ]}
             >
-              <Route
-                path={
-                  network({}).teams({}).team({ teamId: team.id }).outputs({}).$
-                }
-              >
-                <Outputs
-                  userAssociationMember={userAssociationMember}
-                  draftOutputs={draftOutputs}
-                  team={team}
+              <Routes>
+                <Route
+                  path={
+                    network({}).teams({}).team({ teamId: team.id }).outputs({})
+                      .$
+                  }
+                  element={
+                    <Outputs
+                      userAssociationMember={userAssociationMember}
+                      draftOutputs={draftOutputs}
+                      team={team}
+                    />
+                  }
                 />
-              </Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -213,8 +217,8 @@ it('triggers export with the same parameters and custom file name', async () => 
       teamId,
       currentPage: 0,
       pageSize: CARD_VIEW_PAGE_SIZE,
-    });
-  });
+    }),
+  );
 });
 
 it('triggers draft research output export with custom file name', async () => {
